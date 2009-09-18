@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<!--Magento Product Category Tree/Form view  -->
+
+		<record model="ir.ui.view" id="product_category_form_view_magerp2">
+			<field name="name">product.category.form_view_magerp2</field>
+			<field name="model">product.category</field>
+			<field name="inherit_id" ref="product.product_category_form_view" />
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<xpath expr="/form/field[@name='sequence']" position="after">
+					<group colspan="4" col="4" attrs="{'invisible':[('exportable','!=',1)],'readonly':[('level','=',0)]}">
+						<separator string="Magento Information" colspan="4" />
+						<notebook attrs="{'invisible':[('exportable','!=',1)]}" colspan="4">
+							<page string="General Information">
+								<group cols="2" colspan="4">
+									<group col="2" colspan="1">
+										<separator string="Meta Information" colspan="2" />
+										<field name="meta_title" colspan="2" />
+										<field name="meta_keywords" colspan="2" />
+										<field name="meta_description" colspan="2" />
+										<field name="url_key" colspan="2" />
+										<field name="level" colspan="2" />
+										<field name="category_id" colspan="2" />
+									</group>
+									<group col="1" colspan="1">
+										<separator string="Category Image" />
+										<field name="image" nolabel="1" widget="image" />
+										<field name="image_name" colspan="1" nolabel="1" />
+										<separator string="Description" />
+										<field name="description" colspan="1" nolabel="1" />
+										<group col="4" colspan="1">
+											<field name="is_active" colspan="1" />
+											<field name="magento_parent_id" />
+										</group>
+									</group>
+								</group>
+
+							</page>
+							<page string="Display Settings">
+								<group col="4" colspan="4">
+									<separator string="Display Mode" colspan="4" />
+									<field name="display_mode" colspan="1" nolabel="1" />
+									<label string="Products only means that the products associated to the category will display, but not any static blocks.Static block only means that the selected static block will display, but none of the products.Static block and products means that the static block will display with the products listed directly beneath it." colspan="3" />
+								</group>
+								<separator string="Use Anchor" colspan="4" />
+								<group col="4" colspan="4">
+									<field name="is_anchor" colspan="1" />
+									<label string="Anchored categories will display all products associated to all child categories (and child of child, and child of child of child,etc.) on that category‘s page, along with the products associated directly to the parent category." colspan="3" />
+								</group>
+								<separator string="Sorting method" colspan="4" />
+								<field name="available_sort_by" />
+								<field name="default_sort_by" />
+							</page>
+						</notebook>
+					</group>
+				</xpath>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="product_category_form_view_magerp">
+			<field name="name">product.category.form_view_magerp</field>
+			<field name="model">product.category</field>
+			<field name="inherit_id" ref="product.product_category_form_view" />
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<field name="sequence" position="after">
+					<field name="exportable" />
+				</field>
+			</field>
+		</record>
+
+		<!--Magento product_attribute_set Tree/Form view  -->
+		<record model="ir.ui.view" id="magerp_product_attribute_set_form">
+			<field name="name">magerp.product_attribute_set.form</field>
+			<field name="model">magerp.product_attribute_set</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Magento Product Attribute Sets">
+					<group col="4" colspan="4">
+						<field name="attribute_set_id" readonly="1" />
+						<field name="sort_order" readonly="1" />
+						<field name="attribute_set_name" readonly="1" />
+						<field name="instance" readonly="1" />
+					</group>
+					<separator string="Attributes in Set" colspan="4" />
+					<field name="attributes" nolabel="1" readonly="1" />
+				</form>
+			</field>
+		</record>
+		<record model="ir.ui.view" id="magerp_product_attribute_set_tree">
+			<field name="name">magerp.product_attribute_set.tree</field>
+			<field name="model">magerp.product_attribute_set</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Magento Product Attribute Set">
+					<field name="attribute_set_id" select="1" />
+					<field name="sort_order" select="2" />
+					<field name="attribute_set_name" select="1" />
+					<field name="instance" select="2" />
+				</tree>
+			</field>
+		</record>
+		<record id="act_magerp_product_attribute_set_form" model="ir.actions.act_window">
+			<field name="name">Magento Product Attribute Sets</field>
+			<field name="res_model">magerp.product_attribute_set</field>
+			<field name="src_model">magerp.product_attribute_set</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="magerp_product_attribute_set_tree" />
+		</record>
+		<!--Magento product_attributes Tree/Form view  -->
+		<record model="ir.ui.view" id="magerp_product_attributes_form">
+			<field name="name">magerp.product_attributes.form</field>
+			<field name="model">magerp.product_attributes</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Magento Product Attributes">
+					<group col="4" colspan="4">
+						<field name="attribute_code" />
+						<field name="attribute_id" />
+						<field name="frontend_input" />
+						<field name="frontend_class" />
+						<field name="backend_model" />
+						<field name="backend_type" />
+						<field name="frontend_label" />
+
+						<field name="is_visible_in_advanced_search" />
+						<field name="is_global" />
+						<field name="is_filterable" />
+						<field name="is_comparable" />
+						<field name="is_visible" />
+						<field name="is_searchable" />
+						<field name="is_user_defined" />
+						<field name="is_configurable" />
+
+						<field name="is_visible_on_front" />
+						<field name="is_used_for_price_rules" />
+						<field name="is_unique" />
+						<field name="is_required" />
+						<field name="position" />
+
+						<field name="group" />
+						<field name="apply_to" />
+						<field name="default_value" />
+						<field name="note" />
+						<field name="entity_type_id" />
+						<field name="instance" />
+						<field name="options" readonly="1"/>
+					</group>
+				</form>
+			</field>
+		</record>
+		<record model="ir.ui.view" id="magerp_product_attributes_tree">
+			<field name="name">magerp.product_attributes.tree</field>
+			<field name="model">magerp.product_attributes</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Magento Product Attributes">
+					<field name="instance" select="1" />
+					<field name="attribute_code" select="1" />
+					<field name="attribute_id" select="1" />
+				</tree>
+			</field>
+		</record>
+		<record id="act_magerp_product_attributes_form" model="ir.actions.act_window">
+			<field name="name">Magento Product Attributes</field>
+			<field name="res_model">magerp.product_attributes</field>
+			<field name="src_model">magerp.product_attributes</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="magerp_product_attributes_tree" />
+		</record>
+		<!--Magento product_attribute groups Tree/Form view  -->
+		<record model="ir.ui.view" id="magerp_product_attribute_groups_form">
+			<field name="name">magerp.product_attribute_groups.form</field>
+			<field name="model">magerp.product_attribute_groups</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Magento Product Attributes Groups">
+					<group col="4" colspan="4">
+						<field name="attribute_group_id" />
+						<field name="attribute_group_name" />
+						<field name="attribute_set" />
+						<field name="default_id" />
+						<field name="sort_order" />
+						<field name="instance" />
+					</group>
+				</form>
+			</field>
+		</record>
+		<record model="ir.ui.view" id="magerp_product_attribute_groups_tree">
+			<field name="name">magerp.product_attribute_groups.tree</field>
+			<field name="model">magerp.product_attribute_groups</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Magento Product Attribute groups">
+					<field name="attribute_group_id" select="1" />
+					<field name="attribute_group_name" select="1" />
+					<field name="attribute_set" select="2" />
+					<field name="default_id" select="2" />
+					<field name="sort_order" select="2" />
+					<field name="instance" select="2" />
+				</tree>
+			</field>
+		</record>
+		<record id="act_magerp_product_attribute_groups_form" model="ir.actions.act_window">
+			<field name="name">Magento Product Attribute Groups</field>
+			<field name="res_model">magerp.product_attribute_groups</field>
+			<field name="src_model">magerp.product_attribute_groups</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="magerp_product_attribute_groups_tree" />
+		</record>
+	</data>
+</openerp>

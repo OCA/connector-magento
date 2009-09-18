@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<!--Magento Instances Tree/Form view  -->
+		<record model="ir.ui.view" id="magerp_instances_form">
+			<field name="name">magerp.instances.form</field>
+			<field name="model">magerp.instances</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Magento Instances">
+					<group col="4" colspan="4">
+						<separator string="Describe your instance" colspan="4" />
+						<field name="name" colspan="3" />
+						<label string="Example:My Magento Store" colspan="1" />
+						<field name="location" colspan="3" />
+						<label string="Example:http://mymagentostore.com" colspan="1" />
+						<separator string="Security" colspan="4" />
+						<field name="apiusername" colspan="2" />
+						<field name="apipass" password="True" colspan="2" />
+						<separator string="Core Components" colspan="4" />
+						<notebook colspan="4">
+							<page string="Websites">
+								<field name="websites" nolabel="1" />
+							</page>
+							<page string="Store Views">
+								<field name="storeviews" nolabel="1" />
+							</page>
+							<page string="Groups (Stores)">
+								<field name="groups" nolabel="1" />
+							</page>
+							<page string="Product Attributes / Sets">
+								<field name="attribute_sets" nolabel="1" />
+							</page>
+							<page string="Actions">
+								<button name="core_sync" string="Synchronize Core settings" colspan="2" type="object" />
+								<button name="sync_categs" string="Synchronise Product Categories" colspan="2" type="object" />
+								<button name="sync_attribs" string="Synchronise Product Attributes" colspan="2" type="object" />
+								<button name="sync_attrib_sets" string="Synchronise Product Attribute Sets" colspan="2" type="object" />
+								<button name="sync_attrib_groups" string="Synchronise Attribute Groups" colspan="2" type="object" />
+								<button name="sync_customer_groups" string="Sync Customer Groups (Partner Categories)" colspan="2" type="object" />
+								<button name="sync_customer_addresses" string="Sync Customer Addresses" colspan="2" type="object" />
+								<button name="sync_products" string="Sync Products" colspan="2" type="object" />
+							</page>
+						</notebook>
+					</group>
+				</form>
+			</field>
+		</record>
+		<record model="ir.ui.view" id="magerp_instances_tree">
+			<field name="name">magerp.instances.tree</field>
+			<field name="model">magerp.instances</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Magento Instances">
+					<field name="name" select="1" />
+					<field name="location" select="1" />
+				</tree>
+			</field>
+		</record>
+		<record id="act_magerp_instances_form" model="ir.actions.act_window">
+			<field name="name">Magento Instances</field>
+			<field name="res_model">magerp.instances</field>
+			<field name="src_model">magerp.instances</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="magerp_instances_tree" />
+		</record>
+
+		<!--Magento Websites Tree/Form view  -->
+		<record model="ir.ui.view" id="magerp_websites_form">
+			<field name="name">magerp.websites.form</field>
+			<field name="model">magerp.websites</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Magento websites">
+					<group col="4" colspan="4">
+						<field name="name" readonly="1" />
+						<field name="code" readonly="1" />
+						<field name="website_id" readonly="1" />
+						<field name="is_default" readonly="1" />
+						<field name="sort_order" readonly="1" />
+						<field name="default_group" readonly="1" />
+						<field name="default_group_id" readonly="1" />
+						<field name="instance" readonly="1" />
+					</group>
+				</form>
+			</field>
+		</record>
+		<record model="ir.ui.view" id="magerp_websites_tree">
+			<field name="name">magerp.websites.tree</field>
+			<field name="model">magerp.websites</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Magento websites">
+					<field name="website_id" readonly="1" select="1" />
+					<field name="name" readonly="1" select="1" />
+					<field name="code" readonly="1" select="1" />
+					<field name="is_default" readonly="1" select="2" />
+					<field name="sort_order" readonly="1" select="2" />
+					<field name="default_group" readonly="1" select="2" />
+					<field name="instance" readonly="1" select="2" />
+				</tree>
+			</field>
+		</record>
+		<record id="act_magerp_websites_form" model="ir.actions.act_window">
+			<field name="name">Magento websites</field>
+			<field name="res_model">magerp.websites</field>
+			<field name="src_model">magerp.websites</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="magerp_websites_tree" />
+		</record>
+
+		<!--Magento storeviews Tree/Form view  -->
+		<record model="ir.ui.view" id="magerp_storeviews_form">
+			<field name="name">magerp.storeviews.form</field>
+			<field name="model">magerp.storeviews</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Magento storeviews">
+					<group col="4" colspan="4">
+						<field name="store_id" readonly="1" />
+						<field name="name" readonly="1" />
+						<field name="code" readonly="1" />
+						<field name="website" readonly="1" />
+						<field name="is_active" readonly="1" />
+						<field name="sort_order" readonly="1" />
+						<field name="default_group" readonly="1" />
+						<field name="instance" readonly="1" />
+					</group>
+				</form>
+			</field>
+		</record>
+		<record model="ir.ui.view" id="magerp_storeviews_tree">
+			<field name="name">magerp.storeviews.tree</field>
+			<field name="model">magerp.storeviews</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Magento storeviews">
+					<field name="store_id" readonly="1" select="1" />
+					<field name="name" readonly="1" select="1" />
+					<field name="code" readonly="1" select="1" />
+					<field name="website" readonly="1" select="1" />
+					<field name="is_active" readonly="1" select="2" />
+					<field name="sort_order" readonly="1" select="2" />
+					<field name="default_group" readonly="1" select="2" />
+					<field name="instance" readonly="1" select="2" />
+				</tree>
+			</field>
+		</record>
+		<record id="act_magerp_storeviews_form" model="ir.actions.act_window">
+			<field name="name">Magento storeviews</field>
+			<field name="res_model">magerp.storeviews</field>
+			<field name="src_model">magerp.storeviews</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="magerp_storeviews_tree" />
+		</record>
+
+		<!--Magento groups Tree/Form view  -->
+		<record model="ir.ui.view" id="magerp_groups_form">
+			<field name="name">magerp.groups.form</field>
+			<field name="model">magerp.groups</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Magento groups">
+					<group col="4" colspan="4">
+						<field name="group_id" readonly="1" />
+						<field name="name" />
+						<field name="default_store" readonly="1" />
+						<field name="website" readonly="1" />
+						<field name="root_category" readonly="1" />
+						<field name="instance" readonly="1" />
+					</group>
+				</form>
+			</field>
+		</record>
+		<record model="ir.ui.view" id="magerp_groups_tree">
+			<field name="name">magerp.groups.tree</field>
+			<field name="model">magerp.groups</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Magento groups (Stores)">
+					<field name="group_id" readonly="1" select="1" />
+					<field name="name" select="1" />
+					<field name="default_store" readonly="1" select="1" />
+					<field name="website" readonly="1" select="1" />
+					<field name="root_category" readonly="1" select="2" />
+					<field name="instance" readonly="1" select="2" />
+				</tree>
+			</field>
+		</record>
+		<record id="act_magerp_groups_form" model="ir.actions.act_window">
+			<field name="name">Magento groups</field>
+			<field name="res_model">magerp.groups</field>
+			<field name="src_model">magerp.groups</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="magerp_groups_tree" />
+		</record>
+	</data>
+</openerp>
