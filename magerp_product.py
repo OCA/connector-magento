@@ -357,46 +357,78 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
     _known_attributes = {
         'product_id':('product_id'),
         'name':('name','str',False),
-        'cost':('standard_price',float),
         'description':('description',str),
         'short_description':('description_sale',str),
-        'price':('list_price',float),
         'sku':('code',str),
         'weight':('weight_net',float),
-        'category_ids':(False,'False',"""if category_ids:\n\tresult=self.pool.get('product.category').mage_to_oe(cr,uid,category_ids[0],instance)\n\tif result:\n\t\tresult=[('categ_id',result[0])]\nelse:\n\tresult=self.pool.get('product.category').search(cr,uid,[('instance','=',instance)])\n\tif result:\n\t\tresult=[('categ_id',result[0])]""")
+        #Categ id is many2one, but do it for m2m
+        'category_ids':(False,'False',"""if category_ids:\n\tresult=self.pool.get('product.category').mage_to_oe(cr,uid,category_ids[0],instance)\n\tif result:\n\t\tresult=[('categ_id',result[0])]\nelse:\n\tresult=self.pool.get('product.category').search(cr,uid,[('instance','=',instance)])\n\tif result:\n\t\tresult=[('categ_id',result[0])]"""),
+        'created_at':('created_at',str),
+        'updated_at':('updated_at',str),
+        'price':('list_price',float),
+        'cost':('standard_price',float),
                          }
     _ignored_attributes = {
                            
                            }
     def create(self,cr,uid,vals,context={}):
-        if vals['attribute_code']:
-            if vals['attribute_code'] in self._known_attributes.keys():
-                vals['map_in_openerp'] = True
-                vals['mapping_field_name'] = self._known_attributes[vals['attribute_code']][0]
-                vals['mapping_type_cast'] = self._known_attributes[vals['attribute_code']][1]
+        if vals['attribute_code'] in self._known_attributes.keys():
+            vals['map_in_openerp'] = True
+            vals['mapping_field_name'] = self._known_attributes[vals['attribute_code']][0]
+            vals['mapping_type_cast'] = self._known_attributes[vals['attribute_code']][1]
+            try:
                 vals['mapping_script'] = self._known_attributes[vals['attribute_code']][2]
-            elif vals['attribute_code'] in self._ignored_attributes.keys():
-                vals['map_in_openerp'] = False
-            else:
-                #Code for dynamically generating field name and attaching to this
-                type_conversion = {
-                    'text':'char',
-                    'textarea':'text',
-                    'select':'many2one',
-                    'date':'date',
-                    'price':'float',
-                    'media_image':'binary',
-                    'gallery':'binary'
-                }
-                field_name = "magerp_" + vals['attribute_code']
-                #Check if field already exists
-                
-                
+            except:
+                vals['mapping_script'] = False
+        elif vals['attribute_code'] in self._ignored_attributes.keys():
+            vals['map_in_openerp'] = False
+        else:
+            vals['map_in_openerp'] = True
+            
         crid = super(magerp_product_attributes,self).create(cr,uid,vals,context)
+        
         if crid:
+            #Fetch Options
             if vals['frontend_input'] in ['select']:
                 core_conn = self.pool.get('magerp.instances').connect(cr,uid,[vals['instance']])
                 self.pool.get('magerp.product_attribute_options').mage_import(cr, uid, [vals['attribute_id']], core_conn, vals['instance'], debug=False,defaults={'attribute_id':crid})
+            #Manage fields
+            if vals['attribute_code'] and vals['map_in_openerp']:
+                #Code for dynamically generating field name and attaching to this
+                model_id = self.pool.get('ir.model').search(cr,uid,[('model','=','magerp.product_product')])
+                if model_id and len(model_id)==1:
+                    model_id = model_id[0]
+                    type_conversion = {
+                        '':'char',
+                        'text':'char',
+                        'textarea':'text',
+                        'select':'many2one',
+                        'date':'date',
+                        'price':'float',
+                        'media_image':'binary',
+                        'gallery':'binary',
+                        False:'char'
+                    }
+                    field_name = "magerp_" + vals['attribute_code']
+                    #Check if field already exists
+                    field_ids = self.pool.get('ir.model.fields').search(cr,uid,[('name','=',field_name),('model_id','=',model_id)])
+                    if not field_ids:
+                        #The field is not there create it
+                        field_vals = {
+                            'name':field_name,
+                            'model_id':model_id,
+                            'model':'magerp.product_product',
+                            'field_description':vals['frontend_label'] or vals['attribute_code'],
+                            'ttype':type_conversion[vals['frontend_input']],
+                                      }
+                        #IF char add size
+                        if field_vals['ttype']=='char':
+                            field_vals['size']=100
+                        if field_vals['ttype']=='many2one':
+                            field_vals['relation']='magerp.product_attribute_options'
+                            field_vals['domain']="[('attribute_id','=',"+str(crid)+")]"
+                        #All field values are computed, now save
+                        field_id = self.pool.get('ir.model.fields').create(cr,uid,field_vals)
         return crid
     
 
@@ -561,6 +593,8 @@ class product_product(magerp_osv.magerp_osv):
     _columns = {
         'product_id':fields.integer('Magento ID',readonly=True,store=True),
         'instance':fields.many2one('magerp.instances', 'Magento Instance', readonly=True, store=True),
+        'created_at':fields.date('Created'),
+        'updated_at':fields.date('Created'),
 #        'set':fields.many2one('magerp.product_attribute_set','Attribute Set'),
 #        'websites':fields.many2many('magerp.websites','magerp_product_website_rel','website_id','product_id','Websites'),
 #        'type_id':fields.char('Type',size=100),
