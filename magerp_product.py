@@ -599,16 +599,18 @@ class magerp_product_product(magerp_osv.magerp_osv):
                 'product_product_id':fields.many2one('product.product','Product')
                 }
     def mage_import(self, cr, uid, ids_or_filter, conn, instance, debug=False,defaults={}, *attrs):
+        #Build the mapping dictionary dynamically from attributes
         inst_attrs = self.pool.get('magerp.product_attributes').search(cr,uid,[('instance','=',instance),('map_in_openerp','=','1')])
         inst_attrs_reads = self.pool.get('magerp.product_attributes').read(cr,uid,inst_attrs,['attribute_code','mapping_field_name','mapping_type_cast','mapping_script'])
         for each in inst_attrs_reads:
             self._mapping[each['attribute_code']] = (each['mapping_field_name'],eval(each['mapping_type_cast']),each['mapping_script'])
+        #If mapping dictionary exists then synchronise
         if self._mapping:
             if attrs:
                 super(magerp_product_product,self).mage_import(cr, uid, ids_or_filter, conn, instance, debug, defaults, attrs[0])
             else:
                 super(magerp_product_product,self).mage_import(cr, uid, ids_or_filter, conn, instance, debug,defaults)
         else:
-            raise osv.except_osv(_('Undefined Mapping !'),_("Mapping dictionary is not present in the object!"))
+            raise osv.except_osv(_('Undefined Mapping !'),_("Mapping dictionary is not present in the object!\nMake sure attributes are synchronised first"))
 
 magerp_product_product()
