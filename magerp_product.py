@@ -357,16 +357,17 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
     _known_attributes = {
         'product_id':('product_id'),
         'name':('name','str',False),
-        'description':('description',str),
-        'short_description':('description_sale',str),
-        'sku':('code',str),
-        'weight':('weight_net',float),
+        'description':('description','str'),
+        'short_description':('description_sale','str'),
+        'sku':('code','str'),
+        'weight':('weight_net','float'),
         #Categ id is many2one, but do it for m2m
         'category_ids':(False,'False',"""if category_ids:\n\tresult=self.pool.get('product.category').mage_to_oe(cr,uid,category_ids[0],instance)\n\tif result:\n\t\tresult=[('categ_id',result[0])]\nelse:\n\tresult=self.pool.get('product.category').search(cr,uid,[('instance','=',instance)])\n\tif result:\n\t\tresult=[('categ_id',result[0])]"""),
-        'created_at':('created_at',str),
-        'updated_at':('updated_at',str),
-        'price':('list_price',float),
-        'cost':('standard_price',float),
+        'created_at':('created_at','str'),
+        'updated_at':('updated_at','str'),
+        'price':('list_price','float'),
+        'cost':('standard_price','float'),
+        'set':(False,'int',"""if set:\n\tresult=self.pool.get('magerp.product_attribute_set').mage_to_oe(cr,uid,set,instance)\n\tif result:\n\t\tresult=[('set',result[0])]\n\telse:\n\t\tresult=[('set',False)]\nelse:\n\tresult=[('set',False)]""")
                          }
     _ignored_attributes = {
                            
@@ -595,7 +596,7 @@ class product_product(magerp_osv.magerp_osv):
         'instance':fields.many2one('magerp.instances', 'Magento Instance', readonly=True, store=True),
         'created_at':fields.date('Created'),
         'updated_at':fields.date('Created'),
-#        'set':fields.many2one('magerp.product_attribute_set','Attribute Set'),
+        'set':fields.many2one('magerp.product_attribute_set','Attribute Set'),
 #        'websites':fields.many2many('magerp.websites','magerp_product_website_rel','website_id','product_id','Websites'),
 #        'type_id':fields.char('Type',size=100),
 #        'color':fields.char('Color',size=100),
@@ -632,12 +633,16 @@ class magerp_product_product(magerp_osv.magerp_osv):
     _columns = {
                 'product_product_id':fields.many2one('product.product','Product')
                 }
+    
     def mage_import(self, cr, uid, ids_or_filter, conn, instance, debug=False,defaults={}, *attrs):
         #Build the mapping dictionary dynamically from attributes
         inst_attrs = self.pool.get('magerp.product_attributes').search(cr,uid,[('instance','=',instance),('map_in_openerp','=','1')])
         inst_attrs_reads = self.pool.get('magerp.product_attributes').read(cr,uid,inst_attrs,['attribute_code','mapping_field_name','mapping_type_cast','mapping_script'])
         for each in inst_attrs_reads:
-            self._mapping[each['attribute_code']] = (each['mapping_field_name'],eval(each['mapping_type_cast']),each['mapping_script'])
+            if type(each['mapping_type_cast'])==unicode:
+                self._mapping[each['attribute_code']] = (each['mapping_field_name'],eval(each['mapping_type_cast']),each['mapping_script'])
+            else:
+                self._mapping[each['attribute_code']] = (each['mapping_field_name'],each['mapping_type_cast'],each['mapping_script'])
         #If mapping dictionary exists then synchronise
         if self._mapping:
             if attrs:
