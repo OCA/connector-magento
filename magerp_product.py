@@ -20,7 +20,7 @@
 #########################################################################
 
 from osv import osv, fields
-from logilab.astng.nodes import try_except_block_range
+#from logilab.astng.nodes import try_except_block_range
 from compiler.ast import TryFinally
 import datetime
 import base64
@@ -609,7 +609,7 @@ class product_product(magerp_osv.magerp_osv):
     _columns = {
         'product_id':fields.integer('Magento ID',readonly=True,store=True),
         'instance':fields.many2one('magerp.instances', 'Magento Instance', readonly=True, store=True),
-        'created_at':fields.date('Created'),
+        'created_at':fields.date('Created'), #created_at & updated_at in magento side, to allow filtering/search inside OpenERP!
         'updated_at':fields.date('Created'),
         'set':fields.many2one('magerp.product_attribute_set','Attribute Set'),
         'tier_price':fields.one2many('product.tierprice','product','Tier Price'),
