@@ -71,7 +71,7 @@ class magerp_osv(osv.osv):
                 if mage2oe_filters:
                     rec_id = self.mage_to_oe(cr, uid, each_record[self._MAGE_FIELD], instance, mage2oe_filters)
                 else:
-                    if self._MAGE_FIELD and self._MAGE_FIELD in each_record.keys():
+                    if self._MAGE_FIELD:
                         rec_id = self.mage_to_oe(cr, uid, each_record[self._MAGE_FIELD], instance)
                     else:
                         rec_id = False
