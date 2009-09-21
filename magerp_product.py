@@ -367,12 +367,24 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
         'updated_at':('updated_at','str'),
         'price':('list_price','float'),
         'cost':('standard_price','float'),
-        'set':(False,'int',"""if set:\n\tresult=self.pool.get('magerp.product_attribute_set').mage_to_oe(cr,uid,set,instance)\n\tif result:\n\t\tresult=[('set',result[0])]\n\telse:\n\t\tresult=[('set',False)]\nelse:\n\tresult=[('set',False)]""")
+        'set':(False,'int',"""if set:\n\tresult=self.pool.get('magerp.product_attribute_set').mage_to_oe(cr,uid,set,instance)\n\tif result:\n\t\tresult=[('set',result[0])]\n\telse:\n\t\tresult=[('set',False)]\nelse:\n\tresult=[('set',False)]"""),
                          }
-    _ignored_attributes = {
-                           
-                           }
+    _ignored_attributes = [
+
+                           ]
     def create(self,cr,uid,vals,context={}):
+        field_name = "magerp_" + vals['attribute_code']
+        type_casts = {
+                        '':'str',
+                        'text':'str',
+                        'textarea':'str',
+                        'select':'int',
+                        'date':'str',
+                        'price':'float',
+                        'media_image':'False',
+                        'gallery':'False',
+                        False:'str'
+                    }
         if vals['attribute_code'] in self._known_attributes.keys():
             vals['map_in_openerp'] = True
             vals['mapping_field_name'] = self._known_attributes[vals['attribute_code']][0]
@@ -381,10 +393,12 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
                 vals['mapping_script'] = self._known_attributes[vals['attribute_code']][2]
             except:
                 vals['mapping_script'] = False
-        elif vals['attribute_code'] in self._ignored_attributes.keys():
+        elif vals['attribute_code'] in self._ignored_attributes:
             vals['map_in_openerp'] = False
         else:
             vals['map_in_openerp'] = True
+            vals['mapping_field_name'] = field_name
+            vals['mapping_type_cast'] = type_casts[vals['frontend_input']]
             
         crid = super(magerp_product_attributes,self).create(cr,uid,vals,context)
         
@@ -410,7 +424,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
                         'gallery':'binary',
                         False:'char'
                     }
-                    field_name = "magerp_" + vals['attribute_code']
+                    
                     #Check if field already exists
                     field_ids = self.pool.get('ir.model.fields').search(cr,uid,[('name','=',field_name),('model_id','=',model_id)])
                     if not field_ids:
@@ -597,6 +611,7 @@ class product_product(magerp_osv.magerp_osv):
         'created_at':fields.date('Created'),
         'updated_at':fields.date('Created'),
         'set':fields.many2one('magerp.product_attribute_set','Attribute Set'),
+        'tier_price':fields.one2many('product.tierprice','product','Tier Price'),
 #        'websites':fields.many2many('magerp.websites','magerp_product_website_rel','website_id','product_id','Websites'),
 #        'type_id':fields.char('Type',size=100),
 #        'color':fields.char('Color',size=100),
@@ -626,6 +641,7 @@ class magerp_product_product(magerp_osv.magerp_osv):
     _name = "magerp.product_product"
     _inherits = {'product.product':'product_product_id'}
     _LIST_METHOD = "catalog_product.list"
+    _INFO_METHOD = "catalog_product.info"
     _MAGE_FIELD = 'product_id'
     _mapping = {
         'product_id':('product_id',int)
@@ -645,11 +661,77 @@ class magerp_product_product(magerp_osv.magerp_osv):
                 self._mapping[each['attribute_code']] = (each['mapping_field_name'],each['mapping_type_cast'],each['mapping_script'])
         #If mapping dictionary exists then synchronise
         if self._mapping:
+            list_prods = conn.call(self._LIST_METHOD, ids_or_filter)
+            result = []
+            for each in list_prods:
+                each_product_info = conn.call(self._INFO_METHOD, [each['product_id']])
+                result.append(each_product_info)
+            #result contains detailed info of all products
             if attrs:
-                super(magerp_product_product,self).mage_import(cr, uid, ids_or_filter, conn, instance, debug, defaults, attrs[0])
+                self.sync_import(cr, uid, result, instance, debug,defaults, attrs)
             else:
-                super(magerp_product_product,self).mage_import(cr, uid, ids_or_filter, conn, instance, debug,defaults)
+                self.sync_import(cr, uid, result, instance, debug,defaults)
         else:
             raise osv.except_osv(_('Undefined Mapping !'),_("Mapping dictionary is not present in the object!\nMake sure attributes are synchronised first"))
 
+    def write(self,cr,uid,ids,vals,context={}):
+        instance = vals['instance']
+        #Filter the keys to be changes
+        if ids:
+            if type(ids)==list and len(ids)==1:
+                ids = ids[0]
+            elif type(ids)==int or type(ids)==long:
+                ids =ids
+            else:
+                return False
+        tier_price= False
+        if 'magerp_tier_price' in vals.keys(): 
+            tier_price = vals.pop('magerp_tier_price')
+        tp_obj = self.pool.get('product.tierprice')
+        #Delete existing tier prices
+        tier_price_ids = tp_obj.search(cr,uid,[('product','=',ids)])
+        if tier_price_ids:
+            tp_obj.unlink(cr,uid,tier_price_ids)
+        #Save the tier price
+        if tier_price:
+            self.create_tier_price(cr, uid, tier_price, instance, ids)
+        stat = super(magerp_product_product,self).write(cr,uid,ids,vals,context)
+        #Perform other operation
+        return stat
+    
+    def create_tier_price(self,cr,uid,tier_price,instance, product_id):
+        tp_obj = self.pool.get('product.tierprice')
+        for each in eval(tier_price):
+            tier_vals = {}
+            cust_group = self.pool.get('res.partner.category').mage_to_oe(cr,uid,int(each['cust_group']),instance)
+            if cust_group:
+                tier_vals['cust_group'] = cust_group[0]
+            else:
+                tier_vals['cust_group'] = False
+            tier_vals['website_price'] = float(each['website_price'])
+            tier_vals['price'] = float(each['price'])
+            tier_vals['price_qty'] = float(each['price_qty'])
+            tier_vals['product'] = product_id
+            tier_vals['instance'] = instance
+            tier_vals['group_scope'] = each['all_groups']
+            if each['website_id'] == '0':
+                tier_vals['web_scope'] = 'all'
+            else:
+                tier_vals['web_scope'] = 'specific'
+                tier_vals['website_id'] = self.pool.get('magerp.websites').mage_to_oe(cr,uid,int(each['website_id']),instance)
+            tp_obj.create(cr,uid,tier_vals)
+    
+    def create(self,cr,uid,vals,context={}):
+        instance = vals['instance']
+        #Filter keys to be changed
+        tier_price= False
+        if 'magerp_tier_price' in vals.keys(): 
+            tier_price = vals.pop('magerp_tier_price')
+        crid = super(magerp_product_product,self).create(cr,uid,vals,context)
+        #Save the tier price
+        if tier_price:
+            self.create_tier_price(cr, uid, tier_price, instance, crid)
+        #Perform other operations
+        return crid
+    
 magerp_product_product()
