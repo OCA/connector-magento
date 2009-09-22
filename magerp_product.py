@@ -682,7 +682,7 @@ class product_product(magerp_osv.magerp_osv):
                         if each_attr['mapping_field_name'] and not each_attr['mapping_field_name'] in attr_obj._known_attributes.keys():
                             attrib_field = etree.SubElement(group_page,"field",name=each_attr['mapping_field_name'])
             nb_tree.insert(2,mage_xml)
-            res['arch'] = etree.tostring(eres)
+            #res['arch'] = etree.tostring(eres)
             print res['arch']
         return res
     
@@ -700,24 +700,54 @@ class magerp_product_product(magerp_osv.magerp_osv):
     _columns = {
                 'product_product_id':fields.many2one('product.product','Product')
                 }
-    def fields_get_keys(self, cr, user, context=None, read_access=True):
-        #First get the keys
-        result = super(magerp_product_product,self).fields_get_keys(cr,user,context,read_access)
-        #Now extend the keys
-        model_fields_obj = self.pool.get('ir.model.fields')
-        model_fields_ids = model_fields_obj.search(cr,uid,[('model','=','magerp.product_product')])
-        model_fields = model_fields_obj.read(cr,uid,['name'])
-        for each_field in model_fields:
-            result.append(each_field['name'])
-        return result
+#    def fields_get_keys(self, cr, user, context=None, read_access=True):
+#        #First get the keys
+#        result = super(magerp_product_product,self).fields_get_keys(cr,user,context,read_access)
+#        #Now extend the keys
+#        model_fields_obj = self.pool.get('ir.model.fields')
+#        model_fields_ids = model_fields_obj.search(cr,uid,[('model','=','magerp.product_product')])
+#        model_fields = model_fields_obj.read(cr,uid,['name'])
+#        for each_field in model_fields:
+#            result.append(each_field['name'])
+#        return result
+#    
+#    def fields_get(self, cr, user, fields=None, context=None, read_access=True):
+#        #FIrst get fields
+#        result = super(magerp_product_product,self).fields_get(cr,user)
+#        #Now extend fields
+#        model_fields_obj = self.pool.get('ir.model.fields')
+#        model_fields_ids = model_fields_obj.search(cr,user,[('model','=','magerp.product_product')])
+#        model_fields = model_fields_obj.read(cr,user,[])
+#        for each_field in model_fields:
+#            fn = each_field['name'] #Stands for field anme
+#            result[fn] = {
+#                          'type':each_field['ttype'],
+#                          'string':each_field['field_description'],
+#                          'readonly':each_field['readonly'],
+#                          'size':each_field['size'],
+#                          'required':each_field['required'],
+#                          'translate':each_field['translate'],
+#                          'select':each_field['select']
+#                          }
+#            if not read_access:
+#                    result[fn]['readonly'] = True
+#                    result[fn]['states'] = {}
+#            if result[fn]['type'] in ('one2many', 'many2many', 'many2one', 'one2one'):
+#                    result[fn]['relation'] = each_field['relation']
+#                    result[fn]['domain'] = each_field['domain']
+#                    #result[fn]['context'] = each_field['']    #Context is not available
+#        if fields:
+#            # filter out fields which aren't in the fields list
+#            for r in result.keys():
+#                if r not in fields:
+#                    del result[r]
+#        return result
     
-    def fields_get(self, cr, user, fields=None, context=None, read_access=True):
-        #FIrst get fields
-        result = super(magerp_product_product,self).fields_get(cr,user)
-        #Now extend fields
+    def column_generator(self,cr,uid):
         model_fields_obj = self.pool.get('ir.model.fields')
         model_fields_ids = model_fields_obj.search(cr,user,[('model','=','magerp.product_product')])
         model_fields = model_fields_obj.read(cr,user,[])
+        result = {}
         for each_field in model_fields:
             fn = each_field['name'] #Stands for field anme
             result[fn] = {
@@ -736,13 +766,7 @@ class magerp_product_product(magerp_osv.magerp_osv):
                     result[fn]['relation'] = each_field['relation']
                     result[fn]['domain'] = each_field['domain']
                     #result[fn]['context'] = each_field['']    #Context is not available
-        if fields:
-            # filter out fields which aren't in the fields list
-            for r in result.keys():
-                if r not in fields:
-                    del result[r]
-        return result
-                    
+
     def mage_import(self, cr, uid, ids_or_filter, conn, instance, debug=False,defaults={}, *attrs):
         #Build the mapping dictionary dynamically from attributes
         inst_attrs = self.pool.get('magerp.product_attributes').search(cr,uid,[('instance','=',instance),('map_in_openerp','=','1')])
