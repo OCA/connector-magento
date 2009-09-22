@@ -479,7 +479,7 @@ class magerp_product_attribute_set(magerp_osv.magerp_osv):
     _description = "Attribute sets in products"
     _rec_name = 'attribute_set_name'
     _MAGE_FIELD = 'attribute_set_id'
-    _LIST_METHOD = 'catalog_product_attribute_set.list'
+    _LIST_METHOD = 'ol_catalog_product_attributeset.list'
     _columns = {
         'attribute_set_id':fields.integer('ID'),
         'sort_order':fields.integer('Sort Order'),
@@ -679,7 +679,8 @@ class product_product(magerp_osv.magerp_osv):
                     attr_ids = attr_obj.search(cr,uid,[('instance','=',each['id']),('group','=',each_group['attribute_group_id']),('map_in_openerp','=','1')])
                     attributes = attr_obj.read(cr,uid,attr_ids,[])
                     for each_attr in attributes:
-                        attrib_field = etree.SubElement(group_page,"field",name= "magerp_" + each_attr['attribute_code'])
+                        if each_attr['mapping_field_name'] and not each_attr['mapping_field_name'] in attr_obj._known_attributes.keys():
+                            attrib_field = etree.SubElement(group_page,"field",name=each_attr['mapping_field_name'])
             nb_tree.insert(2,mage_xml)
             res['arch'] = etree.tostring(eres)
             print res['arch']
