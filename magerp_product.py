@@ -164,18 +164,18 @@ class product_category(magerp_osv.magerp_osv):
             else:
                 vals[eachkey[1]] = imp_val       
         
-        if vals['image']:
-            #IMage exists
-            #vals['image'] = conn.fetch_image("media/catalog/category/" + vals['image_name'])
-            try:
-                vals['image'] = conn.call('ol_catalog_category_media.info', [int(imp_vals['category_id'])])
-            except Exception, e:
-                pass
-            if vals['image']:
-                vals['image'] = base64.encodestring(base64.urlsafe_b64decode(vals['image'][0]['image_data']))
-                flob = open('/home/sharoon/Desktop/' + vals['image_name'], 'wb')
-                flob.write(base64.decodestring(vals['image']))
-                flob.close()
+#        if vals['image'] and vals['image'] != None:
+#            #IMage exists
+#            #vals['image'] = conn.fetch_image("media/catalog/category/" + vals['image_name'])
+#            try:
+#                vals['image'] = conn.call('ol_catalog_category_media.info', [int(imp_vals['category_id'])])
+#            except Exception, e:
+#                pass
+#            if vals['image']:
+#                vals['image'] = base64.encodestring(base64.urlsafe_b64decode(vals['image'][0]['image_data']))
+#                flob = open('/home/sharoon/Desktop/' + vals['image_name'], 'wb')
+#                flob.write(base64.decodestring(vals['image']))
+#                flob.close()
         if vals['available_sort_by'] == '':
             vals['available_sort_by'] = 'None'
         vals['parent_id'] = self.mage_to_oe(cr, uid, imp_vals['parent_id'], id)
