@@ -216,7 +216,7 @@ class magerp_instances(osv.osv):
             attr_conn = Connection(inst.location, inst.apiusername, inst.apipass, DEBUG)
             filter = []
             if attr_conn.connect():
-                self.pool.get('magerp.product_product').mage_import(cr,uid,filter,attr_conn,inst.id,DEBUG)
+                self.pool.get('product.product').mage_import(cr,uid,filter,attr_conn,inst.id,DEBUG)
             else:
                 osv.except_osv(_("Connection Error"), _("Could not connect to server\nCheck location, username & password."))                        
                                 

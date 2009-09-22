@@ -374,7 +374,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
 
                            ]
     def create(self,cr,uid,vals,context={}):
-        field_name = "magerp_" + vals['attribute_code']
+        field_name = "x_magerp_" + vals['attribute_code']
         type_casts = {
                         '':'str',
                         'text':'str',
@@ -398,8 +398,17 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
             vals['map_in_openerp'] = False
         else:
             vals['map_in_openerp'] = True
-            vals['mapping_field_name'] = field_name
-            vals['mapping_type_cast'] = type_casts[vals['frontend_input']]
+            if vals['frontend_input']=='date':
+                vals['mapping_field_name'] = False
+                vals['mapping_type_cast'] = 'str'
+                vals['mapping_script'] = "if " + vals['attribute_code'] + "=='None':\n\tresult=[(" + field_name + ",False)]\nelse:\n\tresult=[(" + field_name + "," + vals['attribute_code'] + ")]"
+            elif vals['frontend_input']=='select':
+                vals['mapping_field_name'] = False
+                vals['mapping_type_cast'] = 'str'
+                vals['mapping_script'] = "if " + vals['attribute_code'] + ":\n\t\result=self.pool.get('magerp.product_attribute_options').get_option_id(cr,uid,'" + vals['attribute_code'] + "'," + vals['attribute_code'] +",instance)\n\tif result:\n\t\tresult=[('" + vals['attribute_code'] + "',result)]"
+            else:
+                vals['mapping_field_name'] = field_name
+                vals['mapping_type_cast'] = type_casts[vals['frontend_input']]
             
         crid = super(magerp_product_attributes,self).create(cr,uid,vals,context)
         
@@ -411,7 +420,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
             #Manage fields
             if vals['attribute_code'] and vals['map_in_openerp']:
                 #Code for dynamically generating field name and attaching to this
-                model_id = self.pool.get('ir.model').search(cr,uid,[('model','=','magerp.product_product')])
+                model_id = self.pool.get('ir.model').search(cr,uid,[('model','=','product.product')])
                 if model_id and len(model_id)==1:
                     model_id = model_id[0]
                     type_conversion = {
@@ -433,7 +442,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
                         field_vals = {
                             'name':field_name,
                             'model_id':model_id,
-                            'model':'magerp.product_product',
+                            'model':'product.product',
                             'field_description':vals['frontend_label'] or vals['attribute_code'],
                             'ttype':type_conversion[vals['frontend_input']],
                                       }
@@ -443,6 +452,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
                         if field_vals['ttype']=='many2one':
                             field_vals['relation']='magerp.product_attribute_options'
                             field_vals['domain']="[('attribute_id','=',"+str(crid)+")]"
+                        field_vals['state'] = 'manual'
                         #All field values are computed, now save
                         field_id = self.pool.get('ir.model.fields').create(cr,uid,field_vals)
         return crid
@@ -459,6 +469,7 @@ class magerp_product_attribute_options(magerp_osv.magerp_osv):
     
     _columns = {
         'attribute_id':fields.many2one('magerp.product_attributes','Attribute'),
+        'attribute_name':fields.related('attribute_id','attribute_code',type='char',string='Attribute Code',),
         'value':fields.char('Value',size=200),
         'ipcast':fields.char('Type cast',size=50),
         'label':fields.char('Label',size=100),
@@ -468,6 +479,8 @@ class magerp_product_attribute_options(magerp_osv.magerp_osv):
         'value':('value',str,),
         'label':('label',str)
                 }
+    def get_option_id(self,cr,uid,attr_name,value,instance):
+        attr_id = self.search(cr,uid,[('attribute_name','=',attr_name),('value','=',value),('instance','=',instance)])
 magerp_product_attribute_options()
 
 class magerp_product_attribute_set(magerp_osv.magerp_osv):
@@ -600,7 +613,8 @@ product_tierprice()
 class product_product(magerp_osv.magerp_osv):
     _inherit = "product.product"
     _MAGE_FIELD = 'product_id'
-    _LIST_METHOD = 'catalog_product.list'
+    _LIST_METHOD = "catalog_product.list"
+    _INFO_METHOD = "catalog_product.info"
     #Just implement a simple product synch
     _columns = {
         'product_id':fields.integer('Magento ID',readonly=True,store=True),
@@ -609,69 +623,8 @@ class product_product(magerp_osv.magerp_osv):
         'updated_at':fields.date('Created'),
         'set':fields.many2one('magerp.product_attribute_set','Attribute Set'),
         'tier_price':fields.one2many('product.tierprice','product','Tier Price'),
-#        'websites':fields.many2many('magerp.websites','magerp_product_website_rel','website_id','product_id','Websites'),
-#        'type_id':fields.char('Type',size=100),
-#        'color':fields.char('Color',size=100),
-#        'small_image_label':fields.char('small_image_label',size=100),
-#        'thumbnail_label':fields.char('thumbnail_label',size=100),
-#        'custom_design_from':fields.date('custom_design_from'),
-#        'custom_design_to':fields.date('custom_design_to'),
-#        'special_from_date':fields.date('special_from_date'),
-#        'special_to_date':fields.date('special_to_date'),
-#        'url_key':fields.char('url_key',size=200),
-#        'url_path':fields.char('url_path',size=100),
-#        'meta_keyword':fields.text('meta_keyword'),
-#        'meta_description':fields.text('meta_description'),
-#        'meta_title':fields.char('meta_title',size=100),
-#        'news_from_date':fields.date('news_to_date'),
-#        'news_to_date':fields.date('news_to_date'),
-#        'created_at':fields.date('created_at'),
-#        'updated_at':fields.date('updated_at'),
-#        'special_price':fields.float('special price',digits=(10,2)),
-#        'minimal_price':fields.float('special price',digits=(10,2)),
-#        'manufacturer':fields.char('manufacturer',size=100),
         }
     
-product_product()
-
-class magerp_product_product(magerp_osv.magerp_osv):
-    _name = "magerp.product_product"
-    _inherits = {'product.product':'product_product_id'}
-    _LIST_METHOD = "catalog_product.list"
-    _INFO_METHOD = "catalog_product.info"
-    _MAGE_FIELD = 'product_id'
-    _mapping = {
-        'product_id':('product_id',int)
-                }
-    _columns = {
-                'product_product_id':fields.many2one('product.product','Product')
-                }
-
-    
-    def column_generator(self,cr,user):
-        model_fields_obj = self.pool.get('ir.model.fields')
-        model_fields_ids = model_fields_obj.search(cr,user,[('model','=','magerp.product_product')])
-        model_fields = model_fields_obj.read(cr,user,[])
-        result = {}
-        for each_field in model_fields:
-            fn = each_field['name'] #Stands for field anme
-            result[fn] = {
-                          'type':each_field['ttype'],
-                          'string':each_field['field_description'],
-                          'readonly':each_field['readonly'],
-                          'size':each_field['size'],
-                          'required':each_field['required'],
-                          'translate':each_field['translate'],
-                          'select':each_field['select']
-                          }
-            if not read_access:
-                    result[fn]['readonly'] = True
-                    result[fn]['states'] = {}
-            if result[fn]['type'] in ('one2many', 'many2many', 'many2one', 'one2one'):
-                    result[fn]['relation'] = each_field['relation']
-                    result[fn]['domain'] = each_field['domain']
-                    #result[fn]['context'] = each_field['']    #Context is not available
-
     def mage_import(self, cr, uid, ids_or_filter, conn, instance, debug=False,defaults={}, *attrs):
         #Build the mapping dictionary dynamically from attributes
         inst_attrs = self.pool.get('magerp.product_attributes').search(cr,uid,[('instance','=',instance),('map_in_openerp','=','1')])
@@ -707,8 +660,8 @@ class magerp_product_product(magerp_osv.magerp_osv):
             else:
                 return False
         tier_price= False
-        if 'magerp_tier_price' in vals.keys(): 
-            tier_price = vals.pop('magerp_tier_price')
+        if 'x_magerp_tier_price' in vals.keys(): 
+            tier_price = vals.pop('x_magerp_tier_price')
         tp_obj = self.pool.get('product.tierprice')
         #Delete existing tier prices
         tier_price_ids = tp_obj.search(cr,uid,[('product','=',ids)])
@@ -717,7 +670,7 @@ class magerp_product_product(magerp_osv.magerp_osv):
         #Save the tier price
         if tier_price:
             self.create_tier_price(cr, uid, tier_price, instance, ids)
-        stat = super(magerp_product_product,self).write(cr,uid,ids,vals,context)
+        stat = super(product_product,self).write(cr,uid,ids,vals,context)
         #Perform other operation
         return stat
     
@@ -747,14 +700,12 @@ class magerp_product_product(magerp_osv.magerp_osv):
         instance = vals['instance']
         #Filter keys to be changed
         tier_price= False
-        if 'magerp_tier_price' in vals.keys(): 
-            tier_price = vals.pop('magerp_tier_price')
-        crid = super(magerp_product_product,self).create(cr,uid,vals,context)
+        if 'x_magerp_tier_price' in vals.keys(): 
+            tier_price = vals.pop('x_magerp_tier_price')
+        crid = super(product_product,self).create(cr,uid,vals,context)
         #Save the tier price
         if tier_price:
             self.create_tier_price(cr, uid, tier_price, instance, crid)
         #Perform other operations
         return crid
-    
-    
-magerp_product_product()
+product_product()
