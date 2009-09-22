@@ -477,10 +477,10 @@ class magerp_product_attribute_set(magerp_osv.magerp_osv):
     _name = "magerp.product_attribute_set"
     _description = "Attribute sets in products"
     _rec_name = 'attribute_set_name'
-    _MAGE_FIELD = 'attribute_set_id'
+    _MAGE_FIELD = 'set_id'
     _LIST_METHOD = 'catalog_product_attribute_set.list'
     _columns = {
-        'attribute_set_id':fields.integer('ID'),
+        'set_id':fields.integer('ID'),
         'sort_order':fields.integer('Sort Order'),
         'attribute_set_name':fields.char('Set Name',size=100),
         'attributes':fields.many2many('magerp.product_attributes', 'magerp_attrset_attr_rel', 'set_id', 'attr_id', 'Attributes'), 
