@@ -37,6 +37,7 @@ class magerp_osv(osv.osv):
         return res
         
     def mage_to_oe(self, cr, uid, mageid, instance, *args):
+        """given a record id in the Magento referential, returns a tuple (id, name) with the id in the OpenERP referential; Magento instance wise"""
         #Arguments as a list of tuple
         search_params = []
         if mageid:

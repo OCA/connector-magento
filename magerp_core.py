@@ -68,7 +68,7 @@ class Connection():
             return True
         except Exception, e:
             self.logger.notifyChannel(_("Magento Connection"), netsvc.LOG_ERROR, _("Error in connecting") % (e))
-            return False
+            raise
     
     def call(self, method, *args): 
         if args:
@@ -84,7 +84,7 @@ class Connection():
             return res
         except Exception, e:
             self.logger.notifyChannel(_("Magento Call"), netsvc.LOG_ERROR, _("Method: %s\nArguments:%s\nError:%s") % (method, arguments, e))
-            return False
+            raise
     
     def fetch_image(self,imgloc):
         full_loc = self.corelocation + imgloc
