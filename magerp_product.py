@@ -481,6 +481,10 @@ class magerp_product_attribute_options(magerp_osv.magerp_osv):
                 }
     def get_option_id(self,cr,uid,attr_name,value,instance):
         attr_id = self.search(cr,uid,[('attribute_name','=',attr_name),('value','=',value),('instance','=',instance)])
+        if attr_id:
+            return attr_id[0]
+        else:
+            return False
 magerp_product_attribute_options()
 
 class magerp_product_attribute_set(magerp_osv.magerp_osv):
