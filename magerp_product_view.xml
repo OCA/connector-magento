@@ -148,7 +148,7 @@
 						<field name="note" />
 						<field name="entity_type_id" />
 						<field name="instance" />
-						<field name="options" readonly="1"/>
+						<field name="options" readonly="1" />
 					</group>
 				</form>
 			</field>
@@ -216,13 +216,13 @@
 			<field name="view_mode">tree,form</field>
 			<field name="view_id" ref="magerp_product_attribute_groups_tree" />
 		</record>
-<!--Magento product_product Tree/Form view  -->
+		<!--Magento product_product Tree/Form view  -->
 		<record model="ir.ui.view" id="magerp_product_product_form">
 			<field name="name">magerp.product_product.form</field>
 			<field name="model">magerp.product_product</field>
 			<field name="type">form</field>
 			<field name="arch" type="xml">
-<form string="Product">
+				<form string="Product">
 					<group col="6" colspan="4">
 						<group col="2" colspan="4">
 							<separator colspan="4" string="Product Description" />
