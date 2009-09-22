@@ -68,7 +68,7 @@ class Connection():
             return True
         except Exception, e:
             self.logger.notifyChannel(_("Magento Connection"), netsvc.LOG_ERROR, _("Error in connecting") % (e))
-            return False
+            raise
     
     def call(self, method, *args): 
         if args:
