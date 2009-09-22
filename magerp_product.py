@@ -624,7 +624,9 @@ class product_product(magerp_osv.magerp_osv):
         'set':fields.many2one('magerp.product_attribute_set','Attribute Set'),
         'tier_price':fields.one2many('product.tierprice','product','Tier Price'),
         }
-    
+    _mapping = {
+        'product_id':('product_id',int)
+                }
     def mage_import(self, cr, uid, ids_or_filter, conn, instance, debug=False,defaults={}, *attrs):
         #Build the mapping dictionary dynamically from attributes
         inst_attrs = self.pool.get('magerp.product_attributes').search(cr,uid,[('instance','=',instance),('map_in_openerp','=','1')])
