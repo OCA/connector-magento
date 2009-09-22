@@ -216,7 +216,7 @@
 			<field name="view_mode">tree,form</field>
 			<field name="view_id" ref="magerp_product_attribute_groups_tree" />
 		</record>
-		<!--Magento product_product Tree/Form view  -->
+<!--Magento product_product Tree/Form view  -->
 		<record model="ir.ui.view" id="magerp_product_product_form">
 			<field name="name">magerp.product_product.form</field>
 			<field name="model">magerp.product_product</field>
@@ -299,53 +299,6 @@
 								<field groups="base.group_extended" name="company_id" select="2" />
 							</group>
 
-						</page>
-						<page string="Magento Information">
-							<group colspan="4" col="4">
-								<field name="instance" />
-								<field name="set" />
-							</group>
-							<notebook>
-								<page string="General">
-									<field name="manufacturer" />
-									<field name="color" />
-									<field name="news_from_date" />
-									<field name="news_to_date" />
-									<field name="url_key" />
-									<field name="url_path" />
-									<field name="visibility" />
-									<field name="image_label" />
-									<field name="small_image_label" />
-									<field name="thumbnail_label" />
-									<field name="created_at" />
-									<field name="updated_at" />
-									<field name="gift_message_available" />
-								</page>
-								<page string="Prices">
-									<field name="special_price" />
-									<field name="special_from_date" />
-									<field name="special_to_date" />
-									<field name="tax_class_id" />
-									<field name="minimal_price" />
-									<field name="tier_price" />
-									<field name="enable_googlecheckout" />
-									<field name="price_view" />
-								</page>
-								<page string="Prices" />
-								<page string="Meta Information">
-									<field name="meta_title" />
-									<field name="meta_keyword" />
-									<field name="meta_description" />
-								</page>
-								<page string="Images" />
-								<page string="Design">
-									<field name="custom_design" />
-									<field name="custom_design_from" />
-									<field name="custom_design_to" />
-									<field name="page_layout" />
-									<field name="options_container" />
-								</page>
-							</notebook>
 						</page>
 						<page string="Prices &amp; Suppliers">
 							<separator colspan="4" string="Base Prices" />
