@@ -26,6 +26,7 @@ import datetime
 import base64
 import time
 import magerp_osv
+from lxml import etree
 
 class product_category(magerp_osv.magerp_osv):
     
@@ -164,15 +165,15 @@ class product_category(magerp_osv.magerp_osv):
             else:
                 vals[eachkey[1]] = imp_val       
         
-#        if vals['image'] and vals['image'] != None:
-#            #IMage exists
-#            #vals['image'] = conn.fetch_image("media/catalog/category/" + vals['image_name'])
-#            try:
-#                vals['image'] = conn.call('ol_catalog_category_media.info', [int(imp_vals['category_id'])])
-#            except Exception, e:
-#                pass
-#            if vals['image']:
-#                vals['image'] = base64.encodestring(base64.urlsafe_b64decode(vals['image'][0]['image_data']))
+        if vals['image']:
+            #IMage exists
+            #vals['image'] = conn.fetch_image("media/catalog/category/" + vals['image_name'])
+            try:
+                vals['image'] = conn.call('ol_catalog_category_media.info', [int(imp_vals['category_id'])])
+            except Exception, e:
+                pass
+            if vals['image']:
+                vals['image'] = base64.encodestring(base64.urlsafe_b64decode(vals['image'][0]['image_data']))
 #                flob = open('/home/sharoon/Desktop/' + vals['image_name'], 'wb')
 #                flob.write(base64.decodestring(vals['image']))
 #                flob.close()
@@ -534,7 +535,7 @@ class magerp_product_attribute_groups(magerp_osv.magerp_osv):
     _description = "Attribute groups in Magento"
     _rec_name = 'attribute_group_name'
     _MAGE_FIELD = 'attribute_group_id'
-    _order = 'attribute_group_name,sort_order'
+    _order = 'sort_order'
     _LIST_METHOD = 'ol_catalog_product_attribute_group.list'
     def set_get(self, cr, uid, ids, context=None):
         if not len(ids):
@@ -633,8 +634,58 @@ class product_product(magerp_osv.magerp_osv):
 #        'special_price':fields.float('special price',digits=(10,2)),
 #        'minimal_price':fields.float('special price',digits=(10,2)),
 #        'manufacturer':fields.char('manufacturer',size=100),
-        
-                }
+        }
+    
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False):
+        res = super(product_product,self).fields_view_get(cr, uid, view_id, view_type, context, toolbar)
+        print res
+        fields = self.pool.get('magerp.product_product').fields_get(cr,uid)
+        print fields
+        z = res['fields'].update(fields)
+        if res['name']==u"product.normal.form":
+            attr_grp_obj = self.pool.get('magerp.product_attribute_groups')
+            attr_obj = self.pool.get('magerp.product_attributes')
+            #Insert the fields required
+            attr_ids = attr_obj.search(cr,uid,[])
+            attributes = attr_obj.read(cr,uid,[])
+            
+            #CHange the view generation arch
+            eres = etree.fromstring(res['arch'])
+            nb_tree = eres.findall(".//notebook")[0]
+            #Generate View here
+            #Notebook Magento
+            # |
+            # |-Attrbute Group 1
+            # |  |-Attributes under group 1
+            # |
+            # |-Attrbute Group 2
+            #    |-Attributes under group 2
+            mage_xml = etree.Element("page",string="Magento Information")
+            simple_group = etree.SubElement(mage_xml,"group",col="4",colspan="4")
+            set_field = etree.SubElement(simple_group,"field",name="instance")
+            set_field2 = etree.SubElement(simple_group,"field",name="set")
+            #Get Instances
+            magerp_inst_ids = self.pool.get('magerp.instances').search(cr,uid,[])
+            magerp_instances = self.pool.get('magerp.instances').read(cr,uid,magerp_inst_ids,[])
+            for each in magerp_instances:
+                #Create a notebook for each instance
+                instance_notebook = etree.SubElement(mage_xml,"notebook",attrs="{'invisible':[('instance','!='," + str(each['id']) + ")]}")
+                #Get Attribute groups in each instance
+                attr_group_ids = attr_grp_obj.search(cr,uid,[('instance','=',each['id'])])
+                attr_groups = attr_grp_obj.read(cr,uid,attr_group_ids,[])
+                for each_group in attr_groups:
+                    group_page = etree.SubElement(instance_notebook,"page",string=each_group['attribute_group_name'],attrs="{'invisible':[('set','!='," + str(each_group['attribute_set'][0]) + ")]}")
+                    #Get the attributes that have to go into each
+                    attr_ids = attr_obj.search(cr,uid,[('instance','=',each['id']),('group','=',each_group['attribute_group_id']),('map_in_openerp','=','1')])
+                    attributes = attr_obj.read(cr,uid,attr_ids,[])
+                    for each_attr in attributes:
+                        if each_attr['mapping_field_name'] and not each_attr['mapping_field_name'] in attr_obj._known_attributes.keys():
+                            attrib_field = etree.SubElement(group_page,"field",name=each_attr['mapping_field_name'])
+            nb_tree.insert(2,mage_xml)
+            res['arch'] = etree.tostring(eres)
+            print res['arch']
+        return res
+    
 product_product()
 
 class magerp_product_product(magerp_osv.magerp_osv):
@@ -649,7 +700,49 @@ class magerp_product_product(magerp_osv.magerp_osv):
     _columns = {
                 'product_product_id':fields.many2one('product.product','Product')
                 }
+    def fields_get_keys(self, cr, user, context=None, read_access=True):
+        #First get the keys
+        result = super(magerp_product_product,self).fields_get_keys(cr,user,context,read_access)
+        #Now extend the keys
+        model_fields_obj = self.pool.get('ir.model.fields')
+        model_fields_ids = model_fields_obj.search(cr,uid,[('model','=','magerp.product_product')])
+        model_fields = model_fields_obj.read(cr,uid,['name'])
+        for each_field in model_fields:
+            result.append(each_field['name'])
+        return result
     
+    def fields_get(self, cr, user, fields=None, context=None, read_access=True):
+        #FIrst get fields
+        result = super(magerp_product_product,self).fields_get(cr,user)
+        #Now extend fields
+        model_fields_obj = self.pool.get('ir.model.fields')
+        model_fields_ids = model_fields_obj.search(cr,user,[('model','=','magerp.product_product')])
+        model_fields = model_fields_obj.read(cr,user,[])
+        for each_field in model_fields:
+            fn = each_field['name'] #Stands for field anme
+            result[fn] = {
+                          'type':each_field['ttype'],
+                          'string':each_field['field_description'],
+                          'readonly':each_field['readonly'],
+                          'size':each_field['size'],
+                          'required':each_field['required'],
+                          'translate':each_field['translate'],
+                          'select':each_field['select']
+                          }
+            if not read_access:
+                    result[fn]['readonly'] = True
+                    result[fn]['states'] = {}
+            if result[fn]['type'] in ('one2many', 'many2many', 'many2one', 'one2one'):
+                    result[fn]['relation'] = each_field['relation']
+                    result[fn]['domain'] = each_field['domain']
+                    #result[fn]['context'] = each_field['']    #Context is not available
+        if fields:
+            # filter out fields which aren't in the fields list
+            for r in result.keys():
+                if r not in fields:
+                    del result[r]
+        return result
+                    
     def mage_import(self, cr, uid, ids_or_filter, conn, instance, debug=False,defaults={}, *attrs):
         #Build the mapping dictionary dynamically from attributes
         inst_attrs = self.pool.get('magerp.product_attributes').search(cr,uid,[('instance','=',instance),('map_in_openerp','=','1')])
@@ -733,5 +826,6 @@ class magerp_product_product(magerp_osv.magerp_osv):
             self.create_tier_price(cr, uid, tier_price, instance, crid)
         #Perform other operations
         return crid
+    
     
 magerp_product_product()
