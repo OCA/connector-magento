@@ -443,7 +443,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
                             'name':field_name,
                             'model_id':model_id,
                             'model':'product.product',
-                            'field_description':vals['frontend_label'] or vals['attribute_code'],
+                            'field_description':vals.get('frontend_label', False) or vals['attribute_code'],
                             'ttype':type_conversion[vals['frontend_input']],
                                       }
                         #IF char add size
