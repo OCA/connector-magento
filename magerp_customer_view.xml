@@ -34,8 +34,8 @@
 			<field name="arch" type="xml">
 				<field name="email" position="after">
 					<separator string="Magento Specific Info" colspan="4" />
-					<field name="entity_id" colspan="2" readonly="1"/>
-					<field name="instance" colspan="2"/>
+					<field name="entity_id" colspan="2" readonly="1" />
+					<field name="instance" colspan="2" />
 				</field>
 			</field>
 		</record>

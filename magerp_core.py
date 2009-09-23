@@ -74,7 +74,7 @@ class Connection():
         if args:
             arguments = list(args)[0]
         else:
-            arguments=[]
+            arguments = []
         try:
             if self.debug:
                 self.logger.notifyChannel(_("Magento Connection"), netsvc.LOG_INFO, _("Calling Method:%s,Arguments:%s") % (method, arguments))
@@ -86,12 +86,12 @@ class Connection():
             self.logger.notifyChannel(_("Magento Call"), netsvc.LOG_ERROR, _("Method: %s\nArguments:%s\nError:%s") % (method, arguments, e))
             raise
     
-    def fetch_image(self,imgloc):
+    def fetch_image(self, imgloc):
         full_loc = self.corelocation + imgloc
         try:
             img = urllib2.urlopen(full_loc)
             return base64.b64encode(img.read())
-        except Exception,e:
+        except Exception, e:
             pass
         
 class magerp_instances(osv.osv):
@@ -106,13 +106,13 @@ class magerp_instances(osv.osv):
         'websites':fields.one2many('magerp.websites', 'instance', 'Websites'),
         'storeviews':fields.one2many('magerp.storeviews', 'instance', 'Store Views'),
         'groups':fields.one2many('magerp.groups', 'instance', 'Groups'),
-        'attribute_sets':fields.one2many('magerp.product_attribute_set','instance','Attribute Sets')
+        'attribute_sets':fields.one2many('magerp.product_attribute_set', 'instance', 'Attribute Sets')
     }
 
-    def connect(self,cr,uid,ids,ctx={}):
+    def connect(self, cr, uid, ids, ctx={}):
         #ids has to be a list
         if ids:
-            if len(ids)==1:
+            if len(ids) == 1:
                 instance = self.browse(cr, uid, ids, ctx)[0]
                 if instance:
                     core_imp_conn = Connection(instance.location, instance.apiusername, instance.apipass, DEBUG)
@@ -127,96 +127,96 @@ class magerp_instances(osv.osv):
             core_imp_conn = Connection(inst.location, inst.apiusername, inst.apipass, DEBUG)
             if core_imp_conn.connect():
                 #New import methods
-                self.pool.get('magerp.websites').mage_import(cr,uid,filter,core_imp_conn,inst.id,DEBUG)
-                self.pool.get('magerp.storeviews').mage_import(cr,uid,filter,core_imp_conn,inst.id,DEBUG)
-                self.pool.get('magerp.groups').mage_import(cr,uid,filter,core_imp_conn,inst.id,DEBUG)
+                self.pool.get('magerp.websites').mage_import(cr, uid, filter, core_imp_conn, inst.id, DEBUG)
+                self.pool.get('magerp.storeviews').mage_import(cr, uid, filter, core_imp_conn, inst.id, DEBUG)
+                self.pool.get('magerp.groups').mage_import(cr, uid, filter, core_imp_conn, inst.id, DEBUG)
             else:
                 osv.except_osv(_("Connection Error"), _("Could not connect to server\nCheck location, username & password."))
     
-    def sync_categs(self,cr,uid,ids,ctx):
+    def sync_categs(self, cr, uid, ids, ctx):
         instances = self.browse(cr, uid, ids, ctx)
         for inst in instances:
             pro_cat_conn = Connection(inst.location, inst.apiusername, inst.apipass, DEBUG)
             if pro_cat_conn.connect():
-                confirmation = pro_cat_conn.call('catalog_category.currentStore',[0])   #Set browse to root store
+                confirmation = pro_cat_conn.call('catalog_category.currentStore', [0])   #Set browse to root store
                 if confirmation:
                     categ_tree = pro_cat_conn.call('catalog_category.tree')             #Get the tree
-                    self.pool.get('product.category').record_entire_tree(cr,uid,inst.id,pro_cat_conn,categ_tree)
+                    self.pool.get('product.category').record_entire_tree(cr, uid, inst.id, pro_cat_conn, categ_tree)
             else:
                 osv.except_osv(_("Connection Error"), _("Could not connect to server\nCheck location, username & password."))
     
-    def sync_attribs(self,cr,uid,ids,ctx):
+    def sync_attribs(self, cr, uid, ids, ctx):
         instances = self.browse(cr, uid, ids, ctx)
         for inst in instances:
             attr_conn = Connection(inst.location, inst.apiusername, inst.apipass, DEBUG)
             if attr_conn.connect():
-                attrib_set_ids = self.pool.get('magerp.product_attribute_set').search(cr,uid,[('instance','=',inst.id)])
-                attrib_sets = self.pool.get('magerp.product_attribute_set').read(cr,uid,attrib_set_ids,['attribute_set_id'])
+                attrib_set_ids = self.pool.get('magerp.product_attribute_set').search(cr, uid, [('instance', '=', inst.id)])
+                attrib_sets = self.pool.get('magerp.product_attribute_set').read(cr, uid, attrib_set_ids, ['attribute_set_id'])
                 #Get all attribute set ids to get all attributes in one go
-                all_attr_set_ids=self.pool.get('magerp.product_attribute_set').getall_mageids(cr,uid,[],inst.id)
+                all_attr_set_ids = self.pool.get('magerp.product_attribute_set').getall_mageids(cr, uid, [], inst.id)
                 #Call magento for all attributes
-                mage_inp = attr_conn.call('catalog_product_attribute.list',all_attr_set_ids)             #Get the tree
-                self.pool.get('magerp.product_attributes').sync_import(cr,uid,mage_inp,inst.id,DEBUG) #Last argument is extra mage2oe filter as same attribute ids
+                mage_inp = attr_conn.call('catalog_product_attribute.list', all_attr_set_ids)             #Get the tree
+                self.pool.get('magerp.product_attributes').sync_import(cr, uid, mage_inp, inst.id, DEBUG) #Last argument is extra mage2oe filter as same attribute ids
                 #Relate attribute sets & attributes
                 mage_inp = {}
                 #Pass in {attribute_set_id:{attributes},attribute_set_id2:{attributes}}
                 for each in attrib_sets:
-                    mage_inp[each['attribute_set_id']] = attr_conn.call('ol_catalog_product_attribute.relations',[each['attribute_set_id']])
+                    mage_inp[each['attribute_set_id']] = attr_conn.call('ol_catalog_product_attribute.relations', [each['attribute_set_id']])
                 if mage_inp:
-                    self.pool.get('magerp.product_attribute_set').relate(cr,uid,mage_inp,inst.id,DEBUG)
+                    self.pool.get('magerp.product_attribute_set').relate(cr, uid, mage_inp, inst.id, DEBUG)
             else:
                 osv.except_osv(_("Connection Error"), _("Could not connect to server\nCheck location, username & password."))
             
                 
     
-    def sync_attrib_sets(self,cr,uid,ids,ctx):
+    def sync_attrib_sets(self, cr, uid, ids, ctx):
         instances = self.browse(cr, uid, ids, ctx)
         for inst in instances:
             attr_conn = Connection(inst.location, inst.apiusername, inst.apipass, DEBUG)
             if attr_conn.connect():
                 filter = []
-                self.pool.get('magerp.product_attribute_set').mage_import(cr,uid,filter,attr_conn,inst.id,DEBUG)
+                self.pool.get('magerp.product_attribute_set').mage_import(cr, uid, filter, attr_conn, inst.id, DEBUG)
             else:
                 osv.except_osv(_("Connection Error"), _("Could not connect to server\nCheck location, username & password."))          
     
-    def sync_attrib_groups(self,cr,uid,ids,ctx):
+    def sync_attrib_groups(self, cr, uid, ids, ctx):
         instances = self.browse(cr, uid, ids, ctx)
         for inst in instances:
             attr_conn = Connection(inst.location, inst.apiusername, inst.apipass, DEBUG)
-            attrset_ids = self.pool.get('magerp.product_attribute_set').getall_mageids(cr,uid,[],inst.id)
+            attrset_ids = self.pool.get('magerp.product_attribute_set').getall_mageids(cr, uid, [], inst.id)
             filter = [{'attribute_set_id':{'in':attrset_ids}}]
             if attr_conn.connect():
-                self.pool.get('magerp.product_attribute_groups').mage_import(cr,uid,filter,attr_conn,inst.id,DEBUG)
+                self.pool.get('magerp.product_attribute_groups').mage_import(cr, uid, filter, attr_conn, inst.id, DEBUG)
             else:
                 osv.except_osv(_("Connection Error"), _("Could not connect to server\nCheck location, username & password."))
     
-    def sync_customer_groups(self,cr,uid,ids,ctx):
+    def sync_customer_groups(self, cr, uid, ids, ctx):
         instances = self.browse(cr, uid, ids, ctx)
         for inst in instances:
             attr_conn = Connection(inst.location, inst.apiusername, inst.apipass, DEBUG)
             filter = []
             if attr_conn.connect():
-                self.pool.get('res.partner.category').mage_import(cr,uid,filter,attr_conn,inst.id,DEBUG)
+                self.pool.get('res.partner.category').mage_import(cr, uid, filter, attr_conn, inst.id, DEBUG)
             else:
                 osv.except_osv(_("Connection Error"), _("Could not connect to server\nCheck location, username & password."))
     
-    def sync_customer_addresses(self,cr,uid,ids,ctx):
+    def sync_customer_addresses(self, cr, uid, ids, ctx):
         instances = self.browse(cr, uid, ids, ctx)
         for inst in instances:
             attr_conn = Connection(inst.location, inst.apiusername, inst.apipass, DEBUG)
             filter = []
             if attr_conn.connect():
-                self.pool.get('res.partner').mage_import(cr,uid,filter,attr_conn,inst.id,DEBUG)
+                self.pool.get('res.partner').mage_import(cr, uid, filter, attr_conn, inst.id, DEBUG)
             else:
                 osv.except_osv(_("Connection Error"), _("Could not connect to server\nCheck location, username & password."))
     
-    def sync_products(self,cr,uid,ids,ctx):
+    def sync_products(self, cr, uid, ids, ctx):
         instances = self.browse(cr, uid, ids, ctx)
         for inst in instances:
             attr_conn = Connection(inst.location, inst.apiusername, inst.apipass, DEBUG)
             filter = []
             if attr_conn.connect():
-                self.pool.get('product.product').mage_import(cr,uid,filter,attr_conn,inst.id,DEBUG)
+                self.pool.get('product.product').mage_import(cr, uid, filter, attr_conn, inst.id, DEBUG)
             else:
                 osv.except_osv(_("Connection Error"), _("Could not connect to server\nCheck location, username & password."))                        
                                 
@@ -243,15 +243,15 @@ class magerp_websites(magerp_osv.magerp_osv):
         'sort_order':fields.integer('Sort Order'),
         'default_group_id':fields.integer('Default Store Group'), #Many 2 one?
         'default_group':fields.function(_get_group, type="many2one", relation="magerp.groups", method=True, string="Default Store (Group)"),
-        'instance':fields.many2one('magerp.instances', 'Instance',ondelete='cascade')
+        'instance':fields.many2one('magerp.instances', 'Instance', ondelete='cascade')
     }
     _mapping = {
-        'name':('name',str),
-        'code':('code',str),
-        'website_id':('website_id',int),
-        'is_default':('is_default',bool),
-        'sort_order':('sort_order',int),
-        'default_group_id':('default_group_id',int), #Many 2 one?
+        'name':('name', str),
+        'code':('code', str),
+        'website_id':('website_id', int),
+        'is_default':('is_default', bool),
+        'sort_order':('sort_order', int),
+        'default_group_id':('default_group_id', int), #Many 2 one?
                
     }
 
@@ -283,15 +283,15 @@ class magerp_storeviews(magerp_osv.magerp_osv):
         'sort_order':fields.integer('Sort Order'),
         'group_id':fields.integer('Default Store Group'), #Many 2 one?
         'default_group':fields.function(_get_group, type="many2one", relation="magerp.groups", method=True, string="Default Store (Group)"),
-        'instance':fields.many2one('magerp.instances', 'Instance',ondelete='cascade')
+        'instance':fields.many2one('magerp.instances', 'Instance', ondelete='cascade')
     }
     _mapping = {
-        'name':('name',str),
-        'code':('code',str),
-        'store_id':('store_id',int),
-        'website_id':('website_id',int), # Many 2 one ?
-        'is_active':('is_active',bool),
-        'sort_order':('sort_order',int),
+        'name':('name', str),
+        'code':('code', str),
+        'store_id':('store_id', int),
+        'website_id':('website_id', int), # Many 2 one ?
+        'is_active':('is_active', bool),
+        'sort_order':('sort_order', int),
         'group_id':('group_id'), #Many 2 one?
     
     }
@@ -315,10 +315,10 @@ class magerp_groups(magerp_osv.magerp_osv):
     def rootcategory_get(self, cr, uid, ids, context=None):
         if not len(ids):
             return []
-        reads = self.read(cr, uid, ids, ['root_category_id','instance'], context)
+        reads = self.read(cr, uid, ids, ['root_category_id', 'instance'], context)
         res = []
         for record in reads:
-            rid = self.pool.get('product.category').mage_to_oe(cr, uid, record['root_category_id'],record['instance'][0])
+            rid = self.pool.get('product.category').mage_to_oe(cr, uid, record['root_category_id'], record['instance'][0])
             res.append((record['id'], rid))
         return res
     
@@ -338,14 +338,14 @@ class magerp_groups(magerp_osv.magerp_osv):
         'website':fields.function(_get_website, type="many2one", relation="magerp.websites", method=True, string="Website"),
         'root_category_id':fields.integer('Root product Category'),
         'root_category':fields.function(_get_rootcategory, type="many2one", relation="product.category", method=True, string="Root Category"),
-        'instance':fields.many2one('magerp.instances', 'Instance',ondelete='cascade')
+        'instance':fields.many2one('magerp.instances', 'Instance', ondelete='cascade')
     }
     _mapping = {
-        'name':('name',str),
-        'group_id':('group_id',int),
-        'default_store_id':('default_store_id',int), #Many 2 one ?
-        'website_id':('website_id',int), # Many 2 one ?
-        'root_category_id':('root_category_id',int),
+        'name':('name', str),
+        'group_id':('group_id', int),
+        'default_store_id':('default_store_id', int), #Many 2 one ?
+        'website_id':('website_id', int), # Many 2 one ?
+        'root_category_id':('root_category_id', int),
     }
     #Return format of API:{'default_store_id': '1', 'group_id': '1', 'website_id': '1', 'name': 'Main Website Store', 'root_category_id': '2'
 

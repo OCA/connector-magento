@@ -42,12 +42,16 @@
 								<group col="4" colspan="4">
 									<separator string="Display Mode" colspan="4" />
 									<field name="display_mode" colspan="1" nolabel="1" />
-									<label string="Products only means that the products associated to the category will display, but not any static blocks.Static block only means that the selected static block will display, but none of the products.Static block and products means that the static block will display with the products listed directly beneath it." colspan="3" />
+									<label
+										string="Products only means that the products associated to the category will display, but not any static blocks.Static block only means that the selected static block will display, but none of the products.Static block and products means that the static block will display with the products listed directly beneath it."
+										colspan="3" />
 								</group>
 								<separator string="Use Anchor" colspan="4" />
 								<group col="4" colspan="4">
 									<field name="is_anchor" colspan="1" />
-									<label string="Anchored categories will display all products associated to all child categories (and child of child, and child of child of child,etc.) on that category‘s page, along with the products associated directly to the parent category." colspan="3" />
+									<label
+										string="Anchored categories will display all products associated to all child categories (and child of child, and child of child of child,etc.) on that category‘s page, along with the products associated directly to the parent category."
+										colspan="3" />
 								</group>
 								<separator string="Sorting method" colspan="4" />
 								<field name="available_sort_by" />

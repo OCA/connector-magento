@@ -9,30 +9,30 @@ class magerp_osv(osv.osv):
     def website_get(self, cr, uid, ids, context=None):
         if not len(ids):
             return []
-        reads = self.read(cr, uid, ids, [context['field'],'instance'], context)
+        reads = self.read(cr, uid, ids, [context['field'], 'instance'], context)
         res = []
         for record in reads:
-            rid = self.pool.get('magerp.websites').mage_to_oe(cr, uid, record[context['field']],record['instance'][0])
+            rid = self.pool.get('magerp.websites').mage_to_oe(cr, uid, record[context['field']], record['instance'][0])
             res.append((record['id'], rid))
         return res
     
     def store_get(self, cr, uid, ids, context=None):
         if not len(ids):
             return []
-        reads = self.read(cr, uid, ids, [context['field'],'instance'], context)
+        reads = self.read(cr, uid, ids, [context['field'], 'instance'], context)
         res = []
         for record in reads:
-            rid = self.pool.get('magerp.storeviews').mage_to_oe(cr, uid, record[context['field']],record['instance'][0])
+            rid = self.pool.get('magerp.storeviews').mage_to_oe(cr, uid, record[context['field']], record['instance'][0])
             res.append((record['id'], rid))
         return res
 
     def group_get(self, cr, uid, ids, context=None):
         if not len(ids):
             return []
-        reads = self.read(cr, uid, ids, [context['field'],'instance'], context)
+        reads = self.read(cr, uid, ids, [context['field'], 'instance'], context)
         res = []
         for record in reads:
-            rid = self.pool.get('magerp.groups').mage_to_oe(cr, uid, record[context['field']],record['instance'][0])
+            rid = self.pool.get('magerp.groups').mage_to_oe(cr, uid, record[context['field']], record['instance'][0])
             res.append((record['id'], rid))
         return res
         
@@ -58,7 +58,7 @@ class magerp_osv(osv.osv):
                     return (read[0]['id'], read[0][self._rec_name])
         return False
     
-    def sync_import(self, cr, uid, mage_ip, instance, debug=False,defaults={}, *attrs):
+    def sync_import(self, cr, uid, mage_ip, instance, debug=False, defaults={}, *attrs):
         #Attrs of 0 should be mage2oe_filters
         if mage_ip:
             mapped_keys = self._mapping.keys()
@@ -90,9 +90,9 @@ class magerp_osv(osv.osv):
                 for each_valid_key in self._mapping:
                     if each_valid_key in each_record.keys():
                         try:
-                            if len(self._mapping[each_valid_key])==2 or self._mapping[each_valid_key][2]==False:#Only Name & type
+                            if len(self._mapping[each_valid_key]) == 2 or self._mapping[each_valid_key][2] == False:#Only Name & type
                                 vals[self._mapping[each_valid_key][0]] = self._mapping[each_valid_key][1](each_record[each_valid_key]) or False
-                            elif len(self._mapping[each_valid_key])==3:# Name & type & expr
+                            elif len(self._mapping[each_valid_key]) == 3:# Name & type & expr
                                 #get the space ready for expression to run
                                 #Add current type casted value to space if it exists or just the value
                                 if self._mapping[each_valid_key][1]:
@@ -106,15 +106,15 @@ class magerp_osv(osv.osv):
                                         vals[self._mapping[each_valid_key][0]] = space['result']
                                     else:
                                         #If mapping is a function return values is of type [('key','value')]
-                                        if type(space['result'])==type([1,2]) and space['result']:#Check type
+                                        if type(space['result']) == type([1, 2]) and space['result']:#Check type
                                             for each in space['result']:
-                                                if type(each)==type((1,2)) and each:#Check type
-                                                    if len(each)==2:#Assert length
+                                                if type(each) == type((1, 2)) and each:#Check type
+                                                    if len(each) == 2:#Assert length
                                                         vals[each[0]] = each[1]#Assign
                                 else:
                                     if self._mapping[each_valid_key][0]:
                                         vals[self._mapping[each_valid_key][0]] = False
-                        except Exception,e:
+                        except Exception, e:
                             if self._mapping[each_valid_key][0]:#if not function mapping
                                 vals[self._mapping[each_valid_key][0]] = each_record[each_valid_key] or False
                 vals['instance'] = instance
@@ -122,11 +122,11 @@ class magerp_osv(osv.osv):
                     print vals
                 if self._MAGE_FIELD:
                     if self._MAGE_FIELD in vals.keys() and vals[self._MAGE_FIELD]:
-                        self.record_save(cr,uid,rec_id,vals,defaults)
+                        self.record_save(cr, uid, rec_id, vals, defaults)
                 else:
-                    self.record_save(cr,uid,rec_id,vals,defaults)
+                    self.record_save(cr, uid, rec_id, vals, defaults)
                             
-    def record_save(self,cr,uid,rec_id,vals,defaults):
+    def record_save(self, cr, uid, rec_id, vals, defaults):
         if defaults:
             for key in defaults.keys():
                 vals[key] = defaults[key]
@@ -147,20 +147,20 @@ class magerp_osv(osv.osv):
                     subject[key] = True
         return subject
     
-    def mage_import(self, cr, uid, ids_or_filter, conn, instance, debug=False,defaults={}, *attrs):
+    def mage_import(self, cr, uid, ids_or_filter, conn, instance, debug=False, defaults={}, *attrs):
         if self._LIST_METHOD:
             result = conn.call(self._LIST_METHOD, ids_or_filter)
             if attrs:
-                self.sync_import(cr, uid, result, instance, debug,defaults, attrs)
+                self.sync_import(cr, uid, result, instance, debug, defaults, attrs)
             else:
-                self.sync_import(cr, uid, result, instance, debug,defaults)
+                self.sync_import(cr, uid, result, instance, debug, defaults)
         else:
-            raise osv.except_osv(_('Undefined List method !'),_("list method is undefined for this object!"))
+            raise osv.except_osv(_('Undefined List method !'), _("list method is undefined for this object!"))
     
-    def getall_mageids(self, cr, uid, ids=[],instance=False):
+    def getall_mageids(self, cr, uid, ids=[], instance=False):
         search_param = []
         if instance:
-            search_param = [('instance','=',instance)]
+            search_param = [('instance', '=', instance)]
         if not ids:
             ids = self.search(cr, uid, search_param)
         reads = self.read(cr, uid, ids, [self._MAGE_FIELD])

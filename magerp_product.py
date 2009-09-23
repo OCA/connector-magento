@@ -96,20 +96,20 @@ class product_category(magerp_osv.magerp_osv):
                  }
     
     _mapping = {
-        'category_id':('category_id',int),
-        'level':(False,int,"""result=[('sequence',level),('level',level)]"""),
-        'parent_id':('magento_parent_id',int),
-        'is_active':('is_active',bool),
-        'description':('description',str),
-        'meta_title':('meta_title',str),
-        'meta_keywords':('meta_keywords',str),
-        'meta_description':('meta_description',str),
-        'url_key':('url_key',str),
-        'is_anchor':('is_anchor',bool),
-        'available_sort_by':('available_sort_by',str),
-        'default_sort_by':('default_sort_by',str),
-        'name':('name',str),
-        'updated_at':('updated_at',str)
+        'category_id':('category_id', int),
+        'level':(False, int, """result=[('sequence',level),('level',level)]"""),
+        'parent_id':('magento_parent_id', int),
+        'is_active':('is_active', bool),
+        'description':('description', str),
+        'meta_title':('meta_title', str),
+        'meta_keywords':('meta_keywords', str),
+        'meta_description':('meta_description', str),
+        'url_key':('url_key', str),
+        'is_anchor':('is_anchor', bool),
+        'available_sort_by':('available_sort_by', str),
+        'default_sort_by':('default_sort_by', str),
+        'name':('name', str),
+        'updated_at':('updated_at', str)
                 
                 }
     IMPORT_KEYS = [
@@ -260,10 +260,10 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
     def group_get(self, cr, uid, ids, context=None):
         if not len(ids):
             return []
-        reads = self.read(cr, uid, ids, ['group_id','instance'], context)
+        reads = self.read(cr, uid, ids, ['group_id', 'instance'], context)
         res = []
         for record in reads:
-            rid = self.pool.get('magerp.product_attribute_groups').mage_to_oe(cr, uid, record['group_id'],record['instance'][0])
+            rid = self.pool.get('magerp.product_attribute_groups').mage_to_oe(cr, uid, record['group_id'], record['instance'][0])
             if rid:
                 res.append((record['id'], rid))
         return res
@@ -273,31 +273,31 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
         return dict(res) 
     
     _columns = {
-        'attribute_code':fields.char('Code',size=200),
+        'attribute_code':fields.char('Code', size=200),
         'attribute_id':fields.integer('ID'),
         'set_id':fields.integer('Attribute Set'),
-        'options':fields.one2many('magerp.product_attribute_options','attribute_id','Attribute Options'),
+        'options':fields.one2many('magerp.product_attribute_options', 'attribute_id', 'Attribute Options'),
         #'set':fields.function(_get_set, type="many2one", relation="magerp.product_attribute_set", method=True, string="Attribute Set"), This field is invalid as attribs have m2m relation
         'frontend_input':fields.selection([
-                                           ('text','Text'),
-                                           ('textarea','Text Area'),
-                                           ('select','Selection'),
-                                           ('date','Date'),
-                                           ('price','Price'),
-                                           ('media_image','Media Image'),
-                                           ('gallery','Gallery')
-                                           ],'Frontend Input'
+                                           ('text', 'Text'),
+                                           ('textarea', 'Text Area'),
+                                           ('select', 'Selection'),
+                                           ('date', 'Date'),
+                                           ('price', 'Price'),
+                                           ('media_image', 'Media Image'),
+                                           ('gallery', 'Gallery')
+                                           ], 'Frontend Input'
                                           ),
-        'frontend_class':fields.char('Frontend Class',size=100),
-        'backend_model':fields.char('Backend Model',size=200),
+        'frontend_class':fields.char('Frontend Class', size=100),
+        'backend_model':fields.char('Backend Model', size=200),
         'backend_type':fields.selection([
-                                         ('static','static'),
+                                         ('static', 'static'),
                                          ('varchar', ' Varchar'),
                                          ('text', 'Text'),
-                                         ('decimal','Decimal'),
-                                         ('int','Integer'),
-                                         ('datetime','Datetime')],'Backend Type'),
-        'frontend_label':fields.char('Label',size=100),
+                                         ('decimal', 'Decimal'),
+                                         ('int', 'Integer'),
+                                         ('datetime', 'Datetime')], 'Backend Type'),
+        'frontend_label':fields.char('Label', size=100),
         'is_visible_in_advanced_search':fields.boolean('Visible in advanced search?', required=False),
         'is_global':fields.boolean('Global ?', required=False),
         'is_filterable':fields.boolean('Filterable?', required=False),
@@ -313,67 +313,67 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
         'position':fields.integer('Position', required=False),
         'group_id': fields.integer('Group') ,
         'group':fields.function(_get_group, type="many2one", relation="magerp.product_attribute_groups", method=True, string="Attribute Group"),
-        'apply_to': fields.char('Apply to',size=200),
-        'default_value': fields.char('Default Value',size=10),
-        'note':fields.char('Note',size=200),
+        'apply_to': fields.char('Apply to', size=200),
+        'default_value': fields.char('Default Value', size=10),
+        'note':fields.char('Note', size=200),
         'entity_type_id':fields.integer('Entity Type'),
         'instance':fields.many2one('magerp.instances', 'Magento Instance', readonly=True, store=True),
         #These parameters are for automatic management
         'map_in_openerp':fields.boolean('Map in Open ERP?'),
-        'mapping_field_name':fields.char('Field name',size=100),
-        'mapping_type_cast':fields.char('Type cast',size=20),
-        'mapping_script':fields.text('Python Script',help="Write python script here"),
+        'mapping_field_name':fields.char('Field name', size=100),
+        'mapping_type_cast':fields.char('Type cast', size=20),
+        'mapping_script':fields.text('Python Script', help="Write python script here"),
         }
     #mapping magentofield:(openerpfield,typecast,)
     #have an entry for each mapped field
     _mapping = {
-        'attribute_code':('attribute_code',str),
-        'attribute_id':('attribute_id',int),
+        'attribute_code':('attribute_code', str),
+        'attribute_id':('attribute_id', int),
         #'set_id':('set_id',int), #Depreciated from mapping as its an m2m relation
-        'frontend_input':('frontend_input',str),
-        'frontend_class':('frontend_class',str),
-        'backend_model':('backend_model',str),
-        'backend_type':('backend_type',str),
-        'frontend_label':('frontend_label',str),
-        'is_visible_in_advanced_search':('is_visible_in_advanced_search',bool),
-        'is_global':('is_global',bool),
-        'is_filterable':('is_filterable',bool),
-        'is_comparable':('is_comparable',bool),
-        'is_visible':('is_visible',bool),
-        'is_searchable':('is_searchable',bool),
-        'is_user_defined':('is_user_defined',bool),
-        'is_configurable':('is_configurable',bool),
-        'is_visible_on_front':('is_visible_on_front',bool),
-        'is_used_for_price_rules':('is_used_for_price_rules',bool),
-        'is_unique':('is_unique',bool),
-        'is_required':('is_required',bool),
-        'position':('position',int),
-        'group_id': ('group_id',int),
+        'frontend_input':('frontend_input', str),
+        'frontend_class':('frontend_class', str),
+        'backend_model':('backend_model', str),
+        'backend_type':('backend_type', str),
+        'frontend_label':('frontend_label', str),
+        'is_visible_in_advanced_search':('is_visible_in_advanced_search', bool),
+        'is_global':('is_global', bool),
+        'is_filterable':('is_filterable', bool),
+        'is_comparable':('is_comparable', bool),
+        'is_visible':('is_visible', bool),
+        'is_searchable':('is_searchable', bool),
+        'is_user_defined':('is_user_defined', bool),
+        'is_configurable':('is_configurable', bool),
+        'is_visible_on_front':('is_visible_on_front', bool),
+        'is_used_for_price_rules':('is_used_for_price_rules', bool),
+        'is_unique':('is_unique', bool),
+        'is_required':('is_required', bool),
+        'position':('position', int),
+        'group_id': ('group_id', int),
         #'apply_to': ('apply_to',str),
-        'default_value': ('default_value',str),
-        'note':('default_value',str),
-        'entity_type_id':('entity_type_id',int),
+        'default_value': ('default_value', str),
+        'note':('default_value', str),
+        'entity_type_id':('entity_type_id', int),
         
                 }
     _known_attributes = {
         'product_id':('product_id'),
-        'name':('name','str',False),
-        'description':('description','str'),
-        'short_description':('description_sale','str'),
-        'sku':('code','str'),
-        'weight':('weight_net','float'),
+        'name':('name', 'str', False),
+        'description':('description', 'str'),
+        'short_description':('description_sale', 'str'),
+        'sku':('code', 'str'),
+        'weight':('weight_net', 'float'),
         #Categ id is many2one, but do it for m2m
-        'category_ids':(False,'False',"""if category_ids:\n\tresult=self.pool.get('product.category').mage_to_oe(cr,uid,category_ids[0],instance)\n\tif result:\n\t\tresult=[('categ_id',result[0])]\nelse:\n\tresult=self.pool.get('product.category').search(cr,uid,[('instance','=',instance)])\n\tif result:\n\t\tresult=[('categ_id',result[0])]"""),
-        'created_at':('created_at','str'),
-        'updated_at':('updated_at','str'),
-        'price':('list_price','float'),
-        'cost':('standard_price','float'),
-        'set':(False,'int',"""if set:\n\tresult=self.pool.get('magerp.product_attribute_set').mage_to_oe(cr,uid,set,instance)\n\tif result:\n\t\tresult=[('set',result[0])]\n\telse:\n\t\tresult=[('set',False)]\nelse:\n\tresult=[('set',False)]"""),
+        'category_ids':(False, 'False', """if category_ids:\n\tresult=self.pool.get('product.category').mage_to_oe(cr,uid,category_ids[0],instance)\n\tif result:\n\t\tresult=[('categ_id',result[0])]\nelse:\n\tresult=self.pool.get('product.category').search(cr,uid,[('instance','=',instance)])\n\tif result:\n\t\tresult=[('categ_id',result[0])]"""),
+        'created_at':('created_at', 'str'),
+        'updated_at':('updated_at', 'str'),
+        'price':('list_price', 'float'),
+        'cost':('standard_price', 'float'),
+        'set':(False, 'int', """if set:\n\tresult=self.pool.get('magerp.product_attribute_set').mage_to_oe(cr,uid,set,instance)\n\tif result:\n\t\tresult=[('set',result[0])]\n\telse:\n\t\tresult=[('set',False)]\nelse:\n\tresult=[('set',False)]"""),
                          }
     _ignored_attributes = [
 
                            ]
-    def create(self,cr,uid,vals,context={}):
+    def create(self, cr, uid, vals, context={}):
         field_name = "x_magerp_" + vals['attribute_code']
         type_casts = {
                         '':'str',
@@ -398,30 +398,30 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
             vals['map_in_openerp'] = False
         else:
             vals['map_in_openerp'] = True
-            if vals['frontend_input']=='date':
+            if vals['frontend_input'] == 'date':
                 vals['mapping_field_name'] = False
                 vals['mapping_type_cast'] = 'str'
                 vals['mapping_script'] = "if " + vals['attribute_code'] + "=='None':\n\tresult=[(" + field_name + ",False)]\nelse:\n\tresult=[(" + field_name + "," + vals['attribute_code'] + ")]"
-            elif vals['frontend_input']=='select':
+            elif vals['frontend_input'] == 'select':
                 vals['mapping_field_name'] = False
                 vals['mapping_type_cast'] = 'str'
-                vals['mapping_script'] = "if " + vals['attribute_code'] + ":\n\t\result=self.pool.get('magerp.product_attribute_options').get_option_id(cr,uid,'" + vals['attribute_code'] + "'," + vals['attribute_code'] +",instance)\n\tif result:\n\t\tresult=[('" + vals['attribute_code'] + "',result)]"
+                vals['mapping_script'] = "if " + vals['attribute_code'] + ":\n\t\result=self.pool.get('magerp.product_attribute_options').get_option_id(cr,uid,'" + vals['attribute_code'] + "'," + vals['attribute_code'] + ",instance)\n\tif result:\n\t\tresult=[('" + vals['attribute_code'] + "',result)]"
             else:
                 vals['mapping_field_name'] = field_name
                 vals['mapping_type_cast'] = type_casts[vals['frontend_input']]
             
-        crid = super(magerp_product_attributes,self).create(cr,uid,vals,context)
+        crid = super(magerp_product_attributes, self).create(cr, uid, vals, context)
         
         if crid:
             #Fetch Options
             if vals['frontend_input'] in ['select']:
-                core_conn = self.pool.get('magerp.instances').connect(cr,uid,[vals['instance']])
-                self.pool.get('magerp.product_attribute_options').mage_import(cr, uid, [vals['attribute_id']], core_conn, vals['instance'], debug=False,defaults={'attribute_id':crid})
+                core_conn = self.pool.get('magerp.instances').connect(cr, uid, [vals['instance']])
+                self.pool.get('magerp.product_attribute_options').mage_import(cr, uid, [vals['attribute_id']], core_conn, vals['instance'], debug=False, defaults={'attribute_id':crid})
             #Manage fields
             if vals['attribute_code'] and vals['map_in_openerp']:
                 #Code for dynamically generating field name and attaching to this
-                model_id = self.pool.get('ir.model').search(cr,uid,[('model','=','product.product')])
-                if model_id and len(model_id)==1:
+                model_id = self.pool.get('ir.model').search(cr, uid, [('model', '=', 'product.product')])
+                if model_id and len(model_id) == 1:
                     model_id = model_id[0]
                     type_conversion = {
                         '':'char',
@@ -436,7 +436,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
                     }
                     
                     #Check if field already exists
-                    field_ids = self.pool.get('ir.model.fields').search(cr,uid,[('name','=',field_name),('model_id','=',model_id)])
+                    field_ids = self.pool.get('ir.model.fields').search(cr, uid, [('name', '=', field_name), ('model_id', '=', model_id)])
                     if not field_ids:
                         #The field is not there create it
                         field_vals = {
@@ -447,14 +447,14 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
                             'ttype':type_conversion[vals['frontend_input']],
                                       }
                         #IF char add size
-                        if field_vals['ttype']=='char':
-                            field_vals['size']=100
-                        if field_vals['ttype']=='many2one':
-                            field_vals['relation']='magerp.product_attribute_options'
-                            field_vals['domain']="[('attribute_id','=',"+str(crid)+")]"
+                        if field_vals['ttype'] == 'char':
+                            field_vals['size'] = 100
+                        if field_vals['ttype'] == 'many2one':
+                            field_vals['relation'] = 'magerp.product_attribute_options'
+                            field_vals['domain'] = "[('attribute_id','='," + str(crid) + ")]"
                         field_vals['state'] = 'manual'
                         #All field values are computed, now save
-                        field_id = self.pool.get('ir.model.fields').create(cr,uid,field_vals)
+                        field_id = self.pool.get('ir.model.fields').create(cr, uid, field_vals)
         return crid
     
 
@@ -468,19 +468,19 @@ class magerp_product_attribute_options(magerp_osv.magerp_osv):
     _LIST_METHOD = 'ol_catalog_product_attribute.options'
     
     _columns = {
-        'attribute_id':fields.many2one('magerp.product_attributes','Attribute'),
-        'attribute_name':fields.related('attribute_id','attribute_code',type='char',string='Attribute Code',),
-        'value':fields.char('Value',size=200),
-        'ipcast':fields.char('Type cast',size=50),
-        'label':fields.char('Label',size=100),
+        'attribute_id':fields.many2one('magerp.product_attributes', 'Attribute'),
+        'attribute_name':fields.related('attribute_id', 'attribute_code', type='char', string='Attribute Code',),
+        'value':fields.char('Value', size=200),
+        'ipcast':fields.char('Type cast', size=50),
+        'label':fields.char('Label', size=100),
         'instance':fields.many2one('magerp.instances', 'Magento Instance', readonly=True, store=True),
                 }
     _mapping = {
-        'value':('value',str,),
-        'label':('label',str)
+        'value':('value', str,),
+        'label':('label', str)
                 }
-    def get_option_id(self,cr,uid,attr_name,value,instance):
-        attr_id = self.search(cr,uid,[('attribute_name','=',attr_name),('value','=',value),('instance','=',instance)])
+    def get_option_id(self, cr, uid, attr_name, value, instance):
+        attr_id = self.search(cr, uid, [('attribute_name', '=', attr_name), ('value', '=', value), ('instance', '=', instance)])
         if attr_id:
             return attr_id[0]
         else:
@@ -496,14 +496,14 @@ class magerp_product_attribute_set(magerp_osv.magerp_osv):
     _columns = {
         'attribute_set_id':fields.integer('ID'),
         'sort_order':fields.integer('Sort Order'),
-        'attribute_set_name':fields.char('Set Name',size=100),
-        'attributes':fields.many2many('magerp.product_attributes', 'magerp_attrset_attr_rel', 'set_id', 'attr_id', 'Attributes'), 
+        'attribute_set_name':fields.char('Set Name', size=100),
+        'attributes':fields.many2many('magerp.product_attributes', 'magerp_attrset_attr_rel', 'set_id', 'attr_id', 'Attributes'),
         'instance':fields.many2one('magerp.instances', 'Magento Instance', readonly=True, store=True),
                 }
     _mapping = {
-        'attribute_set_id':('attribute_set_id',int),
-        'sort_order':('sort_order',int),
-        'attribute_set_name':('attribute_set_name',str)
+        'attribute_set_id':('attribute_set_id', int),
+        'sort_order':('sort_order', int),
+        'attribute_set_name':('attribute_set_name', str)
                 }
     def relate(self, cr, uid, mage_inp, instance, *args):
         #TODO: Build the relations code
@@ -513,31 +513,31 @@ class magerp_product_attribute_set(magerp_osv.magerp_osv):
         #3. Multirow insert is 4x faster than reduntant insert ref:http://kaiv.wordpress.com/2007/07/19/faster-insert-for-multiple-rows/
         rel_dict = {}
         #Get all attributes in onew place to convert from mage_id to oe_id
-        attr_ids = self.pool.get('magerp.product_attributes').search(cr,uid,[])
-        attr_list_oe = self.pool.get('magerp.product_attributes').read(cr,uid,attr_ids,['attribute_id'])
+        attr_ids = self.pool.get('magerp.product_attributes').search(cr, uid, [])
+        attr_list_oe = self.pool.get('magerp.product_attributes').read(cr, uid, attr_ids, ['attribute_id'])
         attr_list = {}
         for each_set in attr_list_oe:
             attr_list[each_set['attribute_id']] = each_set['id']
-        attr_set_ids = self.search(cr,uid,[])
-        attr_set_list_oe = self.read(cr,uid,attr_set_ids,['attribute_set_id'])
+        attr_set_ids = self.search(cr, uid, [])
+        attr_set_list_oe = self.read(cr, uid, attr_set_ids, ['attribute_set_id'])
         attr_set_list = {}
         for each_set in attr_set_list_oe:
             attr_set_list[each_set['attribute_set_id']] = each_set['id']
         key_attrs = []
         for each_key in mage_inp.keys():
-            self.write(cr,uid,attr_set_list[each_key],{'attributes': [[6, 0, []]]})
+            self.write(cr, uid, attr_set_list[each_key], {'attributes': [[6, 0, []]]})
             for each_attr in mage_inp[each_key]:
                 if each_attr['attribute_id']:
                     try:
-                        key_attrs.append((attr_set_list[each_key],attr_list[int(each_attr['attribute_id'])]))
-                    except Exception,e:
+                        key_attrs.append((attr_set_list[each_key], attr_list[int(each_attr['attribute_id'])]))
+                    except Exception, e:
                         pass
         #rel_dict {set_id:[attr_id_1,attr_id_2,],set_id2:[attr_id_1,attr_id_3]}
         query = "INSERT INTO magerp_attrset_attr_rel (set_id,attr_id) VALUES "
         for each_pair in key_attrs:
             query += str(each_pair)
             query += ","
-        query = query[0:len(query)-1] + ";"
+        query = query[0:len(query) - 1] + ";"
         cr.execute(query)
         return True
     
@@ -553,10 +553,10 @@ class magerp_product_attribute_groups(magerp_osv.magerp_osv):
     def set_get(self, cr, uid, ids, context=None):
         if not len(ids):
             return []
-        reads = self.read(cr, uid, ids, ['attribute_set_id','instance'], context)
+        reads = self.read(cr, uid, ids, ['attribute_set_id', 'instance'], context)
         res = []
         for record in reads:
-            rid = self.pool.get('magerp.product_attribute_set').mage_to_oe(cr, uid, record['attribute_set_id'],record['instance'][0])
+            rid = self.pool.get('magerp.product_attribute_set').mage_to_oe(cr, uid, record['attribute_set_id'], record['instance'][0])
             if rid:
                 res.append((record['id'], rid))
         return res
@@ -569,17 +569,17 @@ class magerp_product_attribute_groups(magerp_osv.magerp_osv):
         'attribute_group_id':fields.integer('Group ID'),
         'attribute_set_id':fields.integer('Attribute Set ID'),
         'attribute_set':fields.function(_get_set, type="many2one", relation="magerp.product_attribute_set", method=True, string="Attribute Set"),
-        'attribute_group_name':fields.char('Group Name',size=100),
+        'attribute_group_name':fields.char('Group Name', size=100),
         'sort_order':fields.integer('Sort Order'),
         'default_id':fields.integer('Default'),
         'instance':fields.many2one('magerp.instances', 'Magento Instance', readonly=True, store=True),
                 }
     _mapping = {
-        'attribute_group_id':('attribute_group_id',int),
-        'attribute_set_id':('attribute_set_id',int),
-        'attribute_group_name':('attribute_group_name',str),
-        'sort_order':('sort_order',int),
-        'default_id':('default_id',int)
+        'attribute_group_id':('attribute_group_id', int),
+        'attribute_set_id':('attribute_set_id', int),
+        'attribute_group_name':('attribute_group_name', str),
+        'sort_order':('sort_order', int),
+        'default_id':('default_id', int)
                 }
 magerp_product_attribute_groups()
 
@@ -589,28 +589,28 @@ class product_tierprice(osv.osv):
     
     _columns = {
         'web_scope':fields.selection([
-                    ('all','All Websites'),
-                    ('specific','Specific Website'),
-                                  ],'Scope'),
-        'website_id':fields.many2one('magerp.websites','Website'),
+                    ('all', 'All Websites'),
+                    ('specific', 'Specific Website'),
+                                  ], 'Scope'),
+        'website_id':fields.many2one('magerp.websites', 'Website'),
         'group_scope':fields.selection([
-                            ('1','All groups'),
-                            ('0','Specific group')
+                            ('1', 'All groups'),
+                            ('0', 'Specific group')
                                        ]),
-        'cust_group':fields.many2one('res.partner.category','Customer Group'),
-        'website_price':fields.float('Website Price',digits=(10,2),),
-        'price':fields.float('Price',digits=(10,2),),
-        'price_qty':fields.float('Quantity Slab',digits=(10,4),help="Slab & above eg.For 10 and above enter 10"),
-        'product':fields.many2one('product.product','Product'),
+        'cust_group':fields.many2one('res.partner.category', 'Customer Group'),
+        'website_price':fields.float('Website Price', digits=(10, 2),),
+        'price':fields.float('Price', digits=(10, 2),),
+        'price_qty':fields.float('Quantity Slab', digits=(10, 4), help="Slab & above eg.For 10 and above enter 10"),
+        'product':fields.many2one('product.product', 'Product'),
         'instance':fields.many2one('magerp.instances', 'Magento Instance', readonly=True, store=True),
                 }
     _mapping = {
-        'cust_group':(False,int,"""result=self.pool.get('res.partner.category').mage_to_oe(cr,uid,cust_group,instance)\nif result:\n\tresult=[('cust_group',result[0])]\nelse:\n\tresult=[('cust_group',False)]"""),
-        'all_groups':(False,str,"""if all_groups=='1':\n\tresult=[('group_scope','1')]\nelse:\n\tresult=[('group_scope','1')]"""),
-        'website_price':('website_price',float),
-        'price':('price',float),
-        'website_id':(False,int,"""result=self.pool.get('magerp.websites').mage_to_oe(cr,uid,website_id,instance)\nif result:\n\tresult=[('website_id',result[0])]\nelse:\n\tresult=[('website_id',False)]"""),
-        'price_qty':('price_qty',float),
+        'cust_group':(False, int, """result=self.pool.get('res.partner.category').mage_to_oe(cr,uid,cust_group,instance)\nif result:\n\tresult=[('cust_group',result[0])]\nelse:\n\tresult=[('cust_group',False)]"""),
+        'all_groups':(False, str, """if all_groups=='1':\n\tresult=[('group_scope','1')]\nelse:\n\tresult=[('group_scope','1')]"""),
+        'website_price':('website_price', float),
+        'price':('price', float),
+        'website_id':(False, int, """result=self.pool.get('magerp.websites').mage_to_oe(cr,uid,website_id,instance)\nif result:\n\tresult=[('website_id',result[0])]\nelse:\n\tresult=[('website_id',False)]"""),
+        'price_qty':('price_qty', float),
                 }
 product_tierprice()
 
@@ -621,25 +621,25 @@ class product_product(magerp_osv.magerp_osv):
     _INFO_METHOD = "catalog_product.info"
     #Just implement a simple product synch
     _columns = {
-        'product_id':fields.integer('Magento ID',readonly=True,store=True),
+        'product_id':fields.integer('Magento ID', readonly=True, store=True),
         'instance':fields.many2one('magerp.instances', 'Magento Instance', readonly=True, store=True),
         'created_at':fields.date('Created'), #created_at & updated_at in magento side, to allow filtering/search inside OpenERP!
         'updated_at':fields.date('Created'),
-        'set':fields.many2one('magerp.product_attribute_set','Attribute Set'),
-        'tier_price':fields.one2many('product.tierprice','product','Tier Price'),
+        'set':fields.many2one('magerp.product_attribute_set', 'Attribute Set'),
+        'tier_price':fields.one2many('product.tierprice', 'product', 'Tier Price'),
         }
     _mapping = {
-        'product_id':('product_id',int)
+        'product_id':('product_id', int)
                 }
-    def mage_import(self, cr, uid, ids_or_filter, conn, instance, debug=False,defaults={}, *attrs):
+    def mage_import(self, cr, uid, ids_or_filter, conn, instance, debug=False, defaults={}, *attrs):
         #Build the mapping dictionary dynamically from attributes
-        inst_attrs = self.pool.get('magerp.product_attributes').search(cr,uid,[('instance','=',instance),('map_in_openerp','=','1')])
-        inst_attrs_reads = self.pool.get('magerp.product_attributes').read(cr,uid,inst_attrs,['attribute_code','mapping_field_name','mapping_type_cast','mapping_script'])
+        inst_attrs = self.pool.get('magerp.product_attributes').search(cr, uid, [('instance', '=', instance), ('map_in_openerp', '=', '1')])
+        inst_attrs_reads = self.pool.get('magerp.product_attributes').read(cr, uid, inst_attrs, ['attribute_code', 'mapping_field_name', 'mapping_type_cast', 'mapping_script'])
         for each in inst_attrs_reads:
-            if type(each['mapping_type_cast'])==unicode:
-                self._mapping[each['attribute_code']] = (each['mapping_field_name'],eval(each['mapping_type_cast']),each['mapping_script'])
+            if type(each['mapping_type_cast']) == unicode:
+                self._mapping[each['attribute_code']] = (each['mapping_field_name'], eval(each['mapping_type_cast']), each['mapping_script'])
             else:
-                self._mapping[each['attribute_code']] = (each['mapping_field_name'],each['mapping_type_cast'],each['mapping_script'])
+                self._mapping[each['attribute_code']] = (each['mapping_field_name'], each['mapping_type_cast'], each['mapping_script'])
         #If mapping dictionary exists then synchronise
         if self._mapping:
             list_prods = conn.call(self._LIST_METHOD, ids_or_filter)
@@ -649,42 +649,42 @@ class product_product(magerp_osv.magerp_osv):
                 result.append(each_product_info)
             #result contains detailed info of all products
             if attrs:
-                self.sync_import(cr, uid, result, instance, debug,defaults, attrs)
+                self.sync_import(cr, uid, result, instance, debug, defaults, attrs)
             else:
-                self.sync_import(cr, uid, result, instance, debug,defaults)
+                self.sync_import(cr, uid, result, instance, debug, defaults)
         else:
-            raise osv.except_osv(_('Undefined Mapping !'),_("Mapping dictionary is not present in the object!\nMake sure attributes are synchronised first"))
+            raise osv.except_osv(_('Undefined Mapping !'), _("Mapping dictionary is not present in the object!\nMake sure attributes are synchronised first"))
 
-    def write(self,cr,uid,ids,vals,context={}):
+    def write(self, cr, uid, ids, vals, context={}):
         instance = vals['instance']
         #Filter the keys to be changes
         if ids:
-            if type(ids)==list and len(ids)==1:
+            if type(ids) == list and len(ids) == 1:
                 ids = ids[0]
-            elif type(ids)==int or type(ids)==long:
-                ids =ids
+            elif type(ids) == int or type(ids) == long:
+                ids = ids
             else:
                 return False
-        tier_price= False
+        tier_price = False
         if 'x_magerp_tier_price' in vals.keys(): 
             tier_price = vals.pop('x_magerp_tier_price')
         tp_obj = self.pool.get('product.tierprice')
         #Delete existing tier prices
-        tier_price_ids = tp_obj.search(cr,uid,[('product','=',ids)])
+        tier_price_ids = tp_obj.search(cr, uid, [('product', '=', ids)])
         if tier_price_ids:
-            tp_obj.unlink(cr,uid,tier_price_ids)
+            tp_obj.unlink(cr, uid, tier_price_ids)
         #Save the tier price
         if tier_price:
             self.create_tier_price(cr, uid, tier_price, instance, ids)
-        stat = super(product_product,self).write(cr,uid,ids,vals,context)
+        stat = super(product_product, self).write(cr, uid, ids, vals, context)
         #Perform other operation
         return stat
     
-    def create_tier_price(self,cr,uid,tier_price,instance, product_id):
+    def create_tier_price(self, cr, uid, tier_price, instance, product_id):
         tp_obj = self.pool.get('product.tierprice')
         for each in eval(tier_price):
             tier_vals = {}
-            cust_group = self.pool.get('res.partner.category').mage_to_oe(cr,uid,int(each['cust_group']),instance)
+            cust_group = self.pool.get('res.partner.category').mage_to_oe(cr, uid, int(each['cust_group']), instance)
             if cust_group:
                 tier_vals['cust_group'] = cust_group[0]
             else:
@@ -699,16 +699,16 @@ class product_product(magerp_osv.magerp_osv):
                 tier_vals['web_scope'] = 'all'
             else:
                 tier_vals['web_scope'] = 'specific'
-                tier_vals['website_id'] = self.pool.get('magerp.websites').mage_to_oe(cr,uid,int(each['website_id']),instance)
-            tp_obj.create(cr,uid,tier_vals)
+                tier_vals['website_id'] = self.pool.get('magerp.websites').mage_to_oe(cr, uid, int(each['website_id']), instance)
+            tp_obj.create(cr, uid, tier_vals)
     
-    def create(self,cr,uid,vals,context={}):
+    def create(self, cr, uid, vals, context={}):
         instance = vals['instance']
         #Filter keys to be changed
-        tier_price= False
+        tier_price = False
         if 'x_magerp_tier_price' in vals.keys(): 
             tier_price = vals.pop('x_magerp_tier_price')
-        crid = super(product_product,self).create(cr,uid,vals,context)
+        crid = super(product_product, self).create(cr, uid, vals, context)
         #Save the tier price
         if tier_price:
             self.create_tier_price(cr, uid, tier_price, instance, crid)
