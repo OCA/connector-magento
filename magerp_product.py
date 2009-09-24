@@ -619,6 +619,7 @@ class product_product(magerp_osv.magerp_osv):
     _MAGE_FIELD = 'product_id'
     _LIST_METHOD = "catalog_product.list"
     _INFO_METHOD = "catalog_product.info"
+    _CREATE_METHOD = "product.create"
     #Just implement a simple product synch
     _columns = {
         'product_id':fields.integer('Magento ID', readonly=True, store=True),
@@ -656,26 +657,27 @@ class product_product(magerp_osv.magerp_osv):
             raise osv.except_osv(_('Undefined Mapping !'), _("Mapping dictionary is not present in the object!\nMake sure attributes are synchronised first"))
 
     def write(self, cr, uid, ids, vals, context={}):
-        instance = vals['instance']
-        #Filter the keys to be changes
-        if ids:
-            if type(ids) == list and len(ids) == 1:
-                ids = ids[0]
-            elif type(ids) == int or type(ids) == long:
-                ids = ids
-            else:
-                return False
-        tier_price = False
-        if 'x_magerp_tier_price' in vals.keys(): 
-            tier_price = vals.pop('x_magerp_tier_price')
-        tp_obj = self.pool.get('product.tierprice')
-        #Delete existing tier prices
-        tier_price_ids = tp_obj.search(cr, uid, [('product', '=', ids)])
-        if tier_price_ids:
-            tp_obj.unlink(cr, uid, tier_price_ids)
-        #Save the tier price
-        if tier_price:
-            self.create_tier_price(cr, uid, tier_price, instance, ids)
+        if vals.get('instance', False):
+            instance = vals['instance']
+            #Filter the keys to be changes
+            if ids:
+                if type(ids) == list and len(ids) == 1:
+                    ids = ids[0]
+                elif type(ids) == int or type(ids) == long:
+                    ids = ids
+                else:
+                    return False
+            tier_price = False
+            if 'x_magerp_tier_price' in vals.keys(): 
+                tier_price = vals.pop('x_magerp_tier_price')
+            tp_obj = self.pool.get('product.tierprice')
+            #Delete existing tier prices
+            tier_price_ids = tp_obj.search(cr, uid, [('product', '=', ids)])
+            if tier_price_ids:
+                tp_obj.unlink(cr, uid, tier_price_ids)
+            #Save the tier price
+            if tier_price:
+                self.create_tier_price(cr, uid, tier_price, instance, ids)
         stat = super(product_product, self).write(cr, uid, ids, vals, context)
         #Perform other operation
         return stat
@@ -714,4 +716,48 @@ class product_product(magerp_osv.magerp_osv):
             self.create_tier_price(cr, uid, tier_price, instance, crid)
         #Perform other operations
         return crid
+    
+    def oe_record_to_mage_create(self, cr, uid, ids, conn, instance, context={}):
+        mage_records = []
+        for product in self.browse(cr, uid, ids):
+            sku = (product.code or "mag") + "_" + str(product.id)
+            
+            pricelist_obj = self.pool.get('product.pricelist')
+            pl_default_id = pricelist_obj.search(cr, uid, [('type', '=', 'sale')]) #TODO pricelist_obj.search(cr, uid, [('magento_default', '=', True)])
+            
+            if product.set and product.set.attribute_set_id:
+                attr_set_id = product.set.attribute_set_id.id
+            else:
+                sets = conn.call('product_attribute_set.list')
+                print "sets", sets
+                for set in sets:
+                    if set['name'] == 'Default':
+                        attr_set_id = set['set_id']
+                        break
+                    else :
+                        attr_set_id = 1
+
+            product_data = { #TODO refactor that using existing mappings? Add extra attributes?
+                    'name': product.name,
+                    'price' : pricelist_obj.price_get(cr, uid, pl_default_id, product.id, 1.0)[pl_default_id[0]],
+                    'weight': (product.weight_net or 0),
+                    'category_ids': [categ.category_id for categ in product.categ_ids],
+                    'description' : (product.description or _("description")),
+                    'short_description' : (product.description_sale or _("short description")),
+                    'websites':['base'],
+                    'tax_class_id': 2, #product.magento_tax_class_id or 2 ? TODO mapp taxes!
+                    'status': product.active and 1 or 2,
+                    'meta_title': product.name,
+                    'meta_keyword': product.name,
+                    'meta_description': product.description_sale and product.description_sale[:255],
+            }
+            print "product_data", product_data  
+
+            mage_record = [product.id, 'simple', attr_set_id, sku, product_data]
+            mage_records.append(mage_record)
+        return mage_records
+    
+    def oe_record_to_mage_update(self, cr, uid, ids, conn, instance, context={}):
+        raise "oe_record_to_mage conversion method not complemented for that class"    
+
 product_product()

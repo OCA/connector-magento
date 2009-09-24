@@ -40,6 +40,7 @@
 								<button name="sync_customer_groups" string="Sync Customer Groups (Partner Categories)" colspan="2" type="object" />
 								<button name="sync_customer_addresses" string="Sync Customer Addresses" colspan="2" type="object" />
 								<button name="sync_products" string="Sync Products" colspan="2" type="object" />
+								<button name="export_products" string="Export Products" colspan="2" type="object" />
 							</page>
 						</notebook>
 					</group>

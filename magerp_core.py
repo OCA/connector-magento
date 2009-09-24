@@ -209,6 +209,18 @@ class magerp_instances(osv.osv):
                 self.pool.get('product.product').mage_import(cr, uid, filter, attr_conn, inst.id, DEBUG)
             else:
                 osv.except_osv(_("Connection Error"), _("Could not connect to server\nCheck location, username & password."))                        
+
+    def export_products(self, cr, uid, ids, ctx):
+        instances = self.browse(cr, uid, ids, ctx)
+        for inst in instances:
+            attr_conn = Connection(inst.location, inst.apiusername, inst.apipass, DEBUG)
+            if attr_conn.connect():
+                ids = self.pool.get('product.product').search(cr, uid, [])
+                self.pool.get('product.product').mage_export(cr, uid, ids, attr_conn, inst.id)
+            else:
+                osv.except_osv(_("Connection Error"), _("Could not connect to server\nCheck location, username & password."))                        
+
+
                                 
 magerp_instances()
 
