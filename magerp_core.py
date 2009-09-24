@@ -143,7 +143,7 @@ class magerp_instances(osv.osv):
                 attrib_set_ids = self.pool.get('magerp.product_attribute_set').search(cr, uid, [('instance', '=', inst.id)])
                 attrib_sets = self.pool.get('magerp.product_attribute_set').read(cr, uid, attrib_set_ids, ['attribute_set_id'])
                 #Get all attribute set ids to get all attributes in one go
-                all_attr_set_ids = self.pool.get('magerp.product_attribute_set').getall_mageids(cr, uid, [], inst.id)
+                all_attr_set_ids = self.pool.get('magerp.product_attribute_set').get_all_mage_ids(cr, uid, [], inst.id)
                 #Call magento for all attributes
                 mage_inp = attr_conn.call('catalog_product_attribute.list', all_attr_set_ids)             #Get the tree
                 self.pool.get('magerp.product_attributes').sync_import(cr, uid, mage_inp, inst.id, DEBUG) #Last argument is extra mage2oe filter as same attribute ids
@@ -173,7 +173,7 @@ class magerp_instances(osv.osv):
         instances = self.browse(cr, uid, ids, ctx)
         for inst in instances:
             attr_conn = Connection(inst.location, inst.apiusername, inst.apipass, DEBUG)
-            attrset_ids = self.pool.get('magerp.product_attribute_set').getall_mageids(cr, uid, [], inst.id)
+            attrset_ids = self.pool.get('magerp.product_attribute_set').get_all_mage_ids(cr, uid, [], inst.id)
             filter = [{'attribute_set_id':{'in':attrset_ids}}]
             if attr_conn.connect():
                 self.pool.get('magerp.product_attribute_groups').mage_import(cr, uid, filter, attr_conn, inst.id, DEBUG)

@@ -157,7 +157,7 @@ class magerp_osv(osv.osv):
         else:
             raise osv.except_osv(_('Undefined List method !'), _("list method is undefined for this object!"))
     
-    def getall_mageids(self, cr, uid, ids=[], instance=False):
+    def get_all_mage_ids(self, cr, uid, ids=[], instance=False):
         search_param = []
         if instance:
             search_param = [('instance', '=', instance)]
