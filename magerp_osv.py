@@ -67,7 +67,7 @@ class magerp_osv(osv.osv):
                 mage2oe_filters = attrs[0]
             for magento_record in magento_records:
                 #Transform Record objects
-                magento_record = self.transform(magento_record)
+                magento_record = self.cast_string(magento_record)
                 #Check if record exists
                 if mage2oe_filters:
                     rec_id = self.mage_to_oe(cr, uid, magento_record[self._MAGE_FIELD], instance, mage2oe_filters)
@@ -137,8 +137,8 @@ class magerp_osv(osv.osv):
             #Record is not there, create it
             self.create(cr, uid, vals,)
             
-    def transform(self, subject):
-        #This function will convert string objects to the data type required
+    def cast_string(self, subject):
+        """This function will convert string objects to the data type required. Example "0"/"1" to boolean conversion"""
         for key in subject.keys():
             if key[0:3] == "is_":
                 if subject[key] == '0':

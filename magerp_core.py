@@ -45,16 +45,6 @@ class Connection():
         self.result = {}
         self.logger = netsvc.Logger()
     
-    def transform(self, subject):
-        #This function will convert string objects to the data type required
-        for key in subject.keys():
-            if key[0:3] == "is_":
-                if subject[key] == '0':
-                    subject[key] = False
-                else:
-                    subject[key] = True
-        return subject
-    
     def connect(self):
         if not self.location[-1] == '/':
             self.location += '/'

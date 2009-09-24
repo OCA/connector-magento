@@ -147,7 +147,7 @@ class product_category(magerp_osv.magerp_osv):
     def record_category(self, cr, uid, id, conn, category_id):
         #This function should record a category
         #The parent has to be created before creating child
-        imp_vals = conn.transform(conn.call('category.info', [category_id]))
+        imp_vals = conn.cast_string(conn.call('category.info', [category_id]))
         vals = {}
         imp_keys = self.IMPORT_KEYS
         for eachkey in imp_keys:
