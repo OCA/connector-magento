@@ -58,47 +58,47 @@ class magerp_osv(osv.osv):
                     return (read[0]['id'], read[0][self._rec_name])
         return False
     
-    def sync_import(self, cr, uid, mage_ip, instance, debug=False, defaults={}, *attrs):
+    def sync_import(self, cr, uid, magento_records, instance, debug=False, defaults={}, *attrs):
         #Attrs of 0 should be mage2oe_filters
-        if mage_ip:
+        if magento_records:
             mapped_keys = self._mapping.keys()
             mage2oe_filters = False
             if attrs:
                 mage2oe_filters = attrs[0]
-            for each_record in mage_ip:
+            for magento_record in magento_records:
                 #Transform Record objects
-                each_record = self.transform(each_record)
+                magento_record = self.transform(magento_record)
                 #Check if record exists
                 if mage2oe_filters:
-                    rec_id = self.mage_to_oe(cr, uid, each_record[self._MAGE_FIELD], instance, mage2oe_filters)
+                    rec_id = self.mage_to_oe(cr, uid, magento_record[self._MAGE_FIELD], instance, mage2oe_filters)
                 else:
                     if self._MAGE_FIELD:
-                        rec_id = self.mage_to_oe(cr, uid, each_record[self._MAGE_FIELD], instance)
+                        rec_id = self.mage_to_oe(cr, uid, magento_record[self._MAGE_FIELD], instance)
                     else:
                         rec_id = False
                 #Generate Vals
                 vals = {}
                 space = {
-                    'self':self,
-                    'uid':uid,
-                    'rec_id':rec_id,
-                    'cr':cr,
-                    'instance':instance,
-                    'temp_vars':{},
-                    'mage2oe_filters':mage2oe_filters
-                                         }
+                            'self':self,
+                            'uid':uid,
+                            'rec_id':rec_id,
+                            'cr':cr,
+                            'instance':instance,
+                            'temp_vars':{},
+                            'mage2oe_filters':mage2oe_filters
+                        }
                 for each_valid_key in self._mapping:
-                    if each_valid_key in each_record.keys():
+                    if each_valid_key in magento_record.keys():
                         try:
                             if len(self._mapping[each_valid_key]) == 2 or self._mapping[each_valid_key][2] == False:#Only Name & type
-                                vals[self._mapping[each_valid_key][0]] = self._mapping[each_valid_key][1](each_record[each_valid_key]) or False
+                                vals[self._mapping[each_valid_key][0]] = self._mapping[each_valid_key][1](magento_record[each_valid_key]) or False
                             elif len(self._mapping[each_valid_key]) == 3:# Name & type & expr
                                 #get the space ready for expression to run
                                 #Add current type casted value to space if it exists or just the value
                                 if self._mapping[each_valid_key][1]:
-                                    space[each_valid_key] = self._mapping[each_valid_key][1](each_record[each_valid_key]) or False
+                                    space[each_valid_key] = self._mapping[each_valid_key][1](magento_record[each_valid_key]) or False
                                 else:
-                                    space[each_valid_key] = each_record[each_valid_key] or False
+                                    space[each_valid_key] = magento_record[each_valid_key] or False
                                 space['vals'] = vals
                                 exec self._mapping[each_valid_key][2] in space
                                 if 'result' in space.keys():
@@ -116,7 +116,7 @@ class magerp_osv(osv.osv):
                                         vals[self._mapping[each_valid_key][0]] = False
                         except Exception, e:
                             if self._mapping[each_valid_key][0]:#if not function mapping
-                                vals[self._mapping[each_valid_key][0]] = each_record[each_valid_key] or False
+                                vals[self._mapping[each_valid_key][0]] = magento_record[each_valid_key] or False
                 vals['instance'] = instance
                 if debug:
                     print vals
@@ -149,11 +149,11 @@ class magerp_osv(osv.osv):
     
     def mage_import(self, cr, uid, ids_or_filter, conn, instance, debug=False, defaults={}, *attrs):
         if self._LIST_METHOD:
-            result = conn.call(self._LIST_METHOD, ids_or_filter)
+            magento_records = conn.call(self._LIST_METHOD, ids_or_filter)
             if attrs:
-                self.sync_import(cr, uid, result, instance, debug, defaults, attrs)
+                self.sync_import(cr, uid, magento_records, instance, debug, defaults, attrs)
             else:
-                self.sync_import(cr, uid, result, instance, debug, defaults)
+                self.sync_import(cr, uid, magento_records, instance, debug, defaults)
         else:
             raise osv.except_osv(_('Undefined List method !'), _("list method is undefined for this object!"))
     
