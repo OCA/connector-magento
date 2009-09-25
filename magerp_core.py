@@ -227,7 +227,6 @@ magerp_instances()
 class magerp_websites(magerp_osv.magerp_osv):
     _name = "magerp.websites"
     _description = "The magento websites information"
-    _MAGE_FIELD = 'website_id'
     _LIST_METHOD = 'ol_websites.list'
     #Return format of API:{'code': 'base', 'name': 'Main', 'website_id': '1', 'is_default': '1', 'sort_order': '0', 'default_group_id': '1'}
             
@@ -235,12 +234,12 @@ class magerp_websites(magerp_osv.magerp_osv):
         res = self.group_get(cr, uid, ids, context={'field':'default_group_id'})
         return dict(res)        
 
-    _order = 'website_id'
+    _order = 'magento_id'
     
     _columns = {
         'name':fields.char('Website Name', size=100),
         'code':fields.char('Code', size=100),
-        'website_id':fields.integer('Website ID'),
+        'magento_id':fields.integer('Website ID'),
         'is_default':fields.boolean('Is Active?'),
         'sort_order':fields.integer('Sort Order'),
         'default_group_id':fields.integer('Default Store Group'), #Many 2 one?
@@ -250,7 +249,7 @@ class magerp_websites(magerp_osv.magerp_osv):
     _mapping = {
         'name':('name', str),
         'code':('code', str),
-        'website_id':('website_id', int),
+        'website_id':('magento_id', int),
         'is_default':('is_default', bool),
         'sort_order':('sort_order', int),
         'default_group_id':('default_group_id', int), #Many 2 one?
@@ -265,20 +264,19 @@ class magerp_storeviews(magerp_osv.magerp_osv):
     _description = "The magento store views information"
        
     def _get_website(self, cr, uid, ids, prop, unknow_none, context):
-        res = self.website_get(cr, uid, ids, context={'field':'website_id'})
+        res = self.website_get(cr, uid, ids, context={'field':'magento_id'})
         return dict(res)
     
     def _get_group(self, cr, uid, ids, prop, unknow_none, context):
         res = self.group_get(cr, uid, ids, context={'field':'group_id'})
         return dict(res) 
     
-    _order = 'store_id'
-    _MAGE_FIELD = 'store_id'
+    _order = 'magento_id'
     _LIST_METHOD = 'ol_storeviews.list'
     _columns = {
         'name':fields.char('Store View Name', size=100),
         'code':fields.char('Code', size=100),
-        'store_id':fields.integer('Store ID'),
+        'magento_id':fields.integer('Store ID'),
         'website_id':fields.integer('Website'), # Many 2 one ?
         'website':fields.function(_get_website, type="many2one", relation="magerp.websites", method=True, string="Website"),
         'is_active':fields.boolean('Default ?'),
@@ -290,7 +288,7 @@ class magerp_storeviews(magerp_osv.magerp_osv):
     _mapping = {
         'name':('name', str),
         'code':('code', str),
-        'store_id':('store_id', int),
+        'store_id':('magento_id', int),
         'website_id':('website_id', int), # Many 2 one ?
         'is_active':('is_active', bool),
         'sort_order':('sort_order', int),
@@ -328,12 +326,12 @@ class magerp_groups(magerp_osv.magerp_osv):
         res = self.rootcategory_get(cr, uid, ids, context)
         return dict(res)     
        
-    _order = 'group_id'
-    _MAGE_FIELD = 'group_id'
+    _order = 'magento_id'
+    _MAGE_FIELD = 'magento_id'
     _LIST_METHOD = 'ol_groups.list'
     _columns = {
         'name':fields.char('Store(Group) Name', size=100),
-        'group_id':fields.integer('ID'),
+        'magento_id':fields.integer('ID'),
         'default_store_id':fields.integer('Store ID'), #Many 2 one ?
         'default_store':fields.function(_get_store, type="many2one", relation="magerp.storeviews", method=True, string="Store View"),
         'website_id':fields.integer('Website'), # Many 2 one ?
@@ -344,7 +342,7 @@ class magerp_groups(magerp_osv.magerp_osv):
     }
     _mapping = {
         'name':('name', str),
-        'group_id':('group_id', int),
+        'group_id':('magento_id', int),
         'default_store_id':('default_store_id', int), #Many 2 one ?
         'website_id':('website_id', int), # Many 2 one ?
         'root_category_id':('root_category_id', int),
