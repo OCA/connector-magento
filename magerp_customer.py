@@ -24,28 +24,28 @@ import magerp_osv
 
 class res_partner_category(magerp_osv.magerp_osv):
     _inherit = "res.partner.category"
-    _MAGE_FIELD = 'customer_group_id'
+    _MAGE_FIELD = 'magento_id'
     _LIST_METHOD = 'ol_customer_groups.list'
     _columns = {
-                'customer_group_id':fields.integer('Customer Group ID'),
+                'magento_id':fields.integer('Customer Group ID'),
                 'tax_class_id':fields.integer('Tax Class ID'),
                 'instance':fields.many2one('magerp.instances', 'Magento Instance', readonly=True, store=True),
                 }
     #mapping magentofield:(openerpfield,typecast,)
     _mapping = {
             'customer_group_code':('name', str),
-            'customer_group_id':('customer_group_id', int),
+            'customer_group_id':('magento_id', int),
             'tax_class_id':('tax_class_id', int)
                 }
 res_partner_category()
 
 class res_partner_address(magerp_osv.magerp_osv):
     _inherit = "res.partner.address"
-    _MAGE_FIELD = 'entity_id'
+    _MAGE_FIELD = 'magento_id'
     _LIST_METHOD = 'ol_customer_address.list'
         
     _columns = {
-        'entity_id':fields.integer('Magento ID'),
+        'magento_id':fields.integer('Magento ID'),
         'lastname':fields.char('Last Name', size=100),
         'instance':fields.many2one('magerp.instances', 'Magento Instance', readonly=True, store=True),
         'exportable':fields.boolean('Export to magento?'),
@@ -55,7 +55,7 @@ class res_partner_address(magerp_osv.magerp_osv):
                  }
     #mapping magentofield:(openerpfield,typecast,)
     _mapping = {
-        'entity_id':('entity_id', int),
+        'entity_id':('magento_id', int),
         'city':('city', str),
         'fax':('fax', str),
         'firstname':('name', str),
@@ -75,10 +75,10 @@ res_partner_address()
 
 class res_partner(magerp_osv.magerp_osv):
     _inherit = "res.partner"
-    _MAGE_FIELD = 'customer_id'
+    _MAGE_FIELD = 'magento_id'
     _LIST_METHOD = 'customer.list'
     _columns = {
-        'customer_id':fields.integer('Magento customer ID', readonly=True, store=True),
+        'magento_id':fields.integer('Magento customer ID', readonly=True, store=True),
         'group_id':fields.many2one('res.partner.category', 'Magento Group(Category)'),
         'store_id':fields.many2one('magerp.storeviews', 'Store'),
         'website_id':fields.many2one('magerp.websites', 'Website'),
@@ -89,7 +89,7 @@ class res_partner(magerp_osv.magerp_osv):
         'instance':fields.many2one('magerp.instances', 'Magento Instance', readonly=True, store=True),
                 }
     _mapping = {
-        'customer_id':('customer_id', int),
+        'customer_id':('magento_id', int),
         'group_id':('group_id', int, """result=self.pool.get('res.partner.category').mage_to_oe(cr,uid,group_id,instance)\nif result:\n\tresult=result[0]"""),
         'store_id':('store_id', int, """result=self.pool.get('magerp.storeviews').mage_to_oe(cr,uid,store_id,instance)\nif result:\n\tresult=result[0]"""),
         'website_id':('website_id', int, """result=self.pool.get('magerp.websites').mage_to_oe(cr,uid,website_id,instance)\nif result:\n\tresult=result[0]"""),
