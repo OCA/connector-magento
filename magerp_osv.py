@@ -4,6 +4,10 @@ import datetime
 class magerp_osv(osv.osv):
     _MAGE_FIELD = 'magento_id'
     _LIST_METHOD = False
+    _GET_METHOD = False
+    _CREATE_METHOD = False
+    _UPDATE_METHOD = False
+    _DELETE_METHOD = False
     _mapping = {}
     
     def website_get(self, cr, uid, ids, context=None):
@@ -157,7 +161,7 @@ class magerp_osv(osv.osv):
         else:
             raise osv.except_osv(_('Undefined List method !'), _("list method is undefined for this object!"))
 
-    def mage_export(self, cr, uid, ids, conn, instance, context={}):
+    def mage_export(self, cr, uid, ids, conn, instance, context={}, debug=False):
         for record_read in self.read(cr, uid, ids, [self._MAGE_FIELD]):#we might imagine a faster batch update to be developed later on eventually
             if record_read[self._MAGE_FIELD]:
                 self.mage_export_update(cr, uid, [record_read["id"]], conn, instance, context={})
@@ -167,19 +171,27 @@ class magerp_osv(osv.osv):
     def mage_export_create(self, cr, uid, ids, conn, instance, context={}):
         mage_records = self.oe_record_to_mage_create(cr, uid, ids, conn, instance, context) #FIXME: eventually that array might be very large, split it into reasonable chunks?
         for mage_record in mage_records:#we might imagine a faster batch update to be developed later on eventually
-            mage_id = conn.call(self._CREATE_METHOD, mage_record[1:])
+            mage_id = conn.call(self._CREATE_METHOD, mage_record[1])
             self.write(cr, uid, mage_record[0], {self._MAGE_FIELD: mage_id})
             cr.commit();#better to commit while export being made in case of slow upload to Magento crashing
             #TODO log it?
     
     def mage_export_update(self, cr, uid, ids, conn, instance, context={}):
-        pass
+        mage_records = self.oe_record_to_mage_update(cr, uid, ids, conn, instance, context) #FIXME: eventually that array might be very large, split it into reasonable chunks?
+        for mage_record in mage_records:#we might imagine a faster batch update to be developed later on eventually
+            mage_id = conn.call(self._UPDATE_METHOD, mage_record[1])
+            self.write(cr, uid, mage_record[0], {self._MAGE_FIELD: mage_id})
+            cr.commit();#better to commit while export being made in case of slow upload to Magento crashing
+            #TODO log it?
     
     def oe_record_to_mage_create(self, cr, uid, ids, conn, instance, context={}):
         raise "oe_record_to_mage conversion method not complemented for that class"
     
     def oe_record_to_mage_update(self, cr, uid, ids, conn, instance, context={}):
         raise "oe_record_to_mage conversion method not complemented for that class"
+    
+    def oe_record_to_mage_data(self, cr, uid, oe_product, conn, instance, context={}):
+        raise "oe_record_to_mage_data method not complemented for that class"
     
     def get_all_mage_ids(self, cr, uid, ids=[], instance=False):
         search_param = []
