@@ -22,7 +22,7 @@
 										<field name="meta_description" colspan="2" />
 										<field name="url_key" colspan="2" />
 										<field name="level" colspan="2" />
-										<field name="category_id" colspan="2" />
+										<field name="magento_id" colspan="2" />
 									</group>
 									<group col="1" colspan="1">
 										<separator string="Category Image" />
@@ -83,7 +83,7 @@
 			<field name="arch" type="xml">
 				<form string="Magento Product Attribute Sets">
 					<group col="4" colspan="4">
-						<field name="attribute_set_id" readonly="1" />
+						<field name="magento_id" readonly="1" />
 						<field name="sort_order" readonly="1" />
 						<field name="attribute_set_name" readonly="1" />
 						<field name="instance" readonly="1" />
@@ -99,7 +99,7 @@
 			<field name="type">tree</field>
 			<field name="arch" type="xml">
 				<tree string="Magento Product Attribute Set">
-					<field name="attribute_set_id" select="1" />
+					<field name="magento_id" select="1" />
 					<field name="sort_order" select="2" />
 					<field name="attribute_set_name" select="1" />
 					<field name="instance" select="2" />
@@ -124,7 +124,7 @@
 				<form string="Magento Product Attributes">
 					<group col="4" colspan="4">
 						<field name="attribute_code" />
-						<field name="attribute_id" />
+						<field name="magento_id" />
 						<field name="frontend_input" />
 						<field name="frontend_class" />
 						<field name="backend_model" />
@@ -165,7 +165,7 @@
 				<tree string="Magento Product Attributes">
 					<field name="instance" select="1" />
 					<field name="attribute_code" select="1" />
-					<field name="attribute_id" select="1" />
+					<field name="magento_id" select="1" />
 				</tree>
 			</field>
 		</record>
@@ -186,7 +186,7 @@
 			<field name="arch" type="xml">
 				<form string="Magento Product Attributes Groups">
 					<group col="4" colspan="4">
-						<field name="attribute_group_id" />
+						<field name="magento_id" />
 						<field name="attribute_group_name" />
 						<field name="attribute_set" />
 						<field name="default_id" />
@@ -202,7 +202,7 @@
 			<field name="type">tree</field>
 			<field name="arch" type="xml">
 				<tree string="Magento Product Attribute groups">
-					<field name="attribute_group_id" select="1" />
+					<field name="magento_id" select="1" />
 					<field name="attribute_group_name" select="1" />
 					<field name="attribute_set" select="2" />
 					<field name="default_id" select="2" />

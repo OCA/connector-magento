@@ -3,6 +3,7 @@ import datetime
 
 class magerp_osv(osv.osv):
     _MAGE_FIELD = 'magento_id'
+    _MAGE_P_KEY = False
     _LIST_METHOD = False
     _GET_METHOD = False
     _CREATE_METHOD = False
@@ -74,10 +75,10 @@ class magerp_osv(osv.osv):
                 magento_record = self.cast_string(magento_record)
                 #Check if record exists
                 if mage2oe_filters:
-                    rec_id = self.mage_to_oe(cr, uid, magento_record[self._MAGE_FIELD], instance, mage2oe_filters)
+                    rec_id = self.mage_to_oe(cr, uid, magento_record[self._MAGE_P_KEY], instance, mage2oe_filters)
                 else:
-                    if self._MAGE_FIELD:
-                        rec_id = self.mage_to_oe(cr, uid, magento_record[self._MAGE_FIELD], instance)
+                    if self._MAGE_P_KEY:
+                        rec_id = self.mage_to_oe(cr, uid, magento_record[self._MAGE_P_KEY], instance)
                     else:
                         rec_id = False
                 #Generate Vals

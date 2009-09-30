@@ -31,7 +31,7 @@ from lxml import etree
 class product_category(magerp_osv.magerp_osv):
     
     _inherit = "product.category"
-    _MAGE_FIELD = 'category_id'
+    _MAGE_FIELD = 'magento_id'
     
     def name_get(self, cr, uid, ids, context=None):
         if not len(ids):
@@ -57,7 +57,7 @@ class product_category(magerp_osv.magerp_osv):
         'instance':fields.many2one('magerp.instances', 'Magento Instance', readonly=True, store=True),
         #*************** Magento Fields ********************
         #==== General Information ====
-        'category_id': fields.integer('Magento category ID', readonly=True, help="If you have created the category from Open ERP this value will be updated once the category is exported"),
+        'magento_id': fields.integer('Magento category ID', readonly=True, help="If you have created the category from Open ERP this value will be updated once the category is exported"),
         'level': fields.integer('Level', readonly=True),
         'magento_parent_id': fields.integer('Magento Parent', readonly=True), #Key Changed from parent_id
         'is_active': fields.boolean('Active?', help="Indicates whether active in magento"),
@@ -96,7 +96,7 @@ class product_category(magerp_osv.magerp_osv):
                  }
     
     _mapping = {
-        'category_id':('category_id', int),
+        'category_id':('magento_id', int),
         'level':(False, int, """result=[('sequence',level),('level',level)]"""),
         'parent_id':('magento_parent_id', int),
         'is_active':('is_active', bool),
@@ -113,7 +113,7 @@ class product_category(magerp_osv.magerp_osv):
                 
                 }
     IMPORT_KEYS = [
-                   ('category_id', '', 'NONE2FALSE'),
+                   ('category_id', 'magento_id', 'NONE2FALSE'),
                    ('level', 'sequence', 'NONE2FALSE'),
                    ('level', '', 'NONE2FALSE'),
                    ('parent_id', 'magento_parent_id', 'NONE2FALSE'),
@@ -138,7 +138,7 @@ class product_category(magerp_osv.magerp_osv):
             vals['magerp_stamp'] = time.strftime('%Y-%m-%d %H:%M:%S')
         return super(product_category, self).write(cr, uid, ids, vals, ctx)
     
-    def record_entire_tree(self, cr, uid, id, conn, categ_tree):
+    def record_entire_tree(self, cr, uid, id, conn, categ_tree, DEBUG=False):
         self.record_category(cr, uid, id, conn, int(categ_tree['category_id']))
         for each in categ_tree['children']:
             self.record_entire_tree(cr, uid, id, conn, each)
@@ -147,7 +147,7 @@ class product_category(magerp_osv.magerp_osv):
     def record_category(self, cr, uid, id, conn, category_id):
         #This function should record a category
         #The parent has to be created before creating child
-        imp_vals = conn.cast_string(conn.call('category.info', [category_id]))
+        imp_vals = self.cast_string(conn.call('category.info', [category_id]))
         vals = {}
         imp_keys = self.IMPORT_KEYS
         for eachkey in imp_keys:
@@ -189,7 +189,7 @@ class product_category(magerp_osv.magerp_osv):
         vals['exportable'] = True
         vals['updated'] = False
         #Check if already exists?
-        pcat_ids = self.search(cr, uid, [('category_id', '=', category_id), ('instance', '=', id)])
+        pcat_ids = self.search(cr, uid, [('magento_id', '=', category_id), ('instance', '=', id)])
         if not pcat_ids:
             #Category is not there
             #print vals
@@ -234,14 +234,14 @@ class product_category(magerp_osv.magerp_osv):
                     vals['available_sort_by'] = ''
                     #all operations are assumed to be complete before this line
                     #remove category_id from keys
-                    vals.pop('category_id')
-                if not record['category_id']:
+                    vals.pop('magento_id')
+                if not record['magento_id']:
                     #Record was never created on magento side, so create new
                     conn.call('catalog_category.create', [vals])
                 else:
                     #Record was created, now update it
-                    if conn.call('catalog_category.update', [record['category_id'], vals]):
-                        cross_check = conn.call('catalog_category.info', [record['category_id']])
+                    if conn.call('catalog_category.update', [record['magento_id'], vals]):
+                        cross_check = conn.call('catalog_category.info', [record['magento_id']])
                         self.write(cr, uid, record['id'], {
                                     'updated':False,
                                     'magerp_stamp':cross_check['updated_at']
@@ -253,7 +253,7 @@ product_category()
 class magerp_product_attributes(magerp_osv.magerp_osv):
     _name = "magerp.product_attributes"
     _description = "Attributes of products"
-    _MAGE_FIELD = 'attribute_id'
+    _MAGE_FIELD = 'magento_id'
     _rec_name = "attribute_code"
     _LIST_METHOD = 'ol_catalog_product_attribute.list'
     
@@ -274,7 +274,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
     
     _columns = {
         'attribute_code':fields.char('Code', size=200),
-        'attribute_id':fields.integer('ID'),
+        'magento_id':fields.integer('ID'),
         'set_id':fields.integer('Attribute Set'),
         'options':fields.one2many('magerp.product_attribute_options', 'attribute_id', 'Attribute Options'),
         #'set':fields.function(_get_set, type="many2one", relation="magerp.product_attribute_set", method=True, string="Attribute Set"), This field is invalid as attribs have m2m relation
@@ -327,8 +327,8 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
     #mapping magentofield:(openerpfield,typecast,)
     #have an entry for each mapped field
     _mapping = {
-        'attribute_code':('attribute_code', str),
-        'attribute_id':('attribute_id', int),
+        'code':('attribute_code', str),
+        'attribute_id':('magento_id', int),
         #'set_id':('set_id',int), #Depreciated from mapping as its an m2m relation
         'frontend_input':('frontend_input', str),
         'frontend_class':('frontend_class', str),
@@ -398,25 +398,25 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
             vals['map_in_openerp'] = False
         else:
             vals['map_in_openerp'] = True
-            if vals['frontend_input'] == 'date':
+            if 'frontend_input' in vals.keys() and vals['frontend_input'] == 'date':
                 vals['mapping_field_name'] = False
                 vals['mapping_type_cast'] = 'str'
                 vals['mapping_script'] = "if " + vals['attribute_code'] + "=='None':\n\tresult=[(" + field_name + ",False)]\nelse:\n\tresult=[(" + field_name + "," + vals['attribute_code'] + ")]"
-            elif vals['frontend_input'] == 'select':
+            elif 'frontend_input' in vals.keys() and  vals['frontend_input'] == 'select':
                 vals['mapping_field_name'] = False
                 vals['mapping_type_cast'] = 'str'
                 vals['mapping_script'] = "if " + vals['attribute_code'] + ":\n\t\result=self.pool.get('magerp.product_attribute_options').get_option_id(cr,uid,'" + vals['attribute_code'] + "'," + vals['attribute_code'] + ",instance)\n\tif result:\n\t\tresult=[('" + vals['attribute_code'] + "',result)]"
             else:
                 vals['mapping_field_name'] = field_name
-                vals['mapping_type_cast'] = type_casts[vals['frontend_input']]
+                vals['mapping_type_cast'] = type_casts[vals.get('frontend_input',False)]
             
         crid = super(magerp_product_attributes, self).create(cr, uid, vals, context)
         
         if crid:
             #Fetch Options
-            if vals['frontend_input'] in ['select']:
+            if 'frontend_input' in vals.keys() and vals['frontend_input'] in ['select']:
                 core_conn = self.pool.get('magerp.instances').connect(cr, uid, [vals['instance']])
-                self.pool.get('magerp.product_attribute_options').mage_import(cr, uid, [vals['attribute_id']], core_conn, vals['instance'], debug=False, defaults={'attribute_id':crid})
+                self.pool.get('magerp.product_attribute_options').mage_import(cr, uid, [vals['magento_id']], core_conn, vals['instance'], debug=False, defaults={'attribute_id':crid})
             #Manage fields
             if vals['attribute_code'] and vals['map_in_openerp']:
                 #Code for dynamically generating field name and attaching to this
@@ -444,7 +444,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
                             'model_id':model_id,
                             'model':'product.product',
                             'field_description':vals.get('frontend_label', False) or vals['attribute_code'],
-                            'ttype':type_conversion[vals['frontend_input']],
+                            'ttype':type_conversion[vals.get('frontend_input',False)],
                                       }
                         #IF char add size
                         if field_vals['ttype'] == 'char':
@@ -491,17 +491,17 @@ class magerp_product_attribute_set(magerp_osv.magerp_osv):
     _name = "magerp.product_attribute_set"
     _description = "Attribute sets in products"
     _rec_name = 'attribute_set_name'
-    _MAGE_FIELD = 'attribute_set_id'
+    _MAGE_FIELD = 'magento_id'
     _LIST_METHOD = 'ol_catalog_product_attributeset.list'
     _columns = {
-        'attribute_set_id':fields.integer('ID'),
+        'magento_id':fields.integer('ID'),
         'sort_order':fields.integer('Sort Order'),
         'attribute_set_name':fields.char('Set Name', size=100),
         'attributes':fields.many2many('magerp.product_attributes', 'magerp_attrset_attr_rel', 'set_id', 'attr_id', 'Attributes'),
         'instance':fields.many2one('magerp.instances', 'Magento Instance', readonly=True, store=True),
                 }
     _mapping = {
-        'attribute_set_id':('attribute_set_id', int),
+        'attribute_set_id':('magento_id', int),
         'sort_order':('sort_order', int),
         'attribute_set_name':('attribute_set_name', str)
                 }
@@ -514,22 +514,25 @@ class magerp_product_attribute_set(magerp_osv.magerp_osv):
         rel_dict = {}
         #Get all attributes in onew place to convert from mage_id to oe_id
         attr_ids = self.pool.get('magerp.product_attributes').search(cr, uid, [])
-        attr_list_oe = self.pool.get('magerp.product_attributes').read(cr, uid, attr_ids, ['attribute_id'])
+        attr_list_oe = self.pool.get('magerp.product_attributes').read(cr, uid, attr_ids, ['magento_id'])
         attr_list = {}
+        print attr_list_oe
         for each_set in attr_list_oe:
-            attr_list[each_set['attribute_id']] = each_set['id']
+            attr_list[each_set['magento_id']] = each_set['id']
         attr_set_ids = self.search(cr, uid, [])
-        attr_set_list_oe = self.read(cr, uid, attr_set_ids, ['attribute_set_id'])
+        attr_set_list_oe = self.read(cr, uid, attr_set_ids, ['magento_id'])
         attr_set_list = {}
+        print attr_set_list_oe
         for each_set in attr_set_list_oe:
-            attr_set_list[each_set['attribute_set_id']] = each_set['id']
+            attr_set_list[each_set['magento_id']] = each_set['id']
         key_attrs = []
+        print mage_inp
         for each_key in mage_inp.keys():
             self.write(cr, uid, attr_set_list[each_key], {'attributes': [[6, 0, []]]})
             for each_attr in mage_inp[each_key]:
-                if each_attr['attribute_id']:
+                if each_attr['magento_id']:
                     try:
-                        key_attrs.append((attr_set_list[each_key], attr_list[int(each_attr['attribute_id'])]))
+                        key_attrs.append((attr_set_list[each_key], attr_list[int(each_attr['magento_id'])]))
                     except Exception, e:
                         pass
         #rel_dict {set_id:[attr_id_1,attr_id_2,],set_id2:[attr_id_1,attr_id_3]}
@@ -547,7 +550,7 @@ class magerp_product_attribute_groups(magerp_osv.magerp_osv):
     _name = "magerp.product_attribute_groups"
     _description = "Attribute groups in Magento"
     _rec_name = 'attribute_group_name'
-    _MAGE_FIELD = 'attribute_group_id'
+    _MAGE_FIELD = 'magento_id'
     _order = 'sort_order'
     _LIST_METHOD = 'ol_catalog_product_attribute_group.list'
     def set_get(self, cr, uid, ids, context=None):
@@ -566,7 +569,7 @@ class magerp_product_attribute_groups(magerp_osv.magerp_osv):
         return dict(res) 
     
     _columns = {
-        'attribute_group_id':fields.integer('Group ID'),
+        'magento_id':fields.integer('Group ID'),
         'attribute_set_id':fields.integer('Attribute Set ID'),
         'attribute_set':fields.function(_get_set, type="many2one", relation="magerp.product_attribute_set", method=True, string="Attribute Set"),
         'attribute_group_name':fields.char('Group Name', size=100),
@@ -575,7 +578,7 @@ class magerp_product_attribute_groups(magerp_osv.magerp_osv):
         'instance':fields.many2one('magerp.instances', 'Magento Instance', readonly=True, store=True),
                 }
     _mapping = {
-        'attribute_group_id':('attribute_group_id', int),
+        'attribute_group_id':('magento_id', int),
         'attribute_set_id':('attribute_set_id', int),
         'attribute_group_name':('attribute_group_name', str),
         'sort_order':('sort_order', int),
@@ -616,14 +619,14 @@ product_tierprice()
 
 class product_product(magerp_osv.magerp_osv):
     _inherit = "product.product"
-    _MAGE_FIELD = 'product_id'
+    _MAGE_FIELD = 'magento_id'
     _LIST_METHOD = "catalog_product.list"
     _INFO_METHOD = "catalog_product.info"
     _CREATE_METHOD = "product.create"
     _UPDATE_METHOD = "product.update"
     #Just implement a simple product synch
     _columns = {
-        'product_id':fields.integer('Magento ID', readonly=True, store=True),
+        'magento_id':fields.integer('Magento ID', readonly=True, store=True),
         'instance':fields.many2one('magerp.instances', 'Magento Instance', readonly=True, store=True),
         'created_at':fields.date('Created'), #created_at & updated_at in magento side, to allow filtering/search inside OpenERP!
         'updated_at':fields.date('Created'),
@@ -631,7 +634,7 @@ class product_product(magerp_osv.magerp_osv):
         'tier_price':fields.one2many('product.tierprice', 'product', 'Tier Price'),
         }
     _mapping = {
-        'product_id':('product_id', int)
+        'product_id':('magento_id', int)
                 }
     def mage_import(self, cr, uid, ids_or_filter, conn, instance, debug=False, defaults={}, *attrs):
         #Build the mapping dictionary dynamically from attributes

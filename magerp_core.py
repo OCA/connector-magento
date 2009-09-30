@@ -131,7 +131,7 @@ class magerp_instances(osv.osv):
                 confirmation = pro_cat_conn.call('catalog_category.currentStore', [0])   #Set browse to root store
                 if confirmation:
                     categ_tree = pro_cat_conn.call('catalog_category.tree')             #Get the tree
-                    self.pool.get('product.category').record_entire_tree(cr, uid, inst.id, pro_cat_conn, categ_tree)
+                    self.pool.get('product.category').record_entire_tree(cr, uid, inst.id, pro_cat_conn, categ_tree, DEBUG)
             else:
                 osv.except_osv(_("Connection Error"), _("Could not connect to server\nCheck location, username & password."))
     
@@ -141,7 +141,7 @@ class magerp_instances(osv.osv):
             attr_conn = Connection(inst.location, inst.apiusername, inst.apipass, DEBUG)
             if attr_conn.connect():
                 attrib_set_ids = self.pool.get('magerp.product_attribute_set').search(cr, uid, [('instance', '=', inst.id)])
-                attrib_sets = self.pool.get('magerp.product_attribute_set').read(cr, uid, attrib_set_ids, ['attribute_set_id'])
+                attrib_sets = self.pool.get('magerp.product_attribute_set').read(cr, uid, attrib_set_ids, ['magento_id'])
                 #Get all attribute set ids to get all attributes in one go
                 all_attr_set_ids = self.pool.get('magerp.product_attribute_set').get_all_mage_ids(cr, uid, [], inst.id)
                 #Call magento for all attributes
@@ -150,8 +150,9 @@ class magerp_instances(osv.osv):
                 #Relate attribute sets & attributes
                 mage_inp = {}
                 #Pass in {attribute_set_id:{attributes},attribute_set_id2:{attributes}}
+                print attrib_sets
                 for each in attrib_sets:
-                    mage_inp[each['attribute_set_id']] = attr_conn.call('ol_catalog_product_attribute.relations', [each['attribute_set_id']])
+                    mage_inp[each['magento_id']] = attr_conn.call('ol_catalog_product_attribute.relations', [each['id']])
                 if mage_inp:
                     self.pool.get('magerp.product_attribute_set').relate(cr, uid, mage_inp, inst.id, DEBUG)
             else:
@@ -228,6 +229,7 @@ class magerp_websites(magerp_osv.magerp_osv):
     _name = "magerp.websites"
     _description = "The magento websites information"
     _LIST_METHOD = 'ol_websites.list'
+    _MAGE_P_KEY = 'website_id'
     #Return format of API:{'code': 'base', 'name': 'Main', 'website_id': '1', 'is_default': '1', 'sort_order': '0', 'default_group_id': '1'}
             
     def _get_group(self, cr, uid, ids, prop, unknow_none, context):
@@ -273,6 +275,7 @@ class magerp_storeviews(magerp_osv.magerp_osv):
     
     _order = 'magento_id'
     _LIST_METHOD = 'ol_storeviews.list'
+    _MAGE_P_KEY = 'store_id'
     _columns = {
         'name':fields.char('Store View Name', size=100),
         'code':fields.char('Code', size=100),
@@ -328,6 +331,7 @@ class magerp_groups(magerp_osv.magerp_osv):
        
     _order = 'magento_id'
     _MAGE_FIELD = 'magento_id'
+    _MAGE_P_KEY = 'group_id'
     _LIST_METHOD = 'ol_groups.list'
     _columns = {
         'name':fields.char('Store(Group) Name', size=100),
