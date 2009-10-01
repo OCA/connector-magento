@@ -530,19 +530,20 @@ class magerp_product_attribute_set(magerp_osv.magerp_osv):
         for each_key in mage_inp.keys():
             self.write(cr, uid, attr_set_list[each_key], {'attributes': [[6, 0, []]]})
             for each_attr in mage_inp[each_key]:
-                if each_attr['magento_id']:
+                if each_attr.get('magento_id', False):
                     try:
                         key_attrs.append((attr_set_list[each_key], attr_list[int(each_attr['magento_id'])]))
                     except Exception, e:
                         pass
-        #rel_dict {set_id:[attr_id_1,attr_id_2,],set_id2:[attr_id_1,attr_id_3]}
-        query = "INSERT INTO magerp_attrset_attr_rel (set_id,attr_id) VALUES "
-        for each_pair in key_attrs:
-            query += str(each_pair)
-            query += ","
-        query = query[0:len(query) - 1] + ";"
-        cr.execute(query)
-        return True
+        if len(key_attrs) > 0:
+            #rel_dict {set_id:[attr_id_1,attr_id_2,],set_id2:[attr_id_1,attr_id_3]}
+            query = "INSERT INTO magerp_attrset_attr_rel (set_id,attr_id) VALUES "
+            for each_pair in key_attrs:
+                query += str(each_pair)
+                query += ","
+            query = query[0:len(query) - 1] + ";"
+            cr.execute(query)
+            return True
     
 magerp_product_attribute_set()
 
