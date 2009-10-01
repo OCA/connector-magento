@@ -18,7 +18,7 @@
 {
     "name" : "Magento e-commerce",
     "version" : "1.0",
-    "depends" : ["base","product",'product_m2mcategories'],
+    "depends" : ["base","product","product_m2mcategories","sale"],
     "author" : "Sharoon Thomas",
     "description": """Magento E-commerce management using Open ERP.
     Inspired by the original work of Raphael Valyi, my mentor & friend.
@@ -26,7 +26,6 @@
     "website" : "http://www.openlabs.co.in/magentoerpconnect",
     "category" : "Generic Modules",
     "init_xml" : [],
-    "depends" : ["product",],
     "demo_xml" : [],
     "update_xml" : [
             'magerp_core_view.xml',
