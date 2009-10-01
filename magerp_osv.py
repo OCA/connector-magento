@@ -17,8 +17,11 @@ class magerp_osv(osv.osv):
         reads = self.read(cr, uid, ids, [context['field'], 'instance'], context)
         res = []
         for record in reads:
-            rid = self.pool.get('magerp.websites').mage_to_oe(cr, uid, record[context['field']], record['instance'][0])
-            res.append((record['id'], rid))
+            if record['instance']:
+                rid = self.pool.get('magerp.websites').mage_to_oe(cr, uid, record[context['field']], record['instance'][0])
+                res.append((record['id'], rid))
+            else:
+                res.append((record['id'], False))
         return res
     
     def store_get(self, cr, uid, ids, context=None):
@@ -27,8 +30,11 @@ class magerp_osv(osv.osv):
         reads = self.read(cr, uid, ids, [context['field'], 'instance'], context)
         res = []
         for record in reads:
-            rid = self.pool.get('magerp.storeviews').mage_to_oe(cr, uid, record[context['field']], record['instance'][0])
-            res.append((record['id'], rid))
+            if record['instance']:
+                rid = self.pool.get('magerp.storeviews').mage_to_oe(cr, uid, record[context['field']], record['instance'][0])
+                res.append((record['id'], rid))
+            else:
+                res.append((record['id'], False))
         return res
 
     def group_get(self, cr, uid, ids, context=None):
@@ -37,8 +43,11 @@ class magerp_osv(osv.osv):
         reads = self.read(cr, uid, ids, [context['field'], 'instance'], context)
         res = []
         for record in reads:
-            rid = self.pool.get('magerp.groups').mage_to_oe(cr, uid, record[context['field']], record['instance'][0])
-            res.append((record['id'], rid))
+            if record['instance']:
+                rid = self.pool.get('sale.shop').mage_to_oe(cr, uid, record[context['field']], record['instance'][0])
+                res.append((record['id'], rid))
+            else:
+                res.append((record['id'], False))
         return res
         
     def mage_to_oe(self, cr, uid, mageid, instance, *args):
@@ -92,6 +101,8 @@ class magerp_osv(osv.osv):
                             'temp_vars':{},
                             'mage2oe_filters':mage2oe_filters
                         }
+                
+                #now properly mapp known Magento attributes to OpenERP entity columns:
                 for each_valid_key in self._mapping:
                     if each_valid_key in magento_record.keys():
                         try:
