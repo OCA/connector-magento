@@ -31,7 +31,6 @@ from lxml import etree
 class product_category(magerp_osv.magerp_osv):
     
     _inherit = "product.category"
-    _MAGE_FIELD = 'magento_id'
     
     def name_get(self, cr, uid, ids, context=None):
         if not len(ids):
@@ -253,7 +252,6 @@ product_category()
 class magerp_product_attributes(magerp_osv.magerp_osv):
     _name = "magerp.product_attributes"
     _description = "Attributes of products"
-    _MAGE_FIELD = 'magento_id'
     _rec_name = "attribute_code"
     _LIST_METHOD = 'ol_catalog_product_attribute.list'
     
@@ -491,7 +489,6 @@ class magerp_product_attribute_set(magerp_osv.magerp_osv):
     _name = "magerp.product_attribute_set"
     _description = "Attribute sets in products"
     _rec_name = 'attribute_set_name'
-    _MAGE_FIELD = 'magento_id'
     _LIST_METHOD = 'ol_catalog_product_attributeset.list'
     _columns = {
         'magento_id':fields.integer('ID'),
@@ -551,7 +548,6 @@ class magerp_product_attribute_groups(magerp_osv.magerp_osv):
     _name = "magerp.product_attribute_groups"
     _description = "Attribute groups in Magento"
     _rec_name = 'attribute_group_name'
-    _MAGE_FIELD = 'magento_id'
     _order = 'sort_order'
     _LIST_METHOD = 'ol_catalog_product_attribute_group.list'
     def set_get(self, cr, uid, ids, context=None):
@@ -620,7 +616,6 @@ product_tierprice()
 
 class product_product(magerp_osv.magerp_osv):
     _inherit = "product.product"
-    _MAGE_FIELD = 'magento_id'
     _LIST_METHOD = "catalog_product.list"
     _INFO_METHOD = "catalog_product.info"
     _CREATE_METHOD = "product.create"
