@@ -150,9 +150,9 @@ class magerp_instances(osv.osv):
                 #Relate attribute sets & attributes
                 mage_inp = {}
                 #Pass in {attribute_set_id:{attributes},attribute_set_id2:{attributes}}
-                print attrib_sets
+                print "Attribute sets are:", attrib_sets
                 for each in attrib_sets:
-                    mage_inp[each['magento_id']] = attr_conn.call('ol_catalog_product_attribute.relations', [each['id']])
+                    mage_inp[each['magento_id']] = attr_conn.call('ol_catalog_product_attribute.relations', [each['magento_id']])
                 if mage_inp:
                     self.pool.get('magerp.product_attribute_set').relate(cr, uid, mage_inp, inst.id, DEBUG)
             else:
