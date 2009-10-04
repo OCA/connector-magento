@@ -26,7 +26,7 @@ import datetime
 import base64
 import time
 import magerp_osv
-from lxml import etree
+
 
 class product_category(magerp_osv.magerp_osv):
     
@@ -360,7 +360,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
         'name':('name', 'str', False),
         'description':('description', 'str'),
         'short_description':('description_sale', 'str'),
-        'sku':('code', 'str'),
+        'sku':('default_code', 'str'),
         'weight':('weight_net', 'float'),
         #Categ id is many2one, but do it for m2m
         'category_ids':(False, 'False', """if category_ids:\n\tresult=self.pool.get('product.category').mage_to_oe(cr,uid,category_ids[0],instance)\n\tif result:\n\t\tresult=[('categ_id',result[0])]\nelse:\n\tresult=self.pool.get('product.category').search(cr,uid,[('instance','=',instance)])\n\tif result:\n\t\tresult=[('categ_id',result[0])]"""),
@@ -631,6 +631,7 @@ class product_product(magerp_osv.magerp_osv):
     #Just implement a simple product synch
     _columns = {
         'magento_id':fields.integer('Magento ID', readonly=True, store=True),
+        'exportable':fields.boolean('Exported to magento?'),
         'instance':fields.many2one('magerp.instances', 'Magento Instance', readonly=True, store=True),
         'created_at':fields.date('Created'), #created_at & updated_at in magento side, to allow filtering/search inside OpenERP!
         'updated_at':fields.date('Created'),
@@ -640,6 +641,9 @@ class product_product(magerp_osv.magerp_osv):
     _mapping = {
         'product_id':('magento_id', int)
                 }
+    _defaults = {
+        'exportable':lambda *a:True
+                 }
     def mage_import(self, cr, uid, ids_or_filter, conn, instance, debug=False, defaults={}, *attrs):
         #Build the mapping dictionary dynamically from attributes
         inst_attrs = self.pool.get('magerp.product_attributes').search(cr, uid, [('instance', '=', instance), ('map_in_openerp', '=', '1')])

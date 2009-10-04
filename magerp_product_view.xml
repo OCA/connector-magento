@@ -42,16 +42,12 @@
 								<group col="4" colspan="4">
 									<separator string="Display Mode" colspan="4" />
 									<field name="display_mode" colspan="1" nolabel="1" />
-									<label
-										string="Products only means that the products associated to the category will display, but not any static blocks.Static block only means that the selected static block will display, but none of the products.Static block and products means that the static block will display with the products listed directly beneath it."
-										colspan="3" />
+									<label string="Products only means that the products associated to the category will display, but not any static blocks.Static block only means that the selected static block will display, but none of the products.Static block and products means that the static block will display with the products listed directly beneath it." colspan="3" />
 								</group>
 								<separator string="Use Anchor" colspan="4" />
 								<group col="4" colspan="4">
 									<field name="is_anchor" colspan="1" />
-									<label
-										string="Anchored categories will display all products associated to all child categories (and child of child, and child of child of child,etc.) on that category‘s page, along with the products associated directly to the parent category."
-										colspan="3" />
+									<label string="Anchored categories will display all products associated to all child categories (and child of child, and child of child of child,etc.) on that category‘s page, along with the products associated directly to the parent category." colspan="3" />
 								</group>
 								<separator string="Sorting method" colspan="4" />
 								<field name="available_sort_by" />
@@ -220,5 +216,30 @@
 			<field name="view_mode">tree,form</field>
 			<field name="view_id" ref="magerp_product_attribute_groups_tree" />
 		</record>
+		<!-- This is a product inherited form that will be dynamically populated-->
+		<record model="ir.ui.view" id="product_product_form_view_magerp">
+			<field name="name">product.normal.form_magerp</field>
+			<field name="model">product.product</field>
+			<field name="inherit_id" ref="product.product_normal_form_view" />
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<xpath expr="/form/group/group/field[@name='purchase_ok']" position="after">
+					<field name="exportable" select="2"/>
+				</xpath>
+			</field>
+		</record>
+		<record model="ir.ui.view" id="product_product_form_view_magerpdynamic">
+			<field name="name">product.normal.form_magerp_dynamic</field>
+			<field name="model">product.product</field>
+			<field name="inherit_id" ref="product.product_normal_form_view" />
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<xpath expr="/form/notebook" position="inside">
+					<page string="Magento Information" attrs="{'invisible':[('exportable','!=',1)]}">
+					</page>
+				</xpath>
+			</field>
+		</record>
+
 	</data>
 </openerp>
