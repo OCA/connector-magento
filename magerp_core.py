@@ -96,7 +96,7 @@ class magerp_instances(osv.osv):
         'apipass':fields.char('API Password', size=100, required=True),
         'websites':fields.one2many('magerp.websites', 'instance', 'Websites'),
         'storeviews':fields.one2many('magerp.storeviews', 'instance', 'Store Views'),
-        'groups':fields.one2many('magerp.groups', 'instance', 'Groups'),
+        'groups':fields.one2many('sale.shop', 'instance', 'Groups'),
         'attribute_sets':fields.one2many('magerp.product_attribute_set', 'instance', 'Attribute Sets')
     }
 
@@ -120,7 +120,7 @@ class magerp_instances(osv.osv):
                 #New import methods
                 self.pool.get('magerp.websites').mage_import(cr, uid, filter, core_imp_conn, inst.id, DEBUG)
                 self.pool.get('magerp.storeviews').mage_import(cr, uid, filter, core_imp_conn, inst.id, DEBUG)
-                self.pool.get('magerp.groups').mage_import(cr, uid, filter, core_imp_conn, inst.id, DEBUG)
+                self.pool.get('sale.shop').mage_import(cr, uid, filter, core_imp_conn, inst.id, DEBUG)
             else:
                 osv.except_osv(_("Connection Error"), _("Could not connect to server\nCheck location, username & password."))
     
@@ -271,7 +271,7 @@ class magerp_websites(magerp_osv.magerp_osv):
         'is_default':fields.boolean('Is Active?'),
         'sort_order':fields.integer('Sort Order'),
         'default_group_id':fields.integer('Default Store Group'), #Many 2 one?
-        'default_group':fields.function(_get_group, type="many2one", relation="magerp.groups", method=True, string="Default Store (Group)"),
+        'default_group':fields.function(_get_group, type="many2one", relation="sale.shop", method=True, string="Default Store (Group)"),
         'instance':fields.many2one('magerp.instances', 'Instance', ondelete='cascade')
     }
     _mapping = {
@@ -311,7 +311,7 @@ class magerp_storeviews(magerp_osv.magerp_osv):
         'is_active':fields.boolean('Default ?'),
         'sort_order':fields.integer('Sort Order'),
         'group_id':fields.integer('Default Store Group'), #Many 2 one?
-        'default_group':fields.function(_get_group, type="many2one", relation="magerp.groups", method=True, string="Default Store (Group)"),
+        'default_group':fields.function(_get_group, type="many2one", relation="sale.shop", method=True, string="Default Store (Group)"),
         'instance':fields.many2one('magerp.instances', 'Instance', ondelete='cascade')
     }
     _mapping = {
@@ -328,55 +328,3 @@ class magerp_storeviews(magerp_osv.magerp_osv):
 
 
 magerp_storeviews()
-
-class magerp_groups(magerp_osv.magerp_osv):
-    _name = "magerp.groups"
-    _description = "The magento groups(store) information"
-       
-    def _get_website(self, cr, uid, ids, prop, unknow_none, context):
-        res = self.website_get(cr, uid, ids, context={'field':'website_id'})
-        return dict(res) 
-   
-    def _get_store(self, cr, uid, ids, prop, unknow_none, context):
-        res = self.store_get(cr, uid, ids, context={'field':'default_store_id'})
-        return dict(res)     
-
-    def rootcategory_get(self, cr, uid, ids, context=None):
-        if not len(ids):
-            return []
-        reads = self.read(cr, uid, ids, ['root_category_id', 'instance'], context)
-        res = []
-        for record in reads:
-            rid = self.pool.get('product.category').mage_to_oe(cr, uid, record['root_category_id'], record['instance'][0])
-            res.append((record['id'], rid))
-        return res
-    
-    def _get_rootcategory(self, cr, uid, ids, prop, unknow_none, context):
-        res = self.rootcategory_get(cr, uid, ids, context)
-        return dict(res)     
-       
-    _order = 'magento_id'
-    _MAGE_FIELD = 'magento_id'
-    _MAGE_P_KEY = 'group_id'
-    _LIST_METHOD = 'ol_groups.list'
-    _columns = {
-        'name':fields.char('Store(Group) Name', size=100),
-        'magento_id':fields.integer('ID'),
-        'default_store_id':fields.integer('Store ID'), #Many 2 one ?
-        'default_store':fields.function(_get_store, type="many2one", relation="magerp.storeviews", method=True, string="Store View"),
-        'website_id':fields.integer('Website'), # Many 2 one ?
-        'website':fields.function(_get_website, type="many2one", relation="magerp.websites", method=True, string="Website"),
-        'root_category_id':fields.integer('Root product Category'),
-        'root_category':fields.function(_get_rootcategory, type="many2one", relation="product.category", method=True, string="Root Category"),
-        'instance':fields.many2one('magerp.instances', 'Instance', ondelete='cascade')
-    }
-    _mapping = {
-        'name':('name', str),
-        'group_id':('magento_id', int),
-        'default_store_id':('default_store_id', int), #Many 2 one ?
-        'website_id':('website_id', int), # Many 2 one ?
-        'root_category_id':('root_category_id', int),
-    }
-    #Return format of API:{'default_store_id': '1', 'group_id': '1', 'website_id': '1', 'name': 'Main Website Store', 'root_category_id': '2'
-
-magerp_groups()

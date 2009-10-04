@@ -7,7 +7,7 @@
 		<menuitem id="menu_magerp_core_instances" name="Magento Instances" parent="menu_magerp_core" action="act_magerp_instances_form" />
 		<menuitem id="menu_magerp_core_websites" name="Magento Websites" parent="menu_magerp_core_instances" action="act_magerp_websites_form" />
 		<menuitem id="menu_magerp_core_storeviews" name="Magento Store Views" parent="menu_magerp_core_instances" action="act_magerp_storeviews_form" />
-		<menuitem id="menu_magerp_core_groups" name="Magento Groups (Stores)" parent="menu_magerp_core_instances" action="act_magerp_groups_form" />
+<!--		<menuitem id="menu_magerp_core_groups" name="Magento Groups (Stores)" parent="menu_magerp_core_instances" action="act_magerp_groups_form" />-->
 
 		<menuitem id="menu_magerp_attnsets" name="Attributes and Sets" parent="menu_magerp" />
 		<menuitem id="menu_magerp_attnsets_sets" name="Attribute Sets" parent="menu_magerp_attnsets" action="act_magerp_product_attribute_set_form" />
