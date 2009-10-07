@@ -107,7 +107,7 @@ class external_referential(osv.osv):
             core_imp_conn = Connection(inst.location, inst.apiusername, inst.apipass, DEBUG)
             if core_imp_conn.connect():
                 #New import methods
-                self.pool.get('magerp.websites').mage_import(cr, uid, filter, core_imp_conn, inst.id, DEBUG)
+                self.pool.get('referential.entity').mage_import(cr, uid, filter, core_imp_conn, inst.id, DEBUG)
                 self.pool.get('magerp.storeviews').mage_import(cr, uid, filter, core_imp_conn, inst.id, DEBUG)
                 self.pool.get('sale.shop').mage_import(cr, uid, filter, core_imp_conn, inst.id, DEBUG)
             else:
@@ -240,9 +240,8 @@ class external_referential(osv.osv):
                                 
 external_referential()
 
-class magerp_websites(magerp_osv.magerp_osv):
-    _name = "magerp.websites"
-    _description = "The magento websites information"
+class referential_entity(magerp_osv.magerp_osv):
+    _inherit = "referential.entity"
     _LIST_METHOD = 'ol_websites.list'
     _MAGE_P_KEY = 'website_id'
     #Return format of API:{'code': 'base', 'name': 'Main', 'website_id': '1', 'is_default': '1', 'sort_order': '0', 'default_group_id': '1'}
@@ -274,7 +273,7 @@ class magerp_websites(magerp_osv.magerp_osv):
     }
 
 
-magerp_websites()
+referential_entity()
 
 class magerp_storeviews(magerp_osv.magerp_osv):
     _name = "magerp.storeviews"
@@ -296,7 +295,7 @@ class magerp_storeviews(magerp_osv.magerp_osv):
         'code':fields.char('Code', size=100),
         'magento_id':fields.integer('Store ID'),
         'website_id':fields.integer('Website'), # Many 2 one ?
-        'website':fields.function(_get_website, type="many2one", relation="magerp.websites", method=True, string="Website"),
+        'website':fields.function(_get_website, type="many2one", relation="referential.entity", method=True, string="Website"),
         'is_active':fields.boolean('Default ?'),
         'sort_order':fields.integer('Sort Order'),
         'group_id':fields.integer('Default Store Group'), #Many 2 one?
