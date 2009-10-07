@@ -28,7 +28,7 @@ class res_partner_category(magerp_osv.magerp_osv):
     _columns = {
                 'magento_id':fields.integer('Customer Group ID'),
                 'tax_class_id':fields.integer('Tax Class ID'),
-                'instance':fields.many2one('magerp.instances', 'Magento Instance', readonly=True, store=True),
+                'instance':fields.many2one('external.referential', 'Magento Instance', readonly=True, store=True),
                 }
     #mapping magentofield:(openerpfield,typecast,)
     _mapping = {
@@ -46,7 +46,7 @@ class res_partner_address(magerp_osv.magerp_osv):
     _columns = {
         'magento_id':fields.integer('Magento ID'),
         'lastname':fields.char('Last Name', size=100),
-        'instance':fields.many2one('magerp.instances', 'Magento Instance', readonly=True, store=True),
+        'instance':fields.many2one('external.referential', 'Magento Instance', readonly=True, store=True),
         'exportable':fields.boolean('Export to magento?'),
                 }
     _defaults = {
@@ -85,7 +85,7 @@ class res_partner(magerp_osv.magerp_osv):
         'created_at':fields.datetime('Created Date'),
         'updated_at':fields.datetime('Updated At'),
         'emailid':fields.char('Email ID', size=100),
-        'instance':fields.many2one('magerp.instances', 'Magento Instance', readonly=True, store=True),
+        'instance':fields.many2one('external.referential', 'Magento Instance', readonly=True, store=True),
                 }
     _mapping = {
         'customer_id':('magento_id', int),

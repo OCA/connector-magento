@@ -53,7 +53,7 @@ class product_category(magerp_osv.magerp_osv):
     _columns = {
         'exportable':fields.boolean('Export to Magento'),
         'updated':fields.boolean('To synchronize', help="Set if the category underwent a change & has to be synched."),
-        'instance':fields.many2one('magerp.instances', 'Magento Instance', readonly=True, store=True),
+        'instance':fields.many2one('external.referential', 'Magento Instance', readonly=True, store=True),
         #*************** Magento Fields ********************
         #==== General Information ====
         'magento_id': fields.integer('Magento category ID', readonly=True, help="If you have created the category from Open ERP this value will be updated once the category is exported"),
@@ -315,7 +315,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
         'default_value': fields.char('Default Value', size=10),
         'note':fields.char('Note', size=200),
         'entity_type_id':fields.integer('Entity Type'),
-        'instance':fields.many2one('magerp.instances', 'Magento Instance', readonly=True, store=True),
+        'instance':fields.many2one('external.referential', 'Magento Instance', readonly=True, store=True),
         #These parameters are for automatic management
         'map_in_openerp':fields.boolean('Map in Open ERP?'),
         'mapping_field_name':fields.char('Field name', size=100),
@@ -413,7 +413,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
         if crid:
             #Fetch Options
             if 'frontend_input' in vals.keys() and vals['frontend_input'] in ['select']:
-                core_conn = self.pool.get('magerp.instances').connect(cr, uid, [vals['instance']])
+                core_conn = self.pool.get('external.referential').connect(cr, uid, [vals['instance']])
                 self.pool.get('magerp.product_attribute_options').mage_import(cr, uid, [vals['magento_id']], core_conn, vals['instance'], debug=False, defaults={'attribute_id':crid})
             #Manage fields
             if vals['attribute_code'] and vals['map_in_openerp']:
@@ -471,7 +471,7 @@ class magerp_product_attribute_options(magerp_osv.magerp_osv):
         'value':fields.char('Value', size=200),
         'ipcast':fields.char('Type cast', size=50),
         'label':fields.char('Label', size=100),
-        'instance':fields.many2one('magerp.instances', 'Magento Instance', readonly=True, store=True),
+        'instance':fields.many2one('external.referential', 'Magento Instance', readonly=True, store=True),
                 }
     _mapping = {
         'value':('value', str,),
@@ -495,7 +495,7 @@ class magerp_product_attribute_set(magerp_osv.magerp_osv):
         'sort_order':fields.integer('Sort Order'),
         'attribute_set_name':fields.char('Set Name', size=100),
         'attributes':fields.many2many('magerp.product_attributes', 'magerp_attrset_attr_rel', 'set_id', 'attr_id', 'Attributes'),
-        'instance':fields.many2one('magerp.instances', 'Magento Instance', readonly=True, store=True),
+        'instance':fields.many2one('external.referential', 'Magento Instance', readonly=True, store=True),
                 }
     _mapping = {
         'attribute_set_id':('magento_id', int),
@@ -576,7 +576,7 @@ class magerp_product_attribute_groups(magerp_osv.magerp_osv):
         'attribute_group_name':fields.char('Group Name', size=100),
         'sort_order':fields.integer('Sort Order'),
         'default_id':fields.integer('Default'),
-        'instance':fields.many2one('magerp.instances', 'Magento Instance', readonly=True, store=True),
+        'instance':fields.many2one('external.referential', 'Magento Instance', readonly=True, store=True),
                 }
     _mapping = {
         'attribute_group_id':('magento_id', int),
@@ -606,7 +606,7 @@ class product_tierprice(osv.osv):
         'price':fields.float('Price', digits=(10, 2),),
         'price_qty':fields.float('Quantity Slab', digits=(10, 4), help="Slab & above eg.For 10 and above enter 10"),
         'product':fields.many2one('product.product', 'Product'),
-        'instance':fields.many2one('magerp.instances', 'Magento Instance', readonly=True, store=True),
+        'instance':fields.many2one('external.referential', 'Magento Instance', readonly=True, store=True),
                 }
     _mapping = {
         'cust_group':(False, int, """result=self.pool.get('res.partner.category').mage_to_oe(cr,uid,cust_group,instance)\nif result:\n\tresult=[('cust_group',result[0])]\nelse:\n\tresult=[('cust_group',False)]"""),
@@ -628,7 +628,7 @@ class product_product(magerp_osv.magerp_osv):
     _columns = {
         'magento_id':fields.integer('Magento ID', readonly=True, store=True),
         'exportable':fields.boolean('Exported to magento?'),
-        'instance':fields.many2one('magerp.instances', 'Magento Instance', readonly=True, store=True),
+        'instance':fields.many2one('external.referential', 'Magento Instance', readonly=True, store=True),
         'created_at':fields.date('Created'), #created_at & updated_at in magento side, to allow filtering/search inside OpenERP!
         'updated_at':fields.date('Created'),
         'set':fields.many2one('magerp.product_attribute_set', 'Attribute Set'),

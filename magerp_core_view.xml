@@ -3,8 +3,8 @@
 	<data>
 		<!--Magento Instances Tree/Form view  -->
 		<record model="ir.ui.view" id="magerp_instances_form">
-			<field name="name">magerp.instances.form</field>
-			<field name="model">magerp.instances</field>
+			<field name="name">external.referential.form</field>
+			<field name="model">external.referential</field>
 			<field name="type">form</field>
 			<field name="arch" type="xml">
 				<form string="Magento Instances">
@@ -48,8 +48,8 @@
 			</field>
 		</record>
 		<record model="ir.ui.view" id="magerp_instances_tree">
-			<field name="name">magerp.instances.tree</field>
-			<field name="model">magerp.instances</field>
+			<field name="name">external.referential.tree</field>
+			<field name="model">external.referential</field>
 			<field name="type">tree</field>
 			<field name="arch" type="xml">
 				<tree string="Magento Instances">
@@ -60,8 +60,8 @@
 		</record>
 		<record id="act_magerp_instances_form" model="ir.actions.act_window">
 			<field name="name">Magento Instances</field>
-			<field name="res_model">magerp.instances</field>
-			<field name="src_model">magerp.instances</field>
+			<field name="res_model">external.referential</field>
+			<field name="src_model">external.referential</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>

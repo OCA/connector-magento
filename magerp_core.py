@@ -81,18 +81,11 @@ class Connection():
         except Exception, e:
             pass
         
-class magerp_instances(osv.osv):
+class external_referential(osv.osv):
     #This class stores instances of magento to which the ERP will connect, the concept of multi website, multistore integration?
-    _name = "magerp.instances"
-    _description = "Instances of magento connected"
+    _inherit = "external.referential"
+
     _columns = {
-        'name':fields.char('Instance Name', size=100, required=True),
-        'location':fields.char('Base URL', size=200, help="Eg:http://thestore.com/ \nUse trailing slash", required=True),
-        'apiusername':fields.char('API user name', size=100, required=True),
-        'apipass':fields.char('API Password', size=100, required=True),
-        'websites':fields.one2many('magerp.websites', 'instance', 'Websites'),
-        'storeviews':fields.one2many('magerp.storeviews', 'instance', 'Store Views'),
-        'groups':fields.one2many('sale.shop', 'instance', 'Groups'),
         'attribute_sets':fields.one2many('magerp.product_attribute_set', 'instance', 'Attribute Sets')
     }
 
@@ -106,7 +99,7 @@ class magerp_instances(osv.osv):
                     if core_imp_conn.connect():
                         return core_imp_conn
         return False
-   
+
     def core_sync(self, cr, uid, ids, ctx={}):
         instances = self.browse(cr, uid, ids, ctx)
         filter = []
@@ -210,7 +203,7 @@ class magerp_instances(osv.osv):
     def redefine_prod_view(self,cr,uid,ids,ctx):
         #This function will rebuild the view for product from instances, attribute groups etc
         #Get all objects needed
-        inst_obj = self.pool.get('magerp.instances')
+        inst_obj = self.pool.get('external.referential')
         attr_set_obj = self.pool.get('magerp.product_attribute_set')
         attr_group_obj = self.pool.get('magerp.product_attribute_group')
         attr_obj = self.pool.get('magerp.product_attributes')
@@ -245,7 +238,7 @@ class magerp_instances(osv.osv):
 
 
                                 
-magerp_instances()
+external_referential()
 
 class magerp_websites(magerp_osv.magerp_osv):
     _name = "magerp.websites"
@@ -268,7 +261,7 @@ class magerp_websites(magerp_osv.magerp_osv):
         'sort_order':fields.integer('Sort Order'),
         'default_group_id':fields.integer('Default Store Group'), #Many 2 one?
         'default_group':fields.function(_get_group, type="many2one", relation="sale.shop", method=True, string="Default Store (Group)"),
-        'instance':fields.many2one('magerp.instances', 'Instance', ondelete='cascade')
+        'instance':fields.many2one('external.referential', 'Instance', ondelete='cascade')
     }
     _mapping = {
         'name':('name', str),
@@ -308,7 +301,7 @@ class magerp_storeviews(magerp_osv.magerp_osv):
         'sort_order':fields.integer('Sort Order'),
         'group_id':fields.integer('Default Store Group'), #Many 2 one?
         'default_group':fields.function(_get_group, type="many2one", relation="sale.shop", method=True, string="Default Store (Group)"),
-        'instance':fields.many2one('magerp.instances', 'Instance', ondelete='cascade')
+        'instance':fields.many2one('external.referential', 'Instance', ondelete='cascade')
     }
     _mapping = {
         'name':('name', str),

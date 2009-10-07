@@ -18,10 +18,9 @@
 {
     "name" : "Magento e-commerce",
     "version" : "1.0",
-    "depends" : ["base","product","product_m2mcategories","sale"],
-    "author" : "Sharoon Thomas",
-    "description": """Magento E-commerce management using Open ERP.
-    Inspired by the original work of Raphael Valyi, my mentor & friend.
+    "depends" : ["base","product","product_m2mcategories","base_sale_multi_channels"],
+    "author" : "Sharoon Thomas, Raphael Valyi",
+    "description": """Magento E-commerce management
 """,
     "website" : "http://www.openlabs.co.in/magentoerpconnect",
     "category" : "Generic Modules",
