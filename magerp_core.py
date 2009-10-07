@@ -22,10 +22,6 @@
 from osv import osv, fields
 import xmlrpclib
 import netsvc
-from dateutil.relativedelta import *
-from lxml import etree
-import time
-import datetime
 import urllib2
 import base64
 import magerp_osv
