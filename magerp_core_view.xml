@@ -25,7 +25,6 @@
 								<field name="attribute_sets" nolabel="1" />
 							</page>
 							<page string="Actions">
-								<button name="core_sync" string="Synchronize Core settings" colspan="2" type="object" />
 								<button name="sync_categs" string="Synchronise Product Categories" colspan="2" type="object" />
 								<button name="sync_attribs" string="Synchronise Product Attributes" colspan="2" type="object" />
 								<button name="sync_attrib_sets" string="Synchronise Product Attribute Sets" colspan="2" type="object" />
