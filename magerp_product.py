@@ -709,7 +709,7 @@ class product_product(magerp_osv.magerp_osv):
                 tier_vals['web_scope'] = 'all'
             else:
                 tier_vals['web_scope'] = 'specific'
-                tier_vals['website_id'] = self.pool.get('magerp.websites').mage_to_oe(cr, uid, int(each['website_id']), instance)
+                tier_vals['website_id'] = self.pool.get('referential.entity').mage_to_oe(cr, uid, int(each['website_id']), instance)
             tp_obj.create(cr, uid, tier_vals)
     
     def create(self, cr, uid, vals, context={}):

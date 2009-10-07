@@ -18,7 +18,7 @@ class magerp_osv(osv.osv):
         res = []
         for record in reads:
             if record['instance']:
-                rid = self.pool.get('magerp.websites').mage_to_oe(cr, uid, record[context['field']], record['instance'][0])
+                rid = self.pool.get('referential.entity').mage_to_oe(cr, uid, record[context['field']], record['instance'][0])
                 res.append((record['id'], rid))
             else:
                 res.append((record['id'], False))

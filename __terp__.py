@@ -18,7 +18,7 @@
 {
     "name" : "Magento e-commerce",
     "version" : "1.0",
-    "depends" : ["base","product","product_m2mcategories","base_sale_multi_channels"],
+    "depends" : ["base","product","product_m2mcategories","base_sale_multichannels"],
     "author" : "Sharoon Thomas, Raphael Valyi",
     "description": """Magento E-commerce management
 """,
