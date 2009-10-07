@@ -3,31 +3,24 @@
 	<data>
 		<!--Magento Instances Tree/Form view  -->
 		<record model="ir.ui.view" id="magerp_instances_form">
-			<field name="name">external.referential.form</field>
+			<field name="name">magerp_instances_form</field>
 			<field name="model">external.referential</field>
+			<field name="inherit_id" ref="base_external_referentials.external_referential_form_view" />
 			<field name="type">form</field>
 			<field name="arch" type="xml">
-				<form string="Magento Instances">
+				<field name="mapping_ids" position="before">
 					<group col="4" colspan="4">
-						<separator string="Describe your instance" colspan="4" />
-						<field name="name" colspan="3" />
-						<label string="Example:My Magento Store" colspan="1" />
-						<field name="location" colspan="3" />
-						<label string="Example:http://mymagentostore.com" colspan="1" />
-						<separator string="Security" colspan="4" />
-						<field name="apiusername" colspan="2" />
-						<field name="apipass" password="True" colspan="2" />
 						<separator string="Core Components" colspan="4" />
 						<notebook colspan="4">
 							<page string="Websites">
-								<field name="websites" nolabel="1" />
+								<field name="entity_ids" nolabel="1" />
 							</page>
-							<page string="Store Views">
-								<field name="storeviews" nolabel="1" />
-							</page>
-							<page string="Groups (Stores)">
-								<field name="groups" nolabel="1" />
-							</page>
+<!--							<page string="Store Views">-->
+<!--								<field name="storeviews" nolabel="1" />-->
+<!--							</page>-->
+<!--							<page string="Groups (Stores)">-->
+<!--								<field name="shop_ids" nolabel="1" />-->
+<!--							</page>-->
 							<page string="Product Attributes / Sets">
 								<field name="attribute_sets" nolabel="1" />
 							</page>
@@ -44,20 +37,10 @@
 							</page>
 						</notebook>
 					</group>
-				</form>
+				</field>
 			</field>
 		</record>
-		<record model="ir.ui.view" id="magerp_instances_tree">
-			<field name="name">external.referential.tree</field>
-			<field name="model">external.referential</field>
-			<field name="type">tree</field>
-			<field name="arch" type="xml">
-				<tree string="Magento Instances">
-					<field name="name" select="1" />
-					<field name="location" select="1" />
-				</tree>
-			</field>
-		</record>
+
 		<record id="act_magerp_instances_form" model="ir.actions.act_window">
 			<field name="name">Magento Instances</field>
 			<field name="res_model">external.referential</field>
@@ -65,7 +48,7 @@
 			<field name="type">ir.actions.act_window</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
-			<field name="view_id" ref="magerp_instances_tree" />
+			<field name="view_id" ref="base_external_referentials.external_referential_tree_view" />
 		</record>
 
 		<!--Magento Websites Tree/Form view  -->
