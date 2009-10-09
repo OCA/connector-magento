@@ -3,7 +3,7 @@
 	<data>
 		<!--Magento Instances Tree/Form view  -->
 		<record model="ir.ui.view" id="magerp_instances_form">
-			<field name="name">magerp_instances_form</field>
+			<field name="name">External Referentials</field>
 			<field name="model">external.referential</field>
 			<field name="inherit_id" ref="base_external_referentials.external_referential_form_view" />
 			<field name="type">form</field>

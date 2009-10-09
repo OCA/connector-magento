@@ -1,7 +1,8 @@
 from osv import osv, fields
 import datetime
+from base_external_referentials import external_osv
 
-class magerp_osv(osv.osv):
+class magerp_osv(external_osv.external_osv):
     _MAGE_FIELD = 'magento_id'
     _MAGE_P_KEY = False
     _LIST_METHOD = False
