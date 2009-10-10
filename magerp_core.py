@@ -25,6 +25,7 @@ import netsvc
 import urllib2
 import base64
 import magerp_osv
+import csv
 
 DEBUG = True
 TIMEOUT = 2
@@ -89,6 +90,8 @@ class external_referential(osv.osv):
         'attribute_sets':fields.one2many('magerp.product_attribute_set', 'instance', 'Attribute Sets')
     }
 
+                
+             
     def connect(self, cr, uid, ids, ctx={}):
         #ids has to be a list
         if ids:
@@ -108,7 +111,8 @@ class external_referential(osv.osv):
             if core_imp_conn.connect():
                 #New import methods
                 self.pool.get('referential.entity').mage_import(cr, uid, filter, core_imp_conn, inst.id, DEBUG)
-                self.pool.get('magerp.storeviews').mage_import(cr, uid, filter, core_imp_conn, inst.id, DEBUG)
+                #self.pool.get('magerp.storeviews').mage_import(cr, uid, filter, core_imp_conn, inst.id, DEBUG)
+                self.pool.get('magerp.storeviews').mage_import_base(self,cr,uid,conn, inst.id)
                 self.pool.get('sale.shop').mage_import(cr, uid, filter, core_imp_conn, inst.id, DEBUG)
             else:
                 osv.except_osv(_("Connection Error"), _("Could not connect to server\nCheck location, username & password."))
@@ -260,7 +264,7 @@ class referential_entity(magerp_osv.magerp_osv):
         'sort_order':fields.integer('Sort Order'),
         'default_group_id':fields.integer('Default Store Group'), #Many 2 one?
         'default_group':fields.function(_get_group, type="many2one", relation="sale.shop", method=True, string="Default Store (Group)"),
-        'instance':fields.many2one('external.referential', 'Instance', ondelete='cascade')
+        #'instance':fields.many2one('external.referential', 'Instance', ondelete='cascade')
     }
     _mapping = {
         'name':('name', str),
@@ -300,7 +304,7 @@ class magerp_storeviews(magerp_osv.magerp_osv):
         'sort_order':fields.integer('Sort Order'),
         'group_id':fields.integer('Default Store Group'), #Many 2 one?
         'default_group':fields.function(_get_group, type="many2one", relation="sale.shop", method=True, string="Default Store (Group)"),
-        'instance':fields.many2one('external.referential', 'Instance', ondelete='cascade')
+        #'instance':fields.many2one('external.referential', 'Instance', ondelete='cascade')
     }
     _mapping = {
         'name':('name', str),

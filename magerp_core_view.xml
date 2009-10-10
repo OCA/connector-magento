@@ -2,6 +2,7 @@
 <openerp>
 	<data>
 		<!--Magento Instances Tree/Form view  -->
+
 		<record model="ir.ui.view" id="magerp_instances_form">
 			<field name="name">External Referentials</field>
 			<field name="model">external.referential</field>
@@ -15,12 +16,12 @@
 							<page string="Websites">
 								<field name="entity_ids" nolabel="1" />
 							</page>
-<!--							<page string="Store Views">-->
-<!--								<field name="storeviews" nolabel="1" />-->
-<!--							</page>-->
-<!--							<page string="Groups (Stores)">-->
-<!--								<field name="shop_ids" nolabel="1" />-->
-<!--							</page>-->
+							<!--							<page string="Store Views">
+								<field name="storeviews" nolabel="1" />
+							</page>
+							<page string="Groups (Stores)">
+									<field name="shop_ids" nolabel="1" />
+														</page>-->
 							<page string="Product Attributes / Sets">
 								<field name="attribute_sets" nolabel="1" />
 							</page>
@@ -39,7 +40,6 @@
 				</field>
 			</field>
 		</record>
-
 		<record id="act_magerp_instances_form" model="ir.actions.act_window">
 			<field name="name">Magento Instances</field>
 			<field name="res_model">external.referential</field>
@@ -160,29 +160,29 @@
 				</field>
 			</field>
 		</record>
-<!--		<record model="ir.ui.view" id="magerp_groups_tree">-->
-<!--			<field name="name">magerp.groups.tree</field>-->
-<!--			<field name="model">magerp.groups</field>-->
-<!--			<field name="type">tree</field>-->
-<!--			<field name="arch" type="xml">-->
-<!--				<tree string="Magento groups (Stores)">-->
-<!--					<field name="magento_id" readonly="1" select="1" />-->
-<!--					<field name="name" select="1" />-->
-<!--					<field name="default_store" readonly="1" select="1" />-->
-<!--					<field name="website" readonly="1" select="1" />-->
-<!--					<field name="root_category" readonly="1" select="2" />-->
-<!--					<field name="instance" readonly="1" select="2" />-->
-<!--				</tree>-->
-<!--			</field>-->
-<!--		</record>-->
-<!--		<record id="act_magerp_groups_form" model="ir.actions.act_window">-->
-<!--			<field name="name">Magento groups</field>-->
-<!--			<field name="res_model">magerp.groups</field>-->
-<!--			<field name="src_model">magerp.groups</field>-->
-<!--			<field name="type">ir.actions.act_window</field>-->
-<!--			<field name="view_type">form</field>-->
-<!--			<field name="view_mode">tree,form</field>-->
-<!--			<field name="view_id" ref="magerp_groups_tree" />-->
-<!--		</record>-->
+		<!--		<record model="ir.ui.view" id="magerp_groups_tree">-->
+		<!--			<field name="name">magerp.groups.tree</field>-->
+		<!--			<field name="model">magerp.groups</field>-->
+		<!--			<field name="type">tree</field>-->
+		<!--			<field name="arch" type="xml">-->
+		<!--				<tree string="Magento groups (Stores)">-->
+		<!--					<field name="magento_id" readonly="1" select="1" />-->
+		<!--					<field name="name" select="1" />-->
+		<!--					<field name="default_store" readonly="1" select="1" />-->
+		<!--					<field name="website" readonly="1" select="1" />-->
+		<!--					<field name="root_category" readonly="1" select="2" />-->
+		<!--					<field name="instance" readonly="1" select="2" />-->
+		<!--				</tree>-->
+		<!--			</field>-->
+		<!--		</record>-->
+		<!--		<record id="act_magerp_groups_form" model="ir.actions.act_window">-->
+		<!--			<field name="name">Magento groups</field>-->
+		<!--			<field name="res_model">magerp.groups</field>-->
+		<!--			<field name="src_model">magerp.groups</field>-->
+		<!--			<field name="type">ir.actions.act_window</field>-->
+		<!--			<field name="view_type">form</field>-->
+		<!--			<field name="view_mode">tree,form</field>-->
+		<!--			<field name="view_id" ref="magerp_groups_tree" />-->
+		<!--		</record>-->
 	</data>
 </openerp>

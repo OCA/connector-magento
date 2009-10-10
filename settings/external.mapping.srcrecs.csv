@@ -1,0 +1,2 @@
+"id","type_id:id","model_id:id","external_list_method","external_get_method","external_update_method","external_create_method","external_delete_method"
+"magento_storeview","magento1324","model_magerp_storeviews","ol_storeviews.list",,,,

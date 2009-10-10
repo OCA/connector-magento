@@ -32,6 +32,8 @@
             'magerp_product_view.xml',
             'magerp_customer_view.xml',
             'magerp_menu.xml',
+            'settings/external.mapping.srcrecs.csv',
+            'settings/external.mappinglines.srcrecs.csv',
                     ],
     "active": False,
     "installable": True,

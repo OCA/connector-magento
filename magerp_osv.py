@@ -164,6 +164,16 @@ class magerp_osv(external_osv.external_osv):
                     subject[key] = True
         return subject
     
+    def mage_import_base(self,cr,uid,conn, external_referential_id, defaults={}, context={}):
+        if not 'ids_or_filter' in context.keys():
+            context['ids_or_filter'] = []
+        mapping_id = self.pool.get('external.mapping').search(cr,uid,[('model','=',self._name),('referential_id','=',external_referential_id)])
+        if mapping_id:
+            list_method = self.pool.get('external.mapping').read(cr,uid,mapping_id[0],['external_list_method'])
+            if list_method:
+                data = conn.call(self._LIST_METHOD, context['ids_or_filter'])
+                result = self.ext_import(cr, uid, data, external_referential_id, defaults, context)
+                
     def mage_import(self, cr, uid, ids_or_filter, conn, instance, debug=False, defaults={}, *attrs):
         if self._LIST_METHOD:
             magento_records = conn.call(self._LIST_METHOD, ids_or_filter)
