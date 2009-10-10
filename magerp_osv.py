@@ -169,9 +169,9 @@ class magerp_osv(external_osv.external_osv):
             context['ids_or_filter'] = []
         mapping_id = self.pool.get('external.mapping').search(cr,uid,[('model','=',self._name),('referential_id','=',external_referential_id)])
         if mapping_id:
-            list_method = self.pool.get('external.mapping').read(cr,uid,mapping_id[0],['external_list_method'])
+            list_method = self.pool.get('external.mapping').read(cr,uid,mapping_id[0],['external_list_method']).get('external_list_method',False)
             if list_method:
-                data = conn.call(self._LIST_METHOD, context['ids_or_filter'])
+                data = conn.call(list_method, context['ids_or_filter'])
                 result = self.ext_import(cr, uid, data, external_referential_id, defaults, context)
                 
     def mage_import(self, cr, uid, ids_or_filter, conn, instance, debug=False, defaults={}, *attrs):

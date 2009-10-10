@@ -1,8 +1,8 @@
 "id","type_id:id","model_id:id","external_field","type","external_type","in_function","out_function"
-"mag_erp_sv_name","magento1324","model_magerp_storeviews","name","in_out","str","result=[('name',if)]","result=[('name',record['name'])]"
-"mag_erp_sv_code","magento1324","model_magerp_storeviews","code","in_out","str","result=[('code',if)]",
-"mag_erp_sv_sid","magento1324","model_magerp_storeviews","store_id","in_out","int","result=[('magento_id',if)]",
-"mag_erp_sv_web","magento1324","model_magerp_storeviews","website_id","in_out","int","result=[('website_id',if)]",
-"mag_erp_sv_isa","magento1324","model_magerp_storeviews","is_active","in_out","str","result=[('is_active',bool(eval(if)))]",
-"mag_erp_sv_stord","magento1324","model_magerp_storeviews","sort_order","in_out","int","result=[('sort_order',if)]",
-"mag_erp_sv_gpid","magento1324","model_magerp_storeviews","group_id","in_out","int","result=[('group_id',if)]",
+"mag_erp_sv_name","magento1324","model_magerp_storeviews","name","in_out","str","result=[('name',ifield)]","result=[('name',record['name'])]"
+"mag_erp_sv_code","magento1324","model_magerp_storeviews","code","in_out","str","result=[('code',ifield)]",
+"mag_erp_sv_sid","magento1324","model_magerp_storeviews","store_id","in_out","int","result=[('magento_id',ifield)]",
+"mag_erp_sv_web","magento1324","model_magerp_storeviews","website_id","in_out","int","result=[('website_id',ifield)]",
+"mag_erp_sv_isa","magento1324","model_magerp_storeviews","is_active","in_out","str","result=[('is_active',bool(eval(ifield)))]",
+"mag_erp_sv_stord","magento1324","model_magerp_storeviews","sort_order","in_out","int","result=[('sort_order',ifield)]",
+"mag_erp_sv_gpid","magento1324","model_magerp_storeviews","group_id","in_out","int","result=[('group_id',ifield)]",

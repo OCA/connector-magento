@@ -112,7 +112,7 @@ class external_referential(osv.osv):
                 #New import methods
                 self.pool.get('referential.entity').mage_import(cr, uid, filter, core_imp_conn, inst.id, DEBUG)
                 #self.pool.get('magerp.storeviews').mage_import(cr, uid, filter, core_imp_conn, inst.id, DEBUG)
-                self.pool.get('magerp.storeviews').mage_import_base(self,cr,uid,conn, inst.id)
+                self.pool.get('magerp.storeviews').mage_import_base(cr,uid,core_imp_conn, inst.id)
                 self.pool.get('sale.shop').mage_import(cr, uid, filter, core_imp_conn, inst.id, DEBUG)
             else:
                 osv.except_osv(_("Connection Error"), _("Could not connect to server\nCheck location, username & password."))
@@ -264,7 +264,7 @@ class referential_entity(magerp_osv.magerp_osv):
         'sort_order':fields.integer('Sort Order'),
         'default_group_id':fields.integer('Default Store Group'), #Many 2 one?
         'default_group':fields.function(_get_group, type="many2one", relation="sale.shop", method=True, string="Default Store (Group)"),
-        #'instance':fields.many2one('external.referential', 'Instance', ondelete='cascade')
+        'instance':fields.many2one('external.referential', 'Instance', ondelete='cascade')
     }
     _mapping = {
         'name':('name', str),

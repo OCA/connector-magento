@@ -65,7 +65,7 @@
 						<field name="sort_order" readonly="1" />
 						<field name="default_group" readonly="1" />
 						<field name="default_group_id" readonly="1" />
-						<field name="instance" readonly="1" />
+						<!--<field name="instance" readonly="1" />-->
 					</group>
 				</form>
 			</field>
@@ -82,7 +82,7 @@
 					<field name="is_default" readonly="1" select="2" />
 					<field name="sort_order" readonly="1" select="2" />
 					<field name="default_group" readonly="1" select="2" />
-					<field name="instance" readonly="1" select="2" />
+					<!--<field name="instance" readonly="1" select="2" />-->
 				</tree>
 			</field>
 		</record>
