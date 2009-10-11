@@ -110,7 +110,7 @@ class external_referential(osv.osv):
             core_imp_conn = Connection(inst.location, inst.apiusername, inst.apipass, DEBUG)
             if core_imp_conn.connect():
                 #New import methods
-                self.pool.get('referential.entity').mage_import(cr, uid, filter, core_imp_conn, inst.id, DEBUG)
+                self.pool.get('referential.entity').mage_import_base(cr, uid,core_imp_conn, inst.id)
                 #self.pool.get('magerp.storeviews').mage_import(cr, uid, filter, core_imp_conn, inst.id, DEBUG)
                 self.pool.get('magerp.storeviews').mage_import_base(cr,uid,core_imp_conn, inst.id)
                 self.pool.get('sale.shop').mage_import(cr, uid, filter, core_imp_conn, inst.id, DEBUG)
@@ -246,8 +246,6 @@ external_referential()
 
 class referential_entity(magerp_osv.magerp_osv):
     _inherit = "referential.entity"
-    _LIST_METHOD = 'ol_websites.list'
-    _MAGE_P_KEY = 'website_id'
     #Return format of API:{'code': 'base', 'name': 'Main', 'website_id': '1', 'is_default': '1', 'sort_order': '0', 'default_group_id': '1'}
             
     def _get_group(self, cr, uid, ids, prop, unknow_none, context):
@@ -257,7 +255,6 @@ class referential_entity(magerp_osv.magerp_osv):
     _order = 'magento_id'
     
     _columns = {
-        'name':fields.char('Website Name', size=100),
         'code':fields.char('Code', size=100),
         'magento_id':fields.integer('Website ID'),
         'is_default':fields.boolean('Is Active?'),
@@ -265,15 +262,6 @@ class referential_entity(magerp_osv.magerp_osv):
         'default_group_id':fields.integer('Default Store Group'), #Many 2 one?
         'default_group':fields.function(_get_group, type="many2one", relation="sale.shop", method=True, string="Default Store (Group)"),
         'instance':fields.many2one('external.referential', 'Instance', ondelete='cascade')
-    }
-    _mapping = {
-        'name':('name', str),
-        'code':('code', str),
-        'website_id':('magento_id', int),
-        'is_default':('is_default', bool),
-        'sort_order':('sort_order', int),
-        'default_group_id':('default_group_id', int), #Many 2 one?
-               
     }
 
 
@@ -306,16 +294,7 @@ class magerp_storeviews(magerp_osv.magerp_osv):
         'default_group':fields.function(_get_group, type="many2one", relation="sale.shop", method=True, string="Default Store (Group)"),
         #'instance':fields.many2one('external.referential', 'Instance', ondelete='cascade')
     }
-    _mapping = {
-        'name':('name', str),
-        'code':('code', str),
-        'store_id':('magento_id', int),
-        'website_id':('website_id', int), # Many 2 one ?
-        'is_active':('is_active', bool),
-        'sort_order':('sort_order', int),
-        'group_id':('group_id'), #Many 2 one?
-    
-    }
+
     #Return format of API:{'code': 'default', 'store_id': '1', 'website_id': '1', 'is_active': '1', 'sort_order': '0', 'group_id': '1', 'name': 'Default Store View'}
 
 
