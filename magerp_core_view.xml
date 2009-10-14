@@ -52,8 +52,8 @@
 
 		<!--Magento Websites Tree/Form view  -->
 		<record model="ir.ui.view" id="magerp_websites_form">
-			<field name="name">referential.entity.form</field>
-			<field name="model">referential.entity</field>
+			<field name="name">external.shop.group.form</field>
+			<field name="model">external.shop.group</field>
 			<field name="type">form</field>
 			<field name="arch" type="xml">
 				<form string="Magento websites">
@@ -71,8 +71,8 @@
 			</field>
 		</record>
 		<record model="ir.ui.view" id="magerp_websites_tree">
-			<field name="name">referential.entity.tree</field>
-			<field name="model">referential.entity</field>
+			<field name="name">external.shop.group.tree</field>
+			<field name="model">external.shop.group</field>
 			<field name="type">tree</field>
 			<field name="arch" type="xml">
 				<tree string="Magento websites">
@@ -88,8 +88,8 @@
 		</record>
 		<record id="act_magerp_websites_form" model="ir.actions.act_window">
 			<field name="name">Magento websites</field>
-			<field name="res_model">referential.entity</field>
-			<field name="src_model">referential.entity</field>
+			<field name="res_model">external.shop.group</field>
+			<field name="src_model">external.shop.group</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>

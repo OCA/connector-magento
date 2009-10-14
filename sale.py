@@ -61,7 +61,7 @@ class sale_shop(magerp_osv.magerp_osv):
         'default_store_id':fields.integer('Store ID'), #Many 2 one ?
         'default_store':fields.function(_get_store, type="many2one", relation="magerp.storeviews", method=True, string="Store View"),
         'website_id':fields.integer('Website'), # Many 2 one ?
-        'website':fields.function(_get_website, type="many2one", relation="referential.entity", method=True, string="Website"),
+        'website':fields.function(_get_website, type="many2one", relation="external.shop.group", method=True, string="Website"),
         'root_category_id':fields.integer('Root product Category'),
         'root_category':fields.function(_get_rootcategory, type="many2one", relation="product.category", method=True, string="Root Category"),
         'instance':fields.many2one('external.referential', 'Instance', ondelete='cascade')
