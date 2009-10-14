@@ -596,7 +596,7 @@ class product_tierprice(osv.osv):
                     ('all', 'All Websites'),
                     ('specific', 'Specific Website'),
                                   ], 'Scope'),
-        'website_id':fields.many2one('referential.entity', 'Website'),
+        'website_id':fields.many2one('external.shop.group', 'Website'),
         'group_scope':fields.selection([
                             ('1', 'All groups'),
                             ('0', 'Specific group')
@@ -613,7 +613,7 @@ class product_tierprice(osv.osv):
         'all_groups':(False, str, """if all_groups=='1':\n\tresult=[('group_scope','1')]\nelse:\n\tresult=[('group_scope','1')]"""),
         'website_price':('website_price', float),
         'price':('price', float),
-        'website_id':(False, int, """result=self.pool.get('referential.entity').mage_to_oe(cr,uid,website_id,instance)\nif result:\n\tresult=[('website_id',result[0])]\nelse:\n\tresult=[('website_id',False)]"""),
+        'website_id':(False, int, """result=self.pool.get('external.shop.group').mage_to_oe(cr,uid,website_id,instance)\nif result:\n\tresult=[('website_id',result[0])]\nelse:\n\tresult=[('website_id',False)]"""),
         'price_qty':('price_qty', float),
                 }
 product_tierprice()
@@ -709,7 +709,7 @@ class product_product(magerp_osv.magerp_osv):
                 tier_vals['web_scope'] = 'all'
             else:
                 tier_vals['web_scope'] = 'specific'
-                tier_vals['website_id'] = self.pool.get('referential.entity').mage_to_oe(cr, uid, int(each['website_id']), instance)
+                tier_vals['website_id'] = self.pool.get('external.shop.group').mage_to_oe(cr, uid, int(each['website_id']), instance)
             tp_obj.create(cr, uid, tier_vals)
     
     def create(self, cr, uid, vals, context={}):

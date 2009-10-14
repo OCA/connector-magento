@@ -1,3 +1,3 @@
 "id","type_id:id","model_id:id","external_list_method","external_get_method","external_update_method","external_create_method","external_delete_method","external_key_name"
-"magento_website","magento1324","base_sale_multichannels.model_referential_entity","ol_websites.list",,,,,"website_id"
+"magento_website","magento1324","base_sale_multichannels.model_external_shop_group","ol_websites.list",,,,,"website_id"
 "magento_storeview","magento1324","model_magerp_storeviews","ol_storeviews.list",,,,,"name"

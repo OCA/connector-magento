@@ -244,7 +244,7 @@ class external_referential(osv.osv):
                                 
 external_referential()
 
-class referential_entity(magerp_osv.magerp_osv):
+class external_shop_group(magerp_osv.magerp_osv):
     _inherit = "external.shop.group"
     #Return format of API:{'code': 'base', 'name': 'Main', 'website_id': '1', 'is_default': '1', 'sort_order': '0', 'default_group_id': '1'}
             
@@ -265,7 +265,7 @@ class referential_entity(magerp_osv.magerp_osv):
     }
 
 
-referential_entity()
+external_shop_group()
 
 class magerp_storeviews(magerp_osv.magerp_osv):
     _name = "magerp.storeviews"
