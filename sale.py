@@ -21,6 +21,7 @@
 
 from osv import osv, fields
 import magerp_osv
+#from base_external_referentials import external_osv
 
 
 class sale_shop(magerp_osv.magerp_osv):
