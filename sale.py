@@ -21,8 +21,10 @@
 
 from osv import osv, fields
 import magerp_osv
+from magerp_core import Connection
 #from base_external_referentials import external_osv
 
+DEBUG = True
 
 class sale_shop(magerp_osv.magerp_osv):
     _inherit = "sale.shop"
@@ -65,7 +67,12 @@ class sale_shop(magerp_osv.magerp_osv):
     
     _defaults = {
         'payment_default_id': lambda *a: 1, #required field that would cause trouble if not set when importing
-    }  
+    }
+    
+    def export_products_collection(self, cr, uid, shop, exportable_products, ctx):
+        attr_conn = Connection(shop.referential_id.location, shop.referential_id.apiusername, shop.referential_id.apipass, DEBUG)
+        if attr_conn.connect():
+            self.pool.get('product.product').mage_export(cr, uid, [product.id for product in exportable_products], attr_conn, shop.referential_id.id, DEBUG)
     
     #Return format of API:{'default_store_id': '1', 'group_id': '1', 'website_id': '1', 'name': 'Main Website Store', 'root_category_id': '2'
     
