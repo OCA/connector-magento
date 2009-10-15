@@ -25,7 +25,7 @@ import netsvc
 import urllib2
 import base64
 import magerp_osv
-import csv
+from base_external_referentials import external_osv
 
 DEBUG = True
 TIMEOUT = 2
