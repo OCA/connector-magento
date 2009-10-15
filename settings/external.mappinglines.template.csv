@@ -12,3 +12,9 @@
 "mag_erp_sv_isa","magento1324","model_magerp_storeviews","is_active","in_out","str","result=[('is_active',bool(eval(ifield)))]",
 "mag_erp_sv_stord","magento1324","model_magerp_storeviews","sort_order","in_out","int","result=[('sort_order',ifield)]",
 "mag_erp_sv_gpid","magento1324","model_magerp_storeviews","group_id","in_out","int","result=[('group_id',ifield)]",
+"mag_erp_st_name","magento1324","sale.model_sale_shop","name","in_out","str","result=[('name',ifield)]","result=[('name',record['name'])]"
+"mag_erp_st_gpid","magento1324","sale.model_sale_shop","group_id","in_out","int","result=[('group_id',ifield)]",
+"mag_erp_st_web","magento1324","sale.model_sale_shop","website_id","in_out","int","result=[('website_id',ifield)]",
+"mag_erp_st_default_st","magento1324","sale.model_sale_shop","default_store_id","in_out","int","result=[('default_store_id',ifield)]",
+"mag_erp_st_root_categ","magento1324","sale.model_sale_shop","root_category_id","in_out","int","result=[('root_category_id',ifield)]",
+

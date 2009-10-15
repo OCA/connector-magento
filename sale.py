@@ -51,11 +51,7 @@ class sale_shop(magerp_osv.magerp_osv):
     def _get_rootcategory(self, cr, uid, ids, prop, unknow_none, context):
         res = self.rootcategory_get(cr, uid, ids, context)
         return dict(res)     
-       
-    _order = 'magento_id'
-    _MAGE_FIELD = 'magento_id'
-    _MAGE_P_KEY = 'group_id'
-    _LIST_METHOD = 'ol_groups.list'
+
     _columns = {
         'magento_id':fields.integer('ID'),
         'default_store_id':fields.integer('Store ID'), #Many 2 one ?
@@ -71,13 +67,6 @@ class sale_shop(magerp_osv.magerp_osv):
         'payment_default_id': lambda *a: 1, #required field that would cause trouble if not set when importing
     }  
     
-    _mapping = {
-        'name':('name', str),
-        'group_id':('magento_id', int),
-        'default_store_id':('default_store_id', int), #Many 2 one ?
-        'website_id':('website_id', int), # Many 2 one ?
-        'root_category_id':('root_category_id', int),
-    }
     #Return format of API:{'default_store_id': '1', 'group_id': '1', 'website_id': '1', 'name': 'Main Website Store', 'root_category_id': '2'
     
 sale_shop()

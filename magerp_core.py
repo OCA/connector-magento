@@ -113,7 +113,7 @@ class external_referential(osv.osv):
                 self.pool.get('external.shop.group').mage_import_base(cr, uid,core_imp_conn, inst.id)
                 #self.pool.get('magerp.storeviews').mage_import(cr, uid, filter, core_imp_conn, inst.id, DEBUG)
                 self.pool.get('magerp.storeviews').mage_import_base(cr,uid,core_imp_conn, inst.id)
-                self.pool.get('sale.shop').mage_import(cr, uid, filter, core_imp_conn, inst.id, DEBUG)
+                self.pool.get('sale.shop').mage_import_base(cr, uid, core_imp_conn, inst.id)
             else:
                 osv.except_osv(_("Connection Error"), _("Could not connect to server\nCheck location, username & password."))
     
