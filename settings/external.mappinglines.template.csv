@@ -55,6 +55,6 @@ result=[('image_name',ifield),('image',image_binary)]","if record['image']:
 	img = base64.decodestring(record['image'])
         img_bin_enc = base64.encodestring(img) 
         conn.call('ol_catalog_category_media.create', [record['image_name'], img_bin_enc])
-	result = [('image',record['image'])]
+	result = [('image',record['image_name'])]
 else:
 	result=[]"
