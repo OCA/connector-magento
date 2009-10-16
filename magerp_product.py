@@ -148,7 +148,7 @@ class product_category(magerp_osv.magerp_osv):
         #This function should record a category
         #The parent has to be created before creating child
         imp_vals = conn.call('category.info', [category_id])
-        self.ext_import(cr, uid, [imp_vals], external_referential_id, defaults={}, context={})
+        self.ext_import(cr, uid, [imp_vals], external_referential_id, defaults={}, context={'conn_obj':conn})
         #Replace code by new method
         """vals = {}
         imp_keys = self.IMPORT_KEYS

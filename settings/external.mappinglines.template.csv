@@ -36,3 +36,13 @@ result=[('magento_parent_id',ifield),('parent_id',parent_id)]",
 "mag_erp_procat_12","magento1324","product.model_product_category","available_sort_by","in_out","str","result=[('available_sort_by',ifield)]",
 "mag_erp_procat_13","magento1324","product.model_product_category","default_sort_by","in_out","str","result=[('default_sort_by',ifield)]",
 "mag_erp_procat_14","magento1324","product.model_product_category","updated_at","in_out","str","result=[('magerp_stamp',ifield)]",
+"mag_erp_procat_15","magento1324","product.model_product_category","image","in_out","str","image_binary = False
+if ifield and not ifield=='None':
+	try:
+		image_binary = conn.call('ol_catalog_category_media.info', [int(data['category_id'])])
+	except Exception, e:
+		print e
+		pass
+	if image_binary:
+		image_binary = base64.encodestring(base64.urlsafe_b64decode(image_binary[0]['image_data']))
+result=[('image_name',ifield),('image',image_binary)]",
