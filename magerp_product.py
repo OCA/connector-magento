@@ -54,6 +54,8 @@ class product_category(magerp_osv.magerp_osv):
         return conn.call(method,[data['parent_id'],data])
     
     _columns = {
+        'create_date': fields.datetime('Created date', readonly=True),
+        'write_date': fields.datetime('Updated date', readonly=True),
         'exportable':fields.boolean('Export to Magento'),
         'updated':fields.boolean('To synchronize', help="Set if the category underwent a change & has to be synched."),
         'instance':fields.many2one('external.referential', 'Magento Instance', readonly=True, store=True),
