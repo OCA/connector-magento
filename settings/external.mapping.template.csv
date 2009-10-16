@@ -2,3 +2,4 @@
 "magento_website","magento1324","base_sale_multichannels.model_external_shop_group","ol_websites.list",,,,,"website_id"
 "magento_storeview","magento1324","model_magerp_storeviews","ol_storeviews.list",,,,,"name"
 "magento_store","magento1324","sale.model_sale_shop","ol_groups.list",,,,,"group_id"
+"magento_order","magento1324","sale.model_sale_order","sales_order.list","sales_order.info",,,,"order_id"

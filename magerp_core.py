@@ -20,69 +20,13 @@
 #########################################################################
 
 from osv import osv, fields
-import xmlrpclib
-import netsvc
-import urllib2
-import base64
 import magerp_osv
 from base_external_referentials import external_osv
 
 DEBUG = True
 TIMEOUT = 2
-
-class Connection():
-    def __init__(self, location, username, password, debug=False):
-        #Append / if not there
-        if not location[-1] == '/':
-            location += '/' 
-        self.corelocation = location
-        self.location = location + "index.php/api/xmlrpc"
-        self.username = username
-        self.password = password
-        self.debug = debug
-        self.result = {}
-        self.logger = netsvc.Logger()
-    
-    def connect(self):
-        if not self.location[-1] == '/':
-            self.location += '/'
-        if self.debug:
-            self.logger.notifyChannel(_("Magento Connection"), netsvc.LOG_INFO, _("Attempting connection with Settings:%s,%s,%s") % (self.location, self.username, self.password))
-        self.ser = xmlrpclib.ServerProxy(self.location)
-        try:
-            self.session = self.ser.login(self.username, self.password)
-            if self.debug:
-                self.logger.notifyChannel(_("Magento Connection"), netsvc.LOG_INFO, _("Login Successful"))
-            return True
-        except Exception, e:
-            self.logger.notifyChannel(_("Magento Connection"), netsvc.LOG_ERROR, _("Error in connecting") % (e))
-            raise
-    
-    def call(self, method, *args): 
-        if args:
-            arguments = list(args)[0]
-        else:
-            arguments = []
-        try:
-            if self.debug:
-                self.logger.notifyChannel(_("Magento Connection"), netsvc.LOG_INFO, _("Calling Method:%s,Arguments:%s") % (method, arguments))
-            res = self.ser.call(self.session, method, arguments)
-            if self.debug:
-                self.logger.notifyChannel(_("Magento Connection"), netsvc.LOG_INFO, _("Query Returned:%s") % (res))
-            return res
-        except Exception, e:
-            self.logger.notifyChannel(_("Magento Call"), netsvc.LOG_ERROR, _("Method: %s\nArguments:%s\nError:%s") % (method, arguments, e))
-            raise
-    
-    def fetch_image(self, imgloc):
-        full_loc = self.corelocation + imgloc
-        try:
-            img = urllib2.urlopen(full_loc)
-            return base64.b64encode(img.read())
-        except Exception, e:
-            pass
         
-class external_referential(osv.osv):
+class external_referential(magerp_osv.magerp_osv):
     #This class stores instances of magento to which the ERP will connect, the concept of multi website, multistore integration?
     _inherit = "external.referential"
 
@@ -92,13 +36,13 @@ class external_referential(osv.osv):
 
                 
              
-    def connect(self, cr, uid, ids, ctx={}):
+    def connect(self, cr, uid, ids, ctx={}):#TODO used?
         #ids has to be a list
         if ids:
             if len(ids) == 1:
                 instance = self.browse(cr, uid, ids, ctx)[0]
                 if instance:
-                    core_imp_conn = Connection(instance.location, instance.apiusername, instance.apipass, DEBUG)
+                    core_imp_conn = self.external_connection(cr, uid, instance, DEBUG)
                     if core_imp_conn.connect():
                         return core_imp_conn
         return False
@@ -107,8 +51,8 @@ class external_referential(osv.osv):
         instances = self.browse(cr, uid, ids, ctx)
         filter = []
         for inst in instances:
-            core_imp_conn = Connection(inst.location, inst.apiusername, inst.apipass, DEBUG)
-            if core_imp_conn.connect():
+            core_imp_conn = self.external_connection(cr, uid, inst, DEBUG)
+            if core_imp_conn:
                 #New import methods
                 self.pool.get('external.shop.group').mage_import_base(cr, uid,core_imp_conn, inst.id)
                 #self.pool.get('magerp.storeviews').mage_import(cr, uid, filter, core_imp_conn, inst.id, DEBUG)
@@ -120,8 +64,8 @@ class external_referential(osv.osv):
     def sync_categs(self, cr, uid, ids, ctx):
         instances = self.browse(cr, uid, ids, ctx)
         for inst in instances:
-            pro_cat_conn = Connection(inst.location, inst.apiusername, inst.apipass, DEBUG)
-            if pro_cat_conn.connect():
+            pro_cat_conn = self.external_connection(cr, uid, inst, DEBUG)
+            if pro_cat_conn:
                 confirmation = pro_cat_conn.call('catalog_category.currentStore', [0])   #Set browse to root store
                 if confirmation:
                     categ_tree = pro_cat_conn.call('catalog_category.tree')             #Get the tree
@@ -132,8 +76,8 @@ class external_referential(osv.osv):
     def sync_attribs(self, cr, uid, ids, ctx):
         instances = self.browse(cr, uid, ids, ctx)
         for inst in instances:
-            attr_conn = Connection(inst.location, inst.apiusername, inst.apipass, DEBUG)
-            if attr_conn.connect():
+            attr_conn = self.external_connection(cr, uid, inst, DEBUG)
+            if attr_conn:
                 attrib_set_ids = self.pool.get('magerp.product_attribute_set').search(cr, uid, [('instance', '=', inst.id)])
                 attrib_sets = self.pool.get('magerp.product_attribute_set').read(cr, uid, attrib_set_ids, ['magento_id'])
                 #Get all attribute set ids to get all attributes in one go
@@ -157,8 +101,8 @@ class external_referential(osv.osv):
     def sync_attrib_sets(self, cr, uid, ids, ctx):
         instances = self.browse(cr, uid, ids, ctx)
         for inst in instances:
-            attr_conn = Connection(inst.location, inst.apiusername, inst.apipass, DEBUG)
-            if attr_conn.connect():
+            attr_conn = self.external_connection(cr, uid, inst, DEBUG)
+            if attr_conn:
                 filter = []
                 self.pool.get('magerp.product_attribute_set').mage_import(cr, uid, filter, attr_conn, inst.id, DEBUG)
             else:
@@ -167,10 +111,10 @@ class external_referential(osv.osv):
     def sync_attrib_groups(self, cr, uid, ids, ctx):
         instances = self.browse(cr, uid, ids, ctx)
         for inst in instances:
-            attr_conn = Connection(inst.location, inst.apiusername, inst.apipass, DEBUG)
+            attr_conn = self.external_connection(cr, uid, inst, DEBUG)
             attrset_ids = self.pool.get('magerp.product_attribute_set').get_all_mage_ids(cr, uid, [], inst.id)
             filter = [{'attribute_set_id':{'in':attrset_ids}}]
-            if attr_conn.connect():
+            if attr_conn:
                 self.pool.get('magerp.product_attribute_groups').mage_import(cr, uid, filter, attr_conn, inst.id, DEBUG)
             else:
                 osv.except_osv(_("Connection Error"), _("Could not connect to server\nCheck location, username & password."))
@@ -178,9 +122,9 @@ class external_referential(osv.osv):
     def sync_customer_groups(self, cr, uid, ids, ctx):
         instances = self.browse(cr, uid, ids, ctx)
         for inst in instances:
-            attr_conn = Connection(inst.location, inst.apiusername, inst.apipass, DEBUG)
+            attr_conn = self.external_connection(cr, uid, inst, DEBUG)
             filter = []
-            if attr_conn.connect():
+            if attr_conn:
                 self.pool.get('res.partner.category').mage_import(cr, uid, filter, attr_conn, inst.id, DEBUG)
             else:
                 osv.except_osv(_("Connection Error"), _("Could not connect to server\nCheck location, username & password."))
@@ -188,9 +132,9 @@ class external_referential(osv.osv):
     def sync_customer_addresses(self, cr, uid, ids, ctx):
         instances = self.browse(cr, uid, ids, ctx)
         for inst in instances:
-            attr_conn = Connection(inst.location, inst.apiusername, inst.apipass, DEBUG)
+            attr_conn = self.external_connection(cr, uid, inst, DEBUG)
             filter = []
-            if attr_conn.connect():
+            if attr_conn:
                 self.pool.get('res.partner').mage_import(cr, uid, filter, attr_conn, inst.id, DEBUG)
             else:
                 osv.except_osv(_("Connection Error"), _("Could not connect to server\nCheck location, username & password."))
@@ -198,9 +142,9 @@ class external_referential(osv.osv):
     def sync_products(self, cr, uid, ids, ctx):
         instances = self.browse(cr, uid, ids, ctx)
         for inst in instances:
-            attr_conn = Connection(inst.location, inst.apiusername, inst.apipass, DEBUG)
+            attr_conn = self.external_connection(cr, uid, inst, DEBUG)
             filter = []
-            if attr_conn.connect():
+            if attr_conn:
                 self.pool.get('product.product').mage_import(cr, uid, filter, attr_conn, inst.id, DEBUG)
             else:
                 osv.except_osv(_("Connection Error"), _("Could not connect to server\nCheck location, username & password."))                        
@@ -233,8 +177,8 @@ class external_referential(osv.osv):
     def export_products(self, cr, uid, ids, ctx):
         instances = self.browse(cr, uid, ids, ctx)
         for inst in instances:
-            attr_conn = Connection(inst.location, inst.apiusername, inst.apipass, DEBUG)
-            if attr_conn.connect():
+            attr_conn = self.external_connection(cr, uid, inst, DEBUG)
+            if attr_conn:
                 ids = self.pool.get('product.product').search(cr, uid, [])
                 self.pool.get('product.product').mage_export(cr, uid, ids, attr_conn, inst.id, DEBUG)
             else:

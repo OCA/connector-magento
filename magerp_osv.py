@@ -1,6 +1,62 @@
 from osv import osv, fields
 import datetime
+import xmlrpclib
+import netsvc
+import urllib2
+import base64
 from base_external_referentials import external_osv
+
+class Connection():
+    def __init__(self, location, username, password, debug=False):
+        #Append / if not there
+        if not location[-1] == '/':
+            location += '/' 
+        self.corelocation = location
+        self.location = location + "index.php/api/xmlrpc"
+        self.username = username
+        self.password = password
+        self.debug = debug
+        self.result = {}
+        self.logger = netsvc.Logger()
+    
+    def connect(self):
+        if not self.location[-1] == '/':
+            self.location += '/'
+        if self.debug:
+            self.logger.notifyChannel(_("Magento Connection"), netsvc.LOG_INFO, _("Attempting connection with Settings:%s,%s,%s") % (self.location, self.username, self.password))
+        self.ser = xmlrpclib.ServerProxy(self.location)
+        try:
+            self.session = self.ser.login(self.username, self.password)
+            if self.debug:
+                self.logger.notifyChannel(_("Magento Connection"), netsvc.LOG_INFO, _("Login Successful"))
+            return True
+        except Exception, e:
+            self.logger.notifyChannel(_("Magento Connection"), netsvc.LOG_ERROR, _("Error in connecting") % (e))
+            raise
+    
+    def call(self, method, *args): 
+        if args:
+            arguments = list(args)[0]
+        else:
+            arguments = []
+        try:
+            if self.debug:
+                self.logger.notifyChannel(_("Magento Connection"), netsvc.LOG_INFO, _("Calling Method:%s,Arguments:%s") % (method, arguments))
+            res = self.ser.call(self.session, method, arguments)
+            if self.debug:
+                self.logger.notifyChannel(_("Magento Connection"), netsvc.LOG_INFO, _("Query Returned:%s") % (res))
+            return res
+        except Exception, e:
+            self.logger.notifyChannel(_("Magento Call"), netsvc.LOG_ERROR, _("Method: %s\nArguments:%s\nError:%s") % (method, arguments, e))
+            raise
+    
+    def fetch_image(self, imgloc):
+        full_loc = self.corelocation + imgloc
+        try:
+            img = urllib2.urlopen(full_loc)
+            return base64.b64encode(img.read())
+        except Exception, e:
+            pass
 
 class magerp_osv(external_osv.external_osv):
     _MAGE_FIELD = 'magento_id'
@@ -11,6 +67,11 @@ class magerp_osv(external_osv.external_osv):
     _UPDATE_METHOD = False
     _DELETE_METHOD = False
     _mapping = {}
+    DEBUG = False
+    
+    def external_connection(self, cr, uid, referential, DEBUG=False):
+        attr_conn = Connection(referential.location, referential.apiusername, referential.apipass, DEBUG)
+        return attr_conn.connect() and attr_conn or False
     
     def website_get(self, cr, uid, ids, context=None):#TODO refactor website_get,group_get and store_get in a single method
         if not len(ids):
