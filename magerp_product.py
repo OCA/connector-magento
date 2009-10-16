@@ -143,11 +143,13 @@ class product_category(magerp_osv.magerp_osv):
             self.record_entire_tree(cr, uid, id, conn, each)
         return True
             
-    def record_category(self, cr, uid, id, conn, category_id):
+    def record_category(self, cr, uid, external_referential_id, conn, category_id):
         #This function should record a category
         #The parent has to be created before creating child
         imp_vals = self.cast_string(conn.call('category.info', [category_id]))
-        vals = {}
+        self.ext_import(cr, uid, imp_vals, external_referential_id, defaults={}, context={})
+        #Replace code by new method
+        """vals = {}
         imp_keys = self.IMPORT_KEYS
         for eachkey in imp_keys:
             #Check if there is any key renames
@@ -203,7 +205,7 @@ class product_category(magerp_osv.magerp_osv):
                 return self.write(cr, uid, pcat_ids, vals)
             elif inc_rec_date < existing_rec_date:
                 #Existing data is new, export this
-                self.export_2_mage(cr, uid, pcat_ids, conn)
+                self.export_2_mage(cr, uid, pcat_ids, conn)"""
                 
     def export_2_mage(self, cr, uid, ids, conn, ctx={}):
         if conn:

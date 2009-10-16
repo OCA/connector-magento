@@ -55,7 +55,6 @@ class external_referential(magerp_osv.magerp_osv):
             if core_imp_conn:
                 #New import methods
                 self.pool.get('external.shop.group').mage_import_base(cr, uid,core_imp_conn, inst.id)
-                #self.pool.get('magerp.storeviews').mage_import(cr, uid, filter, core_imp_conn, inst.id, DEBUG)
                 self.pool.get('magerp.storeviews').mage_import_base(cr,uid,core_imp_conn, inst.id)
                 self.pool.get('sale.shop').mage_import_base(cr, uid, core_imp_conn, inst.id)
             else:
