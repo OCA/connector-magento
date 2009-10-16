@@ -28,14 +28,16 @@ DEBUG = True
 class sale_shop(magerp_osv.magerp_osv):
     _inherit = "sale.shop"
     
-    def _get_website(self, cr, uid, ids, prop, unknow_none, context):
-        res = self.website_get(cr, uid, ids, context={'field':'website_id'})
-        return dict(res) 
-   
-    def _get_store(self, cr, uid, ids, prop, unknow_none, context):
-        res = self.store_get(cr, uid, ids, context={'field':'default_store_id'})
-        return dict(res)     
+    def _shop_group_get(self, cr, uid, ids, prop, unknow_none, context):
+        return self.oe_get(cr, uid, ids, context={'oe_model':'external.shop.group', 'field':'website_id'})
+    
+    def _referential_get(self, cr, uid, ids, prop, unknow_none, context):
+        res = {}
+        for shop in self.browse(cr, uid, ids, context):
+            res[shop.id] = shop.shop_group_id and shop.shop_group_id.referential_id.id or False
+        return res
 
+    #FIXME
     def rootcategory_get(self, cr, uid, ids, context=None):
         if not len(ids):
             return []
@@ -50,18 +52,24 @@ class sale_shop(magerp_osv.magerp_osv):
         return res
     
     def _get_rootcategory(self, cr, uid, ids, prop, unknow_none, context):
-        res = self.rootcategory_get(cr, uid, ids, context)
-        return dict(res)     
+        #res = self.rootcategory_get(cr, uid, ids, context)
+        #return dict(res)
+        res = {}
+        for shop in self.browse(cr, uid, ids, context):
+            res[shop.id] = False
+        return res     
 
     _columns = {
         'magento_id':fields.integer('ID'),
         'default_store_id':fields.integer('Store ID'), #Many 2 one ?
-        'default_store':fields.function(_get_store, type="many2one", relation="magerp.storeviews", method=True, string="Store View"),
         'website_id':fields.integer('Website'), # Many 2 one ?
-        'website':fields.function(_get_website, type="many2one", relation="external.shop.group", method=True, string="Website"),
+        
+        #overridden because using external key id as an intermediate
+        #'shop_group_id':fields.function(_shop_group_get, type="many2one", relation="external.shop.group", method=True, string="Website"),
+        #'referential_id':fields.function(_referential_get, type="many2one", relation="external.referential", method=True, string="External Referential"),
+        
         'root_category_id':fields.integer('Root product Category'),
         'root_category':fields.function(_get_rootcategory, type="many2one", relation="product.category", method=True, string="Root Category"),
-        'instance':fields.many2one('external.referential', 'Instance', ondelete='cascade')
     }
     
     _defaults = {

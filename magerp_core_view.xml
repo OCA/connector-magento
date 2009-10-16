@@ -145,19 +145,16 @@
 		</record>
 
 		<!--Magento store Tree/Form view  -->
-		<record model="ir.ui.view" id="sale_simple_pos_view_shop_form">
-			<field name="name">sale_simple_pos_view_shop_form</field>
+		<record model="ir.ui.view" id="magerp_view_shop_form">
+			<field name="name">magerp_view_shop_form</field>
 			<field name="model">sale.shop</field>
-			<field name="inherit_id" ref="sale.view_shop_form" />
+			<field name="inherit_id" ref="base_sale_multichannels.base_sale_multichannels_view_shop_form" />
 			<field name="type">form</field>
 			<field name="arch" type="xml">
-				<field name="project_id" position="after">
+				<field name="exportable_product_ids" position="after">
 					<field name="magento_id" readonly="1" />
 					<field name="name" />
-					<field name="default_store" readonly="1" />
-					<field name="website" readonly="1" />
 					<field name="root_category" readonly="1" />
-					<field name="instance" readonly="1" />
 				</field>
 			</field>
 		</record>
