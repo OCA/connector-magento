@@ -74,6 +74,7 @@ class product_category(magerp_osv.magerp_osv):
                     ('PRODUCTS_AND_PAGE', 'Static Block & Products')], 'Display Mode', required=True),
         'is_anchor': fields.boolean('Anchor?'),
         'available_sort_by': fields.selection([
+                    ('', 'Use Config Settings'),
                     ('None', 'Use Config Settings'),
                     ('position', 'Best Value'),
                     ('name', 'Name'),
@@ -146,7 +147,7 @@ class product_category(magerp_osv.magerp_osv):
     def record_category(self, cr, uid, external_referential_id, conn, category_id):
         #This function should record a category
         #The parent has to be created before creating child
-        imp_vals = self.cast_string(conn.call('category.info', [category_id]))
+        imp_vals = conn.call('category.info', [category_id])
         self.ext_import(cr, uid, [imp_vals], external_referential_id, defaults={}, context={})
         #Replace code by new method
         """vals = {}
