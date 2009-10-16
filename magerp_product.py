@@ -149,64 +149,6 @@ class product_category(magerp_osv.magerp_osv):
         #The parent has to be created before creating child
         imp_vals = conn.call('category.info', [category_id])
         self.ext_import(cr, uid, [imp_vals], external_referential_id, defaults={}, context={'conn_obj':conn})
-        #Replace code by new method
-        """vals = {}
-        imp_keys = self.IMPORT_KEYS
-        for eachkey in imp_keys:
-            #Check if there is any key renames
-            if imp_vals[eachkey[0]] == None:
-                if eachkey[2] == 'NONE2FALSE':
-                    imp_val = False
-                elif eachkey[2] == 'NONE2STR':
-                    imp_val = eachkey[3] or 'None'
-            else:
-                imp_val = imp_vals[eachkey[0]]
-                
-            if eachkey[1] == '':
-                vals[eachkey[0]] = imp_val
-            else:
-                vals[eachkey[1]] = imp_val       
-        
-        if vals['image']:
-            #IMage exists
-            #vals['image'] = conn.fetch_image("media/catalog/category/" + vals['image_name'])
-            try:
-                vals['image'] = conn.call('ol_catalog_category_media.info', [int(imp_vals['category_id'])])
-            except Exception, e:
-                pass
-            if vals['image']:
-                vals['image'] = base64.encodestring(base64.urlsafe_b64decode(vals['image'][0]['image_data']))
-#                flob = open('/home/sharoon/Desktop/' + vals['image_name'], 'wb')
-#                flob.write(base64.decodestring(vals['image']))
-#                flob.close()
-        if vals['available_sort_by'] == '':
-            vals['available_sort_by'] = 'None'
-        vals['parent_id'] = self.mage_to_oe(cr, uid, imp_vals['parent_id'], id)
-        if vals['parent_id'] == None:
-            vals['parent_id'] = False
-        if vals['parent_id']:
-            vals['parent_id'] = vals['parent_id'][0]
-        vals['instance'] = id
-        vals['sequence'] = id
-        vals['exportable'] = True
-        vals['updated'] = False
-        #Check if already exists?
-        pcat_ids = self.search(cr, uid, [('magento_id', '=', category_id), ('instance', '=', id)])
-        if not pcat_ids:
-            #Category is not there
-            #print vals
-            return self.create(cr, uid, vals)
-        else:
-            #Category Exists,update it if its newer
-            existing_rec_date = self.read(cr, uid, pcat_ids[0], ['magerp_stamp'])['magerp_stamp']
-            inc_rec_date = datetime.datetime.fromtimestamp(time.mktime(time.strptime(imp_vals['updated_at'], '%Y-%m-%d %H:%M:%S')))
-            existing_rec_date = datetime.datetime.fromtimestamp(time.mktime(time.strptime(existing_rec_date, '%Y-%m-%d %H:%M:%S')))
-            if inc_rec_date > existing_rec_date:
-                #Existing data is old
-                return self.write(cr, uid, pcat_ids, vals)
-            elif inc_rec_date < existing_rec_date:
-                #Existing data is new, export this
-                self.export_2_mage(cr, uid, pcat_ids, conn)"""
                 
     def export_2_mage(self, cr, uid, ids, conn, ctx={}):
         if conn:
