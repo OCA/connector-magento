@@ -50,6 +50,9 @@ class product_category(magerp_osv.magerp_osv):
         res = self.name_get(cr, uid, ids, context)
         return dict(res)
     
+    def ext_create(self,cr,uid,data,conn,method):
+        return conn.call(method,[data['parent_id'],data])
+    
     _columns = {
         'exportable':fields.boolean('Export to Magento'),
         'updated':fields.boolean('To synchronize', help="Set if the category underwent a change & has to be synched."),

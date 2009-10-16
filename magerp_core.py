@@ -69,6 +69,8 @@ class external_referential(magerp_osv.magerp_osv):
                 if confirmation:
                     categ_tree = pro_cat_conn.call('catalog_category.tree')             #Get the tree
                     self.pool.get('product.category').record_entire_tree(cr, uid, inst.id, pro_cat_conn, categ_tree, DEBUG)
+                    exp_ids = self.pool.get('product.category').search(cr,uid,[('exportable','=',True)])
+                    self.pool.get('product.category').ext_export(cr,uid,exp_ids,[inst.id],{},{'conn_obj':pro_cat_conn})
             else:
                 osv.except_osv(_("Connection Error"), _("Could not connect to server\nCheck location, username & password."))
     
