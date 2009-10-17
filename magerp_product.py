@@ -100,44 +100,6 @@ class product_category(magerp_osv.magerp_osv):
         'level':lambda * a:1
                  }
     
-    _mapping = {
-        'category_id':('magento_id', int),
-        'level':(False, int, """result=[('sequence',level),('level',level)]"""),
-        'parent_id':('magento_parent_id', int),
-        'is_active':('is_active', bool),
-        'description':('description', str),
-        'meta_title':('meta_title', str),
-        'meta_keywords':('meta_keywords', str),
-        'meta_description':('meta_description', str),
-        'url_key':('url_key', str),
-        'is_anchor':('is_anchor', bool),
-        'available_sort_by':('available_sort_by', str),
-        'default_sort_by':('default_sort_by', str),
-        'name':('name', str),
-        'updated_at':('updated_at', str)
-                
-                }
-    IMPORT_KEYS = [
-                   ('category_id', 'magento_id', 'NONE2FALSE'),
-                   ('level', 'sequence', 'NONE2FALSE'),
-                   ('level', '', 'NONE2FALSE'),
-                   ('parent_id', 'magento_parent_id', 'NONE2FALSE'),
-                   ('is_active', '', 'NONE2FALSE'),
-                   ('description', '', 'NONE2FALSE'),
-                   ('image', '', 'NONE2FALSE'),
-                   ('image', 'image_name', 'NONE2FALSE'),
-                   ('meta_title', '', 'NONE2FALSE'),
-                   ('meta_keywords', '', 'NONE2FALSE'),
-                   ('meta_description', '', 'NONE2FALSE'),
-                   ('url_key', '', 'NONE2FALSE'),
-                   ('display_mode', '', 'NONE2STR', 'PRODUCTS'),
-                   ('is_anchor', '', 'NONE2FALSE'),
-                   ('available_sort_by', '', 'NONE2STR', 'None'),
-                   ('default_sort_by', '', 'NONE2STR', 'None'),
-                   ('name', '', 'NONE2FALSE'),
-                   ('updated_at', 'magerp_stamp', 'NONE2FALSE')
-                   ]
-    
     def write(self, cr, uid, ids, vals, ctx={}):
         if not 'magerp_stamp' in vals.keys():
             vals['magerp_stamp'] = time.strftime('%Y-%m-%d %H:%M:%S')
@@ -155,47 +117,6 @@ class product_category(magerp_osv.magerp_osv):
         imp_vals = conn.call('category.info', [category_id])
         self.ext_import(cr, uid, [imp_vals], external_referential_id, defaults={}, context={'conn_obj':conn})
                 
-    def export_2_mage(self, cr, uid, ids, conn, ctx={}):
-        if conn:
-            print "Connection exists"
-        else:
-            print "create connection"
-        records = self.read(cr, uid, ids, [])
-        for record in records:
-            if record['exportable']:
-                vals = {}
-                imp_keys = self.IMPORT_KEYS
-                for eachkey in imp_keys:
-                    if record[eachkey[1] or eachkey[0]] in [None, False, 'None']:
-                        value = 'None'
-                    else:
-                        value = record[eachkey[1] or eachkey[0]]
-                    vals[eachkey[0]] = value
-                if record['image']:
-                    img = base64.decodestring(record['image'])
-                    #img = "hello"
-                    img_bin_enc = base64.encodestring(img) 
-                    result = conn.call('ol_catalog_category_media.create', [record['image_name'], img_bin_enc])
-                    if result == img:
-                        print "you know how to decode"
-                    #TODO:upload image now
-                if vals['available_sort_by'] == 'None':
-                    vals['available_sort_by'] = ''
-                    #all operations are assumed to be complete before this line
-                    #remove category_id from keys
-                    vals.pop('magento_id')
-                if not record['magento_id']:
-                    #Record was never created on magento side, so create new
-                    conn.call('catalog_category.create', [vals])
-                else:
-                    #Record was created, now update it
-                    if conn.call('catalog_category.update', [record['magento_id'], vals]):
-                        cross_check = conn.call('catalog_category.info', [record['magento_id']])
-                        self.write(cr, uid, record['id'], {
-                                    'updated':False,
-                                    'magerp_stamp':cross_check['updated_at']
-                                                        })
-                    
 product_category()
 
 
