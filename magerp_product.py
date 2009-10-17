@@ -50,8 +50,8 @@ class product_category(magerp_osv.magerp_osv):
         res = self.name_get(cr, uid, ids, context)
         return dict(res)
     
-    def ext_create(self,cr,uid,data,conn,method):
-        return conn.call(method,[data.get('parent_id',1),data])
+    def ext_create(self, cr, uid, data, conn, method):
+        return conn.call(method, [data.get('parent_id', 1), data])
     
     _columns = {
         'create_date': fields.datetime('Created date', readonly=True),
@@ -188,42 +188,9 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
         'entity_type_id':fields.integer('Entity Type'),
         'instance':fields.many2one('external.referential', 'Magento Instance', readonly=True, store=True),
         #These parameters are for automatic management
-        'map_in_openerp':fields.boolean('Map in Open ERP?'),
-        'mapping_field_name':fields.char('Field name', size=100),
-        'mapping_type_cast':fields.char('Type cast', size=20),
-        'mapping_script':fields.text('Python Script', help="Write python script here"),
         }
     #mapping magentofield:(openerpfield,typecast,)
     #have an entry for each mapped field
-    _mapping = {
-        'code':('attribute_code', str),
-        'attribute_id':('magento_id', int),
-        #'set_id':('set_id',int), #Depreciated from mapping as its an m2m relation
-        'frontend_input':('frontend_input', str),
-        'frontend_class':('frontend_class', str),
-        'backend_model':('backend_model', str),
-        'backend_type':('backend_type', str),
-        'frontend_label':('frontend_label', str),
-        'is_visible_in_advanced_search':('is_visible_in_advanced_search', bool),
-        'is_global':('is_global', bool),
-        'is_filterable':('is_filterable', bool),
-        'is_comparable':('is_comparable', bool),
-        'is_visible':('is_visible', bool),
-        'is_searchable':('is_searchable', bool),
-        'is_user_defined':('is_user_defined', bool),
-        'is_configurable':('is_configurable', bool),
-        'is_visible_on_front':('is_visible_on_front', bool),
-        'is_used_for_price_rules':('is_used_for_price_rules', bool),
-        'is_unique':('is_unique', bool),
-        'is_required':('is_required', bool),
-        'position':('position', int),
-        'group_id': ('group_id', int),
-        #'apply_to': ('apply_to',str),
-        'default_value': ('default_value', str),
-        'note':('default_value', str),
-        'entity_type_id':('entity_type_id', int),
-        
-                }
     _known_attributes = {
         'product_id':('product_id'),
         'name':('name', 'str', False),
@@ -239,91 +206,70 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
         'cost':('standard_price', 'float'),
         'set':(False, 'int', """if set:\n\tresult=self.pool.get('magerp.product_attribute_set').mage_to_oe(cr,uid,set,instance)\n\tif result:\n\t\tresult=[('set',result[0])]\n\telse:\n\t\tresult=[('set',False)]\nelse:\n\tresult=[('set',False)]"""),
                          }
+    _no_create_list = [
+                        'product_id',
+                        'name',
+                        'description',
+                        'short_description',
+                        'sku',
+                        'weight',
+                        'category_ids',
+                        'price',
+                        'cost',
+                        'set'
+                       ]
     _ignored_attributes = [
 
                            ]
     def create(self, cr, uid, vals, context={}):
-        field_name = "x_magerp_" + vals['attribute_code']
-        type_casts = {
-                        '':'str',
-                        'text':'str',
-                        'textarea':'str',
-                        'select':'int',
-                        'date':'str',
-                        'price':'float',
-                        'media_image':'False',
-                        'gallery':'False',
-                        False:'str'
-                    }
-        if vals['attribute_code'] in self._known_attributes.keys():
-            vals['map_in_openerp'] = True
-            vals['mapping_field_name'] = self._known_attributes[vals['attribute_code']][0]
-            vals['mapping_type_cast'] = self._known_attributes[vals['attribute_code']][1]
-            try:
-                vals['mapping_script'] = self._known_attributes[vals['attribute_code']][2]
-            except:
-                vals['mapping_script'] = False
-        elif vals['attribute_code'] in self._ignored_attributes:
-            vals['map_in_openerp'] = False
-        else:
-            vals['map_in_openerp'] = True
-            if 'frontend_input' in vals.keys() and vals['frontend_input'] == 'date':
-                vals['mapping_field_name'] = False
-                vals['mapping_type_cast'] = 'str'
-                vals['mapping_script'] = "if " + vals['attribute_code'] + "=='None':\n\tresult=[(" + field_name + ",False)]\nelse:\n\tresult=[(" + field_name + "," + vals['attribute_code'] + ")]"
-            elif 'frontend_input' in vals.keys() and  vals['frontend_input'] == 'select':
-                vals['mapping_field_name'] = False
-                vals['mapping_type_cast'] = 'str'
-                vals['mapping_script'] = "if " + vals['attribute_code'] + ":\n\t\result=self.pool.get('magerp.product_attribute_options').get_option_id(cr,uid,'" + vals['attribute_code'] + "'," + vals['attribute_code'] + ",instance)\n\tif result:\n\t\tresult=[('" + vals['attribute_code'] + "',result)]"
-            else:
-                vals['mapping_field_name'] = field_name
-                vals['mapping_type_cast'] = type_casts[vals.get('frontend_input',False)]
-            
         crid = super(magerp_product_attributes, self).create(cr, uid, vals, context)
-        
-        if crid:
-            #Fetch Options
-            if 'frontend_input' in vals.keys() and vals['frontend_input'] in ['select']:
-                core_conn = self.pool.get('external.referential').connect(cr, uid, [vals['instance']])
-                self.pool.get('magerp.product_attribute_options').mage_import(cr, uid, [vals['magento_id']], core_conn, vals['instance'], debug=False, defaults={'attribute_id':crid})
-            #Manage fields
-            if vals['attribute_code'] and vals['map_in_openerp']:
-                #Code for dynamically generating field name and attaching to this
-                model_id = self.pool.get('ir.model').search(cr, uid, [('model', '=', 'product.product')])
-                if model_id and len(model_id) == 1:
-                    model_id = model_id[0]
-                    type_conversion = {
-                        '':'char',
-                        'text':'char',
-                        'textarea':'text',
-                        'select':'many2one',
-                        'date':'date',
-                        'price':'float',
-                        'media_image':'binary',
-                        'gallery':'binary',
-                        False:'char'
-                    }
-                    
-                    #Check if field already exists
-                    field_ids = self.pool.get('ir.model.fields').search(cr, uid, [('name', '=', field_name), ('model_id', '=', model_id)])
-                    if not field_ids:
-                        #The field is not there create it
-                        field_vals = {
-                            'name':field_name,
-                            'model_id':model_id,
-                            'model':'product.product',
-                            'field_description':vals.get('frontend_label', False) or vals['attribute_code'],
-                            'ttype':type_conversion[vals.get('frontend_input',False)],
-                                      }
-                        #IF char add size
-                        if field_vals['ttype'] == 'char':
-                            field_vals['size'] = 100
-                        if field_vals['ttype'] == 'many2one':
-                            field_vals['relation'] = 'magerp.product_attribute_options'
-                            field_vals['domain'] = "[('attribute_id','='," + str(crid) + ")]"
-                        field_vals['state'] = 'manual'
-                        #All field values are computed, now save
-                        field_id = self.pool.get('ir.model.fields').create(cr, uid, field_vals)
+        if not vals['attribute_code'] in self._no_create_list:
+            #If the field has to be created
+            field_name = "x_magerp_" + vals['attribute_code']
+            #TODO: Create code here to add mapping entries
+            if crid:
+                #Fetch Options
+                if 'frontend_input' in vals.keys() and vals['frontend_input'] in ['select']:
+                    core_conn = self.pool.get('external.referential').connect(cr, uid, [vals['instance']])
+                    self.pool.get('magerp.product_attribute_options').mage_import(cr, uid, [vals['magento_id']], core_conn, vals['instance'], debug=False, defaults={'attribute_id':crid})
+                #Manage fields
+                if vals['attribute_code']:
+                    #Code for dynamically generating field name and attaching to this
+                    model_id = self.pool.get('ir.model').search(cr, uid, [('model', '=', 'product.product')])
+                    if model_id and len(model_id) == 1:
+                        model_id = model_id[0]
+                        type_conversion = {
+                            '':'char',
+                            'text':'char',
+                            'textarea':'text',
+                            'select':'many2one',
+                            'date':'date',
+                            'price':'float',
+                            'media_image':'binary',
+                            'gallery':'binary',
+                            False:'char'
+                        }
+                        
+                        #Check if field already exists
+                        field_ids = self.pool.get('ir.model.fields').search(cr, uid, [('name', '=', field_name), ('model_id', '=', model_id)])
+                        if not field_ids:
+                            #The field is not there create it
+                            field_vals = {
+                                'name':field_name,
+                                'model_id':model_id,
+                                'model':'product.product',
+                                'field_description':vals.get('frontend_label', False) or vals['attribute_code'],
+                                'ttype':type_conversion[vals.get('frontend_input', False)],
+                                          }
+                            #IF char add size
+                            if field_vals['ttype'] == 'char':
+                                field_vals['size'] = 100
+                            if field_vals['ttype'] == 'many2one':
+                                field_vals['relation'] = 'magerp.product_attribute_options'
+                                field_vals['domain'] = "[('attribute_id','='," + str(crid) + ")]"
+                            field_vals['state'] = 'manual'
+                            #All field values are computed, now save
+                            field_id = self.pool.get('ir.model.fields').create(cr, uid, field_vals)
         return crid
     
 
@@ -509,7 +455,7 @@ class product_product(magerp_osv.magerp_osv):
         'product_id':('magento_id', int)
                 }
     _defaults = {
-        'exportable':lambda *a:True
+        'exportable':lambda * a:True
                  }
     def mage_import(self, cr, uid, ids_or_filter, conn, instance, debug=False, defaults={}, *attrs):
         #Build the mapping dictionary dynamically from attributes
