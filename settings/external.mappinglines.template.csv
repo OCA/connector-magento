@@ -63,3 +63,6 @@ else:
 "mag_erp_attrgrp_3","magento1324","model_magerp_product_attribute_groups","attribute_group_name","in_out","str","result=[('attribute_group_name', ifield)]","result=[('attribute_group_name', record['attribute_group_name'])]"
 "mag_erp_attrgrp_4","magento1324","model_magerp_product_attribute_groups","sort_order","in_out","int","result=[('sort_order', ifield)]","result=[('sort_order', record['sort_order'])]"
 "mag_erp_attrgrp_5","magento1324","model_magerp_product_attribute_groups","default_id","in_out","int","result=[('default_id', ifield)]","result=[('default_id', record['default_id'])]"
+"mag_erp_attrset_1","magento1324","model_magerp_product_attribute_set","attribute_set_id","in_out","int","result=[('magento_id', ifield)]","result=[('attribute_set_id', record['magento_id'])]"
+"mag_erp_attrset_2","magento1324","model_magerp_product_attribute_set","sort_order","in_out","int","result=[('sort_order', ifield)]","result=[('sort_order', record['sort_order'])]"
+"mag_erp_attrset_3","magento1324","model_magerp_product_attribute_set","attribute_set_name","in_out","str","result=[('attribute_set_name', ifield)]","result=[('attribute_set_name', record['attribute_set_name'])]"
