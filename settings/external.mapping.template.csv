@@ -4,3 +4,4 @@
 "magento_store","magento1324","sale.model_sale_shop","ol_groups.list",,,,,"group_id"
 "magento_order","magento1324","sale.model_sale_order","sales_order.list","sales_order.info",,,,"order_id"
 "magento_pro_cat","magento1324","product.model_product_category","category.list","category.info","catalog_category.update","catalog_category.create",,"magento_id"
+"magento_attr_grp","magento1324","model_magerp_product_attribute_groups","ol_catalog_product_attribute_group.list","ol_catalog_product_attribute_group.list",,,,"magento_id"

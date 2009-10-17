@@ -51,7 +51,7 @@ class product_category(magerp_osv.magerp_osv):
         return dict(res)
     
     def ext_create(self,cr,uid,data,conn,method):
-        return conn.call(method,[data['parent_id'],data])
+        return conn.call(method,[data.get('parent_id',1),data])
     
     _columns = {
         'create_date': fields.datetime('Created date', readonly=True),
