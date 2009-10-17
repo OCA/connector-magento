@@ -66,7 +66,7 @@ else:
 "mag_erp_attrset_1","magento1324","model_magerp_product_attribute_set","attribute_set_id","in_out","int","result=[('magento_id', ifield)]","result=[('attribute_set_id', record['magento_id'])]"
 "mag_erp_attrset_2","magento1324","model_magerp_product_attribute_set","sort_order","in_out","int","result=[('sort_order', ifield)]","result=[('sort_order', record['sort_order'])]"
 "mag_erp_attrset_3","magento1324","model_magerp_product_attribute_set","attribute_set_name","in_out","str","result=[('attribute_set_name', ifield)]","result=[('attribute_set_name', record['attribute_set_name'])]"
-"mag_erp_attr_1","magento1324","model_magerp_product_attributes","code","in_out","str","result=[('attribute_code', ifield)]","result=[('code', record['attribute_code'])]"
+"mag_erp_attr_1","magento1324","model_magerp_product_attributes","attribute_code","in_out","str","result=[('attribute_code', ifield)]","result=[('code', record['attribute_code'])]"
 "mag_erp_attr_2","magento1324","model_magerp_product_attributes","attribute_id","in_out","int","result=[('magento_id', ifield)]",
 "mag_erp_attr_3","magento1324","model_magerp_product_attributes","frontend_input","in_out","str","result=[('frontend_input', ifield)]","result=[('frontend_input', record['frontend_input'])]"
 "mag_erp_attr_4","magento1324","model_magerp_product_attributes","frontend_class","in_out","str","result=[('frontend_class', ifield)]","result=[('frontend_class', record['frontend_class'])]"
@@ -90,3 +90,13 @@ else:
 "mag_erp_attr_22","magento1324","model_magerp_product_attributes","default_value","in_out","str","result=[('default_value', ifield)]","result=[('default_value', record['default_value'])]"
 "mag_erp_attr_23","magento1324","model_magerp_product_attributes","note","in_out","str","result=[('note', ifield)]","result=[('note', record['note'])]"
 "mag_erp_attr_24","magento1324","model_magerp_product_attributes","entity_type_id","in_out","int","result=[('entity_type_id', ifield)]","result=[('entity_type_id', record['entity_type_id'])]"
+"mag_erp_prd_1","magento1324","product.model_product_product","product_id","in_out","int","result = [('magento_id',ifield)]",
+"mag_erp_prd_2","magento1324","product.model_product_product","name","in_out","str","result = [('name',ifield)]",
+"mag_erp_prd_3","magento1324","product.model_product_product","description","in_out","str","result = [('description',ifield)]",
+"mag_erp_prd_4","magento1324","product.model_product_product","short_description","in_out","str","result = [('description_sale',ifield)]",
+"mag_erp_prd_5","magento1324","product.model_product_product","sku","in_out","str","result = [('default_code',ifield)]",
+"mag_erp_prd_6","magento1324","product.model_product_product","weight","in_out","float","result = [('weight_net',ifield)]",
+"mag_erp_prd_7","magento1324","product.model_product_product","category_ids","in_out","str","result=[]#map later",
+"mag_erp_prd_8","magento1324","product.model_product_product","price","in_out","float","result=[('list_price',ifield)]",
+"mag_erp_prd_9","magento1324","product.model_product_product","cost","in_out","float","result=[('standard_price',ifield)]",
+"mag_erp_prd_10","magento1324","product.model_product_product","set","in_out","str","result=[]",
