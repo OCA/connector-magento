@@ -85,7 +85,8 @@ class external_referential(magerp_osv.magerp_osv):
                 all_attr_set_ids = self.pool.get('magerp.product_attribute_set').get_all_mage_ids(cr, uid, [], inst.id)
                 #Call magento for all attributes
                 mage_inp = attr_conn.call('catalog_product_attribute.list', all_attr_set_ids)             #Get the tree
-                self.pool.get('magerp.product_attributes').sync_import(cr, uid, mage_inp, inst.id, DEBUG) #Last argument is extra mage2oe filter as same attribute ids
+                #self.pool.get('magerp.product_attributes').sync_import(cr, uid, mage_inp, inst.id, DEBUG) #Last argument is extra mage2oe filter as same attribute ids
+                self.pool.get('magerp.product_attributes').ext_import(cr, uid, mage_inp, inst.id, defaults={'instance':inst.id}, context={})
                 #Relate attribute sets & attributes
                 mage_inp = {}
                 #Pass in {attribute_set_id:{attributes},attribute_set_id2:{attributes}}
