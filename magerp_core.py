@@ -31,7 +31,8 @@ class external_referential(magerp_osv.magerp_osv):
     _inherit = "external.referential"
 
     _columns = {
-        'attribute_sets':fields.one2many('magerp.product_attribute_set', 'instance', 'Attribute Sets')
+        'attribute_sets':fields.one2many('magerp.product_attribute_set', 'instance', 'Attribute Sets'),
+        'default_pro_cat':fields.many2one('product.category','Default Product Category',required=True, help="Products imported from magento may have many categories.\nOpen ERP requires a specific category for a product to facilitate invoicing etc.")
     }
 
                 
@@ -149,7 +150,13 @@ class external_referential(magerp_osv.magerp_osv):
             attr_conn = self.external_connection(cr, uid, inst, DEBUG)
             filter = []
             if attr_conn:
-                self.pool.get('product.product').mage_import(cr, uid, filter, attr_conn, inst.id, DEBUG)
+                list_prods = attr_conn.call('catalog_product.list')
+                #self.pool.get('product.product').mage_import(cr, uid, filter, attr_conn, inst.id, DEBUG)
+                result = []
+                for each in list_prods:
+                    each_product_info = attr_conn.call('catalog_product.info', [each['product_id']])
+                    result.append(each_product_info)
+                self.pool.get('product.product').ext_import(cr, uid, result, inst.id, defaults={'instance':inst.id,'categ_id':inst.default_pro_cat.id}, context={})
             else:
                 osv.except_osv(_("Connection Error"), _("Could not connect to server\nCheck location, username & password."))                        
     def redefine_prod_view(self,cr,uid,ids,ctx):
