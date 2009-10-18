@@ -23,7 +23,9 @@
 									<field name="shop_ids" nolabel="1" />
 														</page>-->
 							<page string="Product Attributes / Sets">
-								<field name="attribute_sets" nolabel="1" />
+								<field name="default_pro_cat" colspan="4"/>
+								<newline />
+								<field name="attribute_sets" nolabel="1" colspan="4"/>
 							</page>
 							<page string="Actions">
 								<button name="sync_categs" string="Synchronise Product Categories" colspan="2" type="object" />
@@ -112,7 +114,7 @@
 						<field name="is_active" readonly="1" />
 						<field name="sort_order" readonly="1" />
 						<field name="default_group" readonly="1" />
-<!--						<field name="instance" readonly="1" />-->
+						<!--						<field name="instance" readonly="1" />-->
 					</group>
 				</form>
 			</field>
@@ -130,7 +132,7 @@
 					<field name="is_active" readonly="1" select="2" />
 					<field name="sort_order" readonly="1" select="2" />
 					<field name="default_group" readonly="1" select="2" />
-<!--					<field name="instance" readonly="1" select="2" />-->
+					<!--					<field name="instance" readonly="1" select="2" />-->
 				</tree>
 			</field>
 		</record>
