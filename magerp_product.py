@@ -226,7 +226,6 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
         if not vals['attribute_code'] in self._no_create_list:
             #If the field has to be created
             field_name = "x_magerp_" + vals['attribute_code']
-            #TODO: Create code here to add mapping entries
             if crid:
                 #Fetch Options
                 if 'frontend_input' in vals.keys() and vals['frontend_input'] in ['select']:
@@ -249,11 +248,28 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
                             'gallery':'binary',
                             False:'char'
                         }
-                        
+                        type_casts = {
+                            '':'str',
+                            'text':'str',
+                            'textarea':'str',
+                            'select':'int',
+                            'date':'str',
+                            'price':'float',
+                            'media_image':'False',
+                            'gallery':'False',
+                            False:'str'
+                            }
                         #Check if field already exists
                         field_ids = self.pool.get('ir.model.fields').search(cr, uid, [('name', '=', field_name), ('model_id', '=', model_id)])
+                        mapping_id = self.pool.get('external.mapping').search(cr, uid, [('name', '=', field_name), ('model_id', '=', model_id)])
                         if not field_ids:
                             #The field is not there create it
+                            mapping_line = {
+                                'external_field': vals['attribute_code'],
+                                'mapping_id': mapping_id,
+                                'type': 'in_out',
+                                'external_type':type_casts[vals.get('frontend_input', False)],
+                                            }
                             field_vals = {
                                 'name':field_name,
                                 'model_id':model_id,
@@ -270,6 +286,16 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
                             field_vals['state'] = 'manual'
                             #All field values are computed, now save
                             field_id = self.pool.get('ir.model.fields').create(cr, uid, field_vals)
+                            #TODO: Create code here to add mapping entries
+                            mapping_line['field_id'] = field_id,
+                            if field_vals['ttype'] in ['char','text','date','float']:
+                                mapping_line['in_function']= "result =[('" + field_name + "',ifield)]"
+                            elif field_vals['ttype'] in ['many2one']:
+                                mapping_line['in_function']= """if ifield:\n\toption_id = self.pool.get('magerp.product_attribute_options').search(cr,uid,[('attribute_id','=',crid),('value','=',ifield)])\n\t\tif option_id:\n\t\t\tresult = [('"""
+                                mapping_line['in_function'] += field_name + ",ifield)]"
+                            elif field_vals['ttype'] in ['binary']:
+                                print "Binary mapping not done yet :("
+                            self.pool.get('external.mapping.line').create(cr,ui,mapping_line)
         return crid
     
 
@@ -536,6 +562,7 @@ class product_product(magerp_osv.magerp_osv):
             #Filter keys to be changed
             if 'x_magerp_tier_price' in vals.keys(): 
                 tier_price = vals.pop('x_magerp_tier_price')
+        print vals
         crid = super(product_product, self).create(cr, uid, vals, context)
         #Save the tier price
         if tier_price:
