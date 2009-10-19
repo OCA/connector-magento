@@ -191,21 +191,6 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
         }
     #mapping magentofield:(openerpfield,typecast,)
     #have an entry for each mapped field
-    _known_attributes = {
-        'product_id':('product_id'),
-        'name':('name', 'str', False),
-        'description':('description', 'str'),
-        'short_description':('description_sale', 'str'),
-        'sku':('default_code', 'str'),
-        'weight':('weight_net', 'float'),
-        #Categ id is many2one, but do it for m2m
-        'category_ids':(False, 'False', """if category_ids:\n\tresult=self.pool.get('product.category').mage_to_oe(cr,uid,category_ids[0],instance)\n\tif result:\n\t\tresult=[('categ_id',result[0])]\nelse:\n\tresult=self.pool.get('product.category').search(cr,uid,[('instance','=',instance)])\n\tif result:\n\t\tresult=[('categ_id',result[0])]"""),
-        'created_at':('created_at', 'str'),
-        'updated_at':('updated_at', 'str'),
-        'price':('list_price', 'float'),
-        'cost':('standard_price', 'float'),
-        'set':(False, 'int', """if set:\n\tresult=self.pool.get('magerp.product_attribute_set').mage_to_oe(cr,uid,set,instance)\n\tif result:\n\t\tresult=[('set',result[0])]\n\telse:\n\t\tresult=[('set',False)]\nelse:\n\tresult=[('set',False)]"""),
-                         }
     _no_create_list = [
                         'product_id',
                         'name',
