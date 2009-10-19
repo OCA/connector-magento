@@ -141,7 +141,8 @@ class external_referential(magerp_osv.magerp_osv):
             attr_conn = self.external_connection(cr, uid, inst, DEBUG)
             filter = []
             if attr_conn:
-                self.pool.get('res.partner').mage_import(cr, uid, filter, attr_conn, inst.id, DEBUG)
+                #self.pool.get('res.partner').mage_import(cr, uid, filter, attr_conn, inst.id, DEBUG)
+                self.pool.get('res.partner').mage_import_base(cr, uid, attr_conn, inst.id, {'instance':inst.id}, {'ids_or_filter':filter})
             else:
                 osv.except_osv(_("Connection Error"), _("Could not connect to server\nCheck location, username & password."))
     
