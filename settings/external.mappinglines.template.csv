@@ -103,3 +103,6 @@ else:
 "mag_erp_prd_8","magento1324","product.model_product_product","price","in_out","float","result=[('list_price',ifield)]",
 "mag_erp_prd_9","magento1324","product.model_product_product","cost","in_out","float","result=[('standard_price',ifield)]",
 "mag_erp_prd_10","magento1324","product.model_product_product","set","in_out","str","result=[]",
+"magento_cst_grp_1","magento1324","base.model_res_partner_category","customer_group_code","in","str","result=[('name',ifield)]",
+"magento_cst_grp_2","magento1324","base.model_res_partner_category","customer_group_id","in","int","result=[('magento_id',ifield)]",
+"magento_cst_grp_3","magento1324","base.model_res_partner_category","tax_class_id","in","int","result=[('tax_class_id',ifield)]",

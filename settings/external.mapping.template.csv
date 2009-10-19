@@ -8,3 +8,4 @@
 "magento_attr_set","magento1324","model_magerp_product_attribute_set","ol_catalog_product_attributeset.list",,,,,"magento_id"
 "magento_attr","magento1324","model_magerp_product_attributes","ol_catalog_product_attribute.list",,,,,"magento_id"
 "magento_prd","magento1324","product.model_product_product","catalog_product.list","catalog_product.info","product.update","product.create",,"magento_id"
+"magento_cst_grp","magento1324","base.model_res_partner_category","ol_customer_groups.list",,,,,"magento_id"
