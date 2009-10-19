@@ -282,16 +282,12 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
                             elif field_vals['ttype'] in ['binary']:
                                 print "Binary mapping not done yet :("
                             self.pool.get('external.mapping.line').create(cr,uid,mapping_line)
-                        
         return crid
-    
-
 magerp_product_attributes()
 
 class magerp_product_attribute_options(magerp_osv.magerp_osv):
     _name = "magerp.product_attribute_options"
     _description = "Options  of selected attributes"
-    _MAGE_FIELD = False
     _rec_name = "label"
     _LIST_METHOD = 'ol_catalog_product_attribute.options'
     
@@ -302,10 +298,6 @@ class magerp_product_attribute_options(magerp_osv.magerp_osv):
         'ipcast':fields.char('Type cast', size=50),
         'label':fields.char('Label', size=100),
         'instance':fields.many2one('external.referential', 'Magento Instance', readonly=True, store=True),
-                }
-    _mapping = {
-        'value':('value', str,),
-        'label':('label', str)
                 }
     def get_option_id(self, cr, uid, attr_name, value, instance):
         attr_id = self.search(cr, uid, [('attribute_name', '=', attr_name), ('value', '=', value), ('instance', '=', instance)])
