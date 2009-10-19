@@ -29,19 +29,29 @@ class sale_shop(magerp_osv.magerp_osv):
     _inherit = "sale.shop"
     
     def _shop_group_get(self, cr, uid, ids, prop, unknow_none, context):
-        return self.oe_get(cr, uid, ids, context={'oe_model':'external.shop.group', 'field':'website_id'})
+        res = {}
+        for shop in self.browse(cr, uid, ids, context):
+            if shop.website_id:
+                rid = self.pool.get('external.shop.group').extid_to_oeid(cr, uid, shop.website_id, shop.referential_id.id)
+                res[shop.id] = rid
+            else:
+                res[shop.id] = False
+        return res
   
     def _get_rootcategory(self, cr, uid, ids, prop, unknow_none, context):
-        return self.oe_get(cr, uid, ids, context={'oe_model':'product.category', 'field':'root_category_id'})
+        res = {}
+        for shop in self.browse(cr, uid, ids, context):
+            if shop.website_id:
+                rid = self.pool.get('product.category').extid_to_oeid(cr, uid, shop.root_category_id, shop.referential_id.id)
+                res[shop.id] = rid
+            else:
+                res[shop.id] = False
+        return res
 
     _columns = {
-        'default_store_id':fields.integer('Store ID'), #Many 2 one ?
-        'website_id':fields.integer('Website'), # Many 2 one ?
-        
-        #overridden because using external key id as an intermediate
-        'shop_group_id':fields.function(_shop_group_get, type="many2one", relation="external.shop.group", method=True, string="Website"),
-        #'referential_id':fields.function(_referential_get, type="many2one", relation="external.referential", method=True, string="External Referential"),
-        
+        'default_store_id':fields.integer('Magento Store ID'), #Many 2 one ?
+        'website_id':fields.integer('Magento Website ID'), # Many 2 one ?
+        'group_id':fields.integer('Magento ID'),
         'root_category_id':fields.integer('Root product Category'),
         'root_category':fields.function(_get_rootcategory, type="many2one", relation="product.category", method=True, string="Root Category"),
     }
@@ -52,6 +62,7 @@ class sale_shop(magerp_osv.magerp_osv):
 
 
     def export_products_collection(self, cr, uid, shop, exportable_products, ext_connection, ctx):
+        #TODO use new API!
         self.pool.get('product.product').mage_export(cr, uid, [product.id for product in exportable_products], ext_connection, shop.referential_id.id, DEBUG)
 
 

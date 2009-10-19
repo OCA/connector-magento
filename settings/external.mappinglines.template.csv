@@ -14,9 +14,12 @@
 "mag_erp_sv_gpid","magento1324","model_magerp_storeviews","group_id","in_out","int","result=[('group_id',ifield)]",
 "mag_erp_st_name","magento1324","sale.model_sale_shop","name","in_out","str","result=[('name',ifield)]","result=[('name',record['name'])]"
 "mag_erp_st_gpid","magento1324","sale.model_sale_shop","group_id","in_out","int","result=[('group_id',ifield)]",
+"mag_erp_st_grp","magento1324","sale.model_sale_shop","website_id","in_out","int","oerp_id = self.pool.get('external.shop.group').extid_to_oeid(cr, uid, ifield, external_referential_id)
+result=[('shop_group_id',oerp_id)]",
 "mag_erp_st_web","magento1324","sale.model_sale_shop","website_id","in_out","int","result=[('website_id',ifield)]",
 "mag_erp_st_default_st","magento1324","sale.model_sale_shop","default_store_id","in_out","int","result=[('default_store_id',ifield)]",
 "mag_erp_st_root_categ","magento1324","sale.model_sale_shop","root_category_id","in_out","int","result=[('root_category_id',ifield)]",
+"mag_erp_so_name","magento1324","sale.model_sale_order","name","in_out","str","result=[('increment_id','mag_' + str(ifield))]",
 "mag_erp_procat_1","magento1324","product.model_product_category","category_id","in","int","result=[('magento_id',ifield)]",
 "mag_erp_procat_2","magento1324","product.model_product_category","level","in","int","result=[('sequence',ifield),('level',ifield)]",
 "mag_erp_procat_3","magento1324","product.model_product_category","parent_id","in_out","int","record_id = self.pool.get('ir.model.data').search(cr, uid, [('model', '=', self._name), ('name', '=', self.prefixed_id(ifield))])
