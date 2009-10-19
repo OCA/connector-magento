@@ -46,24 +46,6 @@ class res_partner_address(magerp_osv.magerp_osv):
     _defaults = {
         'exportable':lambda * a:True
                  }
-    #mapping magentofield:(openerpfield,typecast,)
-    _mapping = {
-        'entity_id':('magento_id', int),
-        'city':('city', str),
-        'fax':('fax', str),
-        'firstname':('name', str),
-        'lastname':('lastname', str),
-        'is_active':('active', bool),
-        'country_id':('country_id', str, """result = self.pool.get('res.country').search(cr,uid,[('code','=',country_id)])\nif result and len(result)==1:\n\tresult=result[0]\nelse:\n\tresult=False"""),
-        'street':('street2', str, """result = street.replace("\\n",",")"""),
-        'postcode':('zip', str),
-        'telephone':('phone', str),
-        'region':('state_id', str, """result = self.pool.get('res.country.state').search(cr,uid,[('name','ilike',region)])\nif result and len(result)==1:\n\tresult=result[0]\nelse:\n\tresult=False"""),
-        'company':('street', str),
-        'parent_id':(False, int, """result=self.pool.get('res.partner').mage_to_oe(cr,uid,parent_id,instance)\nif result:\n\tresult=[('partner_id',result[0])]\nelse:\n\tresult=[('partner_id',False)]"""),
-        'default_billing':(False, bool, """if is_default_billing:\n\tresult=[('type','invoice')]"""),
-        'default_shipping':(False, bool, """if is_default_shipping:\n\tresult=[('type','delivery')]"""),
-                }
 res_partner_address()
 
 class res_partner(magerp_osv.magerp_osv):
