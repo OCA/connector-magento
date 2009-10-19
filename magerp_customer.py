@@ -30,12 +30,6 @@ class res_partner_category(magerp_osv.magerp_osv):
                 'tax_class_id':fields.integer('Tax Class ID'),
                 'instance':fields.many2one('external.referential', 'Magento Instance', readonly=True, store=True),
                 }
-    #mapping magentofield:(openerpfield,typecast,)
-    _mapping = {
-            'customer_group_code':('name', str),
-            'customer_group_id':('magento_id', int),
-            'tax_class_id':('tax_class_id', int)
-                }
 res_partner_category()
 
 class res_partner_address(magerp_osv.magerp_osv):
