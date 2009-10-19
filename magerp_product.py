@@ -395,13 +395,6 @@ class magerp_product_attribute_groups(magerp_osv.magerp_osv):
         'default_id':fields.integer('Default'),
         'instance':fields.many2one('external.referential', 'Magento Instance', readonly=True, store=True),
                 }
-    _mapping = {
-        'attribute_group_id':('magento_id', int),
-        'attribute_set_id':('attribute_set_id', int),
-        'attribute_group_name':('attribute_group_name', str),
-        'sort_order':('sort_order', int),
-        'default_id':('default_id', int)
-                }
 magerp_product_attribute_groups()
 
 class product_tierprice(osv.osv):
