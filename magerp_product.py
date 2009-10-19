@@ -319,11 +319,6 @@ class magerp_product_attribute_set(magerp_osv.magerp_osv):
         'attributes':fields.many2many('magerp.product_attributes', 'magerp_attrset_attr_rel', 'set_id', 'attr_id', 'Attributes'),
         'instance':fields.many2one('external.referential', 'Magento Instance', readonly=True, store=True),
                 }
-    _mapping = {
-        'attribute_set_id':('magento_id', int),
-        'sort_order':('sort_order', int),
-        'attribute_set_name':('attribute_set_name', str)
-                }
     def relate(self, cr, uid, mage_inp, instance, *args):
         #TODO: Build the relations code
         #Note: It is better to insert multiple record by cr.execute because:
