@@ -90,7 +90,7 @@ class product_category(magerp_osv.magerp_osv):
                     ('position', 'Best Value'),
                     ('name', 'Name'),
                     ('price', 'Price')
-                    ], 'Default Product Listing Sort (Sort By)', required=True),
+                    ], 'Default Product Listing Sort (Sort By)'),
         'magerp_stamp':fields.datetime('Magento stamp')
         }
     _defaults = {
