@@ -203,9 +203,6 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
                         'cost',
                         'set'
                        ]
-    _ignored_attributes = [
-
-                           ]
     def create(self, cr, uid, vals, context={}):
         crid = super(magerp_product_attributes, self).create(cr, uid, vals, context)
         if not vals['attribute_code'] in self._no_create_list:
