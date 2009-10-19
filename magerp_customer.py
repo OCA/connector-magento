@@ -116,4 +116,15 @@ class res_partner(magerp_osv.magerp_osv):
             self.pool.get('res.partner.address').mage_import(cr, uid, cust_ids, conn, instance, debug, defaults={})
         return ret
     
+    def mage_import_base(self,cr,uid,conn, external_referential_id, defaults={}, context={}):
+        #Overwriting customer sync
+        ids_or_filter = context.get('ids_or_filter',[])
+        ret = super(res_partner, self).mage_import_base(cr,uid,conn, external_referential_id, defaults, context)
+        result = conn.call(self._LIST_METHOD, ids_or_filter)
+        if result:
+            cust_ids = []
+            for each in result:
+                cust_ids.append(each['customer_id'])
+            context['ids_or_filter'] = cust_ids
+            self.pool.get('res.partner.address').mage_import_base(cr,uid,conn, external_referential_id, defaults, context)
 res_partner()
