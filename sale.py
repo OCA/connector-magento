@@ -30,34 +30,9 @@ class sale_shop(magerp_osv.magerp_osv):
     
     def _shop_group_get(self, cr, uid, ids, prop, unknow_none, context):
         return self.oe_get(cr, uid, ids, context={'oe_model':'external.shop.group', 'field':'website_id'})
-    
-#    def _referential_get(self, cr, uid, ids, prop, unknow_none, context):
-#        res = {}
-#        for shop in self.browse(cr, uid, ids, context):
-#            res[shop.id] = shop.shop_group_id and shop.shop_group_id.referential_id.id or False
-#        return res
-
-    #FIXME
-    def rootcategory_get(self, cr, uid, ids, context=None):
-        if not len(ids):
-            return []
-        reads = self.read(cr, uid, ids, ['root_category_id', 'instance'], context)
-        res = []
-        for record in reads:
-            if record['instance']:
-                rid = self.pool.get('product.category').mage_to_oe(cr, uid, record['root_category_id'], record['instance'][0])
-                res.append((record['id'], rid))
-            else:
-                res.append((record['id'], False))
-        return res
-    
+  
     def _get_rootcategory(self, cr, uid, ids, prop, unknow_none, context):
-        #res = self.rootcategory_get(cr, uid, ids, context)
-        #return dict(res)
-        res = {}
-        for shop in self.browse(cr, uid, ids, context):
-            res[shop.id] = False
-        return res     
+        return self.oe_get(cr, uid, ids, context={'oe_model':'product.category', 'field':'root_category_id'})
 
     _columns = {
         'default_store_id':fields.integer('Store ID'), #Many 2 one ?
