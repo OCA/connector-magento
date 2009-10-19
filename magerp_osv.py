@@ -87,7 +87,7 @@ class magerp_osv(external_osv.external_osv):
             return []
         res = []
         for record in self.read(cr, uid, ids, [context['field']], context):
-            rid = self.pool.get('sale.shop').extid_to_oeid(cr, uid, record[context['field']], self.referential_id(cr, uid, record['id']))
+            rid = self.pool.get('sale.shop').extid_to_oeid(cr, uid, record[context['field']], 1)#TODO FIXME self.referential_id(cr, uid, record['id'])
             res.append((record['id'], rid))
         return res
     
