@@ -205,9 +205,7 @@ class external_shop_group(magerp_osv.magerp_osv):
             
     def _get_group(self, cr, uid, ids, prop, unknow_none, context):
         res = self.group_get(cr, uid, ids, context={'field':'default_group_id'})
-        return dict(res)        
-
-    _order = 'magento_id'
+        return dict(res)
     
     _columns = {
         'code':fields.char('Code', size=100),
