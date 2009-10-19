@@ -1,6 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 	<data>
+		<record id="view_partner_form_magerp" model="ir.ui.view">
+			<field name="name">res.partner.form_magerp</field>
+			<field name="model">res.partner</field>
+			<field name="type">form</field>
+			<field name="inherit_id" ref="base.view_partner_form" />
+			<field name="arch" type="xml">
+				<xpath expr="/form/notebook" position="inside">
+					<page string="Magento Information">
+						<field name="emailid" />
+						<field name="group_id" />
+						<field name="store_id" />
+					</page>
+				</xpath>
+			</field>
+		</record>
 		<record id="view_partner_category_form_magerp" model="ir.ui.view">
 			<field name="name">res.partner.category.form_magerp</field>
 			<field name="model">res.partner.category</field>

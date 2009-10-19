@@ -59,7 +59,7 @@ class res_partner(magerp_osv.magerp_osv):
         'created_in':fields.char('Created in', size=100),
         'created_at':fields.datetime('Created Date'),
         'updated_at':fields.datetime('Updated At'),
-        'emailid':fields.char('Email ID', size=100),
+        'emailid':fields.char('Email ID', size=100, help="Magento uses this email ID to correspond to the customer"),
         'instance':fields.many2one('external.referential', 'Magento Instance', readonly=True, store=True),
                 }
 
