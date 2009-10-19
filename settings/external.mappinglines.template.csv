@@ -138,11 +138,11 @@ if result:
 	result=[('partner_id',result)]
 else:
 	result=[('partner_id',False)]",
-"magento_prt_adr_14","magento1324","base.model_res_partner_address","default_billing","in_out","str","if eval(ifield):
+"magento_prt_adr_14","magento1324","base.model_res_partner_address","default_billing","in_out","bool","if ifield:
 	result=[('type','invoice')]
 else:
 	result=[]",
-"magento_prt_adr_15","magento1324","base.model_res_partner_address","default_shipping","in_out","str","if eval(ifield):
+"magento_prt_adr_15","magento1324","base.model_res_partner_address","default_shipping","in_out","bool","if ifield:
 	result=[('type','delivery')]
 else:
 	result=[]",
