@@ -211,7 +211,6 @@ class external_shop_group(magerp_osv.magerp_osv):
     
     _columns = {
         'code':fields.char('Code', size=100),
-        'magento_id':fields.integer('Website ID'),
         'is_default':fields.boolean('Is Active?'),
         'sort_order':fields.integer('Sort Order'),
         'default_group_id':fields.integer('Default Store Group'), #Many 2 one?

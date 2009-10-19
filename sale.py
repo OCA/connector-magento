@@ -60,7 +60,6 @@ class sale_shop(magerp_osv.magerp_osv):
         return res     
 
     _columns = {
-        'magento_id':fields.integer('ID'),
         'default_store_id':fields.integer('Store ID'), #Many 2 one ?
         'website_id':fields.integer('Website'), # Many 2 one ?
         
