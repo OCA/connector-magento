@@ -188,6 +188,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
         'entity_type_id':fields.integer('Entity Type'),
         'instance':fields.many2one('external.referential', 'Magento Instance', readonly=True, store=True),
         #These parameters are for automatic management
+        'field_name':fields.char('Open ERP Field name', size=100)
         }
     #mapping magentofield:(openerpfield,typecast,)
     #have an entry for each mapped field
@@ -204,10 +205,12 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
                         'set'
                        ]
     def create(self, cr, uid, vals, context={}):
+        if not vals['attribute_code'] in self._no_create_list:
+            field_name = "x_magerp_" + vals['attribute_code']
+            vals['field_name'] =  field_name
         crid = super(magerp_product_attributes, self).create(cr, uid, vals, context)
         if not vals['attribute_code'] in self._no_create_list:
             #If the field has to be created
-            field_name = "x_magerp_" + vals['attribute_code']
             if crid:
                 #Fetch Options
                 if 'frontend_input' in vals.keys() and vals['frontend_input'] in ['select']:
@@ -283,6 +286,23 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
                                 print "Binary mapping not done yet :("
                             self.pool.get('external.mapping.line').create(cr,uid,mapping_line)
         return crid
+    
+    def rebuild_view(self,cr,uid):
+        print "This function is not implemented yet"
+        #In the page for magento information, first create two field
+        #Field 1:instance (Informational & not limiting) & Field 2:Set
+        """Add field instance"""
+        """Add field set"""
+        #create a new notebook
+        """
+        for each_set attribute_set
+               for each_group in attribute_set:
+                    create page with attrs={'invisible':[('set','!=',each_set)]}
+                    for each_mage_attribute in each_group:
+                        check if field is not in _no_create_list
+                            get the field_name for attribute & add it
+        save the xml to form view 
+        """
 magerp_product_attributes()
 
 class magerp_product_attribute_options(magerp_osv.magerp_osv):
