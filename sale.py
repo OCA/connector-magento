@@ -31,11 +31,11 @@ class sale_shop(magerp_osv.magerp_osv):
     def _shop_group_get(self, cr, uid, ids, prop, unknow_none, context):
         return self.oe_get(cr, uid, ids, context={'oe_model':'external.shop.group', 'field':'website_id'})
     
-    def _referential_get(self, cr, uid, ids, prop, unknow_none, context):
-        res = {}
-        for shop in self.browse(cr, uid, ids, context):
-            res[shop.id] = shop.shop_group_id and shop.shop_group_id.referential_id.id or False
-        return res
+#    def _referential_get(self, cr, uid, ids, prop, unknow_none, context):
+#        res = {}
+#        for shop in self.browse(cr, uid, ids, context):
+#            res[shop.id] = shop.shop_group_id and shop.shop_group_id.referential_id.id or False
+#        return res
 
     #FIXME
     def rootcategory_get(self, cr, uid, ids, context=None):
@@ -65,7 +65,7 @@ class sale_shop(magerp_osv.magerp_osv):
         'website_id':fields.integer('Website'), # Many 2 one ?
         
         #overridden because using external key id as an intermediate
-        #'shop_group_id':fields.function(_shop_group_get, type="many2one", relation="external.shop.group", method=True, string="Website"),
+        'shop_group_id':fields.function(_shop_group_get, type="many2one", relation="external.shop.group", method=True, string="Website"),
         #'referential_id':fields.function(_referential_get, type="many2one", relation="external.referential", method=True, string="External Referential"),
         
         'root_category_id':fields.integer('Root product Category'),
