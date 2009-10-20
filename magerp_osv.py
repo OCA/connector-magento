@@ -197,16 +197,6 @@ class magerp_osv(external_osv.external_osv):
                 data = conn.call(list_method, context['ids_or_filter'])
                 result = self.ext_import(cr, uid, data, external_referential_id, defaults, context)
         return result
-                
-    def mage_import(self, cr, uid, ids_or_filter, conn, instance, debug=False, defaults={}, *attrs):
-        if self._LIST_METHOD:
-            magento_records = conn.call(self._LIST_METHOD, ids_or_filter)
-            if attrs:
-                self.sync_import(cr, uid, magento_records, instance, debug, defaults, attrs)
-            else:
-                self.sync_import(cr, uid, magento_records, instance, debug, defaults)
-        else:
-            raise osv.except_osv(_('Undefined List method !'), _("list method is undefined for this object!"))
 
     def mage_export(self, cr, uid, ids, conn, instance, context={}, debug=False):
         for record_read in self.read(cr, uid, ids, [self._MAGE_FIELD]):#we might imagine a faster batch update to be developed later on eventually
