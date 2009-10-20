@@ -19,7 +19,11 @@
 "mag_erp_st_web","magento1324","sale.model_sale_shop","website_id","in_out","int","result=[('website_id',ifield)]",
 "mag_erp_st_default_st","magento1324","sale.model_sale_shop","default_store_id","in_out","int","result=[('default_store_id',ifield)]",
 "mag_erp_st_root_categ","magento1324","sale.model_sale_shop","root_category_id","in_out","int","result=[('root_category_id',ifield)]",
-"mag_erp_so_name","magento1324","sale.model_sale_order","name","in_out","str","result=[('increment_id','mag_' + str(ifield))]",
+"mag_erp_so_incid","magento1324","sale.model_sale_order","increment_id","in_out","str","result=[('increment_id',ifield)]",
+"mag_erp_so_name","magento1324","sale.model_sale_order","increment_id","in_out","str","result=[('name','mag_' + str(ifield))]",
+"mag_erp_so_bill","magento1324","sale.model_sale_order","billing_address_id","in_out","str","result=[('magento_billing_address_id',ifield)]",
+"mag_erp_so_ship","magento1324","sale.model_sale_order","shipping_address_id","in_out","str","result=[('magento_shipping_address_id',ifield)]",
+"mag_erp_so_cust","magento1324","sale.model_sale_order","customer_id","in_out","str","result=[('magento_customer_id',ifield)]",
 "mag_erp_procat_1","magento1324","product.model_product_category","category_id","in","int","result=[('magento_id',ifield)]",
 "mag_erp_procat_2","magento1324","product.model_product_category","level","in","int","result=[('sequence',ifield),('level',ifield)]",
 "mag_erp_procat_3","magento1324","product.model_product_category","parent_id","in_out","int","record_id = self.pool.get('ir.model.data').search(cr, uid, [('model', '=', self._name), ('name', '=', self.prefixed_id(ifield))])

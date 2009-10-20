@@ -66,16 +66,32 @@ class sale_shop(magerp_osv.magerp_osv):
         self.pool.get('product.product').mage_export(cr, uid, [product.id for product in exportable_products], ext_connection, shop.referential_id.id, DEBUG)
 
 
-    def import_shop_orders(self, cr, uid, shop, ext_connection, ctx):
-        self.pool.get('sale.order').mage_import_base(cr, uid, ext_connection, shop.referential_id.id)
-        #TODO store filter: sock.call(s,'sales_order.list',[{'order_id':{'gt':0},'store_id':{'eq':1}}])
+    def _get_pricelist(self, cr, uid, shop):
+        if shop.pricelist_id:
+            return shop.pricelist_id.id
+        else:
+            return self.pool.get('product.pricelist').search(cr, uid, [('type', '=', 'sale'), ('active', '=', True)])[0]
+        
 
-    #Return format of API:{'default_store_id': '1', 'group_id': '1', 'website_id': '1', 'name': 'Main Website Store', 'root_category_id': '2'
+    def import_shop_orders(self, cr, uid, shop, ext_connection, ctx):
+        result = self.pool.get('sale.order').mage_import_base(cr, uid, ext_connection, shop.referential_id.id, defaults={'pricelist_id':self._get_pricelist(cr, uid, shop), 'partner_id':1, 'partner_order_id':1, 'partner_invoice_id':1, 'partner_shipping_id':1})
+        print "import_shop_orders RESULT",result
+        #TODO store filter: sock.call(s,'sales_order.list',[{'order_id':{'gt':0},'store_id':{'eq':1}}])
     
 sale_shop()
 
 
 class sale_order(magerp_osv.magerp_osv):
     _inherit = "sale.order"
+    
+    _columns = {
+        'magento_billing_address_id':fields.integer('Magento Billing Address ID'),
+        'magento_shipping_address_id':fields.integer('Magento Billing Address ID'),
+        'magento_customer_id':fields.integer('Magento Customer ID'),
+    }
+    
+    def oevals_from_extdata(self, cr, uid, external_referential_id, data_record, key_field, mapping_lines, defaults, context):
+        vals = super(magerp_osv.magerp_osv, self).oevals_from_extdata(cr, uid, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
+        return vals
 
 sale_order()
