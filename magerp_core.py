@@ -35,7 +35,6 @@ class external_referential(magerp_osv.magerp_osv):
         'default_pro_cat':fields.many2one('product.category','Default Product Category',required=True, help="Products imported from magento may have many categories.\nOpen ERP requires a specific category for a product to facilitate invoicing etc.")
     }
 
-                
              
     def connect(self, cr, uid, ids, ctx={}):#TODO used?
         #ids has to be a list
@@ -98,8 +97,7 @@ class external_referential(magerp_osv.magerp_osv):
                     self.pool.get('magerp.product_attribute_set').relate(cr, uid, mage_inp, inst.id, DEBUG)
             else:
                 osv.except_osv(_("Connection Error"), _("Could not connect to server\nCheck location, username & password."))
-            
-                
+
     
     def sync_attrib_sets(self, cr, uid, ids, ctx):
         instances = self.browse(cr, uid, ids, ctx)
@@ -197,59 +195,62 @@ class external_referential(magerp_osv.magerp_osv):
             else:
                 osv.except_osv(_("Connection Error"), _("Could not connect to server\nCheck location, username & password."))                        
 
-
                                 
 external_referential()
+
 
 class external_shop_group(magerp_osv.magerp_osv):
     _inherit = "external.shop.group"
     #Return format of API:{'code': 'base', 'name': 'Main', 'website_id': '1', 'is_default': '1', 'sort_order': '0', 'default_group_id': '1'}
-            
-    def _get_group(self, cr, uid, ids, prop, unknow_none, context):
-        res = self.group_get(cr, uid, ids, context={'field':'default_group_id'})
-        return dict(res)
+
+    def _get_default_shop_id(self, cr, uid, ids, prop, unknow_none, context):
+        res = {}
+        for shop_group in self.browse(cr, uid, ids, context):
+            if shop_group.default_group_id:
+                rid = self.pool.get('sale.shop').extid_to_oeid(cr, uid, shop_group.default_group_id, shop_group.referential_id.id)
+                res[shop_group.id] = rid
+            else:
+                res[shop_group.id] = False
+        return res
     
     _columns = {
         'code':fields.char('Code', size=100),
         'is_default':fields.boolean('Is Active?'),
         'sort_order':fields.integer('Sort Order'),
         'default_group_id':fields.integer('Default Store Group'), #Many 2 one?
-        'default_group':fields.function(_get_group, type="many2one", relation="sale.shop", method=True, string="Default Store (Group)"),
-        'instance':fields.many2one('external.referential', 'Instance', ondelete='cascade')
+        'default_shop_id':fields.function(_get_default_shop_id, type="many2one", relation="sale.shop", method=True, string="Default Store (Group)"),
     }
-
 
 external_shop_group()
 
+
 class magerp_storeviews(magerp_osv.magerp_osv):
     _name = "magerp.storeviews"
-    _description = "The magento store views information"
-       
-    def _get_website(self, cr, uid, ids, prop, unknow_none, context):
-        res = self.website_get(cr, uid, ids, context={'field':'magento_id'})
-        return dict(res)
+    _description = "The magento store views information"    
     
-    def _get_group(self, cr, uid, ids, prop, unknow_none, context):
-        res = self.group_get(cr, uid, ids, context={'field':'group_id'})
-        return dict(res) 
-    
-    _order = 'magento_id'
-    _LIST_METHOD = 'ol_storeviews.list'
-    _MAGE_P_KEY = 'store_id'
+    def _get_default_shop_id(self, cr, uid, ids, prop, unknow_none, context):
+        res = {}
+        for storeview in self.browse(cr, uid, ids, context):
+            if storeview.magento_store_id:
+                rid = self.pool.get('sale.shop').extid_to_oeid(cr, uid, storeview.magento_store_id, storeview.website_id.referential_id.id)
+                res[storeview.id] = rid
+            else:
+                res[storeview.id] = False
+        return res
+
     _columns = {
         'name':fields.char('Store View Name', size=100),
         'code':fields.char('Code', size=100),
-        'magento_id':fields.integer('Store ID'),
-        'website_id':fields.integer('Website'), # Many 2 one ?
-        'website':fields.function(_get_website, type="many2one", relation="external.shop.group", method=True, string="Website"),
+        'magento_store_id':fields.integer('Store ID'),
+        'magento_website_id':fields.integer('Website'), # Many 2 one ?
+        'website_id':fields.many2one('external.shop.group', 'Website', select=True, ondelete='cascade'),
         'is_active':fields.boolean('Default ?'),
         'sort_order':fields.integer('Sort Order'),
         'group_id':fields.integer('Default Store Group'), #Many 2 one?
-        'default_group':fields.function(_get_group, type="many2one", relation="sale.shop", method=True, string="Default Store (Group)"),
+        'default_shop_id':fields.function(_get_default_shop_id, type="many2one", relation="sale.shop", method=True, string="Default Store (Group)"),
         #'instance':fields.many2one('external.referential', 'Instance', ondelete='cascade')
     }
 
     #Return format of API:{'code': 'default', 'store_id': '1', 'website_id': '1', 'is_active': '1', 'sort_order': '0', 'group_id': '1', 'name': 'Default Store View'}
-
 
 magerp_storeviews()

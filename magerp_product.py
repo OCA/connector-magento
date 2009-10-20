@@ -139,7 +139,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
     
     def _get_group(self, cr, uid, ids, prop, unknow_none, context):
         res = self.group_get(cr, uid, ids, context)
-        return dict(res) 
+        return dict(res)
     
     _columns = {
         'attribute_code':fields.char('Code', size=200),

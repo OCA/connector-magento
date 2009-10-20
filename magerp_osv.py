@@ -72,33 +72,6 @@ class magerp_osv(external_osv.external_osv):
     def external_connection(self, cr, uid, referential, DEBUG=False):
         attr_conn = Connection(referential.location, referential.apiusername, referential.apipass, DEBUG)
         return attr_conn.connect() and attr_conn or False
-    
-    def website_get(self, cr, uid, ids, context=None):#TODO refactor website_get,group_get and store_get in a single method
-        if not len(ids):
-            return []
-        res = []
-        for record in self.read(cr, uid, ids, [context['field']], context):
-            rid = self.pool.get('external.shop.group').extid_to_oeid(cr, uid, record[context['field']], self.referential_id(cr, uid, record['id']))
-            res.append((record['id'], rid))
-        return res
-    
-    def group_get(self, cr, uid, ids, context=None):
-        if not len(ids):
-            return []
-        res = []
-        for record in self.read(cr, uid, ids, [context['field']], context):
-            rid = self.pool.get('sale.shop').extid_to_oeid(cr, uid, record[context['field']], 1)#TODO FIXME self.referential_id(cr, uid, record['id'])
-            res.append((record['id'], rid))
-        return res
-    
-    def store_get(self, cr, uid, ids, context=None):
-        if not len(ids):
-            return []
-        res = []
-        for record in self.read(cr, uid, ids, [context['field']], context):
-            rid = self.pool.get('magerp.storeviews').extid_to_oeid(cr, uid, record[context['field']], self.referential_id(cr, uid, record['id']))
-            res.append((record['id'], rid))
-        return res
         
     def mage_to_oe(self, cr, uid, mageid, instance, *args):
         """given a record id in the Magento referential, returns a tuple (id, name) with the id in the OpenERP referential; Magento instance wise"""

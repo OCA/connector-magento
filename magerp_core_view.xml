@@ -64,10 +64,9 @@
 						<field name="code" readonly="1" />
 						<field name="is_default" readonly="1" />
 						<field name="sort_order" readonly="1" />
-						<field name="default_group" readonly="1" />
+						<field name="default_shop_id" readonly="1" />
 						<field name="default_group_id" readonly="1" />
 						<field name="referential_id" />
-						<!--<field name="instance" readonly="1" />-->
 					</group>
 				</form>
 			</field>
@@ -82,8 +81,7 @@
 					<field name="code" readonly="1" select="1" />
 					<field name="is_default" readonly="1" select="2" />
 					<field name="sort_order" readonly="1" select="2" />
-					<field name="default_group" readonly="1" select="2" />
-					<!--<field name="instance" readonly="1" select="2" />-->
+					<field name="default_shop_id" readonly="1" select="2" />
 				</tree>
 			</field>
 		</record>
@@ -105,14 +103,13 @@
 			<field name="arch" type="xml">
 				<form string="Magento storeviews">
 					<group col="4" colspan="4">
-						<field name="magento_id" readonly="1" />
+						<field name="magento_store_id" readonly="1" />
 						<field name="name" readonly="1" />
 						<field name="code" readonly="1" />
-						<field name="website" readonly="1" />
+						<field name="website_id" readonly="1" />
 						<field name="is_active" readonly="1" />
 						<field name="sort_order" readonly="1" />
-						<field name="default_group" readonly="1" />
-						<!--						<field name="instance" readonly="1" />-->
+						<field name="default_shop_id" readonly="1" />
 					</group>
 				</form>
 			</field>
@@ -123,14 +120,13 @@
 			<field name="type">tree</field>
 			<field name="arch" type="xml">
 				<tree string="Magento storeviews">
-					<field name="magento_id" readonly="1" select="1" />
+					<field name="magento_store_id" readonly="1" select="1" />
 					<field name="name" readonly="1" select="1" />
 					<field name="code" readonly="1" select="1" />
-					<field name="website" readonly="1" select="1" />
+					<field name="magento_website_id" readonly="1" select="1" />
 					<field name="is_active" readonly="1" select="2" />
 					<field name="sort_order" readonly="1" select="2" />
-					<field name="default_group" readonly="1" select="2" />
-					<!--					<field name="instance" readonly="1" select="2" />-->
+					<field name="default_shop_id" readonly="1" select="2" />
 				</tree>
 			</field>
 		</record>
