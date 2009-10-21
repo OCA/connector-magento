@@ -81,6 +81,12 @@ class sale_shop(magerp_osv.magerp_osv):
 sale_shop()
 
 
+class sale_order_line(magerp_osv.magerp_osv):
+    _inherit = "sale.order.line"
+
+sale_order_line()
+
+
 class sale_order(magerp_osv.magerp_osv):
     _inherit = "sale.order"
     
@@ -92,7 +98,7 @@ class sale_order(magerp_osv.magerp_osv):
     
     def oevals_from_extdata(self, cr, uid, external_referential_id, data_record, key_field, mapping_lines, defaults, context):
         res = super(magerp_osv.magerp_osv, self).oevals_from_extdata(cr, uid, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
-        #TODO deal with order lines in the same way
+
         if data_record.get('billing_address', False):
             address_default = {}
             if res.get('parter_id', False):
@@ -100,9 +106,23 @@ class sale_order(magerp_osv.magerp_osv):
             #TODO unlike Magento, avoid creating same addresses over and over, try to detect if customer already have such an address (Magento won't tell it!)
             inv_res = self.pool.get('res.partner.address').ext_import(cr, uid, [data_record['billing_address']], external_referential_id, address_default, context)
             ship_res = self.pool.get('res.partner.address').ext_import(cr, uid, [data_record['shipping_address']], external_referential_id, address_default, context)
-            res['partner_order_id'] = inv_res['create_ids'][0]
-            res['partner_invoice_id'] = inv_res['create_ids'][0]
-            res['partner_shipping_id'] = len(ship_res['create_ids']) > 0 and ship_res['create_ids'][0] or inv_res['create_ids'][0] #shipping might be the same as invoice address
+            res['partner_order_id'] = len(inv_res['create_ids']) > 0 and inv_res['create_ids'][0] or inv_res['write_ids'][0]
+            res['partner_invoice_id'] = res['partner_order_id']
+            res['partner_shipping_id'] = (len(ship_res['create_ids']) > 0 and ship_res['create_ids'][0]) or (len(ship_res['write_ids']) > 0 and ship_res['write_ids'][0]) or res['partner_order_id'] #shipping might be the same as invoice address
+            
+
+        if data_record.get('items', False):
+            mapping_id = self.pool.get('external.mapping').search(cr,uid,[('model','=','sale.order.line'),('referential_id','=',external_referential_id)])
+            if mapping_id:
+                mapping_line_ids = self.pool.get('external.mapping.line').search(cr,uid,[('mapping_id','=',mapping_id),('type','in',['in_out','in'])])
+                mapping_lines = self.pool.get('external.mapping.line').read(cr,uid,mapping_line_ids,['external_field','external_type','in_function'])
+                if mapping_lines:
+                    lines_vals = []
+                    for line_data in data_record.get('items', []):
+                        print "line_data", line_data
+                        lines_vals.append((0, 0, self.oevals_from_extdata(cr, uid, external_referential_id, line_data, 'item_id', mapping_lines, {'product_uom':1}, context)))
+                    res['order_line'] = lines_vals
+                
         return res
 
 sale_order()

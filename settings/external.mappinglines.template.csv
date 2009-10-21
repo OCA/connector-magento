@@ -23,6 +23,11 @@
 "mag_erp_so_name","magento1324","sale.model_sale_order","increment_id","in_out","str","result=[('name','mag_' + str(ifield))]",
 "mag_erp_so_cust","magento1324","sale.model_sale_order","customer_id","in_out","str","result=[('magento_customer_id',ifield)]",
 "mag_erp_so_custo","magento1324","sale.model_sale_order","customer_id","in_out","str","result=[('partner_id',self.pool.get('res.partner').extid_to_oeid(cr, uid, ifield, external_referential_id))]",
+"mag_erp_soline_name","magento1324","sale.model_sale_order_line","name","in_out","str","result=[('name',ifield)]",
+"mag_erp_soline_pid","magento1324","sale.model_sale_order_line","product_id","in_out","str","result=[('product_id',self.pool.get('product.product').extid_to_oeid(cr, uid, ifield, external_referential_id))]",
+"mag_erp_soline_uomqty","magento1324","sale.model_sale_order_line","qty_ordered","in_out","str","result=[('product_uom_qty',ifield)]",
+"mag_erp_soline_uosqty","magento1324","sale.model_sale_order_line","qty_ordered","in","str","result=[('product_uos_qty',ifield)]",
+"mag_erp_soline_price","magento1324","sale.model_sale_order_line","price","in","str","result=[('price_unit',ifield)]",
 "mag_erp_procat_1","magento1324","product.model_product_category","category_id","in","int","result=[('magento_id',ifield)]",
 "mag_erp_procat_2","magento1324","product.model_product_category","level","in","int","result=[('sequence',ifield),('level',ifield)]",
 "mag_erp_procat_3","magento1324","product.model_product_category","parent_id","in_out","int","record_id = self.pool.get('ir.model.data').search(cr, uid, [('model', '=', self._name), ('name', '=', self.prefixed_id(ifield))])
