@@ -193,22 +193,29 @@ class magerp_osv(external_osv.external_osv):
         mapping_id = self.pool.get('external.mapping').search(cr,uid,[('model','=',self._name),('referential_id','=',external_referential_id)])
         if mapping_id:
             data = []
-            print "context", context
-            print "object", self
             if context.get('id', False):
                 get_method = self.pool.get('external.mapping').read(cr,uid,mapping_id[0],['external_get_method']).get('external_get_method',False)
                 if get_method:
-                    print "GET CALL", get_method, [context.get('id', False)]
                     data = [conn.call(get_method, [context.get('id', False)])]
                     data[0]['external_id'] = context.get('id', False)
+                    result = self.ext_import(cr, uid, data, external_referential_id, defaults, context)
             else:
                 list_method = self.pool.get('external.mapping').read(cr,uid,mapping_id[0],['external_list_method']).get('external_list_method',False)
                 if list_method:
-                    print "LIST CALL ", list_method, context['ids_or_filter']
                     data = conn.call(list_method, context['ids_or_filter'])
-            print "DATA in mage_import_base", data
-            result = self.ext_import(cr, uid, data, external_referential_id, defaults, context)
-        print "result in mage_import_base", result
+                    
+                    #it may happen that list method doesn't provide enough information, forcing us to use get_method on each record (case for sale orders)
+                    if context.get('one_by_one', False):
+                        for record in data:
+                            id = record[self.pool.get('external.mapping').read(cr, uid, mapping_id[0],['external_key_name'])['external_key_name']]
+                            get_method = self.pool.get('external.mapping').read(cr,uid,mapping_id[0],['external_get_method']).get('external_get_method',False)
+                            rec_data = [conn.call(get_method, [id])]
+                            rec_result = self.ext_import(cr, uid, rec_data, external_referential_id, defaults, context)
+                            result['create_ids'].append(rec_result['create_ids'])
+                            result['write_ids'].append(rec_result['write_ids'])
+                    else:
+                        result = self.ext_import(cr, uid, data, external_referential_id, defaults, context)
+
         return result
     
     def get_external_data(self, cr, uid, conn, external_referential_id, defaults={}, context={}):

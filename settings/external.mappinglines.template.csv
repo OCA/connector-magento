@@ -21,8 +21,6 @@
 "mag_erp_st_root_categ","magento1324","sale.model_sale_shop","root_category_id","in_out","int","result=[('root_category_id',ifield)]",
 "mag_erp_so_incid","magento1324","sale.model_sale_order","increment_id","in_out","str","result=[('increment_id',ifield)]",
 "mag_erp_so_name","magento1324","sale.model_sale_order","increment_id","in_out","str","result=[('name','mag_' + str(ifield))]",
-"mag_erp_so_bill","magento1324","sale.model_sale_order","billing_address_id","in_out","str","result=[('magento_billing_address_id',ifield)]",
-"mag_erp_so_ship","magento1324","sale.model_sale_order","shipping_address_id","in_out","str","result=[('magento_shipping_address_id',ifield)]",
 "mag_erp_so_cust","magento1324","sale.model_sale_order","customer_id","in_out","str","result=[('magento_customer_id',ifield)]",
 "mag_erp_so_custo","magento1324","sale.model_sale_order","customer_id","in_out","str","result=[('partner_id',self.pool.get('res.partner').extid_to_oeid(cr, uid, ifield, external_referential_id))]",
 "mag_erp_procat_1","magento1324","product.model_product_category","category_id","in","int","result=[('magento_id',ifield)]",
@@ -151,7 +149,7 @@ else:
 	result=[('type','delivery')]
 else:
 	result=[]",
-"magento_prt_1","magento1324","base.model_res_partner","customer_id","in_out","int","result=[('magento_id',ifield)]",
+"magento_prt_adr_cust","magento1324","base.model_res_partner_address","customer_id","in_out","int","result=[('partner_id',self.pool.get('res.partner').extid_to_oeid(cr, uid, ifield, external_referential_id))]",
 "magento_prt_2","magento1324","base.model_res_partner","group_id","in_out","int","if ifield:
 	result=self.pool.get('res.partner.category').extid_to_oeid(cr,uid,ifield,external_referential_id)
 	if result:

@@ -74,7 +74,7 @@ class sale_shop(magerp_osv.magerp_osv):
         
 
     def import_shop_orders(self, cr, uid, shop, ext_connection, ctx):#FIXME: no guest order support for now: [{'customer_id': {'nlike':False}}]
-        result = self.pool.get('sale.order').mage_import_base(cr, uid, ext_connection, shop.referential_id.id, defaults={'pricelist_id':self._get_pricelist(cr, uid, shop), 'partner_order_id':1, 'partner_invoice_id':1, 'partner_shipping_id':1}, context={'ids_or_filter':[{'customer_id': {'nlike':False}}]})
+        result = self.pool.get('sale.order').mage_import_base(cr, uid, ext_connection, shop.referential_id.id, defaults={'pricelist_id':self._get_pricelist(cr, uid, shop)}, context={'one_by_one': True, 'ids_or_filter':[{'customer_id': {'nlike':False}}]})
         return result
         #TODO store filter: sock.call(s,'sales_order.list',[{'order_id':{'gt':0},'store_id':{'eq':1}}])
     
@@ -89,5 +89,20 @@ class sale_order(magerp_osv.magerp_osv):
         'magento_shipping_address_id':fields.integer('Magento Billing Address ID'),
         'magento_customer_id':fields.integer('Magento Customer ID'),
     }
+    
+    def oevals_from_extdata(self, cr, uid, external_referential_id, data_record, key_field, mapping_lines, defaults, context):
+        res = super(magerp_osv.magerp_osv, self).oevals_from_extdata(cr, uid, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
+        #TODO deal with order lines in the same way
+        if data_record.get('billing_address', False):
+            address_default = {}
+            if res.get('parter_id', False):
+                address_default = {'parter_id': res.get('parter_id', False)}
+            #TODO unlike Magento, avoid creating same addresses over and over, try to detect if customer already have such an address (Magento won't tell it!)
+            inv_res = self.pool.get('res.partner.address').ext_import(cr, uid, [data_record['billing_address']], external_referential_id, address_default, context)
+            ship_res = self.pool.get('res.partner.address').ext_import(cr, uid, [data_record['shipping_address']], external_referential_id, address_default, context)
+            res['partner_order_id'] = inv_res['create_ids'][0]
+            res['partner_invoice_id'] = inv_res['create_ids'][0]
+            res['partner_shipping_id'] = len(ship_res['create_ids']) > 0 and ship_res['create_ids'][0] or inv_res['create_ids'][0] #shipping might be the same as invoice address
+        return res
 
 sale_order()
