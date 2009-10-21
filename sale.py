@@ -73,9 +73,9 @@ class sale_shop(magerp_osv.magerp_osv):
             return self.pool.get('product.pricelist').search(cr, uid, [('type', '=', 'sale'), ('active', '=', True)])[0]
         
 
-    def import_shop_orders(self, cr, uid, shop, ext_connection, ctx):
-        result = self.pool.get('sale.order').mage_import_base(cr, uid, ext_connection, shop.referential_id.id, defaults={'pricelist_id':self._get_pricelist(cr, uid, shop), 'partner_id':1, 'partner_order_id':1, 'partner_invoice_id':1, 'partner_shipping_id':1})
-        print "import_shop_orders RESULT",result
+    def import_shop_orders(self, cr, uid, shop, ext_connection, ctx):#FIXME: no guest order support for now: [{'customer_id': {'nlike':False}}]
+        result = self.pool.get('sale.order').mage_import_base(cr, uid, ext_connection, shop.referential_id.id, defaults={'pricelist_id':self._get_pricelist(cr, uid, shop), 'partner_order_id':1, 'partner_invoice_id':1, 'partner_shipping_id':1}, context={'ids_or_filter':[{'customer_id': {'nlike':False}}]})
+        return result
         #TODO store filter: sock.call(s,'sales_order.list',[{'order_id':{'gt':0},'store_id':{'eq':1}}])
     
 sale_shop()
@@ -89,9 +89,5 @@ class sale_order(magerp_osv.magerp_osv):
         'magento_shipping_address_id':fields.integer('Magento Billing Address ID'),
         'magento_customer_id':fields.integer('Magento Customer ID'),
     }
-    
-    def oevals_from_extdata(self, cr, uid, external_referential_id, data_record, key_field, mapping_lines, defaults, context):
-        vals = super(magerp_osv.magerp_osv, self).oevals_from_extdata(cr, uid, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
-        return vals
 
 sale_order()

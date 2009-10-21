@@ -192,11 +192,28 @@ class magerp_osv(external_osv.external_osv):
         result = {'create_ids': [], 'write_ids': []}
         mapping_id = self.pool.get('external.mapping').search(cr,uid,[('model','=',self._name),('referential_id','=',external_referential_id)])
         if mapping_id:
-            list_method = self.pool.get('external.mapping').read(cr,uid,mapping_id[0],['external_list_method']).get('external_list_method',False)
-            if list_method:
-                data = conn.call(list_method, context['ids_or_filter'])
-                result = self.ext_import(cr, uid, data, external_referential_id, defaults, context)
+            data = []
+            print "context", context
+            print "object", self
+            if context.get('id', False):
+                get_method = self.pool.get('external.mapping').read(cr,uid,mapping_id[0],['external_get_method']).get('external_get_method',False)
+                if get_method:
+                    print "GET CALL", get_method, [context.get('id', False)]
+                    data = [conn.call(get_method, [context.get('id', False)])]
+                    data[0]['external_id'] = context.get('id', False)
+            else:
+                list_method = self.pool.get('external.mapping').read(cr,uid,mapping_id[0],['external_list_method']).get('external_list_method',False)
+                if list_method:
+                    print "LIST CALL ", list_method, context['ids_or_filter']
+                    data = conn.call(list_method, context['ids_or_filter'])
+            print "DATA in mage_import_base", data
+            result = self.ext_import(cr, uid, data, external_referential_id, defaults, context)
+        print "result in mage_import_base", result
         return result
+    
+    def get_external_data(self, cr, uid, conn, external_referential_id, defaults={}, context={}):
+        """Constructs data using WS or other synch protocols and then call ext_import on it"""
+        return self.mage_import_base(cr, uid, conn, external_referential_id, defaults, context)#TODO refactor mage_import_base calls to this interface
 
     def mage_export(self, cr, uid, ids, conn, instance, context={}, debug=False):
         for record_read in self.read(cr, uid, ids, [self._MAGE_FIELD]):#we might imagine a faster batch update to be developed later on eventually

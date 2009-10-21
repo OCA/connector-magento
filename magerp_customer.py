@@ -40,7 +40,6 @@ class res_partner_address(magerp_osv.magerp_osv):
     _columns = {
         'magento_id':fields.integer('Magento ID'),
         'lastname':fields.char('Last Name', size=100),
-        'instance':fields.many2one('external.referential', 'Magento Instance', readonly=True, store=True),
         'exportable':fields.boolean('Export to magento?'),
                 }
     _defaults = {
@@ -64,7 +63,7 @@ class res_partner(magerp_osv.magerp_osv):
                 }
 
     def mage_import_base(self,cr,uid,conn, external_referential_id, defaults={}, context={}):
-        #Overwriting customer sync
+        #Overwriting customer sync to create related addresses
         ids_or_filter = context.get('ids_or_filter',[])
         ret = super(res_partner, self).mage_import_base(cr,uid,conn, external_referential_id, defaults, context)
         result = conn.call(self._LIST_METHOD, ids_or_filter)
@@ -73,5 +72,6 @@ class res_partner(magerp_osv.magerp_osv):
             for each in result:
                 cust_ids.append(each['customer_id'])
             context['ids_or_filter'] = cust_ids
-            self.pool.get('res.partner.address').mage_import_base(cr,uid,conn, external_referential_id, defaults, context)
+            self.pool.get('res.partner.address').mage_import_base(cr,uid,conn, external_referential_id, defaults, context)#FIXME: create two addresses instead of one?
+        return ret
 res_partner()
