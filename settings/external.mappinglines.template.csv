@@ -21,8 +21,11 @@
 "mag_erp_st_root_categ","magento1324","sale.model_sale_shop","root_category_id","in_out","int","result=[('root_category_id',ifield)]",
 "mag_erp_so_incid","magento1324","sale.model_sale_order","increment_id","in_out","str","result=[('increment_id',ifield)]",
 "mag_erp_so_name","magento1324","sale.model_sale_order","increment_id","in_out","str","result=[('name','mag_' + str(ifield))]",
-"mag_erp_so_cust","magento1324","sale.model_sale_order","customer_id","in_out","str","result=[('magento_customer_id',ifield)]",
-"mag_erp_so_custo","magento1324","sale.model_sale_order","customer_id","in_out","str","result=[('partner_id',self.pool.get('res.partner').extid_to_oeid(cr, uid, ifield, external_referential_id))]",
+"mag_erp_so_cust","magento1324","sale.model_sale_order","customer_id","in_out","int","result=[('magento_customer_id',ifield)]",
+"mag_erp_so_custo","magento1324","sale.model_sale_order","customer_id","in_out","int","result=[('partner_id',self.pool.get('res.partner').extid_to_oeid(cr, uid, ifield, external_referential_id))]",
+"mag_erp_so_pay","magento1324","sale.model_sale_order","payment","in_out","str","
+payments_mapping = {'checkmo': 'prepaid', 'ccsave': 'prepaid', 'free':'prepaid','googlecheckout':'prepaid','paypayl_express':'prepaid', 'paybox_system': 'prepaid'}
+result=[('order_policy', ifield in payments_mapping and payments_mapping[ifield] or 'prepaid')]",
 "mag_erp_soline_name","magento1324","sale.model_sale_order_line","name","in_out","str","result=[('name',ifield)]",
 "mag_erp_soline_pid","magento1324","sale.model_sale_order_line","product_id","in_out","str","result=[('product_id',self.pool.get('product.product').extid_to_oeid(cr, uid, ifield, external_referential_id))]",
 "mag_erp_soline_uomqty","magento1324","sale.model_sale_order_line","qty_ordered","in_out","str","result=[('product_uom_qty',ifield)]",
