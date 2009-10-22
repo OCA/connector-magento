@@ -123,8 +123,18 @@ class sale_order(magerp_osv.magerp_osv):
                 if mapping_lines:
                     lines_vals = []
                     for line_data in data_record.get('items', []):
-                        print "line_data", line_data
                         lines_vals.append((0, 0, self.oevals_from_extdata(cr, uid, external_referential_id, line_data, 'item_id', mapping_lines, {'product_uom':1}, context)))
+                        
+                    if data_record.get('shipping_amount', False) and data_record.get('shipping_amount', False) > 0:
+                        ship_product_ids = self.pool.get('product.product').search(cr, uid, [('default_code', '=', 'SHIP MAGENTO')])
+                        ship_product = self.pool.get('product.product').browse(cr, uid, ship_product_ids[0], context)
+                        lines_vals.append((0, 0, {
+                                                    'product_id': ship_product.id,
+                                                    'name': ship_product.name,
+                                                    'product_uom': ship_product.uom_id.id,
+                                                    'product_uom_qty': 1,
+                                                    'price_unit': float(data_record['shipping_amount']),
+                                                }))
                     res['order_line'] = lines_vals
                 
         return res

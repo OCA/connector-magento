@@ -27,6 +27,7 @@
     "init_xml" : [],
     "demo_xml" : [],
     "update_xml" : [
+            'magerp_data.xml',
             'settings/external.referential.type.csv',
             'magerp_core_view.xml',
             'magerp_product_view.xml',
