@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<openerp>
+	<data noupdate="1">
+
+		<record id="product_product_shipping" model="product.product">
+			<field name="default_code">SHIP MAGENTO</field>
+			<field name="list_price">0.0</field>
+			<field name="standard_price">0.0</field>
+			<field name="type">service</field>
+			<field name="name">Shipping and Handling</field>
+			<field name="exportable" eval="False" />
+			<field model="product.category" name="categ_id" search="[]"/>
+		</record>
+		
+	</data>
+</openerp>
