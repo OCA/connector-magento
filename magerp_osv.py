@@ -222,6 +222,17 @@ class magerp_osv(external_osv.external_osv):
         """Constructs data using WS or other synch protocols and then call ext_import on it"""
         return self.mage_import_base(cr, uid, conn, external_referential_id, defaults, context)#TODO refactor mage_import_base calls to this interface
 
+    #TODO remove usage of this method which is not based upon ir_model_data!
+    def mage_import(self, cr, uid, ids_or_filter, conn, instance, debug=False, defaults={}, *attrs):
+        if self._LIST_METHOD:
+            magento_records = conn.call(self._LIST_METHOD, ids_or_filter)
+            if attrs:
+                self.sync_import(cr, uid, magento_records, instance, debug, defaults, attrs)
+            else:
+                self.sync_import(cr, uid, magento_records, instance, debug, defaults)
+        else:
+            raise osv.except_osv(_('Undefined List method !'), _("list method is undefined for this object!"))
+
     def mage_export(self, cr, uid, ids, conn, instance, context={}, debug=False):
         for record_read in self.read(cr, uid, ids, [self._MAGE_FIELD]):#we might imagine a faster batch update to be developed later on eventually
             if record_read[self._MAGE_FIELD]:
