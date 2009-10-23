@@ -74,7 +74,7 @@ class sale_shop(magerp_osv.magerp_osv):
         
 
     def import_shop_orders(self, cr, uid, shop, ext_connection, ctx):#FIXME: no guest order support for now: [{'customer_id': {'nlike':False}}]
-        result = self.pool.get('sale.order').mage_import_base(cr, uid, ext_connection, shop.referential_id.id, defaults={'pricelist_id':self._get_pricelist(cr, uid, shop)}, context={'one_by_one': True, 'ids_or_filter':[{'customer_id': {'nlike':False}}]})
+        result = self.pool.get('sale.order').mage_import_base(cr, uid, ext_connection, shop.referential_id.id, defaults={'pricelist_id':self._get_pricelist(cr, uid, shop), 'shop_id': shop.id}, context={'one_by_one': True, 'ids_or_filter':[{'customer_id': {'nlike':False}}]})
         return result
         #TODO store filter: sock.call(s,'sales_order.list',[{'order_id':{'gt':0},'store_id':{'eq':1}}])
     
