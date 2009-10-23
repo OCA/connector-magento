@@ -96,6 +96,43 @@ class sale_order(magerp_osv.magerp_osv):
         'magento_customer_id':fields.integer('Magento Customer ID'),
     }
     
+    def get_order_addresses(self, cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context):
+        address_default = {}
+        if res.get('parter_id', False):
+            address_default = {'parter_id': res.get('parter_id', False)}
+
+        #unlike Magento, avoid creating same addresses over and over, try to detect if customer already have such an address (Magento won't tell it!)
+        inv_res = self.pool.get('res.partner.address').ext_import(cr, uid, [data_record['billing_address']], external_referential_id, address_default, context)
+        ship_res = self.pool.get('res.partner.address').ext_import(cr, uid, [data_record['shipping_address']], external_referential_id, address_default, context)
+        res['partner_order_id'] = len(inv_res['create_ids']) > 0 and inv_res['create_ids'][0] or inv_res['write_ids'][0]
+        res['partner_invoice_id'] = res['partner_order_id']
+        res['partner_shipping_id'] = (len(ship_res['create_ids']) > 0 and ship_res['create_ids'][0]) or (len(ship_res['write_ids']) > 0 and ship_res['write_ids'][0]) or res['partner_order_id'] #shipping might be the same as invoice address
+        return res
+    
+    def get_order_lines(self, cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context):
+        mapping_id = self.pool.get('external.mapping').search(cr,uid,[('model','=','sale.order.line'),('referential_id','=',external_referential_id)])
+        if mapping_id:
+            mapping_line_ids = self.pool.get('external.mapping.line').search(cr,uid,[('mapping_id','=',mapping_id),('type','in',['in_out','in'])])
+            mapping_lines = self.pool.get('external.mapping.line').read(cr,uid,mapping_line_ids,['external_field','external_type','in_function'])
+            if mapping_lines:
+                lines_vals = []
+                for line_data in data_record.get('items', []):
+                    lines_vals.append((0, 0, self.oevals_from_extdata(cr, uid, external_referential_id, line_data, 'item_id', mapping_lines, {'product_uom':1}, context)))
+                res['order_line'] = lines_vals
+        return res
+    
+    def get_order_shipping(self, cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context):
+        ship_product_ids = self.pool.get('product.product').search(cr, uid, [('default_code', '=', 'SHIP MAGENTO')])
+        ship_product = self.pool.get('product.product').browse(cr, uid, ship_product_ids[0], context)
+        res['order_line'].append((0, 0, {
+                                    'product_id': ship_product.id,
+                                    'name': ship_product.name,
+                                    'product_uom': ship_product.uom_id.id,
+                                    'product_uom_qty': 1,
+                                    'price_unit': float(data_record['shipping_amount']),
+                                }))
+        return res
+    
     def oevals_from_extdata(self, cr, uid, external_referential_id, data_record, key_field, mapping_lines, defaults, context):
         if data_record.get('billing_address', False):
             del(data_record['billing_address']['parent_id'])
@@ -103,40 +140,12 @@ class sale_order(magerp_osv.magerp_osv):
         res = super(magerp_osv.magerp_osv, self).oevals_from_extdata(cr, uid, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
 
         if data_record.get('billing_address', False):
-            address_default = {}
-            if res.get('parter_id', False):
-                address_default = {'parter_id': res.get('parter_id', False)}
-
-            #TODO unlike Magento, avoid creating same addresses over and over, try to detect if customer already have such an address (Magento won't tell it!)
-            inv_res = self.pool.get('res.partner.address').ext_import(cr, uid, [data_record['billing_address']], external_referential_id, address_default, context)
-            ship_res = self.pool.get('res.partner.address').ext_import(cr, uid, [data_record['shipping_address']], external_referential_id, address_default, context)
-            res['partner_order_id'] = len(inv_res['create_ids']) > 0 and inv_res['create_ids'][0] or inv_res['write_ids'][0]
-            res['partner_invoice_id'] = res['partner_order_id']
-            res['partner_shipping_id'] = (len(ship_res['create_ids']) > 0 and ship_res['create_ids'][0]) or (len(ship_res['write_ids']) > 0 and ship_res['write_ids'][0]) or res['partner_order_id'] #shipping might be the same as invoice address
-            
-
+            res = self.get_order_addresses(cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
         if data_record.get('items', False):
-            mapping_id = self.pool.get('external.mapping').search(cr,uid,[('model','=','sale.order.line'),('referential_id','=',external_referential_id)])
-            if mapping_id:
-                mapping_line_ids = self.pool.get('external.mapping.line').search(cr,uid,[('mapping_id','=',mapping_id),('type','in',['in_out','in'])])
-                mapping_lines = self.pool.get('external.mapping.line').read(cr,uid,mapping_line_ids,['external_field','external_type','in_function'])
-                if mapping_lines:
-                    lines_vals = []
-                    for line_data in data_record.get('items', []):
-                        lines_vals.append((0, 0, self.oevals_from_extdata(cr, uid, external_referential_id, line_data, 'item_id', mapping_lines, {'product_uom':1}, context)))
-                        
-                    if data_record.get('shipping_amount', False) and data_record.get('shipping_amount', False) > 0:
-                        ship_product_ids = self.pool.get('product.product').search(cr, uid, [('default_code', '=', 'SHIP MAGENTO')])
-                        ship_product = self.pool.get('product.product').browse(cr, uid, ship_product_ids[0], context)
-                        lines_vals.append((0, 0, {
-                                                    'product_id': ship_product.id,
-                                                    'name': ship_product.name,
-                                                    'product_uom': ship_product.uom_id.id,
-                                                    'product_uom_qty': 1,
-                                                    'price_unit': float(data_record['shipping_amount']),
-                                                }))
-                    res['order_line'] = lines_vals
-                
+            res = self.get_order_lines(cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
+            if data_record.get('shipping_amount', False) and data_record.get('shipping_amount', False) > 0:
+                res = self.get_order_shipping(cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
+
         return res
 
 sale_order()
