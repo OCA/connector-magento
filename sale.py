@@ -117,19 +117,36 @@ class sale_order(magerp_osv.magerp_osv):
             if mapping_lines:
                 lines_vals = []
                 for line_data in data_record.get('items', []):
-                    lines_vals.append((0, 0, self.oevals_from_extdata(cr, uid, external_referential_id, line_data, 'item_id', mapping_lines, {'product_uom':1}, context)))
+                    defaults_line = {'product_uom': 1}
+                    #simple VAT tax on order line (else override method):
+                    line_tax_vat = float(line_data['tax_percent']) / 100.0
+                    if line_tax_vat > 0:
+                        line_tax_ids = self.pool.get('account.tax').search(cr, uid, [('type_tax_use', '=', 'sale'), ('amount', '>=', line_tax_vat - 0.001), ('amount', '<=', line_tax_vat + 0.001)])
+                        print "line_tax_ids", line_tax_ids
+                        if line_tax_ids and len(line_tax_ids) > 0:
+                            defaults_line['tax_id'] = [(6, 0, [line_tax_ids[0]])]
+                    lines_vals.append((0, 0, self.oevals_from_extdata(cr, uid, external_referential_id, line_data, 'item_id', mapping_lines, defaults_line, context)))
                 res['order_line'] = lines_vals
         return res
     
     def get_order_shipping(self, cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context):
-        ship_product_ids = self.pool.get('product.product').search(cr, uid, [('default_code', '=', 'SHIP MAGENTO')])
-        ship_product = self.pool.get('product.product').browse(cr, uid, ship_product_ids[0], context)
+        ship_product_id = self.pool.get('product.product').search(cr, uid, [('default_code', '=', 'SHIP MAGENTO')])[0]
+        ship_product = self.pool.get('product.product').browse(cr, uid, ship_product_id, context)
+        
+        #simple VAT tax on shipping (else override method):
+        ship_tax_vat = float(data_record['shipping_tax_amount'])/float(data_record['shipping_amount'])
+        tax_id = []
+        if ship_tax_vat > 0:
+            ship_tax_ids = self.pool.get('account.tax').search(cr, uid, [('type_tax_use', '=', 'sale'), ('amount', '>=', ship_tax_vat - 0.001), ('amount', '<=', ship_tax_vat + 0.001)])
+            if ship_tax_ids and len(ship_tax_ids) > 0:
+                tax_id = [(6, 0, [ship_tax_ids[0]])]
         res['order_line'].append((0, 0, {
                                     'product_id': ship_product.id,
                                     'name': ship_product.name,
                                     'product_uom': ship_product.uom_id.id,
                                     'product_uom_qty': 1,
                                     'price_unit': float(data_record['shipping_amount']),
+                                    'tax_id': tax_id
                                 }))
         return res
     
