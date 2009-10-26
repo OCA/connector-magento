@@ -583,12 +583,11 @@ class product_product(magerp_osv.magerp_osv):
             sku = product.magento_sku
         else:
             code = product.code or 'mag'
-            same_codes = self.pool.get('product.product').search(cr, uid, [('code', '=', code)])
+            same_codes = self.search(cr, uid, [('default_code', '=', code)])
             if same_codes and len(same_codes) > 1:
                 sku = code + "_" + str(product.id)
             else:
                 sku = code
-            self.write(cr, uid, product.id, {'magento_sku': sku})
         return sku
 
     #TODO mapp all attributes
@@ -614,13 +613,14 @@ class product_product(magerp_osv.magerp_osv):
         product_data = self.oe_record_to_mage_data(cr, uid, product, context)
         return [product.virtual_available, 'simple', attr_set_id, sku, product_data]
     
-    def ext_create(self, cr, uid, data, conn, method):
-        res = super(magerp_osv.magerp_osv, self).ext_create(cr, uid, data[1:], conn, method)
+    def ext_create(self, cr, uid, data, conn, method, oe_id):
+        res = super(magerp_osv.magerp_osv, self).ext_create(cr, uid, data[1:], conn, method, oe_id)
+        self.write(cr, uid, oe_id, {'magento_sku': data[3]})
         conn.call('product_stock.update', [data[3], {'qty':data[0], 'is_in_stock': 1}])
         return res
     
-    def ext_update(self, cr, uid, data, conn, method, existing_id):
-        res = super(magerp_osv.magerp_osv, self).ext_update(cr, uid, data[4], conn, method, data[3])
+    def ext_update(self, cr, uid, data, conn, method, oe_id, external_id):
+        res = super(magerp_osv.magerp_osv, self).ext_update(cr, uid, data[4], conn, method, oe_id, data[3])
         conn.call('product_stock.update', [data[3], {'qty':data[0], 'is_in_stock': 1}])
         return res
 
