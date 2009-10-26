@@ -54,8 +54,8 @@ if magento_parent_id:
 "mag_erp_procat_9","magento1324","product.model_product_category","url_key","in_out","str","result=[('url_key',ifield)]","result=[('url_key',record['url_key'])]"
 "mag_erp_procat_10","magento1324","product.model_product_category","name","in_out","str","result=[('name',ifield),('exportable',True)]","result=[('name',record['name'])]"
 "mag_erp_procat_11","magento1324","product.model_product_category","is_anchor","in_out","str","result=[('is_anchor',bool(eval(ifield)))]","result=[('is_anchor',record['is_anchor'])]"
-"mag_erp_procat_12","magento1324","product.model_product_category","available_sort_by","in_out","str","result=[('available_sort_by',ifield)]","result=[('available_sort_by',record['available_sort_by'] or record['name'])]"
-"mag_erp_procat_13","magento1324","product.model_product_category","default_sort_by","in_out","str","result=[('default_sort_by',ifield)]","result=[('default_sort_by',record['default_sort_by'] or record['name'])]"
+"mag_erp_procat_12","magento1324","product.model_product_category","available_sort_by","in_out","str","result=[('available_sort_by',ifield)]","result=[('available_sort_by',record['available_sort_by'] or 'name')]"
+"mag_erp_procat_13","magento1324","product.model_product_category","default_sort_by","in_out","str","result=[('default_sort_by',ifield)]","result=[('default_sort_by',record['default_sort_by'] or 'name')]"
 "mag_erp_procat_14","magento1324","product.model_product_category","updated_at","in","str","result=[('magerp_stamp',ifield)]",
 "mag_erp_procat_15","magento1324","product.model_product_category","image","in_out","str","image_binary = False
 if ifield and not ifield=='None':
