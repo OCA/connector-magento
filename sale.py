@@ -70,8 +70,11 @@ class sale_shop(magerp_osv.magerp_osv):
 
     def import_shop_orders(self, cr, uid, shop, ctx):#FIXME: no guest order support for now: [{'customer_id': {'nlike':False}}]
         magento_shop_id = self.oeid_to_extid(cr, uid, shop.id, shop.referential_id.id, context={})
+        defaults = {'pricelist_id':self._get_pricelist(cr, uid, shop), 'shop_id': shop.id}
+        if shop.is_tax_included:
+            defaults.update({'price_type': True})
         result = self.pool.get('sale.order').mage_import_base(cr, uid, ctx.get('conn_obj', False), shop.referential_id.id,
-                                                              defaults={'pricelist_id':self._get_pricelist(cr, uid, shop), 'shop_id': shop.id, 'price_type': shop.is_tax_included}, 
+                                                              defaults=defaults,
                                                               context={'one_by_one': True, 'ids_or_filter':[{'store_id': {'eq': magento_shop_id}}]})
         return result
     
