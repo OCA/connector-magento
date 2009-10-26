@@ -558,6 +558,7 @@ class product_product(magerp_osv.magerp_osv):
         #Perform other operations
         return crid
     
+    #TODO move part of this to declarative mapping CSV template
     def oe_record_to_mage_data(self, cr, uid, product, context={}):
         pricelist_obj = self.pool.get('product.pricelist')
         pl_default_id = pricelist_obj.search(cr, uid, [('type', '=', 'sale')]) #TODO pricelist_obj.search(cr, uid, [('magento_default', '=', True)])
@@ -590,6 +591,7 @@ class product_product(magerp_osv.magerp_osv):
             self.write(cr, uid, product.id, {'magento_sku': sku})
         return sku
 
+    #TODO mapp all attributes
     def extdata_from_oevals(self, cr, uid, external_referential_id, data_record, mapping_lines, defaults, context):
         product = self.browse(cr, uid, data_record['id'])
         conn = context.get('conn_obj', False)
@@ -610,10 +612,17 @@ class product_product(magerp_osv.magerp_osv):
             attr_set_id = default_set_id
 
         product_data = self.oe_record_to_mage_data(cr, uid, product, context)
-        return ['simple', attr_set_id, sku, product_data]
+        return [product.virtual_available, 'simple', attr_set_id, sku, product_data]
+    
+    def ext_create(self, cr, uid, data, conn, method):
+        res = super(magerp_osv.magerp_osv, self).ext_create(cr, uid, data[1:], conn, method)
+        conn.call('product_stock.update', [data[3], {'qty':data[0], 'is_in_stock': 1}])
+        return res
     
     def ext_update(self, cr, uid, data, conn, method, existing_id):
-        return super(magerp_osv.magerp_osv, self).ext_update(cr, uid, data[3], conn, method, data[2])
+        res = super(magerp_osv.magerp_osv, self).ext_update(cr, uid, data[4], conn, method, data[3])
+        conn.call('product_stock.update', [data[3], {'qty':data[0], 'is_in_stock': 1}])
+        return res
 
 
 product_product()
