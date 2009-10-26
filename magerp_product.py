@@ -558,7 +558,7 @@ class product_product(magerp_osv.magerp_osv):
         #Perform other operations
         return crid
     
-    def oe_record_to_mage_data(self, cr, uid, product, conn, instance, context={}):
+    def oe_record_to_mage_data(self, cr, uid, product, context={}):
         pricelist_obj = self.pool.get('product.pricelist')
         pl_default_id = pricelist_obj.search(cr, uid, [('type', '=', 'sale')]) #TODO pricelist_obj.search(cr, uid, [('magento_default', '=', True)])
         product_data = { #TODO refactor that using existing mappings? Add extra attributes?
@@ -587,10 +587,13 @@ class product_product(magerp_osv.magerp_osv):
                 sku = code + "_" + str(product.id)
             else:
                 sku = code
+            self.write(cr, uid, product.id, {'magento_sku': sku})
         return sku
-    
-    def oe_record_to_mage_create(self, cr, uid, ids, conn, instance, context={}):
-        #default attribute set:
+
+    def extdata_from_oevals(self, cr, uid, external_referential_id, data_record, mapping_lines, defaults, context):
+        product = self.browse(cr, uid, data_record['id'])
+        conn = context.get('conn_obj', False)
+        
         sets = conn.call('product_attribute_set.list')
         default_set_id = 1
         for set in sets:
@@ -598,25 +601,19 @@ class product_product(magerp_osv.magerp_osv):
                 default_set_id = set['set_id']
                 break
         mage_records = []
-        for product in self.browse(cr, uid, ids):
-            sku = self.product_to_sku(cr, uid, product)
-            
-            if product.set and product.set.attribute_set_id:
-                attr_set_id = product.set.attribute_set_id.id
-            else:
-                attr_set_id = default_set_id
 
-            product_data = self.oe_record_to_mage_data(cr, uid, product, conn, instance, context)
-            mage_record = (product.id, ['simple', attr_set_id, sku, product_data])
-            mage_records.append(mage_record)
-        return mage_records
+        sku = self.product_to_sku(cr, uid, product)
+        
+        if product.set and product.set.attribute_set_id:
+            attr_set_id = product.set.attribute_set_id.id
+        else:
+            attr_set_id = default_set_id
+
+        product_data = self.oe_record_to_mage_data(cr, uid, product, context)
+        return ['simple', attr_set_id, sku, product_data]
     
-    def oe_record_to_mage_update(self, cr, uid, ids, conn, instance, context={}):
-        mage_records = []
-        for product in self.browse(cr, uid, ids):
-            product_data = self.oe_record_to_mage_data(cr, uid, product, conn, instance, context)
-            if product.magento_sku:
-                mage_records.append((product.id, [product.magento_sku, product_data]))
-        return mage_records
+    def ext_update(self, cr, uid, data, conn, method, existing_id):
+        return super(magerp_osv.magerp_osv, self).ext_update(cr, uid, data[3], conn, method, data[2])
+
 
 product_product()

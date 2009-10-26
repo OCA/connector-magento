@@ -68,7 +68,7 @@ class external_referential(magerp_osv.magerp_osv):
                 confirmation = pro_cat_conn.call('catalog_category.currentStore', [0])   #Set browse to root store
                 if confirmation:
                     categ_tree = pro_cat_conn.call('catalog_category.tree')             #Get the tree
-                    self.pool.get('product.category').record_entire_tree(cr, uid, inst.id, pro_cat_conn, categ_tree, DEBUG)
+                    #self.pool.get('product.category').record_entire_tree(cr, uid, inst.id, pro_cat_conn, categ_tree, DEBUG)
                     exp_ids = self.pool.get('product.category').search(cr,uid,[('exportable','=',True)])
                     self.pool.get('product.category').ext_export(cr,uid,exp_ids,[inst.id],{},{'conn_obj':pro_cat_conn})
             else:

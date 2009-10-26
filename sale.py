@@ -61,11 +61,6 @@ class sale_shop(magerp_osv.magerp_osv):
     }
 
 
-    def export_products_collection(self, cr, uid, shop, exportable_products, ctx):
-        #TODO use new API!
-        self.pool.get('product.product').mage_export(cr, uid, [product.id for product in exportable_products], ctx.get('conn_obj', False), shop.referential_id.id, DEBUG)
-
-
     def _get_pricelist(self, cr, uid, shop):
         if shop.pricelist_id:
             return shop.pricelist_id.id
