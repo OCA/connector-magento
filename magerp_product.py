@@ -84,7 +84,7 @@ class product_category(magerp_osv.magerp_osv):
                     ('position', 'Best Value'),
                     ('name', 'Name'),
                     ('price', 'Price')
-                    ], 'Available Product Listing (Sort By)', required=True),
+                    ], 'Available Product Listing (Sort By)'),
         'default_sort_by': fields.selection([
                     ('None', 'Use Config Settings'),
                     ('position', 'Best Value'),
@@ -457,6 +457,7 @@ class product_product(magerp_osv.magerp_osv):
     #Just implement a simple product synch
     _columns = {
         'magento_id':fields.integer('Magento ID', readonly=True, store=True),
+        'magento_sku':fields.char('Magento SKU', size=64),
         'exportable':fields.boolean('Exported to magento?'),
         'instance':fields.many2one('external.referential', 'Magento Instance', readonly=True, store=True),
         'created_at':fields.date('Created'), #created_at & updated_at in magento side, to allow filtering/search inside OpenERP!
@@ -576,6 +577,17 @@ class product_product(magerp_osv.magerp_osv):
         }
         return product_data
 
+    def product_to_sku(self, cr, uid, product):
+        if product.magento_sku:
+            sku = product.magento_sku
+        else:
+            code = product.code or 'mag'
+            same_codes = self.pool.get('product.product').search(cr, uid, [('code', '=', code)])
+            if same_codes and len(same_codes) > 1:
+                sku = code + "_" + str(product.id)
+            else:
+                sku = code
+        return sku
     
     def oe_record_to_mage_create(self, cr, uid, ids, conn, instance, context={}):
         #default attribute set:
@@ -587,7 +599,7 @@ class product_product(magerp_osv.magerp_osv):
                 break
         mage_records = []
         for product in self.browse(cr, uid, ids):
-            sku = (product.code or "mag") + "_" + str(product.id)
+            sku = self.product_to_sku(cr, uid, product)
             
             if product.set and product.set.attribute_set_id:
                 attr_set_id = product.set.attribute_set_id.id
@@ -603,12 +615,8 @@ class product_product(magerp_osv.magerp_osv):
         mage_records = []
         for product in self.browse(cr, uid, ids):
             product_data = self.oe_record_to_mage_data(cr, uid, product, conn, instance, context)
-            if product.x_magerp_sku:
-                sku = product.x_magerp_sku
-            else:
-                sku = (product.code or "mag") + "_" + str(product.id)
-            mage_record = (product.id, [sku, product_data])
-            mage_records.append(mage_record)
+            if product.magento_sku:
+                mage_records.append((product.id, [product.magento_sku, product_data]))
         return mage_records
 
 product_product()

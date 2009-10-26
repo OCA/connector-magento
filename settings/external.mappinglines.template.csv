@@ -54,8 +54,8 @@ if magento_parent_id:
 "mag_erp_procat_9","magento1324","product.model_product_category","url_key","in_out","str","result=[('url_key',ifield)]","result=[('url_key',record['url_key'])]"
 "mag_erp_procat_10","magento1324","product.model_product_category","name","in_out","str","result=[('name',ifield),('exportable',True)]","result=[('name',record['name'])]"
 "mag_erp_procat_11","magento1324","product.model_product_category","is_anchor","in_out","str","result=[('is_anchor',bool(eval(ifield)))]","result=[('is_anchor',record['is_anchor'])]"
-"mag_erp_procat_12","magento1324","product.model_product_category","available_sort_by","in_out","str","result=[('available_sort_by',ifield)]","result=[('available_sort_by',record['available_sort_by'])]"
-"mag_erp_procat_13","magento1324","product.model_product_category","default_sort_by","in_out","str","result=[('default_sort_by',ifield)]","result=[('default_sort_by',record['default_sort_by'])]"
+"mag_erp_procat_12","magento1324","product.model_product_category","available_sort_by","in_out","str","result=[('available_sort_by',ifield)]","result=[('available_sort_by',record['available_sort_by'] or record['name'])]"
+"mag_erp_procat_13","magento1324","product.model_product_category","default_sort_by","in_out","str","result=[('default_sort_by',ifield)]","result=[('default_sort_by',record['default_sort_by'] or record['name'])]"
 "mag_erp_procat_14","magento1324","product.model_product_category","updated_at","in","str","result=[('magerp_stamp',ifield)]",
 "mag_erp_procat_15","magento1324","product.model_product_category","image","in_out","str","image_binary = False
 if ifield and not ifield=='None':
@@ -109,7 +109,7 @@ else:
 "mag_erp_prd_2","magento1324","product.model_product_product","name","in_out","str","result = [('name',ifield)]",
 "mag_erp_prd_3","magento1324","product.model_product_product","description","in_out","str","result = [('description',ifield)]",
 "mag_erp_prd_4","magento1324","product.model_product_product","short_description","in_out","str","result = [('description_sale',ifield)]",
-"mag_erp_prd_5","magento1324","product.model_product_product","sku","in_out","str","result = [('default_code',ifield)]",
+"mag_erp_prd_5","magento1324","product.model_product_product","sku","in_out","str","result = [('magento_sku',ifield)]",
 "mag_erp_prd_6","magento1324","product.model_product_product","weight","in_out","float","result = [('weight_net',ifield)]",
 "mag_erp_prd_7","magento1324","product.model_product_product","category_ids","in_out","str","result=[]#map later",
 "mag_erp_prd_8","magento1324","product.model_product_product","price","in_out","float","result=[('list_price',ifield)]",

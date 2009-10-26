@@ -61,9 +61,9 @@ class sale_shop(magerp_osv.magerp_osv):
     }
 
 
-    def export_products_collection(self, cr, uid, shop, exportable_products, ext_connection, ctx):
+    def export_products_collection(self, cr, uid, shop, exportable_products, ctx):
         #TODO use new API!
-        self.pool.get('product.product').mage_export(cr, uid, [product.id for product in exportable_products], ext_connection, shop.referential_id.id, DEBUG)
+        self.pool.get('product.product').mage_export(cr, uid, [product.id for product in exportable_products], ctx.get('conn_obj', False), shop.referential_id.id, DEBUG)
 
 
     def _get_pricelist(self, cr, uid, shop):
@@ -73,9 +73,9 @@ class sale_shop(magerp_osv.magerp_osv):
             return self.pool.get('product.pricelist').search(cr, uid, [('type', '=', 'sale'), ('active', '=', True)])[0]
         
 
-    def import_shop_orders(self, cr, uid, shop, ext_connection, ctx):#FIXME: no guest order support for now: [{'customer_id': {'nlike':False}}]
+    def import_shop_orders(self, cr, uid, shop, ctx):#FIXME: no guest order support for now: [{'customer_id': {'nlike':False}}]
         magento_shop_id = self.oeid_to_extid(cr, uid, shop.id, shop.referential_id.id, context={})
-        result = self.pool.get('sale.order').mage_import_base(cr, uid, ext_connection, shop.referential_id.id, defaults={'pricelist_id':self._get_pricelist(cr, uid, shop), 'shop_id': shop.id}, context={'one_by_one': True, 'ids_or_filter':[{'store_id': {'eq': magento_shop_id}}]})
+        result = self.pool.get('sale.order').mage_import_base(cr, uid, ctx.get('conn_obj', False), shop.referential_id.id, defaults={'pricelist_id':self._get_pricelist(cr, uid, shop), 'shop_id': shop.id}, context={'one_by_one': True, 'ids_or_filter':[{'store_id': {'eq': magento_shop_id}}]})
         return result
         #TODO store filter: sock.call(s,'sales_order.list',[{'order_id':{'gt':0},'store_id':{'eq':1}}])
     

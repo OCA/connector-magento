@@ -72,7 +72,8 @@ class magerp_osv(external_osv.external_osv):
     def external_connection(self, cr, uid, referential, DEBUG=False):
         attr_conn = Connection(referential.location, referential.apiusername, referential.apipass, DEBUG)
         return attr_conn.connect() and attr_conn or False
-        
+    
+    #TODO deprecated, remove use
     def mage_to_oe(self, cr, uid, mageid, instance, *args):
         """given a record id in the Magento referential, returns a tuple (id, name) with the id in the OpenERP referential; Magento instance wise"""
         #Arguments as a list of tuple
@@ -95,6 +96,7 @@ class magerp_osv(external_osv.external_osv):
                     return (read[0]['id'], read[0][self._rec_name])
         return False
     
+    #TODO deprecated, remove use
     def sync_import(self, cr, uid, magento_records, instance, debug=False, defaults={}, *attrs):
         #Attrs of 0 should be mage2oe_filters
         if magento_records:
@@ -222,7 +224,7 @@ class magerp_osv(external_osv.external_osv):
         """Constructs data using WS or other synch protocols and then call ext_import on it"""
         return self.mage_import_base(cr, uid, conn, external_referential_id, defaults, context)#TODO refactor mage_import_base calls to this interface
 
-    #TODO remove usage of this method which is not based upon ir_model_data!
+    #TODO deprecated, remove use
     def mage_import(self, cr, uid, ids_or_filter, conn, instance, debug=False, defaults={}, *attrs):
         if self._LIST_METHOD:
             magento_records = conn.call(self._LIST_METHOD, ids_or_filter)
@@ -233,13 +235,15 @@ class magerp_osv(external_osv.external_osv):
         else:
             raise osv.except_osv(_('Undefined List method !'), _("list method is undefined for this object!"))
 
+    #TODO deprecated, remove use
     def mage_export(self, cr, uid, ids, conn, instance, context={}, debug=False):
         for record_read in self.read(cr, uid, ids, [self._MAGE_FIELD]):#we might imagine a faster batch update to be developed later on eventually
             if record_read[self._MAGE_FIELD]:
                 self.mage_export_update(cr, uid, [record_read["id"]], conn, instance, context={})
             else:
                 self.mage_export_create(cr, uid, [record_read["id"]], conn, instance, context={})
-                
+    
+    #TODO deprecated, remove use 
     def mage_export_create(self, cr, uid, ids, conn, instance, context={}):
         mage_records = self.oe_record_to_mage_create(cr, uid, ids, conn, instance, context) #FIXME: eventually that array might be very large, split it into reasonable chunks?
         for mage_record in mage_records:#we might imagine a faster batch update to be developed later on eventually
@@ -248,6 +252,7 @@ class magerp_osv(external_osv.external_osv):
             cr.commit();#better to commit while export being made in case of slow upload to Magento crashing
             #TODO log it?
     
+    #TODO deprecated, remove use
     def mage_export_update(self, cr, uid, ids, conn, instance, context={}):
         mage_records = self.oe_record_to_mage_update(cr, uid, ids, conn, instance, context) #FIXME: eventually that array might be very large, split it into reasonable chunks?
         for mage_record in mage_records:#we might imagine a faster batch update to be developed later on eventually
