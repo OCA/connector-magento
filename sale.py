@@ -167,7 +167,7 @@ class sale_order(magerp_osv.magerp_osv):
             res = self.get_order_addresses(cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
         if data_record.get('items', False):
             res = self.get_order_lines(cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
-            if data_record.get('shipping_amount', False) and data_record.get('shipping_amount', False) > 0:
+            if data_record.get('shipping_amount', False) and float(data_record.get('shipping_amount', False)) > 0:
                 res = self.get_order_shipping(cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
 
         return res
