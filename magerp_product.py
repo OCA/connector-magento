@@ -29,7 +29,6 @@ import magerp_osv
 
 
 class product_category(magerp_osv.magerp_osv):
-    
     _inherit = "product.category"
     
     def name_get(self, cr, uid, ids, context=None):
@@ -549,6 +548,19 @@ class product_product(magerp_osv.magerp_osv):
                 'meta_keyword': product.name,
                 'meta_description': product.description_sale and product.description_sale[:255],
         }
+        
+        #now mapp the attributes from created after the Magento EAV attributes model:
+        ir_model_id = self.pool.get('ir.model').search(cr, uid, [('model', '=', 'product.product')])[0]
+        ir_model = self.pool.get('ir.model').browse(cr, uid, ir_model_id)
+        ir_model_field_ids = self.pool.get('ir.model.fields').search(cr, uid, [('model_id', '=', ir_model_id), ('ttype', '=', 'char')])
+        ir_model_field_ids += self.pool.get('ir.model.fields').search(cr, uid, [('model_id', '=', ir_model_id), ('ttype', '=', 'date')])
+        ir_model_field_ids += self.pool.get('ir.model.fields').search(cr, uid, [('model_id', '=', ir_model_id), ('ttype', '=', 'int')])
+        ir_model_field_ids += self.pool.get('ir.model.fields').search(cr, uid, [('model_id', '=', ir_model_id), ('ttype', '=', 'float')])
+        ir_model_field_ids += self.pool.get('ir.model.fields').search(cr, uid, [('model_id', '=', ir_model_id), ('ttype', '=', 'text')])
+        field_names = [str(field.name).startswith('x_') and field.name for field in self.pool.get('ir.model.fields').browse(cr, uid, ir_model_field_ids)]
+        attributes = self.read(cr, uid, product.id, field_names, {})
+        #TODO: also deal with many2one option fields!
+        product_data.update(attributes)
         return product_data
 
     def product_to_sku(self, cr, uid, product):
