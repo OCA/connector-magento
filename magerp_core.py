@@ -68,9 +68,9 @@ class external_referential(magerp_osv.magerp_osv):
                 confirmation = pro_cat_conn.call('catalog_category.currentStore', [0])   #Set browse to root store
                 if confirmation:
                     categ_tree = pro_cat_conn.call('catalog_category.tree')             #Get the tree
-                    #self.pool.get('product.category').record_entire_tree(cr, uid, inst.id, pro_cat_conn, categ_tree, DEBUG)
-                    exp_ids = self.pool.get('product.category').search(cr,uid,[('exportable','=',True)])
-                    self.pool.get('product.category').ext_export(cr,uid,exp_ids,[inst.id],{},{'conn_obj':pro_cat_conn})
+                    self.pool.get('product.category').record_entire_tree(cr, uid, inst.id, pro_cat_conn, categ_tree, DEBUG)
+                    #exp_ids = self.pool.get('product.category').search(cr,uid,[('exportable','=',True)])
+                    #self.pool.get('product.category').ext_export(cr,uid,exp_ids,[inst.id],{},{'conn_obj':pro_cat_conn})
             else:
                 osv.except_osv(_("Connection Error"), _("Could not connect to server\nCheck location, username & password."))
     
@@ -187,15 +187,13 @@ class external_referential(magerp_osv.magerp_osv):
                     attr
                 
     def export_products(self, cr, uid, ids, ctx):
-        instances = self.browse(cr, uid, ids, ctx)
-        for inst in instances:
-            attr_conn = self.external_connection(cr, uid, inst, DEBUG)
-            if attr_conn:
-                ids = self.pool.get('product.product').search(cr, uid, [])
-                self.pool.get('product.product').mage_export(cr, uid, ids, attr_conn, inst.id, DEBUG)
-            else:
-                osv.except_osv(_("Connection Error"), _("Could not connect to server\nCheck location, username & password."))                        
-
+        shop_ids = self.pool.get('sale.shop').search(cr, uid, [])
+        for inst in self.browse(cr, uid, ids, ctx):
+            for shop in self.pool.get('sale.shop').browse(cr, uid, shop_ids, ctx):
+                ctx['conn_obj'] = self.external_connection(cr, uid, inst)
+                #shop.export_catalog
+                print "cr, uid, shop, ctx", cr, uid, shop, ctx
+                shop.export_products(cr, uid, shop, ctx)
                                 
 external_referential()
 
