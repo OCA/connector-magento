@@ -41,9 +41,10 @@ if record_id:
 	parent_id=parent_rec.get('res_id',False)
 result=[('magento_parent_id',ifield),('parent_id',parent_id)]","magento_parent_id = False
 if record.get('parent_id',False):
-	magento_parent_id = self.browse(cr,uid,record.get('parent_id')[0]).magento_id
+	magento_parent_id = self.oeid_to_extid(cr, uid, record.get('parent_id')[0], external_referential_id)
 	if not magento_parent_id:
 		self.ext_export(cr,uid,[record.get('parent_id',[False])[0]],[external_referential_id],{},{'conn_obj':conn})
+		magento_parent_id = self.oeid_to_extid(cr, uid, record.get('parent_id')[0], external_referential_id)
 if magento_parent_id:
 	result = [('parent_id',magento_parent_id)]"
 "mag_erp_procat_4","magento1324","product.model_product_category","is_active","in_out","str","result=[('is_active',bool(eval(ifield)))]","result=[('is_active',record['is_active'])]"
