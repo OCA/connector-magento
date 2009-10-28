@@ -33,9 +33,9 @@
 								<button name="sync_attrib_sets" string="Synchronise Product Attribute Sets" colspan="2" type="object" />
 								<button name="sync_attrib_groups" string="Synchronise Attribute Groups" colspan="2" type="object" />
 								<button name="sync_customer_groups" string="Sync Customer Groups (Partner Categories)" colspan="2" type="object" />
-								<button name="sync_customer_addresses" string="Sync Customer Addresses" colspan="2" type="object" />
 								<button name="sync_products" string="Sync Products" colspan="2" type="object" />
-								<button name="export_products" string="Export Products" colspan="2" type="object" />
+<!--								<button name="sync_customer_addresses" string="Sync Customer Addresses" colspan="2" type="object" />-->
+<!--								<button name="export_products" string="Export Products" colspan="2" type="object" />-->
 							</page>
 						</notebook>
 					</group>
