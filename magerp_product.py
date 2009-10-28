@@ -450,11 +450,7 @@ product_tierprice()
 
 class product_product(magerp_osv.magerp_osv):
     _inherit = "product.product"
-    _LIST_METHOD = "catalog_product.list"
-    _INFO_METHOD = "catalog_product.info"
-    _CREATE_METHOD = "product.create"
-    _UPDATE_METHOD = "product.update"
-    #Just implement a simple product synch
+
     _columns = {
         'magento_id':fields.integer('Magento ID', readonly=True, store=True),
         'magento_sku':fields.char('Magento SKU', size=64),
@@ -471,29 +467,6 @@ class product_product(magerp_osv.magerp_osv):
     _defaults = {
         'exportable':lambda * a:True
                  }
-    def mage_import(self, cr, uid, ids_or_filter, conn, instance, debug=False, defaults={}, *attrs):
-        #Build the mapping dictionary dynamically from attributes
-        inst_attrs = self.pool.get('magerp.product_attributes').search(cr, uid, [('instance', '=', instance), ('map_in_openerp', '=', '1')])
-        inst_attrs_reads = self.pool.get('magerp.product_attributes').read(cr, uid, inst_attrs, ['attribute_code', 'mapping_field_name', 'mapping_type_cast', 'mapping_script'])
-        for each in inst_attrs_reads:
-            if type(each['mapping_type_cast']) == unicode:
-                self._mapping[each['attribute_code']] = (each['mapping_field_name'], eval(each['mapping_type_cast']), each['mapping_script'])
-            else:
-                self._mapping[each['attribute_code']] = (each['mapping_field_name'], each['mapping_type_cast'], each['mapping_script'])
-        #If mapping dictionary exists then synchronise
-        if self._mapping:
-            list_prods = conn.call(self._LIST_METHOD, ids_or_filter)
-            result = []
-            for each in list_prods:
-                each_product_info = conn.call(self._INFO_METHOD, [each['product_id']])
-                result.append(each_product_info)
-            #result contains detailed info of all products
-            if attrs:
-                self.sync_import(cr, uid, result, instance, debug, defaults, attrs)
-            else:
-                self.sync_import(cr, uid, result, instance, debug, defaults)
-        else:
-            raise osv.except_osv(_('Undefined Mapping !'), _("Mapping dictionary is not present in the object!\nMake sure attributes are synchronised first"))
 
     def write(self, cr, uid, ids, vals, context={}):
         if vals.get('instance', False):
