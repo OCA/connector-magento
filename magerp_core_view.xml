@@ -28,12 +28,12 @@
 								<field name="attribute_sets" nolabel="1" colspan="4"/>
 							</page>
 							<page string="Actions">
-								<button name="sync_categs" string="Synchronise Product Categories" colspan="2" type="object" />
-								<button name="sync_attribs" string="Synchronise Product Attributes" colspan="2" type="object" />
-								<button name="sync_attrib_sets" string="Synchronise Product Attribute Sets" colspan="2" type="object" />
-								<button name="sync_attrib_groups" string="Synchronise Attribute Groups" colspan="2" type="object" />
-								<button name="sync_customer_groups" string="Sync Customer Groups (Partner Categories)" colspan="2" type="object" />
-								<button name="sync_products" string="Sync Products" colspan="2" type="object" />
+								<button name="sync_categs" string="Import Product Categories" colspan="2" type="object" />
+								<button name="sync_attribs" string="Import Product Attributes" colspan="2" type="object" />
+								<button name="sync_attrib_sets" string="Import Product Attribute Sets" colspan="2" type="object" />
+								<button name="sync_attrib_groups" string="Import Attribute Groups" colspan="2" type="object" />
+								<button name="sync_customer_groups" string="Import Customer Groups (Partner Categories)" colspan="2" type="object" />
+								<button name="sync_products" string="Import Products" colspan="2" type="object" />
 <!--								<button name="sync_customer_addresses" string="Sync Customer Addresses" colspan="2" type="object" />-->
 <!--								<button name="export_products" string="Export Products" colspan="2" type="object" />-->
 							</page>
