@@ -50,7 +50,7 @@ class product_category(magerp_osv.magerp_osv):
         res = self.name_get(cr, uid, ids, context)
         return dict(res)
     
-    def ext_create(self, cr, uid, data, conn, method):
+    def ext_create(self, cr, uid, data, conn, method, oe_id):
         return conn.call(method, [data.get('parent_id', 1), data])
     
     _columns = {
@@ -583,44 +583,47 @@ class product_product(magerp_osv.magerp_osv):
             sku = product.magento_sku
         else:
             code = product.code or 'mag'
-            same_codes = self.search(cr, uid, [('default_code', '=', code)])
-            if same_codes and len(same_codes) > 1:
+            same_codes = self.search(cr, uid, [('magento_sku', '=', code)])
+            print "same_codes", same_codes, code
+            if same_codes and len(same_codes) > 0:
                 sku = code + "_" + str(product.id)
             else:
                 sku = code
         return sku
 
-    #TODO mapp all attributes
-    def extdata_from_oevals(self, cr, uid, external_referential_id, data_record, mapping_lines, defaults, context):
-        product = self.browse(cr, uid, data_record['id'])
+    def ext_export(self, cr, uid, ids, external_referential_ids=[], defaults={}, context={}):
+        """overriden to set the default_set_id in context and avoid extra request for each product upload"""
         conn = context.get('conn_obj', False)
-        
         sets = conn.call('product_attribute_set.list')
         default_set_id = 1
         for set in sets:
             if set['name'] == 'Default':
                 default_set_id = set['set_id']
                 break
-        mage_records = []
+        context['default_set_id'] = default_set_id
+        return super(magerp_osv.magerp_osv, self).ext_export(cr, uid, ids, external_referential_ids, defaults, context)
 
+    #TODO mapp all attributes
+    def extdata_from_oevals(self, cr, uid, external_referential_id, data_record, mapping_lines, defaults, context):
+        product = self.browse(cr, uid, data_record['id'])
         sku = self.product_to_sku(cr, uid, product)
         
         if product.set and product.set.attribute_set_id:
             attr_set_id = product.set.attribute_set_id.id
         else:
-            attr_set_id = default_set_id
+            attr_set_id = context.get('default_set_id', False)
 
         product_data = self.oe_record_to_mage_data(cr, uid, product, context)
         return [product.virtual_available, 'simple', attr_set_id, sku, product_data]
     
     def ext_create(self, cr, uid, data, conn, method, oe_id):
-        res = super(magerp_osv.magerp_osv, self).ext_create(cr, uid, data[1:], conn, method, oe_id)
         self.write(cr, uid, oe_id, {'magento_sku': data[3]})
+        res = super(magerp_osv.magerp_osv, self).ext_create(cr, uid, data[1:], conn, method, oe_id)
         conn.call('product_stock.update', [data[3], {'qty':data[0], 'is_in_stock': 1}])
         return res
     
-    def ext_update(self, cr, uid, data, conn, method, oe_id, external_id):
-        res = super(magerp_osv.magerp_osv, self).ext_update(cr, uid, data[4], conn, method, oe_id, data[3])
+    def ext_update(self, cr, uid, data, conn, method, oe_id, external_id, ir_model_data_id, create_method):
+        res = super(magerp_osv.magerp_osv, self).ext_update(cr, uid, data[4], conn, method, oe_id, data[3], ir_model_data_id, create_method)
         conn.call('product_stock.update', [data[3], {'qty':data[0], 'is_in_stock': 1}])
         return res
 
