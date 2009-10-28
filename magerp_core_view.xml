@@ -149,7 +149,7 @@
 			<field name="arch" type="xml">
 				<field name="exportable_product_ids" position="after">
 					<field name="name" />
-					<field name="root_category" readonly="1" />
+					<field name="magento_root_category" readonly="1" />
 				</field>
 			</field>
 		</record>

@@ -53,7 +53,7 @@ class sale_shop(magerp_osv.magerp_osv):
         'website_id':fields.integer('Magento Website ID'), # Many 2 one ?
         'group_id':fields.integer('Magento ID'),
         'root_category_id':fields.integer('Root product Category'),
-        'root_category':fields.function(_get_rootcategory, type="many2one", relation="product.category", method=True, string="Root Category"),
+        'magento_root_category':fields.function(_get_rootcategory, type="many2one", relation="product.category", method=True, string="Root Category", store=True),
     }
     
     _defaults = {
