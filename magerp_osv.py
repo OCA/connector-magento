@@ -236,6 +236,7 @@ class magerp_osv(external_osv.external_osv):
         else:
             raise osv.except_osv(_('Undefined List method !'), _("list method is undefined for this object!"))
     
+    #TODO deprecated, remove use
     def get_all_mage_ids(self, cr, uid, ids=[], instance=False):
         search_param = []
         if instance:

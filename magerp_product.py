@@ -26,6 +26,7 @@ import datetime
 import base64
 import time
 import magerp_osv
+from tools.translate import _
 
 
 class product_category(magerp_osv.magerp_osv):
@@ -569,7 +570,6 @@ class product_product(magerp_osv.magerp_osv):
         else:
             code = product.code or 'mag'
             same_codes = self.search(cr, uid, [('magento_sku', '=', code)])
-            print "same_codes", same_codes, code
             if same_codes and len(same_codes) > 0:
                 sku = code + "_" + str(product.id)
             else:
