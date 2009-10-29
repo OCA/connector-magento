@@ -5,6 +5,7 @@ import netsvc
 import urllib2
 import base64
 from base_external_referentials import external_osv
+from tools.translate import _
 
 class Connection():
     def __init__(self, location, username, password, debug=False):
