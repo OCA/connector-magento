@@ -67,6 +67,9 @@
 						<field name="default_group_id" readonly="1" />
 						<field name="referential_id" />
 					</group>
+					<group col="4" colspan="4">
+						<field name="shop_ids" />
+					</group>
 				</form>
 			</field>
 		</record>
@@ -81,6 +84,7 @@
 					<field name="is_default" readonly="1" select="2" />
 					<field name="sort_order" readonly="1" select="2" />
 					<field name="default_shop_id" readonly="1" select="2" />
+					<field name="shop_ids" />
 				</tree>
 			</field>
 		</record>
@@ -144,7 +148,6 @@
 			<field name="type">form</field>
 			<field name="arch" type="xml">
 				<field name="exportable_product_ids" position="after">
-					<field name="name" />
 					<field name="magento_root_category" readonly="1" />
 				</field>
 			</field>
