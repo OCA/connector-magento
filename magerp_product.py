@@ -50,7 +50,7 @@ class product_category(magerp_osv.magerp_osv):
         res = self.name_get(cr, uid, ids, context)
         return dict(res)
     
-    def ext_create(self, cr, uid, data, conn, method, oe_id):
+    def ext_create(self, cr, uid, data, conn, method, oe_id, context):
         return conn.call(method, [data.get('parent_id', 1), data])
     
     _columns = {
@@ -601,14 +601,14 @@ class product_product(magerp_osv.magerp_osv):
         product_data = self.oe_record_to_mage_data(cr, uid, product, context)
         return [product.virtual_available, 'simple', attr_set_id, sku, product_data]
     
-    def ext_create(self, cr, uid, data, conn, method, oe_id):
+    def ext_create(self, cr, uid, data, conn, method, oe_id, context):
         self.write(cr, uid, oe_id, {'magento_sku': data[3]})
-        res = super(magerp_osv.magerp_osv, self).ext_create(cr, uid, data[1:], conn, method, oe_id)
+        res = super(magerp_osv.magerp_osv, self).ext_create(cr, uid, data[1:], conn, method, oe_id, context)
         conn.call('product_stock.update', [data[3], {'qty':data[0], 'is_in_stock': 1}])
         return res
     
-    def ext_update(self, cr, uid, data, conn, method, oe_id, external_id, ir_model_data_id, create_method):
-        res = super(magerp_osv.magerp_osv, self).ext_update(cr, uid, data[4], conn, method, oe_id, data[3], ir_model_data_id, create_method)
+    def ext_update(self, cr, uid, data, conn, method, oe_id, external_id, ir_model_data_id, create_method, context):
+        res = super(magerp_osv.magerp_osv, self).ext_update(cr, uid, data[4], conn, method, oe_id, data[3], ir_model_data_id, create_method, context)
         conn.call('product_stock.update', [data[3], {'qty':data[0], 'is_in_stock': 1}])
         return res
 
