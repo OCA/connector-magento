@@ -1,4 +1,5 @@
 from osv import osv, fields
+import time
 import datetime
 import xmlrpclib
 import netsvc
@@ -32,8 +33,15 @@ class Connection():
                 self.logger.notifyChannel(_("Magento Connection"), netsvc.LOG_INFO, _("Login Successful"))
             return True
         except Exception, e:
-            self.logger.notifyChannel(_("Magento Connection"), netsvc.LOG_ERROR, _("Error in connecting") % (e))
-            raise
+            time.sleep(1)
+            try:
+                self.session = self.ser.login(self.username, self.password)
+                if self.debug:
+                    self.logger.notifyChannel(_("Magento Connection"), netsvc.LOG_INFO, _("Login Successful"))
+                return True
+            except Exception, e:
+                self.logger.notifyChannel(_("Magento Connection"), netsvc.LOG_ERROR, _("Error in connecting") % (e))
+                raise
     
     def call(self, method, *args): 
         if args:
@@ -48,8 +56,17 @@ class Connection():
                 self.logger.notifyChannel(_("Magento Connection"), netsvc.LOG_INFO, _("Query Returned:%s") % (res))
             return res
         except Exception, e:
-            self.logger.notifyChannel(_("Magento Call"), netsvc.LOG_ERROR, _("Method: %s\nArguments:%s\nError:%s") % (method, arguments, e))
-            raise
+            time.sleep(1)
+            try:
+                if self.debug:
+                    self.logger.notifyChannel(_("Magento Connection"), netsvc.LOG_INFO, _("Calling Method:%s,Arguments:%s") % (method, arguments))
+                res = self.ser.call(self.session, method, arguments)
+                if self.debug:
+                    self.logger.notifyChannel(_("Magento Connection"), netsvc.LOG_INFO, _("Query Returned:%s") % (res))
+                return res
+            except Exception, e:
+                self.logger.notifyChannel(_("Magento Call"), netsvc.LOG_ERROR, _("Method: %s\nArguments:%s\nError:%s") % (method, arguments, e))
+                raise
     
     def fetch_image(self, imgloc):
         full_loc = self.corelocation + imgloc
