@@ -54,37 +54,14 @@ class sale_shop(magerp_osv.magerp_osv):
         'group_id':fields.integer('Magento ID'),
         'root_category_id':fields.integer('Root product Category'),
         'magento_root_category':fields.function(_get_rootcategory, type="many2one", relation="product.category", method=True, string="Root Category", store=True),
-    }
-    
-    _defaults = {
-        'payment_default_id': lambda *a: 1, #required field that would cause trouble if not set when importing
-    }
+    }   
 
-
-    def _get_pricelist(self, cr, uid, shop):
-        if shop.pricelist_id:
-            return shop.pricelist_id.id
-        else:
-            return self.pool.get('product.pricelist').search(cr, uid, [('type', '=', 'sale'), ('active', '=', True)])[0]
-        
-
-    def import_shop_orders(self, cr, uid, shop, ctx):#FIXME: no guest order support for now: [{'customer_id': {'nlike':False}}]
+    def import_shop_orders(self, cr, uid, shop, defaults, ctx):#FIXME: no guest order support for now: [{'customer_id': {'nlike':False}}]
         magento_shop_id = self.oeid_to_extid(cr, uid, shop.id, shop.referential_id.id, context={})
-        defaults = {'pricelist_id':self._get_pricelist(cr, uid, shop), 'shop_id': shop.id}
-        cr.execute("select ir_model_data.name from sale_order inner join ir_model_data on sale_order.id = ir_model_data.res_id where ir_model_data.model='sale.order' and ir_model_data.external_referential_id NOTNULL order by ir_model_data.write_date DESC;")
-        results = cr.fetchone()
-        last_magento_id = 0
-        if results and len(results) > 0:
-            last_id = results[0].split('sale.order_')[1]
-            last_magento_id = self.pool.get('sale.order').browse(cr, uid, last_id)
-        
-        if shop.is_tax_included:
-            defaults.update({'price_type': 'tax_included'})
-        result = self.pool.get('sale.order').mage_import_base(cr, uid, ctx.get('conn_obj', False), shop.referential_id.id,
+        return self.pool.get('sale.order').mage_import_base(cr, uid, ctx.get('conn_obj', False), shop.referential_id.id,
                                                               defaults=defaults,
-                                                              context={'one_by_one': True, 'ids_or_filter':[{'store_id': {'eq': magento_shop_id}, 'increment_id': {'gt': last_magento_id}}]})
-        return result
-    
+                                                              context={'one_by_one': True, 'ids_or_filter':[{'store_id': {'eq': magento_shop_id}, 'increment_id': {'gt': ctx.get('last_external_id', 0)}}]})
+
 sale_shop()
 
 
