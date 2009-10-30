@@ -25,6 +25,10 @@ import magerp_osv
 
 DEBUG = True
 
+#TODO, may be move that on out CSV mapping, but not sure we can easily
+#see OpenERP sale/sale.py and Magento app/code/core/Mage/Sales/Model/Order.php for details
+ORDER_STATUS_MAPPING = {'draft': 'processing', 'progress': 'processing', 'shipping_except': 'complete', 'invoice_except': 'complete', 'done': 'closed', 'cancel': 'canceled', 'waiting_date': 'holded'}
+
 class sale_shop(magerp_osv.magerp_osv):
     _inherit = "sale.shop"
     
@@ -61,6 +65,13 @@ class sale_shop(magerp_osv.magerp_osv):
         return self.pool.get('sale.order').mage_import_base(cr, uid, ctx.get('conn_obj', False), shop.referential_id.id,
                                                               defaults=defaults,
                                                               context={'one_by_one': True, 'ids_or_filter':[{'store_id': {'eq': magento_shop_id}, 'increment_id': {'gt': ctx.get('last_external_id', 0)}}]})
+
+    def update_shop_orders(self, cr, uid, order, ext_id, ctx):
+        conn = ctx.get('conn_obj', False)
+        status = ORDER_STATUS_MAPPING.get(order.state, False)
+        if status:
+            return conn.call('sales_order.addComment', [ext_id, status, '', True])
+        return True
 
 sale_shop()
 
