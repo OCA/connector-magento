@@ -560,6 +560,7 @@ class product_product(magerp_osv.magerp_osv):
         ir_model_field_ids += self.pool.get('ir.model.fields').search(cr, uid, [('model_id', '=', ir_model_id), ('ttype', '=', 'text')])
         field_names = [str(field.name).startswith('x_') and field.name for field in self.pool.get('ir.model.fields').browse(cr, uid, ir_model_field_ids)]
         attributes = self.read(cr, uid, product.id, field_names, {})
+        del(attributes['id'])
         #TODO: also deal with many2one option fields!
         product_data.update(attributes)
         return product_data
@@ -599,17 +600,28 @@ class product_product(magerp_osv.magerp_osv):
             attr_set_id = context.get('default_set_id', False)
 
         product_data = self.oe_record_to_mage_data(cr, uid, product, context)
-        return [product.virtual_available, 'simple', attr_set_id, sku, product_data]
+        return product_data
     
-    def ext_create(self, cr, uid, data, conn, method, oe_id, context):
-        self.write(cr, uid, oe_id, {'magento_sku': data[3]})
-        res = super(magerp_osv.magerp_osv, self).ext_create(cr, uid, data[1:], conn, method, oe_id, context)
-        conn.call('product_stock.update', [data[3], {'qty':data[0], 'is_in_stock': 1}])
+    def ext_create(self, cr, uid, data, conn, method, oe_id, context):        
+        product = self.browse(cr, uid, oe_id)
+        sku = self.product_to_sku(cr, uid, product)
+        virtual_available = product.virtual_available
+        attr_set_id = product.set and product.set.attribute_set_id or context.get('default_set_id', 1) #TODO check
+        product_type = 'simple'
+
+        res = super(magerp_osv.magerp_osv, self).ext_create(cr, uid, [product_type, attr_set_id, sku, data], conn, method, oe_id, context)
+        self.write(cr, uid, oe_id, {'magento_sku': sku})
+        conn.call('product_stock.update', [sku, {'qty': virtual_available, 'is_in_stock': 1}])
         return res
     
     def ext_update(self, cr, uid, data, conn, method, oe_id, external_id, ir_model_data_id, create_method, context):
-        res = super(magerp_osv.magerp_osv, self).ext_update(cr, uid, data[4], conn, method, oe_id, data[3], ir_model_data_id, create_method, context)
-        conn.call('product_stock.update', [data[3], {'qty':data[0], 'is_in_stock': 1}])
+        product = self.browse(cr, uid, oe_id)
+        sku = self.product_to_sku(cr, uid, product)
+        virtual_available = product.virtual_available
+        attr_set_id = product.set and product.set.attribute_set_id or context.get('default_set_id', 1) #TODO check
+
+        res = super(magerp_osv.magerp_osv, self).ext_update(cr, uid, data, conn, method, oe_id, sku, ir_model_data_id, create_method, context)
+        conn.call('product_stock.update', [sku, {'qty': virtual_available, 'is_in_stock': 1}])
         return res
 
 
