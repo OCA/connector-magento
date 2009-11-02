@@ -283,7 +283,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
                             if field_vals['ttype'] in ['char','text','date','float']:
                                 mapping_line['in_function']= "result =[('" + field_name + "',ifield)]"
                             elif field_vals['ttype'] in ['many2one']:
-                                mapping_line['in_function']= """if ifield:\n\toption_id = self.pool.get('magerp.product_attribute_options').search(cr,uid,[('attribute_id','=',crid),('value','=',ifield)])\n\tif option_id:\n\t\t\tresult = [('"""
+                                mapping_line['in_function']= "if ifield:\n\toption_id = self.pool.get('magerp.product_attribute_options').search(cr,uid,[('attribute_id','=',%s),('value','=',ifield)])\n\tif option_id:\n\t\t\tresult = [('"  % crid
                                 mapping_line['in_function'] += field_name + "',ifield)]"
                             elif field_vals['ttype'] in ['binary']:
                                 print "Binary mapping not done yet :("
