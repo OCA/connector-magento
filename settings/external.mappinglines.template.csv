@@ -31,7 +31,7 @@ result=[('order_policy', ifield in payments_mapping and payments_mapping[ifield]
 "mag_erp_soline_uomqty","magento1324","sale.model_sale_order_line","qty_ordered","in_out","str","result=[('product_uom_qty',ifield)]",
 "mag_erp_soline_uosqty","magento1324","sale.model_sale_order_line","qty_ordered","in","str","result=[('product_uos_qty',ifield)]",
 "mag_erp_soline_price","magento1324","sale.model_sale_order_line","price","in","str","result=[('price_unit',ifield)]",
-"mag_erp_soline_disc","magento1324","sale.model_sale_order_line","discount_amount","in","str","result=[('discount', float(100*float(ifield))/(float(data['price'])*float(data['qty_ordered'])))]",
+"mag_erp_soline_disc","magento1324","sale.model_sale_order_line","discount_amount","in","str","result=[('discount', float(data['price']) != 0 and float(data['qty_ordered']) != 0 and float(100*float(ifield))/(float(data['price'])*float(data['qty_ordered'])) or 0)]",
 "mag_erp_procat_1","magento1324","product.model_product_category","category_id","in","int","result=[('magento_id',ifield)]",
 "mag_erp_procat_2","magento1324","product.model_product_category","level","in","int","result=[('sequence',ifield),('level',ifield)]",
 "mag_erp_procat_3","magento1324","product.model_product_category","parent_id","in_out","int","record_id = self.pool.get('ir.model.data').search(cr, uid, [('model', '=', self._name), ('name', '=', self.prefixed_id(ifield))])
@@ -54,7 +54,8 @@ if magento_parent_id:
 "mag_erp_procat_8","magento1324","product.model_product_category","meta_description","in_out","str","result=[('meta_description',ifield)]","result=[('meta_description',record['meta_description'])]"
 "mag_erp_procat_9","magento1324","product.model_product_category","url_key","in_out","str","result=[('url_key',ifield)]","result=[('url_key',record['url_key'])]"
 "mag_erp_procat_10","magento1324","product.model_product_category","name","in_out","str","result=[('name',ifield),('exportable',True)]","result=[('name',record['name'])]"
-"mag_erp_procat_11","magento1324","product.model_product_category","is_anchor","in_out","str","result=[('is_anchor',bool(eval(ifield)))]","result=[('is_anchor',record['is_anchor'])]"
+"mag_erp_procat_11","magento1324","product.model_product_category","is_anchor","in_out","str","print 'ifield for is_anchor', ifield
+result=[('is_anchor',bool(eval(ifield)))]","result=[('is_anchor',record['is_anchor'])]"
 "mag_erp_procat_12","magento1324","product.model_product_category","available_sort_by","in_out","str","result=[('available_sort_by',ifield)]","result=[('available_sort_by',record['available_sort_by'] or 'name')]"
 "mag_erp_procat_13","magento1324","product.model_product_category","default_sort_by","in_out","str","result=[('default_sort_by',ifield)]","result=[('default_sort_by',record['default_sort_by'] or 'name')]"
 "mag_erp_procat_14","magento1324","product.model_product_category","updated_at","in","str","result=[('magerp_stamp',ifield)]",
