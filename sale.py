@@ -76,12 +76,6 @@ class sale_shop(magerp_osv.magerp_osv):
 sale_shop()
 
 
-class sale_order_line(magerp_osv.magerp_osv):
-    _inherit = "sale.order.line"
-
-sale_order_line()
-
-
 class sale_order(magerp_osv.magerp_osv):
     _inherit = "sale.order"
     
@@ -90,6 +84,10 @@ class sale_order(magerp_osv.magerp_osv):
         'magento_shipping_address_id':fields.integer('Magento Billing Address ID'),
         'magento_customer_id':fields.integer('Magento Customer ID'),
     }
+    
+    def _auto_init(self, cr, context={}):
+        cr.execute("ALTER TABLE sale_order_line ALTER COLUMN discount TYPE numeric(16,6);")
+        super(sale_order, self)._auto_init(cr, context)
     
     def get_order_addresses(self, cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context):
         address_default = {}
