@@ -152,6 +152,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
                                            ('text', 'Text'),
                                            ('textarea', 'Text Area'),
                                            ('select', 'Selection'),
+                                           ('multiselect', 'Multi-Selection'),
                                            ('date', 'Date'),
                                            ('price', 'Price'),
                                            ('media_image', 'Media Image'),
@@ -205,6 +206,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
                         'cost',
                         'set'
                        ]
+
     def create(self, cr, uid, vals, context={}):
         if not vals['attribute_code'] in self._no_create_list:
             field_name = "x_magerp_" + vals['attribute_code']
@@ -218,7 +220,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
                     core_conn = self.pool.get('external.referential').connect(cr, uid, [vals['instance']])
                     self.pool.get('magerp.product_attribute_options').mage_import(cr, uid, [vals['magento_id']], core_conn, vals['instance'], debug=False, defaults={'attribute_id':crid})
                 #Manage fields
-                if vals['attribute_code']:
+                if vals['attribute_code'] and vals.get('frontend_input', False) != 'multiselect':
                     #Code for dynamically generating field name and attaching to this
                     model_id = self.pool.get('ir.model').search(cr, uid, [('model', '=', 'product.product')])
                     type_conversion = {
