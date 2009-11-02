@@ -161,6 +161,7 @@
 				<tree string="Magento Product Attributes">
 					<field name="instance" select="1" />
 					<field name="attribute_code" select="1" />
+					<field name="entity_type_id" />
 					<field name="magento_id" select="1" />
 				</tree>
 			</field>
