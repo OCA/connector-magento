@@ -27,6 +27,7 @@ import base64
 import time
 import magerp_osv
 from tools.translate import _
+import netsvc
 
 
 class product_category(magerp_osv.magerp_osv):
@@ -613,16 +614,30 @@ class product_product(magerp_osv.magerp_osv):
         self.write(cr, uid, oe_id, {'magento_sku': sku})
         conn.call('product_stock.update', [sku, {'qty': virtual_available, 'is_in_stock': 1}])
         return res
+
+    def _export_inventory(self, cr, uid, product, stock_id, logger, ctx):
+        if product.magento_sku and product.type != 'service':
+            virtual_available = self.read(cr, uid, product.id, ['virtual_available'], {'location': stock_id})['virtual_available']
+            ctx['conn_obj'].call('product_stock.update', [product.magento_sku, {'qty': virtual_available, 'is_in_stock': 1}])
+            logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "Successfully updated stock level at %s for product with SKU %s " %(virtual_available, product.magento_sku))
     
-    def ext_update(self, cr, uid, data, conn, method, oe_id, external_id, ir_model_data_id, create_method, context):
+    def ext_update(self, cr, uid, data, conn, method, oe_id, external_id, ir_model_data_id, create_method, ctx):
         product = self.browse(cr, uid, oe_id)
         sku = self.product_to_sku(cr, uid, product)
         virtual_available = product.virtual_available
-        attr_set_id = product.set and product.set.attribute_set_id or context.get('default_set_id', 1) #TODO check
+        attr_set_id = product.set and product.set.attribute_set_id or ctx.get('default_set_id', 1) #TODO check
 
-        res = super(magerp_osv.magerp_osv, self).ext_update(cr, uid, data, conn, method, oe_id, sku, ir_model_data_id, create_method, context)
-        conn.call('product_stock.update', [sku, {'qty': virtual_available, 'is_in_stock': 1}])
+        res = super(magerp_osv.magerp_osv, self).ext_update(cr, uid, data, conn, method, oe_id, sku, ir_model_data_id, create_method, ctx)
+        stock_id = self.pool.get('sale.shop').browse(cr, uid, ctx['shop_id']).warehouse_id.lot_stock_id.id
+        logger = netsvc.Logger()
+        self._export_inventory(cr, uid, product, stock_id, logger, ctx)
         return res
+    
+    def export_inventory(self, cr, uid, ids, shop, ctx):
+        logger = netsvc.Logger()
+        stock_id = self.pool.get('sale.shop').browse(cr, uid, ctx['shop_id']).warehouse_id.lot_stock_id.id
+        for product in self.browse(cr, uid, ids):
+            self._export_inventory(cr, uid, product, stock_id, logger, ctx)
 
 
 product_product()
