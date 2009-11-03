@@ -542,7 +542,7 @@ class product_product(magerp_osv.magerp_osv):
                 'name': product.name,
                 'price' : pricelist_obj.price_get(cr, uid, pl_default_id, product.id, 1.0)[pl_default_id[0]],
                 'weight': (product.weight_net or 0),
-                'category_ids': [categ.category_id for categ in product.categ_ids],
+                'category_ids': [product.categ_id.id],#TODO handle m2m categories too
                 'description' : (product.description or _("description")),
                 'short_description' : (product.description_sale or _("short description")),
                 'websites':['base'],
