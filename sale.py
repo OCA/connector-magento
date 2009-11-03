@@ -21,7 +21,7 @@
 
 from osv import osv, fields
 import magerp_osv
-#from base_external_referentials import external_osv
+import netsvc
 
 DEBUG = True
 
@@ -156,6 +156,19 @@ class sale_order(magerp_osv.magerp_osv):
             if data_record.get('shipping_amount', False) and float(data_record.get('shipping_amount', False)) > 0:
                 res = self.get_order_shipping(cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
 
+        return res
+    
+    def ext_import(self, cr, uid, data, external_referential_id, defaults={}, context={}):
+        res = super(sale_order, self).ext_import(cr, uid, data, external_referential_id, defaults, context)
+        wf_service = netsvc.LocalService("workflow")
+        for order in self.browse(cr, uid, res['create_ids'], context): #TODO complete!
+            print order.shop_id.picking_generation_policy
+            if order.order_policy == 'manual' and order.shop_id.picking_generation_policy != 'none':
+                wf_service.trg_validate(uid, 'sale.order', order.id, 'order_confirm', cr)
+                if order.shop_id.invoice_generation_policy != 'none':
+                    wf_service.trg_validate(uid, 'sale.order', order.id, 'manual_invoice', cr)
+            elif order.order_policy == 'picking' and order.shop_id.picking_generation_policy != 'none':
+                wf_service.trg_validate(uid, 'sale.order', order.id, 'order_confirm', cr)
         return res
 
 sale_order()
