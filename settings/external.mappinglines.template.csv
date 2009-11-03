@@ -47,15 +47,14 @@ if record.get('parent_id',False):
 		magento_parent_id = self.oeid_to_extid(cr, uid, record.get('parent_id')[0], external_referential_id)
 if magento_parent_id:
 	result = [('parent_id',magento_parent_id)]"
-"mag_erp_procat_4","magento1324","product.model_product_category","is_active","in_out","str","result=[('is_active',bool(eval(ifield)))]","result=[('is_active',record['is_active'])]"
+"mag_erp_procat_4","magento1324","product.model_product_category","is_active","in_out","str","result=[('is_active',ifield and (eval(ifield)) or False)]","result=[('is_active',record['is_active'])]"
 "mag_erp_procat_5","magento1324","product.model_product_category","description","in_out","str","result=[('description',ifield)]","result=[('description',record['description'])]"
 "mag_erp_procat_6","magento1324","product.model_product_category","meta_title","in_out","str","result=[('meta_title',ifield)]","result=[('meta_title',record['meta_title'])]"
 "mag_erp_procat_7","magento1324","product.model_product_category","meta_keywords","in_out","str","result=[('meta_keywords',ifield)]","result=[('meta_keywords',record['meta_keywords'])]"
 "mag_erp_procat_8","magento1324","product.model_product_category","meta_description","in_out","str","result=[('meta_description',ifield)]","result=[('meta_description',record['meta_description'])]"
 "mag_erp_procat_9","magento1324","product.model_product_category","url_key","in_out","str","result=[('url_key',ifield)]","result=[('url_key',record['url_key'])]"
 "mag_erp_procat_10","magento1324","product.model_product_category","name","in_out","str","result=[('name',ifield),('exportable',True)]","result=[('name',record['name'])]"
-"mag_erp_procat_11","magento1324","product.model_product_category","is_anchor","in_out","str","print 'ifield for is_anchor', ifield
-result=[('is_anchor',bool(eval(ifield)))]","result=[('is_anchor',record['is_anchor'])]"
+"mag_erp_procat_11","magento1324","product.model_product_category","is_anchor","in_out","str","result=[('is_anchor',ifield and bool(eval(ifield)) or False)]","result=[('is_anchor',record['is_anchor'])]"
 "mag_erp_procat_12","magento1324","product.model_product_category","available_sort_by","in_out","str","result=[('available_sort_by',ifield)]","result=[('available_sort_by',record['available_sort_by'] or 'name')]"
 "mag_erp_procat_13","magento1324","product.model_product_category","default_sort_by","in_out","str","result=[('default_sort_by',ifield)]","result=[('default_sort_by',record['default_sort_by'] or 'name')]"
 "mag_erp_procat_14","magento1324","product.model_product_category","updated_at","in","str","result=[('magerp_stamp',ifield)]",
