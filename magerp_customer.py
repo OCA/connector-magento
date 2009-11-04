@@ -26,9 +26,9 @@ class res_partner_category(magerp_osv.magerp_osv):
     _inherit = "res.partner.category"
     _LIST_METHOD = 'ol_customer_groups.list'
     _columns = {
-                'magento_id':fields.integer('Customer Group ID'),
-                'tax_class_id':fields.integer('Tax Class ID'),
-                'instance':fields.many2one('external.referential', 'Magento Instance', readonly=True, store=True),
+                    'magento_id':fields.integer('Customer Group ID'),
+                    'tax_class_id':fields.integer('Tax Class ID'),
+                    'instance':fields.many2one('external.referential', 'Magento Instance', readonly=True, store=True),
                 }
 res_partner_category()
 
@@ -38,12 +38,14 @@ class res_partner_address(magerp_osv.magerp_osv):
     _LIST_METHOD = 'ol_customer_address.list'
         
     _columns = {
-        'magento_id':fields.integer('Magento ID'),
-        'lastname':fields.char('Last Name', size=100),
-        'exportable':fields.boolean('Export to magento?'),
+                    'magento_id':fields.integer('Magento ID'),
+                    'lastname':fields.char('Last Name', size=100),
+                    'exportable':fields.boolean('Export to magento?'),
+                    'is_magento_order_address':fields.boolean('Magento Order Address?'),
                 }
     _defaults = {
-        'exportable':lambda * a:True
+                    'exportable':lambda * a:True,
+                    'is_magento_order_address': lambda * a:False,
                  }
 res_partner_address()
 
@@ -51,15 +53,15 @@ class res_partner(magerp_osv.magerp_osv):
     _inherit = "res.partner"
     _LIST_METHOD = 'customer.list'
     _columns = {
-        'magento_id':fields.integer('Magento customer ID', readonly=True, store=True),
-        'group_id':fields.many2one('res.partner.category', 'Magento Group(Category)'),
-        'store_id':fields.many2one('magerp.storeviews', 'Store'),
-        'website_id':fields.many2one('external.shop.group', 'Website'),
-        'created_in':fields.char('Created in', size=100),
-        'created_at':fields.datetime('Created Date'),
-        'updated_at':fields.datetime('Updated At'),
-        'emailid':fields.char('Email ID', size=100, help="Magento uses this email ID to correspond to the customer"),
-        'instance':fields.many2one('external.referential', 'Magento Instance', readonly=True, store=True),
+                    'magento_id':fields.integer('Magento customer ID', readonly=True, store=True),
+                    'group_id':fields.many2one('res.partner.category', 'Magento Group(Category)'),
+                    'store_id':fields.many2one('magerp.storeviews', 'Store'),
+                    'website_id':fields.many2one('external.shop.group', 'Website'),
+                    'created_in':fields.char('Created in', size=100),
+                    'created_at':fields.datetime('Created Date'),
+                    'updated_at':fields.datetime('Updated At'),
+                    'emailid':fields.char('Email ID', size=100, help="Magento uses this email ID to correspond to the customer"),
+                    'instance':fields.many2one('external.referential', 'Magento Instance', readonly=True, store=True),
                 }
 
 res_partner()
