@@ -3,7 +3,7 @@
 #Core settings are stored here                                          #
 #########################################################################
 #                                                                       #
-# Copyright (C) 2009  Sharoon Thomas                                    #
+# Copyright (C) 2009  Sharoon Thomas, Raphaël Valyi                     #
 #                                                                       #
 #This program is free software: you can redistribute it and/or modify   #
 #it under the terms of the GNU General Public License as published by   #
@@ -25,7 +25,6 @@ import magerp_osv
 class res_partner_category(magerp_osv.magerp_osv):
     _columns = {
                     'tax_class_id':fields.integer('Tax Class ID'),
-                    'instance':fields.many2one('external.referential', 'Magento Instance', readonly=True, store=True),
                 }
 res_partner_category()
 
@@ -50,7 +49,6 @@ class res_partner(magerp_osv.magerp_osv):
                     'created_at':fields.datetime('Created Date'),
                     'updated_at':fields.datetime('Updated At'),
                     'emailid':fields.char('Email ID', size=100, help="Magento uses this email ID to correspond to the customer"),
-                    'instance':fields.many2one('external.referential', 'Magento Instance', readonly=True, store=True),
                 }
 
 res_partner()

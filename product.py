@@ -62,7 +62,6 @@ class product_category(magerp_osv.magerp_osv):
         'instance':fields.many2one('external.referential', 'Magento Instance', readonly=True, store=True),
         #*************** Magento Fields ********************
         #==== General Information ====
-        'magento_id': fields.integer('Magento category ID', readonly=True, help="If you have created the category from Open ERP this value will be updated once the category is exported"),
         'level': fields.integer('Level', readonly=True),
         'magento_parent_id': fields.integer('Magento Parent', readonly=True), #Key Changed from parent_id
         'is_active': fields.boolean('Active?', help="Indicates whether active in magento"),
@@ -334,14 +333,13 @@ class magerp_product_attribute_set(magerp_osv.magerp_osv):
     _name = "magerp.product_attribute_set"
     _description = "Attribute sets in products"
     _rec_name = 'attribute_set_name'
-    _LIST_METHOD = 'ol_catalog_product_attributeset.list'
+    
     _columns = {
-        'magento_id':fields.integer('ID'),
         'sort_order':fields.integer('Sort Order'),
         'attribute_set_name':fields.char('Set Name', size=100),
         'attributes':fields.many2many('magerp.product_attributes', 'magerp_attrset_attr_rel', 'set_id', 'attr_id', 'Attributes'),
-        'instance':fields.many2one('external.referential', 'Magento Instance', readonly=True, store=True),
-                }
+        }
+
     def relate(self, cr, uid, mage_inp, instance, *args):
         #TODO: Build the relations code
         #Note: It is better to insert multiple record by cr.execute because:
@@ -392,8 +390,7 @@ class magerp_product_attribute_groups(magerp_osv.magerp_osv):
     _name = "magerp.product_attribute_groups"
     _description = "Attribute groups in Magento"
     _rec_name = 'attribute_group_name'
-    _order = 'sort_order'
-    _LIST_METHOD = 'ol_catalog_product_attribute_group.list'
+
     def set_get(self, cr, uid, ids, context=None):
         if not len(ids):
             return []
@@ -410,7 +407,6 @@ class magerp_product_attribute_groups(magerp_osv.magerp_osv):
         return dict(res) 
     
     _columns = {
-        'magento_id':fields.integer('Group ID'),
         'attribute_set_id':fields.integer('Attribute Set ID'),
         'attribute_set':fields.function(_get_set, type="many2one", relation="magerp.product_attribute_set", method=True, string="Attribute Set"),
         'attribute_group_name':fields.char('Group Name', size=100),
