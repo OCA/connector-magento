@@ -24,12 +24,16 @@ from osv import osv, fields
 import magerp_osv
 
 class res_partner_category(magerp_osv.magerp_osv):
+    _inherit = "res.partner.category"
+    
     _columns = {
                     'tax_class_id':fields.integer('Tax Class ID'),
                 }
 res_partner_category()
 
 class res_partner_address(magerp_osv.magerp_osv):
+    _inherit = "res.partner.address"
+    
     _columns = {
                     'lastname':fields.char('Last Name', size=100),
                     'exportable':fields.boolean('Export to magento?'),
@@ -42,6 +46,8 @@ class res_partner_address(magerp_osv.magerp_osv):
 res_partner_address()
 
 class res_partner(magerp_osv.magerp_osv):
+    _inherit = "res.partner"
+    
     _columns = {
                     'group_id':fields.many2one('res.partner.category', 'Magento Group(Category)'),
                     'store_id':fields.many2one('magerp.storeviews', 'Store'),
