@@ -34,19 +34,19 @@ import netsvc
 class product_category(magerp_osv.magerp_osv):
     _inherit = "product.category"
     
-    def name_get(self, cr, uid, ids, context=None):
-        if not len(ids):
-            return []
-        reads = self.read(cr, uid, ids, ['name', 'parent_id', 'instance'], context)
-        res = []
-        for record in reads:
-            name = record['name']
-            if record['parent_id']:
-                name = record['parent_id'][1] + ' / ' + name
-            if record['instance'] and not record['parent_id']:
-                name = "[" + record['instance'][1] + "] " + name 
-            res.append((record['id'], name))
-        return res
+#    def name_get(self, cr, uid, ids, context=None):
+#        if not len(ids):
+#            return []
+#        reads = self.read(cr, uid, ids, ['name', 'parent_id', 'instance'], context)
+#        res = []
+#        for record in reads:
+#            name = record['name']
+#            if record['parent_id']:
+#                name = record['parent_id'][1] + ' / ' + name
+#            if record['instance'] and not record['parent_id']:
+#                name = "[" + record['instance'][1] + "] " + name 
+#            res.append((record['id'], name))
+#        return res
 
     def _name_get_fnc(self, cr, uid, ids, prop, unknow_none, context):
         res = self.name_get(cr, uid, ids, context)
@@ -319,7 +319,7 @@ class magerp_product_attribute_options(magerp_osv.magerp_osv):
         'value':fields.char('Value', size=200),
         'ipcast':fields.char('Type cast', size=50),
         'label':fields.char('Label', size=100),
-        'instance':fields.many2one('external.referential', 'Magento Instance', readonly=True, store=True),
+        'instance':fields.many2one('external.referential', 'Magento Instance', readonly=True),
                 }
     def get_option_id(self, cr, uid, attr_name, value, instance):
         attr_id = self.search(cr, uid, [('attribute_name', '=', attr_name), ('value', '=', value), ('instance', '=', instance)])
@@ -338,6 +338,7 @@ class magerp_product_attribute_set(magerp_osv.magerp_osv):
         'sort_order':fields.integer('Sort Order'),
         'attribute_set_name':fields.char('Set Name', size=100),
         'attributes':fields.many2many('magerp.product_attributes', 'magerp_attrset_attr_rel', 'set_id', 'attr_id', 'Attributes'),
+	'instance':fields.many2one('external.referential', 'Magento Instance', readonly=True),
         }
 
     def relate(self, cr, uid, mage_inp, instance, *args):
@@ -434,7 +435,7 @@ class product_tierprice(osv.osv):
         'price':fields.float('Price', digits=(10, 2),),
         'price_qty':fields.float('Quantity Slab', digits=(10, 4), help="Slab & above eg.For 10 and above enter 10"),
         'product':fields.many2one('product.product', 'Product'),
-        'instance':fields.many2one('external.referential', 'Magento Instance', readonly=True, store=True),
+        'instance':fields.many2one('external.referential', 'Magento Instance', readonly=True),
                 }
     _mapping = {
         'cust_group':(False, int, """result=self.pool.get('res.partner.category').mage_to_oe(cr,uid,cust_group,instance)\nif result:\n\tresult=[('cust_group',result[0])]\nelse:\n\tresult=[('cust_group',False)]"""),
