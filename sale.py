@@ -98,13 +98,20 @@ class sale_order(magerp_osv.magerp_osv):
         #avoid the base_external_referentials framework to try to update existing partner addresses
         data_record['billing_address'].update({'magento_id': 'mag_order' + str(data_record['billing_address']['customer_address_id']), 'is_magento_order_address': True})
         data_record['shipping_address'].update({'magento_id': 'mag_order' + str(data_record['shipping_address']['customer_address_id']), 'is_magento_order_address': True})
-        address_default = {}
+        shipping_default = {}
+	billing_default = {}
         if res.get('parter_id', False):
-            address_default = {'parter_id': res.get('parter_id', False)}
+            shipping_default = {'parter_id': res.get('parter_id', False)}
+        billing_default = shipping_default.copy()
+        billing_default.update({'email' : data_record.get('customer_email', False)})
+
+        print 'billing adresse', 'shipping adresse', data_record['billing_address'], data_record['shipping_address']
+        print 'billing default', 'shipping default', billing_default, shipping_default
+
         inv_res = self.pool.get('res.partner.address').ext_import(cr, uid, [data_record['billing_address']], 
-                                                                  external_referential_id, address_default, context)
+                                                                  external_referential_id, billing_default, context)
         ship_res = self.pool.get('res.partner.address').ext_import(cr, uid, [data_record['shipping_address']], 
-                                                                  external_referential_id, address_default, context)
+                                                                  external_referential_id, shipping_default, context)
 
         res['partner_order_id'] = len(inv_res['create_ids']) > 0 and inv_res['create_ids'][0] or inv_res['write_ids'][0]
         res['partner_invoice_id'] = res['partner_order_id']
