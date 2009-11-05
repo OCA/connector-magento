@@ -249,15 +249,15 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
                         #Check if field already exists
                         referential_id = context.get('referential_id',False)
                         field_ids = self.pool.get('ir.model.fields').search(cr, uid, [('name', '=', field_name), ('model_id', '=', model_id)])
+                        field_vals = {
+                                        'name':field_name,
+                                        'model_id':model_id,
+                                        'model':'product.product',
+                                        'field_description':vals.get('frontend_label', False) or vals['attribute_code'],
+                                        'ttype':type_conversion[vals.get('frontend_input', False)],
+                                      }
                         if not field_ids:
                             #The field is not there create it
-                            field_vals = {
-                                'name':field_name,
-                                'model_id':model_id,
-                                'model':'product.product',
-                                'field_description':vals.get('frontend_label', False) or vals['attribute_code'],
-                                'ttype':type_conversion[vals.get('frontend_input', False)],
-                                          }
                             #IF char add size
                             if field_vals['ttype'] == 'char':
                                 field_vals['size'] = 100
@@ -288,23 +288,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
                                 print "Binary mapping not done yet :("
                             self.pool.get('external.mapping.line').create(cr,uid,mapping_line)
         return crid
-    
-    def rebuild_view(self,cr,uid):
-        print "This function is not implemented yet"
-        #In the page for magento information, first create two field
-        #Field 1:instance (Informational & not limiting) & Field 2:Set
-        """Add field instance"""
-        """Add field set"""
-        #create a new notebook
-        """
-        for each_set attribute_set
-               for each_group in attribute_set:
-                    create page with attrs={'invisible':[('set','!=',each_set)]}
-                    for each_mage_attribute in each_group:
-                        check if field is not in _no_create_list
-                            get the field_name for attribute & add it
-        save the xml to form view 
-        """
+
 magerp_product_attributes()
 
 class magerp_product_attribute_options(magerp_osv.magerp_osv):
@@ -338,7 +322,8 @@ class magerp_product_attribute_set(magerp_osv.magerp_osv):
         'sort_order':fields.integer('Sort Order'),
         'attribute_set_name':fields.char('Set Name', size=100),
         'attributes':fields.many2many('magerp.product_attributes', 'magerp_attrset_attr_rel', 'set_id', 'attr_id', 'Attributes'),
-	'instance':fields.many2one('external.referential', 'Magento Instance', readonly=True),
+        'instance':fields.many2one('external.referential', 'Magento Instance', readonly=True),
+        'magento_id':fields.integer('Magento ID'),
         }
 
     def relate(self, cr, uid, mage_inp, instance, *args):
@@ -527,6 +512,25 @@ class product_product(magerp_osv.magerp_osv):
             self.create_tier_price(cr, uid, tier_price, instance, crid)
         #Perform other operations
         return crid
+
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context={}, toolbar=False):
+        result = super(osv.osv, self).fields_view_get(cr, uid, view_id,view_type,context,toolbar=toolbar)
+        if view_type == 'form':
+            ir_model_id = self.pool.get('ir.model').search(cr, uid, [('model', '=', 'product.product')])[0]
+            ir_model = self.pool.get('ir.model').browse(cr, uid, ir_model_id)
+            ir_model_field_ids = self.pool.get('ir.model.fields').search(cr, uid, [('model_id', '=', ir_model_id)])
+            field_names = []
+            for fields in self.pool.get('ir.model.fields').browse(cr, uid, ir_model_field_ids):
+                if str(field.name).startswith('x_'):
+                    field_names.append(field.name)
+            field_tags = ""
+            for field_name in field_names:
+                if field_name:
+                    field_tags += '<field name="%s" />\n' % field_name
+            result['fields'].update(self.fields_get(cr, uid, field_names, context))
+            #TODO this insert all product attributes; we could probably tweak the visibility depending on the product attribute set...
+            result['arch'] = result['arch'].replace('<page string="attributes_placeholder"/>', """<page string="Magento Information" attrs="{'invisible':[('exportable','!=',1)]}">\n%s\n</page>""" % field_tags)
+	return result
     
     #TODO move part of this to declarative mapping CSV template
     def oe_record_to_mage_data(self, cr, uid, product, context={}):
@@ -555,7 +559,10 @@ class product_product(magerp_osv.magerp_osv):
         ir_model_field_ids += self.pool.get('ir.model.fields').search(cr, uid, [('model_id', '=', ir_model_id), ('ttype', '=', 'int')])
         ir_model_field_ids += self.pool.get('ir.model.fields').search(cr, uid, [('model_id', '=', ir_model_id), ('ttype', '=', 'float')])
         ir_model_field_ids += self.pool.get('ir.model.fields').search(cr, uid, [('model_id', '=', ir_model_id), ('ttype', '=', 'text')])
-        field_names = [str(field.name).startswith('x_') and field.name for field in self.pool.get('ir.model.fields').browse(cr, uid, ir_model_field_ids)]
+        field_names = []
+        for fields in self.pool.get('ir.model.fields').browse(cr, uid, ir_model_field_ids):
+            if str(field.name).startswith('x_'):
+                field_names.append(field.name)
         attributes = self.read(cr, uid, product.id, field_names, {})
         del(attributes['id'])
         #TODO: also deal with many2one option fields!

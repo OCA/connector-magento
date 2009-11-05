@@ -224,8 +224,7 @@
 			<field name="type">form</field>
 			<field name="arch" type="xml">
 				<xpath expr="/form/notebook" position="inside">
-					<page string="Magento Information" attrs="{'invisible':[('exportable','!=',1)]}">
-					</page>
+					<page string="attributes_placeholder"/>
 				</xpath>
 			</field>
 		</record>
