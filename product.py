@@ -520,7 +520,7 @@ class product_product(magerp_osv.magerp_osv):
             ir_model = self.pool.get('ir.model').browse(cr, uid, ir_model_id)
             ir_model_field_ids = self.pool.get('ir.model.fields').search(cr, uid, [('model_id', '=', ir_model_id)])
             field_names = []
-            for fields in self.pool.get('ir.model.fields').browse(cr, uid, ir_model_field_ids):
+            for field in self.pool.get('ir.model.fields').browse(cr, uid, ir_model_field_ids):
                 if str(field.name).startswith('x_'):
                     field_names.append(field.name)
             field_tags = ""
@@ -560,7 +560,7 @@ class product_product(magerp_osv.magerp_osv):
         ir_model_field_ids += self.pool.get('ir.model.fields').search(cr, uid, [('model_id', '=', ir_model_id), ('ttype', '=', 'float')])
         ir_model_field_ids += self.pool.get('ir.model.fields').search(cr, uid, [('model_id', '=', ir_model_id), ('ttype', '=', 'text')])
         field_names = []
-        for fields in self.pool.get('ir.model.fields').browse(cr, uid, ir_model_field_ids):
+        for field in self.pool.get('ir.model.fields').browse(cr, uid, ir_model_field_ids):
             if str(field.name).startswith('x_'):
                 field_names.append(field.name)
         attributes = self.read(cr, uid, product.id, field_names, {})
