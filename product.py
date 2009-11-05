@@ -1,9 +1,10 @@
+# -*- encoding: utf-8 -*-
 #########################################################################
 #This module intergrates Open ERP with the magento core                 #
 #Core settings are stored here                                          #
 #########################################################################
 #                                                                       #
-# Copyright (C) 2009  Sharoon Thomas                                    #
+# Copyright (C) 2009  Sharoon Thomas, Raphaël Valyi                     #
 #                                                                       #
 #This program is free software: you can redistribute it and/or modify   #
 #it under the terms of the GNU General Public License as published by   #
@@ -411,7 +412,6 @@ class magerp_product_attribute_groups(magerp_osv.magerp_osv):
         'attribute_group_name':fields.char('Group Name', size=100),
         'sort_order':fields.integer('Sort Order'),
         'default_id':fields.integer('Default'),
-        'instance':fields.many2one('external.referential', 'Magento Instance', readonly=True, store=True),
                 }
 magerp_product_attribute_groups()
 
