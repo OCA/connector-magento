@@ -23,8 +23,6 @@ from osv import osv, fields
 import magerp_osv
 
 class res_partner_category(magerp_osv.magerp_osv):
-    _inherit = "res.partner.category"
-    _LIST_METHOD = 'ol_customer_groups.list'
     _columns = {
                     'magento_id':fields.integer('Customer Group ID'),
                     'tax_class_id':fields.integer('Tax Class ID'),
