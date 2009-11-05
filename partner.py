@@ -33,10 +33,6 @@ class res_partner_category(magerp_osv.magerp_osv):
 res_partner_category()
 
 class res_partner_address(magerp_osv.magerp_osv):
-    _inherit = "res.partner.address"
-    _MAGE_FIELD = 'magento_id'
-    _LIST_METHOD = 'ol_customer_address.list'
-        
     _columns = {
                     'magento_id':fields.integer('Magento ID'),
                     'lastname':fields.char('Last Name', size=100),
@@ -50,8 +46,6 @@ class res_partner_address(magerp_osv.magerp_osv):
 res_partner_address()
 
 class res_partner(magerp_osv.magerp_osv):
-    _inherit = "res.partner"
-    _LIST_METHOD = 'customer.list'
     _columns = {
                     'magento_id':fields.integer('Magento customer ID', readonly=True, store=True),
                     'group_id':fields.many2one('res.partner.category', 'Magento Group(Category)'),
