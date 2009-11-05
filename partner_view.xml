@@ -24,7 +24,6 @@
 			<field name="arch" type="xml">
 				<field name="parent_id" position="after">
 					<separator string="Magento Information" colspan="4" />
-					<field name="magento_id" select="1" readonly="1" />
 					<field name="tax_class_id" select="1" />
 					<field name="instance" />
 				</field>
@@ -49,7 +48,6 @@
 			<field name="arch" type="xml">
 				<field name="email" position="after">
 					<separator string="Magento Specific Info" colspan="4" />
-					<field name="magento_id" colspan="2" readonly="1" />
 					<field name="exportable" colspan="2" />
 				</field>
 			</field>
