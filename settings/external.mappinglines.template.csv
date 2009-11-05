@@ -32,7 +32,6 @@ result=[('order_policy', ifield in payments_mapping and payments_mapping[ifield]
 "mag_erp_soline_uosqty","magento1324","sale.model_sale_order_line","qty_ordered","in","str","result=[('product_uos_qty',ifield)]",
 "mag_erp_soline_price","magento1324","sale.model_sale_order_line","price","in","str","result=[('price_unit', float(data['row_total'])/float(data['qty_ordered']))]",
 "mag_erp_soline_disc","magento1324","sale.model_sale_order_line","discount_amount","in","str","result=[('discount', float(data['price']) != 0 and float(data['qty_ordered']) != 0 and float(100*float(ifield))/(float(data['price'])*float(data['qty_ordered'])) or 0)]",
-"mag_erp_procat_1","magento1324","product.model_product_category","category_id","in","int","result=[('magento_id',ifield)]",
 "mag_erp_procat_2","magento1324","product.model_product_category","level","in","int","result=[('sequence',ifield),('level',ifield)]",
 "mag_erp_procat_3","magento1324","product.model_product_category","parent_id","in_out","int","record_id = self.pool.get('ir.model.data').search(cr, uid, [('model', '=', self._name), ('name', '=', self.prefixed_id(ifield))])
 parent_id = False
@@ -117,9 +116,7 @@ else:
 "mag_erp_prd_9","magento1324","product.model_product_product","cost","in_out","float","result=[('standard_price',ifield)]",
 "mag_erp_prd_10","magento1324","product.model_product_product","set","in_out","str","result=[]",
 "magento_cst_grp_1","magento1324","base.model_res_partner_category","customer_group_code","in","str","result=[('name',ifield)]",
-"magento_cst_grp_2","magento1324","base.model_res_partner_category","customer_group_id","in","int","result=[('magento_id',ifield)]",
 "magento_cst_grp_3","magento1324","base.model_res_partner_category","tax_class_id","in","int","result=[('tax_class_id',ifield)]",
-"magento_prt_adr_1","magento1324","base.model_res_partner_address","entity_id","in_out","int","result=[('magento_id',ifield)]",
 "magento_prt_adr_2","magento1324","base.model_res_partner_address","city","in_out","str","result=[('city',ifield)]",
 "magento_prt_adr_3","magento1324","base.model_res_partner_address","fax","in_out","str","result=[('fax',ifield)]",
 "magento_prt_adr_4","magento1324","base.model_res_partner_address","firstname","in_out","str","result=[('name',ifield)]",
