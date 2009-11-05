@@ -118,7 +118,7 @@ class external_referential(magerp_osv.magerp_osv):
             filter = [{'attribute_set_id':{'in':attrset_ids}}]
             if attr_conn:
                 #self.pool.get('magerp.product_attribute_groups').mage_import(cr, uid, filter, attr_conn, inst.id, DEBUG)
-                self.pool.get('magerp.product_attribute_groups').mage_import_base(cr, uid, attr_conn, inst.id, {'instance':inst.id}, {'ids_or_filter':filter})
+                self.pool.get('magerp.product_attribute_groups').mage_import_base(cr, uid, attr_conn, inst.id, {}, {'ids_or_filter':filter})
             else:
                 osv.except_osv(_("Connection Error"), _("Could not connect to server\nCheck location, username & password."))
     
@@ -129,7 +129,7 @@ class external_referential(magerp_osv.magerp_osv):
             filter = []
             if attr_conn:
                 #self.pool.get('res.partner.category').mage_import(cr, uid, filter, attr_conn, inst.id, DEBUG)
-                self.pool.get('res.partner.category').mage_import_base(cr, uid, attr_conn, inst.id, {'instance':inst.id}, {'ids_or_filter':filter})
+                self.pool.get('res.partner.category').mage_import_base(cr, uid, attr_conn, inst.id, {}, {'ids_or_filter':filter})
             else:
                 osv.except_osv(_("Connection Error"), _("Could not connect to server\nCheck location, username & password."))
     
@@ -141,7 +141,7 @@ class external_referential(magerp_osv.magerp_osv):
             if attr_conn:
                 #self.pool.get('res.partner').mage_import(cr, uid, filter, attr_conn, inst.id, DEBUG)
                 #TODO fix by retrieving customer list first
-                self.pool.get('res.partner.address').mage_import_base(cr, uid, attr_conn, inst.id, {'referential_id':inst.id}, {'ids_or_filter':filter})
+                self.pool.get('res.partner.address').mage_import_base(cr, uid, attr_conn, inst.id, {}, {'ids_or_filter':filter})
             else:
                 osv.except_osv(_("Connection Error"), _("Could not connect to server\nCheck location, username & password."))
     
@@ -157,7 +157,7 @@ class external_referential(magerp_osv.magerp_osv):
                 for each in list_prods:
                     each_product_info = attr_conn.call('catalog_product.info', [each['product_id']])
                     result.append(each_product_info)
-                self.pool.get('product.product').ext_import(cr, uid, result, inst.id, defaults={'instance':inst.id,'categ_id':inst.default_pro_cat.id}, context={})
+                self.pool.get('product.product').ext_import(cr, uid, result, inst.id, defaults={'categ_id':inst.default_pro_cat.id}, context={})
             else:
                 osv.except_osv(_("Connection Error"), _("Could not connect to server\nCheck location, username & password."))                        
     def redefine_prod_view(self,cr,uid,ids,ctx):
