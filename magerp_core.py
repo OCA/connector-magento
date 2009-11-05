@@ -31,8 +31,8 @@ class external_referential(magerp_osv.magerp_osv):
     _inherit = "external.referential"
 
     _columns = {
-        'attribute_sets':fields.one2many('magerp.product_attribute_set', 'instance', 'Attribute Sets'),
-        'default_pro_cat':fields.many2one('product.category','Default Product Category',required=True, help="Products imported from magento may have many categories.\nOpen ERP requires a specific category for a product to facilitate invoicing etc.")
+	'attribute_sets':fields.one2many('magerp.product_attribute_set', 'instance', 'Attribute Sets'),
+        'default_pro_cat':fields.many2one('product.category','Default Product Category',required=True, help="Products imported from magento may have many categories.\nOpenERP requires a specific category for a product to facilitate invoicing etc.")
     }
 
              

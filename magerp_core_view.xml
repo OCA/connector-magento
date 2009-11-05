@@ -13,8 +13,20 @@
 					<group col="4" colspan="4">
 						<separator string="Core Components" colspan="4" />
 						<notebook colspan="4">
+							<page string="Referential Actions">
+								<button name="sync_categs" string="Import Product Categories" colspan="2" type="object" />
+								<button name="sync_attribs" string="Import Product Attributes" colspan="2" type="object" />
+								<button name="sync_attrib_sets" string="Import Product Attribute Sets" colspan="2" type="object" />
+								<button name="sync_attrib_groups" string="Import Attribute Groups" colspan="2" type="object" />
+								<button name="sync_customer_groups" string="Import Customer Groups (Partner Categories)" colspan="2" type="object" />
+								<newline />
+								<field name="default_pro_cat" />
+								<button name="sync_products" string="Import Products" colspan="2" type="object" />
+<!--								<button name="sync_customer_addresses" string="Sync Customer Addresses" colspan="2" type="object" />-->
+<!--								<button name="export_products" string="Export Products" colspan="2" type="object" />-->
+							</page>
 							<page string="Websites">
-								<field name="entity_ids" nolabel="1" />
+								<field name="shop_group_ids" nolabel="1" />
 							</page>
 							<!--							<page string="Store Views">
 								<field name="storeviews" nolabel="1" />
@@ -23,19 +35,8 @@
 									<field name="shop_ids" nolabel="1" />
 														</page>-->
 							<page string="Product Attributes / Sets">
-								<field name="default_pro_cat" colspan="4"/>
 								<newline />
 								<field name="attribute_sets" nolabel="1" colspan="4"/>
-							</page>
-							<page string="Actions">
-								<button name="sync_categs" string="Import Product Categories" colspan="2" type="object" />
-								<button name="sync_attribs" string="Import Product Attributes" colspan="2" type="object" />
-								<button name="sync_attrib_sets" string="Import Product Attribute Sets" colspan="2" type="object" />
-								<button name="sync_attrib_groups" string="Import Attribute Groups" colspan="2" type="object" />
-								<button name="sync_customer_groups" string="Import Customer Groups (Partner Categories)" colspan="2" type="object" />
-								<button name="sync_products" string="Import Products" colspan="2" type="object" />
-<!--								<button name="sync_customer_addresses" string="Sync Customer Addresses" colspan="2" type="object" />-->
-<!--								<button name="export_products" string="Export Products" colspan="2" type="object" />-->
 							</page>
 						</notebook>
 					</group>
