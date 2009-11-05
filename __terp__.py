@@ -30,7 +30,7 @@
             'magerp_data.xml',
             'settings/external.referential.type.csv',
             'magerp_core_view.xml',
-            'magerp_product_view.xml',
+            'product_view.xml',
             'partner_view.xml',
             'magerp_menu.xml',
             'settings/external.mapping.template.csv',

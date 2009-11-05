@@ -16,7 +16,7 @@
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.  #
 #########################################################################
 import magerp_core
-import magerp_product
+import product
 import partner
 import sale
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
