@@ -24,7 +24,6 @@ import magerp_osv
 
 class res_partner_category(magerp_osv.magerp_osv):
     _columns = {
-                    'magento_id':fields.integer('Customer Group ID'),
                     'tax_class_id':fields.integer('Tax Class ID'),
                     'instance':fields.many2one('external.referential', 'Magento Instance', readonly=True, store=True),
                 }
@@ -32,7 +31,6 @@ res_partner_category()
 
 class res_partner_address(magerp_osv.magerp_osv):
     _columns = {
-                    'magento_id':fields.integer('Magento ID'),
                     'lastname':fields.char('Last Name', size=100),
                     'exportable':fields.boolean('Export to magento?'),
                     'is_magento_order_address':fields.boolean('Magento Order Address?'),
@@ -45,7 +43,6 @@ res_partner_address()
 
 class res_partner(magerp_osv.magerp_osv):
     _columns = {
-                    'magento_id':fields.integer('Magento customer ID', readonly=True, store=True),
                     'group_id':fields.many2one('res.partner.category', 'Magento Group(Category)'),
                     'store_id':fields.many2one('magerp.storeviews', 'Store'),
                     'website_id':fields.many2one('external.shop.group', 'Website'),
