@@ -51,6 +51,13 @@ class sale_shop(magerp_osv.magerp_osv):
             else:
                 res[shop.id] = False
         return res
+    
+    def _get_exportable_root_category_ids(self, cr, uid, ids, prop, unknow_none, context):
+        res = {}
+        res1 = self._get_rootcategory(cr, uid, ids, prop, unknow_none, context)
+        for shop in self.browse(cr, uid, ids, context):
+            res[shop.id] = [res1[shop.id]]
+        return res
 
     _columns = {
         'default_store_id':fields.integer('Magento Store ID'), #Many 2 one ?
@@ -58,6 +65,7 @@ class sale_shop(magerp_osv.magerp_osv):
         'group_id':fields.integer('Magento ID'),
         'root_category_id':fields.integer('Root product Category'),
         'magento_root_category':fields.function(_get_rootcategory, type="many2one", relation="product.category", method=True, string="Root Category", store=True),
+        'exportable_root_category_ids': fields.function(_get_exportable_root_category_ids, type="many2many", relation="product.category", method=True, string="Root Category"), #fields.function(_get_exportable_root_category_ids, type="many2one", relation="product.category", method=True, 'Exportable Root Categories'),
     }   
 
     def import_shop_orders(self, cr, uid, shop, defaults, ctx):#FIXME: no guest order support for now: [{'customer_id': {'nlike':False}}]
