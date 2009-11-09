@@ -443,9 +443,7 @@ class product_product(magerp_osv.magerp_osv):
         'set':fields.many2one('magerp.product_attribute_set', 'Attribute Set'),
         'tier_price':fields.one2many('product.tierprice', 'product', 'Tier Price'),
         }
-    _mapping = {
-        'product_id':('magento_id', int)
-                }
+
     _defaults = {
         'exportable':lambda * a:True
                  }
@@ -537,13 +535,13 @@ class product_product(magerp_osv.magerp_osv):
         product = self.browse(cr, uid, data_record['id'], context)
         shop = self.pool.get('sale.shop').browse(cr, uid, context['shop_id'], context)
         pl_default_id = shop.pricelist_id and shop.pricelist_id.id or self.pool.get('product.pricelist').search(cr, uid, [('type', '=', 'sale')])
-        main_categ_id = product.categ_id.oeid_to_extid(cr, uid, id, external_referential_id, context)
+        main_categ_id = self.pool.get('product.category').oeid_to_extid(cr, uid, product.categ_id.id, external_referential_id, context)
         if not main_categ_id:
             main_categ_id = magento_root_category
         
         product_data = { #TODO refactor that using existing mappings? Add extra attributes?
                 'name': product.name,
-                'price' : pricelist_obj.price_get(cr, uid, pl_default_id, product.id, 1.0)[pl_default_id[0]],
+                'price' : self.pool.get('product.pricelist').price_get(cr, uid, pl_default_id, product.id, 1.0)[pl_default_id[0]],
                 'weight': (product.weight_net or 0),
                 'category_ids': [main_categ_id],#TODO handle m2m categories too
                 'description' : (product.description or _("description")),

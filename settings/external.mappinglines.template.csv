@@ -73,7 +73,6 @@ result=[('image_name',ifield),('image',image_binary)]","if record['image']:
 	result = [('image',record['image_name'])]
 else:
 	result=[]"
-"mag_erp_attrgrp_1","magento1324","model_magerp_product_attribute_groups","attribute_group_id","in","int","result=[('magento_id', ifield)]","result=[('attribute_group_id', record['magento_id'])]"
 "mag_erp_attrgrp_2","magento1324","model_magerp_product_attribute_groups","attribute_set_id","in_out","int","result=[('attribute_set_id', ifield)]","result=[('attribute_set_id', record['attribute_set_id'])]"
 "mag_erp_attrgrp_3","magento1324","model_magerp_product_attribute_groups","attribute_group_name","in_out","str","result=[('attribute_group_name', ifield)]","result=[('attribute_group_name', record['attribute_group_name'])]"
 "mag_erp_attrgrp_4","magento1324","model_magerp_product_attribute_groups","sort_order","in_out","int","result=[('sort_order', ifield)]","result=[('sort_order', record['sort_order'])]"
@@ -105,7 +104,6 @@ else:
 "mag_erp_attr_22","magento1324","model_magerp_product_attributes","default_value","in_out","str","result=[('default_value', ifield)]","result=[('default_value', record['default_value'])]"
 "mag_erp_attr_23","magento1324","model_magerp_product_attributes","note","in_out","str","result=[('note', ifield)]","result=[('note', record['note'])]"
 "mag_erp_attr_24","magento1324","model_magerp_product_attributes","entity_type_id","in_out","int","result=[('entity_type_id', ifield)]","result=[('entity_type_id', record['entity_type_id'])]"
-"mag_erp_prd_1","magento1324","product.model_product_product","product_id","in_out","int","result = [('magento_id',ifield)]",
 "mag_erp_prd_2","magento1324","product.model_product_product","name","in_out","str","result = [('name',ifield)]",
 "mag_erp_prd_3","magento1324","product.model_product_product","description","in_out","str","result = [('description',ifield)]",
 "mag_erp_prd_4","magento1324","product.model_product_product","short_description","in_out","str","result = [('description_sale',ifield)]",
