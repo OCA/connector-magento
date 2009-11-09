@@ -533,14 +533,19 @@ class product_product(magerp_osv.magerp_osv):
 	return result
     
     #TODO move part of this to declarative mapping CSV template
-    def oe_record_to_mage_data(self, cr, uid, product, context={}):
-        pricelist_obj = self.pool.get('product.pricelist')
-        pl_default_id = pricelist_obj.search(cr, uid, [('type', '=', 'sale')]) #TODO pricelist_obj.search(cr, uid, [('magento_default', '=', True)])
+    def extdata_from_oevals(self, cr, uid, external_referential_id, data_record, mapping_lines, defaults, context):
+        product = self.browse(cr, uid, data_record['id'], context)
+        shop = self.pool.get('sale.shop').browse(cr, uid, context['shop_id'], context)
+        pl_default_id = shop.pricelist_id and shop.pricelist_id.id or self.pool.get('product.pricelist').search(cr, uid, [('type', '=', 'sale')])
+        main_categ_id = product.categ_id.oeid_to_extid(cr, uid, id, external_referential_id, context)
+        if not main_categ_id:
+            main_categ_id = magento_root_category
+        
         product_data = { #TODO refactor that using existing mappings? Add extra attributes?
                 'name': product.name,
                 'price' : pricelist_obj.price_get(cr, uid, pl_default_id, product.id, 1.0)[pl_default_id[0]],
                 'weight': (product.weight_net or 0),
-                'category_ids': [product.categ_id.id],#TODO handle m2m categories too
+                'category_ids': [main_categ_id],#TODO handle m2m categories too
                 'description' : (product.description or _("description")),
                 'short_description' : (product.description_sale or _("short description")),
                 'websites':['base'],
@@ -592,19 +597,6 @@ class product_product(magerp_osv.magerp_osv):
                 break
         context['default_set_id'] = default_set_id
         return super(magerp_osv.magerp_osv, self).ext_export(cr, uid, ids, external_referential_ids, defaults, context)
-
-    #TODO mapp all attributes
-    def extdata_from_oevals(self, cr, uid, external_referential_id, data_record, mapping_lines, defaults, context):
-        product = self.browse(cr, uid, data_record['id'])
-        sku = self.product_to_sku(cr, uid, product)
-        
-        if product.set and product.set.attribute_set_id:
-            attr_set_id = product.set.attribute_set_id.id
-        else:
-            attr_set_id = context.get('default_set_id', False)
-
-        product_data = self.oe_record_to_mage_data(cr, uid, product, context)
-        return product_data
     
     def _export_inventory(self, cr, uid, product, stock_id, logger, ctx):
         if product.magento_sku and product.type != 'service':
