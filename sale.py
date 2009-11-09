@@ -104,8 +104,8 @@ class sale_order(magerp_osv.magerp_osv):
         #Magento uses to create same addresses over and over, try to detect if customer already have such an address (Magento won't tell it!)
         #We also create new addresses for each command here, passing a custom magento_id key in the following is what
         #avoid the base_external_referentials framework to try to update existing partner addresses
-        data_record['billing_address'].update({'customer_id': 'mag_order' + str(data_record['billing_address']['customer_address_id']), 'is_magento_order_address': True})
-        data_record['shipping_address'].update({'customer_id': 'mag_order' + str(data_record['shipping_address']['customer_address_id']), 'is_magento_order_address': True})
+        data_record['billing_address'].update({'customer_address_id': 'mag_order' + str(data_record['billing_address']['customer_address_id']), 'is_magento_order_address': True})
+        data_record['shipping_address'].update({'customer_address_id': 'mag_order' + str(data_record['shipping_address']['customer_address_id']), 'is_magento_order_address': True})
         shipping_default = {}
         billing_default = {}
         if res.get('parter_id', False):

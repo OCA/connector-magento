@@ -144,7 +144,7 @@ else:
 		result=[]
 else:
 	result=[]",
-"magento_prt_adr_13","magento1324","base.model_res_partner_address","parent_id","in_out","int","result=self.pool.get('res.partner').extid_to_oeid(cr,uid,ifield,external_referential_id)
+"magento_prt_adr_13","magento1324","base.model_res_partner_address","customer_id","in_out","int","result=self.pool.get('res.partner').extid_to_oeid(cr,uid,ifield,external_referential_id)
 if result:
 	result=[('partner_id',result)]
 else:
