@@ -538,12 +538,17 @@ class product_product(magerp_osv.magerp_osv):
         main_categ_id = self.pool.get('product.category').oeid_to_extid(cr, uid, product.categ_id.id, external_referential_id, context)
         if not main_categ_id:
             main_categ_id = magento_root_category
+        categ_ids = [main_categ_id]
+        for categ in product.categ_ids: #deal with extra m2m categories
+            categ_id =  self.pool.get('product.category').oeid_to_extid(cr, uid, categ.id, external_referential_id, context)
+            if categ_id:
+                categ_ids.append(categ_id)
         
         product_data = { #TODO refactor that using existing mappings? Add extra attributes?
                 'name': product.name,
                 'price' : self.pool.get('product.pricelist').price_get(cr, uid, pl_default_id, product.id, 1.0)[pl_default_id[0]],
                 'weight': (product.weight_net or 0),
-                'category_ids': [main_categ_id],#TODO handle m2m categories too
+                'category_ids': categ_ids,
                 'description' : (product.description or _("description")),
                 'short_description' : (product.description_sale or _("short description")),
                 'websites':['base'],
