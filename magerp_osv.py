@@ -69,22 +69,22 @@ class Connection():
         else:
             arguments = []
         try:
-            return self.try_call(self, method, arguments)
+            return self.try_call(method, arguments)
         except Exception, e:
             self.logger.notifyChannel(_("Magento Call"), netsvc.LOG_WARNING, _("Webservice Failure, sleeping 1 second before next attempt"))
             time.sleep(1)
             try:
-                return self.try_call(self, method, arguments)
+                return self.try_call(method, arguments)
             except Exception, e:
                 self.logger.notifyChannel(_("Magento Call"), netsvc.LOG_WARNING, _("Webservice Failure, sleeping 2 seconds before next attempt"))
                 time.sleep(3)
                 try:
-                    return self.try_call(self, method, arguments)
+                    return self.try_call(method, arguments)
                 except Exception, e:
                     self.logger.notifyChannel(_("Magento Call"), netsvc.LOG_WARNING, _("Webservice Failure, sleeping 6 seconds before next attempt"))
                     time.sleep(6)
                     try:
-                        return self.try_call(self, method, arguments)
+                        return self.try_call(method, arguments)
                     except Exception, e:
                         self.logger.notifyChannel(_("Magento Call"), netsvc.LOG_ERROR, _("Method: %s\nArguments:%s\nError:%s") % (method, arguments, e))
                         raise
