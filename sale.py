@@ -87,12 +87,6 @@ sale_shop()
 class sale_order(magerp_osv.magerp_osv):
     _inherit = "sale.order"
     
-    _columns = {
-        'magento_billing_address_id':fields.integer('Magento Billing Address ID'),
-        'magento_shipping_address_id':fields.integer('Magento Billing Address ID'),
-        'magento_customer_id':fields.integer('Magento Customer ID'),
-    }
-    
     def _auto_init(self, cr, context={}):
         cr.execute("ALTER TABLE sale_order_line ALTER COLUMN discount TYPE numeric(16,6);")
         super(sale_order, self)._auto_init(cr, context)
