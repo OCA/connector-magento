@@ -96,6 +96,12 @@ class sale_order(magerp_osv.magerp_osv):
     def _auto_init(self, cr, context={}):
         cr.execute("ALTER TABLE sale_order_line ALTER COLUMN discount TYPE numeric(16,6);")
         super(sale_order, self)._auto_init(cr, context)
+        
+    def get_mage_customer_address_id(self, address_data):
+        if address_data.get('customer_address_id', False):
+            return {'customer_address_id': address_data['customer_address_id'], 'is_magento_order_address': False}
+        else:
+            return {'customer_address_id': 'mag_order' + str(address_data['address_id']), 'is_magento_order_address': True}
     
     def get_order_addresses(self, cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context):
         del(data_record['billing_address']['parent_id'])
@@ -104,17 +110,14 @@ class sale_order(magerp_osv.magerp_osv):
         #Magento uses to create same addresses over and over, try to detect if customer already have such an address (Magento won't tell it!)
         #We also create new addresses for each command here, passing a custom magento_id key in the following is what
         #avoid the base_external_referentials framework to try to update existing partner addresses
-        data_record['billing_address'].update({'customer_address_id': 'mag_order' + str(data_record['billing_address']['customer_address_id']), 'is_magento_order_address': True})
-        data_record['shipping_address'].update({'customer_address_id': 'mag_order' + str(data_record['shipping_address']['customer_address_id']), 'is_magento_order_address': True})
+        data_record['billing_address'].update(self.get_mage_customer_address_id(data_record['billing_address']))
+        data_record['shipping_address'].update(self.get_mage_customer_address_id(data_record['shipping_address']))
         shipping_default = {}
         billing_default = {}
         if res.get('parter_id', False):
             shipping_default = {'parter_id': res.get('parter_id', False)}
         billing_default = shipping_default.copy()
         billing_default.update({'email' : data_record.get('customer_email', False)})
-
-        print 'billing adresse', 'shipping adresse', data_record['billing_address'], data_record['shipping_address']
-        print 'billing default', 'shipping default', billing_default, shipping_default
 
         inv_res = self.pool.get('res.partner.address').ext_import(cr, uid, [data_record['billing_address']], 
                                                                   external_referential_id, billing_default, context)
