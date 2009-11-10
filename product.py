@@ -549,14 +549,9 @@ class product_product(magerp_osv.magerp_osv):
                 'price' : self.pool.get('product.pricelist').price_get(cr, uid, pl_default_id, product.id, 1.0)[pl_default_id[0]],
                 'weight': (product.weight_net or 0),
                 'category_ids': categ_ids,
-                'description' : (product.description or _("description")),
-                'short_description' : (product.description_sale or _("short description")),
-                'websites':['base'],
+                'websites':[shop.shop_group_id.code],
                 'tax_class_id': 2, #product.magento_tax_class_id or 2 ? TODO mapp taxes!
                 'status': product.active and 1 or 2,
-                'meta_title': product.name,
-                'meta_keyword': product.name,
-                'meta_description': product.description_sale and product.description_sale[:255],
         }
         
         #now mapp the attributes from created after the Magento EAV attributes model:
@@ -575,6 +570,18 @@ class product_product(magerp_osv.magerp_osv):
         del(attributes['id'])
         #TODO: also deal with many2one option fields!
         product_data.update(attributes)
+
+        if not product_data.get('description', False):
+            product_data.update({'description': product.description or _("description")})
+        if not product_data.get('short_description', False):
+            product_data.update({'short_description': product.description_sale or _("short description")})
+        if not product_data.get('meta_title', False):
+            product_data.update({'meta_title': product.name})
+        if not product_data.get('meta_keyword', False):
+            product_data.update({'meta_keyword': product.name})
+        if not product_data.get('meta_description', False):
+            product_data.update({'meta_description': product.description_sale and product.description_sale[:255]})
+       
         return product_data
 
     def product_to_sku(self, cr, uid, product):
