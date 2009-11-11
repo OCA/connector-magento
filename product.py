@@ -128,7 +128,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
     def _get_group(self, cr, uid, ids, prop, unknow_none, context):
         res = {}
         for attribute in self.browse(cr, uid, ids, context):
-            res[attribute.id] = self.pool.get('magerp.product_attribute_groups').extid_to_oeid(cr, uid, attribute.group_id, attribute.instance)
+            res[attribute.id] = self.pool.get('magerp.product_attribute_groups').extid_to_oeid(cr, uid, attribute.group_id, attribute.instance.id)
         return res
     
     _columns = {
@@ -177,7 +177,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
         'default_value': fields.char('Default Value', size=10),
         'note':fields.char('Note', size=200),
         'entity_type_id':fields.integer('Entity Type'),
-        'instance':fields.many2one('external.referential', 'Magento Instance', readonly=True, store=True),
+        'instance':fields.many2one('external.referential', 'Magento Instance', readonly=True),
         #These parameters are for automatic management
         'field_name':fields.char('Open ERP Field name', size=100)
         }
@@ -327,7 +327,6 @@ class magerp_product_attribute_set(magerp_osv.magerp_osv):
         attr_ids = self.pool.get('magerp.product_attributes').search(cr, uid, [])
         attr_list_oe = self.pool.get('magerp.product_attributes').read(cr, uid, attr_ids, ['magento_id'])
         attr_list = {}
-            print attr_list_oe
         for each_set in attr_list_oe:
             attr_list[each_set['magento_id']] = each_set['id']
         attr_set_ids = self.search(cr, uid, [])
@@ -366,28 +365,20 @@ class magerp_product_attribute_groups(magerp_osv.magerp_osv):
     _name = "magerp.product_attribute_groups"
     _description = "Attribute groups in Magento"
     _rec_name = 'attribute_group_name'
-
-    def set_get(self, cr, uid, ids, context=None):
-        if not len(ids):
-            return []
-        reads = self.read(cr, uid, ids, ['attribute_set_id', 'instance'], context)
-        res = []
-        for record in reads:
-            rid = self.pool.get('magerp.product_attribute_set').mage_to_oe(cr, uid, record['attribute_set_id'], record['instance'][0])
-            if rid:
-                res.append((record['id'], rid))
-        return res
     
     def _get_set(self, cr, uid, ids, prop, unknow_none, context):
-        res = self.set_get(cr, uid, ids, context)
-        return dict(res) 
+        res = {}
+        for attribute_group in self.browse(cr, uid, ids, context):
+            res[attribute_group.id] = self.pool.get('magerp.product_attribute_set').extid_to_oeid(cr, uid, attribute_group.attribute_set_id, attribute_group.referential_id.id)
+        return res
     
     _columns = {
-        'attribute_set_id':fields.integer('Attribute Set ID'),
-        'attribute_set':fields.function(_get_set, type="many2one", relation="magerp.product_attribute_set", method=True, string="Attribute Set"),
-        'attribute_group_name':fields.char('Group Name', size=100),
-        'sort_order':fields.integer('Sort Order'),
-        'default_id':fields.integer('Default'),
+                'attribute_set_id':fields.integer('Attribute Set ID'),
+                'attribute_set':fields.function(_get_set, type="many2one", relation="magerp.product_attribute_set", method=True, string="Attribute Set"),
+                'attribute_group_name':fields.char('Group Name', size=100),
+                'sort_order':fields.integer('Sort Order'),
+                'default_id':fields.integer('Default'),
+                'referential_id':fields.many2one('external.referential', 'Magento Instance', readonly=True),
                 }
 magerp_product_attribute_groups()
 

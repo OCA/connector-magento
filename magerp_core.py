@@ -118,7 +118,7 @@ class external_referential(magerp_osv.magerp_osv):
             filter = [{'attribute_set_id':{'in':attrset_ids}}]
             if attr_conn:
                 #self.pool.get('magerp.product_attribute_groups').mage_import(cr, uid, filter, attr_conn, inst.id, DEBUG)
-                self.pool.get('magerp.product_attribute_groups').mage_import_base(cr, uid, attr_conn, inst.id, {}, {'ids_or_filter':filter})
+                self.pool.get('magerp.product_attribute_groups').mage_import_base(cr, uid, attr_conn, inst.id, {'referential_id': inst.id}, {'ids_or_filter':filter})
             else:
                 osv.except_osv(_("Connection Error"), _("Could not connect to server\nCheck location, username & password."))
     
