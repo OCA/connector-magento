@@ -128,7 +128,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
     def _get_group(self, cr, uid, ids, prop, unknow_none, context):
         res = {}
         for attribute in self.browse(cr, uid, ids, context):
-            res[attribute.id] = self.pool.get('magerp.product_attribute_groups').extid_to_oeid(cr, uid, attribute.group_id, attribute.instance.id)
+            res[attribute.id] = self.pool.get('magerp.product_attribute_groups').extid_to_oeid(cr, uid, attribute.group_id, attribute.referential_id.id)
         return res
     
     _columns = {
@@ -508,6 +508,7 @@ class product_product(magerp_osv.magerp_osv):
                     field_tags += '<field name="%s" />\n' % field_name
             result['fields'].update(self.fields_get(cr, uid, field_names, context))
             #TODO this insert all product attributes; we could probably tweak the visibility depending on the product attribute set...
+            #FIXME seems there is an issue with non latin chars when client user is not using English
             result['arch'] = result['arch'].replace('<page string="attributes_placeholder"/>', """<page string="Magento Information" attrs="{'invisible':[('exportable','!=',1)]}">\n%s\n</page>""" % field_tags)
 	return result
     
