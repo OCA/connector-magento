@@ -124,22 +124,12 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
     _name = "magerp.product_attributes"
     _description = "Attributes of products"
     _rec_name = "attribute_code"
-    _LIST_METHOD = 'ol_catalog_product_attribute.list'
-    
-    def group_get(self, cr, uid, ids, context=None):
-        if not len(ids):
-            return []
-        reads = self.read(cr, uid, ids, ['group_id', 'instance'], context)
-        res = []
-        for record in reads:
-            rid = self.pool.get('magerp.product_attribute_groups').mage_to_oe(cr, uid, record['group_id'], record['instance'][0])
-            if rid:
-                res.append((record['id'], rid))
-        return res
     
     def _get_group(self, cr, uid, ids, prop, unknow_none, context):
-        res = self.group_get(cr, uid, ids, context)
-        return dict(res)
+        res = {}
+        for attribute in self.browse(cr, uid, ids, context):
+            res[attribute.id] = self.pool.get('magerp.product_attribute_groups').extid_to_oeid(cr, uid, attribute.group_id, attribute.instance)
+        return res
     
     _columns = {
         'attribute_code':fields.char('Code', size=200),
@@ -337,7 +327,7 @@ class magerp_product_attribute_set(magerp_osv.magerp_osv):
         attr_ids = self.pool.get('magerp.product_attributes').search(cr, uid, [])
         attr_list_oe = self.pool.get('magerp.product_attributes').read(cr, uid, attr_ids, ['magento_id'])
         attr_list = {}
-        print attr_list_oe
+            print attr_list_oe
         for each_set in attr_list_oe:
             attr_list[each_set['magento_id']] = each_set['id']
         attr_set_ids = self.search(cr, uid, [])
@@ -569,6 +559,7 @@ class product_product(magerp_osv.magerp_osv):
         attributes = self.read(cr, uid, product.id, field_names, {})
         del(attributes['id'])
         #TODO: also deal with many2one option fields!
+        #FIXME TODO we should absolutely remove the "x_" prefix from the names and not pass False values!
         product_data.update(attributes)
 
         if not product_data.get('description', False):
