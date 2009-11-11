@@ -120,7 +120,7 @@ class magerp_osv(external_osv.external_osv):
         if mageid:
             search_params = [(self._MAGE_FIELD, '=', mageid), ]
         if instance:
-            search_params.append(('instance', '=', instance))
+            search_params.append(('referential_id', '=', instance))
         for each in args:
             if each:
                 if type(each) == type((1, 2)):
@@ -161,7 +161,7 @@ class magerp_osv(external_osv.external_osv):
                             'uid':uid,
                             'rec_id':rec_id,
                             'cr':cr,
-                            'instance':instance,
+                            'referential_id':instance,
                             'temp_vars':{},
                             'mage2oe_filters':mage2oe_filters
                         }
@@ -197,7 +197,7 @@ class magerp_osv(external_osv.external_osv):
                         except Exception, e:
                             if self._mapping[each_valid_key][0]:#if not function mapping
                                 vals[self._mapping[each_valid_key][0]] = magento_record[each_valid_key] or False
-                vals['instance'] = instance
+                vals['referential_id'] = instance
                 if debug:
                     print vals
                 if self._MAGE_FIELD:
@@ -278,7 +278,7 @@ class magerp_osv(external_osv.external_osv):
     def get_all_mage_ids(self, cr, uid, ids=[], instance=False):
         search_param = []
         if instance:
-            search_param = [('instance', '=', instance)]
+            search_param = [('referential_id', '=', instance)]
         if not ids:
             ids = self.search(cr, uid, search_param)
         reads = self.read(cr, uid, ids, [self._MAGE_FIELD])

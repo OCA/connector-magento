@@ -177,7 +177,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
         'default_value': fields.char('Default Value', size=10),
         'note':fields.char('Note', size=200),
         'entity_type_id':fields.integer('Entity Type'),
-        'instance':fields.many2one('external.referential', 'Magento Instance', readonly=True),
+        'referential_id':fields.many2one('external.referential', 'Magento Instance', readonly=True),
         #These parameters are for automatic management
         'field_name':fields.char('Open ERP Field name', size=100)
         }
@@ -206,8 +206,8 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
             if crid:
                 #Fetch Options
                 if 'frontend_input' in vals.keys() and vals['frontend_input'] in ['select']:
-                    core_conn = self.pool.get('external.referential').connect(cr, uid, [vals['instance']])
-                    self.pool.get('magerp.product_attribute_options').mage_import(cr, uid, [vals['magento_id']], core_conn, vals['instance'], debug=False, defaults={'attribute_id':crid})
+                    core_conn = self.pool.get('external.referential').connect(cr, uid, [vals['referential_id']])
+                    self.pool.get('magerp.product_attribute_options').mage_import(cr, uid, [vals['magento_id']], core_conn, vals['referential_id'], debug=False, defaults={'attribute_id':crid})
                 #Manage fields
                 if vals['attribute_code'] and vals.get('frontend_input', False) != 'multiselect':
                     #Code for dynamically generating field name and attaching to this
@@ -293,10 +293,10 @@ class magerp_product_attribute_options(magerp_osv.magerp_osv):
         'value':fields.char('Value', size=200),
         'ipcast':fields.char('Type cast', size=50),
         'label':fields.char('Label', size=100),
-        'instance':fields.many2one('external.referential', 'Magento Instance', readonly=True),
+        'referential_id':fields.many2one('external.referential', 'Magento Instance', readonly=True),
                 }
     def get_option_id(self, cr, uid, attr_name, value, instance):
-        attr_id = self.search(cr, uid, [('attribute_name', '=', attr_name), ('value', '=', value), ('instance', '=', instance)])
+        attr_id = self.search(cr, uid, [('attribute_name', '=', attr_name), ('value', '=', value), ('referential_id', '=', instance)])
         if attr_id:
             return attr_id[0]
         else:
@@ -312,7 +312,7 @@ class magerp_product_attribute_set(magerp_osv.magerp_osv):
         'sort_order':fields.integer('Sort Order'),
         'attribute_set_name':fields.char('Set Name', size=100),
         'attributes':fields.many2many('magerp.product_attributes', 'magerp_attrset_attr_rel', 'set_id', 'attr_id', 'Attributes'),
-        'instance':fields.many2one('external.referential', 'Magento Instance', readonly=True),
+        'referential_id':fields.many2one('external.referential', 'Magento Instance', readonly=True),
         'magento_id':fields.integer('Magento ID'),
         }
 
@@ -401,7 +401,7 @@ class product_tierprice(osv.osv):
         'price':fields.float('Price', digits=(10, 2),),
         'price_qty':fields.float('Quantity Slab', digits=(10, 4), help="Slab & above eg.For 10 and above enter 10"),
         'product':fields.many2one('product.product', 'Product'),
-        'instance':fields.many2one('external.referential', 'Magento Instance', readonly=True),
+        'referential_id':fields.many2one('external.referential', 'Magento Instance', readonly=True),
                 }
     _mapping = {
         'cust_group':(False, int, """result=self.pool.get('res.partner.category').mage_to_oe(cr,uid,cust_group,instance)\nif result:\n\tresult=[('cust_group',result[0])]\nelse:\n\tresult=[('cust_group',False)]"""),
@@ -430,8 +430,8 @@ class product_product(magerp_osv.magerp_osv):
                  }
 
     def write(self, cr, uid, ids, vals, context={}):
-        if vals.get('instance', False):
-            instance = vals['instance']
+        if vals.get('referential_id', False):
+            instance = vals['referential_id']
             #Filter the keys to be changes
             if ids:
                 if type(ids) == list and len(ids) == 1:
@@ -468,7 +468,7 @@ class product_product(magerp_osv.magerp_osv):
             tier_vals['price'] = float(each['price'])
             tier_vals['price_qty'] = float(each['price_qty'])
             tier_vals['product'] = product_id
-            tier_vals['instance'] = instance
+            tier_vals['referential_id'] = instance
             tier_vals['group_scope'] = each['all_groups']
             if each['website_id'] == '0':
                 tier_vals['web_scope'] = 'all'
@@ -479,8 +479,8 @@ class product_product(magerp_osv.magerp_osv):
     
     def create(self, cr, uid, vals, context={}):
         tier_price = False
-        if vals.get('instance', False):
-            instance = vals['instance']
+        if vals.get('referential_id', False):
+            instance = vals['referential_id']
             #Filter keys to be changed
             if 'x_magerp_tier_price' in vals.keys(): 
                 tier_price = vals.pop('x_magerp_tier_price')

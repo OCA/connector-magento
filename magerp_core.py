@@ -31,7 +31,7 @@ class external_referential(magerp_osv.magerp_osv):
     _inherit = "external.referential"
 
     _columns = {
-	'attribute_sets':fields.one2many('magerp.product_attribute_set', 'instance', 'Attribute Sets'),
+	'attribute_sets':fields.one2many('magerp.product_attribute_set', 'referential_id', 'Attribute Sets'),
         'default_pro_cat':fields.many2one('product.category','Default Product Category',required=True, help="Products imported from magento may have many categories.\nOpenERP requires a specific category for a product to facilitate invoicing etc.")
     }
 
@@ -78,14 +78,14 @@ class external_referential(magerp_osv.magerp_osv):
         for inst in instances:
             attr_conn = self.external_connection(cr, uid, inst, DEBUG)
             if attr_conn:
-                attrib_set_ids = self.pool.get('magerp.product_attribute_set').search(cr, uid, [('instance', '=', inst.id)])
+                attrib_set_ids = self.pool.get('magerp.product_attribute_set').search(cr, uid, [('referential_id', '=', inst.id)])
                 attrib_sets = self.pool.get('magerp.product_attribute_set').read(cr, uid, attrib_set_ids, ['magento_id'])
                 #Get all attribute set ids to get all attributes in one go
                 all_attr_set_ids = self.pool.get('magerp.product_attribute_set').get_all_mage_ids(cr, uid, [], inst.id)
                 #Call magento for all attributes
                 mage_inp = attr_conn.call('ol_catalog_product_attribute.list', all_attr_set_ids)             #Get the tree
                 #self.pool.get('magerp.product_attributes').sync_import(cr, uid, mage_inp, inst.id, DEBUG) #Last argument is extra mage2oe filter as same attribute ids
-                self.pool.get('magerp.product_attributes').ext_import(cr, uid, mage_inp, inst.id, defaults={'instance':inst.id}, context={'referential_id':inst.id})
+                self.pool.get('magerp.product_attributes').ext_import(cr, uid, mage_inp, inst.id, defaults={'referential_id':inst.id}, context={'referential_id':inst.id})
                 #Relate attribute sets & attributes
                 mage_inp = {}
                 #Pass in {attribute_set_id:{attributes},attribute_set_id2:{attributes}}
@@ -104,7 +104,7 @@ class external_referential(magerp_osv.magerp_osv):
             attr_conn = self.external_connection(cr, uid, inst, DEBUG)
             if attr_conn:
                 filter = []
-                self.pool.get('magerp.product_attribute_set').mage_import_base(cr, uid, attr_conn, inst.id,{'instance':inst.id},{'ids_or_filter':filter})
+                self.pool.get('magerp.product_attribute_set').mage_import_base(cr, uid, attr_conn, inst.id,{'referential_id':inst.id},{'ids_or_filter':filter})
             else:
                 osv.except_osv(_("Connection Error"), _("Could not connect to server\nCheck location, username & password."))          
     
@@ -172,7 +172,7 @@ class external_referential(magerp_osv.magerp_osv):
         instances = inst_obj.read(cr,uid,inst_ids,[])
         for each_instance in instances:
             #create a group & a notebook inside, group attr
-            attr_set_ids = attr_set_obj.search(cr,uid,[('instance','=',each_instance['id'])])
+            attr_set_ids = attr_set_obj.search(cr,uid,[('referential_id','=',each_instance['id'])])
             attr_sets = attr_set_obj.browse(cr,uid,attr_set_ids)
             for each_set in attr_sets:
                 #Create a page with attrs corresponding to the set id
@@ -244,7 +244,6 @@ class magerp_storeviews(magerp_osv.magerp_osv):
         'sort_order':fields.integer('Sort Order'),
         'group_id':fields.integer('Default Store Group'), #Many 2 one?
         'default_shop_id':fields.function(_get_default_shop_id, type="many2one", relation="sale.shop", method=True, string="Default Store (Group)"),
-        #'instance':fields.many2one('external.referential', 'Instance', ondelete='cascade')
     }
 
     #Return format of API:{'code': 'default', 'store_id': '1', 'website_id': '1', 'is_active': '1', 'sort_order': '0', 'group_id': '1', 'name': 'Default Store View'}
