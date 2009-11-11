@@ -136,7 +136,6 @@ class sale_order(magerp_osv.magerp_osv):
                     line_tax_vat = float(line_data['tax_percent']) / 100.0
                     if line_tax_vat > 0:
                         line_tax_ids = self.pool.get('account.tax').search(cr, uid, [('type_tax_use', '=', 'sale'), ('amount', '>=', line_tax_vat - 0.001), ('amount', '<=', line_tax_vat + 0.001)])
-                        print "line_tax_ids", line_tax_ids
                         if line_tax_ids and len(line_tax_ids) > 0:
                             defaults_line['tax_id'] = [(6, 0, [line_tax_ids[0]])]
                     lines_vals.append((0, 0, self.oevals_from_extdata(cr, uid, external_referential_id, line_data, 'item_id', mapping_lines, defaults_line, context)))
