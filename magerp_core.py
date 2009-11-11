@@ -53,7 +53,6 @@ class external_referential(magerp_osv.magerp_osv):
         for inst in instances:
             core_imp_conn = self.external_connection(cr, uid, inst, DEBUG)
             if core_imp_conn:
-                #New import methods
                 self.pool.get('external.shop.group').mage_import_base(cr, uid,core_imp_conn, inst.id, defaults={'referential_id':inst.id})
                 self.pool.get('magerp.storeviews').mage_import_base(cr,uid,core_imp_conn, inst.id, defaults={})
                 self.pool.get('sale.shop').mage_import_base(cr, uid, core_imp_conn, inst.id, defaults={})
@@ -105,7 +104,6 @@ class external_referential(magerp_osv.magerp_osv):
             attr_conn = self.external_connection(cr, uid, inst, DEBUG)
             if attr_conn:
                 filter = []
-                #self.pool.get('magerp.product_attribute_set').mage_import(cr, uid, filter, attr_conn, inst.id, DEBUG)
                 self.pool.get('magerp.product_attribute_set').mage_import_base(cr, uid, attr_conn, inst.id,{'instance':inst.id},{'ids_or_filter':filter})
             else:
                 osv.except_osv(_("Connection Error"), _("Could not connect to server\nCheck location, username & password."))          
@@ -117,7 +115,6 @@ class external_referential(magerp_osv.magerp_osv):
             attrset_ids = self.pool.get('magerp.product_attribute_set').get_all_mage_ids(cr, uid, [], inst.id)
             filter = [{'attribute_set_id':{'in':attrset_ids}}]
             if attr_conn:
-                #self.pool.get('magerp.product_attribute_groups').mage_import(cr, uid, filter, attr_conn, inst.id, DEBUG)
                 self.pool.get('magerp.product_attribute_groups').mage_import_base(cr, uid, attr_conn, inst.id, {'referential_id': inst.id}, {'ids_or_filter':filter})
             else:
                 osv.except_osv(_("Connection Error"), _("Could not connect to server\nCheck location, username & password."))
@@ -128,7 +125,6 @@ class external_referential(magerp_osv.magerp_osv):
             attr_conn = self.external_connection(cr, uid, inst, DEBUG)
             filter = []
             if attr_conn:
-                #self.pool.get('res.partner.category').mage_import(cr, uid, filter, attr_conn, inst.id, DEBUG)
                 self.pool.get('res.partner.category').mage_import_base(cr, uid, attr_conn, inst.id, {}, {'ids_or_filter':filter})
             else:
                 osv.except_osv(_("Connection Error"), _("Could not connect to server\nCheck location, username & password."))
@@ -159,7 +155,8 @@ class external_referential(magerp_osv.magerp_osv):
                     result.append(each_product_info)
                 self.pool.get('product.product').ext_import(cr, uid, result, inst.id, defaults={'categ_id':inst.default_pro_cat.id}, context={})
             else:
-                osv.except_osv(_("Connection Error"), _("Could not connect to server\nCheck location, username & password."))                        
+                osv.except_osv(_("Connection Error"), _("Could not connect to server\nCheck location, username & password."))
+                      
     def redefine_prod_view(self,cr,uid,ids,ctx):
         #This function will rebuild the view for product from instances, attribute groups etc
         #Get all objects needed
