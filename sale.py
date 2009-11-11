@@ -108,8 +108,8 @@ class sale_order(magerp_osv.magerp_osv):
         data_record['shipping_address'].update(self.get_mage_customer_address_id(data_record['shipping_address']))
         shipping_default = {}
         billing_default = {}
-        if res.get('parter_id', False):
-            shipping_default = {'parter_id': res.get('parter_id', False)}
+        if res.get('partner_id', False):
+            shipping_default = {'partner_id': res.get('partner_id', False)}
         billing_default = shipping_default.copy()
         billing_default.update({'email' : data_record.get('customer_email', False)})
 

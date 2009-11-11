@@ -209,7 +209,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
                     core_conn = self.pool.get('external.referential').connect(cr, uid, [vals['referential_id']])
                     self.pool.get('magerp.product_attribute_options').mage_import(cr, uid, [vals['magento_id']], core_conn, vals['referential_id'], debug=False, defaults={'attribute_id':crid})
                 #Manage fields
-                if vals['attribute_code'] and vals.get('frontend_input', False) != 'multiselect':
+                if vals['attribute_code'] and vals.get('frontend_input', False) != 'multiselect': #TODO map multiselect as the string serialisation of the table and evaluate it at export
                     #Code for dynamically generating field name and attaching to this
                     model_id = self.pool.get('ir.model').search(cr, uid, [('model', '=', 'product.product')])
                     type_conversion = {
