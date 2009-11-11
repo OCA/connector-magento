@@ -206,8 +206,11 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
             if crid:
                 #Fetch Options
                 if 'frontend_input' in vals.keys() and vals['frontend_input'] in ['select']:
-                    core_conn = self.pool.get('external.referential').connect(cr, uid, [vals['referential_id']])
-                    self.pool.get('magerp.product_attribute_options').mage_import(cr, uid, [vals['magento_id']], core_conn, vals['referential_id'], debug=False, defaults={'attribute_id':crid})
+                    core_imp_conn = self.pool.get('external.referential').connect(cr, uid, [vals['referential_id']])
+                    options_data = core_imp_conn.call('ol_catalog_product_attribute.options',[vals['magento_id']])
+                    if options_data:
+                        self.pool.get('magerp.product_attribute_options').data_to_save(cr,uid,options_data,context={'attribute_id':crid,'referential_id':vals['referential_id']})
+                    #self.pool.get('magerp.product_attribute_options').mage_import_base(cr, uid, core_imp_conn, inst.id, defaults={'attribute_id':crid,'ids_or_filter':[vals['magento_id']]})
                 #Manage fields
                 if vals['attribute_code'] and vals.get('frontend_input', False) != 'multiselect': #TODO map multiselect as the string serialisation of the table and evaluate it at export
                     #Code for dynamically generating field name and attaching to this
@@ -295,6 +298,20 @@ class magerp_product_attribute_options(magerp_osv.magerp_osv):
         'label':fields.char('Label', size=100),
         'referential_id':fields.many2one('external.referential', 'Magento Instance', readonly=True),
                 }
+    def data_to_save(self,cr,uid,vals_list,context={}):
+        """This method will take data from vals and use context to create record"""
+        for vals in vals_list:
+            if vals.get('value',False) and vals.get('label',False):
+                #Fixme: What to do when magento offers emty options which open erp doesnt?
+                #Such cases dictionary is: {'value':'','label':''}
+                self.create(cr,uid,
+                            {
+                        'attribute_id':context.get('attribute_id',False),
+                        'value':vals.get('value',False),
+                        'label':vals.get('label',False),
+                        'referential_id':context.get('referential_id',False),
+                             }
+                            ) 
     def get_option_id(self, cr, uid, attr_name, value, instance):
         attr_id = self.search(cr, uid, [('attribute_name', '=', attr_name), ('value', '=', value), ('referential_id', '=', instance)])
         if attr_id:
