@@ -285,7 +285,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
                                 mapping_line['out_function'] = "result=[('%s',record['%s'])]" % (vals['attribute_code'], field_name)
                             elif field_vals['ttype'] in ['many2one']:
                                 mapping_line['in_function'] = "if ifield:\n\toption_id = self.pool.get('magerp.product_attribute_options').search(cr,uid,[('attribute_id','=',%s),('value','=',ifield)])\n\tif option_id:\n\t\t\tresult = [('"  % crid
-                                mapping_line['in_function'] += field_name + "',ifield)]"
+                                mapping_line['in_function'] += field_name + "',option_id)]"
                                 mapping_line['out_function'] = "option=self.pool.get('magerp.product_attribute_options').browse(cr, uid, record['%s'])\nif option:\n\tresult=[('%s',option.value)]" % (vals['attribute_code'], field_name)
                             elif field_vals['ttype'] in ['multiselect']:
                                 mapping_line['in_function'] = "result=[('%s',str(ifield))]" % field_name
@@ -584,45 +584,34 @@ class product_product(magerp_osv.magerp_osv):
     
     #TODO move part of this to declarative mapping CSV template
     def extdata_from_oevals(self, cr, uid, external_referential_id, data_record, mapping_lines, defaults, context):
+        product_data = super(product_product, self).extdata_from_oevals(cr, uid, external_referential_id, data_record, mapping_lines, defaults, context) #Aapply custom/attributes mappings
+
         product = self.browse(cr, uid, data_record['id'], context)
         shop = self.pool.get('sale.shop').browse(cr, uid, context['shop_id'], context)
-        pl_default_id = shop.pricelist_id and shop.pricelist_id.id or self.pool.get('product.pricelist').search(cr, uid, [('type', '=', 'sale')])
-        main_categ_id = self.pool.get('product.category').oeid_to_extid(cr, uid, product.categ_id.id, external_referential_id, context)
-        if not main_categ_id:
-            main_categ_id = magento_root_category
-        categ_ids = [main_categ_id]
-        for categ in product.categ_ids: #deal with extra m2m categories
-            categ_id =  self.pool.get('product.category').oeid_to_extid(cr, uid, categ.id, external_referential_id, context)
-            if categ_id:
-                categ_ids.append(categ_id)
-        
-        product_data = { #TODO refactor that using existing mappings? Add extra attributes?
-                'name': product.name,
-                'price' : self.pool.get('product.pricelist').price_get(cr, uid, pl_default_id, product.id, 1.0)[pl_default_id[0]],
-                'weight': (product.weight_net or 0),
-                'category_ids': categ_ids,
-                'websites':[shop.shop_group_id.code],
-                'tax_class_id': 2, #product.magento_tax_class_id or 2 ? TODO mapp taxes!
-                'status': product.active and 1 or 2,
-        }
-        
-        #now mapp the attributes from created after the Magento EAV attributes model:
-        ir_model_id = self.pool.get('ir.model').search(cr, uid, [('model', '=', 'product.product')])[0]
-        ir_model = self.pool.get('ir.model').browse(cr, uid, ir_model_id)
-        ir_model_field_ids = self.pool.get('ir.model.fields').search(cr, uid, [('model_id', '=', ir_model_id), ('ttype', '=', 'char')])
-        ir_model_field_ids += self.pool.get('ir.model.fields').search(cr, uid, [('model_id', '=', ir_model_id), ('ttype', '=', 'date')])
-        ir_model_field_ids += self.pool.get('ir.model.fields').search(cr, uid, [('model_id', '=', ir_model_id), ('ttype', '=', 'int')])
-        ir_model_field_ids += self.pool.get('ir.model.fields').search(cr, uid, [('model_id', '=', ir_model_id), ('ttype', '=', 'float')])
-        ir_model_field_ids += self.pool.get('ir.model.fields').search(cr, uid, [('model_id', '=', ir_model_id), ('ttype', '=', 'text')])
-        field_names = []
-        for field in self.pool.get('ir.model.fields').browse(cr, uid, ir_model_field_ids):
-            if str(field.name).startswith('x_'):
-                field_names.append(field.name)
-        attributes = self.read(cr, uid, product.id, field_names, {})
-        del(attributes['id'])
-        #TODO: also deal with many2one option fields!
-        #FIXME TODO we should absolutely remove the "x_" prefix from the names and not pass False values!
-        product_data.update(attributes)
+
+        if not product_data.get('category_ids', False):
+            main_categ_id = self.pool.get('product.category').oeid_to_extid(cr, uid, product.categ_id.id, external_referential_id, context)
+            if not main_categ_id:
+                main_categ_id = magento_root_category
+            categ_ids = [main_categ_id]
+            for categ in product.categ_ids: #deal with extra m2m categories
+                categ_id =  self.pool.get('product.category').oeid_to_extid(cr, uid, categ.id, external_referential_id, context)
+                if categ_id:
+                    categ_ids.append(categ_id)
+            product_data.update({'category_ids': categ_ids})
+
+        if not product_data.get('price', False):
+            pl_default_id = shop.pricelist_id and shop.pricelist_id.id or self.pool.get('product.pricelist').search(cr, uid, [('type', '=', 'sale')])
+            roduct_data.update({'price': self.pool.get('product.pricelist').price_get(cr, uid, pl_default_id, product.id, 1.0)[pl_default_id[0]]})
+            
+        if not product_data.get('tax_class_id', False):
+            product_data.update({'tax_class_id': 2}) #FIXME hugly!
+            
+        if not product_data.get('status', False):
+            product_data.update({'status': product.active and 1 or 2})
+            
+        if not product_data.get('websites', False):
+            product_data.update({'websites': [shop.shop_group_id.code]})
 
         if not product_data.get('description', False):
             product_data.update({'description': product.description or _("description")})

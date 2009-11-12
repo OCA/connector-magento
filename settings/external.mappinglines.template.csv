@@ -103,14 +103,15 @@ else:
 "mag_erp_attr_22","magento1324","model_magerp_product_attributes","default_value","in_out","str","result=[('default_value', ifield)]","result=[('default_value', record['default_value'])]"
 "mag_erp_attr_23","magento1324","model_magerp_product_attributes","note","in_out","str","result=[('note', ifield)]","result=[('note', record['note'])]"
 "mag_erp_attr_24","magento1324","model_magerp_product_attributes","entity_type_id","in_out","int","result=[('entity_type_id', ifield)]","result=[('entity_type_id', record['entity_type_id'])]"
-"mag_erp_prd_2","magento1324","product.model_product_product","name","in_out","str","result = [('name',ifield)]",
+
+"mag_erp_prd_2","magento1324","product.model_product_product","name","in_out","str","result = [('name',ifield)]", "result = [('name',record['name'])]"
 "mag_erp_prd_3","magento1324","product.model_product_product","description","in_out","str","result = [('description',ifield)]",
 "mag_erp_prd_4","magento1324","product.model_product_product","short_description","in_out","str","result = [('description_sale',ifield)]",
 "mag_erp_prd_5","magento1324","product.model_product_product","sku","in_out","str","result = [('magento_sku',ifield)]",
-"mag_erp_prd_6","magento1324","product.model_product_product","weight","in_out","float","result = [('weight_net',ifield)]",
-"mag_erp_prd_7","magento1324","product.model_product_product","category_ids","in_out","str","result=[]#map later",
-"mag_erp_prd_8","magento1324","product.model_product_product","price","in_out","float","result=[('list_price',ifield)]",
-"mag_erp_prd_9","magento1324","product.model_product_product","cost","in_out","float","result=[('standard_price',ifield)]",
+"mag_erp_prd_6","magento1324","product.model_product_product","weight","in_out","float","result = [('weight_net',ifield)]","result = [('weight',record['weight_net'] or 0)]"
+"mag_erp_prd_7","magento1324","product.model_product_product","category_ids","in_out","str","result=[]#map later","result=[]#map later"
+"mag_erp_prd_8","magento1324","product.model_product_product","price","in_out","float","result=[('list_price',ifield)]","result=[]#map later"
+"mag_erp_prd_9","magento1324","product.model_product_product","cost","in_out","float","result=[('standard_price',ifield)]","result = [('cost',record['standard_price'] or 0)]"
 "mag_erp_prd_10","magento1324","product.model_product_product","set","in_out","str","result=[]",
 "magento_cst_grp_1","magento1324","base.model_res_partner_category","customer_group_code","in","str","result=[('name',ifield)]",
 "magento_cst_grp_3","magento1324","base.model_res_partner_category","tax_class_id","in","int","result=[('tax_class_id',ifield)]",
