@@ -99,7 +99,7 @@ else:
 "mag_erp_attr_18","magento1324","model_magerp_product_attributes","is_unique","in_out","str","result=[('is_unique', bool(eval(ifield)))]","result=[('is_unique', record['is_unique'])]"
 "mag_erp_attr_19","magento1324","model_magerp_product_attributes","is_required","in_out","str","result=[('is_required', bool(eval(ifield)))]","result=[('is_required', record['is_required'])]"
 "mag_erp_attr_20","magento1324","model_magerp_product_attributes","position","in_out","int","result=[('position', ifield)]","result=[('position', record['position'])]"
-"mag_erp_attr_21","magento1324","model_magerp_product_attributes","group_id","in_out","int","result=[('group_id', ifield)]","result=[('group_id', record['group_id'])]"
+"mag_erp_attr_21","magento1324","model_magerp_product_attributes","attribute_set_info","in_out","str","result=[('attribute_set_info', ifield)]","result=[('attribute_set_info', record['attribute_set_info'])]"
 "mag_erp_attr_22","magento1324","model_magerp_product_attributes","default_value","in_out","str","result=[('default_value', ifield)]","result=[('default_value', record['default_value'])]"
 "mag_erp_attr_23","magento1324","model_magerp_product_attributes","note","in_out","str","result=[('note', ifield)]","result=[('note', record['note'])]"
 "mag_erp_attr_24","magento1324","model_magerp_product_attributes","entity_type_id","in_out","int","result=[('entity_type_id', ifield)]","result=[('entity_type_id', record['entity_type_id'])]"

@@ -179,7 +179,8 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
         'entity_type_id':fields.integer('Entity Type'),
         'referential_id':fields.many2one('external.referential', 'Magento Instance', readonly=True),
         #These parameters are for automatic management
-        'field_name':fields.char('Open ERP Field name', size=100)
+        'field_name':fields.char('Open ERP Field name', size=100),
+        'attribute_set_info':fields.text('Attribute Set Information')
         }
     #mapping magentofield:(openerpfield,typecast,)
     #have an entry for each mapped field
@@ -200,6 +201,11 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
         if not vals['attribute_code'] in self._no_create_list:
             field_name = "x_magerp_" + vals['attribute_code']
             vals['field_name'] =  field_name
+        if 'attribute_set_info' in vals.keys():
+            attr_set_info = eval(vals.get('attribute_set_info',{}))
+            for each_key in attr_set_info.keys():
+                vals['group_id']=attr_set_info[each_key].get('group_id',False)
+                
         crid = super(magerp_product_attributes, self).create(cr, uid, vals, context)
         if not vals['attribute_code'] in self._no_create_list:
             #If the field has to be created
@@ -285,7 +291,18 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
         return crid
 
 magerp_product_attributes()
-
+"""Dont remove the code, we might need it --sharoon
+class magerp_product_attributes_set_info(osv.osv):
+    _name="magerp.product_attributes.set_info"
+    _description = "Attribute Set information for each attribute"
+    _columns = {
+        'referential_id':fields.many2one('external.referential', 'Magento Instance', readonly=True),
+        'attribute_set_id':
+        'sort':fields.integer('sort')
+        'group_sort':fields.integer('group_sort')
+        'group_id':
+                }
+magerp_product_attributes_set_info()"""
 class magerp_product_attribute_options(magerp_osv.magerp_osv):
     _name = "magerp.product_attribute_options"
     _description = "Options  of selected attributes"
@@ -383,7 +400,7 @@ class magerp_product_attribute_groups(magerp_osv.magerp_osv):
     _name = "magerp.product_attribute_groups"
     _description = "Attribute groups in Magento"
     _rec_name = 'attribute_group_name'
-    
+    _order = "sort_order"
     def _get_set(self, cr, uid, ids, prop, unknow_none, context):
         res = {}
         for attribute_group in self.browse(cr, uid, ids, context):
@@ -512,31 +529,38 @@ class product_product(magerp_osv.magerp_osv):
     
     #old attempt to create product view taking Magento attributes into account.
     #there might be some idea to group fields here, however, fields should never appear twice, even hidden, not sure it would work...
-#    def redefine_prod_view(self,cr,uid,ids,ctx):
-#        #This function will rebuild the view for product from instances, attribute groups etc
-#        #Get all objects needed
-#        inst_obj = self.pool.get('external.referential')
-#        attr_set_obj = self.pool.get('magerp.product_attribute_set')
-#        attr_group_obj = self.pool.get('magerp.product_attribute_group')
-#        attr_obj = self.pool.get('magerp.product_attributes')
-#        #Predefined items on top
-#        #Instance
-#        #Attribute Set
-#        #Get all instances
-#        inst_ids = inst_obj.search(cr,uid,[])#TODO:Search for active instances only
-#        instances = inst_obj.read(cr,uid,inst_ids,[])
-#        for each_instance in instances:
-#            #create a group & a notebook inside, group attr
-#            attr_set_ids = attr_set_obj.search(cr,uid,[('referential_id','=',each_instance['id'])])
-#            attr_sets = attr_set_obj.browse(cr,uid,attr_set_ids)
-#            for each_set in attr_sets:
-#                #Create a page with attrs corresponding to the set id
-#                attr_grp_ids = attr_group_obj.search(cr,uid,[('attribute_set','=',each_set['id'])]) #attribute_set is a function field, may slow down the whole thing
-#                attr_groups = attr_group_obj.read(cr,uid,attr_grp_ids,[])
-#                for each_group in attr_groups:
-#                    #Create a page for the attribute group
-#                    attribute_ids = each_set.attributes
-#                    attr
+    def redefine_prod_view(self,cr,uid):
+        #This function will rebuild the view for product from instances, attribute groups etc
+        #Get all objects needed
+        #inst_obj = self.pool.get('external.referential')
+        attr_set_obj = self.pool.get('magerp.product_attribute_set')
+        attr_group_obj = self.pool.get('magerp.product_attribute_groups')
+        attr_obj = self.pool.get('magerp.product_attributes')
+        xml = "<notebook colspan='4'>\n"
+        attr_grp_ids = attr_group_obj.search(cr,uid,[])
+        attr_groups = attr_group_obj.browse(cr,uid,attr_grp_ids)
+        for each_group in attr_groups:
+            #Create a page for the attribute group
+            xml+="<page string='" + each_group.attribute_group_name + "'>\n<group colspan='4' col='4'>"
+#            print "searching for attributes in group %s" % (each_group.id,)
+            attributes_in_group_ids = attr_obj.search(cr,uid,[('group','=',each_group.id)])
+            attributes_in_group = attr_obj.browse(cr,uid,attributes_in_group_ids)
+            for each_attribute in attributes_in_group:
+#                print each_attribute.group
+                if each_attribute.group.id == each_group.id:
+                    if not each_attribute.attribute_code in attr_obj._no_create_list:
+                        if each_attribute.frontend_input in ['textarea']:
+                            xml+="<newline/><separator colspan='4' string='%s'/>" % (each_attribute.frontend_label,)
+                        xml+="<field name='x_magerp_" +  each_attribute.attribute_code + "'"
+                        if each_attribute.is_required:
+                            xml+=" readonly='1'"
+                        if each_attribute.frontend_input in ['textarea']:
+                            xml+=" colspan='4' nolabel='1' " 
+                        xml+=" />\n"
+            xml+="</group></page>\n"
+        xml+="</notebook>"
+#        print xml
+        return xml
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context={}, toolbar=False):
         result = super(osv.osv, self).fields_view_get(cr, uid, view_id,view_type,context,toolbar=toolbar)
@@ -548,15 +572,10 @@ class product_product(magerp_osv.magerp_osv):
             for field in self.pool.get('ir.model.fields').browse(cr, uid, ir_model_field_ids):
                 if str(field.name).startswith('x_'):
                     field_names.append(field.name)
-            field_tags = ""
-            for field_name in field_names:
-                if field_name:
-                    field_tags += '<field name="%s" />\n' % field_name
             result['fields'].update(self.fields_get(cr, uid, field_names, context))
-            #TODO this insert all product attributes; we could probably tweak the visibility depending on the product attribute set...
-            #FIXME seems there is an issue with non latin chars when client user is not using English
-            result['arch'] = result['arch'].replace('<page string="attributes_placeholder"/>', """<page string="Magento Information" attrs="{'invisible':[('exportable','!=',1)]}">\n%s\n</page>""" % field_tags)
-	return result
+            result['arch'] = result['arch'].replace('<page string="attributes_placeholder"/>', """<page string="Magento Information" attrs="{'invisible':[('exportable','!=',1)]}">\n%s\n</page>""" % self.redefine_prod_view(cr, uid))
+            print "\n\n\n\n",result['arch']
+        return result
     
     #TODO move part of this to declarative mapping CSV template
     def extdata_from_oevals(self, cr, uid, external_referential_id, data_record, mapping_lines, defaults, context):
