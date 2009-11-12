@@ -14,14 +14,14 @@
 						<separator string="Core Components" colspan="4" />
 						<notebook colspan="4">
 							<page string="Referential Actions">
-								<button name="sync_categs" string="Import Product Categories" colspan="2" type="object" />
-								<button name="sync_attribs" string="Import Product Attributes" colspan="2" type="object" />
-								<button name="sync_attrib_sets" string="Import Product Attribute Sets" colspan="2" type="object" />
-								<button name="sync_attrib_groups" string="Import Attribute Groups" colspan="2" type="object" />
-								<button name="sync_customer_groups" string="Import Customer Groups (Partner Categories)" colspan="2" type="object" />
+								<button name="sync_customer_groups" string="1 - Import Customer Groups (Partner Categories)" colspan="2" type="object" />
+								<button name="sync_attrib_groups" string="4 - Import Attribute Groups" colspan="2" type="object" />
+								<button name="sync_categs" string="2 - Import Product Categories" colspan="2" type="object" />
+								<button name="sync_attribs" string="5 - Import Product Attributes" colspan="2" type="object" />
+								<button name="sync_attrib_sets" string="3 - Import Product Attribute Sets" colspan="2" type="object" />
 								<newline />
 								<field name="default_pro_cat" />
-								<button name="sync_products" string="Import Products" colspan="2" type="object" />
+								<button name="sync_products" string="6 - Import Products" colspan="2" type="object" />
 <!--								<button name="sync_customer_addresses" string="Sync Customer Addresses" colspan="2" type="object" />-->
 <!--								<button name="export_products" string="Export Products" colspan="2" type="object" />-->
 							</page>
