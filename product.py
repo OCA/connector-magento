@@ -218,7 +218,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
                         self.pool.get('magerp.product_attribute_options').data_to_save(cr,uid,options_data,context={'attribute_id':crid,'referential_id':vals['referential_id']})
                     #self.pool.get('magerp.product_attribute_options').mage_import_base(cr, uid, core_imp_conn, inst.id, defaults={'attribute_id':crid,'ids_or_filter':[vals['magento_id']]})
                 #Manage fields
-                if vals['attribute_code'] and vals.get('frontend_input', False) != 'multiselect': #TODO map multiselect as the string serialisation of the table and evaluate it at export
+                if vals['attribute_code'] and vals.get('frontend_input', False):
                     #Code for dynamically generating field name and attaching to this
                     model_id = self.pool.get('ir.model').search(cr, uid, [('model', '=', 'product.product')])
                     type_conversion = {
@@ -230,6 +230,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
                             'price':'float',
                             'media_image':'binary',
                             'gallery':'binary',
+                            'multiselect':'char',
                             False:'char'
                         }
                     type_casts = {
@@ -241,6 +242,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
                             'price':'float',
                             'media_image':'False',
                             'gallery':'False',
+                            'multiselect':'str',
                             False:'str'
                             }
                     if model_id and len(model_id) == 1:
@@ -285,6 +287,9 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
                                 mapping_line['in_function'] = "if ifield:\n\toption_id = self.pool.get('magerp.product_attribute_options').search(cr,uid,[('attribute_id','=',%s),('value','=',ifield)])\n\tif option_id:\n\t\t\tresult = [('"  % crid
                                 mapping_line['in_function'] += field_name + "',ifield)]"
                                 mapping_line['out_function'] = "option=self.pool.get('magerp.product_attribute_options').browse(cr, uid, record['%s'])\nif option:\n\tresult=[('%s',option.value)]" % (vals['attribute_code'], field_name)
+                            elif field_vals['ttype'] in ['multiselect']:
+                                mapping_line['in_function'] = "result=[('%s',str(ifield))]" % field_name
+                                mapping_line['out_function'] = "result= record['%field_name'] and [('%s', eval(record['%s']))] or []" % (field_name, vals['attribute_code'], field_name)
                             elif field_vals['ttype'] in ['binary']:
                                 print "Binary mapping not done yet :("
                             self.pool.get('external.mapping.line').create(cr,uid,mapping_line)
@@ -529,7 +534,7 @@ class product_product(magerp_osv.magerp_osv):
     
     #old attempt to create product view taking Magento attributes into account.
     #there might be some idea to group fields here, however, fields should never appear twice, even hidden, not sure it would work...
-    def redefine_prod_view(self,cr,uid):
+    def redefine_prod_view(self,cr,uid, field_names):
         #This function will rebuild the view for product from instances, attribute groups etc
         #Get all objects needed
         #inst_obj = self.pool.get('external.referential')
@@ -546,14 +551,14 @@ class product_product(magerp_osv.magerp_osv):
             attributes_in_group_ids = attr_obj.search(cr,uid,[('group','=',each_group.id)])
             attributes_in_group = attr_obj.browse(cr,uid,attributes_in_group_ids)
             for each_attribute in attributes_in_group:
-#                print each_attribute.group
-                if each_attribute.group.id == each_group.id:
+                #TODO understand why we need to do "x_magerp_" +  each_attribute.attribute_code in field_names or fix it
+                if each_attribute.group.id == each_group.id and "x_magerp_" +  each_attribute.attribute_code in field_names:
                     if not each_attribute.attribute_code in attr_obj._no_create_list:
                         if each_attribute.frontend_input in ['textarea']:
                             xml+="<newline/><separator colspan='4' string='%s'/>" % (each_attribute.frontend_label,)
                         xml+="<field name='x_magerp_" +  each_attribute.attribute_code + "'"
                         if each_attribute.is_required:
-                            xml+=" readonly='1'"
+                            xml+=" required='1'"
                         if each_attribute.frontend_input in ['textarea']:
                             xml+=" colspan='4' nolabel='1' " 
                         xml+=" />\n"
@@ -573,8 +578,8 @@ class product_product(magerp_osv.magerp_osv):
                 if str(field.name).startswith('x_'):
                     field_names.append(field.name)
             result['fields'].update(self.fields_get(cr, uid, field_names, context))
-            result['arch'] = result['arch'].replace('<page string="attributes_placeholder"/>', """<page string="Magento Information" attrs="{'invisible':[('exportable','!=',1)]}">\n%s\n</page>""" % self.redefine_prod_view(cr, uid))
-            print "\n\n\n\n",result['arch']
+            result['arch'] = result['arch'].replace('<page string="attributes_placeholder"/>', """<page string="Magento Information" attrs="{'invisible':[('exportable','!=',1)]}">\n%s\n</page>""" % self.redefine_prod_view(cr, uid, field_names))
+            #print "\n\n\n\n",result['arch']
         return result
     
     #TODO move part of this to declarative mapping CSV template
