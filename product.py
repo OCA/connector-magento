@@ -286,10 +286,10 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
                             elif field_vals['ttype'] in ['many2one']:
                                 mapping_line['in_function'] = "if ifield:\n\toption_id = self.pool.get('magerp.product_attribute_options').search(cr,uid,[('attribute_id','=',%s),('value','=',ifield)])\n\tif option_id:\n\t\t\tresult = [('"  % crid
                                 mapping_line['in_function'] += field_name + "',option_id[0])]"
-                                mapping_line['out_function'] = "option=self.pool.get('magerp.product_attribute_options').browse(cr, uid, record['%s'])\nif option:\n\tresult=[('%s',option.value)]" % (vals['attribute_code'], field_name)
+                                mapping_line['out_function'] = "if record['%s']:\n\toption=self.pool.get('magerp.product_attribute_options').browse(cr, uid, record['%s'][0])\n\tif option:\n\t\tresult=[('%s',option.value)]" % (field_name, field_name, vals['attribute_code'])
                             elif field_vals['ttype'] in ['multiselect']:
                                 mapping_line['in_function'] = "result=[('%s',str(ifield))]" % field_name
-                                mapping_line['out_function'] = "result= record['%field_name'] and [('%s', eval(record['%s']))] or []" % (field_name, vals['attribute_code'], field_name)
+                                mapping_line['out_function'] = "result= record['%s'] and [('%s', eval(record['%s']))] or []" % (field_name, vals['attribute_code'], field_name)
                             elif field_vals['ttype'] in ['binary']:
                                 print "Binary mapping not done yet :("
                             self.pool.get('external.mapping.line').create(cr,uid,mapping_line)
@@ -458,7 +458,7 @@ class product_product(magerp_osv.magerp_osv):
 
     _columns = {
         'magento_sku':fields.char('Magento SKU', size=64),
-        'exportable':fields.boolean('Exported to magento?'),
+        'exportable':fields.boolean('Exported to Magento?'),
         'created_at':fields.date('Created'), #created_at & updated_at in magento side, to allow filtering/search inside OpenERP!
         'updated_at':fields.date('Created'),
         'set':fields.many2one('magerp.product_attribute_set', 'Attribute Set'),
@@ -558,7 +558,8 @@ class product_product(magerp_osv.magerp_osv):
                             xml+="<newline/><separator colspan='4' string='%s'/>" % (each_attribute.frontend_label,)
                         xml+="<field name='x_magerp_" +  each_attribute.attribute_code + "'"
                         if each_attribute.is_required:
-                            xml+=" required='1'"
+                            xml+=""" attrs="{'required':[('exportable','=',True)]}" """
+                            #xml+=" required='1'"
                         if each_attribute.frontend_input in ['textarea']:
                             xml+=" colspan='4' nolabel='1' " 
                         xml+=" />\n"
@@ -602,7 +603,7 @@ class product_product(magerp_osv.magerp_osv):
 
         if not product_data.get('price', False):
             pl_default_id = shop.pricelist_id and shop.pricelist_id.id or self.pool.get('product.pricelist').search(cr, uid, [('type', '=', 'sale')])
-            roduct_data.update({'price': self.pool.get('product.pricelist').price_get(cr, uid, pl_default_id, product.id, 1.0)[pl_default_id[0]]})
+            product_data.update({'price': self.pool.get('product.pricelist').price_get(cr, uid, pl_default_id, product.id, 1.0)[pl_default_id[0]]})
             
         if not product_data.get('tax_class_id', False):
             product_data.update({'tax_class_id': 2}) #FIXME hugly!
