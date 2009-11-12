@@ -507,6 +507,34 @@ class product_product(magerp_osv.magerp_osv):
             self.create_tier_price(cr, uid, tier_price, instance, crid)
         #Perform other operations
         return crid
+    
+    #old attempt to create product view taking Magento attributes into account.
+    #there might be some idea to group fields here, however, fields should never appear twice, even hidden, not sure it would work...
+#    def redefine_prod_view(self,cr,uid,ids,ctx):
+#        #This function will rebuild the view for product from instances, attribute groups etc
+#        #Get all objects needed
+#        inst_obj = self.pool.get('external.referential')
+#        attr_set_obj = self.pool.get('magerp.product_attribute_set')
+#        attr_group_obj = self.pool.get('magerp.product_attribute_group')
+#        attr_obj = self.pool.get('magerp.product_attributes')
+#        #Predefined items on top
+#        #Instance
+#        #Attribute Set
+#        #Get all instances
+#        inst_ids = inst_obj.search(cr,uid,[])#TODO:Search for active instances only
+#        instances = inst_obj.read(cr,uid,inst_ids,[])
+#        for each_instance in instances:
+#            #create a group & a notebook inside, group attr
+#            attr_set_ids = attr_set_obj.search(cr,uid,[('referential_id','=',each_instance['id'])])
+#            attr_sets = attr_set_obj.browse(cr,uid,attr_set_ids)
+#            for each_set in attr_sets:
+#                #Create a page with attrs corresponding to the set id
+#                attr_grp_ids = attr_group_obj.search(cr,uid,[('attribute_set','=',each_set['id'])]) #attribute_set is a function field, may slow down the whole thing
+#                attr_groups = attr_group_obj.read(cr,uid,attr_grp_ids,[])
+#                for each_group in attr_groups:
+#                    #Create a page for the attribute group
+#                    attribute_ids = each_set.attributes
+#                    attr
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context={}, toolbar=False):
         result = super(osv.osv, self).fields_view_get(cr, uid, view_id,view_type,context,toolbar=toolbar)
