@@ -288,15 +288,14 @@ class magerp_product_attribute_options(magerp_osv.magerp_osv):
     _name = "magerp.product_attribute_options"
     _description = "Options  of selected attributes"
     _rec_name = "label"
-    _LIST_METHOD = 'ol_catalog_product_attribute.options'
     
     _columns = {
-        'attribute_id':fields.many2one('magerp.product_attributes', 'Attribute'),
-        'attribute_name':fields.related('attribute_id', 'attribute_code', type='char', string='Attribute Code',),
-        'value':fields.char('Value', size=200),
-        'ipcast':fields.char('Type cast', size=50),
-        'label':fields.char('Label', size=100),
-        'referential_id':fields.many2one('external.referential', 'Magento Instance', readonly=True),
+                'attribute_id':fields.many2one('magerp.product_attributes', 'Attribute'),
+                'attribute_name':fields.related('attribute_id', 'attribute_code', type='char', string='Attribute Code',),
+                'value':fields.char('Value', size=200),
+                'ipcast':fields.char('Type cast', size=50),
+                'label':fields.char('Label', size=100),
+                'referential_id':fields.many2one('external.referential', 'Magento Instance', readonly=True),
                 }
     def data_to_save(self,cr,uid,vals_list,context={}):
         """This method will take data from vals and use context to create record"""
