@@ -272,27 +272,29 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
                         #Search & create mapping entries
                         mapping_id = self.pool.get('external.mapping').search(cr, uid, [('referential_id', '=', referential_id), ('model_id', '=', model_id)])
                         if field_ids and mapping_id:
-                            field_id = field_ids[0]
-                            mapping_line = {
-                                'external_field': vals['attribute_code'],
-                                'mapping_id': mapping_id[0],
-                                'type': 'in_out',
-                                'external_type':type_casts[vals.get('frontend_input', False)],
-                                            }
-                            mapping_line['field_id'] = field_id,#TODO also deal with multiselect
-                            if field_vals['ttype'] in ['char','text','date','float']:
-                                mapping_line['in_function'] = "result =[('" + field_name + "',ifield)]"
-                                mapping_line['out_function'] = "result=[('%s',record['%s'])]" % (vals['attribute_code'], field_name)
-                            elif field_vals['ttype'] in ['many2one']:
-                                mapping_line['in_function'] = "if ifield:\n\toption_id = self.pool.get('magerp.product_attribute_options').search(cr,uid,[('attribute_id','=',%s),('value','=',ifield)])\n\tif option_id:\n\t\t\tresult = [('"  % crid
-                                mapping_line['in_function'] += field_name + "',option_id[0])]"
-                                mapping_line['out_function'] = "if record['%s']:\n\toption=self.pool.get('magerp.product_attribute_options').browse(cr, uid, record['%s'][0])\n\tif option:\n\t\tresult=[('%s',option.value)]" % (field_name, field_name, vals['attribute_code'])
-                            elif field_vals['ttype'] in ['multiselect']:
-                                mapping_line['in_function'] = "result=[('%s',str(ifield))]" % field_name
-                                mapping_line['out_function'] = "result= record['%s'] and [('%s', eval(record['%s']))] or []" % (field_name, vals['attribute_code'], field_name)
-                            elif field_vals['ttype'] in ['binary']:
-                                print "Binary mapping not done yet :("
-                            self.pool.get('external.mapping.line').create(cr,uid,mapping_line)
+                            existing_line = self.pool.get('external.mapping.line').search(cr, uid, [('external_field', '=', vals['attribute_code']), ('mapping_id', '=', mapping_id[0])])
+                            if not existing_line or len(existing_line) == 0:
+                                field_id = field_ids[0]
+                                mapping_line = {
+                                                    'external_field': vals['attribute_code'],
+                                                    'mapping_id': mapping_id[0],
+                                                    'type': 'in_out',
+                                                    'external_type':type_casts[vals.get('frontend_input', False)],
+                                                }
+                                mapping_line['field_id'] = field_id,#TODO also deal with multiselect
+                                if field_vals['ttype'] in ['char','text','date','float']:
+                                    mapping_line['in_function'] = "result =[('" + field_name + "',ifield)]"
+                                    mapping_line['out_function'] = "result=[('%s',record['%s'])]" % (vals['attribute_code'], field_name)
+                                elif field_vals['ttype'] in ['many2one']:
+                                    mapping_line['in_function'] = "if ifield:\n\toption_id = self.pool.get('magerp.product_attribute_options').search(cr,uid,[('attribute_id','=',%s),('value','=',ifield)])\n\tif option_id:\n\t\t\tresult = [('"  % crid
+                                    mapping_line['in_function'] += field_name + "',option_id[0])]"
+                                    mapping_line['out_function'] = "if record['%s']:\n\toption=self.pool.get('magerp.product_attribute_options').browse(cr, uid, record['%s'][0])\n\tif option:\n\t\tresult=[('%s',option.value)]" % (field_name, field_name, vals['attribute_code'])
+                                elif field_vals['ttype'] in ['multiselect']:
+                                    mapping_line['in_function'] = "result=[('%s',str(ifield))]" % field_name
+                                    mapping_line['out_function'] = "result= record['%s'] and [('%s', eval(record['%s']))] or []" % (field_name, vals['attribute_code'], field_name)
+                                elif field_vals['ttype'] in ['binary']:
+                                    print "Binary mapping not done yet :("
+                                self.pool.get('external.mapping.line').create(cr,uid,mapping_line)
         return crid
 
 magerp_product_attributes()

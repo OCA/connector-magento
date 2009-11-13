@@ -104,7 +104,7 @@ else:
 "mag_erp_attr_23","magento1324","model_magerp_product_attributes","note","in_out","str","result=[('note', ifield)]","result=[('note', record['note'])]"
 "mag_erp_attr_24","magento1324","model_magerp_product_attributes","entity_type_id","in_out","int","result=[('entity_type_id', ifield)]","result=[('entity_type_id', record['entity_type_id'])]"
 
-"mag_erp_prd_2","magento1324","product.model_product_product","name","in_out","str","result = [('name',ifield)]", "result = [('name',record['name'])]"
+"mag_erp_prd_2","magento1324","product.model_product_product","name","in_out","str","result = [('name',ifield)]","result = [('name',record['name'])]"
 "mag_erp_prd_3","magento1324","product.model_product_product","description","in_out","str","result = [('description',ifield)]",
 "mag_erp_prd_4","magento1324","product.model_product_product","short_description","in_out","str","result = [('description_sale',ifield)]",
 "mag_erp_prd_5","magento1324","product.model_product_product","sku","in_out","str","result = [('magento_sku',ifield)]",
