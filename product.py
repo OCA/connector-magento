@@ -543,7 +543,7 @@ class product_product(magerp_osv.magerp_osv):
         attr_set_obj = self.pool.get('magerp.product_attribute_set')
         attr_group_obj = self.pool.get('magerp.product_attribute_groups')
         attr_obj = self.pool.get('magerp.product_attributes')
-        xml = "<notebook colspan='4'>\n"
+        xml = u"<notebook colspan='4'>\n"
         attr_grp_ids = attr_group_obj.search(cr,uid,[])
         attr_groups = attr_group_obj.browse(cr,uid,attr_grp_ids)
         for each_group in attr_groups:
@@ -567,7 +567,6 @@ class product_product(magerp_osv.magerp_osv):
                         xml+=" />\n"
             xml+="</group></page>\n"
         xml+="</notebook>"
-#        print xml
         return xml
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context={}, toolbar=False):
@@ -581,8 +580,7 @@ class product_product(magerp_osv.magerp_osv):
                 if str(field.name).startswith('x_'):
                     field_names.append(field.name)
             result['fields'].update(self.fields_get(cr, uid, field_names, context))
-            result['arch'] = result['arch'].replace('<page string="attributes_placeholder"/>', """<page string="Magento Information" attrs="{'invisible':[('exportable','!=',1)]}">\n%s\n</page>""" % self.redefine_prod_view(cr, uid, field_names))
-            #print "\n\n\n\n",result['arch']
+            result['arch'] = result['arch'].replace('<page string="attributes_placeholder"/>', """<page string="Magento Information" attrs="{'invisible':[('exportable','!=',1)]}">\n""" + self.redefine_prod_view(cr, uid, field_names) + """\n</page>""") 
         return result
     
     #TODO move part of this to declarative mapping CSV template
