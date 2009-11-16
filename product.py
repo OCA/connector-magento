@@ -592,17 +592,6 @@ class product_product(magerp_osv.magerp_osv):
         product = self.browse(cr, uid, data_record['id'], context)
         shop = self.pool.get('sale.shop').browse(cr, uid, context['shop_id'], context)
 
-        if not product_data.get('category_ids', False):
-            main_categ_id = self.pool.get('product.category').oeid_to_extid(cr, uid, product.categ_id.id, external_referential_id, context)
-            if not main_categ_id:
-                main_categ_id = magento_root_category
-            categ_ids = [main_categ_id]
-            for categ in product.categ_ids: #deal with extra m2m categories
-                categ_id =  self.pool.get('product.category').oeid_to_extid(cr, uid, categ.id, external_referential_id, context)
-                if categ_id:
-                    categ_ids.append(categ_id)
-            product_data.update({'category_ids': categ_ids})
-
         if not product_data.get('price', False):
             pl_default_id = shop.pricelist_id and shop.pricelist_id.id or self.pool.get('product.pricelist').search(cr, uid, [('type', '=', 'sale')])
             product_data.update({'price': self.pool.get('product.pricelist').price_get(cr, uid, pl_default_id, product.id, 1.0)[pl_default_id[0]]})

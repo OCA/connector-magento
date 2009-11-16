@@ -153,7 +153,7 @@ class external_referential(magerp_osv.magerp_osv):
                 for each in list_prods:
                     each_product_info = attr_conn.call('catalog_product.info', [each['product_id']])
                     result.append(each_product_info)
-                self.pool.get('product.product').ext_import(cr, uid, result, inst.id, defaults={'categ_id':inst.default_pro_cat.id}, context={})
+                self.pool.get('product.product').ext_import(cr, uid, result, inst.id, context={})
             else:
                 osv.except_osv(_("Connection Error"), _("Could not connect to server\nCheck location, username & password."))
                 
