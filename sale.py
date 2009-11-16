@@ -89,6 +89,7 @@ class sale_order(magerp_osv.magerp_osv):
     
     def _auto_init(self, cr, context={}):
         cr.execute("ALTER TABLE sale_order_line ALTER COLUMN discount TYPE numeric(16,6);")
+        cr.execute("ALTER TABLE account_invoice_line ALTER COLUMN discount TYPE numeric(16,6);")
         super(sale_order, self)._auto_init(cr, context)
         
     def get_mage_customer_address_id(self, address_data):
