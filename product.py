@@ -550,19 +550,21 @@ class product_product(magerp_osv.magerp_osv):
             #Create a page for the attribute group
             xml+="<page string='" + each_group.attribute_group_name + "'>\n<group colspan='4' col='4'>"
 #            print "searching for attributes in group %s" % (each_group.id,)
-            attributes_in_group_ids = attr_obj.search(cr,uid,[('group','=',each_group.id)])
-            attributes_in_group = attr_obj.browse(cr,uid,attributes_in_group_ids)
-            for each_attribute in attributes_in_group:
+            attributes_in_group_ids = attr_obj.search(cr,uid,[('group_id','=',each_group.id)])
+            #attributes_in_group = attr_obj.browse(cr,uid,attributes_in_group_ids)
+            attributes_in_group_array = attr_obj.read(cr, uid, attributes_in_group_ids, ['attribute_code', 'frontend_input', 'frontend_label', 'is_required'])
+            for each_attribute_line in attributes_in_group_array:
+                #print "each_attribute_line", each_attribute_line
                 #TODO understand why we need to do "x_magerp_" +  each_attribute.attribute_code in field_names or fix it
-                if each_attribute.group.id == each_group.id and "x_magerp_" +  each_attribute.attribute_code in field_names:
-                    if not each_attribute.attribute_code in attr_obj._no_create_list:
-                        if each_attribute.frontend_input in ['textarea']:
-                            xml+="<newline/><separator colspan='4' string='%s'/>" % (each_attribute.frontend_label,)
-                        xml+="<field name='x_magerp_" +  each_attribute.attribute_code + "'"
-                        if each_attribute.is_required:
+                if "x_magerp_" +  each_attribute_line['attribute_code'] in field_names:
+                    if not each_attribute_line['attribute_code'] in attr_obj._no_create_list:
+                        if each_attribute_line['frontend_input'] in ['textarea']:
+                            xml+="<newline/><separator colspan='4' string='%s'/>" % (each_attribute_line['frontend_label'],)
+                        xml+="<field name='x_magerp_" +  each_attribute_line['attribute_code'] + "'"
+                        if each_attribute_line['is_required']:
                             xml+=""" attrs="{'required':[('exportable','=',True)]}" """
                             #xml+=" required='1'"
-                        if each_attribute.frontend_input in ['textarea']:
+                        if each_attribute_line['frontend_input'] in ['textarea']:
                             xml+=" colspan='4' nolabel='1' " 
                         xml+=" />\n"
             xml+="</group></page>\n"
