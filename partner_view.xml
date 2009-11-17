@@ -25,7 +25,6 @@
 				<field name="parent_id" position="after">
 					<separator string="Magento Information" colspan="4" />
 					<field name="tax_class_id" select="1" />
-					<field name="instance" />
 				</field>
 			</field>
 		</record>
