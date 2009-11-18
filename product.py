@@ -357,6 +357,54 @@ class magerp_product_attribute_set(magerp_osv.magerp_osv):
         'referential_id':fields.many2one('external.referential', 'Magento Instance', readonly=True),
         'magento_id':fields.integer('Magento ID'),
         }
+    
+    def create_product_menu(self, cr, uid, ids, vals, context):
+        data_ids = self.pool.get('ir.model.data').search(cr, uid, [('name', '=', 'menu_products'), ('module', '=', 'product')])
+        if data_ids:
+            product_menu_id = self.pool.get('ir.model.data').read(cr, uid, data_ids[0], ['res_id'])['res_id']
+        if type(ids) != list:
+            ids = [ids]
+
+        for attribute_set in self.browse(cr, uid, ids, context):
+            menu_vals = {
+                            'name': attribute_set.attribute_set_name,
+                            'parent_id': product_menu_id,
+                            'icon': 'STOCK_JUSTIFY_FILL'
+            }
+            
+            action_vals = {
+                            'name': attribute_set.attribute_set_name,
+                            'view_type':'form',
+                            #'view_mode':view,
+                            'context': "{'attribute_set':%d}" % (attribute_set.id,),
+                            'res_model': 'product.product'
+            }
+            
+            existing_menu_id = self.pool.get('ir.ui.menu').search(cr, uid, [('name', '=', attribute_set.attribute_set_name)])
+            if len(existing_menu_id) > 0:
+                action_ref = self.pool.get('ir.ui.menu').browse(cr, uid, existing_menu_id[0]).action
+                action_id = False
+                if action_ref:
+                    action_id = int(action_ref.split(',')[1])
+                    self.pool.get('ir.actions.act_window').write(cr, uid, action_id, action_vals, context)
+                else:
+                    action_id = self.pool.get('ir.actions.act_window').create(cr, uid, action_vals, context)
+                menu_vals['action'] = 'ir.actions.act_window,'+str(action_id)
+                self.pool.get('ir.ui.menu').write(cr, uid, existing_menu_id[0], menu_vals, context)
+            else:
+                action_id = self.pool.get('ir.actions.act_window').create(cr, uid, action_vals, context)
+                menu_vals['action'] = 'ir.actions.act_window,'+str(action_id)
+                self.pool.get('ir.ui.menu').create(cr, uid, menu_vals, context)
+    
+    def write(self, cr, uid, ids, vals, context={}):
+        res = super(magerp_product_attribute_set, self).write(cr, uid, ids, vals, context)
+        self.create_product_menu(cr, uid, ids, vals, context)
+        return res
+    
+    def create(self, cr, uid, vals, context={}):
+         id = super(magerp_product_attribute_set, self).create(cr, uid, vals, context)
+         self.create_product_menu(cr, uid, id, vals, context)
+         return id
 
     def relate(self, cr, uid, mage_inp, instance, *args):
         #TODO: Build the relations code
@@ -533,10 +581,9 @@ class product_product(magerp_osv.magerp_osv):
             self.create_tier_price(cr, uid, tier_price, instance, crid)
         #Perform other operations
         return crid
-    
-    #old attempt to create product view taking Magento attributes into account.
-    #there might be some idea to group fields here, however, fields should never appear twice, even hidden, not sure it would work...
-    def redefine_prod_view(self,cr,uid, field_names):
+
+
+    def redefine_prod_view(self,cr,uid, field_names, attribute_set_id):
         #This function will rebuild the view for product from instances, attribute groups etc
         #Get all objects needed
         #inst_obj = self.pool.get('external.referential')
@@ -546,34 +593,43 @@ class product_product(magerp_osv.magerp_osv):
         xml = u"<notebook colspan='4'>\n"
         attr_grp_ids = attr_group_obj.search(cr,uid,[])
         attr_groups = attr_group_obj.browse(cr,uid,attr_grp_ids)
-        for each_group in attr_groups:
+        
+        attr_set = attr_set_obj.browse(cr, uid, attribute_set_id)
+        
+        cr.execute("select attr_id, group_id, attribute_code, frontend_input, frontend_label, is_required  from magerp_attrset_attr_rel left join magerp_product_attributes on magerp_product_attributes.id = attr_id where magerp_attrset_attr_rel.set_id=%s" % attribute_set_id)
+        results = cr.fetchall()
+        result = results.pop()
+        while len(results) > 0:
+            mag_group_id = result[1]
+            oerp_group_id = attr_group_obj.extid_to_oeid(cr, uid, mag_group_id, attr_set.referential_id.id)
+            group_name = attr_group_obj.read(cr, uid, oerp_group_id, ['attribute_group_name'])['attribute_group_name']
+            
             #Create a page for the attribute group
-            xml+="<page string='" + each_group.attribute_group_name + "'>\n<group colspan='4' col='4'>"
-#            print "searching for attributes in group %s" % (each_group.id,)
-            attributes_in_group_ids = attr_obj.search(cr,uid,[('group_id','=',each_group.id)])
-            #attributes_in_group = attr_obj.browse(cr,uid,attributes_in_group_ids)
-            attributes_in_group_array = attr_obj.read(cr, uid, attributes_in_group_ids, ['attribute_code', 'frontend_input', 'frontend_label', 'is_required'])
-            for each_attribute_line in attributes_in_group_array:
-                #print "each_attribute_line", each_attribute_line
+            xml+="<page string='" + group_name + "'>\n<group colspan='4' col='4'>"
+            while len(results) > 0:
+                if result[1] != mag_group_id:
+                    break
                 #TODO understand why we need to do "x_magerp_" +  each_attribute.attribute_code in field_names or fix it
-                if "x_magerp_" +  each_attribute_line['attribute_code'] in field_names:
-                    if not each_attribute_line['attribute_code'] in attr_obj._no_create_list:
-                        if each_attribute_line['frontend_input'] in ['textarea']:
-                            xml+="<newline/><separator colspan='4' string='%s'/>" % (each_attribute_line['frontend_label'],)
-                        xml+="<field name='x_magerp_" +  each_attribute_line['attribute_code'] + "'"
-                        if each_attribute_line['is_required']:
+                if "x_magerp_" +  result[2] in field_names:
+                    if not result[2] in attr_obj._no_create_list:
+                        if result[3] in ['textarea']:
+                            xml+="<newline/><separator colspan='4' string='%s'/>" % (result[4],)
+                        xml+="<field name='x_magerp_" +  result[2] + "'"
+                        if result[5]:
                             xml+=""" attrs="{'required':[('exportable','=',True)]}" """
                             #xml+=" required='1'"
-                        if each_attribute_line['frontend_input'] in ['textarea']:
+                        if result[3] in ['textarea']:
                             xml+=" colspan='4' nolabel='1' " 
                         xml+=" />\n"
+                        
+                result = results.pop()
             xml+="</group></page>\n"
         xml+="</notebook>"
         return xml
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context={}, toolbar=False):
         result = super(osv.osv, self).fields_view_get(cr, uid, view_id,view_type,context,toolbar=toolbar)
-        if view_type == 'form':
+        if view_type == 'form' and context.get('attribute_set', False):
             ir_model_id = self.pool.get('ir.model').search(cr, uid, [('model', '=', 'product.product')])[0]
             ir_model = self.pool.get('ir.model').browse(cr, uid, ir_model_id)
             ir_model_field_ids = self.pool.get('ir.model.fields').search(cr, uid, [('model_id', '=', ir_model_id)])
@@ -582,7 +638,7 @@ class product_product(magerp_osv.magerp_osv):
                 if str(field.name).startswith('x_'):
                     field_names.append(field.name)
             result['fields'].update(self.fields_get(cr, uid, field_names, context))
-            result['arch'] = result['arch'].replace('<page string="attributes_placeholder"/>', """<page string="Magento Information" attrs="{'invisible':[('exportable','!=',1)]}">\n""" + self.redefine_prod_view(cr, uid, field_names) + """\n</page>""") 
+            result['arch'] = result['arch'].replace('<page string="attributes_placeholder"/>', """<page string="Magento Information" attrs="{'invisible':[('exportable','!=',1)]}">\n""" + self.redefine_prod_view(cr, uid, field_names, context['attribute_set']) + """\n</page>""") 
         return result
     
     #TODO move part of this to declarative mapping CSV template

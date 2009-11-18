@@ -154,6 +154,7 @@
 				<tree string="Magento Product Attributes">
 					<field name="attribute_code" select="1" />
 					<field name="entity_type_id" />
+					<field name="group" />
 				</tree>
 			</field>
 		</record>
