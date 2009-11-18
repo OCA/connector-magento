@@ -117,14 +117,13 @@ if ids_openerp and len(ids_openerp) > 0:
 else:
     categ_id = self.pool.get('external.referential').browse(cr, uid, external_referential_id).default_pro_cat.id
 result = [('categ_id', categ_id)]#TODO map the other categs","
+product = self.browse(cr, uid, record['id'])
 main_categ_id = self.pool.get('product.category').oeid_to_extid(cr, uid, product.categ_id.id, external_referential_id)
-            if not main_categ_id:
-                main_categ_id = magento_root_category
-            categ_ids = [main_categ_id]
-            for categ in product.categ_ids: #deal with extra m2m categories
-                categ_id =  self.pool.get('product.category').oeid_to_extid(cr, uid, categ.id, external_referential_id)
-                if categ_id:
-                    categ_ids.append(categ_id)
+categ_ids = [main_categ_id]
+for categ in product.categ_ids: #deal with extra m2m categories
+    categ_id =  self.pool.get('product.category').oeid_to_extid(cr, uid, categ.id, external_referential_id)
+    if categ_id:
+        categ_ids.append(categ_id)
 result=[('category_ids', categ_ids)]"
 "mag_erp_prd_8","magento1324","product.model_product_product","price","in_out","float","result=[('list_price',ifield)]","result=[]#map later"
 "mag_erp_prd_9","magento1324","product.model_product_product","cost","in_out","float","result=[('standard_price',ifield)]","result = [('cost',record['standard_price'] or 0)]"
