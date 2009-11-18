@@ -21,8 +21,6 @@
 #########################################################################
 
 from osv import osv, fields
-#from logilab.astng.nodes import try_except_block_range
-from compiler.ast import TryFinally
 import datetime
 import base64
 import time
