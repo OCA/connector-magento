@@ -627,16 +627,19 @@ class product_product(magerp_osv.magerp_osv):
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context={}, toolbar=False):
         result = super(osv.osv, self).fields_view_get(cr, uid, view_id,view_type,context,toolbar=toolbar)
-        if view_type == 'form' and context.get('attribute_set', False):
-            ir_model_id = self.pool.get('ir.model').search(cr, uid, [('model', '=', 'product.product')])[0]
-            ir_model = self.pool.get('ir.model').browse(cr, uid, ir_model_id)
-            ir_model_field_ids = self.pool.get('ir.model.fields').search(cr, uid, [('model_id', '=', ir_model_id)])
-            field_names = []
-            for field in self.pool.get('ir.model.fields').browse(cr, uid, ir_model_field_ids):
-                if str(field.name).startswith('x_'):
-                    field_names.append(field.name)
-            result['fields'].update(self.fields_get(cr, uid, field_names, context))
-            result['arch'] = result['arch'].replace('<page string="attributes_placeholder"/>', """<page string="Magento Information" attrs="{'invisible':[('exportable','!=',1)]}">\n""" + self.redefine_prod_view(cr, uid, field_names, context['attribute_set']) + """\n</page>""") 
+        if view_type == 'form':
+            if context.get('attribute_set', False):
+                ir_model_id = self.pool.get('ir.model').search(cr, uid, [('model', '=', 'product.product')])[0]
+                ir_model = self.pool.get('ir.model').browse(cr, uid, ir_model_id)
+                ir_model_field_ids = self.pool.get('ir.model.fields').search(cr, uid, [('model_id', '=', ir_model_id)])
+                field_names = []
+                for field in self.pool.get('ir.model.fields').browse(cr, uid, ir_model_field_ids):
+                    if str(field.name).startswith('x_'):
+                        field_names.append(field.name)
+                result['fields'].update(self.fields_get(cr, uid, field_names, context))
+                result['arch'] = result['arch'].replace('<page string="attributes_placeholder"/>', """<page string="Magento Information" attrs="{'invisible':[('exportable','!=',1)]}">\n""" + self.redefine_prod_view(cr, uid, field_names, context['attribute_set']) + """\n</page>""")
+            else:
+                result['arch'] = result['arch'].replace('<page string="attributes_placeholder"/>', "")
         return result
     
     #TODO move part of this to declarative mapping CSV template
