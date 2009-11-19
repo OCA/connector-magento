@@ -279,7 +279,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
                                                     'type': 'in_out',
                                                     'external_type':type_casts[vals.get('frontend_input', False)],
                                                 }
-                                mapping_line['field_id'] = field_id,#TODO also deal with multiselect
+                                mapping_line['field_id'] = field_id,
                                 if field_vals['ttype'] in ['char','text','date','float']:
                                     mapping_line['in_function'] = "result =[('" + field_name + "',ifield)]"
                                     mapping_line['out_function'] = "result=[('%s',record['%s'])]" % (vals['attribute_code'], field_name)
@@ -594,7 +594,7 @@ class product_product(magerp_osv.magerp_osv):
         
         attr_set = attr_set_obj.browse(cr, uid, attribute_set_id)
         
-        cr.execute("select attr_id, group_id, attribute_code, frontend_input, frontend_label, is_required  from magerp_attrset_attr_rel left join magerp_product_attributes on magerp_product_attributes.id = attr_id where magerp_attrset_attr_rel.set_id=%s" % attribute_set_id)
+        cr.execute("select attr_id, group_id, attribute_code, frontend_input, frontend_label, is_required, apply_to  from magerp_attrset_attr_rel left join magerp_product_attributes on magerp_product_attributes.id = attr_id where magerp_attrset_attr_rel.set_id=%s" % attribute_set_id)
         results = cr.fetchall()
         result = results.pop()
         while len(results) > 0:
@@ -613,7 +613,7 @@ class product_product(magerp_osv.magerp_osv):
                         if result[3] in ['textarea']:
                             xml+="<newline/><separator colspan='4' string='%s'/>" % (result[4],)
                         xml+="<field name='x_magerp_" +  result[2] + "'"
-                        if result[5]:
+                        if result[5] and result[6] == "" or "simple" in result[6] or "configurable" in result[6]:
                             xml+=""" attrs="{'required':[('exportable','=',True)]}" """
                             #xml+=" required='1'"
                         if result[3] in ['textarea']:
