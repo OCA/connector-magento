@@ -148,9 +148,9 @@ class sale_order(magerp_osv.magerp_osv):
         ship_product = self.pool.get('product.product').browse(cr, uid, ship_product_id, context)
         
         #simple VAT tax on shipping (else override method):
-        ship_tax_vat = float(data_record['shipping_tax_amount'])/float(data_record['shipping_amount'])
         tax_id = []
-        if ship_tax_vat > 0:
+        if data_record['shipping_tax_amount'] and float(data_record['shipping_tax_amount']) != 0:
+            ship_tax_vat = float(data_record['shipping_tax_amount'])/float(data_record['shipping_amount'])
             ship_tax_ids = self.pool.get('account.tax').search(cr, uid, [('type_tax_use', '=', 'sale'), ('amount', '>=', ship_tax_vat - 0.001), ('amount', '<=', ship_tax_vat + 0.001)])
             if ship_tax_ids and len(ship_tax_ids) > 0:
                 tax_id = [(6, 0, [ship_tax_ids[0]])]
