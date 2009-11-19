@@ -128,6 +128,16 @@ result=[('category_ids', categ_ids)]"
 "mag_erp_prd_8","magento1324","product.model_product_product","price","in_out","float","result=[('list_price',ifield)]","result=[]#map later"
 "mag_erp_prd_9","magento1324","product.model_product_product","cost","in_out","float","result=[('standard_price',ifield)]","result = [('cost',record['standard_price'] or 0)]"
 "mag_erp_prd_10","magento1324","product.model_product_product","set","in_out","str","result=[]",
+"mag_erp_prd_11","magento1324","product.model_product_product","special_price","in_out","float","result = [('x_magerp_special_price',ifield)]","
+if record['x_magerp_special_price'] and record['x_magerp_special_price'] != 0:
+    result = [('special_price',record['x_magerp_special_price'])]
+else:
+    result = [('special_price',False)]"
+"mag_erp_prd_12","magento1324","product.model_product_product","minimal_price","in_out","float","result = [('x_magerp_minimal_price',ifield)]","
+if record['x_magerp_minimal_price'] and record['x_magerp_minimal_price'] != 0:
+    result = [('minimal_price',record['x_magerp_minimal_price'])]
+else:
+    result = [('minimal_price',False)]"
 "magento_cst_grp_1","magento1324","base.model_res_partner_category","customer_group_code","in","str","result=[('name',ifield)]",
 "magento_cst_grp_3","magento1324","base.model_res_partner_category","tax_class_id","in","int","result=[('tax_class_id',ifield)]",
 "magento_prt_adr_2","magento1324","base.model_res_partner_address","city","in_out","str","result=[('city',ifield)]",
