@@ -613,7 +613,7 @@ class product_product(magerp_osv.magerp_osv):
                         if result[3] in ['textarea']:
                             xml+="<newline/><separator colspan='4' string='%s'/>" % (result[4],)
                         xml+="<field name='x_magerp_" +  result[2] + "'"
-                        if result[5] and result[6] == "" or "simple" in result[6] or "configurable" in result[6]:
+                        if result[5] and (result[6] == "" or "simple" in result[6] or "configurable" in result[6]):
                             xml+=""" attrs="{'required':[('exportable','=',True)]}" """
                             #xml+=" required='1'"
                         if result[3] in ['textarea']:
