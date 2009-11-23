@@ -373,7 +373,7 @@ class magerp_product_attribute_set(magerp_osv.magerp_osv):
             action_vals = {
                             'name': attribute_set.attribute_set_name,
                             'view_type':'form',
-                            'domain':"[('set', '=', %s)]" % attribute_set.id,
+                            'domain':attribute_set.attribute_set_name != 'Default' and "[('set', '=', %s)]" % attribute_set.id or "",
                             'context': "{'set':%s}" % attribute_set.id,
                             'res_model': 'product.product'
             }
@@ -636,7 +636,7 @@ class product_product(magerp_osv.magerp_osv):
                     if str(field.name).startswith('x_'):
                         field_names.append(field.name)
                 result['fields'].update(self.fields_get(cr, uid, field_names, context))
-                result['arch'] = result['arch'].replace('<page string="attributes_placeholder"/>', """<page string="Magento Information" attrs="{'invisible':[('exportable','!=',1)]}"><field name='set' required='1' readonly='1'/>\n""" + self.redefine_prod_view(cr, uid, field_names, context['set']) + """\n</page>""")
+                result['arch'] = result['arch'].replace('<page string="attributes_placeholder"/>', """<page string="Magento Information" attrs="{'invisible':[('exportable','!=',1)]}"><field name='set' />\n""" + self.redefine_prod_view(cr, uid, field_names, context['set']) + """\n</page>""")
             else:
                 result['arch'] = result['arch'].replace('<page string="attributes_placeholder"/>', "")
         return result
