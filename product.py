@@ -195,6 +195,24 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
                         'cost',
                         'set'
                        ]
+    
+    _translatable_default_codes = [
+                                   'description',
+                                   'meta_description',
+                                   'meta_keyword',
+                                   'meta_title',
+                                   'name',
+                                   'short_description'
+                                   ]
+    
+    def _is_attribute_translatable(self, vals):
+        """Tells if field associated to attribute should be translatable or not.
+        For now we are using a default list, later we could say that any attribute
+        which scope in Magento is 'store' should be translated."""
+        if vals['attribute_code'] in self._translatable_default_codes:
+            return True
+        else:
+            return False
 
     def create(self, cr, uid, vals, context={}):
         if not vals['attribute_code'] in self._no_create_list:
@@ -257,6 +275,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
                                         'model':'product.product',
                                         'field_description':vals.get('frontend_label', False) or vals['attribute_code'],
                                         'ttype':type_conversion[vals.get('frontend_input', False)],
+                                        'translate': self._is_attribute_translatable(vals)
                                       }
                         if not field_ids:
                             #The field is not there create it
