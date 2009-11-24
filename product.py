@@ -658,7 +658,8 @@ class product_product(magerp_osv.magerp_osv):
                     if str(field.name).startswith('x_'):
                         field_names.append(field.name)
                 result['fields'].update(self.fields_get(cr, uid, field_names, context))
-                result['arch'] = result['arch'].replace('<page string="attributes_placeholder"/>', """<page string="Magento Information" attrs="{'invisible':[('exportable','!=',1)]}"><field name='set' />\n""" + self.redefine_prod_view(cr, uid, field_names, context['set']) + """\n</page>""")
+                view_part = self.redefine_prod_view(cr, uid, field_names, context['set']).decode('utf8')
+                result['arch'] = result['arch'].decode('utf8').replace('<page string="attributes_placeholder"/>', """<page string="Magento Information" attrs="{'invisible':[('exportable','!=',1)]}"><field name='set' />\n""" + view_part + """\n</page>""")
             else:
                 result['arch'] = result['arch'].replace('<page string="attributes_placeholder"/>', "")
         return result
