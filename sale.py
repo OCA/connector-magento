@@ -66,6 +66,7 @@ class sale_shop(magerp_osv.magerp_osv):
         'root_category_id':fields.integer('Root product Category'),
         'magento_root_category':fields.function(_get_rootcategory, type="many2one", relation="product.category", method=True, string="Root Category", store=True),
         'exportable_root_category_ids': fields.function(_get_exportable_root_category_ids, type="many2many", relation="product.category", method=True, string="Root Category"), #fields.function(_get_exportable_root_category_ids, type="many2one", relation="product.category", method=True, 'Exportable Root Categories'),
+        'storeview_ids': fields.one2many('magerp.storeviews', 'shop_id', 'Store Views'),
     }   
 
     def import_shop_orders(self, cr, uid, shop, defaults, ctx):#FIXME: no guest order support for now: [{'customer_id': {'nlike':False}}]

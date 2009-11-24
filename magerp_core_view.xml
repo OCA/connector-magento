@@ -109,6 +109,7 @@
 						<field name="magento_store_id" readonly="1" />
 						<field name="name" readonly="1" />
 						<field name="code" readonly="1" />
+						<field name="shop_id" readonly="1" />
 						<field name="website_id" readonly="1" />
 						<field name="is_active" readonly="1" />
 						<field name="sort_order" readonly="1" />
@@ -126,7 +127,7 @@
 					<field name="magento_store_id" readonly="1" select="1" />
 					<field name="name" readonly="1" select="1" />
 					<field name="code" readonly="1" select="1" />
-					<field name="magento_website_id" readonly="1" select="1" />
+					<field name="shop_id" readonly="1" select="1" />
 					<field name="is_active" readonly="1" select="2" />
 					<field name="sort_order" readonly="1" select="2" />
 					<field name="default_shop_id" readonly="1" select="2" />
@@ -150,6 +151,7 @@
 			<field name="arch" type="xml">
 				<field name="exportable_product_ids" position="after">
 					<field name="magento_root_category" readonly="1" />
+					<field name="storeview_ids" />
 				</field>
 			</field>
 		</record>

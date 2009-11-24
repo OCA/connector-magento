@@ -54,8 +54,8 @@ class external_referential(magerp_osv.magerp_osv):
             core_imp_conn = self.external_connection(cr, uid, inst, DEBUG)
             if core_imp_conn:
                 self.pool.get('external.shop.group').mage_import_base(cr, uid,core_imp_conn, inst.id, defaults={'referential_id':inst.id})
-                self.pool.get('magerp.storeviews').mage_import_base(cr,uid,core_imp_conn, inst.id, defaults={})
                 self.pool.get('sale.shop').mage_import_base(cr, uid, core_imp_conn, inst.id, defaults={})
+                self.pool.get('magerp.storeviews').mage_import_base(cr,uid,core_imp_conn, inst.id, defaults={})
             else:
                 osv.except_osv(_("Connection Error"), _("Could not connect to server\nCheck location, username & password."))
     
@@ -212,11 +212,10 @@ class magerp_storeviews(magerp_osv.magerp_osv):
         'name':fields.char('Store View Name', size=100),
         'code':fields.char('Code', size=100),
         'magento_store_id':fields.integer('Store ID'),
-        'magento_website_id':fields.integer('Website'), # Many 2 one ?
         'website_id':fields.many2one('external.shop.group', 'Website', select=True, ondelete='cascade'),
         'is_active':fields.boolean('Default ?'),
         'sort_order':fields.integer('Sort Order'),
-        'group_id':fields.integer('Default Store Group'), #Many 2 one?
+        'shop_id':fields.many2one('sale.shop', 'Shop', select=True, ondelete='cascade'),
         'default_shop_id':fields.function(_get_default_shop_id, type="many2one", relation="sale.shop", method=True, string="Default Store (Group)"),
     }
 
