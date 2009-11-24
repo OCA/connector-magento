@@ -143,7 +143,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
                                            ('date', 'Date'),
                                            ('price', 'Price'),
                                            ('media_image', 'Media Image'),
-                                           ('gallery', 'Gallery')
+                                           ('gallery', 'Gallery'),
                                            ('weee', 'Fixed Product Tax')
                                            ], 'Frontend Input'
                                           ),
