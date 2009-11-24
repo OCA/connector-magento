@@ -395,7 +395,7 @@ class magerp_product_attribute_set(magerp_osv.magerp_osv):
             action_vals = {
                             'name': attribute_set.attribute_set_name,
                             'view_type':'form',
-                            'domain':attribute_set.attribute_set_name != 'Default' and "[('set', '=', %s)]" % attribute_set.id or "",
+                            'domain':"[('set', '=', %s)]" % attribute_set.id,
                             'context': "{'set':%s}" % attribute_set.id,
                             'res_model': 'product.product'
             }
