@@ -144,6 +144,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
                                            ('price', 'Price'),
                                            ('media_image', 'Media Image'),
                                            ('gallery', 'Gallery')
+                                           ('weee', 'Fixed Product Tax')
                                            ], 'Frontend Input'
                                           ),
         'frontend_class':fields.char('Frontend Class', size=100),
@@ -229,6 +230,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
                             'media_image':'binary',
                             'gallery':'binary',
                             'multiselect':'char',
+                            'weee':'char',
                             False:'char'
                         }
                     type_casts = {
@@ -241,6 +243,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
                             'media_image':'False',
                             'gallery':'False',
                             'multiselect':'str',
+                            'weee':'str',
                             False:'str'
                             }
                     if model_id and len(model_id) == 1:
@@ -280,7 +283,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
                                                     'external_type':type_casts[vals.get('frontend_input', False)],
                                                 }
                                 mapping_line['field_id'] = field_id,
-                                if field_vals['ttype'] in ['char','text','date','float']:
+                                if field_vals['ttype'] in ['char','text','date','float','weee']:
                                     mapping_line['in_function'] = "result =[('" + field_name + "',ifield)]"
                                     mapping_line['out_function'] = "result=[('%s',record['%s'])]" % (vals['attribute_code'], field_name)
                                 elif field_vals['ttype'] in ['many2one']:
