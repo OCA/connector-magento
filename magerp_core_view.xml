@@ -132,6 +132,7 @@
 					<field name="is_active" readonly="1" select="2" />
 					<field name="sort_order" readonly="1" select="2" />
 					<field name="default_shop_id" readonly="1" select="2" />
+					<field name="lang_id" />
 				</tree>
 			</field>
 		</record>
@@ -150,10 +151,15 @@
 			<field name="inherit_id" ref="base_sale_multichannels.base_sale_multichannels_view_shop_form" />
 			<field name="type">form</field>
 			<field name="arch" type="xml">
-				<field name="exportable_product_ids" position="after">
-					<field name="magento_root_category" readonly="1" />
-					<field name="storeview_ids" />
-				</field>
+			    <data>
+			        <field name="exportable_root_category_ids" position="replace">
+			            <field name="exportable_root_category_ids" invisible="1" />
+			        </field>
+					<field name="shop_group_id" position="after">
+						<field name="magento_root_category" readonly="1" />
+						<field name="storeview_ids" nolabel="1" colspan="4" />
+					</field>
+				</data>
 			</field>
 		</record>
 		
