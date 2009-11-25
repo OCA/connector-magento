@@ -19,5 +19,6 @@ import magerp_core
 import product
 import partner
 import sale
+import invoice
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

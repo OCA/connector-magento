@@ -22,6 +22,7 @@
 from osv import osv, fields
 import magerp_osv
 import netsvc
+from tools.translate import _
 
 DEBUG = True
 
@@ -78,15 +79,32 @@ class sale_shop(magerp_osv.magerp_osv):
     def update_shop_orders(self, cr, uid, order, ext_id, ctx):
         conn = ctx.get('conn_obj', False)
         status = ORDER_STATUS_MAPPING.get(order.state, False)
+        result = {}
+        
+        #status update:
         if status:
-            return conn.call('sales_order.addComment', [ext_id, status, '', True])
-        return True
+            result['status_change'] = conn.call('sales_order.addComment', [ext_id, status, '', True])
+        
+        #creation of Magento invoice eventually:
+        cr.execute("select account_invoice.id from account_invoice inner join sale_order_invoice_rel on invoice_id = account_invoice.id where  order_id = %s" % order.id)
+        result = cr.fetchone()
+        if result and len(result) == 1:
+            invoice = self.pool.get("account.invoice").browse(cr, uid, result[0])
+            if invoice.amount_total == order.amount_total and not invoice.magento_ref:
+                result['magento_invoice_ref'] = conn.call('sales_order_invoice.create', [order.magento_incrementid, [], _("Invoice Created"), True, True])
+                self.pool.get("account.invoice").write(cr, uid, invoice.id, {'magento_ref': result['magento_invoice_ref']})
+        
+        return result
 
 sale_shop()
 
 
 class sale_order(magerp_osv.magerp_osv):
     _inherit = "sale.order"
+    
+    _columns = {
+                'magento_incrementid':fields.char('Magento Increment ID'),
+    }
     
     def _auto_init(self, cr, context={}):
         cr.execute("ALTER TABLE sale_order_line ALTER COLUMN discount TYPE numeric(16,6);")
