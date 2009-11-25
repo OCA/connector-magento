@@ -29,6 +29,8 @@ DEBUG = True
 #TODO, may be move that on out CSV mapping, but not sure we can easily
 #see OpenERP sale/sale.py and Magento app/code/core/Mage/Sales/Model/Order.php for details
 ORDER_STATUS_MAPPING = {'draft': 'processing', 'progress': 'processing', 'shipping_except': 'complete', 'invoice_except': 'complete', 'done': 'closed', 'cancel': 'canceled', 'waiting_date': 'holded'}
+PAYMENTS_MAPPING = {'checkmo': 'prepaid', 'ccsave': 'prepaid', 'free':'prepaid','googlecheckout':'prepaid','paypayl_express':'prepaid', 'paybox_system': 'prepaid'}
+
 
 class sale_shop(magerp_osv.magerp_osv):
     _inherit = "sale.shop"
@@ -103,7 +105,7 @@ class sale_order(magerp_osv.magerp_osv):
     _inherit = "sale.order"
     
     _columns = {
-                'magento_incrementid':fields.char('Magento Increment ID'),
+                'magento_incrementid': fields.char('Magento Increment ID', size=32),
     }
     
     def _auto_init(self, cr, context={}):
@@ -192,6 +194,8 @@ class sale_order(magerp_osv.magerp_osv):
             res = self.get_order_lines(cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
             if data_record.get('shipping_amount', False) and float(data_record.get('shipping_amount', False)) > 0:
                 res = self.get_order_shipping(cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
+        if data_record.get('payment_method', False):
+            res['order_policy'] = PAYMENTS_MAPPING.get(data_record['payment_method'], 'prepaid')
 
         return res
     
