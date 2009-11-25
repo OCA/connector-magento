@@ -89,9 +89,9 @@ class sale_shop(magerp_osv.magerp_osv):
         
         #creation of Magento invoice eventually:
         cr.execute("select account_invoice.id from account_invoice inner join sale_order_invoice_rel on invoice_id = account_invoice.id where  order_id = %s" % order.id)
-        result = cr.fetchone()
-        if result and len(result) == 1:
-            invoice = self.pool.get("account.invoice").browse(cr, uid, result[0])
+        resultset = cr.fetchone()
+        if resultset and len(resultset) == 1:
+            invoice = self.pool.get("account.invoice").browse(cr, uid, resultset[0])
             if invoice.amount_total == order.amount_total and not invoice.magento_ref:
                 result['magento_invoice_ref'] = conn.call('sales_order_invoice.create', [order.magento_incrementid, [], _("Invoice Created"), True, True])
                 self.pool.get("account.invoice").write(cr, uid, invoice.id, {'magento_ref': result['magento_invoice_ref']})
