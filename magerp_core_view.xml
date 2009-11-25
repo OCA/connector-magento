@@ -114,6 +114,7 @@
 						<field name="is_active" readonly="1" />
 						<field name="sort_order" readonly="1" />
 						<field name="default_shop_id" readonly="1" />
+						<field name="lang_id" />
 					</group>
 				</form>
 			</field>

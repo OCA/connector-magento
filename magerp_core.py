@@ -216,6 +216,7 @@ class magerp_storeviews(magerp_osv.magerp_osv):
         'is_active':fields.boolean('Default ?'),
         'sort_order':fields.integer('Sort Order'),
         'shop_id':fields.many2one('sale.shop', 'Shop', select=True, ondelete='cascade'),
+        'lang_id':fields.many2one('res.lang', 'Language'),
         'default_shop_id':fields.function(_get_default_shop_id, type="many2one", relation="sale.shop", method=True, string="Default Store (Group)"),
     }
 

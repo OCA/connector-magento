@@ -594,7 +594,7 @@ class product_product(magerp_osv.magerp_osv):
             #Filter keys to be changed
             if 'x_magerp_tier_price' in vals.keys(): 
                 tier_price = vals.pop('x_magerp_tier_price')
-        print vals
+
         crid = super(product_product, self).create(cr, uid, vals, context)
         #Save the tier price
         if tier_price:
@@ -626,7 +626,7 @@ class product_product(magerp_osv.magerp_osv):
             
             #Create a page for the attribute group
             xml+="<page string='" + group_name + "'>\n<group colspan='4' col='4'>"
-            while len(results) > 0:
+            while True:
                 if result[1] != mag_group_id:
                     break
                 #TODO understand why we need to do "x_magerp_" +  each_attribute.attribute_code in field_names or fix it
@@ -640,8 +640,11 @@ class product_product(magerp_osv.magerp_osv):
                         if result[3] in ['textarea']:
                             xml+=" colspan='4' nolabel='1' " 
                         xml+=" />\n"
-                        
-                result = results.pop()
+                
+                if len(results) > 0:
+                    result = results.pop()
+                else:
+                    break
             xml+="</group></page>\n"
         xml+="</notebook>"
         return xml
@@ -736,20 +739,42 @@ class product_product(magerp_osv.magerp_osv):
 
         res = super(magerp_osv.magerp_osv, self).ext_create(cr, uid, [product_type, attr_set_id, sku, data], conn, method, oe_id, ctx)
         self.write(cr, uid, oe_id, {'magento_sku': sku})
+        return res
+    
+    def ext_export(self, cr, uid, ids, external_referential_ids=[], defaults={}, context={}):
+        shop = self.pool.get('sale.shop').browse(cr, uid, context['shop_id'])
+        no_local = context.copy()
+        if no_local.get('lang', False):
+            del(no_local['lang'])
+        result = super(magerp_osv.magerp_osv, self).ext_export(cr, uid, ids, external_referential_ids, defaults, no_local)
+        ids = result['create_ids'] + result['write_ids']
+        
+        #language wise update:
+        for storeview in shop.storeview_ids:
+            if storeview.lang_id:
+                context.update({'storeview_code': storeview.code, 'lang': storeview.lang_id.code, 'force': True})
+                super(magerp_osv.magerp_osv, self).ext_export(cr, uid, ids, external_referential_ids, defaults, context)
+
+        #inventory level updates:
+        shop = self.pool.get('sale.shop').browse(cr, uid, context['shop_id'])
         stock_id = shop.warehouse_id.lot_stock_id.id
         logger = netsvc.Logger()
-        self._export_inventory(cr, uid, product, stock_id, logger, ctx)
-        return res
+        for id in ids:
+            self._export_inventory(cr, uid, self.pool.get('product.product').browse(cr, uid, id), stock_id, logger, context)                
+                
+        return result
+    
+    
+    def try_ext_update(self, cr, uid, data, conn, method, oe_id, external_id, ir_model_data_id, create_method, context):
+        if context.get('storeview_code', False):
+            return conn.call(method, [external_id, data, context.get('storeview_code', False)])
+        else:
+            return conn.call(method, [external_id, data])
     
     def ext_update(self, cr, uid, data, conn, method, oe_id, external_id, ir_model_data_id, create_method, ctx):
         product = self.browse(cr, uid, oe_id)
         sku = self.product_to_sku(cr, uid, product)
-
-        res = super(magerp_osv.magerp_osv, self).ext_update(cr, uid, data, conn, method, oe_id, sku, ir_model_data_id, create_method, ctx)
-        stock_id = self.pool.get('sale.shop').browse(cr, uid, ctx['shop_id']).warehouse_id.lot_stock_id.id
-        logger = netsvc.Logger()
-        self._export_inventory(cr, uid, product, stock_id, logger, ctx)
-        return res
+        return super(magerp_osv.magerp_osv, self).ext_update(cr, uid, data, conn, method, oe_id, sku, ir_model_data_id, create_method, ctx)
     
     def export_inventory(self, cr, uid, ids, shop, ctx):
         logger = netsvc.Logger()
