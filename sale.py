@@ -111,6 +111,7 @@ class sale_order(magerp_osv.magerp_osv):
     
     _columns = {
                 'magento_incrementid': fields.char('Magento Increment ID', size=32),
+                'magento_payment_method': fields.char('Magento Payment Method', size=32),
     }
     
     def _auto_init(self, cr, context={}):
