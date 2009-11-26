@@ -72,11 +72,18 @@ class sale_shop(magerp_osv.magerp_osv):
         'storeview_ids': fields.one2many('magerp.storeviews', 'shop_id', 'Store Views'),
     }   
 
-    def import_shop_orders(self, cr, uid, shop, defaults, ctx):#FIXME: no guest order support for now: [{'customer_id': {'nlike':False}}]
-        magento_shop_id = self.oeid_to_extid(cr, uid, shop.id, shop.referential_id.id, context={})
-        return self.pool.get('sale.order').mage_import_base(cr, uid, ctx.get('conn_obj', False), shop.referential_id.id,
+    def import_shop_orders(self, cr, uid, shop, defaults, ctx):
+        result = []
+        for storeview in shop.storeview_ids:
+            magento_storeview_id = self.pool.get('magerp.storeviews').oeid_to_extid(cr, uid, storeview.id, shop.referential_id.id, context={})
+            result.append(self.pool.get('sale.order').mage_import_base(cr, uid, ctx.get('conn_obj', False), shop.referential_id.id,
                                                               defaults=defaults,
-                                                              context={'one_by_one': True, 'ids_or_filter':[{'store_id': {'eq': magento_shop_id}, 'increment_id': {'gt': ctx.get('last_external_id', 0)}}]})
+                                                              context={
+                                                                       'one_by_one': True, 
+                                                                       'ids_or_filter':[{
+                                                                                         'store_id': {'eq': magento_storeview_id},
+                                                                                         'increment_id': {'gt': ctx.get('last_external_id', 0)}}]}))
+        return result
 
     def update_shop_orders(self, cr, uid, order, ext_id, ctx):
         conn = ctx.get('conn_obj', False)
@@ -203,7 +210,6 @@ class sale_order(magerp_osv.magerp_osv):
         res = super(sale_order, self).ext_import(cr, uid, data, external_referential_id, defaults, context)
         wf_service = netsvc.LocalService("workflow")
         for order in self.browse(cr, uid, res['create_ids'], context): #TODO complete!
-            print order.shop_id.picking_generation_policy
             if order.order_policy == 'manual' and order.shop_id.picking_generation_policy != 'none':
                 wf_service.trg_validate(uid, 'sale.order', order.id, 'order_confirm', cr)
                 if order.shop_id.invoice_generation_policy != 'none':
