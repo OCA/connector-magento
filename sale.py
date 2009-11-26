@@ -200,6 +200,9 @@ class sale_order(magerp_osv.magerp_osv):
             res = self.get_order_lines(cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
             if data_record.get('shipping_amount', False) and float(data_record.get('shipping_amount', False)) > 0:
                 res = self.get_order_shipping(cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
+        if data_record.get('payment', False):
+            payment = data_record['payment']
+            self.generate_payment_with_pay_code(cr, uid, payment['method'], res['partner_id'], payment['amount_paid'], "mag_" + payment['payment_id'], "mag_" + data_record['increment_id'], context)
 
         return res
     
