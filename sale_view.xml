@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+		<record model="ir.ui.view" id="magerp_view_shop_form">
+			<field name="name">magerp_view_shop_form</field>
+			<field name="model">sale.shop</field>
+			<field name="inherit_id" ref="base_sale_multichannels.base_sale_multichannels_view_shop_form" />
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+			    <data>
+			        <field name="exportable_root_category_ids" position="replace">
+			            <field name="exportable_root_category_ids" invisible="1" />
+			        </field>
+					<field name="shop_group_id" position="after">
+						<field name="magento_root_category" readonly="1" />
+						<field name="storeview_ids" nolabel="1" colspan="4" />
+					</field>
+				</data>
+			</field>
+		</record>
+		
+		<record id="act_magerp_shop_form" model="ir.actions.act_window">
+			<field name="name">Magento Shops</field>
+			<field name="res_model">sale.shop</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[('referential_id', '!=', False)]</field>
+		</record>
+		
+		<record model="ir.ui.view" id="magerp_view_order_tree">
+			<field name="name">magerp_view_order_tree</field>
+			<field name="model">sale.order</field>
+			<field name="inherit_id" ref="sale.view_order_tree" />
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+		        <field name="state" position="after">
+		            <field name="magento_payment_method" select="1" />
+		        </field>
+			</field>
+		</record>
+
+	</data>
+</openerp>

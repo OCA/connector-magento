@@ -32,6 +32,7 @@
             'magerp_core_view.xml',
             'product_view.xml',
             'partner_view.xml',
+            'sale_view.xml',
             'magerp_menu.xml',
             'settings/external.mapping.template.csv',
             'settings/external.mappinglines.template.csv',
