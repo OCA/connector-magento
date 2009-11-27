@@ -227,5 +227,14 @@ class sale_order(magerp_osv.magerp_osv):
         self.pool.get('sale.order.line').unlink(cr, uid, order_line_ids)
         return super(magerp_osv.magerp_osv, self).oe_update(cr, uid, existing_rec_id, vals, data, external_referential_id, defaults, context)
 
+    def oe_create(self, cr, uid, vals, data, external_referential_id, defaults, context):
+        wf_service = netsvc.LocalService("workflow")
+        order_id = super(magerp_osv.magerp_osv, self).oe_create(cr, uid, vals, data, external_referential_id, defaults, context)
+        if data.get('status_history', False) and len(data['status_history'])>0 and data['status_history'][0]['status'] == 'canceled':
+            wf_service.trg_validate(uid, 'sale.order', order_id, 'cancel', cr)
+        return order_id
+        
 
+
+    
 sale_order()
