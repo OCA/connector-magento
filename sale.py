@@ -74,13 +74,15 @@ class sale_shop(magerp_osv.magerp_osv):
         result = []
         for storeview in shop.storeview_ids:
             magento_storeview_id = self.pool.get('magerp.storeviews').oeid_to_extid(cr, uid, storeview.id, shop.referential_id.id, context={})
+            ids_or_filter = [{'store_id': {'eq': magento_storeview_id}}]
+            if ctx.get('last_external_id', False):
+                ids_or_filter[0]['increment_id'] = {'gt': ctx['last_external_id']}
             result.append(self.pool.get('sale.order').mage_import_base(cr, uid, ctx.get('conn_obj', False), shop.referential_id.id,
                                                               defaults=defaults,
                                                               context={
                                                                        'one_by_one': True, 
-                                                                       'ids_or_filter':[{
-                                                                                         'store_id': {'eq': magento_storeview_id},
-                                                                                         'increment_id': {'gt': ctx.get('last_external_id', 0)}}]}))
+                                                                       'ids_or_filter':ids_or_filter
+                                                                       }))
         return result
 
     def update_shop_orders(self, cr, uid, order, ext_id, ctx):
@@ -202,9 +204,9 @@ class sale_order(magerp_osv.magerp_osv):
                 res = self.get_order_shipping(cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
         if data_record.get('payment', False):
             payment = data_record['payment']
-            if payment['amount_paid']:
+            if payment.get('amount_paid', False):
                 self.generate_payment_with_pay_code(cr, uid, payment['method'], res['partner_id'], payment['amount_paid'], "mag_" + payment['payment_id'], "mag_" + data_record['increment_id'], True, context)
-            elif payment['amount_ordered']:
+            elif payment.get('amount_ordered', False):
                 self.generate_payment_with_pay_code(cr, uid, payment['method'], res['partner_id'], payment['amount_ordered'], "mag_" + payment['payment_id'], "mag_" + data_record['increment_id'], False, context)
         return res
     
