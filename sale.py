@@ -221,5 +221,11 @@ class sale_order(magerp_osv.magerp_osv):
             elif order.order_policy == 'picking' and order.shop_id.picking_generation_policy != 'none':
                 wf_service.trg_validate(uid, 'sale.order', order.id, 'order_confirm', cr)
         return res
+    
+    def oe_update(self,cr, uid, existing_rec_id, vals, data, external_referential_id, defaults, context):
+        order_line_ids = self.pool.get('sale.order.line').search(cr,uid,[('order_id','=', existing_rec_id)])
+        self.pool.get('sale.order.line').unlink(cr, uid, order_line_ids)
+        return super(magerp_osv.magerp_osv, self).oe_update(cr, uid, existing_rec_id, vals, data, external_referential_id, defaults, context)
+
 
 sale_order()
