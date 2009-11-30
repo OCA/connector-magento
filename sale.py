@@ -100,8 +100,11 @@ class sale_shop(magerp_osv.magerp_osv):
         if resultset and len(resultset) == 1:
             invoice = self.pool.get("account.invoice").browse(cr, uid, resultset[0])
             if invoice.amount_total == order.amount_total and not invoice.magento_ref:
-                result['magento_invoice_ref'] = conn.call('sales_order_invoice.create', [order.magento_incrementid, [], _("Invoice Created"), True, True])
-                self.pool.get("account.invoice").write(cr, uid, invoice.id, {'magento_ref': result['magento_invoice_ref']})
+                try:
+                    result['magento_invoice_ref'] = conn.call('sales_order_invoice.create', [order.magento_incrementid, [], _("Invoice Created"), True, True])
+                    self.pool.get("account.invoice").write(cr, uid, invoice.id, {'magento_ref': result['magento_invoice_ref']})
+                except Exception, e:
+                    pass #TODO make sure that's because Magento invoice already exists and then re-attach it!
         
         return result
 
