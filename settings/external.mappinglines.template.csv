@@ -128,6 +128,7 @@ result=[('category_ids', categ_ids)]"
 "mag_erp_prd_9","magento1324","product.model_product_product","cost","in_out","float","result=[('standard_price',ifield)]","result = [('cost',record['standard_price'] or 0)]"
 "mag_erp_prd_10","magento1324","product.model_product_product","set","in_out","str","result=[('set',self.pool.get('magerp.product_attribute_set').extid_to_oeid(cr, uid, ifield, external_referential_id))]",
 "mag_erp_prd_11","magento1324","product.model_product_product","special_price","in_out","float","result = [('x_magerp_special_price',ifield)]","
+"mag_erp_prd_12","magento1324","product.model_product_product","tier_price","in_out","str","result=[]#no mapping by default","result=[]#no mapping by default"
 if record['x_magerp_special_price'] and record['x_magerp_special_price'] != 0:
     result = [('special_price',record['x_magerp_special_price'])]
 else:
