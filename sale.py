@@ -208,6 +208,8 @@ class sale_order(magerp_osv.magerp_osv):
                 self.generate_payment_with_pay_code(cr, uid, payment['method'], res['partner_id'], payment['amount_paid'], "mag_" + payment['payment_id'], "mag_" + data_record['increment_id'], True, context)
             elif payment.get('amount_ordered', False):
                 self.generate_payment_with_pay_code(cr, uid, payment['method'], res['partner_id'], payment['amount_ordered'], "mag_" + payment['payment_id'], "mag_" + data_record['increment_id'], False, context)
+        if data_record.get('status_history', False) and len(data_record['status_history']) > 0:
+            res['date_order'] = data_record['status_history'][len(data_record['status_history'])-1]['created_at']
         return res
     
     def ext_import(self, cr, uid, data, external_referential_id, defaults={}, context={}):
