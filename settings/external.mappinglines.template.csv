@@ -108,14 +108,14 @@ else:
 "mag_erp_prd_4","magento1324","product.model_product_product","short_description","in_out","str","result = [('description_sale',ifield)]",
 "mag_erp_prd_5","magento1324","product.model_product_product","sku","in_out","str","result = [('magento_sku',ifield), ('default_code',ifield)]",
 "mag_erp_prd_6","magento1324","product.model_product_product","weight","in_out","float","result = [('weight_net',ifield)]","result = [('weight',record['weight_net'] or 0)]"
-"mag_erp_prd_7","magento1324","product.model_product_product","category_ids","in_out","str","ids_openerp =[]
-for category_ids in eval(ifield):
-    ids_openerp.append(self.pool.get('product.category').extid_to_oeid(cr, uid, category_ids, external_referential_id))
-if ids_openerp and len(ids_openerp) > 0:
-    categ_id = ids_openerp.pop()
+"mag_erp_prd_7","magento1324","product.model_product_product","category_ids","in_out","str","categ_ids =[]
+if len(eval(ifield)) > 0:
+    for category_ids in eval(ifield):
+        categ_ids.append((6, 0, [self.pool.get('product.category').extid_to_oeid(cr, uid, category_ids, external_referential_id)]))
+    categ_id = categ_ids.pop()[2][0]
 else:
     categ_id = self.pool.get('external.referential').browse(cr, uid, external_referential_id).default_pro_cat.id
-result = [('categ_id', categ_id)]#TODO map the other categs","
+result = [('categ_id', categ_id), ('categ_ids', categ_ids)]","
 product = self.browse(cr, uid, record['id'])
 main_categ_id = self.pool.get('product.category').oeid_to_extid(cr, uid, product.categ_id.id, external_referential_id)
 categ_ids = [main_categ_id]
