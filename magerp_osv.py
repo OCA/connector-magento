@@ -63,9 +63,9 @@ class Connection():
         return res
         
     
-    def call(self, method, *args): 
-        if args:
-            arguments = list(args)[0]
+    def call(self, method, *arguments): 
+        if arguments:
+            arguments = list(arguments)[0]
         else:
             arguments = []
         try:
@@ -113,7 +113,7 @@ class magerp_osv(external_osv.external_osv):
         return attr_conn.connect() and attr_conn or False
     
     #TODO deprecated, remove use
-    def mage_to_oe(self, cr, uid, mageid, instance, *args):
+    def mage_to_oe(self, cr, uid, mageid, instance, *arguments):
         """given a record id in the Magento referential, returns a tuple (id, name) with the id in the OpenERP referential; Magento instance wise"""
         #Arguments as a list of tuple
         search_params = []
@@ -121,7 +121,7 @@ class magerp_osv(external_osv.external_osv):
             search_params = [(self._MAGE_FIELD, '=', mageid), ]
         if instance:
             search_params.append(('referential_id', '=', instance))
-        for each in args:
+        for each in arguments:
             if each:
                 if type(each) == type((1, 2)):
                     search_params.append(each)
