@@ -202,9 +202,14 @@ class sale_order(magerp_osv.magerp_osv):
         if data_record.get('billing_address', False):
             res = self.get_order_addresses(cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
         if data_record.get('items', False):
-            res = self.get_order_lines(cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
-            if data_record.get('shipping_amount', False) and float(data_record.get('shipping_amount', False)) > 0:
-                res = self.get_order_shipping(cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
+            try:
+                res = self.get_order_lines(cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
+                if data_record.get('shipping_amount', False) and float(data_record.get('shipping_amount', False)) > 0:
+                    res = self.get_order_shipping(cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
+            except Exception, e:
+                print "order has errors with items lines, data are: ", data_record
+                print e
+                #TODO flag that the order has an error, especially.
         if data_record.get('status_history', False) and len(data_record['status_history']) > 0:
             res['date_order'] = data_record['status_history'][len(data_record['status_history'])-1]['created_at']
         if data_record.get('payment', False):
