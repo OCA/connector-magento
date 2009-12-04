@@ -57,7 +57,7 @@ class sale_shop(magerp_osv.magerp_osv):
         res = {}
         res1 = self._get_rootcategory(cr, uid, ids, prop, unknow_none, context)
         for shop in self.browse(cr, uid, ids, context):
-            res[shop.id] = [res1[shop.id]]
+            res[shop.id] = res1[shop.id] and [res1[shop.id]] or []
         return res
 
     _columns = {
