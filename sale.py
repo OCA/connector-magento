@@ -215,27 +215,28 @@ class sale_order(magerp_osv.magerp_osv):
                 self.generate_payment_with_pay_code(cr, uid, payment['method'], res['partner_id'], payment['amount_ordered'], "mag_" + payment['payment_id'], "mag_" + data_record['increment_id'], res['date_order'], False, context) 
         return res
     
-    def ext_import(self, cr, uid, data, external_referential_id, defaults={}, context={}):
-        res = super(sale_order, self).ext_import(cr, uid, data, external_referential_id, defaults, context)
+    def oe_update(self,cr, uid, existing_rec_id, vals, data, external_referential_id, defaults, context):
+        order_line_ids = self.pool.get('sale.order.line').search(cr,uid,[('order_id','=', existing_rec_id)])
+        self.pool.get('sale.order.line').unlink(cr, uid, order_line_ids)
+        self.oe_status(cr, uid, data, existing_rec_id, context)
+        return super(magerp_osv.magerp_osv, self).oe_update(cr, uid, existing_rec_id, vals, data, external_referential_id, defaults, context)
+
+    def oe_create(self, cr, uid, vals, data, external_referential_id, defaults, context):
+        order_id = super(magerp_osv.magerp_osv, self).oe_create(cr, uid, vals, data, external_referential_id, defaults, context)
+        self.oe_status(cr, uid, data, order_id, context)
+        return order_id
+        
+    def oe_status(self, cr, uid, data, order_id, context):
         wf_service = netsvc.LocalService("workflow")
-        for order in self.browse(cr, uid, res['create_ids'], context): #TODO complete!
+        if data.get('status_history', False) and len(data['status_history']) > 0 and data['status_history'][0]['status'] == 'canceled':
+            wf_service.trg_validate(uid, 'sale.order', order_id, 'cancel', cr)
+        else:    
+            order = self.browse(cr, uid, order_id, context)
             if order.order_policy == 'manual' and order.shop_id.picking_generation_policy != 'none':
                 wf_service.trg_validate(uid, 'sale.order', order.id, 'order_confirm', cr)
                 if order.shop_id.invoice_generation_policy != 'none':
                     wf_service.trg_validate(uid, 'sale.order', order.id, 'manual_invoice', cr)
             elif order.order_policy == 'picking' and order.shop_id.picking_generation_policy != 'none':
                 wf_service.trg_validate(uid, 'sale.order', order.id, 'order_confirm', cr)
-        return res
-    
-    def oe_update(self,cr, uid, existing_rec_id, vals, data, external_referential_id, defaults, context):
-        order_line_ids = self.pool.get('sale.order.line').search(cr,uid,[('order_id','=', existing_rec_id)])
-        self.pool.get('sale.order.line').unlink(cr, uid, order_line_ids)
-        return super(magerp_osv.magerp_osv, self).oe_update(cr, uid, existing_rec_id, vals, data, external_referential_id, defaults, context)
-
-    def oe_create(self, cr, uid, vals, data, external_referential_id, defaults, context):
-        wf_service = netsvc.LocalService("workflow")
-        order_id = super(magerp_osv.magerp_osv, self).oe_create(cr, uid, vals, data, external_referential_id, defaults, context)
-        if data.get('status_history', False) and len(data['status_history'])>0 and data['status_history'][0]['status'] == 'canceled':
-            wf_service.trg_validate(uid, 'sale.order', order_id, 'cancel', cr)
-        return order_id
+                
 sale_order()
