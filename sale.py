@@ -141,8 +141,7 @@ class sale_order(magerp_osv.magerp_osv):
         data_record['shipping_address'].update(self.get_mage_customer_address_id(data_record['shipping_address']))
         shipping_default = {}
         billing_default = {}
-        if res.get('partner_id', False):
-            shipping_default = {'partner_id': res.get('partner_id', False)}
+        shipping_default = {'partner_id': res.get('partner_id', False)}
         billing_default = shipping_default.copy()
         billing_default.update({'email' : data_record.get('customer_email', False)})
 
@@ -199,25 +198,29 @@ class sale_order(magerp_osv.magerp_osv):
     def oevals_from_extdata(self, cr, uid, external_referential_id, data_record, key_field, mapping_lines, defaults, context):
         res = super(magerp_osv.magerp_osv, self).oevals_from_extdata(cr, uid, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
 
-        if data_record.get('billing_address', False):
-            res = self.get_order_addresses(cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
-        if data_record.get('items', False):
-            try:
-                res = self.get_order_lines(cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
-                if data_record.get('shipping_amount', False) and float(data_record.get('shipping_amount', False)) > 0:
-                    res = self.get_order_shipping(cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
-            except Exception, e:
-                print "order has errors with items lines, data are: ", data_record
-                print e
-                #TODO flag that the order has an error, especially.
-        if data_record.get('status_history', False) and len(data_record['status_history']) > 0:
-            res['date_order'] = data_record['status_history'][len(data_record['status_history'])-1]['created_at']
-        if data_record.get('payment', False):
-            payment = data_record['payment']
-            if payment.get('amount_paid', False):
-                self.generate_payment_with_pay_code(cr, uid, payment['method'], res['partner_id'], payment['amount_paid'], "mag_" + payment['payment_id'], "mag_" + data_record['increment_id'], res['date_order'], True, context)
-            elif payment.get('amount_ordered', False):
-                self.generate_payment_with_pay_code(cr, uid, payment['method'], res['partner_id'], payment['amount_ordered'], "mag_" + payment['payment_id'], "mag_" + data_record['increment_id'], res['date_order'], False, context) 
+        if not context.get('one_by_one', False):
+            if data_record.get('billing_address', False):
+                if not data_record.get('partner_id', False): #seems like a guest order, create partner on the fly from billing address to make OpenERP happy:
+                    res['partner_id'] = self.pool.get('res.partner').create(cr, uid, {'name': data_record['billing_address'].get('lastname', '') + ' ' + data_record['billing_address'].get('firstname', '')}, context)
+                res = self.get_order_addresses(cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
+            if data_record.get('items', False):
+                try:
+                    res = self.get_order_lines(cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
+                    if data_record.get('shipping_amount', False) and float(data_record.get('shipping_amount', False)) > 0:
+                        res = self.get_order_shipping(cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
+                except Exception, e:
+                    print "order has errors with items lines, data are: ", data_record
+                    print e
+                    #TODO flag that the order has an error, especially.
+            if data_record.get('status_history', False) and len(data_record['status_history']) > 0:
+                res['date_order'] = data_record['status_history'][len(data_record['status_history'])-1]['created_at']
+            if data_record.get('payment', False):
+                payment = data_record['payment']
+                if payment.get('amount_paid', False):
+                    self.generate_payment_with_pay_code(cr, uid, payment['method'], res['partner_id'], payment['amount_paid'], "mag_" + payment['payment_id'], "mag_" + data_record['increment_id'], res['date_order'], True, context)
+                elif payment.get('amount_ordered', False):
+                    self.generate_payment_with_pay_code(cr, uid, payment['method'], res['partner_id'], payment['amount_ordered'], "mag_" + payment['payment_id'], "mag_" + data_record['increment_id'], res['date_order'], False, context) 
+
         return res
     
     def oe_update(self,cr, uid, existing_rec_id, vals, data, external_referential_id, defaults, context):

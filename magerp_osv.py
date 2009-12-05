@@ -71,23 +71,24 @@ class Connection():
         try:
             return self.try_call(method, arguments)
         except Exception, e:
-            self.logger.notifyChannel(_("Magento Call"), netsvc.LOG_WARNING, _("Webservice Failure, sleeping 1 second before next attempt"))
-            time.sleep(1)
-            try:
-                return self.try_call(method, arguments)
-            except Exception, e:
-                self.logger.notifyChannel(_("Magento Call"), netsvc.LOG_WARNING, _("Webservice Failure, sleeping 2 seconds before next attempt"))
-                time.sleep(3)
-                try:
-                    return self.try_call(method, arguments)
-                except Exception, e:
-                    self.logger.notifyChannel(_("Magento Call"), netsvc.LOG_WARNING, _("Webservice Failure, sleeping 6 seconds before next attempt"))
-                    time.sleep(6)
-                    try:
-                        return self.try_call(method, arguments)
-                    except Exception, e:
-                        self.logger.notifyChannel(_("Magento Call"), netsvc.LOG_ERROR, _("Method: %s\nArguments:%s\nError:%s") % (method, arguments, e))
-                        raise
+            raise
+#            self.logger.notifyChannel(_("Magento Call"), netsvc.LOG_WARNING, _("Webservice Failure, sleeping 1 second before next attempt"))
+#            time.sleep(1)
+#            try:
+#                return self.try_call(method, arguments)
+#            except Exception, e:
+#                self.logger.notifyChannel(_("Magento Call"), netsvc.LOG_WARNING, _("Webservice Failure, sleeping 2 seconds before next attempt"))
+#                time.sleep(3)
+#                try:
+#                    return self.try_call(method, arguments)
+#                except Exception, e:
+#                    self.logger.notifyChannel(_("Magento Call"), netsvc.LOG_WARNING, _("Webservice Failure, sleeping 6 seconds before next attempt"))
+#                    time.sleep(6)
+#                    try:
+#                        return self.try_call(method, arguments)
+#                    except Exception, e:
+#                        self.logger.notifyChannel(_("Magento Call"), netsvc.LOG_ERROR, _("Method: %s\nArguments:%s\nError:%s") % (method, arguments, e))
+#                        raise
     
     def fetch_image(self, imgloc):
         full_loc = self.corelocation + imgloc
@@ -247,6 +248,7 @@ class magerp_osv(external_osv.external_osv):
                     
                     #it may happen that list method doesn't provide enough information, forcing us to use get_method on each record (case for sale orders)
                     if context.get('one_by_one', False):
+                        del(context['one_by_one'])
                         for record in data:
                             id = record[self.pool.get('external.mapping').read(cr, uid, mapping_id[0],['external_key_name'])['external_key_name']]
                             get_method = self.pool.get('external.mapping').read(cr,uid,mapping_id[0],['external_get_method']).get('external_get_method',False)
