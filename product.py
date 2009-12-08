@@ -727,7 +727,7 @@ class product_product(magerp_osv.magerp_osv):
     def _export_inventory(self, cr, uid, product, stock_id, logger, ctx):
         if product.magento_sku and product.type != 'service':
             virtual_available = self.read(cr, uid, product.id, ['virtual_available'], {'location': stock_id})['virtual_available']
-            ctx['conn_obj'].call('product_stock.update', [product.magento_sku, {'qty': virtual_available, 'is_in_stock': virtual_available > 0 and 1 or 0}])
+            ctx['conn_obj'].call('product_stock.update', [product.magento_sku, {'qty': virtual_available, 'is_in_stock': 1}])
             logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "Successfully updated stock level at %s for product with SKU %s " %(virtual_available, product.magento_sku))
     
     def ext_create(self, cr, uid, data, conn, method, oe_id, ctx):        
