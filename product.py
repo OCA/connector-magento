@@ -1,3 +1,4 @@
+
 # -*- encoding: utf-8 -*-
 #########################################################################
 #This module intergrates Open ERP with the magento core                 #
@@ -205,6 +206,35 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
                                    'short_description'
                                    ]
     
+    _type_conversion = {
+        '':'char',
+        'text':'char',
+        'textarea':'text',
+        'select':'many2one',
+        'date':'date',
+        'price':'float',
+        'media_image':'binary',
+        'gallery':'binary',
+        'multiselect':'char',
+        'weee':'char',
+        False:'char'
+        }
+    
+    _type_casts = {
+        '':'str',
+        'text':'str',
+        'textarea':'str',
+        'select':'int',
+        'date':'str',
+        'price':'float',
+        'media_image':'False',
+        'gallery':'False',
+        'multiselect':'str',
+        'weee':'str',
+        False:'str'
+        }
+
+    
     def _is_attribute_translatable(self, vals):
         """Tells if field associated to attribute should be translatable or not.
         For now we are using a default list, later we could say that any attribute
@@ -214,7 +244,22 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
         else:
             return False
 
+    def write(self, cr, uid, ids, vals, context={}):
+        """Will recreate the mapping attributes, beware if you customized some!"""
+        if type(ids) == int:
+            ids = [ids]
+        result = super(magerp_product_attributes, self).write(cr, uid, ids, vals, context) 
+        model_id = model_id = self.pool.get('ir.model').search(cr, uid, [('model', '=', 'product.product')])[0]
+        referential_id = context.get('referential_id', False)
+        for id in ids:
+            all_vals = self.read(cr, uid, id, [], context)
+            field_name = all_vals['field_name']
+            field_ids = self.pool.get('ir.model.fields').search(cr, uid, [('name', '=', field_name), ('model_id', '=', model_id)])
+            self.create_mapping (cr, uid, self._type_conversion[all_vals.get('frontend_input', False)], field_ids, field_name, referential_id, model_id, all_vals, id)
+        return result
+
     def create(self, cr, uid, vals, context={}):
+        """Will create product.product new fields accordingly to Magento product custom attributes and also create mappings for them"""
         if not vals['attribute_code'] in self._no_create_list:
             field_name = "x_magerp_" + vals['attribute_code']
             vals['field_name'] =  field_name
@@ -238,32 +283,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
                 if vals['attribute_code'] and vals.get('frontend_input', False):
                     #Code for dynamically generating field name and attaching to this
                     model_id = self.pool.get('ir.model').search(cr, uid, [('model', '=', 'product.product')])
-                    type_conversion = {
-                            '':'char',
-                            'text':'char',
-                            'textarea':'text',
-                            'select':'many2one',
-                            'date':'date',
-                            'price':'float',
-                            'media_image':'binary',
-                            'gallery':'binary',
-                            'multiselect':'char',
-                            'weee':'char',
-                            False:'char'
-                        }
-                    type_casts = {
-                            '':'str',
-                            'text':'str',
-                            'textarea':'str',
-                            'select':'int',
-                            'date':'str',
-                            'price':'float',
-                            'media_image':'False',
-                            'gallery':'False',
-                            'multiselect':'str',
-                            'weee':'str',
-                            False:'str'
-                            }
+
                     if model_id and len(model_id) == 1:
                         model_id = model_id[0]
                         #Check if field already exists
@@ -274,7 +294,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
                                         'model_id':model_id,
                                         'model':'product.product',
                                         'field_description':vals.get('frontend_label', False) or vals['attribute_code'],
-                                        'ttype':type_conversion[vals.get('frontend_input', False)],
+                                        'ttype':self._type_conversion[vals.get('frontend_input', False)],
                                         'translate': self._is_attribute_translatable(vals)
                                       }
                         if not field_ids:
@@ -289,33 +309,39 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
                             #All field values are computed, now save
                             field_id = self.pool.get('ir.model.fields').create(cr, uid, field_vals)
                             field_ids = [field_id]
-                        #Search & create mapping entries
-                        mapping_id = self.pool.get('external.mapping').search(cr, uid, [('referential_id', '=', referential_id), ('model_id', '=', model_id)])
-                        if field_ids and mapping_id:
-                            existing_line = self.pool.get('external.mapping.line').search(cr, uid, [('external_field', '=', vals['attribute_code']), ('mapping_id', '=', mapping_id[0])])
-                            if not existing_line or len(existing_line) == 0:
-                                field_id = field_ids[0]
-                                mapping_line = {
-                                                    'external_field': vals['attribute_code'],
-                                                    'mapping_id': mapping_id[0],
-                                                    'type': 'in_out',
-                                                    'external_type':type_casts[vals.get('frontend_input', False)],
-                                                }
-                                mapping_line['field_id'] = field_id,
-                                if field_vals['ttype'] in ['char','text','date','float','weee']:
-                                    mapping_line['in_function'] = "result =[('" + field_name + "',ifield)]"
-                                    mapping_line['out_function'] = "result=[('%s',record['%s'])]" % (vals['attribute_code'], field_name)
-                                elif field_vals['ttype'] in ['many2one']:
-                                    mapping_line['in_function'] = "if ifield:\n\toption_id = self.pool.get('magerp.product_attribute_options').search(cr,uid,[('attribute_id','=',%s),('value','=',ifield)])\n\tif option_id:\n\t\t\tresult = [('"  % crid
-                                    mapping_line['in_function'] += field_name + "',option_id[0])]"
-                                    mapping_line['out_function'] = "if record['%s']:\n\toption=self.pool.get('magerp.product_attribute_options').browse(cr, uid, record['%s'][0])\n\tif option:\n\t\tresult=[('%s',option.value)]" % (field_name, field_name, vals['attribute_code'])
-                                elif field_vals['ttype'] in ['multiselect']:
-                                    mapping_line['in_function'] = "result=[('%s',str(ifield))]" % field_name
-                                    mapping_line['out_function'] = "result= record['%s'] and [('%s', eval(record['%s']))] or []" % (field_name, vals['attribute_code'], field_name)
-                                elif field_vals['ttype'] in ['binary']:
-                                    print "Binary mapping not done yet :("
-                                self.pool.get('external.mapping.line').create(cr,uid,mapping_line)
+                            
+                            self.create_mapping (cr, uid, field_vals['ttype'], field_ids, field_name, referential_id, model_id, vals, crid)
+                            
         return crid
+    
+    def create_mapping (self, cr, uid, ttype, field_ids, field_name, referential_id, model_id, vals, crid):
+        #Search & create mapping entries
+        mapping_id = self.pool.get('external.mapping').search(cr, uid, [('referential_id', '=', referential_id), ('model_id', '=', model_id)])
+        if field_ids and mapping_id:
+            field_id=field_ids[0]
+            existing_line = self.pool.get('external.mapping.line').search(cr, uid, [('external_field', '=', vals['attribute_code']), ('mapping_id', '=', mapping_id[0])])
+            if not existing_line or len(existing_line) == 0:
+                mapping_line = {
+                                    'external_field': vals['attribute_code'],
+                                    'mapping_id': mapping_id[0],
+                                    'type': 'in_out',
+                                    'external_type':self._type_casts[vals.get('frontend_input', False)],
+                                }
+                mapping_line['field_id'] = field_id,
+                if ttype in ['char','text','date','float','weee']:
+                    mapping_line['in_function'] = "result =[('" + field_name + "',ifield)]"
+                    mapping_line['out_function'] = "result=[('%s',record['%s'])]" % (vals['attribute_code'], field_name)
+                elif ttype in ['many2one']:
+                    mapping_line['in_function'] = "if ifield:\n\toption_id = self.pool.get('magerp.product_attribute_options').search(cr,uid,[('attribute_id','=',%s),('value','=',ifield)])\n\tif option_id:\n\t\t\tresult = [('"  % crid
+                    mapping_line['in_function'] += field_name + "',option_id[0])]"
+                    mapping_line['out_function'] = "if record['%s']:\n\toption=self.pool.get('magerp.product_attribute_options').browse(cr, uid, record['%s'][0])\n\tif option:\n\t\tresult=[('%s',option.value)]" % (field_name, field_name, vals['attribute_code'])
+                elif ttype in ['multiselect']:
+                    mapping_line['in_function'] = "result=[('%s',str(ifield))]" % field_name
+                    mapping_line['out_function'] = "result= record['%s'] and [('%s', eval(record['%s']))] or []" % (field_name, vals['attribute_code'], field_name)
+                elif ttype in ['binary']:
+                    print "Binary mapping not done yet :("
+                self.pool.get('external.mapping.line').create(cr,uid,mapping_line)
+
 
 magerp_product_attributes()
 """Dont remove the code, we might need it --sharoon
