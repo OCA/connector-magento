@@ -214,7 +214,7 @@
 			<field name="arch" type="xml">
 				<xpath expr="/form/group/group/field[@name='purchase_ok']" position="after">
 					<field name="magento_sku" select="2"/>
-					<field name="exportable" select="2"/>
+					<field name="magento_exportable" select="2"/>
 				</xpath>
 			</field>
 		</record>

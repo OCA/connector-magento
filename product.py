@@ -554,7 +554,7 @@ class product_product(magerp_osv.magerp_osv):
 
     _columns = {
         'magento_sku':fields.char('Magento SKU', size=64),
-        'exportable':fields.boolean('Exported to Magento?'),
+        'magento_exportable':fields.boolean('Exported to Magento?'),
         'created_at':fields.date('Created'), #created_at & updated_at in magento side, to allow filtering/search inside OpenERP!
         'updated_at':fields.date('Created'),
         'set':fields.many2one('magerp.product_attribute_set', 'Attribute Set'),
@@ -562,7 +562,7 @@ class product_product(magerp_osv.magerp_osv):
         }
 
     _defaults = {
-        'exportable':lambda * a:True
+        'magento_exportable':lambda * a:True
                  }
 
     def write(self, cr, uid, ids, vals, context={}):
@@ -662,7 +662,7 @@ class product_product(magerp_osv.magerp_osv):
                             xml+="<newline/><separator colspan='4' string='%s'/>" % (result[4],)
                         xml+="<field name='x_magerp_" +  result[2] + "'"
                         if result[5] and (result[6] == "" or "simple" in result[6] or "configurable" in result[6]) and result[2] not in ['created_at', 'updated_at']:
-                            xml+=""" attrs="{'required':[('exportable','=',True)]}" """
+                            xml+=""" attrs="{'required':[('magento_exportable','=',True)]}" """
                         if result[3] in ['textarea']:
                             xml+=" colspan='4' nolabel='1' " 
                         xml+=" />\n"
@@ -688,7 +688,7 @@ class product_product(magerp_osv.magerp_osv):
                         field_names.append(field.name)
                 result['fields'].update(self.fields_get(cr, uid, field_names, context))
                 view_part = self.redefine_prod_view(cr, uid, field_names, context['set']).decode('utf8')
-                result['arch'] = result['arch'].decode('utf8').replace('<page string="attributes_placeholder"/>', """<page string="Magento Information" attrs="{'invisible':[('exportable','!=',1)]}"><field name='set' />\n""" + view_part + """\n</page>""")
+                result['arch'] = result['arch'].decode('utf8').replace('<page string="attributes_placeholder"/>', """<page string="Magento Information" attrs="{'invisible':[('magento_exportable','!=',1)]}"><field name='set' />\n""" + view_part + """\n</page>""")
             else:
                 result['arch'] = result['arch'].replace('<page string="attributes_placeholder"/>', "")
         return result
