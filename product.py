@@ -768,6 +768,7 @@ class product_product(magerp_osv.magerp_osv):
         return res
     
     def ext_export(self, cr, uid, ids, external_referential_ids=[], defaults={}, context={}):
+        ids = self.search(cr, uid, [('id', 'in', ids), ('magento_exportable', '=', True)]) #restrict export to only exportable products
         shop = self.pool.get('sale.shop').browse(cr, uid, context['shop_id'])
         no_local = context.copy()
         if no_local.get('lang', False):
