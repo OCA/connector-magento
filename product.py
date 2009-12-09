@@ -564,6 +564,10 @@ class product_product(magerp_osv.magerp_osv):
     _defaults = {
         'magento_exportable':lambda * a:True
                  }
+    
+    #remember one thing in life: Magento lies: it tells attributes are required while they are awkward to fill
+    #and will have a nice default vaule anyway, that's why we avoid making them mandatory in the product view
+    _magento_fake_mandatory_attrs = ['created_at', 'updated_at', 'has_options', 'required_options', 'model']
 
     def write(self, cr, uid, ids, vals, context={}):
         if vals.get('referential_id', False):
@@ -661,7 +665,7 @@ class product_product(magerp_osv.magerp_osv):
                         if result[3] in ['textarea']:
                             xml+="<newline/><separator colspan='4' string='%s'/>" % (result[4],)
                         xml+="<field name='x_magerp_" +  result[2] + "'"
-                        if result[5] and (result[6] == "" or "simple" in result[6] or "configurable" in result[6]) and result[2] not in ['created_at', 'updated_at']:
+                        if result[5] and (result[6] == "" or "simple" in result[6] or "configurable" in result[6]) and result[2] not in self._magento_fake_mandatory_attrs:
                             xml+=""" attrs="{'required':[('magento_exportable','=',True)]}" """
                         if result[3] in ['textarea']:
                             xml+=" colspan='4' nolabel='1' " 
