@@ -36,11 +36,9 @@ class res_partner_address(magerp_osv.magerp_osv):
     
     _columns = {
                     'lastname':fields.char('Last Name', size=100),
-                    'exportable':fields.boolean('Export to magento?'),
                     'is_magento_order_address':fields.boolean('Magento Order Address?'),
                 }
     _defaults = {
-                    'exportable':lambda * a:True,
                     'is_magento_order_address': lambda * a:False,
                  }
 res_partner_address()
