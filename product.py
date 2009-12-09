@@ -57,7 +57,7 @@ class product_category(magerp_osv.magerp_osv):
     _columns = {
         'create_date': fields.datetime('Created date', readonly=True),
         'write_date': fields.datetime('Updated date', readonly=True),
-        'exportable':fields.boolean('Export to Magento'),
+        'magento_exportable':fields.boolean('Export to Magento'),
         'updated':fields.boolean('To synchronize', help="Set if the category underwent a change & has to be synched."),
         #*************** Magento Fields ********************
         #==== General Information ====

@@ -10,9 +10,9 @@
 			<field name="type">form</field>
 			<field name="arch" type="xml">
 				<xpath expr="/form/field[@name='sequence']" position="after">
-					<group colspan="4" col="4" attrs="{'invisible':[('exportable','!=',1)],'readonly':[('level','=',0)]}">
+					<group colspan="4" col="4" attrs="{'invisible':[('magento_exportable','!=',1)],'readonly':[('level','=',0)]}">
 						<separator string="Magento Information" colspan="4" />
-						<notebook attrs="{'invisible':[('exportable','!=',1)]}" colspan="4">
+						<notebook attrs="{'invisible':[('magento_exportable','!=',1)]}" colspan="4">
 							<page string="General Information">
 								<group cols="2" colspan="4">
 									<group col="2" colspan="1">
@@ -65,7 +65,7 @@
 			<field name="type">form</field>
 			<field name="arch" type="xml">
 				<field name="sequence" position="after">
-					<field name="exportable" />
+					<field name="magento_exportable" />
 				</field>
 			</field>
 		</record>
