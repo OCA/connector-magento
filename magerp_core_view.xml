@@ -66,6 +66,7 @@
 						<field name="sort_order" readonly="1" />
 						<field name="default_shop_id" readonly="1" />
 						<field name="default_group_id" readonly="1" />
+						<field name="default_lang_id" />
 						<field name="referential_id" />
 					</group>
 					<group col="4" colspan="4">

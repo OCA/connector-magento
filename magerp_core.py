@@ -189,6 +189,7 @@ class external_shop_group(magerp_osv.magerp_osv):
         'sort_order':fields.integer('Sort Order'),
         'default_group_id':fields.integer('Default Store Group'), #Many 2 one?
         'default_shop_id':fields.function(_get_default_shop_id, type="many2one", relation="sale.shop", method=True, string="Default Store (Group)"),
+        'default_lang_id':fields.many2one('res.lang', 'Default Language', help="Magento website wise default locale if different from English"),
     }
 
 external_shop_group()

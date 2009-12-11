@@ -774,7 +774,10 @@ class product_product(magerp_osv.magerp_osv):
 
         shop = self.pool.get('sale.shop').browse(cr, uid, context['shop_id'])
         no_local = context.copy()
-        if no_local.get('lang', False):
+        
+        if shop.shop_group_id.default_lang_id: #default magento language might not be English
+            no_local['lang'] = shop.shop_group_id.default_lang_id.code
+        elif no_local.get('lang', False):
             del(no_local['lang'])
         result = super(magerp_osv.magerp_osv, self).ext_export(cr, uid, ids, external_referential_ids, defaults, no_local)
         ids = result['create_ids'] + result['write_ids']
