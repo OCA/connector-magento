@@ -8,7 +8,7 @@ import base64
 from base_external_referentials import external_osv
 from tools.translate import _
 
-class Connection():
+class Connection(object):
     def __init__(self, location, username, password, debug=False):
         #Append / if not there
         if not location[-1] == '/':
