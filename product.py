@@ -742,18 +742,6 @@ class product_product(magerp_osv.magerp_osv):
                 sku = code
         return sku
 
-    def ext_export(self, cr, uid, ids, external_referential_ids=[], defaults={}, context={}):
-        """overriden to set the default_set_id in context and avoid extra request for each product upload"""
-        conn = context.get('conn_obj', False)
-        sets = conn.call('product_attribute_set.list')
-        default_set_id = 1
-        for set in sets:
-            if set['name'] == 'Default':
-                default_set_id = set['set_id']
-                break
-        context['default_set_id'] = default_set_id
-        return super(magerp_osv.magerp_osv, self).ext_export(cr, uid, ids, external_referential_ids, defaults, context)
-    
     def _export_inventory(self, cr, uid, product, stock_id, logger, ctx):
         if product.magento_sku and product.type != 'service':
             virtual_available = self.read(cr, uid, product.id, ['virtual_available'], {'location': stock_id})['virtual_available']
@@ -773,6 +761,17 @@ class product_product(magerp_osv.magerp_osv):
     
     def ext_export(self, cr, uid, ids, external_referential_ids=[], defaults={}, context={}):
         ids = self.search(cr, uid, [('id', 'in', ids), ('magento_exportable', '=', True)]) #restrict export to only exportable products
+
+        #set the default_set_id in context and avoid extra request for each product upload
+        conn = context.get('conn_obj', False)
+        sets = conn.call('product_attribute_set.list')
+        default_set_id = 1
+        for set in sets:
+            if set['name'] == 'Default':
+                default_set_id = set['set_id']
+                break
+        context['default_set_id'] = default_set_id
+
         shop = self.pool.get('sale.shop').browse(cr, uid, context['shop_id'])
         no_local = context.copy()
         if no_local.get('lang', False):
