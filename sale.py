@@ -75,8 +75,12 @@ class sale_shop(magerp_osv.magerp_osv):
         for storeview in shop.storeview_ids:
             magento_storeview_id = self.pool.get('magerp.storeviews').oeid_to_extid(cr, uid, storeview.id, shop.referential_id.id, context={})
             ids_or_filter = [{'store_id': {'eq': magento_storeview_id}}]
-            if ctx.get('last_external_id', False):
-                ids_or_filter[0]['increment_id'] = {'gt': ctx['last_external_id']}
+                        
+            #get last imported order:
+            last_external_id = self.get_last_imported_external_id(cr, 'sale.order', shop.referential_id.id, "sale_order.shop_id=%s and magento_storeview_id=%s" % (shop.id, storeview.id))[1]
+            if last_external_id:
+                ids_or_filter[0]['increment_id'] = {'gt': last_external_id}
+            defaults['magento_storeview_id'] = storeview.id
             result.append(self.pool.get('sale.order').mage_import_base(cr, uid, ctx.get('conn_obj', False), shop.referential_id.id,
                                                               defaults=defaults,
                                                               context={
@@ -117,6 +121,7 @@ class sale_order(magerp_osv.magerp_osv):
     _columns = {
                 'magento_incrementid': fields.char('Magento Increment ID', size=32),
                 'magento_payment_method': fields.char('Magento Payment Method', size=32),
+                'magento_storeview_id': fields.many2one('magerp.storeviews', 'Magento Store View'),
     }
     
     def _auto_init(self, cr, context={}):
