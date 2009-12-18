@@ -253,6 +253,15 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
         referential_id = context.get('referential_id', False)
         for id in ids:
             all_vals = self.read(cr, uid, id, [], context)
+            
+            #Fetch Options
+            if 'frontend_input' in all_vals.keys() and all_vals['frontend_input'] in ['select']:
+                core_imp_conn = self.pool.get('external.referential').connect(cr, uid, [referential_id])
+                options_data = core_imp_conn.call('ol_catalog_product_attribute.options', [all_vals['magento_id']])
+                if options_data:
+                    self.pool.get('magerp.product_attribute_options').data_to_save(cr, uid, options_data, update=True, context={'attribute_id': id, 'referential_id': referential_id})
+
+            
             field_name = all_vals['field_name']
             field_ids = self.pool.get('ir.model.fields').search(cr, uid, [('name', '=', field_name), ('model_id', '=', model_id)])
             self.create_mapping (cr, uid, self._type_conversion[all_vals.get('frontend_input', False)], field_ids, field_name, referential_id, model_id, all_vals, id)
@@ -277,7 +286,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
                     core_imp_conn = self.pool.get('external.referential').connect(cr, uid, [vals['referential_id']])
                     options_data = core_imp_conn.call('ol_catalog_product_attribute.options', [vals['magento_id']])
                     if options_data:
-                        self.pool.get('magerp.product_attribute_options').data_to_save(cr, uid, options_data, context={'attribute_id': crid,'referential_id': vals['referential_id']})
+                        self.pool.get('magerp.product_attribute_options').data_to_save(cr, uid, options_data, update=False, context={'attribute_id': crid, 'referential_id': vals['referential_id']})
       
                 #Manage fields
                 if vals['attribute_code'] and vals.get('frontend_input', False):
@@ -344,6 +353,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
 
 
 magerp_product_attributes()
+
 """Dont remove the code, we might need it --sharoon
 class magerp_product_attributes_set_info(osv.osv):
     _name="magerp.product_attributes.set_info"
@@ -356,6 +366,7 @@ class magerp_product_attributes_set_info(osv.osv):
         'group_id':
                 }
 magerp_product_attributes_set_info()"""
+
 class magerp_product_attribute_options(magerp_osv.magerp_osv):
     _name = "magerp.product_attribute_options"
     _description = "Options  of selected attributes"
@@ -370,19 +381,33 @@ class magerp_product_attribute_options(magerp_osv.magerp_osv):
                 'referential_id':fields.many2one('external.referential', 'Magento Instance', readonly=True),
                 }
 
-    def data_to_save(self, cr, uid, vals_list, context={}):
+    def data_to_save(self, cr, uid, vals_list, update=False, context={}):
         """This method will take data from vals and use context to create record"""
+        
+        to_remove_ids = []
+        if update:
+            to_remove_ids = self.search(cr, uid, [('attribute_id', '=', context['attribute_id'])])
+        
         for vals in vals_list:
             if vals.get('value', False) and vals.get('label', False):
-                #Fixme: What to do when magento offers emty options which open erp doesnt?
+                #Fixme: What to do when Magento offers emty options which open erp doesnt?
                 #Such cases dictionary is: {'value':'','label':''}
+                if update:
+                    existing_ids = self.search(cr, uid, [('attribute_id', '=', context['attribute_id']), ('label', '=', vals['label'])])
+                    if len(existing_ids) == 1:
+                        to_remove_ids.remove(existing_ids[0])
+                        self.write(cr, uid, existing_ids[0], {'value': vals.get('value', False)})
+                        continue
+
                 self.create(cr, uid, {
-                                        'attribute_id':context.get('attribute_id',False),
-                                        'value':vals.get('value',False),
-                                        'label':vals.get('label',False),
-                                        'referential_id':context.get('referential_id',False),
+                                        'attribute_id': context['attribute_id'],
+                                        'value': vals['value'],
+                                        'label': vals['label'],
+                                        'referential_id': context['referential_id'],
                                     }
                             )
+
+        self.unlink(cr, uid, to_remove_ids) #if a product points to a removed option, it will get no option instead
 
     def get_option_id(self, cr, uid, attr_name, value, instance):
         attr_id = self.search(cr, uid, [('attribute_name', '=', attr_name), ('value', '=', value), ('referential_id', '=', instance)])
@@ -470,11 +495,11 @@ class magerp_product_attribute_set(magerp_osv.magerp_osv):
         attr_set_ids = self.search(cr, uid, [])
         attr_set_list_oe = self.read(cr, uid, attr_set_ids, ['magento_id'])
         attr_set_list = {}
-        print attr_set_list_oe
+        #print attr_set_list_oe
         for each_set in attr_set_list_oe:
             attr_set_list[each_set['magento_id']] = each_set['id']
         key_attrs = []
-        print mage_inp
+        #print mage_inp
         for each_key in mage_inp.keys():
             self.write(cr, uid, attr_set_list[each_key], {'attributes': [[6, 0, []]]})
             for each_attr in mage_inp[each_key]:
@@ -816,6 +841,5 @@ class product_product(magerp_osv.magerp_osv):
         stock_id = self.pool.get('sale.shop').browse(cr, uid, ctx['shop_id']).warehouse_id.lot_stock_id.id
         for product in self.browse(cr, uid, ids):
             self._export_inventory(cr, uid, product, stock_id, logger, ctx)
-
 
 product_product()
