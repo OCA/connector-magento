@@ -111,11 +111,11 @@ else:
 "mag_erp_prd_7","magento1324","product.model_product_product","category_ids","in_out","str","categ_ids =[]
 if len(eval(ifield)) > 0:
     for category_ids in eval(ifield):
-        categ_ids.append((6, 0, [self.pool.get('product.category').extid_to_oeid(cr, uid, category_ids, external_referential_id)]))
-    categ_id = categ_ids.pop()[2][0]
+        categ_ids.append(self.pool.get('product.category').extid_to_oeid(cr, uid, category_ids, external_referential_id))
+    categ_id = categ_ids.pop()
 else:
     categ_id = self.pool.get('external.referential').browse(cr, uid, external_referential_id).default_pro_cat.id
-result = [('categ_id', categ_id), ('categ_ids', categ_ids)]","
+result = [('categ_id', categ_id), ('categ_ids',[(6, 0, categ_ids)])]","
 product = self.browse(cr, uid, record['id'])
 main_categ_id = self.pool.get('product.category').oeid_to_extid(cr, uid, product.categ_id.id, external_referential_id)
 categ_ids = [main_categ_id]
