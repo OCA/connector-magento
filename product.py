@@ -266,7 +266,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
         if 'attribute_set_info' in vals.keys():
             attr_set_info = eval(vals.get('attribute_set_info',{}))
             for each_key in attr_set_info.keys():
-                vals['group_id']=attr_set_info[each_key].get('group_id',False)
+                vals['group_id'] = attr_set_info[each_key].get('group_id', False)
                 
         crid = super(magerp_product_attributes, self).create(cr, uid, vals, context)
         if not vals['attribute_code'] in self._no_create_list:
@@ -275,10 +275,10 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
                 #Fetch Options
                 if 'frontend_input' in vals.keys() and vals['frontend_input'] in ['select']:
                     core_imp_conn = self.pool.get('external.referential').connect(cr, uid, [vals['referential_id']])
-                    options_data = core_imp_conn.call('ol_catalog_product_attribute.options',[vals['magento_id']])
+                    options_data = core_imp_conn.call('ol_catalog_product_attribute.options', [vals['magento_id']])
                     if options_data:
-                        self.pool.get('magerp.product_attribute_options').data_to_save(cr,uid,options_data,context={'attribute_id':crid,'referential_id':vals['referential_id']})
-                    #self.pool.get('magerp.product_attribute_options').mage_import_base(cr, uid, core_imp_conn, inst.id, defaults={'attribute_id':crid,'ids_or_filter':[vals['magento_id']]})
+                        self.pool.get('magerp.product_attribute_options').data_to_save(cr, uid, options_data, context={'attribute_id': crid,'referential_id': vals['referential_id']})
+      
                 #Manage fields
                 if vals['attribute_code'] and vals.get('frontend_input', False):
                     #Code for dynamically generating field name and attaching to this
@@ -369,26 +369,28 @@ class magerp_product_attribute_options(magerp_osv.magerp_osv):
                 'label':fields.char('Label', size=100),
                 'referential_id':fields.many2one('external.referential', 'Magento Instance', readonly=True),
                 }
-    def data_to_save(self,cr,uid,vals_list,context={}):
+
+    def data_to_save(self, cr, uid, vals_list, context={}):
         """This method will take data from vals and use context to create record"""
         for vals in vals_list:
-            if vals.get('value',False) and vals.get('label',False):
+            if vals.get('value', False) and vals.get('label', False):
                 #Fixme: What to do when magento offers emty options which open erp doesnt?
                 #Such cases dictionary is: {'value':'','label':''}
-                self.create(cr,uid,
-                            {
-                        'attribute_id':context.get('attribute_id',False),
-                        'value':vals.get('value',False),
-                        'label':vals.get('label',False),
-                        'referential_id':context.get('referential_id',False),
-                             }
-                            ) 
+                self.create(cr, uid, {
+                                        'attribute_id':context.get('attribute_id',False),
+                                        'value':vals.get('value',False),
+                                        'label':vals.get('label',False),
+                                        'referential_id':context.get('referential_id',False),
+                                    }
+                            )
+
     def get_option_id(self, cr, uid, attr_name, value, instance):
         attr_id = self.search(cr, uid, [('attribute_name', '=', attr_name), ('value', '=', value), ('referential_id', '=', instance)])
         if attr_id:
             return attr_id[0]
         else:
             return False
+
 magerp_product_attribute_options()
 
 class magerp_product_attribute_set(magerp_osv.magerp_osv):
