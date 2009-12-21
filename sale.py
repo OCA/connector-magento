@@ -146,7 +146,8 @@ class sale_order(magerp_osv.magerp_osv):
         data_record['shipping_address'].update(self.get_mage_customer_address_id(data_record['shipping_address']))
         shipping_default = {}
         billing_default = {}
-        shipping_default = {'partner_id': res.get('partner_id', False)}
+        if res.get('partner_id', False):
+            shipping_default = {'partner_id': res.get('partner_id', False)}
         billing_default = shipping_default.copy()
         billing_default.update({'email' : data_record.get('customer_email', False)})
 
@@ -158,6 +159,14 @@ class sale_order(magerp_osv.magerp_osv):
         res['partner_order_id'] = len(inv_res['create_ids']) > 0 and inv_res['create_ids'][0] or inv_res['write_ids'][0]
         res['partner_invoice_id'] = res['partner_order_id']
         res['partner_shipping_id'] = (len(ship_res['create_ids']) > 0 and ship_res['create_ids'][0]) or (len(ship_res['write_ids']) > 0 and ship_res['write_ids'][0]) or res['partner_order_id'] #shipping might be the same as invoice address
+        
+        result = self.pool.get('res.partner.address').read(cr, uid, res['partner_order_id'], ['partner_id'])
+        if result and result['partner_id']:
+            partner_id = result['partner_id'][0]
+        else: #seems like a guest order, create partner on the fly from billing address to make OpenERP happy:
+            partner_id = self.pool.get('res.partner').create(cr, uid, {'name': data_record['billing_address'].get('lastname', '') + ' ' + data_record['billing_address'].get('firstname', '')}, context)
+            self.pool.get('res.partner.address').write(cr, uid, [res['partner_order_id'], res['partner_invoice_id'], res['partner_shipping_id']], {'partner_id': partner_id})
+        res['partner_id'] = partner_id
         return res
     
     def get_order_lines(self, cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context):
@@ -205,8 +214,6 @@ class sale_order(magerp_osv.magerp_osv):
 
         if not context.get('one_by_one', False):
             if data_record.get('billing_address', False):
-                if not data_record.get('partner_id', False): #seems like a guest order, create partner on the fly from billing address to make OpenERP happy:
-                    res['partner_id'] = self.pool.get('res.partner').create(cr, uid, {'name': data_record['billing_address'].get('lastname', '') + ' ' + data_record['billing_address'].get('firstname', '')}, context)
                 res = self.get_order_addresses(cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
             if data_record.get('items', False):
                 try:
