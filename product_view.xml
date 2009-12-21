@@ -212,10 +212,14 @@
 			<field name="inherit_id" ref="product.product_normal_form_view" />
 			<field name="type">form</field>
 			<field name="arch" type="xml">
-				<xpath expr="/form/group/group/field[@name='purchase_ok']" position="after">
-					<field name="magento_sku" select="2"/>
-					<field name="magento_exportable" select="2"/>
-				</xpath>
+				<data>
+					<xpath expr="/form/group/group/field[@name='ean13']" position="after">
+						<field name="magento_sku" select="2"/>
+					</xpath>
+					<xpath expr="/form/group/group/field[@name='rental']" position="after">
+						<field name="magento_exportable" select="2"/>
+					</xpath>
+				</data>
 			</field>
 		</record>
 		<record model="ir.ui.view" id="product_product_form_view_magerpdynamic">
