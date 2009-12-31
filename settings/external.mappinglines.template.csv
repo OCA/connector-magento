@@ -176,6 +176,12 @@ else:
 	result=[('type','delivery')]
 else:
 	result=[]",
+"magento_prt_adr_16","magento1324","base.model_res_partner_address","address_type","in_out","str","if ifield=='billing':
+	result=[('type','invoice')]
+elif ifield=='shipping':
+	result=[('type','delivery')]
+else:
+	result=[]",
 "magento_prt_2","magento1324","base.model_res_partner","group_id","in_out","int","if ifield:
 	result=self.pool.get('res.partner.category').extid_to_oeid(cr,uid,ifield,external_referential_id)
 	if result:
