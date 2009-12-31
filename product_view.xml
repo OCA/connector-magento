@@ -115,13 +115,13 @@
 				<form string="Magento Product Attributes">
 					<group col="4" colspan="4">
 						<field name="attribute_code" />
-						<field name="frontend_input" />
+						<field name="frontend_input" select="2" />
 						<field name="frontend_class" />
 						<field name="backend_model" />
-						<field name="backend_type" />
-						<field name="frontend_label" />
+						<field name="backend_type" select="2" />
+						<field name="frontend_label"/>
 
-						<field name="is_visible_in_advanced_search" />
+						<field name="is_visible_in_advanced_search" select="2" />
 						<field name="is_global" />
 						<field name="is_filterable" />
 						<field name="is_comparable" />
@@ -137,7 +137,7 @@
 						<field name="position" />
 
 						<field name="group" />
-						<field name="apply_to" />
+						<field name="apply_to" select="2" />
 						<field name="default_value" />
 						<field name="note" />
 						<field name="entity_type_id" />
@@ -153,8 +153,13 @@
 			<field name="arch" type="xml">
 				<tree string="Magento Product Attributes">
 					<field name="attribute_code" select="1" />
-					<field name="entity_type_id" />
-					<field name="group" />
+					<field name="frontend_label" select="1"/>
+					<field name="is_visible" select="1"/>
+					<field name="is_required" select="1"/>
+					<field name="is_searchable" select="1" />
+					<field name="is_comparable" select="1" />
+					<field name="entity_type_id" select="1" />
+					<field name="group" select="1" />
 				</tree>
 			</field>
 		</record>
@@ -214,7 +219,7 @@
 			<field name="arch" type="xml">
 				<data>
 					<xpath expr="/form/group/group/field[@name='ean13']" position="after">
-						<field name="magento_sku" select="2"/>
+						<field name="magento_sku" select="2" attrs="{'required':[('magento_exportable','==',True)]}"/>
 					</xpath>
 					<xpath expr="/form/group/group/field[@name='rental']" position="after">
 						<field name="magento_exportable" select="2"/>

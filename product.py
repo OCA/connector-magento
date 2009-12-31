@@ -151,8 +151,8 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
         'frontend_class':fields.char('Frontend Class', size=100),
         'backend_model':fields.char('Backend Model', size=200),
         'backend_type':fields.selection([
-                                         ('static', 'static'),
-                                         ('varchar', ' Varchar'),
+                                         ('static', 'Static'),
+                                         ('varchar', 'Varchar'),
                                          ('text', 'Text'),
                                          ('decimal', 'Decimal'),
                                          ('int', 'Integer'),
@@ -660,17 +660,18 @@ class product_product(magerp_osv.magerp_osv):
         return crid
 
 
-    def redefine_prod_view(self,cr,uid, field_names, attribute_set_id):
+    def redefine_prod_view(self,cr,uid, field_names, context):
         #This function will rebuild the view for product from instances, attribute groups etc
         #Get all objects needed
         #inst_obj = self.pool.get('external.referential')
         attr_set_obj = self.pool.get('magerp.product_attribute_set')
         attr_group_obj = self.pool.get('magerp.product_attribute_groups')
         attr_obj = self.pool.get('magerp.product_attributes')
+        translation_obj = self.pool.get('ir.translation')
         xml = u"<notebook colspan='4'>\n"
         attr_grp_ids = attr_group_obj.search(cr,uid,[])
         attr_groups = attr_group_obj.browse(cr,uid,attr_grp_ids)
-        
+        attribute_set_id = context['set']
         attr_set = attr_set_obj.browse(cr, uid, attribute_set_id)
         
         cr.execute("select attr_id, group_id, attribute_code, frontend_input, frontend_label, is_required, apply_to  from magerp_attrset_attr_rel left join magerp_product_attributes on magerp_product_attributes.id = attr_id where magerp_attrset_attr_rel.set_id=%s" % attribute_set_id)
@@ -682,7 +683,9 @@ class product_product(magerp_osv.magerp_osv):
             group_name = attr_group_obj.read(cr, uid, oerp_group_id, ['attribute_group_name'])['attribute_group_name']
             
             #Create a page for the attribute group
-            xml+="<page string='" + group_name + "'>\n<group colspan='4' col='4'>"
+            trans = translation_obj._get_source(cr, uid, 'product.product', 'view', context.get('lang', ''), group_name)
+            trans = trans or group_name
+            xml+="<page string='" + trans + "'>\n<group colspan='4' col='4'>"
             while True:
                 if result[1] != mag_group_id:
                     break
@@ -690,7 +693,9 @@ class product_product(magerp_osv.magerp_osv):
                 if "x_magerp_" +  result[2] in field_names:
                     if not result[2] in attr_obj._no_create_list:
                         if result[3] in ['textarea']:
-                            xml+="<newline/><separator colspan='4' string='%s'/>" % (result[4],)
+                            trans = translation_obj._get_source(cr, uid, 'product.product', 'view', context.get('lang', ''), result[4])
+                            trans = trans or result[4]
+                            xml+="<newline/><separator colspan='4' string='%s'/>" % (trans,)
                         xml+="<field name='x_magerp_" +  result[2] + "'"
                         if result[5] and (result[6] == "" or "simple" in result[6] or "configurable" in result[6]) and result[2] not in self._magento_fake_mandatory_attrs:
                             xml+=""" attrs="{'required':[('magento_exportable','=',True)]}" """
@@ -718,8 +723,8 @@ class product_product(magerp_osv.magerp_osv):
                     if str(field.name).startswith('x_'):
                         field_names.append(field.name)
                 result['fields'].update(self.fields_get(cr, uid, field_names, context))
-                view_part = self.redefine_prod_view(cr, uid, field_names, context['set']).decode('utf8')
-                result['arch'] = result['arch'].decode('utf8').replace('<page string="attributes_placeholder"/>', """<page string="Magento Information" attrs="{'invisible':[('magento_exportable','!=',1)]}"><field name='set' />\n""" + view_part + """\n</page>""")
+                view_part = self.redefine_prod_view(cr, uid, field_names, context) #.decode('utf8') It is not necessary, the translated view could be in UTF8
+                result['arch'] = result['arch'].decode('utf8').replace('<page string="attributes_placeholder"/>', '<page string="'+_("Magento Information")+'"'+""" attrs="{'invisible':[('magento_exportable','!=',1)]}"><field name='set' attrs="{'required':[('magento_exportable','=',True)]}"/>\n""" + view_part + """\n</page>""")
             else:
                 result['arch'] = result['arch'].replace('<page string="attributes_placeholder"/>', "")
         return result

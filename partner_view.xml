@@ -11,7 +11,12 @@
 					<page string="Magento Information">
 						<field name="emailid" />
 						<field name="group_id" />
+						<field name="mag_vat" />
+						<field name="mag_birthday" />
 						<field name="store_id" />
+                        <newline/>
+                        <separator string="Store views" colspan="4" />
+						<field name="store_ids" colspan="4" nolabel="1" />
 					</page>
 				</xpath>
 			</field>
