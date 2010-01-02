@@ -23,6 +23,7 @@ from osv import osv, fields
 import magerp_osv
 import netsvc
 from tools.translate import _
+import string
 
 DEBUG = True
 
@@ -167,6 +168,24 @@ class sale_order(magerp_osv.magerp_osv):
             partner_id = self.pool.get('res.partner').create(cr, uid, {'name': data_record['billing_address'].get('lastname', '') + ' ' + data_record['billing_address'].get('firstname', '')}, context)
             self.pool.get('res.partner.address').write(cr, uid, [res['partner_order_id'], res['partner_invoice_id'], res['partner_shipping_id']], {'partner_id': partner_id})
         res['partner_id'] = partner_id
+
+        # Adds last store view (m2o field store_id) to the list of store views (m2m field store_ids)
+        partner = self.pool.get('res.partner').browse(cr, uid, partner_id)
+        if partner.store_id:
+            store_ids = [store.id for store in partner.store_ids]
+            if partner.store_id.id not in store_ids:
+                store_ids.append(partner.store_id.id)
+            self.pool.get('res.partner').write(cr, uid, [partner_id], {'store_ids': [(6,0,store_ids)]})
+
+        # Adds vat number (country code+magento vat) if base_vat module is installed and Magento sends customer_taxvat
+        cr.execute('select * from ir_module_module where name=%s and state=%s', ('base_vat','installed'))
+        if cr.fetchone() and 'customer_taxvat' in data_record:
+            allchars = string.maketrans('', '')
+            delchars = ''.join([c for c in allchars if c not in string.letters + string.digits])
+            vat = data_record['customer_taxvat'].translate(allchars, delchars).upper()
+            if 'country_id' in data_record['billing_address']:
+                vat = data_record['billing_address']['country_id'] + vat
+            self.pool.get('res.partner').write(cr, uid, [partner_id], {'vat_subjected':True, 'vat':vat})
         return res
     
     def get_order_lines(self, cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context):

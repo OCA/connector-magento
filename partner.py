@@ -55,8 +55,8 @@ class res_partner(magerp_osv.magerp_osv):
                     'created_at':fields.datetime('Created Date'),
                     'updated_at':fields.datetime('Updated At'),
                     'emailid':fields.char('Email ID', size=100, help="Magento uses this email ID to correspond to the customer."),
-                    'mag_vat':fields.char('Magento VAT', size=50, help="To be able to receive customer VAT number you must set it in Magento Admin Panel, menú System / Configuration / Client Configuration / Name and Address Options."),
-                    'mag_birthday':fields.date('Birthday', help="To be able to receive customer birthday you must set it in Magento Admin Panel, menú System / Configuration / Client Configuration / Name and Address Options."),
+                    'mag_vat':fields.char('Magento VAT', size=50, help="To be able to receive customer VAT number you must set it in Magento Admin Panel, menu System / Configuration / Client Configuration / Name and Address Options."),
+                    'mag_birthday':fields.date('Birthday', help="To be able to receive customer birthday you must set it in Magento Admin Panel, menu System / Configuration / Client Configuration / Name and Address Options."),
                 }
 
 res_partner()

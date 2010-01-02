@@ -76,7 +76,7 @@ class Connection(object):
             try:
                 return self.try_call(method, arguments)
             except Exception, e:
-                self.logger.notifyChannel(_("Magento Call"), netsvc.LOG_WARNING, _("Webservice Failure, sleeping 2 seconds before next attempt"))
+                self.logger.notifyChannel(_("Magento Call"), netsvc.LOG_WARNING, _("Webservice Failure, sleeping 3 seconds before next attempt"))
                 time.sleep(3)
                 try:
                     return self.try_call(method, arguments)
