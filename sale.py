@@ -269,7 +269,7 @@ class sale_order(magerp_osv.magerp_osv):
         wf_service = netsvc.LocalService("workflow")
         if data.get('status_history', False) and len(data['status_history']) > 0 and data['status_history'][0]['status'] == 'canceled':
             wf_service.trg_validate(uid, 'sale.order', order_id, 'cancel', cr)
-        else:    
+        else:
             order = self.browse(cr, uid, order_id, context)
             if order.order_policy == 'manual' and order.shop_id.picking_generation_policy != 'none':
                 wf_service.trg_validate(uid, 'sale.order', order.id, 'order_confirm', cr)

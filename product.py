@@ -774,12 +774,6 @@ class product_product(magerp_osv.magerp_osv):
                 sku = code
         return sku
 
-    def _export_inventory(self, cr, uid, product, stock_id, logger, ctx):
-        if product.magento_sku and product.type != 'service':
-            virtual_available = self.read(cr, uid, product.id, ['virtual_available'], {'location': stock_id})['virtual_available']
-            ctx['conn_obj'].call('product_stock.update', [product.magento_sku, {'qty': virtual_available, 'is_in_stock': 1}])
-            logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "Successfully updated stock level at %s for product with SKU %s " %(virtual_available, product.magento_sku))
-    
     def ext_create(self, cr, uid, data, conn, method, oe_id, ctx):        
         product = self.browse(cr, uid, oe_id)
         sku = self.product_to_sku(cr, uid, product)
@@ -823,10 +817,6 @@ class product_product(magerp_osv.magerp_osv):
         #inventory level updates:
         shop = self.pool.get('sale.shop').browse(cr, uid, context['shop_id'])
         stock_id = shop.warehouse_id.lot_stock_id.id
-        logger = netsvc.Logger()
-        for id in ids:
-            self._export_inventory(cr, uid, self.pool.get('product.product').browse(cr, uid, id), stock_id, logger, context)                
-                
         return result
     
     
@@ -845,6 +835,10 @@ class product_product(magerp_osv.magerp_osv):
         logger = netsvc.Logger()
         stock_id = self.pool.get('sale.shop').browse(cr, uid, ctx['shop_id']).warehouse_id.lot_stock_id.id
         for product in self.browse(cr, uid, ids):
-            self._export_inventory(cr, uid, product, stock_id, logger, ctx)
+            if product.magento_sku and product.type != 'service':
+                virtual_available = self.read(cr, uid, product.id, ['virtual_available'], {'location': stock_id})['virtual_available']
+                ctx['conn_obj'].call('product_stock.update', [product.magento_sku, {'qty': virtual_available, 'is_in_stock': 1}])
+                logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "Successfully updated stock level at %s for product with SKU %s " %(virtual_available, product.magento_sku))
+    
 
 product_product()
