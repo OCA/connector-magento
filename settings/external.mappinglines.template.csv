@@ -138,7 +138,7 @@ else:
 "magento_cst_grp_3","magento1324","base.model_res_partner_category","tax_class_id","in","int","result=[('tax_class_id',ifield)]",
 "magento_prt_adr_2","magento1324","base.model_res_partner_address","city","in_out","str","result=[('city',ifield)]",
 "magento_prt_adr_3","magento1324","base.model_res_partner_address","fax","in_out","str","result=[('fax',ifield)]",
-"magento_prt_adr_4","magento1324","base.model_res_partner_address","firstname","in_out","str","result = [('name', data['lastname'] + ' ' + ifield + (data.get('company', False) and (' - ' + data['company']) or ''))]",
+"magento_prt_adr_4","magento1324","base.model_res_partner_address","firstname","in_out","str","result = result = [('name', (data.get('company', False) and (data['company'] + ' ; ') or '') + ifield + ' ' + data['lastname'])]",
 "magento_prt_adr_6","magento1324","base.model_res_partner_address","is_active","in_out","str","result=[('active',bool(eval(ifield)))]",
 "magento_prt_adr_7","magento1324","base.model_res_partner_address","country_id","in_out","str","result = self.pool.get('res.country').search(cr,uid,[('code','=',ifield)])
 if result and len(result)==1:
@@ -198,16 +198,7 @@ else:
 "magento_prt_5","magento1324","base.model_res_partner","created_in","in_out","str","result=[('created_in',ifield)]",
 "magento_prt_6","magento1324","base.model_res_partner","created_at","in_out","str","result=[('created_at',ifield)]",
 "magento_prt_7","magento1324","base.model_res_partner","updated_at","in_out","str","result=[('updated_at',ifield)]",
-"magento_prt_8","magento1324","base.model_res_partner","firstname","in_out","str","if ifield:
-	if 'name' in vals.keys() and vals['name']:
-		result = [('name',vals['name']+"" ""+ifield)]
-	else:
-		result = [('name',ifield)]",
-"magento_prt_9","magento1324","base.model_res_partner","lastname","in_out","str","if ifield:
-	if 'name' in vals.keys() and vals['name']:
-		result = [('name',ifield+"" ""+vals['name'])]
-	else:
-		result = [('name',ifield)]",
+"magento_prt_8","magento1324","base.model_res_partner","firstname","in_out","str","result = [('name', ifield + ' ' + data['lastname'])]",
 "magento_prt_10","magento1324","base.model_res_partner","email","in_out","str","result=[('emailid',ifield)]",
 "magento_prt_11","magento1324","base.model_res_partner","taxvat","in_out","str","if ifield:
 	result=[('mag_vat',ifield)]
