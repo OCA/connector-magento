@@ -137,6 +137,8 @@ class sale_order(magerp_osv.magerp_osv):
             return {'customer_address_id': 'mag_order' + str(address_data['address_id']), 'is_magento_order_address': True}
     
     def get_order_addresses(self, cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context):
+        partner_obj = self.pool.get('res.partner')
+        partner_address_obj = self.pool.get('res.partner.address')
         del(data_record['billing_address']['parent_id'])
         del(data_record['shipping_address']['parent_id'])
         
@@ -152,30 +154,30 @@ class sale_order(magerp_osv.magerp_osv):
         billing_default = shipping_default.copy()
         billing_default.update({'email' : data_record.get('customer_email', False)})
 
-        inv_res = self.pool.get('res.partner.address').ext_import(cr, uid, [data_record['billing_address']], 
+        inv_res = partner_address_obj.ext_import(cr, uid, [data_record['billing_address']], 
                                                                   external_referential_id, billing_default, context)
-        ship_res = self.pool.get('res.partner.address').ext_import(cr, uid, [data_record['shipping_address']], 
+        ship_res = partner_address_obj.ext_import(cr, uid, [data_record['shipping_address']], 
                                                                   external_referential_id, shipping_default, context)
 
         res['partner_order_id'] = len(inv_res['create_ids']) > 0 and inv_res['create_ids'][0] or inv_res['write_ids'][0]
         res['partner_invoice_id'] = res['partner_order_id']
         res['partner_shipping_id'] = (len(ship_res['create_ids']) > 0 and ship_res['create_ids'][0]) or (len(ship_res['write_ids']) > 0 and ship_res['write_ids'][0]) or res['partner_order_id'] #shipping might be the same as invoice address
         
-        result = self.pool.get('res.partner.address').read(cr, uid, res['partner_order_id'], ['partner_id'])
+        result = partner_address_obj.read(cr, uid, res['partner_order_id'], ['partner_id'])
         if result and result['partner_id']:
             partner_id = result['partner_id'][0]
         else: #seems like a guest order, create partner on the fly from billing address to make OpenERP happy:
-            partner_id = self.pool.get('res.partner').create(cr, uid, {'name': data_record['billing_address'].get('lastname', '') + ' ' + data_record['billing_address'].get('firstname', '')}, context)
-            self.pool.get('res.partner.address').write(cr, uid, [res['partner_order_id'], res['partner_invoice_id'], res['partner_shipping_id']], {'partner_id': partner_id})
+            partner_id = partner_obj.create(cr, uid, {'name': data_record['billing_address'].get('lastname', '') + ' ' + data_record['billing_address'].get('firstname', '')}, context)
+            partner_address_obj.write(cr, uid, [res['partner_order_id'], res['partner_invoice_id'], res['partner_shipping_id']], {'partner_id': partner_id})
         res['partner_id'] = partner_id
 
         # Adds last store view (m2o field store_id) to the list of store views (m2m field store_ids)
-        partner = self.pool.get('res.partner').browse(cr, uid, partner_id)
+        partner = partner_obj.browse(cr, uid, partner_id)
         if partner.store_id:
             store_ids = [store.id for store in partner.store_ids]
             if partner.store_id.id not in store_ids:
                 store_ids.append(partner.store_id.id)
-            self.pool.get('res.partner').write(cr, uid, [partner_id], {'store_ids': [(6,0,store_ids)]})
+            partner_obj.write(cr, uid, [partner_id], {'store_ids': [(6,0,store_ids)]})
 
         # Adds vat number (country code+magento vat) if base_vat module is installed and Magento sends customer_taxvat
         cr.execute('select * from ir_module_module where name=%s and state=%s', ('base_vat','installed'))
@@ -183,9 +185,18 @@ class sale_order(magerp_osv.magerp_osv):
             allchars = string.maketrans('', '')
             delchars = ''.join([c for c in allchars if c not in string.letters + string.digits])
             vat = data_record['customer_taxvat'].translate(allchars, delchars).upper()
-            if 'country_id' in data_record['billing_address']:
+            vat_country, vat_number = vat[:2].lower(), vat[2:]
+            check = getattr(partner_obj, 'check_vat_' + vat_country)
+            vat_ok = check(vat_number)
+            #print "1", vat, vat_ok
+            if not vat_ok and 'country_id' in data_record['billing_address']:
+                # Maybe magento vat number has not country code prefix. Take it from billing address.
+                check = getattr(partner_obj, 'check_vat_' + data_record['billing_address']['country_id'].lower())
+                vat_ok = check(vat)
                 vat = data_record['billing_address']['country_id'] + vat
-            self.pool.get('res.partner').write(cr, uid, [partner_id], {'vat_subjected':True, 'vat':vat})
+                #print "2", vat, vat_ok
+            if vat_ok:    
+                partner_obj.write(cr, uid, [partner_id], {'vat_subjected':True, 'vat':vat})
         return res
     
     def get_order_lines(self, cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context):
