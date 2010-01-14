@@ -141,6 +141,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
                                            ('textarea', 'Text Area'),
                                            ('select', 'Selection'),
                                            ('multiselect', 'Multi-Selection'),
+                                           ('boolean', 'Yes/No'),
                                            ('date', 'Date'),
                                            ('price', 'Price'),
                                            ('media_image', 'Media Image'),
@@ -216,6 +217,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
         'media_image':'binary',
         'gallery':'binary',
         'multiselect':'char',
+        'boolean':'boolean',
         'weee':'char',
         False:'char'
         }
@@ -230,6 +232,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
         'media_image':'False',
         'gallery':'False',
         'multiselect':'str',
+        'boolean':'int',
         'weee':'str',
         False:'str'
         }
@@ -337,7 +340,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
                                     'external_type':self._type_casts[vals.get('frontend_input', False)],
                                 }
                 mapping_line['field_id'] = field_id,
-                if ttype in ['char','text','date','float','weee']:
+                if ttype in ['char','text','date','float','weee','boolean']:
                     mapping_line['in_function'] = "result =[('" + field_name + "',ifield)]"
                     mapping_line['out_function'] = "result=[('%s',record['%s'])]" % (vals['attribute_code'], field_name)
                 elif ttype in ['many2one']:
@@ -576,8 +579,21 @@ class product_tierprice(osv.osv):
                 }
 product_tierprice()
 
+class product_product_type(osv.osv):
+    _name = 'magerp.product_product_type'
+    _columns = {
+        'name': fields.char('Name', size=100, required=True, translate=True),
+        'product_type': fields.char('Type', size=100, required=True, help="Use the same name of Magento product type, for example 'simple'."),
+    }
+product_product_type()
+
 class product_product(magerp_osv.magerp_osv):
     _inherit = "product.product"
+
+    def _product_type_get(self, cr, uid, context={}):
+        ids = self.pool.get('magerp.product_product_type').search(cr, uid, [], order='id')
+        product_types = self.pool.get('magerp.product_product_type').read(cr, uid, ids, ['product_type','name'], context=context)
+        return [(pt['product_type'], pt['name']) for pt in product_types]
 
     _columns = {
         'magento_sku':fields.char('Magento SKU', size=64),
@@ -586,6 +602,7 @@ class product_product(magerp_osv.magerp_osv):
         'updated_at':fields.date('Created'),
         'set':fields.many2one('magerp.product_attribute_set', 'Attribute Set'),
         'tier_price':fields.one2many('product.tierprice', 'product', 'Tier Price'),
+        'product_type': fields.selection(_product_type_get, 'Product Type'),
         }
 
     _defaults = {
@@ -718,13 +735,13 @@ class product_product(magerp_osv.magerp_osv):
                 ir_model_id = self.pool.get('ir.model').search(cr, uid, [('model', '=', 'product.product')])[0]
                 ir_model = self.pool.get('ir.model').browse(cr, uid, ir_model_id)
                 ir_model_field_ids = self.pool.get('ir.model.fields').search(cr, uid, [('model_id', '=', ir_model_id)])
-                field_names = ['set']
+                field_names = ['product_type']
                 for field in self.pool.get('ir.model.fields').browse(cr, uid, ir_model_field_ids):
                     if str(field.name).startswith('x_'):
                         field_names.append(field.name)
                 result['fields'].update(self.fields_get(cr, uid, field_names, context))
                 view_part = self.redefine_prod_view(cr, uid, field_names, context) #.decode('utf8') It is not necessary, the translated view could be in UTF8
-                result['arch'] = result['arch'].decode('utf8').replace('<page string="attributes_placeholder"/>', '<page string="'+_("Magento Information")+'"'+""" attrs="{'invisible':[('magento_exportable','!=',1)]}"><field name='set' attrs="{'required':[('magento_exportable','=',True)]}"/>\n""" + view_part + """\n</page>""")
+                result['arch'] = result['arch'].decode('utf8').replace('<page string="attributes_placeholder"/>', '<page string="'+_("Magento Information")+'"'+""" attrs="{'invisible':[('magento_exportable','!=',1)]}"><field name='product_type' attrs="{'required':[('magento_exportable','=',True)]}"/>\n""" + view_part + """\n</page>""")
             else:
                 result['arch'] = result['arch'].replace('<page string="attributes_placeholder"/>', "")
         return result
@@ -840,5 +857,4 @@ class product_product(magerp_osv.magerp_osv):
                 ctx['conn_obj'].call('product_stock.update', [product.magento_sku, {'qty': virtual_available, 'is_in_stock': 1}])
                 logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "Successfully updated stock level at %s for product with SKU %s " %(virtual_available, product.magento_sku))
     
-
 product_product()

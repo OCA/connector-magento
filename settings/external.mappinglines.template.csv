@@ -129,11 +129,18 @@ result=[('category_ids', categ_ids)]"
 "mag_erp_prd_10","magento1324","product.model_product_product","set","in_out","str","result=[('set',self.pool.get('magerp.product_attribute_set').extid_to_oeid(cr, uid, ifield, external_referential_id))]",
 "mag_erp_prd_11","magento1324","product.model_product_product","special_price","in_out","float","result = [('x_magerp_special_price',ifield)]",""
 "mag_erp_prd_12","magento1324","product.model_product_product","tier_price","in_out","str","result=[]#no mapping by default","result=[]#no mapping by default"
-"mag_erp_prd_12","magento1324","product.model_product_product","minimal_price","in_out","float","result = [('x_magerp_minimal_price',ifield)]","
+"mag_erp_prd_13","magento1324","product.model_product_product","minimal_price","in_out","float","result = [('x_magerp_minimal_price',ifield)]","
 if record['x_magerp_minimal_price'] and record['x_magerp_minimal_price'] != 0:
     result = [('minimal_price',record['x_magerp_minimal_price'])]
 else:
     result = [('minimal_price',False)]"
+"mag_erp_prd_14","magento1324","product.model_product_product","type_id","in_out","str","if ifield:
+    product_type_ids  = self.pool.get('magerp.product_product_type').search(cr,uid,[('product_type','=',ifield)])
+    if product_type_ids:
+        result = [('product_type',ifield)]","if 'product_type' in record and record['product_type']:
+    result = [('type_id',record['product_type'])]
+else:
+    result = [('type_id','simple')]"
 "magento_cst_grp_1","magento1324","base.model_res_partner_category","customer_group_code","in","str","result=[('name',ifield)]",
 "magento_cst_grp_3","magento1324","base.model_res_partner_category","tax_class_id","in","int","result=[('tax_class_id',ifield)]",
 "magento_prt_adr_2","magento1324","base.model_res_partner_address","city","in_out","str","result=[('city',ifield)]",

@@ -1,0 +1,1268 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* magentoerpconnect
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 5.0.6\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2010-01-02 02:41:18+0000\n"
+"PO-Revision-Date: 2010-01-02 02:41:18+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: magentoerpconnect
+#: field:magerp.storeviews,magento_store_id:0
+msgid "Store ID"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:res.partner,mag_birthday:0
+msgid "To be able to receive customer birthday you must set it in Magento Admin Panel, menu System / Configuration / Client Configuration / Name and Address Options."
+msgstr ""
+
+#. module: magentoerpconnect
+#: selection:product.tierprice,group_scope:0
+msgid "All groups"
+msgstr ""
+
+#. module: magentoerpconnect
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,position:0
+msgid "Position"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:res.partner,group_id:0
+msgid "Magento Group(Category)"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.tierprice,web_scope:0
+msgid "Scope"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magerp.product_attribute_groups,attribute_group_name:0
+msgid "Group Name"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.category,available_sort_by:0
+msgid "Available Product Listing (Sort By)"
+msgstr ""
+
+#. module: magentoerpconnect
+#: view:external.referential:0
+msgid "Referential Actions"
+msgstr ""
+
+#. module: magentoerpconnect
+#: view:external.referential:0
+msgid "6 - Import Products"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:external.shop.group,default_shop_id:0
+#: field:magerp.storeviews,default_shop_id:0
+msgid "Default Store (Group)"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magerp.product_attribute_set,magento_id:0
+#: field:sale.shop,group_id:0
+msgid "Magento ID"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.product,tier_price:0
+msgid "Tier Price"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.category,default_sort_by:0
+msgid "Default Product Listing Sort (Sort By)"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:res.partner,emailid:0
+msgid "Magento uses this email ID to correspond to the customer."
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.category,create_date:0
+msgid "Created date"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,is_filterable:0
+msgid "Filterable?"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.category,meta_title:0
+msgid "Title (Meta)"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:ir.actions.act_window,name:magentoerpconnect.act_magerp_shop_form
+#: model:ir.ui.menu,name:magentoerpconnect.menu_magerp_core_shops
+msgid "Magento Shops"
+msgstr ""
+
+#. module: magentoerpconnect
+#: selection:magerp.product_attributes,frontend_input:0
+msgid "Media Image"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:res.partner.address,is_magento_order_address:0
+msgid "Magento Order Address?"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.category,level:0
+msgid "Level"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,options:0
+msgid "Attribute Options"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,is_comparable:0
+msgid "Comparable?"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magerp.product_attribute_options,value:0
+msgid "Value"
+msgstr ""
+
+#. module: magentoerpconnect
+#: selection:product.category,display_mode:0
+msgid "Products Only"
+msgstr ""
+
+#. module: magentoerpconnect
+#: view:product.category:0
+msgid "Meta Information"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,is_visible:0
+msgid "Visible?"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:ir.ui.menu,name:magentoerpconnect.menu_magerp_attnsets_attributes
+#: field:magerp.product_attribute_set,attributes:0
+msgid "Attributes"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:sale.shop,root_category_id:0
+msgid "Root product Category"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:res.partner,emailid:0
+msgid "Email ID"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magerp.storeviews,shop_id:0
+msgid "Shop"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,frontend_class:0
+msgid "Frontend Class"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,backend_model:0
+msgid "Backend Model"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magerp.storeviews,name:0
+msgid "Store View Name"
+msgstr ""
+
+#. module: magentoerpconnect
+#: view:product.category:0
+msgid "Use Anchor"
+msgstr ""
+
+#. module: magentoerpconnect
+#: selection:magerp.product_attributes,frontend_input:0
+msgid "Gallery"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.category,is_anchor:0
+msgid "Anchor?"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magerp.product_attribute_options,ipcast:0
+msgid "Type cast"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,is_required:0
+msgid "Required?"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,is_user_defined:0
+msgid "User Defined?"
+msgstr ""
+
+#. module: magentoerpconnect
+#: view:magerp.product_attribute_groups:0
+msgid "Magento Product Attribute groups"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:res.partner,created_in:0
+msgid "Created in"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,group:0
+msgid "Attribute Group"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magerp.product_attribute_options,label:0
+#: field:magerp.product_attributes,frontend_label:0
+msgid "Label"
+msgstr ""
+
+#. module: magentoerpconnect
+#: view:external.referential:0
+msgid "1 - Import Customer Groups (Partner Categories)"
+msgstr ""
+
+#. module: magentoerpconnect
+#: view:external.referential:0
+msgid "4 - Import Attribute Groups"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.category,magento_exportable:0
+msgid "Export to Magento"
+msgstr ""
+
+#. module: magentoerpconnect
+#: selection:magerp.product_attributes,backend_type:0
+msgid "Datetime"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_magerp_product_attribute_set
+msgid "Attribute sets in products"
+msgstr ""
+
+#. module: magentoerpconnect
+#: view:external.referential:0
+msgid "Product Attributes / Sets"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,is_used_for_price_rules:0
+msgid "Used for pricing rules?"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:res.partner,store_ids:0
+#: field:sale.shop,storeview_ids:0
+msgid "Store Views"
+msgstr ""
+
+#. module: magentoerpconnect
+#: view:product.category:0
+msgid "Sorting method"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_magerp_product_attribute_options
+msgid "Options  of selected attributes"
+msgstr ""
+
+#. module: magentoerpconnect
+#: view:product.category:0
+msgid "Category Image"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:sale.shop,default_store_id:0
+msgid "Magento Store ID"
+msgstr ""
+
+#. module: magentoerpconnect
+#: selection:magerp.product_attributes,backend_type:0
+#: selection:magerp.product_attributes,frontend_input:0
+msgid "Text"
+msgstr ""
+
+#. module: magentoerpconnect
+#: selection:magerp.product_attributes,frontend_input:0
+msgid "Multi-Selection"
+msgstr ""
+
+#. module: magentoerpconnect
+#: selection:magerp.product_attributes,frontend_input:0
+msgid "Yes/No"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:ir.actions.act_window,name:magentoerpconnect.act_magerp_storeviews_form
+#: view:magerp.storeviews:0
+msgid "Magento storeviews"
+msgstr ""
+
+#. module: magentoerpconnect
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr ""
+
+#. module: magentoerpconnect
+#: constraint:product.template:0
+msgid "Error: UOS must be in a different category than the UOM"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.product,created_at:0
+#: field:product.product,updated_at:0
+msgid "Created"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magerp.product_attribute_set,attribute_set_name:0
+msgid "Set Name"
+msgstr ""
+
+#. module: magentoerpconnect
+#: view:product.category:0
+#: field:product.category,display_mode:0
+msgid "Display Mode"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:res.partner,created_at:0
+msgid "Created Date"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:sale.order,magento_incrementid:0
+msgid "Magento Increment ID"
+msgstr ""
+
+#. module: magentoerpconnect
+#: selection:magerp.product_attributes,backend_type:0
+msgid "Varchar"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:res.partner,store_id:0
+msgid "Last Store View"
+msgstr ""
+
+#. module: magentoerpconnect
+#: selection:magerp.product_attributes,frontend_input:0
+msgid "Selection"
+msgstr ""
+
+#. module: magentoerpconnect
+#: view:external.referential:0
+msgid "Core Components"
+msgstr ""
+
+#. module: magentoerpconnect
+#: selection:magerp.product_attributes,frontend_input:0
+msgid "Text Area"
+msgstr ""
+
+#. module: magentoerpconnect
+#: view:magerp.product_attribute_set:0
+msgid "Magento Product Attribute Set"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:res.partner.address,lastname:0
+msgid "Last Name"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.category,image:0
+msgid "Image"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magerp.product_attribute_groups,attribute_set:0
+#: field:magerp.product_attributes,set_id:0
+#: field:product.product,set:0
+msgid "Attribute Set"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:sale.shop,magento_root_category:0
+msgid "Root Category"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:external.referential,default_pro_cat:0
+msgid "Products imported from magento may have many categories.\n"
+"OpenERP requires a specific category for a product to facilitate invoicing etc."
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:external.shop.group,default_group_id:0
+msgid "Default Store Group"
+msgstr ""
+
+#. module: magentoerpconnect
+#: selection:magerp.product_attributes,backend_type:0
+msgid "Static"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_magerp_product_attribute_groups
+msgid "Attribute groups in Magento"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.product,magento_exportable:0
+msgid "Exported to Magento?"
+msgstr ""
+
+#. module: magentoerpconnect
+#: selection:magerp.product_attributes,frontend_input:0
+msgid "Fixed Product Tax"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:res.partner,updated_at:0
+msgid "Updated At"
+msgstr ""
+
+#. module: magentoerpconnect
+#: selection:product.tierprice,web_scope:0
+msgid "Specific Website"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_magerp_product_attributes
+msgid "Attributes of products"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,frontend_input:0
+msgid "Frontend Input"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.category,is_active:0
+msgid "Active?"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:ir.actions.act_window,name:magentoerpconnect.act_magerp_product_attribute_set_form
+#: view:magerp.product_attribute_set:0
+msgid "Magento Product Attribute Sets"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,group_id:0
+msgid "Group"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:external.shop.group,is_default:0
+msgid "Is Active?"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:ir.module.module,description:magentoerpconnect.module_meta_information
+msgid "Magento E-commerce management\n"
+""
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.category,magerp_stamp:0
+msgid "Magento stamp"
+msgstr ""
+
+#. module: magentoerpconnect
+#: constraint:product.template:0
+msgid "Error: The default UOM and the purchase UOM must be in the same category."
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,note:0
+msgid "Note"
+msgstr ""
+
+#. module: magentoerpconnect
+#: view:magerp.product_attribute_groups:0
+msgid "Magento Product Attributes Groups"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.tierprice,price_qty:0
+msgid "Quantity Slab"
+msgstr ""
+
+#. module: magentoerpconnect
+#: view:product.category:0
+#: view:res.partner:0
+#: view:res.partner.category:0
+msgid "Magento Information"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,is_searchable:0
+msgid "Searchable ?"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magerp.storeviews,website_id:0
+#: field:product.tierprice,website_id:0
+#: field:res.partner,website_id:0
+msgid "Website"
+msgstr ""
+
+#. module: magentoerpconnect
+#: view:external.referential:0
+msgid "3 - Import Product Attribute Sets"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.tierprice,group_scope:0
+msgid "unknown"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:external.referential,attribute_sets:0
+#: model:ir.ui.menu,name:magentoerpconnect.menu_magerp_attnsets_sets
+msgid "Attribute Sets"
+msgstr ""
+
+#. module: magentoerpconnect
+#: view:product.product:0
+msgid "attributes_placeholder"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:res.partner,mag_birthday:0
+msgid "Birthday"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:external.referential,default_pro_cat:0
+msgid "Default Product Category"
+msgstr ""
+
+#. module: magentoerpconnect
+#: selection:magerp.product_attributes,frontend_input:0
+msgid "Date"
+msgstr ""
+
+#. module: magentoerpconnect
+#: selection:magerp.product_attributes,backend_type:0
+msgid "Integer"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:ir.ui.menu,name:magentoerpconnect.menu_magerp_core_websites
+msgid "Magento Websites"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:product.category,updated:0
+msgid "Set if the category underwent a change & has to be synched."
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magerp.storeviews,lang_id:0
+msgid "Language"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magerp.product_attribute_groups,default_id:0
+msgid "Default"
+msgstr ""
+
+#. module: magentoerpconnect
+#: selection:magerp.product_attributes,backend_type:0
+msgid "Decimal"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:ir.ui.menu,name:magentoerpconnect.menu_magerp_attnsets
+msgid "Attributes and Sets"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:external.shop.group,sort_order:0
+#: field:magerp.product_attribute_groups,sort_order:0
+#: field:magerp.product_attribute_set,sort_order:0
+#: field:magerp.storeviews,sort_order:0
+msgid "Sort Order"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,is_unique:0
+msgid "Unique?"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,is_visible_on_front:0
+msgid "Visible (Front)?"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_product_tierprice
+msgid "Implements magento tier pricing"
+msgstr ""
+
+#. module: magentoerpconnect
+#: view:magerp.product_attribute_set:0
+msgid "Attributes in Set"
+msgstr ""
+
+#. module: magentoerpconnect
+#: view:product.category:0
+msgid "Products only means that the products associated to the category will display, but not any static blocks.Static block only means that the selected static block will display, but none of the products.Static block and products means that the static block will display with the products listed directly beneath it."
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,backend_type:0
+msgid "Backend Type"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:res.partner,mag_vat:0
+msgid "To be able to receive customer VAT number you must set it in Magento Admin Panel, menú System / Configuration / Client Configuration / Name and Address Options."
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_magerp_storeviews
+msgid "The magento store views information"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:external.shop.group,code:0
+#: field:magerp.product_attributes,attribute_code:0
+#: field:magerp.storeviews,code:0
+msgid "Code"
+msgstr ""
+
+#. module: magentoerpconnect
+#: view:external.referential:0
+msgid "2 - Import Product Categories"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magerp.product_attribute_options,attribute_id:0
+msgid "Attribute"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.category,updated:0
+msgid "To synchronize"
+msgstr ""
+
+#. module: magentoerpconnect
+#: selection:product.category,display_mode:0
+msgid "Static Block Only"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.category,magento_parent_id:0
+msgid "Magento Parent"
+msgstr ""
+
+#. module: magentoerpconnect
+#: view:product.category:0
+msgid "General Information"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,field_name:0
+msgid "Open ERP Field name"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:sale.order,magento_storeview_id:0
+msgid "Magento Store View"
+msgstr ""
+
+#. module: magentoerpconnect
+#: selection:product.category,display_mode:0
+msgid "Static Block & Products"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.tierprice,cust_group:0
+msgid "Customer Group"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,is_visible_in_advanced_search:0
+msgid "Visible in advanced search?"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:res.partner,mag_vat:0
+msgid "Magento VAT"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:res.partner.category,tax_class_id:0
+msgid "Tax Class ID"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,apply_to:0
+msgid "Apply to"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,is_global:0
+msgid "Global ?"
+msgstr ""
+
+#. module: magentoerpconnect
+#: constraint:ir.model:0
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:ir.ui.menu,name:magentoerpconnect.menu_magerp
+msgid "Magento-Connection"
+msgstr ""
+
+#. module: magentoerpconnect
+#: selection:product.category,available_sort_by:0
+#: selection:product.category,default_sort_by:0
+msgid "Use Config Settings"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:ir.actions.act_window,name:magentoerpconnect.act_magerp_product_attribute_groups_form
+msgid "Magento Product Attribute Groups"
+msgstr ""
+
+#. module: magentoerpconnect
+#: selection:product.category,available_sort_by:0
+#: selection:product.category,default_sort_by:0
+msgid "Best Value"
+msgstr ""
+
+#. module: magentoerpconnect
+#: view:external.referential:0
+msgid "5 - Import Product Attributes"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,attribute_set_info:0
+msgid "Attribute Set Information"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:ir.ui.menu,name:magentoerpconnect.menu_magerp_core_storeviews
+msgid "Magento Store Views"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,entity_type_id:0
+msgid "Entity Type"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:res.partner,store_id:0
+msgid "Last store view where the customer has bought."
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.category,meta_keywords:0
+msgid "Meta Keywords"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:ir.ui.menu,name:magentoerpconnect.menu_magerp_attnsets_attribute_groups
+msgid "Attribute Groups"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:product.template,name:magentoerpconnect.product_product_shipping_product_template
+msgid "Shipping and Handling"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.tierprice,product:0
+msgid "Product"
+msgstr ""
+
+#. module: magentoerpconnect
+#: view:external.shop.group:0
+#: model:ir.actions.act_window,name:magentoerpconnect.act_magerp_websites_form
+msgid "Magento websites"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:ir.module.module,shortdesc:magentoerpconnect.module_meta_information
+msgid "Magento e-commerce"
+msgstr ""
+
+#. module: magentoerpconnect
+#: view:product.category:0
+#: field:product.category,description:0
+msgid "Description"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.category,url_key:0
+msgid "URL-key"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magerp.product_attribute_groups,referential_id:0
+#: field:magerp.product_attribute_options,referential_id:0
+#: field:magerp.product_attribute_set,referential_id:0
+#: field:magerp.product_attributes,referential_id:0
+#: field:product.tierprice,referential_id:0
+msgid "Magento Instance"
+msgstr ""
+
+#. module: magentoerpconnect
+#: selection:product.tierprice,web_scope:0
+msgid "All Websites"
+msgstr ""
+
+#. module: magentoerpconnect
+#: selection:magerp.product_attributes,frontend_input:0
+#: selection:product.category,available_sort_by:0
+#: selection:product.category,default_sort_by:0
+#: field:product.tierprice,price:0
+msgid "Price"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:account.invoice,magento_ref:0
+msgid "Magento REF"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:product.category,is_active:0
+msgid "Indicates whether active in magento"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.tierprice,website_price:0
+msgid "Website Price"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.product,magento_sku:0
+msgid "Magento SKU"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:ir.actions.act_window,name:magentoerpconnect.act_magerp_instances_form
+#: model:ir.ui.menu,name:magentoerpconnect.menu_magerp_core_instances
+msgid "Magento Instances"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:ir.ui.menu,name:magentoerpconnect.menu_magerp_core
+msgid "Core Settings"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:sale.shop,website_id:0
+msgid "Magento Website ID"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magerp.product_product_type,name:0
+#: selection:product.category,available_sort_by:0
+#: selection:product.category,default_sort_by:0
+msgid "Name"
+msgstr ""
+
+#. module: magentoerpconnect
+#: selection:product.tierprice,group_scope:0
+msgid "Specific group"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:ir.actions.act_window,name:magentoerpconnect.act_magerp_product_attributes_form
+#: view:magerp.product_attributes:0
+msgid "Magento Product Attributes"
+msgstr ""
+
+#. module: magentoerpconnect
+#: view:res.partner:0
+msgid "Store views"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magerp.product_attribute_groups,attribute_set_id:0
+msgid "Attribute Set ID"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magerp.storeviews,is_active:0
+msgid "Default ?"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:external.shop.group,default_lang_id:0
+msgid "Default Language"
+msgstr ""
+
+#. module: magentoerpconnect
+#: view:external.referential:0
+msgid "Websites"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,magento_id:0
+msgid "ID"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.category,meta_description:0
+msgid "Meta Description"
+msgstr ""
+
+#. module: magentoerpconnect
+#: view:product.category:0
+msgid "Anchored categories will display all products associated to all child categories (and child of child, and child of child of child,etc.) on that category‘s page, along with the products associated directly to the parent category."
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.category,write_date:0
+msgid "Updated date"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magerp.product_attribute_options,attribute_name:0
+msgid "Attribute Code"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.category,image_name:0
+msgid "File Name"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:product.tierprice,price_qty:0
+msgid "Slab & above eg.For 10 and above enter 10"
+msgstr ""
+
+#. module: magentoerpconnect
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:external.shop.group,default_lang_id:0
+msgid "Magento website wise default locale if different from English"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:sale.order,magento_payment_method:0
+msgid "Magento Payment Method"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,default_value:0
+msgid "Default Value"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,is_configurable:0
+msgid "Configurable?"
+msgstr ""
+
+#. module: magentoerpconnect
+#: view:product.category:0
+msgid "Display Settings"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.product,product_type:0
+msgid "Product Type"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magerp.product_product_type,product_type:0
+msgid "Type"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magerp.product_product_type,product_type:0
+msgid "Use the same name of Magento product type, for example 'simple'."
+msgstr ""
+
+#. module: magentoerpconnect
+#: view:magerp.product_product_type:0
+msgid "Product Type"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:ir.actions.act_window,name:magentoerpconnect.act_magerp_product_type_form
+#: model:ir.ui.menu,name:magentoerpconnect.menu_magerp_product_type
+msgid "Product Types"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_magerp_product_product_type
+msgid "magerp.product_product_type"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:magerp.product_product_type,name:magentoerpconnect.product_type_simple
+msgid "Simple Product"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:magerp.product_product_type,name:magentoerpconnect.product_type_grouped
+msgid "Grouped Product"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:magerp.product_product_type,name:magentoerpconnect.product_type_bundle
+msgid "Bundle Product"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:magerp.product_product_type,name:magentoerpconnect.product_type_virtual
+msgid "Virtual Product"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:magerp.product_product_type,name:magentoerpconnect.product_type_configurable
+msgid "Configurable Product"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:magerp.product_product_type,name:magentoerpconnect.product_type_downloadable
+msgid "Downloadable Product"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_manufacturer:0
+msgid "Manufacturer"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_color:0
+msgid "Color"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_news_from_date:0
+msgid "Set Product as New from Date"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_news_to_date:0
+msgid "Set Product as New to Date"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_status:0
+msgid "Status"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_url_key:0
+msgid "URL key"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_visibility:0
+msgid "Visibility"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_required_options:0
+msgid "required_options"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_gift_message_available:0
+msgid "Allow Gift Message"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_has_options:0
+msgid "has_options"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_image_label:0
+msgid "Image Label"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_small_image_label:0
+msgid "Small Image Label"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_thumbnail_label:0
+msgid "Thumbnail Label"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_created_at:0
+msgid "created_at"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_updated_at:0
+msgid "updated_at"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_special_price:0
+msgid "Special Price"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_special_from_date:0
+msgid "Special Price From Date"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_special_to_date:0
+msgid "Special Price To Date"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_tax_class_id:0
+msgid "Tax Class"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_tier_price:0
+msgid "Tier Price"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_minimal_price:0
+msgid "Minimal Price"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_enable_googlecheckout:0
+msgid "Is product available for purchase with Google Checkout"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_price_view:0
+msgid "Price View"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_meta_title:0
+msgid "Meta Title"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_meta_keyword:0
+msgid "Meta Keywords"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_meta_description:0
+msgid "Meta Description"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_custom_design:0
+msgid "Custom Design"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_custom_design_from:0
+msgid "Active From"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_custom_design_to:0
+msgid "Active To"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_custom_layout_update:0
+msgid "Custom Layout Update"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_page_layout:0
+msgid "Page Layout"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_options_container:0
+msgid "Display product options in"
+msgstr ""
+
+#. module: product
+#: view:product.product:0
+msgid "Design"
+msgstr ""
+
+#. module: product
+#: view:product.product:0
+msgid "Meta Information"
+msgstr ""
+
+#. module: product
+#: view:product.product:0
+msgid "Prices"
+msgstr ""
+
+#. module: product
+#: view:product.product:0
+msgid "General"
+msgstr ""
+
+#. module: product
+#: view:product.product:0
+msgid "Images"
+msgstr ""
+
+#. module: product
+#: view:product.product:0
+msgid "Custom Layout Update"
+msgstr ""
+
+#. module: product
+#: view:product.product:0
+msgid "Meta Keywords"
+msgstr ""
+
+#. module: product
+#: view:product.product:0
+msgid "Meta Description"
+msgstr ""
+

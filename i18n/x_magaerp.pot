@@ -1,0 +1,201 @@
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_manufacturer:0
+msgid "Manufacturer"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_color:0
+msgid "Color"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_news_from_date:0
+msgid "Set Product as New from Date"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_news_to_date:0
+msgid "Set Product as New to Date"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_status:0
+msgid "Status"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_url_key:0
+msgid "URL key"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_visibility:0
+msgid "Visibility"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_required_options:0
+msgid "required_options"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_gift_message_available:0
+msgid "Allow Gift Message"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_has_options:0
+msgid "has_options"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_image_label:0
+msgid "Image Label"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_small_image_label:0
+msgid "Small Image Label"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_thumbnail_label:0
+msgid "Thumbnail Label"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_created_at:0
+msgid "created_at"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_updated_at:0
+msgid "updated_at"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_special_price:0
+msgid "Special Price"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_special_from_date:0
+msgid "Special Price From Date"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_special_to_date:0
+msgid "Special Price To Date"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_tax_class_id:0
+msgid "Tax Class"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_tier_price:0
+msgid "Tier Price"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_minimal_price:0
+msgid "Minimal Price"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_enable_googlecheckout:0
+msgid "Is product available for purchase with Google Checkout"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_price_view:0
+msgid "Price View"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_meta_title:0
+msgid "Meta Title"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_meta_keyword:0
+msgid "Meta Keywords"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_meta_description:0
+msgid "Meta Description"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_custom_design:0
+msgid "Custom Design"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_custom_design_from:0
+msgid "Active From"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_custom_design_to:0
+msgid "Active To"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_custom_layout_update:0
+msgid "Custom Layout Update"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_page_layout:0
+msgid "Page Layout"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_options_container:0
+msgid "Display product options in"
+msgstr ""
+
+#. module: product
+#: view:product.product:0
+msgid "Design"
+msgstr ""
+
+#. module: product
+#: view:product.product:0
+msgid "Meta Information"
+msgstr ""
+
+#. module: product
+#: view:product.product:0
+msgid "Prices"
+msgstr ""
+
+#. module: product
+#: view:product.product:0
+msgid "General"
+msgstr ""
+
+#. module: product
+#: view:product.product:0
+msgid "Images"
+msgstr ""
+
+#. module: product
+#: view:product.product:0
+msgid "Custom Layout Update"
+msgstr ""
+
+#. module: product
+#: view:product.product:0
+msgid "Meta Keywords"
+msgstr ""
+
+#. module: product
+#: view:product.product:0
+msgid "Meta Description"
+msgstr ""
+
+

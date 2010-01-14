@@ -36,6 +36,7 @@
             'magerp_menu.xml',
             'settings/external.mapping.template.csv',
             'settings/external.mappinglines.template.csv',
+            'settings/magerp_product_product_type.xml',
                     ],
     "active": False,
     "installable": True,

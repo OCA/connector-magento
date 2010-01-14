@@ -106,6 +106,7 @@
 			<field name="view_mode">tree,form</field>
 			<field name="view_id" ref="magerp_product_attribute_set_tree" />
 		</record>
+
 		<!--Magento product_attributes Tree/Form view  -->
 		<record model="ir.ui.view" id="magerp_product_attributes_form">
 			<field name="name">magerp.product_attributes.form</field>
@@ -172,6 +173,7 @@
 			<field name="view_mode">tree,form</field>
 			<field name="view_id" ref="magerp_product_attributes_tree" />
 		</record>
+
 		<!--Magento product_attribute groups Tree/Form view  -->
 		<record model="ir.ui.view" id="magerp_product_attribute_groups_form">
 			<field name="name">magerp.product_attribute_groups.form</field>
@@ -210,6 +212,7 @@
 			<field name="view_mode">tree,form</field>
 			<field name="view_id" ref="magerp_product_attribute_groups_tree" />
 		</record>
+
 		<!-- This is a product inherited form that will be dynamically populated-->
 		<record model="ir.ui.view" id="product_product_form_view_magerp">
 			<field name="name">product.normal.form_magerp</field>
@@ -220,6 +223,9 @@
 				<data>
 					<xpath expr="/form/group/group/field[@name='ean13']" position="after">
 						<field name="magento_sku" select="2" attrs="{'required':[('magento_exportable','==',True)]}"/>
+					</xpath>
+					<xpath expr="/form/group/group/field[@name='variants']" position="after">
+						<field name="set" select="2" attrs="{'required':[('magento_exportable','==',True)]}"/>
 					</xpath>
 					<xpath expr="/form/group/group/field[@name='rental']" position="after">
 						<field name="magento_exportable" select="2"/>
@@ -239,5 +245,37 @@
 			</field>
 		</record>
 
+		<!--Magento Product Type Tree/Form view  -->
+	    <record model="ir.ui.view" id="magerp_product_type_form">
+		    <field name="name">magerp.product_product_type.form</field>
+		    <field name="model">magerp.product_product_type</field>
+		    <field name="type">form</field>
+		    <field name="priority" eval="5"/>
+		    <field name="arch" type="xml">
+		    <form string="Product Type">
+				    <field name="product_type"/>
+				    <field name="name"/>
+		    </form>
+		    </field>
+	    </record>
+	
+	    <record model="ir.ui.view" id="magerp_product_type_tree">
+		    <field name="name">magerp.product_product_type.tree</field>
+		    <field name="model">magerp.product_product_type</field>
+		    <field name="type">tree</field>
+		    <field name="priority" eval="5"/>
+		    <field name="arch" type="xml">
+			    <tree string="Product Type">
+				    <field name="name" select="1"/>
+				    <field name="product_type" select="1"/>			
+			    </tree>
+		    </field>
+	    </record>
+
+        <record model="ir.actions.act_window" id="act_magerp_product_type_form">
+            <field name="name">Product Types</field>
+            <field name="res_model">magerp.product_product_type</field>
+            <field name="view_mode">tree,form</field>
+        </record>
 	</data>
 </openerp>
