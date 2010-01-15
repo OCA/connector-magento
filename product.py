@@ -755,6 +755,8 @@ class product_product(magerp_osv.magerp_osv):
 
         if not product_data.get('price', False):
             pl_default_id = shop.pricelist_id and shop.pricelist_id.id or self.pool.get('product.pricelist').search(cr, uid, [('type', '=', 'sale')])
+            if isinstance(pl_default_id, int):
+                pl_default_id = [pl_default_id]
             product_data.update({'price': self.pool.get('product.pricelist').price_get(cr, uid, pl_default_id, product.id, 1.0)[pl_default_id[0]]})
             
         if not product_data.get('tax_class_id', False):
