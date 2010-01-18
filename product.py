@@ -829,7 +829,7 @@ class product_product(magerp_osv.magerp_osv):
         
         #language wise update:
         for storeview in shop.storeview_ids:
-            if storeview.lang_id:
+            if storeview.lang_id and not (shop.shop_group_id.default_lang_id and storeview.lang_id.code == shop.shop_group_id.default_lang_id.code):
                 context.update({'storeview_code': storeview.code, 'lang': storeview.lang_id.code, 'force': True})
                 super(magerp_osv.magerp_osv, self).ext_export(cr, uid, ids, external_referential_ids, defaults, context)
 
