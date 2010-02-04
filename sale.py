@@ -24,7 +24,7 @@ import magerp_osv
 import netsvc
 from tools.translate import _
 import string
-
+from datetime import datetime
 DEBUG = True
 
 #TODO, may be move that on out CSV mapping, but not sure we can easily
@@ -34,6 +34,16 @@ ORDER_STATUS_MAPPING = {'draft': 'processing', 'progress': 'processing', 'shippi
 class sale_shop(magerp_osv.magerp_osv):
     _inherit = "sale.shop"
     
+    def export_images(self, cr, uid, ids, ctx):
+        for shop in self.browse(cr, uid, ids):
+            ctx['shop_id'] = shop.id
+            ctx['conn_obj'] = self.external_connection(cr, uid, shop.referential_id)
+            recent_changed_images = self.pool.get('product.images').get_changed_ids(cr, uid, shop.last_images_export_date)
+            if recent_changed_images:
+                res = self.pool.get('product.images').update_remote_images(cr, uid, recent_changed_images, ctx)
+            res = True
+            self.write(cr,uid,ctx['shop_id'],{'last_images_export_date':datetime.now()})
+               
     def _shop_group_get(self, cr, uid, ids, prop, unknow_none, context):
         res = {}
         for shop in self.browse(cr, uid, ids, context):

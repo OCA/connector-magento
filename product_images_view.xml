@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<record id="view_product_image_form" model="ir.ui.view">
+			<field name="name">product.images.form.inherit</field>
+			<field name="model">product.images</field>
+			<field name="inherit_id" ref="product_images_olbs.view_product_image_form" />
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<xpath expr="/form/notebook/page/field[@name='preview']"
+					position="after">
+					<field name="mage_file" />
+					<group col="4" colspan="2">
+						<field name="base_image" colspan="4" />
+						<field name="small_image" colspan="4" />
+					</group>
+					<group col="4" colspan="2">
+						<field name="thumbnail" colspan="4" />
+						<field name="exclude" colspan="4" />
+					</group>
+				</xpath>
+			</field>
+		</record>
+	</data>
+</openerp>
