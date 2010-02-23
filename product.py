@@ -819,6 +819,7 @@ class product_product(magerp_osv.magerp_osv):
 
         shop = self.pool.get('sale.shop').browse(cr, uid, context['shop_id'])
         no_local = context.copy()
+        no_local['globalstoreview'] = True
         
         if shop.shop_group_id.default_lang_id: #default magento language might not be English
             no_local['lang'] = shop.shop_group_id.default_lang_id.code
