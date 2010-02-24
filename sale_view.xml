@@ -17,13 +17,6 @@
 						<field name="magento_root_category" readonly="1" />
 						<field name="storeview_ids" nolabel="1" colspan="4" />
 					</field>
-					<button name="import_orders" position="after">
-						<group col="4" colspan="4">
-							<button name="export_images" string="Update Images"
-								colspan="2" type="object" />
-							<field name="last_images_export_date" />
-						</group>
-					</button>
 				</data>
 			</field>
 		</record>
@@ -48,6 +41,22 @@
 				</field>
 			</field>
 		</record>
+
+        <record id="magerp_view_shop_images_form" model="ir.ui.view">
+            <field name="name">magerp_view_shop_images_form</field>
+            <field name="model">sale.shop</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="sale.view_shop_form"/>
+            <field name="arch" type="xml">
+				<field name="last_inventory_export_date" position="after">
+						<group col="4" colspan="4">
+							<button name="export_images" string="Update Images"
+								colspan="2" type="object" />
+							<field name="last_images_export_date" />
+						</group>
+				</field>
+            </field>
+        </record>
 
 	</data>
 </openerp>
