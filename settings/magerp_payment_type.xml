@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data noupdate="1">
+		<record id="payment_type_checkmo" model="payment.type">
+			<field name="name">Check / Money Order</field>
+			<field name="code">checkmo</field>
+		</record>
+		<record id="payment_type_ccsave" model="payment.type">
+			<field name="name">Saved Credit Card</field>
+			<field name="code">ccsave</field>
+		</record>
+		<record id="payment_type_free" model="payment.type">
+			<field name="name">Free</field>
+			<field name="code">free</field>
+		</record>
+		<record id="payment_type_googlecheckout" model="payment.type">
+			<field name="name">Google Checkout</field>
+			<field name="code">googlecheckout</field>
+		</record>
+		<record id="payment_type_paypayl_express" model="payment.type">
+			<field name="name">Paypal Express</field>
+			<field name="code">paypal_express</field>
+		</record>
+		<record id="payment_type_paybox_system" model="payment.type">
+			<field name="name">Paybox System</field>
+			<field name="code">paybox_system</field>
+		</record>
+		<record id="payment_type_paypal_standard" model="payment.type">
+			<field name="name">Paypal Standard</field>
+			<field name="code">paypal_standard</field>
+		</record>
+		<record id="payment_type_cashondelivery" model="payment.type">
+			<field name="name">Cash On Delivery</field>
+			<field name="code">cashondelivery</field>
+		</record>
+		<record id="payment_type_servired_standard" model="payment.type">
+			<field name="name">Servired Standard</field>
+			<field name="code">servired_standard</field>
+		</record>
+		<record id="payment_type_bbva" model="payment.type">
+			<field name="name">BBVA</field>
+			<field name="code">bbva</field>
+		</record>
+		<record id="payment_type_cofidis" model="payment.type">
+			<field name="name">Cofidis</field>
+			<field name="code">cofidis</field>
+		</record>
+	</data>
+</openerp>

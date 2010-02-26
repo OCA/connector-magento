@@ -119,6 +119,7 @@ msgstr "ID Magento"
 
 #. module: magentoerpconnect
 #: field:product.product,tier_price:0
+#: field:product.product,x_magerp_tier_price:0
 msgid "Tier Price"
 msgstr "Escalado de precios"
 
@@ -805,6 +806,7 @@ msgstr "Tipo entidad"
 
 #. module: magentoerpconnect
 #: field:product.category,meta_keywords:0
+#: field:product.product,x_magerp_meta_keyword:0
 msgid "Meta Keywords"
 msgstr "Meta Palabras clave"
 
@@ -948,6 +950,7 @@ msgstr "ID"
 
 #. module: magentoerpconnect
 #: field:product.category,meta_description:0
+#: field:product.product,x_magerp_meta_description:0
 msgid "Meta Description"
 msgstr "Meta Descripción"
 
@@ -1008,6 +1011,7 @@ msgstr "Valores visualización"
 
 #. module: magentoerpconnect
 #: field:product.product,product_type:0
+#: view:magerp.product_product_type:0
 msgid "Product Type"
 msgstr "Tipo de producto"
 
@@ -1020,11 +1024,6 @@ msgstr "Tipo"
 #: help:magerp.product_product_type,product_type:0
 msgid "Use the same name of Magento product type, for example 'simple'."
 msgstr "Use el mismo nombre del tipo de producto Magento, por ejemplo 'simple'."
-
-#. module: magentoerpconnect
-#: view:magerp.product_product_type:0
-msgid "Product Type"
-msgstr "Tipo de producto"
 
 #. module: magentoerpconnect
 #: model:ir.actions.act_window,name:magentoerpconnect.act_magerp_product_type_form
@@ -1066,6 +1065,200 @@ msgstr "Producto configurable"
 #: model:magerp.product_product_type,name:magentoerpconnect.product_type_downloadable
 msgid "Downloadable Product"
 msgstr "Producto descargable"
+
+#. module: magentoerpconnect
+#: model:payment.type,name:magentoerpconnect.payment_type_free
+msgid "Free"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:payment.type,name:magentoerpconnect.payment_type_servired_standard
+msgid "Servired Standard"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:payment.type,name:magentoerpconnect.payment_type_ccsave
+msgid "Saved Credit Card"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:payment.type,name:magentoerpconnect.payment_type_cashondelivery
+msgid "Cash On Delivery"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:payment.type,name:magentoerpconnect.payment_type_googlecheckout
+msgid "Google Checkout"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:payment.type,name:magentoerpconnect.payment_type_paypal_standard
+msgid "Paypal Standard"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:payment.type,name:magentoerpconnect.payment_type_paybox_system
+msgid "Paybox System"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:payment.type,name:magentoerpconnect.payment_type_checkmo
+msgid "Check / Money Order"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:payment.type,name:magentoerpconnect.payment_type_paypayl_express
+msgid "Paypal Express"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:payment.type,name:magentoerpconnect.payment_type_bbva
+msgid "BBVA"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:payment.type,name:magentoerpconnect.payment_type_cofidis
+msgid "Cofidis"
+msgstr ""
+
+#. module: magentoerpconnect
+#: view:magerp.sale.shop.payment.type:0
+#: field:magerp.sale.shop.payment.type,payment_type_id:0
+#: field:sale.shop,payment_types:0
+msgid "Payment Type"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_magerp_sale_shop_payment_type
+msgid "Magento Sale Shop Payment Type"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.images,base_image:0
+msgid "Base Image"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.images,small_image:0
+msgid "Small Image"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.images,thumbnail:0
+msgid "Thumbnail"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.category,image:0
+msgid "Image"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.images,sync_status:0
+msgid "Sync Status"
+msgstr ""
+
+#. module: magentoerpconnect
+#: view:sale.shop:0
+msgid "Update Images"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:product.images,mage_file:0
+msgid "Filled when uploaded or synchronised"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.images,exclude:0
+msgid "Exclude"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.images,mage_file:0
+msgid "Magento File Name"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:product.category,write_date:0
+#: field:product.images,write_date:0
+msgid "Updated date"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,position:0
+#: field:product.images,position:0
+msgid "Position"
+msgstr ""
+
+#. module: magentoerpconnect
+#: selection:magerp.sale.shop.payment.type,picking_policy:0
+msgid "Partial Delivery"
+msgstr ""
+
+#. module: magentoerpconnect
+#: selection:magerp.sale.shop.payment.type,order_policy:0
+msgid "Payment Before Delivery"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magerp.sale.shop.payment.type,order_policy:0
+msgid "Shipping Policy"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:product.template,description:magentoerpconnect.product_product_shipping_product_template
+msgid "description"
+msgstr ""
+
+#. module: magentoerpconnect
+#: selection:magerp.sale.shop.payment.type,picking_policy:0
+msgid "Complete Delivery"
+msgstr ""
+
+#. module: magentoerpconnect
+#: selection:magerp.sale.shop.payment.type,invoice_quantity:0
+msgid "Ordered Quantities"
+msgstr ""
+
+#. module: magentoerpconnect
+#: selection:magerp.sale.shop.payment.type,order_policy:0
+msgid "Invoice on Order After Delivery"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:res.partner,mag_vat:0
+msgid "To be able to receive customer VAT number you must set it in Magento Admin Panel, menu System / Configuration / Client Configuration / Name and Address Options."
+msgstr ""
+
+#. module: magentoerpconnect
+#: selection:magerp.sale.shop.payment.type,order_policy:0
+msgid "Shipping & Manual Invoice"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magerp.sale.shop.payment.type,picking_policy:0
+msgid "Packing Policy"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:product.template,description_sale:magentoerpconnect.product_product_shipping_product_template
+msgid "short description"
+msgstr ""
+
+#. module: magentoerpconnect
+#: selection:magerp.sale.shop.payment.type,order_policy:0
+msgid "Invoice from the Packing"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magerp.sale.shop.payment.type,invoice_quantity:0
+msgid "Invoice on"
+msgstr ""
+
+#. module: magentoerpconnect
+#: selection:magerp.sale.shop.payment.type,invoice_quantity:0
+msgid "Shipped Quantities"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:product.product,x_magerp_manufacturer:0
@@ -1163,11 +1356,6 @@ msgid "Tax Class"
 msgstr "Clase impuesto"
 
 #. module: magentoerpconnect
-#: field:product.product,x_magerp_tier_price:0
-msgid "Tier Price"
-msgstr "Escalado de precios"
-
-#. module: magentoerpconnect
 #: field:product.product,x_magerp_minimal_price:0
 msgid "Minimal Price"
 msgstr "Precio mínimo"
@@ -1186,16 +1374,6 @@ msgstr "Vista precio"
 #: field:product.product,x_magerp_meta_title:0
 msgid "Meta Title"
 msgstr "Meta Título"
-
-#. module: magentoerpconnect
-#: field:product.product,x_magerp_meta_keyword:0
-msgid "Meta Keywords"
-msgstr "Meta Palabras clave"
-
-#. module: magentoerpconnect
-#: field:product.product,x_magerp_meta_description:0
-msgid "Meta Description"
-msgstr "Meta Descripción"
 
 #. module: magentoerpconnect
 #: field:product.product,x_magerp_custom_design:0
