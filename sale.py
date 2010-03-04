@@ -151,13 +151,15 @@ class sale_order(magerp_osv.magerp_osv):
         partner_obj = self.pool.get('res.partner')
         partner_address_obj = self.pool.get('res.partner.address')
         del(data_record['billing_address']['parent_id'])
-        del(data_record['shipping_address']['parent_id'])
+        if 'parent_id' in data_record['shipping_address']:
+            del(data_record['shipping_address']['parent_id'])
         
         #Magento uses to create same addresses over and over, try to detect if customer already have such an address (Magento won't tell it!)
         #We also create new addresses for each command here, passing a custom magento_id key in the following is what
         #avoid the base_external_referentials framework to try to update existing partner addresses
         data_record['billing_address'].update(self.get_mage_customer_address_id(data_record['billing_address']))
-        data_record['shipping_address'].update(self.get_mage_customer_address_id(data_record['shipping_address']))
+        if 'address_type' in data_record['shipping_address']:
+            data_record['shipping_address'].update(self.get_mage_customer_address_id(data_record['shipping_address']))
         shipping_default = {}
         billing_default = {}
         if res.get('partner_id', False):
@@ -165,10 +167,11 @@ class sale_order(magerp_osv.magerp_osv):
         billing_default = shipping_default.copy()
         billing_default.update({'email' : data_record.get('customer_email', False)})
 
-        inv_res = partner_address_obj.ext_import(cr, uid, [data_record['billing_address']], 
-                                                                  external_referential_id, billing_default, context)
-        ship_res = partner_address_obj.ext_import(cr, uid, [data_record['shipping_address']], 
-                                                                  external_referential_id, shipping_default, context)
+        inv_res = partner_address_obj.ext_import(cr, uid, [data_record['billing_address']], external_referential_id, billing_default, context)
+        if 'address_type' in data_record['shipping_address']:
+            ship_res = partner_address_obj.ext_import(cr, uid, [data_record['shipping_address']], external_referential_id, shipping_default, context)
+        else:
+            ship_res = partner_address_obj.ext_import(cr, uid, [data_record['billing_address']], external_referential_id, shipping_default, context)
 
         res['partner_order_id'] = len(inv_res['create_ids']) > 0 and inv_res['create_ids'][0] or inv_res['write_ids'][0]
         res['partner_invoice_id'] = res['partner_order_id']

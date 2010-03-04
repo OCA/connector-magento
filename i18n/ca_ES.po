@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.6\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-12-27 20:37:10+0000\n"
-"PO-Revision-Date: 2009-12-29 00:57+0100\n"
-"Last-Translator: Jordi Esteve <jesteve@zikzakmedia.com>\n"
+"PO-Revision-Date: 2010-03-02 12:59+0100\n"
+"Last-Translator: Jordi Esteve (Zikzakmedia) <jesteve@zikzakmedia.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1071,196 +1071,196 @@ msgstr "Producte descarregable"
 #. module: magentoerpconnect
 #: model:payment.type,name:magentoerpconnect.payment_type_free
 msgid "Free"
-msgstr ""
+msgstr "Gratuït"
 
 #. module: magentoerpconnect
 #: model:payment.type,name:magentoerpconnect.payment_type_servired_standard
 msgid "Servired Standard"
-msgstr ""
+msgstr "Servired estàndard"
 
 #. module: magentoerpconnect
 #: model:payment.type,name:magentoerpconnect.payment_type_ccsave
 msgid "Saved Credit Card"
-msgstr ""
+msgstr "Targetes de crèdit desades"
 
 #. module: magentoerpconnect
 #: model:payment.type,name:magentoerpconnect.payment_type_cashondelivery
 msgid "Cash On Delivery"
-msgstr ""
+msgstr "Contra reemborsament"
 
 #. module: magentoerpconnect
 #: model:payment.type,name:magentoerpconnect.payment_type_googlecheckout
 msgid "Google Checkout"
-msgstr ""
+msgstr "Google Checkout"
 
 #. module: magentoerpconnect
 #: model:payment.type,name:magentoerpconnect.payment_type_paypal_standard
 msgid "Paypal Standard"
-msgstr ""
+msgstr "Paypal estàndard"
 
 #. module: magentoerpconnect
 #: model:payment.type,name:magentoerpconnect.payment_type_paybox_system
 msgid "Paybox System"
-msgstr ""
+msgstr "Paybox"
 
 #. module: magentoerpconnect
 #: model:payment.type,name:magentoerpconnect.payment_type_checkmo
 msgid "Check / Money Order"
-msgstr ""
+msgstr "Transferència bancària"
 
 #. module: magentoerpconnect
 #: model:payment.type,name:magentoerpconnect.payment_type_paypayl_express
 msgid "Paypal Express"
-msgstr ""
+msgstr "Paypal Express"
 
 #. module: magentoerpconnect
 #: model:payment.type,name:magentoerpconnect.payment_type_bbva
 msgid "BBVA"
-msgstr ""
+msgstr "BBVA"
 
 #. module: magentoerpconnect
 #: model:payment.type,name:magentoerpconnect.payment_type_cofidis
 msgid "Cofidis"
-msgstr ""
+msgstr "Cofidis"
 
 #. module: magentoerpconnect
 #: view:magerp.sale.shop.payment.type:0
 #: field:magerp.sale.shop.payment.type,payment_type_id:0
 #: field:sale.shop,payment_types:0
 msgid "Payment Type"
-msgstr ""
+msgstr "Tipus de pagament"
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_magerp_sale_shop_payment_type
 msgid "Magento Sale Shop Payment Type"
-msgstr ""
+msgstr "Tipus de pagament botigues Magento"
 
 #. module: magentoerpconnect
 #: field:product.images,base_image:0
 msgid "Base Image"
-msgstr ""
+msgstr "Imatge base"
 
 #. module: magentoerpconnect
 #: field:product.images,small_image:0
 msgid "Small Image"
-msgstr ""
+msgstr "Imatge petita"
 
 #. module: magentoerpconnect
 #: field:product.images,thumbnail:0
 msgid "Thumbnail"
-msgstr ""
+msgstr "Miniatura"
 
 #. module: magentoerpconnect
 #: field:product.category,image:0
 msgid "Image"
-msgstr ""
+msgstr "Imatge"
 
 #. module: magentoerpconnect
 #: field:product.images,sync_status:0
 msgid "Sync Status"
-msgstr ""
+msgstr "Estat de la sincronització"
 
 #. module: magentoerpconnect
 #: view:sale.shop:0
 msgid "Update Images"
-msgstr ""
+msgstr "Imatges publicades"
 
 #. module: magentoerpconnect
 #: help:product.images,mage_file:0
 msgid "Filled when uploaded or synchronised"
-msgstr ""
+msgstr "Cobrir quan carregar o sincronitzada"
 
 #. module: magentoerpconnect
 #: field:product.images,exclude:0
 msgid "Exclude"
-msgstr ""
+msgstr "Excloure"
 
 #. module: magentoerpconnect
 #: field:product.images,mage_file:0
 msgid "Magento File Name"
-msgstr ""
+msgstr "Magento nom fitxer"
 
 #. module: magentoerpconnect
 #: field:product.category,write_date:0
 #: field:product.images,write_date:0
 msgid "Updated date"
-msgstr ""
+msgstr "Data publicat"
 
 #. module: magentoerpconnect
 #: field:magerp.product_attributes,position:0
 #: field:product.images,position:0
 msgid "Position"
-msgstr ""
+msgstr "Possició"
 
 #. module: magentoerpconnect
 #: selection:magerp.sale.shop.payment.type,picking_policy:0
 msgid "Partial Delivery"
-msgstr ""
+msgstr "Enviament parcial"
 
 #. module: magentoerpconnect
 #: selection:magerp.sale.shop.payment.type,order_policy:0
 msgid "Payment Before Delivery"
-msgstr ""
+msgstr "Pagament abans de l'enviament"
 
 #. module: magentoerpconnect
 #: field:magerp.sale.shop.payment.type,order_policy:0
 msgid "Shipping Policy"
-msgstr ""
+msgstr "Política de facturació"
 
 #. module: magentoerpconnect
 #: model:product.template,description:magentoerpconnect.product_product_shipping_product_template
 msgid "description"
-msgstr ""
+msgstr "Descripció"
 
 #. module: magentoerpconnect
 #: selection:magerp.sale.shop.payment.type,picking_policy:0
 msgid "Complete Delivery"
-msgstr ""
+msgstr "Enviament complet"
 
 #. module: magentoerpconnect
 #: selection:magerp.sale.shop.payment.type,invoice_quantity:0
 msgid "Ordered Quantities"
-msgstr ""
+msgstr "Quantitats ordenades"
 
 #. module: magentoerpconnect
 #: selection:magerp.sale.shop.payment.type,order_policy:0
 msgid "Invoice on Order After Delivery"
-msgstr ""
+msgstr "Factura comanda després de l'enviament"
 
 #. module: magentoerpconnect
 #: help:res.partner,mag_vat:0
 msgid "To be able to receive customer VAT number you must set it in Magento Admin Panel, menu System / Configuration / Client Configuration / Name and Address Options."
-msgstr ""
+msgstr "Per a poder rebre el número NIF/CIF del client heu de configurar-ho al Magento Admin Panel, menú Sistema / Configuració / Configuració del client / Opcions del Nom i Adreça."
 
 #. module: magentoerpconnect
 #: selection:magerp.sale.shop.payment.type,order_policy:0
 msgid "Shipping & Manual Invoice"
-msgstr ""
+msgstr "Envia & Factura manual"
 
 #. module: magentoerpconnect
 #: field:magerp.sale.shop.payment.type,picking_policy:0
 msgid "Packing Policy"
-msgstr ""
+msgstr "Política d'enviament"
 
 #. module: magentoerpconnect
 #: model:product.template,description_sale:magentoerpconnect.product_product_shipping_product_template
 msgid "short description"
-msgstr ""
+msgstr "Descripció curta"
 
 #. module: magentoerpconnect
 #: selection:magerp.sale.shop.payment.type,order_policy:0
 msgid "Invoice from the Packing"
-msgstr ""
+msgstr "Factura des d'albarà"
 
 #. module: magentoerpconnect
 #: field:magerp.sale.shop.payment.type,invoice_quantity:0
 msgid "Invoice on"
-msgstr ""
+msgstr "Factura"
 
 #. module: magentoerpconnect
 #: selection:magerp.sale.shop.payment.type,invoice_quantity:0
 msgid "Shipped Quantities"
-msgstr ""
+msgstr "Quantitats enviades"
 
 #. module: magentoerpconnect
 #: field:product.product,x_magerp_manufacturer:0
