@@ -108,7 +108,7 @@ else:
 "mag_erp_attr_23","magento1324","model_magerp_product_attributes","note","in_out","str","result=[('note', ifield)]","result=[('note', record['note'])]"
 "mag_erp_attr_24","magento1324","model_magerp_product_attributes","entity_type_id","in_out","int","result=[('entity_type_id', ifield)]","result=[('entity_type_id', record['entity_type_id'])]"
 "mag_erp_attr_25","magento1324","model_magerp_product_attributes","apply_to","in_out","str","result=[('apply_to', str(ifield))]","result=[('apply_to', eval(record['%s']))]"
-"mag_erp_prd_1","magento1324","product.model_product_product","url_key","in_out","str","result=[('x_magerp_url_key',ifield)]","if context.get('globalstoreview', False) :
+"mag_erp_prd_1","magento1324","product.model_product_product","url_key","in_out","str","result=[('x_magerp_url_key',ifield)]","if context.get('export_url', False) :
     result=[('url_key',record['x_magerp_url_key'])]"
 "mag_erp_prd_2","magento1324","product.model_product_product","name","in_out","str","result = [('name',ifield)]","result = [('name',record['name'])]"
 "mag_erp_prd_3","magento1324","product.model_product_product","description","in_out","str","result = [('description',ifield)]",
