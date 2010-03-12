@@ -840,37 +840,38 @@ class product_product(magerp_osv.magerp_osv):
                 break
         context['default_set_id'] = default_set_id
         context_dic = {}
-        
-        context_dic['default_value'] = context.copy()
-        context_dic['default_value']['export_url'] = True # for the magento version 1.3.2.4, only one url is autorized by product, so we only export the url in the default language 
-        
-        if shop.shop_group_id.default_lang_id: #default magento language might not be English
-            context_dic['default_value']['lang'] = shop.shop_group_id.default_lang_id.code
-        elif context_dic['default_value'].get('lang', False):
-            del(context_dic['default_value']['lang'])
-            #TODO ADD DEFAULT LANGUAGE IN THE DEFAULT CONTEXT
-            
-            
-            #TODO EXPORT DEFAULT VALUE ONLY IF THE ONE OF THE STOREVIEW HAVE NO LANGUAGE SET
-            
+
+
+        #EXPORT URL ONLY IN THE DEFAULT LANGUAGE for the magento version 1.3.2.4
+        #TODO DEFAULT LANGUAGE HAVE TO BE BY MAGENTO INSTANCE AND NOT MAGENTO WEBSITE!!
+
         for storeview in shop.storeview_ids:
             if storeview.lang_id :
                 context_dic[storeview] = context.copy()
                 context_dic[storeview].update({'storeview_code': storeview.code, 'lang': storeview.lang_id.code})
-                if storeview.lang_id.code == context_dic['default_value']['lang']:
+                if False: #storeview.lang_id.code == context_dic['default_value']['lang']:
                     context_dic[storeview]['export_url'] = True # for the magento version 1.3.2.4, only one url is autorized by product, so we only export the url in the default language
 
+        if len(shop.storeview_ids) > len(context_dic):
+            context_dic['default_value'] = context.copy()
+            context_dic['default_value']['export_url'] = True # for the magento version 1.3.2.4, only one url is autorized by product, so we only export the url in the default language 
+            
+            if shop.shop_group_id.default_lang_id: #default magento language might not be English
+                context_dic['default_value']['lang'] = shop.shop_group_id.default_lang_id.code
+            elif context_dic['default_value'].get('lang', False):
+                del(context_dic['default_value']['lang'])
+                #TODO ADD DEFAULT LANGUAGE IN THE DEFAULT CONTEXT
+            
+            
+
+        result = {'create_ids':[], 'write_ids':[]}
         for id in ids:
             for storeview in context_dic:
-                result = super(magerp_osv.magerp_osv, self).ext_export(cr, uid, [id], external_referential_ids, defaults, context_dic[storeview])
+                temp_result = super(magerp_osv.magerp_osv, self).ext_export(cr, uid, [id], external_referential_ids, defaults, context_dic[storeview])
             self.pool.get('sale.shop').write(cr, uid,context['shop_id'], {'last_products_export_date': ids_2_dates[id]})
-        
-            result = {}
-            #TODO RETURN ALL CREATE AND WRITE ID
-        
-        #inventory level updates:
-        #shop = self.pool.get('sale.shop').browse(cr, uid, context['shop_id'])
-        #stock_id = shop.warehouse_id.lot_stock_id.id #DEAD CODE??
+            result['create_ids'] += temp_result['create_ids']
+            result['write_ids'] += temp_result['write_ids']
+
         return result
     
     
