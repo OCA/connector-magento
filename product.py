@@ -841,28 +841,17 @@ class product_product(magerp_osv.magerp_osv):
         context['default_set_id'] = default_set_id
         context_dic = {}
 
-
-        #EXPORT URL ONLY IN THE DEFAULT LANGUAGE for the magento version 1.3.2.4
-        #TODO DEFAULT LANGUAGE HAVE TO BE BY MAGENTO INSTANCE AND NOT MAGENTO WEBSITE!!
-
         for storeview in shop.storeview_ids:
             if storeview.lang_id :
                 context_dic[storeview] = context.copy()
                 context_dic[storeview].update({'storeview_code': storeview.code, 'lang': storeview.lang_id.code})
-                if False: #storeview.lang_id.code == context_dic['default_value']['lang']:
-                    context_dic[storeview]['export_url'] = True # for the magento version 1.3.2.4, only one url is autorized by product, so we only export the url in the default language
+                if storeview.lang_id.code == shop.referential_id.default_lang_id.code:
+                    context_dic[storeview]['export_url'] = True # for the magento version 1.3.2.4, only one url is autorized by product, so we only export with the MAPPING TEMPLATE the url of the default language
 
         if len(shop.storeview_ids) > len(context_dic):
             context_dic['default_value'] = context.copy()
-            context_dic['default_value']['export_url'] = True # for the magento version 1.3.2.4, only one url is autorized by product, so we only export the url in the default language 
-            
-            if shop.shop_group_id.default_lang_id: #default magento language might not be English
-                context_dic['default_value']['lang'] = shop.shop_group_id.default_lang_id.code
-            elif context_dic['default_value'].get('lang', False):
-                del(context_dic['default_value']['lang'])
-                #TODO ADD DEFAULT LANGUAGE IN THE DEFAULT CONTEXT
-            
-            
+            context_dic['default_value']['export_url'] = True # for the magento version 1.3.2.4, only one url is autorized by product, so we only export with the MAPPING TEMPLATE the url of the default language 
+            context_dic['default_value']['lang'] = shop.referential_id.default_lang_id.code
 
         result = {'create_ids':[], 'write_ids':[]}
         for id in ids:

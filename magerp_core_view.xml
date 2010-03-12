@@ -19,9 +19,9 @@
 								<button name="sync_categs" string="2 - Import Product Categories" colspan="2" type="object" />
 								<button name="sync_attribs" string="5 - Import Product Attributes" colspan="2" type="object" />
 								<button name="sync_attrib_sets" string="3 - Import Product Attribute Sets" colspan="2" type="object" />
-								<newline />
-								<field name="default_pro_cat" />
 								<button name="sync_products" string="6 - Import Products" colspan="2" type="object" />
+								<field name="default_pro_cat" />
+								<field name="default_lang_id" />
 <!--								<button name="sync_customer_addresses" string="Sync Customer Addresses" colspan="2" type="object" />-->
 <!--								<button name="export_products" string="Export Products" colspan="2" type="object" />-->
 							</page>
@@ -66,7 +66,6 @@
 						<field name="sort_order" readonly="1" />
 						<field name="default_shop_id" readonly="1" />
 						<field name="default_group_id" readonly="1" />
-						<field name="default_lang_id" />
 						<field name="referential_id" />
 					</group>
 					<group col="4" colspan="4">

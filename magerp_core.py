@@ -31,8 +31,9 @@ class external_referential(magerp_osv.magerp_osv):
     _inherit = "external.referential"
 
     _columns = {
-	'attribute_sets':fields.one2many('magerp.product_attribute_set', 'referential_id', 'Attribute Sets'),
-        'default_pro_cat':fields.many2one('product.category','Default Product Category',required=True, help="Products imported from magento may have many categories.\nOpenERP requires a specific category for a product to facilitate invoicing etc.")
+        'attribute_sets':fields.one2many('magerp.product_attribute_set', 'referential_id', 'Attribute Sets'),
+        'default_pro_cat':fields.many2one('product.category','Default Product Category',required=True, help="Products imported from magento may have many categories.\nOpenERP requires a specific category for a product to facilitate invoicing etc."),
+        'default_lang_id':fields.many2one('res.lang', 'Default Language',required=True, help="Choose the language which will be used for the Default Value in Magento"),
     }
 
              
@@ -189,7 +190,6 @@ class external_shop_group(magerp_osv.magerp_osv):
         'sort_order':fields.integer('Sort Order'),
         'default_group_id':fields.integer('Default Store Group'), #Many 2 one?
         'default_shop_id':fields.function(_get_default_shop_id, type="many2one", relation="sale.shop", method=True, string="Default Store (Group)"),
-        'default_lang_id':fields.many2one('res.lang', 'Default Language', help="Magento website wise default locale if different from English"),
     }
 
 external_shop_group()
