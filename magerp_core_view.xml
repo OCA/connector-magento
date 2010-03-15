@@ -65,7 +65,6 @@
 						<field name="is_default" readonly="1" />
 						<field name="sort_order" readonly="1" />
 						<field name="default_shop_id" readonly="1" />
-						<field name="default_group_id" readonly="1" />
 						<field name="referential_id" />
 					</group>
 					<group col="4" colspan="4">
@@ -113,7 +112,6 @@
 						<field name="website_id" readonly="1" />
 						<field name="is_active" readonly="1" />
 						<field name="sort_order" readonly="1" />
-						<field name="default_shop_id" readonly="1" />
 						<field name="lang_id" />
 					</group>
 				</form>
@@ -131,7 +129,6 @@
 					<field name="shop_id" readonly="1" select="1" />
 					<field name="is_active" readonly="1" select="2" />
 					<field name="sort_order" readonly="1" select="2" />
-					<field name="default_shop_id" readonly="1" select="2" />
 					<field name="lang_id" />
 				</tree>
 			</field>

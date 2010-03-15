@@ -173,12 +173,13 @@ external_referential()
 class external_shop_group(magerp_osv.magerp_osv):
     _inherit = "external.shop.group"
     #Return format of API:{'code': 'base', 'name': 'Main', 'website_id': '1', 'is_default': '1', 'sort_order': '0', 'default_group_id': '1'}
+    # default_group_id is the default shop of the external_shop_group (external_shop_group = website)
 
     def _get_default_shop_id(self, cr, uid, ids, prop, unknow_none, context):
         res = {}
         for shop_group in self.browse(cr, uid, ids, context):
-            if shop_group.default_group_id:
-                rid = self.pool.get('sale.shop').extid_to_oeid(cr, uid, shop_group.default_group_id, shop_group.referential_id.id)
+            if shop_group.default_shop_integer_id:
+                rid = self.pool.get('sale.shop').extid_to_oeid(cr, uid, shop_group.default_shop_integer_id, shop_group.referential_id.id)
                 res[shop_group.id] = rid
             else:
                 res[shop_group.id] = False
@@ -188,8 +189,8 @@ class external_shop_group(magerp_osv.magerp_osv):
         'code':fields.char('Code', size=100),
         'is_default':fields.boolean('Is Active?'),
         'sort_order':fields.integer('Sort Order'),
-        'default_group_id':fields.integer('Default Store Group'), #Many 2 one?
-        'default_shop_id':fields.function(_get_default_shop_id, type="many2one", relation="sale.shop", method=True, string="Default Store (Group)"),
+        'default_shop_integer_id':fields.integer('Default Store'), #This field can't be a many2one because shop_group field will be mapped before creating Shop (Shop = Store, shop_group = website)
+        'default_shop_id':fields.function(_get_default_shop_id, type="many2one", relation="sale.shop", method=True, string="Default Store"),
     }
 
 external_shop_group()
@@ -197,18 +198,9 @@ external_shop_group()
 
 class magerp_storeviews(magerp_osv.magerp_osv):
     _name = "magerp.storeviews"
-    _description = "The magento store views information"    
+    _description = "The magento store views information"
+    #Return format of API:{'code': 'default', 'store_id': '1', 'website_id': '1', 'is_active': '1', 'sort_order': '0', 'group_id': '1', 'name': 'English'}
     
-    def _get_default_shop_id(self, cr, uid, ids, prop, unknow_none, context):
-        res = {}
-        for storeview in self.browse(cr, uid, ids, context):
-            if storeview.magento_store_id:
-                rid = self.pool.get('sale.shop').extid_to_oeid(cr, uid, storeview.magento_store_id, storeview.website_id.referential_id.id)
-                res[storeview.id] = rid
-            else:
-                res[storeview.id] = False
-        return res
-
     _columns = {
         'name':fields.char('Store View Name', size=100),
         'code':fields.char('Code', size=100),
@@ -218,7 +210,6 @@ class magerp_storeviews(magerp_osv.magerp_osv):
         'sort_order':fields.integer('Sort Order'),
         'shop_id':fields.many2one('sale.shop', 'Shop', select=True, ondelete='cascade'),
         'lang_id':fields.many2one('res.lang', 'Language'),
-        'default_shop_id':fields.function(_get_default_shop_id, type="many2one", relation="sale.shop", method=True, string="Default Store (Group)"),
     }
 
     #Return format of API:{'code': 'default', 'store_id': '1', 'website_id': '1', 'is_active': '1', 'sort_order': '0', 'group_id': '1', 'name': 'Default Store View'}
