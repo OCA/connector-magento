@@ -15,7 +15,6 @@
 "mag_erp_st_name","magento1324","sale.model_sale_shop","name","in_out","str","result=[('name',ifield)]","result=[('name',record['name'])]"
 "mag_erp_st_gpid","magento1324","sale.model_sale_shop","group_id","in_out","int","result=[('group_id',ifield)]",
 "mag_erp_st_grp","magento1324","sale.model_sale_shop","website_id","in_out","int","result=[('shop_group_id',self.pool.get('external.shop.group').extid_to_oeid(cr, uid, ifield, external_referential_id))]",
-"mag_erp_st_web","magento1324","sale.model_sale_shop","website_id","in_out","int","result=[('website_id',ifield)]",
 "mag_erp_st_default_st","magento1324","sale.model_sale_shop","default_store_id","in_out","int","result=[('default_store_id',ifield)]",
 "mag_erp_st_root_categ","magento1324","sale.model_sale_shop","root_category_id","in_out","int","result=[('root_category_id',ifield)]",
 "mag_erp_so_name","magento1324","sale.model_sale_order","increment_id","in_out","str","result=[('magento_incrementid',str(ifield)), ('name','mag_' + str(ifield))]",

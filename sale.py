@@ -44,20 +44,11 @@ class sale_shop(magerp_osv.magerp_osv):
             res = True
             self.write(cr,uid,ctx['shop_id'],{'last_images_export_date':datetime.now()})
                
-    def _shop_group_get(self, cr, uid, ids, prop, unknow_none, context):
-        res = {}
-        for shop in self.browse(cr, uid, ids, context):
-            if shop.website_id:
-                rid = self.pool.get('external.shop.group').extid_to_oeid(cr, uid, shop.website_id, shop.referential_id.id)
-                res[shop.id] = rid
-            else:
-                res[shop.id] = False
-        return res
   
     def _get_rootcategory(self, cr, uid, ids, prop, unknow_none, context):
         res = {}
         for shop in self.browse(cr, uid, ids, context):
-            if shop.website_id:
+            if shop.root_category_id:
                 rid = self.pool.get('product.category').extid_to_oeid(cr, uid, shop.root_category_id, shop.referential_id.id)
                 res[shop.id] = rid
             else:
@@ -73,7 +64,6 @@ class sale_shop(magerp_osv.magerp_osv):
 
     _columns = {
         'default_store_id':fields.integer('Magento Store ID'), #Many 2 one ?
-        'website_id':fields.integer('Magento Website ID'), # Many 2 one ?
         'group_id':fields.integer('Magento ID'),
         'root_category_id':fields.integer('Root product Category'),
         'magento_root_category':fields.function(_get_rootcategory, type="many2one", relation="product.category", method=True, string="Root Category", store=True),
