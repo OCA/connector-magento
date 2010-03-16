@@ -603,7 +603,7 @@ class product_product(magerp_osv.magerp_osv):
         'set':fields.many2one('magerp.product_attribute_set', 'Attribute Set'),
         'tier_price':fields.one2many('product.tierprice', 'product', 'Tier Price'),
         'product_type': fields.selection(_product_type_get, 'Product Type'),
-        'websites_ids': fields.many2many('external.shop.group', 'magerp_product_shop_group_rel', 'product_id', 'shop_group_id', 'Websites'),
+        'websites_ids': fields.many2many('external.shop.group', 'magerp_product_shop_group_rel', 'product_id', 'shop_group_id', 'Websites', help='By defaut product will be exported on every website, if you want to exporte it only on some website select them here'),
         }
 
     _defaults = {
@@ -727,7 +727,7 @@ class product_product(magerp_osv.magerp_osv):
                     break
             xml+="</group></page>\n"
         if context.get('multiwebsite', False):
-            xml+="""<page string='Website'>\n<group colspan='4' col='4'>\n<field name='websites_ids'/>\n</group>\n</page>\n"""
+            xml+="""<page string='Websites'>\n<group colspan='4' col='4'>\n<field name='websites_ids'/>\n</group>\n</page>\n"""
         xml+="</notebook>"
         return xml
 

@@ -34,6 +34,16 @@ ORDER_STATUS_MAPPING = {'draft': 'processing', 'progress': 'processing', 'shippi
 class sale_shop(magerp_osv.magerp_osv):
     _inherit = "sale.shop"
     
+    def _get_exportable_product_ids(self, cr, uid, ids, name, args, context=None):
+        res = super(sale_shop, self)._get_exportable_product_ids(cr, uid, ids, name, args, context=None)
+        for shop_id in res:
+            website_id =  self.read(cr, uid, shop_id, ['shop_group_id'])
+            if website_id.get('shop_group_id', False):
+                res[shop_id] = self.pool.get('product.product').search(cr, uid, [('id', 'in', res[shop_id]), "|", ('websites_ids', 'in', [website_id['shop_group_id'][0]]) , ('websites_ids', '=', False)])
+            else:
+                res[shop_id] = []
+        return res
+
     def _get_default_storeview_id(self, cr, uid, ids, prop, unknow_none, context):
         res = {}
         for shop in self.browse(cr, uid, ids, context):
@@ -80,6 +90,7 @@ class sale_shop(magerp_osv.magerp_osv):
         'exportable_root_category_ids': fields.function(_get_exportable_root_category_ids, type="many2many", relation="product.category", method=True, string="Root Category"), #fields.function(_get_exportable_root_category_ids, type="many2one", relation="product.category", method=True, 'Exportable Root Categories'),
         'storeview_ids': fields.one2many('magerp.storeviews', 'shop_id', 'Store Views'),
         'payment_types': fields.one2many('magerp.sale.shop.payment.type', 'shop_id', 'Payment Type'),
+        'exportable_product_ids': fields.function(_get_exportable_product_ids, method=True, type='one2many', relation="product.product", string='Exportable Products'),
     }   
 
     def import_shop_orders(self, cr, uid, shop, defaults, ctx):
