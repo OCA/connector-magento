@@ -603,6 +603,7 @@ class product_product(magerp_osv.magerp_osv):
         'set':fields.many2one('magerp.product_attribute_set', 'Attribute Set'),
         'tier_price':fields.one2many('product.tierprice', 'product', 'Tier Price'),
         'product_type': fields.selection(_product_type_get, 'Product Type'),
+        'websites_ids': fields.many2many('external.shop.group', 'magerp_product_shop_group_rel', 'product_id', 'shop_group_id', 'Websites'),
         }
 
     _defaults = {
@@ -725,6 +726,8 @@ class product_product(magerp_osv.magerp_osv):
                 else:
                     break
             xml+="</group></page>\n"
+        if context.get('multiwebsite', False):
+            xml+="""<page string='Website'>\n<group colspan='4' col='4'>\n<field name='websites_ids'/>\n</group>\n</page>\n"""
         xml+="</notebook>"
         return xml
 
@@ -739,6 +742,9 @@ class product_product(magerp_osv.magerp_osv):
                 for field in self.pool.get('ir.model.fields').browse(cr, uid, ir_model_field_ids):
                     if str(field.name).startswith('x_'):
                         field_names.append(field.name)
+                if len(self.pool.get('external.shop.group').search(cr,uid,[('referential_type', 'ilike', 'mag')])) >1 :
+                    context['multiwebsite'] = True
+                    field_names.append('websites_ids')
                 result['fields'].update(self.fields_get(cr, uid, field_names, context))
                 view_part = self.redefine_prod_view(cr, uid, field_names, context) #.decode('utf8') It is not necessary, the translated view could be in UTF8
                 result['arch'] = result['arch'].decode('utf8').replace('<page string="attributes_placeholder"/>', '<page string="'+_("Magento Information")+'"'+""" attrs="{'invisible':[('magento_exportable','!=',1)]}"><field name='product_type' attrs="{'required':[('magento_exportable','=',True)]}"/>\n""" + view_part + """\n</page>""")

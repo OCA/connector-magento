@@ -191,6 +191,7 @@ class external_shop_group(magerp_osv.magerp_osv):
         'sort_order':fields.integer('Sort Order'),
         'default_shop_integer_id':fields.integer('Default Store'), #This field can't be a many2one because shop_group field will be mapped before creating Shop (Shop = Store, shop_group = website)
         'default_shop_id':fields.function(_get_default_shop_id, type="many2one", relation="sale.shop", method=True, string="Default Store"),
+        'referential_type' : fields.related('referential_id', 'type_id', type='many2one', relation='external.referential.type', string='External Referential Type'),
     }
 
 external_shop_group()
