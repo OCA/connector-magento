@@ -65,10 +65,10 @@
 						<field name="is_default" readonly="1" />
 						<field name="sort_order" readonly="1" />
 						<field name="default_shop_id" readonly="1" />
-						<field name="referential_id" />
+						<field name="referential_id" readonly="1" />
 					</group>
 					<group col="4" colspan="4">
-						<field name="shop_ids" />
+						<field name="shop_ids" readonly="1"/>
 					</group>
 				</form>
 			</field>
@@ -84,7 +84,7 @@
 					<field name="is_default" readonly="1" select="2" />
 					<field name="sort_order" readonly="1" select="2" />
 					<field name="default_shop_id" readonly="1" select="2" />
-					<field name="shop_ids" />
+					<field name="shop_ids" readonly="1" />
 				</tree>
 			</field>
 		</record>
