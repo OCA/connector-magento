@@ -105,7 +105,6 @@
 			<field name="arch" type="xml">
 				<form string="Magento storeviews">
 					<group col="4" colspan="4">
-						<field name="magento_store_id" readonly="1" />
 						<field name="name" readonly="1" />
 						<field name="code" readonly="1" />
 						<field name="shop_id" readonly="1" />
@@ -123,7 +122,6 @@
 			<field name="type">tree</field>
 			<field name="arch" type="xml">
 				<tree string="Magento storeviews">
-					<field name="magento_store_id" readonly="1" select="1" />
 					<field name="name" readonly="1" select="1" />
 					<field name="code" readonly="1" select="1" />
 					<field name="shop_id" readonly="1" select="1" />

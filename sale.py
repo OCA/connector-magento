@@ -37,7 +37,7 @@ class sale_shop(magerp_osv.magerp_osv):
     def _get_default_storeview_id(self, cr, uid, ids, prop, unknow_none, context):
         res = {}
         for shop in self.browse(cr, uid, ids, context):
-            if shop.magento_store_id:
+            if shop.default_storeview_id:
                 rid = self.pool.get('magerp.storeviews').extid_to_oeid(cr, uid, shop.default_storeview_integer_id, shop.referential_id.id)
                 res[shop.id] = rid
             else:
@@ -75,7 +75,6 @@ class sale_shop(magerp_osv.magerp_osv):
     _columns = {
         'default_storeview_integer_id':fields.integer('Magento default Storewiev ID'), #This field can't be a many2one because store field will be mapped before creating storeviews
         'default_storeview_id':fields.function(_get_default_storeview_id, type="many2one", relation="magerp.storeviews", method=True, string="Default Storeview"),
-        'group_id':fields.integer('Magento ID'),
         'root_category_id':fields.integer('Root product Category'), #This field can't be a many2one because store field will be mapped before creating category
         'magento_root_category':fields.function(_get_rootcategory, type="many2one", relation="product.category", method=True, string="Root Category", store=True),
         'exportable_root_category_ids': fields.function(_get_exportable_root_category_ids, type="many2many", relation="product.category", method=True, string="Root Category"), #fields.function(_get_exportable_root_category_ids, type="many2one", relation="product.category", method=True, 'Exportable Root Categories'),

@@ -199,12 +199,10 @@ external_shop_group()
 class magerp_storeviews(magerp_osv.magerp_osv):
     _name = "magerp.storeviews"
     _description = "The magento store views information"
-    #Return format of API:{'code': 'default', 'store_id': '1', 'website_id': '1', 'is_active': '1', 'sort_order': '0', 'group_id': '1', 'name': 'English'}
     
     _columns = {
         'name':fields.char('Store View Name', size=100),
         'code':fields.char('Code', size=100),
-        'magento_store_id':fields.integer('Store ID'),
         'website_id':fields.many2one('external.shop.group', 'Website', select=True, ondelete='cascade'),
         'is_active':fields.boolean('Default ?'),
         'sort_order':fields.integer('Sort Order'),
