@@ -2,6 +2,12 @@
 <openerp>
 	<data noupdate="1">
 
+
+        <record id="mag0" model="product.category">
+            <field name="parent_id" ref="null"/>
+            <field name="name">Service</field>
+        </record>
+
 		<record id="product_product_shipping" model="product.product">
 			<field name="default_code">SHIP MAGENTO</field>
 			<field name="list_price">0.0</field>
@@ -9,7 +15,7 @@
 			<field name="type">service</field>
 			<field name="name">Shipping and Handling</field>
 			<field name="exportable" eval="False" />
-			<field model="product.category" name="categ_id" search="[]"/>
+			<field name="categ_id" ref="mag0"/>
 		</record>
 		
 	</data>
