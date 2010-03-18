@@ -47,7 +47,7 @@ class sale_shop(magerp_osv.magerp_osv):
     def _get_default_storeview_id(self, cr, uid, ids, prop, unknow_none, context):
         res = {}
         for shop in self.browse(cr, uid, ids, context):
-            if shop.default_storeview_id:
+            if shop.default_storeview_integer_id:
                 rid = self.pool.get('magerp.storeviews').extid_to_oeid(cr, uid, shop.default_storeview_integer_id, shop.referential_id.id)
                 res[shop.id] = rid
             else:
