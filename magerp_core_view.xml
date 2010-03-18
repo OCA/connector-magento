@@ -19,9 +19,9 @@
 								<button name="sync_categs" string="2 - Import Product Categories" colspan="2" type="object" />
 								<button name="sync_attribs" string="5 - Import Product Attributes" colspan="2" type="object" />
 								<button name="sync_attrib_sets" string="3 - Import Product Attribute Sets" colspan="2" type="object" />
-								<newline />
-								<field name="default_pro_cat" />
 								<button name="sync_products" string="6 - Import Products" colspan="2" type="object" />
+								<field name="default_pro_cat" />
+								<field name="default_lang_id" />
 <!--								<button name="sync_customer_addresses" string="Sync Customer Addresses" colspan="2" type="object" />-->
 <!--								<button name="export_products" string="Export Products" colspan="2" type="object" />-->
 							</page>
@@ -65,12 +65,10 @@
 						<field name="is_default" readonly="1" />
 						<field name="sort_order" readonly="1" />
 						<field name="default_shop_id" readonly="1" />
-						<field name="default_group_id" readonly="1" />
-						<field name="default_lang_id" />
-						<field name="referential_id" />
+						<field name="referential_id" readonly="1" />
 					</group>
 					<group col="4" colspan="4">
-						<field name="shop_ids" />
+						<field name="shop_ids" readonly="1"/>
 					</group>
 				</form>
 			</field>
@@ -86,7 +84,7 @@
 					<field name="is_default" readonly="1" select="2" />
 					<field name="sort_order" readonly="1" select="2" />
 					<field name="default_shop_id" readonly="1" select="2" />
-					<field name="shop_ids" />
+					<field name="shop_ids" readonly="1" />
 				</tree>
 			</field>
 		</record>
@@ -107,14 +105,12 @@
 			<field name="arch" type="xml">
 				<form string="Magento storeviews">
 					<group col="4" colspan="4">
-						<field name="magento_store_id" readonly="1" />
 						<field name="name" readonly="1" />
 						<field name="code" readonly="1" />
 						<field name="shop_id" readonly="1" />
 						<field name="website_id" readonly="1" />
 						<field name="is_active" readonly="1" />
 						<field name="sort_order" readonly="1" />
-						<field name="default_shop_id" readonly="1" />
 						<field name="lang_id" />
 					</group>
 				</form>
@@ -126,13 +122,11 @@
 			<field name="type">tree</field>
 			<field name="arch" type="xml">
 				<tree string="Magento storeviews">
-					<field name="magento_store_id" readonly="1" select="1" />
 					<field name="name" readonly="1" select="1" />
 					<field name="code" readonly="1" select="1" />
 					<field name="shop_id" readonly="1" select="1" />
 					<field name="is_active" readonly="1" select="2" />
 					<field name="sort_order" readonly="1" select="2" />
-					<field name="default_shop_id" readonly="1" select="2" />
 					<field name="lang_id" />
 				</tree>
 			</field>

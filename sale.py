@@ -34,6 +34,26 @@ ORDER_STATUS_MAPPING = {'draft': 'processing', 'progress': 'processing', 'shippi
 class sale_shop(magerp_osv.magerp_osv):
     _inherit = "sale.shop"
     
+    def _get_exportable_product_ids(self, cr, uid, ids, name, args, context=None):
+        res = super(sale_shop, self)._get_exportable_product_ids(cr, uid, ids, name, args, context=None)
+        for shop_id in res:
+            website_id =  self.read(cr, uid, shop_id, ['shop_group_id'])
+            if website_id.get('shop_group_id', False):
+                res[shop_id] = self.pool.get('product.product').search(cr, uid, [('id', 'in', res[shop_id]), "|", ('websites_ids', 'in', [website_id['shop_group_id'][0]]) , ('websites_ids', '=', False)])
+            else:
+                res[shop_id] = []
+        return res
+
+    def _get_default_storeview_id(self, cr, uid, ids, prop, unknow_none, context):
+        res = {}
+        for shop in self.browse(cr, uid, ids, context):
+            if shop.default_storeview_id:
+                rid = self.pool.get('magerp.storeviews').extid_to_oeid(cr, uid, shop.default_storeview_integer_id, shop.referential_id.id)
+                res[shop.id] = rid
+            else:
+                res[shop.id] = False
+        return res
+    
     def export_images(self, cr, uid, ids, ctx):
         for shop in self.browse(cr, uid, ids):
             ctx['shop_id'] = shop.id
@@ -44,20 +64,11 @@ class sale_shop(magerp_osv.magerp_osv):
             res = True
             self.write(cr,uid,ctx['shop_id'],{'last_images_export_date':datetime.now()})
                
-    def _shop_group_get(self, cr, uid, ids, prop, unknow_none, context):
-        res = {}
-        for shop in self.browse(cr, uid, ids, context):
-            if shop.website_id:
-                rid = self.pool.get('external.shop.group').extid_to_oeid(cr, uid, shop.website_id, shop.referential_id.id)
-                res[shop.id] = rid
-            else:
-                res[shop.id] = False
-        return res
   
     def _get_rootcategory(self, cr, uid, ids, prop, unknow_none, context):
         res = {}
         for shop in self.browse(cr, uid, ids, context):
-            if shop.website_id:
+            if shop.root_category_id:
                 rid = self.pool.get('product.category').extid_to_oeid(cr, uid, shop.root_category_id, shop.referential_id.id)
                 res[shop.id] = rid
             else:
@@ -72,14 +83,14 @@ class sale_shop(magerp_osv.magerp_osv):
         return res
 
     _columns = {
-        'default_store_id':fields.integer('Magento Store ID'), #Many 2 one ?
-        'website_id':fields.integer('Magento Website ID'), # Many 2 one ?
-        'group_id':fields.integer('Magento ID'),
-        'root_category_id':fields.integer('Root product Category'),
+        'default_storeview_integer_id':fields.integer('Magento default Storewiev ID'), #This field can't be a many2one because store field will be mapped before creating storeviews
+        'default_storeview_id':fields.function(_get_default_storeview_id, type="many2one", relation="magerp.storeviews", method=True, string="Default Storeview"),
+        'root_category_id':fields.integer('Root product Category'), #This field can't be a many2one because store field will be mapped before creating category
         'magento_root_category':fields.function(_get_rootcategory, type="many2one", relation="product.category", method=True, string="Root Category", store=True),
         'exportable_root_category_ids': fields.function(_get_exportable_root_category_ids, type="many2many", relation="product.category", method=True, string="Root Category"), #fields.function(_get_exportable_root_category_ids, type="many2one", relation="product.category", method=True, 'Exportable Root Categories'),
         'storeview_ids': fields.one2many('magerp.storeviews', 'shop_id', 'Store Views'),
         'payment_types': fields.one2many('magerp.sale.shop.payment.type', 'shop_id', 'Payment Type'),
+        'exportable_product_ids': fields.function(_get_exportable_product_ids, method=True, type='one2many', relation="product.product", string='Exportable Products'),
     }   
 
     def import_shop_orders(self, cr, uid, shop, defaults, ctx):

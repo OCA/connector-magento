@@ -13,7 +13,11 @@
 					<field name="exportable_root_category_ids" position="replace">
 						<field name="exportable_root_category_ids" invisible="1" />
 					</field>
-					<field name="shop_group_id" position="after">
+					<field name="referential_id" position="replace">
+						<field name="referential_id" readonly="1"/>	
+					</field>
+					<field name="shop_group_id" position="replace">
+						<field name="shop_group_id" readonly="1"/>
 						<field name="magento_root_category" readonly="1" />
 						<field name="storeview_ids" nolabel="1" colspan="4" />
 					</field>
