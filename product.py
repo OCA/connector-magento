@@ -887,6 +887,12 @@ class product_product(magerp_osv.magerp_osv):
         for product in self.browse(cr, uid, ids):
             if product.magento_sku and product.type != 'service':
                 virtual_available = self.read(cr, uid, product.id, ['virtual_available'], {'location': stock_id})['virtual_available']
+		# Changing Stock Availability to "Out of Stock" in Magento
+                # if a product has qty lt or equal to 0.
+                if virtual_available <= 0 :
+                    is_in_stock = 0
+                else :
+                    is_in_stock = 1
                 ctx['conn_obj'].call('product_stock.update', [product.magento_sku, {'qty': virtual_available, 'is_in_stock': 1}])
                 logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "Successfully updated stock level at %s for product with SKU %s " %(virtual_available, product.magento_sku))
     
