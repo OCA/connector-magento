@@ -817,8 +817,11 @@ class product_product(magerp_osv.magerp_osv):
         
         shop = self.pool.get('sale.shop').browse(cr, uid, context['shop_id'])
         
-        last_exported_time = datetime.datetime.fromtimestamp(time.mktime(time.strptime(shop.last_products_export_date, '%Y-%m-%d %H:%M:%S')))
-        
+        if shop.last_products_export_date:
+            last_exported_time = datetime.datetime.fromtimestamp(time.mktime(time.strptime(shop.last_products_export_date, '%Y-%m-%d %H:%M:%S')))
+        else:
+            last_exported_time = datetime.datetime.today()
+
         #strangely seems that on inherits structure, write_date/create_date are False for children
         cr.execute("select id, write_date, create_date from product_product where id in ("+ ','.join(map(lambda x: str(x),ids))+')')
         read = cr.fetchall()

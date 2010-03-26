@@ -24,7 +24,8 @@ import magerp_osv
 import netsvc
 from tools.translate import _
 import string
-from datetime import datetime
+#from datetime import datetime
+import time
 DEBUG = True
 
 #TODO, may be move that on out CSV mapping, but not sure we can easily
@@ -62,7 +63,7 @@ class sale_shop(magerp_osv.magerp_osv):
             if recent_changed_images:
                 res = self.pool.get('product.images').update_remote_images(cr, uid, recent_changed_images, ctx)
             res = True
-            self.write(cr,uid,ctx['shop_id'],{'last_images_export_date':datetime.now()})
+            self.write(cr,uid,ctx['shop_id'],{'last_images_export_date':time.strftime('%Y-%m-%d %H:%M:%S')})
                
   
     def _get_rootcategory(self, cr, uid, ids, prop, unknow_none, context):
@@ -91,6 +92,8 @@ class sale_shop(magerp_osv.magerp_osv):
         'storeview_ids': fields.one2many('magerp.storeviews', 'shop_id', 'Store Views'),
         'payment_types': fields.one2many('magerp.sale.shop.payment.type', 'shop_id', 'Payment Type'),
         'exportable_product_ids': fields.function(_get_exportable_product_ids, method=True, type='one2many', relation="product.product", string='Exportable Products'),
+        'magento_shop': fields.boolean('Magento Shop', readonly=True),
+        'auto_import': fields.boolean('Automatic Import'),
     }   
 
     def import_shop_orders(self, cr, uid, shop, defaults, ctx):
@@ -134,6 +137,77 @@ class sale_shop(magerp_osv.magerp_osv):
                     pass #TODO make sure that's because Magento invoice already exists and then re-attach it!
 
         return result
+
+    # Schedules functions ============ #
+    def run_import_orders_scheduler(self, cr, uid, context=None):
+        if context == None:
+            context = {}
+        sale_obj = self.pool.get('sale.shop')
+        search_params = [
+            ('magento_shop', '=', True),
+            ('auto_import', '=', True),
+        ]
+        shops_ids = sale_obj.search(cr, uid, search_params)
+        if shops_ids:
+            self.import_orders(cr, uid, shops_ids, context)
+        if DEBUG:
+            print "run_import_orders_scheduler: %s" % shops_ids
+
+    def run_update_orders_scheduler(self, cr, uid, context=None):
+        if context == None:
+            context = {}
+        sale_obj = self.pool.get('sale.shop')
+        search_params = [
+            ('magento_shop', '=', True),
+            ('auto_import', '=', True),
+        ]
+        shops_ids = sale_obj.search(cr, uid, search_params)
+        if shops_ids:
+            self.update_orders(cr, uid, shops_ids, context)
+        if DEBUG:
+            print "run_update_orders_scheduler: %s" % shops_ids
+
+    def run_export_catalog_scheduler(self, cr, uid, context=None):
+        if context == None:
+            context = {}
+        sale_obj = self.pool.get('sale.shop')
+        search_params = [
+            ('magento_shop', '=', True),
+            ('auto_import', '=', True),
+        ]
+        shops_ids = sale_obj.search(cr, uid, search_params)
+        if shops_ids:
+            self.export_catalog(cr, uid, shops_ids, context)
+        if DEBUG:
+            print "run_export_catalog_scheduler: %s" % shops_ids
+
+    def run_export_stock_levels_scheduler(self, cr, uid, context=None):
+        if context == None:
+            context = {}
+        sale_obj = self.pool.get('sale.shop')
+        search_params = [
+            ('magento_shop', '=', True),
+            ('auto_import', '=', True),
+        ]
+        shops_ids = sale_obj.search(cr, uid, search_params)
+        if shops_ids:
+            self.export_inventory(cr, uid, shops_ids, context)
+        if DEBUG:
+            print "run_export_stock_levels_scheduler: %s" % shops_ids
+
+    def run_update_images_scheduler(self, cr, uid, context=None):
+        if context == None:
+            context = {}
+        sale_obj = self.pool.get('sale.shop')
+        search_params = [
+            ('magento_shop', '=', True),
+            ('auto_import', '=', True),
+        ]
+        shops_ids = sale_obj.search(cr, uid, search_params)
+        if shops_ids:
+            self.export_images(cr, uid, shops_ids, context)
+        if DEBUG:
+            print "run_update_images_scheduler: %s" % shops_ids
 
 sale_shop()
 

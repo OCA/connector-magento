@@ -74,6 +74,21 @@
 			</field>
 		</record>
 
+		<record id="magerp_view_shop_auto_import_form" model="ir.ui.view">
+			<field name="name">magerp_view_shop_auto_import_form</field>
+			<field name="model">sale.shop</field>
+			<field name="type">form</field>
+			<field name="inherit_id" ref="base_sale_multichannels.base_sale_multichannels_view_shop_form"/>
+			<field name="arch" type="xml">
+				<xpath expr="/form/notebook" position="inside">
+					<page string="Magento Information">
+						<field name="magento_shop" />
+						<field name="auto_import" />
+					</page>
+				</xpath>
+			</field>
+		</record>
+
 		<record id="magerp_view_shop_payment_type_form" model="ir.ui.view">
 			<field name="name">magerp_view_shop_payment_type_form</field>
 			<field name="model">sale.shop</field>
