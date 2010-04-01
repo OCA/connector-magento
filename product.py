@@ -896,7 +896,7 @@ class product_product(magerp_osv.magerp_osv):
                     is_in_stock = 0
                 else :
                     is_in_stock = 1
-                ctx['conn_obj'].call('product_stock.update', [product.magento_sku, {'qty': virtual_available, 'is_in_stock': 1}])
+                ctx['conn_obj'].call('product_stock.update', [product.magento_sku, {'qty': virtual_available, 'is_in_stock': is_in_stock}])
                 logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "Successfully updated stock level at %s for product with SKU %s " %(virtual_available, product.magento_sku))
     
 product_product()
