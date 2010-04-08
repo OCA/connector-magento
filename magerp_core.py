@@ -46,6 +46,7 @@ class external_referential(magerp_osv.magerp_osv):
                     core_imp_conn = self.external_connection(cr, uid, instance, DEBUG)
                     if core_imp_conn.connect():
                         return core_imp_conn
+        return False
 
     def core_sync(self, cr, uid, ids, ctx={}):
         instances = self.browse(cr, uid, ids, ctx)
