@@ -29,6 +29,9 @@ import magerp_osv
 from tools.translate import _
 import netsvc
 
+#Enabling this to True will put all custom attributes into One page in
+#the products view
+GROUP_CUSTOM_ATTRS_TOGETHER = True
 
 class product_category(magerp_osv.magerp_osv):
     _inherit = "product.category"
@@ -691,7 +694,7 @@ class product_product(magerp_osv.magerp_osv):
         attr_groups = attr_group_obj.browse(cr,uid,attr_grp_ids)
         attribute_set_id = context['set']
         attr_set = attr_set_obj.browse(cr, uid, attribute_set_id)
-        
+        attr_group_fields_rel = {}
         cr.execute("select attr_id, group_id, attribute_code, frontend_input, frontend_label, is_required, apply_to  from magerp_attrset_attr_rel left join magerp_product_attributes on magerp_product_attributes.id = attr_id where magerp_attrset_attr_rel.set_id=%s" % attribute_set_id)
         results = cr.fetchall()
         result = results.pop()
@@ -701,10 +704,9 @@ class product_product(magerp_osv.magerp_osv):
             group_name = attr_group_obj.read(cr, uid, oerp_group_id, ['attribute_group_name'])['attribute_group_name']
             
             #Create a page for the attribute group
-            trans = translation_obj._get_source(cr, uid, 'product.product', 'view', context.get('lang', ''), group_name)
-            trans = trans or group_name
-            xml+="<page string='" + trans + "'>\n<group colspan='4' col='4'>"
+            attr_group_fields_rel[group_name] = []
             while True:
+                field_xml=""
                 if result[1] != mag_group_id:
                     break
                 #TODO understand why we need to do "x_magerp_" +  each_attribute.attribute_code in field_names or fix it
@@ -713,19 +715,38 @@ class product_product(magerp_osv.magerp_osv):
                         if result[3] in ['textarea']:
                             trans = translation_obj._get_source(cr, uid, 'product.product', 'view', context.get('lang', ''), result[4])
                             trans = trans or result[4]
-                            xml+="<newline/><separator colspan='4' string='%s'/>" % (trans,)
-                        xml+="<field name='x_magerp_" +  result[2] + "'"
+                            field_xml+="<newline/><separator colspan='4' string='%s'/>" % (trans,)
+                        field_xml+="<field name='x_magerp_" +  result[2] + "'"
                         if result[5] and (result[6] == "" or "simple" in result[6] or "configurable" in result[6]) and result[2] not in self._magento_fake_mandatory_attrs:
-                            xml+=""" attrs="{'required':[('magento_exportable','=',True)]}" """
+                            field_xml+=""" attrs="{'required':[('magento_exportable','=',True)]}" """
                         if result[3] in ['textarea']:
-                            xml+=" colspan='4' nolabel='1' " 
-                        xml+=" />\n"
-                
+                            field_xml+=" colspan='4' nolabel='1' " 
+                        field_xml+=" />\n"
+                        if (group_name in  [
+                                            u'Meta Information', 
+                                            u'General', 
+                                            u'Custom Layout Update', 
+                                            u'Prices', 
+                                            u'Design', 
+                                            ]) or GROUP_CUSTOM_ATTRS_TOGETHER==False:
+                            attr_group_fields_rel[group_name].append(field_xml)
+                        else:
+                            custom_attributes = attr_group_fields_rel.get(u"Custom Attributes",[])
+                            custom_attributes.append(field_xml)
+                            attr_group_fields_rel[u"Custom Attributes"] = custom_attributes
                 if len(results) > 0:
                     result = results.pop()
                 else:
                     break
-            xml+="</group></page>\n"
+        attribute_groups = attr_group_fields_rel.keys()
+        attribute_groups.sort()
+        for each_attribute_group in attribute_groups:
+            trans = translation_obj._get_source(cr, uid, 'product.product', 'view', context.get('lang', ''), each_attribute_group)
+            trans = trans or each_attribute_group
+            if attr_group_fields_rel.get(each_attribute_group,False):
+                xml+="<page string='" + trans + "'>\n<group colspan='4' col='4'>"
+                xml+="\n".join(attr_group_fields_rel.get(each_attribute_group,[]))
+                xml+="</group></page>\n"
         if context.get('multiwebsite', False):
             xml+="""<page string='Websites'>\n<group colspan='4' col='4'>\n<field name='websites_ids'/>\n</group>\n</page>\n"""
         xml+="</notebook>"
