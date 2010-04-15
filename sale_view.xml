@@ -46,18 +46,6 @@
 			</field>
 		</record>
 
-		<record model="ir.ui.view" id="magerp_view_order_form">
-			<field name="name">magerp_view_order_form</field>
-			<field name="model">sale.order</field>
-			<field name="inherit_id" ref="sale.view_order_form" />
-			<field name="type">form</field>
-			<field name="arch" type="xml">
-				<field name="fiscal_position" position="after">
-					<field name="magento_payment_method" />
-				</field>
-			</field>
-		</record>
-
 		<record id="magerp_view_shop_images_form" model="ir.ui.view">
 			<field name="name">magerp_view_shop_images_form</field>
 			<field name="model">sale.shop</field>
@@ -86,50 +74,6 @@
 						<field name="auto_import" />
 					</page>
 				</xpath>
-			</field>
-		</record>
-
-		<record id="magerp_view_shop_payment_type_form" model="ir.ui.view">
-			<field name="name">magerp_view_shop_payment_type_form</field>
-			<field name="model">sale.shop</field>
-			<field name="type">form</field>
-			<field name="inherit_id" ref="base_sale_multichannels.base_sale_multichannels_view_shop_form"/>
-			<field name="arch" type="xml">
-				<field name="picking_generation_policy" position="after">
-					<group col="4" colspan="4">
-					<field name="payment_types" nolabel="1"/>
-					</group>
-				</field>
-			</field>
-		</record>
-
-		<record model="ir.ui.view" id="view_magerp_sale_shop_payment_type_form">
-			<field name="name">magerp_sale_shop_payment_type_form</field>
-			<field name="model">magerp.sale.shop.payment.type</field>
-			<field name="type">form</field>
-			<field name="priority" eval="5"/>
-			<field name="arch" type="xml">
-			<form string="Payment Type">
-				<field name="payment_type_id"/>
-				<field name="order_policy"/>
-				<field name="picking_policy"/>
-				<field name="invoice_quantity"/>
-			</form>
-			</field>
-		</record>
-
-		<record model="ir.ui.view" id="view_magerp_sale_shop_payment_type_tree">
-			<field name="name">magerp_sale_shop_payment_type_tree</field>
-			<field name="model">magerp.sale.shop.payment.type</field>
-			<field name="type">tree</field>
-			<field name="priority" eval="5"/>
-			<field name="arch" type="xml">
-				<tree string="Payment Type">
-					<field name="payment_type_id"/>
-					<field name="order_policy"/>
-					<field name="picking_policy"/>
-					<field name="invoice_quantity"/>
-				</tree>
 			</field>
 		</record>
 
