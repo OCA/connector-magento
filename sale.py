@@ -354,24 +354,35 @@ class sale_order(magerp_osv.magerp_osv):
                     #TODO flag that the order has an error, especially.
             if data_record.get('status_history', False) and len(data_record['status_history']) > 0:
                 res['date_order'] = data_record['status_history'][len(data_record['status_history'])-1]['created_at']
-            if data_record.get('payment', False):
-                payment = data_record['payment']
-                if payment.get('amount_paid', False):
-                    self.generate_payment_with_pay_code(cr, uid, payment['method'], res['partner_id'], payment['amount_paid'], "mag_" + payment['payment_id'], "mag_" + data_record['increment_id'], res['date_order'], True, context)
-                elif payment.get('amount_ordered', False):
-                    self.generate_payment_with_pay_code(cr, uid, payment['method'], res['partner_id'], payment['amount_ordered'], "mag_" + payment['payment_id'], "mag_" + data_record['increment_id'], res['date_order'], False, context) 
         return res
     
     def oe_update(self,cr, uid, existing_rec_id, vals, data, external_referential_id, defaults, context):
         order_line_ids = self.pool.get('sale.order.line').search(cr,uid,[('order_id','=', existing_rec_id)])
         self.pool.get('sale.order.line').unlink(cr, uid, order_line_ids)
+        #TODO update order status eventually
         self.oe_status(cr, uid, data, existing_rec_id, context)
         return super(magerp_osv.magerp_osv, self).oe_update(cr, uid, existing_rec_id, vals, data, external_referential_id, defaults, context)
 
     def oe_create(self, cr, uid, vals, data, external_referential_id, defaults, context):
         order_id = super(magerp_osv.magerp_osv, self).oe_create(cr, uid, vals, data, external_referential_id, defaults, context)
         self.oe_status(cr, uid, data, order_id, context)
+        self.create_payments(cr, uid, data, order_id, context)
         return order_id
+    
+    def create_payments(self, cr, uid, data_record, order_id, context):
+       if data_record.get('payment', False):
+            payment = data_record['payment']
+            amount = False
+            if payment.get('amount_paid', False):
+                amount =  payment.get('amount_paid', False)
+                validate = True
+            elif payment.get('amount_ordered', False):
+                amount =  payment.get('amount_ordered', False)
+                validate = False
+            if amount:
+                partner_id = self.pool.get('sale.order').browse(cr, uid, order_id, context).partner_id.id
+                self.generate_payment_with_pay_code(cr, uid, payment['method'], partner_id, amount, "mag_" + payment['payment_id'], "mag_" + data_record['increment_id'], res['date_order'], validate, context) 
+
         
     def oe_status(self, cr, uid, data, order_id, context):
         wf_service = netsvc.LocalService("workflow")
