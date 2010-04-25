@@ -90,7 +90,6 @@ class sale_shop(magerp_osv.magerp_osv):
         'magento_root_category':fields.function(_get_rootcategory, type="many2one", relation="product.category", method=True, string="Root Category", store=True),
         'exportable_root_category_ids': fields.function(_get_exportable_root_category_ids, type="many2many", relation="product.category", method=True, string="Root Category"), #fields.function(_get_exportable_root_category_ids, type="many2one", relation="product.category", method=True, 'Exportable Root Categories'),
         'storeview_ids': fields.one2many('magerp.storeviews', 'shop_id', 'Store Views'),
-        'payment_types': fields.one2many('magerp.sale.shop.payment.type', 'shop_id', 'Payment Type'),
         'exportable_product_ids': fields.function(_get_exportable_product_ids, method=True, type='one2many', relation="product.product", string='Exportable Products'),
         'magento_shop': fields.boolean('Magento Shop', readonly=True),
         'auto_import': fields.boolean('Automatic Import'),
@@ -357,16 +356,6 @@ class sale_order(magerp_osv.magerp_osv):
                 res['date_order'] = data_record['status_history'][len(data_record['status_history'])-1]['created_at']
             if data_record.get('payment', False):
                 payment = data_record['payment']
-                if payment.get('method', False):
-                    # Sets order_policy, picking_policy, invoice_quantity depending on the payment method
-                    pay_type_ids = self.pool.get('payment.type').search(cr, uid, [('code','=',payment['method'])])
-                    if pay_type_ids:
-                        shop_pay_ids = self.pool.get('magerp.sale.shop.payment.type').search(cr, uid, [('payment_type_id','=',pay_type_ids[0]),('shop_id','=',res['shop_id'])])
-                        if shop_pay_ids:
-                            shop_pay = self.pool.get('magerp.sale.shop.payment.type').browse(cr, uid, shop_pay_ids[0])
-                            res['order_policy'] = shop_pay.order_policy or res['order_policy']
-                            res['picking_policy'] = shop_pay.picking_policy or res['picking_policy']
-                            res['invoice_quantity'] = shop_pay.invoice_quantity or res['invoice_quantity']
                 if payment.get('amount_paid', False):
                     self.generate_payment_with_pay_code(cr, uid, payment['method'], res['partner_id'], payment['amount_paid'], "mag_" + payment['payment_id'], "mag_" + data_record['increment_id'], res['date_order'], True, context)
                 elif payment.get('amount_ordered', False):
@@ -399,23 +388,3 @@ class sale_order(magerp_osv.magerp_osv):
                 
 sale_order()
 
-
-class magerp_sale_shop_payment_type(magerp_osv.magerp_osv):
-    _name = "magerp.sale.shop.payment.type"
-    _description = "Magento Sale Shop Payment Type"
-    _rec_name = "payment_type_id"
-
-    _columns = {
-        'payment_type_id': fields.many2one('payment.type','Payment Type', required=True),
-        'shop_id': fields.many2one('sale.shop','Shop', required=True),
-        'picking_policy': fields.selection([('direct', 'Partial Delivery'), ('one', 'Complete Delivery')], 'Packing Policy'),
-        'order_policy': fields.selection([
-            ('prepaid', 'Payment Before Delivery'),
-            ('manual', 'Shipping & Manual Invoice'),
-            ('postpaid', 'Invoice on Order After Delivery'),
-            ('picking', 'Invoice from the Packing'),
-        ], 'Shipping Policy'),
-        'invoice_quantity': fields.selection([('order', 'Ordered Quantities'), ('procurement', 'Shipped Quantities')], 'Invoice on'),
-    }
-
-magerp_sale_shop_payment_type()
