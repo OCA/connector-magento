@@ -876,11 +876,11 @@ class product_product(magerp_osv.magerp_osv):
                 context_dic[storeview] = context.copy()
                 context_dic[storeview].update({'storeview_code': storeview.code, 'lang': storeview.lang_id.code})
                 if storeview.lang_id.code == shop.referential_id.default_lang_id.code:
-                    context_dic[storeview]['export_url'] = True # for the magento version 1.3.2.4, only one url is autorized by product, so we only export with the MAPPING TEMPLATE the url of the default language
+                    context_dic[storeview]['export_url'] = True # Magento #1.3.2.4 has only 1 URL per product, so we only export with the MAPPING TEMPLATE the url of the default language
 
         if len(shop.storeview_ids) > len(context_dic):
             context_dic['default_value'] = context.copy()
-            context_dic['default_value']['export_url'] = True # for the magento version 1.3.2.4, only one url is autorized by product, so we only export with the MAPPING TEMPLATE the url of the default language 
+            context_dic['default_value']['export_url'] = True #1.3.2.4 has only 1 URL per product, so we only export with the MAPPING TEMPLATE the url of the default language
             context_dic['default_value']['lang'] = shop.referential_id.default_lang_id.code
 
         result = {'create_ids':[], 'write_ids':[]}
