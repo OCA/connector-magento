@@ -33,6 +33,7 @@
     "init_xml" : [],
     "demo_xml" : [],
     "update_xml" : [
+            'security/ir.model.access.csv',
             'magerp_data.xml',
             'settings/external.referential.type.csv',
             'magerp_core_view.xml',
