@@ -354,12 +354,18 @@ class sale_order(magerp_osv.magerp_osv):
                     #TODO flag that the order has an error, especially.
             if data_record.get('status_history', False) and len(data_record['status_history']) > 0:
                 res['date_order'] = data_record['status_history'][len(data_record['status_history'])-1]['created_at']
+            payment_settings = self.payment_code_to_payment_settings(cr, uid, payment_code, ctx)
+            if payment_settings:
+                res['order_policy'] = payment_settings.order_policy
+                res['picking_policy'] = payment_settings.picking_policy
+                res['picking_policy'] = payment_settings.picking_policy
+                res['invoice_quantity'] = payment_settings.invoice_quantity
         return res
     
     def oe_update(self,cr, uid, existing_rec_id, vals, data, external_referential_id, defaults, context):
         order_line_ids = self.pool.get('sale.order.line').search(cr,uid,[('order_id','=', existing_rec_id)])
         self.pool.get('sale.order.line').unlink(cr, uid, order_line_ids)
-        #TODO update order status eventually
+        #TODO update order status eventually (that would be easier if they were linked by some foreign key...)
         self.oe_status(cr, uid, data, existing_rec_id, context)
         return super(magerp_osv.magerp_osv, self).oe_update(cr, uid, existing_rec_id, vals, data, external_referential_id, defaults, context)
 
@@ -381,7 +387,7 @@ class sale_order(magerp_osv.magerp_osv):
                 validate = False
             if amount:
                 partner_id = self.pool.get('sale.order').browse(cr, uid, order_id, context).partner_id.id
-                self.generate_payment_with_pay_code(cr, uid, payment['method'], partner_id, amount, "mag_" + payment['payment_id'], "mag_" + data_record['increment_id'], res['date_order'], validate, context) 
+                self.generate_payment_with_pay_code(cr, uid, payment['method'], partner_id, amount, "mag_" + payment['payment_id'], "mag_" + data_record['increment_id'], res['date_order'], validate and payment_setting, context) 
 
         
     def oe_status(self, cr, uid, data, order_id, context):
@@ -390,11 +396,12 @@ class sale_order(magerp_osv.magerp_osv):
             wf_service.trg_validate(uid, 'sale.order', order_id, 'cancel', cr)
         else:
             order = self.browse(cr, uid, order_id, context)
+            payment_settings = self.payment_code_to_payment_settings(cr, uid, order.magento_payment_method, ctx)
             if order.order_policy == 'manual' and order.shop_id.picking_generation_policy != 'none':
                 wf_service.trg_validate(uid, 'sale.order', order.id, 'order_confirm', cr)
-                if order.shop_id.invoice_generation_policy != 'none':
+                if payment_settings.validate_invoice:
                     wf_service.trg_validate(uid, 'sale.order', order.id, 'manual_invoice', cr)
-            elif order.order_policy == 'picking' and order.shop_id.picking_generation_policy != 'none':
+            elif order.order_policy == 'picking' and payment_settings.validate_picking:
                 wf_service.trg_validate(uid, 'sale.order', order.id, 'order_confirm', cr)
                 
 sale_order()
