@@ -373,6 +373,7 @@ class sale_order(magerp_osv.magerp_osv):
         order_id = super(magerp_osv.magerp_osv, self).oe_create(cr, uid, vals, data, external_referential_id, defaults, context)
         self.oe_status(cr, uid, data, order_id, context)
         self.create_payments(cr, uid, data, order_id, context)
+        #TODO auto_reconcile invoice and statement depending on is_auto_reconcile param; see sale_simple_pos module implementation of this
         return order_id
     
     def create_payments(self, cr, uid, data_record, order_id, context):
