@@ -890,7 +890,7 @@ class product_product(magerp_osv.magerp_osv):
             self.pool.get('sale.shop').write(cr, uid,context['shop_id'], {'last_products_export_date': ids_2_dates[id]})
             result['create_ids'] += temp_result['create_ids']
             result['write_ids'] += temp_result['write_ids']
-        self.pool.get('sale.shop').write(cr, uid,context['shop_id'], {'last_products_export_date': datetime.datetime.today()})
+        self.pool.get('sale.shop').write(cr, uid,context['shop_id'], {'last_products_export_date': datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S')})
 
         return result
     
