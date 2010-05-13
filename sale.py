@@ -389,7 +389,7 @@ class sale_order(magerp_osv.magerp_osv):
                 validate = False
             if amount:
                 order = self.pool.get('sale.order').browse(cr, uid, order_id, context)
-                self.generate_payment_with_pay_code(cr, uid, payment['method'], order.partner_id.id, amount, "mag_" + payment['payment_id'], "mag_" + data_record['increment_id'], order.date_order, validate and payment_setting, context) 
+                self.generate_payment_with_pay_code(cr, uid, payment['method'], order.partner_id.id, amount, "mag_" + payment['payment_id'], "mag_" + data_record['increment_id'], order.date_order, validate, context) 
 
         
     def oe_status(self, cr, uid, data, order_id, context):
@@ -399,11 +399,13 @@ class sale_order(magerp_osv.magerp_osv):
         else:
             order = self.browse(cr, uid, order_id, context)
             payment_settings = self.payment_code_to_payment_settings(cr, uid, order.magento_payment_method, context)
-            if order.order_policy == 'manual' and order.shop_id.picking_generation_policy != 'none':
+            if payment_settings and payment_settings.validate_order:
                 wf_service.trg_validate(uid, 'sale.order', order.id, 'order_confirm', cr)
-                if payment_settings and payment_settings.validate_invoice:
+                if order.order_policy == 'manual' and payment_settings.create_invoice:
                     wf_service.trg_validate(uid, 'sale.order', order.id, 'manual_invoice', cr)
-            elif order.order_policy == 'picking' and payment_settings and payment_settings.validate_picking:
-                wf_service.trg_validate(uid, 'sale.order', order.id, 'order_confirm', cr)
+                    if payment_settings.validate_invoice:
+                        pass #TODO validate the invoice!
+                elif order.order_policy == 'picking' and payment_settings.validate_picking:
+                    pass #TODO validate the picking!
                 
 sale_order()
