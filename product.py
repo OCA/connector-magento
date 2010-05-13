@@ -793,7 +793,8 @@ class product_product(magerp_osv.magerp_osv):
             product_data.update({'status': product.active and 1 or 2})
             
         if not product_data.get('websites', False):
-            product_data.update({'websites': [shop.shop_group_id.code]})
+            group_shop_ids = self.pool.get('external.shop.group').search(cr,uid,[('referential_id', '=', external_referential_id)])
+            product_data.update({'websites': [x['code'] for x in self.pool.get('external.shop.group').read(cr, uid, group_shop_ids, ['code'])]})
 
         if not product_data.get('description', False):
             product_data.update({'description': product.description or _("description")})
