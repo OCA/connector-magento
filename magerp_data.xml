@@ -83,5 +83,15 @@
             <field eval="'()'" name="args"/>
         </record>
 
+        <record id="payment_type1" model="base.sale.payment.type">
+			<field name="name">checkmo;cashondelivery</field>
+			<field name="order_policy">manual</field>
+		</record>
+		
+        <record id="payment_type2" model="base.sale.payment.type">
+			<field name="name">ccsave;free;googlecheckout;paypayl_express;paybox_system;paypal_standard;servired_standard;bbva;cofidis</field>
+			<field name="order_policy">prepaid</field>
+		</record>
+
 	</data>
 </openerp>

@@ -90,7 +90,6 @@ class sale_shop(magerp_osv.magerp_osv):
         'magento_root_category':fields.function(_get_rootcategory, type="many2one", relation="product.category", method=True, string="Root Category", store=True),
         'exportable_root_category_ids': fields.function(_get_exportable_root_category_ids, type="many2many", relation="product.category", method=True, string="Root Category"), #fields.function(_get_exportable_root_category_ids, type="many2one", relation="product.category", method=True, 'Exportable Root Categories'),
         'storeview_ids': fields.one2many('magerp.storeviews', 'shop_id', 'Store Views'),
-        'payment_types': fields.one2many('magerp.sale.shop.payment.type', 'shop_id', 'Payment Type'),
         'exportable_product_ids': fields.function(_get_exportable_product_ids, method=True, type='one2many', relation="product.product", string='Exportable Products'),
         'magento_shop': fields.boolean('Magento Shop', readonly=True),
         'auto_import': fields.boolean('Automatic Import'),
@@ -355,34 +354,43 @@ class sale_order(magerp_osv.magerp_osv):
                     #TODO flag that the order has an error, especially.
             if data_record.get('status_history', False) and len(data_record['status_history']) > 0:
                 res['date_order'] = data_record['status_history'][len(data_record['status_history'])-1]['created_at']
-            if data_record.get('payment', False):
-                payment = data_record['payment']
-                if payment.get('method', False):
-                    # Sets order_policy, picking_policy, invoice_quantity depending on the payment method
-                    pay_type_ids = self.pool.get('payment.type').search(cr, uid, [('code','=',payment['method'])])
-                    if pay_type_ids:
-                        shop_pay_ids = self.pool.get('magerp.sale.shop.payment.type').search(cr, uid, [('payment_type_id','=',pay_type_ids[0]),('shop_id','=',res['shop_id'])])
-                        if shop_pay_ids:
-                            shop_pay = self.pool.get('magerp.sale.shop.payment.type').browse(cr, uid, shop_pay_ids[0])
-                            res['order_policy'] = shop_pay.order_policy or res['order_policy']
-                            res['picking_policy'] = shop_pay.picking_policy or res['picking_policy']
-                            res['invoice_quantity'] = shop_pay.invoice_quantity or res['invoice_quantity']
-                if payment.get('amount_paid', False):
-                    self.generate_payment_with_pay_code(cr, uid, payment['method'], res['partner_id'], payment['amount_paid'], "mag_" + payment['payment_id'], "mag_" + data_record['increment_id'], res['date_order'], True, context)
-                elif payment.get('amount_ordered', False):
-                    self.generate_payment_with_pay_code(cr, uid, payment['method'], res['partner_id'], payment['amount_ordered'], "mag_" + payment['payment_id'], "mag_" + data_record['increment_id'], res['date_order'], False, context) 
+            if data_record.get('payment', False) and data_record['payment'].get('method', False):
+                payment_settings = self.payment_code_to_payment_settings(cr, uid, data_record['payment']['method'], context)
+                if payment_settings:
+                    res['order_policy'] = payment_settings.order_policy
+                    res['picking_policy'] = payment_settings.picking_policy
+                    res['picking_policy'] = payment_settings.picking_policy
+                    res['invoice_quantity'] = payment_settings.invoice_quantity
         return res
     
     def oe_update(self,cr, uid, existing_rec_id, vals, data, external_referential_id, defaults, context):
         order_line_ids = self.pool.get('sale.order.line').search(cr,uid,[('order_id','=', existing_rec_id)])
         self.pool.get('sale.order.line').unlink(cr, uid, order_line_ids)
+        #TODO update order status eventually (that would be easier if they were linked by some foreign key...)
         self.oe_status(cr, uid, data, existing_rec_id, context)
         return super(magerp_osv.magerp_osv, self).oe_update(cr, uid, existing_rec_id, vals, data, external_referential_id, defaults, context)
 
     def oe_create(self, cr, uid, vals, data, external_referential_id, defaults, context):
         order_id = super(magerp_osv.magerp_osv, self).oe_create(cr, uid, vals, data, external_referential_id, defaults, context)
         self.oe_status(cr, uid, data, order_id, context)
+        self.create_payments(cr, uid, data, order_id, context)
+        #TODO auto_reconcile invoice and statement depending on is_auto_reconcile param; see sale_simple_pos module implementation of this
         return order_id
+    
+    def create_payments(self, cr, uid, data_record, order_id, context):
+       if data_record.get('payment', False):
+            payment = data_record['payment']
+            amount = False
+            if payment.get('amount_paid', False):
+                amount =  payment.get('amount_paid', False)
+                validate = True
+            elif payment.get('amount_ordered', False):
+                amount =  payment.get('amount_ordered', False)
+                validate = False
+            if amount:
+                order = self.pool.get('sale.order').browse(cr, uid, order_id, context)
+                self.generate_payment_with_pay_code(cr, uid, payment['method'], order.partner_id.id, amount, "mag_" + payment['payment_id'], "mag_" + data_record['increment_id'], order.date_order, validate and payment_setting, context) 
+
         
     def oe_status(self, cr, uid, data, order_id, context):
         wf_service = netsvc.LocalService("workflow")
@@ -390,32 +398,12 @@ class sale_order(magerp_osv.magerp_osv):
             wf_service.trg_validate(uid, 'sale.order', order_id, 'cancel', cr)
         else:
             order = self.browse(cr, uid, order_id, context)
+            payment_settings = self.payment_code_to_payment_settings(cr, uid, order.magento_payment_method, context)
             if order.order_policy == 'manual' and order.shop_id.picking_generation_policy != 'none':
                 wf_service.trg_validate(uid, 'sale.order', order.id, 'order_confirm', cr)
-                if order.shop_id.invoice_generation_policy != 'none':
+                if payment_settings and payment_settings.validate_invoice:
                     wf_service.trg_validate(uid, 'sale.order', order.id, 'manual_invoice', cr)
-            elif order.order_policy == 'picking' and order.shop_id.picking_generation_policy != 'none':
+            elif order.order_policy == 'picking' and payment_settings and payment_settings.validate_picking:
                 wf_service.trg_validate(uid, 'sale.order', order.id, 'order_confirm', cr)
                 
 sale_order()
-
-
-class magerp_sale_shop_payment_type(magerp_osv.magerp_osv):
-    _name = "magerp.sale.shop.payment.type"
-    _description = "Magento Sale Shop Payment Type"
-    _rec_name = "payment_type_id"
-
-    _columns = {
-        'payment_type_id': fields.many2one('payment.type','Payment Type', required=True),
-        'shop_id': fields.many2one('sale.shop','Shop', required=True),
-        'picking_policy': fields.selection([('direct', 'Partial Delivery'), ('one', 'Complete Delivery')], 'Packing Policy'),
-        'order_policy': fields.selection([
-            ('prepaid', 'Payment Before Delivery'),
-            ('manual', 'Shipping & Manual Invoice'),
-            ('postpaid', 'Invoice on Order After Delivery'),
-            ('picking', 'Invoice from the Packing'),
-        ], 'Shipping Policy'),
-        'invoice_quantity': fields.selection([('order', 'Ordered Quantities'), ('procurement', 'Shipped Quantities')], 'Invoice on'),
-    }
-
-magerp_sale_shop_payment_type()
