@@ -361,17 +361,10 @@ class sale_order(magerp_osv.magerp_osv):
                     res['picking_policy'] = payment_settings.picking_policy
                     res['invoice_quantity'] = payment_settings.invoice_quantity
         return res
-    
-    def oe_update(self,cr, uid, existing_rec_id, vals, data, external_referential_id, defaults, context):
-        order_line_ids = self.pool.get('sale.order.line').search(cr,uid,[('order_id','=', existing_rec_id)])
-        self.pool.get('sale.order.line').unlink(cr, uid, order_line_ids)
-        #TODO update order status eventually (that would be easier if they were linked by some foreign key...)
-        self.oe_status(cr, uid, data, existing_rec_id, context)
-        return super(magerp_osv.magerp_osv, self).oe_update(cr, uid, existing_rec_id, vals, data, external_referential_id, defaults, context)
 
     def oe_create(self, cr, uid, vals, data, external_referential_id, defaults, context):
         order_id = super(magerp_osv.magerp_osv, self).oe_create(cr, uid, vals, data, external_referential_id, defaults, context)
-        self.oe_status(cr, uid, data, order_id, context)
+        self.oe_status(cr, uid, order_id, context)
         self.create_payments(cr, uid, data, order_id, context)
         #TODO auto_reconcile invoice and statement depending on is_auto_reconcile param; see sale_simple_pos module implementation of this
         return order_id
@@ -390,12 +383,21 @@ class sale_order(magerp_osv.magerp_osv):
                 order = self.pool.get('sale.order').browse(cr, uid, order_id, context)
                 self.generate_payment_with_pay_code(cr, uid, payment['method'], order.partner_id.id, amount, "mag_" + payment['payment_id'], "mag_" + data_record['increment_id'], order.date_order, validate, context) 
 
-        
-    def oe_status(self, cr, uid, data, order_id, context):
-        wf_service = netsvc.LocalService("workflow")
-        if data.get('status_history', False) and len(data['status_history']) > 0 and data['status_history'][0]['status'] == 'canceled':
-            wf_service.trg_validate(uid, 'sale.order', order_id, 'cancel', cr)
-        else:
-            super(magerp_osv.magerp_osv, self).oe_status(cr, uid, order_id, context)
+
+# UPDATE ORDER STATUS FROM MAGENTO TO OPENERP IS UNSTABLE, AND NOT VERY USEFULL. MAYBE IT WILL BE REFACTORED 
+
+    #def oe_update(self,cr, uid, existing_rec_id, vals, data, external_referential_id, defaults, context):
+        #order_line_ids = self.pool.get('sale.order.line').search(cr,uid,[('order_id','=', existing_rec_id)])
+        #self.pool.get('sale.order.line').unlink(cr, uid, order_line_ids)
+        #TODO update order status eventually (that would be easier if they were linked by some foreign key...)
+        #self.oe_status(cr, uid, data, existing_rec_id, context)
+        #return super(magerp_osv.magerp_osv, self).oe_update(cr, uid, existing_rec_id, vals, data, external_referential_id, defaults, context)
+
+    #def oe_status(self, cr, uid, data, order_id, context):
+        #wf_service = netsvc.LocalService("workflow")
+        #if data.get('status_history', False) and len(data['status_history']) > 0 and data['status_history'][0]['status'] == 'canceled':
+        #   wf_service.trg_validate(uid, 'sale.order', order_id, 'cancel', cr)
+        #else:
+        #   super(magerp_osv.magerp_osv, self).oe_status(cr, uid, order_id, context)
 
 sale_order()
