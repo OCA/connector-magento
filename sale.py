@@ -216,7 +216,6 @@ class sale_order(magerp_osv.magerp_osv):
     
     _columns = {
                 'magento_incrementid': fields.char('Magento Increment ID', size=32),
-                'magento_payment_method': fields.char('Magento Payment Method', size=32),
                 'magento_storeview_id': fields.many2one('magerp.storeviews', 'Magento Store View'),
     }
     
@@ -398,7 +397,7 @@ class sale_order(magerp_osv.magerp_osv):
             wf_service.trg_validate(uid, 'sale.order', order_id, 'cancel', cr)
         else:
             order = self.browse(cr, uid, order_id, context)
-            payment_settings = self.payment_code_to_payment_settings(cr, uid, order.magento_payment_method, context)
+            payment_settings = self.payment_code_to_payment_settings(cr, uid, order.ext_payment_method, context)
             if payment_settings and payment_settings.validate_order:
                 wf_service.trg_validate(uid, 'sale.order', order.id, 'order_confirm', cr)
                 if order.order_policy == 'manual' and payment_settings.create_invoice:

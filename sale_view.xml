@@ -34,18 +34,6 @@
 			<field name="domain">[('referential_id', '!=', False)]</field>
 		</record>
 
-		<record model="ir.ui.view" id="magerp_view_order_tree">
-			<field name="name">magerp_view_order_tree</field>
-			<field name="model">sale.order</field>
-			<field name="inherit_id" ref="sale.view_order_tree" />
-			<field name="type">form</field>
-			<field name="arch" type="xml">
-				<field name="state" position="after">
-					<field name="magento_payment_method" select="1" />
-				</field>
-			</field>
-		</record>
-
 		<record id="magerp_view_shop_images_form" model="ir.ui.view">
 			<field name="name">magerp_view_shop_images_form</field>
 			<field name="model">sale.shop</field>
