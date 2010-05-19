@@ -396,15 +396,6 @@ class sale_order(magerp_osv.magerp_osv):
         if data.get('status_history', False) and len(data['status_history']) > 0 and data['status_history'][0]['status'] == 'canceled':
             wf_service.trg_validate(uid, 'sale.order', order_id, 'cancel', cr)
         else:
-            order = self.browse(cr, uid, order_id, context)
-            payment_settings = self.payment_code_to_payment_settings(cr, uid, order.ext_payment_method, context)
-            if payment_settings and payment_settings.validate_order:
-                wf_service.trg_validate(uid, 'sale.order', order.id, 'order_confirm', cr)
-                if order.order_policy == 'manual' and payment_settings.create_invoice:
-                    wf_service.trg_validate(uid, 'sale.order', order.id, 'manual_invoice', cr)
-                    if payment_settings.validate_invoice:
-                        pass #TODO validate the invoice!
-                elif order.order_policy == 'picking' and payment_settings.validate_picking:
-                    pass #TODO validate the picking!
-                
+            super(magerp_osv.magerp_osv, self).oe_status(cr, uid, order_id, context)
+
 sale_order()
