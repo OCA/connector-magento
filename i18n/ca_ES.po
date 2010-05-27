@@ -4,56 +4,31 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.6\n"
+"Project-Id-Version: OpenERP Server 5.0.9\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-12-27 20:37:10+0000\n"
-"PO-Revision-Date: 2010-03-02 12:59+0100\n"
+"POT-Creation-Date: 2010-05-27 16:07:53+0000\n"
+"PO-Revision-Date: 2010-05-27 19:36+0100\n"
 "Last-Translator: Jordi Esteve (Zikzakmedia) <jesteve@zikzakmedia.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Poedit-Language: Catalan\n"
+"Plural-Forms: \n"
 
 #. module: magentoerpconnect
-#: help:res.partner,mag_birthday:0
-msgid "To be able to receive customer birthday you must set it in Magento Admin Panel, menu System / Configuration / Client Configuration / Name and Address Options."
-msgstr "Per a poder rebre la data de naixement del client heu de configurar-ho al Magento Admin Panel, menú Sistema / Configuració / Configuració del client / Opcions del Nom i Adreça."
+#: field:external.shop.group,is_default:0
+msgid "Is Default?"
+msgstr "Per defecte?"
 
 #. module: magentoerpconnect
-#: help:res.partner,mag_vat:0
-msgid "To be able to receive customer VAT number you must set it in Magento Admin Panel, menu System / Configuration / Client Configuration / Name and Address Options."
-msgstr "Per a poder rebre el número NIF/CIF del client heu de configurar-ho al Magento Admin Panel, menú Sistema / Configuració / Configuració del client / Opcions del Nom i Adreça."
+#: model:product.category,name:magentoerpconnect.mag0
+msgid "Service"
+msgstr "Servei"
 
 #. module: magentoerpconnect
-#: field:res.partner,mag_birthday:0
-msgid "Birthday"
-msgstr "Data naixement"
-
-#. module: magentoerpconnect
-#: field:res.partner,mag_vat:0
-msgid "Magento VAT"
-msgstr "CIF/NIF Magento"
-
-#. module: magentoerpconnect
-#: help:res.partner,store_id:0
-msgid "Last store view where the customer has bought."
-msgstr "Última vista de tenda a on el client ha comprat."
-
-#. module: magentoerpconnect
-#: view:res.partner:0
-msgid "Store views"
-msgstr "Vistes de tenda"
-
-#. module: magentoerpconnect
-#: field:magerp.storeviews,magento_store_id:0
-msgid "Store ID"
-msgstr "ID tenda"
-
-#. module: magentoerpconnect
-#: help:res.partner,emailid:0
-msgid "Magento uses this email ID to correspond to the customer."
-msgstr "Magento utilitza aquest ID d'email per a relacionar-lo amb el client."
+#: selection:magerp.sale.shop.payment.type,picking_policy:0
+msgid "Partial Delivery"
+msgstr "Enviament parcial"
 
 #. module: magentoerpconnect
 #: selection:product.tierprice,group_scope:0
@@ -61,9 +36,9 @@ msgid "All groups"
 msgstr "Tots els grups"
 
 #. module: magentoerpconnect
-#: selection:magerp.product_attributes,backend_type:0
-msgid "Varchar"
-msgstr "Varchar"
+#: field:product.images,small_image:0
+msgid "Small Image"
+msgstr "Imatge petita"
 
 #. module: magentoerpconnect
 #: constraint:ir.actions.act_window:0
@@ -72,6 +47,7 @@ msgstr "Nom de model no vàlid en la definició de l'acció."
 
 #. module: magentoerpconnect
 #: field:magerp.product_attributes,position:0
+#: field:product.images,position:0
 msgid "Position"
 msgstr "Posició"
 
@@ -106,22 +82,20 @@ msgid "6 - Import Products"
 msgstr "6 - Importa productes"
 
 #. module: magentoerpconnect
-#: field:external.shop.group,default_shop_id:0
-#: field:magerp.storeviews,default_shop_id:0
-msgid "Default Store (Group)"
-msgstr "Tenda per defecte (Grup)"
-
-#. module: magentoerpconnect
 #: field:magerp.product_attribute_set,magento_id:0
-#: field:sale.shop,group_id:0
 msgid "Magento ID"
 msgstr "ID Magento"
 
 #. module: magentoerpconnect
 #: field:product.product,tier_price:0
-#: field:product.product,x_magerp_tier_price:0
 msgid "Tier Price"
 msgstr "Escalat de preus"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/magerp_core.py:0
+#, python-format
+msgid "Connection Error"
+msgstr "Error de connexió"
 
 #. module: magentoerpconnect
 #: field:product.category,default_sort_by:0
@@ -129,7 +103,18 @@ msgid "Default Product Listing Sort (Sort By)"
 msgstr "Ordenació per defecte llistat productes (Ordena per)"
 
 #. module: magentoerpconnect
+#: help:res.partner,emailid:0
+msgid "Magento uses this email ID to correspond to the customer."
+msgstr "Magento utilitza aquest ID d'email per a relacionar-lo amb el client."
+
+#. module: magentoerpconnect
+#: model:payment.type,name:magentoerpconnect.payment_type_free
+msgid "Free"
+msgstr "Gratuït"
+
+#. module: magentoerpconnect
 #: field:product.category,create_date:0
+#: field:product.images,create_date:0
 msgid "Created date"
 msgstr "Data creació"
 
@@ -139,9 +124,9 @@ msgid "Filterable?"
 msgstr "Filtrable?"
 
 #. module: magentoerpconnect
-#: field:product.category,meta_title:0
-msgid "Title (Meta)"
-msgstr "Títol (Meta)"
+#: field:product.images,base_image:0
+msgid "Base Image"
+msgstr "Imatge base"
 
 #. module: magentoerpconnect
 #: model:ir.actions.act_window,name:magentoerpconnect.act_magerp_shop_form
@@ -160,6 +145,16 @@ msgid "Magento Order Address?"
 msgstr "Adreça comanda Magento?"
 
 #. module: magentoerpconnect
+#: field:product.tierprice,website_price:0
+msgid "Website Price"
+msgstr "Preu lloc web"
+
+#. module: magentoerpconnect
+#: field:product.category,magerp_stamp:0
+msgid "Magento stamp"
+msgstr "Marca data Magento"
+
+#. module: magentoerpconnect
 #: field:product.category,level:0
 msgid "Level"
 msgstr "Nivell"
@@ -175,6 +170,11 @@ msgid "Comparable?"
 msgstr "Comparable?"
 
 #. module: magentoerpconnect
+#: field:magerp.product_attributes,frontend_class:0
+msgid "Frontend Class"
+msgstr "Classe frontend"
+
+#. module: magentoerpconnect
 #: field:magerp.product_attribute_options,value:0
 msgid "Value"
 msgstr "Valor"
@@ -185,14 +185,35 @@ msgid "Products Only"
 msgstr "Només productes"
 
 #. module: magentoerpconnect
+#: model:payment.type,name:magentoerpconnect.payment_type_servired_standard
+msgid "Servired Standard"
+msgstr "Servired estàndard"
+
+#. module: magentoerpconnect
 #: view:product.category:0
 msgid "Meta Information"
 msgstr "Meta Informació"
 
 #. module: magentoerpconnect
+#: selection:magerp.sale.shop.payment.type,order_policy:0
+msgid "Payment Before Delivery"
+msgstr "Pagament abans de l'enviament"
+
+#. module: magentoerpconnect
 #: field:magerp.product_attributes,is_visible:0
 msgid "Visible?"
 msgstr "Visible?"
+
+#. module: magentoerpconnect
+#: field:magerp.sale.shop.payment.type,order_policy:0
+msgid "Shipping Policy"
+msgstr "Política de facturació"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/magerp_osv.py:0
+#, python-format
+msgid "Query Returned:%s"
+msgstr "Query retornada:%s"
 
 #. module: magentoerpconnect
 #: model:ir.ui.menu,name:magentoerpconnect.menu_magerp_attnsets_attributes
@@ -211,19 +232,36 @@ msgid "Email ID"
 msgstr "ID email"
 
 #. module: magentoerpconnect
+#: field:magerp.sale.shop.payment.type,shop_id:0
 #: field:magerp.storeviews,shop_id:0
 msgid "Shop"
 msgstr "Tenda"
 
 #. module: magentoerpconnect
-#: field:magerp.product_attributes,frontend_class:0
-msgid "Frontend Class"
-msgstr "Classe frontend"
+#: field:magerp.product_attributes,note:0
+msgid "Note"
+msgstr "Nota"
+
+#. module: magentoerpconnect
+#: model:magerp.product_product_type,name:magentoerpconnect.product_type_configurable
+msgid "Configurable Product"
+msgstr "Producte configurable"
+
+#. module: magentoerpconnect
+#: view:product.category:0
+#: field:product.category,display_mode:0
+msgid "Display Mode"
+msgstr "Mode visualització"
 
 #. module: magentoerpconnect
 #: field:magerp.product_attributes,backend_model:0
 msgid "Backend Model"
 msgstr "Model backend"
+
+#. module: magentoerpconnect
+#: constraint:product.category:0
+msgid "Error ! You can not create recursive categories."
+msgstr "Error! No podeu crear categories recursives."
 
 #. module: magentoerpconnect
 #: field:magerp.storeviews,name:0
@@ -236,9 +274,20 @@ msgid "Use Anchor"
 msgstr "Usa àncora"
 
 #. module: magentoerpconnect
-#: selection:magerp.product_attributes,frontend_input:0
-msgid "Gallery"
-msgstr "Galeria"
+#: selection:magerp.product_attributes,backend_type:0
+msgid "Datetime"
+msgstr "Data-hora"
+
+#. module: magentoerpconnect
+#: model:payment.type,name:magentoerpconnect.payment_type_ccsave
+msgid "Saved Credit Card"
+msgstr "Targeta de crèdit desada"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/product.py:0
+#, python-format
+msgid "Warning!"
+msgstr "Avís!"
 
 #. module: magentoerpconnect
 #: field:product.category,is_anchor:0
@@ -261,14 +310,36 @@ msgid "User Defined?"
 msgstr "Definit per l'usuari?"
 
 #. module: magentoerpconnect
-#: view:magerp.product_attribute_groups:0
-msgid "Magento Product Attribute groups"
-msgstr "Grups d'atributs"
+#: field:external.shop.group,referential_type:0
+msgid "External Referential Type"
+msgstr "Tipus referencia externa"
 
 #. module: magentoerpconnect
 #: field:res.partner,created_in:0
 msgid "Created in"
 msgstr "Creat en"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/sale.py:0
+#, python-format
+msgid "Invoice Created"
+msgstr "Factura creada"
+
+#. module: magentoerpconnect
+#: selection:product.category,display_mode:0
+msgid "Static Block Only"
+msgstr "Només bloc estàtic"
+
+#. module: magentoerpconnect
+#: field:sale.shop,default_storeview_integer_id:0
+msgid "Magento default Storeview ID"
+msgstr "Storeview ID per defecte de Magento"
+
+#. module: magentoerpconnect
+#: field:external.shop.group,default_shop_id:0
+#: field:external.shop.group,default_shop_integer_id:0
+msgid "Default Store"
+msgstr "Botiga per defecte"
 
 #. module: magentoerpconnect
 #: field:magerp.product_attributes,group:0
@@ -292,9 +363,9 @@ msgid "4 - Import Attribute Groups"
 msgstr "4 - Importa grups d'atributs"
 
 #. module: magentoerpconnect
-#: selection:magerp.product_attributes,backend_type:0
-msgid "Static"
-msgstr "Static"
+#: view:magerp.product_attribute_groups:0
+msgid "Magento Product Attribute groups"
+msgstr "Grups d'atributs"
 
 #. module: magentoerpconnect
 #: field:product.category,magento_exportable:0
@@ -302,9 +373,20 @@ msgid "Export to Magento"
 msgstr "Exporta a Magento"
 
 #. module: magentoerpconnect
-#: selection:magerp.product_attributes,backend_type:0
-msgid "Datetime"
-msgstr "Data-hora"
+#: view:external.shop.group:0
+#: model:ir.actions.act_window,name:magentoerpconnect.act_magerp_websites_form
+msgid "Magento websites"
+msgstr "Llocs web Magento"
+
+#. module: magentoerpconnect
+#: field:magerp.product_product_type,product_type:0
+msgid "Type"
+msgstr "Tipus"
+
+#. module: magentoerpconnect
+#: field:product.images,thumbnail:0
+msgid "Thumbnail"
+msgstr "Miniatura"
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_magerp_product_attribute_set
@@ -312,9 +394,36 @@ msgid "Attribute sets in products"
 msgstr "Conjunts d'atributs de productes"
 
 #. module: magentoerpconnect
-#: view:external.referential:0
-msgid "Product Attributes / Sets"
-msgstr "Atributs / Conjunts de productes"
+#: code:addons/magentoerpconnect/product.py:0
+#, python-format
+msgid "description"
+msgstr "Descripció"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/magerp_osv.py:0
+#, python-format
+msgid "Webservice Failure, sleeping 1 second before next attempt"
+msgstr "El webservice ha fallat, es reintentarà d'aquí 1 segon"
+
+#. module: magentoerpconnect
+#: help:external.referential,default_lang_id:0
+msgid "Choose the language which will be used for the Default Value in Magento"
+msgstr "Trieu l'idioma que utilitzareu per defecte a Magento."
+
+#. module: magentoerpconnect
+#: selection:magerp.sale.shop.payment.type,picking_policy:0
+msgid "Complete Delivery"
+msgstr "Enviament complet"
+
+#. module: magentoerpconnect
+#: view:product.product:0
+msgid "attributes_placeholder"
+msgstr "attributes_placeholder"
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_magerp_product_product_type
+msgid "magerp.product_product_type"
+msgstr "magerp.tipus_producte"
 
 #. module: magentoerpconnect
 #: field:magerp.product_attributes,is_used_for_price_rules:0
@@ -322,14 +431,24 @@ msgid "Used for pricing rules?"
 msgstr "Usat per a regles de preus?"
 
 #. module: magentoerpconnect
-#: field:sale.shop,storeview_ids:0
-msgid "Store Views"
-msgstr "Vistes botigues"
+#: selection:magerp.sale.shop.payment.type,invoice_quantity:0
+msgid "Ordered Quantities"
+msgstr "Quantitats ordenades"
+
+#. module: magentoerpconnect
+#: field:sale.shop,magento_root_category:0
+msgid "Root Category"
+msgstr "Categoria arrel"
 
 #. module: magentoerpconnect
 #: view:product.category:0
 msgid "Sorting method"
 msgstr "Mètode ordenació"
+
+#. module: magentoerpconnect
+#: model:magerp.product_product_type,name:magentoerpconnect.product_type_simple
+msgid "Simple Product"
+msgstr "Producte simple"
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_magerp_product_attribute_options
@@ -342,9 +461,10 @@ msgid "Category Image"
 msgstr "Imatge categoria"
 
 #. module: magentoerpconnect
-#: field:sale.shop,default_store_id:0
-msgid "Magento Store ID"
-msgstr "ID tenda Magento"
+#: view:magerp.product_product_type:0
+#: field:product.product,product_type:0
+msgid "Product Type"
+msgstr "Tipus de producte"
 
 #. module: magentoerpconnect
 #: selection:magerp.product_attributes,backend_type:0
@@ -358,15 +478,20 @@ msgid "Multi-Selection"
 msgstr "Multi-Selecció"
 
 #. module: magentoerpconnect
-#: selection:magerp.product_attributes,frontend_input:0
-msgid "Yes/No"
-msgstr "Si/No"
-
-#. module: magentoerpconnect
 #: model:ir.actions.act_window,name:magentoerpconnect.act_magerp_storeviews_form
 #: view:magerp.storeviews:0
 msgid "Magento storeviews"
 msgstr "Vistes botigues Magento"
+
+#. module: magentoerpconnect
+#: constraint:ir.cron:0
+msgid "Invalid arguments"
+msgstr "Arguments invàlids"
+
+#. module: magentoerpconnect
+#: selection:magerp.sale.shop.payment.type,order_policy:0
+msgid "Invoice on Order After Delivery"
+msgstr "Factura comanda després de l'enviament"
 
 #. module: magentoerpconnect
 #: constraint:ir.ui.view:0
@@ -390,10 +515,19 @@ msgid "Set Name"
 msgstr "Nom conjunt"
 
 #. module: magentoerpconnect
-#: view:product.category:0
-#: field:product.category,display_mode:0
-msgid "Display Mode"
-msgstr "Mode visualització"
+#: model:payment.type,name:magentoerpconnect.payment_type_bbva
+msgid "BBVA"
+msgstr "BBVA"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/magerp_core.py:0
+#, python-format
+msgid ""
+"Could not connect to server\n"
+"Check location, username & password."
+msgstr ""
+"No es pot connectar amb el servidor\n"
+"Reviseu la localització, usuari i contrasenya."
 
 #. module: magentoerpconnect
 #: field:res.partner,created_at:0
@@ -406,10 +540,35 @@ msgid "Magento Increment ID"
 msgstr "ID increment Magento"
 
 #. module: magentoerpconnect
+#: view:res.partner:0
+msgid "Store views"
+msgstr "Vistes de tenda"
+
+#. module: magentoerpconnect
+#: help:res.partner,mag_vat:0
+msgid "To be able to receive customer VAT number you must set it in Magento Admin Panel, menu System / Configuration / Client Configuration / Name and Address Options."
+msgstr "Per a poder rebre el número NIF/CIF del client heu de configurar-ho al Magento Admin Panel, menú Sistema / Configuració / Configuració del client / Opcions del Nom i Adreça."
+
+#. module: magentoerpconnect
+#: model:ir.ui.menu,name:magentoerpconnect.menu_magerp_core_storeviews
+msgid "Magento Store Views"
+msgstr "Vistes botigues Magento"
+
+#. module: magentoerpconnect
+#: selection:magerp.product_attributes,backend_type:0
+msgid "Varchar"
+msgstr "Varchar"
+
+#. module: magentoerpconnect
 #: field:external.referential,attribute_sets:0
 #: model:ir.ui.menu,name:magentoerpconnect.menu_magerp_attnsets_sets
 msgid "Attribute Sets"
 msgstr "Conjunts d'atributs"
+
+#. module: magentoerpconnect
+#: field:product.images,sync_status:0
+msgid "Sync Status"
+msgstr "Estat de la sincronització"
 
 #. module: magentoerpconnect
 #: selection:magerp.product_attributes,frontend_input:0
@@ -437,6 +596,12 @@ msgid "Last Name"
 msgstr "Últim nom"
 
 #. module: magentoerpconnect
+#: code:addons/magentoerpconnect/magerp_osv.py:0
+#, python-format
+msgid "Webservice Failure, sleeping 3 seconds before next attempt"
+msgstr "El webservice ha fallat, es reintentarà d'aquí 3 segons"
+
+#. module: magentoerpconnect
 #: field:product.category,image:0
 msgid "Image"
 msgstr "Imatge"
@@ -449,6 +614,11 @@ msgid "Attribute Set"
 msgstr "Conjunt d'atributs"
 
 #. module: magentoerpconnect
+#: field:res.partner,mag_vat:0
+msgid "Magento VAT"
+msgstr "CIF/NIF Magento"
+
+#. module: magentoerpconnect
 #: help:external.referential,default_pro_cat:0
 msgid ""
 "Products imported from magento may have many categories.\n"
@@ -458,9 +628,9 @@ msgstr ""
 "OpenERP requereix que els productes tinguin una categoria específica per a facilitar la facturació, etc."
 
 #. module: magentoerpconnect
-#: field:external.shop.group,default_group_id:0
-msgid "Default Store Group"
-msgstr "Grup de botigues per defecte"
+#: selection:magerp.product_attributes,backend_type:0
+msgid "Static"
+msgstr "Static"
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_magerp_product_attribute_groups
@@ -493,9 +663,20 @@ msgid "Attributes of products"
 msgstr "Atributs de productes"
 
 #. module: magentoerpconnect
+#: code:addons/magentoerpconnect/magerp_osv.py:0
+#, python-format
+msgid "Webservice Failure, sleeping 6 seconds before next attempt"
+msgstr "El webservice ha fallat, es reintentarà d'aquí 6 segons"
+
+#. module: magentoerpconnect
 #: field:magerp.product_attributes,frontend_input:0
 msgid "Frontend Input"
 msgstr "Entrada frontend"
+
+#. module: magentoerpconnect
+#: help:product.product,websites_ids:0
+msgid "By defaut product will be exported on every website, if you want to exporte it only on some website select them here"
+msgstr "Per defecte el producte s'exportarà a tots els llocs webs. Si només voleu exportar a un tenda en concret seleccioneu la tenda a exportar."
 
 #. module: magentoerpconnect
 #: field:product.category,is_active:0
@@ -514,9 +695,10 @@ msgid "Group"
 msgstr "Grup"
 
 #. module: magentoerpconnect
-#: field:external.shop.group,is_default:0
-msgid "Is Active?"
-msgstr "Està actiu?"
+#: field:res.partner,store_ids:0
+#: field:sale.shop,storeview_ids:0
+msgid "Store Views"
+msgstr "Vistes botigues"
 
 #. module: magentoerpconnect
 #: model:ir.module.module,description:magentoerpconnect.module_meta_information
@@ -524,9 +706,10 @@ msgid "Magento E-commerce management\n"
 msgstr "Gestió comerç electrònic Magento\n"
 
 #. module: magentoerpconnect
-#: field:product.category,magerp_stamp:0
-msgid "Magento stamp"
-msgstr "Marca data Magento"
+#: code:addons/magentoerpconnect/magerp_osv.py:0
+#, python-format
+msgid "Magento Connection"
+msgstr "Connexió Magento"
 
 #. module: magentoerpconnect
 #: constraint:product.template:0
@@ -534,9 +717,16 @@ msgid "Error: The default UOM and the purchase UOM must be in the same category.
 msgstr "Error: La UdM per defecte i la UdM de compra han d'estar en la mateixa categoria."
 
 #. module: magentoerpconnect
-#: field:magerp.product_attributes,note:0
-msgid "Note"
-msgstr "Nota"
+#: view:magerp.sale.shop.payment.type:0
+#: field:magerp.sale.shop.payment.type,payment_type_id:0
+#: field:sale.shop,payment_types:0
+msgid "Payment Type"
+msgstr "Tipus de pagament"
+
+#. module: magentoerpconnect
+#: model:magerp.product_product_type,name:magentoerpconnect.product_type_grouped
+msgid "Grouped Product"
+msgstr "Producte agrupat"
 
 #. module: magentoerpconnect
 #: view:magerp.product_attribute_groups:0
@@ -549,16 +739,29 @@ msgid "Quantity Slab"
 msgstr "Quantitat tram"
 
 #. module: magentoerpconnect
+#: code:addons/magentoerpconnect/product.py:0
 #: view:product.category:0
 #: view:res.partner:0
 #: view:res.partner.category:0
+#: view:sale.shop:0
+#, python-format
 msgid "Magento Information"
 msgstr "Informació Magento"
 
 #. module: magentoerpconnect
-#: field:res.partner,store_id:0
-msgid "Last Store View"
-msgstr "Última vista tenda"
+#: selection:magerp.sale.shop.payment.type,order_policy:0
+msgid "Shipping & Manual Invoice"
+msgstr "Envia & Factura manual"
+
+#. module: magentoerpconnect
+#: selection:magerp.product_attributes,frontend_input:0
+msgid "Yes/No"
+msgstr "Si/No"
+
+#. module: magentoerpconnect
+#: model:payment.type,name:magentoerpconnect.payment_type_cofidis
+msgid "Cofidis"
+msgstr "Cofidis"
 
 #. module: magentoerpconnect
 #: field:magerp.product_attributes,is_searchable:0
@@ -578,19 +781,55 @@ msgid "3 - Import Product Attribute Sets"
 msgstr "3 - Importa conjunts d'atributs de producte"
 
 #. module: magentoerpconnect
+#: field:magerp.sale.shop.payment.type,picking_policy:0
+msgid "Packing Policy"
+msgstr "Política d'enviament"
+
+#. module: magentoerpconnect
 #: field:product.tierprice,group_scope:0
 msgid "unknown"
 msgstr "desconegut"
 
 #. module: magentoerpconnect
-#: view:product.product:0
-msgid "attributes_placeholder"
-msgstr "attributes_placeholder"
+#: view:sale.shop:0
+msgid "Update Images"
+msgstr "Imatges publicades"
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_product_tierprice
+msgid "Implements magento tier pricing"
+msgstr "Implementa escalats de preus Magento"
+
+#. module: magentoerpconnect
+#: field:res.partner,store_id:0
+msgid "Last Store View"
+msgstr "Última vista tenda"
+
+#. module: magentoerpconnect
+#: help:product.images,mage_file:0
+msgid "Filled when uploaded or synchronised"
+msgstr "S'omple quan es carrega o es sincronitza."
+
+#. module: magentoerpconnect
+#: field:res.partner,mag_birthday:0
+msgid "Birthday"
+msgstr "Data naixement"
+
+#. module: magentoerpconnect
+#: field:product.product,magento_sku:0
+msgid "Magento SKU"
+msgstr "Codi Magento"
 
 #. module: magentoerpconnect
 #: field:external.referential,default_pro_cat:0
 msgid "Default Product Category"
 msgstr "Categoria producte per defecte"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/product.py:0
+#, python-format
+msgid "short description"
+msgstr "Descripció curta"
 
 #. module: magentoerpconnect
 #: selection:magerp.product_attributes,frontend_input:0
@@ -613,6 +852,28 @@ msgid "Set if the category underwent a change & has to be synched."
 msgstr "Indica si la categoria ha d'estar sincronitzada si es produeix un canvi."
 
 #. module: magentoerpconnect
+#: field:magerp.product_attributes,is_visible_on_front:0
+msgid "Visible (Front)?"
+msgstr "Visible (frontend)?"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/magerp_osv.py:0
+#, python-format
+msgid ""
+"Method: %s\n"
+"Arguments:%s\n"
+"Error:%s"
+msgstr ""
+"Mètode: %s\n"
+"Arguments: %s\n"
+"Error:%s"
+
+#. module: magentoerpconnect
+#: field:product.category,meta_title:0
+msgid "Title (Meta)"
+msgstr "Títol (Meta)"
+
+#. module: magentoerpconnect
 #: field:magerp.storeviews,lang_id:0
 msgid "Language"
 msgstr "Idioma"
@@ -621,6 +882,11 @@ msgstr "Idioma"
 #: field:magerp.product_attribute_groups,default_id:0
 msgid "Default"
 msgstr "Per defecte"
+
+#. module: magentoerpconnect
+#: selection:magerp.product_attributes,frontend_input:0
+msgid "Gallery"
+msgstr "Galeria"
 
 #. module: magentoerpconnect
 #: selection:magerp.product_attributes,backend_type:0
@@ -646,14 +912,19 @@ msgid "Unique?"
 msgstr "Únic?"
 
 #. module: magentoerpconnect
-#: field:magerp.product_attributes,is_visible_on_front:0
-msgid "Visible (Front)?"
-msgstr "Visible (frontend)?"
+#: model:magerp.product_product_type,name:magentoerpconnect.product_type_bundle
+msgid "Bundle Product"
+msgstr "Producte compost"
 
 #. module: magentoerpconnect
-#: model:ir.model,name:magentoerpconnect.model_product_tierprice
-msgid "Implements magento tier pricing"
-msgstr "Implementa escalats de preus Magento"
+#: model:ir.model,name:magentoerpconnect.model_magerp_sale_shop_payment_type
+msgid "Magento Sale Shop Payment Type"
+msgstr "Tipus de pagament botigues Magento"
+
+#. module: magentoerpconnect
+#: view:product.category:0
+msgid "Display Settings"
+msgstr "Valors visualització"
 
 #. module: magentoerpconnect
 #: view:magerp.product_attribute_set:0
@@ -669,6 +940,11 @@ msgstr "Productes indica que es mostraran els productes corresponents a la categ
 #: field:magerp.product_attributes,backend_type:0
 msgid "Backend Type"
 msgstr "Tipus backend"
+
+#. module: magentoerpconnect
+#: model:magerp.product_product_type,name:magentoerpconnect.product_type_virtual
+msgid "Virtual Product"
+msgstr "Producte virtual"
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_magerp_storeviews
@@ -698,9 +974,9 @@ msgid "To synchronize"
 msgstr "A sincronitzar"
 
 #. module: magentoerpconnect
-#: selection:product.category,display_mode:0
-msgid "Static Block Only"
-msgstr "Només bloc estàtic"
+#: model:payment.type,name:magentoerpconnect.payment_type_cashondelivery
+msgid "Cash On Delivery"
+msgstr "Contra reemborsament"
 
 #. module: magentoerpconnect
 #: field:product.category,magento_parent_id:0
@@ -718,6 +994,11 @@ msgid "Open ERP Field name"
 msgstr "Nom camp OpenERP"
 
 #. module: magentoerpconnect
+#: model:payment.type,name:magentoerpconnect.payment_type_googlecheckout
+msgid "Google Checkout"
+msgstr "Google Checkout"
+
+#. module: magentoerpconnect
 #: field:sale.order,magento_storeview_id:0
 msgid "Magento Store View"
 msgstr "Vista tenda Magento"
@@ -733,14 +1014,25 @@ msgid "Customer Group"
 msgstr "Grup client"
 
 #. module: magentoerpconnect
+#: field:product.images,exclude:0
+msgid "Exclude"
+msgstr "Excloure"
+
+#. module: magentoerpconnect
 #: field:magerp.product_attributes,is_visible_in_advanced_search:0
 msgid "Visible in advanced search?"
 msgstr "Visible en cerca avançada?"
 
 #. module: magentoerpconnect
-#: field:sale.shop,magento_root_category:0
-msgid "Root Category"
-msgstr "Categoria arrel"
+#: code:addons/magentoerpconnect/magerp_osv.py:0
+#, python-format
+msgid "Webservice Failure, sleeping 6 second before next attempt"
+msgstr "Webservice ha fallat, es reintentarà d'aquí 6 segons"
+
+#. module: magentoerpconnect
+#: field:sale.shop,default_storeview_id:0
+msgid "Default Storeview"
+msgstr "Storeview per defecte"
 
 #. module: magentoerpconnect
 #: field:res.partner.category,tax_class_id:0
@@ -774,6 +1066,12 @@ msgid "Use Config Settings"
 msgstr "Usa valors configuració"
 
 #. module: magentoerpconnect
+#: code:addons/magentoerpconnect/magerp_osv.py:0
+#, python-format
+msgid "Undefined List method !"
+msgstr "El mètode list no està definit!"
+
+#. module: magentoerpconnect
 #: model:ir.actions.act_window,name:magentoerpconnect.act_magerp_product_attribute_groups_form
 msgid "Magento Product Attribute Groups"
 msgstr "Grups d'atributs"
@@ -795,9 +1093,15 @@ msgid "Attribute Set Information"
 msgstr "Informació conjunt d'atributs"
 
 #. module: magentoerpconnect
-#: model:ir.ui.menu,name:magentoerpconnect.menu_magerp_core_storeviews
-msgid "Magento Store Views"
-msgstr "Vistes botigues Magento"
+#: code:addons/magentoerpconnect/magerp_osv.py:0
+#, python-format
+msgid "Magento Call"
+msgstr "Crida Magento"
+
+#. module: magentoerpconnect
+#: model:payment.type,name:magentoerpconnect.payment_type_paypal_standard
+msgid "Paypal Standard"
+msgstr "Paypal estàndard"
 
 #. module: magentoerpconnect
 #: field:magerp.product_attributes,entity_type_id:0
@@ -805,10 +1109,31 @@ msgid "Entity Type"
 msgstr "Tipus entitat"
 
 #. module: magentoerpconnect
+#: help:res.partner,store_id:0
+msgid "Last store view where the customer has bought."
+msgstr "Última vista de tenda a on el client ha comprat."
+
+#. module: magentoerpconnect
+#: model:ir.actions.act_window,name:magentoerpconnect.act_magerp_product_type_form
+#: model:ir.ui.menu,name:magentoerpconnect.menu_magerp_product_type
+msgid "Product Types"
+msgstr "Tipus de producte"
+
+#. module: magentoerpconnect
 #: field:product.category,meta_keywords:0
-#: field:product.product,x_magerp_meta_keyword:0
 msgid "Meta Keywords"
 msgstr "Meta Paraules clau"
+
+#. module: magentoerpconnect
+#: model:payment.type,name:magentoerpconnect.payment_type_paybox_system
+msgid "Paybox System"
+msgstr "Paybox"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/magerp_osv.py:0
+#, python-format
+msgid "Login Successful"
+msgstr "Identificació realitzada correctament"
 
 #. module: magentoerpconnect
 #: model:ir.ui.menu,name:magentoerpconnect.menu_magerp_attnsets_attribute_groups
@@ -826,10 +1151,9 @@ msgid "Product"
 msgstr "Producte"
 
 #. module: magentoerpconnect
-#: view:external.shop.group:0
-#: model:ir.actions.act_window,name:magentoerpconnect.act_magerp_websites_form
-msgid "Magento websites"
-msgstr "Llocs web Magento"
+#: view:external.referential:0
+msgid "Product Attributes / Sets"
+msgstr "Atributs / Conjunts de productes"
 
 #. module: magentoerpconnect
 #: model:ir.module.module,shortdesc:magentoerpconnect.module_meta_information
@@ -875,19 +1199,35 @@ msgid "Magento REF"
 msgstr "REF Magento"
 
 #. module: magentoerpconnect
+#: code:addons/magentoerpconnect/magerp_osv.py:0
+#, python-format
+msgid "list method is undefined for this object!"
+msgstr "El mètode list no està definit per aquest objecte!"
+
+#. module: magentoerpconnect
 #: help:product.category,is_active:0
 msgid "Indicates whether active in magento"
-msgstr "Indica si està actiu en Magento"
+msgstr "Indica si està actiu a Magento."
 
 #. module: magentoerpconnect
-#: field:product.tierprice,website_price:0
-msgid "Website Price"
-msgstr "Preu lloc web"
+#: field:sale.shop,magento_shop:0
+msgid "Magento Shop"
+msgstr "Botiga Magento"
 
 #. module: magentoerpconnect
-#: field:product.product,magento_sku:0
-msgid "Magento SKU"
-msgstr "Codi Magento"
+#: field:product.images,mage_file:0
+msgid "Magento File Name"
+msgstr "Magento nom fitxer"
+
+#. module: magentoerpconnect
+#: selection:magerp.sale.shop.payment.type,order_policy:0
+msgid "Invoice from the Packing"
+msgstr "Factura des d'albarà"
+
+#. module: magentoerpconnect
+#: model:payment.type,name:magentoerpconnect.payment_type_checkmo
+msgid "Check / Money Order"
+msgstr "Transferència bancària"
 
 #. module: magentoerpconnect
 #: model:ir.actions.act_window,name:magentoerpconnect.act_magerp_instances_form
@@ -901,9 +1241,16 @@ msgid "Core Settings"
 msgstr "Configuracions bàsiques"
 
 #. module: magentoerpconnect
-#: field:sale.shop,website_id:0
-msgid "Magento Website ID"
-msgstr "ID lloc web Magento"
+#: code:addons/magentoerpconnect/magerp_osv.py:0
+#, python-format
+msgid "Calling Method:%s,Arguments:%s"
+msgstr "Mètode de crida:%s, Arguments:%s"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/magerp_osv.py:0
+#, python-format
+msgid "Attempting connection with Settings:%s,%s,%s"
+msgstr "Intent de connexió amb:%s,%s,%s"
 
 #. module: magentoerpconnect
 #: field:magerp.product_product_type,name:0
@@ -911,6 +1258,11 @@ msgstr "ID lloc web Magento"
 #: selection:product.category,default_sort_by:0
 msgid "Name"
 msgstr "Nom"
+
+#. module: magentoerpconnect
+#: field:magerp.sale.shop.payment.type,invoice_quantity:0
+msgid "Invoice on"
+msgstr "Factura"
 
 #. module: magentoerpconnect
 #: selection:product.tierprice,group_scope:0
@@ -924,6 +1276,11 @@ msgid "Magento Product Attributes"
 msgstr "Atributs de producte"
 
 #. module: magentoerpconnect
+#: selection:magerp.sale.shop.payment.type,invoice_quantity:0
+msgid "Shipped Quantities"
+msgstr "Quantitats enviades"
+
+#. module: magentoerpconnect
 #: field:magerp.product_attribute_groups,attribute_set_id:0
 msgid "Attribute Set ID"
 msgstr "ID conjunt d'atributs"
@@ -934,14 +1291,41 @@ msgid "Default ?"
 msgstr "Per defecte"
 
 #. module: magentoerpconnect
-#: field:external.shop.group,default_lang_id:0
+#: field:external.referential,default_lang_id:0
 msgid "Default Language"
 msgstr "Idioma per defecte"
 
 #. module: magentoerpconnect
 #: view:external.referential:0
+#: field:product.product,websites_ids:0
 msgid "Websites"
 msgstr "Llocs web"
+
+#. module: magentoerpconnect
+#: model:magerp.product_product_type,name:magentoerpconnect.product_type_downloadable
+msgid "Downloadable Product"
+msgstr "Producte descarregable"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/product.py:0
+#, python-format
+msgid ""
+"They are some products related to Magento. They can not be deleted!\n"
+"You can change their Magento status to \"Disabled\" and uncheck the active box to hide them from OpenERP."
+msgstr ""
+"Hi han alguns productes relacionats amb Magento. No es poden eliminar!\n"
+"Podeu canviar l'estat del producte a Magento a \"Desactivat\" a la pestanya \"Informació Magento\" i desactivar l'opció  \"Actiu\" a la fitxa del producte per amagar-lo a OpenERP."
+
+#. module: magentoerpconnect
+#: model:payment.type,name:magentoerpconnect.payment_type_paypayl_express
+msgid "Paypal Express"
+msgstr "Paypal Express"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/magerp_osv.py:0
+#, python-format
+msgid "Error in connecting"
+msgstr "Error al connectar-se"
 
 #. module: magentoerpconnect
 #: field:magerp.product_attributes,magento_id:0
@@ -949,12 +1333,19 @@ msgid "ID"
 msgstr "ID"
 
 #. module: magentoerpconnect
+#: help:res.partner,mag_birthday:0
+msgid "To be able to receive customer birthday you must set it in Magento Admin Panel, menu System / Configuration / Client Configuration / Name and Address Options."
+msgstr "Per a poder rebre la data de naixement del client heu de configurar-ho al Magento Admin Panel, menú Sistema / Configuració / Configuració del client / Opcions del Nom i Adreça."
+
+#. module: magentoerpconnect
 #: field:product.category,meta_description:0
-#: field:product.product,x_magerp_meta_description:0
-#: view:product.product:0
-#: view:product.template:0
 msgid "Meta Description"
 msgstr "Meta Descripció"
+
+#. module: magentoerpconnect
+#: help:magerp.product_product_type,product_type:0
+msgid "Use the same name of Magento product type, for example 'simple'."
+msgstr "Useu el mateix nom del tipus de producte Magento, per exemple 'simple'."
 
 #. module: magentoerpconnect
 #: view:product.category:0
@@ -962,9 +1353,21 @@ msgid "Anchored categories will display all products associated to all child cat
 msgstr "L'àncora en una categoria mostrarà tots els productes associats a totes les categories filles (i filles de filles, i filles de filles de filles, etc) en la pàgina d'aquesta categoria, junt amb els productes associats directament a la categoria."
 
 #. module: magentoerpconnect
+#: code:addons/magentoerpconnect/magerp_osv.py:0
+#, python-format
+msgid "Webservice Failure, sleeping 3 second before next attempt"
+msgstr "Webservice ha fallat, es reintentarà d'aquí 3 segons"
+
+#. module: magentoerpconnect
+#: field:sale.shop,auto_import:0
+msgid "Automatic Import"
+msgstr "Importació automàtica"
+
+#. module: magentoerpconnect
 #: field:product.category,write_date:0
+#: field:product.images,write_date:0
 msgid "Updated date"
-msgstr "Data actualització"
+msgstr "Data publicat"
 
 #. module: magentoerpconnect
 #: field:magerp.product_attribute_options,attribute_name:0
@@ -987,9 +1390,14 @@ msgid "Error: Invalid ean code"
 msgstr "Error: Codi EAN no vàlid"
 
 #. module: magentoerpconnect
-#: help:external.shop.group,default_lang_id:0
-msgid "Magento website wise default locale if different from English"
-msgstr "El lloc web Magento requereix locale per defecte si és diferent de l'anglès."
+#: code:addons/magentoerpconnect/product.py:0
+#, python-format
+msgid ""
+"This product is related to Magento. It can not be deleted!\n"
+"You can change it Magento status to \"Disabled\" and uncheck the active box to hide it from OpenERP."
+msgstr ""
+"Aquest producte està relacionat amb Magento. No es pot eliminar!\n"
+"Podeu canviar l'estat del producte a Magento a \"Desactivat\" a la pestanya \"Informació Magento\" i desactivar l'opció  \"Actiu\" a la fitxa del producte per amagar-lo a OpenERP."
 
 #. module: magentoerpconnect
 #: field:sale.order,magento_payment_method:0
@@ -1007,260 +1415,9 @@ msgid "Configurable?"
 msgstr "Configurable?"
 
 #. module: magentoerpconnect
-#: view:product.category:0
-msgid "Display Settings"
-msgstr "Valors visualització"
-
-#. module: magentoerpconnect
-#: field:product.product,product_type:0
-#: view:magerp.product_product_type:0
-msgid "Product Type"
-msgstr "Tipus de producte"
-
-#. module: magentoerpconnect
-#: field:magerp.product_product_type,product_type:0
-msgid "Type"
-msgstr "Tipus"
-
-#. module: magentoerpconnect
-#: help:magerp.product_product_type,product_type:0
-msgid "Use the same name of Magento product type, for example 'simple'."
-msgstr "Useu el mateix nom del tipus de producte Magento, per exemple 'simple'."
-
-#. module: magentoerpconnect
-#: model:ir.actions.act_window,name:magentoerpconnect.act_magerp_product_type_form
-#: model:ir.ui.menu,name:magentoerpconnect.menu_magerp_product_type
-msgid "Product Types"
-msgstr "Tipus de producte"
-
-#. module: magentoerpconnect
-#: model:ir.model,name:magentoerpconnect.model_magerp_product_product_type
-msgid "magerp.product_product_type"
-msgstr "magerp.tipus_producte"
-
-#. module: magentoerpconnect
-#: model:magerp.product_product_type,name:magentoerpconnect.product_type_simple
-msgid "Simple Product"
-msgstr "Producte simple"
-
-#. module: magentoerpconnect
-#: model:magerp.product_product_type,name:magentoerpconnect.product_type_grouped
-msgid "Grouped Product"
-msgstr "Producte agrupat"
-
-#. module: magentoerpconnect
-#: model:magerp.product_product_type,name:magentoerpconnect.product_type_bundle
-msgid "Bundle Product"
-msgstr "Producte compost"
-
-#. module: magentoerpconnect
-#: model:magerp.product_product_type,name:magentoerpconnect.product_type_virtual
-msgid "Virtual Product"
-msgstr "Producte virtual"
-
-#. module: magentoerpconnect
-#: model:magerp.product_product_type,name:magentoerpconnect.product_type_configurable
-msgid "Configurable Product"
-msgstr "Producte configurable"
-
-#. module: magentoerpconnect
-#: model:magerp.product_product_type,name:magentoerpconnect.product_type_downloadable
-msgid "Downloadable Product"
-msgstr "Producte descarregable"
-
-#. module: magentoerpconnect
-#: model:payment.type,name:magentoerpconnect.payment_type_free
-msgid "Free"
-msgstr "Gratuït"
-
-#. module: magentoerpconnect
-#: model:payment.type,name:magentoerpconnect.payment_type_servired_standard
-msgid "Servired Standard"
-msgstr "Servired estàndard"
-
-#. module: magentoerpconnect
-#: model:payment.type,name:magentoerpconnect.payment_type_ccsave
-msgid "Saved Credit Card"
-msgstr "Targetes de crèdit desades"
-
-#. module: magentoerpconnect
-#: model:payment.type,name:magentoerpconnect.payment_type_cashondelivery
-msgid "Cash On Delivery"
-msgstr "Contra reemborsament"
-
-#. module: magentoerpconnect
-#: model:payment.type,name:magentoerpconnect.payment_type_googlecheckout
-msgid "Google Checkout"
-msgstr "Google Checkout"
-
-#. module: magentoerpconnect
-#: model:payment.type,name:magentoerpconnect.payment_type_paypal_standard
-msgid "Paypal Standard"
-msgstr "Paypal estàndard"
-
-#. module: magentoerpconnect
-#: model:payment.type,name:magentoerpconnect.payment_type_paybox_system
-msgid "Paybox System"
-msgstr "Paybox"
-
-#. module: magentoerpconnect
-#: model:payment.type,name:magentoerpconnect.payment_type_checkmo
-msgid "Check / Money Order"
-msgstr "Transferència bancària"
-
-#. module: magentoerpconnect
-#: model:payment.type,name:magentoerpconnect.payment_type_paypayl_express
-msgid "Paypal Express"
-msgstr "Paypal Express"
-
-#. module: magentoerpconnect
-#: model:payment.type,name:magentoerpconnect.payment_type_bbva
-msgid "BBVA"
-msgstr "BBVA"
-
-#. module: magentoerpconnect
-#: model:payment.type,name:magentoerpconnect.payment_type_cofidis
-msgid "Cofidis"
-msgstr "Cofidis"
-
-#. module: magentoerpconnect
-#: view:magerp.sale.shop.payment.type:0
-#: field:magerp.sale.shop.payment.type,payment_type_id:0
-#: field:sale.shop,payment_types:0
-msgid "Payment Type"
-msgstr "Tipus de pagament"
-
-#. module: magentoerpconnect
-#: model:ir.model,name:magentoerpconnect.model_magerp_sale_shop_payment_type
-msgid "Magento Sale Shop Payment Type"
-msgstr "Tipus de pagament botigues Magento"
-
-#. module: magentoerpconnect
-#: field:product.images,base_image:0
-msgid "Base Image"
-msgstr "Imatge base"
-
-#. module: magentoerpconnect
-#: field:product.images,small_image:0
-msgid "Small Image"
-msgstr "Imatge petita"
-
-#. module: magentoerpconnect
-#: field:product.images,thumbnail:0
-msgid "Thumbnail"
-msgstr "Miniatura"
-
-#. module: magentoerpconnect
-#: field:product.category,image:0
-msgid "Image"
-msgstr "Imatge"
-
-#. module: magentoerpconnect
-#: field:product.images,sync_status:0
-msgid "Sync Status"
-msgstr "Estat de la sincronització"
-
-#. module: magentoerpconnect
-#: view:sale.shop:0
-msgid "Update Images"
-msgstr "Imatges publicades"
-
-#. module: magentoerpconnect
-#: help:product.images,mage_file:0
-msgid "Filled when uploaded or synchronised"
-msgstr "Cobrir quan carregar o sincronitzada"
-
-#. module: magentoerpconnect
-#: field:product.images,exclude:0
-msgid "Exclude"
-msgstr "Excloure"
-
-#. module: magentoerpconnect
-#: field:product.images,mage_file:0
-msgid "Magento File Name"
-msgstr "Magento nom fitxer"
-
-#. module: magentoerpconnect
-#: field:product.category,write_date:0
-#: field:product.images,write_date:0
-msgid "Updated date"
-msgstr "Data publicat"
-
-#. module: magentoerpconnect
-#: field:magerp.product_attributes,position:0
-#: field:product.images,position:0
-msgid "Position"
-msgstr "Possició"
-
-#. module: magentoerpconnect
-#: selection:magerp.sale.shop.payment.type,picking_policy:0
-msgid "Partial Delivery"
-msgstr "Enviament parcial"
-
-#. module: magentoerpconnect
-#: selection:magerp.sale.shop.payment.type,order_policy:0
-msgid "Payment Before Delivery"
-msgstr "Pagament abans de l'enviament"
-
-#. module: magentoerpconnect
-#: field:magerp.sale.shop.payment.type,order_policy:0
-msgid "Shipping Policy"
-msgstr "Política de facturació"
-
-#. module: magentoerpconnect
-#: model:product.template,description:magentoerpconnect.product_product_shipping_product_template
-msgid "description"
-msgstr "Descripció"
-
-#. module: magentoerpconnect
-#: selection:magerp.sale.shop.payment.type,picking_policy:0
-msgid "Complete Delivery"
-msgstr "Enviament complet"
-
-#. module: magentoerpconnect
-#: selection:magerp.sale.shop.payment.type,invoice_quantity:0
-msgid "Ordered Quantities"
-msgstr "Quantitats ordenades"
-
-#. module: magentoerpconnect
-#: selection:magerp.sale.shop.payment.type,order_policy:0
-msgid "Invoice on Order After Delivery"
-msgstr "Factura comanda després de l'enviament"
-
-#. module: magentoerpconnect
-#: help:res.partner,mag_vat:0
-msgid "To be able to receive customer VAT number you must set it in Magento Admin Panel, menu System / Configuration / Client Configuration / Name and Address Options."
-msgstr "Per a poder rebre el número NIF/CIF del client heu de configurar-ho al Magento Admin Panel, menú Sistema / Configuració / Configuració del client / Opcions del Nom i Adreça."
-
-#. module: magentoerpconnect
-#: selection:magerp.sale.shop.payment.type,order_policy:0
-msgid "Shipping & Manual Invoice"
-msgstr "Envia & Factura manual"
-
-#. module: magentoerpconnect
-#: field:magerp.sale.shop.payment.type,picking_policy:0
-msgid "Packing Policy"
-msgstr "Política d'enviament"
-
-#. module: magentoerpconnect
-#: model:product.template,description_sale:magentoerpconnect.product_product_shipping_product_template
-msgid "short description"
-msgstr "Descripció curta"
-
-#. module: magentoerpconnect
-#: selection:magerp.sale.shop.payment.type,order_policy:0
-msgid "Invoice from the Packing"
-msgstr "Factura des d'albarà"
-
-#. module: magentoerpconnect
-#: field:magerp.sale.shop.payment.type,invoice_quantity:0
-msgid "Invoice on"
-msgstr "Factura"
-
-#. module: magentoerpconnect
-#: selection:magerp.sale.shop.payment.type,invoice_quantity:0
-msgid "Shipped Quantities"
-msgstr "Quantitats enviades"
+#: field:sale.shop,last_products_export_date:0
+msgid "Last Product Export  Time"
+msgstr "Data última exportació productes"
 
 #. module: magentoerpconnect
 #: field:product.product,x_magerp_manufacturer:0
@@ -1407,57 +1564,43 @@ msgstr "Disseny pàgina"
 msgid "Display product options in"
 msgstr "Mostra opcions del producte en"
 
-#. module: product
+#. module: magentoerpconnect
+#: field:product.product,tier_price:0
+#: field:product.product,x_magerp_tier_price:0
+msgid "Tier Price"
+msgstr "Escalat de preus"
+
+#. module: magentoerpconnect
+#: field:product.category,meta_keywords:0
+#: field:product.product,x_magerp_meta_keyword:0
+msgid "Meta Keywords"
+msgstr "Meta Paraules clau"
+
+#. module: magentoerpconnect
+#: field:product.category,meta_description:0
+#: field:product.product,x_magerp_meta_description:0
 #: view:product.product:0
 #: view:product.template:0
-msgid "Magento Information"
-msgstr "Info. Magento"
+msgid "Meta Description"
+msgstr "Meta Descripció"
 
 #. module: product
 #: view:product.product:0
-#: view:product.template:0
 msgid "Design"
 msgstr "Disseny"
 
 #. module: product
 #: view:product.product:0
-#: view:product.template:0
-msgid "Meta Information"
-msgstr "Meta Informació"
-
-#. module: product
-#: view:product.product:0
-#: view:product.template:0
 msgid "Prices"
 msgstr "Preus"
 
 #. module: product
 #: view:product.product:0
-#: view:product.template:0
 msgid "General"
 msgstr "General"
 
 #. module: product
 #: view:product.product:0
-#: view:product.template:0
 msgid "Images"
 msgstr "Imatges"
-
-#. module: product
-#: view:product.product:0
-#: view:product.template:0
-msgid "Custom Layout Update"
-msgstr "Actualització disseny a mida"
-
-#. module: product
-#: view:product.product:0
-#: view:product.template:0
-msgid "Meta Keywords"
-msgstr "Meta Paraules clau"
-
-#. module: product
-#: view:product.product:0
-#: view:product.template:0
-msgid "Meta Description"
-msgstr "Meta Descripció"
 
