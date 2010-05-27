@@ -680,6 +680,28 @@ class product_product(magerp_osv.magerp_osv):
         #Perform other operations
         return crid
 
+    def unlink(self, cr, uid, ids, context={}):
+        #if product is mapped to magento, not delete it
+        not_delete = False
+        sale_obj = self.pool.get('sale.shop')
+        search_params = [
+            ('magento_shop', '=', True),
+        ]
+        shops_ids = sale_obj.search(cr, uid, search_params)
+
+        for shop in sale_obj.browse(cr, uid, shops_ids, context):
+            for product_id in ids:
+                mgn_product = self.oeid_to_extid(cr, uid, product_id, shop.referential_id.id)
+                if mgn_product:
+                    not_delete = True
+                    break
+        if not_delete:
+            if len(ids) > 1:
+                raise osv.except_osv(_('Warning!'), _('They are some products related to Magento. They can not be deleted!\nYou can change their Magento status to "Disabled" and uncheck the active box to hide them from OpenERP.'))
+            else:
+                raise osv.except_osv(_('Warning!'), _('This product is related to Magento. It can not be deleted!\nYou can change it Magento status to "Disabled" and uncheck the active box to hide it from OpenERP.'))
+        else:
+            return super(product_product, self).unlink(cr, uid, ids, context)
 
     def redefine_prod_view(self,cr,uid, field_names, context):
         #This function will rebuild the view for product from instances, attribute groups etc
