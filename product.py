@@ -892,24 +892,20 @@ class product_product(magerp_osv.magerp_osv):
                 default_set_id = set['set_id']
                 break
         context['default_set_id'] = default_set_id
-        context_dic = {}
+        
+        context_dic = [context.copy()]
+        context_dic[0]['export_url'] = True # for the magento version 1.3.2.4, only one url is autorized by product, so we only export with the MAPPING TEMPLATE the url of the default language 
+        context_dic[0]['lang'] = shop.referential_id.default_lang_id.code
 
         for storeview in shop.storeview_ids:
-            if storeview.lang_id :
-                context_dic[storeview] = context.copy()
-                context_dic[storeview].update({'storeview_code': storeview.code, 'lang': storeview.lang_id.code})
-                if storeview.lang_id.code == shop.referential_id.default_lang_id.code:
-                    context_dic[storeview]['export_url'] = True # for the magento version 1.3.2.4, only one url is autorized by product, so we only export with the MAPPING TEMPLATE the url of the default language
-
-        if len(shop.storeview_ids) > len(context_dic):
-            context_dic['default_value'] = context.copy()
-            context_dic['default_value']['export_url'] = True # for the magento version 1.3.2.4, only one url is autorized by product, so we only export with the MAPPING TEMPLATE the url of the default language 
-            context_dic['default_value']['lang'] = shop.referential_id.default_lang_id.code
+            if storeview.lang_id and storeview.lang_id.code != shop.referential_id.default_lang_id.code:
+                context_dic += [context.copy()]
+                context_dic[len(context_dic)-1].update({'storeview_code': storeview.code, 'lang': storeview.lang_id.code})
 
         result = {'create_ids':[], 'write_ids':[]}
         for id in ids:
-            for storeview in context_dic:
-                temp_result = super(magerp_osv.magerp_osv, self).ext_export(cr, uid, [id], external_referential_ids, defaults, context_dic[storeview])
+            for ctx_storeview in context_dic:
+                temp_result = super(magerp_osv.magerp_osv, self).ext_export(cr, uid, [id], external_referential_ids, defaults, ctx_storeview)
             self.pool.get('sale.shop').write(cr, uid,context['shop_id'], {'last_products_export_date': ids_2_dates[id]})
             result['create_ids'] += temp_result['create_ids']
             result['write_ids'] += temp_result['write_ids']
