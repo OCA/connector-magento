@@ -146,6 +146,26 @@ else:
     result = [('type_id',record['product_type'])]
 else:
     result = [('type_id','simple')]"
+"mag_erp_prd_14","magento1324","product.model_product_product","websites","in_out","str","websites_ids = []
+for ext_id in eval(ifield):
+    websites_ids.append(self.pool.get('external.shop.group').extid_to_oeid(cr, uid, ext_id, external_referential_id))
+
+##### OPTION START, with this if the field websites of the product is empty the product is exported on every website
+all_oe_websites_ids = self.pool.get('external.shop.group').search(cr,uid,[('referential_id', '=', external_referential_id)])
+if set(websites_ids) == set(all_oe_websites_ids):
+    websites_ids =[]
+##### OPTION END
+
+result=[('websites_ids', [(6,0, websites_ids)])]","##### OPTION START, with this if the field websites of the product is empty the product is exported on every website
+if not record['websites_ids']:
+    record['websites_ids'] = self.pool.get('external.shop.group').search(cr,uid,[('referential_id', '=', external_referential_id)])
+##### OPTION END
+
+ext_websites_ids = []
+for oe_id in record['websites_ids']:
+    ext_websites_ids.append(self.pool.get('external.shop.group').oeid_to_extid(cr, uid, oe_id, external_referential_id))
+
+result=[('websites', ext_websites_ids)]"
 "magento_cst_grp_1","magento1324","base.model_res_partner_category","customer_group_code","in","str","result=[('name',ifield)]",
 "magento_cst_grp_3","magento1324","base.model_res_partner_category","tax_class_id","in","int","result=[('tax_class_id',ifield)]",
 "magento_prt_adr_2","magento1324","base.model_res_partner_address","city","in_out","str","result=[('city',ifield)]",
