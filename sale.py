@@ -364,25 +364,25 @@ class sale_order(magerp_osv.magerp_osv):
 
     def oe_create(self, cr, uid, vals, data, external_referential_id, defaults, context):
         order_id = super(magerp_osv.magerp_osv, self).oe_create(cr, uid, vals, data, external_referential_id, defaults, context)
-        self.oe_status(cr, uid, order_id, context)
-        self.create_payments(cr, uid, data, order_id, context)
-        #TODO auto_reconcile invoice and statement depending on is_auto_reconcile param; see sale_simple_pos module implementation of this
+        paid = self.create_payments(cr, uid, data, order_id, context)
+        self.oe_status(cr, uid, order_id, paid, context)
+        #TODO auto_reconcile invoice and statement depending on is_auto_reconcile param
         return order_id
     
     def create_payments(self, cr, uid, data_record, order_id, context):
-       if data_record.get('payment', False):
+        paid = False
+        if data_record.get('payment', False):
             payment = data_record['payment']
             amount = False
             if payment.get('amount_paid', False):
                 amount =  payment.get('amount_paid', False)
-                validate = True
+                paid = True
             elif payment.get('amount_ordered', False):
                 amount =  payment.get('amount_ordered', False)
-                validate = False
             if amount:
                 order = self.pool.get('sale.order').browse(cr, uid, order_id, context)
-                self.generate_payment_with_pay_code(cr, uid, payment['method'], order.partner_id.id, amount, "mag_" + payment['payment_id'], "mag_" + data_record['increment_id'], order.date_order, validate, context) 
-
+                self.generate_payment_with_pay_code(cr, uid, payment['method'], order.partner_id.id, amount, "mag_" + payment['payment_id'], "mag_" + data_record['increment_id'], order.date_order, paid, context) 
+        return paid
 
 # UPDATE ORDER STATUS FROM MAGENTO TO OPENERP IS UNSTABLE, AND NOT VERY USEFULL. MAYBE IT WILL BE REFACTORED 
 
