@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.6\n"
+"Project-Id-Version: OpenERP Server 5.0.9\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-12-27 20:37:10+0000\n"
-"PO-Revision-Date: 2010-03-02 12:59+0100\n"
+"POT-Creation-Date: 2010-05-27 16:22:56+0000\n"
+"PO-Revision-Date: 2010-05-27 19:36+0100\n"
 "Last-Translator: Jordi Esteve (Zikzakmedia) <jesteve@zikzakmedia.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,44 +16,19 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: magentoerpconnect
-#: help:res.partner,mag_birthday:0
-msgid "To be able to receive customer birthday you must set it in Magento Admin Panel, menu System / Configuration / Client Configuration / Name and Address Options."
-msgstr "Para poder recibir la fecha de nacimiento del cliente debe configurarlo en el Magento Admin Panel, menú Sistema / Configuración / Configuración del cliente / Opciones del Nombre y Dirección."
+#: field:external.shop.group,is_default:0
+msgid "Is Default?"
+msgstr "Por defecto?"
 
 #. module: magentoerpconnect
-#: help:res.partner,mag_vat:0
-msgid "To be able to receive customer VAT number you must set it in Magento Admin Panel, menu System / Configuration / Client Configuration / Name and Address Options."
-msgstr "Para poder recibir el número NIF/CIF del cliente debe configurarlo en el Magento Admin Panel, menú Sistema / Configuración / Configuración del cliente / Opciones del Nombre y Dirección."
+#: model:product.category,name:magentoerpconnect.mag0
+msgid "Service"
+msgstr "Servicio"
 
 #. module: magentoerpconnect
-#: field:res.partner,mag_birthday:0
-msgid "Birthday"
-msgstr "Fecha nacimiento"
-
-#. module: magentoerpconnect
-#: field:res.partner,mag_vat:0
-msgid "Magento VAT"
-msgstr "CIF/NIF Magento"
-
-#. module: magentoerpconnect
-#: help:res.partner,store_id:0
-msgid "Last store view where the customer has bought."
-msgstr "Última vista de tienda donde el cliente ha comprado."
-
-#. module: magentoerpconnect
-#: view:res.partner:0
-msgid "Store views"
-msgstr "Vistas de tienda"
-
-#. module: magentoerpconnect
-#: field:magerp.storeviews,magento_store_id:0
-msgid "Store ID"
-msgstr "ID tienda"
-
-#. module: magentoerpconnect
-#: help:res.partner,emailid:0
-msgid "Magento uses this email ID to correspond to the customer."
-msgstr "Magento utiliza este ID de email para relacionarlo con el cliente."
+#: selection:magerp.sale.shop.payment.type,picking_policy:0
+msgid "Partial Delivery"
+msgstr "Envío parcial"
 
 #. module: magentoerpconnect
 #: selection:product.tierprice,group_scope:0
@@ -61,9 +36,9 @@ msgid "All groups"
 msgstr "Todos los grupos"
 
 #. module: magentoerpconnect
-#: selection:magerp.product_attributes,backend_type:0
-msgid "Varchar"
-msgstr "Varchar"
+#: field:product.images,small_image:0
+msgid "Small Image"
+msgstr "Imagen pequeña"
 
 #. module: magentoerpconnect
 #: constraint:ir.actions.act_window:0
@@ -72,6 +47,7 @@ msgstr "Nombre de modelo no válido en la definición de la acción."
 
 #. module: magentoerpconnect
 #: field:magerp.product_attributes,position:0
+#: field:product.images,position:0
 msgid "Position"
 msgstr "Posición"
 
@@ -106,22 +82,20 @@ msgid "6 - Import Products"
 msgstr "6 - Importar productos"
 
 #. module: magentoerpconnect
-#: field:external.shop.group,default_shop_id:0
-#: field:magerp.storeviews,default_shop_id:0
-msgid "Default Store (Group)"
-msgstr "Tienda por defecto (Grupo)"
-
-#. module: magentoerpconnect
 #: field:magerp.product_attribute_set,magento_id:0
-#: field:sale.shop,group_id:0
 msgid "Magento ID"
 msgstr "ID Magento"
 
 #. module: magentoerpconnect
 #: field:product.product,tier_price:0
-#: field:product.product,x_magerp_tier_price:0
 msgid "Tier Price"
 msgstr "Escalado de precios"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/magerp_core.py:0
+#, python-format
+msgid "Connection Error"
+msgstr "Error de conexión"
 
 #. module: magentoerpconnect
 #: field:product.category,default_sort_by:0
@@ -129,7 +103,18 @@ msgid "Default Product Listing Sort (Sort By)"
 msgstr "Ordenación por defecto listado productos (Ordenar por)"
 
 #. module: magentoerpconnect
+#: help:res.partner,emailid:0
+msgid "Magento uses this email ID to correspond to the customer."
+msgstr "Magento utiliza este ID de email para relacionarlo con el cliente."
+
+#. module: magentoerpconnect
+#: model:payment.type,name:magentoerpconnect.payment_type_free
+msgid "Free"
+msgstr "Gratuito"
+
+#. module: magentoerpconnect
 #: field:product.category,create_date:0
+#: field:product.images,create_date:0
 msgid "Created date"
 msgstr "Fecha creación"
 
@@ -139,9 +124,9 @@ msgid "Filterable?"
 msgstr "¿Filtrable?"
 
 #. module: magentoerpconnect
-#: field:product.category,meta_title:0
-msgid "Title (Meta)"
-msgstr "Título (Meta)"
+#: field:product.images,base_image:0
+msgid "Base Image"
+msgstr "Imagen base"
 
 #. module: magentoerpconnect
 #: model:ir.actions.act_window,name:magentoerpconnect.act_magerp_shop_form
@@ -160,6 +145,16 @@ msgid "Magento Order Address?"
 msgstr "¿Dirección pedido Magento?"
 
 #. module: magentoerpconnect
+#: field:product.tierprice,website_price:0
+msgid "Website Price"
+msgstr "Precio sitio web"
+
+#. module: magentoerpconnect
+#: field:product.category,magerp_stamp:0
+msgid "Magento stamp"
+msgstr "Marca fecha Magento"
+
+#. module: magentoerpconnect
 #: field:product.category,level:0
 msgid "Level"
 msgstr "Nivel"
@@ -175,6 +170,11 @@ msgid "Comparable?"
 msgstr "¿Comparable?"
 
 #. module: magentoerpconnect
+#: field:magerp.product_attributes,frontend_class:0
+msgid "Frontend Class"
+msgstr "Clase frontend"
+
+#. module: magentoerpconnect
 #: field:magerp.product_attribute_options,value:0
 msgid "Value"
 msgstr "Valor"
@@ -185,14 +185,35 @@ msgid "Products Only"
 msgstr "Sólo productos"
 
 #. module: magentoerpconnect
+#: model:payment.type,name:magentoerpconnect.payment_type_servired_standard
+msgid "Servired Standard"
+msgstr "Servired estándar"
+
+#. module: magentoerpconnect
 #: view:product.category:0
 msgid "Meta Information"
 msgstr "Meta Información"
 
 #. module: magentoerpconnect
+#: selection:magerp.sale.shop.payment.type,order_policy:0
+msgid "Payment Before Delivery"
+msgstr "Pago antes del envío"
+
+#. module: magentoerpconnect
 #: field:magerp.product_attributes,is_visible:0
 msgid "Visible?"
 msgstr "¿Visible?"
+
+#. module: magentoerpconnect
+#: field:magerp.sale.shop.payment.type,order_policy:0
+msgid "Shipping Policy"
+msgstr "Política de facturación"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/magerp_osv.py:0
+#, python-format
+msgid "Query Returned:%s"
+msgstr "Query devuelta:%s"
 
 #. module: magentoerpconnect
 #: model:ir.ui.menu,name:magentoerpconnect.menu_magerp_attnsets_attributes
@@ -211,19 +232,36 @@ msgid "Email ID"
 msgstr "ID email"
 
 #. module: magentoerpconnect
+#: field:magerp.sale.shop.payment.type,shop_id:0
 #: field:magerp.storeviews,shop_id:0
 msgid "Shop"
 msgstr "Tienda"
 
 #. module: magentoerpconnect
-#: field:magerp.product_attributes,frontend_class:0
-msgid "Frontend Class"
-msgstr "Clase frontend"
+#: field:magerp.product_attributes,note:0
+msgid "Note"
+msgstr "Nota"
+
+#. module: magentoerpconnect
+#: model:magerp.product_product_type,name:magentoerpconnect.product_type_configurable
+msgid "Configurable Product"
+msgstr "Producto configurable"
+
+#. module: magentoerpconnect
+#: view:product.category:0
+#: field:product.category,display_mode:0
+msgid "Display Mode"
+msgstr "Modo visualización"
 
 #. module: magentoerpconnect
 #: field:magerp.product_attributes,backend_model:0
 msgid "Backend Model"
 msgstr "Modelo backend"
+
+#. module: magentoerpconnect
+#: constraint:product.category:0
+msgid "Error ! You can not create recursive categories."
+msgstr "¡Error! No puede crear categorías recursivas."
 
 #. module: magentoerpconnect
 #: field:magerp.storeviews,name:0
@@ -236,9 +274,20 @@ msgid "Use Anchor"
 msgstr "Usar áncora"
 
 #. module: magentoerpconnect
-#: selection:magerp.product_attributes,frontend_input:0
-msgid "Gallery"
-msgstr "Galería"
+#: selection:magerp.product_attributes,backend_type:0
+msgid "Datetime"
+msgstr "Fecha-hora"
+
+#. module: magentoerpconnect
+#: model:payment.type,name:magentoerpconnect.payment_type_ccsave
+msgid "Saved Credit Card"
+msgstr "Tarjeta de crédito guardada"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/product.py:0
+#, python-format
+msgid "Warning!"
+msgstr "¡Aviso!"
 
 #. module: magentoerpconnect
 #: field:product.category,is_anchor:0
@@ -261,14 +310,36 @@ msgid "User Defined?"
 msgstr "¿Definido por el usuario?"
 
 #. module: magentoerpconnect
-#: view:magerp.product_attribute_groups:0
-msgid "Magento Product Attribute groups"
-msgstr "Grupos de atributos"
+#: field:external.shop.group,referential_type:0
+msgid "External Referential Type"
+msgstr "Tipo de referencia externa"
 
 #. module: magentoerpconnect
 #: field:res.partner,created_in:0
 msgid "Created in"
 msgstr "Creado en"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/sale.py:0
+#, python-format
+msgid "Invoice Created"
+msgstr "Factura creada"
+
+#. module: magentoerpconnect
+#: selection:product.category,display_mode:0
+msgid "Static Block Only"
+msgstr "Sólo bloque estático"
+
+#. module: magentoerpconnect
+#: field:sale.shop,default_storeview_integer_id:0
+msgid "Magento default Storeview ID"
+msgstr "Storeview ID por defecto de Magento"
+
+#. module: magentoerpconnect
+#: field:external.shop.group,default_shop_id:0
+#: field:external.shop.group,default_shop_integer_id:0
+msgid "Default Store"
+msgstr "Tienda por defecto"
 
 #. module: magentoerpconnect
 #: field:magerp.product_attributes,group:0
@@ -292,9 +363,9 @@ msgid "4 - Import Attribute Groups"
 msgstr "4 - Importar grupos de atributos"
 
 #. module: magentoerpconnect
-#: selection:magerp.product_attributes,backend_type:0
-msgid "Static"
-msgstr "Static"
+#: view:magerp.product_attribute_groups:0
+msgid "Magento Product Attribute groups"
+msgstr "Grupos de atributos"
 
 #. module: magentoerpconnect
 #: field:product.category,magento_exportable:0
@@ -302,9 +373,20 @@ msgid "Export to Magento"
 msgstr "Exportar a Magento"
 
 #. module: magentoerpconnect
-#: selection:magerp.product_attributes,backend_type:0
-msgid "Datetime"
-msgstr "Fecha-hora"
+#: view:external.shop.group:0
+#: model:ir.actions.act_window,name:magentoerpconnect.act_magerp_websites_form
+msgid "Magento websites"
+msgstr "Sitios web Magento"
+
+#. module: magentoerpconnect
+#: field:magerp.product_product_type,product_type:0
+msgid "Type"
+msgstr "Tipo"
+
+#. module: magentoerpconnect
+#: field:product.images,thumbnail:0
+msgid "Thumbnail"
+msgstr "Miniatura"
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_magerp_product_attribute_set
@@ -312,9 +394,36 @@ msgid "Attribute sets in products"
 msgstr "Conjuntos de atributos de productos"
 
 #. module: magentoerpconnect
-#: view:external.referential:0
-msgid "Product Attributes / Sets"
-msgstr "Atributos / Conjuntos de productos"
+#: code:addons/magentoerpconnect/product.py:0
+#, python-format
+msgid "description"
+msgstr "Descripción"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/magerp_osv.py:0
+#, python-format
+msgid "Webservice Failure, sleeping 1 second before next attempt"
+msgstr "El webservice ha fallado, se reintentará de aquí 1 segundo"
+
+#. module: magentoerpconnect
+#: help:external.referential,default_lang_id:0
+msgid "Choose the language which will be used for the Default Value in Magento"
+msgstr "Seleccione el idioma que se usará por defecto en Magento."
+
+#. module: magentoerpconnect
+#: selection:magerp.sale.shop.payment.type,picking_policy:0
+msgid "Complete Delivery"
+msgstr "Envío completo"
+
+#. module: magentoerpconnect
+#: view:product.product:0
+msgid "attributes_placeholder"
+msgstr "attributes_placeholder"
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_magerp_product_product_type
+msgid "magerp.product_product_type"
+msgstr "magerp.tipo_producto"
 
 #. module: magentoerpconnect
 #: field:magerp.product_attributes,is_used_for_price_rules:0
@@ -322,14 +431,24 @@ msgid "Used for pricing rules?"
 msgstr "¿Usado para reglas de precios?"
 
 #. module: magentoerpconnect
-#: field:sale.shop,storeview_ids:0
-msgid "Store Views"
-msgstr "Vistas tiendas"
+#: selection:magerp.sale.shop.payment.type,invoice_quantity:0
+msgid "Ordered Quantities"
+msgstr "Cantidades ordenadas"
+
+#. module: magentoerpconnect
+#: field:sale.shop,magento_root_category:0
+msgid "Root Category"
+msgstr "Categoría raíz"
 
 #. module: magentoerpconnect
 #: view:product.category:0
 msgid "Sorting method"
 msgstr "Método ordenación"
+
+#. module: magentoerpconnect
+#: model:magerp.product_product_type,name:magentoerpconnect.product_type_simple
+msgid "Simple Product"
+msgstr "Producto simple"
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_magerp_product_attribute_options
@@ -342,9 +461,10 @@ msgid "Category Image"
 msgstr "Imagen categoría"
 
 #. module: magentoerpconnect
-#: field:sale.shop,default_store_id:0
-msgid "Magento Store ID"
-msgstr "ID tienda Magento"
+#: view:magerp.product_product_type:0
+#: field:product.product,product_type:0
+msgid "Product Type"
+msgstr "Tipo de producto"
 
 #. module: magentoerpconnect
 #: selection:magerp.product_attributes,backend_type:0
@@ -358,15 +478,20 @@ msgid "Multi-Selection"
 msgstr "Multi-Selección"
 
 #. module: magentoerpconnect
-#: selection:magerp.product_attributes,frontend_input:0
-msgid "Yes/No"
-msgstr "Sí/No"
-
-#. module: magentoerpconnect
 #: model:ir.actions.act_window,name:magentoerpconnect.act_magerp_storeviews_form
 #: view:magerp.storeviews:0
 msgid "Magento storeviews"
 msgstr "Vistas tiendas Magento"
+
+#. module: magentoerpconnect
+#: constraint:ir.cron:0
+msgid "Invalid arguments"
+msgstr "Argumentos incorrectos"
+
+#. module: magentoerpconnect
+#: selection:magerp.sale.shop.payment.type,order_policy:0
+msgid "Invoice on Order After Delivery"
+msgstr "Facturar pedido después del envío"
 
 #. module: magentoerpconnect
 #: constraint:ir.ui.view:0
@@ -390,10 +515,19 @@ msgid "Set Name"
 msgstr "Nombre conjunto"
 
 #. module: magentoerpconnect
-#: view:product.category:0
-#: field:product.category,display_mode:0
-msgid "Display Mode"
-msgstr "Modo visualización"
+#: model:payment.type,name:magentoerpconnect.payment_type_bbva
+msgid "BBVA"
+msgstr "BBVA"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/magerp_core.py:0
+#, python-format
+msgid ""
+"Could not connect to server\n"
+"Check location, username & password."
+msgstr ""
+"No se puede conectar con el servidor\n"
+"Revise la localización, usuario y contraseña."
 
 #. module: magentoerpconnect
 #: field:res.partner,created_at:0
@@ -406,10 +540,35 @@ msgid "Magento Increment ID"
 msgstr "ID incremento Magento"
 
 #. module: magentoerpconnect
+#: view:res.partner:0
+msgid "Store views"
+msgstr "Vistas de tienda"
+
+#. module: magentoerpconnect
+#: help:res.partner,mag_vat:0
+msgid "To be able to receive customer VAT number you must set it in Magento Admin Panel, menu System / Configuration / Client Configuration / Name and Address Options."
+msgstr "Para poder recibir el número NIF/CIF del cliente debe configurarlo en el Magento Admin Panel, menú Sistema / Configuración / Configuración del cliente / Opciones del Nombre y Dirección."
+
+#. module: magentoerpconnect
+#: model:ir.ui.menu,name:magentoerpconnect.menu_magerp_core_storeviews
+msgid "Magento Store Views"
+msgstr "Vistas tiendas Magento"
+
+#. module: magentoerpconnect
+#: selection:magerp.product_attributes,backend_type:0
+msgid "Varchar"
+msgstr "Varchar"
+
+#. module: magentoerpconnect
 #: field:external.referential,attribute_sets:0
 #: model:ir.ui.menu,name:magentoerpconnect.menu_magerp_attnsets_sets
 msgid "Attribute Sets"
 msgstr "Conjuntos de atributos"
+
+#. module: magentoerpconnect
+#: field:product.images,sync_status:0
+msgid "Sync Status"
+msgstr "Estado sincronización"
 
 #. module: magentoerpconnect
 #: selection:magerp.product_attributes,frontend_input:0
@@ -437,6 +596,12 @@ msgid "Last Name"
 msgstr "Último nombre"
 
 #. module: magentoerpconnect
+#: code:addons/magentoerpconnect/magerp_osv.py:0
+#, python-format
+msgid "Webservice Failure, sleeping 3 seconds before next attempt"
+msgstr "El webservice ha fallado, se reintentará de aquí 3 segundos"
+
+#. module: magentoerpconnect
 #: field:product.category,image:0
 msgid "Image"
 msgstr "Imagen"
@@ -449,6 +614,11 @@ msgid "Attribute Set"
 msgstr "Conjunto de atributos"
 
 #. module: magentoerpconnect
+#: field:res.partner,mag_vat:0
+msgid "Magento VAT"
+msgstr "CIF/NIF Magento"
+
+#. module: magentoerpconnect
 #: help:external.referential,default_pro_cat:0
 msgid ""
 "Products imported from magento may have many categories.\n"
@@ -458,9 +628,9 @@ msgstr ""
 "OpenERP requiere que los productos tengan una categoría específica para facilitar la facturación, etc."
 
 #. module: magentoerpconnect
-#: field:external.shop.group,default_group_id:0
-msgid "Default Store Group"
-msgstr "Grupo de tiendas por defecto"
+#: selection:magerp.product_attributes,backend_type:0
+msgid "Static"
+msgstr "Static"
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_magerp_product_attribute_groups
@@ -493,9 +663,20 @@ msgid "Attributes of products"
 msgstr "Atributos de productos"
 
 #. module: magentoerpconnect
+#: code:addons/magentoerpconnect/magerp_osv.py:0
+#, python-format
+msgid "Webservice Failure, sleeping 6 seconds before next attempt"
+msgstr "El webservice ha fallado, se reintentará de aquí 6 segundos"
+
+#. module: magentoerpconnect
 #: field:magerp.product_attributes,frontend_input:0
 msgid "Frontend Input"
 msgstr "Entrada frontend"
+
+#. module: magentoerpconnect
+#: help:product.product,websites_ids:0
+msgid "By defaut product will be exported on every website, if you want to exporte it only on some website select them here"
+msgstr "Por defecto el producto se exportará a todas los sitios web. Si quiere exportar a una única tienda seleccione la tienda a exportar."
 
 #. module: magentoerpconnect
 #: field:product.category,is_active:0
@@ -514,9 +695,10 @@ msgid "Group"
 msgstr "Grupo"
 
 #. module: magentoerpconnect
-#: field:external.shop.group,is_default:0
-msgid "Is Active?"
-msgstr "¿Está activo?"
+#: field:res.partner,store_ids:0
+#: field:sale.shop,storeview_ids:0
+msgid "Store Views"
+msgstr "Vistas tiendas"
 
 #. module: magentoerpconnect
 #: model:ir.module.module,description:magentoerpconnect.module_meta_information
@@ -524,9 +706,10 @@ msgid "Magento E-commerce management\n"
 msgstr "Gestión comercio electrónico Magento\n"
 
 #. module: magentoerpconnect
-#: field:product.category,magerp_stamp:0
-msgid "Magento stamp"
-msgstr "Marca fecha Magento"
+#: code:addons/magentoerpconnect/magerp_osv.py:0
+#, python-format
+msgid "Magento Connection"
+msgstr "Conexión Magento"
 
 #. module: magentoerpconnect
 #: constraint:product.template:0
@@ -534,9 +717,16 @@ msgid "Error: The default UOM and the purchase UOM must be in the same category.
 msgstr "Error: La UdM por defecto y la UdM de compra deben estar en la misma categoría."
 
 #. module: magentoerpconnect
-#: field:magerp.product_attributes,note:0
-msgid "Note"
-msgstr "Nota"
+#: view:magerp.sale.shop.payment.type:0
+#: field:magerp.sale.shop.payment.type,payment_type_id:0
+#: field:sale.shop,payment_types:0
+msgid "Payment Type"
+msgstr "Tipo de pago"
+
+#. module: magentoerpconnect
+#: model:magerp.product_product_type,name:magentoerpconnect.product_type_grouped
+msgid "Grouped Product"
+msgstr "Producto agrupado"
 
 #. module: magentoerpconnect
 #: view:magerp.product_attribute_groups:0
@@ -549,16 +739,29 @@ msgid "Quantity Slab"
 msgstr "Cantidad tramo"
 
 #. module: magentoerpconnect
+#: code:addons/magentoerpconnect/product.py:0
 #: view:product.category:0
 #: view:res.partner:0
 #: view:res.partner.category:0
+#: view:sale.shop:0
+#, python-format
 msgid "Magento Information"
 msgstr "Información Magento"
 
 #. module: magentoerpconnect
-#: field:res.partner,store_id:0
-msgid "Last Store View"
-msgstr "Última vista tienda"
+#: selection:magerp.sale.shop.payment.type,order_policy:0
+msgid "Shipping & Manual Invoice"
+msgstr "Enviar & Factura manual"
+
+#. module: magentoerpconnect
+#: selection:magerp.product_attributes,frontend_input:0
+msgid "Yes/No"
+msgstr "Sí/No"
+
+#. module: magentoerpconnect
+#: model:payment.type,name:magentoerpconnect.payment_type_cofidis
+msgid "Cofidis"
+msgstr "Cofidis"
 
 #. module: magentoerpconnect
 #: field:magerp.product_attributes,is_searchable:0
@@ -578,19 +781,55 @@ msgid "3 - Import Product Attribute Sets"
 msgstr "3 - Importar conjuntos de atributos de producto"
 
 #. module: magentoerpconnect
+#: field:magerp.sale.shop.payment.type,picking_policy:0
+msgid "Packing Policy"
+msgstr "Política de envío"
+
+#. module: magentoerpconnect
 #: field:product.tierprice,group_scope:0
 msgid "unknown"
 msgstr "desconocido"
 
 #. module: magentoerpconnect
-#: view:product.product:0
-msgid "attributes_placeholder"
-msgstr "attributes_placeholder"
+#: view:sale.shop:0
+msgid "Update Images"
+msgstr "Publicar imágenes"
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_product_tierprice
+msgid "Implements magento tier pricing"
+msgstr "Implementa escalados de precios Magento"
+
+#. module: magentoerpconnect
+#: field:res.partner,store_id:0
+msgid "Last Store View"
+msgstr "Última vista tienda"
+
+#. module: magentoerpconnect
+#: help:product.images,mage_file:0
+msgid "Filled when uploaded or synchronised"
+msgstr "Se rellena cuando se carga o se sincroniza."
+
+#. module: magentoerpconnect
+#: field:res.partner,mag_birthday:0
+msgid "Birthday"
+msgstr "Fecha nacimiento"
+
+#. module: magentoerpconnect
+#: field:product.product,magento_sku:0
+msgid "Magento SKU"
+msgstr "Código Magento"
 
 #. module: magentoerpconnect
 #: field:external.referential,default_pro_cat:0
 msgid "Default Product Category"
 msgstr "Categoría producto por defecto"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/product.py:0
+#, python-format
+msgid "short description"
+msgstr "Descripción corta"
 
 #. module: magentoerpconnect
 #: selection:magerp.product_attributes,frontend_input:0
@@ -613,6 +852,27 @@ msgid "Set if the category underwent a change & has to be synched."
 msgstr "Indica si la categoría tiene que estar sincronizada si se produce un cambio."
 
 #. module: magentoerpconnect
+#: field:magerp.product_attributes,is_visible_on_front:0
+msgid "Visible (Front)?"
+msgstr "¿Visible (frontend)?"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/magerp_osv.py:0
+#, python-format
+msgid ""
+"Method: %s\n"
+"Arguments:%s\n"
+"Error:%s"
+msgstr ""
+"Método:%s\n"
+"Argumentos:%sError:%s"
+
+#. module: magentoerpconnect
+#: field:product.category,meta_title:0
+msgid "Title (Meta)"
+msgstr "Título (Meta)"
+
+#. module: magentoerpconnect
 #: field:magerp.storeviews,lang_id:0
 msgid "Language"
 msgstr "Idioma"
@@ -621,6 +881,11 @@ msgstr "Idioma"
 #: field:magerp.product_attribute_groups,default_id:0
 msgid "Default"
 msgstr "Por defecto"
+
+#. module: magentoerpconnect
+#: selection:magerp.product_attributes,frontend_input:0
+msgid "Gallery"
+msgstr "Galería"
 
 #. module: magentoerpconnect
 #: selection:magerp.product_attributes,backend_type:0
@@ -646,14 +911,19 @@ msgid "Unique?"
 msgstr "¿Único?"
 
 #. module: magentoerpconnect
-#: field:magerp.product_attributes,is_visible_on_front:0
-msgid "Visible (Front)?"
-msgstr "¿Visible (frontend)?"
+#: model:magerp.product_product_type,name:magentoerpconnect.product_type_bundle
+msgid "Bundle Product"
+msgstr "Producto compuesto"
 
 #. module: magentoerpconnect
-#: model:ir.model,name:magentoerpconnect.model_product_tierprice
-msgid "Implements magento tier pricing"
-msgstr "Implementa escalados de precios Magento"
+#: model:ir.model,name:magentoerpconnect.model_magerp_sale_shop_payment_type
+msgid "Magento Sale Shop Payment Type"
+msgstr "Tipo de pago tienda Magento"
+
+#. module: magentoerpconnect
+#: view:product.category:0
+msgid "Display Settings"
+msgstr "Valores visualización"
 
 #. module: magentoerpconnect
 #: view:magerp.product_attribute_set:0
@@ -669,6 +939,11 @@ msgstr "Productos indica que se mostrarán los productos correspondientes a la c
 #: field:magerp.product_attributes,backend_type:0
 msgid "Backend Type"
 msgstr "Tipo backend"
+
+#. module: magentoerpconnect
+#: model:magerp.product_product_type,name:magentoerpconnect.product_type_virtual
+msgid "Virtual Product"
+msgstr "Producto virtual"
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_magerp_storeviews
@@ -698,9 +973,9 @@ msgid "To synchronize"
 msgstr "A sincronizar"
 
 #. module: magentoerpconnect
-#: selection:product.category,display_mode:0
-msgid "Static Block Only"
-msgstr "Sólo bloque estático"
+#: model:payment.type,name:magentoerpconnect.payment_type_cashondelivery
+msgid "Cash On Delivery"
+msgstr "Contrareembolso"
 
 #. module: magentoerpconnect
 #: field:product.category,magento_parent_id:0
@@ -718,6 +993,11 @@ msgid "Open ERP Field name"
 msgstr "Nombre campo OpenERP"
 
 #. module: magentoerpconnect
+#: model:payment.type,name:magentoerpconnect.payment_type_googlecheckout
+msgid "Google Checkout"
+msgstr "Google Checkout"
+
+#. module: magentoerpconnect
 #: field:sale.order,magento_storeview_id:0
 msgid "Magento Store View"
 msgstr "Vista tienda Magento"
@@ -733,14 +1013,25 @@ msgid "Customer Group"
 msgstr "Grupo cliente"
 
 #. module: magentoerpconnect
+#: field:product.images,exclude:0
+msgid "Exclude"
+msgstr "Excluir"
+
+#. module: magentoerpconnect
 #: field:magerp.product_attributes,is_visible_in_advanced_search:0
 msgid "Visible in advanced search?"
 msgstr "¿Visible en búsqueda avanzada?"
 
 #. module: magentoerpconnect
-#: field:sale.shop,magento_root_category:0
-msgid "Root Category"
-msgstr "Categoría raíz"
+#: code:addons/magentoerpconnect/magerp_osv.py:0
+#, python-format
+msgid "Webservice Failure, sleeping 6 second before next attempt"
+msgstr "El webservice ha fallado, se reintentará de aquí 6 segundos"
+
+#. module: magentoerpconnect
+#: field:sale.shop,default_storeview_id:0
+msgid "Default Storeview"
+msgstr "Storeview por defecto"
 
 #. module: magentoerpconnect
 #: field:res.partner.category,tax_class_id:0
@@ -774,6 +1065,12 @@ msgid "Use Config Settings"
 msgstr "Usar valores configuración"
 
 #. module: magentoerpconnect
+#: code:addons/magentoerpconnect/magerp_osv.py:0
+#, python-format
+msgid "Undefined List method !"
+msgstr "¡El método list no está definido!"
+
+#. module: magentoerpconnect
 #: model:ir.actions.act_window,name:magentoerpconnect.act_magerp_product_attribute_groups_form
 msgid "Magento Product Attribute Groups"
 msgstr "Grupos de atributos"
@@ -795,9 +1092,15 @@ msgid "Attribute Set Information"
 msgstr "Información conjunto de atributos"
 
 #. module: magentoerpconnect
-#: model:ir.ui.menu,name:magentoerpconnect.menu_magerp_core_storeviews
-msgid "Magento Store Views"
-msgstr "Vistas tiendas Magento"
+#: code:addons/magentoerpconnect/magerp_osv.py:0
+#, python-format
+msgid "Magento Call"
+msgstr "Llamada Magento"
+
+#. module: magentoerpconnect
+#: model:payment.type,name:magentoerpconnect.payment_type_paypal_standard
+msgid "Paypal Standard"
+msgstr "Paypal Standard"
 
 #. module: magentoerpconnect
 #: field:magerp.product_attributes,entity_type_id:0
@@ -805,10 +1108,31 @@ msgid "Entity Type"
 msgstr "Tipo entidad"
 
 #. module: magentoerpconnect
+#: help:res.partner,store_id:0
+msgid "Last store view where the customer has bought."
+msgstr "Última vista de tienda donde el cliente ha comprado."
+
+#. module: magentoerpconnect
+#: model:ir.actions.act_window,name:magentoerpconnect.act_magerp_product_type_form
+#: model:ir.ui.menu,name:magentoerpconnect.menu_magerp_product_type
+msgid "Product Types"
+msgstr "Tipos de producto"
+
+#. module: magentoerpconnect
 #: field:product.category,meta_keywords:0
-#: field:product.product,x_magerp_meta_keyword:0
 msgid "Meta Keywords"
 msgstr "Meta Palabras clave"
+
+#. module: magentoerpconnect
+#: model:payment.type,name:magentoerpconnect.payment_type_paybox_system
+msgid "Paybox System"
+msgstr "Paybox System"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/magerp_osv.py:0
+#, python-format
+msgid "Login Successful"
+msgstr "Indentificación correcta"
 
 #. module: magentoerpconnect
 #: model:ir.ui.menu,name:magentoerpconnect.menu_magerp_attnsets_attribute_groups
@@ -826,10 +1150,9 @@ msgid "Product"
 msgstr "Producto"
 
 #. module: magentoerpconnect
-#: view:external.shop.group:0
-#: model:ir.actions.act_window,name:magentoerpconnect.act_magerp_websites_form
-msgid "Magento websites"
-msgstr "Sitios web Magento"
+#: view:external.referential:0
+msgid "Product Attributes / Sets"
+msgstr "Atributos / Conjuntos de productos"
 
 #. module: magentoerpconnect
 #: model:ir.module.module,shortdesc:magentoerpconnect.module_meta_information
@@ -875,19 +1198,35 @@ msgid "Magento REF"
 msgstr "REF Magento"
 
 #. module: magentoerpconnect
+#: code:addons/magentoerpconnect/magerp_osv.py:0
+#, python-format
+msgid "list method is undefined for this object!"
+msgstr "¡El método list no está definido para este objeto!"
+
+#. module: magentoerpconnect
 #: help:product.category,is_active:0
 msgid "Indicates whether active in magento"
-msgstr "Indica si está activo en Magento"
+msgstr "Indica si está activo en Magento."
 
 #. module: magentoerpconnect
-#: field:product.tierprice,website_price:0
-msgid "Website Price"
-msgstr "Precio sitio web"
+#: field:sale.shop,magento_shop:0
+msgid "Magento Shop"
+msgstr "Tienda Magento"
 
 #. module: magentoerpconnect
-#: field:product.product,magento_sku:0
-msgid "Magento SKU"
-msgstr "Código Magento"
+#: field:product.images,mage_file:0
+msgid "Magento File Name"
+msgstr "Nombre de fichero Magento"
+
+#. module: magentoerpconnect
+#: selection:magerp.sale.shop.payment.type,order_policy:0
+msgid "Invoice from the Packing"
+msgstr "Factura desde albarán"
+
+#. module: magentoerpconnect
+#: model:payment.type,name:magentoerpconnect.payment_type_checkmo
+msgid "Check / Money Order"
+msgstr "Cheque / Giro de dinero"
 
 #. module: magentoerpconnect
 #: model:ir.actions.act_window,name:magentoerpconnect.act_magerp_instances_form
@@ -901,9 +1240,16 @@ msgid "Core Settings"
 msgstr "Configuraciones básicas"
 
 #. module: magentoerpconnect
-#: field:sale.shop,website_id:0
-msgid "Magento Website ID"
-msgstr "ID sitio web Magento"
+#: code:addons/magentoerpconnect/magerp_osv.py:0
+#, python-format
+msgid "Calling Method:%s,Arguments:%s"
+msgstr "Métodos de llamada:%s,Argumentos:%s"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/magerp_osv.py:0
+#, python-format
+msgid "Attempting connection with Settings:%s,%s,%s"
+msgstr "Intento de conexión con:%s,%s,%s"
 
 #. module: magentoerpconnect
 #: field:magerp.product_product_type,name:0
@@ -911,6 +1257,11 @@ msgstr "ID sitio web Magento"
 #: selection:product.category,default_sort_by:0
 msgid "Name"
 msgstr "Nombre"
+
+#. module: magentoerpconnect
+#: field:magerp.sale.shop.payment.type,invoice_quantity:0
+msgid "Invoice on"
+msgstr "Factura"
 
 #. module: magentoerpconnect
 #: selection:product.tierprice,group_scope:0
@@ -924,6 +1275,11 @@ msgid "Magento Product Attributes"
 msgstr "Atributos de producto"
 
 #. module: magentoerpconnect
+#: selection:magerp.sale.shop.payment.type,invoice_quantity:0
+msgid "Shipped Quantities"
+msgstr "Cantidades enviadas"
+
+#. module: magentoerpconnect
 #: field:magerp.product_attribute_groups,attribute_set_id:0
 msgid "Attribute Set ID"
 msgstr "ID conjunto de atributos"
@@ -934,14 +1290,41 @@ msgid "Default ?"
 msgstr "Por defecto"
 
 #. module: magentoerpconnect
-#: field:external.shop.group,default_lang_id:0
+#: field:external.referential,default_lang_id:0
 msgid "Default Language"
 msgstr "Idioma por defecto"
 
 #. module: magentoerpconnect
 #: view:external.referential:0
+#: field:product.product,websites_ids:0
 msgid "Websites"
 msgstr "Sitios web"
+
+#. module: magentoerpconnect
+#: model:magerp.product_product_type,name:magentoerpconnect.product_type_downloadable
+msgid "Downloadable Product"
+msgstr "Producto descargable"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/product.py:0
+#, python-format
+msgid ""
+"They are some products related to Magento. They can not be deleted!\n"
+"You can change their Magento status to \"Disabled\" and uncheck the active box to hide them from OpenERP."
+msgstr ""
+"Hay algunos productos relacionados con Magento. No se pueden eliminar estos productos!\n"
+"Puede cambiar el estado del producto de Magento a \"Desactivado\" en la pestaña \"Información Magento\" y desactivar la opción \"Activo\" de la ficha del producto para ocultarlo en OpenERP."
+
+#. module: magentoerpconnect
+#: model:payment.type,name:magentoerpconnect.payment_type_paypayl_express
+msgid "Paypal Express"
+msgstr "Paypal Express"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/magerp_osv.py:0
+#, python-format
+msgid "Error in connecting"
+msgstr "Error al conectarse"
 
 #. module: magentoerpconnect
 #: field:magerp.product_attributes,magento_id:0
@@ -949,10 +1332,19 @@ msgid "ID"
 msgstr "ID"
 
 #. module: magentoerpconnect
+#: help:res.partner,mag_birthday:0
+msgid "To be able to receive customer birthday you must set it in Magento Admin Panel, menu System / Configuration / Client Configuration / Name and Address Options."
+msgstr "Para poder recibir la fecha de nacimiento del cliente debe configurarlo en el Magento Admin Panel, menú Sistema / Configuración / Configuración del cliente / Opciones del Nombre y Dirección."
+
+#. module: magentoerpconnect
 #: field:product.category,meta_description:0
-#: field:product.product,x_magerp_meta_description:0
 msgid "Meta Description"
 msgstr "Meta Descripción"
+
+#. module: magentoerpconnect
+#: help:magerp.product_product_type,product_type:0
+msgid "Use the same name of Magento product type, for example 'simple'."
+msgstr "Use el mismo nombre del tipo de producto Magento, por ejemplo 'simple'."
 
 #. module: magentoerpconnect
 #: view:product.category:0
@@ -960,9 +1352,21 @@ msgid "Anchored categories will display all products associated to all child cat
 msgstr "La áncora en una categoría mostrará todos los productos asociados a todas las categorías hijas (y hijas de hijas, y hijas de hijas de hijas, etc) en la página de esa categoría, junto con los productos asociados directamente a la categoría."
 
 #. module: magentoerpconnect
+#: code:addons/magentoerpconnect/magerp_osv.py:0
+#, python-format
+msgid "Webservice Failure, sleeping 3 second before next attempt"
+msgstr "El webservice ha fallado, se reintentará de aquí 3 segundos"
+
+#. module: magentoerpconnect
+#: field:sale.shop,auto_import:0
+msgid "Automatic Import"
+msgstr "Importación automática"
+
+#. module: magentoerpconnect
 #: field:product.category,write_date:0
+#: field:product.images,write_date:0
 msgid "Updated date"
-msgstr "Fecha actualización"
+msgstr "Fecha publicación"
 
 #. module: magentoerpconnect
 #: field:magerp.product_attribute_options,attribute_name:0
@@ -985,9 +1389,14 @@ msgid "Error: Invalid ean code"
 msgstr "Error: Código EAN no válido"
 
 #. module: magentoerpconnect
-#: help:external.shop.group,default_lang_id:0
-msgid "Magento website wise default locale if different from English"
-msgstr "El sitio web Magento requiere locale por defecto si es diferente del inglés."
+#: code:addons/magentoerpconnect/product.py:0
+#, python-format
+msgid ""
+"This product is related to Magento. It can not be deleted!\n"
+"You can change it Magento status to \"Disabled\" and uncheck the active box to hide it from OpenERP."
+msgstr ""
+"Este producto está relacionado con Magento. No se puede eliminar este producto!\n"
+"Puede cambiar el estado del producto de Magento a \"Desactivado\" en la pestaña \"Información Magento\" y desactivar la opción \"Activo\" de la ficha del producto para ocultarlo en OpenERP"
 
 #. module: magentoerpconnect
 #: field:sale.order,magento_payment_method:0
@@ -1005,260 +1414,15 @@ msgid "Configurable?"
 msgstr "¿Configurable?"
 
 #. module: magentoerpconnect
-#: view:product.category:0
-msgid "Display Settings"
-msgstr "Valores visualización"
+#: field:sale.shop,last_products_export_date:0
+msgid "Last Product Export  Time"
+msgstr "Fecha última exportación productos"
 
 #. module: magentoerpconnect
-#: field:product.product,product_type:0
-#: view:magerp.product_product_type:0
-msgid "Product Type"
-msgstr "Tipo de producto"
-
-#. module: magentoerpconnect
-#: field:magerp.product_product_type,product_type:0
-msgid "Type"
-msgstr "Tipo"
-
-#. module: magentoerpconnect
-#: help:magerp.product_product_type,product_type:0
-msgid "Use the same name of Magento product type, for example 'simple'."
-msgstr "Use el mismo nombre del tipo de producto Magento, por ejemplo 'simple'."
-
-#. module: magentoerpconnect
-#: model:ir.actions.act_window,name:magentoerpconnect.act_magerp_product_type_form
-#: model:ir.ui.menu,name:magentoerpconnect.menu_magerp_product_type
-msgid "Product Types"
-msgstr "Tipos de producto"
-
-#. module: magentoerpconnect
-#: model:ir.model,name:magentoerpconnect.model_magerp_product_product_type
-msgid "magerp.product_product_type"
-msgstr "magerp.tipo_producto"
-
-#. module: magentoerpconnect
-#: model:magerp.product_product_type,name:magentoerpconnect.product_type_simple
-msgid "Simple Product"
-msgstr "Producto simple"
-
-#. module: magentoerpconnect
-#: model:magerp.product_product_type,name:magentoerpconnect.product_type_grouped
-msgid "Grouped Product"
-msgstr "Producto agrupado"
-
-#. module: magentoerpconnect
-#: model:magerp.product_product_type,name:magentoerpconnect.product_type_bundle
-msgid "Bundle Product"
-msgstr "Producto compuesto"
-
-#. module: magentoerpconnect
-#: model:magerp.product_product_type,name:magentoerpconnect.product_type_virtual
-msgid "Virtual Product"
-msgstr "Producto virtual"
-
-#. module: magentoerpconnect
-#: model:magerp.product_product_type,name:magentoerpconnect.product_type_configurable
-msgid "Configurable Product"
-msgstr "Producto configurable"
-
-#. module: magentoerpconnect
-#: model:magerp.product_product_type,name:magentoerpconnect.product_type_downloadable
-msgid "Downloadable Product"
-msgstr "Producto descargable"
-
-#. module: magentoerpconnect
-#: model:payment.type,name:magentoerpconnect.payment_type_free
-msgid "Free"
-msgstr "Gratuito"
-
-#. module: magentoerpconnect
-#: model:payment.type,name:magentoerpconnect.payment_type_servired_standard
-msgid "Servired Standard"
-msgstr "Servired estandard"
-
-#. module: magentoerpconnect
-#: model:payment.type,name:magentoerpconnect.payment_type_ccsave
-msgid "Saved Credit Card"
-msgstr "Guardado CC"
-
-#. module: magentoerpconnect
-#: model:payment.type,name:magentoerpconnect.payment_type_cashondelivery
-msgid "Cash On Delivery"
-msgstr "Contrareembolso"
-
-#. module: magentoerpconnect
-#: model:payment.type,name:magentoerpconnect.payment_type_googlecheckout
-msgid "Google Checkout"
-msgstr "Google Checkout"
-
-#. module: magentoerpconnect
-#: model:payment.type,name:magentoerpconnect.payment_type_paypal_standard
-msgid "Paypal Standard"
-msgstr "Paypal Standard"
-
-#. module: magentoerpconnect
-#: model:payment.type,name:magentoerpconnect.payment_type_paybox_system
-msgid "Paybox System"
-msgstr "Paybox System"
-
-#. module: magentoerpconnect
-#: model:payment.type,name:magentoerpconnect.payment_type_checkmo
-msgid "Check / Money Order"
-msgstr "Cheque / Giro de dinero"
-
-#. module: magentoerpconnect
-#: model:payment.type,name:magentoerpconnect.payment_type_paypayl_express
-msgid "Paypal Express"
-msgstr "Paypal Express"
-
-#. module: magentoerpconnect
-#: model:payment.type,name:magentoerpconnect.payment_type_bbva
-msgid "BBVA"
-msgstr "BBVA"
-
-#. module: magentoerpconnect
-#: model:payment.type,name:magentoerpconnect.payment_type_cofidis
-msgid "Cofidis"
-msgstr "Cofidis"
-
-#. module: magentoerpconnect
-#: view:magerp.sale.shop.payment.type:0
-#: field:magerp.sale.shop.payment.type,payment_type_id:0
-#: field:sale.shop,payment_types:0
-msgid "Payment Type"
-msgstr "Tipo de pago"
-
-#. module: magentoerpconnect
-#: model:ir.model,name:magentoerpconnect.model_magerp_sale_shop_payment_type
-msgid "Magento Sale Shop Payment Type"
-msgstr "Tipo de pago tienda Magento"
-
-#. module: magentoerpconnect
-#: field:product.images,base_image:0
-msgid "Base Image"
-msgstr "Imagen base"
-
-#. module: magentoerpconnect
-#: field:product.images,small_image:0
-msgid "Small Image"
-msgstr "Imagen pequeña"
-
-#. module: magentoerpconnect
-#: field:product.images,thumbnail:0
-msgid "Thumbnail"
-msgstr "Miniatura"
-
-#. module: magentoerpconnect
-#: field:product.category,image:0
-msgid "Image"
-msgstr "Imágen"
-
-#. module: magentoerpconnect
-#: field:product.images,sync_status:0
-msgid "Sync Status"
-msgstr "Estado sincronización"
-
-#. module: magentoerpconnect
-#: view:sale.shop:0
-msgid "Update Images"
-msgstr "Publicar imágenes"
-
-#. module: magentoerpconnect
-#: help:product.images,mage_file:0
-msgid "Filled when uploaded or synchronised"
-msgstr "Cobrirse cuando carga o sincronizada"
-
-#. module: magentoerpconnect
-#: field:product.images,exclude:0
-msgid "Exclude"
-msgstr "Excluir"
-
-#. module: magentoerpconnect
-#: field:product.images,mage_file:0
-msgid "Magento File Name"
-msgstr "Nombre de fichero Magento"
-
-#. module: magentoerpconnect
-#: field:product.category,write_date:0
-#: field:product.images,write_date:0
-msgid "Updated date"
-msgstr "Fecha publicación"
-
-#. module: magentoerpconnect
-#: field:magerp.product_attributes,position:0
-#: field:product.images,position:0
-msgid "Position"
-msgstr "Posición"
-
-#. module: magentoerpconnect
-#: selection:magerp.sale.shop.payment.type,picking_policy:0
-msgid "Partial Delivery"
-msgstr "Envío parcial"
-
-#. module: magentoerpconnect
-#: selection:magerp.sale.shop.payment.type,order_policy:0
-msgid "Payment Before Delivery"
-msgstr "Pago antes del envío"
-
-#. module: magentoerpconnect
-#: field:magerp.sale.shop.payment.type,order_policy:0
-msgid "Shipping Policy"
-msgstr "Política de facturación"
-
-#. module: magentoerpconnect
-#: model:product.template,description:magentoerpconnect.product_product_shipping_product_template
-msgid "description"
-msgstr "Descripción"
-
-#. module: magentoerpconnect
-#: selection:magerp.sale.shop.payment.type,picking_policy:0
-msgid "Complete Delivery"
-msgstr "Envío completo"
-
-#. module: magentoerpconnect
-#: selection:magerp.sale.shop.payment.type,invoice_quantity:0
-msgid "Ordered Quantities"
-msgstr "Cantidades ordenadas"
-
-#. module: magentoerpconnect
-#: selection:magerp.sale.shop.payment.type,order_policy:0
-msgid "Invoice on Order After Delivery"
-msgstr "Facturar pedido después del envío"
-
-#. module: magentoerpconnect
-#: help:res.partner,mag_vat:0
-msgid "To be able to receive customer VAT number you must set it in Magento Admin Panel, menu System / Configuration / Client Configuration / Name and Address Options."
-msgstr "Para poder recibir el número NIF/CIF del cliente debe configurarlo en el Magento Admin Panel, menú Sistema / Configuración / Configuración del cliente / Opciones del Nombre y Dirección."
-
-#. module: magentoerpconnect
-#: selection:magerp.sale.shop.payment.type,order_policy:0
-msgid "Shipping & Manual Invoice"
-msgstr "Enviar & Factura manual"
-
-#. module: magentoerpconnect
-#: field:magerp.sale.shop.payment.type,picking_policy:0
-msgid "Packing Policy"
-msgstr "Política de envío"
-
-#. module: magentoerpconnect
-#: model:product.template,description_sale:magentoerpconnect.product_product_shipping_product_template
-msgid "short description"
-msgstr "Descripción corta"
-
-#. module: magentoerpconnect
-#: selection:magerp.sale.shop.payment.type,order_policy:0
-msgid "Invoice from the Packing"
-msgstr "Factura desde albarán"
-
-#. module: magentoerpconnect
-#: field:magerp.sale.shop.payment.type,invoice_quantity:0
-msgid "Invoice on"
-msgstr "Factura"
-
-#. module: magentoerpconnect
-#: selection:magerp.sale.shop.payment.type,invoice_quantity:0
-msgid "Shipped Quantities"
-msgstr "Cantidades enviadas"
+#: field:product.product,tier_price:0
+#: field:product.product,x_magerp_tier_price:0
+msgid "Tier Price"
+msgstr "Escalado de precios"
 
 #. module: magentoerpconnect
 #: field:product.product,x_magerp_manufacturer:0
@@ -1391,11 +1555,6 @@ msgid "Active To"
 msgstr "Activo hasta"
 
 #. module: magentoerpconnect
-#: field:product.product,x_magerp_custom_layout_update:0
-msgid "Custom Layout Update"
-msgstr "Actualización diseño a medida"
-
-#. module: magentoerpconnect
 #: field:product.product,x_magerp_page_layout:0
 msgid "Page Layout"
 msgstr "Diseño página"
@@ -1408,54 +1567,43 @@ msgstr "Mostrar opciones del producto en"
 #. module: product
 #: view:product.product:0
 #: view:product.template:0
-msgid "Magento Information"
-msgstr "Info. Magento"
-
-#. module: product
-#: view:product.product:0
-#: view:product.template:0
-msgid "Design"
-msgstr "Diseño"
-
-#. module: product
-#: view:product.product:0
-#: view:product.template:0
-msgid "Meta Information"
-msgstr "Meta Información"
-
-#. module: product
-#: view:product.product:0
-#: view:product.template:0
-msgid "Prices"
-msgstr "Precios"
-
-#. module: product
-#: view:product.product:0
-#: view:product.template:0
-msgid "General"
-msgstr "General"
-
-#. module: product
-#: view:product.product:0
-#: view:product.template:0
-msgid "Images"
-msgstr "Imágenes"
-
-#. module: product
-#: view:product.product:0
-#: view:product.template:0
+#: field:product.product,x_magerp_custom_layout_update:0
 msgid "Custom Layout Update"
 msgstr "Actualización diseño a medida"
 
 #. module: product
 #: view:product.product:0
 #: view:product.template:0
+#: field:product.category,meta_keywords:0
+#: field:product.product,x_magerp_meta_keyword:0
 msgid "Meta Keywords"
 msgstr "Meta Palabras clave"
 
 #. module: product
 #: view:product.product:0
 #: view:product.template:0
+#: field:product.category,meta_description:0
+#: field:product.product,x_magerp_meta_description:0
 msgid "Meta Description"
 msgstr "Meta Descripción"
+
+#. module: product
+#: view:product.product:0
+msgid "Design"
+msgstr "Diseño"
+
+#. module: product
+#: view:product.product:0
+msgid "Prices"
+msgstr "Precios"
+
+#. module: product
+#: view:product.product:0
+msgid "General"
+msgstr "General"
+
+#. module: product
+#: view:product.product:0
+msgid "Images"
+msgstr "Imágenes"
 

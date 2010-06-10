@@ -680,6 +680,28 @@ class product_product(magerp_osv.magerp_osv):
         #Perform other operations
         return crid
 
+    def unlink(self, cr, uid, ids, context={}):
+        #if product is mapped to magento, not delete it
+        not_delete = False
+        sale_obj = self.pool.get('sale.shop')
+        search_params = [
+            ('magento_shop', '=', True),
+        ]
+        shops_ids = sale_obj.search(cr, uid, search_params)
+
+        for shop in sale_obj.browse(cr, uid, shops_ids, context):
+            for product_id in ids:
+                mgn_product = self.oeid_to_extid(cr, uid, product_id, shop.referential_id.id)
+                if mgn_product:
+                    not_delete = True
+                    break
+        if not_delete:
+            if len(ids) > 1:
+                raise osv.except_osv(_('Warning!'), _('They are some products related to Magento. They can not be deleted!\nYou can change their Magento status to "Disabled" and uncheck the active box to hide them from OpenERP.'))
+            else:
+                raise osv.except_osv(_('Warning!'), _('This product is related to Magento. It can not be deleted!\nYou can change it Magento status to "Disabled" and uncheck the active box to hide it from OpenERP.'))
+        else:
+            return super(product_product, self).unlink(cr, uid, ids, context)
 
     def redefine_prod_view(self,cr,uid, field_names, context):
         #This function will rebuild the view for product from instances, attribute groups etc
@@ -791,9 +813,6 @@ class product_product(magerp_osv.magerp_osv):
             
         if not product_data.get('status', False):
             product_data.update({'status': product.active and 1 or 2})
-            
-        if not product_data.get('websites', False):
-            product_data.update({'websites': [shop.shop_group_id.code]})
 
         if not product_data.get('description', False):
             product_data.update({'description': product.description or _("description")})
@@ -869,24 +888,20 @@ class product_product(magerp_osv.magerp_osv):
                 default_set_id = set['set_id']
                 break
         context['default_set_id'] = default_set_id
-        context_dic = {}
+        
+        context_dic = [context.copy()]
+        context_dic[0]['export_url'] = True # for the magento version 1.3.2.4, only one url is autorized by product, so we only export with the MAPPING TEMPLATE the url of the default language 
+        context_dic[0]['lang'] = shop.referential_id.default_lang_id.code
 
         for storeview in shop.storeview_ids:
-            if storeview.lang_id :
-                context_dic[storeview] = context.copy()
-                context_dic[storeview].update({'storeview_code': storeview.code, 'lang': storeview.lang_id.code})
-                if storeview.lang_id.code == shop.referential_id.default_lang_id.code:
-                    context_dic[storeview]['export_url'] = True # Magento #1.3.2.4 has only 1 URL per product, so we only export with the MAPPING TEMPLATE the url of the default language
-
-        if len(shop.storeview_ids) > len(context_dic):
-            context_dic['default_value'] = context.copy()
-            context_dic['default_value']['export_url'] = True #1.3.2.4 has only 1 URL per product, so we only export with the MAPPING TEMPLATE the url of the default language
-            context_dic['default_value']['lang'] = shop.referential_id.default_lang_id.code
+            if storeview.lang_id and storeview.lang_id.code != shop.referential_id.default_lang_id.code:
+                context_dic += [context.copy()]
+                context_dic[len(context_dic)-1].update({'storeview_code': storeview.code, 'lang': storeview.lang_id.code})
 
         result = {'create_ids':[], 'write_ids':[]}
         for id in ids:
-            for storeview in context_dic:
-                temp_result = super(magerp_osv.magerp_osv, self).ext_export(cr, uid, [id], external_referential_ids, defaults, context_dic[storeview])
+            for ctx_storeview in context_dic:
+                temp_result = super(magerp_osv.magerp_osv, self).ext_export(cr, uid, [id], external_referential_ids, defaults, ctx_storeview)
             self.pool.get('sale.shop').write(cr, uid,context['shop_id'], {'last_products_export_date': ids_2_dates[id]})
             result['create_ids'] += temp_result['create_ids']
             result['write_ids'] += temp_result['write_ids']
