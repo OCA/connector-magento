@@ -81,7 +81,7 @@ class product_images(magerp_osv.magerp_osv):
                         #self.write(cr, uid, each.id, {'mage_file':result})
                     else:
                         if each.product_id.magento_sku:
-                            print "Sending %s's image: %s" % (each.product_id.name, each.product_id.magento_sku)
+                            print u"Sending %s's image: %s" % (each.product_id.name, each.product_id.magento_sku)
                             result = conn.call('catalog_product_attribute_media.create',
                                       [each.product_id.magento_sku,
                                        {'file':{

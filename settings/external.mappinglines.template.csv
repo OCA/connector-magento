@@ -146,7 +146,7 @@ else:
     result = [('type_id',record['product_type'])]
 else:
     result = [('type_id','simple')]"
-"mag_erp_prd_14","magento1324","product.model_product_product","websites","in_out","str","websites_ids = []
+"mag_erp_prd_15","magento1324","product.model_product_product","websites","in_out","str","websites_ids = []
 for ext_id in eval(ifield):
     websites_ids.append(self.pool.get('external.shop.group').extid_to_oeid(cr, uid, ext_id, external_referential_id))
 
