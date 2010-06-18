@@ -122,12 +122,14 @@ class magerp_osv(external_osv.external_osv):
         if instance:
             search_params.append(('referential_id', '=', instance))
         for each in arguments:
-            if each:
-                if type(each) == type((1, 2)):
-                    search_params.append(each)
-                if type(each) == type([1, 2]):
-                    for each_tup in each:
-                        search_params.append(each_tup)
+            if not each:
+                continue
+
+            if isinstance(each, tuple):
+                search_params.append(each)
+            if isinstance(each, list):
+                for each_tup in each:
+                    search_params.append(each_tup)
         if search_params:
             oeid = self.search(cr, uid, search_params)
             if oeid:
@@ -136,7 +138,11 @@ class magerp_osv(external_osv.external_osv):
         return False
     
     #TODO deprecated, remove use
-    def sync_import(self, cr, uid, magento_records, instance, debug=False, defaults={}, *attrs):
+    def sync_import(self, cr, uid, magento_records, instance, debug=False, defaults=None, *attrs):
+
+        if defaults is None:
+            defaults = {}
+
         #Attrs of 0 should be mage2oe_filters
         if magento_records:
             mapped_keys = self._mapping.keys()
@@ -157,14 +163,14 @@ class magerp_osv(external_osv.external_osv):
                 #Generate Vals
                 vals = {}
                 space = {
-                            'self':self,
-                            'uid':uid,
-                            'rec_id':rec_id,
-                            'cr':cr,
-                            'referential_id':instance,
-                            'temp_vars':{},
-                            'mage2oe_filters':mage2oe_filters
-                        }
+                    'self':self,
+                    'uid':uid,
+                    'rec_id':rec_id,
+                    'cr':cr,
+                    'referential_id':instance,
+                    'temp_vars':{},
+                    'mage2oe_filters':mage2oe_filters
+                }
                 
                 #now properly mapp known Magento attributes to OpenERP entity columns:
                 for each_valid_key in self._mapping:
@@ -198,8 +204,7 @@ class magerp_osv(external_osv.external_osv):
                             if self._mapping[each_valid_key][0]:#if not function mapping
                                 vals[self._mapping[each_valid_key][0]] = magento_record[each_valid_key] or False
                 vals['referential_id'] = instance
-                if debug:
-                    print vals
+                tools.debug(vals)
                 if self._MAGE_FIELD:
                     if self._MAGE_FIELD in vals.keys() and vals[self._MAGE_FIELD]:
                         self.record_save(cr, uid, rec_id, vals, defaults)
