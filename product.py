@@ -1,4 +1,3 @@
-
 # -*- encoding: utf-8 -*-
 #########################################################################
 #This module intergrates Open ERP with the magento core                 #
@@ -831,7 +830,13 @@ class product_product(magerp_osv.magerp_osv):
         return res
     
     def ext_export(self, cr, uid, ids, external_referential_ids=[], defaults={}, context={}):
+        result = {'create_ids':[], 'write_ids':[]}
+
         ids = self.search(cr, uid, [('id', 'in', ids), ('magento_exportable', '=', True)]) #restrict export to only exportable products
+        
+        if not ids:
+            return result
+            
         dates_2_ids = []
         ids_2_dates = {}
         
@@ -843,7 +848,7 @@ class product_product(magerp_osv.magerp_osv):
             last_exported_time = False
 
         #strangely seems that on inherits structure, write_date/create_date are False for children
-        cr.execute("select id, write_date, create_date from product_product where id in ("+ ','.join(map(lambda x: str(x),ids))+')')
+        cr.execute("select id, write_date, create_date from product_product where id in %s", (tuple(ids),))
         read = cr.fetchall()
         ids = []
         context['force']=True
@@ -878,7 +883,6 @@ class product_product(magerp_osv.magerp_osv):
                 context_dic += [context.copy()]
                 context_dic[len(context_dic)-1].update({'storeview_code': storeview.code, 'lang': storeview.lang_id.code})
 
-        result = {'create_ids':[], 'write_ids':[]}
         for id in ids:
             for ctx_storeview in context_dic:
                 temp_result = super(magerp_osv.magerp_osv, self).ext_export(cr, uid, [id], external_referential_ids, defaults, ctx_storeview)
