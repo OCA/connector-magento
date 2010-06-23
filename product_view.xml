@@ -227,7 +227,7 @@
 					<xpath expr="/form/group/group/field[@name='variants']" position="after">
 						<field name="set" select="2" attrs="{'required':[('magento_exportable','==',True)]}"/>
 					</xpath>
-					<xpath expr="/form/notebook position="before">
+					<xpath expr="/form/notebook" position="before">
 						<field name="magento_exportable" select="2"/>
 					</xpath>
 				</data>
