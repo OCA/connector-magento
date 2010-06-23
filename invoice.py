@@ -26,6 +26,7 @@ class account_invoice(osv.osv):
     _inherit = "account.invoice"
     
     _columns = {
-                    'magento_ref':fields.char('Magento REF', size=32),
-                }
+        'magento_ref':fields.char('Magento REF', size=32),
+    }
+
 account_invoice()

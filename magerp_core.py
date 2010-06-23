@@ -37,15 +37,17 @@ class external_referential(magerp_osv.magerp_osv):
     }
 
              
-    def connect(self, cr, uid, ids, ctx={}):#TODO used?
+    def connect(self, cr, uid, ids, ctx=None):#TODO used?
         #ids has to be a list
-        if ids:
-            if len(ids) == 1:
-                instance = self.browse(cr, uid, ids, ctx)[0]
-                if instance:
-                    core_imp_conn = self.external_connection(cr, uid, instance, DEBUG)
-                    if core_imp_conn.connect():
-                        return core_imp_conn
+        if isinstance(ids, (list, tuple)) and len(ids) == 1:
+            instance = self.browse(cr, uid, ids[0], ctx)
+            if instance:
+                core_imp_conn = self.external_connection(cr, uid, instance, DEBUG)
+                if core_imp_conn.connect():
+                    return core_imp_conn
+                else:
+                    raise osv.except_osv(_("Connection Error"), _("Could not connect to server\nCheck location, username & password."))
+
         return False
 
     def core_sync(self, cr, uid, ids, ctx={}):
@@ -53,63 +55,51 @@ class external_referential(magerp_osv.magerp_osv):
         filter = []
         for inst in instances:
             core_imp_conn = self.external_connection(cr, uid, inst, DEBUG)
-            if core_imp_conn:
-                self.pool.get('external.shop.group').mage_import_base(cr, uid,core_imp_conn, inst.id, defaults={'referential_id':inst.id})
-                self.pool.get('sale.shop').mage_import_base(cr, uid, core_imp_conn, inst.id, defaults={'magento_shop':True})
-                self.pool.get('magerp.storeviews').mage_import_base(cr,uid,core_imp_conn, inst.id, defaults={})
-            else:
-                osv.except_osv(_("Connection Error"), _("Could not connect to server\nCheck location, username & password."))
+            self.pool.get('external.shop.group').mage_import_base(cr, uid,core_imp_conn, inst.id, defaults={'referential_id':inst.id})
+            self.pool.get('sale.shop').mage_import_base(cr, uid, core_imp_conn, inst.id, defaults={'magento_shop':True})
+            self.pool.get('magerp.storeviews').mage_import_base(cr,uid,core_imp_conn, inst.id, defaults={})
         return True
 
     def sync_categs(self, cr, uid, ids, ctx):
         instances = self.browse(cr, uid, ids, ctx)
         for inst in instances:
             pro_cat_conn = self.external_connection(cr, uid, inst, DEBUG)
-            if pro_cat_conn:
-                confirmation = pro_cat_conn.call('catalog_category.currentStore', [0])   #Set browse to root store
-                if confirmation:
-                    categ_tree = pro_cat_conn.call('catalog_category.tree')             #Get the tree
-                    self.pool.get('product.category').record_entire_tree(cr, uid, inst.id, pro_cat_conn, categ_tree, DEBUG)
-                    #exp_ids = self.pool.get('product.category').search(cr,uid,[('exportable','=',True)])
-                    #self.pool.get('product.category').ext_export(cr,uid,exp_ids,[inst.id],{},{'conn_obj':pro_cat_conn})
-            else:
-                osv.except_osv(_("Connection Error"), _("Could not connect to server\nCheck location, username & password."))
+            confirmation = pro_cat_conn.call('catalog_category.currentStore', [0])   #Set browse to root store
+            if confirmation:
+                categ_tree = pro_cat_conn.call('catalog_category.tree')             #Get the tree
+                self.pool.get('product.category').record_entire_tree(cr, uid, inst.id, pro_cat_conn, categ_tree, DEBUG)
+                #exp_ids = self.pool.get('product.category').search(cr,uid,[('exportable','=',True)])
+                #self.pool.get('product.category').ext_export(cr,uid,exp_ids,[inst.id],{},{'conn_obj':pro_cat_conn})
         return True
 
     def sync_attribs(self, cr, uid, ids, ctx):
         instances = self.browse(cr, uid, ids, ctx)
         for inst in instances:
             attr_conn = self.external_connection(cr, uid, inst, DEBUG)
-            if attr_conn:
-                attrib_set_ids = self.pool.get('magerp.product_attribute_set').search(cr, uid, [('referential_id', '=', inst.id)])
-                attrib_sets = self.pool.get('magerp.product_attribute_set').read(cr, uid, attrib_set_ids, ['magento_id'])
-                #Get all attribute set ids to get all attributes in one go
-                all_attr_set_ids = self.pool.get('magerp.product_attribute_set').get_all_mage_ids(cr, uid, [], inst.id)
-                #Call magento for all attributes
-                mage_inp = attr_conn.call('ol_catalog_product_attribute.list', [all_attr_set_ids])             #Get the tree
-                #self.pool.get('magerp.product_attributes').sync_import(cr, uid, mage_inp, inst.id, DEBUG) #Last argument is extra mage2oe filter as same attribute ids
-                self.pool.get('magerp.product_attributes').ext_import(cr, uid, mage_inp, inst.id, defaults={'referential_id':inst.id}, context={'referential_id':inst.id})
-                #Relate attribute sets & attributes
-                mage_inp = {}
-                #Pass in {attribute_set_id:{attributes},attribute_set_id2:{attributes}}
-                #print "Attribute sets are:", attrib_sets
-                for each in attrib_sets:
-                    mage_inp[each['magento_id']] = attr_conn.call('ol_catalog_product_attribute.relations', [each['magento_id']])
-                if mage_inp:
-                    self.pool.get('magerp.product_attribute_set').relate(cr, uid, mage_inp, inst.id, DEBUG)
-            else:
-                osv.except_osv(_("Connection Error"), _("Could not connect to server\nCheck location, username & password."))
+            attrib_set_ids = self.pool.get('magerp.product_attribute_set').search(cr, uid, [('referential_id', '=', inst.id)])
+            attrib_sets = self.pool.get('magerp.product_attribute_set').read(cr, uid, attrib_set_ids, ['magento_id'])
+            #Get all attribute set ids to get all attributes in one go
+            all_attr_set_ids = self.pool.get('magerp.product_attribute_set').get_all_mage_ids(cr, uid, [], inst.id)
+            #Call magento for all attributes
+            mage_inp = attr_conn.call('ol_catalog_product_attribute.list', [all_attr_set_ids])             #Get the tree
+            #self.pool.get('magerp.product_attributes').sync_import(cr, uid, mage_inp, inst.id, DEBUG) #Last argument is extra mage2oe filter as same attribute ids
+            self.pool.get('magerp.product_attributes').ext_import(cr, uid, mage_inp, inst.id, defaults={'referential_id':inst.id}, context={'referential_id':inst.id})
+            #Relate attribute sets & attributes
+            mage_inp = {}
+            #Pass in {attribute_set_id:{attributes},attribute_set_id2:{attributes}}
+            #print "Attribute sets are:", attrib_sets
+            for each in attrib_sets:
+                mage_inp[each['magento_id']] = attr_conn.call('ol_catalog_product_attribute.relations', [each['magento_id']])
+            if mage_inp:
+                self.pool.get('magerp.product_attribute_set').relate(cr, uid, mage_inp, inst.id, DEBUG)
         return True
 
     def sync_attrib_sets(self, cr, uid, ids, ctx):
         instances = self.browse(cr, uid, ids, ctx)
         for inst in instances:
             attr_conn = self.external_connection(cr, uid, inst, DEBUG)
-            if attr_conn:
-                filter = []
-                self.pool.get('magerp.product_attribute_set').mage_import_base(cr, uid, attr_conn, inst.id,{'referential_id':inst.id},{'ids_or_filter':filter})
-            else:
-                osv.except_osv(_("Connection Error"), _("Could not connect to server\nCheck location, username & password."))          
+            filter = []
+            self.pool.get('magerp.product_attribute_set').mage_import_base(cr, uid, attr_conn, inst.id,{'referential_id':inst.id},{'ids_or_filter':filter})
         return True
 
     def sync_attrib_groups(self, cr, uid, ids, ctx):
@@ -118,10 +108,7 @@ class external_referential(magerp_osv.magerp_osv):
             attr_conn = self.external_connection(cr, uid, inst, DEBUG)
             attrset_ids = self.pool.get('magerp.product_attribute_set').get_all_mage_ids(cr, uid, [], inst.id)
             filter = [{'attribute_set_id':{'in':attrset_ids}}]
-            if attr_conn:
-                self.pool.get('magerp.product_attribute_groups').mage_import_base(cr, uid, attr_conn, inst.id, {'referential_id': inst.id}, {'ids_or_filter':filter})
-            else:
-                osv.except_osv(_("Connection Error"), _("Could not connect to server\nCheck location, username & password."))
+            self.pool.get('magerp.product_attribute_groups').mage_import_base(cr, uid, attr_conn, inst.id, {'referential_id': inst.id}, {'ids_or_filter':filter})
         return True
 
     def sync_customer_groups(self, cr, uid, ids, ctx):
@@ -129,10 +116,7 @@ class external_referential(magerp_osv.magerp_osv):
         for inst in instances:
             attr_conn = self.external_connection(cr, uid, inst, DEBUG)
             filter = []
-            if attr_conn:
-                self.pool.get('res.partner.category').mage_import_base(cr, uid, attr_conn, inst.id, {}, {'ids_or_filter':filter})
-            else:
-                osv.except_osv(_("Connection Error"), _("Could not connect to server\nCheck location, username & password."))
+            self.pool.get('res.partner.category').mage_import_base(cr, uid, attr_conn, inst.id, {}, {'ids_or_filter':filter})
         return True
 
     def sync_customer_addresses(self, cr, uid, ids, ctx):
@@ -140,12 +124,9 @@ class external_referential(magerp_osv.magerp_osv):
         for inst in instances:
             attr_conn = self.external_connection(cr, uid, inst, DEBUG)
             filter = []
-            if attr_conn:
-                #self.pool.get('res.partner').mage_import(cr, uid, filter, attr_conn, inst.id, DEBUG)
-                #TODO fix by retrieving customer list first
-                self.pool.get('res.partner.address').mage_import_base(cr, uid, attr_conn, inst.id, {}, {'ids_or_filter':filter})
-            else:
-                osv.except_osv(_("Connection Error"), _("Could not connect to server\nCheck location, username & password."))
+            #self.pool.get('res.partner').mage_import(cr, uid, filter, attr_conn, inst.id, DEBUG)
+            #TODO fix by retrieving customer list first
+            self.pool.get('res.partner.address').mage_import_base(cr, uid, attr_conn, inst.id, {}, {'ids_or_filter':filter})
         return True
 
     def sync_products(self, cr, uid, ids, ctx):
@@ -153,16 +134,13 @@ class external_referential(magerp_osv.magerp_osv):
         for inst in instances:
             attr_conn = self.external_connection(cr, uid, inst, DEBUG)
             filter = []
-            if attr_conn:
-                list_prods = attr_conn.call('catalog_product.list')
-                #self.pool.get('product.product').mage_import(cr, uid, filter, attr_conn, inst.id, DEBUG)
-                result = []
-                for each in list_prods:
-                    each_product_info = attr_conn.call('catalog_product.info', [each['product_id']])
-                    result.append(each_product_info)
-                self.pool.get('product.product').ext_import(cr, uid, result, inst.id, context={})
-            else:
-                osv.except_osv(_("Connection Error"), _("Could not connect to server\nCheck location, username & password."))
+            list_prods = attr_conn.call('catalog_product.list')
+            #self.pool.get('product.product').mage_import(cr, uid, filter, attr_conn, inst.id, DEBUG)
+            result = []
+            for each in list_prods:
+                each_product_info = attr_conn.call('catalog_product.info', [each['product_id']])
+                result.append(each_product_info)
+            self.pool.get('product.product').ext_import(cr, uid, result, inst.id, context={})
         return True
 
     def export_products(self, cr, uid, ids, ctx):
@@ -171,7 +149,7 @@ class external_referential(magerp_osv.magerp_osv):
             for shop in self.pool.get('sale.shop').browse(cr, uid, shop_ids, ctx):
                 ctx['conn_obj'] = self.external_connection(cr, uid, inst)
                 #shop.export_catalog
-                print "cr, uid, shop, ctx", cr, uid, shop, ctx
+                tools.debug((cr, uid, shop, ctx,))
                 shop.export_products(cr, uid, shop, ctx)
         return True
 

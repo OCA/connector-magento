@@ -1,4 +1,3 @@
-
 # -*- encoding: utf-8 -*-
 #########################################################################
 #This module intergrates Open ERP with the magento core                 #
@@ -35,24 +34,6 @@ GROUP_CUSTOM_ATTRS_TOGETHER = True
 
 class product_category(magerp_osv.magerp_osv):
     _inherit = "product.category"
-    
-#    def name_get(self, cr, uid, ids, context=None):
-#        if not len(ids):
-#            return []
-#        reads = self.read(cr, uid, ids, ['name', 'parent_id', 'instance'], context)
-#        res = []
-#        for record in reads:
-#            name = record['name']
-#            if record['parent_id']:
-#                name = record['parent_id'][1] + ' / ' + name
-#            if record['instance'] and not record['parent_id']:
-#                name = "[" + record['instance'][1] + "] " + name 
-#            res.append((record['id'], name))
-#        return res
-
-    def _name_get_fnc(self, cr, uid, ids, prop, unknow_none, context):
-        res = self.name_get(cr, uid, ids, context)
-        return dict(res)
     
     def ext_create(self, cr, uid, data, conn, method, oe_id, context):
         return conn.call(method, [data.get('parent_id', 1), data])
@@ -189,26 +170,26 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
     #mapping magentofield:(openerpfield,typecast,)
     #have an entry for each mapped field
     _no_create_list = [
-                        'product_id',
-                        'name',
-                        'description',
-                        'short_description',
-                        'sku',
-                        'weight',
-                        'category_ids',
-                        'price',
-                        'cost',
-                        'set'
-                       ]
-    
+        'product_id',
+        'name',
+        'description',
+        'short_description',
+        'sku',
+        'weight',
+        'category_ids',
+        'price',
+        'cost',
+        'set'
+    ]
+
     _translatable_default_codes = [
-                                   'description',
-                                   'meta_description',
-                                   'meta_keyword',
-                                   'meta_title',
-                                   'name',
-                                   'short_description'
-                                   ]
+        'description',
+        'meta_description',
+        'meta_keyword',
+        'meta_title',
+        'name',
+        'short_description'
+    ]
     
     _type_conversion = {
         '':'char',
@@ -223,7 +204,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
         'boolean':'boolean',
         'weee':'char',
         False:'char'
-        }
+    }
     
     _type_casts = {
         '':'str',
@@ -238,7 +219,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
         'boolean':'int',
         'weee':'str',
         False:'str'
-        }
+    }
 
     
     def _is_attribute_translatable(self, vals):
@@ -255,7 +236,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
         if type(ids) == int:
             ids = [ids]
         result = super(magerp_product_attributes, self).write(cr, uid, ids, vals, context) 
-        model_id = model_id = self.pool.get('ir.model').search(cr, uid, [('model', '=', 'product.product')])[0]
+        model_id = self.pool.get('ir.model').search(cr, uid, [('model', '=', 'product.product')])[0]
         referential_id = context.get('referential_id', False)
         for id in ids:
             all_vals = self.read(cr, uid, id, [], context)
@@ -305,13 +286,13 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
                         referential_id = context.get('referential_id',False)
                         field_ids = self.pool.get('ir.model.fields').search(cr, uid, [('name', '=', field_name), ('model_id', '=', model_id)])
                         field_vals = {
-                                        'name':field_name,
-                                        'model_id':model_id,
-                                        'model':'product.product',
-                                        'field_description':vals.get('frontend_label', False) or vals['attribute_code'],
-                                        'ttype':self._type_conversion[vals.get('frontend_input', False)],
-                                        'translate': self._is_attribute_translatable(vals)
-                                      }
+                            'name':field_name,
+                            'model_id':model_id,
+                            'model':'product.product',
+                            'field_description':vals.get('frontend_label', False) or vals['attribute_code'],
+                            'ttype':self._type_conversion[vals.get('frontend_input', False)],
+                            'translate': self._is_attribute_translatable(vals)
+                        }
                         if not field_ids:
                             #The field is not there create it
                             #IF char add size
@@ -377,15 +358,15 @@ class magerp_product_attribute_options(magerp_osv.magerp_osv):
     _name = "magerp.product_attribute_options"
     _description = "Options  of selected attributes"
     _rec_name = "label"
-    
+
     _columns = {
-                'attribute_id':fields.many2one('magerp.product_attributes', 'Attribute'),
-                'attribute_name':fields.related('attribute_id', 'attribute_code', type='char', string='Attribute Code',),
-                'value':fields.char('Value', size=200),
-                'ipcast':fields.char('Type cast', size=50),
-                'label':fields.char('Label', size=100),
-                'referential_id':fields.many2one('external.referential', 'Magento Instance', readonly=True),
-                }
+        'attribute_id':fields.many2one('magerp.product_attributes', 'Attribute'),
+        'attribute_name':fields.related('attribute_id', 'attribute_code', type='char', string='Attribute Code',),
+        'value':fields.char('Value', size=200),
+        'ipcast':fields.char('Type cast', size=50),
+        'label':fields.char('Label', size=100),
+        'referential_id':fields.many2one('external.referential', 'Magento Instance', readonly=True),
+    }
 
     def data_to_save(self, cr, uid, vals_list, update=False, context={}):
         """This method will take data from vals and use context to create record"""
@@ -446,17 +427,17 @@ class magerp_product_attribute_set(magerp_osv.magerp_osv):
 
         for attribute_set in self.browse(cr, uid, ids, context):
             menu_vals = {
-                            'name': attribute_set.attribute_set_name,
-                            'parent_id': product_menu_id,
-                            'icon': 'STOCK_JUSTIFY_FILL'
+                'name': attribute_set.attribute_set_name,
+                'parent_id': product_menu_id,
+                'icon': 'STOCK_JUSTIFY_FILL'
             }
-            
+
             action_vals = {
-                            'name': attribute_set.attribute_set_name,
-                            'view_type':'form',
-                            'domain':"[('set', '=', %s)]" % attribute_set.id,
-                            'context': "{'set':%s}" % attribute_set.id,
-                            'res_model': 'product.product'
+                'name': attribute_set.attribute_set_name,
+                'view_type':'form',
+                'domain':"[('set', '=', %s)]" % attribute_set.id,
+                'context': "{'set':%s}" % attribute_set.id,
+                'res_model': 'product.product'
             }
             
             existing_menu_id = self.pool.get('ir.ui.menu').search(cr, uid, [('name', '=', attribute_set.attribute_set_name)])
@@ -523,10 +504,8 @@ class magerp_product_attribute_set(magerp_osv.magerp_osv):
                 query += ","
             query = query[0:len(query) - 1] + ";"
             cr.execute(query)
-            return True
-        else:
-            #The attribute mapping is null
-            return True
+
+        return True
     
 magerp_product_attribute_set()
 
@@ -542,13 +521,13 @@ class magerp_product_attribute_groups(magerp_osv.magerp_osv):
         return res
     
     _columns = {
-                'attribute_set_id':fields.integer('Attribute Set ID'),
-                'attribute_set':fields.function(_get_set, type="many2one", relation="magerp.product_attribute_set", method=True, string="Attribute Set"),
-                'attribute_group_name':fields.char('Group Name', size=100),
-                'sort_order':fields.integer('Sort Order'),
-                'default_id':fields.integer('Default'),
-                'referential_id':fields.many2one('external.referential', 'Magento Instance', readonly=True),
-                }
+        'attribute_set_id':fields.integer('Attribute Set ID'),
+        'attribute_set':fields.function(_get_set, type="many2one", relation="magerp.product_attribute_set", method=True, string="Attribute Set"),
+        'attribute_group_name':fields.char('Group Name', size=100),
+        'sort_order':fields.integer('Sort Order'),
+        'default_id':fields.integer('Default'),
+        'referential_id':fields.many2one('external.referential', 'Magento Instance', readonly=True),
+    }
 magerp_product_attribute_groups()
 
 class product_tierprice(osv.osv):
@@ -557,21 +536,21 @@ class product_tierprice(osv.osv):
     
     _columns = {
         'web_scope':fields.selection([
-                    ('all', 'All Websites'),
-                    ('specific', 'Specific Website'),
-                                  ], 'Scope'),
+            ('all', 'All Websites'),
+            ('specific', 'Specific Website'),
+        ], 'Scope'),
         'website_id':fields.many2one('external.shop.group', 'Website'),
         'group_scope':fields.selection([
-                            ('1', 'All groups'),
-                            ('0', 'Specific group')
-                                       ]),
+            ('1', 'All groups'),
+            ('0', 'Specific group')
+        ]),
         'cust_group':fields.many2one('res.partner.category', 'Customer Group'),
         'website_price':fields.float('Website Price', digits=(10, 2),),
         'price':fields.float('Price', digits=(10, 2),),
         'price_qty':fields.float('Quantity Slab', digits=(10, 4), help="Slab & above eg.For 10 and above enter 10"),
         'product':fields.many2one('product.product', 'Product'),
         'referential_id':fields.many2one('external.referential', 'Magento Instance', readonly=True),
-                }
+    }
     _mapping = {
         'cust_group':(False, int, """result=self.pool.get('res.partner.category').mage_to_oe(cr,uid,cust_group,instance)\nif result:\n\tresult=[('cust_group',result[0])]\nelse:\n\tresult=[('cust_group',False)]"""),
         'all_groups':(False, str, """if all_groups=='1':\n\tresult=[('group_scope','1')]\nelse:\n\tresult=[('group_scope','1')]"""),
@@ -579,7 +558,7 @@ class product_tierprice(osv.osv):
         'price':('price', float),
         'website_id':(False, int, """result=self.pool.get('external.shop.group').mage_to_oe(cr,uid,website_id,instance)\nif result:\n\tresult=[('website_id',result[0])]\nelse:\n\tresult=[('website_id',False)]"""),
         'price_qty':('price_qty', float),
-                }
+    }
 product_tierprice()
 
 class product_product_type(osv.osv):
@@ -611,7 +590,7 @@ class product_product(magerp_osv.magerp_osv):
 
     _defaults = {
         'magento_exportable':lambda * a:True
-                 }
+    }
     
     #remember one thing in life: Magento lies: it tells attributes are required while they are awkward to fill
     #and will have a nice default vaule anyway, that's why we avoid making them mandatory in the product view
@@ -851,7 +830,13 @@ class product_product(magerp_osv.magerp_osv):
         return res
     
     def ext_export(self, cr, uid, ids, external_referential_ids=[], defaults={}, context={}):
+        result = {'create_ids':[], 'write_ids':[]}
+
         ids = self.search(cr, uid, [('id', 'in', ids), ('magento_exportable', '=', True)]) #restrict export to only exportable products
+        
+        if not ids:
+            return result
+            
         dates_2_ids = []
         ids_2_dates = {}
         
@@ -863,7 +848,7 @@ class product_product(magerp_osv.magerp_osv):
             last_exported_time = False
 
         #strangely seems that on inherits structure, write_date/create_date are False for children
-        cr.execute("select id, write_date, create_date from product_product where id in ("+ ','.join(map(lambda x: str(x),ids))+')')
+        cr.execute("select id, write_date, create_date from product_product where id in %s", (tuple(ids),))
         read = cr.fetchall()
         ids = []
         context['force']=True
@@ -898,7 +883,6 @@ class product_product(magerp_osv.magerp_osv):
                 context_dic += [context.copy()]
                 context_dic[len(context_dic)-1].update({'storeview_code': storeview.code, 'lang': storeview.lang_id.code})
 
-        result = {'create_ids':[], 'write_ids':[]}
         for id in ids:
             for ctx_storeview in context_dic:
                 temp_result = super(magerp_osv.magerp_osv, self).ext_export(cr, uid, [id], external_referential_ids, defaults, ctx_storeview)
@@ -929,10 +913,7 @@ class product_product(magerp_osv.magerp_osv):
                 virtual_available = self.read(cr, uid, product.id, ['virtual_available'], {'location': stock_id})['virtual_available']
 		# Changing Stock Availability to "Out of Stock" in Magento
                 # if a product has qty lt or equal to 0.
-                if virtual_available <= 0 :
-                    is_in_stock = 0
-                else :
-                    is_in_stock = 1
+                is_in_stock = int(virtual_available > 0)
                 ctx['conn_obj'].call('product_stock.update', [product.magento_sku, {'qty': virtual_available, 'is_in_stock': is_in_stock}])
                 logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "Successfully updated stock level at %s for product with SKU %s " %(virtual_available, product.magento_sku))
     
