@@ -23,7 +23,6 @@
                  "product_m2mcategories",
                  "base_sale_multichannels",
                  "product_images_olbs",
-                 "account_payment",
                 ],
     "author" : "Sharoon Thomas, Raphael Valyi",
     "description": """Magento E-commerce management
@@ -45,7 +44,6 @@
             'settings/external.mapping.template.csv',
             'settings/external.mappinglines.template.csv',
             'settings/magerp_product_product_type.xml',
-            'settings/magerp_payment_type.xml',
                     ],
     "active": False,
     "installable": True,
