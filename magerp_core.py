@@ -27,7 +27,7 @@ DEBUG = True
 TIMEOUT = 2
         
 class external_referential(magerp_osv.magerp_osv):
-    #This class stores instances of magento to which the ERP will connect, the concept of multi website, multistore integration?
+    #This class stores instances of magento to which the ERP will connect, so you can connect OpenERP to multiple Magento installations (eg different Magento databases)
     _inherit = "external.referential"
 
     _columns = {
@@ -37,7 +37,7 @@ class external_referential(magerp_osv.magerp_osv):
     }
 
              
-    def connect(self, cr, uid, ids, ctx=None):#TODO used?
+    def connect(self, cr, uid, ids, ctx=None):
         #ids has to be a list
         if isinstance(ids, (list, tuple)) and len(ids) == 1:
             instance = self.browse(cr, uid, ids[0], ctx)
