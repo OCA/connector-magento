@@ -20,12 +20,7 @@ class Connection(object):
         self.debug = debug
         self.result = {}
         self.logger = netsvc.Logger()
-        
-    def try_connect(self):
-        self.session = self.ser.login(self.username, self.password)
-        if self.debug:
-            self.logger.notifyChannel(_("Magento Connection"), netsvc.LOG_INFO, _("Login Successful"))
-        return True
+
     
     def connect(self):
         if not self.location[-1] == '/':
@@ -33,62 +28,39 @@ class Connection(object):
         if self.debug:
             self.logger.notifyChannel(_("Magento Connection"), netsvc.LOG_INFO, _("Attempting connection with Settings:%s,%s,%s") % (self.location, self.username, self.password))
         self.ser = xmlrpclib.ServerProxy(self.location)
-        try:
-            return self.try_connect()
-        except Exception, e:
-            self.logger.notifyChannel(_("Magento Connection"), netsvc.LOG_WARNING, _("Webservice Failure, sleeping 1 second before next attempt"))
-            time.sleep(1)
+        for sleep_time in [1, 3, 6]:
             try:
-                return self.try_connect()
+                self.session = self.ser.login(self.username, self.password)
+                if self.debug:
+                    self.logger.notifyChannel(_("Magento Connection"), netsvc.LOG_INFO, _("Login Successful"))
+                return True
             except Exception, e:
-                self.logger.notifyChannel(_("Magento Connection"), netsvc.LOG_WARNING, _("Webservice Failure, sleeping 3 second before next attempt"))
-                time.sleep(3)
-                try:
-                    return self.try_connect()
-                except Exception, e:
-                    self.logger.notifyChannel(_("Magento Connection"), netsvc.LOG_WARNING, _("Webservice Failure, sleeping 6 second before next attempt"))
-                    time.sleep(6)
-                    try:
-                        return self.try_connect()
-                    except Exception, e:
-                        self.logger.notifyChannel(_("Magento Connection"), netsvc.LOG_ERROR, _("Error in connecting") % (e))
-                        raise
-            
-    def try_call(self, method, arguments):
-        if self.debug:
-            self.logger.notifyChannel(_("Magento Connection"), netsvc.LOG_INFO, _("Calling Method:%s,Arguments:%s") % (method, arguments))
-        res = self.ser.call(self.session, method, arguments)
-        if self.debug:
-            self.logger.notifyChannel(_("Magento Connection"), netsvc.LOG_INFO, _("Query Returned:%s") % (res))
-        return res
-        
+                self.logger.notifyChannel(_("Magento Connection"), netsvc.LOG_ERROR, _("Error in connecting:%s") % (e))
+                self.logger.notifyChannel(_("Magento Call"), netsvc.LOG_WARNING, _("Webservice Failure, sleeping %s second before next attempt") % (sleep_time))
+                time.sleep(sleep_time)
+        raise
+
     
     def call(self, method, *arguments): 
         if arguments:
             arguments = list(arguments)[0]
         else:
             arguments = []
-        try:
-            return self.try_call(method, arguments)
-        except Exception, e:
-            self.logger.notifyChannel(_("Magento Call"), netsvc.LOG_WARNING, _("Webservice Failure, sleeping 1 second before next attempt"))
-            time.sleep(1)
+        for sleep_time in [1, 3, 6]:
             try:
-                return self.try_call(method, arguments)
+                if self.debug:
+                    self.logger.notifyChannel(_("Magento Connection"), netsvc.LOG_INFO, _("Calling Method:%s,Arguments:%s") % (method, arguments))
+                res = self.ser.call(self.session, method, arguments)
+                if self.debug:
+                    self.logger.notifyChannel(_("Magento Connection"), netsvc.LOG_INFO, _("Query Returned:%s") % (res))
+                return res
             except Exception, e:
-                self.logger.notifyChannel(_("Magento Call"), netsvc.LOG_WARNING, _("Webservice Failure, sleeping 3 seconds before next attempt"))
-                time.sleep(3)
-                try:
-                    return self.try_call(method, arguments)
-                except Exception, e:
-                    self.logger.notifyChannel(_("Magento Call"), netsvc.LOG_WARNING, _("Webservice Failure, sleeping 6 seconds before next attempt"))
-                    time.sleep(6)
-                    try:
-                        return self.try_call(method, arguments)
-                    except Exception, e:
-                        self.logger.notifyChannel(_("Magento Call"), netsvc.LOG_ERROR, _("Method: %s\nArguments:%s\nError:%s") % (method, arguments, e))
-                        raise
-    
+                self.logger.notifyChannel(_("Magento Call"), netsvc.LOG_ERROR, _("Method: %s\nArguments:%s\nError:%s") % (method, arguments, e))
+                self.logger.notifyChannel(_("Magento Call"), netsvc.LOG_WARNING, _("Webservice Failure, sleeping %s second before next attempt") % (sleep_time))
+                time.sleep(sleep_time)
+        raise
+
+
     def fetch_image(self, imgloc):
         full_loc = self.corelocation + imgloc
         try:
