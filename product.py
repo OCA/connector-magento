@@ -445,7 +445,7 @@ class magerp_product_attribute_set(magerp_osv.magerp_osv):
                 action_ref = self.pool.get('ir.ui.menu').browse(cr, uid, existing_menu_id[0]).action
                 action_id = False
                 if action_ref:
-                    action_id = type(action_ref) == str and int(action_ref.split(',')[1]) or action_ref.id #compat with OpenERP v5 and v6
+                    action_id = isinstance(action_ref, str) and int(action_ref.split(',')[1]) or action_ref.id #compat with OpenERP v5 and v6. TODO change once v5 is deprecated
                     self.pool.get('ir.actions.act_window').write(cr, uid, action_id, action_vals, context)
                 else:
                     action_id = self.pool.get('ir.actions.act_window').create(cr, uid, action_vals, context)
