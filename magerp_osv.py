@@ -64,6 +64,7 @@ class Connection(object):
         
     
     def call(self, method, *arguments): 
+        print "****** CALL", method, arguments
         if arguments:
             arguments = list(arguments)[0]
         else:
@@ -72,11 +73,14 @@ class Connection(object):
             return self.try_call(method, arguments)
         except Exception, e:
             self.logger.notifyChannel(_("Magento Call"), netsvc.LOG_WARNING, _("Webservice Failure, sleeping 1 second before next attempt"))
+            print e
+            raise
             time.sleep(1)
             try:
                 return self.try_call(method, arguments)
             except Exception, e:
                 self.logger.notifyChannel(_("Magento Call"), netsvc.LOG_WARNING, _("Webservice Failure, sleeping 3 seconds before next attempt"))
+                print e
                 time.sleep(3)
                 try:
                     return self.try_call(method, arguments)
