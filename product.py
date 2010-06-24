@@ -705,7 +705,8 @@ class product_product(magerp_osv.magerp_osv):
             group_name = attr_group_obj.read(cr, uid, oerp_group_id, ['attribute_group_name'])['attribute_group_name']
             
             #Create a page for the attribute group
-            attr_group_fields_rel[group_name] = []
+            if not attr_group_fields_rel.get(group_name, False):
+                attr_group_fields_rel[group_name] = []
             while True:
                 field_xml=""
                 if result[1] != mag_group_id:
