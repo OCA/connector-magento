@@ -792,7 +792,7 @@ class product_product(magerp_osv.magerp_osv):
             product_data.update({'tax_class_id': 2}) #FIXME hugly!
             
         if not product_data.get('status', False):
-            product_data.update({'status': product.active and 1 or 2})
+            product_data.update({'status': product.active and 1 or 0})
 
         if not product_data.get('description', False):
             product_data.update({'description': product.description or _("description")})
