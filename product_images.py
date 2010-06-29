@@ -22,6 +22,7 @@
 from osv import osv, fields
 import magerp_osv
 import mimetypes
+import netsvc
 
 class product_images(magerp_osv.magerp_osv):
     _inherit = "product.images"
@@ -58,6 +59,7 @@ class product_images(magerp_osv.magerp_osv):
             return ids
      
     def update_remote_images(self, cr, uid, ids, context={}):
+        logger = netsvc.Logger()
         conn = context.get('conn_obj', False)
         if conn:
             for each in self.browse(cr, uid, ids):
@@ -81,7 +83,7 @@ class product_images(magerp_osv.magerp_osv):
                         #self.write(cr, uid, each.id, {'mage_file':result})
                     else:
                         if each.product_id.magento_sku:
-                            print u"Sending %s's image: %s" % (each.product_id.name, each.product_id.magento_sku)
+                            logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "Sending %s's image: %s" %(each.product_id.name, each.product_id.magento_sku))
                             result = conn.call('catalog_product_attribute_media.create',
                                       [each.product_id.magento_sku,
                                        {'file':{
