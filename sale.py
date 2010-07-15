@@ -138,7 +138,6 @@ class sale_shop(magerp_osv.magerp_osv):
         return result
 
     def create_complet_shipping(self, cr, uid, id, order, external_referential_id, ctx):
-        print 'create complete shipping' , order.magento_incrementid
         conn = ctx.get('conn_obj', False)
         ext_shipping_id = False
         try:
@@ -153,10 +152,29 @@ class sale_shop(magerp_osv.magerp_osv):
         return ext_shipping_id
         
     def create_partial_shipping(self, cr, uid, id, order, external_referential_id, ctx):
-        print 'create partial picking'
        
+        conn = ctx.get('conn_obj', False)
+        ext_shipping_id = False
         
-        return False
+        order_items = conn.call('sales_order.info', [order.magento_incrementid])['items']
+        product_2_item = {}
+        for item in order_items:
+            product_2_item.update({self.pool.get('product.product').extid_to_oeid(cr, uid, item['product_id'], external_referential_id, context={}): item['item_id']})
+        
+        picking = self.pool.get('stock.picking').browse(cr, uid, id, ctx)
+        
+        item_qty = {}
+        for line in picking.move_lines:
+            if item_qty.get(product_2_item[line.product_id.id], False):
+                item_qty[product_2_item[line.product_id.id]] += line.product_qty
+            else:
+                item_qty.update({product_2_item[line.product_id.id]:line.product_qty})
+        try:
+            ext_shipping_id = conn.call('sales_order_shipment.create', [order.magento_incrementid, item_qty, _("Shipping Created"), True, True])
+        except Exception, e:
+            pass #TODO make sure that's because Magento picking already exists and then re-attach it!
+        
+        return ext_shipping_id
         
     def add_ext_tracking_reference(self, cr, uid, ext_shipping_id, tracking_ref, carrier_id, ctx):
         print 'add tracking number'
