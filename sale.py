@@ -137,6 +137,44 @@ class sale_shop(magerp_osv.magerp_osv):
 
         return result
 
+    def create_complet_shipping(self, cr, uid, id, order, external_referential_id, ctx):
+        print 'create complete shipping' , order.magento_incrementid
+        conn = ctx.get('conn_obj', False)
+        ext_shipping_id = False
+        try:
+            ext_shipping_id = conn.call('sales_order_shipment.create', [order.magento_incrementid, {}, _("Shipping Created"), True, True])
+        except Exception, e:
+            shipping_list = conn.call('sales_order_shipment.list')
+            for shipping in shipping_list:
+                if shipping['order_increment_id'] == order.magento_incrementid:
+                    print 'same'
+                    ext_shipping_id = shipping['increment_id']
+                    break
+        return ext_shipping_id
+        
+    def create_partial_shipping(self, cr, uid, id, order, external_referential_id, ctx):
+        print 'create partial picking'
+       
+        
+        return False
+        
+    def add_ext_tracking_reference(self, cr, uid, ext_shipping_id, tracking_ref, carrier_id, ctx):
+        print 'add tracking number'
+        return false
+        conn = ctx.get('conn_obj', False)
+        return conn.call('sales_order_shipment.addTrack', [ext_shipping_id, [], _("Shipping Created"), True, True])
+
+
+
+
+
+
+
+
+
+
+
+
     # Schedules functions ============ #
     def run_import_orders_scheduler(self, cr, uid, context=None):
         if context == None:

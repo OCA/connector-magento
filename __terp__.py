@@ -23,6 +23,7 @@
                  "product_m2mcategories",
                  "base_sale_multichannels",
                  "product_images_olbs",
+                 'delivery',
                 ],
     "author" : "Sharoon Thomas, Raphael Valyi",
     "description": """Magento E-commerce management
