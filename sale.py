@@ -209,6 +209,20 @@ class sale_shop(magerp_osv.magerp_osv):
             self.export_images(cr, uid, shops_ids, context)
         if DEBUG:
             print "run_update_images_scheduler: %s" % shops_ids
+                   
+    def run_export_shipping_scheduler(self, cr, uid, context=None):
+        if context == None:
+            context = {}
+        sale_obj = self.pool.get('sale.shop')
+        search_params = [
+            ('magento_shop', '=', True),
+            ('auto_import', '=', True),
+        ]
+        shops_ids = sale_obj.search(cr, uid, search_params)
+        if shops_ids:
+            self.export_shipping(cr, uid, shops_ids, context)
+        if DEBUG:
+            print "run_export_shipping_scheduler: %s" % shops_ids
 
 sale_shop()
 
