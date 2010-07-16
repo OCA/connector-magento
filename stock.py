@@ -26,15 +26,10 @@ import netsvc
 class stock_picking(osv.osv):
     _inherit = "stock.picking"
 
-    def create_ext_complet_shipping(self, cr, uid, id, external_referential_id, ctx):
+
+    def create_ext_complete_shipping(self, cr, uid, id, external_referential_id, magento_incrementid, ctx):
         conn = ctx.get('conn_obj', False)
         ext_shipping_id = False
-        magento_incrementid = self.browse(cr, uid, id, ['sale_id'], ctx).sale_id.magento_incrementid
-        carrier_id = self.pool.get('stock.picking').read(cr, uid, id, ['carrier_id'], ctx)['carrier_id']
-        if carrier_id:
-            carrier_id = carrier_id[0]
-            self.pool.get('delivery.carrier').check_ext_carrier_reference(cr, uid, carrier_id, magento_incrementid, ctx)
-        
         try:
             ext_shipping_id = conn.call('sales_order_shipment.create', [magento_incrementid, {}, _("Shipping Created"), True, True])
         except Exception, e:
@@ -43,47 +38,46 @@ class stock_picking(osv.osv):
                 if shipping['order_increment_id'] == magento_incrementid:
                     ext_shipping_id = shipping['increment_id']
                     break
-        if ext_shipping_id and carrier_id:
-            self.add_ext_tracking_reference(cr, uid, id, carrier_id, ext_shipping_id, ctx)
-        return ext_shipping_id
-        
-        
-    def create_ext_partial_shipping(self, cr, uid, id, external_referential_id, ctx):
+        return ext_shipping_id        
+
+
+    def create_ext_partial_shipping(self, cr, uid, id, external_referential_id, magento_incrementid, ctx):
         conn = ctx.get('conn_obj', False)
         ext_shipping_id = False
-        magento_incrementid = self.browse(cr, uid, id, ['sale_id']).sale_id.magento_incrementid
-        carrier_id = self.pool.get('stock.picking').read(cr, uid, id, ['carrier_id'], ctx)['carrier_id']
-        if carrier_id:
-            carrier_id = carrier_id[0]
-            self.pool.get('delivery.carrier').check_ext_carrier_reference(cr, uid, carrier_id, magento_incrementid, ctx)
-        
         order_items = conn.call('sales_order.info', [magento_incrementid])['items']
         product_2_item = {}
         for item in order_items:
             product_2_item.update({self.pool.get('product.product').extid_to_oeid(cr, uid, item['product_id'], external_referential_id, context={}): item['item_id']})
-        
         picking = self.pool.get('stock.picking').browse(cr, uid, id, ctx)
-        
         item_qty = {}
         for line in picking.move_lines:
             if item_qty.get(product_2_item[line.product_id.id], False):
                 item_qty[product_2_item[line.product_id.id]] += line.product_qty
             else:
                 item_qty.update({product_2_item[line.product_id.id]:line.product_qty})
-        
         try:
             ext_shipping_id = conn.call('sales_order_shipment.create', [magento_incrementid, item_qty, _("Shipping Created"), True, True])
         except Exception, e:
             pass #TODO make sure that's because Magento picking already exists and then re-attach it or raise a error to re-attach manually!
-        
+        return ext_shipping_id 
+
+
+    def create_ext_shipping(self, cr, uid, id, picking_type, external_referential_id, ctx):
+        magento_incrementid = self.browse(cr, uid, id, ['sale_id'], ctx).sale_id.magento_incrementid
+        carrier_id = self.pool.get('stock.picking').read(cr, uid, id, ['carrier_id'], ctx)['carrier_id']
+        if carrier_id:
+            carrier_id = carrier_id[0]
+            self.pool.get('delivery.carrier').check_ext_carrier_reference(cr, uid, carrier_id, magento_incrementid, ctx)
+
+        ext_shipping_id = eval('self.create_ext_' + picking_type + '_shipping(cr, uid, id, external_referential_id, magento_incrementid, ctx)')
+
         if ext_shipping_id and carrier_id:
             self.add_ext_tracking_reference(cr, uid, id, carrier_id, ext_shipping_id, ctx)
         return ext_shipping_id
-        
-        
+
+
     def add_ext_tracking_reference(self, cr, uid, id, carrier_id, ext_shipping_id, ctx):
         logger = netsvc.Logger()
-        print 'add_ext_tracking_reference'
         conn = ctx.get('conn_obj', False)
         carrier = self.pool.get('delivery.carrier').read(cr, uid, carrier_id, ['magento_code', 'magento_tracking_title'], ctx)
         carrier_tracking_ref = self.read(cr, uid, id, ['carrier_tracking_ref'], ctx)['carrier_tracking_ref']

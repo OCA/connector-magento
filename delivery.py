@@ -33,8 +33,9 @@ class delivery_carrier(osv.osv):
     def check_ext_carrier_reference(self, cr, uid, id, magento_incrementid, ctx):
         conn = ctx.get('conn_obj', False)
         mag_carrier = conn.call('sales_order_shipment.getCarriers', [magento_incrementid])
-        if not self.read(cr, uid, id, ['magento_code'],ctx)['magento_code'] in mag_carrier.keys():
-            raise osv.except_osv(_("Error"), _("The carrier's magento_code is not valid!! Indeed the value %s is not in the magento carrier list %s" %(carrier.magento_code, mag_carrier.keys())))
+        carrier = self.read(cr, uid, id, ['magento_code', 'name'],ctx)
+        if not carrier['magento_code'] in mag_carrier.keys():
+            raise osv.except_osv(_("Error"), _("The carrier %s don't have a magento_code valid!! Indeed the value %s is not in the magento carrier list %s" %(carrier['name'], carrier['magento_code'], mag_carrier.keys())))
         print 'carrier check oki'
         return True
 delivery_carrier()
