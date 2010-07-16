@@ -137,55 +137,7 @@ class sale_shop(magerp_osv.magerp_osv):
 
         return result
 
-    def create_complet_shipping(self, cr, uid, id, order, external_referential_id, ctx):
-        conn = ctx.get('conn_obj', False)
-        ext_shipping_id = False
-        try:
-            ext_shipping_id = conn.call('sales_order_shipment.create', [order.magento_incrementid, {}, _("Shipping Created"), True, True])
-        except Exception, e:
-            shipping_list = conn.call('sales_order_shipment.list')
-            for shipping in shipping_list:
-                if shipping['order_increment_id'] == order.magento_incrementid:
-                    ext_shipping_id = shipping['increment_id']
-                    break
-        return ext_shipping_id
-        
-    def create_partial_shipping(self, cr, uid, id, order, external_referential_id, ctx):
-        conn = ctx.get('conn_obj', False)
-        ext_shipping_id = False
-        
-        order_items = conn.call('sales_order.info', [order.magento_incrementid])['items']
-        product_2_item = {}
-        for item in order_items:
-            product_2_item.update({self.pool.get('product.product').extid_to_oeid(cr, uid, item['product_id'], external_referential_id, context={}): item['item_id']})
-        
-        picking = self.pool.get('stock.picking').browse(cr, uid, id, ctx)
-        
-        item_qty = {}
-        for line in picking.move_lines:
-            if item_qty.get(product_2_item[line.product_id.id], False):
-                item_qty[product_2_item[line.product_id.id]] += line.product_qty
-            else:
-                item_qty.update({product_2_item[line.product_id.id]:line.product_qty})
-        try:
-            ext_shipping_id = conn.call('sales_order_shipment.create', [order.magento_incrementid, item_qty, _("Shipping Created"), True, True])
-        except Exception, e:
-            pass #TODO make sure that's because Magento picking already exists and then re-attach it!
-        return ext_shipping_id
-        
-    def add_ext_tracking_reference(self, cr, uid, ext_shipping_id, carrier_id, tracking_carrier_ref, order, ctx):
-        conn = ctx.get('conn_obj', False)
-        carrier = self.pool.get('delivery.carrier').browse(cr, uid, carrier_id, ctx)
-        print carrier.name, carrier.magento_tracking_title, tracking_carrier_ref
-        return conn.call('sales_order_shipment.addTrack', [ext_shipping_id, carrier.magento_code, carrier.magento_tracking_title, tracking_carrier_ref])
 
-    def check_carrier_reference(self, cr, uid, id, order, carrier_id, ctx):
-        conn = ctx.get('conn_obj', False)
-        mag_carrier = conn.call('sales_order_shipment.getCarriers', [order.magento_incrementid])
-        carrier = self.pool.get('delivery.carrier').browse(cr, uid, carrier_id, ctx)
-        if not carrier.magento_code in mag_carrier.keys():
-            return "The carrier's magento_code is not valid!! Indeed the value %s is not in the magento carrier list %s" %(carrier.magento_code, mag_carrier.keys())
-        return False
 
     # Schedules functions ============ #
     def run_import_orders_scheduler(self, cr, uid, context=None):
@@ -449,5 +401,5 @@ class sale_order(magerp_osv.magerp_osv):
         #   wf_service.trg_validate(uid, 'sale.order', order_id, 'cancel', cr)
         #else:
         #   super(magerp_osv.magerp_osv, self).oe_status(cr, uid, order_id, context)
-
+    
 sale_order()

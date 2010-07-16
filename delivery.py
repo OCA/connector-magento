@@ -1,6 +1,9 @@
+# -*- encoding: utf-8 -*-
 #########################################################################
 #                                                                       #
-# Copyright (C) 2009  Sharoon Thomas                                    #
+#########################################################################
+#                                                                       #
+# Copyright (C) 2010 BEAU Sébastien                                     #
 #                                                                       #
 #This program is free software: you can redistribute it and/or modify   #
 #it under the terms of the GNU General Public License as published by   #
@@ -15,13 +18,17 @@
 #You should have received a copy of the GNU General Public License      #
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.  #
 #########################################################################
-import magerp_core
-import product
-import partner
-import sale
-import invoice
-import product_images
-import delivery
-import stock
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+
+from osv import fields,osv
+from tools.translate import _
+
+class delivery_carrier(osv.osv):
+    _inherit = "delivery.carrier"
+
+    _columns = {
+        'magento_code': fields.char('Magento Carrier Code', size=64, required=True),
+        'magento_tracking_title': fields.char('Magento Tracking Title', size=64, required=True),
+    }
+ 
+delivery_carrier()
 
