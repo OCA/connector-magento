@@ -21,14 +21,20 @@
 
 from osv import fields,osv
 from tools.translate import _
+import netsvc
 
 class stock_picking(osv.osv):
     _inherit = "stock.picking"
-    
+
     def create_ext_complet_shipping(self, cr, uid, id, external_referential_id, ctx):
         conn = ctx.get('conn_obj', False)
         ext_shipping_id = False
-        magento_incrementid = self.browse(cr, uid, id, ['sale_id']).sale_id.magento_incrementid
+        magento_incrementid = self.browse(cr, uid, id, ['sale_id'], ctx).sale_id.magento_incrementid
+        carrier_id = self.pool.get('stock.picking').read(cr, uid, id, ['carrier_id'], ctx)['carrier_id']
+        if carrier_id:
+            carrier_id = carrier_id[0]
+            self.pool.get('delivery.carrier').check_ext_carrier_reference(cr, uid, carrier_id, magento_incrementid, ctx)
+        
         try:
             ext_shipping_id = conn.call('sales_order_shipment.create', [magento_incrementid, {}, _("Shipping Created"), True, True])
         except Exception, e:
@@ -37,12 +43,20 @@ class stock_picking(osv.osv):
                 if shipping['order_increment_id'] == magento_incrementid:
                     ext_shipping_id = shipping['increment_id']
                     break
+        if ext_shipping_id and carrier_id:
+            self.add_ext_tracking_reference(cr, uid, id, carrier_id, ext_shipping_id, ctx)
         return ext_shipping_id
+        
         
     def create_ext_partial_shipping(self, cr, uid, id, external_referential_id, ctx):
         conn = ctx.get('conn_obj', False)
         ext_shipping_id = False
         magento_incrementid = self.browse(cr, uid, id, ['sale_id']).sale_id.magento_incrementid
+        carrier_id = self.pool.get('stock.picking').read(cr, uid, id, ['carrier_id'], ctx)['carrier_id']
+        if carrier_id:
+            carrier_id = carrier_id[0]
+            self.pool.get('delivery.carrier').check_ext_carrier_reference(cr, uid, carrier_id, magento_incrementid, ctx)
+        
         order_items = conn.call('sales_order.info', [magento_incrementid])['items']
         product_2_item = {}
         for item in order_items:
@@ -56,25 +70,28 @@ class stock_picking(osv.osv):
                 item_qty[product_2_item[line.product_id.id]] += line.product_qty
             else:
                 item_qty.update({product_2_item[line.product_id.id]:line.product_qty})
+        
         try:
             ext_shipping_id = conn.call('sales_order_shipment.create', [magento_incrementid, item_qty, _("Shipping Created"), True, True])
         except Exception, e:
             pass #TODO make sure that's because Magento picking already exists and then re-attach it or raise a error to re-attach manually!
+        
+        if ext_shipping_id and carrier_id:
+            self.add_ext_tracking_reference(cr, uid, id, carrier_id, ext_shipping_id, ctx)
         return ext_shipping_id
         
-    def add_ext_tracking_reference(self, cr, uid, id, carrier_id, ext_shipping_id, tracking_carrier_ref, ctx):
+        
+    def add_ext_tracking_reference(self, cr, uid, id, carrier_id, ext_shipping_id, ctx):
+        logger = netsvc.Logger()
+        print 'add_ext_tracking_reference'
         conn = ctx.get('conn_obj', False)
-        carrier = self.pool.get('delivery.carrier').browse(cr, uid, carrier_id, ctx)
-        return conn.call('sales_order_shipment.addTrack', [ext_shipping_id, carrier.magento_code, carrier.magento_tracking_title or '', tracking_carrier_ref or ''])
-
-    def check_ext_carrier_reference(self, cr, uid, id, carrier_id, ctx):
-        conn = ctx.get('conn_obj', False)
-        magento_incrementid = self.browse(cr, uid, id, ['sale_id']).sale_id.magento_incrementid
-        mag_carrier = conn.call('sales_order_shipment.getCarriers', [magento_incrementid])
-        carrier = self.pool.get('delivery.carrier').browse(cr, uid, carrier_id, ctx)
-        if not carrier.magento_code in mag_carrier.keys():
-            return "The carrier's magento_code is not valid!! Indeed the value %s is not in the magento carrier list %s" %(carrier.magento_code, mag_carrier.keys())
-        return False
+        carrier = self.pool.get('delivery.carrier').read(cr, uid, carrier_id, ['magento_code', 'magento_tracking_title'], ctx)
+        carrier_tracking_ref = self.read(cr, uid, id, ['carrier_tracking_ref'], ctx)['carrier_tracking_ref']
+        
+        res= conn.call('sales_order_shipment.addTrack', [ext_shipping_id, carrier['magento_code'], carrier['magento_tracking_title'] or '', carrier_tracking_ref or ''])
+        if res:
+            logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "Successfully adding a tracking reference to the shipping with OpenERP id %s and ext id %s in external sale system" % (id, ext_shipping_id))       
+        return True
 
 stock_picking()
 
