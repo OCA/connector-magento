@@ -204,7 +204,11 @@ class magerp_osv(external_osv.external_osv):
                     subject[key] = True
         return subject
     
-    def mage_import_base(self,cr,uid,conn, external_referential_id, defaults={}, context={}):
+    def mage_import_base(self,cr,uid,conn, external_referential_id, defaults=None, context=None):
+        if context is None:
+            context = {}
+        if defaults is None:
+            defaults = {}
         if not 'ids_or_filter' in context.keys():
             context['ids_or_filter'] = []
         result = {'create_ids': [], 'write_ids': []}
@@ -237,12 +241,15 @@ class magerp_osv(external_osv.external_osv):
 
         return result
     
-    def get_external_data(self, cr, uid, conn, external_referential_id, defaults={}, context={}):
+    def get_external_data(self, cr, uid, conn, external_referential_id, defaults=None, context=None):
         """Constructs data using WS or other synch protocols and then call ext_import on it"""
         return self.mage_import_base(cr, uid, conn, external_referential_id, defaults, context)#TODO refactor mage_import_base calls to this interface
 
     #TODO deprecated, remove use
-    def mage_import(self, cr, uid, ids_or_filter, conn, instance, debug=False, defaults={}, *attrs):
+    def mage_import(self, cr, uid, ids_or_filter, conn, instance, debug=False, defaults=None, *attrs):
+        if defaults is None:
+            defaults = {}
+
         if self._LIST_METHOD:
             magento_records = conn.call(self._LIST_METHOD, ids_or_filter)
             if attrs:
@@ -253,7 +260,7 @@ class magerp_osv(external_osv.external_osv):
             raise osv.except_osv(_('Undefined List method !'), _("list method is undefined for this object!"))
     
     #TODO deprecated, remove use
-    def get_all_mage_ids(self, cr, uid, ids=[], instance=False):
+    def get_all_mage_ids(self, cr, uid, ids, instance=False):
         search_param = []
         if instance:
             search_param = [('referential_id', '=', instance)]

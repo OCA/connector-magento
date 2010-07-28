@@ -235,7 +235,7 @@ class sale_order(magerp_osv.magerp_osv):
                 'magento_storeview_id': fields.many2one('magerp.storeviews', 'Magento Store View'),
     }
     
-    def _auto_init(self, cr, context={}):
+    def _auto_init(self, cr, context=None):
         cr.execute("ALTER TABLE sale_order_line ALTER COLUMN discount TYPE numeric(16,6);")
         cr.execute("ALTER TABLE account_invoice_line ALTER COLUMN discount TYPE numeric(16,6);")
         super(sale_order, self)._auto_init(cr, context)

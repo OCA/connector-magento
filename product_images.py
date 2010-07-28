@@ -58,7 +58,9 @@ class product_images(magerp_osv.magerp_osv):
             ids = self.pool.get('product.images').search(cr, uid, [])
             return ids
      
-    def update_remote_images(self, cr, uid, ids, context={}):
+    def update_remote_images(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         logger = netsvc.Logger()
         conn = context.get('conn_obj', False)
         if conn:
