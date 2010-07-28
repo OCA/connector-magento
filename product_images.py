@@ -47,72 +47,67 @@ class product_images(magerp_osv.magerp_osv):
     }
     
     def get_changed_ids(self, cr, uid, start_date=False):
-        if start_date:
-            crids = self.pool.get('product.images').search(cr, uid, [('create_date', '>=', start_date)])
-            wrids = self.pool.get('product.images').search(cr, uid, [('write_date', '>=', start_date)])
-            for each in crids:
-                if not each in wrids:
-                    wrids.append(each)
-            return wrids    #return one list of ids
-        else:
-            ids = self.pool.get('product.images').search(cr, uid, [])
-            return ids
+        proxy = self.pool.get('product.images')
+        domain = start_date and ['|', ('create_date', '>=', start_date), ('write_date', '>=', start_date)] or []
+        return proxy.search(cr, uid, domain)
      
     def update_remote_images(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
         logger = netsvc.Logger()
         conn = context.get('conn_obj', False)
-        if conn:
-            for each in self.browse(cr, uid, ids):
-                if each.product_id.magento_exportable:
-                    if each.mage_file: #If update
-                        types = []
-                        if each.small_image:
-                            types.append('small_image')
-                        if each.base_image:
-                            types.append('image')
-                        if each.thumbnail:
-                            types.append('thumbnail')
-                        result = conn.call('catalog_product_attribute_media.update',
-                                  [each.product_id.magento_sku,
-                                   each.mage_file,
-                                   {'label':each.name,
-                                    'exclude':each.exclude,
-                                    'types':types,
-                                    }
-                                   ])
-                        #self.write(cr, uid, each.id, {'mage_file':result})
-                    else:
-                        if each.product_id.magento_sku:
-                            logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "Sending %s's image: %s" %(each.product_id.name, each.product_id.magento_sku))
-                            result = conn.call('catalog_product_attribute_media.create',
-                                      [each.product_id.magento_sku,
-                                       {'file':{
-                                                'content':self.get_image(cr, uid, each.id),
-                                                'mime':each.filename and mimetypes.guess_type(each.filename)[0] or 'image/jpeg',
-                                                }
-                                       }
-                                       ])
-                            self.write(cr, uid, each.id, {'mage_file':result})
-                            types = []
-                            if each.small_image:
-                                types.append('small_image')
-                            if each.base_image:
-                                types.append('image')
-                            if each.thumbnail:
-                                types.append('thumbnail')
-                            new_result = conn.call('catalog_product_attribute_media.update',
-                                      [each.product_id.magento_sku,
-                                       result,
-                                       {'label':each.name,
-                                        'exclude':each.exclude,
-                                        'types':types,
-                                        }
-                                       ])
-                        #self.write(cr, uid, each.id, {'mage_file':new_result})
-        else:
+        if not conn:
             return False
+
+        for each in self.browse(cr, uid, ids, context=context):
+            if not each.product_id.magento_exportable:
+                continue
+
+            if each.mage_file: #If update
+                types = []
+                if each.small_image:
+                    types.append('small_image')
+                if each.base_image:
+                    types.append('image')
+                if each.thumbnail:
+                    types.append('thumbnail')
+                result = conn.call('catalog_product_attribute_media.update',
+                          [each.product_id.magento_sku,
+                           each.mage_file,
+                           {'label':each.name,
+                            'exclude':each.exclude,
+                            'types':types,
+                            }
+                           ])
+                #self.write(cr, uid, each.id, {'mage_file':result})
+            else:
+                if each.product_id.magento_sku:
+                    logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "Sending %s's image: %s" %(each.product_id.name, each.product_id.magento_sku))
+                    result = conn.call('catalog_product_attribute_media.create',
+                              [each.product_id.magento_sku,
+                               {'file':{
+                                        'content':self.get_image(cr, uid, each.id),
+                                        'mime':each.filename and mimetypes.guess_type(each.filename)[0] or 'image/jpeg',
+                                        }
+                               }
+                               ])
+                    self.write(cr, uid, each.id, {'mage_file':result})
+                    types = []
+                    if each.small_image:
+                        types.append('small_image')
+                    if each.base_image:
+                        types.append('image')
+                    if each.thumbnail:
+                        types.append('thumbnail')
+                    new_result = conn.call('catalog_product_attribute_media.update',
+                              [each.product_id.magento_sku,
+                               result,
+                               {'label':each.name,
+                                'exclude':each.exclude,
+                                'types':types,
+                                }
+                               ])
+                #self.write(cr, uid, each.id, {'mage_file':new_result})
         return True
         
 product_images()
