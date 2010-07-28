@@ -59,27 +59,33 @@ class product_images(magerp_osv.magerp_osv):
         if not conn:
             return False
 
+        def detect_types(image):
+            types = []
+            if image.small_image:
+                types.append('small_image')
+            if image.base_image:
+                types.append('image')
+            if image.thumbnail:
+                types.append('thumbnail')
+            return types
+
+        def update_image(content, image):
+            result = conn.call('catalog_product_attribute_media.update',
+                               [image.product_id.magento_sku,
+                                content,
+                                {'label':image.name,
+                                 'exclude':image.exclude,
+                                 'types':detect_types(image),
+                                }
+                               ])
+            return result
+
         for each in self.browse(cr, uid, ids, context=context):
             if not each.product_id.magento_exportable:
                 continue
 
             if each.mage_file: #If update
-                types = []
-                if each.small_image:
-                    types.append('small_image')
-                if each.base_image:
-                    types.append('image')
-                if each.thumbnail:
-                    types.append('thumbnail')
-                result = conn.call('catalog_product_attribute_media.update',
-                          [each.product_id.magento_sku,
-                           each.mage_file,
-                           {'label':each.name,
-                            'exclude':each.exclude,
-                            'types':types,
-                            }
-                           ])
-                #self.write(cr, uid, each.id, {'mage_file':result})
+                result = update_image(each.mage_file, each)
             else:
                 if each.product_id.magento_sku:
                     logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "Sending %s's image: %s" %(each.product_id.name, each.product_id.magento_sku))
@@ -92,22 +98,7 @@ class product_images(magerp_osv.magerp_osv):
                                }
                                ])
                     self.write(cr, uid, each.id, {'mage_file':result})
-                    types = []
-                    if each.small_image:
-                        types.append('small_image')
-                    if each.base_image:
-                        types.append('image')
-                    if each.thumbnail:
-                        types.append('thumbnail')
-                    new_result = conn.call('catalog_product_attribute_media.update',
-                              [each.product_id.magento_sku,
-                               result,
-                               {'label':each.name,
-                                'exclude':each.exclude,
-                                'types':types,
-                                }
-                               ])
-                #self.write(cr, uid, each.id, {'mage_file':new_result})
+                    result = update_image(result, each)
         return True
         
 product_images()
