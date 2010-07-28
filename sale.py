@@ -139,90 +139,35 @@ class sale_shop(magerp_osv.magerp_osv):
 
 
 
+    def _sale_shop(self, cr, uid, callback, context=None):
+        proxy = self.pool.get('sale.shop')
+        domain = [ ('magento_shop', '=', True), ('auto_import', '=', True) ]
+
+        ids = proxy.search(cr, uid, domain, context=context)
+        if ids:
+            callback(cr, uid, ids, context=context)
+
+        tools.debug(callback)
+        tools.debug(ids)
+
     # Schedules functions ============ #
     def run_import_orders_scheduler(self, cr, uid, context=None):
-        if context == None:
-            context = {}
-        sale_obj = self.pool.get('sale.shop')
-        search_params = [
-            ('magento_shop', '=', True),
-            ('auto_import', '=', True),
-        ]
-        shops_ids = sale_obj.search(cr, uid, search_params)
-        if shops_ids:
-            self.import_orders(cr, uid, shops_ids, context)
-        if DEBUG:
-            print "run_import_orders_scheduler: %s" % shops_ids
+        self._sale_shop(cr, uid, self.import_orders, context=context)
 
     def run_update_orders_scheduler(self, cr, uid, context=None):
-        if context == None:
-            context = {}
-        sale_obj = self.pool.get('sale.shop')
-        search_params = [
-            ('magento_shop', '=', True),
-            ('auto_import', '=', True),
-        ]
-        shops_ids = sale_obj.search(cr, uid, search_params)
-        if shops_ids:
-            self.update_orders(cr, uid, shops_ids, context)
-        if DEBUG:
-            print "run_update_orders_scheduler: %s" % shops_ids
+        self._sale_shop(cr, uid, self.update_orders, context=context)
 
     def run_export_catalog_scheduler(self, cr, uid, context=None):
-        if context == None:
-            context = {}
-        sale_obj = self.pool.get('sale.shop')
-        search_params = [
-            ('magento_shop', '=', True),
-            ('auto_import', '=', True),
-        ]
-        shops_ids = sale_obj.search(cr, uid, search_params)
-        if shops_ids:
-            self.export_catalog(cr, uid, shops_ids, context)
-        if DEBUG:
-            print "run_export_catalog_scheduler: %s" % shops_ids
+        self._sale_shop(cr, uid, self.export_catalog, context=context)
 
     def run_export_stock_levels_scheduler(self, cr, uid, context=None):
-        if context == None:
-            context = {}
-        sale_obj = self.pool.get('sale.shop')
-        search_params = [
-            ('magento_shop', '=', True),
-            ('auto_import', '=', True),
-        ]
-        shops_ids = sale_obj.search(cr, uid, search_params)
-        if shops_ids:
-            self.export_inventory(cr, uid, shops_ids, context)
-        if DEBUG:
-            print "run_export_stock_levels_scheduler: %s" % shops_ids
+        self._sale_shop(cr, uid, self.export_inventory, context=context)
 
     def run_update_images_scheduler(self, cr, uid, context=None):
-        if context == None:
-            context = {}
-        sale_obj = self.pool.get('sale.shop')
-        search_params = [
-            ('magento_shop', '=', True),
-            ('auto_import', '=', True),
-        ]
-        shops_ids = sale_obj.search(cr, uid, search_params)
-        if shops_ids:
-            self.export_images(cr, uid, shops_ids, context)
-        if DEBUG:
-            print "run_update_images_scheduler: %s" % shops_ids
+        self._sale_shop(cr, uid, self.export_images, context=context)
                    
     def run_export_shipping_scheduler(self, cr, uid, context=None):
-        if context == None:
-            context = {}
-        sale_obj = self.pool.get('sale.shop')
-        search_params = [
-            ('magento_shop', '=', True),
-            ('auto_import', '=', True),
-        ]
-        shops_ids = sale_obj.search(cr, uid, search_params)
-        if shops_ids:
-            self.export_shipping(cr, uid, shops_ids, context)
-        if DEBUG:
-            print "run_export_shipping_scheduler: %s" % shops_ids
+        self._sale_shop(cr, uid, self.export_shipping, context=context)
 
 sale_shop()
 
