@@ -23,6 +23,8 @@ from osv import osv, fields
 import magerp_osv
 from base_external_referentials import external_osv
 
+import tools
+
 DEBUG = True
 TIMEOUT = 2
         
