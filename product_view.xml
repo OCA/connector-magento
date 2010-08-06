@@ -46,7 +46,7 @@
 								<separator string="Use Anchor" colspan="4" />
 								<group col="4" colspan="4">
 									<field name="is_anchor" colspan="1" />
-									<label string="Anchored categories will display all products associated to all child categories (and child of child, and child of child of child,etc.) on that category‘s page, along with the products associated directly to the parent category." colspan="3" />
+									<label string="Anchored categories will display all products associated to all child categories (and child of child, and child of child of child,etc.) on that category's page, along with the products associated directly to the parent category." colspan="3" />
 								</group>
 								<separator string="Sorting method" colspan="4" />
 								<field name="available_sort_by" />
