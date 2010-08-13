@@ -26,8 +26,8 @@ class delivery_carrier(osv.osv):
     _inherit = "delivery.carrier"
 
     _columns = {
-        'magento_code': fields.char('Magento Carrier Code', size=64, required=True),
-        'magento_tracking_title': fields.char('Magento Tracking Title', size=64, required=True),
+        'magento_code': fields.char('Magento Carrier Code', size=64, required=False),
+        'magento_tracking_title': fields.char('Magento Tracking Title', size=64, required=False),
     }
     
     def check_ext_carrier_reference(self, cr, uid, id, magento_incrementid, ctx):
