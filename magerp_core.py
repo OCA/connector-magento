@@ -34,8 +34,12 @@ class external_referential(magerp_osv.magerp_osv):
         'attribute_sets':fields.one2many('magerp.product_attribute_set', 'referential_id', 'Attribute Sets'),
         'default_pro_cat':fields.many2one('product.category','Default Product Category',required=True, help="Products imported from magento may have many categories.\nOpenERP requires a specific category for a product to facilitate invoicing etc."),
         'default_lang_id':fields.many2one('res.lang', 'Default Language',required=True, help="Choose the language which will be used for the Default Value in Magento"),
+        'active': fields.boolean('Active'),
     }
 
+    _defaults = {
+        'active': lambda *a: 1,
+    }
              
     def connect(self, cr, uid, ids, ctx=None):
         #ids has to be a list
@@ -152,6 +156,100 @@ class external_referential(magerp_osv.magerp_osv):
                 tools.debug((cr, uid, shop, ctx,))
                 shop.export_products(cr, uid, shop, ctx)
         return True
+
+    def sync_partner(self, cr, uid, ids, ctx):
+        instances = self.browse(cr, uid, ids, ctx)
+
+        for inst in instances:
+            attr_conn = self.external_connection(cr, uid, inst, DEBUG)
+            result = []
+            result_address = []
+
+            list_customer = attr_conn.call('customer.list')
+
+            for each in list_customer:
+                customer_id = int(each['customer_id'])
+
+                each_customer_info = attr_conn.call('customer.info', [customer_id])
+                result.append(each_customer_info)
+
+                each_customer_address_info = attr_conn.call('customer_address.list', [customer_id])
+                customer_address_info = each_customer_address_info[0]
+                customer_address_info['customer_id'] = customer_id
+                customer_address_info['email'] = each_customer_info['email']
+                result_address.append(customer_address_info)
+                print customer_address_info
+
+            partner_ids = self.pool.get('res.partner').ext_import(cr, uid, result, inst.id, context={})
+            partner_address_ids = self.pool.get('res.partner.address').ext_import(cr, uid, result_address, inst.id, context={})
+
+        return True
+
+    def sync_newsletter(self, cr, uid, ids, ctx):
+        #update first all customer
+        self.sync_partner(cr, uid, ids, ctx)
+
+        instances = self.browse(cr, uid, ids, ctx)
+        partner_obj = self.pool.get('res.partner')
+
+        for inst in instances:
+            attr_conn = self.external_connection(cr, uid, inst, DEBUG)
+            filter = []
+            list_subscribers = attr_conn.call('ol_customer_subscriber.list')
+            result = []
+            for each in list_subscribers:
+                each_subscribers_info = attr_conn.call('ol_customer_subscriber.info', [each])
+
+                # search this customer. If exist, update your newsletter subscription
+                partner_ids = partner_obj.search(cr, uid, [('emailid', '=', each_subscribers_info[0]['subscriber_email'])])
+                if partner_ids:
+                    #unsubscriber magento value: 3
+                    if int(each_subscribers_info[0]['subscriber_status']) == 1:
+                        subscriber_status = 1
+                    else:
+                        subscriber_status = 0
+                    partner_obj.write(cr, uid, partner_ids[0], {'mag_newsletter': subscriber_status})
+        return True
+
+    def sync_newsletter_unsubscriber(self, cr, uid, ids, ctx):
+        instances = self.browse(cr, uid, ids, ctx)
+        partner_obj = self.pool.get('res.partner')
+
+        for inst in instances:
+            attr_conn = self.external_connection(cr, uid, inst, DEBUG)
+            partner_ids  = partner_obj.search(cr, uid, [('mag_newsletter', '!=', 1), ('emailid', '!=', '')])
+
+            print partner_ids
+
+            for partner in partner_obj.browse(cr, uid, partner_ids):
+                print partner.emailid
+                if partner.emailid:
+                    attr_conn.call('ol_customer_subscriber.delete', [partner.emailid])
+
+        return True
+
+    # Schedules functions ============ #
+    def run_import_newsletter_scheduler(self, cr, uid, context=None):
+        if context == None:
+            context = {}
+
+        instances_ids  = self.search(cr, uid, [('active', '=', 1)])
+
+        if instances_ids:
+            self.sync_newsletter(cr, uid, instances_ids, context)
+        if DEBUG:
+            print "run_import_newsletter_scheduler: %s" % instances_ids
+
+    def run_import_newsletter_unsubscriber_scheduler(self, cr, uid, context=None):
+        if context == None:
+            context = {}
+
+        instances_ids  = self.search(cr, uid, [('active', '=', 1)])
+
+        if instances_ids:
+            self.sync_newsletter_unsubscriber(cr, uid, instances_ids, context)
+        if DEBUG:
+            print "run_import_newsletter_unsubscriber_scheduler: %s" % instances_ids
 
 external_referential()
 

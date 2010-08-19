@@ -38,6 +38,14 @@
 								<newline />
 								<field name="attribute_sets" nolabel="1" colspan="4"/>
 							</page>
+							<page string="Advanced">
+                                <separator string="Partner" colspan="4"/>
+								<button name="sync_partner" string="Import All Partners" colspan="4" type="object" />
+								<button name="sync_newsletter" string="Import Newsletter Subscribers" colspan="2" type="object" />
+								<button name="sync_newsletter_unsubscriber" string="Export Newsletter UnSubscribers" colspan="2" type="object" />
+                                <separator string="Others" colspan="4"/>
+                                <field name="active" select="2"/>
+							</page>
 						</notebook>
 					</group>
 				</field>

@@ -13,6 +13,7 @@
 						<field name="group_id" />
 						<field name="mag_vat" />
 						<field name="mag_birthday" />
+						<field name="mag_newsletter" select="2"/>
 						<field name="store_id" />
                         <newline/>
                         <separator string="Store views" colspan="4" />
