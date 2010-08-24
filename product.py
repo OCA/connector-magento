@@ -84,7 +84,7 @@ class product_category(magerp_osv.magerp_osv):
         'level':lambda * a:1
                  }
     
-    def write(self, cr, uid, ids, vals, ctx={}):
+    def write(self, cr, uid, ids, vals, ctx=None):
         if not 'magerp_stamp' in vals.keys():
             vals['magerp_stamp'] = time.strftime('%Y-%m-%d %H:%M:%S')
         return super(product_category, self).write(cr, uid, ids, vals, ctx)
@@ -109,7 +109,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
     _description = "Attributes of products"
     _rec_name = "attribute_code"
     
-    def _get_group(self, cr, uid, ids, prop, unknow_none, context):
+    def _get_group(self, cr, uid, ids, prop, unknow_none, context=None):
         res = {}
         for attribute in self.browse(cr, uid, ids, context):
             res[attribute.id] = self.pool.get('magerp.product_attribute_groups').extid_to_oeid(cr, uid, attribute.group_id, attribute.referential_id.id)
@@ -232,8 +232,12 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
         else:
             return False
 
-    def write(self, cr, uid, ids, vals, context={}):
+    def write(self, cr, uid, ids, vals, context=None):
         """Will recreate the mapping attributes, beware if you customized some!"""
+
+        if context is None:
+            context = {}
+
         if type(ids) == int:
             ids = [ids]
         result = super(magerp_product_attributes, self).write(cr, uid, ids, vals, context) 
@@ -255,8 +259,10 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
             self.create_mapping (cr, uid, self._type_conversion[all_vals.get('frontend_input', False)], field_ids, field_name, referential_id, model_id, all_vals, id)
         return result
 
-    def create(self, cr, uid, vals, context={}):
+    def create(self, cr, uid, vals, context=None):
         """Will create product.product new fields accordingly to Magento product custom attributes and also create mappings for them"""
+        if context is None:
+            context = {}
         if not vals['attribute_code'] in self._no_create_list:
             field_name = "x_magerp_" + vals['attribute_code']
             vals['field_name'] =  field_name
@@ -369,9 +375,11 @@ class magerp_product_attribute_options(magerp_osv.magerp_osv):
         'referential_id':fields.many2one('external.referential', 'Magento Instance', readonly=True),
     }
 
-    def data_to_save(self, cr, uid, vals_list, update=False, context={}):
+    def data_to_save(self, cr, uid, vals_list, update=False, context=None):
         """This method will take data from vals and use context to create record"""
         
+        if context is None:
+            context = {}
         to_remove_ids = []
         if update:
             to_remove_ids = self.search(cr, uid, [('attribute_id', '=', context['attribute_id'])])
@@ -457,12 +465,12 @@ class magerp_product_attribute_set(magerp_osv.magerp_osv):
                 menu_vals['action'] = 'ir.actions.act_window,'+str(action_id)
                 self.pool.get('ir.ui.menu').create(cr, uid, menu_vals, context)
     
-    def write(self, cr, uid, ids, vals, context={}):
+    def write(self, cr, uid, ids, vals, context=None):
         res = super(magerp_product_attribute_set, self).write(cr, uid, ids, vals, context)
         self.create_product_menu(cr, uid, ids, vals, context)
         return res
     
-    def create(self, cr, uid, vals, context={}):
+    def create(self, cr, uid, vals, context=None):
          id = super(magerp_product_attribute_set, self).create(cr, uid, vals, context)
          self.create_product_menu(cr, uid, id, vals, context)
          return id
@@ -573,7 +581,7 @@ product_product_type()
 class product_product(magerp_osv.magerp_osv):
     _inherit = "product.product"
 
-    def _product_type_get(self, cr, uid, context={}):
+    def _product_type_get(self, cr, uid, context=None):
         ids = self.pool.get('magerp.product_product_type').search(cr, uid, [], order='id')
         product_types = self.pool.get('magerp.product_product_type').read(cr, uid, ids, ['product_type','name'], context=context)
         return [(pt['product_type'], pt['name']) for pt in product_types]
@@ -597,7 +605,7 @@ class product_product(magerp_osv.magerp_osv):
     #and will have a nice default vaule anyway, that's why we avoid making them mandatory in the product view
     _magento_fake_mandatory_attrs = ['created_at', 'updated_at', 'has_options', 'required_options', 'model']
 
-    def write(self, cr, uid, ids, vals, context={}):
+    def write(self, cr, uid, ids, vals, context=None):
         if vals.get('referential_id', False):
             instance = vals['referential_id']
             #Filter the keys to be changes
@@ -645,7 +653,7 @@ class product_product(magerp_osv.magerp_osv):
                 tier_vals['website_id'] = self.pool.get('external.shop.group').mage_to_oe(cr, uid, int(each['website_id']), instance)
             tp_obj.create(cr, uid, tier_vals)
     
-    def create(self, cr, uid, vals, context={}):
+    def create(self, cr, uid, vals, context=None):
         tier_price = False
         if vals.get('referential_id', False):
             instance = vals['referential_id']
@@ -660,7 +668,7 @@ class product_product(magerp_osv.magerp_osv):
         #Perform other operations
         return crid
 
-    def unlink(self, cr, uid, ids, context={}):
+    def unlink(self, cr, uid, ids, context=None):
         #if product is mapped to magento, not delete it
         not_delete = False
         sale_obj = self.pool.get('sale.shop')
@@ -755,7 +763,11 @@ class product_product(magerp_osv.magerp_osv):
         xml+="</notebook>"
         return xml
 
-    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context={}, toolbar=False, submenu=False):
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+
+        if context is None:
+            context = {}
+
         result = super(osv.osv, self).fields_view_get(cr, uid, view_id,view_type,context,toolbar=toolbar)
         if view_type == 'form':
             if context.get('set', False):
@@ -831,7 +843,16 @@ class product_product(magerp_osv.magerp_osv):
         self.write(cr, uid, oe_id, {'magento_sku': sku})
         return res
     
-    def ext_export(self, cr, uid, ids, external_referential_ids=[], defaults={}, context={}):
+    def ext_export(self, cr, uid, ids, external_referential_ids=None, defaults=None, context=None):
+        if context is None:
+            context = {}
+
+        if defaults is None:
+            defaults = {}
+
+        if external_referential_ids is None:
+            external_referential_ids = []
+
         result = {'create_ids':[], 'write_ids':[]}
 
         ids = self.search(cr, uid, [('id', 'in', ids), ('magento_exportable', '=', True)]) #restrict export to only exportable products

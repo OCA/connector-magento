@@ -23,6 +23,8 @@ from osv import osv, fields
 import magerp_osv
 from base_external_referentials import external_osv
 
+import tools
+
 DEBUG = True
 TIMEOUT = 2
         
@@ -54,7 +56,7 @@ class external_referential(magerp_osv.magerp_osv):
 
         return False
 
-    def core_sync(self, cr, uid, ids, ctx={}):
+    def core_sync(self, cr, uid, ids, ctx=None):
         instances = self.browse(cr, uid, ids, ctx)
         filter = []
         for inst in instances:
