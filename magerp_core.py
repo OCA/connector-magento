@@ -62,7 +62,7 @@ class external_referential(magerp_osv.magerp_osv):
         for inst in instances:
             core_imp_conn = self.external_connection(cr, uid, inst, DEBUG)
             self.pool.get('external.shop.group').mage_import_base(cr, uid,core_imp_conn, inst.id, defaults={'referential_id':inst.id})
-            self.pool.get('sale.shop').mage_import_base(cr, uid, core_imp_conn, inst.id, defaults={'magento_shop':True})
+            self.pool.get('sale.shop').mage_import_base(cr, uid, core_imp_conn, inst.id, {'magento_shop':True, 'company_id':self.pool.get('res.users').browse(cr, uid, uid).company_id.id})
             self.pool.get('magerp.storeviews').mage_import_base(cr,uid,core_imp_conn, inst.id, defaults={})
         return True
 
