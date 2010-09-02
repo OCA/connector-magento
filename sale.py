@@ -211,6 +211,12 @@ class sale_order(magerp_osv.magerp_osv):
             shipping_default = {'partner_id': res.get('partner_id', False)}
         billing_default = shipping_default.copy()
         billing_default.update({'email' : data_record.get('customer_email', False)})
+        
+        if not data_record['billing_address']['customer_id']:
+            data_record['billing_address']['customer_id'] = data_record['customer_id']
+        
+        if not data_record['shipping_address']['customer_id']:
+            data_record['shipping_address']['customer_id'] = data_record['customer_id']
 
         print "**** data_record['billing_address']", data_record['billing_address']
         print "---", data_record
