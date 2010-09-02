@@ -211,6 +211,8 @@ class sale_order(magerp_osv.magerp_osv):
             shipping_default = {'partner_id': res.get('partner_id', False)}
         billing_default = shipping_default.copy()
         billing_default.update({'email' : data_record.get('customer_email', False)})
+        print "**** data_record['billing_address']", data_record['billing_address']
+        print "---", data_record
 
         inv_res = partner_address_obj.ext_import(cr, uid, [data_record['billing_address']], external_referential_id, billing_default, context)
         if 'address_type' in data_record['shipping_address']:
