@@ -206,11 +206,12 @@ class sale_order(magerp_osv.magerp_osv):
             data_record['shipping_address'].update(self.get_mage_customer_address_id(data_record['shipping_address']))
         shipping_default = {}
         billing_default = {}
-        if res.get('customer_id', False):
-            partner_id = self.pool.get('res.partner').extid_to_oeid(cr, uid, res.get('customer_id', False), external_referential_id)
+        res['partner_id'] = self.pool.get('res.partner').extid_to_oeid(cr, uid, data_record['customer_id'], external_referential_id)
+        if res.get('partner_id', False):
             shipping_default = {'partner_id': res.get('partner_id', False)}
         billing_default = shipping_default.copy()
         billing_default.update({'email' : data_record.get('customer_email', False)})
+
         print "**** data_record['billing_address']", data_record['billing_address']
         print "---", data_record
 
