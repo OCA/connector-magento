@@ -206,7 +206,8 @@ class sale_order(magerp_osv.magerp_osv):
             data_record['shipping_address'].update(self.get_mage_customer_address_id(data_record['shipping_address']))
         shipping_default = {}
         billing_default = {}
-        if res.get('partner_id', False):
+        if res.get('customer_id', False):
+            partner_id = self.pool.get('res.partner').extid_to_oeid(cr, uid, res.get('customer_id', False), external_referential_id)
             shipping_default = {'partner_id': res.get('partner_id', False)}
         billing_default = shipping_default.copy()
         billing_default.update({'email' : data_record.get('customer_email', False)})
@@ -298,11 +299,14 @@ class sale_order(magerp_osv.magerp_osv):
         return res
     
     def oevals_from_extdata(self, cr, uid, external_referential_id, data_record, key_field, mapping_lines, defaults, context):
+        if not context.get('one_by_one', False):
+            if data_record.get('billing_address', False):
+                defaults = self.get_order_addresses(cr, uid, defaults, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
+                print "********* defaults", defaults
+        
         res = super(magerp_osv.magerp_osv, self).oevals_from_extdata(cr, uid, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
 
         if not context.get('one_by_one', False):
-            if data_record.get('billing_address', False):
-                res = self.get_order_addresses(cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
             if data_record.get('items', False):
                 try:
                     res = self.get_order_lines(cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
