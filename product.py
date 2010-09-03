@@ -837,7 +837,8 @@ class product_product(magerp_osv.magerp_osv):
         sku = self.product_to_sku(cr, uid, product)
         shop = self.pool.get('sale.shop').browse(cr, uid, ctx['shop_id'])
         attr_set_id = product.set and self.pool.get('magerp.product_attribute_set').oeid_to_extid(cr, uid, product.set.id, shop.referential_id.id) or ctx.get('default_set_id', 1)
-        product_type = 'simple' #TODO FIXME do not hardcode that!
+        
+        product_type = self.read(cr, uid, oe_id, ['product_type'])['product_type'] or 'simple'
 
         res = super(magerp_osv.magerp_osv, self).ext_create(cr, uid, [product_type, attr_set_id, sku, data], conn, method, oe_id, ctx)
         self.write(cr, uid, oe_id, {'magento_sku': sku})
@@ -871,13 +872,24 @@ class product_product(magerp_osv.magerp_osv):
             last_exported_time = False
 
         #strangely seems that on inherits structure, write_date/create_date are False for children
-        cr.execute("select id, write_date, create_date from product_product where id in %s", (tuple(ids),))
+        cr.execute("select id, write_date, create_date, product_type from product_product where id in %s", (tuple(ids),))
         read = cr.fetchall()
         ids = []
         context['force']=True
         for product_read in read:
             last_updated_product = product_read[1] and product_read[1].split('.')[0] or product_read[2] and product_read[2].split('.')[0] or False
             last_updated_time = datetime.datetime.fromtimestamp(time.mktime(time.strptime(last_updated_product, '%Y-%m-%d %H:%M:%S')))
+            if product_read[3] == 'grouped':
+                cr.execute("select id, write_date, create_date from mrp_bom where product_id = %s", (product_read[0],))
+                read_bom = cr.fetchall()
+                for bom in read_bom:
+                    last_updated_bom = bom[1] and bom[1].split('.')[0] or bom[2] and bom[2].split('.')[0] or False
+                    last_updated_bom_time = datetime.datetime.fromtimestamp(time.mktime(time.strptime(last_updated_bom, '%Y-%m-%d %H:%M:%S')))
+                    if last_updated_bom_time and last_exported_time:
+                        if last_exported_time - datetime.timedelta(seconds=1) < last_updated_bom_time:
+                            if last_updated_time < last_updated_bom_time:
+                                last_updated_time = last_updated_bom_time
+                                last_updated_product = last_updated_bom
             if last_updated_time and last_exported_time:
                 if last_exported_time + datetime.timedelta(seconds=1) > last_updated_time:
                     continue
@@ -907,14 +919,29 @@ class product_product(magerp_osv.magerp_osv):
                 context_dic[len(context_dic)-1].update({'storeview_code': storeview.code, 'lang': storeview.lang_id.code})
 
         for id in ids:
+            child_ids = []
+            product_type = self.read(cr, uid, id, ['product_type'])['product_type']
+            if product_type == 'grouped': # lookup for Magento "grouped product"
+                bom_ids = self.read(cr, uid, id, ['bom_ids'])['bom_ids']
+                if len(bom_ids): # it has or is part of a BoM
+                    cr.execute("SELECT product_id, product_qty FROM mrp_bom WHERE bom_id = %s", (bom_ids[0],)) #FIXME What if there is more than a materials list?
+                    results = cr.fetchall()
+                    child_ids = []
+                    quantities = {}
+                    for x in results:
+                        child_ids += [x[0]]
+                        sku = self.read(cr, uid, x[0], ['magento_sku'])['magento_sku']
+                        quantities.update({sku: x[1]})
+                    if child_ids: #it is an assembly and it contains the products child_ids: 
+                        self.ext_export(cr, uid, child_ids, external_referential_ids, defaults, context) #so we export them
             for ctx_storeview in context_dic:
                 temp_result = super(magerp_osv.magerp_osv, self).ext_export(cr, uid, [id], external_referential_ids, defaults, ctx_storeview)
+                if child_ids: 
+                    self.ext_grouped_product_assign(cr, uid, id, child_ids, quantities, ctx_storeview)
             self.pool.get('sale.shop').write(cr, uid,context['shop_id'], {'last_products_export_date': ids_2_dates[id]})
             result['create_ids'] += temp_result['create_ids']
             result['write_ids'] += temp_result['write_ids']
-
         return result
-    
     
     def try_ext_update(self, cr, uid, data, conn, method, oe_id, external_id, ir_model_data_id, create_method, context):
         if context.get('storeview_code', False):
@@ -938,5 +965,48 @@ class product_product(magerp_osv.magerp_osv):
                 is_in_stock = int(virtual_available > 0)
                 ctx['conn_obj'].call('product_stock.update', [product.magento_sku, {'qty': virtual_available, 'is_in_stock': is_in_stock}])
                 logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "Successfully updated stock level at %s for product with SKU %s " %(virtual_available, product.magento_sku))
-    
+
+    def ext_grouped_product_assign(self, cr, uid, parent_id, child_ids, quantities, context):
+        logger = netsvc.Logger()
+        conn = context.get('conn_obj', False)
+        parent_sku = self.read(cr, uid, parent_id, ['magento_sku'])['magento_sku']
+        new_child_skus = self.read(cr, uid, child_ids, ['magento_sku']) # get the sku of the products to be assigned
+        new_child_skus = [x['magento_sku'] for x in new_child_skus]
+        
+        data = ['grouped', parent_sku]
+        child_list = conn.call('product_link.list', data) # get the sku of the products already assigned
+        old_child_skus = [x['sku'] for x in child_list]
+        skus_to_remove = []
+        skus_to_assign = []
+        skus_to_update = []
+        for old_child_sku in old_child_skus:
+            if old_child_sku not in new_child_skus:
+                skus_to_remove += [old_child_sku]
+        for new_child_sku in new_child_skus:
+            if new_child_sku in old_child_skus:
+                skus_to_update += [new_child_sku]
+            else:
+                skus_to_assign += [new_child_sku]
+        for old_child_sku in skus_to_remove:
+            conn.call('product_link.remove', data + [old_child_sku]) # remove the products that are no more used
+            logger.notifyChannel('ext assign', netsvc.LOG_INFO, "Successfully removed assignment for product %s to product %s" %(parent_sku, old_child_sku))
+        for child_sku in skus_to_assign:
+            conn.call('product_link.assign', data + [child_sku, {'position': 0, 'qty': quantities[child_sku]}]) # assign new product
+            logger.notifyChannel('ext assign', netsvc.LOG_INFO, "Successfully assigned product %s to product %s " %(parent_sku, child_sku))
+        for child_sku in skus_to_update:
+            conn.call('product_link.update', data + [child_sku, {'position': 0, 'qty': quantities[child_sku]}]) # update products already assigned
+            logger.notifyChannel('ext assign', netsvc.LOG_INFO, "Successfully updated assignment of product %s to product %s" %(parent_sku, child_sku))
+        return True
+
 product_product()
+
+class mrp_bom(osv.osv):
+    _inherit = 'mrp.bom'
+    
+    def create(self, cr, uid, vals, context=None):
+        res = super(mrp_bom, self).create(cr, uid, vals, context)
+        if not vals.get('bom_id', True) and vals.get('product_id', False):
+            self.pool.get('product.product').write(cr, uid, vals['product_id'], {'product_type': 'grouped'}, context)
+        return res
+        
+mrp_bom()
