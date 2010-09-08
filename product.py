@@ -100,6 +100,37 @@ class product_category(magerp_osv.magerp_osv):
         #The parent has to be created before creating child
         imp_vals = conn.call('category.info', [category_id])
         self.ext_import(cr, uid, [imp_vals], external_referential_id, defaults={}, context={'conn_obj':conn})
+        
+    def ext_export(self, cr, uid, ids, external_referential_ids=None, defaults=None, context=None): # We export all the categories if at least one has been modified since last export
+        if context is None:
+            context = {}
+
+        if defaults is None:
+            defaults = {}
+            
+        res = False
+        ids = self.search(cr, uid, [('id', 'in', ids), ('magento_exportable', '=', True)]) #restrict export to only exportable products
+        
+        shop = self.pool.get('sale.shop').browse(cr, uid, context['shop_id'])
+        
+        if shop.last_products_export_date:
+            last_exported_time = datetime.datetime.fromtimestamp(time.mktime(time.strptime(shop.last_products_export_date, '%Y-%m-%d %H:%M:%S')))
+        else:
+            last_exported_time = False
+        
+        cr.execute("select write_date, create_date from product_category where id in %s", (tuple(ids),))
+        read = cr.fetchall()
+        for categ in read:
+            last_updated_categ = categ[0] and categ[0].split('.')[0] or categ[1] and categ[1].split('.')[0] or False
+            last_updated_categ_time = datetime.datetime.fromtimestamp(time.mktime(time.strptime(last_updated_categ, '%Y-%m-%d %H:%M:%S')))
+            if last_updated_categ_time and last_exported_time:
+                if last_exported_time - datetime.timedelta(seconds=1) < last_updated_categ_time:
+                    context['force'] = True
+                    res = super(product_category, self).ext_export(cr, uid, ids, external_referential_ids, defaults, context)
+                    break
+        if not res:
+            res = super(product_category, self).ext_export(cr, uid, [], external_referential_ids, defaults, context)
+        return res
                 
 product_category()
 
