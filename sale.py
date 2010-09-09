@@ -211,15 +211,6 @@ class sale_order(magerp_osv.magerp_osv):
             shipping_default = {'partner_id': res.get('partner_id', False)}
         billing_default = shipping_default.copy()
         billing_default.update({'email' : data_record.get('customer_email', False)})
-        
-        if not data_record['billing_address']['customer_id']:
-            data_record['billing_address']['customer_id'] = data_record['customer_id']
-        
-        if not data_record['shipping_address']['customer_id']:
-            data_record['shipping_address']['customer_id'] = data_record['customer_id']
-
-        print "**** data_record['billing_address']", data_record['billing_address']
-        print "---", data_record
 
         inv_res = partner_address_obj.ext_import(cr, uid, [data_record['billing_address']], external_referential_id, billing_default, context)
         if 'address_type' in data_record['shipping_address']:
@@ -256,13 +247,11 @@ class sale_order(magerp_osv.magerp_osv):
             vat_country, vat_number = vat[:2].lower(), vat[2:]
             check = getattr(partner_obj, 'check_vat_' + vat_country)
             vat_ok = check(vat_number)
-            #print "1", vat, vat_ok
             if not vat_ok and 'country_id' in data_record['billing_address']:
                 # Maybe magento vat number has not country code prefix. Take it from billing address.
                 check = getattr(partner_obj, 'check_vat_' + data_record['billing_address']['country_id'].lower())
                 vat_ok = check(vat)
                 vat = data_record['billing_address']['country_id'] + vat
-                #print "2", vat, vat_ok
             if vat_ok:    
                 partner_obj.write(cr, uid, [partner_id], {'vat_subjected':True, 'vat':vat})
         return res
@@ -311,7 +300,6 @@ class sale_order(magerp_osv.magerp_osv):
         if not context.get('one_by_one', False):
             if data_record.get('billing_address', False):
                 defaults = self.get_order_addresses(cr, uid, defaults, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
-                print "********* defaults", defaults
         
         res = super(magerp_osv.magerp_osv, self).oevals_from_extdata(cr, uid, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
 
