@@ -206,6 +206,7 @@ class sale_order(magerp_osv.magerp_osv):
             data_record['shipping_address'].update(self.get_mage_customer_address_id(data_record['shipping_address']))
         shipping_default = {}
         billing_default = {}
+        res['partner_id'] = self.pool.get('res.partner').extid_to_oeid(cr, uid, data_record['customer_id'], external_referential_id)
         if res.get('partner_id', False):
             shipping_default = {'partner_id': res.get('partner_id', False)}
         billing_default = shipping_default.copy()
@@ -246,13 +247,11 @@ class sale_order(magerp_osv.magerp_osv):
             vat_country, vat_number = vat[:2].lower(), vat[2:]
             check = getattr(partner_obj, 'check_vat_' + vat_country)
             vat_ok = check(vat_number)
-            #print "1", vat, vat_ok
             if not vat_ok and 'country_id' in data_record['billing_address']:
                 # Maybe magento vat number has not country code prefix. Take it from billing address.
                 check = getattr(partner_obj, 'check_vat_' + data_record['billing_address']['country_id'].lower())
                 vat_ok = check(vat)
                 vat = data_record['billing_address']['country_id'] + vat
-                #print "2", vat, vat_ok
             if vat_ok:    
                 partner_obj.write(cr, uid, [partner_id], {'vat_subjected':True, 'vat':vat})
         return res
@@ -298,11 +297,13 @@ class sale_order(magerp_osv.magerp_osv):
         return res
     
     def oevals_from_extdata(self, cr, uid, external_referential_id, data_record, key_field, mapping_lines, defaults, context):
+        if not context.get('one_by_one', False):
+            if data_record.get('billing_address', False):
+                defaults = self.get_order_addresses(cr, uid, defaults, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
+        
         res = super(magerp_osv.magerp_osv, self).oevals_from_extdata(cr, uid, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
 
         if not context.get('one_by_one', False):
-            if data_record.get('billing_address', False):
-                res = self.get_order_addresses(cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
             if data_record.get('items', False):
                 try:
                     res = self.get_order_lines(cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
