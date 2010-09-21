@@ -1037,7 +1037,8 @@ class mrp_bom(osv.osv):
     def create(self, cr, uid, vals, context=None):
         res = super(mrp_bom, self).create(cr, uid, vals, context)
         if not vals.get('bom_id', True) and vals.get('product_id', False):
-            self.pool.get('product.product').write(cr, uid, vals['product_id'], {'product_type': 'grouped'}, context)
+            if self.pool.get('magerp.product_product_type').search(cr, uid, [['product_type', '=', 'grouped']]):
+                self.pool.get('product.product').write(cr, uid, vals['product_id'], {'product_type': 'grouped'}, context)
         return res
         
 mrp_bom()
