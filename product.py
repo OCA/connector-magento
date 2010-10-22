@@ -287,7 +287,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
             
             field_name = all_vals['field_name']
             field_ids = self.pool.get('ir.model.fields').search(cr, uid, [('name', '=', field_name), ('model_id', '=', model_id)])
-            self.create_mapping (cr, uid, self._type_conversion[all_vals.get('frontend_input', False)], field_ids, field_name, referential_id, model_id, all_vals, id)
+            self.create_mapping(cr, uid, self._type_conversion[all_vals.get('frontend_input', False)], field_ids, field_name, referential_id, model_id, all_vals, id)
         return result
 
     def create(self, cr, uid, vals, context=None):
