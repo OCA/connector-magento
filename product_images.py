@@ -92,6 +92,7 @@ class product_images(magerp_osv.magerp_osv):
                     result = conn.call('catalog_product_attribute_media.create',
                               [each.product_id.magento_sku,
                                {'file':{
+                                        'name':each.name,
                                         'content':self.get_image(cr, uid, each.id),
                                         'mime':each.filename and mimetypes.guess_type(each.filename)[0] or 'image/jpeg',
                                         }
