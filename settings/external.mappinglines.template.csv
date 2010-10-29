@@ -20,8 +20,11 @@
 "mag_erp_so_carrier_id","magento1324","sale.model_sale_order","shipping_method","in_out","str","if not ifield:
 	result = []
 else:
-	carrier_id = self.pool.get('delivery.carrier').search(cr, uid, [('magento_code', '=', ifield)])[0]
-	result=[('carrier_id', carrier_id)]",
+	carrier_ids = self.pool.get('delivery.carrier').search(cr, uid, [('magento_code', '=', ifield)])
+	if carrier_ids:
+		result=[('carrier_id', carrier_ids[0])]
+	else:
+		result=[]",
 "mag_erp_so_pay","magento1324","sale.model_sale_order","payment","in_out","str","
 payments_mapping = {'checkmo': 'manual', 'ccsave': 'prepaid', 'free':'prepaid','googlecheckout':'prepaid','paypayl_express':'prepaid', 'paybox_system': 'prepaid', 'paypal_standard': 'prepaid', 'cashondelivery': 'manual', 'servired_standard': 'prepaid', 'bbva': 'prepaid', 'cofidis': 'prepaid'}
 ifield=eval(ifield)
