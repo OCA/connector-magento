@@ -9,11 +9,13 @@
 			<field name="inherit_id" ref="base_external_referentials.external_referential_form_view" />
 			<field name="type">form</field>
 			<field name="arch" type="xml">
-				<field name="mapping_ids" position="before">
-					<group col="4" colspan="4">
-						<separator string="Core Components" colspan="4" />
-						<notebook colspan="4">
-							<page string="Referential Actions">
+			    <xpath expr="/form/group[2]/notebook" position="replace">
+					<notebook colspan="4">
+						<page string="Referential Actions">
+				        	<separator string="Compulsory" colspan="4" />
+				            <button name="refresh_mapping" string="1 - Reload Referential Mapping Templates" colspan="2" type="object" />
+            				<button name="core_sync" string="2 - Synchronize Referential Settings" colspan="2" type="object" attrs="{'readonly':[('mapping_ids','=',[])]}"/>
+            				<separator string="Optional - Initial import only" colspan="4" />
 								<button name="sync_customer_groups" string="1 - Import Customer Groups (Partner Categories)" colspan="2" type="object" />
 								<button name="sync_attrib_groups" string="4 - Import Attribute Groups" colspan="2" type="object" />
 								<button name="sync_categs" string="2 - Import Product Categories" colspan="2" type="object" />
@@ -47,8 +49,7 @@
                                 <field name="active" select="2"/>
 							</page>
 						</notebook>
-					</group>
-				</field>
+					</xpath>
 			</field>
 		</record>
 		<record id="act_magerp_instances_form" model="ir.actions.act_window">
