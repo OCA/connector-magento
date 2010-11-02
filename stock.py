@@ -28,20 +28,18 @@ class stock_picking(osv.osv):
 
 
     def create_ext_complete_shipping(self, cr, uid, id, external_referential_id, magento_incrementid, ctx):
+        logger = netsvc.Logger()
         conn = ctx.get('conn_obj', False)
         ext_shipping_id = False
         try:
             ext_shipping_id = conn.call('sales_order_shipment.create', [magento_incrementid, {}, _("Shipping Created"), True, True])
         except Exception, e:
-            shipping_list = conn.call('sales_order_shipment.list')
-            for shipping in shipping_list:
-                if shipping['order_increment_id'] == magento_incrementid:
-                    ext_shipping_id = shipping['increment_id']
-                    break
+            logger.notifyChannel(_("Magento Call"), netsvc.LOG_ERROR, _("The picking from the order %s can't be created on Magento, please attach it manually, %s") % (magento_incrementid, e))
         return ext_shipping_id        
 
 
     def create_ext_partial_shipping(self, cr, uid, id, external_referential_id, magento_incrementid, ctx):
+        logger = netsvc.Logger()
         conn = ctx.get('conn_obj', False)
         ext_shipping_id = False
         order_items = conn.call('sales_order.info', [magento_incrementid])['items']
@@ -58,7 +56,7 @@ class stock_picking(osv.osv):
         try:
             ext_shipping_id = conn.call('sales_order_shipment.create', [magento_incrementid, item_qty, _("Shipping Created"), True, True])
         except Exception, e:
-            pass #TODO make sure that's because Magento picking already exists and then re-attach it or raise a error to re-attach manually!
+            logger.notifyChannel(_("Magento Call"), netsvc.LOG_ERROR, _("The picking from the order %s can't be created on Magento, please attach it manually, %s") % (magento_incrementid, e))
         return ext_shipping_id 
 
 
