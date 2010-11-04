@@ -35,12 +35,13 @@ class res_partner_address(magerp_osv.magerp_osv):
     _inherit = "res.partner.address"
     
     _columns = {
+                    'firstname':fields.char('First Name', size=100),
                     'lastname':fields.char('Last Name', size=100),
                     'is_magento_order_address':fields.boolean('Magento Order Address?'),
                 }
     _defaults = {
                     'is_magento_order_address': lambda * a:False,
-                 }
+                 }    
 res_partner_address()
 
 class res_partner(magerp_osv.magerp_osv):

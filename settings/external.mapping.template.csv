@@ -11,4 +11,4 @@
 "magento_prd","magento1324","product.model_product_product","catalog_product.list","catalog_product.info","product.update","product.create",,"product_id"
 "magento_cst_grp","magento1324","base.model_res_partner_category","ol_customer_groups.list",,,,,"customer_group_id"
 "magento_prt_adr","magento1324","base.model_res_partner_address","ol_customer_address.list","ol_customer_address.info",,,,"customer_address_id"
-"magento_prt","magento1324","base.model_res_partner","customer.list","customer.info",,,,"customer_id"
+"magento_prt","magento1324","base.model_res_partner","customer.list","customer.info","customer.update",,,"customer_id"

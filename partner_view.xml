@@ -41,6 +41,7 @@
 			<field name="inherit_id" ref="base.view_partner_address_form1" />
 			<field name="arch" type="xml">
 				<field name="name" position="after">
+				    <field name="firstname" />
 					<field name="lastname" />
 				</field>
 			</field>
