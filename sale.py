@@ -240,7 +240,7 @@ class sale_order(magerp_osv.magerp_osv):
 
         # Adds vat number (country code+magento vat) if base_vat module is installed and Magento sends customer_taxvat
         cr.execute('select * from ir_module_module where name=%s and state=%s', ('base_vat','installed'))
-        if cr.fetchone() and 'customer_taxvat' in data_record:
+        if cr.fetchone() and 'customer_taxvat' in data_record and data_record['customer_taxvat']:
             allchars = string.maketrans('', '')
             delchars = ''.join([c for c in allchars if c not in string.letters + string.digits])
             vat = data_record['customer_taxvat'].translate(allchars, delchars).upper()
