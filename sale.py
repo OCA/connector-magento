@@ -99,7 +99,7 @@ class sale_shop(magerp_osv.magerp_osv):
         result = []
         for storeview in shop.storeview_ids:
             magento_storeview_id = self.pool.get('magerp.storeviews').oeid_to_extid(cr, uid, storeview.id, shop.referential_id.id, context={})
-            ids_or_filter = [{'store_id': {'eq': magento_storeview_id}, 'state': {'neq': 'holded'}}]
+            ids_or_filter = [{'store_id': {'eq': magento_storeview_id}, 'state': {'neq': 'canceled'}}]
                         
             #get last imported order:
             last_external_id = self.get_last_imported_external_id(cr, 'sale.order', shop.referential_id.id, "sale_order.shop_id=%s and magento_storeview_id=%s" % (shop.id, storeview.id))[1]
