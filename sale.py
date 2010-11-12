@@ -113,7 +113,48 @@ class sale_shop(magerp_osv.magerp_osv):
                                                                        'ids_or_filter':ids_or_filter
                                                                        }))
         return result
+        
+    def update_orders(self, cr, uid, ids, ctx=None):
+        # First update the shop order from OERP
+        super(sale_shop, self).update_orders(cr,uid,ids,ctx)
+        conn = ctx.get('conn_obj', False)
+        so_obj = self.pool.get('sale.order')
 
+        for referencial in self.browse(cr,uid,ids):
+            # Update the state of orders in OERP that are in "need_to_update":True
+            # from the Magento's corresponding orders
+    
+            # Get all need_to_update orders in OERP
+            orders_to_update=so_obj.search(cr,uid,[('need_to_update','=',True)])
+            for order in so_obj.browse(cr,uid,orders_to_update):
+                mag_status = ORDER_STATUS_MAPPING.get(order.state, False)
+                # For each one, check if the status has change in Magento
+                # We dont use oeid_to_extid function cause it only handle int id
+                # Magento can have something like '100000077-2'
+                model_data_ids = self.pool.get('ir.model.data').search(cr, uid, [('model', '=', so_obj._name), ('res_id', '=', order.id), ('external_referential_id', '=', referencial.referential_id.id)])
+                if model_data_ids:
+                    prefixed_id = self.pool.get('ir.model.data').read(cr, uid, model_data_ids[0], ['name'])['name']
+                    ext_id = so_obj.id_from_prefixed_id(prefixed_id)
+                else:
+                    return False
+                data_record=conn.call('sales_order.info', [ext_id])
+                updated = False
+                if data_record['status'] == 'canceled':
+                    wf_service = netsvc.LocalService("workflow")
+                    wf_service.trg_validate(uid, 'sale.order', order.id, 'cancel', cr)
+                    updated = True
+                # If the order isn't canceled and was blocked, 
+                # so we follow the standard flow according to ext_payment_method:
+                else:
+                    paid = so_obj.create_payments(cr, uid, data_record, order.id, ctx)                        
+                    so_obj.oe_status(cr, uid, order.id, paid, ctx)
+                    updated = paid
+                # Untick the need_to_update if updated (if so was canceled in magento
+                # or if it has been paid through magento)
+                if updated:
+                    so_obj.write(cr,uid,order.id,{'need_to_update':False})
+        return False
+         
     def update_shop_orders(self, cr, uid, order, ext_id, ctx):
         conn = ctx.get('conn_obj', False)
         status = ORDER_STATUS_MAPPING.get(order.state, False)
@@ -122,6 +163,10 @@ class sale_shop(magerp_osv.magerp_osv):
         #status update:
         if status:
             result['status_change'] = conn.call('sales_order.addComment', [ext_id, status, '', True])
+            # If status has changed into OERP and the order need_to_update, then we consider the update is done
+            # remove the 'need_to_update': True
+            if order.need_to_update:
+                self.pool.get('sale.order').write(cr, uid, order.id, {'need_to_update': False})
         
         #creation of Magento invoice eventually:
         cr.execute("select account_invoice.id from account_invoice inner join sale_order_invoice_rel on invoice_id = account_invoice.id where order_id = %s" % order.id)
