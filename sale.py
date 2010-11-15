@@ -25,6 +25,7 @@ import netsvc
 from tools.translate import _
 import string
 #from datetime import datetime
+import tools
 import time
 DEBUG = True
 
