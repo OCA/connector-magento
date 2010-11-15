@@ -84,10 +84,10 @@ class product_category(magerp_osv.magerp_osv):
         'level':lambda * a:1
                  }
     
-    def write(self, cr, uid, ids, vals, ctx=None):
+    def write(self, cr, uid, ids, vals, context=None):
         if not 'magerp_stamp' in vals.keys():
             vals['magerp_stamp'] = time.strftime('%Y-%m-%d %H:%M:%S')
-        return super(product_category, self).write(cr, uid, ids, vals, ctx)
+        return super(product_category, self).write(cr, uid, ids, vals, context)
     
     def record_entire_tree(self, cr, uid, id, conn, categ_tree, DEBUG=False):
         self.record_category(cr, uid, id, conn, int(categ_tree['category_id']))
@@ -863,15 +863,15 @@ class product_product(magerp_osv.magerp_osv):
                 sku = code
         return sku
 
-    def ext_create(self, cr, uid, data, conn, method, oe_id, ctx):        
+    def ext_create(self, cr, uid, data, conn, method, oe_id, context):        
         product = self.browse(cr, uid, oe_id)
         sku = self.product_to_sku(cr, uid, product)
-        shop = self.pool.get('sale.shop').browse(cr, uid, ctx['shop_id'])
-        attr_set_id = product.set and self.pool.get('magerp.product_attribute_set').oeid_to_extid(cr, uid, product.set.id, shop.referential_id.id) or ctx.get('default_set_id', 1)
+        shop = self.pool.get('sale.shop').browse(cr, uid, context['shop_id'])
+        attr_set_id = product.set and self.pool.get('magerp.product_attribute_set').oeid_to_extid(cr, uid, product.set.id, shop.referential_id.id) or context.get('default_set_id', 1)
         
         product_type = self.read(cr, uid, oe_id, ['product_type'])['product_type'] or 'simple'
 
-        res = super(magerp_osv.magerp_osv, self).ext_create(cr, uid, [product_type, attr_set_id, sku, data], conn, method, oe_id, ctx)
+        res = super(magerp_osv.magerp_osv, self).ext_create(cr, uid, [product_type, attr_set_id, sku, data], conn, method, oe_id, context)
         self.write(cr, uid, oe_id, {'magento_sku': sku})
         return res
     
@@ -965,10 +965,10 @@ class product_product(magerp_osv.magerp_osv):
                         quantities.update({sku: x[1]})
                     if child_ids: #it is an assembly and it contains the products child_ids: 
                         self.ext_export(cr, uid, child_ids, external_referential_ids, defaults, context) #so we export them
-            for ctx_storeview in context_dic:
-                temp_result = super(magerp_osv.magerp_osv, self).ext_export(cr, uid, [id], external_referential_ids, defaults, ctx_storeview)
+            for context_storeview in context_dic:
+                temp_result = super(magerp_osv.magerp_osv, self).ext_export(cr, uid, [id], external_referential_ids, defaults, context_storeview)
                 if child_ids: 
-                    self.ext_grouped_product_assign(cr, uid, id, child_ids, quantities, ctx_storeview)
+                    self.ext_grouped_product_assign(cr, uid, id, child_ids, quantities, context_storeview)
             self.pool.get('sale.shop').write(cr, uid,context['shop_id'], {'last_products_export_date': ids_2_dates[id]})
             result['create_ids'] += temp_result['create_ids']
             result['write_ids'] += temp_result['write_ids']
@@ -980,21 +980,21 @@ class product_product(magerp_osv.magerp_osv):
         else:
             return conn.call(method, [external_id, data])
     
-    def ext_update(self, cr, uid, data, conn, method, oe_id, external_id, ir_model_data_id, create_method, ctx):
+    def ext_update(self, cr, uid, data, conn, method, oe_id, external_id, ir_model_data_id, create_method, context):
         product = self.browse(cr, uid, oe_id)
         sku = self.product_to_sku(cr, uid, product)
-        return super(magerp_osv.magerp_osv, self).ext_update(cr, uid, data, conn, method, oe_id, sku, ir_model_data_id, create_method, ctx)
+        return super(magerp_osv.magerp_osv, self).ext_update(cr, uid, data, conn, method, oe_id, sku, ir_model_data_id, create_method, context)
     
-    def export_inventory(self, cr, uid, ids, shop, ctx):
+    def export_inventory(self, cr, uid, ids, shop, context):
         logger = netsvc.Logger()
-        stock_id = self.pool.get('sale.shop').browse(cr, uid, ctx['shop_id']).warehouse_id.lot_stock_id.id
+        stock_id = self.pool.get('sale.shop').browse(cr, uid, context['shop_id']).warehouse_id.lot_stock_id.id
         for product in self.browse(cr, uid, ids):
             if product.magento_sku and product.type != 'service':
                 virtual_available = self.read(cr, uid, product.id, ['virtual_available'], {'location': stock_id})['virtual_available']
 		# Changing Stock Availability to "Out of Stock" in Magento
                 # if a product has qty lt or equal to 0.
                 is_in_stock = int(virtual_available > 0)
-                ctx['conn_obj'].call('product_stock.update', [product.magento_sku, {'qty': virtual_available, 'is_in_stock': is_in_stock}])
+                context['conn_obj'].call('product_stock.update', [product.magento_sku, {'qty': virtual_available, 'is_in_stock': is_in_stock}])
                 logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "Successfully updated stock level at %s for product with SKU %s " %(virtual_available, product.magento_sku))
 
     def ext_grouped_product_assign(self, cr, uid, parent_id, child_ids, quantities, context):

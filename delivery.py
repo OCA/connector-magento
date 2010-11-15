@@ -30,10 +30,10 @@ class delivery_carrier(osv.osv):
         'magento_tracking_title': fields.char('Magento Tracking Title', size=64, required=False),
     }
     
-    def check_ext_carrier_reference(self, cr, uid, id, magento_incrementid, ctx):
-        conn = ctx and ctx.get('conn_obj', False) or False
+    def check_ext_carrier_reference(self, cr, uid, id, magento_incrementid, context):
+        conn = context and context.get('conn_obj', False) or False
         mag_carrier = conn.call('sales_order_shipment.getCarriers', [magento_incrementid])
-        carrier = self.read(cr, uid, id, ['magento_code', 'name'], context=ctx)
+        carrier = self.read(cr, uid, id, ['magento_code', 'name'], context=context)
         if not carrier['magento_code'] in mag_carrier.keys():
             raise osv.except_osv(_("Error"), _("The carrier %s don't have a magento_code valid!! Indeed the value %s is not in the magento carrier list %s" %(carrier['name'], carrier['magento_code'], mag_carrier.keys())))
         return True

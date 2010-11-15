@@ -55,15 +55,15 @@ class sale_shop(magerp_osv.magerp_osv):
                 res[shop.id] = False
         return res
     
-    def export_images(self, cr, uid, ids, ctx):
+    def export_images(self, cr, uid, ids, context):
         for shop in self.browse(cr, uid, ids):
-            ctx['shop_id'] = shop.id
-            ctx['conn_obj'] = self.external_connection(cr, uid, shop.referential_id)
+            context['shop_id'] = shop.id
+            context['conn_obj'] = self.external_connection(cr, uid, shop.referential_id)
             recent_changed_images = self.pool.get('product.images').get_changed_ids(cr, uid, shop.last_images_export_date)
             if recent_changed_images:
-                res = self.pool.get('product.images').update_remote_images(cr, uid, recent_changed_images, ctx)
+                res = self.pool.get('product.images').update_remote_images(cr, uid, recent_changed_images, context)
             res = True
-            self.write(cr,uid,ctx['shop_id'],{'last_images_export_date':time.strftime('%Y-%m-%d %H:%M:%S')})
+            self.write(cr,uid,context['shop_id'],{'last_images_export_date':time.strftime('%Y-%m-%d %H:%M:%S')})
                
   
     def _get_rootcategory(self, cr, uid, ids, prop, unknow_none, context):
@@ -95,7 +95,7 @@ class sale_shop(magerp_osv.magerp_osv):
         'auto_import': fields.boolean('Automatic Import'),
     }   
 
-    def import_shop_orders(self, cr, uid, shop, defaults, ctx):
+    def import_shop_orders(self, cr, uid, shop, defaults, context):
         result = []
         for storeview in shop.storeview_ids:
             magento_storeview_id = self.pool.get('magerp.storeviews').oeid_to_extid(cr, uid, storeview.id, shop.referential_id.id, context={})
@@ -106,7 +106,7 @@ class sale_shop(magerp_osv.magerp_osv):
             if last_external_id:
                 ids_or_filter[0]['increment_id'] = {'gt': last_external_id}
             defaults['magento_storeview_id'] = storeview.id
-            result.append(self.pool.get('sale.order').mage_import_base(cr, uid, ctx.get('conn_obj', False), shop.referential_id.id,
+            result.append(self.pool.get('sale.order').mage_import_base(cr, uid, context.get('conn_obj', False), shop.referential_id.id,
                                                               defaults=defaults,
                                                               context={
                                                                        'one_by_one': True, 
@@ -114,10 +114,10 @@ class sale_shop(magerp_osv.magerp_osv):
                                                                        }))
         return result
         
-    def update_orders(self, cr, uid, ids, ctx=None):
+    def update_orders(self, cr, uid, ids, context=None):
         # First update the shop order from OERP
-        super(sale_shop, self).update_orders(cr,uid,ids,ctx)
-        conn = ctx.get('conn_obj', False)
+        super(sale_shop, self).update_orders(cr,uid,ids,context)
+        conn = context.get('conn_obj', False)
         so_obj = self.pool.get('sale.order')
 
         for referencial in self.browse(cr,uid,ids):
@@ -146,8 +146,8 @@ class sale_shop(magerp_osv.magerp_osv):
                 # If the order isn't canceled and was blocked, 
                 # so we follow the standard flow according to ext_payment_method:
                 else:
-                    paid = so_obj.create_payments(cr, uid, data_record, order.id, ctx)                        
-                    so_obj.oe_status(cr, uid, order.id, paid, ctx)
+                    paid = so_obj.create_payments(cr, uid, data_record, order.id, context)                        
+                    so_obj.oe_status(cr, uid, order.id, paid, context)
                     updated = paid
                 # Untick the need_to_update if updated (if so was canceled in magento
                 # or if it has been paid through magento)
@@ -155,8 +155,8 @@ class sale_shop(magerp_osv.magerp_osv):
                     so_obj.write(cr,uid,order.id,{'need_to_update':False})
         return False
          
-    def update_shop_orders(self, cr, uid, order, ext_id, ctx):
-        conn = ctx.get('conn_obj', False)
+    def update_shop_orders(self, cr, uid, order, ext_id, context):
+        conn = context.get('conn_obj', False)
         status = ORDER_STATUS_MAPPING.get(order.state, False)
         result = {}
         

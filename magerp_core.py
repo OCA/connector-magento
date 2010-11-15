@@ -43,10 +43,10 @@ class external_referential(magerp_osv.magerp_osv):
         'active': lambda *a: 1,
     }
              
-    def connect(self, cr, uid, ids, ctx=None):
+    def connect(self, cr, uid, ids, context=None):
         #ids has to be a list
         if isinstance(ids, (list, tuple)) and len(ids) == 1:
-            instance = self.browse(cr, uid, ids[0], ctx)
+            instance = self.browse(cr, uid, ids[0], context)
             if instance:
                 core_imp_conn = self.external_connection(cr, uid, instance, DEBUG)
                 if core_imp_conn.connect():
@@ -56,8 +56,8 @@ class external_referential(magerp_osv.magerp_osv):
 
         return False
 
-    def core_sync(self, cr, uid, ids, ctx=None):
-        instances = self.browse(cr, uid, ids, ctx)
+    def core_sync(self, cr, uid, ids, context=None):
+        instances = self.browse(cr, uid, ids, context)
         filter = []
         for inst in instances:
             core_imp_conn = self.external_connection(cr, uid, inst, DEBUG)
@@ -66,8 +66,8 @@ class external_referential(magerp_osv.magerp_osv):
             self.pool.get('magerp.storeviews').mage_import_base(cr,uid,core_imp_conn, inst.id, defaults={})
         return True
 
-    def sync_categs(self, cr, uid, ids, ctx):
-        instances = self.browse(cr, uid, ids, ctx)
+    def sync_categs(self, cr, uid, ids, context):
+        instances = self.browse(cr, uid, ids, context)
         for inst in instances:
             pro_cat_conn = self.external_connection(cr, uid, inst, DEBUG)
             confirmation = pro_cat_conn.call('catalog_category.currentStore', [0])   #Set browse to root store
@@ -78,8 +78,8 @@ class external_referential(magerp_osv.magerp_osv):
                 #self.pool.get('product.category').ext_export(cr,uid,exp_ids,[inst.id],{},{'conn_obj':pro_cat_conn})
         return True
 
-    def sync_attribs(self, cr, uid, ids, ctx):
-        instances = self.browse(cr, uid, ids, ctx)
+    def sync_attribs(self, cr, uid, ids, context):
+        instances = self.browse(cr, uid, ids, context)
         for inst in instances:
             attr_conn = self.external_connection(cr, uid, inst, DEBUG)
             attrib_set_ids = self.pool.get('magerp.product_attribute_set').search(cr, uid, [('referential_id', '=', inst.id)])
@@ -100,16 +100,16 @@ class external_referential(magerp_osv.magerp_osv):
                 self.pool.get('magerp.product_attribute_set').relate(cr, uid, mage_inp, inst.id, DEBUG)
         return True
 
-    def sync_attrib_sets(self, cr, uid, ids, ctx):
-        instances = self.browse(cr, uid, ids, ctx)
+    def sync_attrib_sets(self, cr, uid, ids, context):
+        instances = self.browse(cr, uid, ids, context)
         for inst in instances:
             attr_conn = self.external_connection(cr, uid, inst, DEBUG)
             filter = []
             self.pool.get('magerp.product_attribute_set').mage_import_base(cr, uid, attr_conn, inst.id,{'referential_id':inst.id},{'ids_or_filter':filter})
         return True
 
-    def sync_attrib_groups(self, cr, uid, ids, ctx):
-        instances = self.browse(cr, uid, ids, ctx)
+    def sync_attrib_groups(self, cr, uid, ids, context):
+        instances = self.browse(cr, uid, ids, context)
         for inst in instances:
             attr_conn = self.external_connection(cr, uid, inst, DEBUG)
             attrset_ids = self.pool.get('magerp.product_attribute_set').get_all_mage_ids(cr, uid, [], inst.id)
@@ -117,16 +117,16 @@ class external_referential(magerp_osv.magerp_osv):
             self.pool.get('magerp.product_attribute_groups').mage_import_base(cr, uid, attr_conn, inst.id, {'referential_id': inst.id}, {'ids_or_filter':filter})
         return True
 
-    def sync_customer_groups(self, cr, uid, ids, ctx):
-        instances = self.browse(cr, uid, ids, ctx)
+    def sync_customer_groups(self, cr, uid, ids, context):
+        instances = self.browse(cr, uid, ids, context)
         for inst in instances:
             attr_conn = self.external_connection(cr, uid, inst, DEBUG)
             filter = []
             self.pool.get('res.partner.category').mage_import_base(cr, uid, attr_conn, inst.id, {}, {'ids_or_filter':filter})
         return True
 
-    def sync_customer_addresses(self, cr, uid, ids, ctx):
-        instances = self.browse(cr, uid, ids, ctx)
+    def sync_customer_addresses(self, cr, uid, ids, context):
+        instances = self.browse(cr, uid, ids, context)
         for inst in instances:
             attr_conn = self.external_connection(cr, uid, inst, DEBUG)
             filter = []
@@ -135,8 +135,8 @@ class external_referential(magerp_osv.magerp_osv):
             self.pool.get('res.partner.address').mage_import_base(cr, uid, attr_conn, inst.id, {}, {'ids_or_filter':filter})
         return True
 
-    def sync_products(self, cr, uid, ids, ctx):
-        instances = self.browse(cr, uid, ids, ctx)
+    def sync_products(self, cr, uid, ids, context):
+        instances = self.browse(cr, uid, ids, context)
         for inst in instances:
             attr_conn = self.external_connection(cr, uid, inst, DEBUG)
             filter = []
@@ -149,18 +149,18 @@ class external_referential(magerp_osv.magerp_osv):
             self.pool.get('product.product').ext_import(cr, uid, result, inst.id, context={})
         return True
 
-    def export_products(self, cr, uid, ids, ctx):
+    def export_products(self, cr, uid, ids, context):
         shop_ids = self.pool.get('sale.shop').search(cr, uid, [])
-        for inst in self.browse(cr, uid, ids, ctx):
-            for shop in self.pool.get('sale.shop').browse(cr, uid, shop_ids, ctx):
-                ctx['conn_obj'] = self.external_connection(cr, uid, inst)
+        for inst in self.browse(cr, uid, ids, context):
+            for shop in self.pool.get('sale.shop').browse(cr, uid, shop_ids, context):
+                context['conn_obj'] = self.external_connection(cr, uid, inst)
                 #shop.export_catalog
-                tools.debug((cr, uid, shop, ctx,))
-                shop.export_products(cr, uid, shop, ctx)
+                tools.debug((cr, uid, shop, context,))
+                shop.export_products(cr, uid, shop, context)
         return True
 
-    def sync_partner(self, cr, uid, ids, ctx):
-        instances = self.browse(cr, uid, ids, ctx)
+    def sync_partner(self, cr, uid, ids, context):
+        instances = self.browse(cr, uid, ids, context)
 
         for inst in instances:
             attr_conn = self.external_connection(cr, uid, inst, DEBUG)
@@ -187,11 +187,11 @@ class external_referential(magerp_osv.magerp_osv):
 
         return True
 
-    def sync_newsletter(self, cr, uid, ids, ctx):
+    def sync_newsletter(self, cr, uid, ids, context):
         #update first all customer
-        self.sync_partner(cr, uid, ids, ctx)
+        self.sync_partner(cr, uid, ids, context)
 
-        instances = self.browse(cr, uid, ids, ctx)
+        instances = self.browse(cr, uid, ids, context)
         partner_obj = self.pool.get('res.partner')
 
         for inst in instances:
@@ -213,8 +213,8 @@ class external_referential(magerp_osv.magerp_osv):
                     partner_obj.write(cr, uid, partner_ids[0], {'mag_newsletter': subscriber_status})
         return True
 
-    def sync_newsletter_unsubscriber(self, cr, uid, ids, ctx):
-        instances = self.browse(cr, uid, ids, ctx)
+    def sync_newsletter_unsubscriber(self, cr, uid, ids, context):
+        instances = self.browse(cr, uid, ids, context)
         partner_obj = self.pool.get('res.partner')
 
         for inst in instances:

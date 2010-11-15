@@ -27,9 +27,9 @@ class stock_picking(osv.osv):
     _inherit = "stock.picking"
 
 
-    def create_ext_complete_shipping(self, cr, uid, id, external_referential_id, magento_incrementid, ctx):
+    def create_ext_complete_shipping(self, cr, uid, id, external_referential_id, magento_incrementid, context):
         logger = netsvc.Logger()
-        conn = ctx.get('conn_obj', False)
+        conn = context.get('conn_obj', False)
         ext_shipping_id = False
         try:
             ext_shipping_id = conn.call('sales_order_shipment.create', [magento_incrementid, {}, _("Shipping Created"), True, True])
@@ -38,15 +38,15 @@ class stock_picking(osv.osv):
         return ext_shipping_id        
 
 
-    def create_ext_partial_shipping(self, cr, uid, id, external_referential_id, magento_incrementid, ctx):
+    def create_ext_partial_shipping(self, cr, uid, id, external_referential_id, magento_incrementid, context):
         logger = netsvc.Logger()
-        conn = ctx.get('conn_obj', False)
+        conn = context.get('conn_obj', False)
         ext_shipping_id = False
         order_items = conn.call('sales_order.info', [magento_incrementid])['items']
         product_2_item = {}
         for item in order_items:
             product_2_item.update({self.pool.get('product.product').extid_to_oeid(cr, uid, item['product_id'], external_referential_id, context={}): item['item_id']})
-        picking = self.pool.get('stock.picking').browse(cr, uid, id, ctx)
+        picking = self.pool.get('stock.picking').browse(cr, uid, id, context)
         item_qty = {}
         for line in picking.move_lines:
             if item_qty.get(product_2_item[line.product_id.id], False):
@@ -60,27 +60,27 @@ class stock_picking(osv.osv):
         return ext_shipping_id 
 
 
-    def create_ext_shipping(self, cr, uid, id, picking_type, external_referential_id, ctx):
-        magento_incrementid = self.browse(cr, uid, id, ['sale_id'], ctx).sale_id.magento_incrementid
-        carrier_id = self.pool.get('stock.picking').read(cr, uid, id, ['carrier_id'], ctx)['carrier_id']
+    def create_ext_shipping(self, cr, uid, id, picking_type, external_referential_id, context):
+        magento_incrementid = self.browse(cr, uid, id, ['sale_id'], context).sale_id.magento_incrementid
+        carrier_id = self.pool.get('stock.picking').read(cr, uid, id, ['carrier_id'], context)['carrier_id']
         if carrier_id:
             carrier_id = carrier_id[0]
-            self.pool.get('delivery.carrier').check_ext_carrier_reference(cr, uid, carrier_id, magento_incrementid, ctx)
+            self.pool.get('delivery.carrier').check_ext_carrier_reference(cr, uid, carrier_id, magento_incrementid, context)
 
-        ext_shipping_id = eval('self.create_ext_' + picking_type + '_shipping(cr, uid, id, external_referential_id, magento_incrementid, ctx)')
+        ext_shipping_id = eval('self.create_ext_' + picking_type + '_shipping(cr, uid, id, external_referential_id, magento_incrementid, context)')
 
         if ext_shipping_id and carrier_id:
-            self.add_ext_tracking_reference(cr, uid, id, carrier_id, ext_shipping_id, ctx)
+            self.add_ext_tracking_reference(cr, uid, id, carrier_id, ext_shipping_id, context)
         return ext_shipping_id
 
 
-    def add_ext_tracking_reference(self, cr, uid, id, carrier_id, ext_shipping_id, ctx):
+    def add_ext_tracking_reference(self, cr, uid, id, carrier_id, ext_shipping_id, context):
         logger = netsvc.Logger()
-        conn = ctx.get('conn_obj', False)
-        carrier = self.pool.get('delivery.carrier').read(cr, uid, carrier_id, ['magento_code', 'magento_tracking_title'], ctx)
+        conn = context.get('conn_obj', False)
+        carrier = self.pool.get('delivery.carrier').read(cr, uid, carrier_id, ['magento_code', 'magento_tracking_title'], context)
         
         if self.pool.get('ir.model.fields').search(cr, uid, [('name', '=', 'carrier_tracking_ref'), ('model', '=', 'stock.picking')]): #OpenERP v6 have the field carrier_tracking_ref on the stock_picking but v5 doesn't have it
-            carrier_tracking_ref = self.read(cr, uid, id, ['carrier_tracking_ref'], ctx)['carrier_tracking_ref']
+            carrier_tracking_ref = self.read(cr, uid, id, ['carrier_tracking_ref'], context)['carrier_tracking_ref']
         else:
             carrier_tracking_ref = ''
             
