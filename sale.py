@@ -32,6 +32,8 @@ DEBUG = True
 #TODO, may be move that on out CSV mapping, but not sure we can easily
 #see OpenERP sale/sale.py and Magento app/code/core/Mage/Sales/Model/Order.php for details
 ORDER_STATUS_MAPPING = {'draft': 'processing', 'progress': 'processing', 'shipping_except': 'complete', 'invoice_except': 'complete', 'done': 'closed', 'cancel': 'canceled', 'waiting_date': 'holded'}
+#SALE_ORDER_MAPPING = {1: 100000001, 3: 300000001, 2: 200000001} #Usefull for first import if there is a lot of sale orders! IMPORTANT : Note that this is template, we just let it here for example, working with magento's example data. 
+SALE_ORDER_IMPORT_STEP = 200
 
 class sale_shop(magerp_osv.magerp_osv):
     _inherit = "sale.shop"
@@ -101,18 +103,22 @@ class sale_shop(magerp_osv.magerp_osv):
         for storeview in shop.storeview_ids:
             magento_storeview_id = self.pool.get('magerp.storeviews').oeid_to_extid(cr, uid, storeview.id, shop.referential_id.id, context={})
             ids_or_filter = [{'store_id': {'eq': magento_storeview_id}, 'state': {'neq': 'canceled'}}]
-                        
-            #get last imported order:
-            last_external_id = self.get_last_imported_external_id(cr, 'sale.order', shop.referential_id.id, "sale_order.shop_id=%s and magento_storeview_id=%s" % (shop.id, storeview.id))[1]
-            if last_external_id:
-                ids_or_filter[0]['increment_id'] = {'gt': last_external_id}
-            defaults['magento_storeview_id'] = storeview.id
-            result.append(self.pool.get('sale.order').mage_import_base(cr, uid, context.get('conn_obj', False), shop.referential_id.id,
-                                                              defaults=defaults,
-                                                              context={
-                                                                       'one_by_one': True, 
-                                                                       'ids_or_filter':ids_or_filter
-                                                                       }))
+            res = {'create_ids': [], 'write_ids': []}
+            nb_last_created_ids = SALE_ORDER_IMPORT_STEP
+            while nb_last_created_ids != 0:
+                #get last imported order:
+                last_external_id = self.get_last_imported_external_id(cr, 'sale.order', shop.referential_id.id, "sale_order.shop_id=%s and magento_storeview_id=%s" % (shop.id, storeview.id))[1]
+                if last_external_id:
+                    ids_or_filter[0]['increment_id'] = {'from': int(last_external_id) + 1, 'to': int(last_external_id) + SALE_ORDER_IMPORT_STEP}
+                else:
+                    if SALE_ORDER_MAPPING.get(magento_storeview_id, False):
+                        ids_or_filter[0]['increment_id'] = {'lt': SALE_ORDER_MAPPING[magento_storeview_id] + SALE_ORDER_IMPORT_STEP}
+                defaults['magento_storeview_id'] = storeview.id
+                resp = self.pool.get('sale.order').mage_import_base(cr, uid, context.get('conn_obj', False), shop.referential_id.id, defaults=defaults, context={'one_by_one': True, 'ids_or_filter':ids_or_filter})
+                res['create_ids'] += resp['create_ids']
+                res['write_ids'] += resp['write_ids']
+                nb_last_created_ids = len(resp['create_ids'])
+            result.append(res)
         return result
         
     def update_orders(self, cr, uid, ids, context=None):
