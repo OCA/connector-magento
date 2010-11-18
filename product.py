@@ -102,6 +102,7 @@ class product_category(magerp_osv.magerp_osv):
         self.ext_import(cr, uid, [imp_vals], external_referential_id, defaults={}, context={'conn_obj':conn})
         
     def ext_export(self, cr, uid, ids, external_referential_ids=None, defaults=None, context=None): # We export all the categories if at least one has been modified since last export
+        #TODO Move this function in base_sale_multichannels
         if context is None:
             context = {}
 
@@ -109,7 +110,8 @@ class product_category(magerp_osv.magerp_osv):
             defaults = {}
             
         res = False
-        ids = self.search(cr, uid, [('id', 'in', ids), ('magento_exportable', '=', True)]) #restrict export to only exportable products
+        ids_exportable = self.search(cr, uid, [('id', 'in', ids), ('magento_exportable', '=', True)]) #restrict export to only exportable products
+        ids = [id for id in ids if id in ids_exportable] #we need to kept the order of the categories
         
         shop = self.pool.get('sale.shop').browse(cr, uid, context['shop_id'])
         
@@ -129,7 +131,8 @@ class product_category(magerp_osv.magerp_osv):
                     res = super(product_category, self).ext_export(cr, uid, ids, external_referential_ids, defaults, context)
                     break
         if not res:
-            res = super(product_category, self).ext_export(cr, uid, [], external_referential_ids, defaults, context)
+            context['force'] = True
+            res = super(product_category, self).ext_export(cr, uid, ids, external_referential_ids, defaults, context)
         return res
                 
 product_category()
