@@ -18,7 +18,7 @@
 					</field>
 					<field name="shop_group_id" position="replace">
 						<field name="shop_group_id" readonly="1"/>
-						<field name="magento_root_category" readonly="1" />
+						<field name="magento_root_category"/>
 						<field name="storeview_ids" nolabel="1" colspan="4" />
 					</field>
 				</data>

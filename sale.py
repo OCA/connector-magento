@@ -67,6 +67,7 @@ class sale_shop(magerp_osv.magerp_osv):
                 res = self.pool.get('product.images').update_remote_images(cr, uid, recent_changed_images, context)
             res = True
             self.write(cr,uid,context['shop_id'],{'last_images_export_date':time.strftime('%Y-%m-%d %H:%M:%S')})
+        return True
                
   
     def _get_rootcategory(self, cr, uid, ids, prop, unknow_none, context):
@@ -78,7 +79,21 @@ class sale_shop(magerp_osv.magerp_osv):
             else:
                 res[shop.id] = False
         return res
-    
+
+    def _set_rootcategory(self, cr, uid, id, name, value, fnct_inv_arg, context):
+        res = {}
+        ir_model_data_obj = self.pool.get('ir.model.data')
+        shop = self.browse(cr, uid, id, context=context)
+        if shop.root_category_id:
+            model_data_id = ir_model_data_obj.search(cr, uid, [('name', '=', 'product.category_'+ str(shop.root_category_id)), ('model', '=', 'product.category'), ('external_referential_id', '=', shop.referential_id.id)])
+            if len(model_data_id) == 1:
+                ir_model_data_obj.write(cr, uid, model_data_id, {'res_id' : value}, context=context)
+            elif len(model_data_id) == 0:
+                raise osv.except_osv(_('Warning!'), _('No external id found, are you sure that the referential are syncronized? Please contact your administrator. (more information in magentoerpconnect/sale.py)'))
+            else:
+                raise osv.except_osv(_('Warning!'), _('You have an error in the ir_model_data table, please contact your administrator. (more information in magentoerpconnect/sale.py)'))
+        return True
+
     def _get_exportable_root_category_ids(self, cr, uid, ids, prop, unknow_none, context):
         res = {}
         res1 = self._get_rootcategory(cr, uid, ids, prop, unknow_none, context)
@@ -90,7 +105,7 @@ class sale_shop(magerp_osv.magerp_osv):
         'default_storeview_integer_id':fields.integer('Magento default Storeview ID'), #This field can't be a many2one because store field will be mapped before creating storeviews
         'default_storeview_id':fields.function(_get_default_storeview_id, type="many2one", relation="magerp.storeviews", method=True, string="Default Storeview"),
         'root_category_id':fields.integer('Root product Category'), #This field can't be a many2one because store field will be mapped before creating category
-        'magento_root_category':fields.function(_get_rootcategory, type="many2one", relation="product.category", method=True, string="Root Category", store=True),
+        'magento_root_category':fields.function(_get_rootcategory, fnct_inv = _set_rootcategory, type="many2one", relation="product.category", method=True, string="Root Category", store=True),
         'exportable_root_category_ids': fields.function(_get_exportable_root_category_ids, type="many2many", relation="product.category", method=True, string="Root Category"), #fields.function(_get_exportable_root_category_ids, type="many2one", relation="product.category", method=True, 'Exportable Root Categories'),
         'storeview_ids': fields.one2many('magerp.storeviews', 'shop_id', 'Store Views'),
         'exportable_product_ids': fields.function(_get_exportable_product_ids, method=True, type='one2many', relation="product.product", string='Exportable Products'),
