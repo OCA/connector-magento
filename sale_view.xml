@@ -40,13 +40,14 @@
 			<field name="type">form</field>
 			<field name="inherit_id" ref="base_sale_multichannels.base_sale_multichannels_view_shop_form"/>
 			<field name="arch" type="xml">
-				<field name="last_inventory_export_date" position="after">
-						<group col="4" colspan="4">
-							<button name="export_images" string="Update Images"
-								colspan="2" type="object" />
-							<field name="last_images_export_date" />
-						</group>
-				</field>
+                <data>
+                    <button name="export_inventory" position="after">
+                        <button name="export_images" string="Update Images"	colspan="2" type="object" />
+                    </button>
+				    <field name="last_inventory_export_date" position="after">
+				    	<field name="last_images_export_date" />
+				    </field>
+                </data>
 			</field>
 		</record>
 
