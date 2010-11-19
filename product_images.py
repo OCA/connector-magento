@@ -48,7 +48,7 @@ class product_images(magerp_osv.magerp_osv):
     
     def get_changed_ids(self, cr, uid, start_date=False):
         proxy = self.pool.get('product.images')
-        domain = start_date and ['|', ('create_date', '>=', start_date), ('write_date', '>=', start_date)] or []
+        domain = start_date and ['|', ('create_date', '>', start_date), ('write_date', '>', start_date)] or []
         return proxy.search(cr, uid, domain)
      
     def update_remote_images(self, cr, uid, ids, context=None):
@@ -80,15 +80,27 @@ class product_images(magerp_osv.magerp_osv):
                                ])
             return result
 
-        for each in self.browse(cr, uid, ids, context=context):
+        logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "Updating %s images" %(len(ids)))
+        list_image = self.read(cr, uid, ids, ['write_date', 'create_date'], context=context)
+        date_2_image={}
+        image_2_date={}
+        for image in list_image:
+            date_2_image[image['write_date'] or image['create_date']] = image['id']
+            image_2_date[image['id']] = image['write_date'] or image['create_date']
+        list_date = date_2_image.keys()
+        list_date.sort()
+        
+        ids = [date_2_image[date] for date in list_date]
+        for each in self.browse_w_order(cr, uid, ids, context=context):
             if not each.product_id.magento_exportable:
                 continue
 
             if each.mage_file: #If update
                 result = update_image(each.mage_file, each)
+                logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "Updating %s's image: %s" %(each.product_id.magento_sku, each.name))
             else:
                 if each.product_id.magento_sku:
-                    logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "Sending %s's image: %s" %(each.product_id.name, each.product_id.magento_sku))
+                    logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "Sending %s's image: %s" %(each.product_id.magento_sku, each.name))
                     result = conn.call('catalog_product_attribute_media.create',
                               [each.product_id.magento_sku,
                                {'file':{
@@ -100,6 +112,8 @@ class product_images(magerp_osv.magerp_osv):
                                ])
                     self.write(cr, uid, each.id, {'mage_file':result})
                     result = update_image(result, each)
+            self.pool.get('sale.shop').write(cr,uid,context['shop_id'],{'last_images_export_date':image_2_date[each.id]})
+            cr.commit()
         return True
         
 product_images()
