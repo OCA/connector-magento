@@ -389,7 +389,6 @@ class sale_order(magerp_osv.magerp_osv):
                 if payment_settings:
                     res['order_policy'] = payment_settings.order_policy
                     res['picking_policy'] = payment_settings.picking_policy
-                    res['picking_policy'] = payment_settings.picking_policy
                     res['invoice_quantity'] = payment_settings.invoice_quantity
         return res
 
