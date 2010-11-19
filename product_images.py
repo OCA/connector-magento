@@ -24,11 +24,26 @@ import magerp_osv
 import mimetypes
 import netsvc
 
+class product_images_external_name(magerp_osv.magerp_osv):
+    _name = 'product.images.external.name'
+    _description = 'Product Image External Name'
+
+    _columns = {
+        'name':fields.char('Magento File Name', size=100, readonly=True,
+                                help="Filled when uploaded or synchronised"),
+        'external_referential_id' : fields.many2one('external.referential', 'External Referential', readonly=True),
+        'image_id': fields.many2one('product.images', 'Product Image'),
+
+    }
+
+product_images_external_name()
+
+
+
 class product_images(magerp_osv.magerp_osv):
     _inherit = "product.images"
     _columns = {
-        'mage_file':fields.char('Magento File Name', size=100, readonly=True,
-                                help="Filled when uploaded or synchronised"),
+        'external_name':fields.one2many('product.images.external.name', 'image_id', 'Magento File Name', help="Filled when uploaded or synchronised"),
         'base_image':fields.boolean('Base Image'),
         'small_image':fields.boolean('Small Image'),
         'thumbnail':fields.boolean('Thumbnail'),
@@ -37,6 +52,9 @@ class product_images(magerp_osv.magerp_osv):
         'sync_status':fields.boolean('Sync Status', readonly=True),
         'create_date': fields.datetime('Created date', readonly=True),
         'write_date': fields.datetime('Updated date', readonly=True),
+        #TO REMOVE (date to remove 1 february 2011) : USE FOR UPDATING OLD VERSION START
+        #'mage_file': fields.char('Magento File Name', size=100, readonly=True, help="Filled when uploaded or synchronised"),
+        #TO REMOVE USE FOR UPDATING OLD VERSION END
     }
     _defaults = {
         'sync_status':lambda * a: False,
@@ -50,6 +68,13 @@ class product_images(magerp_osv.magerp_osv):
         proxy = self.pool.get('product.images')
         domain = start_date and ['|', ('create_date', '>', start_date), ('write_date', '>', start_date)] or []
         return proxy.search(cr, uid, domain)
+
+    def get_image_name(self, cr, uid, id, context):
+        image_ext_name_obj = self.pool.get('product.images.external.name')
+        name_id = image_ext_name_obj.search(cr, uid, [('image_id', '=', id), ('external_referential_id', '=', context['external_referential_id'])], context=context)
+        if name_id:
+            return image_ext_name_obj.read(cr, uid, name_id, ['name'], context=context)[0]['name']
+        return False
      
     def update_remote_images(self, cr, uid, ids, context=None):
         if context is None:
@@ -91,12 +116,25 @@ class product_images(magerp_osv.magerp_osv):
         list_date.sort()
         
         ids = [date_2_image[date] for date in list_date]
+
         for each in self.browse_w_order(cr, uid, ids, context=context):
             if not each.product_id.magento_exportable:
                 continue
-
-            if each.mage_file: #If update
-                result = update_image(each.mage_file, each)
+            #####
+            #TO REMOVE (date to remove 1 february 2011):USE FOR UPDATING OLD VERSION START
+            # to update your old database, just uncomment this lines (also the line in the column), remove the 'last export image date' in the shop and start the update
+            # this will not push the image in magento but just create the name in the external referential 
+            #####
+            #if each.mage_file:
+            #    print 'update'
+            #    print 'context', context['external_referential']
+            #    self.pool.get('product.images.external.name').create(cr, uid, {'name': each.mage_file, 'external_referential_id' : context['external_referential_id'], 'image_id' : each.id})
+            #    logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "Creating the external name in the openerp database %s's image: %s" %(each.product_id.magento_sku, each.name))
+            #continue
+            #TO REMOVE USE FOR UPDATING OLD VERSION END
+            ext_file_name = each.get_image_name(context)
+            if ext_file_name: #If update
+                result = update_image(ext_file_name, each)
                 logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "Updating %s's image: %s" %(each.product_id.magento_sku, each.name))
             else:
                 if each.product_id.magento_sku:
@@ -110,7 +148,7 @@ class product_images(magerp_osv.magerp_osv):
                                         }
                                }
                                ])
-                    self.write(cr, uid, each.id, {'mage_file':result})
+                    self.pool.get('product.images.external.name').create(cr, uid, {'name':result, 'external_referential_id' : context['external_referential_id'], 'image_id' : each.id})
                     result = update_image(result, each)
             self.pool.get('sale.shop').write(cr,uid,context['shop_id'],{'last_images_export_date':image_2_date[each.id]})
             cr.commit()

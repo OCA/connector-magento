@@ -61,6 +61,7 @@ class sale_shop(magerp_osv.magerp_osv):
     def export_images(self, cr, uid, ids, context):
         for shop in self.browse(cr, uid, ids):
             context['shop_id'] = shop.id
+            context['external_referential_id'] = shop.referential_id.id
             context['conn_obj'] = self.external_connection(cr, uid, shop.referential_id)
             recent_changed_images = self.pool.get('product.images').get_changed_ids(cr, uid, shop.last_images_export_date)
             if recent_changed_images:
