@@ -294,7 +294,14 @@ class sale_order(magerp_osv.magerp_osv):
         if result and result['partner_id']:
             partner_id = result['partner_id'][0]
         else: #seems like a guest order, create partner on the fly from billing address to make OpenERP happy:
-            partner_id = partner_obj.create(cr, uid, {'name': data_record['billing_address'].get('lastname', '') + ' ' + data_record['billing_address'].get('firstname', '')}, context)
+            #TODO fix the bug in magento, indeed some order have as value for the customer_id : None. It's why we create a customer on the fly, with this method some parameter are maybe not mapped, be careful
+            vals = {}
+            store_id = self.pool.get('magerp.storeviews').extid_to_oeid(cr, uid, data_record['store_id'], external_referential_id)
+            if store_id:
+		        lang = self.pool.get('magerp.storeviews').browse(cr, uid, store_id).lang_id
+		        vals.update({'store_id' : store_id, 'lang' : lang and lang.code or False})
+            vals.update({'name': data_record['billing_address'].get('lastname', '') + ' ' + data_record['billing_address'].get('firstname', '')})
+            partner_id = partner_obj.create(cr, uid, vals, context)
             partner_address_obj.write(cr, uid, [res['partner_order_id'], res['partner_invoice_id'], res['partner_shipping_id']], {'partner_id': partner_id})
         res['partner_id'] = partner_id
 
