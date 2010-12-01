@@ -176,14 +176,16 @@ class external_referential(magerp_osv.magerp_osv):
                 result.append(each_customer_info)
 
                 each_customer_address_info = attr_conn.call('customer_address.list', [customer_id])
-                customer_address_info = each_customer_address_info[0]
-                customer_address_info['customer_id'] = customer_id
-                customer_address_info['email'] = each_customer_info['email']
-                result_address.append(customer_address_info)
-                print customer_address_info
+                if len(each_customer_address_info):
+                    customer_address_info = each_customer_address_info[0]
+                    customer_address_info['customer_id'] = customer_id
+                    customer_address_info['email'] = each_customer_info['email']
+                    result_address.append(customer_address_info)
+                    print customer_address_info
 
             partner_ids = self.pool.get('res.partner').ext_import(cr, uid, result, inst.id, context={})
-            partner_address_ids = self.pool.get('res.partner.address').ext_import(cr, uid, result_address, inst.id, context={})
+            if result_address:
+                partner_address_ids = self.pool.get('res.partner.address').ext_import(cr, uid, result_address, inst.id, context={})
 
         return True
 
