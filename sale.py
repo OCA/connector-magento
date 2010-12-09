@@ -32,7 +32,7 @@ DEBUG = True
 #TODO, may be move that on out CSV mapping, but not sure we can easily
 #see OpenERP sale/sale.py and Magento app/code/core/Mage/Sales/Model/Order.php for details
 ORDER_STATUS_MAPPING = {'draft': 'processing', 'progress': 'processing', 'shipping_except': 'complete', 'invoice_except': 'complete', 'done': 'closed', 'cancel': 'canceled', 'waiting_date': 'holded'}
-#SALE_ORDER_MAPPING = {1: 100000001, 3: 300000001, 2: 200000001} #Usefull for first import if there is a lot of sale orders! IMPORTANT : Note that this is template, we just let it here for example, working with magento's example data. 
+SALE_ORDER_MAPPING = {} #{1: 100000001, 3: 300000001, 2: 200000001} #Usefull for first import if there is a lot of sale orders! IMPORTANT : Note that this is template, we just let it here for example, working with magento's example data. 
 SALE_ORDER_IMPORT_STEP = 200
 
 class sale_shop(magerp_osv.magerp_osv):
