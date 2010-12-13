@@ -59,15 +59,21 @@ class sale_shop(magerp_osv.magerp_osv):
         return res
     
     def export_images(self, cr, uid, ids, context):
+        logger = netsvc.Logger()
+        start_date = time.strftime('%Y-%m-%d %H:%M:%S')
+        image_obj = self.pool.get('product.images')
         for shop in self.browse(cr, uid, ids):
             context['shop_id'] = shop.id
             context['external_referential_id'] = shop.referential_id.id
             context['conn_obj'] = self.external_connection(cr, uid, shop.referential_id)
-            recent_changed_images = self.pool.get('product.images').get_changed_ids(cr, uid, shop.last_images_export_date)
-            if recent_changed_images:
-                res = self.pool.get('product.images').update_remote_images(cr, uid, recent_changed_images, context)
-            res = True
-            self.write(cr,uid,context['shop_id'],{'last_images_export_date':time.strftime('%Y-%m-%d %H:%M:%S')})
+            context['last_images_export_date'] = shop.last_images_export_date
+            exportable_product_ids = self.read(cr, uid, shop.id, ['exportable_product_ids'], context=context)['exportable_product_ids']
+            res = self.pool.get('product.product').get_exportable_images(cr, uid, exportable_product_ids, context=context)
+            if res:
+                logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "Creating %s images" %(len(res['to_create'])))
+                logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "Updating %s images" %(len(res['to_update'])))
+                image_obj.update_remote_images(cr, uid, res['to_update']+res['to_create'], context)
+            self.write(cr,uid,context['shop_id'],{'last_images_export_date': start_date})
         return True
                
   

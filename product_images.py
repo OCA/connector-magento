@@ -105,7 +105,6 @@ class product_images(magerp_osv.magerp_osv):
                                ])
             return result
 
-        logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "Updating %s images" %(len(ids)))
         list_image = self.read(cr, uid, ids, ['write_date', 'create_date'], context=context)
         date_2_image={}
         image_2_date={}
@@ -118,8 +117,6 @@ class product_images(magerp_osv.magerp_osv):
         ids = [date_2_image[date] for date in list_date]
 
         for each in self.browse_w_order(cr, uid, ids, context=context):
-            if not each.product_id.magento_exportable:
-                continue
             #####
             #TO REMOVE (date to remove 1 february 2011):USE FOR UPDATING OLD VERSION START
             # to update your old database, just uncomment this lines (also the line in the column), remove the 'last export image date' in the shop and start the update
@@ -150,7 +147,8 @@ class product_images(magerp_osv.magerp_osv):
                                ])
                     self.pool.get('product.images.external.name').create(cr, uid, {'name':result, 'external_referential_id' : context['external_referential_id'], 'image_id' : each.id})
                     result = update_image(result, each)
-            self.pool.get('sale.shop').write(cr,uid,context['shop_id'],{'last_images_export_date':image_2_date[each.id]})
+            if image_2_date[each.id] > context['last_images_export_date']: #indeed if a product was created a long time ago and checked as exportable recently, the write date of the image can be far away in the past
+                self.pool.get('sale.shop').write(cr,uid,context['shop_id'],{'last_images_export_date':image_2_date[each.id]})
             cr.commit()
         return True
         
