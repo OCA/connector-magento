@@ -34,7 +34,7 @@ class Connection(object):
                 if self.debug:
                     self.logger.notifyChannel(_("Magento Connection"), netsvc.LOG_INFO, _("Login Successful"))
                 return True
-            except Exception, e:
+            except IOError, e:
                 self.logger.notifyChannel(_("Magento Connection"), netsvc.LOG_ERROR, _("Error in connecting:%s") % (e))
                 self.logger.notifyChannel(_("Magento Call"), netsvc.LOG_WARNING, _("Webservice Failure, sleeping %s second before next attempt") % (sleep_time))
                 time.sleep(sleep_time)
@@ -54,7 +54,7 @@ class Connection(object):
                 if self.debug:
                     self.logger.notifyChannel(_("Magento Connection"), netsvc.LOG_INFO, _("Query Returned:%s") % (res))
                 return res
-            except Exception, e:
+            except IOError, e:
                 self.logger.notifyChannel(_("Magento Call"), netsvc.LOG_ERROR, _("Method: %s\nArguments:%s\nError:%s") % (method, arguments, e))
                 self.logger.notifyChannel(_("Magento Call"), netsvc.LOG_WARNING, _("Webservice Failure, sleeping %s second before next attempt") % (sleep_time))
                 time.sleep(sleep_time)
