@@ -424,7 +424,7 @@ class sale_order(magerp_osv.magerp_osv):
                 amount =  payment.get('amount_ordered', False)
             if amount:
                 order = self.pool.get('sale.order').browse(cr, uid, order_id, context)
-                self.generate_payment_with_pay_code(cr, uid, payment['method'], order.partner_id.id, amount, "mag_" + payment['payment_id'], "mag_" + data_record['increment_id'], order.date_order, paid, context) 
+                self.generate_payment_with_pay_code(cr, uid, payment['method'], order.partner_id.id, float(amount), "mag_" + payment['payment_id'], "mag_" + data_record['increment_id'], order.date_order, paid, context) 
         return paid
 
 # UPDATE ORDER STATUS FROM MAGENTO TO OPENERP IS UNSTABLE, AND NOT VERY USEFULL. MAYBE IT WILL BE REFACTORED 
