@@ -1,0 +1,1629 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * magentoerpconnect
+# douwe <douwe@dypalio.nl>, 2010.
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 5.0.9\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2010-05-27 16:07:53+0000\n"
+"PO-Revision-Date: 2010-12-09 16:51+0200\n"
+"Last-Translator: douwe <douwe@dypalio.nl>\n"
+"Language-Team: douwe wullink\n"
+"Language: nl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Virtaal 0.6.1\n"
+
+#. module: magentoerpconnect
+#: field:external.shop.group,is_default:0
+msgid "Is Default?"
+msgstr "Is standaard?"
+
+#. module: magentoerpconnect
+#: model:product.category,name:magentoerpconnect.mag0
+msgid "Service"
+msgstr "Service"
+
+#. module: magentoerpconnect
+#: selection:magerp.sale.shop.payment.type,picking_policy:0
+msgid "Partial Delivery"
+msgstr "Deellevering\t"
+
+#. module: magentoerpconnect
+#: selection:product.tierprice,group_scope:0
+msgid "All groups"
+msgstr "Alle groepen"
+
+#. module: magentoerpconnect
+#: field:product.images,small_image:0
+msgid "Small Image"
+msgstr "Kleine afbeelding"
+
+#. module: magentoerpconnect
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
+msgstr "Ongeldige modelnaam in de actie definitie."
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,position:0
+#: field:product.images,position:0
+msgid "Position"
+msgstr "Positie"
+
+#. module: magentoerpconnect
+#: field:res.partner,group_id:0
+msgid "Magento Group(Category)"
+msgstr "Magento groep(Categorie)"
+
+#. module: magentoerpconnect
+#: field:product.tierprice,web_scope:0
+msgid "Scope"
+msgstr "Bereik"
+
+#. module: magentoerpconnect
+#: field:magerp.product_attribute_groups,attribute_group_name:0
+msgid "Group Name"
+msgstr "Groepnaam"
+
+#. module: magentoerpconnect
+#: field:product.category,available_sort_by:0
+msgid "Available Product Listing (Sort By)"
+msgstr "Beschikbare productlijst (Sorteren op)"
+
+#. module: magentoerpconnect
+#: view:external.referential:0
+msgid "Referential Actions"
+msgstr "Referentiële acties"
+
+#. module: magentoerpconnect
+#: view:external.referential:0
+msgid "6 - Import Products"
+msgstr "6 - Producten importeren"
+
+#. module: magentoerpconnect
+#: field:magerp.product_attribute_set,magento_id:0
+msgid "Magento ID"
+msgstr "Magento ID"
+
+#. module: magentoerpconnect
+#: field:product.product,tier_price:0
+msgid "Tier Price"
+msgstr "Staffelprijs"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/magerp_core.py:0
+#, python-format
+msgid "Connection Error"
+msgstr "Verbindingsfout"
+
+#. module: magentoerpconnect
+#: field:product.category,default_sort_by:0
+msgid "Default Product Listing Sort (Sort By)"
+msgstr "Standaard productlijst sortering (Sorteren op)"
+
+#. module: magentoerpconnect
+#: help:res.partner,emailid:0
+msgid "Magento uses this email ID to correspond to the customer."
+msgstr "Magento gebruikt dit email ID voor correspondentie met de klant."
+
+#. module: magentoerpconnect
+#: model:payment.type,name:magentoerpconnect.payment_type_free
+msgid "Free"
+msgstr "Gratis"
+
+#. module: magentoerpconnect
+#: field:product.category,create_date:0
+#: field:product.images,create_date:0
+msgid "Created date"
+msgstr "Datum gemaakt"
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,is_filterable:0
+msgid "Filterable?"
+msgstr "Filterbaar?"
+
+#. module: magentoerpconnect
+#: field:product.images,base_image:0
+msgid "Base Image"
+msgstr "Basis afbeelding"
+
+#. module: magentoerpconnect
+#: model:ir.actions.act_window,name:magentoerpconnect.act_magerp_shop_form
+#: model:ir.ui.menu,name:magentoerpconnect.menu_magerp_core_shops
+msgid "Magento Shops"
+msgstr "Magento winkels"
+
+#. module: magentoerpconnect
+#: selection:magerp.product_attributes,frontend_input:0
+msgid "Media Image"
+msgstr "Media afbeelding"
+
+#. module: magentoerpconnect
+#: field:res.partner.address,is_magento_order_address:0
+msgid "Magento Order Address?"
+msgstr "Magento orderadres?"
+
+#. module: magentoerpconnect
+#: field:product.tierprice,website_price:0
+msgid "Website Price"
+msgstr "Website prijs"
+
+#. module: magentoerpconnect
+#: field:product.category,magerp_stamp:0
+msgid "Magento stamp"
+msgstr "Magento markering"
+
+#. module: magentoerpconnect
+#: field:product.category,level:0
+msgid "Level"
+msgstr "Niveau"
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,options:0
+msgid "Attribute Options"
+msgstr "Attribuut opties"
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,is_comparable:0
+msgid "Comparable?"
+msgstr "Vergelijkbaar?"
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,frontend_class:0
+msgid "Frontend Class"
+msgstr "Frontend Class"
+
+#. module: magentoerpconnect
+#: field:magerp.product_attribute_options,value:0
+msgid "Value"
+msgstr "Waarde"
+
+#. module: magentoerpconnect
+#: selection:product.category,display_mode:0
+msgid "Products Only"
+msgstr "Alleen producten"
+
+#. module: magentoerpconnect
+#: model:payment.type,name:magentoerpconnect.payment_type_servired_standard
+msgid "Servired Standard"
+msgstr "Servired Standard"
+
+#. module: magentoerpconnect
+#: view:product.category:0
+msgid "Meta Information"
+msgstr "Meta informatie"
+
+#. module: magentoerpconnect
+#: selection:magerp.sale.shop.payment.type,order_policy:0
+msgid "Payment Before Delivery"
+msgstr "Vooruitbetaling"
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,is_visible:0
+msgid "Visible?"
+msgstr "Zichtbaar?"
+
+#. module: magentoerpconnect
+#: field:magerp.sale.shop.payment.type,order_policy:0
+msgid "Shipping Policy"
+msgstr "Shipping Policy"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/magerp_osv.py:0
+#, python-format
+msgid "Query Returned:%s"
+msgstr "Query gaf terug:%s"
+
+#. module: magentoerpconnect
+#: model:ir.ui.menu,name:magentoerpconnect.menu_magerp_attnsets_attributes
+#: field:magerp.product_attribute_set,attributes:0
+msgid "Attributes"
+msgstr "Attributen"
+
+#. module: magentoerpconnect
+#: field:sale.shop,root_category_id:0
+msgid "Root product Category"
+msgstr "Hoofd product categorie"
+
+#. module: magentoerpconnect
+#: field:res.partner,emailid:0
+msgid "Email ID"
+msgstr "Email ID"
+
+#. module: magentoerpconnect
+#: field:magerp.sale.shop.payment.type,shop_id:0
+#: field:magerp.storeviews,shop_id:0
+msgid "Shop"
+msgstr "Winkel"
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,note:0
+msgid "Note"
+msgstr "Notitie"
+
+#. module: magentoerpconnect
+#: model:magerp.product_product_type,name:magentoerpconnect.product_type_configurable
+msgid "Configurable Product"
+msgstr "Configureerbaar product"
+
+#. module: magentoerpconnect
+#: view:product.category:0
+#: field:product.category,display_mode:0
+msgid "Display Mode"
+msgstr "Weergavestand"
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,backend_model:0
+msgid "Backend Model"
+msgstr "Backend Model"
+
+#. module: magentoerpconnect
+#: constraint:product.category:0
+msgid "Error ! You can not create recursive categories."
+msgstr "Fout ! U kunt geen recursieve categoriën maken."
+
+#. module: magentoerpconnect
+#: field:magerp.storeviews,name:0
+msgid "Store View Name"
+msgstr "Winkel weergave naam"
+
+#. module: magentoerpconnect
+#: view:product.category:0
+msgid "Use Anchor"
+msgstr "Use Anchor"
+
+#. module: magentoerpconnect
+#: selection:magerp.product_attributes,backend_type:0
+msgid "Datetime"
+msgstr "Datetime"
+
+#. module: magentoerpconnect
+#: model:payment.type,name:magentoerpconnect.payment_type_ccsave
+msgid "Saved Credit Card"
+msgstr "Opgeslagen kredietkaart"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/product.py:0
+#, python-format
+msgid "Warning!"
+msgstr "Waarschuwing!"
+
+#. module: magentoerpconnect
+#: field:product.category,is_anchor:0
+msgid "Anchor?"
+msgstr "Anchor?"
+
+#. module: magentoerpconnect
+#: field:magerp.product_attribute_options,ipcast:0
+msgid "Type cast"
+msgstr "Type cast"
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,is_required:0
+msgid "Required?"
+msgstr "Verplicht?"
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,is_user_defined:0
+msgid "User Defined?"
+msgstr "Gebruikers gedefinieerd?"
+
+#. module: magentoerpconnect
+#: field:external.shop.group,referential_type:0
+msgid "External Referential Type"
+msgstr "Extern referentie type"
+
+#. module: magentoerpconnect
+#: field:res.partner,created_in:0
+msgid "Created in"
+msgstr "Gemaakt in"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/sale.py:0
+#, python-format
+msgid "Invoice Created"
+msgstr "Factuur gemaakt"
+
+#. module: magentoerpconnect
+#: selection:product.category,display_mode:0
+msgid "Static Block Only"
+msgstr "Static Block Only"
+
+#. module: magentoerpconnect
+#: field:sale.shop,default_storeview_integer_id:0
+msgid "Magento default Storeview ID"
+msgstr "Magento standaard winkel weergave ID"
+
+#. module: magentoerpconnect
+#: field:external.shop.group,default_shop_id:0
+#: field:external.shop.group,default_shop_integer_id:0
+msgid "Default Store"
+msgstr "Standaard winkel"
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,group:0
+msgid "Attribute Group"
+msgstr "Attribuut groep"
+
+#. module: magentoerpconnect
+#: field:magerp.product_attribute_options,label:0
+#: field:magerp.product_attributes,frontend_label:0
+msgid "Label"
+msgstr "Label"
+
+#. module: magentoerpconnect
+#: view:external.referential:0
+msgid "1 - Import Customer Groups (Partner Categories)"
+msgstr "1 - Klantgroepen importeren (Relatie categorieën)"
+
+#. module: magentoerpconnect
+#: view:external.referential:0
+msgid "4 - Import Attribute Groups"
+msgstr "4 - Attribuutgroepen importeren"
+
+#. module: magentoerpconnect
+#: view:magerp.product_attribute_groups:0
+msgid "Magento Product Attribute groups"
+msgstr "Magento product attribuutgroepen"
+
+#. module: magentoerpconnect
+#: field:product.category,magento_exportable:0
+msgid "Export to Magento"
+msgstr "Exporteren naar Magento"
+
+#. module: magentoerpconnect
+#: view:external.shop.group:0
+#: model:ir.actions.act_window,name:magentoerpconnect.act_magerp_websites_form
+msgid "Magento websites"
+msgstr "Magento websites"
+
+#. module: magentoerpconnect
+#: field:magerp.product_product_type,product_type:0
+msgid "Type"
+msgstr "Type"
+
+#. module: magentoerpconnect
+#: field:product.images,thumbnail:0
+msgid "Thumbnail"
+msgstr "Miniatuur"
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_magerp_product_attribute_set
+msgid "Attribute sets in products"
+msgstr "Attribuut sets in producten"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/product.py:0
+#, python-format
+msgid "description"
+msgstr "omschrijving"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/magerp_osv.py:0
+#, python-format
+msgid "Webservice Failure, sleeping 1 second before next attempt"
+msgstr "Webservice storing, wacht 1 seconde voor de volgende poging"
+
+#. module: magentoerpconnect
+#: help:external.referential,default_lang_id:0
+msgid "Choose the language which will be used for the Default Value in Magento"
+msgstr "Kies de taal die wordt gebruikt als standaardwaarde in Magento"
+
+#. module: magentoerpconnect
+#: selection:magerp.sale.shop.payment.type,picking_policy:0
+msgid "Complete Delivery"
+msgstr "Volledige levering"
+
+#. module: magentoerpconnect
+#: view:product.product:0
+msgid "attributes_placeholder"
+msgstr "attributes_placeholder"
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_magerp_product_product_type
+msgid "magerp.product_product_type"
+msgstr "magerp.product_product_type"
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,is_used_for_price_rules:0
+msgid "Used for pricing rules?"
+msgstr "Gebruikt voor prijsregels?"
+
+#. module: magentoerpconnect
+#: selection:magerp.sale.shop.payment.type,invoice_quantity:0
+msgid "Ordered Quantities"
+msgstr "Bestelde aantallen"
+
+#. module: magentoerpconnect
+#: field:sale.shop,magento_root_category:0
+msgid "Root Category"
+msgstr "Hoofdcategorie"
+
+#. module: magentoerpconnect
+#: view:product.category:0
+msgid "Sorting method"
+msgstr "Sorteermethode"
+
+#. module: magentoerpconnect
+#: model:magerp.product_product_type,name:magentoerpconnect.product_type_simple
+msgid "Simple Product"
+msgstr "Eenvoudig product"
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_magerp_product_attribute_options
+msgid "Options  of selected attributes"
+msgstr "Opties van geselecteerde attributen"
+
+#. module: magentoerpconnect
+#: view:product.category:0
+msgid "Category Image"
+msgstr "Afbeelding categorie"
+
+#. module: magentoerpconnect
+#: view:magerp.product_product_type:0
+#: field:product.product,product_type:0
+msgid "Product Type"
+msgstr "Producttype"
+
+#. module: magentoerpconnect
+#: selection:magerp.product_attributes,backend_type:0
+#: selection:magerp.product_attributes,frontend_input:0
+msgid "Text"
+msgstr "Tekst"
+
+#. module: magentoerpconnect
+#: selection:magerp.product_attributes,frontend_input:0
+msgid "Multi-Selection"
+msgstr "Multi-selectie"
+
+#. module: magentoerpconnect
+#: model:ir.actions.act_window,name:magentoerpconnect.act_magerp_storeviews_form
+#: view:magerp.storeviews:0
+msgid "Magento storeviews"
+msgstr "Magento winkelweergaven"
+
+#. module: magentoerpconnect
+#: constraint:ir.cron:0
+msgid "Invalid arguments"
+msgstr "Ongeldige argumenten"
+
+#. module: magentoerpconnect
+#: selection:magerp.sale.shop.payment.type,order_policy:0
+msgid "Invoice on Order After Delivery"
+msgstr "Facturatie na levering"
+
+#. module: magentoerpconnect
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr "Ongeldige XML voor weergave opbouw!"
+
+#. module: magentoerpconnect
+#: constraint:product.template:0
+msgid "Error: UOS must be in a different category than the UOM"
+msgstr "Fout: verkoopeenheid moet andere categorie hebben dan voorraadeenheid"
+
+#. module: magentoerpconnect
+#: field:product.product,created_at:0
+#: field:product.product,updated_at:0
+msgid "Created"
+msgstr "Gemaakt"
+
+#. module: magentoerpconnect
+#: field:magerp.product_attribute_set,attribute_set_name:0
+msgid "Set Name"
+msgstr "Setnaam"
+
+#. module: magentoerpconnect
+#: model:payment.type,name:magentoerpconnect.payment_type_bbva
+msgid "BBVA"
+msgstr "BBVA"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/magerp_core.py:0
+#, python-format
+msgid ""
+"Could not connect to server\n"
+"Check location, username & password."
+msgstr ""
+"Kon niet verbinden met server\n"
+"Controleer locatie, gebruiker en wachtwoord."
+
+#. module: magentoerpconnect
+#: field:res.partner,created_at:0
+msgid "Created Date"
+msgstr "Datum gemaakt"
+
+#. module: magentoerpconnect
+#: field:sale.order,magento_incrementid:0
+msgid "Magento Increment ID"
+msgstr "Magento Increment ID"
+
+#. module: magentoerpconnect
+#: view:res.partner:0
+msgid "Store views"
+msgstr "Winkel weergaven"
+
+#. module: magentoerpconnect
+#: help:res.partner,mag_vat:0
+msgid "To be able to receive customer VAT number you must set it in Magento Admin Panel, menu System / Configuration / Client Configuration / Name and Address Options."
+msgstr ""
+"Om het klant BTW nummer te ontvangen moet u dat aanzetten in Magento Admin, "
+"menu Systeem / Configuratie / Klant configuratie / Naam en adres opties."
+
+#. module: magentoerpconnect
+#: model:ir.ui.menu,name:magentoerpconnect.menu_magerp_core_storeviews
+msgid "Magento Store Views"
+msgstr "Magento winkel weergaven"
+
+#. module: magentoerpconnect
+#: selection:magerp.product_attributes,backend_type:0
+msgid "Varchar"
+msgstr "Varchar"
+
+#. module: magentoerpconnect
+#: field:external.referential,attribute_sets:0
+#: model:ir.ui.menu,name:magentoerpconnect.menu_magerp_attnsets_sets
+msgid "Attribute Sets"
+msgstr "Attribuut sets"
+
+#. module: magentoerpconnect
+#: field:product.images,sync_status:0
+msgid "Sync Status"
+msgstr "Synchr.status"
+
+#. module: magentoerpconnect
+#: selection:magerp.product_attributes,frontend_input:0
+msgid "Selection"
+msgstr "Selectie"
+
+#. module: magentoerpconnect
+#: view:external.referential:0
+msgid "Core Components"
+msgstr "Basis componenten"
+
+#. module: magentoerpconnect
+#: selection:magerp.product_attributes,frontend_input:0
+msgid "Text Area"
+msgstr "Tekst gebied"
+
+#. module: magentoerpconnect
+#: view:magerp.product_attribute_set:0
+msgid "Magento Product Attribute Set"
+msgstr "Magento product attibuut set"
+
+#. module: magentoerpconnect
+#: field:res.partner.address,lastname:0
+msgid "Last Name"
+msgstr "Achternaam"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/magerp_osv.py:0
+#, python-format
+msgid "Webservice Failure, sleeping 3 seconds before next attempt"
+msgstr "Webservice storing, wacht  seconden voor nieuwe poging"
+
+#. module: magentoerpconnect
+#: field:product.category,image:0
+msgid "Image"
+msgstr "Afbeelding"
+
+#. module: magentoerpconnect
+#: field:magerp.product_attribute_groups,attribute_set:0
+#: field:magerp.product_attributes,set_id:0
+#: field:product.product,set:0
+msgid "Attribute Set"
+msgstr "Attribuut set"
+
+#. module: magentoerpconnect
+#: field:res.partner,mag_vat:0
+msgid "Magento VAT"
+msgstr "Magento BTW"
+
+#. module: magentoerpconnect
+#: help:external.referential,default_pro_cat:0
+msgid ""
+"Products imported from magento may have many categories.\n"
+"OpenERP requires a specific category for a product to facilitate invoicing etc."
+msgstr ""
+"Van Magento geïmporteerde products kunnen veel categorieën hebben.\n"
+"OpenERP vereist een specifieke categorie voor een product om te kunnen "
+"factureren etc."
+
+#. module: magentoerpconnect
+#: selection:magerp.product_attributes,backend_type:0
+msgid "Static"
+msgstr "Statisch"
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_magerp_product_attribute_groups
+msgid "Attribute groups in Magento"
+msgstr "Attribuut groepen in Magento"
+
+#. module: magentoerpconnect
+#: field:product.product,magento_exportable:0
+msgid "Exported to Magento?"
+msgstr "Geëxporteerd naar Magento?"
+
+#. module: magentoerpconnect
+#: selection:magerp.product_attributes,frontend_input:0
+msgid "Fixed Product Tax"
+msgstr "Vaste product belasting"
+
+#. module: magentoerpconnect
+#: field:res.partner,updated_at:0
+msgid "Updated At"
+msgstr "Bijgewerkt op"
+
+#. module: magentoerpconnect
+#: selection:product.tierprice,web_scope:0
+msgid "Specific Website"
+msgstr "Specifieke website"
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_magerp_product_attributes
+msgid "Attributes of products"
+msgstr "Product attributen"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/magerp_osv.py:0
+#, python-format
+msgid "Webservice Failure, sleeping 6 seconds before next attempt"
+msgstr "Webservice storing, wacht 6 seconden voor volgende poging"
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,frontend_input:0
+msgid "Frontend Input"
+msgstr "Voorkant invoer"
+
+#. module: magentoerpconnect
+#: help:product.product,websites_ids:0
+msgid "By defaut product will be exported on every website, if you want to exporte it only on some website select them here"
+msgstr ""
+"Standaard wordt het product geëxporteerd naar elke website; als u alleen "
+"naar enkele wilt exporteren, selecteer die dan hier"
+
+#. module: magentoerpconnect
+#: field:product.category,is_active:0
+msgid "Active?"
+msgstr "Actief?"
+
+#. module: magentoerpconnect
+#: model:ir.actions.act_window,name:magentoerpconnect.act_magerp_product_attribute_set_form
+#: view:magerp.product_attribute_set:0
+msgid "Magento Product Attribute Sets"
+msgstr "Magento product attribuut sets"
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,group_id:0
+msgid "Group"
+msgstr "Groep"
+
+#. module: magentoerpconnect
+#: field:res.partner,store_ids:0
+#: field:sale.shop,storeview_ids:0
+msgid "Store Views"
+msgstr "Winkel weergaves"
+
+#. module: magentoerpconnect
+#: model:ir.module.module,description:magentoerpconnect.module_meta_information
+msgid "Magento E-commerce management\n"
+msgstr "Magento E-commerce beheer\n"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/magerp_osv.py:0
+#, python-format
+msgid "Magento Connection"
+msgstr "Magento verbinding"
+
+#. module: magentoerpconnect
+#: constraint:product.template:0
+msgid "Error: The default UOM and the purchase UOM must be in the same category."
+msgstr ""
+"Fout: de standaard voorraadeenheid en de inkoopeenheid moeten in dezelfde "
+"categorie zitten."
+
+#. module: magentoerpconnect
+#: view:magerp.sale.shop.payment.type:0
+#: field:magerp.sale.shop.payment.type,payment_type_id:0
+#: field:sale.shop,payment_types:0
+msgid "Payment Type"
+msgstr "Soort betaling"
+
+#. module: magentoerpconnect
+#: model:magerp.product_product_type,name:magentoerpconnect.product_type_grouped
+msgid "Grouped Product"
+msgstr "Groepsproduct"
+
+#. module: magentoerpconnect
+#: view:magerp.product_attribute_groups:0
+msgid "Magento Product Attributes Groups"
+msgstr "Magento product attribuutgroepen"
+
+#. module: magentoerpconnect
+#: field:product.tierprice,price_qty:0
+msgid "Quantity Slab"
+msgstr "Quantity Slab"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/product.py:0
+#: view:product.category:0
+#: view:res.partner:0
+#: view:res.partner.category:0
+#: view:sale.shop:0
+#, python-format
+msgid "Magento Information"
+msgstr "Magento informatie"
+
+#. module: magentoerpconnect
+#: selection:magerp.sale.shop.payment.type,order_policy:0
+msgid "Shipping & Manual Invoice"
+msgstr "Verzending & handmatige factuur"
+
+#. module: magentoerpconnect
+#: selection:magerp.product_attributes,frontend_input:0
+msgid "Yes/No"
+msgstr "Ja/Nee"
+
+#. module: magentoerpconnect
+#: model:payment.type,name:magentoerpconnect.payment_type_cofidis
+msgid "Cofidis"
+msgstr "Cofidis"
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,is_searchable:0
+msgid "Searchable ?"
+msgstr "Doorzoekbaar?"
+
+#. module: magentoerpconnect
+#: field:magerp.storeviews,website_id:0
+#: field:product.tierprice,website_id:0
+#: field:res.partner,website_id:0
+msgid "Website"
+msgstr "Website"
+
+#. module: magentoerpconnect
+#: view:external.referential:0
+msgid "3 - Import Product Attribute Sets"
+msgstr "3 - Product attribuut sets importeren"
+
+#. module: magentoerpconnect
+#: field:magerp.sale.shop.payment.type,picking_policy:0
+msgid "Packing Policy"
+msgstr "Verpakkingsbeleid"
+
+#. module: magentoerpconnect
+#: field:product.tierprice,group_scope:0
+msgid "unknown"
+msgstr "onbekend"
+
+#. module: magentoerpconnect
+#: view:sale.shop:0
+msgid "Update Images"
+msgstr "Afbeeldingen bijwerken"
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_product_tierprice
+msgid "Implements magento tier pricing"
+msgstr "Implementeert magento staffelprijzen"
+
+#. module: magentoerpconnect
+#: field:res.partner,store_id:0
+msgid "Last Store View"
+msgstr "Laatste winkel weergave"
+
+#. module: magentoerpconnect
+#: help:product.images,mage_file:0
+msgid "Filled when uploaded or synchronised"
+msgstr "Gevuld bij uploaden of synchroniseren"
+
+#. module: magentoerpconnect
+#: field:res.partner,mag_birthday:0
+msgid "Birthday"
+msgstr "Verjaardag"
+
+#. module: magentoerpconnect
+#: field:product.product,magento_sku:0
+msgid "Magento SKU"
+msgstr "Magento SKU"
+
+#. module: magentoerpconnect
+#: field:external.referential,default_pro_cat:0
+msgid "Default Product Category"
+msgstr "Standaard product categorie"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/product.py:0
+#, python-format
+msgid "short description"
+msgstr "korte omschrijving"
+
+#. module: magentoerpconnect
+#: selection:magerp.product_attributes,frontend_input:0
+msgid "Date"
+msgstr "Datum"
+
+#. module: magentoerpconnect
+#: selection:magerp.product_attributes,backend_type:0
+msgid "Integer"
+msgstr "Integer"
+
+#. module: magentoerpconnect
+#: model:ir.ui.menu,name:magentoerpconnect.menu_magerp_core_websites
+msgid "Magento Websites"
+msgstr "Magento websites"
+
+#. module: magentoerpconnect
+#: help:product.category,updated:0
+msgid "Set if the category underwent a change & has to be synched."
+msgstr "Ingesteld als de categorie is gewijzigd & is gesynchroniseerd."
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,is_visible_on_front:0
+msgid "Visible (Front)?"
+msgstr "Zichtbaar (voorkant)?"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/magerp_osv.py:0
+#, python-format
+msgid ""
+"Method: %s\n"
+"Arguments:%s\n"
+"Error:%s"
+msgstr ""
+"Methode: %s\n"
+"Argumenten:%s\n"
+"Fout:%s"
+
+#. module: magentoerpconnect
+#: field:product.category,meta_title:0
+msgid "Title (Meta)"
+msgstr "Titel (Meta)"
+
+#. module: magentoerpconnect
+#: field:magerp.storeviews,lang_id:0
+msgid "Language"
+msgstr "Taal"
+
+#. module: magentoerpconnect
+#: field:magerp.product_attribute_groups,default_id:0
+msgid "Default"
+msgstr "Standaard"
+
+#. module: magentoerpconnect
+#: selection:magerp.product_attributes,frontend_input:0
+msgid "Gallery"
+msgstr "Gallerij"
+
+#. module: magentoerpconnect
+#: selection:magerp.product_attributes,backend_type:0
+msgid "Decimal"
+msgstr "Decimal"
+
+#. module: magentoerpconnect
+#: model:ir.ui.menu,name:magentoerpconnect.menu_magerp_attnsets
+msgid "Attributes and Sets"
+msgstr "Attributen en sets"
+
+#. module: magentoerpconnect
+#: field:external.shop.group,sort_order:0
+#: field:magerp.product_attribute_groups,sort_order:0
+#: field:magerp.product_attribute_set,sort_order:0
+#: field:magerp.storeviews,sort_order:0
+msgid "Sort Order"
+msgstr "Sortering"
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,is_unique:0
+msgid "Unique?"
+msgstr "Uniek?"
+
+#. module: magentoerpconnect
+#: model:magerp.product_product_type,name:magentoerpconnect.product_type_bundle
+msgid "Bundle Product"
+msgstr "Bundelproduct"
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_magerp_sale_shop_payment_type
+msgid "Magento Sale Shop Payment Type"
+msgstr "Magento verkoopshop betalingswijze"
+
+#. module: magentoerpconnect
+#: view:product.category:0
+msgid "Display Settings"
+msgstr "Afbeeldinstellingen"
+
+#. module: magentoerpconnect
+#: view:magerp.product_attribute_set:0
+msgid "Attributes in Set"
+msgstr "Attributen in set"
+
+#. module: magentoerpconnect
+#: view:product.category:0
+msgid "Products only means that the products associated to the category will display, but not any static blocks.Static block only means that the selected static block will display, but none of the products.Static block and products means that the static block will display with the products listed directly beneath it."
+msgstr ""
+"Products only means that the products associated to the category will "
+"display, but not any static blocks.Static block only means that the selected "
+"static block will display, but none of the products.Static block and "
+"products means that the static block will display with the products listed "
+"directly beneath it."
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,backend_type:0
+msgid "Backend Type"
+msgstr "Achterkant soort"
+
+#. module: magentoerpconnect
+#: model:magerp.product_product_type,name:magentoerpconnect.product_type_virtual
+msgid "Virtual Product"
+msgstr "Virtueel product"
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_magerp_storeviews
+msgid "The magento store views information"
+msgstr "De magento winkelweergaven informatie"
+
+#. module: magentoerpconnect
+#: field:external.shop.group,code:0
+#: field:magerp.product_attributes,attribute_code:0
+#: field:magerp.storeviews,code:0
+msgid "Code"
+msgstr "Code"
+
+#. module: magentoerpconnect
+#: view:external.referential:0
+msgid "2 - Import Product Categories"
+msgstr "2 - Productcategorieën importeren"
+
+#. module: magentoerpconnect
+#: field:magerp.product_attribute_options,attribute_id:0
+msgid "Attribute"
+msgstr "Attribuut"
+
+#. module: magentoerpconnect
+#: field:product.category,updated:0
+msgid "To synchronize"
+msgstr "Te synchroniseren"
+
+#. module: magentoerpconnect
+#: model:payment.type,name:magentoerpconnect.payment_type_cashondelivery
+msgid "Cash On Delivery"
+msgstr "Onder rembours"
+
+#. module: magentoerpconnect
+#: field:product.category,magento_parent_id:0
+msgid "Magento Parent"
+msgstr "Magento Parent"
+
+#. module: magentoerpconnect
+#: view:product.category:0
+msgid "General Information"
+msgstr "Algemene informatie"
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,field_name:0
+msgid "Open ERP Field name"
+msgstr "OpenERP veldnaam"
+
+#. module: magentoerpconnect
+#: model:payment.type,name:magentoerpconnect.payment_type_googlecheckout
+msgid "Google Checkout"
+msgstr "Google Checkout"
+
+#. module: magentoerpconnect
+#: field:sale.order,magento_storeview_id:0
+msgid "Magento Store View"
+msgstr "Magento Winkelweergave"
+
+#. module: magentoerpconnect
+#: selection:product.category,display_mode:0
+msgid "Static Block & Products"
+msgstr "Statisch blok & producten"
+
+#. module: magentoerpconnect
+#: field:product.tierprice,cust_group:0
+msgid "Customer Group"
+msgstr "Klantgroep"
+
+#. module: magentoerpconnect
+#: field:product.images,exclude:0
+msgid "Exclude"
+msgstr "Uitsluiten"
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,is_visible_in_advanced_search:0
+msgid "Visible in advanced search?"
+msgstr "Zichtbaar in geavanceerd zoeken?"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/magerp_osv.py:0
+#, python-format
+msgid "Webservice Failure, sleeping 6 second before next attempt"
+msgstr "Webservice fout, wacht 6 seconden voor volgende poging"
+
+#. module: magentoerpconnect
+#: field:sale.shop,default_storeview_id:0
+msgid "Default Storeview"
+msgstr "Standaard winkelweergave"
+
+#. module: magentoerpconnect
+#: field:res.partner.category,tax_class_id:0
+msgid "Tax Class ID"
+msgstr "Belasting Class ID"
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,apply_to:0
+msgid "Apply to"
+msgstr "Gebruiken bij"
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,is_global:0
+msgid "Global ?"
+msgstr "Globaal?"
+
+#. module: magentoerpconnect
+#: constraint:ir.model:0
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr ""
+"De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten !"
+
+#. module: magentoerpconnect
+#: model:ir.ui.menu,name:magentoerpconnect.menu_magerp
+msgid "Magento-Connection"
+msgstr "Magento-koppeling"
+
+#. module: magentoerpconnect
+#: selection:product.category,available_sort_by:0
+#: selection:product.category,default_sort_by:0
+msgid "Use Config Settings"
+msgstr "Gebruik configuratie instellingen"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/magerp_osv.py:0
+#, python-format
+msgid "Undefined List method !"
+msgstr "Ongedefinieerde lijst methode !"
+
+#. module: magentoerpconnect
+#: model:ir.actions.act_window,name:magentoerpconnect.act_magerp_product_attribute_groups_form
+msgid "Magento Product Attribute Groups"
+msgstr "Magento productattribuut groepen"
+
+#. module: magentoerpconnect
+#: selection:product.category,available_sort_by:0
+#: selection:product.category,default_sort_by:0
+msgid "Best Value"
+msgstr "Beste waarde"
+
+#. module: magentoerpconnect
+#: view:external.referential:0
+msgid "5 - Import Product Attributes"
+msgstr "5 - Productattributen importeren"
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,attribute_set_info:0
+msgid "Attribute Set Information"
+msgstr "Attribuut set informatie"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/magerp_osv.py:0
+#, python-format
+msgid "Magento Call"
+msgstr "Magento Call"
+
+#. module: magentoerpconnect
+#: model:payment.type,name:magentoerpconnect.payment_type_paypal_standard
+msgid "Paypal Standard"
+msgstr "Paypal standaard"
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,entity_type_id:0
+msgid "Entity Type"
+msgstr "Entiteitsoort"
+
+#. module: magentoerpconnect
+#: help:res.partner,store_id:0
+msgid "Last store view where the customer has bought."
+msgstr "Laatste winkelweergave waar de klant heeft besteld."
+
+#. module: magentoerpconnect
+#: model:ir.actions.act_window,name:magentoerpconnect.act_magerp_product_type_form
+#: model:ir.ui.menu,name:magentoerpconnect.menu_magerp_product_type
+msgid "Product Types"
+msgstr "Productsoorten"
+
+#. module: magentoerpconnect
+#: field:product.category,meta_keywords:0
+msgid "Meta Keywords"
+msgstr "Meta Keywords"
+
+#. module: magentoerpconnect
+#: model:payment.type,name:magentoerpconnect.payment_type_paybox_system
+msgid "Paybox System"
+msgstr "Paybox systeem"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/magerp_osv.py:0
+#, python-format
+msgid "Login Successful"
+msgstr "Aanmelding succesvol"
+
+#. module: magentoerpconnect
+#: model:ir.ui.menu,name:magentoerpconnect.menu_magerp_attnsets_attribute_groups
+msgid "Attribute Groups"
+msgstr "Attribuutgroepen"
+
+#. module: magentoerpconnect
+#: model:product.template,name:magentoerpconnect.product_product_shipping_product_template
+msgid "Shipping and Handling"
+msgstr "Verzending en behandeling"
+
+#. module: magentoerpconnect
+#: field:product.tierprice,product:0
+msgid "Product"
+msgstr "Product"
+
+#. module: magentoerpconnect
+#: view:external.referential:0
+msgid "Product Attributes / Sets"
+msgstr "Productattributen / sets"
+
+#. module: magentoerpconnect
+#: model:ir.module.module,shortdesc:magentoerpconnect.module_meta_information
+msgid "Magento e-commerce"
+msgstr "Magento e-commerce"
+
+#. module: magentoerpconnect
+#: view:product.category:0
+#: field:product.category,description:0
+msgid "Description"
+msgstr "Omschrijving"
+
+#. module: magentoerpconnect
+#: field:product.category,url_key:0
+msgid "URL-key"
+msgstr "URL-key"
+
+#. module: magentoerpconnect
+#: field:magerp.product_attribute_groups,referential_id:0
+#: field:magerp.product_attribute_options,referential_id:0
+#: field:magerp.product_attribute_set,referential_id:0
+#: field:magerp.product_attributes,referential_id:0
+#: field:product.tierprice,referential_id:0
+msgid "Magento Instance"
+msgstr "Magento exemplaar"
+
+#. module: magentoerpconnect
+#: selection:product.tierprice,web_scope:0
+msgid "All Websites"
+msgstr "Alle websites"
+
+#. module: magentoerpconnect
+#: selection:magerp.product_attributes,frontend_input:0
+#: selection:product.category,available_sort_by:0
+#: selection:product.category,default_sort_by:0
+#: field:product.tierprice,price:0
+msgid "Price"
+msgstr "Prijs"
+
+#. module: magentoerpconnect
+#: field:account.invoice,magento_ref:0
+msgid "Magento REF"
+msgstr "Magento REF"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/magerp_osv.py:0
+#, python-format
+msgid "list method is undefined for this object!"
+msgstr "lijst methode is niet gedefinieerd voor dit object!"
+
+#. module: magentoerpconnect
+#: help:product.category,is_active:0
+msgid "Indicates whether active in magento"
+msgstr "Geeft aan of actief in magento"
+
+#. module: magentoerpconnect
+#: field:sale.shop,magento_shop:0
+msgid "Magento Shop"
+msgstr "Magento winkel"
+
+#. module: magentoerpconnect
+#: field:product.images,mage_file:0
+msgid "Magento File Name"
+msgstr "Magento bestandsnaam"
+
+#. module: magentoerpconnect
+#: selection:magerp.sale.shop.payment.type,order_policy:0
+msgid "Invoice from the Packing"
+msgstr "Factuur op basis pakbon"
+
+#. module: magentoerpconnect
+#: model:payment.type,name:magentoerpconnect.payment_type_checkmo
+msgid "Check / Money Order"
+msgstr "Check / Money Order"
+
+#. module: magentoerpconnect
+#: model:ir.actions.act_window,name:magentoerpconnect.act_magerp_instances_form
+#: model:ir.ui.menu,name:magentoerpconnect.menu_magerp_core_instances
+msgid "Magento Instances"
+msgstr "Magento exemplaren"
+
+#. module: magentoerpconnect
+#: model:ir.ui.menu,name:magentoerpconnect.menu_magerp_core
+msgid "Core Settings"
+msgstr "Basis instellingen"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/magerp_osv.py:0
+#, python-format
+msgid "Calling Method:%s,Arguments:%s"
+msgstr "Aanroepen methode:%s,argumenten:%s"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/magerp_osv.py:0
+#, python-format
+msgid "Attempting connection with Settings:%s,%s,%s"
+msgstr "Proberen te verbinden met instellingen:%s,%s,%s"
+
+#. module: magentoerpconnect
+#: field:magerp.product_product_type,name:0
+#: selection:product.category,available_sort_by:0
+#: selection:product.category,default_sort_by:0
+msgid "Name"
+msgstr "Naam"
+
+#. module: magentoerpconnect
+#: field:magerp.sale.shop.payment.type,invoice_quantity:0
+msgid "Invoice on"
+msgstr "Factuur op"
+
+#. module: magentoerpconnect
+#: selection:product.tierprice,group_scope:0
+msgid "Specific group"
+msgstr "Specifieke groep"
+
+#. module: magentoerpconnect
+#: model:ir.actions.act_window,name:magentoerpconnect.act_magerp_product_attributes_form
+#: view:magerp.product_attributes:0
+msgid "Magento Product Attributes"
+msgstr "Magento productattributen"
+
+#. module: magentoerpconnect
+#: selection:magerp.sale.shop.payment.type,invoice_quantity:0
+msgid "Shipped Quantities"
+msgstr "Geleverde aantallen"
+
+#. module: magentoerpconnect
+#: field:magerp.product_attribute_groups,attribute_set_id:0
+msgid "Attribute Set ID"
+msgstr "Attribuut set ID"
+
+#. module: magentoerpconnect
+#: field:magerp.storeviews,is_active:0
+msgid "Default ?"
+msgstr "Standaard?"
+
+#. module: magentoerpconnect
+#: field:external.referential,default_lang_id:0
+msgid "Default Language"
+msgstr "Standaardtaal"
+
+#. module: magentoerpconnect
+#: view:external.referential:0
+#: field:product.product,websites_ids:0
+msgid "Websites"
+msgstr "Websites"
+
+#. module: magentoerpconnect
+#: model:magerp.product_product_type,name:magentoerpconnect.product_type_downloadable
+msgid "Downloadable Product"
+msgstr "Downloadbaar product"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/product.py:0
+#, python-format
+msgid ""
+"They are some products related to Magento. They can not be deleted!\n"
+"You can change their Magento status to \"Disabled\" and uncheck the active box to hide them from OpenERP."
+msgstr ""
+"Het zijn sommige aan Magento gekoppelde producten. Ze kunnen niet worden "
+"verwijderd!\n"
+"U kunt hun Magento status wijzigen in \"Geblokkeerd\" en aktief uitzetten om "
+"ze te verbergen in OpenERP."
+
+#. module: magentoerpconnect
+#: model:payment.type,name:magentoerpconnect.payment_type_paypayl_express
+msgid "Paypal Express"
+msgstr "Paypal Express"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/magerp_osv.py:0
+#, python-format
+msgid "Error in connecting"
+msgstr "Fount bij verbinden"
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,magento_id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: magentoerpconnect
+#: help:res.partner,mag_birthday:0
+msgid "To be able to receive customer birthday you must set it in Magento Admin Panel, menu System / Configuration / Client Configuration / Name and Address Options."
+msgstr ""
+"Om de klant verjaardag te ontvangen moet u dat aanzetten in Magento "
+"beheerpaneel, menu Systeem / Configuratie / Klant Configuratie / Naam en "
+"adres opties."
+
+#. module: magentoerpconnect
+#: field:product.category,meta_description:0
+msgid "Meta Description"
+msgstr "Meta omschrijving"
+
+#. module: magentoerpconnect
+#: help:magerp.product_product_type,product_type:0
+msgid "Use the same name of Magento product type, for example 'simple'."
+msgstr "Gebruik dezelfde naam van Magento productsoort, bijvoorbeeld 'simpel'."
+
+#. module: magentoerpconnect
+#: view:product.category:0
+msgid "Anchored categories will display all products associated to all child categories (and child of child, and child of child of child,etc.) on that category‘s page, along with the products associated directly to the parent category."
+msgstr ""
+"Verankerde categorieën tonen alle producten geassocieerd met alle "
+"sub(sub)categorieën op de categorie pagina, samen met de direct "
+"geassocieerde producten."
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/magerp_osv.py:0
+#, python-format
+msgid "Webservice Failure, sleeping 3 second before next attempt"
+msgstr "Webservice storing, wacht 3 seconden voor volgende poging"
+
+#. module: magentoerpconnect
+#: field:sale.shop,auto_import:0
+msgid "Automatic Import"
+msgstr "Automatische import"
+
+#. module: magentoerpconnect
+#: field:product.category,write_date:0
+#: field:product.images,write_date:0
+msgid "Updated date"
+msgstr "Datum gewijzigd"
+
+#. module: magentoerpconnect
+#: field:magerp.product_attribute_options,attribute_name:0
+msgid "Attribute Code"
+msgstr "Attribuut code"
+
+#. module: magentoerpconnect
+#: field:product.category,image_name:0
+msgid "File Name"
+msgstr "Bestandsnaam"
+
+#. module: magentoerpconnect
+#: help:product.tierprice,price_qty:0
+msgid "Slab & above eg.For 10 and above enter 10"
+msgstr "Staffel en erboven. Bijvoorbeeld voor 10 en hoger vult u 10 in."
+
+#. module: magentoerpconnect
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
+msgstr "Fout: ongeldige EAN code"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/product.py:0
+#, python-format
+msgid ""
+"This product is related to Magento. It can not be deleted!\n"
+"You can change it Magento status to \"Disabled\" and uncheck the active box to hide it from OpenERP."
+msgstr ""
+"Dit product is aan Magento gekoppeld. Het kan niet worden verwijderd!\n"
+"U kunt de Magento status wijzigen in \"Geblokkeerd\" en aktief uitzetten om "
+"het te verbergen in OpenERP."
+
+#. module: magentoerpconnect
+#: field:sale.order,magento_payment_method:0
+msgid "Magento Payment Method"
+msgstr "Magento Betaalwijze"
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,default_value:0
+msgid "Default Value"
+msgstr "Standaardwaarde"
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,is_configurable:0
+msgid "Configurable?"
+msgstr "Configureerbaar?"
+
+#. module: magentoerpconnect
+#: field:sale.shop,last_products_export_date:0
+msgid "Last Product Export  Time"
+msgstr "Laaste product exporttijd"
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_manufacturer:0
+msgid "Manufacturer"
+msgstr "Fabrikant"
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_color:0
+msgid "Color"
+msgstr "Kleur"
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_news_from_date:0
+msgid "Set Product as New from Date"
+msgstr "Stel product in als nieuw vanaf datum"
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_news_to_date:0
+msgid "Set Product as New to Date"
+msgstr "Stel product in als nieuw tot datum"
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_status:0
+msgid "Status"
+msgstr "Status"
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_url_key:0
+msgid "URL key"
+msgstr "URL key"
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_visibility:0
+msgid "Visibility"
+msgstr "Zichtbaarheid"
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_required_options:0
+msgid "required_options"
+msgstr "verplichte opties"
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_gift_message_available:0
+msgid "Allow Gift Message"
+msgstr "Gift bericht toestaan"
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_has_options:0
+msgid "has_options"
+msgstr "has_options"
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_image_label:0
+msgid "Image Label"
+msgstr "Afbeelding label"
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_small_image_label:0
+msgid "Small Image Label"
+msgstr "Kleine afbeelding label"
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_thumbnail_label:0
+msgid "Thumbnail Label"
+msgstr "Miniatuur label"
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_created_at:0
+msgid "created_at"
+msgstr "Gemaakt"
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_updated_at:0
+msgid "updated_at"
+msgstr "Gewijzigd"
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_special_price:0
+msgid "Special Price"
+msgstr "Speciale prijs"
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_special_from_date:0
+msgid "Special Price From Date"
+msgstr "Speciale prijs vanaf datum"
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_special_to_date:0
+msgid "Special Price To Date"
+msgstr "Speciale prijs tot datum"
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_tax_class_id:0
+msgid "Tax Class"
+msgstr "Belasting klasse"
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_minimal_price:0
+msgid "Minimal Price"
+msgstr "Minimum prijs"
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_enable_googlecheckout:0
+msgid "Is product available for purchase with Google Checkout"
+msgstr "Is product beschikbaar voor aankoop met Google Checkout"
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_price_view:0
+msgid "Price View"
+msgstr "Prijs weergave"
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_meta_title:0
+msgid "Meta Title"
+msgstr "Meta titel"
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_custom_design:0
+msgid "Custom Design"
+msgstr "Aangepast ontwerp"
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_custom_design_from:0
+msgid "Active From"
+msgstr "Actief vanaf"
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_custom_design_to:0
+msgid "Active To"
+msgstr "Actief tot"
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_custom_layout_update:0
+msgid "Custom Layout Update"
+msgstr "Aangepaste layout gewijzgd"
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_page_layout:0
+msgid "Page Layout"
+msgstr "Pagina layout"
+
+#. module: magentoerpconnect
+#: field:product.product,x_magerp_options_container:0
+msgid "Display product options in"
+msgstr "Product opties afbeelden in"
+
+#. module: magentoerpconnect
+#: field:product.product,tier_price:0
+#: field:product.product,x_magerp_tier_price:0
+msgid "Tier Price"
+msgstr "Staffelprijs"
+
+#. module: magentoerpconnect
+#: field:product.category,meta_keywords:0
+#: field:product.product,x_magerp_meta_keyword:0
+msgid "Meta Keywords"
+msgstr "Meta Keywords"
+
+#. module: magentoerpconnect
+#: field:product.category,meta_description:0
+#: field:product.product,x_magerp_meta_description:0
+#: view:product.product:0
+#: view:product.template:0
+msgid "Meta Description"
+msgstr "Meta omschrijving"
+
+#. module: product
+#: view:product.product:0
+msgid "Design"
+msgstr "Ontwerp"
+
+#. module: product
+#: view:product.product:0
+msgid "Prices"
+msgstr "Prijzen"
+
+#. module: product
+#: view:product.product:0
+msgid "General"
+msgstr "Algemeen"
+
+#. module: product
+#: view:product.product:0
+msgid "Images"
+msgstr "Afbeeldingen"
