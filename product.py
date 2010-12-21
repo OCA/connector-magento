@@ -1032,6 +1032,20 @@ class product_product(magerp_osv.magerp_osv):
             logger.notifyChannel('ext assign', netsvc.LOG_INFO, "Successfully updated assignment of product %s to product %s" %(parent_sku, child_sku))
         return True
 
+    #TODO move this code (get exportable image) and also some code in product_image.py and sale.py in base_sale_multichannel or in a new module in order to be more generic
+    def get_exportable_images(self, cr, uid, ids, context=None):
+        image_obj = self.pool.get('product.images')
+        image_ext_name_obj = self.pool.get('product.images.external.name')
+
+        images_exportable_ids = image_obj.search(cr, uid, [('product_id', 'in', ids)], context=context)
+        images_ext_name_ids = image_ext_name_obj.search(cr, uid, [('image_id', 'in', images_exportable_ids), ('external_referential_id', '=', context['external_referential_id'])], context=context)
+        images_to_update_ids = [x['image_id'][0] for x in image_ext_name_obj.read(cr, uid, images_ext_name_ids, ['image_id'], context=context)]
+        images_to_create = [x for x in images_exportable_ids if not x in images_to_update_ids]
+
+        if context.get('last_images_export_date', False):
+            images_to_update_ids = image_obj.search(cr, uid, [('id', 'in', images_to_update_ids), '|', ('create_date', '>', context['last_images_export_date']), ('write_date', '>', context['last_images_export_date'])], context=context)
+        return {'to_create' : images_to_create, 'to_update' : images_to_update_ids}
+
 product_product()
 
 class mrp_bom(osv.osv):
