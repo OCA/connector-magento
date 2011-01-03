@@ -1,8 +1,8 @@
 "id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
-"access_magentoerpconnect_magerp_product_attributes","magerp_product_attributes","model_magerp_product_attributes","product.group_product_manager",1,0,0,0
-"access_magentoerpconnect_magerp_product_attribute_set","magerp_product_attribute_set","model_magerp_product_attribute_set","product.group_product_manager",1,0,0,0
-"access_magentoerpconnect_magerp_product_attribute_groups","magerp_product_attribute_groups","model_magerp_product_attribute_groups","product.group_product_manager",1,0,0,0
-"access_magentoerpconnect_magerp_product_attribute_options","magerp_product_attribute_options","model_magerp_product_attribute_options","product.group_product_manager",1,0,0,0
-"access_magentoerpconnect_product_tierprice","product_tierprice","model_product_tierprice","product.group_product_manager",1,1,1,1
-"access_magentoerpconnect_model_magerp_product_product_type","model_magerp_product_product_type","model_magerp_product_product_type","product.group_product_manager",1,0,0,0
+"access_magentoerpconnect_magerp_product_attributes","magerp_product_attributes","model_magerp_product_attributes","base.group_sale_manager",1,0,0,0
+"access_magentoerpconnect_magerp_product_attribute_set","magerp_product_attribute_set","model_magerp_product_attribute_set","base.group_sale_manager",1,0,0,0
+"access_magentoerpconnect_magerp_product_attribute_groups","magerp_product_attribute_groups","model_magerp_product_attribute_groups","base.group_sale_manager",1,0,0,0
+"access_magentoerpconnect_magerp_product_attribute_options","magerp_product_attribute_options","model_magerp_product_attribute_options","base.group_sale_manager",1,0,0,0
+"access_magentoerpconnect_product_tierprice","product_tierprice","model_product_tierprice","base.group_sale_manager",1,1,1,1
+"access_magentoerpconnect_model_magerp_product_product_type","model_magerp_product_product_type","model_magerp_product_product_type","base.group_sale_manager",1,0,0,0
 "access_magentoerpconnect_magerp_storeviews","magerp_storeviews","model_magerp_storeviews","base.group_sale_manager",1,1,1,1
