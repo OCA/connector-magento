@@ -23,6 +23,7 @@ from osv import osv, fields
 import magerp_osv
 import mimetypes
 import netsvc
+from tools.translate import _
 
 class product_images_external_name(magerp_osv.magerp_osv):
     _name = 'product.images.external.name'
@@ -36,6 +37,9 @@ class product_images_external_name(magerp_osv.magerp_osv):
 
     }
 
+    _sql_constraints = [
+    ('external_referential_id', 'UNIQUE(image_id, external_referential_id)', 'An image can have only one external name per referential')
+            ]
 product_images_external_name()
 
 
@@ -76,6 +80,13 @@ class product_images(magerp_osv.magerp_osv):
             return image_ext_name_obj.read(cr, uid, name_id, ['name'], context=context)[0]['name']
         return False
      
+    def del_image_name(self, cr, uid, id, context):
+        image_ext_name_obj = self.pool.get('product.images.external.name')
+        name_id = image_ext_name_obj.search(cr, uid, [('image_id', '=', id), ('external_referential_id', '=', context['external_referential_id'])], context=context)
+        if name_id:
+            return image_ext_name_obj.unlink(cr, uid, name_id, context=context)
+        return False
+
     def update_remote_images(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
@@ -104,52 +115,79 @@ class product_images(magerp_osv.magerp_osv):
                                 }
                                ])
             return result
-
+        list_image = []
         list_image = self.read(cr, uid, ids, ['write_date', 'create_date'], context=context)
+
         date_2_image={}
         image_2_date={}
         for image in list_image:
-            date_2_image[image['write_date'] or image['create_date']] = image['id']
+            if date_2_image.get(image['write_date'] or image['create_date'], False):
+                done = False
+                count = 0
+                while not done:
+                    count += 1
+                    if not date_2_image.get((image['write_date'] or image['create_date']) + '-' + str(count), False):
+                        date_2_image[(image['write_date'] or image['create_date']) + '-' + str(count)] = image['id']
+                        done = True
+            else:
+                date_2_image[image['write_date'] or image['create_date']] = image['id']
             image_2_date[image['id']] = image['write_date'] or image['create_date']
         list_date = date_2_image.keys()
         list_date.sort()
         
         ids = [date_2_image[date] for date in list_date]
 
-        for each in self.browse_w_order(cr, uid, ids, context=context):
-            #####
-            #TO REMOVE (date to remove 1 february 2011):USE FOR UPDATING OLD VERSION START
-            # to update your old database, just uncomment this lines (also the line in the column), remove the 'last export image date' in the shop and start the update
-            # this will not push the image in magento but just create the name in the external referential 
-            #####
-            #if each.mage_file:
-            #    print 'update'
-            #    print 'context', context['external_referential']
-            #    self.pool.get('product.images.external.name').create(cr, uid, {'name': each.mage_file, 'external_referential_id' : context['external_referential_id'], 'image_id' : each.id})
-            #    logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "Creating the external name in the openerp database %s's image: %s" %(each.product_id.magento_sku, each.name))
-            #continue
-            #TO REMOVE USE FOR UPDATING OLD VERSION END
-            ext_file_name = each.get_image_name(context)
-            if ext_file_name: #If update
-                result = update_image(ext_file_name, each)
-                logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "Updating %s's image: %s" %(each.product_id.magento_sku, each.name))
-            else:
-                if each.product_id.magento_sku:
-                    logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "Sending %s's image: %s" %(each.product_id.magento_sku, each.name))
-                    result = conn.call('catalog_product_attribute_media.create',
-                              [each.product_id.magento_sku,
-                               {'file':{
-                                        'name':each.name,
-                                        'content':self.get_image(cr, uid, each.id),
-                                        'mime':each.filename and mimetypes.guess_type(each.filename)[0] or 'image/jpeg',
-                                        }
-                               }
-                               ])
-                    self.pool.get('product.images.external.name').create(cr, uid, {'name':result, 'external_referential_id' : context['external_referential_id'], 'image_id' : each.id})
-                    result = update_image(result, each)
-            if image_2_date[each.id] > context['last_images_export_date']: #indeed if a product was created a long time ago and checked as exportable recently, the write date of the image can be far away in the past
-                self.pool.get('sale.shop').write(cr,uid,context['shop_id'],{'last_images_export_date':image_2_date[each.id]})
-            cr.commit()
+        while ids:
+            product_images = self.browse_w_order(cr, uid, ids[:1000], context=context)
+            for each in product_images:
+                #####
+                #TO REMOVE (date to remove 1 february 2011):USE FOR UPDATING OLD VERSION START
+                # to update your old database, just uncomment this lines (also the line in the column), remove the 'last export image date' in the shop and start the update
+                # this will not push the image in magento but just create the name in the external referential 
+                #####
+                #if each.mage_file:
+                #    print 'update'
+                #    print 'context', context['external_referential']
+                #    self.pool.get('product.images.external.name').create(cr, uid, {'name': each.mage_file, 'external_referential_id' : context['external_referential_id'], 'image_id' : each.id})
+                #    logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "Creating the external name in the openerp database %s's image: %s" %(each.product_id.magento_sku, each.name))
+                #continue
+                #TO REMOVE USE FOR UPDATING OLD VERSION END
+                need_to_be_created = True
+                ext_file_name = each.get_image_name(context)
+                if ext_file_name: #If update
+                    try:
+                        logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "Updating %s's image: %s" %(each.product_id.magento_sku, each.name))
+                        result = update_image(ext_file_name, each)
+                        logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "%s's image updated with sucess: %s" %(each.product_id.magento_sku, each.name))
+                        need_to_be_created = False
+                    except Exception, e:
+                        logger.notifyChannel(_("Magento Connection"), netsvc.LOG_ERROR, _("Error in connecting:%s") % (e))
+                        if not "Fault 103" in str(e):
+                            logger.notifyChannel(_("Magento Connection"), netsvc.LOG_ERROR, _("Unknow error stop export"))
+                            raise
+                        else:
+                            each.del_image_name(context) #If the image was deleded in magento, the external name is automatically deleded
+                            logger.notifyChannel(_("Magento Connection"), netsvc.LOG_ERROR, _("The product don't exist in magento, try to create it"))
+                if need_to_be_created:
+                    if each.product_id.magento_sku:
+                        logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "Sending %s's image: %s" %(each.product_id.magento_sku, each.name))
+                        result = conn.call('catalog_product_attribute_media.create',
+                                  [each.product_id.magento_sku,
+                                   {'file':{
+                                            'name':each.name,
+                                            'content':self.get_image(cr, uid, each.id),
+                                            'mime':each.filename and mimetypes.guess_type(each.filename)[0] or 'image/jpeg',
+                                            }
+                                   }
+                                   ])
+                        self.pool.get('product.images.external.name').create(cr, uid, {'name':result, 'external_referential_id' : context['external_referential_id'], 'image_id' : each.id})
+                        result = update_image(result, each)
+                        logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "%s's image send with sucess: %s" %(each.product_id.magento_sku, each.name))
+                if image_2_date[each.id] > context['last_images_export_date']: #indeed if a product was created a long time ago and checked as exportable recently, the write date of the image can be far away in the past
+                    self.pool.get('sale.shop').write(cr,uid,context['shop_id'],{'last_images_export_date':image_2_date[each.id]})
+                cr.commit()
+            ids = ids[1000:]
+            logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "still %s image to export" %len(ids))
         return True
         
 product_images()
