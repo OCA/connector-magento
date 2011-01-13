@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 	<data>
-		<menuitem id="menu_magerp" name="Magento-Connection" />
+		<menuitem id="menu_magerp" name="Magento-Connection" icon="terp-sale"
+			web_icon="images/magento.png" 
+                        web_icon_hover="images/magento-hover.png"/>
 
 		<menuitem id="menu_magerp_core" name="Core Settings" parent="menu_magerp" />
 		<menuitem id="menu_magerp_core_instances" name="Magento Instances" parent="menu_magerp_core" action="act_magerp_instances_form" />
