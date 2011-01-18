@@ -146,6 +146,7 @@ class sale_shop(magerp_osv.magerp_osv):
     def update_orders(self, cr, uid, ids, context=None):
         # First update the shop order from OERP
         super(sale_shop, self).update_orders(cr,uid,ids,context)
+        logger = netsvc.Logger()
         conn = context.get('conn_obj', False)
         so_obj = self.pool.get('sale.order')
 
@@ -172,12 +173,17 @@ class sale_shop(magerp_osv.magerp_osv):
                     wf_service = netsvc.LocalService("workflow")
                     wf_service.trg_validate(uid, 'sale.order', order.id, 'cancel', cr)
                     updated = True
+                    self.log(cr, uid, order.id, "order %s canceled when updated from external system" % (order.id,))
+                    logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "order %s canceled when updated from external system" % (order.id,))
                 # If the order isn't canceled and was blocked, 
                 # so we follow the standard flow according to ext_payment_method:
                 else:
                     paid = so_obj.create_payments(cr, uid, data_record, order.id, context)                        
                     so_obj.oe_status(cr, uid, order.id, paid, context)
                     updated = paid
+                    if paid:
+                        self.log(cr, uid, order.id, "order %s paid when updated from external system" % (order.id,))
+                        logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "order %s paid when updated from external system" % (order.id,))
                 # Untick the need_to_update if updated (if so was canceled in magento
                 # or if it has been paid through magento)
                 if updated:
