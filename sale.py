@@ -187,7 +187,8 @@ class sale_shop(magerp_osv.magerp_osv):
                 # Untick the need_to_update if updated (if so was canceled in magento
                 # or if it has been paid through magento)
                 if updated:
-                    so_obj.write(cr,uid,order.id,{'need_to_update':False})
+                    so_obj.write(cr, uid, order.id, {'need_to_update': False})
+                cr.commit();
         return False
          
     def update_shop_orders(self, cr, uid, order, ext_id, context):
