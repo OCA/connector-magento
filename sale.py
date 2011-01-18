@@ -358,7 +358,30 @@ class sale_order(magerp_osv.magerp_osv):
                     lines_vals.append((0, 0, self.oevals_from_extdata(cr, uid, external_referential_id, line_data, 'item_id', mapping_lines, defaults_line, context)))
                 res['order_line'] = lines_vals
         return res
-    
+
+    def add_gift_certificates(self, cursor, user, order_values, 
+            magento_order_data, context):
+        '''Add gift certificate as a separate line item with single quantity 
+        and negative amount. Known to work with Unigry gift certificates also
+        '''
+        product_obj = self.pool.get('product.product')
+        if ('giftcert_amount' in magento_order_data) and \
+            (float(magento_order_data.get('giftcert_amount', 0)) > 0):
+            gift_product_ids = product_obj.search(cursor, user, 
+                [('default_code', '=', 'GIFT CERTIFICATE')], context=context)
+            if gift_product_ids:
+                gift_product = product_obj.browse(
+                    cursor, user, gift_product_ids[0], context)
+                gift_cert_code = magento_order_data['giftcert_code']
+                order_values['order_line'].append((0, 0, {
+                    'product_id': gift_product.id,
+                    'name': 'Gift Certificate %s' % gift_cert_code,
+                    'product_uom': gift_product.uom_id.id,
+                    'product_uom_qty': 1,
+                    'price_unit': -float(magento_order_data['giftcert_amount']),
+                    }))
+        return order_values
+
     def get_order_shipping(self, cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context):
         ship_product_id = self.pool.get('product.product').search(cr, uid, [('default_code', '=', 'SHIP MAGENTO')])[0]
         ship_product = self.pool.get('product.product').browse(cr, uid, ship_product_id, context)
@@ -393,6 +416,7 @@ class sale_order(magerp_osv.magerp_osv):
                     res = self.get_order_lines(cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
                     if data_record.get('shipping_amount', False) and float(data_record.get('shipping_amount', False)) > 0:
                         res = self.get_order_shipping(cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
+                    res = self.add_gift_certificates(cr, uid, res, data_record, context)
                 except Exception, e:
                     print "order has errors with items lines, data are: ", data_record
                     print e
