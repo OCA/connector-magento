@@ -61,6 +61,8 @@
 					<page string="Magento Information">
 						<field name="magento_shop" />
 						<field name="auto_import" />
+                                                <field name="allow_magento_order_status_push" />
+                                                <field name="allow_magento_notification" attrs="{'invisible':[('allow_magento_order_status_push','=',False)]}"/>
 					</page>
 				</xpath>
 			</field>

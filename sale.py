@@ -118,7 +118,16 @@ class sale_shop(magerp_osv.magerp_osv):
         'exportable_product_ids': fields.function(_get_exportable_product_ids, method=True, type='one2many', relation="product.product", string='Exportable Products'),
         'magento_shop': fields.boolean('Magento Shop', readonly=True),
         'auto_import': fields.boolean('Automatic Import'),
+        'allow_magento_order_status_push': fields.boolean('Allow Magento Order Status push', help='Allow to send back order status to Magento if order status changed in OpenERP first?'),
+        'allow_magento_notification': fields.boolean('Allow Magento Notification', help='Allow Magento to notify customer (mail) if OpenERP update Magento order status?'),
     }   
+
+    _defaults = {
+        'auto_import': lambda * a: True,
+        'allow_magento_order_status_push': lambda * a: False,
+        'allow_magento_notification': lambda * a: False,
+    }
+
 
     def import_shop_orders(self, cr, uid, shop, defaults, context):
         result = []
@@ -192,29 +201,34 @@ class sale_shop(magerp_osv.magerp_osv):
         return False
          
     def update_shop_orders(self, cr, uid, order, ext_id, context):
-        conn = context.get('conn_obj', False)
-        status = ORDER_STATUS_MAPPING.get(order.state, False)
         result = {}
+
+        if order.shop_id.allow_magento_order_status_push:        
+            #status update:
+            conn = context.get('conn_obj', False)
+            logger = netsvc.Logger()
+            status = ORDER_STATUS_MAPPING.get(order.state, False)
+            if status:
+                result['status_change'] = conn.call('sales_order.addComment', [ext_id, status, '', order.shop_id.allow_magento_notification])
+                # If status has changed into OERP and the order need_to_update, then we consider the update is done
+                # remove the 'need_to_update': True
+                if order.need_to_update:
+                    self.pool.get('sale.order').write(cr, uid, order.id, {'need_to_update': False})
         
-        #status update:
-        if status:
-            result['status_change'] = conn.call('sales_order.addComment', [ext_id, status, '', True])
-            # If status has changed into OERP and the order need_to_update, then we consider the update is done
-            # remove the 'need_to_update': True
-            if order.need_to_update:
-                self.pool.get('sale.order').write(cr, uid, order.id, {'need_to_update': False})
-        
-        #creation of Magento invoice eventually:
-        cr.execute("select account_invoice.id from account_invoice inner join sale_order_invoice_rel on invoice_id = account_invoice.id where order_id = %s" % order.id)
-        resultset = cr.fetchone()
-        if resultset and len(resultset) == 1:
-            invoice = self.pool.get("account.invoice").browse(cr, uid, resultset[0])
-            if invoice.amount_total == order.amount_total and not invoice.magento_ref:
-                try:
-                    result['magento_invoice_ref'] = conn.call('sales_order_invoice.create', [order.magento_incrementid, [], _("Invoice Created"), True, True])
-                    self.pool.get("account.invoice").write(cr, uid, invoice.id, {'magento_ref': result['magento_invoice_ref'], 'origin': result['magento_invoice_ref']})
-                except Exception, e:
-                    pass #TODO make sure that's because Magento invoice already exists and then re-attach it!
+            #creation of Magento invoice eventually:
+            cr.execute("select account_invoice.id from account_invoice inner join sale_order_invoice_rel on invoice_id = account_invoice.id where order_id = %s" % order.id)
+            resultset = cr.fetchone()
+            if resultset and len(resultset) == 1:
+                invoice = self.pool.get("account.invoice").browse(cr, uid, resultset[0])
+                if invoice.amount_total == order.amount_total and not invoice.magento_ref:
+                    try:
+                        result['magento_invoice_ref'] = conn.call('sales_order_invoice.create', [order.magento_incrementid, [], _("Invoice Created"), True, order.shop_id.allow_magento_notification])
+                        self.pool.get("account.invoice").write(cr, uid, invoice.id, {'magento_ref': result['magento_invoice_ref'], 'origin': result['magento_invoice_ref']})
+                        self.log(cr, uid, order.id, "created Magento invoice for order %s" % (order.id,))
+                    except Exception, e:
+                        self.log(cr, uid, order.id, "failed to create Magento invoice for order %s" % (order.id,))
+                        logger.notifyChannel('ext synchro', netsvc.LOG_DEBUG, "failed to create Magento invoice for order %s" % (order.id,))
+                        #TODO make sure that's because Magento invoice already exists and then re-attach it!
 
         return result
 
