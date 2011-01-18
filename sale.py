@@ -214,6 +214,8 @@ class sale_shop(magerp_osv.magerp_osv):
 
 
     def _sale_shop(self, cr, uid, callback, context=None):
+        if context is None:
+            context = {}
         proxy = self.pool.get('sale.shop')
         domain = [ ('magento_shop', '=', True), ('auto_import', '=', True) ]
 
