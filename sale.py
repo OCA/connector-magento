@@ -225,6 +225,7 @@ class sale_shop(magerp_osv.magerp_osv):
 
         tools.debug(callback)
         tools.debug(ids)
+        return True
 
     # Schedules functions ============ #
     def run_import_orders_scheduler(self, cr, uid, context=None):
