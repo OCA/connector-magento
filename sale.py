@@ -373,7 +373,7 @@ class sale_order(magerp_osv.magerp_osv):
                     #simple VAT tax on order line (else override method):
                     line_tax_vat = float(line_data['tax_percent']) / 100.0
                     if line_tax_vat > 0:
-                        line_tax_ids = self.pool.get('account.tax').search(cr, uid, [('type_tax_use', '=', 'sale'), ('amount', '>=', line_tax_vat - 0.001), ('amount', '<=', line_tax_vat + 0.001)])
+                        line_tax_ids = self.pool.get('account.tax').search(cr, uid, ['|', ('type_tax_use', '=', 'all'), ('type_tax_use', '=', 'sale'), ('amount', '>=', line_tax_vat - 0.001), ('amount', '<=', line_tax_vat + 0.001)])
                         if line_tax_ids and len(line_tax_ids) > 0:
                             defaults_line['tax_id'] = [(6, 0, [line_tax_ids[0]])]
                     context.update({'partner_id': res['partner_id'], 'pricelist_id': res['pricelist_id']})
