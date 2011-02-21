@@ -888,6 +888,7 @@ class product_product(magerp_osv.magerp_osv):
         if external_referential_ids is None:
             external_referential_ids = []
 
+        logger = netsvc.Logger()
         result = {'create_ids':[], 'write_ids':[]}
 
         ids = self.search(cr, uid, [('id', 'in', ids), ('magento_exportable', '=', True)]) #restrict export to only exportable products
@@ -914,16 +915,20 @@ class product_product(magerp_osv.magerp_osv):
             last_updated_product = product_read[1] and product_read[1].split('.')[0] or product_read[2] and product_read[2].split('.')[0] or False
             last_updated_time = datetime.datetime.fromtimestamp(time.mktime(time.strptime(last_updated_product, '%Y-%m-%d %H:%M:%S')))
             if product_read[3] == 'grouped':
-                cr.execute("select id, write_date, create_date from mrp_bom where product_id = %s", (product_read[0],))
-                read_bom = cr.fetchall()
-                for bom in read_bom:
-                    last_updated_bom = bom[1] and bom[1].split('.')[0] or bom[2] and bom[2].split('.')[0] or False
-                    last_updated_bom_time = datetime.datetime.fromtimestamp(time.mktime(time.strptime(last_updated_bom, '%Y-%m-%d %H:%M:%S')))
-                    if last_updated_bom_time and last_exported_time:
-                        if last_exported_time - datetime.timedelta(seconds=1) < last_updated_bom_time:
-                            if last_updated_time < last_updated_bom_time:
-                                last_updated_time = last_updated_bom_time
-                                last_updated_product = last_updated_bom
+                cr.execute('select * from ir_module_module where name=%s and state=%s', ('mrp','installed'))
+                if cr.fetchone() and 'mrp' in data_record and data_record['mrp']:
+                    cr.execute("select id, write_date, create_date from mrp_bom where product_id = %s", (product_read[0],))
+                    read_bom = cr.fetchall()
+                    for bom in read_bom:
+                        last_updated_bom = bom[1] and bom[1].split('.')[0] or bom[2] and bom[2].split('.')[0] or False
+                        last_updated_bom_time = datetime.datetime.fromtimestamp(time.mktime(time.strptime(last_updated_bom, '%Y-%m-%d %H:%M:%S')))
+                        if last_updated_bom_time and last_exported_time:
+                            if last_exported_time - datetime.timedelta(seconds=1) < last_updated_bom_time:
+                                if last_updated_time < last_updated_bom_time:
+                                    last_updated_time = last_updated_bom_time
+                                    last_updated_product = last_updated_bom
+                else:
+                        logger.notifyChannel('ext synchro', netsvc.LOG_ERROR, "OpenERP 'grouped' products will export to Magento as 'grouped products' only if they have a BOM and if the 'mrp' BOM module is installed")
             if last_updated_time and last_exported_time:
                 if last_exported_time + datetime.timedelta(seconds=1) > last_updated_time:
                     continue
@@ -956,18 +961,22 @@ class product_product(magerp_osv.magerp_osv):
             child_ids = []
             product_type = self.read(cr, uid, id, ['product_type'])['product_type']
             if product_type == 'grouped': # lookup for Magento "grouped product"
-                bom_ids = self.read(cr, uid, id, ['bom_ids'])['bom_ids']
-                if len(bom_ids): # it has or is part of a BoM
-                    cr.execute("SELECT product_id, product_qty FROM mrp_bom WHERE bom_id = %s", (bom_ids[0],)) #FIXME What if there is more than a materials list?
-                    results = cr.fetchall()
-                    child_ids = []
-                    quantities = {}
-                    for x in results:
-                        child_ids += [x[0]]
-                        sku = self.read(cr, uid, x[0], ['magento_sku'])['magento_sku']
-                        quantities.update({sku: x[1]})
-                    if child_ids: #it is an assembly and it contains the products child_ids: 
-                        self.ext_export(cr, uid, child_ids, external_referential_ids, defaults, context) #so we export them
+                cr.execute('select * from ir_module_module where name=%s and state=%s', ('mrp','installed'))
+                if cr.fetchone() and 'mrp' in data_record and data_record['mrp']:
+                    bom_ids = self.read(cr, uid, id, ['bom_ids'])['bom_ids']
+                    if len(bom_ids): # it has or is part of a BoM
+                        cr.execute("SELECT product_id, product_qty FROM mrp_bom WHERE bom_id = %s", (bom_ids[0],)) #FIXME What if there is more than a materials list?
+                        results = cr.fetchall()
+                        child_ids = []
+                        quantities = {}
+                        for x in results:
+                            child_ids += [x[0]]
+                            sku = self.read(cr, uid, x[0], ['magento_sku'])['magento_sku']
+                            quantities.update({sku: x[1]})
+                        if child_ids: #it is an assembly and it contains the products child_ids: 
+                            self.ext_export(cr, uid, child_ids, external_referential_ids, defaults, context) #so we export them
+                 else:
+                        logger.notifyChannel('ext synchro', netsvc.LOG_ERROR, "OpenERP 'grouped' products will export to Magento as 'grouped products' only if they have a BOM and if the 'mrp' BOM module is installed")
             for context_storeview in context_dic:
                 temp_result = super(magerp_osv.magerp_osv, self).ext_export(cr, uid, [id], external_referential_ids, defaults, context_storeview)
                 if child_ids: 
@@ -1047,15 +1056,3 @@ class product_product(magerp_osv.magerp_osv):
         return {'to_create' : images_to_create, 'to_update' : images_to_update_ids}
 
 product_product()
-
-class mrp_bom(osv.osv):
-    _inherit = 'mrp.bom'
-    
-    def create(self, cr, uid, vals, context=None):
-        res = super(mrp_bom, self).create(cr, uid, vals, context)
-        if not vals.get('bom_id', True) and vals.get('product_id', False):
-            if self.pool.get('magerp.product_product_type').search(cr, uid, [['product_type', '=', 'grouped']]):
-                self.pool.get('product.product').write(cr, uid, vals['product_id'], {'product_type': 'grouped'}, context)
-        return res
-        
-mrp_bom()
