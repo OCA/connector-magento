@@ -975,8 +975,8 @@ class product_product(magerp_osv.magerp_osv):
                             quantities.update({sku: x[1]})
                         if child_ids: #it is an assembly and it contains the products child_ids: 
                             self.ext_export(cr, uid, child_ids, external_referential_ids, defaults, context) #so we export them
-                 else:
-                        logger.notifyChannel('ext synchro', netsvc.LOG_ERROR, "OpenERP 'grouped' products will export to Magento as 'grouped products' only if they have a BOM and if the 'mrp' BOM module is installed")
+                else:
+                    logger.notifyChannel('ext synchro', netsvc.LOG_ERROR, "OpenERP 'grouped' products will export to Magento as 'grouped products' only if they have a BOM and if the 'mrp' BOM module is installed")
             for context_storeview in context_dic:
                 temp_result = super(magerp_osv.magerp_osv, self).ext_export(cr, uid, [id], external_referential_ids, defaults, context_storeview)
                 if child_ids: 
