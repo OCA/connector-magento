@@ -227,6 +227,9 @@
 					<xpath expr="/form/group/group/field[@name='variants']" position="after">
 						<field name="set" select="2" attrs="{'required':[('magento_exportable','==',True)]}"/>
 					</xpath>
+					<xpath expr="/form/group/group/field[@name='sale_ok']" position="before">
+						<button name="open_magento_fields" string="Open Magento Fields" icon="gtk-go-forward" type="object" colspan="2"/>
+					</xpath>
 					<xpath expr="/form/notebook" position="before">
 						<field name="magento_exportable" select="2"/>
 					</xpath>
@@ -244,6 +247,26 @@
 				</xpath>
 			</field>
 		</record>
+
+        <!--Magento Product Product Wizard Form view  -->
+
+        <record model="ir.ui.view" id="product_product_wizard_form_view_magerpdynamic">
+            <field name="name">product.normal.wizard.form_magerp_dynamic</field>
+            <field name="model">product.product</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Product">
+                    <group colspan='4' col='8'>
+                        <separator string="Magento Information" colspan="8"/>
+                        <field name="name"/>
+                        <field name="set" select="2" attrs="{'required':[('magento_exportable','==',True)]}"/>
+                        <field name="magento_sku" select="2" attrs="{'required':[('magento_exportable','==',True)]}"/>
+                        <field name="magento_exportable"/>
+                    </group>
+                    <separator string="attributes_placeholder" colspan="4"/>
+                </form>
+            </field>
+        </record>
 
 		<!--Magento Product Type Tree/Form view  -->
 	    <record model="ir.ui.view" id="magerp_product_type_form">

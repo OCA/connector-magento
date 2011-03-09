@@ -615,6 +615,25 @@ product_product_type()
 class product_product(magerp_osv.magerp_osv):
     _inherit = "product.product"
 
+    def open_magento_fields(self, cr, uid, ids, context=None):
+        ir_model_data_obj = self.pool.get('ir.model.data')
+        ir_model_data_id = ir_model_data_obj.search(cr, uid, [['model', '=', 'ir.ui.view'], ['name', '=', 'product_product_wizard_form_view_magerpdynamic']], context=context)
+        if ir_model_data_id:
+            res_id = ir_model_data_obj.read(cr, uid, ir_model_data_id, fields=['res_id'])[0]['res_id']
+
+        return {
+            'name': 'Magento Fields',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': [res_id],
+            'res_model': 'product.product',
+            'context': "{'set':'wizard_open_magento_field'}",
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'current',
+            'res_id': ids and ids[0] or False,
+        }
+
     def _product_type_get(self, cr, uid, context=None):
         ids = self.pool.get('magerp.product_product_type').search(cr, uid, [], order='id')
         product_types = self.pool.get('magerp.product_product_type').read(cr, uid, ids, ['product_type','name'], context=context)
@@ -798,13 +817,14 @@ class product_product(magerp_osv.magerp_osv):
         return xml
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
-
         if context is None:
             context = {}
 
         result = super(osv.osv, self).fields_view_get(cr, uid, view_id,view_type,context,toolbar=toolbar)
         if view_type == 'form':
             if context.get('set', False):
+                if context['set'] == 'wizard_open_magento_field':
+                    context['set'] = self.read(cr, uid, context['active_id'], fields=['set'], context=context)['set'][0]
                 ir_model_id = self.pool.get('ir.model').search(cr, uid, [('model', '=', 'product.product')])[0]
                 ir_model = self.pool.get('ir.model').browse(cr, uid, ir_model_id)
                 ir_model_field_ids = self.pool.get('ir.model.fields').search(cr, uid, [('model_id', '=', ir_model_id)])
@@ -817,7 +837,10 @@ class product_product(magerp_osv.magerp_osv):
                     field_names.append('websites_ids')
                 result['fields'].update(self.fields_get(cr, uid, field_names, context))
                 view_part = self.redefine_prod_view(cr, uid, field_names, context) #.decode('utf8') It is not necessary, the translated view could be in UTF8
-                result['arch'] = result['arch'].decode('utf8').replace('<page string="attributes_placeholder"/>', '<page string="'+_("Magento Information")+'"'+""" attrs="{'invisible':[('magento_exportable','!=',1)]}"><field name='product_type' attrs="{'required':[('magento_exportable','=',True)]}"/>\n""" + view_part + """\n</page>""")
+                result['arch'] = result['arch'].decode('utf8').replace('<page string="attributes_placeholder"/>', '<page string="'+_("Magento Information")+'"'+""" attrs="{'invisible':[('magento_exportable','!=',1)]}"><field name='product_type' attrs="{'required':[('magento_exportable','=',True)]}"/>\n""" + view_part + """\n</page>""").replace('<button name="open_magento_fields" string="Open Magento Fields" icon="gtk-go-forward" type="object" colspan="2"/>', '')
+
+                result['arch'] = result['arch'].replace('<separator string="attributes_placeholder" colspan="4"/>', view_part)
+
             else:
                 result['arch'] = result['arch'].replace('<page string="attributes_placeholder"/>', "")
         return result
@@ -929,7 +952,7 @@ class product_product(magerp_osv.magerp_osv):
                                     last_updated_product = last_updated_bom
                 else:
                         logger.notifyChannel('ext synchro', netsvc.LOG_ERROR, "OpenERP 'grouped' products will export to Magento as 'grouped products' only if they have a BOM and if the 'mrp' BOM module is installed")
-            if last_updated_time and last_exported_time:
+            if last_updated_time and last_exported_time and not context.get('force_export', False):
                 if last_exported_time + datetime.timedelta(seconds=1) > last_updated_time:
                     continue
             dates_2_ids += [(last_updated_product, product_read[0])]
@@ -981,7 +1004,7 @@ class product_product(magerp_osv.magerp_osv):
                 temp_result = super(magerp_osv.magerp_osv, self).ext_export(cr, uid, [id], external_referential_ids, defaults, context_storeview)
                 if child_ids: 
                     self.ext_grouped_product_assign(cr, uid, id, child_ids, quantities, context_storeview)
-            self.pool.get('sale.shop').write(cr, uid,context['shop_id'], {'last_products_export_date': ids_2_dates[id]})
+            not context.get('do_not_update_date', False) and self.pool.get('sale.shop').write(cr, uid,context['shop_id'], {'last_products_export_date': ids_2_dates[id]})
             result['create_ids'] += temp_result['create_ids']
             result['write_ids'] += temp_result['write_ids']
         return result

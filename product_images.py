@@ -141,7 +141,7 @@ class product_images(magerp_osv.magerp_osv):
             product_images = self.browse_w_order(cr, uid, ids[:1000], context=context)
             for each in product_images:
                 #####
-                #TO REMOVE (date to remove 1 february 2011):USE FOR UPDATING OLD VERSION START
+                #TO REMOVE (date to remove 1 june 2011):USE FOR UPDATING OLD VERSION V5 to V6 START
                 # to update your old database, just uncomment this lines (also the line in the column), remove the 'last export image date' in the shop and start the update
                 # this will not push the image in magento but just create the name in the external referential 
                 #####

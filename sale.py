@@ -43,7 +43,7 @@ class sale_shop(magerp_osv.magerp_osv):
         for shop_id in res:
             website_id =  self.read(cr, uid, shop_id, ['shop_group_id'])
             if website_id.get('shop_group_id', False):
-                res[shop_id] = self.pool.get('product.product').search(cr, uid, [('id', 'in', res[shop_id]), "|", ('websites_ids', 'in', [website_id['shop_group_id'][0]]) , ('websites_ids', '=', False)])
+                res[shop_id] = self.pool.get('product.product').search(cr, uid, [('magento_exportable', '=', True), ('id', 'in', res[shop_id]), "|", ('websites_ids', 'in', [website_id['shop_group_id'][0]]) , ('websites_ids', '=', False)])
             else:
                 res[shop_id] = []
         return res
