@@ -620,6 +620,7 @@ class product_product(magerp_osv.magerp_osv):
         ir_model_data_id = ir_model_data_obj.search(cr, uid, [['model', '=', 'ir.ui.view'], ['name', '=', 'product_product_wizard_form_view_magerpdynamic']], context=context)
         if ir_model_data_id:
             res_id = ir_model_data_obj.read(cr, uid, ir_model_data_id, fields=['res_id'])[0]['res_id']
+        set_id = self.read(cr, uid, ids, fields=['set'], context=context)[0]['set'][0]
 
         return {
             'name': 'Magento Fields',
@@ -627,7 +628,7 @@ class product_product(magerp_osv.magerp_osv):
             'view_mode': 'form',
             'view_id': [res_id],
             'res_model': 'product.product',
-            'context': "{'set':'wizard_open_magento_field'}",
+            'context': "{'set': %s}"%(set_id),
             'type': 'ir.actions.act_window',
             'nodestroy': True,
             'target': 'current',
@@ -823,8 +824,6 @@ class product_product(magerp_osv.magerp_osv):
         result = super(osv.osv, self).fields_view_get(cr, uid, view_id,view_type,context,toolbar=toolbar)
         if view_type == 'form':
             if context.get('set', False):
-                if context['set'] == 'wizard_open_magento_field':
-                    context['set'] = self.read(cr, uid, context['active_id'], fields=['set'], context=context)['set'][0]
                 ir_model_id = self.pool.get('ir.model').search(cr, uid, [('model', '=', 'product.product')])[0]
                 ir_model = self.pool.get('ir.model').browse(cr, uid, ir_model_id)
                 ir_model_field_ids = self.pool.get('ir.model.fields').search(cr, uid, [('model_id', '=', ir_model_id)])
