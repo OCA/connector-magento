@@ -156,21 +156,21 @@ class sale_shop(magerp_osv.magerp_osv):
         # First update the shop order from OERP
         super(sale_shop, self).update_orders(cr,uid,ids,context)
         logger = netsvc.Logger()
-        conn = context.get('conn_obj', False)
         so_obj = self.pool.get('sale.order')
 
-        for referencial in self.browse(cr,uid,ids):
+        for shop in self.browse(cr, uid, ids):
+            conn = self.external_connection(cr, uid, shop.referential_id)
             # Update the state of orders in OERP that are in "need_to_update":True
             # from the Magento's corresponding orders
     
             # Get all need_to_update orders in OERP
-            orders_to_update=so_obj.search(cr,uid,[('need_to_update','=',True)])
-            for order in so_obj.browse(cr,uid,orders_to_update):
+            orders_to_update = so_obj.search(cr,uid,[('need_to_update', '=', True), ('shop_id', '=', shop.id)])
+            for order in so_obj.browse(cr, uid, orders_to_update):
                 mag_status = ORDER_STATUS_MAPPING.get(order.state, False)
                 # For each one, check if the status has change in Magento
                 # We dont use oeid_to_extid function cause it only handle int id
                 # Magento can have something like '100000077-2'
-                model_data_ids = self.pool.get('ir.model.data').search(cr, uid, [('model', '=', so_obj._name), ('res_id', '=', order.id), ('external_referential_id', '=', referencial.referential_id.id)])
+                model_data_ids = self.pool.get('ir.model.data').search(cr, uid, [('model', '=', so_obj._name), ('res_id', '=', order.id), ('external_referential_id', '=', shop.referential_id.id)])
                 if model_data_ids:
                     prefixed_id = self.pool.get('ir.model.data').read(cr, uid, model_data_ids[0], ['name'])['name']
                     ext_id = so_obj.id_from_prefixed_id(prefixed_id)
