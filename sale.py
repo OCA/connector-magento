@@ -377,7 +377,10 @@ class sale_order(magerp_osv.magerp_osv):
                         if line_tax_ids and len(line_tax_ids) > 0:
                             defaults_line['tax_id'] = [(6, 0, [line_tax_ids[0]])]
                     context.update({'partner_id': res['partner_id'], 'pricelist_id': res['pricelist_id']})
-                    lines_vals.append((0, 0, self.oevals_from_extdata(cr, uid, external_referential_id, line_data, 'item_id', mapping_lines, defaults_line, context)))
+                    line_val = self.oevals_from_extdata(cr, uid, external_referential_id, line_data, 'item_id', mapping_lines, defaults_line, context)
+                    if line_val['product_id']:
+                        line_val['type'] = self.pool.get('product.product').read(cr, uid, line_val['product_id'], context)['procure_method']
+                    lines_vals.append((0, 0, line_val))
                 res['order_line'] = lines_vals
         return res
 
