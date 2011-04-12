@@ -379,7 +379,7 @@ class sale_order(magerp_osv.magerp_osv):
                     context.update({'partner_id': res['partner_id'], 'pricelist_id': res['pricelist_id']})
                     line_val = self.oevals_from_extdata(cr, uid, external_referential_id, line_data, 'item_id', mapping_lines, defaults_line, context)
                     if line_val['product_id']:
-                        line_val['type'] = self.pool.get('product.product').read(cr, uid, line_val['product_id'], context)['procure_method']
+                        line_val['type'] = self.pool.get('product.product').read(cr, uid, line_val['product_id'], ['procure_method'], context)['procure_method']
                     lines_vals.append((0, 0, line_val))
                 res['order_line'] = lines_vals
         return res
