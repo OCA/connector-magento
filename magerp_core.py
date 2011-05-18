@@ -143,7 +143,7 @@ class external_referential(magerp_osv.magerp_osv):
             list_prods = attr_conn.call('catalog_product.list')
             #self.pool.get('product.product').mage_import(cr, uid, filter, attr_conn, inst.id, DEBUG)
             result = []
-            for each in list_prods:
+            for each in [{'product_id':'47'}]:#list_prods:
                 each_product_info = attr_conn.call('catalog_product.info', [each['product_id']])
                 result.append(each_product_info)
             self.pool.get('product.product').ext_import(cr, uid, result, inst.id, context={})

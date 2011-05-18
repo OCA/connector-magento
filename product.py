@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+00# -*- encoding: utf-8 -*-
 # -*- encoding: utf-8 -*-
 #########################################################################
 #This module intergrates Open ERP with the magento core                 #
@@ -29,9 +29,11 @@ import magerp_osv
 from tools.translate import _
 import netsvc
 
+
 #Enabling this to True will put all custom attributes into One page in
 #the products view
 GROUP_CUSTOM_ATTRS_TOGETHER = True
+SHOW_JSON = True
 
 class product_category(magerp_osv.magerp_osv):
     _inherit = "product.category"
@@ -200,8 +202,14 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
         'referential_id':fields.many2one('external.referential', 'Magento Instance', readonly=True),
         #These parameters are for automatic management
         'field_name':fields.char('Open ERP Field name', size=100),
-        'attribute_set_info':fields.text('Attribute Set Information')
+        'attribute_set_info':fields.text('Attribute Set Information'),
+        'based_on':fields.selection([('product_product', 'Product Product'), ('product_template', 'Product Template')], 'Based On'),
         }
+
+    _defaults = {
+        'based_on': lambda*a: 'product_template',
+    }
+
     #mapping magentofield:(openerpfield,typecast,)
     #have an entry for each mapped field
     _no_create_list = [
@@ -223,7 +231,20 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
         'meta_keyword',
         'meta_title',
         'name',
-        'short_description'
+        'short_description',
+        'url_key',
+    ]
+
+    _not_store_in_json = [
+        'minimal_price',
+        'special_price',
+        'description',
+        'meta_description',
+        'meta_keyword',
+        'meta_title',
+        'name',
+        'short_description',
+        'url_key',
     ]
     
     _type_conversion = {
@@ -294,12 +315,16 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
         return result
 
     def create(self, cr, uid, vals, context=None):
-        """Will create product.product new fields accordingly to Magento product custom attributes and also create mappings for them"""
+        """Will create product.template new fields accordingly to Magento product custom attributes and also create mappings for them"""
         if context is None:
             context = {}
         if not vals['attribute_code'] in self._no_create_list:
-            field_name = "x_magerp_" + vals['attribute_code']
-            vals['field_name'] =  field_name
+            if vals['attribute_code'] in self._not_store_in_json:
+                field_name = "x_magerp_" + vals['attribute_code']
+            else:
+                field_name = "x_js_magerp_x_" + vals['attribute_code']
+            vals['field_name'] = field_name
+
         if 'attribute_set_info' in vals.keys():
             attr_set_info = eval(vals.get('attribute_set_info',{}))
             for each_key in attr_set_info.keys():
@@ -319,7 +344,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
                 #Manage fields
                 if vals['attribute_code'] and vals.get('frontend_input', False):
                     #Code for dynamically generating field name and attaching to this
-                    model_id = self.pool.get('ir.model').search(cr, uid, [('model', '=', 'product.product')])
+                    model_id = self.pool.get('ir.model').search(cr, uid, [('model', '=', 'product.template')])
 
                     if model_id and len(model_id) == 1:
                         model_id = model_id[0]
@@ -329,7 +354,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
                         field_vals = {
                             'name':field_name,
                             'model_id':model_id,
-                            'model':'product.product',
+                            'model':'product.template',
                             'field_description':vals.get('frontend_label', False) or vals['attribute_code'],
                             'ttype':self._type_conversion[vals.get('frontend_input', False)],
                             'translate': self._is_attribute_translatable(vals)
@@ -346,12 +371,14 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
                             #All field values are computed, now save
                             field_id = self.pool.get('ir.model.fields').create(cr, uid, field_vals)
                             field_ids = [field_id]
-                            
+                            # mapping have to be based on product.product
+                            model_id = self.pool.get('ir.model').search(cr, uid, [('model', '=', 'product.product')])[0]
                             self.create_mapping (cr, uid, field_vals['ttype'], field_ids, field_name, referential_id, model_id, vals, crid)
                             
         return crid
     
     def create_mapping (self, cr, uid, ttype, field_ids, field_name, referential_id, model_id, vals, crid):
+        print "create mapping"
         #Search & create mapping entries
         mapping_id = self.pool.get('external.mapping').search(cr, uid, [('referential_id', '=', referential_id), ('model_id', '=', model_id)])
         if field_ids and mapping_id:
@@ -612,6 +639,15 @@ class product_product_type(osv.osv):
     }
 product_product_type()
 
+class product_template(magerp_osv.magerp_osv):
+    _inherit = "product.template"
+
+    _columns = {
+        'magerp' : fields.text('Magento Fields'),
+    }
+product_template()
+
+
 class product_product(magerp_osv.magerp_osv):
     _inherit = "product.product"
 
@@ -759,7 +795,7 @@ class product_product(magerp_osv.magerp_osv):
         attribute_set_id = context['set']
         attr_set = attr_set_obj.browse(cr, uid, attribute_set_id)
         attr_group_fields_rel = {}
-        cr.execute("select attr_id, group_id, attribute_code, frontend_input, frontend_label, is_required, apply_to  from magerp_attrset_attr_rel left join magerp_product_attributes on magerp_product_attributes.id = attr_id where magerp_attrset_attr_rel.set_id=%s" % attribute_set_id)
+        cr.execute("select attr_id, group_id, attribute_code, frontend_input, frontend_label, is_required, apply_to, field_name  from magerp_attrset_attr_rel left join magerp_product_attributes on magerp_product_attributes.id = attr_id where magerp_attrset_attr_rel.set_id=%s" % attribute_set_id)
         results = cr.fetchall()
         result = results.pop()
         while len(results) > 0:
@@ -775,13 +811,13 @@ class product_product(magerp_osv.magerp_osv):
                 if result[1] != mag_group_id:
                     break
                 #TODO understand why we need to do "x_magerp_" +  each_attribute.attribute_code in field_names or fix it
-                if "x_magerp_" +  result[2] in field_names:
+                if result[7] in field_names:
                     if not result[2] in attr_obj._no_create_list:
                         if result[3] in ['textarea']:
                             trans = translation_obj._get_source(cr, uid, 'product.product', 'view', context.get('lang', ''), result[4])
                             trans = trans or result[4]
                             field_xml+="<newline/><separator colspan='4' string='%s'/>" % (trans,)
-                        field_xml+="<field name='x_magerp_" +  result[2] + "'"
+                        field_xml+="<field name='" +  result[7] + "'"
                         if result[5] and (result[6] == "" or "simple" in result[6] or "configurable" in result[6]) and result[2] not in self._magento_fake_mandatory_attrs:
                             field_xml+=""" attrs="{'required':[('magento_exportable','=',True)]}" """
                         if result[3] in ['textarea']:
@@ -814,6 +850,8 @@ class product_product(magerp_osv.magerp_osv):
                 xml+="</group></page>\n"
         if context.get('multiwebsite', False):
             xml+="""<page string='Websites'>\n<group colspan='4' col='4'>\n<field name='websites_ids'/>\n</group>\n</page>\n"""
+        if SHOW_JSON:
+            xml+="""<page string='Json'>\n<field name='magerp' nolabel="1"/>\n</page>\n"""
         xml+="</notebook>"
         return xml
 
@@ -824,9 +862,11 @@ class product_product(magerp_osv.magerp_osv):
         result = super(osv.osv, self).fields_view_get(cr, uid, view_id,view_type,context,toolbar=toolbar)
         if view_type == 'form':
             if context.get('set', False):
-                ir_model_id = self.pool.get('ir.model').search(cr, uid, [('model', '=', 'product.product')])[0]
-                ir_model = self.pool.get('ir.model').browse(cr, uid, ir_model_id)
-                ir_model_field_ids = self.pool.get('ir.model.fields').search(cr, uid, [('model_id', '=', ir_model_id)])
+                ir_model_ids = self.pool.get('ir.model').search(cr, uid, [('model', 'in', ['product.product','product.template'])])
+                print 'ir_model_ids', ir_model_ids
+                #ir_model = self.pool.get('ir.model').browse(cr, uid, ir_model_ids)
+                ir_model_field_ids = self.pool.get('ir.model.fields').search(cr, uid, [('model_id', 'in', ir_model_ids)])
+                print 'ir_model_field_ids', ir_model_field_ids
                 field_names = ['product_type']
                 for field in self.pool.get('ir.model.fields').browse(cr, uid, ir_model_field_ids):
                     if str(field.name).startswith('x_'):
@@ -834,6 +874,8 @@ class product_product(magerp_osv.magerp_osv):
                 if len(self.pool.get('external.shop.group').search(cr,uid,[('referential_type', 'ilike', 'mag')])) >1 :
                     context['multiwebsite'] = True
                     field_names.append('websites_ids')
+                if SHOW_JSON:
+                    field_names.append('magerp')
                 result['fields'].update(self.fields_get(cr, uid, field_names, context))
                 view_part = self.redefine_prod_view(cr, uid, field_names, context) #.decode('utf8') It is not necessary, the translated view could be in UTF8
                 result['arch'] = result['arch'].decode('utf8').replace('<page string="attributes_placeholder"/>', '<page string="'+_("Magento Information")+'"'+""" attrs="{'invisible':[('magento_exportable','!=',1)]}"><field name='product_type' attrs="{'required':[('magento_exportable','=',True)]}"/>\n""" + view_part + """\n</page>""").replace('<button name="open_magento_fields" string="Open Magento Fields" icon="gtk-go-forward" type="object" colspan="2"/>', '')

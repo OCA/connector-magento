@@ -143,6 +143,8 @@
 						<field name="note" />
 						<field name="entity_type_id" />
 						<field name="options" readonly="1" />
+                        <field name="field_name" />
+                        <field name="based_on" />
 					</group>
 				</form>
 			</field>

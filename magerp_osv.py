@@ -5,7 +5,6 @@ import xmlrpclib
 import netsvc
 import urllib2
 import base64
-from base_external_referentials import external_osv
 from tools.translate import _
 
 class Connection(object):
@@ -69,7 +68,7 @@ class Connection(object):
         except Exception, e:
             pass
 
-class magerp_osv(external_osv.external_osv):
+class magerp_osv(osv.osv):
     _MAGE_FIELD = 'magento_id'
     _MAGE_P_KEY = False
     _LIST_METHOD = False
