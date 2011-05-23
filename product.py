@@ -35,6 +35,7 @@ import netsvc
 GROUP_CUSTOM_ATTRS_TOGETHER = True
 SHOW_JSON = True
 
+
 class product_category(magerp_osv.magerp_osv):
     _inherit = "product.category"
     
@@ -639,17 +640,13 @@ class product_product_type(osv.osv):
     }
 product_product_type()
 
-class product_template(magerp_osv.magerp_osv):
-    _inherit = "product.template"
-
-    _columns = {
-        'magerp' : fields.text('Magento Fields'),
-    }
-product_template()
 
 
-class product_product(magerp_osv.magerp_osv):
-    _inherit = "product.product"
+class product_mag_osv(magerp_osv.magerp_osv):
+
+    #remember one thing in life: Magento lies: it tells attributes are required while they are awkward to fill
+    #and will have a nice default vaule anyway, that's why we avoid making them mandatory in the product view
+    _magento_fake_mandatory_attrs = ['created_at', 'updated_at', 'has_options', 'required_options', 'model']
 
     def open_magento_fields(self, cr, uid, ids, context=None):
         ir_model_data_obj = self.pool.get('ir.model.data')
@@ -663,13 +660,135 @@ class product_product(magerp_osv.magerp_osv):
             'view_type': 'form',
             'view_mode': 'form',
             'view_id': [res_id],
-            'res_model': 'product.product',
+            'res_model': self._name,
             'context': "{'set': %s}"%(set_id),
             'type': 'ir.actions.act_window',
             'nodestroy': True,
-            'target': 'current',
+            'target': 'new',
             'res_id': ids and ids[0] or False,
         }
+
+    def save_and_close_magento_fields(self, cr, uid, ids, context=None):
+        '''this empty function will save the magento field'''
+        return {'type': 'ir.actions.act_window_close'}
+
+    def redefine_prod_view(self,cr,uid, field_names, context):
+        #This function will rebuild the view for product from instances, attribute groups etc
+        #Get all objects needed
+        #inst_obj = self.pool.get('external.referential')
+        attr_set_obj = self.pool.get('magerp.product_attribute_set')
+        attr_group_obj = self.pool.get('magerp.product_attribute_groups')
+        attr_obj = self.pool.get('magerp.product_attributes')
+        translation_obj = self.pool.get('ir.translation')
+        xml = u"<notebook colspan='4'>\n"
+        attr_grp_ids = attr_group_obj.search(cr,uid,[])
+        attr_groups = attr_group_obj.browse(cr,uid,attr_grp_ids)
+        attribute_set_id = context['set']
+        attr_set = attr_set_obj.browse(cr, uid, attribute_set_id)
+        attr_group_fields_rel = {}
+        cr.execute("select attr_id, group_id, attribute_code, frontend_input, frontend_label, is_required, apply_to, field_name  from magerp_attrset_attr_rel left join magerp_product_attributes on magerp_product_attributes.id = attr_id where magerp_attrset_attr_rel.set_id=%s" % attribute_set_id)
+        results = cr.fetchall()
+        result = results.pop()
+        while len(results) > 0:
+            mag_group_id = result[1]
+            oerp_group_id = attr_group_obj.extid_to_oeid(cr, uid, mag_group_id, attr_set.referential_id.id)
+            group_name = attr_group_obj.read(cr, uid, oerp_group_id, ['attribute_group_name'])['attribute_group_name']
+            
+            #Create a page for the attribute group
+            if not attr_group_fields_rel.get(group_name, False):
+                attr_group_fields_rel[group_name] = []
+            while True:
+                field_xml=""
+                if result[1] != mag_group_id:
+                    break
+                if result[7] in field_names:
+                    if not result[2] in attr_obj._no_create_list:
+                        if result[3] in ['textarea']:
+                            trans = translation_obj._get_source(cr, uid, 'product.product', 'view', context.get('lang', ''), result[4])
+                            trans = trans or result[4]
+                            field_xml+="<newline/><separator colspan='4' string='%s'/>" % (trans,)
+                        field_xml+="<field name='" +  result[7] + "'"
+                        if result[5] and (result[6] == "" or "simple" in result[6] or "configurable" in result[6]) and result[2] not in self._magento_fake_mandatory_attrs:
+                            field_xml+=""" attrs="{'required':[('magento_exportable','=',True)]}" """
+                        if result[3] in ['textarea']:
+                            field_xml+=" colspan='4' nolabel='1' " 
+                        field_xml+=" />\n"
+                        if (group_name in  [
+                                            u'Meta Information', 
+                                            u'General', 
+                                            u'Custom Layout Update', 
+                                            u'Prices', 
+                                            u'Design', 
+                                            ]) or GROUP_CUSTOM_ATTRS_TOGETHER==False:
+                            attr_group_fields_rel[group_name].append(field_xml)
+                        else:
+                            custom_attributes = attr_group_fields_rel.get(u"Custom Attributes",[])
+                            custom_attributes.append(field_xml)
+                            attr_group_fields_rel[u"Custom Attributes"] = custom_attributes
+                if len(results) > 0:
+                    result = results.pop()
+                else:
+                    break
+        attribute_groups = attr_group_fields_rel.keys()
+        attribute_groups.sort()
+        for each_attribute_group in attribute_groups:
+            trans = translation_obj._get_source(cr, uid, 'product.product', 'view', context.get('lang', ''), each_attribute_group)
+            trans = trans or each_attribute_group
+            if attr_group_fields_rel.get(each_attribute_group,False):
+                xml+="<page string='" + trans + "'>\n<group colspan='4' col='4'>"
+                xml+="\n".join(attr_group_fields_rel.get(each_attribute_group,[]))
+                xml+="</group></page>\n"
+        if context.get('multiwebsite', False):
+            xml+="""<page string='Websites'>\n<group colspan='4' col='4'>\n<field name='websites_ids'/>\n</group>\n</page>\n"""
+        if SHOW_JSON:
+            xml+="""<page string='Json'>\n<field name='magerp' nolabel="1"/>\n</page>\n"""
+        xml+="</notebook>"
+        return xml
+
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        if context is None:
+            context = {}
+
+        result = super(osv.osv, self).fields_view_get(cr, uid, view_id,view_type,context,toolbar=toolbar)
+        if view_type == 'form':
+            if context.get('set', False):
+                ir_model_ids = self.pool.get('ir.model').search(cr, uid, [('model', 'in', ['product.product','product.template'])])
+                print 'ir_model_ids', ir_model_ids
+                #ir_model = self.pool.get('ir.model').browse(cr, uid, ir_model_ids)
+                ir_model_field_ids = self.pool.get('ir.model.fields').search(cr, uid, [('model_id', 'in', ir_model_ids)])
+                print 'ir_model_field_ids', ir_model_field_ids
+                field_names = ['product_type']
+                for field in self.pool.get('ir.model.fields').browse(cr, uid, ir_model_field_ids):
+                    if str(field.name).startswith('x_'):
+                        field_names.append(field.name)
+                if len(self.pool.get('external.shop.group').search(cr,uid,[('referential_type', 'ilike', 'mag')])) >1 :
+                    context['multiwebsite'] = True
+                    field_names.append('websites_ids')
+                if SHOW_JSON:
+                    field_names.append('magerp')
+                result['fields'].update(self.fields_get(cr, uid, field_names, context))
+                view_part = self.redefine_prod_view(cr, uid, field_names, context) #.decode('utf8') It is not necessary, the translated view could be in UTF8
+                result['arch'] = result['arch'].decode('utf8').replace('<page string="attributes_placeholder"/>', '<page string="'+_("Magento Information")+'"'+""" attrs="{'invisible':[('magento_exportable','!=',1)]}"><field name='product_type' attrs="{'required':[('magento_exportable','=',True)]}"/>\n""" + view_part + """\n</page>""").replace('<button name="open_magento_fields" string="Open Magento Fields" icon="gtk-go-forward" type="object" colspan="2"/>', '')
+
+                result['arch'] = result['arch'].replace('<separator string="attributes_placeholder" colspan="4"/>', view_part)
+
+            else:
+                result['arch'] = result['arch'].replace('<page string="attributes_placeholder"/>', "")
+        return result
+
+class product_template(product_mag_osv):
+    _inherit = "product.template"
+
+    _columns = {
+        'magerp' : fields.text('Magento Fields'),
+        'set':fields.many2one('magerp.product_attribute_set', 'Attribute Set'),
+    }
+
+product_template()
+
+
+class product_product(product_mag_osv):
+    _inherit = "product.product"
 
     def _product_type_get(self, cr, uid, context=None):
         ids = self.pool.get('magerp.product_product_type').search(cr, uid, [], order='id')
@@ -681,7 +800,6 @@ class product_product(magerp_osv.magerp_osv):
         'magento_exportable':fields.boolean('Exported to Magento?'),
         'created_at':fields.date('Created'), #created_at & updated_at in magento side, to allow filtering/search inside OpenERP!
         'updated_at':fields.date('Created'),
-        'set':fields.many2one('magerp.product_attribute_set', 'Attribute Set'),
         'tier_price':fields.one2many('product.tierprice', 'product', 'Tier Price'),
         'product_type': fields.selection(_product_type_get, 'Product Type'),
         'websites_ids': fields.many2many('external.shop.group', 'magerp_product_shop_group_rel', 'product_id', 'shop_group_id', 'Websites', help='By defaut product will be exported on every website, if you want to exporte it only on some website select them here'),
@@ -690,10 +808,6 @@ class product_product(magerp_osv.magerp_osv):
     _defaults = {
         'magento_exportable':lambda * a:True
     }
-    
-    #remember one thing in life: Magento lies: it tells attributes are required while they are awkward to fill
-    #and will have a nice default vaule anyway, that's why we avoid making them mandatory in the product view
-    _magento_fake_mandatory_attrs = ['created_at', 'updated_at', 'has_options', 'required_options', 'model']
 
     def write(self, cr, uid, ids, vals, context=None):
         if vals.get('referential_id', False):
@@ -780,111 +894,6 @@ class product_product(magerp_osv.magerp_osv):
                 raise osv.except_osv(_('Warning!'), _('This product is related to Magento. It can not be deleted!\nYou can change it Magento status to "Disabled" and uncheck the active box to hide it from OpenERP.'))
         else:
             return super(product_product, self).unlink(cr, uid, ids, context)
-
-    def redefine_prod_view(self,cr,uid, field_names, context):
-        #This function will rebuild the view for product from instances, attribute groups etc
-        #Get all objects needed
-        #inst_obj = self.pool.get('external.referential')
-        attr_set_obj = self.pool.get('magerp.product_attribute_set')
-        attr_group_obj = self.pool.get('magerp.product_attribute_groups')
-        attr_obj = self.pool.get('magerp.product_attributes')
-        translation_obj = self.pool.get('ir.translation')
-        xml = u"<notebook colspan='4'>\n"
-        attr_grp_ids = attr_group_obj.search(cr,uid,[])
-        attr_groups = attr_group_obj.browse(cr,uid,attr_grp_ids)
-        attribute_set_id = context['set']
-        attr_set = attr_set_obj.browse(cr, uid, attribute_set_id)
-        attr_group_fields_rel = {}
-        cr.execute("select attr_id, group_id, attribute_code, frontend_input, frontend_label, is_required, apply_to, field_name  from magerp_attrset_attr_rel left join magerp_product_attributes on magerp_product_attributes.id = attr_id where magerp_attrset_attr_rel.set_id=%s" % attribute_set_id)
-        results = cr.fetchall()
-        result = results.pop()
-        while len(results) > 0:
-            mag_group_id = result[1]
-            oerp_group_id = attr_group_obj.extid_to_oeid(cr, uid, mag_group_id, attr_set.referential_id.id)
-            group_name = attr_group_obj.read(cr, uid, oerp_group_id, ['attribute_group_name'])['attribute_group_name']
-            
-            #Create a page for the attribute group
-            if not attr_group_fields_rel.get(group_name, False):
-                attr_group_fields_rel[group_name] = []
-            while True:
-                field_xml=""
-                if result[1] != mag_group_id:
-                    break
-                #TODO understand why we need to do "x_magerp_" +  each_attribute.attribute_code in field_names or fix it
-                if result[7] in field_names:
-                    if not result[2] in attr_obj._no_create_list:
-                        if result[3] in ['textarea']:
-                            trans = translation_obj._get_source(cr, uid, 'product.product', 'view', context.get('lang', ''), result[4])
-                            trans = trans or result[4]
-                            field_xml+="<newline/><separator colspan='4' string='%s'/>" % (trans,)
-                        field_xml+="<field name='" +  result[7] + "'"
-                        if result[5] and (result[6] == "" or "simple" in result[6] or "configurable" in result[6]) and result[2] not in self._magento_fake_mandatory_attrs:
-                            field_xml+=""" attrs="{'required':[('magento_exportable','=',True)]}" """
-                        if result[3] in ['textarea']:
-                            field_xml+=" colspan='4' nolabel='1' " 
-                        field_xml+=" />\n"
-                        if (group_name in  [
-                                            u'Meta Information', 
-                                            u'General', 
-                                            u'Custom Layout Update', 
-                                            u'Prices', 
-                                            u'Design', 
-                                            ]) or GROUP_CUSTOM_ATTRS_TOGETHER==False:
-                            attr_group_fields_rel[group_name].append(field_xml)
-                        else:
-                            custom_attributes = attr_group_fields_rel.get(u"Custom Attributes",[])
-                            custom_attributes.append(field_xml)
-                            attr_group_fields_rel[u"Custom Attributes"] = custom_attributes
-                if len(results) > 0:
-                    result = results.pop()
-                else:
-                    break
-        attribute_groups = attr_group_fields_rel.keys()
-        attribute_groups.sort()
-        for each_attribute_group in attribute_groups:
-            trans = translation_obj._get_source(cr, uid, 'product.product', 'view', context.get('lang', ''), each_attribute_group)
-            trans = trans or each_attribute_group
-            if attr_group_fields_rel.get(each_attribute_group,False):
-                xml+="<page string='" + trans + "'>\n<group colspan='4' col='4'>"
-                xml+="\n".join(attr_group_fields_rel.get(each_attribute_group,[]))
-                xml+="</group></page>\n"
-        if context.get('multiwebsite', False):
-            xml+="""<page string='Websites'>\n<group colspan='4' col='4'>\n<field name='websites_ids'/>\n</group>\n</page>\n"""
-        if SHOW_JSON:
-            xml+="""<page string='Json'>\n<field name='magerp' nolabel="1"/>\n</page>\n"""
-        xml+="</notebook>"
-        return xml
-
-    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
-        if context is None:
-            context = {}
-
-        result = super(osv.osv, self).fields_view_get(cr, uid, view_id,view_type,context,toolbar=toolbar)
-        if view_type == 'form':
-            if context.get('set', False):
-                ir_model_ids = self.pool.get('ir.model').search(cr, uid, [('model', 'in', ['product.product','product.template'])])
-                print 'ir_model_ids', ir_model_ids
-                #ir_model = self.pool.get('ir.model').browse(cr, uid, ir_model_ids)
-                ir_model_field_ids = self.pool.get('ir.model.fields').search(cr, uid, [('model_id', 'in', ir_model_ids)])
-                print 'ir_model_field_ids', ir_model_field_ids
-                field_names = ['product_type']
-                for field in self.pool.get('ir.model.fields').browse(cr, uid, ir_model_field_ids):
-                    if str(field.name).startswith('x_'):
-                        field_names.append(field.name)
-                if len(self.pool.get('external.shop.group').search(cr,uid,[('referential_type', 'ilike', 'mag')])) >1 :
-                    context['multiwebsite'] = True
-                    field_names.append('websites_ids')
-                if SHOW_JSON:
-                    field_names.append('magerp')
-                result['fields'].update(self.fields_get(cr, uid, field_names, context))
-                view_part = self.redefine_prod_view(cr, uid, field_names, context) #.decode('utf8') It is not necessary, the translated view could be in UTF8
-                result['arch'] = result['arch'].decode('utf8').replace('<page string="attributes_placeholder"/>', '<page string="'+_("Magento Information")+'"'+""" attrs="{'invisible':[('magento_exportable','!=',1)]}"><field name='product_type' attrs="{'required':[('magento_exportable','=',True)]}"/>\n""" + view_part + """\n</page>""").replace('<button name="open_magento_fields" string="Open Magento Fields" icon="gtk-go-forward" type="object" colspan="2"/>', '')
-
-                result['arch'] = result['arch'].replace('<separator string="attributes_placeholder" colspan="4"/>', view_part)
-
-            else:
-                result['arch'] = result['arch'].replace('<page string="attributes_placeholder"/>', "")
-        return result
     
     #TODO move part of this to declarative mapping CSV template
     def extdata_from_oevals(self, cr, uid, external_referential_id, data_record, mapping_lines, defaults, context):
@@ -941,7 +950,14 @@ class product_product(magerp_osv.magerp_osv):
         res = super(magerp_osv.magerp_osv, self).ext_create(cr, uid, [product_type, attr_set_id, sku, data], conn, method, oe_id, context)
         self.write(cr, uid, oe_id, {'magento_sku': sku})
         return res
-    
+
+    def ext_export_configurable(self, cr, uid, id, external_referential_ids=None, defaults=None, context=None):
+        return True
+
+    def configurable_product_are_supported(self):
+        '''By default Configurable Product are not supported if you module add this functionality just overwrite this function.'''
+        return False
+
     def ext_export(self, cr, uid, ids, external_referential_ids=None, defaults=None, context=None):
         if context is None:
             context = {}
@@ -970,6 +986,9 @@ class product_product(magerp_osv.magerp_osv):
         else:
             last_exported_time = False
 
+        support_configurable = self.configurable_product_are_supported()
+        configurable_product_ids = []
+
         #strangely seems that on inherits structure, write_date/create_date are False for children
         cr.execute("select id, write_date, create_date, product_type from product_product where id in %s", (tuple(ids),))
         read = cr.fetchall()
@@ -993,6 +1012,10 @@ class product_product(magerp_osv.magerp_osv):
                                     last_updated_product = last_updated_bom
                 else:
                         logger.notifyChannel('ext synchro', netsvc.LOG_ERROR, "OpenERP 'grouped' products will export to Magento as 'grouped products' only if they have a BOM and if the 'mrp' BOM module is installed")
+            elif product_read[3]=='configurable':
+                if support_configurable:
+                    configurable_product_ids += [product_read[0]]
+                    continue
             if last_updated_time and last_exported_time and not context.get('force_export', False):
                 if last_exported_time + datetime.timedelta(seconds=1) > last_updated_time:
                     continue
@@ -1041,6 +1064,11 @@ class product_product(magerp_osv.magerp_osv):
                             self.ext_export(cr, uid, child_ids, external_referential_ids, defaults, context) #so we export them
                 else:
                     logger.notifyChannel('ext synchro', netsvc.LOG_ERROR, "OpenERP 'grouped' products will export to Magento as 'grouped products' only if they have a BOM and if the 'mrp' BOM module is installed")
+
+            elif product_type == 'configurable':
+                self.ext_export_configurable(cr, uid, id, external_referential_ids, defaults, context)
+
+
             for context_storeview in context_dic:
                 temp_result = super(magerp_osv.magerp_osv, self).ext_export(cr, uid, [id], external_referential_ids, defaults, context_storeview)
                 if child_ids: 

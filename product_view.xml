@@ -266,6 +266,10 @@
                         <field name="magento_exportable"/>
                     </group>
                     <separator string="attributes_placeholder" colspan="4"/>
+                    <group colspan='4' col='4'>
+                        <button icon="gtk-cancel" special="cancel" string="Cancel"/>
+                        <button icon="gtk-ok" name="save_and_close_magento_fields" string="Save and Close" type="object"/>
+                    </group>
                 </form>
             </field>
         </record>
