@@ -23,5 +23,6 @@ import invoice
 import product_images
 import delivery
 import stock
+import product_links
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

@@ -46,6 +46,7 @@
             'settings/external.mappinglines.template.csv',
             'settings/magerp_product_product_type.xml',
             'delivery_view.xml',
+            'product_links_view.xml'
                     ],
     "active": False,
     "installable": True,
