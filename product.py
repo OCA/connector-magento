@@ -114,27 +114,45 @@ class product_category(magerp_osv.magerp_osv):
         ids = [id for id in ids if id in ids_exportable] #we need to kept the order of the categories
         
         shop = self.pool.get('sale.shop').browse(cr, uid, context['shop_id'])
-        
+
+        context_dic = [context.copy()]
+        context_dic[0]['export_url'] = True # for the magento version 1.3.2.4, only one url is autorized by category, so we only export with the MAPPING TEMPLATE the url of the default language
+        context_dic[0]['lang'] = shop.referential_id.default_lang_id.code
+
+        for storeview in shop.storeview_ids:
+            if storeview.lang_id and storeview.lang_id.code != shop.referential_id.default_lang_id.code:
+                context_dic += [context.copy()]
+                context_dic[len(context_dic)-1].update({'storeview_code': storeview.code, 'lang': storeview.lang_id.code})
+
         if shop.last_products_export_date:
             last_exported_time = datetime.datetime.fromtimestamp(time.mktime(time.strptime(shop.last_products_export_date, '%Y-%m-%d %H:%M:%S')))
         else:
             last_exported_time = False
-        
-        cr.execute("select write_date, create_date from product_category where id in %s", (tuple(ids),))
-        read = cr.fetchall()
-        for categ in read:
-            last_updated_categ = categ[0] and categ[0].split('.')[0] or categ[1] and categ[1].split('.')[0] or False
-            last_updated_categ_time = datetime.datetime.fromtimestamp(time.mktime(time.strptime(last_updated_categ, '%Y-%m-%d %H:%M:%S')))
-            if last_updated_categ_time and last_exported_time:
-                if last_exported_time - datetime.timedelta(seconds=1) < last_updated_categ_time:
-                    context['force'] = True
-                    res = super(product_category, self).ext_export(cr, uid, ids, external_referential_ids, defaults, context)
-                    break
-        if not res:
-            context['force'] = True
-            res = super(product_category, self).ext_export(cr, uid, ids, external_referential_ids, defaults, context)
+
+        if not last_exported_time:
+            for ctx_storeview in context_dic:
+                ctx_storeview['force'] = True
+                res = super(product_category, self).ext_export(cr, uid, ids, external_referential_ids, defaults, ctx_storeview)
+        else:
+            cr.execute("select write_date, create_date from product_category where id in %s", (tuple(ids),))
+            read = cr.fetchall()
+            for categ in read:
+                last_updated_categ = categ[0] and categ[0].split('.')[0] or categ[1] and categ[1].split('.')[0] or False
+                last_updated_categ_time = datetime.datetime.fromtimestamp(time.mktime(time.strptime(last_updated_categ, '%Y-%m-%d %H:%M:%S')))
+                if last_updated_categ_time and last_exported_time:
+                    if last_exported_time - datetime.timedelta(seconds=1) < last_updated_categ_time:
+                        for ctx_storeview in context_dic:
+                            ctx_storeview['force'] = True
+                            res = super(product_category, self).ext_export(cr, uid, ids, external_referential_ids, defaults, ctx_storeview)
+                        break
         return res
-                
+
+    def try_ext_update(self, cr, uid, data, conn, method, oe_id, external_id, ir_model_data_id, create_method, context):
+        if context.get('storeview_code', False):
+            return conn.call(method, [external_id, data, context.get('storeview_code', False)])
+        else:
+            return conn.call(method, [external_id, data])    
+
 product_category()
 
 
