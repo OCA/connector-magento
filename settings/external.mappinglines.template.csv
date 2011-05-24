@@ -46,7 +46,7 @@ result=[('magento_parent_id',ifield),('parent_id',parent_id)]","magento_parent_i
 if record.get('parent_id',False):
 	magento_parent_id = self.oeid_to_extid(cr, uid, record.get('parent_id')[0], external_referential_id)
 	if not magento_parent_id:
-		self.ext_export(cr,uid,[record.get('parent_id',[False])[0]],[external_referential_id],{},{'conn_obj':conn})
+		self.ext_export(cr,uid,[record.get('parent_id',[False])[0]],[external_referential_id],{},{'conn_obj':conn, 'shop_id':context.get('shop_id', False)})
 		magento_parent_id = self.oeid_to_extid(cr, uid, record.get('parent_id')[0], external_referential_id)
 if magento_parent_id:
 	result = [('parent_id',magento_parent_id)]"
