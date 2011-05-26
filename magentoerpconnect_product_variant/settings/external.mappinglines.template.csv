@@ -1,0 +1,63 @@
+"id","type_id:id","model_id:id","external_field","type","external_type","in_function","out_function"
+"mag_erp_prd_associated_skus","magentoerpconnect.magento1324","product.model_product_product","associated_skus","in_out","str","","if record['product_type'] == 'configurable':
+    skus = []
+    if record['configurable_elements']:
+        for element_id in record['configurable_elements']:
+            element = self.pool.get('product.product').browse(cr, uid, element_id)
+            skus.append(element.magento_sku)
+    result = [('associated_skus', skus)]"
+"mag_erp_prd_configurable_attributes","magentoerpconnect.magento1324","product.model_product_product","configurable_attributes_data","in_out","str","","# only on configurable products and only on their creation
+if record['product_type'] == 'configurable':
+    shop = self.pool.get('sale.shop').browse(cr, uid, context['shop_id'])
+    # check if not already created
+    if not self.oeid_to_extid(cr, uid, record['id'], shop.referential_id.id):
+        products_data = {} # values of the attributes used on the element products
+        attributes_data = {} # params of the attributes to use on the configurable product
+        attr_set_obj = self.pool.get('magerp.product_attribute_set')
+        product_obj = self.pool.get('product.product')
+
+        if record['configurable_elements']:
+            # get the configurable attributes of the set
+            attribute_set_id = record['set']
+            attribute_set = attr_set_obj.browse(cr, uid, attribute_set_id[0])
+
+            # create a dict with all values used on the configurable products
+            for product_id in record['configurable_elements']:
+                product = product_obj.browse(cr, uid, product_id)
+                # get values for each attribute of the product
+                mag_prod_id = str(self.oeid_to_extid(cr, uid, product.id, shop.referential_id.id))
+                products_data[mag_prod_id] = {}
+                for attr in attribute_set.configurable_attributes:
+                    # get the option selected on the product
+                    option = getattr(product, attr.field_name.encode('ascii'), False)
+
+                    prod_data = {
+                        'attribute_id': attr.magento_id, # id of the attribute
+                        'label': option.label, # label of the option
+                        'value_index': option.id, # id of the option
+                        'is_percent': 0, # modification of the price
+                        'pricing_value': '', # modification of the price
+                    }
+                    products_data[mag_prod_id][str(attribute_set.configurable_attributes.index(attr))] = prod_data
+
+            # create a dict with attributes used on the configurable product
+            for attr in attribute_set.configurable_attributes:
+                index = str(attribute_set.configurable_attributes.index(attr))
+                attr_data = {
+                             #'id': False,
+                             'label': '',
+                             #'position': False,
+                             'values': [],
+                             'attribute_id': attr.magento_id, # id of the attribute on magento
+                             'attribute_code': attr.attribute_code, # code of the attribute on magento
+                             'frontend_label': attr.frontend_label, # label of the attribute on magento
+                             'html_id': ""config_super_product__attribute_%s"" % index, # must be config_super_product__attribute_ with an increment
+                }
+                attr_values = []
+
+                for prod_id in products_data:
+                    [attr_values.append(products_data[prod_id][prod_attr_index]) for prod_attr_index in products_data[prod_id] if prod_attr_index == str(index)]
+                attr_data.update({'values': attr_values})
+                attributes_data.update({index: attr_data})
+
+        result = [('configurable_products_data', products_data), ('configurable_attributes_data', attributes_data)]"
