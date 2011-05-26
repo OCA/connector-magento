@@ -7,7 +7,7 @@
             <field name="name">product.link.form.magento</field>
             <field name="model">product.link</field>
             <!--parent python entity -->
-            <field name="inherit_id" ref="base_sale_multichannels.product_link_form" />
+            <field name="inherit_id" ref="product_links.product_link_form" />
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Product Links" position="inside">
@@ -21,7 +21,7 @@
             <field name="name">product.link.tree.magento</field>
             <field name="model">product.link</field>
             <!--parent python entity -->
-            <field name="inherit_id" ref="base_sale_multichannels.product_link_tree" />
+            <field name="inherit_id" ref="product_links.product_link_tree" />
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Product Links" position="inside">
@@ -33,7 +33,7 @@
         <record model="ir.ui.view" id="product_product_link_form_magento">
             <field name="name">product.normal.form.custom.link.magento</field>
             <field name="model">product.product</field>
-            <field name="inherit_id" ref="base_sale_multichannels.product_product_link_form"/>
+            <field name="inherit_id" ref="product_links.product_product_link_form"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <data>

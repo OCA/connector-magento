@@ -35,10 +35,10 @@ GROUP_CUSTOM_ATTRS_TOGETHER = True
 
 class product_category(magerp_osv.magerp_osv):
     _inherit = "product.category"
-    
+
     def ext_create(self, cr, uid, data, conn, method, oe_id, context):
         return conn.call(method, [data.get('parent_id', 1), data])
-    
+
     _columns = {
         'create_date': fields.datetime('Created date', readonly=True),
         'write_date': fields.datetime('Updated date', readonly=True),
@@ -83,24 +83,24 @@ class product_category(magerp_osv.magerp_osv):
         'default_sort_by':lambda * a:'None',
         'level':lambda * a:1
                  }
-    
+
     def write(self, cr, uid, ids, vals, context=None):
         if not 'magerp_stamp' in vals.keys():
             vals['magerp_stamp'] = time.strftime('%Y-%m-%d %H:%M:%S')
         return super(product_category, self).write(cr, uid, ids, vals, context)
-    
+
     def record_entire_tree(self, cr, uid, id, conn, categ_tree, DEBUG=False):
         self.record_category(cr, uid, id, conn, int(categ_tree['category_id']))
         for each in categ_tree['children']:
             self.record_entire_tree(cr, uid, id, conn, each)
         return True
-            
+
     def record_category(self, cr, uid, external_referential_id, conn, category_id):
         #This function should record a category
         #The parent has to be created before creating child
         imp_vals = conn.call('category.info', [category_id])
         self.ext_import(cr, uid, [imp_vals], external_referential_id, defaults={}, context={'conn_obj':conn})
-        
+
     def ext_export(self, cr, uid, ids, external_referential_ids=None, defaults=None, context=None): # We export all the categories if at least one has been modified since last export
         #TODO Move this function in base_sale_multichannels
         if context is None:
@@ -108,11 +108,11 @@ class product_category(magerp_osv.magerp_osv):
 
         if defaults is None:
             defaults = {}
-            
+
         res = False
         ids_exportable = self.search(cr, uid, [('id', 'in', ids), ('magento_exportable', '=', True)]) #restrict export to only exportable products
         ids = [id for id in ids if id in ids_exportable] #we need to kept the order of the categories
-        
+
         shop = self.pool.get('sale.shop').browse(cr, uid, context['shop_id'])
 
         context_dic = [context.copy()]
@@ -160,13 +160,13 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
     _name = "magerp.product_attributes"
     _description = "Attributes of products"
     _rec_name = "attribute_code"
-    
+
     def _get_group(self, cr, uid, ids, prop, unknow_none, context=None):
         res = {}
         for attribute in self.browse(cr, uid, ids, context):
             res[attribute.id] = self.pool.get('magerp.product_attribute_groups').extid_to_oeid(cr, uid, attribute.group_id, attribute.referential_id.id)
         return res
-    
+
     _columns = {
         'attribute_code':fields.char('Code', size=200),
         'magento_id':fields.integer('ID'),
@@ -243,7 +243,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
         'name',
         'short_description'
     ]
-    
+
     _type_conversion = {
         '':'char',
         'text':'char',
@@ -258,7 +258,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
         'weee':'char',
         False:'char'
     }
-    
+
     _type_casts = {
         '':'str',
         'text':'str',
@@ -274,7 +274,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
         False:'str'
     }
 
-    
+
     def _is_attribute_translatable(self, vals):
         """Tells if field associated to attribute should be translatable or not.
         For now we are using a default list, later we could say that any attribute
@@ -297,7 +297,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
         referential_id = context.get('referential_id', False)
         for id in ids:
             all_vals = self.read(cr, uid, id, [], context)
-            
+
             #Fetch Options
             if 'frontend_input' in all_vals.keys() and all_vals['frontend_input'] in ['select']:
                 core_imp_conn = self.pool.get('external.referential').connect(cr, uid, [referential_id])
@@ -305,7 +305,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
                 if options_data:
                     self.pool.get('magerp.product_attribute_options').data_to_save(cr, uid, options_data, update=True, context={'attribute_id': id, 'referential_id': referential_id})
 
-            
+
             field_name = all_vals['field_name']
             field_ids = self.pool.get('ir.model.fields').search(cr, uid, [('name', '=', field_name), ('model_id', '=', model_id)])
             self.create_mapping(cr, uid, self._type_conversion[all_vals.get('frontend_input', False)], field_ids, field_name, referential_id, model_id, all_vals, id)
@@ -322,7 +322,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
             attr_set_info = eval(vals.get('attribute_set_info',{}))
             for each_key in attr_set_info.keys():
                 vals['group_id'] = attr_set_info[each_key].get('group_id', False)
-                
+
         crid = super(magerp_product_attributes, self).create(cr, uid, vals, context)
         if not vals['attribute_code'] in self._no_create_list:
             #If the field has to be created
@@ -333,7 +333,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
                     options_data = core_imp_conn.call('ol_catalog_product_attribute.options', [vals['magento_id']])
                     if options_data:
                         self.pool.get('magerp.product_attribute_options').data_to_save(cr, uid, options_data, update=False, context={'attribute_id': crid, 'referential_id': vals['referential_id']})
-      
+
                 #Manage fields
                 if vals['attribute_code'] and vals.get('frontend_input', False):
                     #Code for dynamically generating field name and attaching to this
@@ -364,11 +364,11 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
                             #All field values are computed, now save
                             field_id = self.pool.get('ir.model.fields').create(cr, uid, field_vals)
                             field_ids = [field_id]
-                            
+
                             self.create_mapping (cr, uid, field_vals['ttype'], field_ids, field_name, referential_id, model_id, vals, crid)
-                            
+
         return crid
-    
+
     def create_mapping (self, cr, uid, ttype, field_ids, field_name, referential_id, model_id, vals, crid):
         #Search & create mapping entries
         mapping_id = self.pool.get('external.mapping').search(cr, uid, [('referential_id', '=', referential_id), ('model_id', '=', model_id)])
@@ -429,13 +429,13 @@ class magerp_product_attribute_options(magerp_osv.magerp_osv):
 
     def data_to_save(self, cr, uid, vals_list, update=False, context=None):
         """This method will take data from vals and use context to create record"""
-        
+
         if context is None:
             context = {}
         to_remove_ids = []
         if update:
             to_remove_ids = self.search(cr, uid, [('attribute_id', '=', context['attribute_id'])])
-        
+
         for vals in vals_list:
             if vals.get('value', False) and vals.get('label', False):
                 #Fixme: What to do when Magento offers emty options which open erp doesnt?
@@ -470,7 +470,7 @@ class magerp_product_attribute_set(magerp_osv.magerp_osv):
     _name = "magerp.product_attribute_set"
     _description = "Attribute sets in products"
     _rec_name = 'attribute_set_name'
-    
+
     _columns = {
         'sort_order':fields.integer('Sort Order'),
         'attribute_set_name':fields.char('Set Name', size=100),
@@ -478,7 +478,7 @@ class magerp_product_attribute_set(magerp_osv.magerp_osv):
         'referential_id':fields.many2one('external.referential', 'Magento Instance', readonly=True),
         'magento_id':fields.integer('Magento ID'),
         }
-    
+
     def create_product_menu(self, cr, uid, ids, vals, context):
         data_ids = self.pool.get('ir.model.data').search(cr, uid, [('name', '=', 'menu_products'), ('module', '=', 'product')])
         if data_ids:
@@ -500,7 +500,7 @@ class magerp_product_attribute_set(magerp_osv.magerp_osv):
                 'context': "{'set':%s}" % attribute_set.id,
                 'res_model': 'product.product'
             }
-            
+
             existing_menu_id = self.pool.get('ir.ui.menu').search(cr, uid, [('name', '=', attribute_set.attribute_set_name)])
             if len(existing_menu_id) > 0:
                 action_ref = self.pool.get('ir.ui.menu').browse(cr, uid, existing_menu_id[0]).action
@@ -516,12 +516,12 @@ class magerp_product_attribute_set(magerp_osv.magerp_osv):
                 action_id = self.pool.get('ir.actions.act_window').create(cr, uid, action_vals, context)
                 menu_vals['action'] = 'ir.actions.act_window,'+str(action_id)
                 self.pool.get('ir.ui.menu').create(cr, uid, menu_vals, context)
-    
+
     def write(self, cr, uid, ids, vals, context=None):
         res = super(magerp_product_attribute_set, self).write(cr, uid, ids, vals, context)
         self.create_product_menu(cr, uid, ids, vals, context)
         return res
-    
+
     def create(self, cr, uid, vals, context=None):
          id = super(magerp_product_attribute_set, self).create(cr, uid, vals, context)
          self.create_product_menu(cr, uid, id, vals, context)
@@ -567,7 +567,7 @@ class magerp_product_attribute_set(magerp_osv.magerp_osv):
             cr.execute(query)
 
         return True
-    
+
 magerp_product_attribute_set()
 
 class magerp_product_attribute_groups(magerp_osv.magerp_osv):
@@ -580,7 +580,7 @@ class magerp_product_attribute_groups(magerp_osv.magerp_osv):
         for attribute_group in self.browse(cr, uid, ids, context):
             res[attribute_group.id] = self.pool.get('magerp.product_attribute_set').extid_to_oeid(cr, uid, attribute_group.attribute_set_id, attribute_group.referential_id.id)
         return res
-    
+
     _columns = {
         'attribute_set_id':fields.integer('Attribute Set ID'),
         'attribute_set':fields.function(_get_set, type="many2one", relation="magerp.product_attribute_set", method=True, string="Attribute Set"),
@@ -594,7 +594,7 @@ magerp_product_attribute_groups()
 class product_tierprice(osv.osv):
     _name = "product.tierprice"
     _description = "Implements magento tier pricing"
-    
+
     _columns = {
         'web_scope':fields.selection([
             ('all', 'All Websites'),
@@ -672,7 +672,7 @@ class product_product(magerp_osv.magerp_osv):
     _defaults = {
         'magento_exportable':lambda * a:True
     }
-    
+
     #remember one thing in life: Magento lies: it tells attributes are required while they are awkward to fill
     #and will have a nice default vaule anyway, that's why we avoid making them mandatory in the product view
     _magento_fake_mandatory_attrs = ['created_at', 'updated_at', 'has_options', 'required_options', 'model']
@@ -702,7 +702,7 @@ class product_product(magerp_osv.magerp_osv):
         stat = super(product_product, self).write(cr, uid, ids, vals, context)
         #Perform other operation
         return stat
-    
+
     def create_tier_price(self, cr, uid, tier_price, instance, product_id):
         tp_obj = self.pool.get('product.tierprice')
         for each in eval(tier_price):
@@ -724,7 +724,7 @@ class product_product(magerp_osv.magerp_osv):
                 tier_vals['web_scope'] = 'specific'
                 tier_vals['website_id'] = self.pool.get('external.shop.group').mage_to_oe(cr, uid, int(each['website_id']), instance)
             tp_obj.create(cr, uid, tier_vals)
-    
+
     def create(self, cr, uid, vals, context=None):
         tier_price = False
         if vals.get('referential_id', False):
@@ -784,7 +784,7 @@ class product_product(magerp_osv.magerp_osv):
             mag_group_id = result[1]
             oerp_group_id = attr_group_obj.extid_to_oeid(cr, uid, mag_group_id, attr_set.referential_id.id)
             group_name = attr_group_obj.read(cr, uid, oerp_group_id, ['attribute_group_name'])['attribute_group_name']
-            
+
             #Create a page for the attribute group
             if not attr_group_fields_rel.get(group_name, False):
                 attr_group_fields_rel[group_name] = []
@@ -861,7 +861,7 @@ class product_product(magerp_osv.magerp_osv):
             else:
                 result['arch'] = result['arch'].replace('<page string="attributes_placeholder"/>', "")
         return result
-    
+
     #TODO move part of this to declarative mapping CSV template
     def extdata_from_oevals(self, cr, uid, external_referential_id, data_record, mapping_lines, defaults, context):
         product_data = super(product_product, self).extdata_from_oevals(cr, uid, external_referential_id, data_record, mapping_lines, defaults, context) #Aapply custom/attributes mappings
@@ -874,10 +874,10 @@ class product_product(magerp_osv.magerp_osv):
             if isinstance(pl_default_id, int):
                 pl_default_id = [pl_default_id]
             product_data.update({'price': self.pool.get('product.pricelist').price_get(cr, uid, pl_default_id, product.id, 1.0)[pl_default_id[0]]})
-            
+
         if not product_data.get('tax_class_id', False):
             product_data.update({'tax_class_id': 2}) #FIXME hugly!
-            
+
         if not product_data.get('status', False):
             product_data.update({'status': product.active and 1 or 0})
 
@@ -891,7 +891,7 @@ class product_product(magerp_osv.magerp_osv):
             product_data.update({'meta_keyword': product.name})
         if not product_data.get('meta_description', False):
             product_data.update({'meta_description': product.description_sale and product.description_sale[:255]})
-       
+
         return product_data
 
     def product_to_sku(self, cr, uid, product):
@@ -911,13 +911,13 @@ class product_product(magerp_osv.magerp_osv):
         sku = self.product_to_sku(cr, uid, product)
         shop = self.pool.get('sale.shop').browse(cr, uid, context['shop_id'])
         attr_set_id = product.set and self.pool.get('magerp.product_attribute_set').oeid_to_extid(cr, uid, product.set.id, shop.referential_id.id) or context.get('default_set_id', 1)
-        
+
         product_type = self.read(cr, uid, oe_id, ['product_type'])['product_type'] or 'simple'
 
         res = super(magerp_osv.magerp_osv, self).ext_create(cr, uid, [product_type, attr_set_id, sku, data], conn, method, oe_id, context)
         self.write(cr, uid, oe_id, {'magento_sku': sku})
         return res
-    
+
     def ext_export(self, cr, uid, ids, external_referential_ids=None, defaults=None, context=None):
         if context is None:
             context = {}
@@ -932,15 +932,15 @@ class product_product(magerp_osv.magerp_osv):
         result = {'create_ids':[], 'write_ids':[]}
 
         ids = self.search(cr, uid, [('id', 'in', ids), ('magento_exportable', '=', True)]) #restrict export to only exportable products
-        
+
         if not ids:
             return result
-            
+
         dates_2_ids = []
         ids_2_dates = {}
-        
+
         shop = self.pool.get('sale.shop').browse(cr, uid, context['shop_id'])
-        
+
         if shop.last_products_export_date:
             last_exported_time = datetime.datetime.fromtimestamp(time.mktime(time.strptime(shop.last_products_export_date, '%Y-%m-%d %H:%M:%S')))
         else:
@@ -956,7 +956,8 @@ class product_product(magerp_osv.magerp_osv):
             last_updated_time = datetime.datetime.fromtimestamp(time.mktime(time.strptime(last_updated_product, '%Y-%m-%d %H:%M:%S')))
             if product_read[3] == 'grouped':
                 cr.execute('select * from ir_module_module where name=%s and state=%s', ('mrp','installed'))
-                if cr.fetchone() and 'mrp' in data_record and data_record['mrp']:
+                data_record = cr.fetchone()
+                if data_record and 'mrp' in data_record:
                     cr.execute("select id, write_date, create_date from mrp_bom where product_id = %s", (product_read[0],))
                     read_bom = cr.fetchall()
                     for bom in read_bom:
@@ -987,7 +988,7 @@ class product_product(magerp_osv.magerp_osv):
                 default_set_id = set['set_id']
                 break
         context['default_set_id'] = default_set_id
-        
+
         context_dic = [context.copy()]
         context_dic[0]['export_url'] = True # for the magento version 1.3.2.4, only one url is autorized by product, so we only export with the MAPPING TEMPLATE the url of the default language 
         context_dic[0]['lang'] = shop.referential_id.default_lang_id.code
@@ -1002,7 +1003,8 @@ class product_product(magerp_osv.magerp_osv):
             product_type = self.read(cr, uid, id, ['product_type'])['product_type']
             if product_type == 'grouped': # lookup for Magento "grouped product"
                 cr.execute('select * from ir_module_module where name=%s and state=%s', ('mrp','installed'))
-                if cr.fetchone() and 'mrp' in data_record and data_record['mrp']:
+                data_record = cr.fetchone()
+                if data_record and 'mrp' in data_record:
                     bom_ids = self.read(cr, uid, id, ['bom_ids'])['bom_ids']
                     if len(bom_ids): # it has or is part of a BoM
                         cr.execute("SELECT product_id, product_qty FROM mrp_bom WHERE bom_id = %s", (bom_ids[0],)) #FIXME What if there is more than a materials list?
@@ -1020,44 +1022,65 @@ class product_product(magerp_osv.magerp_osv):
             for context_storeview in context_dic:
                 temp_result = super(magerp_osv.magerp_osv, self).ext_export(cr, uid, [id], external_referential_ids, defaults, context_storeview)
                 if child_ids: 
-                    self.ext_grouped_product_assign(cr, uid, id, child_ids, quantities, context_storeview)
+                    self.ext_product_assign(cr, uid, 'grouped', id, child_ids, quantities=quantities, context=context_storeview)
+                self.ext_assign_links(cr, uid, id, context=context_storeview)
+
             not context.get('do_not_update_date', False) and self.pool.get('sale.shop').write(cr, uid,context['shop_id'], {'last_products_export_date': ids_2_dates[id]})
             result['create_ids'] += temp_result['create_ids']
             result['write_ids'] += temp_result['write_ids']
         return result
-    
+
     def try_ext_update(self, cr, uid, data, conn, method, oe_id, external_id, ir_model_data_id, create_method, context):
         if context.get('storeview_code', False):
             return conn.call(method, [external_id, data, context.get('storeview_code', False)])
         else:
             return conn.call(method, [external_id, data])
-    
+
     def ext_update(self, cr, uid, data, conn, method, oe_id, external_id, ir_model_data_id, create_method, context):
         product = self.browse(cr, uid, oe_id)
         sku = self.product_to_sku(cr, uid, product)
         return super(magerp_osv.magerp_osv, self).ext_update(cr, uid, data, conn, method, oe_id, sku, ir_model_data_id, create_method, context)
-    
+
     def export_inventory(self, cr, uid, ids, shop, context):
         logger = netsvc.Logger()
         stock_id = self.pool.get('sale.shop').browse(cr, uid, context['shop_id']).warehouse_id.lot_stock_id.id
         for product in self.browse(cr, uid, ids):
             if product.magento_sku and product.type != 'service':
                 virtual_available = self.read(cr, uid, product.id, ['virtual_available'], {'location': stock_id})['virtual_available']
-		# Changing Stock Availability to "Out of Stock" in Magento
+        # Changing Stock Availability to "Out of Stock" in Magento
                 # if a product has qty lt or equal to 0.
                 is_in_stock = int(virtual_available > 0)
                 context['conn_obj'].call('product_stock.update', [product.magento_sku, {'qty': virtual_available, 'is_in_stock': is_in_stock}])
                 logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "Successfully updated stock level at %s for product with SKU %s " %(virtual_available, product.magento_sku))
         return True
+    
+    def ext_assign_links(self, cr, uid, ids, context=None):
+        """ Assign links of type up-sell, cross-sell, related """
+        if type(ids) == int:
+            ids = [ids]
+        for product in self.browse(cr, uid, ids, context):
+            for type_selection in self.pool.get('product.link').get_link_type_selection(cr, uid, context):
+                link_type = type_selection[0]
+                position = {}
+                linked_product_ids = []
+                for link in product.product_link_ids:
+                    if link.type == link_type:
+                        linked_product_ids.append(link.linked_product_id.id)
+                        position[link.linked_product_id.magento_sku] = link.sequence
+                self.ext_product_assign(cr, uid, link_type, product.id, linked_product_ids, position=position, context=context)
+        return True
 
-    def ext_grouped_product_assign(self, cr, uid, parent_id, child_ids, quantities, context):
+    def ext_product_assign(self, cr, uid, type, parent_id, child_ids, quantities=None, position=None, context=None):
+        context = context or {}
+        position = position or {}
+        quantities = quantities or {}
         logger = netsvc.Logger()
         conn = context.get('conn_obj', False)
         parent_sku = self.read(cr, uid, parent_id, ['magento_sku'])['magento_sku']
         new_child_skus = self.read(cr, uid, child_ids, ['magento_sku']) # get the sku of the products to be assigned
         new_child_skus = [x['magento_sku'] for x in new_child_skus]
-        
-        data = ['grouped', parent_sku]
+
+        data = [type, parent_sku]
         child_list = conn.call('product_link.list', data) # get the sku of the products already assigned
         old_child_skus = [x['sku'] for x in child_list]
         skus_to_remove = []
@@ -1073,13 +1096,13 @@ class product_product(magerp_osv.magerp_osv):
                 skus_to_assign += [new_child_sku]
         for old_child_sku in skus_to_remove:
             conn.call('product_link.remove', data + [old_child_sku]) # remove the products that are no more used
-            logger.notifyChannel('ext assign', netsvc.LOG_INFO, "Successfully removed assignment for product %s to product %s" %(parent_sku, old_child_sku))
+            logger.notifyChannel('ext assign', netsvc.LOG_INFO, "Successfully removed assignment of type %s for product %s to product %s" % (type, parent_sku, old_child_sku))
         for child_sku in skus_to_assign:
-            conn.call('product_link.assign', data + [child_sku, {'position': 0, 'qty': quantities[child_sku]}]) # assign new product
-            logger.notifyChannel('ext assign', netsvc.LOG_INFO, "Successfully assigned product %s to product %s " %(parent_sku, child_sku))
+            conn.call('product_link.assign', data + [child_sku, {'position': position.get(child_sku, 0), 'qty': quantities.get(child_sku, 1)}]) # assign new product
+            logger.notifyChannel('ext assign', netsvc.LOG_INFO, "Successfully assigned product %s to product %s with type %s" %(parent_sku, child_sku, type))
         for child_sku in skus_to_update:
-            conn.call('product_link.update', data + [child_sku, {'position': 0, 'qty': quantities[child_sku]}]) # update products already assigned
-            logger.notifyChannel('ext assign', netsvc.LOG_INFO, "Successfully updated assignment of product %s to product %s" %(parent_sku, child_sku))
+            conn.call('product_link.update', data + [child_sku, {'position': position.get(child_sku, 0), 'qty': quantities.get(child_sku, 1)}]) # update products already assigned
+            logger.notifyChannel('ext assign', netsvc.LOG_INFO, "Successfully updated assignment of type %s of product %s to product %s" %(type, parent_sku, child_sku))
         return True
 
     #TODO move this code (get exportable image) and also some code in product_image.py and sale.py in base_sale_multichannel or in a new module in order to be more generic
