@@ -959,6 +959,7 @@ class product_product(product_mag_osv):
         return False
 
     def ext_export(self, cr, uid, ids, external_referential_ids=None, defaults=None, context=None):
+        #Is external_referential_ids is still used?
         if context is None:
             context = {}
 
@@ -987,7 +988,8 @@ class product_product(product_mag_osv):
             last_exported_time = False
 
         support_configurable = self.configurable_product_are_supported()
-        configurable_product_ids = []
+        configurable_product_ids = {}
+        simple_to_configurable = {}
 
         #strangely seems that on inherits structure, write_date/create_date are False for children
         cr.execute("select id, write_date, create_date, product_type from product_product where id in %s", (tuple(ids),))
@@ -1014,8 +1016,14 @@ class product_product(product_mag_osv):
                         logger.notifyChannel('ext synchro', netsvc.LOG_ERROR, "OpenERP 'grouped' products will export to Magento as 'grouped products' only if they have a BOM and if the 'mrp' BOM module is installed")
             elif product_read[3]=='configurable':
                 if support_configurable:
-                    configurable_product_ids += [product_read[0]]
-                    continue
+                    variant_ids = self.read(cr, uid, product_read[0], ['variant_ids'], context)
+                    print set([1,2,3])
+                    variant_ids_to_export = list(set(variant_ids) & set(ids))
+                    if variant_ids_to_export:
+                        configurable_product_ids[product_read[0]] = variant_ids_to_export
+                        for id in variant_ids_to_export:
+                            simple_to_configurable[id] = product_read[0]
+                        continue
             if last_updated_time and last_exported_time and not context.get('force_export', False):
                 if last_exported_time + datetime.timedelta(seconds=1) > last_updated_time:
                     continue
@@ -1023,15 +1031,27 @@ class product_product(product_mag_osv):
             ids_2_dates[product_read[0]] = last_updated_product
 
         dates_2_ids.sort()
-        ids = [x[1] for x in dates_2_ids]
+        tmp_ids = [x[1] for x in dates_2_ids]
+
+        #Add the configurable product have to be syncronise just after exporting all simple product 
+        ids=[]
+        for id in tmp_ids:
+            ids += [id]
+            if simple_to_configurable.get(id, False):
+                configurable_product_ids[simple_to_configurable[id]].remove(simple_to_configurable[id])
+                if len(configurable_product_ids[simple_to_configurable[id]])==0:
+                    ids += simple_to_configurable[id]
+
+        #TODO on the same model as configurable product add the id of the group product just after exporting the simple product. Avoid useless syncronization
+            
 
         #set the default_set_id in context and avoid extra request for each product upload
         conn = context.get('conn_obj', False)
-        sets = conn.call('product_attribute_set.list')
+        attr_sets = conn.call('product_attribute_set.list')
         default_set_id = 1
-        for set in sets:
-            if set['name'] == 'Default':
-                default_set_id = set['set_id']
+        for attr_set in attr_sets:
+            if attr_set['name'] == 'Default':
+                default_set_id = attr_set['set_id']
                 break
         context['default_set_id'] = default_set_id
         
@@ -1067,7 +1087,6 @@ class product_product(product_mag_osv):
 
             elif product_type == 'configurable':
                 self.ext_export_configurable(cr, uid, id, external_referential_ids, defaults, context)
-
 
             for context_storeview in context_dic:
                 temp_result = super(magerp_osv.magerp_osv, self).ext_export(cr, uid, [id], external_referential_ids, defaults, context_storeview)
