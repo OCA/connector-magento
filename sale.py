@@ -368,16 +368,20 @@ class sale_order(magerp_osv.magerp_osv):
             mapping_lines = self.pool.get('external.mapping.line').read(cr,uid,mapping_line_ids,['external_field','external_type','in_function'])
             if mapping_lines:
                 lines_vals = []
+                is_tax_included = defaults.get('price_type', False) == 'tax_included'
                 for line_data in data_record.get('items', []):
                     defaults_line = {'product_uom': 1}
                     #simple VAT tax on order line (else override method):
                     line_tax_vat = float(line_data['tax_percent']) / 100.0
                     if line_tax_vat > 0:
-                        line_tax_ids = self.pool.get('account.tax').search(cr, uid, ['|', ('type_tax_use', '=', 'all'), ('type_tax_use', '=', 'sale'), ('amount', '>=', line_tax_vat - 0.001), ('amount', '<=', line_tax_vat + 0.001)])
+                        line_tax_ids = self.pool.get('account.tax').search(cr, uid, ['|', ('type_tax_use', '=', 'all'), ('type_tax_use', '=', 'sale'), ('price_include', '=', is_tax_included), ('amount', '>=', line_tax_vat - 0.001), ('amount', '<=', line_tax_vat + 0.001)])
                         if line_tax_ids and len(line_tax_ids) > 0:
                             defaults_line['tax_id'] = [(6, 0, [line_tax_ids[0]])]
                     context.update({'partner_id': res['partner_id'], 'pricelist_id': res['pricelist_id']})
+                    if defaults.get('price_type', False) == 'tax_included':
+                        context.update({'price_is_tax_included': True})
                     line_val = self.oevals_from_extdata(cr, uid, external_referential_id, line_data, 'item_id', mapping_lines, defaults_line, context)
+                                        
                     if line_val['product_id']:
                         line_val['type'] = self.pool.get('product.product').read(cr, uid, line_val['product_id'], ['procure_method'], context)['procure_method']
                     lines_vals.append((0, 0, line_val))
@@ -410,20 +414,31 @@ class sale_order(magerp_osv.magerp_osv):
     def get_order_shipping(self, cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context):
         ship_product_id = self.pool.get('product.product').search(cr, uid, [('default_code', '=', 'SHIP MAGENTO')])[0]
         ship_product = self.pool.get('product.product').browse(cr, uid, ship_product_id, context)
-        
+        is_tax_included = defaults.get('price_type', False) == 'tax_included'
         #simple VAT tax on shipping (else override method):
         tax_id = []
         if data_record['shipping_tax_amount'] and float(data_record['shipping_tax_amount']) != 0:
             ship_tax_vat = float(data_record['shipping_tax_amount'])/float(data_record['shipping_amount'])
-            ship_tax_ids = self.pool.get('account.tax').search(cr, uid, [('type_tax_use', '=', 'sale'), ('amount', '>=', ship_tax_vat - 0.001), ('amount', '<=', ship_tax_vat + 0.001)])
+            ship_tax_ids = self.pool.get('account.tax').search(cr, uid, [('price_include', '=', is_tax_included), ('type_tax_use', '=', 'sale'), ('amount', '>=', ship_tax_vat - 0.001), ('amount', '<=', ship_tax_vat + 0.001)])
             if ship_tax_ids and len(ship_tax_ids) > 0:
                 tax_id = [(6, 0, [ship_tax_ids[0]])]
+            else:
+                #try to find the taxe with less precision 
+                ship_tax_ids = self.pool.get('account.tax').search(cr, uid, [('price_include', '=', is_tax_included), ('type_tax_use', '=', 'sale'), ('amount', '>=', ship_tax_vat - 0.01), ('amount', '<=', ship_tax_vat + 0.01)])
+                if ship_tax_ids and len(ship_tax_ids) > 0:
+                    tax_id = [(6, 0, [ship_tax_ids[0]])]
+                
+        if is_tax_included:
+            price_unit = float(data_record['shipping_amount']) + float(data_record['shipping_tax_amount'])
+        else:
+            price_unit = float(data_record['shipping_amount'])
+            
         res['order_line'].append((0, 0, {
                                     'product_id': ship_product.id,
                                     'name': ship_product.name,
                                     'product_uom': ship_product.uom_id.id,
                                     'product_uom_qty': 1,
-                                    'price_unit': float(data_record['shipping_amount']),
+                                    'price_unit': price_unit,
                                     'tax_id': tax_id
                                 }))
         return res
