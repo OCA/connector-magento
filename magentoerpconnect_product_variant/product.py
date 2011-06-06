@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 #################################################################################
 #                                                                               #
-#    magentoerpconnect_configurable_product for OpenERP                                          #
+#    magentoerpconnect_configurable_product for OpenERP                         #
 #    Copyright (C) 2011 Akretion Sébastien BEAU <sebastien.beau@akretion.com>   #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
@@ -40,8 +40,8 @@ class product_variant_dimension_option(osv.osv):
     
 
     _columns = {
-        'magento_attribut': fields.related('dimension_id', 'magento_attribut', type="many2one", relation="magerp.product_attributes", string="Magento attributs", readonly=True),
-        'magento_attribut_option': fields.many2one('magerp.product_attribute_options', 'magento_attributs_option', domain = "[('attribute_id', '=', magento_attribut)]"),
+        #'magento_attribut': fields.related('dimension_id', 'magento_attribut', type="many2one", relation="magerp.product_attributes", string="Magento attributs", readonly=True),
+        'magento_attribut_option': fields.many2one('magerp.product_attribute_options', 'magento_attributs_option', domain = "[('attribute_id', '=', parent.magento_attribut)]"),
 
     }
 
@@ -163,11 +163,9 @@ class product_product(osv.osv):
         #TODO maybe this mapping can be in the mapping template but the problem is that this mapping have to be apply at the end
         #because they will overwrite other mapping result. Maybe adding a sequence on the mapping will be the solution
         res = super(product_product, self).extdata_from_oevals(cr, uid, external_referential_id, data_record, mapping_lines, defaults, context)
-        print 'res before', res
         if data_record.get('is_multi_variants', False):
             for dim_value in self.pool.get('product.variant.dimension.value').browse(cr, uid, data_record['dimension_value_ids'], context=context):
-                res[dim_value.option_id.magento_attribut.attribute_code] = dim_value.option_id.magento_attribut_option.value
-        print 'res after', res
+                res[dim_value.dimension_id.magento_attribut.attribute_code] = dim_value.option_id.magento_attribut_option.value
         return res
 
 product_product()
@@ -175,17 +173,16 @@ product_product()
 class product_template(osv.osv):
 
     _inherit = "product.template"
+
+    _columns = {
+        'magento_exportable':fields.boolean('Exported all variant to Magento?'),
+    }
+
     def _create_variant_list(self, cr, ids, uid, vals, context=None):
         res = super(product_template, self)._create_variant_list(cr, ids, uid, vals, context)
         res = res + [[]]
-        print 'variant list', res
         return res
 
-
-
-
-
-    
 product_template()
 
 

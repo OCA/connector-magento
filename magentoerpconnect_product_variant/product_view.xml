@@ -20,7 +20,6 @@
 				<data>
 					<field name="sequence" position="after">
 						<field name="magento_attribut_option" />
-                        <field name='magento_attribut' invisible="True"/>
 					</field>
 				</data>
 			</field>
@@ -92,12 +91,40 @@
 					</field>
 
                     <xpath expr="/form/notebook" position="before">
-                        <button name="open_magento_fields" string="Open Magento Fields" icon="gtk-go-forward" type="object" colspan="1"/>
+                        <group colsan="1">
+                            <button name="open_magento_fields" string="Open Magento Fields" icon="gtk-go-forward" type="object"/>
+                        </group>
                     </xpath>
+					<field name="variant_track_outgoing" position="after">
+						<field name="magento_exportable"/>
+					</field>
 				</data>
 			</field>
 		</record>
 
+        <!--Magento Product Template Wizard Form view  -->
+
+        <record model="ir.ui.view" id="product_template_wizard_form_view_magerpdynamic">
+            <field name="name">product.template.wizard.form_magerp_dynamic</field>
+            <field name="model">product.template</field>
+            <field name="type">form</field>
+            <field name="priority">20</field>
+            <field name="arch" type="xml">
+                <form string="Product">
+                    <group colspan='4' col='8'>
+                        <separator string="Magento Information" colspan="8"/>
+                        <field name="name"/>
+                        <field name="set" select="2" attrs="{'required':[('magento_exportable','==',True)]}"/>
+                        <field name="magento_exportable"/>
+                    </group>
+                    <separator string="attributes_placeholder" colspan="4"/>
+                    <group colspan='4' col='4'>
+                        <button icon="gtk-cancel" special="cancel" string="Cancel"/>
+                        <button icon="gtk-ok" name="save_and_close_magento_fields" string="Save and Close" type="object"/>
+                    </group>
+                </form>
+            </field>
+        </record>
 
 
     </data>
