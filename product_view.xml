@@ -263,6 +263,7 @@
                         <field name="name"/>
                         <field name="set" select="2" attrs="{'required':[('magento_exportable','==',True)]}"/>
                         <field name="magento_sku" select="2" attrs="{'required':[('magento_exportable','==',True)]}"/>
+                        <field name="product_type" select="2" attrs="{'required':[('magento_exportable','==',True)]}"/>
                         <field name="magento_exportable"/>
                     </group>
                     <separator string="attributes_placeholder" colspan="4"/>

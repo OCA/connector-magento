@@ -650,10 +650,13 @@ class product_mag_osv(magerp_osv.magerp_osv):
 
     def open_magento_fields(self, cr, uid, ids, context=None):
         ir_model_data_obj = self.pool.get('ir.model.data')
-        ir_model_data_id = ir_model_data_obj.search(cr, uid, [['model', '=', 'ir.ui.view'], ['name', '=', 'product_product_wizard_form_view_magerpdynamic']], context=context)
+        ir_model_data_id = ir_model_data_obj.search(cr, uid, [['model', '=', 'ir.ui.view'], ['name', '=', self._name.replace('.','_') + '_wizard_form_view_magerpdynamic']], context=context)
         if ir_model_data_id:
             res_id = ir_model_data_obj.read(cr, uid, ir_model_data_id, fields=['res_id'])[0]['res_id']
-        set_id = self.read(cr, uid, ids, fields=['set'], context=context)[0]['set'][0]
+        set_id = self.read(cr, uid, ids, fields=['set'], context=context)[0]['set']
+
+        if not set_id:
+            raise osv.except_osv(_('User Error'), _('Please chose an attribut set before'))
 
         return {
             'name': 'Magento Fields',
@@ -661,7 +664,7 @@ class product_mag_osv(magerp_osv.magerp_osv):
             'view_mode': 'form',
             'view_id': [res_id],
             'res_model': self._name,
-            'context': "{'set': %s}"%(set_id),
+            'context': "{'set': %s, 'open_from_button_object_id': %s}"%(set_id[0], ids),
             'type': 'ir.actions.act_window',
             'nodestroy': True,
             'target': 'new',
@@ -749,14 +752,13 @@ class product_mag_osv(magerp_osv.magerp_osv):
         if context is None:
             context = {}
 
+        print 'get view', view_type, context
         result = super(osv.osv, self).fields_view_get(cr, uid, view_id,view_type,context,toolbar=toolbar)
         if view_type == 'form':
             if context.get('set', False):
+                print 'lal'
                 ir_model_ids = self.pool.get('ir.model').search(cr, uid, [('model', 'in', ['product.product','product.template'])])
-                print 'ir_model_ids', ir_model_ids
-                #ir_model = self.pool.get('ir.model').browse(cr, uid, ir_model_ids)
                 ir_model_field_ids = self.pool.get('ir.model.fields').search(cr, uid, [('model_id', 'in', ir_model_ids)])
-                print 'ir_model_field_ids', ir_model_field_ids
                 field_names = ['product_type']
                 for field in self.pool.get('ir.model.fields').browse(cr, uid, ir_model_field_ids):
                     if str(field.name).startswith('x_'):
@@ -764,6 +766,18 @@ class product_mag_osv(magerp_osv.magerp_osv):
                 if len(self.pool.get('external.shop.group').search(cr,uid,[('referential_type', 'ilike', 'mag')])) >1 :
                     context['multiwebsite'] = True
                     field_names.append('websites_ids')
+                #in the cas that the magento view is open from the button 'open magento fields', we can give a very customize view because only on for one product
+
+                if context.get('open_from_button_object_id', False):
+                    print 'context', context, context['open_from_button_object_id']
+                    product = self.read(cr, uid, context['open_from_button_object_id'], ['is_multi_variants', 'dimension_type_ids'], context=context)[0]
+                    print product
+                    if product['is_multi_variants'] and product['dimension_type_ids']:
+                        for dimension in self.pool.get('product.variant.dimension.type').browse(cr, uid, product['dimension_type_ids'], context=context):
+                            field_names.remove(dimension.magento_attribut.field_name)
+
+                print 'field_names', field_names
+             
                 if SHOW_JSON:
                     field_names.append('magerp')
                 result['fields'].update(self.fields_get(cr, uid, field_names, context))
