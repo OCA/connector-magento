@@ -24,6 +24,7 @@ import magerp_osv
 from base_external_referentials import external_osv
 
 import tools
+from tools.translate import _
 
 DEBUG = True
 TIMEOUT = 2
@@ -136,17 +137,36 @@ class external_referential(magerp_osv.magerp_osv):
         return True
 
     def sync_products(self, cr, uid, ids, context):
+        if context == None:
+            context = {}
         instances = self.browse(cr, uid, ids, context)
         for inst in instances:
             attr_conn = self.external_connection(cr, uid, inst, DEBUG)
             filter = []
             list_prods = attr_conn.call('catalog_product.list')
             #self.pool.get('product.product').mage_import(cr, uid, filter, attr_conn, inst.id, DEBUG)
-            result = []
-            for each in list_prods:
-                each_product_info = attr_conn.call('catalog_product.info', [each['product_id']])
-                result.append(each_product_info)
-            self.pool.get('product.product').ext_import(cr, uid, result, inst.id, context={})
+            storeview_obj = self.pool.get('magerp.storeviews')
+            lang_obj = self.pool.get('res.lang')
+            #get all instance storeviews
+            storeview_ids = []
+            for website in inst.shop_group_ids:
+                for shop in website.shop_ids:
+                    for storeview in shop.storeview_ids:
+                        storeview_ids += [storeview.id]
+            for storeview in storeview_obj.browse(cr, uid, storeview_ids, context):
+                #get lang of the storeview
+                lang_id = storeview.lang_id
+                if lang_id:
+                    lang = lang_id.code
+                else:
+                    osv.except_osv(_('Warning!'), _('The storeviews have no language defined'))
+                    lang = inst.default_lang_id.code
+                context.update({'lang': lang})
+                result = []
+                for each in list_prods:
+                    each_product_info = attr_conn.call('catalog_product.info', [each['product_id'], storeview['code']])
+                    result.append(each_product_info)
+                self.pool.get('product.product').ext_import(cr, uid, result, inst.id, defaults={}, context=context)
         return True
 
     def export_products(self, cr, uid, ids, context):

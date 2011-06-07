@@ -143,6 +143,8 @@
 						<field name="note" />
 						<field name="entity_type_id" />
 						<field name="options" readonly="1" />
+                        <field name="field_name" />
+                        <field name="based_on" />
 					</group>
 				</form>
 			</field>
@@ -261,9 +263,14 @@
                         <field name="name"/>
                         <field name="set" select="2" attrs="{'required':[('magento_exportable','==',True)]}"/>
                         <field name="magento_sku" select="2" attrs="{'required':[('magento_exportable','==',True)]}"/>
+                        <field name="product_type" select="2" attrs="{'required':[('magento_exportable','==',True)]}"/>
                         <field name="magento_exportable"/>
                     </group>
                     <separator string="attributes_placeholder" colspan="4"/>
+                    <group colspan='4' col='4'>
+                        <button icon="gtk-cancel" special="cancel" string="Cancel"/>
+                        <button icon="gtk-ok" name="save_and_close_magento_fields" string="Save and Close" type="object"/>
+                    </group>
                 </form>
             </field>
         </record>

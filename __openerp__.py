@@ -25,6 +25,7 @@
                  "base_sale_multichannels",
                  "product_images_olbs",
                  "product_links",
+                 "base_json_fields",
                 ],
     "author" : "Sharoon Thomas, Raphael Valyi",
     "description": """Magento E-commerce management
