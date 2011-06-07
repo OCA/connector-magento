@@ -1,0 +1,18 @@
+<openerp>
+    <data noupdate="1">
+     <!--
+    Sequence for product magento SKUs
+    -->
+        <record id="seq_type_magento_sku" model="ir.sequence.type">
+            <field name="name">Product Magento SKU</field>
+            <field name="code">product.magento.sku</field>
+        </record>
+        <record id="seq_magento_sku" model="ir.sequence">
+            <field name="name">Product Magento SKU</field>
+            <field name="code">product.magento.sku</field>
+            <field name="prefix">%(year)s/</field>
+            <field name="padding">5</field>            
+        </record>        
+        
+    </data>
+</openerp>
