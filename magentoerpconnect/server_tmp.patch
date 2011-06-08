@@ -1,11 +1,11 @@
 === modified file 'bin/osv/orm.py'
---- bin/osv/orm.py	2011-04-11 10:08:47 +0000
-+++ bin/osv/orm.py	2011-05-11 16:09:24 +0000
+--- bin/osv/orm.py	2011-05-24 10:18:10 +0000
++++ bin/osv/orm.py	2011-06-07 20:17:29 +0000
 @@ -199,6 +199,7 @@
              # otherwise we fetch only that field
              else:
                  fields_to_fetch = [(name, col)]
-+            fields_to_fetch = [x for x in fields_to_fetch if not 'x_magerp' in x[0]]
++            fields_to_fetch = [x for x in fields_to_fetch if not 'x_js_' in x[0]]
              ids = filter(lambda id: name not in self._data[id], self._data.keys())
              # read the results
              field_names = map(lambda x: x[0], fields_to_fetch)
@@ -13,9 +13,9 @@
                  if k.startswith('x_') and not update_custom_fields:
                      continue
  
-+                if k.startswith('x_magerp_js_'):
++                if k.startswith('x_js_'):
 +                    continue
-+
++                
                  f = self._columns[k]
  
                  if isinstance(f, fields.one2many):
