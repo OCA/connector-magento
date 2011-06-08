@@ -33,11 +33,28 @@ class external_referential(magerp_osv.magerp_osv):
     #This class stores instances of magento to which the ERP will connect, so you can connect OpenERP to multiple Magento installations (eg different Magento databases)
     _inherit = "external.referential"
 
+    def _is_magento_referential(self, cr, uid, ids, field_name, arg, context):
+        """If at least one shop is magento, we consider that the external
+        referential is a magento referential
+        """
+        res = {}
+        for referential in self.browse(cr, uid, ids, context):
+            res[referential.id] = False
+            for group in referential.shop_group_ids:
+                for shop in group.shop_ids:
+                    if shop.magento_shop:
+                        res[referential.id] = True
+                        break
+                if res[referential.id]:
+                    break
+        return res
+
     _columns = {
         'attribute_sets':fields.one2many('magerp.product_attribute_set', 'referential_id', 'Attribute Sets'),
         'default_pro_cat':fields.many2one('product.category','Default Product Category',required=True, help="Products imported from magento may have many categories.\nOpenERP requires a specific category for a product to facilitate invoicing etc."),
         'default_lang_id':fields.many2one('res.lang', 'Default Language',required=True, help="Choose the language which will be used for the Default Value in Magento"),
         'active': fields.boolean('Active'),
+        'magento_referential': fields.function(_is_magento_referential, type="boolean", method=True, string="Magento Referential"),
     }
 
     _defaults = {

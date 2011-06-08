@@ -838,6 +838,20 @@ class product_product(product_mag_osv):
         product_types = self.pool.get('magerp.product_product_type').read(cr, uid, ids, ['product_type','name'], context=context)
         return [(pt['product_type'], pt['name']) for pt in product_types]
 
+    def _is_magento_exported(self, cr, uid, ids, field_name, arg, context):
+        """Return True if the product is already exported to at least one magento shop
+        """
+        res = {}
+        # get all magento external_referentials
+        referentials = self.pool.get('external.referential').search(cr, uid, [('magento_referential', '=', True)])
+        for product in self.browse(cr, uid, ids, context):
+            for referential in referentials:
+                res[product.id] = False
+                if self.oeid_to_extid(cr, uid, product.id, referential, context):
+                    res[product.id] = True
+                    break
+        return res
+
     _columns = {
         'magento_sku':fields.char('Magento SKU', size=64),
         'magento_exportable':fields.boolean('Exported to Magento?'),
@@ -846,6 +860,7 @@ class product_product(product_mag_osv):
         'tier_price':fields.one2many('product.tierprice', 'product', 'Tier Price'),
         'product_type': fields.selection(_product_type_get, 'Product Type'),
         'websites_ids': fields.many2many('external.shop.group', 'magerp_product_shop_group_rel', 'product_id', 'shop_group_id', 'Websites', help='By defaut product will be exported on every website, if you want to exporte it only on some website select them here'),
+        'magento_exported': fields.function(_is_magento_exported, type="boolean", method=True, string="Exists on Magento"),  # used to set the sku readonly when already exported
         }
 
     _defaults = {

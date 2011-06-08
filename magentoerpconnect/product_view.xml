@@ -227,7 +227,8 @@
 			<field name="arch" type="xml">
 				<data>
 					<xpath expr="/form/group/group/field[@name='ean13']" position="after">
-						<field name="magento_sku" select="2" attrs="{'required':[('magento_exportable','==',True)]}"/>
+                        <field name="magento_exported" invisible="True"/>
+						<field name="magento_sku" select="2" attrs="{'required':[('magento_exportable','==',True)], 'readonly':[('magento_exported', '==', True)]}"/>
 					</xpath>
 					<xpath expr="/form/group/group/field[@name='variants']" position="after">
 						<field name="set" select="2" attrs="{'required':[('magento_exportable','==',True)]}"/>
