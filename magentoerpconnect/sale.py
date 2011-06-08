@@ -630,19 +630,14 @@ class sale_order(magerp_osv.magerp_osv):
         Before the import, check if the order is already imported and in a such case, skip the import
          and flag "imported" on Magento.
         """
+        res = {'create_ids': [], 'write_ids': []}
         ext_order_id = data[0]['increment_id']
-        # check if order is already imported
-        if self.extid_to_existing_oeid(cr, uid, ext_order_id, external_referential_id, context):
-            # set the missing flag on magento and skip the import in order to avoid the update of
-            # the already imported order
-            self.ext_set_order_imported(cr, uid, ext_order_id, external_referential_id, context)
-            return {'create_ids': [], 'write_ids': []}
+        if not self.extid_to_existing_oeid(cr, uid, ext_order_id, external_referential_id, context):
+            res = super(sale_order, self).ext_import(cr, uid, data, external_referential_id, defaults=defaults, context=context)
 
-        res = super(sale_order, self).ext_import(cr, uid, data, external_referential_id, defaults=defaults, context=context)
-
-        # if a created order has a relation_parent_real_id, the new one replaces the original, so we have to cancel the old one
-        if data[0].get('relation_parent_real_id', False): # data[0] because orders are imported one by one so data always has 1 element
-            self.chain_cancel_orders(cr, uid, ext_order_id, external_referential_id, defaults=defaults, context=context)
+            # if a created order has a relation_parent_real_id, the new one replaces the original, so we have to cancel the old one
+            if data[0].get('relation_parent_real_id', False): # data[0] because orders are imported one by one so data always has 1 element
+                self.chain_cancel_orders(cr, uid, ext_order_id, external_referential_id, defaults=defaults, context=context)
 
         # set the "imported" flag to true on Magento
         self.ext_set_order_imported(cr, uid, ext_order_id, external_referential_id, context)
