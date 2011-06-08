@@ -52,19 +52,26 @@ class product_product(osv.osv):
     
     _inherit = "product.product"
 
+    def build_product_code_and_properties(self, cr, uid, ids, context=None):
+        super(product_product, self).build_product_code_and_properties(cr, uid, ids, context=context)
+        magento_product_exportable_ids = []
+        for product in self.browse(cr, uid, ids, context=context):
+            if product.product_tmpl_id.magento_exportable:
+                magento_product_exportable_ids += [product.id]
+        self.write(cr, uid, magento_product_exportable_ids, {'magento_exportable':True}, context=context)
+        return True
+
     def configurable_product_are_supported(self):
         return True
     
     def generate_variant_name(self, cr, uid, product_id, context=None):
         res = super(product_product, self).generate_variant_name(cr, uid, product_id, context)
-        print 'variant name', res
         if res == '':
             return 'Magento Configurable Product'
         return res
 
     def generate_product_code(self, cr, uid, product_obj, code_generator, context=None):
         res = super(product_product, self).generate_product_code(cr, uid, product_obj, code_generator, context)
-        print 'product code', res
         return res
 
     def create(self, cr, uid, vals, context):
@@ -74,17 +81,6 @@ class product_product(osv.osv):
             else:
                 vals['product_type'] = 'simple'
         super(product_product, self).create(cr, uid, vals, context)
-
-
-#if record['product_type'] == 'configurable':
-#    skus = []
-#    if record['configurable_elements']:
-#        for element_id in record['configurable_elements']:
-#            element = self.pool.get('product.product').browse(cr, uid, element_id)
-#            skus.append(element.magento_sku)
-#    result = [('associated_skus', skus)]
-
-
 
     def ext_export_configurable(self, cr, uid, id, external_referential_ids, defaults, context):
         '''check if all simple product are already exported if not it export the unexported product'''
@@ -167,6 +163,17 @@ class product_product(osv.osv):
             for dim_value in self.pool.get('product.variant.dimension.value').browse(cr, uid, data_record['dimension_value_ids'], context=context):
                 res[dim_value.dimension_id.magento_attribut.attribute_code] = dim_value.option_id.magento_attribut_option.value
         return res
+    
+    def _filter_fields_to_return(self, cr, uid, field_names, context):
+        #In the cas that the magento view is open from the button 'open magento fields', we can give a very customize view because only on for one product
+        field_names = super(product_product, self)._filter_fields_to_return(cr, uid, field_names, context)
+        if context.get('open_from_button_object_id', False):
+            product = self.read(cr, uid, context['open_from_button_object_id'], ['is_multi_variants', 'dimension_type_ids'], context=context)[0]
+            if product['is_multi_variants'] and product['dimension_type_ids']:
+                for dimension in self.pool.get('product.variant.dimension.type').browse(cr, uid, product['dimension_type_ids'], context=context):
+                    field_names.remove(dimension.magento_attribut.field_name)
+        return field_names
+
 
 product_product()
 

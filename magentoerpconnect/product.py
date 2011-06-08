@@ -776,16 +776,18 @@ class product_mag_osv(magerp_osv.magerp_osv):
             xml+="""<page string='Json'>\n<field name='magerp' nolabel="1"/>\n</page>\n"""
         xml+="</notebook>"
         return xml
+    
+    def _filter_fields_to_return(self, cr, uid, field_names, context):
+        '''This function is a hook in order to filter the fields that appears on the view'''
+        return field_names
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         if context is None:
             context = {}
 
-        print 'get view', view_type, context
-        result = super(product.product, self).fields_view_get(cr, uid, view_id,view_type,context,toolbar=toolbar)
+        result = super(product_mag_osv, self).fields_view_get(cr, uid, view_id,view_type,context,toolbar=toolbar)
         if view_type == 'form':
             if context.get('set', False):
-                print 'lal'
                 ir_model_ids = self.pool.get('ir.model').search(cr, uid, [('model', 'in', ['product.product','product.template'])])
                 ir_model_field_ids = self.pool.get('ir.model.fields').search(cr, uid, [('model_id', 'in', ir_model_ids)])
                 field_names = ['product_type']
@@ -795,26 +797,17 @@ class product_mag_osv(magerp_osv.magerp_osv):
                 if len(self.pool.get('external.shop.group').search(cr,uid,[('referential_type', 'ilike', 'mag')])) >1 :
                     context['multiwebsite'] = True
                     field_names.append('websites_ids')
-                #in the cas that the magento view is open from the button 'open magento fields', we can give a very customize view because only on for one product
-
-                if context.get('open_from_button_object_id', False):
-                    print 'context', context, context['open_from_button_object_id']
-                    product = self.read(cr, uid, context['open_from_button_object_id'], ['is_multi_variants', 'dimension_type_ids'], context=context)[0]
-                    print product
-                    if product['is_multi_variants'] and product['dimension_type_ids']:
-                        for dimension in self.pool.get('product.variant.dimension.type').browse(cr, uid, product['dimension_type_ids'], context=context):
-                            field_names.remove(dimension.magento_attribut.field_name)
-
-                print 'field_names', field_names
              
                 if SHOW_JSON:
                     field_names.append('magerp')
+                    
+                field_names = self._filter_fields_to_return(cr, uid, field_names, context)
+                  
                 result['fields'].update(self.fields_get(cr, uid, field_names, context))
                 view_part = self.redefine_prod_view(cr, uid, field_names, context) #.decode('utf8') It is not necessary, the translated view could be in UTF8
                 result['arch'] = result['arch'].decode('utf8').replace('<page string="attributes_placeholder"/>', '<page string="'+_("Magento Information")+'"'+""" attrs="{'invisible':[('magento_exportable','!=',1)]}"><field name='product_type' attrs="{'required':[('magento_exportable','=',True)]}"/>\n""" + view_part + """\n</page>""").replace('<button name="open_magento_fields" string="Open Magento Fields" icon="gtk-go-forward" type="object" colspan="2"/>', '')
 
                 result['arch'] = result['arch'].replace('<separator string="attributes_placeholder" colspan="4"/>', view_part)
-
             else:
                 result['arch'] = result['arch'].replace('<page string="attributes_placeholder"/>', "")
         return result
