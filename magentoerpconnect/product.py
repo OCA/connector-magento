@@ -78,13 +78,24 @@ class product_category(magerp_osv.magerp_osv):
                     ('name', 'Name'),
                     ('price', 'Price')
                     ], 'Default Product Listing Sort (Sort By)'),
-        'magerp_stamp':fields.datetime('Magento stamp')
+        'magerp_stamp':fields.datetime('Magento stamp'),
+        'include_in_menu': fields.boolean('Include in Navigation Menu'),
+        'page_layout': fields.selection([
+                    ('None', 'No layout updates'),
+                    ('empty', 'Empty'),
+                    ('one_column', '1 column'),
+                    ('two_columns_left', '2 columns with left bar'),
+                    ('two_columns_right', '2 columns with right bar'),
+                    ('three_columns', '3 columns'),
+                    ], 'Page Layout'),        
         }
     _defaults = {
         'display_mode':lambda * a:'PRODUCTS',
         'available_sort_by':lambda * a:'None',
         'default_sort_by':lambda * a:'None',
-        'level':lambda * a:1
+        'level':lambda * a:1,
+        'include_in_menu': lambda * a:True,
+        'page_layout': lambda * a:'None'
                  }
     
     def write(self, cr, uid, ids, vals, context=None):

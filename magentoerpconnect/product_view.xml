@@ -22,6 +22,7 @@
 										<field name="meta_description" colspan="2" />
 										<field name="url_key" colspan="2" />
 										<field name="level" colspan="2" />
+                                        <field name="include_in_menu" colspan="2" />
 									</group>
 									<group col="1" colspan="1">
 										<separator string="Category Image" />
@@ -51,6 +52,8 @@
 								<separator string="Sorting method" colspan="4" />
 								<field name="available_sort_by" />
 								<field name="default_sort_by" />
+								<separator string="Page Layout" colspan="4" />
+								<field name="page_layout" nolabel="1" />
 							</page>
 						</notebook>
 					</group>

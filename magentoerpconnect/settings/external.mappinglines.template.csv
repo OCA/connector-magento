@@ -81,6 +81,11 @@ result=[('image_name',ifield),('image',image_binary)]","if record['image']:
 	result = [('image',record['image_name'])]
 else:
 	result=[]"
+"mag_erp_procat_16","magento1324","product.model_product_category","include_in_menu","in_out","str","result=[('include_in_menu', ifield and (eval(ifield)) or False)]","result=[('include_in_menu',record['include_in_menu'])]"
+"mag_erp_procat_17","magento1324","product.model_product_category","page_layout","in_out","str","if ifield:
+    result=[('page_layout',ifield)]
+else:
+    result=[('page_layout','None')]","result=[('page_layout', record['page_layout'] or '')]"
 "mag_erp_attrgrp_2","magento1324","model_magerp_product_attribute_groups","attribute_set_id","in_out","int","result=[('attribute_set_id', ifield)]","result=[('attribute_set_id', record['attribute_set_id'])]"
 "mag_erp_attrgrp_3","magento1324","model_magerp_product_attribute_groups","attribute_group_name","in_out","str","result=[('attribute_group_name', ifield)]","result=[('attribute_group_name', record['attribute_group_name'])]"
 "mag_erp_attrgrp_4","magento1324","model_magerp_product_attribute_groups","sort_order","in_out","int","result=[('sort_order', ifield)]","result=[('sort_order', record['sort_order'])]"
