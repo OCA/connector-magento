@@ -227,19 +227,28 @@ class magerp_osv(osv.osv):
                     
                     #it may happen that list method doesn't provide enough information, forcing us to use get_method on each record (case for sale orders)
                     if context.get('one_by_one', False):
-                        del(context['one_by_one'])
-                        for record in data:
-                            id = record[self.pool.get('external.mapping').read(cr, uid, mapping_id[0],['external_key_name'])['external_key_name']]
-                            get_method = self.pool.get('external.mapping').read(cr,uid,mapping_id[0],['external_get_method']).get('external_get_method',False)
-                            rec_data = [conn.call(get_method, [id])]
-                            rec_result = self.ext_import(cr, uid, rec_data, external_referential_id, defaults, context)
-                            result['create_ids'].append(rec_result['create_ids'])
-                            result['write_ids'].append(rec_result['write_ids'])
+                        self.mage_import_one_by_one(cr, uid, conn, external_referential_id, mapping_id[0], data, defaults, context)
                     else:
                         result = self.ext_import(cr, uid, data, external_referential_id, defaults, context)
 
         return result
-    
+
+    def mage_import_one_by_one(self, cr, uid, conn, external_referential_id, mapping_id, data, defaults=None, context=None):
+        if context is None:
+            context = {}
+        result = {'create_ids': [], 'write_ids': []}
+        if context.get('one_by_one', False):
+            del(context['one_by_one'])
+        for record in data:
+            id = record[self.pool.get('external.mapping').read(cr, uid, mapping_id, ['external_key_name'])['external_key_name']]
+            get_method = self.pool.get('external.mapping').read(cr, uid, mapping_id, ['external_get_method']).get('external_get_method',False)
+            rec_data = [conn.call(get_method, [id])]
+            rec_result = self.ext_import(cr, uid, rec_data, external_referential_id, defaults, context)
+            result['create_ids'].append(rec_result['create_ids'])
+            result['write_ids'].append(rec_result['write_ids'])
+            # and let the import continue, because it will be imported on the next import
+        return result
+
     def get_external_data(self, cr, uid, conn, external_referential_id, defaults=None, context=None):
         """Constructs data using WS or other synch protocols and then call ext_import on it"""
         return self.mage_import_base(cr, uid, conn, external_referential_id, defaults, context)#TODO refactor mage_import_base calls to this interface

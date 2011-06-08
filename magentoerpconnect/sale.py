@@ -33,7 +33,6 @@ NOTRY = False
 #TODO, may be move that on out CSV mapping, but not sure we can easily
 #see OpenERP sale/sale.py and Magento app/code/core/Mage/Sales/Model/Order.php for details
 ORDER_STATUS_MAPPING = {'draft': 'processing', 'progress': 'processing', 'shipping_except': 'complete', 'invoice_except': 'complete', 'done': 'closed', 'cancel': 'canceled', 'waiting_date': 'holded'}
-SALE_ORDER_MAPPING = {} #{1: 100000001, 3: 300000001, 2: 200000001} #Usefull for first import if there is a lot of sale orders! IMPORTANT : Note that this is template, we just let it here for example, working with magento's example data. 
 SALE_ORDER_IMPORT_STEP = 200
 
 class sale_shop(magerp_osv.magerp_osv):
@@ -137,22 +136,17 @@ class sale_shop(magerp_osv.magerp_osv):
             ids_or_filter = [{'store_id': {'eq': magento_storeview_id}, 'state': {'neq': 'canceled'}}]
             res = {'create_ids': [], 'write_ids': []}
             nb_last_created_ids = SALE_ORDER_IMPORT_STEP
-            while nb_last_created_ids != 0:
-                #get last imported order:
-                last_external_id = self.get_last_imported_external_id(cr, 'sale.order', shop.referential_id.id, "sale_order.shop_id=%s and magento_storeview_id=%s" % (shop.id, storeview.id))[1]
-                if last_external_id:
-                    ids_or_filter[0]['increment_id'] = {'from': int(last_external_id) + 1, 'to': int(last_external_id) + SALE_ORDER_IMPORT_STEP}
-                else:
-                    if SALE_ORDER_MAPPING.get(magento_storeview_id, False):
-                        ids_or_filter[0]['increment_id'] = {'lt': SALE_ORDER_MAPPING[magento_storeview_id] + SALE_ORDER_IMPORT_STEP}
+            while nb_last_created_ids:
                 defaults['magento_storeview_id'] = storeview.id
-                resp = self.pool.get('sale.order').mage_import_base(cr, uid, context.get('conn_obj', False), shop.referential_id.id, defaults=defaults, context={'one_by_one': True, 'ids_or_filter':ids_or_filter})
+                resp = self.pool.get('sale.order').mage_import_base(cr, uid, context.get('conn_obj', False),
+                                                                    shop.referential_id.id, defaults=defaults,
+                                                                    context={'ids_or_filter':ids_or_filter})
                 res['create_ids'] += resp['create_ids']
                 res['write_ids'] += resp['write_ids']
                 nb_last_created_ids = len(resp['create_ids'])
             result.append(res)
         return result
-        
+
     def update_orders(self, cr, uid, ids, context=None):
         # First update the shop order from OERP
         super(sale_shop, self).update_orders(cr,uid,ids,context)
@@ -583,6 +577,109 @@ class sale_order(magerp_osv.magerp_osv):
                 order = self.pool.get('sale.order').browse(cr, uid, order_id, context)
                 self.generate_payment_with_pay_code(cr, uid, payment['method'], order.partner_id.id, float(amount), "mag_" + payment['payment_id'], "mag_" + data_record['increment_id'], order.date_order, paid, context) 
         return paid
+
+    def chain_cancel_orders(self, cr, uid, external_id, external_referential_id, defaults=None, context=None):
+        """ Get all the chain of edited orders (an edited order is canceled on Magento)
+         and cancel them on OpenERP. If an order cannot be canceled (confirmed for example)
+         A request is created to inform the user.
+        """
+        if context is None:
+            context = {}
+        logger = netsvc.Logger()
+        conn = context.get('conn_obj', False)
+        parent_list = []
+        # get all parents orders (to cancel) of the sale orders
+        parent = conn.call('sales_order.get_parent', [external_id])
+        while parent:
+            parent_list.append(parent)
+            parent = conn.call('sales_order.get_parent', [parent])
+
+        wf_service = netsvc.LocalService("workflow")
+        for parent_incr_id in parent_list:
+            canceled_order_id = self.extid_to_existing_oeid(cr, uid, parent_incr_id, external_referential_id)
+            if canceled_order_id:
+                try:
+                    wf_service.trg_validate(uid, 'sale.order', canceled_order_id, 'cancel', cr)
+                    self.log(cr, uid, canceled_order_id, "order %s canceled when updated from external system" % (canceled_order_id,))
+                    logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "Order %s canceled when updated from external system because it has been replaced by a new one" % (canceled_order_id,))
+                except osv.except_osv, e:
+                    #TODO: generic reporting of errors in magentoerpconnect
+                    # except if the sale order has been confirmed for example, we cannot cancel the order
+                    to_cancel_order_name = self.read(cr, uid, canceled_order_id, ['name'])['name']
+                    request = self.pool.get('res.request')
+                    summary = _(("The sale order %s has been replaced by the sale order %s on Magento.\n"
+                                 "The sale order %s has to be canceled on OpenERP but it is currently impossible.\n\n"
+                                 "Error:\n"
+                                 "%s\n"
+                                 "%s")) % (parent_incr_id,
+                                          external_id,
+                                          to_cancel_order_name,
+                                          e.name,
+                                          e.value)
+                    request.create(cr, uid,
+                                   {'name': _("Could not cancel sale order %s during Magento's sale orders import") % (to_cancel_order_name,),
+                                    'act_from': uid,
+                                    'act_to': uid,
+                                    'body': summary,
+                                    'priority': '2'
+                                    })
+
+    def ext_import(self, cr, uid, data, external_referential_id, defaults=None, context=None):
+        """
+        Inherit the method to flag the order to "Imported" on Magento right after the importation
+        Before the import, check if the order is already imported and in a such case, skip the import
+         and flag "imported" on Magento.
+        """
+        ext_order_id = data[0]['increment_id']
+        # check if order is already imported
+        if self.extid_to_existing_oeid(cr, uid, ext_order_id, external_referential_id, context):
+            # set the missing flag on magento and skip the import in order to avoid the update of
+            # the already imported order
+            self.ext_set_order_imported(cr, uid, ext_order_id, external_referential_id, context)
+            return {'create_ids': [], 'write_ids': []}
+
+        res = super(sale_order, self).ext_import(cr, uid, data, external_referential_id, defaults=defaults, context=context)
+
+        # if a created order has a relation_parent_real_id, the new one replaces the original, so we have to cancel the old one
+        if data[0].get('relation_parent_real_id', False): # data[0] because orders are imported one by one so data always has 1 element
+            self.chain_cancel_orders(cr, uid, ext_order_id, external_referential_id, defaults=defaults, context=context)
+
+        # set the "imported" flag to true on Magento
+        self.ext_set_order_imported(cr, uid, ext_order_id, external_referential_id, context)
+        return res
+
+    def ext_set_order_imported(self, cr, uid, external_id, external_referential_id, context=None):
+        if context is None:
+            context = {}
+        logger = netsvc.Logger()
+        conn = context.get('conn_obj', False)
+        conn.call('sales_order.done', [external_id])
+        logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "Successfully set the imported flag on Magento on sale order %s" % external_id)
+        return True
+
+    def mage_import_base(self, cr, uid, conn, external_referential_id, defaults=None, context=None):
+        """ Inherited method for Sales orders in order to import only order not flagged as "imported" on Magento
+        """
+        if context is None:
+            context = {}
+        if not 'ids_or_filter' in context.keys():
+            context['ids_or_filter'] = []
+        result = {'create_ids': [], 'write_ids': []}
+
+        mapping_id = self.pool.get('external.mapping').search(cr,uid,[('model', '=', self._name),
+                                                                      ('referential_id', '=', external_referential_id)])
+        if mapping_id:
+            # returns the non already imported order (limit returns the n first orders)
+            order_retrieve_params = {
+                'imported': False,
+                'limit': SALE_ORDER_IMPORT_STEP,
+                'filters': context['ids_or_filter'][0],
+            }
+            data = conn.call('sales_order.retrieve', [order_retrieve_params])
+
+            context['conn_obj'] = conn # we will need the connection to set the flag to "imported" on magento after each order import
+            result = self.mage_import_one_by_one(cr, uid, conn, external_referential_id, mapping_id[0], data, defaults, context)
+        return result
 
 # UPDATE ORDER STATUS FROM MAGENTO TO OPENERP IS UNSTABLE, AND NOT VERY USEFULL. MAYBE IT WILL BE REFACTORED 
 
