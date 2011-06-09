@@ -1,4 +1,3 @@
-00# -*- encoding: utf-8 -*-
 # -*- encoding: utf-8 -*-
 #########################################################################
 #This module intergrates Open ERP with the magento core                 #
@@ -1002,14 +1001,24 @@ class product_product(product_mag_osv):
         self.write(cr, uid, oe_id, {'magento_sku': sku})
         return res
 
-    def ext_export_configurable(self, cr, uid, id, external_referential_ids=None, defaults=None, context=None):
-        return True
-
     def configurable_product_are_supported(self):
         '''By default Configurable Product are not supported if you module add this functionality just overwrite this function.'''
         return False
+    
+    def ext_export_configurable(self, cr, uid, id, external_referential_ids=None, defaults=None, context=None):
+        '''Hook to allow your external module to execute some code before exporting a configurable product'''
+        return True
+
+    def bundle_product_are_supported(self):
+        '''By default Bundle Product are not supported if you module add this functionality just overwrite this function.'''
+        return False
+    
+    def ext_export_bundle(self, cr, uid, id, external_referential_ids=None, defaults=None, context=None):
+        '''Hook to allow your external module to execute some code before exporting a bundle product'''
+        return True
 
     def ext_export(self, cr, uid, ids, external_referential_ids=None, defaults=None, context=None):
+        #TODO refactor and split this method
         #Is external_referential_ids is still used?
         if context is None:
             context = {}
@@ -1041,6 +1050,8 @@ class product_product(product_mag_osv):
         support_configurable = self.configurable_product_are_supported()
         configurable_product_ids = {}
         simple_to_configurable = {}
+        bundle_product_ids = {}
+        simple_to_bundle = {}
 
         #strangely seems that on inherits structure, write_date/create_date are False for children
         cr.execute("select id, write_date, create_date, product_type from product_product where id in %s", (tuple(ids),))
@@ -1065,17 +1076,37 @@ class product_product(product_mag_osv):
                                     last_updated_time = last_updated_bom_time
                                     last_updated_product = last_updated_bom
                 else:
-                        logger.notifyChannel('ext synchro', netsvc.LOG_ERROR, "OpenERP 'grouped' products will export to Magento as 'grouped products' only if they have a BOM and if the 'mrp' BOM module is installed")
+                    logger.notifyChannel('ext synchro', netsvc.LOG_ERROR, "OpenERP 'grouped' products will export to Magento as 'grouped products' only if they have a BOM and if the 'mrp' BOM module is installed")
             elif product_read[3]=='configurable':
+                # The configurable product have to be exported after all simple product which is depend
+                # Configurable_product_ids link the configurable with their variants
+                # After each export simple product are remove from the dependency list
+                # When all simple product are exported the configurable is exported
                 if support_configurable:
-                    variant_ids = self.read(cr, uid, product_read[0], ['variant_ids'], context)
-                    print set([1,2,3])
+                    variant_ids = self.read(cr, uid, product_read[0], ['variant_ids'], context=context)
                     variant_ids_to_export = list(set(variant_ids) & set(ids))
                     if variant_ids_to_export:
                         configurable_product_ids[product_read[0]] = variant_ids_to_export
                         for id in variant_ids_to_export:
                             simple_to_configurable[id] = product_read[0]
                         continue
+
+            elif product_read[3]=='bundle':
+                # The same method for congurable product are apply on bundle
+                component_ids = []
+                if support_bundle:
+                    product = self.browse(cr, uid, product_read[0], context=context)
+                    for product_item_set in product.item_set_ids:
+                        for product_item_set_line in product_item_set.item_set_line_ids:
+                            component_ids += product_item_set_line.product.id
+                    
+                    component_ids_to_export = list(set(component_ids) & set(ids))
+                    if component_ids_to_export:
+                        bundle_product_ids[product_read[0]] = component_ids_to_export
+                        for id in component_ids_to_export:
+                            simple_to_bundle[id] = product_read[0]
+                        continue
+                    
             if last_updated_time and last_exported_time and not context.get('force_export', False):
                 if last_exported_time + datetime.timedelta(seconds=1) > last_updated_time:
                     continue
@@ -1085,6 +1116,7 @@ class product_product(product_mag_osv):
         dates_2_ids.sort()
         tmp_ids = [x[1] for x in dates_2_ids]
 
+        #TODO refactor this code merge the two loop in a single function
         #Add the configurable product have to be syncronise just after exporting all simple product 
         ids=[]
         for id in tmp_ids:
@@ -1093,6 +1125,15 @@ class product_product(product_mag_osv):
                 configurable_product_ids[simple_to_configurable[id]].remove(simple_to_configurable[id])
                 if len(configurable_product_ids[simple_to_configurable[id]])==0:
                     ids += simple_to_configurable[id]
+                    
+        #Add the bundle product have to be syncronise just after exporting all simple product 
+        ids=[]
+        for id in tmp_ids:
+            ids += [id]
+            if bundle_to_configurable.get(id, False):
+                bundle_product_ids[simple_to_bundle[id]].remove(simple_to_bundle[id])
+                if len(bundle_product_ids[simple_to_configurable[id]])==0:
+                    ids += simple_to_bundle[id]
 
         #TODO on the same model as configurable product add the id of the group product just after exporting the simple product. Avoid useless syncronization
             
@@ -1139,8 +1180,11 @@ class product_product(product_mag_osv):
                     logger.notifyChannel('ext synchro', netsvc.LOG_ERROR, "OpenERP 'grouped' products will export to Magento as 'grouped products' only if they have a BOM and if the 'mrp' BOM module is installed")
 
             elif product_type == 'configurable':
-                self.ext_export_configurable(cr, uid, id, external_referential_ids, defaults, context)
-
+                self.ext_export_configurable(cr, uid, id, product_type, external_referential_ids, defaults, context)
+            
+            #TODO all method if product_type == 'grouped' and elif product_type == 'configurable' have to be check by this function "action_before_exporting"
+            self.action_before_exporting(cr, uid, id, external_referential_ids, defaults, context)
+            
             for context_storeview in context_dic:
                 temp_result = super(magerp_osv.magerp_osv, self).ext_export(cr, uid, [id], external_referential_ids, defaults, context_storeview)
                 if child_ids: 

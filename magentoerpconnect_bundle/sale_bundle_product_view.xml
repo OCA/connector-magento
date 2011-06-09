@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  magentoerpconnect_bundle for OpenERP
+  Copyright (C) 2011 Akretion Sébastien BEAU <sebastien.beau@akretion.com>
+  The licence is in the file __openerp__.py
+-->
+
+<openerp>
+    <data>
+    
+        <!-- INHERITED VIEW FOR THE OBJECT : product_item_set_line -->
+
+		<record id="product_item_set_line_view_form" model="ir.ui.view">
+			<field name="name">magentoerpconnect_bundle.product_item_set_line.view_form</field>
+			<field name="model">product.item.set.line</field>
+			<field name="inherit_id" ref="sale_bundle_product.view_id" />
+            <field eval="16" name="priority"/>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<data>
+					<field name="field_reference" position="after">
+						<field name="magento_render_type" />
+					</field>
+				</data>
+			</field>
+		</record>
+
+    </data>
+</openerp>
