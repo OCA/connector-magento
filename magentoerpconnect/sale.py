@@ -370,7 +370,10 @@ class sale_order(magerp_osv.magerp_osv):
                 lines_vals = []
                 is_tax_included = defaults.get('price_type', False) == 'tax_included'
                 for line_data in data_record.get('items', []):
-                    defaults_line = {'product_uom': 1}
+                    # Setting the UoM in sale order line as defined in product definition in openerp
+                    product_id = self.pool.get('product.product').extid_to_oeid(cr, uid, line_data['product_id'], external_referential_id)
+                    product = self.pool.get('product.product').browse(cr, uid, product_id)
+                    defaults_line = {'product_uom': product.uom_id.id}
                     #simple VAT tax on order line (else override method):
                     line_tax_vat = float(line_data['tax_percent']) / 100.0
                     if line_tax_vat > 0:
