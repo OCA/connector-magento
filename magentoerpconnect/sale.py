@@ -392,61 +392,104 @@ class sale_order(magerp_osv.magerp_osv):
                 res['order_line'] = lines_vals
         return res
 
-    def add_gift_certificates(self, cursor, user, order_values, 
-            magento_order_data, context):
-        '''Add gift certificate as a separate line item with single quantity 
-        and negative amount. Known to work with Unigry gift certificates also
-        '''
-        product_obj = self.pool.get('product.product')
-        if ('giftcert_amount' in magento_order_data) and \
-            (float(magento_order_data.get('giftcert_amount', 0)) > 0):
-            gift_product_ids = product_obj.search(cursor, user, 
-                [('default_code', '=', 'GIFT CERTIFICATE')], context=context)
-            if gift_product_ids:
-                gift_product = product_obj.browse(
-                    cursor, user, gift_product_ids[0], context)
-                gift_cert_code = magento_order_data['giftcert_code']
-                order_values['order_line'].append((0, 0, {
-                    'product_id': gift_product.id,
-                    'name': 'Gift Certificate %s' % gift_cert_code,
-                    'product_uom': gift_product.uom_id.id,
-                    'product_uom_qty': 1,
-                    'price_unit': -float(magento_order_data['giftcert_amount']),
-                    }))
-        return order_values
 
-    def get_order_shipping(self, cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context):
-        ship_product_id = self.pool.get('product.product').search(cr, uid, [('default_code', '=', 'SHIP MAGENTO')])[0]
-        ship_product = self.pool.get('product.product').browse(cr, uid, ship_product_id, context)
+    def add_order_extra_line(self, cr, uid, res, data_record, ext_field, product_code, context):
+        """ Add or substract amount on order as a separate line item with single quantity for each type of amounts like :
+        shipping, cash on delivery, discount, gift certificates...
+        Arguments :
+        ext_field: name of the field in data_record where the amount is stored
+        product_code: code of the product to use in the sale order line
+        Optional arguments in kwargs:
+        sign: multiply the amount with the sign to add or substract it from the sale order
+        ext_tax_field: name of the field in data_record where the tax amount is stored
+        ext_code_field: name of the field in data_record containing a code (for coupons and gift certificates) which will be printed on the product name
+        """
+        sign = 'sign' in context and context['sign'] or 1
+        ext_tax_field = 'ext_tax_field' in context and context['ext_tax_field'] or None
+        ext_code_field = 'ext_code_field' in context and context['ext_code_field'] or None
+
+        product_id = self.pool.get('product.product').search(cr, uid, [('default_code', '=', product_code)])[0]
+        product = self.pool.get('product.product').browse(cr, uid, product_id, context)
         is_tax_included = defaults.get('price_type', False) == 'tax_included'
-        #simple VAT tax on shipping (else override method):
+        amount = float(data_record[ext_field]) * sign
         tax_id = []
-        if data_record['shipping_tax_amount'] and float(data_record['shipping_tax_amount']) != 0:
-            ship_tax_vat = float(data_record['shipping_tax_amount'])/float(data_record['shipping_amount'])
-            ship_tax_ids = self.pool.get('account.tax').search(cr, uid, [('price_include', '=', is_tax_included), ('type_tax_use', '=', 'sale'), ('amount', '>=', ship_tax_vat - 0.001), ('amount', '<=', ship_tax_vat + 0.001)])
-            if ship_tax_ids and len(ship_tax_ids) > 0:
-                tax_id = [(6, 0, [ship_tax_ids[0]])]
+        if ext_tax_field:
+            if data_record[ext_tax_field] and float(data_record[ext_tax_field]) != 0:
+                tax_vat = abs(float(data_record[ext_tax_field]) / amount)
+                tax_ids = self.pool.get('account.tax').search(cr, uid, [('price_include', '=', is_tax_included), ('type_tax_use', '=', 'sale'), ('amount', '>=', tax_vat - 0.001), ('amount', '<=', tax_vat + 0.001)])
+                if tax_ids and len(tax_ids) > 0:
+                    tax_id = [(6, 0, [tax_ids[0]])]
             else:
-                #try to find the taxe with less precision 
-                ship_tax_ids = self.pool.get('account.tax').search(cr, uid, [('price_include', '=', is_tax_included), ('type_tax_use', '=', 'sale'), ('amount', '>=', ship_tax_vat - 0.01), ('amount', '<=', ship_tax_vat + 0.01)])
-                if ship_tax_ids and len(ship_tax_ids) > 0:
-                    tax_id = [(6, 0, [ship_tax_ids[0]])]
-                
+                #try to find a tax with less precision 
+                tax_ids = self.pool.get('account.tax').search(cr, uid, [('price_include', '=', is_tax_included), ('type_tax_use', '=', 'sale'), ('amount', '>=', tax_vat - 0.01), ('amount', '<=', tax_vat + 0.01)])
+                if tax_ids and len(tax_ids) > 0:
+                    tax_id = [(6, 0, [tax_ids[0]])]
+
+        name = product.name
+        if ext_code_field and data_record.get(ext_code_field, False):
+            name = "%s [%s]" % (name, data_record[ext_code_field])
+		
         if is_tax_included:
-            price_unit = float(data_record['shipping_amount']) + float(data_record['shipping_tax_amount'])
+            price_unit = float(amount) + float(data_record[ext_tax_field])
         else:
-            price_unit = float(data_record['shipping_amount'])
-            
+            price_unit = float(amount)
+
         res['order_line'].append((0, 0, {
-                                    'product_id': ship_product.id,
-                                    'name': ship_product.name,
-                                    'product_uom': ship_product.uom_id.id,
+                                    'product_id': product.id,
+                                    'name': name,
+                                    'product_uom': product.uom_id.id,
                                     'product_uom_qty': 1,
                                     'price_unit': price_unit,
                                     'tax_id': tax_id
                                 }))
         return res
     
+    def add_order_shipping(self, cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context):
+        if data_record.get('shipping_amount', False) and float(data_record.get('shipping_amount', False)) > 0:
+            ctx = context.copy()
+            ctx.update({
+                'ext_tax_field': 'shipping_tax_amount',
+            })
+            res = self.add_order_extra_line(cr, uid, res, data_record, 'shipping_amount', 'SHIP MAGENTO', ctx)
+        return res
+    
+    def add_order_shipping(self, cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context):
+        if data_record.get('shipping_amount', False) and float(data_record.get('shipping_amount', False)) > 0:
+            ctx = context.copy()
+            ctx.update({
+                'ext_tax_field': 'shipping_tax_amount',
+            })
+            res = self.add_order_extra_line(cr, uid, res, data_record, 'shipping_amount', 'SHIP MAGENTO', ctx)
+        return res
+
+    def add_gift_certificates(self, cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context):
+        if data_record.get('giftcert_amount', False) and float(data_record.get('giftcert_amount', False)) > 0:
+            ctx = context.copy()
+            ctx.update({
+                'ext_code_field': 'giftcert_code',
+                'sign': -1,
+            })
+            res = self.add_order_extra_line(cr, uid, res, data_record, 'giftcert_amount', 'GIFT CERTIFICATE', ctx)
+        return res
+
+    def add_discount(self, cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context):
+        if data_record.get('discount_amount', False) and float(data_record.get('discount_amount', False)) < 0:
+            ctx = context.copy()
+            ctx.update({
+                'ext_code_field': 'coupon_code',
+            })
+            res = self.add_order_extra_line(cr, uid, res, data_record, 'discount_amount', 'DISCOUNT MAGENTO', ctx)
+        return res
+
+    def add_cash_on_delivery(self, cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context):
+        if data_record.get('cod_fee', False) and float(data_record.get('cod_fee', False)) > 0:
+            ctx = context.copy()
+            ctx.update({
+                'ext_tax_field': 'cod_tax_amount',
+            })
+            res = self.add_order_extra_line(cr, uid, res, data_record, 'cod_fee', 'CASH ON DELIVERY MAGENTO', ctx)
+        return res   
+     
     def oevals_from_extdata(self, cr, uid, external_referential_id, data_record, key_field, mapping_lines, defaults, context):
         if not context.get('one_by_one', False):
             if data_record.get('billing_address', False):
@@ -458,9 +501,10 @@ class sale_order(magerp_osv.magerp_osv):
             if data_record.get('items', False):
                 try:
                     res = self.get_order_lines(cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
-                    if data_record.get('shipping_amount', False) and float(data_record.get('shipping_amount', False)) > 0:
-                        res = self.get_order_shipping(cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
-                    res = self.add_gift_certificates(cr, uid, res, data_record, context)
+                    res = self.add_order_shipping(cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
+                    res = self.add_gift_certificates(cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
+                    res = self.add_discount(cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
+                    res = self.add_cash_on_delivery(cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
                 except Exception, e:
                     print "order has errors with items lines, data are: ", data_record
                     print e
