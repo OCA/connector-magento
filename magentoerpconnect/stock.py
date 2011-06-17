@@ -35,7 +35,15 @@ class stock_picking(osv.osv):
             ext_shipping_id = conn.call('sales_order_shipment.create', [magento_incrementid, {}, _("Shipping Created"), True, True])
         except Exception, e:
             logger.notifyChannel(_("Magento Call"), netsvc.LOG_ERROR, _("The picking from the order %s can't be created on Magento, please attach it manually, %s") % (magento_incrementid, e))
-        return ext_shipping_id        
+        return ext_shipping_id
+    
+    def add_picking_line(self, cr, uid, lines, picking_line, context):
+        """ A line to add in the shipping is a dict with : product_id and product_qty keys."""
+        line_info = {'product_id': picking_line.product_id.id,
+                     'product_qty': picking_line.product_qty,
+        }
+        lines.append(line_info)
+        return lines        
 
 
     def create_ext_partial_shipping(self, cr, uid, id, external_referential_id, magento_incrementid, context):
@@ -48,11 +56,17 @@ class stock_picking(osv.osv):
             product_2_item.update({self.pool.get('product.product').extid_to_oeid(cr, uid, item['product_id'], external_referential_id, context={}): item['item_id']})
         picking = self.pool.get('stock.picking').browse(cr, uid, id, context)
         item_qty = {}
+        
+        lines = []
+        # get product and quantities to ship from the picking
         for line in picking.move_lines:
-            if item_qty.get(product_2_item[line.product_id.id], False):
-                item_qty[product_2_item[line.product_id.id]] += line.product_qty
+            lines = self.add_picking_line(cr, uid, lines, line, context)
+
+        for line in lines:
+            if item_qty.get(product_2_item[line['product_id']], False):
+                item_qty[product_2_item[line['product_id']]] += line['product_qty']
             else:
-                item_qty.update({product_2_item[line.product_id.id]:line.product_qty})
+                item_qty.update({product_2_item[line['product_id']]: line['product_qty']})
         try:
             ext_shipping_id = conn.call('sales_order_shipment.create', [magento_incrementid, item_qty, _("Shipping Created"), True, True])
         except Exception, e:
