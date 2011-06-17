@@ -29,7 +29,7 @@
 			<field name="inherit_id" ref="base.view_partner_category_form" />
 			<field name="arch" type="xml">
 				<field name="parent_id" position="after">
-					<separator string="Magento Information" colspan="4" />
+					<separator string="Magento/Tax Information" colspan="4" />
 					<field name="tax_class_id" select="1" />
 				</field>
 			</field>
