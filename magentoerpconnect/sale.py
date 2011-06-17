@@ -387,7 +387,8 @@ class sale_order(magerp_osv.magerp_osv):
                                         
                     if line_val['product_id']:
                         line_val['type'] = self.pool.get('product.product').read(cr, uid, line_val['product_id'], ['procure_method'], context)['procure_method']
-                    lines_vals.append((0, 0, line_val))
+                    if not line_val.has_key('_CANCEL_IMPORT'):
+                        lines_vals.append((0, 0, line_val))
                 res['order_line'] = lines_vals
         return res
 
