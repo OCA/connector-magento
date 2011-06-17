@@ -723,6 +723,12 @@ class product_mag_osv(magerp_osv.magerp_osv):
         while len(results) > 0:
             mag_group_id = result[1]
             oerp_group_id = attr_group_obj.extid_to_oeid(cr, uid, mag_group_id, attr_set.referential_id.id)
+            if not oerp_group_id: #FIXME workaround in multi-Magento instances (databases) where attribute group might not be found due to the way we share attributes currently
+                for ref_id in self.pool.get('external.referential').search(cr, uid, []):
+                     if ref_id != attr_set.referential_id.id:
+                         oerp_group_id = attr_group_obj.extid_to_oeid(cr, uid, mag_group_id, ref_id)
+                         if oerp_group_id:
+                             break
             group_name = attr_group_obj.read(cr, uid, oerp_group_id, ['attribute_group_name'])['attribute_group_name']
             
             #Create a page for the attribute group
