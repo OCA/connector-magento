@@ -14,7 +14,7 @@
 			<field name="standard_price">0.0</field>
 			<field name="type">service</field>
 			<field name="name">Shipping and Handling</field>
-			<field name="exportable" eval="False" />
+			<field name="magento_exportable" eval="False" />
 			<field name="categ_id" ref="mag0"/>
 		</record>
 
