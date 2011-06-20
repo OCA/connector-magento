@@ -29,7 +29,18 @@ else:
 payments_mapping = {'checkmo': 'manual', 'ccsave': 'prepaid', 'free':'prepaid','googlecheckout':'prepaid','paypayl_express':'prepaid', 'paybox_system': 'prepaid', 'paypal_standard': 'prepaid', 'cashondelivery': 'manual', 'servired_standard': 'prepaid', 'bbva': 'prepaid', 'cofidis': 'prepaid'}
 ifield=eval(ifield)
 result=[('order_policy', ifield['method'] in payments_mapping and payments_mapping[ifield['method']] or 'prepaid'), ('ext_payment_method', ifield['method'])]",
-"mag_erp_soline_name","magento1324","sale.model_sale_order_line","name","in_out","str","result=[('name',ifield)]",
+"mag_erp_soline_name","magento1324","sale.model_sale_order_line","name","in_out","str","import re
+options_label = []
+options_data = data['product_options']
+clean = re.sub('\w:\w:|\w:\w+;', '', options_data)
+for each in clean.split('{'):
+    if each.startswith('""label""'):
+        split_info = each.split(';')	
+        options_label.append('%s: %s [%s]' % (split_info[1], split_info[3], data['sku']))
+	
+	
+result=[('name', ifield), ('notes',  """".join(options_label).replace('""""', '\n').replace('""', ''))]
+",
 "mag_erp_soline_pid","magento1324","sale.model_sale_order_line","product_id","in_out","str","context['alternative_key'] = data['sku']
 result=[('product_id',self.pool.get('product.product').extid_to_oeid(cr, uid, ifield, external_referential_id))]",
 "mag_erp_soline_uomqty","magento1324","sale.model_sale_order_line","qty_ordered","in_out","str","result=[('product_uom_qty',ifield)]",
