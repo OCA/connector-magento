@@ -24,9 +24,26 @@ import netsvc
 
 
 class product_product(osv.osv):
-    
     _inherit = "product.product"
     
+    def get_depends(self, cr, uid, id, product_type, context=None):
+        product_depends, child_to_parent_product_depends = super(product_product, self).get_depends(cr, uid, id, product_type, context=None)       
+        if product_type == 'configurable':
+            component_ids = []
+            product = self.browse(cr, uid, id, context=context)
+            for product_item_set in product.item_set_ids:
+                for product_item_set_line in product_item_set.item_set_line_ids:
+                    component_ids += product_item_set_line.product.id
+            
+            component_ids_to_export = list(set(component_ids) & set(ids))
+            if component_ids_to_export:
+                product_depends[id] = component_ids_to_export
+                for component_id in component_ids_to_export:
+                    child_to_parent_product_depends[component_id] = id
+                return product_depends, child_to_parent_product_depends, True
+        return product_depends, child_to_parent_product_depends, False
+                    
+                    
     def bundle_product_are_supported(self):
         return True
     

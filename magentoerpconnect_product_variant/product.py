@@ -51,6 +51,27 @@ product_variant_dimension_option()
 class product_product(osv.osv):
     
     _inherit = "product.product"
+    
+#    def get_depends(self, cr, uid, id, product_type, context=None):         
+#        product_depends = super(product_product, self).get_depends(cr, uid, id, product_type, context=None)
+#        if product_type == 'configurable':
+#            variant_ids = self.read(cr, uid, id, ['variant_ids'], context=context)
+#            variant_ids_to_export = list(set(variant_ids) & set(ids))
+#            if variant_ids_to_export:
+#                if product_depends.get(id, False):
+#                    product_depends[id] = variant_ids_to_export
+#                else:
+#                    product_depends[id] += variant_ids_to_export
+#        return product_depends
+
+    def get_last_update_date(self, cr, uid, product_read, context=None):
+        #A configurable product have to be updated if a variant is added
+        last_updated_date=super(product_product, self).get_last_update_date(cr, uid, product_read, context=context)
+        if product_read['product_type']=='configurable':
+            variant_ids = self.read(cr, uid, product_read['id'], ['variant_ids'], context=context)['variant_ids']
+            for variant_id in variant_ids:
+                self.oeid_to_extid(cr, uid, variant_id, context['external_referential_id'])
+        return last_updated_date
 
     def build_product_code_and_properties(self, cr, uid, ids, context=None):
         super(product_product, self).build_product_code_and_properties(cr, uid, ids, context=context)
@@ -82,15 +103,20 @@ class product_product(osv.osv):
                 vals['product_type'] = 'simple'
         super(product_product, self).create(cr, uid, vals, context)
 
-    def ext_export_configurable(self, cr, uid, id, external_referential_ids, defaults, context):
-        '''check if all simple product are already exported if not it export the unexported product'''
-        shop = self.pool.get('sale.shop').browse(cr, uid, context['shop_id'])
-        variant_ids = self.read(cr, uid, id, ['variant_ids'], context)['variant_ids']
-        variant_ids.remove(id)
-        for id in variant_ids:
-            if not self.oeid_to_extid(cr, uid, id, shop.referential_id.id):
-                context['do_not_update_date'] = True 
-                self.ext_export(cr, uid, [id], external_referential_ids, defaults, context)
+    def action_before_exporting(self, cr, uid, id, product_type, external_referential_ids, defaults, context):
+        #When the export of a configurable product is forced we should check if all variant are already exported
+        if context.get('force_export', False) and product_type == 'configurable':
+            print 'product to export', id
+            conn = context.get('conn_obj', False)
+            shop = self.pool.get('sale.shop').browse(cr, uid, context['shop_id'])
+            variant_ids = self.read(cr, uid, id, ['variant_ids'], context)['variant_ids']
+            variant_ids.remove(id)
+            for variant in self.browse(cr, uid, variant_ids, context=context):
+                if variant.magento_exportable:
+                    if not self.oeid_to_extid(cr, uid, variant.id, shop.referential_id.id):
+                        context['force_export'] = True 
+                        conn.logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "Force the export of the product %s as it was not exported before" %(id))
+                        self.ext_export(cr, uid, [variant.id], external_referential_ids, defaults, context)
         return True
 
     def add_data_to_create_configurable_product(self, cr, uid, oe_id, data, context=None):
@@ -105,27 +131,28 @@ class product_product(osv.osv):
             associated_skus = []
             # create a dict with all values used on the configurable products
             for product in self.browse(cr, uid, variant_ids):
-                associated_skus += [product.magento_sku]
-                attr_list = set()
-                # get values for each attribute of the product
-                mag_prod_id = str(self.oeid_to_extid(cr, uid, product.id, shop.referential_id.id))
-                products_data[mag_prod_id] = {}
-                index=0
-                for value in product.dimension_value_ids:
-                    # get the option selected on the product
-                    option = value.option_id.magento_attribut_option
-                    attr = option.attribute_id
-                    attr_list = attr_list.union(set([attr]))
-                    prod_data = {
-                        'attribute_id': attr.magento_id, # id of the attribute
-                        'label': option.label, # label of the option
-                        'value_index': int(option.value), # id of the option
-                        'is_percent': 0, # modification of the price
-                        'pricing_value': '', # modification of the price
-                    }
-                    #products_data[mag_prod_id][str(attribute_set.configurable_attributes.index(attr))] = prod_data
-                    products_data[mag_prod_id][str(index)] = prod_data
-                    index += 1
+                if product.magento_exportable:
+                    associated_skus += [product.magento_sku]
+                    attr_list = set()
+                    # get values for each attribute of the product
+                    mag_prod_id = str(self.oeid_to_extid(cr, uid, product.id, shop.referential_id.id))
+                    products_data[mag_prod_id] = {}
+                    index=0
+                    for value in product.dimension_value_ids:
+                        # get the option selected on the product
+                        option = value.option_id.magento_attribut_option
+                        attr = option.attribute_id
+                        attr_list = attr_list.union(set([attr]))
+                        prod_data = {
+                            'attribute_id': attr.magento_id, # id of the attribute
+                            'label': option.label, # label of the option
+                            'value_index': int(option.value), # id of the option
+                            'is_percent': 0, # modification of the price
+                            'pricing_value': '', # modification of the price
+                        }
+                        #products_data[mag_prod_id][str(attribute_set.configurable_attributes.index(attr))] = prod_data
+                        products_data[mag_prod_id][str(index)] = prod_data
+                        index += 1
 
             # create a dict with attributes used on the configurable product
             index=-1
