@@ -393,7 +393,7 @@ class sale_order(magerp_osv.magerp_osv):
         return res
 
 
-    def add_order_extra_line(self, cr, uid, res, data_record, ext_field, product_code, context):
+    def add_order_extra_line(self, cr, uid, res, data_record, ext_field, product_code, defaults, context):
         """ Add or substract amount on order as a separate line item with single quantity for each type of amounts like :
         shipping, cash on delivery, discount, gift certificates...
         Arguments :
@@ -450,7 +450,7 @@ class sale_order(magerp_osv.magerp_osv):
             ctx.update({
                 'ext_tax_field': 'shipping_tax_amount',
             })
-            res = self.add_order_extra_line(cr, uid, res, data_record, 'shipping_amount', 'SHIP MAGENTO', ctx)
+            res = self.add_order_extra_line(cr, uid, res, data_record, 'shipping_amount', 'SHIP MAGENTO', defaults, ctx)
         return res
     
     def add_order_shipping(self, cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context):
@@ -459,7 +459,7 @@ class sale_order(magerp_osv.magerp_osv):
             ctx.update({
                 'ext_tax_field': 'shipping_tax_amount',
             })
-            res = self.add_order_extra_line(cr, uid, res, data_record, 'shipping_amount', 'SHIP MAGENTO', ctx)
+            res = self.add_order_extra_line(cr, uid, res, data_record, 'shipping_amount', 'SHIP MAGENTO', defaults, ctx)
         return res
 
     def add_gift_certificates(self, cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context):
@@ -469,7 +469,7 @@ class sale_order(magerp_osv.magerp_osv):
                 'ext_code_field': 'giftcert_code',
                 'sign': -1,
             })
-            res = self.add_order_extra_line(cr, uid, res, data_record, 'giftcert_amount', 'GIFT CERTIFICATE', ctx)
+            res = self.add_order_extra_line(cr, uid, res, data_record, 'giftcert_amount', 'GIFT CERTIFICATE', defaults, ctx)
         return res
 
     def add_discount(self, cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context):
@@ -478,7 +478,7 @@ class sale_order(magerp_osv.magerp_osv):
             ctx.update({
                 'ext_code_field': 'coupon_code',
             })
-            res = self.add_order_extra_line(cr, uid, res, data_record, 'discount_amount', 'DISCOUNT MAGENTO', ctx)
+            res = self.add_order_extra_line(cr, uid, res, data_record, 'discount_amount', 'DISCOUNT MAGENTO', defaults, ctx)
         return res
 
     def add_cash_on_delivery(self, cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context):
@@ -487,7 +487,7 @@ class sale_order(magerp_osv.magerp_osv):
             ctx.update({
                 'ext_tax_field': 'cod_tax_amount',
             })
-            res = self.add_order_extra_line(cr, uid, res, data_record, 'cod_fee', 'CASH ON DELIVERY MAGENTO', ctx)
+            res = self.add_order_extra_line(cr, uid, res, data_record, 'cod_fee', 'CASH ON DELIVERY MAGENTO', defaults, ctx)
         return res   
      
     def oevals_from_extdata(self, cr, uid, external_referential_id, data_record, key_field, mapping_lines, defaults, context):
@@ -558,3 +558,4 @@ class sale_order(magerp_osv.magerp_osv):
         #   super(magerp_osv.magerp_osv, self).oe_status(cr, uid, order_id, context)
     
 sale_order()
+
