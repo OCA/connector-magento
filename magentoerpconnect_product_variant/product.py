@@ -51,18 +51,6 @@ product_variant_dimension_option()
 class product_product(osv.osv):
     
     _inherit = "product.product"
-    
-#    def get_depends(self, cr, uid, id, product_type, context=None):         
-#        product_depends = super(product_product, self).get_depends(cr, uid, id, product_type, context=None)
-#        if product_type == 'configurable':
-#            variant_ids = self.read(cr, uid, id, ['variant_ids'], context=context)
-#            variant_ids_to_export = list(set(variant_ids) & set(ids))
-#            if variant_ids_to_export:
-#                if product_depends.get(id, False):
-#                    product_depends[id] = variant_ids_to_export
-#                else:
-#                    product_depends[id] += variant_ids_to_export
-#        return product_depends
 
     def get_last_update_date(self, cr, uid, product_read, context=None):
         #A configurable product have to be updated if a variant is added
@@ -106,7 +94,6 @@ class product_product(osv.osv):
     def action_before_exporting(self, cr, uid, id, product_type, external_referential_ids, defaults, context):
         #When the export of a configurable product is forced we should check if all variant are already exported
         if context.get('force_export', False) and product_type == 'configurable':
-            print 'product to export', id
             conn = context.get('conn_obj', False)
             shop = self.pool.get('sale.shop').browse(cr, uid, context['shop_id'])
             variant_ids = self.read(cr, uid, id, ['variant_ids'], context)['variant_ids']
@@ -114,7 +101,6 @@ class product_product(osv.osv):
             for variant in self.browse(cr, uid, variant_ids, context=context):
                 if variant.magento_exportable:
                     if not self.oeid_to_extid(cr, uid, variant.id, shop.referential_id.id):
-                        context['force_export'] = True 
                         conn.logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "Force the export of the product %s as it was not exported before" %(id))
                         self.ext_export(cr, uid, [variant.id], external_referential_ids, defaults, context)
         return True

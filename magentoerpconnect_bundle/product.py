@@ -26,30 +26,9 @@ import netsvc
 class product_product(osv.osv):
     _inherit = "product.product"
     
-    def get_depends(self, cr, uid, id, product_type, context=None):
-        product_depends, child_to_parent_product_depends = super(product_product, self).get_depends(cr, uid, id, product_type, context=None)       
-        if product_type == 'configurable':
-            component_ids = []
-            product = self.browse(cr, uid, id, context=context)
-            for product_item_set in product.item_set_ids:
-                for product_item_set_line in product_item_set.item_set_line_ids:
-                    component_ids += product_item_set_line.product.id
-            
-            component_ids_to_export = list(set(component_ids) & set(ids))
-            if component_ids_to_export:
-                product_depends[id] = component_ids_to_export
-                for component_id in component_ids_to_export:
-                    child_to_parent_product_depends[component_id] = id
-                return product_depends, child_to_parent_product_depends, True
-        return product_depends, child_to_parent_product_depends, False
-                    
-                    
-    def bundle_product_are_supported(self):
-        return True
-    
-    def get_bundle_component(cr, uid, ids, context):
+    def get_bundle_component(self, cr, uid, ids, context):
         res = {}
-        for product in self.browse(cr, uid, product_read[0], context=context)
+        for product in self.browse(cr, uid, product_read[0], context=context):
             res[product.id] = []
             for product_item_set in product.item_set_ids:
                 for product_item_set_line in product_item_set.item_set_line_ids:
@@ -57,13 +36,12 @@ class product_product(osv.osv):
         return res
     
     def action_before_exporting(self, cr, uid, id, product_type, external_referential_ids, defaults, context=None):
-        if product_type == 'bundle':
-            # Check if all simple product are already exported if not it export the unexported product
+        #When the export of a bundle product is forced we should check if all variant are already exported
+        if context.get('force_export', False) and product_type == 'bundle':
             shop = self.pool.get('sale.shop').browse(cr, uid, context['shop_id'])
             component_ids = self.get_bundle_component(cr, uid, [id], context)[id]
             for id in component_ids:
                 if not self.oeid_to_extid(cr, uid, id, shop.referential_id.id):
-                    context['do_not_update_date'] = True 
                     self.ext_export(cr, uid, [id], external_referential_ids, defaults, context)
         return super(self, product_product).action_before_exporting(cr, uid, id, product_type, external_referential_ids, defaults, context=context)
     

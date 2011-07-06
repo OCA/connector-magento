@@ -1000,14 +1000,6 @@ class product_product(product_mag_osv):
         res = super(magerp_osv.magerp_osv, self).ext_create(cr, uid, [product_type, attr_set_id, sku, data], conn, method, oe_id, context)
         self.write(cr, uid, oe_id, {'magento_sku': sku})
         return res
-
-    def configurable_product_are_supported(self):
-        '''By default Configurable Product are not supported if you module add this functionality just overwrite this function.'''
-        return False
-
-    def bundle_product_are_supported(self):
-        '''By default Bundle Product are not supported if you module add this functionality just overwrite this function.'''
-        return False
     
     def action_before_exporting_grouped_product(self, cr, uid, id, external_referential_ids=None, defaults=None, context=None):
         logger = netsvc.Logger()
