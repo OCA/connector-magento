@@ -419,9 +419,9 @@ class sale_order(magerp_osv.magerp_osv):
                 tax_ids = self.pool.get('account.tax').search(cr, uid, [('price_include', '=', is_tax_included), ('type_tax_use', '=', 'sale'), ('amount', '>=', tax_vat - 0.001), ('amount', '<=', tax_vat + 0.001)])
                 if tax_ids and len(tax_ids) > 0:
                     tax_id = [(6, 0, [tax_ids[0]])]
-            else:
-                #try to find a tax with less precision 
-                tax_ids = self.pool.get('account.tax').search(cr, uid, [('price_include', '=', is_tax_included), ('type_tax_use', '=', 'sale'), ('amount', '>=', tax_vat - 0.01), ('amount', '<=', tax_vat + 0.01)])
+                else:
+                    #try to find a tax with less precision 
+                    tax_ids = self.pool.get('account.tax').search(cr, uid, [('price_include', '=', is_tax_included), ('type_tax_use', '=', 'sale'), ('amount', '>=', tax_vat - 0.01), ('amount', '<=', tax_vat + 0.01)])
                 if tax_ids and len(tax_ids) > 0:
                     tax_id = [(6, 0, [tax_ids[0]])]
 
