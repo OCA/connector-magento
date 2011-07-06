@@ -8,9 +8,9 @@
 <openerp>
     <data>
     
-        <!-- INHERITED VIEW FOR THE OBJECT : product_product -->
+        <!-- INHERITED VIEW FOR THE OBJECT : product_product 
 
-		<record id="magentoerpconnect_bundle_product_product_view_form" model="ir.ui.view">
+		<record id="product_view_form" model="ir.ui.view">
 			<field name="name">magentoerpconnect_bundle.product_product.view_form</field>
 			<field name="model">product.product</field>
 			<field name="inherit_id" ref="module_name_to_inherit.view_id" />
@@ -24,7 +24,7 @@
 			</field>
 		</record>
 
-		<record id="magentoerpconnect_bundle_product_product_view_tree" model="ir.ui.view">
+		<record id="product_view_tree" model="ir.ui.view">
 			<field name="name">magentoerpconnect_bundle.product_product.view_tree</field>
 			<field name="model">product.product</field>
 			<field name="inherit_id" ref="module_name_to_inherit.view_id" />
@@ -38,7 +38,7 @@
 			</field>
 		</record>
     
-
+-->
 
 
 
