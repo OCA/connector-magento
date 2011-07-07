@@ -25,26 +25,12 @@ import netsvc
 
 class sale_order(osv.osv):
     _inherit = "sale.order"
-
-    def get_order_lines(self, cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context):
-        bundle_configuration = {}
-        item_filtred=[]
-        #First all bundle child are remove for the order line
-        for item in data_record['items']:
-            if item['parent_item_id'] and 'bundle_selection_attributes'in item['product_options']:
-                if bundle_configuration.get(item['parent_item_id'], False):
-                    bundle_configuration[item['parent_item_id']].append({'product_id' : int(item['product_id']) , 'qty_ordered' : float(item['qty_ordered'])})
-                else:
-                    bundle_configuration[item['parent_item_id']] = [{'product_id' : int(item['product_id']) , 'qty_ordered' : float(item['qty_ordered'])}]
-            else:
-                item_filtred.append(item)
-                
-        #now add the bundle configuration to bundle product
-        for item in item_filtred:
-            if bundle_configuration.get(item['item_id'], False):
-                item['bundle_configuration'] = bundle_configuration[item['item_id']]
-
-        data_record['items'] = item_filtred
-        return super(sale_order, self).get_order_lines(cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context=context)
+    
+    def merge_parent_item_line_with_child(self, cr, uid, item, items_child, context=None):
+        if item['product_type'] == 'bundle':
+            item['bundle_configuration'] = []
+            for child in items_child[item['item_id']]:
+                item['bundle_configuration'].append({'product_id' : int(child['product_id']) , 'qty_ordered' : float(child['qty_ordered'])})
+        return super(sale_order, self).merge_parent_item_line_with_child(cr, uid, item, items_child, context=context)
     
 sale_order()

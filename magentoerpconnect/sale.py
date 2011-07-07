@@ -28,6 +28,7 @@ import string
 import tools
 import time
 DEBUG = True
+NOTRY = False
 
 #TODO, may be move that on out CSV mapping, but not sure we can easily
 #see OpenERP sale/sale.py and Magento app/code/core/Mage/Sales/Model/Order.php for details
@@ -488,9 +489,51 @@ class sale_order(magerp_osv.magerp_osv):
                 'ext_tax_field': 'cod_tax_amount',
             })
             res = self.add_order_extra_line(cr, uid, res, data_record, 'cod_fee', 'CASH ON DELIVERY MAGENTO', defaults, ctx)
-        return res   
-     
+        return res
+    
+    
+    def merge_parent_item_line_with_child(self, cr, uid, item, items_child, context=None):
+        if item['product_type'] == 'configurable':
+            #For configurable product all information regarding the price is in the configurable item
+            #In the child a lot of information is empty, but containt the right sku and product_id
+            #So the real product_id and the sku and the name have to be extracted from the child
+            for field in ['sku', 'product_id', 'name']:
+                item[field] = items_child[item['item_id']][0][field]
+        return item 
+    
+    def data_record_filter(self, cr, uid, data_record, context=None):
+        items_child = {}
+        items_to_import = []
+
+        #First all child are remove for the order line
+        for item in data_record['items']:
+            if item['parent_item_id']:
+                if items_child.get(item['parent_item_id'], False):
+                    items_child[item['parent_item_id']].append(item)
+                else:
+                    items_child[item['parent_item_id']] = [item]
+            else:
+                items_to_import.append(item)
+        
+        for item in items_to_import:
+            item = self.merge_parent_item_line_with_child(cr, uid, item, items_child, context=context)
+        
+        data_record['items'] = items_to_import 
+        return data_record
+    
+    
+    def get_all_order_lines(self, cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context):
+        res = self.get_order_lines(cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
+        res = self.add_order_shipping(cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
+        res = self.add_gift_certificates(cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
+        res = self.add_discount(cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
+        res = self.add_cash_on_delivery(cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
+        return res
+
     def oevals_from_extdata(self, cr, uid, external_referential_id, data_record, key_field, mapping_lines, defaults, context):
+        if data_record.get('items', False):
+            data_record = self.data_record_filter(cr, uid, data_record, context=context)
+        
         if not context.get('one_by_one', False):
             if data_record.get('billing_address', False):
                 defaults = self.get_order_addresses(cr, uid, defaults, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
@@ -499,16 +542,16 @@ class sale_order(magerp_osv.magerp_osv):
 
         if not context.get('one_by_one', False):
             if data_record.get('items', False):
-                try:
-                    res = self.get_order_lines(cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
-                    res = self.add_order_shipping(cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
-                    res = self.add_gift_certificates(cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
-                    res = self.add_discount(cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
-                    res = self.add_cash_on_delivery(cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
-                except Exception, e:
-                    print "order has errors with items lines, data are: ", data_record
-                    print e
-                    #TODO flag that the order has an error, especially.
+                if NOTRY:
+                    res = self.get_all_order_lines(cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
+                else:
+                    try:
+                        res = self.get_all_order_lines(cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
+                    except Exception, e:
+                        print "order has errors with items lines, data are: ", data_record
+                        print e
+                        #TODO flag that the order has an error, especially.
+            
             if data_record.get('status_history', False) and len(data_record['status_history']) > 0:
                 res['date_order'] = data_record['status_history'][len(data_record['status_history'])-1]['created_at']
             if data_record.get('payment', False) and data_record['payment'].get('method', False):
