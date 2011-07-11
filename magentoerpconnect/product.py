@@ -212,7 +212,8 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
                                            ('price', 'Price'),
                                            ('media_image', 'Media Image'),
                                            ('gallery', 'Gallery'),
-                                           ('weee', 'Fixed Product Tax')
+                                           ('weee', 'Fixed Product Tax'),
+                                           ('file', 'File'), #this option is not a magento native field it will be better to found a generic solutionto manage this kind of custom option
                                            ], 'Frontend Input'
                                           ),
         'frontend_class':fields.char('Frontend Class', size=100),
@@ -304,7 +305,8 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
         'multiselect':'char',
         'boolean':'boolean',
         'weee':'char',
-        False:'char'
+        False:'char',
+        'file':'char', #this option is not a magento native field it will be better to found a generic solutionto manage this kind of custom option
     }
     
     _type_casts = {
@@ -319,7 +321,8 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
         'multiselect':'str',
         'boolean':'int',
         'weee':'str',
-        False:'str'
+        False:'str',
+        'file':'str', #this option is not a magento native field it will be better to found a generic solutionto manage this kind of custom option
     }
 
     
