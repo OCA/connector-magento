@@ -50,10 +50,10 @@
 									<label string="Anchored categories will display all products associated to all child categories (and child of child, and child of child of child,etc.) on that category's page, along with the products associated directly to the parent category." colspan="3" />
 								</group>
 								<separator string="Sorting method" colspan="4" />
-								<field name="available_sort_by" />
-								<field name="default_sort_by" />
+								<field name="available_sort_by" widget="selection"/>
+								<field name="default_sort_by" widget="selection"/>
 								<separator string="Page Layout" colspan="4" />
-								<field name="page_layout" nolabel="1" />
+								<field name="page_layout" nolabel="1" widget="selection"/>
 							</page>
 						</notebook>
 					</group>
@@ -311,5 +311,55 @@
             <field name="res_model">magerp.product_product_type</field>
             <field name="view_mode">tree,form</field>
         </record>
+
+
+
+    <!--Magento product_category attribute_option Tree/Form view  -->
+		<record model="ir.ui.view" id="magerp_product_category_attribute_options_form">
+			<field name="name">magerp.product_category_attribute_options.form</field>
+			<field name="model">magerp.product_category_attribute_options</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Magento Product Category Attribute Option">
+					<group col="4" colspan="4">
+						<field name="attribute_name" />
+						<field name="label" />
+						<field name="value" />
+					</group>
+				</form>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="magerp_product_category_attribute_options_tree">
+			<field name="name">magerp.product_category_attribute_options.tree</field>
+			<field name="model">magerp.product_category_attribute_options</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Magento Product Category Attribute Option">
+					<field name="attribute_name" />
+					<field name="label" />
+					<field name="value" />
+				</tree>
+			</field>
+		</record>
+
+		<record id="act_magerp_product_category_attribute_options_form" model="ir.actions.act_window">
+			<field name="name">Magento Product Category Attribute Options</field>
+			<field name="res_model">magerp.product_category_attribute_options</field>
+            <field name="src_model">magerp.product_category_attribute_options</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="magerp_product_category_attribute_options_tree" />
+		</record>
+
+
+
+
+
+
+
+
+
 	</data>
 </openerp>

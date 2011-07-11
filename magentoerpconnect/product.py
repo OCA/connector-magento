@@ -34,12 +34,44 @@ import netsvc
 GROUP_CUSTOM_ATTRS_TOGETHER = True
 SHOW_JSON = True
 
+class magerp_product_category_attribute_options(magerp_osv.magerp_osv):
+    _name = "magerp.product_category_attribute_options"
+    _description = "Option products category Attributes"
+    _rec_name = "label"
+    
+    def get_create_option_id(self, cr, uid, value, attribute_name, context=None):
+        print 'get create', value, attribute_name
+        id = self.search(cr, uid, [['attribute_name', '=', attribute_name], ['value', '=', value]], context=context)
+        if id:
+            return id[0]
+        else:
+            return self.create(cr, uid, {
+                                'value': value,
+                                'attribute_name': attribute_name,
+                                'label': value.replace('_', ' '),
+                                }, context=context)
+
+    #TODO to finish : this is just the start of the implementation of attributs for category
+    _columns = {
+        #'attribute_id':fields.many2one('magerp.product_attributes', 'Attribute'),
+        'attribute_name':fields.char(string='Attribute Code',size=64),
+        'value':fields.char('Value', size=200),
+        #'ipcast':fields.char('Type cast', size=50),
+        'label':fields.char('Label', size=100),
+    }
+    
+    
+magerp_product_category_attribute_options()
+
 
 class product_category(magerp_osv.magerp_osv):
     _inherit = "product.category"
     
     def ext_create(self, cr, uid, data, conn, method, oe_id, context):
         return conn.call(method, [data.get('parent_id', 1), data])
+    
+    
+    
     
     _columns = {
         'create_date': fields.datetime('Created date', readonly=True),
@@ -64,30 +96,14 @@ class product_category(magerp_osv.magerp_osv):
                     ('PAGE', 'Static Block Only'),
                     ('PRODUCTS_AND_PAGE', 'Static Block & Products')], 'Display Mode', required=True),
         'is_anchor': fields.boolean('Anchor?'),
-        'available_sort_by': fields.selection([
-                    ('', 'Use Config Settings'),
-                    ('None', 'Use Config Settings'),
-                    ('position', 'Best Value'),
-                    ('name', 'Name'),
-                    ('price', 'Price')
-                    ], 'Available Product Listing (Sort By)'),
-        'default_sort_by': fields.selection([
-                    ('None', 'Use Config Settings'),
-                    ('position', 'Best Value'),
-                    ('name', 'Name'),
-                    ('price', 'Price')
-                    ], 'Default Product Listing Sort (Sort By)'),
+        #TODO fix me and use a m2m
+        'available_sort_by': fields.many2one('magerp.product_category_attribute_options', 'Available Product Listing (Sort By)', domain="[['attribute_name', '=', 'default_sort_by']]"),
+        'default_sort_by': fields.many2one('magerp.product_category_attribute_options', 'Default Product Listing Sort (Sort By)', domain="[['attribute_name', '=', 'default_sort_by']]"),
         'magerp_stamp':fields.datetime('Magento stamp'),
         'include_in_menu': fields.boolean('Include in Navigation Menu'),
-        'page_layout': fields.selection([
-                    ('None', 'No layout updates'),
-                    ('empty', 'Empty'),
-                    ('one_column', '1 column'),
-                    ('two_columns_left', '2 columns with left bar'),
-                    ('two_columns_right', '2 columns with right bar'),
-                    ('three_columns', '3 columns'),
-                    ], 'Page Layout'),        
+        'page_layout': fields.many2one('magerp.product_category_attribute_options', 'Page Layout', domain="[['attribute_name', '=', 'page_layout']]"),
         }
+        
     _defaults = {
         'display_mode':lambda * a:'PRODUCTS',
         'available_sort_by':lambda * a:'None',
@@ -407,7 +423,6 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
         return crid
     
     def create_mapping (self, cr, uid, ttype, field_ids, field_name, referential_id, model_id, vals, crid):
-        print "create mapping"
         #Search & create mapping entries
         mapping_id = self.pool.get('external.mapping').search(cr, uid, [('referential_id', '=', referential_id), ('model_id', '=', model_id)])
         if field_ids and mapping_id:

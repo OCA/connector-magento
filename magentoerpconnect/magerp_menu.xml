@@ -16,6 +16,9 @@
 		<menuitem id="menu_magerp_attnsets_attributes" name="Attributes" parent="menu_magerp_attnsets" action="act_magerp_product_attributes_form" />
 		<menuitem id="menu_magerp_attnsets_attribute_groups" name="Attribute Groups" parent="menu_magerp_attnsets" action="act_magerp_product_attribute_groups_form" />
 
+		<menuitem id="menu_magerp_categ_att" name="Category Attributes" parent="menu_magerp" />
+		<menuitem id="menu_magerp_categ_att_option" name="Category Attribute Options" parent="menu_magerp_categ_att" action="act_magerp_product_category_attribute_options_form" />
+
         <menuitem id="menu_magerp_product_type" name="Product Types" parent="menu_magerp" action="act_magerp_product_type_form" />
 	</data>
 </openerp>

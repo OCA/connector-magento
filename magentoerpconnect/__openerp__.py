@@ -47,6 +47,7 @@
             'settings/external.mapping.template.csv',
             'settings/external.mappinglines.template.csv',
             'settings/magerp_product_product_type.xml',
+            'settings/magerp.product_category_attribute_options.csv',
             'delivery_view.xml',
             'product_links_view.xml',
             'wizard/product_change_sku_view.xml',
