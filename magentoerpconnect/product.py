@@ -39,8 +39,12 @@ class magerp_product_category_attribute_options(magerp_osv.magerp_osv):
     _description = "Option products category Attributes"
     _rec_name = "label"
     
+    def _get_default_option(self, cr, uid, field_name, value, context=None):
+        res = self.search(cr, uid, [['attribute_name', '=', field_name], ['value', '=', value]], context=context)
+        return res and res[0] or False
+        
+    
     def get_create_option_id(self, cr, uid, value, attribute_name, context=None):
-        print 'get create', value, attribute_name
         id = self.search(cr, uid, [['attribute_name', '=', attribute_name], ['value', '=', value]], context=context)
         if id:
             return id[0]
@@ -69,10 +73,7 @@ class product_category(magerp_osv.magerp_osv):
     
     def ext_create(self, cr, uid, data, conn, method, oe_id, context):
         return conn.call(method, [data.get('parent_id', 1), data])
-    
-    
-    
-    
+
     _columns = {
         'create_date': fields.datetime('Created date', readonly=True),
         'write_date': fields.datetime('Updated date', readonly=True),
@@ -103,14 +104,16 @@ class product_category(magerp_osv.magerp_osv):
         'include_in_menu': fields.boolean('Include in Navigation Menu'),
         'page_layout': fields.many2one('magerp.product_category_attribute_options', 'Page Layout', domain="[['attribute_name', '=', 'page_layout']]"),
         }
-        
+    
+
+    
     _defaults = {
         'display_mode':lambda * a:'PRODUCTS',
-        'available_sort_by':lambda * a:'None',
-        'default_sort_by':lambda * a:'None',
+        'available_sort_by': lambda self,cr,uid,c: self.pool.get('magerp.product_category_attribute_options')._get_default_option(cr, uid, 'available_sort_by', 'None', context=c),
+        'default_sort_by': lambda self,cr,uid,c: self.pool.get('magerp.product_category_attribute_options')._get_default_option(cr, uid, 'default_sort_by', 'None', context=c),
         'level':lambda * a:1,
         'include_in_menu': lambda * a:True,
-        'page_layout': lambda * a:'None'
+        'page_layout': lambda self,cr,uid,c: self.pool.get('magerp.product_category_attribute_options')._get_default_option(cr, uid, 'page_layout', 'None', context=c),
                  }
     
     def write(self, cr, uid, ids, vals, context=None):
