@@ -98,11 +98,11 @@ class product_category(magerp_osv.magerp_osv):
                     ('PRODUCTS_AND_PAGE', 'Static Block & Products')], 'Display Mode', required=True),
         'is_anchor': fields.boolean('Anchor?'),
         #TODO fix me and use a m2m
-        'available_sort_by': fields.many2one('magerp.product_category_attribute_options', 'Available Product Listing (Sort By)', domain="[['attribute_name', '=', 'default_sort_by']]"),
-        'default_sort_by': fields.many2one('magerp.product_category_attribute_options', 'Default Product Listing Sort (Sort By)', domain="[['attribute_name', '=', 'default_sort_by']]"),
+        'available_sort_by': fields.many2one('magerp.product_category_attribute_options', 'Available Product Listing (Sort By)', domain="[('attribute_name', '=', 'available_sort_by')]"),
+        'default_sort_by': fields.many2one('magerp.product_category_attribute_options', 'Default Product Listing Sort (Sort By)', domain="[('attribute_name', '=', 'default_sort_by')]"),
         'magerp_stamp':fields.datetime('Magento stamp'),
         'include_in_menu': fields.boolean('Include in Navigation Menu'),
-        'page_layout': fields.many2one('magerp.product_category_attribute_options', 'Page Layout', domain="[['attribute_name', '=', 'page_layout']]"),
+        'page_layout': fields.many2one('magerp.product_category_attribute_options', 'Page Layout', domain="[('attribute_name', '=', 'page_layout')]"),
         }
     
 

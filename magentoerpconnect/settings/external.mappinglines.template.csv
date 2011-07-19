@@ -73,8 +73,16 @@ if magento_parent_id:
     result=[('url_key',record['url_key'])]"
 "mag_erp_procat_10","magento1324","product.model_product_category","name","in_out","str","result=[('name',ifield or 'UNDEFINED'),('magento_exportable',True)]","result=[('name',record['name'])]"
 "mag_erp_procat_11","magento1324","product.model_product_category","is_anchor","in_out","str","result=[('is_anchor',ifield and bool(eval(ifield)) or False)]","result=[('is_anchor',record['is_anchor'])]"
-"mag_erp_procat_12","magento1324","product.model_product_category","available_sort_by","in_out","str","result=[('available_sort_by',ifield)]","result=[('available_sort_by',record['available_sort_by'] or 'name')]"
-"mag_erp_procat_13","magento1324","product.model_product_category","default_sort_by","in_out","str","result=[('default_sort_by',ifield)]","result=[('default_sort_by',record['default_sort_by'] or 'name')]"
+"mag_erp_procat_12","magento1324","product.model_product_category","available_sort_by","in_out","str","if ifield:
+    att_id = self.pool.get('magerp.product_category_attribute_options').get_create_option_id(cr, uid, ifield,'available_sort_by', context=context)
+else:
+    att_id = self.pool.get('magerp.product_category_attribute_options').get_create_option_id(cr, uid, 'None','available_sort_by', context=context)
+result=[('available_sort_by',att_id)]","result=[('available_sort_by',record['available_sort_by'][1] or 'name')]"
+"mag_erp_procat_13","magento1324","product.model_product_category","default_sort_by","in_out","str","if ifield:
+    att_id = self.pool.get('magerp.product_category_attribute_options').get_create_option_id(cr, uid, ifield,'default_sort_by', context=context)
+else:
+    att_id = self.pool.get('magerp.product_category_attribute_options').get_create_option_id(cr, uid, 'None','default_sort_by', context=context)
+result=[('default_sort_by',att_id)]","result=[('default_sort_by',record['default_sort_by'][1] or 'name')]"
 "mag_erp_procat_14","magento1324","product.model_product_category","updated_at","in","str","result=[('magerp_stamp',ifield)]",
 "mag_erp_procat_15","magento1324","product.model_product_category","image","in_out","str","image_binary = False
 if ifield and not ifield=='None':
@@ -94,9 +102,10 @@ else:
 	result=[]"
 "mag_erp_procat_16","magento1324","product.model_product_category","include_in_menu","in_out","str","result=[('include_in_menu', ifield and (eval(ifield)) or False)]","result=[('include_in_menu',record['include_in_menu'])]"
 "mag_erp_procat_17","magento1324","product.model_product_category","page_layout","in_out","str","if ifield:
-    result=[('page_layout',ifield)]
+    att_id = self.pool.get('magerp.product_category_attribute_options').get_create_option_id(cr, uid, ifield,'page_layout', context=context)
 else:
-    result=[('page_layout','None')]","result=[('page_layout', record['page_layout'] or '')]"
+    att_id = self.pool.get('magerp.product_category_attribute_options').get_create_option_id(cr, uid, 'None','page_layout', context=context)
+result=[('page_layout',att_id)]","result=[('page_layout', record['page_layout'][1] or '')]"
 "mag_erp_attrgrp_2","magento1324","model_magerp_product_attribute_groups","attribute_set_id","in_out","int","result=[('attribute_set_id', ifield)]","result=[('attribute_set_id', record['attribute_set_id'])]"
 "mag_erp_attrgrp_3","magento1324","model_magerp_product_attribute_groups","attribute_group_name","in_out","str","result=[('attribute_group_name', ifield)]","result=[('attribute_group_name', record['attribute_group_name'])]"
 "mag_erp_attrgrp_4","magento1324","model_magerp_product_attribute_groups","sort_order","in_out","int","result=[('sort_order', ifield)]","result=[('sort_order', record['sort_order'])]"

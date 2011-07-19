@@ -50,10 +50,10 @@
 									<label string="Anchored categories will display all products associated to all child categories (and child of child, and child of child of child,etc.) on that category's page, along with the products associated directly to the parent category." colspan="3" />
 								</group>
 								<separator string="Sorting method" colspan="4" />
-								<field name="available_sort_by" widget="selection"/>
-								<field name="default_sort_by" widget="selection"/>
+								<field name="available_sort_by" widget="selection" domain="[('attribute_name', '=', 'available_sort_by')]"/>
+								<field name="default_sort_by" widget="selection" domain="[('attribute_name', '=', 'default_sort_by')]"/>
 								<separator string="Page Layout" colspan="4" />
-								<field name="page_layout" nolabel="1" widget="selection"/>
+								<field name="page_layout" nolabel="1" widget="selection" domain="[('attribute_name', '=', 'page_layout')]"/>
 							</page>
 						</notebook>
 					</group>
