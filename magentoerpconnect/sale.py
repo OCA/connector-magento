@@ -184,7 +184,7 @@ class sale_shop(magerp_osv.magerp_osv):
                 # If the order isn't canceled and was blocked, 
                 # so we follow the standard flow according to ext_payment_method:
                 else:
-                    paid = so_obj.create_payments(cr, uid, data_record, order.id, context)                        
+                    paid = so_obj.create_payments(cr, uid, order.id, data_record, context)                        
                     so_obj.oe_status(cr, uid, order.id, paid, context)
                     updated = paid
                     if paid:
@@ -541,34 +541,24 @@ class sale_order(magerp_osv.magerp_osv):
             
             if data_record.get('status_history', False) and len(data_record['status_history']) > 0:
                 res['date_order'] = data_record['status_history'][len(data_record['status_history'])-1]['created_at']
-            if data_record.get('payment', False) and data_record['payment'].get('method', False):
-                payment_settings = self.payment_code_to_payment_settings(cr, uid, data_record['payment']['method'], context)
-                if payment_settings:
-                    res['order_policy'] = payment_settings.order_policy
-                    res['picking_policy'] = payment_settings.picking_policy
-                    res['invoice_quantity'] = payment_settings.invoice_quantity
         return res
-
-    def oe_create(self, cr, uid, vals, data, external_referential_id, defaults, context):
-        order_id = super(magerp_osv.magerp_osv, self).oe_create(cr, uid, vals, data, external_referential_id, defaults, context)
-        paid = self.create_payments(cr, uid, data, order_id, context)
-        self.oe_status(cr, uid, order_id, paid, context)
-        #TODO auto_reconcile invoice and statement depending on is_auto_reconcile param
-        return order_id
     
-    def create_payments(self, cr, uid, data_record, order_id, context):
-        paid = False
-        if data_record.get('payment', False):
-            payment = data_record['payment']
-            amount = False
-            if payment.get('amount_paid', False):
-                amount =  payment.get('amount_paid', False)
-                paid = True
-            elif payment.get('amount_ordered', False):
-                amount =  payment.get('amount_ordered', False)
-            if amount:
-                order = self.pool.get('sale.order').browse(cr, uid, order_id, context)
-                self.generate_payment_with_pay_code(cr, uid, payment['method'], order.partner_id.id, float(amount), "mag_" + payment['payment_id'], "mag_" + data_record['increment_id'], order.date_order, paid, context) 
+    def create_payments(self, cr, uid, order_id, data_record, context):
+        if 'Magento' in context.get('external_referential_type', False):
+            paid = False
+            if data_record.get('payment', False):
+                payment = data_record['payment']
+                amount = False
+                if payment.get('amount_paid', False):
+                    amount =  payment.get('amount_paid', False)
+                    paid = True
+                elif payment.get('amount_ordered', False):
+                    amount =  payment.get('amount_ordered', False)
+                if amount:
+                    order = self.pool.get('sale.order').browse(cr, uid, order_id, context)
+                    self.generate_payment_with_pay_code(cr, uid, payment['method'], order.partner_id.id, float(amount), "mag_" + payment['payment_id'], "mag_" + data_record['increment_id'], order.date_order, paid, context)
+        else:
+            paid = super(sale_order, self).create_payments(cr, uid, order_id, data_record, context=context)
         return paid
 
     def chain_cancel_orders(self, cr, uid, external_id, external_referential_id, defaults=None, context=None):
