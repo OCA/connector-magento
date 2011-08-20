@@ -118,13 +118,11 @@ class sale_shop(magerp_osv.magerp_osv):
         'storeview_ids': fields.one2many('magerp.storeviews', 'shop_id', 'Store Views'),
         'exportable_product_ids': fields.function(_get_exportable_product_ids, method=True, type='one2many', relation="product.product", string='Exportable Products'),
         'magento_shop': fields.boolean('Magento Shop', readonly=True),
-        'auto_import': fields.boolean('Automatic Import'),
         'allow_magento_order_status_push': fields.boolean('Allow Magento Order Status push', help='Allow to send back order status to Magento if order status changed in OpenERP first?'),
         'allow_magento_notification': fields.boolean('Allow Magento Notification', help='Allow Magento to notify customer (mail) if OpenERP update Magento order status?'),
     }   
 
     _defaults = {
-        'auto_import': lambda * a: True,
         'allow_magento_order_status_push': lambda * a: False,
         'allow_magento_notification': lambda * a: False,
     }
