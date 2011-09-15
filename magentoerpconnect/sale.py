@@ -3,6 +3,7 @@
 #                                                                       #
 #########################################################################
 #                                                                       #
+# Copyright (C) 2011  Sharoon Thomas                                    #
 # Copyright (C) 2009  Raphaël Valyi                                     #
 #                                                                       #
 #This program is free software: you can redistribute it and/or modify   #
@@ -437,15 +438,6 @@ class sale_order(magerp_osv.magerp_osv):
                                     'price_unit': price_unit,
                                     'tax_id': tax_id
                                 }))
-        return res
-    
-    def add_order_shipping(self, cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context):
-        if data_record.get('shipping_amount', False) and float(data_record.get('shipping_amount', False)) > 0:
-            ctx = context.copy()
-            ctx.update({
-                'ext_tax_field': 'shipping_tax_amount',
-            })
-            res = self.add_order_extra_line(cr, uid, res, data_record, 'shipping_amount', 'SHIP MAGENTO', defaults, ctx)
         return res
     
     def add_order_shipping(self, cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context):
