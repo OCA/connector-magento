@@ -131,6 +131,7 @@ class sale_shop(magerp_osv.magerp_osv):
 
 
     def import_shop_orders(self, cr, uid, shop, defaults, context):
+        self.check_need_to_update(cr, uid, [shop.id], context=context)
         result = []
         for storeview in shop.storeview_ids:
             magento_storeview_id = self.pool.get('magerp.storeviews').oeid_to_extid(cr, uid, storeview.id, shop.referential_id.id, context={})
@@ -148,9 +149,8 @@ class sale_shop(magerp_osv.magerp_osv):
             result.append(res)
         return result
 
-    def update_orders(self, cr, uid, ids, context=None):
-        # First update the shop order from OERP
-        super(sale_shop, self).update_orders(cr,uid,ids,context)
+    def check_need_to_update(self, cr, uid, ids, context=None):
+        '''This function will update the order status in OpenERP for the order which are in the state 'need to update' '''
         logger = netsvc.Logger()
         so_obj = self.pool.get('sale.order')
 
