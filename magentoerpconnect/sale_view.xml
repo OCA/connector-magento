@@ -14,12 +14,12 @@
 						<field name="exportable_root_category_ids" invisible="1" />
 					</field>
 					<field name="referential_id" position="replace">
-						<field name="referential_id" readonly="1"/>	
+						<field name="referential_id" attrs="{'readonly': [('magento_shop','=',True)]}"/>	
 					</field>
 					<field name="shop_group_id" position="replace">
-						<field name="shop_group_id" readonly="1"/>
-						<field name="magento_root_category"/>
-						<field name="storeview_ids" nolabel="1" colspan="4" />
+						<field name="shop_group_id" attrs="{'readonly': [('magento_shop','=',True)]}"/>
+						<field name="magento_root_category" attrs="{'invisible': [('magento_shop','=',False)]}"/>
+						<field name="storeview_ids" nolabel="1" colspan="4" attrs="{'invisible': [('magento_shop','=',False)]}"/>
 					</field>
 				</data>
 			</field>
@@ -31,7 +31,7 @@
 			<field name="type">ir.actions.act_window</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
-			<field name="domain">[('referential_id', '!=', False)]</field>
+			<field name="domain">[('magento_shop', '=', True)]</field>
 		</record>
 
 		<record id="magerp_view_shop_images_form" model="ir.ui.view">
@@ -58,11 +58,11 @@
 			<field name="inherit_id" ref="base_sale_multichannels.base_sale_multichannels_view_shop_form"/>
 			<field name="arch" type="xml">
 				<xpath expr="/form/notebook" position="inside">
-					<page string="Magento Information">
+					<page string="Magento Information" attrs="{'invisible': [('magento_shop','=',False)]}">
 						<field name="magento_shop" />
 						<field name="auto_import" />
-                                                <field name="allow_magento_order_status_push" />
-                                                <field name="allow_magento_notification" attrs="{'invisible':[('allow_magento_order_status_push','=',False)]}"/>
+						<field name="allow_magento_order_status_push" />
+						<field name="allow_magento_notification" attrs="{'invisible':[('allow_magento_order_status_push','=',False)]}"/>
 					</page>
 				</xpath>
 			</field>

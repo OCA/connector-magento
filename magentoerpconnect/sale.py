@@ -131,22 +131,23 @@ class sale_shop(magerp_osv.magerp_osv):
 
 
     def import_shop_orders(self, cr, uid, shop, defaults, context):
-        self.check_need_to_update(cr, uid, [shop.id], context=context)
-        result = []
-        for storeview in shop.storeview_ids:
-            magento_storeview_id = self.pool.get('magerp.storeviews').oeid_to_extid(cr, uid, storeview.id, shop.referential_id.id, context={})
-            ids_or_filter = [{'store_id': {'eq': magento_storeview_id}, 'state': {'neq': 'canceled'}}]
-            res = {'create_ids': [], 'write_ids': []}
-            nb_last_created_ids = SALE_ORDER_IMPORT_STEP
-            while nb_last_created_ids:
-                defaults['magento_storeview_id'] = storeview.id
-                resp = self.pool.get('sale.order').mage_import_base(cr, uid, context.get('conn_obj', False),
-                                                                    shop.referential_id.id, defaults=defaults,
-                                                                    context={'ids_or_filter':ids_or_filter})
-                res['create_ids'] += resp['create_ids']
-                res['write_ids'] += resp['write_ids']
-                nb_last_created_ids = len(resp['create_ids'])
-            result.append(res)
+        result = super(sale_shop, self).import_shop_orders(cr, uid, shop, defaults=defaults, context=context)
+        if shop.magento_shop:
+            self.check_need_to_update(cr, uid, [shop.id], context=context)
+            for storeview in shop.storeview_ids:
+                magento_storeview_id = self.pool.get('magerp.storeviews').oeid_to_extid(cr, uid, storeview.id, shop.referential_id.id, context={})
+                ids_or_filter = [{'store_id': {'eq': magento_storeview_id}, 'state': {'neq': 'canceled'}}]
+                res = {'create_ids': [], 'write_ids': []}
+                nb_last_created_ids = SALE_ORDER_IMPORT_STEP
+                while nb_last_created_ids:
+                    defaults['magento_storeview_id'] = storeview.id
+                    resp = self.pool.get('sale.order').mage_import_base(cr, uid, context.get('conn_obj', False),
+                                                                        shop.referential_id.id, defaults=defaults,
+                                                                        context={'ids_or_filter':ids_or_filter})
+                    res['create_ids'] += resp['create_ids']
+                    res['write_ids'] += resp['write_ids']
+                    nb_last_created_ids = len(resp['create_ids'])
+                result.append(res)
         return result
 
     def check_need_to_update(self, cr, uid, ids, context=None):
