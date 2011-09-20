@@ -69,6 +69,8 @@ class Connection(object):
             pass
 
 class magerp_osv(osv.osv):
+    _register = False # Set to false if the model shouldn't be automatically discovered.
+
     _MAGE_FIELD = 'magento_id'
     _MAGE_P_KEY = False
     _LIST_METHOD = False

@@ -313,19 +313,19 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
     }
     
     _type_casts = {
-        '':'str',
-        'text':'str',
-        'textarea':'str',
+        '':'unicode',
+        'text':'unicode',
+        'textarea':'unicode',
         'select':'int',
-        'date':'str',
+        'date':'unicode',
         'price':'float',
         'media_image':'False',
         'gallery':'False',
-        'multiselect':'str',
+        'multiselect':'unicode',
         'boolean':'int',
-        'weee':'str',
-        False:'str',
-        'file':'str', #this option is not a magento native field it will be better to found a generic solutionto manage this kind of custom option
+        'weee':'unicode',
+        False:'unicode',
+        'file':'unicode', #this option is not a magento native field it will be better to found a generic solutionto manage this kind of custom option
     }
 
     
@@ -370,17 +370,13 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
         if context is None:
             context = {}
         if not vals['attribute_code'] in self._no_create_list:
-            if vals['attribute_code'] in self._not_store_in_json:
-                field_name = "x_magerp_" + vals['attribute_code']
-            else:
-                field_name = "x_js_magerp_x_" + vals['attribute_code']
-            vals['field_name'] = field_name
-
+            field_name = "x_magerp_" + vals['attribute_code']
+            vals['field_name']= field_name
         if 'attribute_set_info' in vals.keys():
             attr_set_info = eval(vals.get('attribute_set_info',{}))
             for each_key in attr_set_info.keys():
                 vals['group_id'] = attr_set_info[each_key].get('group_id', False)
-                
+        
         crid = super(magerp_product_attributes, self).create(cr, uid, vals, context)
         if not vals['attribute_code'] in self._no_create_list:
             #If the field has to be created
@@ -408,8 +404,10 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
                             'model':'product.template',
                             'field_description':vals.get('frontend_label', False) or vals['attribute_code'],
                             'ttype':self._type_conversion[vals.get('frontend_input', False)],
-                            'translate': self._is_attribute_translatable(vals)
+                            'translate': self._is_attribute_translatable(vals),
                         }
+                        if not vals['attribute_code'] in self._not_store_in_json:
+                            field_vals['serialization_field_id'] = self.pool.get('ir.model.fields').search(cr, uid, [('name', '=', 'magerp_tmpl'), ('model', '=', 'product.template')], context=context)[0]
                         if not field_ids:
                             #The field is not there create it
                             #IF char add size
@@ -420,11 +418,12 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
                                 field_vals['domain'] = "[('attribute_id','='," + str(crid) + ")]"
                             field_vals['state'] = 'manual'
                             #All field values are computed, now save
+
                             field_id = self.pool.get('ir.model.fields').create(cr, uid, field_vals)
                             field_ids = [field_id]
                             # mapping have to be based on product.product
                             model_id = self.pool.get('ir.model').search(cr, uid, [('model', '=', 'product.product')])[0]
-                            self.create_mapping (cr, uid, field_vals['ttype'], field_ids, field_name, referential_id, model_id, vals, crid)
+                            self.create_mapping(cr, uid, field_vals['ttype'], field_ids, field_name, referential_id, model_id, vals, crid)
                             
         return crid
     
@@ -692,7 +691,8 @@ product_product_type()
 
 
 class product_mag_osv(magerp_osv.magerp_osv):
-
+    _register = False # Set to false if the model shouldn't be automatically discovered.
+    
     #remember one thing in life: Magento lies: it tells attributes are required while they are awkward to fill
     #and will have a nice default vaule anyway, that's why we avoid making them mandatory in the product view
     _magento_fake_mandatory_attrs = ['created_at', 'updated_at', 'has_options', 'required_options', 'model']
@@ -798,8 +798,6 @@ class product_mag_osv(magerp_osv.magerp_osv):
                 xml+="</group></page>\n"
         if context.get('multiwebsite', False):
             xml+="""<page string='Websites'>\n<group colspan='4' col='4'>\n<field name='websites_ids'/>\n</group>\n</page>\n"""
-        if SHOW_JSON:
-            xml+="""<page string='Json'>\n<field name='magerp' nolabel="1"/>\n</page>\n"""
         xml+="</notebook>"
         return xml
     
@@ -823,9 +821,6 @@ class product_mag_osv(magerp_osv.magerp_osv):
                 if len(self.pool.get('external.shop.group').search(cr,uid,[('referential_type', 'ilike', 'mag')])) >1 :
                     context['multiwebsite'] = True
                     field_names.append('websites_ids')
-             
-                if SHOW_JSON:
-                    field_names.append('magerp')
                     
                 field_names = self._filter_fields_to_return(cr, uid, field_names, context)
                   
@@ -842,7 +837,7 @@ class product_template(product_mag_osv):
     _inherit = "product.template"
 
     _columns = {
-        'magerp' : fields.text('Magento Fields'),
+        'magerp_tmpl' : fields.serialized('Magento Template Fields'),
         'set':fields.many2one('magerp.product_attribute_set', 'Attribute Set'),
     }
 

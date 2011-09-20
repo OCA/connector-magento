@@ -21,7 +21,6 @@
 
 from osv import osv, fields
 import magerp_osv
-from base_external_referentials import external_osv
 
 import tools
 from tools.translate import _
@@ -156,6 +155,7 @@ class external_referential(magerp_osv.magerp_osv):
     def sync_products(self, cr, uid, ids, context):
         if context == None:
             context = {}
+        context.update({'dont_raise_error': True})
         instances = self.browse(cr, uid, ids, context)
         for inst in instances:
             attr_conn = self.external_connection(cr, uid, inst, DEBUG)
