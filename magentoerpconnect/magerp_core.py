@@ -1,9 +1,12 @@
+# -*- encoding: utf-8 -*-
 #########################################################################
 #This module intergrates Open ERP with the magento core                 #
 #Core settings are stored here                                          #
 #########################################################################
 #                                                                       #
 # Copyright (C) 2009  Sharoon Thomas                                    #
+# Copyright (C) 2011 Akretion Sébastien BEAU                            #
+#                                <sebastien.beau@akretion.com>          #
 #                                                                       #
 #This program is free software: you can redistribute it and/or modify   #
 #it under the terms of the GNU General Public License as published by   #
@@ -174,7 +177,7 @@ class external_referential(magerp_osv.magerp_osv):
                     for storeview in shop.storeview_ids:
                         storeview_ids += [storeview.id]
 
-            storeview_list=[]
+            lang_2_storeview={}
             for storeview in storeview_obj.browse(cr, uid, storeview_ids, context):
                 #get lang of the storeview
                 lang_id = storeview.lang_id
@@ -183,16 +186,19 @@ class external_referential(magerp_osv.magerp_osv):
                 else:
                     osv.except_osv(_('Warning!'), _('The storeviews have no language defined'))
                     lang = inst.default_lang_id.code
-                storeview_list.append({'code': storeview.code, 'lang': lang})
+                if not lang_2_storeview.get(lang, False):
+                    lang_2_storeview[lang]=storeview.code
             
             import_cr = pooler.get_db(cr.dbname).cursor()
             for each in list_prods:
                 result=[]
-                for storeview in storeview_list:
-                    each_product_info = attr_conn.call('catalog_product.info', [each['product_id'], storeview['code']])
+                for lang in lang_2_storeview:
+                    each_product_info = attr_conn.call('catalog_product.info', [each['product_id'], lang_2_storeview[lang]])
                     result.append(each_product_info)
                 self.pool.get('product.product').ext_import(import_cr, uid, result, inst.id, defaults={}, context=context)
-                self.write(import_cr, uid, inst.id, {'last_imported_product_id': int(each['product_id'])}, context=context)
+                ctx = context.copy()
+                ctx['lang'] = lang
+                self.write(import_cr, uid, inst.id, {'last_imported_product_id': int(each['product_id'])}, context=ctx)
                 
                 import_cr.commit()
             import_cr.close()
