@@ -21,6 +21,7 @@
 
 from osv import osv, fields
 import magerp_osv
+import pooler
 
 import tools
 from tools.translate import _
@@ -54,6 +55,7 @@ class external_referential(magerp_osv.magerp_osv):
         'default_lang_id':fields.many2one('res.lang', 'Default Language',required=True, help="Choose the language which will be used for the Default Value in Magento"),
         'active': fields.boolean('Active'),
         'magento_referential': fields.function(_is_magento_referential, type="boolean", method=True, string="Magento Referential"),
+        'last_imported_product_id': fields.integer('Last Imported Product Id', help="Product are imported one by one. This is the magento id of the last product imported. If you clear it all product will be imported"),
     }
 
     _defaults = {
@@ -160,8 +162,9 @@ class external_referential(magerp_osv.magerp_osv):
         for inst in instances:
             attr_conn = self.external_connection(cr, uid, inst, DEBUG)
             filter = []
-            list_prods = attr_conn.call('catalog_product.list')
-            #self.pool.get('product.product').mage_import(cr, uid, filter, attr_conn, inst.id, DEBUG)
+            if inst.last_imported_product_id:
+                filter.append({'product_id' : {'gt': inst.last_imported_product_id}})
+            list_prods = attr_conn.call('catalog_product.list', filter)
             storeview_obj = self.pool.get('magerp.storeviews')
             lang_obj = self.pool.get('res.lang')
             #get all instance storeviews
@@ -170,6 +173,8 @@ class external_referential(magerp_osv.magerp_osv):
                 for shop in website.shop_ids:
                     for storeview in shop.storeview_ids:
                         storeview_ids += [storeview.id]
+
+            storeview_list=[]
             for storeview in storeview_obj.browse(cr, uid, storeview_ids, context):
                 #get lang of the storeview
                 lang_id = storeview.lang_id
@@ -178,12 +183,19 @@ class external_referential(magerp_osv.magerp_osv):
                 else:
                     osv.except_osv(_('Warning!'), _('The storeviews have no language defined'))
                     lang = inst.default_lang_id.code
-                context.update({'lang': lang})
-                result = []
-                for each in list_prods:
+                storeview_list.append({'code': storeview.code, 'lang': lang})
+            
+            import_cr = pooler.get_db(cr.dbname).cursor()
+            for each in list_prods:
+                result=[]
+                for storeview in storeview_list:
                     each_product_info = attr_conn.call('catalog_product.info', [each['product_id'], storeview['code']])
                     result.append(each_product_info)
-                self.pool.get('product.product').ext_import(cr, uid, result, inst.id, defaults={}, context=context)
+                self.pool.get('product.product').ext_import(import_cr, uid, result, inst.id, defaults={}, context=context)
+                self.write(import_cr, uid, inst.id, {'last_imported_product_id': int(each['product_id'])}, context=context)
+                
+                import_cr.commit()
+            import_cr.close()
         return True
     
     def sync_images(self, cr, uid, ids, context):
