@@ -51,7 +51,11 @@ class Connection(object):
                     self.logger.notifyChannel(_("Magento Connection"), netsvc.LOG_INFO, _("Calling Method:%s,Arguments:%s") % (method, arguments))
                 res = self.ser.call(self.session, method, arguments)
                 if self.debug:
-                    self.logger.notifyChannel(_("Magento Connection"), netsvc.LOG_INFO, _("Query Returned:%s") % (res))
+                    if method=='catalog_product.list':
+                        # the response of the method catalog_product.list can be very very long so it's better to see it only if debug log is activate
+                        self.logger.notifyChannel(_("Magento Connection"), netsvc.LOG_DEBUG, _("Query Returned:%s") % (res))
+                    else:
+                        self.logger.notifyChannel(_("Magento Connection"), netsvc.LOG_INFO, _("Query Returned:%s") % (res))
                 return res
             except IOError, e:
                 self.logger.notifyChannel(_("Magento Call"), netsvc.LOG_ERROR, _("Method: %s\nArguments:%s\nError:%s") % (method, arguments, e))
