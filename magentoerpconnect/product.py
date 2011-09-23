@@ -725,6 +725,10 @@ class product_mag_osv(magerp_osv.magerp_osv):
         return {'type': 'ir.actions.act_window_close'}
 
     def redefine_prod_view(self,cr,uid, field_names, context):
+        def clean_for_xml(string):
+            for key, key_replace in [('&', '&amp;'), ('>','&gt;'),  ('<', '&lt;')]:
+                string = string.replace(key, key_replace)
+            return string
         #This function will rebuild the view for product from instances, attribute groups etc
         #Get all objects needed
         #inst_obj = self.pool.get('external.referential')
@@ -764,8 +768,8 @@ class product_mag_osv(magerp_osv.magerp_osv):
                         if result[3] in ['textarea']:
                             trans = translation_obj._get_source(cr, uid, 'product.product', 'view', context.get('lang', ''), result[4])
                             trans = trans or result[4]
-                            field_xml+="<newline/><separator colspan='4' string='%s'/>" % (trans,)
-                        field_xml+="<field name='" +  result[7] + "'"
+                            field_xml+="<newline/><separator colspan='4' string='%s'/>" % (clean_for_xml(trans),)
+                        field_xml+="<field name='" +  clean_for_xml(result[7]) + "'"
                         if result[5] and (result[6] == "" or "simple" in result[6] or "configurable" in result[6]) and result[2] not in self._magento_fake_mandatory_attrs:
                             field_xml+=""" attrs="{'required':[('magento_exportable','=',True)]}" """
                         if result[3] in ['textarea']:
@@ -793,7 +797,7 @@ class product_mag_osv(magerp_osv.magerp_osv):
             trans = translation_obj._get_source(cr, uid, 'product.product', 'view', context.get('lang', ''), each_attribute_group)
             trans = trans or each_attribute_group
             if attr_group_fields_rel.get(each_attribute_group,False):
-                xml+="<page string='" + trans + "'>\n<group colspan='4' col='4'>"
+                xml+="<page string='" + clean_for_xml(trans) + "'>\n<group colspan='4' col='4'>"
                 xml+="\n".join(attr_group_fields_rel.get(each_attribute_group,[]))
                 xml+="</group></page>\n"
         if context.get('multiwebsite', False):
