@@ -1191,7 +1191,7 @@ class product_product(product_mag_osv):
     
     def ext_assign_links(self, cr, uid, ids, external_referential_ids=None, defaults=None, context=None):
         """ Assign links of type up-sell, cross-sell, related """
-        if type(ids) == int:
+        if isinstance(ids, (int, long)):
             ids = [ids]
         for product in self.browse(cr, uid, ids, context):
             for type_selection in self.pool.get('product.link').get_link_type_selection(cr, uid, context):
