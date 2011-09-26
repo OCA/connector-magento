@@ -1158,8 +1158,8 @@ class product_product(product_mag_osv):
                 temp_result = super(magerp_osv.magerp_osv, self).ext_export(cr, uid, [id], external_referential_ids, defaults, context_storeview)
                 #TODO maybe refactor this part, did we need to assign and make the link for every store?
                 if child_ids:
-                    self.ext_product_assign(cr, uid, 'grouped', id, child_ids, quantities=quantities, context=context_storeview)
-                self.ext_assign_links(cr, uid, id, context=context_storeview)
+                    self.ext_product_assign(cr, uid, 'grouped', id, child_ids, quantities=quantities, external_referential_ids=external_referential_ids, defaults=defaults, context=context_storeview)
+                self.ext_assign_links(cr, uid, id, external_referential_ids=external_referential_ids, defaults=defaults, context=context_storeview)
             not context.get('force_export', False) and self.pool.get('sale.shop').write(cr, uid,context['shop_id'], {'last_products_export_date': ids_2_dates[id]})
             result['create_ids'] += temp_result['create_ids']
             result['write_ids'] += temp_result['write_ids']
@@ -1189,7 +1189,7 @@ class product_product(product_mag_osv):
                 logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "Successfully updated stock level at %s for product with SKU %s " %(virtual_available, product.magento_sku))
         return True
     
-    def ext_assign_links(self, cr, uid, ids, context=None):
+    def ext_assign_links(self, cr, uid, ids, external_referential_ids=None, defaults=None, context=None):
         """ Assign links of type up-sell, cross-sell, related """
         if type(ids) == int:
             ids = [ids]
@@ -1202,15 +1202,26 @@ class product_product(product_mag_osv):
                     if link.type == link_type:
                         linked_product_ids.append(link.linked_product_id.id)
                         position[link.linked_product_id.magento_sku] = link.sequence
-                self.ext_product_assign(cr, uid, link_type, product.id, linked_product_ids, position=position, context=context)
+                self.ext_product_assign(cr, uid, link_type, product.id, linked_product_ids, position=position,
+                                        external_referential_ids=external_referential_ids, defaults=defaults, context=context)
         return True
 
-    def ext_product_assign(self, cr, uid, type, parent_id, child_ids, quantities=None, position=None, context=None):
+    def ext_product_assign(self, cr, uid, type, parent_id, child_ids, quantities=None, position=None, external_referential_ids=None, defaults=None, context=None):
         context = context or {}
         position = position or {}
         quantities = quantities or {}
+        external_referential_ids = external_referential_ids or []
         logger = netsvc.Logger()
         conn = context.get('conn_obj', False)
+
+        # ensure that the product to link is exported before assigning it, export it if necessary
+        for external_referential_id in external_referential_ids:
+            ids_to_export = []
+            for child_id in child_ids:
+                if not self.oeid_to_extid(cr, uid, child_id, external_referential_id, context=context):
+                    ids_to_export.append(child_id)
+            self.ext_export(cr, uid, ids_to_export, [external_referential_id], defaults, context)
+
         parent_sku = self.read(cr, uid, parent_id, ['magento_sku'])['magento_sku']
         new_child_skus = self.read(cr, uid, child_ids, ['magento_sku']) # get the sku of the products to be assigned
         new_child_skus = [x['magento_sku'] for x in new_child_skus]
