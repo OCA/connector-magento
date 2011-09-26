@@ -1220,7 +1220,9 @@ class product_product(product_mag_osv):
             for child_id in child_ids:
                 if not self.oeid_to_extid(cr, uid, child_id, external_referential_id, context=context):
                     ids_to_export.append(child_id)
-            self.ext_export(cr, uid, ids_to_export, [external_referential_id], defaults, context)
+            export_ctx = context.copy()
+            export_ctx['force_export'] = True
+            self.ext_export(cr, uid, ids_to_export, [external_referential_id], defaults, export_ctx)
 
         parent_sku = self.read(cr, uid, parent_id, ['magento_sku'])['magento_sku']
         new_child_skus = self.read(cr, uid, child_ids, ['magento_sku']) # get the sku of the products to be assigned
