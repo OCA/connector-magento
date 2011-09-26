@@ -1,12 +1,12 @@
 "id","type_id:id","model_id:id","external_field","type","external_type","in_function","out_function"
-"mag_erp_prd_associated_skus","magentoerpconnect.magento1324","product.model_product_product","associated_skus","in_out","str","","if record['product_type'] == 'configurable':
+"mag_erp_prd_associated_skus","magentoerpconnect.magento1324","product.model_product_product","associated_skus","in_out","unicode",,"if record['product_type'] == 'configurable':
     skus = []
     if record['configurable_elements']:
         for element_id in record['configurable_elements']:
             element = self.pool.get('product.product').browse(cr, uid, element_id)
             skus.append(element.magento_sku)
     result = [('associated_skus', skus)]"
-"mag_erp_prd_configurable_attributes","magentoerpconnect.magento1324","product.model_product_product","configurable_attributes_data","in_out","str","","# only on configurable products and only on their creation
+"mag_erp_prd_configurable_attributes","magentoerpconnect.magento1324","product.model_product_product","configurable_attributes_data","in_out","unicode",,"# only on configurable products and only on their creation
 if record['product_type'] == 'configurable':
     shop = self.pool.get('sale.shop').browse(cr, uid, context['shop_id'])
     # check if not already created
