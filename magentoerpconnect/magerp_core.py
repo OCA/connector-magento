@@ -25,6 +25,7 @@
 from osv import osv, fields
 import magerp_osv
 import pooler
+import netsvc
 
 import tools
 from tools.translate import _
