@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 #################################################################################
 #                                                                               #
-#    Magentoerpconnect Product Variant for OpenERP                                          #
+#    Magentoerpconnect Product Variant for OpenERP                              #
 #    Copyright (C) 2011 Akretion Sébastien BEAU <sebastien.beau@akretion.com>   #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
@@ -33,7 +33,7 @@ NB: in magento the variant are called 'configurable product'""",
     'init_xml': [],
     'update_xml': [ 
            'product_view.xml',
-           'settings/external.mappinglines.template.csv',
+           'settings/1.3.2.4/external.mappinglines.template.csv',
     ],
     'demo_xml': [],
     'installable': True,

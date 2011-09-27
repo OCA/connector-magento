@@ -33,7 +33,7 @@
     'update_xml': [ 
            'sale_bundle_product_view.xml',
            'product_view.xml',
-           'settings/external.mappinglines.template.csv',
+           'settings/1.3.2.4/external.mappinglines.template.csv',
     ],
     'demo_xml': [],
     'installable': True,
