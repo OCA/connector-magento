@@ -34,6 +34,7 @@
            'sale_bundle_product_view.xml',
            'product_view.xml',
            'settings/1.3.2.4/external.mappinglines.template.csv',
+           'settings/1.5.0.0/external.mappinglines.template.csv',
     ],
     'demo_xml': [],
     'installable': True,
