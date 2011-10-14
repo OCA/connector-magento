@@ -89,7 +89,7 @@ class product_product(osv.osv):
                 vals['product_type'] = 'configurable'
             else:
                 vals['product_type'] = 'simple'
-        super(product_product, self).create(cr, uid, vals, context)
+        return super(product_product, self).create(cr, uid, vals, context)
 
     def action_before_exporting(self, cr, uid, id, product_type, external_referential_ids, defaults, context):
         #When the export of a configurable product is forced we should check if all variant are already exported

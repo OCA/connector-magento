@@ -7,6 +7,9 @@ import urllib2
 import base64
 from tools.translate import _
 
+
+#TODO clean error message, moreover it should be great to take a look on the magento python lib done by Sharoon : https://github.com/openlabs/magento
+
 class Connection(object):
     def __init__(self, location, username, password, debug=False):
         #Append / if not there
@@ -37,7 +40,11 @@ class Connection(object):
                 self.logger.notifyChannel(_("Magento Connection"), netsvc.LOG_ERROR, _("Error in connecting:%s") % (e))
                 self.logger.notifyChannel(_("Magento Call"), netsvc.LOG_WARNING, _("Webservice Failure, sleeping %s second before next attempt") % (sleep_time))
                 time.sleep(sleep_time)
-        raise
+            except Exception,e:
+                self.logger.notifyChannel(_("Magento Connection"), netsvc.LOG_ERROR, _("Error in connecting:%s") % (e))
+                self.logger.notifyChannel(_("Magento Call"), netsvc.LOG_WARNING, _("Webservice Failure, sleeping %s second before next attempt") % (sleep_time))
+                time.sleep(sleep_time)  
+        raise osv.except_osv(_('User Error'), _('Error when try to connect to magento, are your sure that your login is right? Did openerp can access to your magento?'))
 
     
     def call(self, method, *arguments): 
