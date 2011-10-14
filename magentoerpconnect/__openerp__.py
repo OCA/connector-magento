@@ -26,10 +26,10 @@
                  "product_images_olbs",
                  "product_links",
                 ],
-    "author" : "Sharoon Thomas, Raphael Valyi",
+    "author" : "MagentoERPconnect Core Editors",
     "description": """Magento E-commerce management
 """,
-    "website" : "http://openlabs.co.in/blog/post/open-erp-magento-integration-new/",
+    "website" : "https://launchpad.net/magentoerpconnect",
     "category" : "Generic Modules",
     "init_xml" : [],
     "demo_xml" : [],
