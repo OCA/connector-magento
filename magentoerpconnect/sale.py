@@ -345,13 +345,19 @@ class sale_order(magerp_osv.magerp_osv):
             delchars = ''.join([c for c in allchars if c not in string.letters + string.digits])
             vat = data_record['customer_taxvat'].translate(allchars, delchars).upper()
             vat_country, vat_number = vat[:2].lower(), vat[2:]
-            check = getattr(partner_obj, 'check_vat_' + vat_country)
-            vat_ok = check(vat_number)
-            if not vat_ok and 'country_id' in data_record['billing_address']:
+            if 'check_vat_' + vat_country in dir(partner_obj):
+                check = getattr(partner_obj, 'check_vat_' + vat_country)
+                vat_ok = check(vat_number)
+            else:
                 # Maybe magento vat number has not country code prefix. Take it from billing address.
-                check = getattr(partner_obj, 'check_vat_' + data_record['billing_address']['country_id'].lower())
-                vat_ok = check(vat)
-                vat = data_record['billing_address']['country_id'] + vat
+                if 'country_id' in data_record['billing_address']:
+                    fnct = 'check_vat_' + data_record['billing_address']['country_id'].lower()
+                    if fnct in dir(partner_obj):
+                        check = getattr(partner_obj, fnct)
+                        vat_ok = check(vat)
+                        vat = data_record['billing_address']['country_id'] + vat
+                    else:
+                        vat_ok = False
             if vat_ok:    
                 partner_obj.write(cr, uid, [partner_id], {'vat_subjected':True, 'vat':vat})
         return res
