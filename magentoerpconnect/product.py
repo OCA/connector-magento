@@ -5,6 +5,7 @@
 #########################################################################
 #                                                                       #
 # Copyright (C) 2009  Sharoon Thomas, Raphaël Valyi                     #
+# Copyright (C) 2011 Akretion Sébastien BEAU sebastien.beau@akretion.com#
 #                                                                       #
 #This program is free software: you can redistribute it and/or modify   #
 #it under the terms of the GNU General Public License as published by   #
@@ -75,6 +76,7 @@ class product_category(magerp_osv.magerp_osv):
         return conn.call(method, [data.get('parent_id', 1), data])
 
     _columns = {
+        'magerp_fields' : fields.serialized('Magento Product Categories Extra Fields'),
         'create_date': fields.datetime('Created date', readonly=True),
         'write_date': fields.datetime('Updated date', readonly=True),
         'magento_exportable':fields.boolean('Export to Magento'),
@@ -97,8 +99,7 @@ class product_category(magerp_osv.magerp_osv):
                     ('PAGE', 'Static Block Only'),
                     ('PRODUCTS_AND_PAGE', 'Static Block & Products')], 'Display Mode', required=True),
         'is_anchor': fields.boolean('Anchor?'),
-        #TODO fix me and use a m2m
-        'available_sort_by': fields.many2one('magerp.product_category_attribute_options', 'Available Product Listing (Sort By)', domain="[('attribute_name', '=', 'available_sort_by')]"),
+        'available_sort_by': fields.sparse(type='many2many', relation='magerp.product_category_attribute_options', string='Available Product Listing (Sort By)', serialization_field='magerp_fields'),
         'default_sort_by': fields.many2one('magerp.product_category_attribute_options', 'Default Product Listing Sort (Sort By)', domain="[('attribute_name', '=', 'default_sort_by')]"),
         'magerp_stamp':fields.datetime('Magento stamp'),
         'include_in_menu': fields.boolean('Include in Navigation Menu'),

@@ -5,6 +5,7 @@
 #########################################################################
 #                                                                       #
 # Copyright (C) 2009  Sharoon Thomas,                                   #
+# Copyright (C) 2011 Akretion Sébastien BEAU sebastien.beau@akretion.com#
 #                                                                       #
 #This program is free software: you can redistribute it and/or modify   #
 #it under the terms of the GNU General Public License as published by   #
