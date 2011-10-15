@@ -885,6 +885,10 @@ class product_product(product_mag_osv):
         'magento_exportable':lambda * a:True
     }
 
+    _sql_constraints = [
+        ('magento_sku_uniq', 'unique (magento_sku)', 'The Magento SKU should be uniq!'),
+    ]
+
     def write(self, cr, uid, ids, vals, context=None):
         if vals.get('referential_id', False):
             instance = vals['referential_id']
