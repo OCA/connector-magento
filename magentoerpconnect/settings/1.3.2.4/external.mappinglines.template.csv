@@ -74,16 +74,26 @@ if magento_parent_id:
     result=[('url_key',record['url_key'])]"
 "mag_1324_erp_procat_10","magento1324","product.model_product_category","name","in_out","unicode","result=[('name',ifield or 'UNDEFINED'),('magento_exportable',True)]","result=[('name',record['name'])]"
 "mag_1324_erp_procat_11","magento1324","product.model_product_category","is_anchor","in_out","unicode","result=[('is_anchor',ifield and bool(eval(ifield)) or False)]","result=[('is_anchor',record['is_anchor'])]"
-"mag_1324_erp_procat_12","magento1324","product.model_product_category","available_sort_by","in_out","unicode","if ifield:
-    att_id = self.pool.get('magerp.product_category_attribute_options').get_create_option_id(cr, uid, ifield,'available_sort_by', context=context)
+"mag_1324_erp_procat_12","magento1324","product.model_product_category","available_sort_by","in_out","list","attr_ids = []
+cat_attr_obj = self.pool.get('magerp.product_category_attribute_options')
+if ifield:
+    for val in ifield:
+        attr_ids.append(cat_attr_obj.get_create_option_id(cr, uid, val,'available_sort_by', context=context))
+    result=[('available_sort_by', [(6, 0, attr_ids)]), ('use_default_available_sort_by', False)]
 else:
-    att_id = self.pool.get('magerp.product_category_attribute_options').get_create_option_id(cr, uid, 'None','available_sort_by', context=context)
-result=[('available_sort_by',att_id)]","result=[('available_sort_by',record['available_sort_by'][1] or 'name')]"
+    result=[('use_default_available_sort_by', True)]","if record['use_default_available_sort_by']:
+    res = u'None'
+else:
+    res = []
+    for cat_attr_option in self.pool.get('magerp.product_category_attribute_options').browse(cr, uid, record['available_sort_by'], context=context):
+        res.append(cat_attr_option.value)
+result=[('available_sort_by', res)]"
 "mag_1324_erp_procat_13","magento1324","product.model_product_category","default_sort_by","in_out","unicode","if ifield:
     att_id = self.pool.get('magerp.product_category_attribute_options').get_create_option_id(cr, uid, ifield,'default_sort_by', context=context)
 else:
     att_id = self.pool.get('magerp.product_category_attribute_options').get_create_option_id(cr, uid, 'None','default_sort_by', context=context)
-result=[('default_sort_by',att_id)]","result=[('default_sort_by',record['default_sort_by'][1] or 'name')]"
+result=[('default_sort_by',att_id)]","cat_attr_option = self.pool.get('magerp.product_category_attribute_options').browse(cr, uid, record['default_sort_by'][0], context=context)
+result=[('default_sort_by', cat_attr_option.value)]"
 "mag_1324_erp_procat_14","magento1324","product.model_product_category","updated_at","in","unicode","result=[('magerp_stamp',ifield)]",
 "mag_1324_erp_procat_15","magento1324","product.model_product_category","image","in_out","unicode","image_binary = False
 if ifield and not ifield=='None':
@@ -269,5 +279,3 @@ else:
 	result =[('mag_birthday',ifield[:10])]
 else:
 	result=[]",
-
-

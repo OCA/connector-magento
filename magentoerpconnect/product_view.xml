@@ -49,11 +49,23 @@
 									<field name="is_anchor" colspan="1" />
 									<label string="Anchored categories will display all products associated to all child categories (and child of child, and child of child of child,etc.) on that category's page, along with the products associated directly to the parent category." colspan="3" />
 								</group>
-								<separator string="Sorting method" colspan="4" />
-								<field name="available_sort_by" widget="selection" domain="[('attribute_name', '=', 'available_sort_by')]"/>
-								<field name="default_sort_by" widget="selection" domain="[('attribute_name', '=', 'default_sort_by')]"/>
-								<separator string="Page Layout" colspan="4" />
-								<field name="page_layout" nolabel="1" widget="selection" domain="[('attribute_name', '=', 'page_layout')]"/>
+                                <group col="4" colspan="4">
+                                    <group col="10" colspan="2">
+								        <separator string="Available Sorting method" colspan="10" />
+                                        <field name="use_default_available_sort_by" string="Use Default Config"/>
+								        <field name="available_sort_by" colspan="10" nolabel="1" attrs="{'readonly':[('use_default_available_sort_by','=',True)],'required':[('use_default_available_sort_by','=',False)]}">
+                                            <tree string="Available Sort By">
+                                                <field name="label"/>
+                                            </tree>
+                                        </field>
+								    </group>
+                                    <group col="2" colspan="2">
+								        <separator string="Default Sorting method" colspan="2" />
+								        <field name="default_sort_by" widget="selection" nolabel="1"/>
+								        <separator string="Page Layout" colspan="2" />
+								        <field name="page_layout" nolabel="1" widget="selection" domain="[('attribute_name', '=', 'page_layout')]"/>
+                                    </group>
+                                </group>
 							</page>
 						</notebook>
 					</group>
