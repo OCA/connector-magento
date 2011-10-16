@@ -78,7 +78,7 @@ if magento_parent_id:
 cat_attr_obj = self.pool.get('magerp.product_category_attribute_options')
 if ifield:
     for val in ifield:
-        attr_ids.append(cat_attr_obj.get_create_option_id(cr, uid, val,'available_sort_by', context=context))
+        attr_ids.append(cat_attr_obj.get_create_option_id(cr, uid, val,'sort_by', context=context))
     result=[('available_sort_by', [(6, 0, attr_ids)]), ('use_default_available_sort_by', False)]
 else:
     result=[('use_default_available_sort_by', True)]","if record['use_default_available_sort_by']:
@@ -89,9 +89,9 @@ else:
         res.append(cat_attr_option.value)
 result=[('available_sort_by', res)]"
 "mag_1500_erp_procat_13","magento1500","product.model_product_category","default_sort_by","in_out","unicode","if ifield:
-    att_id = self.pool.get('magerp.product_category_attribute_options').get_create_option_id(cr, uid, ifield,'default_sort_by', context=context)
+    att_id = self.pool.get('magerp.product_category_attribute_options').get_create_option_id(cr, uid, ifield,'sort_by', context=context)
 else:
-    att_id = self.pool.get('magerp.product_category_attribute_options').get_create_option_id(cr, uid, 'None','default_sort_by', context=context)
+    att_id = self.pool.get('magerp.product_category_attribute_options').get_create_option_id(cr, uid, 'None','sort_by', context=context)
 result=[('default_sort_by',att_id)]","cat_attr_option = self.pool.get('magerp.product_category_attribute_options').browse(cr, uid, record['default_sort_by'][0], context=context)
 result=[('default_sort_by', cat_attr_option.value)]"
 "mag_1500_erp_procat_14","magento1500","product.model_product_category","updated_at","in","unicode","result=[('magerp_stamp',ifield)]",

@@ -61,7 +61,7 @@
 								    </group>
                                     <group col="2" colspan="2">
 								        <separator string="Default Sorting method" colspan="2" />
-								        <field name="default_sort_by" widget="selection" nolabel="1"/>
+								        <field name="default_sort_by" widget="selection" nolabel="1" domain="[('attribute_name', '=', 'sort_by')]"/>
 								        <separator string="Page Layout" colspan="2" />
 								        <field name="page_layout" nolabel="1" widget="selection" domain="[('attribute_name', '=', 'page_layout')]"/>
                                     </group>
