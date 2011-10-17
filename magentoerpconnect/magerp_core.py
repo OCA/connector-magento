@@ -195,6 +195,7 @@ class external_referential(magerp_osv.magerp_osv):
                 for lang in lang_2_storeview:
                     each_product_info = attr_conn.call('catalog_product.info', [each['product_id'], lang_2_storeview[lang]])
                     result.append(each_product_info)
+                context['magento_sku'] = result[0]['sku']
                 self.pool.get('product.product').ext_import(import_cr, uid, result, inst.id, defaults={}, context=context)
                 ctx = context.copy()
                 ctx['lang'] = lang

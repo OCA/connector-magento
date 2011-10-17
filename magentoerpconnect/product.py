@@ -864,6 +864,15 @@ product_template()
 
 class product_product(product_mag_osv):
     _inherit = "product.product"
+    
+    def extid_to_existing_oeid(self, cr, uid, id, external_referential_id, context=None):
+        """Returns the OpenERP id of a resource by its external id.
+           Returns False if the resource does not exist."""
+        res = super(product_mag_osv, self).extid_to_existing_oeid(cr, uid, id, external_referential_id, context=context)
+        if not res and context.get('magento_sku', False):
+            product_id = self.search(cr, uid, [('magento_sku', '=', context['magento_sku'])], context=context)
+            return product_id and product_id[0] or False
+        return False
 
     def _product_type_get(self, cr, uid, context=None):
         ids = self.pool.get('magerp.product_product_type').search(cr, uid, [], order='id')
