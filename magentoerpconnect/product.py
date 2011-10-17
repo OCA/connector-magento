@@ -307,7 +307,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
         'price':'float',
         'media_image':'binary',
         'gallery':'binary',
-        'multiselect':'char',
+        'multiselect':'many2many',
         'boolean':'boolean',
         'weee':'char',
         False:'char',
@@ -323,7 +323,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
         'price':'float',
         'media_image':'False',
         'gallery':'False',
-        'multiselect':'unicode',
+        'multiselect':'list',
         'boolean':'int',
         'weee':'unicode',
         False:'unicode',
@@ -355,7 +355,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
             all_vals = self.read(cr, uid, id, [], context)
             
             #Fetch Options
-            if 'frontend_input' in all_vals.keys() and all_vals['frontend_input'] in ['select']:
+            if 'frontend_input' in all_vals.keys() and all_vals['frontend_input'] in ['select', 'multiselect']:
                 core_imp_conn = self.pool.get('external.referential').connect(cr, uid, [referential_id])
                 options_data = core_imp_conn.call('ol_catalog_product_attribute.options', [all_vals['magento_id']])
                 if options_data:
@@ -384,7 +384,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
             #If the field has to be created
             if crid:
                 #Fetch Options
-                if 'frontend_input' in vals.keys() and vals['frontend_input'] in ['select']:
+                if 'frontend_input' in vals.keys() and vals['frontend_input'] in ['select',  'multiselect']:
                     core_imp_conn = self.pool.get('external.referential').connect(cr, uid, [vals['referential_id']])
                     options_data = core_imp_conn.call('ol_catalog_product_attribute.options', [vals['magento_id']])
                     if options_data:
@@ -418,9 +418,11 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
                             if field_vals['ttype'] == 'many2one':
                                 field_vals['relation'] = 'magerp.product_attribute_options'
                                 field_vals['domain'] = "[('attribute_id','='," + str(crid) + ")]"
+                            if field_vals['ttype'] == 'many2many':
+                                field_vals['relation'] = 'magerp.product_attribute_options'
+                                field_vals['domain'] = "[('attribute_id','='," + str(crid) + ")]"
                             field_vals['state'] = 'manual'
                             #All field values are computed, now save
-
                             field_id = self.pool.get('ir.model.fields').create(cr, uid, field_vals)
                             field_ids = [field_id]
                             # mapping have to be based on product.product
@@ -449,10 +451,20 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
                 elif ttype in ['many2one']:
                     mapping_line['in_function'] = "if ifield:\n\toption_id = self.pool.get('magerp.product_attribute_options').search(cr,uid,[('attribute_id','=',%s),('value','=',ifield)])\n\tif option_id:\n\t\t\tresult = [('"  % crid
                     mapping_line['in_function'] += field_name + "',option_id[0])]"
-                    mapping_line['out_function'] = "if record['%s']:\n\toption=self.pool.get('magerp.product_attribute_options').browse(cr, uid, record['%s'][0])\n\tif option:\n\t\tresult=[('%s',option.value)]" % (field_name, field_name, vals['attribute_code'])
-                elif ttype in ['multiselect']:
-                    mapping_line['in_function'] = "result=[('%s',str(ifield))]" % field_name
-                    mapping_line['out_function'] = "result= record['%s'] and [('%s', eval(record['%s']))] or []" % (field_name, vals['attribute_code'], field_name)
+                    mapping_line['out_function'] = "if record.get('%s', False):\n\toption=self.pool.get('magerp.product_attribute_options').browse(cr, uid, record['%s'][0])\n\tif option:\n\t\tresult=[('%s',option.value)]" % (field_name, field_name, vals['attribute_code'])
+                elif ttype in ['many2many']:
+                    mapping_line['in_function'] = """
+option_ids = []
+opt_obj = self.pool.get('magerp.product_attribute_options')
+for ext_option_id in ifield:
+    option_ids.append(opt_obj.search(cr,uid,[('attribute_id','=',%s),('value','=',ext_option_id)])[0])
+result = [('%s', [(6,0,option_ids)])]
+""" % (crid, field_name)
+                    mapping_line['out_function'] = """
+if record.get('%s', False):
+    options = self.pool.get('magerp.product_attribute_options').browse(cr, uid, record['%s'])
+    result=[('%s', [option.value for option in options])]
+""" % (field_name, field_name, vals['attribute_code'])
                 elif ttype in ['binary']:
                     print "Binary mapping not done yet :("
                 self.pool.get('external.mapping.line').create(cr,uid,mapping_line)
