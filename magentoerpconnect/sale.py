@@ -395,7 +395,6 @@ class sale_order(magerp_osv.magerp_osv):
                     if defaults.get('price_type', False) == 'tax_included':
                         context.update({'price_is_tax_included': True})
                     line_val = self.oevals_from_extdata(cr, uid, external_referential_id, line_data, 'item_id', mapping_lines, defaults_line, context)
-                                        
                     if line_val['product_id']:
                         line_val['type'] = self.pool.get('product.product').read(cr, uid, line_val['product_id'], ['procure_method'], context)['procure_method']
                     if not line_val.has_key('_CANCEL_IMPORT'):
@@ -546,11 +545,13 @@ class sale_order(magerp_osv.magerp_osv):
                 if NOTRY:
                     res = self.get_all_order_lines(cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
                 else:
-                    try:
-                        res = self.get_all_order_lines(cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
-                    except Exception, e:
-                        print "order has errors with items lines, data are: ", data_record
-                        print e
+                    #TODO fix me error should be raise correctly in the reporting system
+                    res = self.get_all_order_lines(cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
+                    #try:
+                    #    res = self.get_all_order_lines(cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
+                    #except Exception, e:
+                    #    print "order has errors with items lines, data are: ", data_record
+                    #    print e
                         #TODO flag that the order has an error, especially.
             
             if data_record.get('status_history', False) and len(data_record['status_history']) > 0:

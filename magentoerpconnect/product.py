@@ -872,7 +872,7 @@ class product_product(product_mag_osv):
         if not res and context.get('magento_sku', False):
             product_id = self.search(cr, uid, [('magento_sku', '=', context['magento_sku'])], context=context)
             return product_id and product_id[0] or False
-        return False
+        return res
 
     def _product_type_get(self, cr, uid, context=None):
         ids = self.pool.get('magerp.product_product_type').search(cr, uid, [], order='id')
