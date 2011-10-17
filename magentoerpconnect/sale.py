@@ -140,9 +140,11 @@ class sale_shop(magerp_osv.magerp_osv):
                 nb_last_created_ids = SALE_ORDER_IMPORT_STEP
                 while nb_last_created_ids:
                     defaults['magento_storeview_id'] = storeview.id
+                    ctx = context.copy()
+                    ctx['ids_or_filter'] = ids_or_filter
                     resp = self.pool.get('sale.order').mage_import_base(cr, uid, context.get('conn_obj', False),
                                                                         shop.referential_id.id, defaults=defaults,
-                                                                        context={'ids_or_filter':ids_or_filter})
+                                                                        context=ctx)
                     res['create_ids'] += resp['create_ids']
                     res['write_ids'] += resp['write_ids']
                     nb_last_created_ids = len(resp['create_ids'])
@@ -559,7 +561,7 @@ class sale_order(magerp_osv.magerp_osv):
         return res
     
     def create_payments(self, cr, uid, order_id, data_record, context):
-        if 'Magento' in context.get('external_referential_type', False):
+        if context.get('external_referential_type', False) and 'Magento' in context['external_referential_type']:
             paid = False
             if data_record.get('payment', False):
                 payment = data_record['payment']
