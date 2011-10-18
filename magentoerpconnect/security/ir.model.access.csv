@@ -7,3 +7,9 @@
 "access_magentoerpconnect_model_magerp_product_product_type","model_magerp_product_product_type","model_magerp_product_product_type","base.group_sale_manager",1,0,0,0
 "access_magentoerpconnect_magerp_storeviews","magerp_storeviews","model_magerp_storeviews","base.group_sale_manager",1,1,1,1
 "access_magentoerpconnect_model_product_images_external_name","model_product_images_external_name","model_product_images_external_name","base.group_sale_manager",1,0,0,0
+"access_magentoerpconnect_magerp_product_attributes_manager","magerp_product_attributes","model_magerp_product_attributes","stock.group_stock_manager",1,1,1,1
+"access_magentoerpconnect_magerp_product_attribute_set_manager","magerp_product_attribute_set","model_magerp_product_attribute_set","stock.group_stock_manager",1,1,1,1
+"access_magentoerpconnect_magerp_product_attribute_groups_manager","magerp_product_attribute_groups","model_magerp_product_attribute_groups","stock.group_stock_manager",1,1,1,1
+"access_magentoerpconnect_magerp_product_attribute_options_manager","magerp_product_attribute_options","model_magerp_product_attribute_options","stock.group_stock_manager",1,1,1,1
+"access_magentoerpconnect_model_magerp_product_product_type_manager","model_magerp_product_product_type","model_magerp_product_product_type","stock.group_stock_manager",1,1,1,1
+"access_magentoerpconnect_model_product_images_external_name_manager","model_product_images_external_name","model_product_images_external_name","stock.group_stock_manager",1,1,1,1
