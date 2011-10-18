@@ -857,6 +857,7 @@ class product_template(product_mag_osv):
     _columns = {
         'magerp_tmpl' : fields.serialized('Magento Template Fields'),
         'set':fields.many2one('magerp.product_attribute_set', 'Attribute Set'),
+        'websites_ids': fields.many2many('external.shop.group', 'magerp_product_shop_group_rel', 'product_id', 'shop_group_id', 'Websites', help='By defaut product will be exported on every website, if you want to export it only on some website select them here'),
     }
 
 product_template()
@@ -900,7 +901,6 @@ class product_product(product_mag_osv):
         'updated_at':fields.date('Created'),
         'tier_price':fields.one2many('product.tierprice', 'product', 'Tier Price'),
         'product_type': fields.selection(_product_type_get, 'Product Type'),
-        'websites_ids': fields.many2many('external.shop.group', 'magerp_product_shop_group_rel', 'product_id', 'shop_group_id', 'Websites', help='By defaut product will be exported on every website, if you want to exporte it only on some website select them here'),
         'magento_exported': fields.function(_is_magento_exported, type="boolean", method=True, string="Exists on Magento"),  # used to set the sku readonly when already exported
         }
 
