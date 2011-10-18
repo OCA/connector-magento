@@ -1,4 +1,5 @@
 "id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+"access_magentoerpconnect_magerp_product_category_attribute_options","magerp_product_category_attribute_options","model_magerp_product_category_attribute_options","base.group_sale_manager",1,0,0,0
 "access_magentoerpconnect_magerp_product_attributes","magerp_product_attributes","model_magerp_product_attributes","base.group_sale_manager",1,0,0,0
 "access_magentoerpconnect_magerp_product_attribute_set","magerp_product_attribute_set","model_magerp_product_attribute_set","base.group_sale_manager",1,0,0,0
 "access_magentoerpconnect_magerp_product_attribute_groups","magerp_product_attribute_groups","model_magerp_product_attribute_groups","base.group_sale_manager",1,0,0,0
@@ -8,6 +9,7 @@
 "access_magentoerpconnect_magerp_storeviews","magerp_storeviews","model_magerp_storeviews","base.group_sale_manager",1,1,1,1
 "access_magentoerpconnect_model_product_images_external_name","model_product_images_external_name","model_product_images_external_name","base.group_sale_manager",1,0,0,0
 "access_magentoerpconnect_magerp_product_attributes_manager","magerp_product_attributes","model_magerp_product_attributes","stock.group_stock_manager",1,1,1,1
+"access_magentoerpconnect_magerp_product_category_attribute_options_manager","magerp_product_category_attribute_options","model_magerp_product_category_attribute_options","stock.group_stock_manager",1,1,1,1
 "access_magentoerpconnect_magerp_product_attribute_set_manager","magerp_product_attribute_set","model_magerp_product_attribute_set","stock.group_stock_manager",1,1,1,1
 "access_magentoerpconnect_magerp_product_attribute_groups_manager","magerp_product_attribute_groups","model_magerp_product_attribute_groups","stock.group_stock_manager",1,1,1,1
 "access_magentoerpconnect_magerp_product_attribute_options_manager","magerp_product_attribute_options","model_magerp_product_attribute_options","stock.group_stock_manager",1,1,1,1
