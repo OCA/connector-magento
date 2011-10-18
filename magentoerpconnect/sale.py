@@ -476,12 +476,13 @@ class sale_order(magerp_osv.magerp_osv):
         return res
 
     def add_discount(self, cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context):
-        if data_record.get('discount_amount', False) and float(data_record.get('discount_amount', False)) < 0:
-            ctx = context.copy()
-            ctx.update({
-                'ext_code_field': 'coupon_code',
-            })
-            res = self.add_order_extra_line(cr, uid, res, data_record, 'discount_amount', 'DISCOUNT MAGENTO', defaults, ctx)
+        #TODO fix me rev 476
+        #if data_record.get('discount_amount', False) and float(data_record.get('discount_amount', False)) < 0:
+        #    ctx = context.copy()
+        #    ctx.update({
+        #        'ext_code_field': 'coupon_code',
+        #    })
+        #    res = self.add_order_extra_line(cr, uid, res, data_record, 'discount_amount', 'DISCOUNT MAGENTO', defaults, ctx)
         return res
 
     def add_cash_on_delivery(self, cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context):
