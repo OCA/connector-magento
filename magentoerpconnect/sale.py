@@ -284,8 +284,10 @@ class sale_order(magerp_osv.magerp_osv):
         if data_record and 'sale_margin' in data_record:
             sale_margin_installed=True
             tools.drop_view_if_exists(cr, 'report_account_invoice_product')
+        tools.drop_view_if_exists(cr, 'sale_report')
         cr.execute("ALTER TABLE sale_order_line ALTER COLUMN discount TYPE numeric(16,6);")
         cr.execute("ALTER TABLE account_invoice_line ALTER COLUMN discount TYPE numeric(16,6);")
+        self.pool.get('sale.report').init(cr)
         if sale_margin_installed:
             self.pool.get('report.account.invoice.product').init(cr)
         super(sale_order, self)._auto_init(cr, context)
