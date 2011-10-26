@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 	<data>
-		<menuitem id="menu_magerp" name="Magento-Connection" icon="terp-sale"
+		<menuitem id="menu_magerp" name="MagentoERPconnect" icon="terp-sale"
 			web_icon="images/magento.png" 
                         web_icon_hover="images/magento-hover.png"/>
 
 		<menuitem id="menu_magerp_core" name="Core Settings" parent="menu_magerp" />
 		<menuitem id="menu_magerp_core_instances" name="Magento Instances" parent="menu_magerp_core" action="act_magerp_instances_form" />
-		<menuitem id="menu_magerp_core_websites" name="Magento Websites" parent="menu_magerp_core_instances" action="act_magerp_websites_form" />
-		<menuitem id="menu_magerp_core_storeviews" name="Magento Store Views" parent="menu_magerp_core_instances" action="act_magerp_storeviews_form" />
-		<menuitem id="menu_magerp_core_shops" name="Magento Shops" parent="menu_magerp_core_instances" action="act_magerp_shop_form" />
+		<menuitem id="menu_magerp_core_websites" name="Magento Websites" parent="menu_magerp_core" action="act_magerp_websites_form" />
+		<menuitem id="menu_magerp_core_storeviews" name="Magento Store Views" parent="menu_magerp_core" action="act_magerp_storeviews_form" />
+		<menuitem id="menu_magerp_core_shops" name="Magento Shops" parent="menu_magerp_core" action="act_magerp_shop_form" />
 
 		<menuitem id="menu_magerp_attnsets" name="Attributes and Sets" parent="menu_magerp" />
 		<menuitem id="menu_magerp_attnsets_sets" name="Attribute Sets" parent="menu_magerp_attnsets" action="act_magerp_product_attribute_set_form" />
