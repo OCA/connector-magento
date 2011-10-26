@@ -318,7 +318,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
         '':'unicode',
         'text':'unicode',
         'textarea':'unicode',
-        'select':'int',
+        'select':'unicode',
         'date':'unicode',
         'price':'float',
         'media_image':'False',
@@ -342,14 +342,14 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
 
     def write(self, cr, uid, ids, vals, context=None):
         """Will recreate the mapping attributes, beware if you customized some!"""
-
         if context is None:
             context = {}
 
         if type(ids) == int:
             ids = [ids]
         result = super(magerp_product_attributes, self).write(cr, uid, ids, vals, context) 
-        model_id = self.pool.get('ir.model').search(cr, uid, [('model', '=', 'product.product')])[0]
+        model_ids = self.pool.get('ir.model').search(cr, uid, [('model', 'in', ['product.product', 'product.template'])])
+        product_model_id = self.pool.get('ir.model').search(cr, uid, [('model', 'in', ['product.product'])])[0]
         referential_id = context.get('referential_id', False)
         for id in ids:
             all_vals = self.read(cr, uid, id, [], context)
@@ -363,8 +363,9 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
 
             
             field_name = all_vals['field_name']
-            field_ids = self.pool.get('ir.model.fields').search(cr, uid, [('name', '=', field_name), ('model_id', '=', model_id)])
-            self.create_mapping(cr, uid, self._type_conversion[all_vals.get('frontend_input', False)], field_ids, field_name, referential_id, model_id, all_vals, id)
+            #TODO refactor me it will be better to add a one2many between the magerp_product_attributes and the ir.model.fields
+            field_ids = self.pool.get('ir.model.fields').search(cr, uid, [('name', '=', field_name), ('model_id', 'in', model_ids)])
+            self.create_mapping(cr, uid, self._type_conversion[all_vals.get('frontend_input', False)], field_ids, field_name, referential_id, product_model_id, all_vals, id)
         return result
 
     def create(self, cr, uid, vals, context=None):
@@ -869,6 +870,8 @@ class product_product(product_mag_osv):
     def extid_to_existing_oeid(self, cr, uid, id, external_referential_id, context=None):
         """Returns the OpenERP id of a resource by its external id.
            Returns False if the resource does not exist."""
+        if not context:
+            context={}
         res = super(product_mag_osv, self).extid_to_existing_oeid(cr, uid, id, external_referential_id, context=context)
         if not res and context.get('magento_sku', False):
             product_id = self.search(cr, uid, [('magento_sku', '=', context['magento_sku'])], context=context)
