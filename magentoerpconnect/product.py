@@ -330,6 +330,11 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
         'file':'unicode', #this option is not a magento native field it will be better to found a generic solutionto manage this kind of custom option
     }
 
+    _variant_fields = [
+        'color',   
+        'dimension',
+        'visibility',
+    ]
     
     def _is_attribute_translatable(self, vals):
         """Tells if field associated to attribute should be translatable or not.
@@ -394,7 +399,12 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
                 #Manage fields
                 if vals['attribute_code'] and vals.get('frontend_input', False):
                     #Code for dynamically generating field name and attaching to this
-                    model_id = self.pool.get('ir.model').search(cr, uid, [('model', '=', 'product.template')])
+                    if vals['attribute_code'] in self._variant_fields:
+                        model_name='product.product'
+                    else:
+                        model_name='product.template'
+
+                    model_id = self.pool.get('ir.model').search(cr, uid, [('model', '=', model_name)])
 
                     if model_id and len(model_id) == 1:
                         model_id = model_id[0]
@@ -404,13 +414,16 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
                         field_vals = {
                             'name':field_name,
                             'model_id':model_id,
-                            'model':'product.template',
+                            'model':model_name,
                             'field_description':vals.get('frontend_label', False) or vals['attribute_code'],
                             'ttype':self._type_conversion[vals.get('frontend_input', False)],
                             'translate': self._is_attribute_translatable(vals),
                         }
                         if not vals['attribute_code'] in self._not_store_in_json:
-                            field_vals['serialization_field_id'] = self.pool.get('ir.model.fields').search(cr, uid, [('name', '=', 'magerp_tmpl'), ('model', '=', 'product.template')], context=context)[0]
+                            if model_name == 'product.template':
+                                field_vals['serialization_field_id'] = self.pool.get('ir.model.fields').search(cr, uid, [('name', '=', 'magerp_tmpl'), ('model', '=', 'product.template')], context=context)[0]
+                            else:
+                                field_vals['serialization_field_id'] = self.pool.get('ir.model.fields').search(cr, uid, [('name', '=', 'magerp_variant'), ('model', '=', 'product.product')], context=context)[0]
                         if not field_ids:
                             #The field is not there create it
                             #IF char add size
@@ -831,7 +844,10 @@ class product_mag_osv(magerp_osv.magerp_osv):
         result = super(product_mag_osv, self).fields_view_get(cr, uid, view_id,view_type,context,toolbar=toolbar)
         if view_type == 'form':
             if context.get('set', False):
-                ir_model_ids = self.pool.get('ir.model').search(cr, uid, [('model', 'in', ['product.product','product.template'])])
+                models = ['product.template']
+                if self._name == 'product.product':
+                    models.append('product.product')
+                ir_model_ids = self.pool.get('ir.model').search(cr, uid, [('model', 'in', models)])
                 ir_model_field_ids = self.pool.get('ir.model.fields').search(cr, uid, [('model_id', 'in', ir_model_ids)])
                 field_names = ['product_type']
                 for field in self.pool.get('ir.model.fields').browse(cr, uid, ir_model_field_ids):
@@ -898,6 +914,7 @@ class product_product(product_mag_osv):
         return res
 
     _columns = {
+        'magerp_variant' : fields.serialized('Magento Variant Fields'),
         'magento_sku':fields.char('Magento SKU', size=64),
         'magento_exportable':fields.boolean('Exported to Magento?'),
         'created_at':fields.date('Created'), #created_at & updated_at in magento side, to allow filtering/search inside OpenERP!
