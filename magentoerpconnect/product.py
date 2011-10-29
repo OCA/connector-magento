@@ -565,53 +565,55 @@ class magerp_product_attribute_set(magerp_osv.magerp_osv):
         'magento_id':fields.integer('Magento ID'),
         }
     
-    def create_product_menu(self, cr, uid, ids, vals, context):
-        data_ids = self.pool.get('ir.model.data').search(cr, uid, [('name', '=', 'menu_products'), ('module', '=', 'product')])
-        if data_ids:
-            product_menu_id = self.pool.get('ir.model.data').read(cr, uid, data_ids[0], ['res_id'])['res_id']
-        if type(ids) != list:
-            ids = [ids]
-
-        for attribute_set in self.browse(cr, uid, ids, context):
-            menu_vals = {
-                'name': attribute_set.attribute_set_name,
-                'parent_id': product_menu_id,
-                'icon': 'STOCK_JUSTIFY_FILL'
-            }
-
-            action_vals = {
-                'name': attribute_set.attribute_set_name,
-                'view_type':'form',
-                'domain':"[('set', '=', %s)]" % attribute_set.id,
-                'context': "{'set':%s}" % attribute_set.id,
-                'res_model': 'product.product'
-            }
-            
-            existing_menu_id = self.pool.get('ir.ui.menu').search(cr, uid, [('name', '=', attribute_set.attribute_set_name)])
-            if len(existing_menu_id) > 0:
-                action_ref = self.pool.get('ir.ui.menu').browse(cr, uid, existing_menu_id[0]).action
-                action_id = False
-                if action_ref:
-                    action_id = (isinstance(action_ref, unicode) or isinstance(action_ref, str)) and int(action_ref.split(',')[1]) or action_ref.id #compat with OpenERP v5 and v6. TODO change once v5 is deprecated
-                    self.pool.get('ir.actions.act_window').write(cr, uid, action_id, action_vals, context)
-                else:
-                    action_id = self.pool.get('ir.actions.act_window').create(cr, uid, action_vals, context)
-                menu_vals['action'] = 'ir.actions.act_window,'+str(action_id)
-                self.pool.get('ir.ui.menu').write(cr, uid, existing_menu_id[0], menu_vals, context)
-            else:
-                action_id = self.pool.get('ir.actions.act_window').create(cr, uid, action_vals, context)
-                menu_vals['action'] = 'ir.actions.act_window,'+str(action_id)
-                self.pool.get('ir.ui.menu').create(cr, uid, menu_vals, context)
-    
-    def write(self, cr, uid, ids, vals, context=None):
-        res = super(magerp_product_attribute_set, self).write(cr, uid, ids, vals, context)
-        self.create_product_menu(cr, uid, ids, vals, context)
-        return res
-    
-    def create(self, cr, uid, vals, context=None):
-         id = super(magerp_product_attribute_set, self).create(cr, uid, vals, context)
-         self.create_product_menu(cr, uid, id, vals, context)
-         return id
+    #The menu creation is now a deprecated functionality, you can still use it by uncommented the code creation
+    #In the futur a wizard will give the posibily to open product by attributes set.
+    #def create_product_menu(self, cr, uid, ids, vals, context):
+    #    data_ids = self.pool.get('ir.model.data').search(cr, uid, [('name', '=', 'menu_products'), ('module', '=', 'product')])
+    #    if data_ids:
+    #        product_menu_id = self.pool.get('ir.model.data').read(cr, uid, data_ids[0], ['res_id'])['res_id']
+    #    if type(ids) != list:
+    #        ids = [ids]
+    #
+    #    for attribute_set in self.browse(cr, uid, ids, context):
+    #        menu_vals = {
+    #            'name': attribute_set.attribute_set_name,
+    #            'parent_id': product_menu_id,
+    #            'icon': 'STOCK_JUSTIFY_FILL'
+    #        }
+    #
+    #        action_vals = {
+    #            'name': attribute_set.attribute_set_name,
+    #            'view_type':'form',
+    #            'domain':"[('set', '=', %s)]" % attribute_set.id,
+    #            'context': "{'set':%s}" % attribute_set.id,
+    #            'res_model': 'product.product'
+    #        }
+    #        
+    #        existing_menu_id = self.pool.get('ir.ui.menu').search(cr, uid, [('name', '=', attribute_set.attribute_set_name)])
+    #        if len(existing_menu_id) > 0:
+    #            action_ref = self.pool.get('ir.ui.menu').browse(cr, uid, existing_menu_id[0]).action
+    #            action_id = False
+    #            if action_ref:
+    #                action_id = (isinstance(action_ref, unicode) or isinstance(action_ref, str)) and int(action_ref.split(',')[1]) or action_ref.id #compat with OpenERP v5 and v6. TODO change once v5 is deprecated
+    #                self.pool.get('ir.actions.act_window').write(cr, uid, action_id, action_vals, context)
+    #            else:
+    #                action_id = self.pool.get('ir.actions.act_window').create(cr, uid, action_vals, context)
+    #            menu_vals['action'] = 'ir.actions.act_window,'+str(action_id)
+    #            self.pool.get('ir.ui.menu').write(cr, uid, existing_menu_id[0], menu_vals, context)
+    #        else:
+    #            action_id = self.pool.get('ir.actions.act_window').create(cr, uid, action_vals, context)
+    #            menu_vals['action'] = 'ir.actions.act_window,'+str(action_id)
+    #            self.pool.get('ir.ui.menu').create(cr, uid, menu_vals, context)
+    #
+    #def write(self, cr, uid, ids, vals, context=None):
+    #    res = super(magerp_product_attribute_set, self).write(cr, uid, ids, vals, context)
+    #    self.create_product_menu(cr, uid, ids, vals, context)
+    #    return res
+    #
+    #def create(self, cr, uid, vals, context=None):
+    #     id = super(magerp_product_attribute_set, self).create(cr, uid, vals, context)
+    #     self.create_product_menu(cr, uid, id, vals, context)
+    #     return id
 
     def relate(self, cr, uid, mage_inp, instance, *args):
         #TODO: Build the relations code
