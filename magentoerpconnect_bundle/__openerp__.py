@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 #################################################################################
 #                                                                               #
-#    magentoerpconnect_bundle for OpenERP                                          #
+#    magentoerpconnect_bundle for OpenERP                                       #
 #    Copyright (C) 2011 Akretion Sébastien BEAU <sebastien.beau@akretion.com>   #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
@@ -23,11 +23,17 @@
 {
     'name': 'magentoerpconnect_bundle',
     'version': '0.1',
-    'category': 'Generic Modules/Others',
+    'category': 'Generic Modules',
     'license': 'AGPL-3',
-    'description': """empty""",
-    'author': 'Akretion',
-    'website': 'http://www.akretion.com/',
+    'description': """Module to extend the module magentoerpconnect, with it you will be able to create bundle product in magento directly from Openerp. Enjoy it !""",
+    'images': [
+        'images/magentoerpconnect.png',
+        'images/magentocoreeditors.png',
+        'images/items.png',
+        'images/items_lines.png',
+        'images/sale_order_configuration.png',
+    ],
+    "website" : "https://launchpad.net/magentoerpconnect",
     'depends': ['magentoerpconnect','sale_bundle_product'], 
     'init_xml': [],
     'update_xml': [ 

@@ -28,7 +28,14 @@
     'description': """Module to extend the module magentoerpconnect, with it you will be able to create variant of product in magento directly from Openerp. Enjoy it !
 NB: in magento the variant are called 'configurable product'""",
     'author': 'Akretion',
-    'website': 'http://www.akretion.com/',
+    'images': [
+        'images/magentoerpconnect.png',
+        'images/magentocoreeditors.png',
+        'images/product_template.png',
+        'images/dimension_type.png',
+        'images/dimension_option.png',
+    ],
+    "website" : "https://launchpad.net/magentoerpconnect",
     'depends': ['magentoerpconnect', 'product_variant_multi'], 
     'init_xml': [],
     'update_xml': [ 

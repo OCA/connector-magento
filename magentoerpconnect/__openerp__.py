@@ -30,7 +30,14 @@
     "author" : "MagentoERPconnect Core Editors",
     "description": """Magento E-commerce management
 """,
-    'images': ['images/magentoerpconnect.png'],
+    'images': [
+        'images/magentoerpconnect.png',
+        'images/magentocoreeditors.png',
+        'images/main_menu.png',
+        'images/instance.png',
+        'images/sale_shop.png',
+        'images/product.png',
+    ],
     "website" : "https://launchpad.net/magentoerpconnect",
     "category" : "Generic Modules",
     "init_xml" : [],

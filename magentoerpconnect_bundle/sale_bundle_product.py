@@ -25,7 +25,7 @@ import netsvc
 
 class product_item_set_line(osv.osv):
     
-    _inherit = "product.item.set.line"
+    _inherit = "product.item.set"
     
 
     _columns = {
