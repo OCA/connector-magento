@@ -831,7 +831,7 @@ class product_mag_osv(magerp_osv.magerp_osv):
                 xml+="\n".join(attr_group_fields_rel.get(each_attribute_group,[]))
                 xml+="</group></page>\n"
         if context.get('multiwebsite', False):
-            xml+="""<page string='Websites'>\n<group colspan='4' col='4'>\n<field name='websites_ids'/>\n</group>\n</page>\n"""
+            xml+="""<page string='Websites'>\n<field name='websites_ids' nolabel="1"/>\n</page>\n"""
         xml+="</notebook>"
         return xml
     
