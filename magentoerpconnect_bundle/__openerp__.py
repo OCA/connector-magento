@@ -27,11 +27,11 @@
     'license': 'AGPL-3',
     'description': """Module to extend the module magentoerpconnect, with it you will be able to create bundle product in magento directly from Openerp. Enjoy it !""",
     'images': [
-        'images/magentoerpconnect.png',
-        'images/magentocoreeditors.png',
         'images/items.png',
         'images/items_lines.png',
         'images/sale_order_configuration.png',
+        'images/magentocoreeditors.png',
+        'images/magentoerpconnect.png',
     ],
     "website" : "https://launchpad.net/magentoerpconnect",
     'depends': ['magentoerpconnect','sale_bundle_product'], 
