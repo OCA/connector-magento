@@ -1,0 +1,2 @@
+"id","type_id:id","model_id:id","external_field","type","external_type","in_function","out_function"
+"magentoerpconnect.mag_1500_erp_prd_6","magentoerpconnect.magento1500","product.model_product_product","weight","in_out","float","#weight import is not supported with product variant installed","result = [('weight',record['total_weight'] or 0)]"
