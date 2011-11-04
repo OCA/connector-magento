@@ -74,14 +74,16 @@ class product_images(magerp_osv.magerp_osv):
         domain = start_date and ['|', ('create_date', '>', start_date), ('write_date', '>', start_date)] or []
         return proxy.search(cr, uid, domain)
 
-    def get_image_name(self, cr, uid, id, context):
+    def get_image_name(self, cr, uid, id, context=None):
+        if context is None: context = {}
         image_ext_name_obj = self.pool.get('product.images.external.name')
         name_id = image_ext_name_obj.search(cr, uid, [('image_id', '=', id), ('external_referential_id', '=', context['external_referential_id'])], context=context)
         if name_id:
             return image_ext_name_obj.read(cr, uid, name_id, ['name'], context=context)[0]['name']
         return False
      
-    def del_image_name(self, cr, uid, id, context):
+    def del_image_name(self, cr, uid, id, context=None):
+        if context is None: context = {}
         image_ext_name_obj = self.pool.get('product.images.external.name')
         name_id = image_ext_name_obj.search(cr, uid, [('image_id', '=', id), ('external_referential_id', '=', context['external_referential_id'])], context=context)
         if name_id:

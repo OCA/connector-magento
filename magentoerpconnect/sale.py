@@ -50,7 +50,7 @@ class sale_shop(magerp_osv.magerp_osv):
                 res[shop_id] = []
         return res
 
-    def _get_default_storeview_id(self, cr, uid, ids, prop, unknow_none, context):
+    def _get_default_storeview_id(self, cr, uid, ids, prop, unknow_none, context=None):
         res = {}
         for shop in self.browse(cr, uid, ids, context):
             if shop.default_storeview_integer_id:
@@ -60,7 +60,8 @@ class sale_shop(magerp_osv.magerp_osv):
                 res[shop.id] = False
         return res
     
-    def export_images(self, cr, uid, ids, context):
+    def export_images(self, cr, uid, ids, context=None):
+        if context is None: context = {}
         logger = netsvc.Logger()
         start_date = time.strftime('%Y-%m-%d %H:%M:%S')
         image_obj = self.pool.get('product.images')
@@ -79,7 +80,7 @@ class sale_shop(magerp_osv.magerp_osv):
         return True
                
   
-    def _get_rootcategory(self, cr, uid, ids, prop, unknow_none, context):
+    def _get_rootcategory(self, cr, uid, ids, prop, unknow_none, context=None):
         res = {}
         for shop in self.browse(cr, uid, ids, context):
             if shop.root_category_id:
@@ -89,7 +90,7 @@ class sale_shop(magerp_osv.magerp_osv):
                 res[shop.id] = False
         return res
 
-    def _set_rootcategory(self, cr, uid, id, name, value, fnct_inv_arg, context):
+    def _set_rootcategory(self, cr, uid, id, name, value, fnct_inv_arg, context=None):
         res = {}
         ir_model_data_obj = self.pool.get('ir.model.data')
         shop = self.browse(cr, uid, id, context=context)
@@ -103,7 +104,7 @@ class sale_shop(magerp_osv.magerp_osv):
                 raise osv.except_osv(_('Warning!'), _('You have an error in the ir_model_data table, please contact your administrator. (more information in magentoerpconnect/sale.py)'))
         return True
 
-    def _get_exportable_root_category_ids(self, cr, uid, ids, prop, unknow_none, context):
+    def _get_exportable_root_category_ids(self, cr, uid, ids, prop, unknow_none, context=None):
         res = {}
         res1 = self._get_rootcategory(cr, uid, ids, prop, unknow_none, context)
         for shop in self.browse(cr, uid, ids, context):
@@ -129,7 +130,8 @@ class sale_shop(magerp_osv.magerp_osv):
     }
 
 
-    def import_shop_orders(self, cr, uid, shop, defaults, context):
+    def import_shop_orders(self, cr, uid, shop, defaults, context=None):
+        if context is None: context = {}
         result = super(sale_shop, self).import_shop_orders(cr, uid, shop, defaults=defaults, context=context)
         if shop.magento_shop:
             self.check_need_to_update(cr, uid, [shop.id], context=context)
@@ -198,7 +200,8 @@ class sale_shop(magerp_osv.magerp_osv):
                 cr.commit();
         return False
          
-    def update_shop_orders(self, cr, uid, order, ext_id, context):
+    def update_shop_orders(self, cr, uid, order, ext_id, context=None):
+        if context is None: context = {}
         result = {}
 
         if order.shop_id.allow_magento_order_status_push:        
@@ -298,7 +301,7 @@ class sale_order(magerp_osv.magerp_osv):
         else:
             return {'customer_address_id': 'mag_order' + str(address_data['address_id']), 'is_magento_order_address': True}
     
-    def get_order_addresses(self, cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context):
+    def get_order_addresses(self, cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context=None):
         partner_obj = self.pool.get('res.partner')
         partner_address_obj = self.pool.get('res.partner.address')
         del(data_record['billing_address']['parent_id'])
@@ -376,7 +379,8 @@ class sale_order(magerp_osv.magerp_osv):
                 partner_obj.write(cr, uid, [partner_id], {'vat_subjected':True, 'vat':vat})
         return res
     
-    def get_order_lines(self, cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context):
+    def get_order_lines(self, cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context=None):
+        if context is None: context = {}
         mapping_id = self.pool.get('external.mapping').search(cr,uid,[('model','=','sale.order.line'),('referential_id','=',external_referential_id)])
         if mapping_id:
             mapping_line_ids = self.pool.get('external.mapping.line').search(cr,uid,[('mapping_id','=',mapping_id[0]),('type','in',['in_out','in'])])
@@ -407,7 +411,7 @@ class sale_order(magerp_osv.magerp_osv):
         return res
 
 
-    def add_order_extra_line(self, cr, uid, res, data_record, ext_field, product_code, defaults, context):
+    def add_order_extra_line(self, cr, uid, res, data_record, ext_field, product_code, defaults, context=None):
         """ Add or substract amount on order as a separate line item with single quantity for each type of amounts like :
         shipping, cash on delivery, discount, gift certificates...
         Arguments :
@@ -418,6 +422,7 @@ class sale_order(magerp_osv.magerp_osv):
         ext_tax_field: name of the field in data_record where the tax amount is stored
         ext_code_field: name of the field in data_record containing a code (for coupons and gift certificates) which will be printed on the product name
         """
+        if context is None: context = {}
         sign = 'sign' in context and context['sign'] or 1
         ext_tax_field = 'ext_tax_field' in context and context['ext_tax_field'] or None
         ext_code_field = 'ext_code_field' in context and context['ext_code_field'] or None
@@ -458,7 +463,8 @@ class sale_order(magerp_osv.magerp_osv):
                                 }))
         return res
     
-    def add_order_shipping(self, cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context):
+    def add_order_shipping(self, cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context=None):
+        if context is None: context = {}
         if data_record.get('shipping_amount', False) and float(data_record.get('shipping_amount', False)) > 0:
             ctx = context.copy()
             ctx.update({
@@ -467,7 +473,8 @@ class sale_order(magerp_osv.magerp_osv):
             res = self.add_order_extra_line(cr, uid, res, data_record, 'shipping_amount', 'SHIP MAGENTO', defaults, ctx)
         return res
 
-    def add_gift_certificates(self, cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context):
+    def add_gift_certificates(self, cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context=None):
+        if context is None: context = {}
         if data_record.get('giftcert_amount', False) and float(data_record.get('giftcert_amount', False)) > 0:
             ctx = context.copy()
             ctx.update({
@@ -477,7 +484,7 @@ class sale_order(magerp_osv.magerp_osv):
             res = self.add_order_extra_line(cr, uid, res, data_record, 'giftcert_amount', 'GIFT CERTIFICATE', defaults, ctx)
         return res
 
-    def add_discount(self, cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context):
+    def add_discount(self, cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context=None):
         #TODO fix me rev 476
         #if data_record.get('discount_amount', False) and float(data_record.get('discount_amount', False)) < 0:
         #    ctx = context.copy()
@@ -487,7 +494,8 @@ class sale_order(magerp_osv.magerp_osv):
         #    res = self.add_order_extra_line(cr, uid, res, data_record, 'discount_amount', 'DISCOUNT MAGENTO', defaults, ctx)
         return res
 
-    def add_cash_on_delivery(self, cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context):
+    def add_cash_on_delivery(self, cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context=None):
+        if context is None: context = {}
         if data_record.get('cod_fee', False) and float(data_record.get('cod_fee', False)) > 0:
             ctx = context.copy()
             ctx.update({
@@ -527,7 +535,7 @@ class sale_order(magerp_osv.magerp_osv):
         return data_record
     
     
-    def get_all_order_lines(self, cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context):
+    def get_all_order_lines(self, cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context=None):
         res = self.get_order_lines(cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
         res = self.add_order_shipping(cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
         res = self.add_gift_certificates(cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
@@ -535,7 +543,8 @@ class sale_order(magerp_osv.magerp_osv):
         res = self.add_cash_on_delivery(cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
         return res
 
-    def oevals_from_extdata(self, cr, uid, external_referential_id, data_record, key_field, mapping_lines, defaults, context):
+    def oevals_from_extdata(self, cr, uid, external_referential_id, data_record, key_field, mapping_lines, defaults, context=None):
+        if context is None: context = {}
         if data_record.get('items', False):
             data_record = self.data_record_filter(cr, uid, data_record, context=context)
         
@@ -563,7 +572,8 @@ class sale_order(magerp_osv.magerp_osv):
                 res['date_order'] = data_record['status_history'][len(data_record['status_history'])-1]['created_at']
         return res
     
-    def create_payments(self, cr, uid, order_id, data_record, context):
+    def create_payments(self, cr, uid, order_id, data_record, context=None):
+        if context is None: context = {}
         if context.get('external_referential_type', False) and 'Magento' in context['external_referential_type']:
             paid = False
             if data_record.get('payment', False):

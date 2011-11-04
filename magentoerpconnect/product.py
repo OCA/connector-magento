@@ -72,7 +72,7 @@ magerp_product_category_attribute_options()
 class product_category(magerp_osv.magerp_osv):
     _inherit = "product.category"
     
-    def ext_create(self, cr, uid, data, conn, method, oe_id, context):
+    def ext_create(self, cr, uid, data, conn, method, oe_id, context=None):
         return conn.call(method, [data.get('parent_id', 1), data])
 
     _columns = {
@@ -181,7 +181,8 @@ class product_category(magerp_osv.magerp_osv):
                         break
         return res
     
-    def try_ext_update(self, cr, uid, data, conn, method, oe_id, external_id, ir_model_data_id, create_method, context):
+    def try_ext_update(self, cr, uid, data, conn, method, oe_id, external_id, ir_model_data_id, create_method, context=None):
+        if context is None: context = {}
         if context.get('storeview_code', False):
             return conn.call(method, [external_id, data, context.get('storeview_code', False)])
         else:
@@ -663,7 +664,7 @@ class magerp_product_attribute_groups(magerp_osv.magerp_osv):
     _description = "Attribute groups in Magento"
     _rec_name = 'attribute_group_name'
     _order = "sort_order"
-    def _get_set(self, cr, uid, ids, prop, unknow_none, context):
+    def _get_set(self, cr, uid, ids, prop, unknow_none, context=None):
         res = {}
         for attribute_group in self.browse(cr, uid, ids, context):
             res[attribute_group.id] = self.pool.get('magerp.product_attribute_set').extid_to_oeid(cr, uid, attribute_group.attribute_set_id, attribute_group.referential_id.id)
@@ -754,7 +755,7 @@ class product_mag_osv(magerp_osv.magerp_osv):
         '''this empty function will save the magento field'''
         return {'type': 'ir.actions.act_window_close'}
 
-    def redefine_prod_view(self,cr,uid, field_names, context):
+    def redefine_prod_view(self,cr,uid, field_names, context=None):
         def clean_for_xml(string):
             for key, key_replace in [('&', '&amp;'), ('>','&gt;'),  ('<', '&lt;')]:
                 string = string.replace(key, key_replace)
@@ -762,6 +763,7 @@ class product_mag_osv(magerp_osv.magerp_osv):
         #This function will rebuild the view for product from instances, attribute groups etc
         #Get all objects needed
         #inst_obj = self.pool.get('external.referential')
+        if context is None: context = {}
         attr_set_obj = self.pool.get('magerp.product_attribute_set')
         attr_group_obj = self.pool.get('magerp.product_attribute_groups')
         attr_obj = self.pool.get('magerp.product_attributes')
@@ -835,7 +837,7 @@ class product_mag_osv(magerp_osv.magerp_osv):
         xml+="</notebook>"
         return xml
     
-    def _filter_fields_to_return(self, cr, uid, field_names, context):
+    def _filter_fields_to_return(self, cr, uid, field_names, context=None):
         '''This function is a hook in order to filter the fields that appears on the view'''
         return field_names
 
@@ -901,7 +903,7 @@ class product_product(product_mag_osv):
         product_types = self.pool.get('magerp.product_product_type').read(cr, uid, ids, ['product_type','name'], context=context)
         return [(pt['product_type'], pt['name']) for pt in product_types]
 
-    def _is_magento_exported(self, cr, uid, ids, field_name, arg, context):
+    def _is_magento_exported(self, cr, uid, ids, field_name, arg, context=None):
         """Return True if the product is already exported to at least one magento shop
         """
         res = {}
@@ -1021,9 +1023,9 @@ class product_product(product_mag_osv):
             return super(product_product, self).unlink(cr, uid, ids, context)
     
     #TODO move part of this to declarative mapping CSV template
-    def extdata_from_oevals(self, cr, uid, external_referential_id, data_record, mapping_lines, defaults, context):
+    def extdata_from_oevals(self, cr, uid, external_referential_id, data_record, mapping_lines, defaults, context=None):
         product_data = super(product_product, self).extdata_from_oevals(cr, uid, external_referential_id, data_record, mapping_lines, defaults, context) #Aapply custom/attributes mappings
-
+        if context is None: context = {}
         product = self.browse(cr, uid, data_record['id'], context)
         shop = self.pool.get('sale.shop').browse(cr, uid, context['shop_id'], context)
 
@@ -1064,8 +1066,9 @@ class product_product(product_mag_osv):
                 sku = code
         return sku
 
-    def ext_create(self, cr, uid, data, conn, method, oe_id, context):        
-        product = self.browse(cr, uid, oe_id)
+    def ext_create(self, cr, uid, data, conn, method, oe_id, context=None):
+        if context is None: context = {}
+        product = self.browse(cr, uid, oe_id, context=context)
         sku = self.product_to_sku(cr, uid, product)
         shop = self.pool.get('sale.shop').browse(cr, uid, context['shop_id'])
         attr_set_id = product.set and self.pool.get('magerp.product_attribute_set').oeid_to_extid(cr, uid, product.set.id, shop.referential_id.id) or context.get('default_set_id', 1)
@@ -1214,18 +1217,20 @@ class product_product(product_mag_osv):
             result['write_ids'] += temp_result['write_ids']
         return result
     
-    def try_ext_update(self, cr, uid, data, conn, method, oe_id, external_id, ir_model_data_id, create_method, context):
+    def try_ext_update(self, cr, uid, data, conn, method, oe_id, external_id, ir_model_data_id, create_method, context=None):
+        if context is None: context = {}
         if context.get('storeview_code', False):
             return conn.call(method, [external_id, data, context.get('storeview_code', False)])
         else:
             return conn.call(method, [external_id, data])
     
-    def ext_update(self, cr, uid, data, conn, method, oe_id, external_id, ir_model_data_id, create_method, context):
+    def ext_update(self, cr, uid, data, conn, method, oe_id, external_id, ir_model_data_id, create_method, context=None):
         product = self.browse(cr, uid, oe_id)
         sku = self.product_to_sku(cr, uid, product)
         return super(magerp_osv.magerp_osv, self).ext_update(cr, uid, data, conn, method, oe_id, sku, ir_model_data_id, create_method, context)
     
-    def export_inventory(self, cr, uid, ids, shop, context):
+    def export_inventory(self, cr, uid, ids, shop, context=None):
+        if context is None: context = {}
         logger = netsvc.Logger()
         stock_id = self.pool.get('sale.shop').browse(cr, uid, context['shop_id']).warehouse_id.lot_stock_id.id
         for product in self.browse(cr, uid, ids):
