@@ -27,7 +27,8 @@ class stock_picking(osv.osv):
     _inherit = "stock.picking"
 
 
-    def create_ext_complete_shipping(self, cr, uid, id, external_referential_id, magento_incrementid, context):
+    def create_ext_complete_shipping(self, cr, uid, id, external_referential_id, magento_incrementid, context=None):
+        if context is None: context = {}
         logger = netsvc.Logger()
         conn = context.get('conn_obj', False)
         ext_shipping_id = False
@@ -37,7 +38,7 @@ class stock_picking(osv.osv):
             logger.notifyChannel(_("Magento Call"), netsvc.LOG_ERROR, _("The picking from the order %s can't be created on Magento, please attach it manually, %s") % (magento_incrementid, e))
         return ext_shipping_id
     
-    def add_picking_line(self, cr, uid, lines, picking_line, context):
+    def add_picking_line(self, cr, uid, lines, picking_line, context=None):
         """ A line to add in the shipping is a dict with : product_id and product_qty keys."""
         line_info = {'product_id': picking_line.product_id.id,
                      'product_qty': picking_line.product_qty,
@@ -46,7 +47,8 @@ class stock_picking(osv.osv):
         return lines        
 
 
-    def create_ext_partial_shipping(self, cr, uid, id, external_referential_id, magento_incrementid, context):
+    def create_ext_partial_shipping(self, cr, uid, id, external_referential_id, magento_incrementid, context=None):
+        if context is None: context = {}
         logger = netsvc.Logger()
         conn = context.get('conn_obj', False)
         ext_shipping_id = False
@@ -74,7 +76,7 @@ class stock_picking(osv.osv):
         return ext_shipping_id 
 
 
-    def create_ext_shipping(self, cr, uid, id, picking_type, external_referential_id, context):
+    def create_ext_shipping(self, cr, uid, id, picking_type, external_referential_id, context=None):
         magento_incrementid = self.browse(cr, uid, id, ['sale_id'], context).sale_id.magento_incrementid
         carrier_id = self.pool.get('stock.picking').read(cr, uid, id, ['carrier_id'], context)['carrier_id']
         if carrier_id:
@@ -88,7 +90,8 @@ class stock_picking(osv.osv):
         return ext_shipping_id
 
 
-    def add_ext_tracking_reference(self, cr, uid, id, carrier_id, ext_shipping_id, context):
+    def add_ext_tracking_reference(self, cr, uid, id, carrier_id, ext_shipping_id, context=None):
+        if context is None: context = {}
         logger = netsvc.Logger()
         conn = context.get('conn_obj', False)
         carrier = self.pool.get('delivery.carrier').read(cr, uid, carrier_id, ['magento_code', 'magento_tracking_title'], context)

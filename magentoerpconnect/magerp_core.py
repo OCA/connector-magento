@@ -36,7 +36,7 @@ class external_referential(magerp_osv.magerp_osv):
     #This class stores instances of magento to which the ERP will connect, so you can connect OpenERP to multiple Magento installations (eg different Magento databases)
     _inherit = "external.referential"
 
-    def _is_magento_referential(self, cr, uid, ids, field_name, arg, context):
+    def _is_magento_referential(self, cr, uid, ids, field_name, arg, context=None):
         """If at least one shop is magento, we consider that the external
         referential is a magento referential
         """
@@ -88,7 +88,7 @@ class external_referential(magerp_osv.magerp_osv):
             self.pool.get('magerp.storeviews').mage_import_base(cr,uid,core_imp_conn, inst.id, defaults={})
         return True
 
-    def sync_categs(self, cr, uid, ids, context):
+    def sync_categs(self, cr, uid, ids, context=None):
         instances = self.browse(cr, uid, ids, context)
         for inst in instances:
             pro_cat_conn = self.external_connection(cr, uid, inst, DEBUG)
@@ -100,7 +100,7 @@ class external_referential(magerp_osv.magerp_osv):
                 #self.pool.get('product.category').ext_export(cr,uid,exp_ids,[inst.id],{},{'conn_obj':pro_cat_conn})
         return True
 
-    def sync_attribs(self, cr, uid, ids, context):
+    def sync_attribs(self, cr, uid, ids, context=None):
         instances = self.browse(cr, uid, ids, context)
         for inst in instances:
             attr_conn = self.external_connection(cr, uid, inst, DEBUG)
@@ -122,7 +122,7 @@ class external_referential(magerp_osv.magerp_osv):
                 self.pool.get('magerp.product_attribute_set').relate(cr, uid, mage_inp, inst.id, DEBUG)
         return True
 
-    def sync_attrib_sets(self, cr, uid, ids, context):
+    def sync_attrib_sets(self, cr, uid, ids, context=None):
         instances = self.browse(cr, uid, ids, context)
         for inst in instances:
             attr_conn = self.external_connection(cr, uid, inst, DEBUG)
@@ -130,7 +130,7 @@ class external_referential(magerp_osv.magerp_osv):
             self.pool.get('magerp.product_attribute_set').mage_import_base(cr, uid, attr_conn, inst.id,{'referential_id':inst.id},{'ids_or_filter':filter})
         return True
 
-    def sync_attrib_groups(self, cr, uid, ids, context):
+    def sync_attrib_groups(self, cr, uid, ids, context=None):
         instances = self.browse(cr, uid, ids, context)
         for inst in instances:
             attr_conn = self.external_connection(cr, uid, inst, DEBUG)
@@ -139,7 +139,7 @@ class external_referential(magerp_osv.magerp_osv):
             self.pool.get('magerp.product_attribute_groups').mage_import_base(cr, uid, attr_conn, inst.id, {'referential_id': inst.id}, {'ids_or_filter':filter})
         return True
 
-    def sync_customer_groups(self, cr, uid, ids, context):
+    def sync_customer_groups(self, cr, uid, ids, context=None):
         instances = self.browse(cr, uid, ids, context)
         for inst in instances:
             attr_conn = self.external_connection(cr, uid, inst, DEBUG)
@@ -147,7 +147,7 @@ class external_referential(magerp_osv.magerp_osv):
             self.pool.get('res.partner.category').mage_import_base(cr, uid, attr_conn, inst.id, {}, {'ids_or_filter':filter})
         return True
 
-    def sync_customer_addresses(self, cr, uid, ids, context):
+    def sync_customer_addresses(self, cr, uid, ids, context=None):
         instances = self.browse(cr, uid, ids, context)
         for inst in instances:
             attr_conn = self.external_connection(cr, uid, inst, DEBUG)
@@ -157,8 +157,8 @@ class external_referential(magerp_osv.magerp_osv):
             self.pool.get('res.partner.address').mage_import_base(cr, uid, attr_conn, inst.id, {}, {'ids_or_filter':filter})
         return True
 
-    def sync_products(self, cr, uid, ids, context):
-        if context == None:
+    def sync_products(self, cr, uid, ids, context=None):
+        if context is None:
             context = {}
         context.update({'dont_raise_error': True})
         instances = self.browse(cr, uid, ids, context)
@@ -205,7 +205,7 @@ class external_referential(magerp_osv.magerp_osv):
             import_cr.close()
         return True
     
-    def sync_images(self, cr, uid, ids, context):
+    def sync_images(self, cr, uid, ids, context=None):
         logger = netsvc.Logger()
         shop_ids = self.pool.get('sale.shop').search(cr, uid, [])
         for inst in self.browse(cr, uid, ids, context):
@@ -253,7 +253,8 @@ class external_referential(magerp_osv.magerp_osv):
 				    image_ext_name_obj.create(cr, uid, {'name':image['file'], 'external_referential_id' : inst.id, 'image_id' : new_image_id}, context=context)               
         return True
 
-    def export_products(self, cr, uid, ids, context):
+    def export_products(self, cr, uid, ids, context=None):
+        if context is None: context = {}
         shop_ids = self.pool.get('sale.shop').search(cr, uid, [])
         for inst in self.browse(cr, uid, ids, context):
             for shop in self.pool.get('sale.shop').browse(cr, uid, shop_ids, context):
@@ -263,7 +264,7 @@ class external_referential(magerp_osv.magerp_osv):
                 shop.export_products(cr, uid, shop, context)
         return True
 
-    def sync_partner(self, cr, uid, ids, context):
+    def sync_partner(self, cr, uid, ids, context=None):
         instances = self.browse(cr, uid, ids, context)
 
         for inst in instances:
@@ -293,7 +294,7 @@ class external_referential(magerp_osv.magerp_osv):
 
         return True
 
-    def sync_newsletter(self, cr, uid, ids, context):
+    def sync_newsletter(self, cr, uid, ids, context=None):
         #update first all customer
         self.sync_partner(cr, uid, ids, context)
 
@@ -319,7 +320,7 @@ class external_referential(magerp_osv.magerp_osv):
                     partner_obj.write(cr, uid, partner_ids[0], {'mag_newsletter': subscriber_status})
         return True
 
-    def sync_newsletter_unsubscriber(self, cr, uid, ids, context):
+    def sync_newsletter_unsubscriber(self, cr, uid, ids, context=None):
         instances = self.browse(cr, uid, ids, context)
         partner_obj = self.pool.get('res.partner')
 
@@ -338,7 +339,7 @@ class external_referential(magerp_osv.magerp_osv):
 
     # Schedules functions ============ #
     def run_import_newsletter_scheduler(self, cr, uid, context=None):
-        if context == None:
+        if context is None:
             context = {}
 
         instances_ids  = self.search(cr, uid, [('active', '=', 1)])
@@ -349,7 +350,7 @@ class external_referential(magerp_osv.magerp_osv):
             print "run_import_newsletter_scheduler: %s" % instances_ids
 
     def run_import_newsletter_unsubscriber_scheduler(self, cr, uid, context=None):
-        if context == None:
+        if context is None:
             context = {}
 
         instances_ids  = self.search(cr, uid, [('active', '=', 1)])
@@ -367,7 +368,7 @@ class external_shop_group(magerp_osv.magerp_osv):
     #Return format of API:{'code': 'base', 'name': 'Main', 'website_id': '1', 'is_default': '1', 'sort_order': '0', 'default_group_id': '1'}
     # default_group_id is the default shop of the external_shop_group (external_shop_group = website)
 
-    def _get_default_shop_id(self, cr, uid, ids, prop, unknow_none, context):
+    def _get_default_shop_id(self, cr, uid, ids, prop, unknow_none, context=None):
         res = {}
         for shop_group in self.browse(cr, uid, ids, context):
             if shop_group.default_shop_integer_id:
