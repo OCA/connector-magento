@@ -666,6 +666,7 @@ class sale_order(magerp_osv.magerp_osv):
     def mage_import_base(self, cr, uid, conn, external_referential_id, defaults=None, context=None):
         """ Inherited method for Sales orders in order to import only order not flagged as "imported" on Magento
         """
+        logger = netsvc.Logger()
         if context is None:
             context = {}
         if not 'ids_or_filter' in context.keys():
@@ -682,9 +683,15 @@ class sale_order(magerp_osv.magerp_osv):
                 'filters': context['ids_or_filter'][0],
             }
             data = conn.call('sales_order.retrieve', [order_retrieve_params])
-
+            data_filtred=[]
+            for order in data:
+                if self.extid_to_existing_oeid(cr, uid, order['increment_id'], external_referential_id, context=context):
+                    logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "the order %s already exist in OpenERP" % (order['increment_id'],))
+                    self.ext_set_order_imported(cr, uid, order['increment_id'], external_referential_id, context=context)
+                else:
+                    data_filtred.appends(order)                    
             context['conn_obj'] = conn # we will need the connection to set the flag to "imported" on magento after each order import
-            result = self.mage_import_one_by_one(cr, uid, conn, external_referential_id, mapping_id[0], data, defaults, context)
+            result = self.mage_import_one_by_one(cr, uid, conn, external_referential_id, mapping_id[0], data_filtred, defaults, context)
         return result
 
 # UPDATE ORDER STATUS FROM MAGENTO TO OPENERP IS UNSTABLE, AND NOT VERY USEFULL. MAYBE IT WILL BE REFACTORED 
