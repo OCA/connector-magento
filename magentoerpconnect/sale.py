@@ -91,17 +91,15 @@ class sale_shop(magerp_osv.magerp_osv):
         return res
 
     def _set_rootcategory(self, cr, uid, id, name, value, fnct_inv_arg, context=None):
-        res = {}
         ir_model_data_obj = self.pool.get('ir.model.data')
         shop = self.browse(cr, uid, id, context=context)
         if shop.root_category_id:
-            model_data_id = ir_model_data_obj.search(cr, uid, [('name', '=', 'product.category_'+ str(shop.root_category_id)), ('model', '=', 'product.category'), ('external_referential_id', '=', shop.referential_id.id)])
-            if len(model_data_id) == 1:
+            model_data_id = self.pool.get('product.category').\
+            extid_to_existing_oeid(cr, uid, shop.root_category_id, shop.referential_id.id, context=context)
+            if model_data_id:
                 ir_model_data_obj.write(cr, uid, model_data_id, {'res_id' : value}, context=context)
-            elif len(model_data_id) == 0:
-                raise osv.except_osv(_('Warning!'), _('No external id found, are you sure that the referential are syncronized? Please contact your administrator. (more information in magentoerpconnect/sale.py)'))
             else:
-                raise osv.except_osv(_('Warning!'), _('You have an error in the ir_model_data table, please contact your administrator. (more information in magentoerpconnect/sale.py)'))
+                raise osv.except_osv(_('Warning!'), _('No external id found, are you sure that the referential are syncronized? Please contact your administrator. (more information in magentoerpconnect/sale.py)'))
         return True
 
     def _get_exportable_root_category_ids(self, cr, uid, ids, prop, unknow_none, context=None):
