@@ -22,6 +22,7 @@
 #########################################################################
 
 from osv import osv, fields
+from tools.translate import _
 import magerp_osv
 
 class res_partner_category(magerp_osv.magerp_osv):
@@ -56,10 +57,20 @@ class res_partner(magerp_osv.magerp_osv):
                     'created_in':fields.char('Created in', size=100),
                     'created_at':fields.datetime('Created Date'),
                     'updated_at':fields.datetime('Updated At'),
-                    'emailid':fields.char('Email Address', size=100, readonly=True, help="Magento uses this email ID to match the customer."),
+                    'emailid':fields.char('Email Address', size=100, help="Magento uses this email ID to match the customer."),
                     'mag_vat':fields.char('Magento VAT', size=50, help="To be able to receive customer VAT number you must set it in Magento Admin Panel, menu System / Configuration / Client Configuration / Name and Address Options."),
                     'mag_birthday':fields.date('Birthday', help="To be able to receive customer birthday you must set it in Magento Admin Panel, menu System / Configuration / Client Configuration / Name and Address Options."),
                     'mag_newsletter':fields.boolean('Newsletter'),
                 }
+	
+    def _search_existing_id_by_vals(self, cr, uid, vals, external_id, external_referential_id, defaults=None, context=None):
+        """ 
+            Return: ID of the partner to bind with the external partner id
+        """
+        magento_mail = vals['emailid']
+        res_ids = self.search(cr, uid, [('emailid', '=', magento_mail)], context=context)
+        if len(res_ids) > 1:
+            raise osv.except_osv(_('Error'), _("More than one partner found with the email address : %s") % (magento_mail,))
+        return res_ids and res_ids[0] or False
 
 res_partner()
