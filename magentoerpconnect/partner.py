@@ -6,6 +6,7 @@
 #                                                                       #
 # Copyright (C) 2009  Sharoon Thomas, Raphaël Valyi                     #
 # Copyright (C) 2011 Akretion Sébastien BEAU sebastien.beau@akretion.com#
+# Copyright (C) 2011 Camptocamp Guewen Baconnier                        # 
 #                                                                       #
 #This program is free software: you can redistribute it and/or modify   #
 #it under the terms of the GNU General Public License as published by   #
@@ -22,6 +23,7 @@
 #########################################################################
 
 from osv import osv, fields
+from tools.translate import _
 import magerp_osv
 
 class res_partner_category(magerp_osv.magerp_osv):
@@ -47,7 +49,21 @@ res_partner_address()
 
 class res_partner(magerp_osv.magerp_osv):
     _inherit = "res.partner"
-    
+
+    def _is_magento_exported(self, cr, uid, ids, field_name, arg, context=None):
+        """Return True if the product is already exported to at least one magento shop
+        """
+        res = {}
+        # get all magento external_referentials
+        referentials = self.pool.get('external.referential').search(cr, uid, [('magento_referential', '=', True)])
+        for partner in self.browse(cr, uid, ids, context):
+            for referential in referentials:
+                res[partner.id] = False
+                if self.oeid_to_extid(cr, uid, partner.id, referential, context):
+                    res[partner.id] = True
+                    break
+        return res
+
     _columns = {
                     'group_id':fields.many2one('res.partner.category', 'Magento Group(Category)'),
                     'store_id':fields.many2one('magerp.storeviews', 'Last Store View', readonly=True, help="Last store view where the customer has bought."),
@@ -56,10 +72,21 @@ class res_partner(magerp_osv.magerp_osv):
                     'created_in':fields.char('Created in', size=100),
                     'created_at':fields.datetime('Created Date'),
                     'updated_at':fields.datetime('Updated At'),
-                    'emailid':fields.char('Email Address', size=100, readonly=True, help="Magento uses this email ID to match the customer."),
+                    'emailid':fields.char('Email Address', size=100, help="Magento uses this email ID to match the customer. If filled, if a Magento customer is imported with the exact same email, he will be bound with this partner and this latter will be updated with Magento's values."),
                     'mag_vat':fields.char('Magento VAT', size=50, help="To be able to receive customer VAT number you must set it in Magento Admin Panel, menu System / Configuration / Client Configuration / Name and Address Options."),
                     'mag_birthday':fields.date('Birthday', help="To be able to receive customer birthday you must set it in Magento Admin Panel, menu System / Configuration / Client Configuration / Name and Address Options."),
                     'mag_newsletter':fields.boolean('Newsletter'),
+                    'magento_exported': fields.function(_is_magento_exported, type="boolean", method=True, string="Exists on Magento"),
                 }
+	
+    def _search_existing_id_by_vals(self, cr, uid, vals, external_id, external_referential_id, defaults=None, context=None):
+        """ 
+            Return: ID of the partner to bind with the external partner id
+        """
+        magento_mail = vals['emailid']
+        res_ids = self.search(cr, uid, [('emailid', '=', magento_mail)], context=context)
+        if len(res_ids) > 1:
+            raise osv.except_osv(_('Error'), _("More than one partner found with the email address : %s") % (magento_mail,))
+        return res_ids and res_ids[0] or False
 
 res_partner()

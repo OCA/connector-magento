@@ -9,7 +9,8 @@
 			<field name="arch" type="xml">
 				<xpath expr="/form/notebook" position="inside">
 					<page string="Magento Information">
-						<field name="emailid" />
+                        <field name="magento_exported" invisible="True"/>
+						<field name="emailid" attrs="{'readonly': [('magento_exported', '=', True)]}"/>
 						<field name="group_id" />
 						<field name="mag_vat" />
 						<field name="mag_birthday" />
