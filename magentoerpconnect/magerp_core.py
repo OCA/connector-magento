@@ -6,6 +6,7 @@
 #                                                                       #
 # Copyright (C) 2009  Sharoon Thomas                                    #
 # Copyright (C) 2011 Akretion Sébastien BEAU sebastien.beau@akretion.com#
+# Copyright (C) 2011 Camptocamp Guewen Baconnier                        #
 #                                                                       #
 #This program is free software: you can redistribute it and/or modify   #
 #it under the terms of the GNU General Public License as published by   #
@@ -31,7 +32,7 @@ from tools.translate import _
 
 DEBUG = True
 TIMEOUT = 2
-        
+
 class external_referential(magerp_osv.magerp_osv):
     #This class stores instances of magento to which the ERP will connect, so you can connect OpenERP to multiple Magento installations (eg different Magento databases)
     _inherit = "external.referential"
@@ -64,7 +65,7 @@ class external_referential(magerp_osv.magerp_osv):
     _defaults = {
         'active': lambda *a: 1,
     }
-             
+
     def connect(self, cr, uid, ids, context=None):
         #ids has to be a list
         if isinstance(ids, (list, tuple)) and len(ids) == 1:
@@ -188,7 +189,7 @@ class external_referential(magerp_osv.magerp_osv):
                     lang = inst.default_lang_id.code
                 if not lang_2_storeview.get(lang, False):
                     lang_2_storeview[lang]=storeview.code
-            
+
             import_cr = pooler.get_db(cr.dbname).cursor()
             for each in list_prods:
                 for lang in lang_2_storeview:
@@ -202,7 +203,7 @@ class external_referential(magerp_osv.magerp_osv):
                 import_cr.commit()
             import_cr.close()
         return True
-    
+
     def sync_images(self, cr, uid, ids, context=None):
         logger = netsvc.Logger()
         shop_ids = self.pool.get('sale.shop').search(cr, uid, [])
@@ -236,7 +237,7 @@ class external_referential(magerp_osv.magerp_osv):
 				image_ext_name_id = image_ext_name_obj.search(cr, uid, [('name', '=', image['file']), ('external_referential_id', '=', inst.id)], context=context)
 				if image_ext_name_id:
 				    # update existing image
-				    # find the correspondent product image from the external name 
+				    # find the correspondent product image from the external name
 				    image_ext_name = image_ext_name_obj.read(cr, uid, image_ext_name_id, [], context=context)
 				    if self.pool.get('product.images').search(cr, uid, [('id', '=', image_ext_name[0]['id'])], context=context):
    				        self.pool.get('product.images').write(cr, uid, image_ext_name[0]['id'], data, context=context)
@@ -248,7 +249,24 @@ class external_referential(magerp_osv.magerp_osv):
 				else:
 				    # create new image
 				    new_image_id = self.pool.get('product.images').create(cr, uid, data, context=context)
-				    image_ext_name_obj.create(cr, uid, {'name':image['file'], 'external_referential_id' : inst.id, 'image_id' : new_image_id}, context=context)               
+				    image_ext_name_obj.create(cr, uid, {'name':image['file'], 'external_referential_id' : inst.id, 'image_id' : new_image_id}, context=context)
+        return True
+
+    def sync_product_links(self, cr, uid, ids, context=None):
+        if context is None: context = {}
+        instances = self.browse(cr, uid, ids, context)
+        for inst in instances:
+            conn = self.external_connection(cr, uid, inst, DEBUG)
+            ctx = context.copy()
+            ctx['conn'] = conn
+            link_types = conn.call('catalog_product_link.types')
+
+            exportable_product_ids= []
+            for shop_group in inst.shop_group_ids:
+                for shop in shop_group.shop_ids:
+                    exportable_product_ids.extend([product.id for product in shop.exportable_product_ids])
+            exportable_product_ids = list(set(exportable_product_ids))
+            self.pool.get('product.product').mag_import_product_links(cr, uid, exportable_product_ids, link_types, inst.id, context=ctx)
         return True
 
     def export_products(self, cr, uid, ids, context=None):
@@ -375,7 +393,7 @@ class external_shop_group(magerp_osv.magerp_osv):
             else:
                 res[shop_group.id] = False
         return res
-    
+
     _columns = {
         'code':fields.char('Code', size=100),
         'is_default':fields.boolean('Is Default?'),
@@ -391,7 +409,7 @@ external_shop_group()
 class magerp_storeviews(magerp_osv.magerp_osv):
     _name = "magerp.storeviews"
     _description = "The magento store views information"
-    
+
     _columns = {
         'name':fields.char('Store View Name', size=100),
         'code':fields.char('Code', size=100),
