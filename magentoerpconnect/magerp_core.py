@@ -160,7 +160,7 @@ class external_referential(magerp_osv.magerp_osv):
     def sync_products(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
-        context.update({'dont_raise_error': True})
+#        context.update({'dont_raise_error': True})
         instances = self.browse(cr, uid, ids, context)
         for inst in instances:
             attr_conn = self.external_connection(cr, uid, inst, DEBUG)
@@ -191,16 +191,14 @@ class external_referential(magerp_osv.magerp_osv):
             
             import_cr = pooler.get_db(cr.dbname).cursor()
             for each in list_prods:
-                result=[]
                 for lang in lang_2_storeview:
-                    each_product_info = attr_conn.call('catalog_product.info', [each['product_id'], lang_2_storeview[lang]])
-                    result.append(each_product_info)
-                context['magento_sku'] = result[0]['sku']
-                self.pool.get('product.product').ext_import(import_cr, uid, result, inst.id, defaults={}, context=context)
-                ctx = context.copy()
-                ctx['lang'] = lang
-                self.write(import_cr, uid, inst.id, {'last_imported_product_id': int(each['product_id'])}, context=ctx)
-                
+                    product_info = attr_conn.call('catalog_product.info', [each['product_id'], lang_2_storeview[lang]])
+                    context['magento_sku'] = product_info['sku']
+                    ctx = context.copy()
+                    ctx['lang'] = lang
+                    self.pool.get('product.product').ext_import(import_cr, uid, [product_info], inst.id, defaults={}, context=ctx)
+
+                self.write(import_cr, uid, inst.id, {'last_imported_product_id': int(each['product_id'])}, context=context)
                 import_cr.commit()
             import_cr.close()
         return True
