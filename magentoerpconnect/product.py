@@ -6,6 +6,7 @@
 #                                                                       #
 # Copyright (C) 2009  Sharoon Thomas, Raphaël Valyi                     #
 # Copyright (C) 2011 Akretion Sébastien BEAU sebastien.beau@akretion.com#
+# Copyright (C) 2011 Camptocamp Guewen Baconnier
 #                                                                       #
 #This program is free software: you can redistribute it and/or modify   #
 #it under the terms of the GNU General Public License as published by   #
@@ -25,6 +26,7 @@ from osv import osv, fields
 import datetime
 import base64
 import time
+import pooler
 import magerp_osv
 from tools.translate import _
 import netsvc
@@ -1320,5 +1322,57 @@ class product_product(product_mag_osv):
         if context.get('last_images_export_date', False):
             images_to_update_ids = image_obj.search(cr, uid, [('id', 'in', images_to_update_ids), '|', ('create_date', '>', context['last_images_export_date']), ('write_date', '>', context['last_images_export_date'])], context=context)
         return {'to_create' : images_to_create, 'to_update' : images_to_update_ids}
+
+    def _mag_import_product_links_type(self, cr, uid, product, link_type, external_referential_id, context=None):
+        if context is None: context = {}
+        logger = netsvc.Logger()
+        conn = context.get('conn')
+        product_link_obj = self.pool.get('product.link')
+        if not conn:
+            raise Exception('Connection is missing ')
+        selection_link_types = product_link_obj._columns['type'].selection(cr, uid, context)
+        # This method could be completed to import grouped products too, you know, for Magento a product link is as
+        # well a cross-sell, up-sell, related than the assignment between grouped products
+        if link_type in [ltype[0] for ltype in selection_link_types]:
+            product_links = []
+            try:
+                product_links = conn.call('product_link.list', [link_type, product.magento_sku])
+            except Exception, e:
+                self.log(cr, uid, product.id, "Error when retrieving the list of links in Magento for product with sku %s and product id %s !" % (product.magento_sku, product.id,))
+                logger.notifyChannel('ext synchro', netsvc.LOG_DEBUG, "Error when retrieving the list of links in Magento for product with sku %s and product id %s !" % (product.magento_sku, product.id,))
+
+            for product_link in product_links:
+                ctx = context.copy()
+                ctx['alternative_key'] = product_link['sku']
+                linked_product_id = self.extid_to_oeid(cr, uid, product_link['product_id'], external_referential_id, context=context)
+                link_data = {
+                    'product_id': product.id,
+                    'type': link_type,
+                    'linked_product_id': linked_product_id,
+                    'sequence': product_link['position'],
+                }
+
+                existing_link = product_link_obj.search(cr, uid,
+                    [('product_id', '=', link_data['product_id']),
+                     ('type', '=', link_data['type']),
+                     ('linked_product_id', '=', link_data['linked_product_id'])
+                    ], context=context)
+                if existing_link:
+                    product_link_obj.write(cr, uid, existing_link, link_data, context=context)
+                    logger.notifyChannel('Import Product Links', netsvc.LOG_INFO, "Successfully updated product link of type %s on product %s to product %s" %(link_type, product.id, linked_product_id))
+                else:
+                    product_link_obj.create(cr, uid, link_data, context=context)
+                    logger.notifyChannel('Import Product Links', netsvc.LOG_INFO, "Successfully created product link of type %s on product %s to product %s" %(link_type, product.id, linked_product_id))
+
+        return True
+
+    def mag_import_product_links(self, cr, uid, ids, link_types, external_referential_id, context=None):
+        local_cr = pooler.get_db(cr.dbname).cursor()
+        for product in self.browse(local_cr, uid, ids, context=context):
+            [self._mag_import_product_links_type(local_cr, uid, product, link_type, external_referential_id, context=context)
+             for link_type in link_types]
+            local_cr.commit()
+        local_cr.close()
+        return True
 
 product_product()

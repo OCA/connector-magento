@@ -26,6 +26,7 @@
 							<button name="sync_attrib_sets" string="3 - Import Product Attribute Sets" colspan="2" type="object" />
 							<button name="sync_images" string="7 - Import Images" colspan="2" type="object" />
 							<button name="sync_attrib_groups" string="4 - Import Attribute Groups" colspan="2" type="object" />
+                            <button name="sync_product_links" string="8 - Import Product Links" colspan="2" type="object" />
             				<separator string="Default values" colspan="4" />
 							<field name="default_pro_cat" />
 							<field name="default_lang_id" />
