@@ -157,7 +157,7 @@ result=[('page_layout',att_id)]","result=[('page_layout', record['page_layout'][
 "mag_1500_erp_prd_5","magento1500","product.model_product_product","sku","in_out","unicode","result = [('magento_sku',ifield), ('default_code',ifield)]",
 "mag_1500_erp_prd_6","magento1500","product.model_product_product","weight","in_out","float","result = [('weight',ifield)]","result = [('weight',record['weight'] or 0)]"
 "mag_1500_erp_prd_7","magento1500","product.model_product_product","categories","in_out","unicode","categ_ids =[]
-if len(eval(ifield)) > 0:
+if ifield and len(eval(ifield)) > 0:
     for category_ids in eval(ifield):
         categ_ids.append(self.pool.get('product.category').extid_to_oeid(cr, uid, category_ids, external_referential_id))
     categ_id = categ_ids.pop()
