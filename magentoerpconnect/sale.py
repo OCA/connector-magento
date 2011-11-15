@@ -470,7 +470,7 @@ class sale_order(magerp_osv.magerp_osv):
             ctx.update({
                 'ext_tax_field': 'shipping_tax_amount',
             })
-            res = self.add_order_extra_line(cr, uid, res, data_record, 'shipping_amount', 'SHIP MAGENTO', defaults, ctx)
+            res = self.add_order_extra_line(cr, uid, res, data_record, 'shipping_amount', 'SHIP', defaults, ctx)
         return res
 
     def add_gift_certificates(self, cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context=None):
@@ -643,6 +643,12 @@ class sale_order(magerp_osv.magerp_osv):
         Before the import, check if the order is already imported and in a such case, skip the import
          and flag "imported" on Magento.
         """
+        #This check should be done by a decorator
+
+        if context is None: context = {}
+        if not (context.get('external_referential_type', False) and 'Magento' in context['external_referential_type']):
+            return super(sale_order, self).ext_import(cr, uid, data, external_referential_id, defaults=defaults, context=context)
+
         #the new cursor should be replace by a beautiful decorator on ext_import
         order_cr = pooler.get_db(cr.dbname).cursor()
         res = {'create_ids': [], 'write_ids': []}

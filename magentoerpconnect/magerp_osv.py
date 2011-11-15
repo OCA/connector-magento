@@ -113,12 +113,14 @@ class magerp_osv(osv.osv):
     _DELETE_METHOD = False
     _mapping = {}
     DEBUG = False
-    
+    #should be move in the class external_referential
     def external_connection(self, cr, uid, referential, DEBUG=False):
+        print 'magento'
         if 'magento' in referential.type_id.name.lower():
             attr_conn = Connection(referential.location, referential.apiusername, referential.apipass, DEBUG)
             return attr_conn.connect() and attr_conn or False
         else:
+            print 'super call'
             return super(magerp_osv, self).external_connection(cr, uid, referential, DEBUG=DEBUG)
     
     #TODO deprecated, remove use

@@ -24,7 +24,7 @@
 		result=[('carrier_id', carrier_ids[0])]
 	else:
 		fake_partner_id = self.pool.get('res.partner').search(cr, uid, [])[0]
-		product_id = self.pool.get('product.product').search(cr, uid, [['default_code', '=', 'SHIP MAGENTO']])[0]
+		product_id = self.pool.get('product.product').search(cr, uid, [['default_code', '=', 'SHIP']])[0]
 		carrier_id = self.pool.get('delivery.carrier').create(cr, uid, {'partner_id' : fake_partner_id, 'product_id' : product_id, 'name' : ifield, 'magento_code' : ifield})
 		result=[('carrier_id', carrier_id)]",
 "mag_1324_erp_so_pay","magento1324","sale.model_sale_order","payment","in_out","unicode","

@@ -55,8 +55,8 @@ class external_referential(magerp_osv.magerp_osv):
 
     _columns = {
         'attribute_sets':fields.one2many('magerp.product_attribute_set', 'referential_id', 'Attribute Sets'),
-        'default_pro_cat':fields.many2one('product.category','Default Product Category',required=True, help="Products imported from magento may have many categories.\nOpenERP requires a specific category for a product to facilitate invoicing etc."),
-        'default_lang_id':fields.many2one('res.lang', 'Default Language',required=True, help="Choose the language which will be used for the Default Value in Magento"),
+        'default_pro_cat':fields.many2one('product.category','Default Product Category', help="Products imported from magento may have many categories.\nOpenERP requires a specific category for a product to facilitate invoicing etc."),
+        'default_lang_id':fields.many2one('res.lang', 'Default Language', help="Choose the language which will be used for the Default Value in Magento"),
         'active': fields.boolean('Active'),
         'magento_referential': fields.function(_is_magento_referential, type="boolean", method=True, string="Magento Referential"),
         'last_imported_product_id': fields.integer('Last Imported Product Id', help="Product are imported one by one. This is the magento id of the last product imported. If you clear it all product will be imported"),
