@@ -70,7 +70,7 @@ class sale_shop(magerp_osv.magerp_osv):
         for shop in self.browse(cr, uid, ids):
             context['shop_id'] = shop.id
             context['external_referential_id'] = shop.referential_id.id
-            context['conn_obj'] = self.external_connection(cr, uid, shop.referential_id)
+            context['conn_obj'] = shop.referential_id.external_connection()
             context['last_images_export_date'] = shop.last_images_export_date
             exportable_product_ids = self.read(cr, uid, shop.id, ['exportable_product_ids'], context=context)['exportable_product_ids']
             res = self.pool.get('product.product').get_exportable_images(cr, uid, exportable_product_ids, context=context)
@@ -159,7 +159,7 @@ class sale_shop(magerp_osv.magerp_osv):
         so_obj = self.pool.get('sale.order')
 
         for shop in self.browse(cr, uid, ids):
-            conn = self.external_connection(cr, uid, shop.referential_id)
+            conn = shop.referential_id.external_connection()
             # Update the state of orders in OERP that are in "need_to_update":True
             # from the Magento's corresponding orders
     

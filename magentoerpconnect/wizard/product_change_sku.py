@@ -21,11 +21,10 @@ class ProductChangeSkuWizard(osv.osv_memory):
 
         product_id = context['active_ids'][0]
         # get all magento external_referentials
-        referential_ids = ext_ref_obj.search(cr, uid, [('magento_referential', '=', True)])
 
-        for referential in ext_ref_obj.browse(cr, uid, referential_ids, context=context):
-            conn = sale_shop_obj.external_connection(cr, uid, referential)
-            magento_product_id = product_obj.oeid_to_extid(cr, uid, product_id, referential.id, context)
+        for referential_id in ext_ref_obj.search(cr, uid, [('magento_referential', '=', True)]):
+            conn = ext_ref_obj.external_connection(cr, uid, referential_id)
+            magento_product_id = product_obj.oeid_to_extid(cr, uid, product_id, referential_id, context)
             if magento_product_id:
                 conn.call('catalog_product.update',
                     [magento_product_id, {'sku': new_magento_sku}])
