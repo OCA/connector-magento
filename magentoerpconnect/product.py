@@ -1001,6 +1001,15 @@ class product_product(product_mag_osv):
         #Perform other operations
         return crid
 
+    def copy(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+
+        default['magento_exportable'] = False
+        default['magento_sku'] = False
+
+        return super(product_product, self).copy(cr, uid, id, default=default, context=context)
+
     def unlink(self, cr, uid, ids, context=None):
         #if product is mapped to magento, not delete it
         not_delete = False
