@@ -26,7 +26,7 @@ from osv import osv, fields
 import magerp_osv
 import pooler
 import netsvc
-
+from magerp_osv import Connection
 import tools
 from tools.translate import _
 
@@ -94,7 +94,7 @@ class external_referential(magerp_osv.magerp_osv):
         filter = []
         for referential_id in ids:
             core_imp_conn = self.external_connection(cr, uid, referential_id, DEBUG)
-            self.pool.get('external.shop.group').mage_import_base(cr, uid,core_imp_conn, referential_id, defaults={'referential_id':inst.id})
+            self.pool.get('external.shop.group').mage_import_base(cr, uid,core_imp_conn, referential_id, defaults={'referential_id':referential_id})
             self.pool.get('sale.shop').mage_import_base(cr, uid, core_imp_conn, referential_id, {'magento_shop':True, 'company_id':self.pool.get('res.users').browse(cr, uid, uid).company_id.id})
             self.pool.get('magerp.storeviews').mage_import_base(cr,uid,core_imp_conn, referential_id, defaults={})
         return True
