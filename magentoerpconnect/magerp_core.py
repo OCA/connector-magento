@@ -212,49 +212,47 @@ class external_referential(magerp_osv.magerp_osv):
         logger = netsvc.Logger()
         shop_ids = self.pool.get('sale.shop').search(cr, uid, [])
         for referential in self.browse(cr, uid, ids, context):
-	    shop_groups = referential.shop_group_ids
-	    for shop_group in shop_groups:
-		shops = shop_group.shop_ids
-		for shop in shops:
-			conn = referential.external_connection()
-                        for product in shop.exportable_product_ids:
-                            try:
-                                img_list = conn.call('catalog_product_attribute_media.list', [product.magento_sku])
+            for shop_group in referential.shop_group_ids:
+                for shop in shop_group.shop_ids:
+                    conn = referential.external_connection()
+                    for product in shop.exportable_product_ids:
+                        try:
+                            img_list = conn.call('catalog_product_attribute_media.list', [product.magento_sku])
 
-                            except Exception, e:
-                                self.log(cr, uid, product.id, "failed to find product with sku %s for product id %s in Magento!" % (product.magento_sku, product.id,))
-                                logger.notifyChannel('ext synchro', netsvc.LOG_DEBUG, "failed to find product with sku %s for product id %s in Magento!" % (product.magento_sku, product.id,))
-                                continue
-			    logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "Magento image for SKU %s: %s" %(product.magento_sku, img_list))
-			    for image in img_list:
-				data = {'name': image['label'] or os.path.splitext(os.path.split(image['file'])[1])[0],
-					'link': True,
-					'filename': image['url'],
-					'product_id': product.id,
-					'base_image': image['types'].count('image') == 1,
-					'small_image': image['types'].count('small_image') == 1,
-					'thumbnail': image['types'].count('thumbnail') == 1,
-					'exclude': image['exclude'],
-					'position': image['position']
-					}
-				image_ext_name_obj = self.pool.get('product.images.external.name')
-				image_ext_name_id = image_ext_name_obj.search(cr, uid, [('name', '=', image['file']), ('external_referential_id', '=', referential.id)], context=context)
-				if image_ext_name_id:
-				    # update existing image
-				    # find the correspondent product image from the external name
-				    image_ext_name = image_ext_name_obj.read(cr, uid, image_ext_name_id, [], context=context)
-				    if self.pool.get('product.images').search(cr, uid, [('id', '=', image_ext_name[0]['id'])], context=context):
-   				        self.pool.get('product.images').write(cr, uid, image_ext_name[0]['id'], data, context=context)
-				        image_ext_name_obj.write(cr, uid, image_ext_name_id, {'name':image['file']}, context=context)
-				    else:
-					self.log(cr, uid, product.id, "failed to find product image with id %s for product id %s in OpenERP!" % (image_ext_name_id, product.id,))
-                                	logger.notifyChannel('ext synchro', netsvc.LOG_DEBUG, "failed to find product image with id %s for product id %s in OpenERP!" % (image_ext_name_id, product.id,))
-                                	continue
-				else:
-				    # create new image
-				    new_image_id = self.pool.get('product.images').create(cr, uid, data, context=context)
-				    image_ext_name_obj.create(cr, uid, {'name':image['file'], 'external_referential_id' : referential.id, 'image_id' : new_image_id}, context=context)
-        return True
+                        except Exception, e:
+                            self.log(cr, uid, product.id, "failed to find product with sku %s for product id %s in Magento!" % (product.magento_sku, product.id,))
+                            logger.notifyChannel('ext synchro', netsvc.LOG_DEBUG, "failed to find product with sku %s for product id %s in Magento!" % (product.magento_sku, product.id,))
+                            continue
+                        logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "Magento image for SKU %s: %s" %(product.magento_sku, img_list))
+                        for image in img_list:
+                            data = {'name': image['label'] or os.path.splitext(os.path.split(image['file'])[1])[0],
+                                'link': True,
+                                'filename': image['url'],
+                                'product_id': product.id,
+                                'base_image': image['types'].count('image') == 1,
+                                'small_image': image['types'].count('small_image') == 1,
+                                'thumbnail': image['types'].count('thumbnail') == 1,
+                                'exclude': image['exclude'],
+                                'position': image['position']
+                                }
+                            image_ext_name_obj = self.pool.get('product.images.external.name')
+                            image_ext_name_id = image_ext_name_obj.search(cr, uid, [('name', '=', image['file']), ('external_referential_id', '=', referential.id)], context=context)
+                            if image_ext_name_id:
+                                # update existing image
+                                # find the correspondent product image from the external name
+                                image_ext_name = image_ext_name_obj.read(cr, uid, image_ext_name_id, [], context=context)
+                                if self.pool.get('product.images').search(cr, uid, [('id', '=', image_ext_name[0]['id'])], context=context):
+                                    self.pool.get('product.images').write(cr, uid, image_ext_name[0]['id'], data, context=context)
+                                    image_ext_name_obj.write(cr, uid, image_ext_name_id, {'name':image['file']}, context=context)
+                                else:
+                                    self.log(cr, uid, product.id, "failed to find product image with id %s for product id %s in OpenERP!" % (image_ext_name_id, product.id,))
+                                    logger.notifyChannel('ext synchro', netsvc.LOG_DEBUG, "failed to find product image with id %s for product id %s in OpenERP!" % (image_ext_name_id, product.id,))
+                                    continue
+                            else:
+                                # create new image
+                                new_image_id = self.pool.get('product.images').create(cr, uid, data, context=context)
+                                image_ext_name_obj.create(cr, uid, {'name':image['file'], 'external_referential_id' : referential.id, 'image_id' : new_image_id}, context=context)
+                return True
 
     def sync_product_links(self, cr, uid, ids, context=None):
         if context is None: context = {}
