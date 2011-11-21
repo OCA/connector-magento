@@ -26,9 +26,11 @@ from osv import osv, fields
 import magerp_osv
 import pooler
 import netsvc
+import base64, urllib
 from magerp_osv import Connection
 import tools
 from tools.translate import _
+import os
 
 DEBUG = True
 TIMEOUT = 2
@@ -66,7 +68,7 @@ class external_referential(magerp_osv.magerp_osv):
         'active': lambda *a: 1,
     }
 
-    def external_connection(self, cr, uid, id, DEBUG=False):
+    def external_connection(self, cr, uid, id, DEBUG=False, context=None):
         if isinstance(id, list):
             id=id[0]
         referential = self.browse(cr, uid, id)
@@ -74,7 +76,7 @@ class external_referential(magerp_osv.magerp_osv):
             attr_conn = Connection(referential.location, referential.apiusername, referential.apipass, DEBUG)
             return attr_conn.connect() and attr_conn or False
         else:
-            return super(external_referential, self).external_connection(cr, uid, referential, DEBUG=DEBUG)
+            return super(external_referential, self).external_connection(cr, uid, referential, DEBUG=DEBUG, context=context)
 
     def connect(self, cr, uid, id, context=None):
         if isinstance(id, (list, tuple)):
@@ -82,7 +84,7 @@ class external_referential(magerp_osv.magerp_osv):
                 raise osv.except_osv(_("Error"), _("Connect should be only call with one id"))
             else:
                 id = id[0]
-            core_imp_conn = self.external_connection(cr, uid, id, DEBUG)
+            core_imp_conn = self.external_connection(cr, uid, id, DEBUG, context=context)
             if core_imp_conn.connect():
                 return core_imp_conn
             else:
@@ -93,7 +95,7 @@ class external_referential(magerp_osv.magerp_osv):
     def core_sync(self, cr, uid, ids, context=None):
         filter = []
         for referential_id in ids:
-            core_imp_conn = self.external_connection(cr, uid, referential_id, DEBUG)
+            core_imp_conn = self.external_connection(cr, uid, referential_id, DEBUG, context=context)
             self.pool.get('external.shop.group').mage_import_base(cr, uid,core_imp_conn, referential_id, defaults={'referential_id':referential_id})
             self.pool.get('sale.shop').mage_import_base(cr, uid, core_imp_conn, referential_id, {'magento_shop':True, 'company_id':self.pool.get('res.users').browse(cr, uid, uid).company_id.id})
             self.pool.get('magerp.storeviews').mage_import_base(cr,uid,core_imp_conn, referential_id, defaults={})
@@ -101,7 +103,7 @@ class external_referential(magerp_osv.magerp_osv):
 
     def sync_categs(self, cr, uid, ids, context=None):
         for referential_id in ids:
-            pro_cat_conn = self.external_connection(cr, uid, referential_id, DEBUG)
+            pro_cat_conn = self.external_connection(cr, uid, referential_id, DEBUG, context=context)
             confirmation = pro_cat_conn.call('catalog_category.currentStore', [0])   #Set browse to root store
             if confirmation:
                 categ_tree = pro_cat_conn.call('catalog_category.tree')             #Get the tree
@@ -112,7 +114,7 @@ class external_referential(magerp_osv.magerp_osv):
 
     def sync_attribs(self, cr, uid, ids, context=None):
         for referential_id in ids:
-            attr_conn = self.external_connection(cr, uid, referential_id, DEBUG)
+            attr_conn = self.external_connection(cr, uid, referential_id, DEBUG, context=context)
             attrib_set_ids = self.pool.get('magerp.product_attribute_set').search(cr, uid, [('referential_id', '=', referential_id)])
             attrib_sets = self.pool.get('magerp.product_attribute_set').read(cr, uid, attrib_set_ids, ['magento_id'])
             #Get all attribute set ids to get all attributes in one go
@@ -133,14 +135,14 @@ class external_referential(magerp_osv.magerp_osv):
 
     def sync_attrib_sets(self, cr, uid, ids, context=None):
         for referential_id in ids:
-            attr_conn = self.external_connection(cr, uid, referential_id, DEBUG)
+            attr_conn = self.external_connection(cr, uid, referential_id, DEBUG, context=context)
             filter = []
             self.pool.get('magerp.product_attribute_set').mage_import_base(cr, uid, attr_conn, referential_id,{'referential_id':referential_id},{'ids_or_filter':filter})
         return True
 
     def sync_attrib_groups(self, cr, uid, ids, context=None):
         for referential_id in ids:
-            attr_conn = self.external_connection(cr, uid, referential_id, DEBUG)
+            attr_conn = self.external_connection(cr, uid, referential_id, DEBUG, context=context)
             attrset_ids = self.pool.get('magerp.product_attribute_set').get_all_mage_ids(cr, uid, [], referential_id)
             filter = [{'attribute_set_id':{'in':attrset_ids}}]
             self.pool.get('magerp.product_attribute_groups').mage_import_base(cr, uid, attr_conn, referential_id, {'referential_id': referential_id}, {'ids_or_filter':filter})
@@ -148,14 +150,14 @@ class external_referential(magerp_osv.magerp_osv):
 
     def sync_customer_groups(self, cr, uid, ids, context=None):
         for referential_id in ids:
-            attr_conn = self.external_connection(cr, uid, referential_id, DEBUG)
+            attr_conn = self.external_connection(cr, uid, referential_id, DEBUG, context=context)
             filter = []
             self.pool.get('res.partner.category').mage_import_base(cr, uid, attr_conn, referential_id, {}, {'ids_or_filter':filter})
         return True
 
     def sync_customer_addresses(self, cr, uid, ids, context=None):
         for referential_id in ids:
-            attr_conn = self.external_connection(cr, uid, referential_id, DEBUG)
+            attr_conn = self.external_connection(cr, uid, referential_id, DEBUG, context=context)
             filter = []
             #self.pool.get('res.partner').mage_import(cr, uid, filter, attr_conn, referential_id, DEBUG)
             #TODO fix by retrieving customer list first
@@ -168,7 +170,7 @@ class external_referential(magerp_osv.magerp_osv):
 #        context.update({'dont_raise_error': True})
         referentials = self.browse(cr, uid, ids, context)
         for referential in referentials:
-            attr_conn = referential.external_connection(DEBUG)
+            attr_conn = referential.external_connection(DEBUG, context=context)
             filter = []
             if referential.last_imported_product_id:
                 filter.append({'product_id' : {'gt': referential.last_imported_product_id}})
@@ -209,50 +211,59 @@ class external_referential(magerp_osv.magerp_osv):
         return True
 
     def sync_images(self, cr, uid, ids, context=None):
+        #TODO base the import on the mapping and the function ext_import
+        #Moreover maybe importing the image at the same time of the product can be a better idea
         logger = netsvc.Logger()
-        shop_ids = self.pool.get('sale.shop').search(cr, uid, [])
-        for referential in self.browse(cr, uid, ids, context):
-            for shop_group in referential.shop_group_ids:
-                for shop in shop_group.shop_ids:
-                    conn = referential.external_connection()
-                    for product in shop.exportable_product_ids:
-                        try:
-                            img_list = conn.call('catalog_product_attribute_media.list', [product.magento_sku])
-
-                        except Exception, e:
-                            self.log(cr, uid, product.id, "failed to find product with sku %s for product id %s in Magento!" % (product.magento_sku, product.id,))
-                            logger.notifyChannel('ext synchro', netsvc.LOG_DEBUG, "failed to find product with sku %s for product id %s in Magento!" % (product.magento_sku, product.id,))
+        product_obj = self.pool.get('product.product')
+        image_obj = self.pool.get('product.images')
+        for referential_id in ids:
+            print 'ref', referential_id
+            conn = self.external_connection(cr, uid, referential_id, DEBUG, context=context)
+            product_ids = product_obj.get_all_oeid_from_referential(cr, uid, referential_id, context=context)
+            print 'product', product_ids
+            for product in product_obj.browse(cr, uid, product_ids, context=context):
+                try:
+                    img_list = conn.call('catalog_product_attribute_media.list', [product.magento_sku])
+                except Exception, e:
+                    self.log(cr, uid, product.id, "failed to find product with sku %s for product id %s in Magento!" % (product.magento_sku, product.id,))
+                    logger.notifyChannel('ext synchro', netsvc.LOG_DEBUG, "failed to find product with sku %s for product id %s in Magento!" % (product.magento_sku, product.id,))
+                    continue
+                logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "Magento image for SKU %s: %s" %(product.magento_sku, img_list))
+                for image in img_list:
+                    img=False
+                    try:
+                        (filename, header) = urllib.urlretrieve(image['url'])
+                        f = open(filename , 'rb')
+                        data = f.read()
+                        f.close()
+                        if "DOCTYPE html PUBLIC" in data:
+                            logger.notifyChannel('ext synchro', netsvc.LOG_WARNING, "failed to open the image %s from Magento" % (image['url'],))
                             continue
-                        logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "Magento image for SKU %s: %s" %(product.magento_sku, img_list))
-                        for image in img_list:
-                            data = {'name': image['label'] or os.path.splitext(os.path.split(image['file'])[1])[0],
-                                'link': True,
-                                'filename': image['url'],
-                                'product_id': product.id,
-                                'base_image': image['types'].count('image') == 1,
-                                'small_image': image['types'].count('small_image') == 1,
-                                'thumbnail': image['types'].count('thumbnail') == 1,
-                                'exclude': image['exclude'],
-                                'position': image['position']
-                                }
-                            image_ext_name_obj = self.pool.get('product.images.external.name')
-                            image_ext_name_id = image_ext_name_obj.search(cr, uid, [('name', '=', image['file']), ('external_referential_id', '=', referential.id)], context=context)
-                            if image_ext_name_id:
-                                # update existing image
-                                # find the correspondent product image from the external name
-                                image_ext_name = image_ext_name_obj.read(cr, uid, image_ext_name_id, [], context=context)
-                                if self.pool.get('product.images').search(cr, uid, [('id', '=', image_ext_name[0]['id'])], context=context):
-                                    self.pool.get('product.images').write(cr, uid, image_ext_name[0]['id'], data, context=context)
-                                    image_ext_name_obj.write(cr, uid, image_ext_name_id, {'name':image['file']}, context=context)
-                                else:
-                                    self.log(cr, uid, product.id, "failed to find product image with id %s for product id %s in OpenERP!" % (image_ext_name_id, product.id,))
-                                    logger.notifyChannel('ext synchro', netsvc.LOG_DEBUG, "failed to find product image with id %s for product id %s in OpenERP!" % (image_ext_name_id, product.id,))
-                                    continue
-                            else:
-                                # create new image
-                                new_image_id = self.pool.get('product.images').create(cr, uid, data, context=context)
-                                image_ext_name_obj.create(cr, uid, {'name':image['file'], 'external_referential_id' : referential.id, 'image_id' : new_image_id}, context=context)
-                return True
+                        else:
+                            img = base64.encodestring(data)
+                    except Exception, e:
+                        logger.notifyChannel('ext synchro', netsvc.LOG_WARNING, "failed to open the image %s from Magento" % (image['url'],))
+                        continue
+                    data = {'name': image['label'] or os.path.basename(image['file']),
+                        'link': False,
+                        'preview': img,
+                        'product_id': product.id,
+                        'image_small': image['types'].count('small_image') == 1,
+                        'base_image': image['types'].count('image') == 1,
+                        'thumbnail': image['types'].count('thumbnail') == 1,
+                        'exclude': image['exclude'],
+                        'position': image['position']
+                        }
+                    image_oe_id = image_obj.extid_to_existing_oeid(cr, uid, image['file'], referential_id, context=None)
+                    if image_oe_id:
+                        # update existing image
+                        image_obj.write(cr, uid, image_oe_id, data, context=context)
+                    else:
+                        # create new image
+                        new_image_id = image_obj.create(cr, uid, data, context=context)
+                        print 'create', image['file']
+                        image_obj.create_external_id_vals(cr, uid, new_image_id, image['file'], referential_id, context=context)
+        return True
 
     def sync_product_links(self, cr, uid, ids, context=None):
         if context is None: context = {}
@@ -275,7 +286,7 @@ class external_referential(magerp_osv.magerp_osv):
         shop_ids = self.pool.get('sale.shop').search(cr, uid, [])
         for referential_id in ids:
             for shop in self.pool.get('sale.shop').browse(cr, uid, shop_ids, context):
-                context['conn_obj'] = self.external_connection(cr, uid, referential_id)
+                context['conn_obj'] = self.external_connection(cr, uid, referential_id, context=context)
                 #shop.export_catalog
                 tools.debug((cr, uid, shop, context,))
                 shop.export_products(cr, uid, shop, context)
@@ -283,7 +294,7 @@ class external_referential(magerp_osv.magerp_osv):
 
     def sync_partner(self, cr, uid, ids, context=None):
         for referential_id in ids:
-            attr_conn = self.external_connection(cr, uid, referential_id, DEBUG)
+            attr_conn = self.external_connection(cr, uid, referential_id, DEBUG, context=context)
             result = []
             result_address = []
 
@@ -316,7 +327,7 @@ class external_referential(magerp_osv.magerp_osv):
         partner_obj = self.pool.get('res.partner')
 
         for referential_id in ids:
-            attr_conn = self.external_connection(cr, uid, referential_id, DEBUG)
+            attr_conn = self.external_connection(cr, uid, referential_id, DEBUG, context=context)
             filter = []
             list_subscribers = attr_conn.call('ol_customer_subscriber.list')
             result = []
@@ -338,7 +349,7 @@ class external_referential(magerp_osv.magerp_osv):
         partner_obj = self.pool.get('res.partner')
 
         for referential_id in ids:
-            attr_conn = self.external_connection(cr, uid, referential_id, DEBUG)
+            attr_conn = self.external_connection(cr, uid, referential_id, DEBUG, context=context)
             partner_ids  = partner_obj.search(cr, uid, [('mag_newsletter', '!=', 1), ('emailid', '!=', '')])
 
             print partner_ids

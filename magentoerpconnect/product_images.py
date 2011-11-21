@@ -132,10 +132,10 @@ class product_images(magerp_osv.magerp_osv):
                             raise
                         else:
                             #If the image was deleded in magento, the external name is automatically deleded before trying to re-create the image in magento
-                            model_data_ids = ir_model_data_obj.search(cr, uid, [('model', '=', self._name), ('res_id', '=', id), ('external_referential_id', '=', context['external_referential_id'])])
+                            model_data_ids = ir_model_data_obj.search(cr, uid, [('model', '=', self._name), ('res_id', '=', each.id), ('external_referential_id', '=', context['external_referential_id'])])
                             if model_data_ids and len(model_data_ids) > 0:
-                                ir_model_data_obj.unlink(model_data_ids)
-                            logger.notifyChannel(_("Magento Connection"), netsvc.LOG_ERROR, _("The product don't exist in magento, try to create it"))
+                                ir_model_data_obj.unlink(cr, uid, model_data_ids, context=context)
+                            logger.notifyChannel(_("Magento Connection"), netsvc.LOG_ERROR, _("The image don't exist in magento, try to create it"))
                 if need_to_be_created:
                     if each.product_id.magento_sku:
                         logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "Sending %s's image: %s" %(each.product_id.magento_sku, each.name))
