@@ -18,14 +18,15 @@
 "mag_1500_erp_st_root_categ","magento1500","sale.model_sale_shop","root_category_id","in_out","int","result=[('root_category_id',ifield)]",
 "mag_1500_erp_so_name","magento1500","sale.model_sale_order","increment_id","in_out","unicode","result=[('magento_incrementid',str(ifield)), ('name','mag_' + str(ifield))]",
 "mag_1500_erp_so_total_amount","magento1500","sale.model_sale_order","grand_total","in_out","float","result=[('ext_total_amount',str(ifield))]",
-"mag_1500_erp_so_carrier_id","magento1500","sale.model_sale_order","shipping_method","in_out","unicode","if not ifield:
-	result = []
-else:
+"mag_1500_erp_so_carrier_id","magento1500","sale.model_sale_order","shipping_method","in_out","unicode","if ifield:
 	carrier_ids = self.pool.get('delivery.carrier').search(cr, uid, [('magento_code', '=', ifield)])
 	if carrier_ids:
 		result=[('carrier_id', carrier_ids[0])]
 	else:
-		result=[]",
+		fake_partner_id = self.pool.get('res.partner').search(cr, uid, [])[0]
+		product_id = self.pool.get('product.product').search(cr, uid, [['default_code', '=', 'SHIP MAGENTO']])[0]
+		carrier_id = self.pool.get('delivery.carrier').create(cr, uid, {'partner_id' : fake_partner_id, 'product_id' : product_id, 'name' : ifield, 'magento_code' : ifield})
+		result=[('carrier_id', carrier_id)]",
 "mag_1500_erp_so_pay","magento1500","sale.model_sale_order","payment","in_out","unicode","
 payments_mapping = {'checkmo': 'manual', 'ccsave': 'prepaid', 'free':'prepaid','googlecheckout':'prepaid','paypayl_express':'prepaid', 'paybox_system': 'prepaid', 'paypal_standard': 'prepaid', 'cashondelivery': 'manual', 'servired_standard': 'prepaid', 'bbva': 'prepaid', 'cofidis': 'prepaid'}
 ifield=eval(ifield)
