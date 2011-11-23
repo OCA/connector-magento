@@ -37,6 +37,8 @@ class external_referential(magerp_osv.magerp_osv):
     #This class stores instances of magento to which the ERP will connect, so you can connect OpenERP to multiple Magento installations (eg different Magento databases)
     _inherit = "external.referential"
 
+    SYNC_PRODUCT_FILTERS = {'status': {'=': 1}}
+
     def _is_magento_referential(self, cr, uid, ids, field_name, arg, context=None):
         """If at least one shop is magento, we consider that the external
         referential is a magento referential
@@ -167,7 +169,9 @@ class external_referential(magerp_osv.magerp_osv):
             attr_conn = self.external_connection(cr, uid, inst, DEBUG)
             filter = []
             if inst.last_imported_product_id:
-                filter.append({'product_id' : {'gt': inst.last_imported_product_id}})
+                filters = {'product_id': {'gt': inst.last_imported_product_id}}
+                filters.update(self.SYNC_PRODUCT_FILTERS)
+                filter = [filters]
             list_prods = attr_conn.call('catalog_product.list', filter)
             storeview_obj = self.pool.get('magerp.storeviews')
             lang_obj = self.pool.get('res.lang')
