@@ -160,6 +160,13 @@ class external_referential(magerp_osv.magerp_osv):
             self.pool.get('res.partner.address').mage_import_base(cr, uid, attr_conn, inst.id, {}, {'ids_or_filter':filter})
         return True
 
+    def _sync_product_storeview(self, cr, uid, referential_id, mag_connection, product, storeview, context=None):
+        if context is None: context = {}
+        product_info = mag_connection.call('catalog_product.info', [product['product_id'], storeview.code])
+        ctx = context.copy()
+        ctx.update({'magento_sku': product_info['sku']})
+        return self.pool.get('product.product').ext_import(cr, uid, [product_info], referential_id, defaults={}, context=ctx)
+
     def sync_products(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
@@ -174,7 +181,7 @@ class external_referential(magerp_osv.magerp_osv):
                 filter = [filters]
             list_prods = attr_conn.call('catalog_product.list', filter)
             storeview_obj = self.pool.get('magerp.storeviews')
-            lang_obj = self.pool.get('res.lang')
+
             #get all instance storeviews
             storeview_ids = []
             for website in inst.shop_group_ids:
@@ -192,18 +199,16 @@ class external_referential(magerp_osv.magerp_osv):
                     osv.except_osv(_('Warning!'), _('The storeviews have no language defined'))
                     lang = inst.default_lang_id.code
                 if not lang_2_storeview.get(lang, False):
-                    lang_2_storeview[lang]=storeview.code
+                    lang_2_storeview[lang] = storeview
 
             import_cr = pooler.get_db(cr.dbname).cursor()
-            for each in list_prods:
-                for lang in lang_2_storeview:
-                    product_info = attr_conn.call('catalog_product.info', [each['product_id'], lang_2_storeview[lang]])
-                    context['magento_sku'] = product_info['sku']
+            for mag_product in list_prods:
+                for lang, storeview in lang_2_storeview.iteritems():
                     ctx = context.copy()
-                    ctx['lang'] = lang
-                    self.pool.get('product.product').ext_import(import_cr, uid, [product_info], inst.id, defaults={}, context=ctx)
+                    ctx.update({'lang': lang})
+                    self._sync_product_storeview(import_cr, uid, inst.id, attr_conn, mag_product, storeview, context=ctx)
 
-                self.write(import_cr, uid, inst.id, {'last_imported_product_id': int(each['product_id'])}, context=context)
+                self.write(import_cr, uid, inst.id, {'last_imported_product_id': int(mag_product['product_id'])}, context=context)
                 import_cr.commit()
             import_cr.close()
         return True
