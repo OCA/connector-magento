@@ -895,6 +895,8 @@ class product_product(product_mag_osv):
         if not context:
             context={}
         res = super(product_mag_osv, self).extid_to_existing_oeid(cr, uid, id, external_referential_id, context=context)
+        # TODO : check if this can be replaced by _search_existing_id_by_vals (see example in res.partner)
+        # thus when importing a product which do not already exists in OpenERP, ext_import will create the binding and update it directly
         if not res and context.get('magento_sku', False):
             product_id = self.search(cr, uid, [('magento_sku', '=', context['magento_sku'])], context=context)
             return product_id and product_id[0] or False

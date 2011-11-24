@@ -38,6 +38,7 @@ class external_referential(magerp_osv.magerp_osv):
     _inherit = "external.referential"
 
     SYNC_PRODUCT_FILTERS = {'status': {'=': 1}}
+    SYNC_PARTNER_FILTERS = {}
 
     def _is_magento_referential(self, cr, uid, ids, field_name, arg, context=None):
         """If at least one shop is magento, we consider that the external
@@ -62,6 +63,7 @@ class external_referential(magerp_osv.magerp_osv):
         'active': fields.boolean('Active'),
         'magento_referential': fields.function(_is_magento_referential, type="boolean", method=True, string="Magento Referential"),
         'last_imported_product_id': fields.integer('Last Imported Product Id', help="Product are imported one by one. This is the magento id of the last product imported. If you clear it all product will be imported"),
+        'last_imported_partner_id': fields.integer('Last Imported Partner Id', help="Partners are imported one by one. This is the magento id of the last partner imported. If you clear it all partners will be imported"),
     }
 
     _defaults = {
@@ -293,31 +295,39 @@ class external_referential(magerp_osv.magerp_osv):
 
     def sync_partner(self, cr, uid, ids, context=None):
         instances = self.browse(cr, uid, ids, context)
-
         for inst in instances:
             attr_conn = self.external_connection(cr, uid, inst, DEBUG)
             result = []
             result_address = []
+            filter = []
+            if inst.last_imported_product_id:
+                filters = {'customer_id': {'gt': inst.last_imported_partner_id}}
+                filters.update(self.SYNC_PARTNER_FILTERS)
+                filter = [filters]
+            list_customer = attr_conn.call('customer.list', filter)
 
-            list_customer = attr_conn.call('customer.list')
+            import_cr = pooler.get_db(cr.dbname).cursor()
+            try:
+                for each in list_customer:
+                    customer_id = int(each['customer_id'])
 
-            for each in list_customer:
-                customer_id = int(each['customer_id'])
+                    each_customer_info = attr_conn.call('customer.info', [customer_id])
+                    each_customer_address_info = attr_conn.call('customer_address.list', [customer_id])
 
-                each_customer_info = attr_conn.call('customer.info', [customer_id])
-                result.append(each_customer_info)
+                    customer_address_info = False
+                    if each_customer_address_info:
+                        customer_address_info = each_customer_address_info[0]
+                        customer_address_info['customer_id'] = customer_id
+                        customer_address_info['email'] = each_customer_info['email']
 
-                each_customer_address_info = attr_conn.call('customer_address.list', [customer_id])
-                if len(each_customer_address_info):
-                    customer_address_info = each_customer_address_info[0]
-                    customer_address_info['customer_id'] = customer_id
-                    customer_address_info['email'] = each_customer_info['email']
-                    result_address.append(customer_address_info)
-                    print customer_address_info
+                    partner_id = self.pool.get('res.partner').ext_import(import_cr, uid, [each_customer_info], inst.id, context={})
+                    if customer_address_info:
+                        partner_address_id = self.pool.get('res.partner.address').ext_import(import_cr, uid, [customer_address_info], inst.id, context={})
 
-            partner_ids = self.pool.get('res.partner').ext_import(cr, uid, result, inst.id, context={})
-            if result_address:
-                partner_address_ids = self.pool.get('res.partner.address').ext_import(cr, uid, result_address, inst.id, context={})
+                    self.write(import_cr, uid, inst.id, {'last_imported_partner_id': customer_id}, context=context)
+                    import_cr.commit()
+            finally:
+                import_cr.close()
 
         return True
 
