@@ -202,15 +202,17 @@ class external_referential(magerp_osv.magerp_osv):
                     lang_2_storeview[lang] = storeview
 
             import_cr = pooler.get_db(cr.dbname).cursor()
-            for mag_product in list_prods:
-                for lang, storeview in lang_2_storeview.iteritems():
-                    ctx = context.copy()
-                    ctx.update({'lang': lang})
-                    self._sync_product_storeview(import_cr, uid, inst.id, attr_conn, mag_product, storeview, context=ctx)
+            try:
+                for mag_product in list_prods:
+                    for lang, storeview in lang_2_storeview.iteritems():
+                        ctx = context.copy()
+                        ctx.update({'lang': lang})
+                        self._sync_product_storeview(import_cr, uid, inst.id, attr_conn, mag_product, storeview, context=ctx)
 
-                self.write(import_cr, uid, inst.id, {'last_imported_product_id': int(mag_product['product_id'])}, context=context)
-                import_cr.commit()
-            import_cr.close()
+                    self.write(import_cr, uid, inst.id, {'last_imported_product_id': int(mag_product['product_id'])}, context=context)
+                    import_cr.commit()
+            finally:
+                import_cr.close()
         return True
 
     def sync_images(self, cr, uid, ids, context=None):
