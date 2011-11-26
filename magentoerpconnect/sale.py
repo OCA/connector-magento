@@ -133,12 +133,17 @@ class sale_shop(magerp_osv.magerp_osv):
     def import_shop_orders(self, cr, uid, shop, defaults, context=None):
         if context is None: context = {}
         result = super(sale_shop, self).import_shop_orders(cr, uid, shop, defaults=defaults, context=context)
+        if result.get('create_ids', False):
+            result['create_ids']=[]
+        if result.get('write_ids', False):
+            result['write_ids']=[]
+        if result.get('unchanged_ids', False):
+            result['unchanged_ids']=[]
         if shop.magento_shop:
             self.check_need_to_update(cr, uid, [shop.id], context=context)
             for storeview in shop.storeview_ids:
                 magento_storeview_id = self.pool.get('magerp.storeviews').oeid_to_extid(cr, uid, storeview.id, shop.referential_id.id, context={})
                 ids_or_filter = [{'store_id': {'eq': magento_storeview_id}, 'state': {'neq': 'canceled'}}]
-                res = {'create_ids': [], 'write_ids': []}
                 nb_last_created_ids = SALE_ORDER_IMPORT_STEP
                 while nb_last_created_ids:
                     defaults['magento_storeview_id'] = storeview.id
@@ -147,10 +152,10 @@ class sale_shop(magerp_osv.magerp_osv):
                     resp = self.pool.get('sale.order').mage_import_base(cr, uid, context.get('conn_obj', False),
                                                                         shop.referential_id.id, defaults=defaults,
                                                                         context=ctx)
-                    res['create_ids'] += resp['create_ids']
-                    res['write_ids'] += resp['write_ids']
-                    nb_last_created_ids = len(resp['create_ids'])
-                result.append(res)
+                    result['create_ids'] += resp['create_ids']
+                    result['write_ids'] += resp['write_ids']
+                    result['unchanged_ids'] += resp['unchanged_ids']
+                    nb_last_created_ids = len(resp['create_ids']+resp['write_ids']+resp['unchanged_ids'])
         return result
 
     def check_need_to_update(self, cr, uid, ids, context=None):
@@ -394,7 +399,7 @@ class sale_order(magerp_osv.magerp_osv):
                     product = self.pool.get('product.product').browse(cr, uid, product_id)
                     defaults_line = {'product_uom': product.uom_id.id}
                     #simple VAT tax on order line (else override method):
-                    line_tax_vat = float(line_data['tax_percent']) / 100.0
+                    line_tax_vat = float(line_data.get('tax_percent', False) or 0) / 100.0
                     if line_tax_vat > 0:
                         line_tax_ids = self.pool.get('account.tax').search(cr, uid, ['|', ('type_tax_use', '=', 'all'), ('type_tax_use', '=', 'sale'), ('price_include', '=', is_tax_included), ('amount', '>=', line_tax_vat - 0.001), ('amount', '<=', line_tax_vat + 0.001)])
                         if line_tax_ids and len(line_tax_ids) > 0:
@@ -696,14 +701,18 @@ class sale_order(magerp_osv.magerp_osv):
             }
             data = conn.call('sales_order.retrieve', [order_retrieve_params])
             data_filtred=[]
+            unchanged_ids=[]
             for order in data:
-                if self.extid_to_existing_oeid(cr, uid, order['increment_id'], external_referential_id, context=context):
+                existing_id = self.extid_to_existing_oeid(cr, uid, order['increment_id'], external_referential_id, context=context)
+                if existing_id:
+                    unchanged_ids.append(existing_id)
                     logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "the order %s already exist in OpenERP" % (order['increment_id'],))
                     self.ext_set_order_imported(cr, uid, order['increment_id'], external_referential_id, context=context)
                 else:
-                    data_filtred.append(order)                    
+                    data_filtred.append(order)
             context['conn_obj'] = conn # we will need the connection to set the flag to "imported" on magento after each order import
             result = self.mage_import_one_by_one(cr, uid, conn, external_referential_id, mapping_id[0], data_filtred, defaults, context)
+            result['unchanged_ids'] = unchanged_ids
         return result
 
 # UPDATE ORDER STATUS FROM MAGENTO TO OPENERP IS UNSTABLE, AND NOT VERY USEFULL. MAYBE IT WILL BE REFACTORED 
