@@ -468,7 +468,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
                 elif ttype in ['many2one']:
                     mapping_line['in_function'] = "if ifield:\n\toption_id = self.pool.get('magerp.product_attribute_options').search(cr,uid,[('attribute_id','=',%s),('value','=',ifield)])\n\tif option_id:\n\t\t\tresult = [('"  % crid
                     mapping_line['in_function'] += field_name + "',option_id[0])]"
-                    mapping_line['out_function'] = "if record.get('%s', False):\n\toption=self.pool.get('magerp.product_attribute_options').browse(cr, uid, record['%s'][0])\n\tif option:\n\t\tresult=[('%s',option.value)]" % (field_name, field_name, vals['attribute_code'])
+                    mapping_line['out_function'] = "if record.get('%s', False):\n\toption=self.pool.get('magerp.product_attribute_options').browse(cr, uid, record['%s'])\n\tif option:\n\t\tresult=[('%s',option.value)]" % (field_name, field_name, vals['attribute_code'])
                 elif ttype in ['many2many']:
                     mapping_line['in_function'] = """
 option_ids = []

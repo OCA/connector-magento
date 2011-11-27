@@ -26,7 +26,10 @@ class ProductChangeSkuWizard(osv.osv_memory):
             conn = ext_ref_obj.external_connection(cr, uid, referential_id)
             magento_product_id = product_obj.oeid_to_extid(cr, uid, product_id, referential_id, context)
             if magento_product_id:
-                conn.call('catalog_product.update',
+                mapping_id = self.pool.get('external.mapping').search(cr, uid, [('model', '=', 'product.product'), ('referential_id', '=', referential_id)])
+                if mapping_id and len(mapping_id) == 1:
+                    update_method = self.pool.get('external.mapping').read(cr, uid, mapping_id[0], ['external_update_method'])['external_update_method']
+                conn.call(update_method,
                     [magento_product_id, {'sku': new_magento_sku}])
 
         # TODO: rollback on all referential if one update fail
