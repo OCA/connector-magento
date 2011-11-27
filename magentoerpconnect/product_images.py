@@ -26,6 +26,9 @@ import mimetypes
 import netsvc
 from tools.translate import _
 
+#TODO the option small_image, thumbnail, exclude, base_image, should be store diferently indeed this is not compatible with mutli instance (maybe serialized will be a good solution)
+#Moreover when a small is selected the flag on other image should be remove as magento does
+
 class product_images(magerp_osv.magerp_osv):
     _inherit = "product.images"
     _columns = {
@@ -81,7 +84,6 @@ class product_images(magerp_osv.magerp_osv):
 
         #TODO update the image file
         def update_image(image_name, image):
-            print 'update'
             result = conn.call('catalog_product_attribute_media.update',
                                [image.product_id.magento_sku,
                                 image_name,
@@ -118,7 +120,6 @@ class product_images(magerp_osv.magerp_osv):
             for each in product_images:
                 need_to_be_created = True
                 ext_file_name = each.oeid_to_extid(context['external_referential_id'])
-                print 'ext_file_name', ext_file_name
                 if ext_file_name: #If update
                     try:
                         logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "Updating %s's image: %s" %(each.product_id.magento_sku, each.name))
@@ -143,8 +144,8 @@ class product_images(magerp_osv.magerp_osv):
                                   [each.product_id.magento_sku,
                                    {'file':{
                                             'name':each.name,
-                                            'content':self.get_image(cr, uid, each.id),
-                                            'mime':each.filename and mimetypes.guess_type(each.filename)[0] or 'image/jpeg',
+                                            'content': each.file,
+                                            'mime': each.link and each.url and mimetypes.guess_type(each.url)[0] or each.extention and mimetypes.guess_type(each.extention)[0] or 'image/jpeg',
                                             }
                                    }
                                    ])

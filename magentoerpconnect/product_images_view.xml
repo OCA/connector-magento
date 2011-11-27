@@ -7,7 +7,7 @@
 			<field name="inherit_id" ref="product_images_olbs.view_product_image_form" />
 			<field name="type">form</field>
 			<field name="arch" type="xml">
-				<xpath expr="/form/notebook/page/field[@name='preview']"
+				<xpath expr="/form/notebook/page/field[@name='file']"
 					position="after">
 					<group col="4" colspan="2">
 						<field name="base_image" colspan="4" />

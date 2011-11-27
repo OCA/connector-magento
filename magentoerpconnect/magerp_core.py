@@ -217,10 +217,8 @@ class external_referential(magerp_osv.magerp_osv):
         product_obj = self.pool.get('product.product')
         image_obj = self.pool.get('product.images')
         for referential_id in ids:
-            print 'ref', referential_id
             conn = self.external_connection(cr, uid, referential_id, DEBUG, context=context)
             product_ids = product_obj.get_all_oeid_from_referential(cr, uid, referential_id, context=context)
-            print 'product', product_ids
             for product in product_obj.browse(cr, uid, product_ids, context=context):
                 try:
                     img_list = conn.call('catalog_product_attribute_media.list', [product.magento_sku])
@@ -244,14 +242,16 @@ class external_referential(magerp_osv.magerp_osv):
                     except Exception, e:
                         logger.notifyChannel('ext synchro', netsvc.LOG_WARNING, "failed to open the image %s from Magento" % (image['url'],))
                         continue
+
                     data = {'name': image['label'] or os.path.basename(image['file']),
+                        'extention': os.path.splitext(image['file'])[1],
                         'link': False,
-                        'preview': img,
+                        'file': img,
                         'product_id': product.id,
-                        'image_small': image['types'].count('small_image') == 1,
+                        'small_image': image['types'].count('small_image') == 1,
                         'base_image': image['types'].count('image') == 1,
                         'thumbnail': image['types'].count('thumbnail') == 1,
-                        'exclude': image['exclude'],
+                        'exclude': int(image['exclude']),
                         'position': image['position']
                         }
                     image_oe_id = image_obj.extid_to_existing_oeid(cr, uid, image['file'], referential_id, context=None)
