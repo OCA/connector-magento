@@ -243,9 +243,9 @@ class external_referential(magerp_osv.magerp_osv):
                     except Exception, e:
                         logger.notifyChannel('ext synchro', netsvc.LOG_WARNING, "failed to open the image %s from Magento" % (image['url'],))
                         continue
-
-                    data = {'name': image['label'] or os.path.basename(image['file']),
-                        'extention': os.path.splitext(image['file'])[1],
+                    mag_filename, extention = os.path.splitext(os.path.basename(image['file']))
+                    data = {'name': image['label'] or mag_filename,
+                        'extention': extention,
                         'link': False,
                         'file': img,
                         'product_id': product.id,
