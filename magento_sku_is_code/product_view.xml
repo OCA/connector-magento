@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="product_product_form_view_magerp_sku">
+            <field name="name">product.normal.form_magerp.sku</field>
+            <field name="model">product.product</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="magentoerpconnect.product_product_form_view_magerp"/>
+            <field name="arch" type="xml">
+                <data>
+                    <field name="default_code" position="attributes">
+                        <attribute name="attrs">{'required':[('magento_exportable','=',True)]}</attribute>
+                    </field>
+                    <field name="magento_sku" position="attributes">
+                        <attribute name="attrs"/>
+                    </field>
+                    <field name="magento_sku" position="attributes">
+                        <attribute name="readonly">True</attribute>
+                    </field>
+                </data>
+            </field>
+        </record>
+    </data>
+</openerp>
