@@ -42,7 +42,7 @@
 			<field name="arch" type="xml">
                 <data>
                     <button name="export_inventory" position="after">
-                        <button name="export_images" string="Update Images"	colspan="2" type="object" />
+                        <button name="export_images" string="Export Images"	colspan="2" type="object" />
                     </button>
 				    <field name="last_inventory_export_date" position="after">
 				    	<field name="last_images_export_date" />

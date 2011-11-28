@@ -468,7 +468,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
                 elif ttype in ['many2one']:
                     mapping_line['in_function'] = "if ifield:\n\toption_id = self.pool.get('magerp.product_attribute_options').search(cr,uid,[('attribute_id','=',%s),('value','=',ifield)])\n\tif option_id:\n\t\t\tresult = [('"  % crid
                     mapping_line['in_function'] += field_name + "',option_id[0])]"
-                    mapping_line['out_function'] = "if record.get('%s', False):\n\toption=self.pool.get('magerp.product_attribute_options').browse(cr, uid, record['%s'][0])\n\tif option:\n\t\tresult=[('%s',option.value)]" % (field_name, field_name, vals['attribute_code'])
+                    mapping_line['out_function'] = "if record.get('%s', False):\n\toption=self.pool.get('magerp.product_attribute_options').browse(cr, uid, record['%s'])\n\tif option:\n\t\tresult=[('%s',option.value)]" % (field_name, field_name, vals['attribute_code'])
                 elif ttype in ['many2many']:
                     mapping_line['in_function'] = """
 option_ids = []
@@ -1323,11 +1323,8 @@ class product_product(product_mag_osv):
     #TODO move this code (get exportable image) and also some code in product_image.py and sale.py in base_sale_multichannel or in a new module in order to be more generic
     def get_exportable_images(self, cr, uid, ids, context=None):
         image_obj = self.pool.get('product.images')
-        image_ext_name_obj = self.pool.get('product.images.external.name')
-
         images_exportable_ids = image_obj.search(cr, uid, [('product_id', 'in', ids)], context=context)
-        images_ext_name_ids = image_ext_name_obj.search(cr, uid, [('image_id', 'in', images_exportable_ids), ('external_referential_id', '=', context['external_referential_id'])], context=context)
-        images_to_update_ids = [x['image_id'][0] for x in image_ext_name_obj.read(cr, uid, images_ext_name_ids, ['image_id'], context=context)]
+        images_to_update_ids = image_obj.get_all_oeid_from_referential(cr, uid, context['external_referential_id'], context=None)
         images_to_create = [x for x in images_exportable_ids if not x in images_to_update_ids]
 
         if context.get('last_images_export_date', False):

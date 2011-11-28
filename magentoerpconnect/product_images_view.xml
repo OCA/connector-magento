@@ -7,9 +7,8 @@
 			<field name="inherit_id" ref="product_images_olbs.view_product_image_form" />
 			<field name="type">form</field>
 			<field name="arch" type="xml">
-				<xpath expr="/form/notebook/page/field[@name='preview']"
+				<xpath expr="/form/notebook/page/field[@name='file']"
 					position="after">
-					<field name="external_name" nolabel="1"/>
 					<group col="4" colspan="2">
 						<field name="base_image" colspan="4" />
 						<field name="small_image" colspan="4" />
@@ -21,33 +20,5 @@
 				</xpath>
 			</field>
 		</record>
-
-		<record id="view_product_images_external_name_form" model="ir.ui.view">
-			<field name="name">product.images.external.name.form</field>
-			<field name="model">product.images.external.name</field>
-			<field name="type">form</field>
-			<field name="arch" type="xml">
-				<form string="Product images external name">
-					<group col="4" colspan="4">
-						<field name="name" />
-						<field name="external_referential_id" />
-					</group>
-				</form>
-			</field>
-		</record>
-
-		<record model="ir.ui.view" id="view_product_images_external_name_tree">
-			<field name="name">product.images.external.name.tree</field>
-			<field name="model">product.images.external.name</field>
-			<field name="type">tree</field>
-			<field name="arch" type="xml">
-				<tree string="Product images external name">
-					<field name="name" />
-					<field name="external_referential_id" />
-				</tree>
-			</field>
-		</record>
-
-
 	</data>
 </openerp>

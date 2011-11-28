@@ -28,8 +28,8 @@
 							<button name="sync_attrib_groups" string="4 - Import Attribute Groups" colspan="2" type="object" />
                             <button name="sync_product_links" string="8 - Import Product Links" colspan="2" type="object" />
             				<separator string="Default values" colspan="4" />
-							<field name="default_pro_cat" />
-							<field name="default_lang_id" />
+							<field name="default_pro_cat" required="1"/>
+							<field name="default_lang_id" required="1"/>
 <!--							<button name="sync_customer_addresses" string="Sync Customer Addresses" colspan="2" type="object" />-->
 <!--							<button name="export_products" string="Export Products" colspan="2" type="object" />-->
 						</page>
