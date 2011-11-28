@@ -38,7 +38,9 @@ class Connection(object):
         if not location[-1] == '/':
             location += '/' 
         self.corelocation = location
-        self.location = location + "index.php/api/xmlrpc"
+        #Please do not remove the str indeed xmlrpc lib require a string for the location
+        #if an unicode is send it will raise you an error
+        self.location = str(location + "index.php/api/xmlrpc")
         self.username = username
         self.password = password
         self.debug = True
