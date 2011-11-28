@@ -643,21 +643,23 @@ class sale_order(magerp_osv.magerp_osv):
         Before the import, check if the order is already imported and in a such case, skip the import
          and flag "imported" on Magento.
         """
-        #the new cursor should be replace by a beautiful decorator on ext_import
-        order_cr = pooler.get_db(cr.dbname).cursor()
         res = {'create_ids': [], 'write_ids': []}
         ext_order_id = data[0]['increment_id']
-        if not self.extid_to_existing_oeid(order_cr, uid, ext_order_id, external_referential_id, context):
-            res = super(sale_order, self).ext_import(order_cr, uid, data, external_referential_id, defaults=defaults, context=context)
+        #the new cursor should be replaced by a beautiful decorator on ext_import
+        order_cr = pooler.get_db(cr.dbname).cursor()
+        try:
+            if not self.extid_to_existing_oeid(order_cr, uid, ext_order_id, external_referential_id, context):
+                res = super(sale_order, self).ext_import(order_cr, uid, data, external_referential_id, defaults=defaults, context=context)
 
-            # if a created order has a relation_parent_real_id, the new one replaces the original, so we have to cancel the old one
-            if data[0].get('relation_parent_real_id', False): # data[0] because orders are imported one by one so data always has 1 element
-                self.chain_cancel_orders(order_cr, uid, ext_order_id, external_referential_id, defaults=defaults, context=context)
+                # if a created order has a relation_parent_real_id, the new one replaces the original, so we have to cancel the old one
+                if data[0].get('relation_parent_real_id', False): # data[0] because orders are imported one by one so data always has 1 element
+                    self.chain_cancel_orders(order_cr, uid, ext_order_id, external_referential_id, defaults=defaults, context=context)
 
-        # set the "imported" flag to true on Magento
-        self.ext_set_order_imported(order_cr, uid, ext_order_id, external_referential_id, context)
-        order_cr.commit()
-        order_cr.close()
+            # set the "imported" flag to true on Magento
+            self.ext_set_order_imported(order_cr, uid, ext_order_id, external_referential_id, context)
+            order_cr.commit()
+        finally:
+            order_cr.close()
         return res
 
     def ext_set_order_imported(self, cr, uid, external_id, external_referential_id, context=None):
