@@ -67,7 +67,6 @@ class Product(osv.osv):
 
         return super(Product, self).write(cr, uid, ids_to_write, vals, context=context)
 
-
     def copy(self, cr, uid, id, default=None, context=None):
         if not default is None: default = {}
         default['default_code'] = False
