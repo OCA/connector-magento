@@ -216,6 +216,7 @@ class external_referential(magerp_osv.magerp_osv):
         logger = netsvc.Logger()
         product_obj = self.pool.get('product.product')
         image_obj = self.pool.get('product.images')
+        import_cr = pooler.get_db(cr.dbname).cursor()
         for referential_id in ids:
             conn = self.external_connection(cr, uid, referential_id, DEBUG, context=context)
             product_ids = product_obj.get_all_oeid_from_referential(cr, uid, referential_id, context=context)
@@ -257,12 +258,14 @@ class external_referential(magerp_osv.magerp_osv):
                     image_oe_id = image_obj.extid_to_existing_oeid(cr, uid, image['file'], referential_id, context=None)
                     if image_oe_id:
                         # update existing image
-                        image_obj.write(cr, uid, image_oe_id, data, context=context)
+                        image_obj.write(import_cr, uid, image_oe_id, data, context=context)
                     else:
                         # create new image
-                        new_image_id = image_obj.create(cr, uid, data, context=context)
+                        new_image_id = image_obj.create(import_cr, uid, data, context=context)
                         print 'create', image['file']
-                        image_obj.create_external_id_vals(cr, uid, new_image_id, image['file'], referential_id, context=context)
+                        image_obj.create_external_id_vals(import_cr, uid, new_image_id, image['file'], referential_id, context=context)
+                    import_cr.commit()
+        import_cr.close()
         return True
 
     def sync_product_links(self, cr, uid, ids, context=None):

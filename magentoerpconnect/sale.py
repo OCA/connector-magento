@@ -133,11 +133,11 @@ class sale_shop(magerp_osv.magerp_osv):
     def import_shop_orders(self, cr, uid, shop, defaults, context=None):
         if context is None: context = {}
         result = super(sale_shop, self).import_shop_orders(cr, uid, shop, defaults=defaults, context=context)
-        if result.get('create_ids', False):
+        if not result.get('create_ids', False):
             result['create_ids']=[]
-        if result.get('write_ids', False):
+        if not result.get('write_ids', False):
             result['write_ids']=[]
-        if result.get('unchanged_ids', False):
+        if not result.get('unchanged_ids', False):
             result['unchanged_ids']=[]
         if shop.magento_shop:
             self.check_need_to_update(cr, uid, [shop.id], context=context)
@@ -152,10 +152,11 @@ class sale_shop(magerp_osv.magerp_osv):
                     resp = self.pool.get('sale.order').mage_import_base(cr, uid, context.get('conn_obj', False),
                                                                         shop.referential_id.id, defaults=defaults,
                                                                         context=ctx)
-                    result['create_ids'] += resp['create_ids']
-                    result['write_ids'] += resp['write_ids']
-                    result['unchanged_ids'] += resp['unchanged_ids']
-                    nb_last_created_ids = len(resp['create_ids']+resp['write_ids']+resp['unchanged_ids'])
+                    result['create_ids'] += resp.get('create_ids', [])
+                    result['write_ids'] += resp.get('write_ids', [])
+                    result['unchanged_ids'] += resp.get('unchanged_ids', [])
+                    nb_last_created_ids = len(resp.get('create_ids',[]) + resp.get('write_ids', []) + resp.get('unchanged_ids', []))
+                    print nb_last_created_ids
         return result
 
     def check_need_to_update(self, cr, uid, ids, context=None):
