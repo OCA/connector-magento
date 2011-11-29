@@ -173,7 +173,8 @@ class external_referential(magerp_osv.magerp_osv):
         product_info = mag_connection.call('catalog_product.info', [product['product_id'], storeview.code])
         ctx = context.copy()
         ctx.update({'magento_sku': product_info['sku']})
-        return self.pool.get('product.product').ext_import(cr, uid, [product_info], referential_id, defaults={}, context=ctx)
+        defaults={'magento_exportable': True}
+        return self.pool.get('product.product').ext_import(cr, uid, [product_info], referential_id, defaults=defaults , context=ctx)
 
     def sync_products(self, cr, uid, ids, context=None):
         if context is None:
