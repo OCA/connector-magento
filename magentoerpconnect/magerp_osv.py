@@ -38,7 +38,9 @@ class Connection(object):
         if not location[-1] == '/':
             location += '/' 
         self.corelocation = location
-        self.location = location + "index.php/api/xmlrpc"
+        #Please do not remove the str indeed xmlrpc lib require a string for the location
+        #if an unicode is send it will raise you an error
+        self.location = str(location + "index.php/api/xmlrpc")
         self.username = username
         self.password = password
         self.debug = True
@@ -113,13 +115,6 @@ class magerp_osv(osv.osv):
     _DELETE_METHOD = False
     _mapping = {}
     DEBUG = False
-    
-    def external_connection(self, cr, uid, referential, DEBUG=False):
-        if 'magento' in referential.type_id.name.lower():
-            attr_conn = Connection(referential.location, referential.apiusername, referential.apipass, DEBUG)
-            return attr_conn.connect() and attr_conn or False
-        else:
-            return super(magerp_osv, self).external_connection(cr, uid, referential, DEBUG=DEBUG)
     
     #TODO deprecated, remove use
     def mage_to_oe(self, cr, uid, mageid, instance, *arguments):

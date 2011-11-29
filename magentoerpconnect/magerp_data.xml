@@ -1,22 +1,6 @@
 <?xml version="1.0"?>
 <openerp>
 	<data noupdate="1">
-
-
-        <record id="mag0" model="product.category">
-            <field name="parent_id" ref="null"/>
-            <field name="name">Service</field>
-        </record>
-
-		<record id="product_product_shipping" model="product.product">
-			<field name="default_code">SHIP MAGENTO</field>
-			<field name="list_price">0.0</field>
-			<field name="standard_price">0.0</field>
-			<field name="type">service</field>
-			<field name="name">Shipping and Handling</field>
-			<field name="magento_exportable" eval="False" />
-			<field name="categ_id" ref="mag0"/>
-		</record>
 		
 		<record id="product_product_cash_on_delivery" model="product.product">
 			<field name="default_code">CASH ON DELIVERY MAGENTO</field>
@@ -25,7 +9,7 @@
 			<field name="type">service</field>
 			<field name="name">Cash on delivery</field>
 			<field name="magento_exportable" eval="False" />
-			<field name="categ_id" ref="mag0"/>
+			<field name="categ_id" ref="base_sale_multichannels.categ_0"/>
 		</record>
 
 		<record id="product_product_gift" model="product.product">
@@ -35,7 +19,7 @@
 			<field name="type">service</field>
 			<field name="name">Gift Certificate</field>
 			<field name="magento_exportable" eval="False" />
-			<field name="categ_id" ref="mag0"/>
+			<field name="categ_id" ref="base_sale_multichannels.categ_0"/>
 		</record>
 
 		<record id="product_product_discount" model="product.product">
@@ -45,7 +29,7 @@
 			<field name="type">service</field>
 			<field name="name">Discount Coupon</field>
 			<field name="magento_exportable" eval="False" />
-			<field name="categ_id" ref="mag0"/>
+			<field name="categ_id" ref="base_sale_multichannels.categ_0"/>
 		</record>
 
         <record forcecreate="True" id="ir_cron_import_orders_scheduler_action" model="ir.cron">

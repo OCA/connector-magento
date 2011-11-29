@@ -26,29 +26,12 @@ import mimetypes
 import netsvc
 from tools.translate import _
 
-class product_images_external_name(magerp_osv.magerp_osv):
-    _name = 'product.images.external.name'
-    _description = 'Product Image External Name'
-
-    _columns = {
-        'name':fields.char('Magento File Name', size=100, readonly=True,
-                                help="Filled when uploaded or synchronised"),
-        'external_referential_id' : fields.many2one('external.referential', 'External Referential', readonly=True),
-        'image_id': fields.many2one('product.images', 'Product Image'),
-
-    }
-
-    _sql_constraints = [
-    ('external_referential_id', 'UNIQUE(image_id, external_referential_id)', 'An image can have only one external name per referential')
-            ]
-product_images_external_name()
-
-
+#TODO the option small_image, thumbnail, exclude, base_image, should be store diferently indeed this is not compatible with mutli instance (maybe serialized will be a good solution)
+#Moreover when a small is selected the flag on other image should be remove as magento does
 
 class product_images(magerp_osv.magerp_osv):
     _inherit = "product.images"
     _columns = {
-        'external_name':fields.one2many('product.images.external.name', 'image_id', 'Magento File Name', help="Filled when uploaded or synchronised"),
         'base_image':fields.boolean('Base Image'),
         'small_image':fields.boolean('Small Image'),
         'thumbnail':fields.boolean('Thumbnail'),
@@ -57,9 +40,6 @@ class product_images(magerp_osv.magerp_osv):
         'sync_status':fields.boolean('Sync Status', readonly=True),
         'create_date': fields.datetime('Created date', readonly=True),
         'write_date': fields.datetime('Updated date', readonly=True),
-        #TO REMOVE (date to remove 1 february 2011) : USE FOR UPDATING OLD VERSION START
-        #'mage_file': fields.char('Magento File Name', size=100, readonly=True, help="Filled when uploaded or synchronised"),
-        #TO REMOVE USE FOR UPDATING OLD VERSION END
     }
     _defaults = {
         'sync_status':lambda * a: False,
@@ -73,14 +53,6 @@ class product_images(magerp_osv.magerp_osv):
         proxy = self.pool.get('product.images')
         domain = start_date and ['|', ('create_date', '>', start_date), ('write_date', '>', start_date)] or []
         return proxy.search(cr, uid, domain)
-
-    def get_image_name(self, cr, uid, id, context=None):
-        if context is None: context = {}
-        image_ext_name_obj = self.pool.get('product.images.external.name')
-        name_id = image_ext_name_obj.search(cr, uid, [('image_id', '=', id), ('external_referential_id', '=', context['external_referential_id'])], context=context)
-        if name_id:
-            return image_ext_name_obj.read(cr, uid, name_id, ['name'], context=context)[0]['name']
-        return False
      
     def del_image_name(self, cr, uid, id, context=None):
         if context is None: context = {}
@@ -98,6 +70,8 @@ class product_images(magerp_osv.magerp_osv):
         if not conn:
             return False
 
+        ir_model_data_obj = self.pool.get('ir.model.data')
+
         def detect_types(image):
             types = []
             if image.small_image:
@@ -108,10 +82,11 @@ class product_images(magerp_osv.magerp_osv):
                 types.append('thumbnail')
             return types
 
-        def update_image(content, image):
+        #TODO update the image file
+        def update_image(image_name, image):
             result = conn.call('catalog_product_attribute_media.update',
                                [image.product_id.magento_sku,
-                                content,
+                                image_name,
                                 {'label':image.name,
                                  'exclude':image.exclude,
                                  'types':detect_types(image),
@@ -143,20 +118,8 @@ class product_images(magerp_osv.magerp_osv):
         while ids:
             product_images = self.browse_w_order(cr, uid, ids[:1000], context=context)
             for each in product_images:
-                #####
-                #TO REMOVE (date to remove 1 june 2011):USE FOR UPDATING OLD VERSION V5 to V6 START
-                # to update your old database, just uncomment this lines (also the line in the column), remove the 'last export image date' in the shop and start the update
-                # this will not push the image in magento but just create the name in the external referential 
-                #####
-                #if each.mage_file:
-                #    print 'update'
-                #    print 'context', context['external_referential']
-                #    self.pool.get('product.images.external.name').create(cr, uid, {'name': each.mage_file, 'external_referential_id' : context['external_referential_id'], 'image_id' : each.id})
-                #    logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "Creating the external name in the openerp database %s's image: %s" %(each.product_id.magento_sku, each.name))
-                #continue
-                #TO REMOVE USE FOR UPDATING OLD VERSION END
                 need_to_be_created = True
-                ext_file_name = each.get_image_name(context)
+                ext_file_name = each.oeid_to_extid(context['external_referential_id'])
                 if ext_file_name: #If update
                     try:
                         logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "Updating %s's image: %s" %(each.product_id.magento_sku, each.name))
@@ -169,8 +132,11 @@ class product_images(magerp_osv.magerp_osv):
                             logger.notifyChannel(_("Magento Connection"), netsvc.LOG_ERROR, _("Unknow error stop export"))
                             raise
                         else:
-                            each.del_image_name(context) #If the image was deleded in magento, the external name is automatically deleded
-                            logger.notifyChannel(_("Magento Connection"), netsvc.LOG_ERROR, _("The product don't exist in magento, try to create it"))
+                            #If the image was deleded in magento, the external name is automatically deleded before trying to re-create the image in magento
+                            model_data_ids = ir_model_data_obj.search(cr, uid, [('model', '=', self._name), ('res_id', '=', each.id), ('external_referential_id', '=', context['external_referential_id'])])
+                            if model_data_ids and len(model_data_ids) > 0:
+                                ir_model_data_obj.unlink(cr, uid, model_data_ids, context=context)
+                            logger.notifyChannel(_("Magento Connection"), netsvc.LOG_ERROR, _("The image don't exist in magento, try to create it"))
                 if need_to_be_created:
                     if each.product_id.magento_sku:
                         logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "Sending %s's image: %s" %(each.product_id.magento_sku, each.name))
@@ -178,12 +144,12 @@ class product_images(magerp_osv.magerp_osv):
                                   [each.product_id.magento_sku,
                                    {'file':{
                                             'name':each.name,
-                                            'content':self.get_image(cr, uid, each.id),
-                                            'mime':each.filename and mimetypes.guess_type(each.filename)[0] or 'image/jpeg',
+                                            'content': each.file,
+                                            'mime': each.link and each.url and mimetypes.guess_type(each.url)[0] or each.extention and mimetypes.guess_type(each.extention)[0] or 'image/jpeg',
                                             }
                                    }
                                    ])
-                        self.pool.get('product.images.external.name').create(cr, uid, {'name':result, 'external_referential_id' : context['external_referential_id'], 'image_id' : each.id})
+                        self.create_external_id_vals(cr, uid, each.id, result, context['external_referential_id'], context=context)
                         result = update_image(result, each)
                         logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "%s's image send with sucess: %s" %(each.product_id.magento_sku, each.name))
                 if image_2_date[each.id] > context['last_images_export_date']: #indeed if a product was created a long time ago and checked as exportable recently, the write date of the image can be far away in the past
