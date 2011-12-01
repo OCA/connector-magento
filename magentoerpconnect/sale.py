@@ -656,8 +656,6 @@ class sale_order(magerp_osv.magerp_osv):
         if not (context.get('external_referential_type', False) and 'Magento' in context['external_referential_type']):
             return super(sale_order, self).ext_import(cr, uid, data, external_referential_id, defaults=defaults, context=context)
 
-        #the new cursor should be replace by a beautiful decorator on ext_import
-        order_cr = pooler.get_db(cr.dbname).cursor()
         res = {'create_ids': [], 'write_ids': []}
         ext_order_id = data[0]['increment_id']
         #the new cursor should be replaced by a beautiful decorator on ext_import
