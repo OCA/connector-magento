@@ -1256,18 +1256,18 @@ class product_product(product_mag_osv):
         sku = self.product_to_sku(cr, uid, product)
         return super(magerp_osv.magerp_osv, self).ext_update(cr, uid, data, conn, method, oe_id, sku, ir_model_data_id, create_method, context)
     
-    def export_inventory(self, cr, uid, ids, shop, context=None):
+    def export_inventory(self, cr, uid, ids, stock_field, context=None):
         if context is None: context = {}
         logger = netsvc.Logger()
         stock_id = self.pool.get('sale.shop').browse(cr, uid, context['shop_id']).warehouse_id.lot_stock_id.id
         for product in self.browse(cr, uid, ids):
             if product.magento_sku and product.type != 'service':
-                virtual_available = self.read(cr, uid, product.id, ['virtual_available'], {'location': stock_id})['virtual_available']
-        # Changing Stock Availability to "Out of Stock" in Magento
+                stock_available = self.read(cr, uid, product.id, [stock_field], {'location': stock_id})[stock_field]
+                # Changing Stock Availability to "Out of Stock" in Magento
                 # if a product has qty lt or equal to 0.
-                is_in_stock = int(virtual_available > 0)
-                context['conn_obj'].call('product_stock.update', [product.magento_sku, {'qty': virtual_available, 'is_in_stock': is_in_stock}])
-                logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "Successfully updated stock level at %s for product with SKU %s " %(virtual_available, product.magento_sku))
+                is_in_stock = int(stock_available > 0)
+                context['conn_obj'].call('product_stock.update', [product.magento_sku, {'qty': stock_available, 'is_in_stock': is_in_stock}])
+                logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "Successfully updated stock level at %s for product with SKU %s " %(stock_available, product.magento_sku))
         return True
     
     def ext_assign_links(self, cr, uid, ids, external_referential_ids=None, defaults=None, context=None):
