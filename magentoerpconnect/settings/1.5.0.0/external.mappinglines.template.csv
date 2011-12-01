@@ -34,14 +34,14 @@ result=[('order_policy', ifield['method'] in payments_mapping and payments_mappi
 "mag_1500_erp_soline_name","magento1500","sale.model_sale_order_line","name","in_out","unicode","import re
 options_label = []
 options_data = data['product_options']
-clean = re.sub('\w:\w:|\w:\w+;', '', options_data)
+clean = re.sub('\w:\w+:|\w:\w+;', '', options_data)
 for each in clean.split('{'):
     if each.startswith('""label""'):
         split_info = each.split(';')	
         options_label.append('%s: %s [%s]' % (split_info[1], split_info[3], data['sku']))
 	
 	
-result=[('name', ifield), ('notes',  """".join(options_label).replace('""""', '\n').replace('""', ''))]
+result=[('name', ifield), ('notes',  '\n'.join(options_label).replace('""""', '\n').replace('""', ''))]
 ",
 "mag_1500_erp_soline_pid","magento1500","sale.model_sale_order_line","product_id","in_out","unicode","context['alternative_key'] = data['sku']
 result=[('product_id',self.pool.get('product.product').extid_to_oeid(cr, uid, ifield, external_referential_id))]",
