@@ -27,6 +27,7 @@ import pooler
 import magerp_osv
 import netsvc
 from tools.translate import _
+from collections import defaultdict
 import string
 #from datetime import datetime
 import tools
@@ -133,12 +134,8 @@ class sale_shop(magerp_osv.magerp_osv):
     def import_shop_orders(self, cr, uid, shop, defaults, context=None):
         if context is None: context = {}
         result = super(sale_shop, self).import_shop_orders(cr, uid, shop, defaults=defaults, context=context)
-        if not result.get('create_ids', False):
-            result['create_ids']=[]
-        if not result.get('write_ids', False):
-            result['write_ids']=[]
-        if not result.get('unchanged_ids', False):
-            result['unchanged_ids']=[]
+        if result is False:
+            result = defaultdict(list)
         if shop.magento_shop:
             self.check_need_to_update(cr, uid, [shop.id], context=context)
             for storeview in shop.storeview_ids:
@@ -155,7 +152,7 @@ class sale_shop(magerp_osv.magerp_osv):
                     result['create_ids'] += resp.get('create_ids', [])
                     result['write_ids'] += resp.get('write_ids', [])
                     result['unchanged_ids'] += resp.get('unchanged_ids', [])
-                    nb_last_created_ids = len(resp.get('create_ids',[]) + resp.get('write_ids', []) + resp.get('unchanged_ids', []))
+                    nb_last_created_ids = len(resp.get('create_ids', []) + resp.get('write_ids', []) + resp.get('unchanged_ids', []))
                     print nb_last_created_ids
         return result
 
