@@ -252,6 +252,13 @@ elif ifield=='shipping':
 else:
 	result=[]",
 "magento_1500_prt_adr_15","magento1500","base.model_res_partner_address","email","in_out","unicode","result=[('email',ifield)]",
+"magento_1500_prt_adr_16","magento1500","base.model_res_partner_address","prefix","in_out","unicode","if ifield:
+    title_ids = self.pool.get('res.partner.title').search(cr, uid, [('domain', '=', 'contact'), ('shortcut', '=', ifield)])
+    if title_ids:
+        title_id = title_ids[0]
+    else:
+        title_id = self.pool.get('res.partner.title').create(cr, uid, {'domain': 'contact', 'shortcut': ifield, 'name' : ifield})
+    result=[('title', title_id)]",
 "magento_1500_prt_2","magento1500","base.model_res_partner","group_id","in_out","int","if ifield:
 	result=self.pool.get('res.partner.category').extid_to_oeid(cr,uid,ifield,external_referential_id)
 	if result:
