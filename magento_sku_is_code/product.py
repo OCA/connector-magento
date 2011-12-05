@@ -53,9 +53,9 @@ class Product(osv.osv):
         return super(Product, self).create(cr, uid, vals, context)
 
     def write(self, cr, uid, ids, vals, context=None):
-        ids_to_write = ids[:]
         if isinstance(ids, (int, long)):
             ids = [ids]
+        ids_to_write = ids[:]
         if vals.get('default_code'):
             for product in self.browse(cr, uid, ids, context=context):
                 # write separately on each product if they are not already exported
