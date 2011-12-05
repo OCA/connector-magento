@@ -467,7 +467,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
             in_function = ("option_ids = []\n"
                            "opt_obj = self.pool.get('magerp.product_attribute_options')\n"
                            "for ext_option_id in ifield:\n"
-                           "    option_ids.extend(opt_obj.search(cr, uid, [('attribute_id','=',%(attribute_id)s), ('value','=',ext_option_id)])[0])\n"
+                           "    option_ids.extend(opt_obj.search(cr, uid, [('attribute_id','=',%(attribute_id)s), ('value','=',ext_option_id)]))\n"
                            "result = [('%(field_name)s', [(6, 0, option_ids)])]") % ({'attribute_id': attribute_id, 'field_name': field_name})
             out_function = ("result=[('%(attribute_code)s', [])]\n"
                             "if record.get('%(field_name)s', False):\n"
