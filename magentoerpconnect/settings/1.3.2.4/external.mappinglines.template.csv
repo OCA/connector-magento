@@ -19,14 +19,15 @@
 "mag_1324_erp_so_total_amount","magento1324","sale.model_sale_order","grand_total","in_out","float","result=[('ext_total_amount',str(ifield))]",
 "mag_1324_erp_so_name","magento1324","sale.model_sale_order","increment_id","in_out","unicode","result=[('magento_incrementid',str(ifield)), ('name','mag_' + str(ifield))]",
 "mag_1324_erp_so_carrier_id","magento1324","sale.model_sale_order","shipping_method","in_out","unicode","if ifield:
-	carrier_ids = self.pool.get('delivery.carrier').search(cr, uid, [('magento_code', '=', ifield)])
-	if carrier_ids:
-		result=[('carrier_id', carrier_ids[0])]
-	else:
-		fake_partner_id = self.pool.get('res.partner').search(cr, uid, [])[0]
-		product_id = self.pool.get('product.product').search(cr, uid, [['default_code', '=', 'SHIP']])[0]
-		carrier_id = self.pool.get('delivery.carrier').create(cr, uid, {'partner_id' : fake_partner_id, 'product_id' : product_id, 'name' : ifield, 'magento_code' : ifield})
-		result=[('carrier_id', carrier_id)]",
+    carrier_ids = self.pool.get('delivery.carrier').search(cr, uid, [('magento_code', '=', ifield)])
+    if carrier_ids:
+        result=[('carrier_id', carrier_ids[0])]
+    else:
+        fake_partner_id = self.pool.get('res.partner').search(cr, uid, [])[0]
+        model_data_obj = self.pool.get('ir.model.data')
+        model, product_id = model_data_obj.get_object_reference(cr, uid, 'base_sale_multichannels', 'product_product_shipping')
+        carrier_id = self.pool.get('delivery.carrier').create(cr, uid, {'partner_id' : fake_partner_id, 'product_id' : product_id, 'name' : ifield, 'magento_code' : ifield})
+        result=[('carrier_id', carrier_id)]",
 "mag_1324_erp_so_pay","magento1324","sale.model_sale_order","payment","in_out","unicode","
 payments_mapping = {'checkmo': 'manual', 'ccsave': 'prepaid', 'free':'prepaid','googlecheckout':'prepaid','paypayl_express':'prepaid', 'paybox_system': 'prepaid', 'paypal_standard': 'prepaid', 'cashondelivery': 'manual', 'servired_standard': 'prepaid', 'bbva': 'prepaid', 'cofidis': 'prepaid'}
 ifield=eval(ifield)

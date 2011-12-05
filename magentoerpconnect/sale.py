@@ -414,23 +414,27 @@ class sale_order(magerp_osv.magerp_osv):
         return res
 
 
-    def add_order_extra_line(self, cr, uid, res, data_record, ext_field, product_code, defaults, context=None):
+    def add_order_extra_line(self, cr, uid, res, data_record, ext_field, product_ref, defaults, context=None):
         """ Add or substract amount on order as a separate line item with single quantity for each type of amounts like :
         shipping, cash on delivery, discount, gift certificates...
-        Arguments :
-        ext_field: name of the field in data_record where the amount is stored
-        product_code: code of the product to use in the sale order line
-        Optional arguments in kwargs:
+
+        @param res: dict of the order to create
+        @param data_record: full data dict of the order
+        @param ext_field: name of the field in data_record where the amount of the extra lineis stored
+        @param product_ref: tuple with module and xml_id (module, xml_id) of the product to use for the extra line
+
+        Optional arguments in context:
         sign: multiply the amount with the sign to add or substract it from the sale order
         ext_tax_field: name of the field in data_record where the tax amount is stored
         ext_code_field: name of the field in data_record containing a code (for coupons and gift certificates) which will be printed on the product name
         """
         if context is None: context = {}
+        model_data_obj = self.pool.get('ir.model.data')
         sign = 'sign' in context and context['sign'] or 1
         ext_tax_field = 'ext_tax_field' in context and context['ext_tax_field'] or None
         ext_code_field = 'ext_code_field' in context and context['ext_code_field'] or None
 
-        product_id = self.pool.get('product.product').search(cr, uid, [('default_code', '=', product_code)])[0]
+        model, product_id = model_data_obj.get_object_reference(cr, uid, *product_ref)
         product = self.pool.get('product.product').browse(cr, uid, product_id, context)
         is_tax_included = defaults.get('price_type', False) == 'tax_included'
         amount = float(data_record[ext_field]) * sign
@@ -473,7 +477,8 @@ class sale_order(magerp_osv.magerp_osv):
             ctx.update({
                 'ext_tax_field': 'shipping_tax_amount',
             })
-            res = self.add_order_extra_line(cr, uid, res, data_record, 'shipping_amount', 'SHIP', defaults, ctx)
+            product_ref = ('base_sale_multichannels', 'product_product_shipping')
+            res = self.add_order_extra_line(cr, uid, res, data_record, 'shipping_amount', product_ref, defaults, ctx)
         return res
 
     def add_gift_certificates(self, cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context=None):
@@ -484,7 +489,8 @@ class sale_order(magerp_osv.magerp_osv):
                 'ext_code_field': 'giftcert_code',
                 'sign': -1,
             })
-            res = self.add_order_extra_line(cr, uid, res, data_record, 'giftcert_amount', 'GIFT CERTIFICATE', defaults, ctx)
+            product_ref = ('magentoerpconnect', 'product_product_gift')
+            res = self.add_order_extra_line(cr, uid, res, data_record, 'giftcert_amount', product_ref, defaults, ctx)
         return res
 
     def add_discount(self, cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context=None):
@@ -494,7 +500,8 @@ class sale_order(magerp_osv.magerp_osv):
         #    ctx.update({
         #        'ext_code_field': 'coupon_code',
         #    })
-        #    res = self.add_order_extra_line(cr, uid, res, data_record, 'discount_amount', 'DISCOUNT MAGENTO', defaults, ctx)
+        #    product_ref = ('magentoerpconnect', 'product_product_discount')
+        #    res = self.add_order_extra_line(cr, uid, res, data_record, 'discount_amount', product_ref, defaults, ctx)
         return res
 
     def add_cash_on_delivery(self, cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context=None):
@@ -504,7 +511,8 @@ class sale_order(magerp_osv.magerp_osv):
             ctx.update({
                 'ext_tax_field': 'cod_tax_amount',
             })
-            res = self.add_order_extra_line(cr, uid, res, data_record, 'cod_fee', 'CASH ON DELIVERY MAGENTO', defaults, ctx)
+            product_ref = ('magentoerpconnect', 'product_product_cash_on_delivery')
+            res = self.add_order_extra_line(cr, uid, res, data_record, 'cod_fee', product_ref, defaults, ctx)
         return res
     
     
