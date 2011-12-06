@@ -1,53 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-	<data>
-		<record id="view_partner_form_magerp" model="ir.ui.view">
-			<field name="name">res.partner.form_magerp</field>
-			<field name="model">res.partner</field>
-			<field name="type">form</field>
-			<field name="inherit_id" ref="base.view_partner_form" />
-			<field name="arch" type="xml">
-				<xpath expr="/form/notebook" position="inside">
-					<page string="Magento Information">
+    <data>
+        <record id="view_partner_form_magerp" model="ir.ui.view">
+            <field name="name">res.partner.form_magerp</field>
+            <field name="model">res.partner</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="base.view_partner_form" />
+            <field name="arch" type="xml">
+                <xpath expr="/form/notebook" position="inside">
+                    <page string="Magento Information">
                         <field name="magento_exported" invisible="True"/>
-						<field name="emailid" attrs="{'readonly': [('magento_exported', '=', True)]}"/>
+                        <field name="emailid" attrs="{'readonly': [('magento_exported', '=', True)]}"/>
                         <field name="website_id" attrs="{'readonly': [('magento_exported', '=', True)]}"/>
-						<field name="group_id" />
-						<field name="mag_vat" />
-						<field name="mag_birthday" />
-						<field name="mag_newsletter" select="2"/>
-						<field name="store_id" />
+                        <field name="group_id" />
+                        <field name="mag_vat" />
+                        <field name="mag_birthday" />
+                        <field name="mag_newsletter" select="2"/>
+                        <field name="store_id" />
                         <newline/>
                         <separator string="Store views" colspan="4" />
-						<field name="store_ids" colspan="4" nolabel="1" />
-					</page>
-				</xpath>
-			</field>
-		</record>
-		<record id="view_partner_category_form_magerp" model="ir.ui.view">
-			<field name="name">res.partner.category.form_magerp</field>
-			<field name="model">res.partner.category</field>
-			<field name="type">form</field>
-			<field name="inherit_id" ref="base.view_partner_category_form" />
-			<field name="arch" type="xml">
-				<field name="parent_id" position="after">
-					<separator string="Magento/Tax Information" colspan="4" />
-					<field name="tax_class_id" select="1" />
-				</field>
-			</field>
-		</record>
-		<record id="view_partner_address_form1_magerp1" model="ir.ui.view">
-			<field name="name">res.partner.address.form1magerp1</field>
-			<field name="model">res.partner.address</field>
-			<field name="type">form</field>
-			<field name="inherit_id" ref="base.view_partner_address_form1" />
-			<field name="arch" type="xml">
-				<field name="name" position="after">
-				    <field name="firstname" />
-					<field name="lastname" />
-				</field>
-			</field>
-		</record>
+                        <field name="store_ids" colspan="4" nolabel="1" />
+                    </page>
+                </xpath>
+            </field>
+        </record>
 
-	</data>
+        <record id="view_partner_category_form_magerp" model="ir.ui.view">
+            <field name="name">res.partner.category.form_magerp</field>
+            <field name="model">res.partner.category</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="base.view_partner_category_form" />
+            <field name="arch" type="xml">
+                <field name="parent_id" position="after">
+                    <separator string="Magento/Tax Information" colspan="4" />
+                    <field name="tax_class_id" select="1" />
+                </field>
+            </field>
+        </record>
+
+        <record id="view_partner_address_form1_magerp1" model="ir.ui.view">
+            <field name="name">res.partner.address.form1magerp1</field>
+            <field name="model">res.partner.address</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="base.view_partner_address_form1" />
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="firstname" />
+                    <field name="lastname" />
+                </field>
+            </field>
+        </record>
+
+    </data>
 </openerp>

@@ -108,10 +108,14 @@ class res_partner(magerp_osv.magerp_osv):
                                   [('emailid', '=', magento_mail),
                                    ('website_id', '=', website_id)],
                                   context=context)
-        # when the partner has been created, the website is not necessarily filled, in such case we search the first occurrence
+        # when the partner has been created, the website is not necessarily
+        # filled, in such case we search the first occurrence
         # with the same email not already binded with a magento customer
         if not partner_ids:
-            partner_ids = self.search(cr, uid, [('emailid', '=', magento_mail), ('website_id', '=', False)], context=context)
+            partner_ids = self.search(cr, uid,
+                                      [('emailid', '=', magento_mail),
+                                       ('website_id', '=', False)],
+                                      context=context)
         partner_ids = [partner.id for partner
                        in self.browse(cr, uid, partner_ids[:], context=context)
                        if not partner.magento_exported]
