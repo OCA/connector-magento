@@ -11,6 +11,7 @@
 					<page string="Magento Information">
                         <field name="magento_exported" invisible="True"/>
 						<field name="emailid" attrs="{'readonly': [('magento_exported', '=', True)]}"/>
+                        <field name="website_id" attrs="{'readonly': [('magento_exported', '=', True)]}"/>
 						<field name="group_id" />
 						<field name="mag_vat" />
 						<field name="mag_birthday" />
