@@ -134,8 +134,7 @@ class sale_shop(magerp_osv.magerp_osv):
     def import_shop_orders(self, cr, uid, shop, defaults, context=None):
         if context is None: context = {}
         result = super(sale_shop, self).import_shop_orders(cr, uid, shop, defaults=defaults, context=context)
-        if result is False:
-            result = defaultdict(list)
+        [result.setdefault(key, []) for key in ['create_ids', 'write_ids', 'unchanged_ids']]
         if shop.magento_shop:
             self.check_need_to_update(cr, uid, [shop.id], context=context)
             for storeview in shop.storeview_ids:
