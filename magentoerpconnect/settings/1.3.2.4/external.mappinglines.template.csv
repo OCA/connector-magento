@@ -211,7 +211,7 @@ for oe_id in record['websites_ids']:
     ext_websites_ids.append(self.pool.get('external.shop.group').oeid_to_extid(cr, uid, oe_id, external_referential_id))
 
 result=[('websites', ext_websites_ids)]"
-"mag_1324_erp_prd_16","magento1324","product.model_product_product","has_options","in","bool","result =[('x_magerp_has_options',ifield)]",""
+"mag_1324_erp_prd_16","magento1324","product.model_product_product","has_options","in","unicode","result =[('x_magerp_has_options',ifield)]",""
 "magento_1324_cst_grp_1","magento1324","base.model_res_partner_category","customer_group_code","in","unicode","result=[('name',ifield)]",
 "magento_1324_cst_grp_3","magento1324","base.model_res_partner_category","tax_class_id","in","int","result=[('tax_class_id',ifield)]",
 "magento_1324_prt_adr_2","magento1324","base.model_res_partner_address","city","in_out","unicode","result=[('city',ifield)]",
