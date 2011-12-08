@@ -52,7 +52,8 @@ result=[('product_id',self.pool.get('product.product').extid_to_oeid(cr, uid, if
     result=[('price_unit', (float(data['row_total']) + float(data['tax_amount']))/float(data['qty_ordered']))]
 else:
     result=[('price_unit', float(data['row_total'])/float(data['qty_ordered']))]",
-"mag_1500_erp_soline_disc","magento1500","sale.model_sale_order_line","discount_amount","in","unicode","result=[('discount', float(data['price']) != 0 and float(data['qty_ordered']) != 0 and float(100*float(ifield))/(float(data['price'])*float(data['qty_ordered'])) or 0)]",
+"mag_1500_erp_soline_disc","magento1500","sale.model_sale_order_line","discount_amount","in","float","if ifield:
+    result=[('discount', float(data['price']) != 0 and float(data['qty_ordered']) != 0 and float(100*ifield)/(float(data['price'])*float(data['qty_ordered'])) or 0)]",
 "mag_1500_erp_procat_2","magento1500","product.model_product_category","level","in","int","result=[('sequence',ifield),('level',ifield)]",
 "mag_1500_erp_procat_3","magento1500","product.model_product_category","parent_id","in_out","int","record_id = self.pool.get('ir.model.data').search(cr, uid, [('model', '=', self._name), ('name', '=', self.prefixed_id(ifield))])
 parent_id = False
