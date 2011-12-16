@@ -458,9 +458,10 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
                            "    option_id = self.pool.get('magerp.product_attribute_options').search(cr, uid, [('attribute_id','=',%(attribute_id)s),('value','=',ifield)])\n"
                            "    if option_id:\n"
                            "        result = [('%(field_name)s', option_id[0])]")  % ({'attribute_id': attribute_id, 'field_name': field_name})
+            # we browse on record['%(field_name)s'][0] because record[field_name] is in the form (id, name)
             out_function = ("result = [('%(attribute_code)s', False)]\n"
-                            "if record.get('%(field_name)s', False):\n"
-                            "    option = self.pool.get('magerp.product_attribute_options').browse(cr, uid, record['%(field_name)s'])\n"
+                            "if record.get('%(field_name)s'):\n"
+                            "    option = self.pool.get('magerp.product_attribute_options').browse(cr, uid, record['%(field_name)s'][0])\n"
                             "    if option:\n"
                             "        result = [('%(attribute_code)s', option.value)]") % ({'field_name': field_name, 'attribute_code': vals['attribute_code']})
         elif ttype in ['many2many']:
@@ -470,7 +471,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
                            "    option_ids.extend(opt_obj.search(cr, uid, [('attribute_id','=',%(attribute_id)s), ('value','=',ext_option_id)]))\n"
                            "result = [('%(field_name)s', [(6, 0, option_ids)])]") % ({'attribute_id': attribute_id, 'field_name': field_name})
             out_function = ("result=[('%(attribute_code)s', [])]\n"
-                            "if record.get('%(field_name)s', False):\n"
+                            "if record.get('%(field_name)s'):\n"
                             "    options = self.pool.get('magerp.product_attribute_options').browse(cr, uid, record['%(field_name)s'])\n"
                             "    result = [('%(attribute_code)s', [option.value for option in options])]") % \
                            ({'field_name': field_name, 'attribute_code': vals['attribute_code']})
