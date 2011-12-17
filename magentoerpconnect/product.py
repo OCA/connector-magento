@@ -34,8 +34,7 @@ import netsvc
 
 #Enabling this to True will put all custom attributes into One page in
 #the products view
-GROUP_CUSTOM_ATTRS_TOGETHER = True
-SHOW_JSON = True
+GROUP_CUSTOM_ATTRS_TOGETHER = False
 
 class magerp_product_category_attribute_options(magerp_osv.magerp_osv):
     _name = "magerp.product_category_attribute_options"
@@ -879,13 +878,28 @@ class product_mag_osv(magerp_osv.magerp_osv):
                     field_names.append('websites_ids')
                     
                 field_names = self._filter_fields_to_return(cr, uid, field_names, context)
-                  
                 result['fields'].update(self.fields_get(cr, uid, field_names, context))
-                view_part = self.redefine_prod_view(cr, uid, field_names, context) #.decode('utf8') It is not necessary, the translated view could be in UTF8
-                result['arch'] = result['arch'].decode('utf8').replace('<page string="attributes_placeholder"/>', '<page string="'+_("Magento Information")+'"'+""" attrs="{'invisible':[('magento_exportable','!=',1)]}"><field name='product_type' attrs="{'required':[('magento_exportable','=',True)]}"/>\n""" + view_part + """\n</page>""").replace('<button name="open_magento_fields" string="Open Magento Fields" icon="gtk-go-forward" type="object" colspan="2"/>', '')
 
-                result['arch'] = result['arch'].replace('<separator string="attributes_placeholder" colspan="4"/>', view_part)
+                view_part = self.redefine_prod_view(cr, uid, field_names, context)
+                if '<page string="attributes_placeholder"/>' in result['arch']:
+                    # If the view have the tag '<page string="attributes_placeholder"/>' the view asked is the main view
+                    # Else it's the pop up with specific fields
+                    magento_tab = (
+                        "<page string='" + _('Magento Information') + " ' attrs=\"{'invisible':[('magento_exportable','!=',1)]}\">"
+                            "<field name='product_type' attrs=\"{'required':[('magento_exportable','=',True)]}\"/>\n"
+                            + view_part +
+                        "</page>"
+                        )
+                    result['arch'] = result['arch'].replace('<page string="attributes_placeholder"/>', magento_tab)
+                    result['arch'] = result['arch'].replace('<button name="open_magento_fields"/>', '')
+                else:
+                    result['arch'] = result['arch'].replace('<separator string="attributes_placeholder" colspan="4"/>', view_part)
             else:
+                magento_button = (
+                    "<button name='open_magento_fields' string='Open Magento Fields' icon='gtk-go-forward' type='object'"
+                    " colspan='2' attrs=\"{'invisible':[('magento_exportable','!=', True)]}\"/>"
+                    )
+                result['arch'] = result['arch'].replace('<button name="open_magento_fields"/>', magento_button)
                 result['arch'] = result['arch'].replace('<page string="attributes_placeholder"/>', "")
         return result
 

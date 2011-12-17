@@ -246,7 +246,7 @@
 						<field name="set" select="2" attrs="{'required':[('magento_exportable','==',True)]}"/>
 					</xpath>
 					<xpath expr="/form/group/group/field[@name='sale_ok']" position="before">
-						<button name="open_magento_fields" string="Open Magento Fields" icon="gtk-go-forward" type="object" colspan="2" attrs="{'invisible':[('magento_exportable','!=', True)]}"/>
+						<button name="open_magento_fields"/>
 					</xpath>
 					<xpath expr="/form/notebook" position="before">
 						<field name="magento_exportable" select="2"/>
