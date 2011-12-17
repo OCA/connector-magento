@@ -80,7 +80,7 @@ class external_referential(magerp_osv.magerp_osv):
             attr_conn = Connection(referential.location, referential.apiusername, referential.apipass, DEBUG)
             return attr_conn.connect() and attr_conn or False
         else:
-            return super(external_referential, self).external_connection(cr, uid, referential, DEBUG=DEBUG, context=context)
+            return super(external_referential, self).external_connection(cr, uid, id, DEBUG=DEBUG, context=context)
 
     def connect(self, cr, uid, id, context=None):
         if isinstance(id, (list, tuple)):
