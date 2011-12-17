@@ -62,6 +62,7 @@
             'delivery_view.xml',
             'product_links_view.xml',
             'wizard/product_change_sku_view.xml',
+            'wizard/open_product_by_attribut_set.xml',
                     ],
     "active": False,
     "installable": True,

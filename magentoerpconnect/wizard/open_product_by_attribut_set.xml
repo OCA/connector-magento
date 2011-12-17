@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="open_product_by_attribut_set_view">
+            <field name="name">open.product.by.attribut.set.view</field>
+            <field name="model">open.product.by.attribut.set</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Open product by attributs set">
+                    <field name="attributs_set" colspan="4"/>
+                    <button icon="gtk-cancel" special="cancel" string="Cancel"/>
+                    <button icon="gtk-ok" name="open_product_by_attribut" string="Open Product By Attribut" type="object"/>
+                </form>
+            </field>
+        </record>
+
+        <record id="open_product_by_attribut_set" model="ir.actions.act_window">
+            <field name="name">Open Product By Attribut Set</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">open.product.by.attribut.set</field>
+            <field name="view_type">form</field>
+            <field name="target">new</field>
+            <field name="view_id" ref="open_product_by_attribut_set_view"/>
+            <field name="help">You can open your product by attributs, in this case the magento fields will be directly integrated in the main view</field>
+        </record>
+
+        <menuitem action="open_product_by_attribut_set" id="open_product_wizard" parent="base.menu_product" sequence="2" icon="STOCK_JUSTIFY_FILL"/>
+    </data>
+</openerp>
