@@ -813,6 +813,7 @@ class product_mag_osv(magerp_osv.magerp_osv):
 
         result = super(product_mag_osv, self).fields_view_get(cr, uid, view_id,view_type,context,toolbar=toolbar)
         if view_type == 'form':
+            result['arch'] = result['arch'].decode('utf8') #in order to support special character, the arch for the product view will be a unicode and not a str
             if context.get('set', False):
                 models = ['product.template']
                 if self._name == 'product.product':
