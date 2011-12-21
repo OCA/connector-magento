@@ -518,7 +518,7 @@ class sale_order(magerp_osv.magerp_osv):
         data_record['items'] = items_to_import 
         return data_record
 
-    def oevals_from_extdata(self, cr, uid, external_referential_id, data_record, key_field, mapping_lines, parent_data, defaults, context=None):
+    def oevals_from_extdata(self, cr, uid, external_referential_id, data_record, key_field, mapping_lines, parent_data=None, previous_lines=None, defaults=None, context=None):
         if context is None: context = {}
         if data_record.get('items', False):
             data_record = self.data_record_filter(cr, uid, data_record, context=context)
@@ -526,7 +526,7 @@ class sale_order(magerp_osv.magerp_osv):
         if not context.get('one_by_one', False):
             if data_record.get('billing_address', False):
                 defaults = self.get_order_addresses(cr, uid, defaults, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
-        res = super(magerp_osv.magerp_osv, self).oevals_from_extdata(cr, uid, external_referential_id, data_record, key_field, mapping_lines, parent_data, defaults, context)
+        res = super(magerp_osv.magerp_osv, self).oevals_from_extdata(cr, uid, external_referential_id, data_record, key_field, mapping_lines, parent_data, previous_lines, defaults, context)
 
         #Move me in a mapping
         if not context.get('one_by_one', False):            
