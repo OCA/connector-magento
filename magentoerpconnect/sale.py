@@ -707,19 +707,19 @@ class sale_order(magerp_osv.magerp_osv):
                 'limit': SALE_ORDER_IMPORT_STEP,
                 'filters': context['ids_or_filter'][0],
             }
-            data = conn.call('sales_order.retrieve', [order_retrieve_params])
-            data_filtred=[]
+            ext_order_ids = conn.call('sales_order.search', [order_retrieve_params])
+            order_ids_filtred=[]
             unchanged_ids=[]
-            for order in data:
-                existing_id = self.extid_to_existing_oeid(cr, uid, order['increment_id'], external_referential_id, context=context)
+            for ext_order_id in ext_order_ids:
+                existing_id = self.extid_to_existing_oeid(cr, uid, ext_order_id, external_referential_id, context=context)
                 if existing_id:
                     unchanged_ids.append(existing_id)
-                    logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "the order %s already exist in OpenERP" % (order['increment_id'],))
-                    self.ext_set_order_imported(cr, uid, order['increment_id'], external_referential_id, context=context)
+                    logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "the order %s already exist in OpenERP" % (ext_order_id,))
+                    self.ext_set_order_imported(cr, uid, ext_order_id, external_referential_id, context=context)
                 else:
-                    data_filtred.append(order)
+                    order_ids_filtred.append({'increment_id' : ext_order_id})
             context['conn_obj'] = conn # we will need the connection to set the flag to "imported" on magento after each order import
-            result = self.mage_import_one_by_one(cr, uid, conn, external_referential_id, mapping_id[0], data_filtred, defaults, context)
+            result = self.mage_import_one_by_one(cr, uid, conn, external_referential_id, mapping_id[0], order_ids_filtred, defaults, context)
             result['unchanged_ids'] = unchanged_ids
         return result
 
