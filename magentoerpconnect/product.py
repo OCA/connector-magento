@@ -30,11 +30,33 @@ import pooler
 import magerp_osv
 from tools.translate import _
 import netsvc
-
+import unicodedata
 
 #Enabling this to True will put all custom attributes into One page in
 #the products view
 GROUP_CUSTOM_ATTRS_TOGETHER = False
+
+
+#TODO find a good method to replace all of the special caracter allowed by magento as name for product fields
+special_character_to_replace = [
+    (u"\xf8", u"diam"),
+    (u'\xb5', u'micro'),
+    (u'\xb2', u'2'),
+    (u'\u0153', u'oe'),
+]
+
+def convert_to_ascii(my_unicode):
+    '''Convert to ascii, with clever management of accents (é -> e, è -> e)'''
+    if isinstance(my_unicode, unicode):
+        my_unicode_with_ascii_chars_only = ''.join((char for char in unicodedata.normalize('NFD', my_unicode) if unicodedata.category(char) != 'Mn'))
+        for special_caracter in special_character_to_replace:
+            my_unicode_with_ascii_chars_only = my_unicode_with_ascii_chars_only.replace(special_caracter[0], special_caracter[1])
+        return str(my_unicode_with_ascii_chars_only)
+    # If the argument is already of string type, we return it with the same value
+    elif isinstance(my_unicode, str):
+        return my_unicode
+    else:
+        return False
 
 class magerp_product_category_attribute_options(magerp_osv.magerp_osv):
     _name = "magerp.product_category_attribute_options"
@@ -382,6 +404,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
             context = {}
         if not vals['attribute_code'] in self._no_create_list:
             field_name = "x_magerp_" + vals['attribute_code']
+            field_name = convert_to_ascii(field_name)
             vals['field_name']= field_name
         if 'attribute_set_info' in vals.keys():
             attr_set_info = eval(vals.get('attribute_set_info',{}))
@@ -822,7 +845,7 @@ class product_mag_osv(magerp_osv.magerp_osv):
                 ir_model_field_ids = self.pool.get('ir.model.fields').search(cr, uid, [('model_id', 'in', ir_model_ids)])
                 field_names = ['product_type']
                 for field in self.pool.get('ir.model.fields').browse(cr, uid, ir_model_field_ids):
-                    if str(field.name).startswith('x_'):
+                    if field.name.startswith('x_'):
                         field_names.append(field.name)
                 if len(self.pool.get('external.shop.group').search(cr,uid,[('referential_type', 'ilike', 'mag')])) >1 :
                     context['multiwebsite'] = True
