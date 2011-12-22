@@ -217,7 +217,7 @@ result=[('websites', ext_websites_ids)]"
 "magento_1324_cst_grp_3","magento1324","base.model_res_partner_category","tax_class_id","in","int","result=[('tax_class_id',ifield)]",
 "magento_1324_prt_adr_2","magento1324","base.model_res_partner_address","city","in_out","unicode","result=[('city',ifield)]",
 "magento_1324_prt_adr_3","magento1324","base.model_res_partner_address","fax","in_out","unicode","result=[('fax',ifield)]",
-"magento_1324_prt_adr_4","magento1324","base.model_res_partner_address","firstname","in_out","unicode","result = [('name', (data.get('company', False) and (data['company'] + ' ; ') or '') + ifield + ' ' + data['lastname']), ('firstname', ifield), ('lastname', data['lastname'])]",
+"magento_1324_prt_adr_4","magento1324","base.model_res_partner_address","firstname","in_out","unicode","result = [('name', (data.get('company', False) and (data['company'] + ' ; ') or '') + ifield + ' ' + (data['lastname'] or '')), ('firstname', ifield), ('lastname', (data['lastname'] or ''))]",
 "magento_1324_prt_adr_6","magento1324","base.model_res_partner_address","is_active","in_out","unicode","result=[('active',bool(eval(ifield)))]",
 "magento_1324_prt_adr_7","magento1324","base.model_res_partner_address","country_id","in_out","unicode","result = self.pool.get('res.country').search(cr,uid,[('code','=',ifield)])
 if result and len(result)==1:
