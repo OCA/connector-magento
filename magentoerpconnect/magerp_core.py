@@ -66,6 +66,8 @@ class external_referential(magerp_osv.magerp_osv):
         'magento_referential': fields.function(_is_magento_referential, type="boolean", method=True, string="Magento Referential"),
         'last_imported_product_id': fields.integer('Last Imported Product Id', help="Product are imported one by one. This is the magento id of the last product imported. If you clear it all product will be imported"),
         'last_imported_partner_id': fields.integer('Last Imported Partner Id', help="Partners are imported one by one. This is the magento id of the last partner imported. If you clear it all partners will be imported"),
+        'import_all_attributs': fields.boolean('Import all attributs', help="If the option is uncheck only the attributs that doesn't exist in OpenERP will be imported"), 
+
     }
 
     _defaults = {
@@ -117,16 +119,34 @@ class external_referential(magerp_osv.magerp_osv):
         return True
 
     def sync_attribs(self, cr, uid, ids, context=None):
-        for referential_id in ids:
-            attr_conn = self.external_connection(cr, uid, referential_id, DEBUG, context=context)
-            attrib_set_ids = self.pool.get('magerp.product_attribute_set').search(cr, uid, [('referential_id', '=', referential_id)])
-            attrib_sets = self.pool.get('magerp.product_attribute_set').read(cr, uid, attrib_set_ids, ['magento_id'])
+        attr_obj = self.pool.get('magerp.product_attributes')
+        attr_set_obj = self.pool.get('magerp.product_attribute_set')
+        logger = netsvc.Logger()
+        for referential in self.browse(cr, uid, ids, context=context):
+            attr_conn = referential.external_connection(DEBUG, context=context)
+            attrib_set_ids = attr_set_obj.search(cr, uid, [('referential_id', '=', referential.id)])
+            attrib_sets = attr_set_obj.read(cr, uid, attrib_set_ids, ['magento_id'])
             #Get all attribute set ids to get all attributes in one go
-            all_attr_set_ids = self.pool.get('magerp.product_attribute_set').get_all_mage_ids(cr, uid, [], referential_id)
+            all_attr_set_ids = attr_set_obj.get_all_extid_from_referential(cr, uid, referential.id, context=context)
             #Call magento for all attributes
-            mage_inp = attr_conn.call('ol_catalog_product_attribute.list', [all_attr_set_ids])             #Get the tree
-            #self.pool.get('magerp.product_attributes').sync_import(cr, uid, mage_inp, referential_id, DEBUG) #Last argument is extra mage2oe filter as same attribute ids
-            self.pool.get('magerp.product_attributes').ext_import(cr, uid, mage_inp, referential_id, defaults={'referential_id':referential_id}, context={'referential_id':referential_id})
+            if referential.import_all_attributs:
+                attributes_imported=[]
+            else:
+                attributes_imported = attr_obj.get_all_extid_from_referential(cr, uid, referential.id, context=context)
+            import_cr = pooler.get_db(cr.dbname).cursor()
+            try:
+                for attr_set_id in all_attr_set_ids:
+                    mage_inp = attr_conn.call('ol_catalog_product_attribute.list', [attr_set_id])             #Get the tree
+                    attribut_to_import = []
+                    for attribut in mage_inp:
+                        ext_id = attribut['attribute_id']
+                        if not ext_id in attributes_imported:
+                            attributes_imported.append(ext_id)
+                            attr_obj.ext_import(import_cr, uid, [attribut], referential.id, defaults={'referential_id':referential.id}, context={'referential_id':referential.id})
+                            import_cr.commit()
+                    logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "All attributs for the attributs set id %s was succesfully imported" %(attr_set_id))
+            finally:
+                import_cr.close()
             #Relate attribute sets & attributes
             mage_inp = {}
             #Pass in {attribute_set_id:{attributes},attribute_set_id2:{attributes}}
@@ -134,7 +154,7 @@ class external_referential(magerp_osv.magerp_osv):
             for each in attrib_sets:
                 mage_inp[each['magento_id']] = attr_conn.call('ol_catalog_product_attribute.relations', [each['magento_id']])
             if mage_inp:
-                self.pool.get('magerp.product_attribute_set').relate(cr, uid, mage_inp, referential_id, DEBUG)
+                attr_set_obj.relate(cr, uid, mage_inp, referential.id, DEBUG)
         return True
 
     def sync_attrib_sets(self, cr, uid, ids, context=None):
