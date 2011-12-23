@@ -87,7 +87,7 @@ class sale_shop(magerp_osv.magerp_osv):
         res = {}
         for shop in self.browse(cr, uid, ids, context):
             if shop.root_category_id:
-                rid = self.pool.get('product.category').extid_to_oeid(cr, uid, shop.root_category_id, shop.referential_id.id)
+                rid = self.pool.get('product.category').extid_to_oeid(cr, uid, shop.root_category_id, shop.shop_group_id.referential_id.id)
                 res[shop.id] = rid
             else:
                 res[shop.id] = False
