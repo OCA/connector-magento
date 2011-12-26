@@ -146,16 +146,18 @@ class external_referential(magerp_osv.magerp_osv):
                             attr_obj.ext_import(import_cr, uid, [attribut], referential.id, defaults={'referential_id':referential.id}, context={'referential_id':referential.id})
                             import_cr.commit()
                     logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "All attributs for the attributs set id %s was succesfully imported" %(attr_set_id))
+                #Relate attribute sets & attributes
+                mage_inp = {}
+                #Pass in {attribute_set_id:{attributes},attribute_set_id2:{attributes}}
+                #print "Attribute sets are:", attrib_sets
+                #TODO find a solution in order to import the relation in a incremental way (maybe splitting this function in two)
+                for each in attrib_sets:
+                    mage_inp[each['magento_id']] = attr_conn.call('ol_catalog_product_attribute.relations', [each['magento_id']])
+                if mage_inp:
+                    attr_set_obj.relate(import_cr, uid, mage_inp, referential.id, DEBUG)
+                import_cr.commit()
             finally:
                 import_cr.close()
-            #Relate attribute sets & attributes
-            mage_inp = {}
-            #Pass in {attribute_set_id:{attributes},attribute_set_id2:{attributes}}
-            #print "Attribute sets are:", attrib_sets
-            for each in attrib_sets:
-                mage_inp[each['magento_id']] = attr_conn.call('ol_catalog_product_attribute.relations', [each['magento_id']])
-            if mage_inp:
-                attr_set_obj.relate(cr, uid, mage_inp, referential.id, DEBUG)
         return True
 
     def sync_attrib_sets(self, cr, uid, ids, context=None):
