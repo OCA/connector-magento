@@ -207,7 +207,8 @@ class external_referential(magerp_osv.magerp_osv):
                 filters = {'product_id': {'gt': referential.last_imported_product_id}}
                 filters.update(self.SYNC_PRODUCT_FILTERS)
                 filter = [filters]
-            list_prods = attr_conn.call('catalog_product.list', filter)
+            #TODO call method should be not harcoded. Need refactoring
+            ext_product_ids = attr_conn.call('ol_catalog_product.search', filter)
             storeview_obj = self.pool.get('magerp.storeviews')
 
             #get all instance storeviews
@@ -231,18 +232,17 @@ class external_referential(magerp_osv.magerp_osv):
 
             import_cr = pooler.get_db(cr.dbname).cursor()
             try:
-                for mag_product in list_prods:
+                for ext_product_id in ext_product_ids:
                     for lang, storeview in lang_2_storeview.iteritems():
                         ctx = context.copy()
                         ctx.update({'lang': lang})
-                        self._sync_product_storeview(import_cr, uid, referential.id, attr_conn, mag_product, storeview, context=ctx)
+                        self._sync_product_storeview(import_cr, uid, referential.id, attr_conn, ext_product_id, storeview, context=ctx)
 
-                    self.write(import_cr, uid, referential.id, {'last_imported_product_id': int(mag_product['product_id'])}, context=context)
+                    self.write(import_cr, uid, referential.id, {'last_imported_product_id': int(ext_product_id)}, context=context)
                     import_cr.commit()
             finally:
                 import_cr.close()
         return True
-
 
     def sync_images(self, cr, uid, ids, context=None):
         #TODO base the import on the mapping and the function ext_import
