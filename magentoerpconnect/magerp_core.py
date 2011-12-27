@@ -193,7 +193,8 @@ class external_referential(magerp_osv.magerp_osv):
 
     def _sync_product_storeview(self, cr, uid, referential_id, mag_connection, ext_product_id, storeview, context=None):
         if context is None: context = {}
-        product_info = mag_connection.call('catalog_product.info', [ext_product_id, storeview.code])
+        #we really need to clean all magento call and give the posibility to force everythere to use the id as identifier
+        product_info = mag_connection.call('catalog_product.info', [ext_product_id, storeview.code, False, 'id'])
         ctx = context.copy()
         ctx.update({'magento_sku': product_info['sku']})
         defaults={'magento_exportable': True}
