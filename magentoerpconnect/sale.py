@@ -358,27 +358,33 @@ class sale_order(magerp_osv.magerp_osv):
             partner_obj.write(cr, uid, [partner_id], {'store_ids': [(6,0,store_ids)]})
 
         # Adds vat number (country code+magento vat) if base_vat module is installed and Magento sends customer_taxvat
-        cr.execute('select * from ir_module_module where name=%s and state=%s', ('base_vat','installed'))
-        if cr.fetchone() and 'customer_taxvat' in data_record and data_record['customer_taxvat']:
-            allchars = string.maketrans('', '')
-            delchars = ''.join([c for c in allchars if c not in string.letters + string.digits])
-            vat = data_record['customer_taxvat'].translate(allchars, delchars).upper()
-            vat_country, vat_number = vat[:2].lower(), vat[2:]
-            if 'check_vat_' + vat_country in dir(partner_obj):
-                check = getattr(partner_obj, 'check_vat_' + vat_country)
-                vat_ok = check(vat_number)
-            else:
-                # Maybe magento vat number has not country code prefix. Take it from billing address.
-                if 'country_id' in data_record['billing_address']:
-                    fnct = 'check_vat_' + data_record['billing_address']['country_id'].lower()
-                    if fnct in dir(partner_obj):
-                        check = getattr(partner_obj, fnct)
-                        vat_ok = check(vat)
-                        vat = data_record['billing_address']['country_id'] + vat
-                    else:
-                        vat_ok = False
-            if vat_ok:    
-                partner_obj.write(cr, uid, [partner_id], {'vat_subjected':True, 'vat':vat})
+        #TODO replace me by a generic function maybe the best solution will to have a field vat and a flag vat_ok and a flag force vat_ok
+        #And so it's will be possible to have an invalid vat number (imported from magento for exemple) but the flag will be not set
+        #Also we should think about the way to update customer. Indeed by default there are never updated
+        if data_record.get('customer_taxvat'):
+            partner_vals = {'mag_vat': data_record.get('customer_taxvat')}
+            cr.execute('select * from ir_module_module where name=%s and state=%s', ('base_vat','installed'))
+            if cr.fetchone(): 
+                allchars = string.maketrans('', '')
+                delchars = ''.join([c for c in allchars if c not in string.letters + string.digits])
+                vat = data_record['customer_taxvat'].translate(allchars, delchars).upper()
+                vat_country, vat_number = vat[:2].lower(), vat[2:]
+                if 'check_vat_' + vat_country in dir(partner_obj):
+                    check = getattr(partner_obj, 'check_vat_' + vat_country)
+                    vat_ok = check(vat_number)
+                else:
+                    # Maybe magento vat number has not country code prefix. Take it from billing address.
+                    if 'country_id' in data_record['billing_address']:
+                        fnct = 'check_vat_' + data_record['billing_address']['country_id'].lower()
+                        if fnct in dir(partner_obj):
+                            check = getattr(partner_obj, fnct)
+                            vat_ok = check(vat)
+                            vat = data_record['billing_address']['country_id'] + vat
+                        else:
+                            vat_ok = False
+                if vat_ok:
+                    partner_vals.update({'vat_subjected':True, 'vat':vat})
+            partner_obj.write(cr, uid, [partner_id], partner_vals)
         return res
     
     def get_order_lines(self, cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context=None):
