@@ -904,6 +904,7 @@ class product_product(product_mag_osv):
         # to use the id as external key instead of mixed id/sku
         img_list = conn.call('catalog_product_attribute_media.list', [ext_id, False, 'id'])
         logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "Magento image for product ext_id %s: %s" %(ext_id, img_list))
+        images_name = []
         for image in img_list:
             img=False
             try:
@@ -921,7 +922,7 @@ class product_product(product_mag_osv):
                 logger.notifyChannel('ext synchro', netsvc.LOG_WARNING, "failed to open the image %s from Magento, error : %s" % (image['url'],e))
                 continue
             mag_filename, extention = os.path.splitext(os.path.basename(image['file']))
-            data = {'name': image['label'] or mag_filename,
+            data = {'name': image['label'] and not image['label'] in images_name and image['label'] or mag_filename,
                 'extention': extention,
                 'link': False,
                 'file': img,
@@ -932,6 +933,7 @@ class product_product(product_mag_osv):
                 'exclude': bool(eval(image['exclude'] or 'False')),
                 'position': image['position']
                 }
+            images_name.append(data['name'])
             image_oe_id = image_obj.extid_to_existing_oeid(cr, uid, image['file'], referential_id, context=None)
             if image_oe_id:
                 # update existing image
