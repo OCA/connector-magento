@@ -929,7 +929,7 @@ class product_product(product_mag_osv):
                 'small_image': image['types'].count('small_image') == 1,
                 'base_image': image['types'].count('image') == 1,
                 'thumbnail': image['types'].count('thumbnail') == 1,
-                'exclude': bool(eval(image['exclude'] or False)),
+                'exclude': bool(eval(image['exclude'] or 'False')),
                 'position': image['position']
                 }
             image_oe_id = image_obj.extid_to_existing_oeid(cr, uid, image['file'], referential_id, context=None)
