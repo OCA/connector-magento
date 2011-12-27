@@ -933,6 +933,8 @@ class product_product(product_mag_osv):
                 'exclude': bool(eval(image['exclude'] or 'False')),
                 'position': image['position']
                 }
+            #the character '/' is not allowed in the name of the image
+            data['name'] = data['name'].replace('/', ' ')
             images_name.append(data['name'])
             image_oe_id = image_obj.extid_to_existing_oeid(cr, uid, image['file'], referential_id, context=None)
             if image_oe_id:
