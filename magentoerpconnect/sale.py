@@ -87,7 +87,7 @@ class sale_shop(magerp_osv.magerp_osv):
         res = {}
         for shop in self.browse(cr, uid, ids, context):
             if shop.root_category_id:
-                rid = self.pool.get('product.category').extid_to_oeid(cr, uid, shop.root_category_id, shop.referential_id.id)
+                rid = self.pool.get('product.category').extid_to_oeid(cr, uid, shop.root_category_id, shop.shop_group_id.referential_id.id)
                 res[shop.id] = rid
             else:
                 res[shop.id] = False
@@ -358,27 +358,33 @@ class sale_order(magerp_osv.magerp_osv):
             partner_obj.write(cr, uid, [partner_id], {'store_ids': [(6,0,store_ids)]})
 
         # Adds vat number (country code+magento vat) if base_vat module is installed and Magento sends customer_taxvat
-        cr.execute('select * from ir_module_module where name=%s and state=%s', ('base_vat','installed'))
-        if cr.fetchone() and 'customer_taxvat' in data_record and data_record['customer_taxvat']:
-            allchars = string.maketrans('', '')
-            delchars = ''.join([c for c in allchars if c not in string.letters + string.digits])
-            vat = data_record['customer_taxvat'].translate(allchars, delchars).upper()
-            vat_country, vat_number = vat[:2].lower(), vat[2:]
-            if 'check_vat_' + vat_country in dir(partner_obj):
-                check = getattr(partner_obj, 'check_vat_' + vat_country)
-                vat_ok = check(vat_number)
-            else:
-                # Maybe magento vat number has not country code prefix. Take it from billing address.
-                if 'country_id' in data_record['billing_address']:
-                    fnct = 'check_vat_' + data_record['billing_address']['country_id'].lower()
-                    if fnct in dir(partner_obj):
-                        check = getattr(partner_obj, fnct)
-                        vat_ok = check(vat)
-                        vat = data_record['billing_address']['country_id'] + vat
-                    else:
-                        vat_ok = False
-            if vat_ok:    
-                partner_obj.write(cr, uid, [partner_id], {'vat_subjected':True, 'vat':vat})
+        #TODO replace me by a generic function maybe the best solution will to have a field vat and a flag vat_ok and a flag force vat_ok
+        #And so it's will be possible to have an invalid vat number (imported from magento for exemple) but the flag will be not set
+        #Also we should think about the way to update customer. Indeed by default there are never updated
+        if data_record.get('customer_taxvat'):
+            partner_vals = {'mag_vat': data_record.get('customer_taxvat')}
+            cr.execute('select * from ir_module_module where name=%s and state=%s', ('base_vat','installed'))
+            if cr.fetchone(): 
+                allchars = string.maketrans('', '')
+                delchars = ''.join([c for c in allchars if c not in string.letters + string.digits])
+                vat = data_record['customer_taxvat'].translate(allchars, delchars).upper()
+                vat_country, vat_number = vat[:2].lower(), vat[2:]
+                if 'check_vat_' + vat_country in dir(partner_obj):
+                    check = getattr(partner_obj, 'check_vat_' + vat_country)
+                    vat_ok = check(vat_number)
+                else:
+                    # Maybe magento vat number has not country code prefix. Take it from billing address.
+                    if 'country_id' in data_record['billing_address']:
+                        fnct = 'check_vat_' + data_record['billing_address']['country_id'].lower()
+                        if fnct in dir(partner_obj):
+                            check = getattr(partner_obj, fnct)
+                            vat_ok = check(vat)
+                            vat = data_record['billing_address']['country_id'] + vat
+                        else:
+                            vat_ok = False
+                if vat_ok:
+                    partner_vals.update({'vat_subjected':True, 'vat':vat})
+            partner_obj.write(cr, uid, [partner_id], partner_vals)
         return res
     
     def get_order_lines(self, cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context=None):
@@ -707,19 +713,19 @@ class sale_order(magerp_osv.magerp_osv):
                 'limit': SALE_ORDER_IMPORT_STEP,
                 'filters': context['ids_or_filter'][0],
             }
-            data = conn.call('sales_order.retrieve', [order_retrieve_params])
-            data_filtred=[]
+            ext_order_ids = conn.call('sales_order.search', [order_retrieve_params])
+            order_ids_filtred=[]
             unchanged_ids=[]
-            for order in data:
-                existing_id = self.extid_to_existing_oeid(cr, uid, order['increment_id'], external_referential_id, context=context)
+            for ext_order_id in ext_order_ids:
+                existing_id = self.extid_to_existing_oeid(cr, uid, ext_order_id, external_referential_id, context=context)
                 if existing_id:
                     unchanged_ids.append(existing_id)
-                    logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "the order %s already exist in OpenERP" % (order['increment_id'],))
-                    self.ext_set_order_imported(cr, uid, order['increment_id'], external_referential_id, context=context)
+                    logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "the order %s already exist in OpenERP" % (ext_order_id,))
+                    self.ext_set_order_imported(cr, uid, ext_order_id, external_referential_id, context=context)
                 else:
-                    data_filtred.append(order)
+                    order_ids_filtred.append({'increment_id' : ext_order_id})
             context['conn_obj'] = conn # we will need the connection to set the flag to "imported" on magento after each order import
-            result = self.mage_import_one_by_one(cr, uid, conn, external_referential_id, mapping_id[0], data_filtred, defaults, context)
+            result = self.mage_import_one_by_one(cr, uid, conn, external_referential_id, mapping_id[0], order_ids_filtred, defaults, context)
             result['unchanged_ids'] = unchanged_ids
         return result
 

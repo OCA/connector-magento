@@ -30,11 +30,35 @@ import pooler
 import magerp_osv
 from tools.translate import _
 import netsvc
-
+import unicodedata
+import base64, urllib
+import os
 
 #Enabling this to True will put all custom attributes into One page in
 #the products view
 GROUP_CUSTOM_ATTRS_TOGETHER = False
+
+
+#TODO find a good method to replace all of the special caracter allowed by magento as name for product fields
+special_character_to_replace = [
+    (u"\xf8", u"diam"),
+    (u'\xb5', u'micro'),
+    (u'\xb2', u'2'),
+    (u'\u0153', u'oe'),
+]
+
+def convert_to_ascii(my_unicode):
+    '''Convert to ascii, with clever management of accents (é -> e, è -> e)'''
+    if isinstance(my_unicode, unicode):
+        my_unicode_with_ascii_chars_only = ''.join((char for char in unicodedata.normalize('NFD', my_unicode) if unicodedata.category(char) != 'Mn'))
+        for special_caracter in special_character_to_replace:
+            my_unicode_with_ascii_chars_only = my_unicode_with_ascii_chars_only.replace(special_caracter[0], special_caracter[1])
+        return str(my_unicode_with_ascii_chars_only)
+    # If the argument is already of string type, we return it with the same value
+    elif isinstance(my_unicode, str):
+        return my_unicode
+    else:
+        return False
 
 class magerp_product_category_attribute_options(magerp_osv.magerp_osv):
     _name = "magerp.product_category_attribute_options"
@@ -382,6 +406,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
             context = {}
         if not vals['attribute_code'] in self._no_create_list:
             field_name = "x_magerp_" + vals['attribute_code']
+            field_name = convert_to_ascii(field_name)
             vals['field_name']= field_name
         if 'attribute_set_info' in vals.keys():
             attr_set_info = eval(vals.get('attribute_set_info',{}))
@@ -822,7 +847,7 @@ class product_mag_osv(magerp_osv.magerp_osv):
                 ir_model_field_ids = self.pool.get('ir.model.fields').search(cr, uid, [('model_id', 'in', ir_model_ids)])
                 field_names = ['product_type']
                 for field in self.pool.get('ir.model.fields').browse(cr, uid, ir_model_field_ids):
-                    if str(field.name).startswith('x_'):
+                    if field.name.startswith('x_'):
                         field_names.append(field.name)
                 if len(self.pool.get('external.shop.group').search(cr,uid,[('referential_type', 'ilike', 'mag')])) >1 :
                     context['multiwebsite'] = True
@@ -868,6 +893,58 @@ product_template()
 
 class product_product(product_mag_osv):
     _inherit = "product.product"
+    
+    #TODO base the import on the mapping and the function ext_import
+    def import_product_image(self, cr, uid, id, referential_id, conn, ext_id=None, context=None):
+        image_obj = self.pool.get('product.images')
+        logger = netsvc.Logger()
+        if not ext_id:
+            ext_id = self.oeid_to_extid(cr, uid, id, referential_id, context=None)
+        # TODO everythere will should pass the params 'id' for magento api in order to force 
+        # to use the id as external key instead of mixed id/sku
+        img_list = conn.call('catalog_product_attribute_media.list', [ext_id, False, 'id'])
+        logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "Magento image for product ext_id %s: %s" %(ext_id, img_list))
+        images_name = []
+        for image in img_list:
+            img=False
+            try:
+                (filename, header) = urllib.urlretrieve(image['url'])
+                f = open(filename , 'rb')
+                data = f.read()
+                f.close()
+                if "DOCTYPE html PUBLIC" in data:
+                    logger.notifyChannel('ext synchro', netsvc.LOG_WARNING, "failed to open the image %s from Magento" % (image['url'],))
+                    continue
+                else:
+                    img = base64.encodestring(data)
+            except Exception, e:
+                #TODO raise correctly the error
+                logger.notifyChannel('ext synchro', netsvc.LOG_WARNING, "failed to open the image %s from Magento, error : %s" % (image['url'],e))
+                continue
+            mag_filename, extention = os.path.splitext(os.path.basename(image['file']))
+            data = {'name': image['label'] and not image['label'] in images_name and image['label'] or mag_filename,
+                'extention': extention,
+                'link': False,
+                'file': img,
+                'product_id': id,
+                'small_image': image['types'].count('small_image') == 1,
+                'base_image': image['types'].count('image') == 1,
+                'thumbnail': image['types'].count('thumbnail') == 1,
+                'exclude': bool(eval(image['exclude'] or 'False')),
+                'position': image['position']
+                }
+            #the character '/' is not allowed in the name of the image
+            data['name'] = data['name'].replace('/', ' ')
+            images_name.append(data['name'])
+            image_oe_id = image_obj.extid_to_existing_oeid(cr, uid, image['file'], referential_id, context=None)
+            if image_oe_id:
+                # update existing image
+                image_obj.write(cr, uid, image_oe_id, data, context=context)
+            else:
+                # create new image
+                new_image_id = image_obj.create(cr, uid, data, context=context)
+                image_obj.create_external_id_vals(cr, uid, new_image_id, image['file'], referential_id, context=context)
+        return True
     
     def extid_to_existing_oeid(self, cr, uid, id, external_referential_id, context=None):
         """Returns the OpenERP id of a resource by its external id.
