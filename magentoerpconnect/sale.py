@@ -410,9 +410,9 @@ class sale_order(magerp_osv.magerp_osv):
         if ext_tax_field:
             if data_record[ext_tax_field] and float(data_record[ext_tax_field]) != 0:
                 line_tax_vat_rate = abs(float(data_record[ext_tax_field]) / amount)
-                line_tax_ids = self.pool.get('account.tax').get_tax_from_rate(cr, uid, line_tax_vat_rate, is_tax_included, context)
-                if line_tax_ids:
-                    defaults_line['tax_id'] = [(6, 0, line_tax_ids)]
+                line_tax_id = self.pool.get('account.tax').get_tax_from_rate(cr, uid, line_tax_vat_rate, is_tax_included, context)
+                if line_tax_id:
+                    tax_id = [(6, 0, [line_tax_id])]
 
         name = product.name
         if ext_code_field and data_record.get(ext_code_field, False):
