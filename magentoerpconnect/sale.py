@@ -139,7 +139,10 @@ class sale_shop(magerp_osv.magerp_osv):
             self.check_need_to_update(cr, uid, [shop.id], context=context)
             for storeview in shop.storeview_ids:
                 magento_storeview_id = self.pool.get('magerp.storeviews').oeid_to_extid(cr, uid, storeview.id, shop.referential_id.id, context={})
+                #TODO refactor the filter It's look like puting the dict in the list is useless in our case. Did am I wrong? (comment by seb)
                 ids_or_filter = [{'store_id': {'eq': magento_storeview_id}, 'state': {'neq': 'canceled'}}]
+                if shop.import_from_date:
+                    ids_or_filter[0].update({'created_at' : {'gt': shop.import_from_date}})
                 nb_last_created_ids = SALE_ORDER_IMPORT_STEP
                 while nb_last_created_ids:
                     defaults['magento_storeview_id'] = storeview.id
