@@ -67,8 +67,8 @@ class external_referential(magerp_osv.magerp_osv):
         'last_imported_product_id': fields.integer('Last Imported Product Id', help="Product are imported one by one. This is the magento id of the last product imported. If you clear it all product will be imported"),
         'last_imported_partner_id': fields.integer('Last Imported Partner Id', help="Partners are imported one by one. This is the magento id of the last partner imported. If you clear it all partners will be imported"),
         'import_all_attributs': fields.boolean('Import all attributs', help="If the option is uncheck only the attributs that doesn't exist in OpenERP will be imported"), 
-        'import_image_with_product': fields.boolean('With image', help="If the option is check the product's image and the product will be imported at the same time and so the step '7-import images' is not needed"), 
-
+        'import_image_with_product': fields.boolean('With image', help="If the option is check the product's image and the product will be imported at the same time and so the step '7-import images' is not needed"),
+        'import_links_with_product': fields.boolean('With links', help="If the option is check the product's links (Up-Sell, Cross-Sell, Related) and the product will be imported at the same time and so the step '8-import links' is not needed"),
     }
 
     _defaults = {
@@ -234,6 +234,10 @@ class external_referential(magerp_osv.magerp_osv):
                     lang = referential.default_lang_id.code
                 if not lang_2_storeview.get(lang, False):
                     lang_2_storeview[lang] = storeview
+
+            if referential.import_links_with_product:
+                link_types = self.get_magento_product_link_types(cr, uid, referential.id, attr_conn, context=context)
+
             import_cr = pooler.get_db(cr.dbname).cursor()
             try:
                 for ext_product_id in ext_product_ids:
@@ -244,40 +248,45 @@ class external_referential(magerp_osv.magerp_osv):
                     product_id = (res.get('create_ids') or res.get('write_ids'))[0]
                     if referential.import_image_with_product:
                         prod_obj.import_product_image(import_cr, uid, product_id, referential.id, attr_conn, ext_id=ext_product_id, context=context)
+                    if referential.import_links_with_product:
+                        prod_obj.mag_import_product_links_types(import_cr, uid, product_id, link_types, referential.id, attr_conn, context=context)
                     self.write(import_cr, uid, referential.id, {'last_imported_product_id': int(ext_product_id)}, context=context)
                     import_cr.commit()
             finally:
                 import_cr.close()
         return True
-    
+
+    def get_magento_product_link_types(self, cr, uid, ids, conn=None, context=None):
+        if not conn:
+            conn = self.external_connection(cr, uid, ids, DEBUG, context=context)
+        return conn.call('catalog_product_link.types')
+
     def sync_images(self, cr, uid, ids, context=None):
         logger = netsvc.Logger()
         product_obj = self.pool.get('product.product')
         image_obj = self.pool.get('product.images')
         import_cr = pooler.get_db(cr.dbname).cursor()
-        for referential_id in ids:
-            conn = self.external_connection(cr, uid, referential_id, DEBUG, context=context)
-            product_ids = product_obj.get_all_oeid_from_referential(cr, uid, referential_id, context=context)
-            for product_id in product_ids:
-                product_obj.import_product_image(import_cr, uid, product_id, referential_id, conn, context=context)
-                import_cr.commit()
-        import_cr.close()
+        try:
+            for referential_id in ids:
+                conn = self.external_connection(cr, uid, referential_id, DEBUG, context=context)
+                product_ids = product_obj.get_all_oeid_from_referential(cr, uid, referential_id, context=context)
+                for product_id in product_ids:
+                    product_obj.import_product_image(import_cr, uid, product_id, referential_id, conn, context=context)
+                    import_cr.commit()
+        finally:
+            import_cr.close()
         return True
 
     def sync_product_links(self, cr, uid, ids, context=None):
         if context is None: context = {}
         for referential in self.browse(cr, uid, ids, context):
             conn = referential.external_connection(DEBUG)
-            ctx = context.copy()
-            ctx['conn'] = conn
-            link_types = conn.call('catalog_product_link.types')
-
             exportable_product_ids= []
             for shop_group in referential.shop_group_ids:
                 for shop in shop_group.shop_ids:
                     exportable_product_ids.extend([product.id for product in shop.exportable_product_ids])
             exportable_product_ids = list(set(exportable_product_ids))
-            self.pool.get('product.product').mag_import_product_links(cr, uid, exportable_product_ids, link_types, referential.id, context=ctx)
+            self.pool.get('product.product').mag_import_product_links(cr, uid, exportable_product_ids, referential.id, conn, context=context)
         return True
 
     def export_products(self, cr, uid, ids, context=None):

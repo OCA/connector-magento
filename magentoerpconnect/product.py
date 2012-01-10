@@ -1388,13 +1388,10 @@ class product_product(product_mag_osv):
             images_to_update_ids = image_obj.search(cr, uid, [('id', 'in', images_to_update_ids), '|', ('create_date', '>', context['last_images_export_date']), ('write_date', '>', context['last_images_export_date'])], context=context)
         return {'to_create' : images_to_create, 'to_update' : images_to_update_ids}
 
-    def _mag_import_product_links_type(self, cr, uid, product, link_type, external_referential_id, context=None):
+    def _mag_import_product_links_type(self, cr, uid, product, link_type, external_referential_id, conn, context=None):
         if context is None: context = {}
         logger = netsvc.Logger()
-        conn = context.get('conn')
         product_link_obj = self.pool.get('product.link')
-        if not conn:
-            raise Exception('Connection is missing ')
         selection_link_types = product_link_obj._columns['type'].selection(cr, uid, context)
         # This method could be completed to import grouped products too, you know, for Magento a product link is as
         # well a cross-sell, up-sell, related than the assignment between grouped products
@@ -1424,20 +1421,27 @@ class product_product(product_mag_osv):
                     ], context=context)
                 if existing_link:
                     product_link_obj.write(cr, uid, existing_link, link_data, context=context)
-                    logger.notifyChannel('Import Product Links', netsvc.LOG_INFO, "Successfully updated product link of type %s on product %s to product %s" %(link_type, product.id, linked_product_id))
                 else:
                     product_link_obj.create(cr, uid, link_data, context=context)
-                    logger.notifyChannel('Import Product Links', netsvc.LOG_INFO, "Successfully created product link of type %s on product %s to product %s" %(link_type, product.id, linked_product_id))
-
+                logger.notifyChannel('Import Product Links', netsvc.LOG_INFO, "Successfully imported product link of type %s on product %s to product %s" %(link_type, product.id, linked_product_id))
         return True
 
-    def mag_import_product_links(self, cr, uid, ids, link_types, external_referential_id, context=None):
+    def mag_import_product_links_types(self, cr, uid, ids, link_types, external_referential_id, conn, context=None):
+        if isinstance(ids, (int, long)): ids = [ids]
+        for product in self.browse(cr, uid, ids, context=context):
+            for link_type in link_types:
+                self._mag_import_product_links_type(cr, uid, product, link_type, external_referential_id, conn, context=context)
+        return True
+
+    def mag_import_product_links(self, cr, uid, ids, external_referential_id, conn, context=None):
+        link_types = self.pool.get('external.referential').get_magento_product_link_types(cr, uid, external_referential_id, conn, context=context)
         local_cr = pooler.get_db(cr.dbname).cursor()
-        for product in self.browse(local_cr, uid, ids, context=context):
-            [self._mag_import_product_links_type(local_cr, uid, product, link_type, external_referential_id, context=context)
-             for link_type in link_types]
-            local_cr.commit()
-        local_cr.close()
+        try:
+            for product_id in ids:
+                self.mag_import_product_links_types(local_cr, uid, [product_id], link_types, external_referential_id, conn, context=context)
+                local_cr.commit()
+        finally:
+            local_cr.close()
         return True
 
 product_product()

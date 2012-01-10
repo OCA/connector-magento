@@ -22,12 +22,13 @@
     							<field name="import_all_attributs"/>
 							</group>
 							<button name="sync_categs" string="2 - Import Product Categories" colspan="2" type="object" />
-							<group colspan="2" col="12">
+							<group colspan="2" col="14">
                                 <group colspan="8">
 								    <button name="sync_products" string="6 - Import Products" type="object" attrs="{'invisible':[('import_image_with_product','=',True)]}" />
                                     <button name="sync_products" string="6 - Import Products And Images" type="object" attrs="{'invisible':[('import_image_with_product','=',False)]}" />
                                 </group>
 								<field name="import_image_with_product"/>
+                                <field name="import_links_with_product"/>
 								<field name="last_imported_product_id" string=""/>
 							</group>
 							<button name="sync_attrib_sets" string="3 - Import Product Attribute Sets" colspan="2" type="object" />
