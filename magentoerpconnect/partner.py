@@ -68,7 +68,7 @@ class res_partner(magerp_osv.magerp_osv):
                     'group_id':fields.many2one('res.partner.category', 'Magento Group(Category)'),
                     'store_id':fields.many2one('magerp.storeviews', 'Last Store View', readonly=True, help="Last store view where the customer has bought."),
                     'store_ids':fields.many2many('magerp.storeviews', 'magerp_storeid_rel', 'partner_id', 'store_id', 'Store Views', readonly=True),
-                    'website_id':fields.many2one('external.shop.group', 'Website', help='Select a website for with which the Magento\'s customer will be bound.'),
+                    'website_id':fields.many2one('external.shop.group', 'Magento Website', help='Select a website for which the Magento customer will be bound.'),
                     'created_in':fields.char('Created in', size=100),
                     'created_at':fields.datetime('Created Date'),
                     'updated_at':fields.datetime('Updated At'),
