@@ -32,6 +32,8 @@ import string
 #from datetime import datetime
 import tools
 import time
+from tools import DEFAULT_SERVER_DATETIME_FORMAT
+
 DEBUG = True
 NOTRY = False
 
@@ -66,7 +68,7 @@ class sale_shop(magerp_osv.magerp_osv):
     def export_images(self, cr, uid, ids, context=None):
         if context is None: context = {}
         logger = netsvc.Logger()
-        start_date = time.strftime('%Y-%m-%d %H:%M:%S')
+        start_date = time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         image_obj = self.pool.get('product.images')
         for shop in self.browse(cr, uid, ids):
             context['shop_id'] = shop.id
