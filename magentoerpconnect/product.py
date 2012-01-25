@@ -34,6 +34,8 @@ import unicodedata
 import base64, urllib
 import os
 
+from tools import DEFAULT_SERVER_DATETIME_FORMAT
+
 #Enabling this to True will put all custom attributes into One page in
 #the products view
 GROUP_CUSTOM_ATTRS_TOGETHER = False
@@ -145,7 +147,7 @@ class product_category(magerp_osv.magerp_osv):
     
     def write(self, cr, uid, ids, vals, context=None):
         if not 'magerp_stamp' in vals.keys():
-            vals['magerp_stamp'] = time.strftime('%Y-%m-%d %H:%M:%S')
+            vals['magerp_stamp'] = time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         return super(product_category, self).write(cr, uid, ids, vals, context)
     
     def record_entire_tree(self, cr, uid, id, conn, categ_tree, DEBUG=False):
@@ -184,7 +186,7 @@ class product_category(magerp_osv.magerp_osv):
                 context_dic[len(context_dic)-1].update({'storeview_code': storeview.code, 'lang': storeview.lang_id.code})
         
         if shop.last_products_export_date:
-            last_exported_time = datetime.datetime.fromtimestamp(time.mktime(time.strptime(shop.last_products_export_date, '%Y-%m-%d %H:%M:%S')))
+            last_exported_time = datetime.datetime.fromtimestamp(time.mktime(time.strptime(shop.last_products_export_date[:19], DEFAULT_SERVER_DATETIME_FORMAT)))
         else:
             last_exported_time = False
         
@@ -197,7 +199,7 @@ class product_category(magerp_osv.magerp_osv):
             read = cr.fetchall()
             for categ in read:
                 last_updated_categ = categ[0] and categ[0].split('.')[0] or categ[1] and categ[1].split('.')[0] or False
-                last_updated_categ_time = datetime.datetime.fromtimestamp(time.mktime(time.strptime(last_updated_categ, '%Y-%m-%d %H:%M:%S')))
+                last_updated_categ_time = datetime.datetime.fromtimestamp(time.mktime(time.strptime(last_updated_categ[:19], DEFAULT_SERVER_DATETIME_FORMAT)))
                 if last_updated_categ_time and last_exported_time:
                     if last_exported_time - datetime.timedelta(seconds=1) < last_updated_categ_time:
                         for ctx_storeview in context_dic:

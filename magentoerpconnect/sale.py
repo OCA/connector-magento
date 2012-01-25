@@ -32,6 +32,8 @@ import string
 #from datetime import datetime
 import tools
 import time
+from tools import DEFAULT_SERVER_DATETIME_FORMAT
+
 DEBUG = True
 NOTRY = False
 
@@ -66,7 +68,7 @@ class sale_shop(magerp_osv.magerp_osv):
     def export_images(self, cr, uid, ids, context=None):
         if context is None: context = {}
         logger = netsvc.Logger()
-        start_date = time.strftime('%Y-%m-%d %H:%M:%S')
+        start_date = time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         image_obj = self.pool.get('product.images')
         for shop in self.browse(cr, uid, ids):
             context['shop_id'] = shop.id
@@ -284,19 +286,10 @@ class sale_order(magerp_osv.magerp_osv):
     }
     
     def _auto_init(self, cr, context=None):
-        sale_margin_installed = False
-        #check if sale_margin is installed
-        cr.execute('select * from ir_module_module where name=%s and state=%s', ('sale_margin','installed'))
-        data_record = cr.fetchone()
-        if data_record and 'sale_margin' in data_record:
-            sale_margin_installed=True
-            tools.drop_view_if_exists(cr, 'report_account_invoice_product')
         tools.drop_view_if_exists(cr, 'sale_report')
         cr.execute("ALTER TABLE sale_order_line ALTER COLUMN discount TYPE numeric(16,6);")
         cr.execute("ALTER TABLE account_invoice_line ALTER COLUMN discount TYPE numeric(16,6);")
         self.pool.get('sale.report').init(cr)
-        if sale_margin_installed:
-            self.pool.get('report.account.invoice.product').init(cr)
         super(sale_order, self)._auto_init(cr, context)
         
     def get_mage_customer_address_id(self, address_data):
