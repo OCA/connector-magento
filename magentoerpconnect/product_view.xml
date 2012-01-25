@@ -299,8 +299,9 @@
 		    <field name="priority" eval="5"/>
 		    <field name="arch" type="xml">
 		    <form string="Product Type">
-				    <field name="product_type"/>
-				    <field name="name"/>
+                <field name="product_type"/>
+                <field name="name"/>
+                <field name="default_type"/>
 		    </form>
 		    </field>
 	    </record>
@@ -311,9 +312,10 @@
 		    <field name="type">tree</field>
 		    <field name="priority" eval="5"/>
 		    <field name="arch" type="xml">
-			    <tree string="Product Type">
+			    <tree string="Product Type" editable="top">
 				    <field name="name" select="1"/>
-				    <field name="product_type" select="1"/>			
+				    <field name="product_type" select="1"/>
+                    <field name="default_type" select="1"/>
 			    </tree>
 		    </field>
 	    </record>
