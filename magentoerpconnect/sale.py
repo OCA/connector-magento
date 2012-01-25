@@ -86,7 +86,7 @@ class sale_shop(magerp_osv.magerp_osv):
     def _get_rootcategory(self, cr, uid, ids, prop, unknow_none, context=None):
         res = {}
         for shop in self.browse(cr, uid, ids, context):
-            if shop.root_category_id:
+            if shop.root_category_id and shop.shop_group_id.referential_id:
                 rid = self.pool.get('product.category').extid_to_oeid(cr, uid, shop.root_category_id, shop.shop_group_id.referential_id.id)
                 res[shop.id] = rid
             else:
