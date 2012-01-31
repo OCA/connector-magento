@@ -41,6 +41,7 @@ class external_referential(magerp_osv.magerp_osv):
 
     SYNC_PRODUCT_FILTERS = {'status': {'=': 1}}
     SYNC_PARTNER_FILTERS = {}
+    SYNC_PARTNER_STEP = 500
 
     def _is_magento_referential(self, cr, uid, ids, field_name, arg, context=None):
         """If at least one shop is magento, we consider that the external
@@ -301,37 +302,40 @@ class external_referential(magerp_osv.magerp_osv):
         return True
 
     def sync_partner(self, cr, uid, ids, context=None):
+        def next_partners(connection, start, step):
+            filters = {'customer_id': {'in': range(start, start + step)}}
+            filters.update(self.SYNC_PARTNER_FILTERS)
+            filter = [filters]
+            return attr_conn.call('ol_customer.search', filter)
+
         for referential in self.browse(cr, uid, ids, context):
             attr_conn = referential.external_connection(DEBUG)
-            result = []
-            result_address = []
-            filter = []
+            last_imported_id = 0
             if referential.last_imported_partner_id:
-                filters = {'customer_id': {'gt': referential.last_imported_partner_id}}
-                filters.update(self.SYNC_PARTNER_FILTERS)
-                filter = [filters]
-            list_customer = attr_conn.call('customer.list', filter)
+                last_imported_id = referential.last_imported_partner_id
 
+            ext_customer_ids = next_partners(attr_conn, last_imported_id + 1, self.SYNC_PARTNER_STEP)
             import_cr = pooler.get_db(cr.dbname).cursor()
             try:
-                for each in list_customer:
-                    customer_id = int(each['customer_id'])
+                while ext_customer_ids:
+                    for ext_customer_id in ext_customer_ids:
+                        customer_info = attr_conn.call('customer.info', [ext_customer_id])
+                        customer_address_info = attr_conn.call('customer_address.list', [ext_customer_id])
 
-                    each_customer_info = attr_conn.call('customer.info', [customer_id])
-                    each_customer_address_info = attr_conn.call('customer_address.list', [customer_id])
+                        address_info = False
+                        if customer_address_info:
+                            address_info = customer_address_info[0]
+                            address_info['customer_id'] = ext_customer_id
+                            address_info['email'] = customer_info['email']
 
-                    customer_address_info = False
-                    if each_customer_address_info:
-                        customer_address_info = each_customer_address_info[0]
-                        customer_address_info['customer_id'] = customer_id
-                        customer_address_info['email'] = each_customer_info['email']
+                        self.pool.get('res.partner').ext_import(import_cr, uid, [customer_info], referential.id, context=context)
+                        if address_info:
+                            self.pool.get('res.partner.address').ext_import(import_cr, uid, [address_info], referential.id, context=context)
 
-                    partner_id = self.pool.get('res.partner').ext_import(import_cr, uid, [each_customer_info], referential.id, context={})
-                    if customer_address_info:
-                        partner_address_id = self.pool.get('res.partner.address').ext_import(import_cr, uid, [customer_address_info], referential.id, context={})
-
-                    self.write(import_cr, uid, referential.id, {'last_imported_partner_id': customer_id}, context=context)
-                    import_cr.commit()
+                        last_imported_id = int(ext_customer_id)
+                        self.write(import_cr, uid, referential.id, {'last_imported_partner_id': last_imported_id}, context=context)
+                        import_cr.commit()
+                    ext_customer_ids = next_partners(attr_conn, last_imported_id + 1, self.SYNC_PARTNER_STEP)
             finally:
                 import_cr.close()
         return True
