@@ -382,37 +382,6 @@ class sale_order(magerp_osv.magerp_osv):
             partner_obj.write(cr, uid, [partner_id], partner_vals)
         return res
     
-    def get_order_lines(self, cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context=None):
-        if context is None: context = {}
-        mapping_id = self.pool.get('external.mapping').search(cr,uid,[('model','=','sale.order.line'),('referential_id','=',external_referential_id)])
-        if mapping_id:
-            mapping_line_ids = self.pool.get('external.mapping.line').search(cr,uid,[('mapping_id','=',mapping_id[0]),('type','in',['in_out','in'])])
-            mapping_lines = self.pool.get('external.mapping.line').read(cr,uid,mapping_line_ids,['external_field','external_type','in_function'])
-            if mapping_lines:
-                lines_vals = []
-                is_tax_included = defaults.get('price_type', False) == 'tax_included'
-                for line_data in data_record.get('items', []):
-                    # Setting the UoM in sale order line as defined in product definition in openerp
-                    product_id = self.pool.get('product.product').extid_to_oeid(cr, uid, line_data['product_id'], external_referential_id)
-                    product = self.pool.get('product.product').browse(cr, uid, product_id)
-                    defaults_line = {'product_uom': product.uom_id.id}
-                    #simple VAT tax on order line (else override method):
-                    line_tax_vat = float(line_data.get('tax_percent', False) or 0) / 100.0
-                    if line_tax_vat > 0:
-                        line_tax_ids = self.pool.get('account.tax').search(cr, uid, ['|', ('type_tax_use', '=', 'all'), ('type_tax_use', '=', 'sale'), ('price_include', '=', is_tax_included), ('amount', '>=', line_tax_vat - 0.001), ('amount', '<=', line_tax_vat + 0.001)])
-                        if line_tax_ids and len(line_tax_ids) > 0:
-                            defaults_line['tax_id'] = [(6, 0, [line_tax_ids[0]])]
-                    context.update({'partner_id': res['partner_id'], 'pricelist_id': res['pricelist_id']})
-                    if defaults.get('price_type', False) == 'tax_included':
-                        context.update({'price_is_tax_included': True})
-                    line_val = self.oevals_from_extdata(cr, uid, external_referential_id, line_data, 'item_id', mapping_lines, defaults_line, context)
-                    if line_val['product_id']:
-                        line_val['type'] = self.pool.get('product.product').read(cr, uid, line_val['product_id'], ['procure_method'], context)['procure_method']
-                    if not line_val.has_key('_CANCEL_IMPORT'):
-                        lines_vals.append((0, 0, line_val))
-                res['order_line'] = lines_vals
-        return res
-
 
     def add_order_extra_line(self, cr, uid, res, data_record, ext_field, product_ref, defaults, context=None):
         """ Add or substract amount on order as a separate line item with single quantity for each type of amounts like :
@@ -436,20 +405,15 @@ class sale_order(magerp_osv.magerp_osv):
 
         model, product_id = model_data_obj.get_object_reference(cr, uid, *product_ref)
         product = self.pool.get('product.product').browse(cr, uid, product_id, context)
-        is_tax_included = defaults.get('price_type', False) == 'tax_included'
+        is_tax_included = context.get('price_is_tax_included', False)
         amount = float(data_record[ext_field]) * sign
         tax_id = []
         if ext_tax_field:
             if data_record[ext_tax_field] and float(data_record[ext_tax_field]) != 0:
-                tax_vat = abs(float(data_record[ext_tax_field]) / amount)
-                tax_ids = self.pool.get('account.tax').search(cr, uid, [('price_include', '=', is_tax_included), ('type_tax_use', '=', 'sale'), ('amount', '>=', tax_vat - 0.001), ('amount', '<=', tax_vat + 0.001)])
-                if tax_ids and len(tax_ids) > 0:
-                    tax_id = [(6, 0, [tax_ids[0]])]
-                else:
-                    #try to find a tax with less precision 
-                    tax_ids = self.pool.get('account.tax').search(cr, uid, [('price_include', '=', is_tax_included), ('type_tax_use', '=', 'sale'), ('amount', '>=', tax_vat - 0.01), ('amount', '<=', tax_vat + 0.01)])
-                if tax_ids and len(tax_ids) > 0:
-                    tax_id = [(6, 0, [tax_ids[0]])]
+                line_tax_vat_rate = abs(float(data_record[ext_tax_field]) / amount)
+                line_tax_ids = self.pool.get('account.tax').get_tax_from_rate(cr, uid, line_tax_vat_rate, is_tax_included, context)
+                if line_tax_ids:
+                    defaults_line['tax_id'] = [(6, 0, line_tax_ids)]
 
         name = product.name
         if ext_code_field and data_record.get(ext_code_field, False):
@@ -470,7 +434,7 @@ class sale_order(magerp_osv.magerp_osv):
                                 }))
         return res
     
-    def add_order_shipping(self, cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context=None):
+    def add_order_shipping(self, cr, uid, res, external_referential_id, data_record, defaults, context=None):
         if context is None: context = {}
         if data_record.get('shipping_amount', False) and float(data_record.get('shipping_amount', False)) > 0:
             ctx = context.copy()
@@ -481,7 +445,7 @@ class sale_order(magerp_osv.magerp_osv):
             res = self.add_order_extra_line(cr, uid, res, data_record, 'shipping_amount', product_ref, defaults, ctx)
         return res
 
-    def add_gift_certificates(self, cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context=None):
+    def add_gift_certificates(self, cr, uid, res, external_referential_id, data_record, defaults, context=None):
         if context is None: context = {}
         if data_record.get('giftcert_amount', False) and float(data_record.get('giftcert_amount', False)) > 0:
             ctx = context.copy()
@@ -493,7 +457,7 @@ class sale_order(magerp_osv.magerp_osv):
             res = self.add_order_extra_line(cr, uid, res, data_record, 'giftcert_amount', product_ref, defaults, ctx)
         return res
 
-    def add_discount(self, cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context=None):
+    def add_discount(self, cr, uid, res, external_referential_id, data_record, defaults, context=None):
         #TODO fix me rev 476
         #if data_record.get('discount_amount', False) and float(data_record.get('discount_amount', False)) < 0:
         #    ctx = context.copy()
@@ -504,7 +468,7 @@ class sale_order(magerp_osv.magerp_osv):
         #    res = self.add_order_extra_line(cr, uid, res, data_record, 'discount_amount', product_ref, defaults, ctx)
         return res
 
-    def add_cash_on_delivery(self, cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context=None):
+    def add_cash_on_delivery(self, cr, uid, res, external_referential_id, data_record, defaults, context=None):
         if context is None: context = {}
         if data_record.get('cod_fee', False) and float(data_record.get('cod_fee', False)) > 0:
             ctx = context.copy()
@@ -515,7 +479,16 @@ class sale_order(magerp_osv.magerp_osv):
             res = self.add_order_extra_line(cr, uid, res, data_record, 'cod_fee', product_ref, defaults, ctx)
         return res
     
-    
+    def convert_extdata_into_oedata(self, cr, uid, external_data, external_referential_id, parent_data=None, defaults=None, context=None):
+        res = super(sale_order, self).convert_extdata_into_oedata(cr, uid, external_data, external_referential_id, parent_data=parent_data, defaults=defaults, context=context)
+        res=res[0]
+        external_data = external_data[0]
+        res = self.add_order_shipping(cr, uid, res, external_referential_id, external_data, defaults, context)
+        res = self.add_gift_certificates(cr, uid, res, external_referential_id, external_data, defaults, context)
+        res = self.add_discount(cr, uid, res, external_referential_id, external_data, defaults, context)
+        res = self.add_cash_on_delivery(cr, uid, res, external_referential_id, external_data, defaults, context)
+        return [res]
+
     def merge_parent_item_line_with_child(self, cr, uid, item, items_child, context=None):
         if item['product_type'] == 'configurable':
             #For configurable product all information regarding the price is in the configurable item
@@ -544,41 +517,19 @@ class sale_order(magerp_osv.magerp_osv):
         
         data_record['items'] = items_to_import 
         return data_record
-    
-    
-    def get_all_order_lines(self, cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context=None):
-        res = self.get_order_lines(cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
-        res = self.add_order_shipping(cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
-        res = self.add_gift_certificates(cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
-        res = self.add_discount(cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
-        res = self.add_cash_on_delivery(cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
-        return res
 
-    def oevals_from_extdata(self, cr, uid, external_referential_id, data_record, key_field, mapping_lines, defaults, context=None):
+    def oevals_from_extdata(self, cr, uid, external_referential_id, data_record, key_field, mapping_lines, parent_data, defaults, context=None):
         if context is None: context = {}
         if data_record.get('items', False):
             data_record = self.data_record_filter(cr, uid, data_record, context=context)
-        
+        #TODO refactor this code regarding the new feature of sub-mapping in base_external_referential
         if not context.get('one_by_one', False):
             if data_record.get('billing_address', False):
                 defaults = self.get_order_addresses(cr, uid, defaults, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
-        
-        res = super(magerp_osv.magerp_osv, self).oevals_from_extdata(cr, uid, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
+        res = super(magerp_osv.magerp_osv, self).oevals_from_extdata(cr, uid, external_referential_id, data_record, key_field, mapping_lines, parent_data, defaults, context)
 
-        if not context.get('one_by_one', False):
-            if data_record.get('items', False):
-                if NOTRY:
-                    res = self.get_all_order_lines(cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
-                else:
-                    #TODO fix me error should be raise correctly in the reporting system
-                    res = self.get_all_order_lines(cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
-                    #try:
-                    #    res = self.get_all_order_lines(cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
-                    #except Exception, e:
-                    #    print "order has errors with items lines, data are: ", data_record
-                    #    print e
-                        #TODO flag that the order has an error, especially.
-            
+        #Move me in a mapping
+        if not context.get('one_by_one', False):            
             if data_record.get('status_history', False) and len(data_record['status_history']) > 0:
                 res['date_order'] = data_record['status_history'][len(data_record['status_history'])-1]['created_at']
         return res
@@ -724,21 +675,6 @@ class sale_order(magerp_osv.magerp_osv):
             result['unchanged_ids'] = unchanged_ids
         return result
 
-# UPDATE ORDER STATUS FROM MAGENTO TO OPENERP IS UNSTABLE, AND NOT VERY USEFULL. MAYBE IT WILL BE REFACTORED 
 
-    #def oe_update(self,cr, uid, existing_rec_id, vals, data, external_referential_id, defaults, context):
-        #order_line_ids = self.pool.get('sale.order.line').search(cr,uid,[('order_id','=', existing_rec_id)])
-        #self.pool.get('sale.order.line').unlink(cr, uid, order_line_ids)
-        #TODO update order status eventually (that would be easier if they were linked by some foreign key...)
-        #self.oe_status(cr, uid, data, existing_rec_id, context)
-        #return super(magerp_osv.magerp_osv, self).oe_update(cr, uid, existing_rec_id, vals, data, external_referential_id, defaults, context)
-
-    #def oe_status(self, cr, uid, data, order_id, context):
-        #wf_service = netsvc.LocalService("workflow")
-        #if data.get('status_history', False) and len(data['status_history']) > 0 and data['status_history'][0]['status'] == 'canceled':
-        #   wf_service.trg_validate(uid, 'sale.order', order_id, 'cancel', cr)
-        #else:
-        #   super(magerp_osv.magerp_osv, self).oe_status(cr, uid, order_id, context)
-    
 sale_order()
 
