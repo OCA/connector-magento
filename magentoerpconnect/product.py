@@ -1127,8 +1127,8 @@ class product_product(product_mag_osv):
        
         return product_data
 
-    def oevals_from_extdata(self, cr, uid, external_referential_id, data_record, key_field, mapping_lines, defaults, context):
-        res = super(product_product, self).oevals_from_extdata(cr, uid, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
+    def oevals_from_extdata(self, cr, uid, external_referential_id, data_record, mapping_lines, key_for_external_id=None, parent_data=None, previous_lines=None, defaults=None, context=None):
+        res = super(product_product, self).oevals_from_extdata(cr, uid, external_referential_id, data_record, mapping_lines, key_for_external_id=key_for_external_id, parent_data=parent_data, previous_lines=previous_lines, defaults=defaults, context=context)
 
         # assign a default product type (Procurement, not the magento's one)
         if not res.get('type'):
