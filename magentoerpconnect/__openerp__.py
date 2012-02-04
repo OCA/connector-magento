@@ -45,10 +45,11 @@
     "update_xml" : [
             'security/ir.model.access.csv',
             'settings/magerp.product_category_attribute_options.csv',
-            'settings/1.3.2.4/external.referential.type.csv',
+            'settings/external.referential.type.csv',
+            'settings/1.3.2.4/external.referential.version.csv',
             'settings/1.3.2.4/external.mapping.template.csv',
             'settings/1.3.2.4/external.mappinglines.template.csv',
-            'settings/1.5.0.0/external.referential.type.csv',
+            'settings/1.5.0.0/external.referential.version.csv',
             'settings/1.5.0.0/external.mapping.template.csv',
             'settings/1.5.0.0/external.mappinglines.template.csv',
             'settings/magerp_product_product_type.xml',

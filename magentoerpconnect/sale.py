@@ -34,6 +34,8 @@ import tools
 import time
 from tools import DEFAULT_SERVER_DATETIME_FORMAT
 
+from base_external_referentials import report
+
 DEBUG = True
 NOTRY = False
 
@@ -132,10 +134,10 @@ class sale_shop(magerp_osv.magerp_osv):
         'allow_magento_notification': lambda * a: False,
     }
 
-
-    def import_shop_orders(self, cr, uid, shop, defaults, context=None):
+    @report.open_report
+    def _import_orders_from_magento(self, cr, uid, shop, defaults, context=None):
         if context is None: context = {}
-        result = super(sale_shop, self).import_shop_orders(cr, uid, shop, defaults=defaults, context=context)
+        result = {}
         [result.setdefault(key, []) for key in ['create_ids', 'write_ids', 'unchanged_ids']]
         if shop.magento_shop:
             self.check_need_to_update(cr, uid, [shop.id], context=context)

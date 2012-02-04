@@ -1,4 +1,4 @@
-"id","type_id:id","model_id:id","external_field","field_id:id","type","evaluation_type","external_type","child_mapping_id:id","in_function","out_function"
+"id","version_id:id","model_id:id","external_field","field_id:id","type","evaluation_type","external_type","child_mapping_id:id","in_function","out_function"
 "mag_1500_erp_s_name","magento1500","base_sale_multichannels.model_external_shop_group","name",,"in_out","function","unicode",,"result=[('name',ifield)]","result=[('name',record['name'])]"
 "mag_1500_erp_s_code","magento1500","base_sale_multichannels.model_external_shop_group","code",,"in_out","function","unicode",,"result=[('code',ifield)]",
 "mag_1500_erp_s_web","magento1500","base_sale_multichannels.model_external_shop_group","website_id",,"in_out","function","int",,"result=[('website_id',ifield)]",
