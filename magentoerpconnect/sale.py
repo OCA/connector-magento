@@ -514,35 +514,55 @@ class sale_order(magerp_osv.magerp_osv):
             product_ref = ('magentoerpconnect', 'product_product_cash_on_delivery')
             res = self.add_order_extra_line(cr, uid, res, data_record, 'cod_fee', product_ref, defaults, ctx)
         return res
-    
-    
-    def merge_parent_item_line_with_child(self, cr, uid, item, items_child, context=None):
-        if item['product_type'] == 'configurable':
-            #For configurable product all information regarding the price is in the configurable item
-            #In the child a lot of information is empty, but containt the right sku and product_id
-            #So the real product_id and the sku and the name have to be extracted from the child
-            for field in ['sku', 'product_id', 'name']:
-                item[field] = items_child[item['item_id']][0][field]
-        return item 
-    
-    def data_record_filter(self, cr, uid, data_record, context=None):
-        items_child = {}
-        items_to_import = []
 
-        #First all child are remove for the order line
+    def _merge_sub_items(self, cr, uid, product_type, top_item, child_items, context=None):
+        """
+        Manage the sub items of the magento sale order lines. A top item contains one
+        or many child_items. For some product types, we want to merge them in the main
+        item, or keep them as order line.
+
+        A list may be returned to add many items (ie to keep all child_items as items.
+
+        :param top_item: main item (bundle, configurable)
+        :param child_items: list of childs of the top item
+        :return: item or list of items
+        """
+        if product_type == 'configurable':
+            item = top_item.copy()
+            # For configurable product all information regarding the price is in the configurable item
+            # In the child a lot of information is empty, but contains the right sku and product_id
+            # So the real product_id and the sku and the name have to be extracted from the child
+            for field in ['sku', 'product_id', 'name']:
+                item[field] = child_items[0][field]
+            return item
+        return top_item
+
+    def data_record_filter(self, cr, uid, data_record, context=None):
+        child_items = {}  # key is the parent item id
+        top_items = []
+
+        # Group the childs with their parent
         for item in data_record['items']:
-            if item['parent_item_id']:
-                if items_child.get(item['parent_item_id'], False):
-                    items_child[item['parent_item_id']].append(item)
-                else:
-                    items_child[item['parent_item_id']] = [item]
+            if item.get('parent_item_id'):
+                child_items.setdefault(item['parent_item_id'], []).append(item)
             else:
-                items_to_import.append(item)
+                top_items.append(item)
+
+        all_items = []
+        for top_item in top_items:
+            if top_item['item_id'] in child_items:
+                item_modified = self._merge_sub_items(cr, uid,
+                                                      top_item['product_type'],
+                                                      top_item,
+                                                      child_items[top_item['item_id']],
+                                                      context=context)
+                if not isinstance(item_modified, list):
+                    item_modified = [item_modified]
+                all_items.extend(item_modified)
+            else:
+                all_items.append(top_item)
         
-        for item in items_to_import:
-            item = self.merge_parent_item_line_with_child(cr, uid, item, items_child, context=context)
-        
-        data_record['items'] = items_to_import 
+        data_record['items'] = all_items
         return data_record
     
     
