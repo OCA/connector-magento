@@ -1,0 +1,6 @@
+"id","type_id:id","model_id:id","external_field","type","external_type","in_function","out_function"
+"mag_1500_erp_prd_bundle_configuration","magentoerpconnect.magento1500","sale.model_sale_order_line","bundle_configuration","in_out","list","line_ids = []
+for val in ifield:
+    product_id = self.pool.get('product.product').extid_to_oeid(cr, uid, val['product_id'], external_referential_id)
+    line_ids.append(self.pool.get('sale.order.line.item.set').get_create_items_lines(cr, uid, product_id, val['qty_ordered']))
+result=[('so_line_item_set_ids', [(6, 0, line_ids)])]",
