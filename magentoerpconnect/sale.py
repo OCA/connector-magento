@@ -602,7 +602,7 @@ class sale_order(magerp_osv.magerp_osv):
             paid = super(sale_order, self).create_payments(cr, uid, order_id, data_record, context=context)
         return paid
 
-    def chain_cancel_orders(self, cr, uid, external_id, external_referential_id, defaults=None, context=None):
+    def _chain_cancel_orders(self, cr, uid, external_id, external_referential_id, defaults=None, context=None):
         """ Get all the chain of edited orders (an edited order is canceled on Magento)
          and cancel them on OpenERP. If an order cannot be canceled (confirmed for example)
          A request is created to inform the user.
@@ -671,7 +671,7 @@ class sale_order(magerp_osv.magerp_osv):
 
                 # if a created order has a relation_parent_real_id, the new one replaces the original, so we have to cancel the old one
                 if data[0].get('relation_parent_real_id', False): # data[0] because orders are imported one by one so data always has 1 element
-                    self.chain_cancel_orders(order_cr, uid, ext_order_id, external_referential_id, defaults=defaults, context=context)
+                    self._chain_cancel_orders(order_cr, uid, ext_order_id, external_referential_id, defaults=defaults, context=context)
 
             # set the "imported" flag to true on Magento
             self.ext_set_order_imported(order_cr, uid, ext_order_id, external_referential_id, context)
