@@ -41,6 +41,11 @@ Each item choosed in a bundle is imported as a sale order line, so you are able 
 The bundle product is imported with a price of 0.0 and is a service.
 
 For the shipment, the first item which was part of the bundle create the full shipment on Magento (limitation because Magento wait for the bundle product).
+The side effect is that the order will be marked as fully shipped on Magento even if the packing is sent in 2 times in OpenERP.
+
+This module is not compatible with "magentoerpconnect_bundle" as it does not handle the bundles the same way.
+magentoerpconnect_bundle: products configurator for bundles with production orders for sub-items
+magentoerpconnect_bundle_split: sub-items are managed as normal products in OpenERP, no configurator
 """,
     'images': ['images/magentocoreeditors.png',
                'images/magentoerpconnect.png',],
