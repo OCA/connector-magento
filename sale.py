@@ -56,10 +56,14 @@ class sale_order(osv.osv):
             return super(sale_order, self)._merge_sub_items(cr, uid, product_type,
                                             top_item, child_items, context=context)
 
-    def oe_create(self, cr, uid, vals, data, external_referential_id, defaults, context):
-        order_id = super(sale_order, self).\
-            oe_create(cr, uid, vals, data, external_referential_id, defaults, context)
+    def oe_create(self, cr, uid, vals, data,
+                  external_referential_id, defaults, context):
 
+        order_id = super(sale_order, self).\
+            oe_create(cr, uid, vals, data,
+                      external_referential_id, defaults, context)
+
+        order_line_obj = self.pool.get('sale.order.line')
         order = self.browse(cr, uid, order_id, context=context)
 
         bundle_ids = {}
@@ -68,14 +72,25 @@ class sale_order(osv.osv):
                 bundle_ids.setdefault(line.magento_parent_item_id, []).append(line.id)
 
         for parent_item_id, child_line_ids in bundle_ids.iteritems():
-            parent_line_ids = self.search(cr, uid, [('magento_item_id', '=', parent_item_id)])
+            parent_line_ids = order_line_obj.search(cr, uid,
+                [('magento_item_id', '=', parent_item_id)])
             if not parent_line_ids:
                 continue
-            self.write(cr, uid, child_line_ids,
+            order_line_obj.write(cr, uid, child_line_ids,
                     {'bundle_parent_id': parent_line_ids[0]},
                        context=context)
 
         return order_id
+
+    def _prepare_order_line_move(self, cr, uid, order, line, picking_id,
+                                 date_planned, context=None):
+        res = super(sale_order, self)._prepare_order_line_move(
+                cr, uid, order, line,
+                picking_id, date_planned,
+                context=context)
+        if line.bundle_parent_id:
+            res['sale_line_bundle_id'] = line.bundle_parent_id.id
+        return res
 
 sale_order()
 
