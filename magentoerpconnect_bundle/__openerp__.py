@@ -25,7 +25,14 @@
     'version': '0.1',
     'category': 'Generic Modules',
     'license': 'AGPL-3',
-    'description': """Module to extend the module magentoerpconnect, with it you will be able to create bundle product in magento directly from Openerp. Enjoy it !""",
+    'description': """Module to extend the module magentoerpconnect, with it you will be able to create bundle product in magento directly from Openerp.
+
+Enjoy it !
+
+This module is not compatible with "magentoerpconnect_bundle_split" as it does not handle the bundles the same way.
+magentoerpconnect_bundle: products configurator for bundles with production orders for sub-items
+magentoerpconnect_bundle_split: sub-items are managed as normal products in OpenERP, no configurator
+""",
     'images': [
         'images/items.png',
         'images/items_lines.png',
