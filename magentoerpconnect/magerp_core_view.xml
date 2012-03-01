@@ -17,7 +17,7 @@
 				            <button name="refresh_mapping" string="1 - Reload Referential Mapping Templates" colspan="2" type="object" />
             				<button name="import_referentials" string="2 - Synchronize Referential Settings" colspan="2" type="object" attrs="{'readonly':[('mapping_ids','=',[])]}"/>
             				<separator string="Optional - Initial import only" colspan="4" />
-							<button name="sync_customer_groups" string="1 - Import Customer Groups (Partner Categories)" colspan="2" type="object" />
+							<button name="import_customer_groups" string="1 - Import Customer Groups (Partner Categories)" colspan="2" type="object" />
 							<group colspan="2" col="12">
 							    <button name="sync_attribs" string="5 - Import Product Attributes" colspan="10" type="object" />
     							<field name="import_all_attributs"/>

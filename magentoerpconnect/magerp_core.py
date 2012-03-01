@@ -139,11 +139,7 @@ class external_referential(magerp_osv.magerp_osv):
         return True
 
     def sync_attrib_sets(self, cr, uid, ids, context=None):
-        for referential_id in ids:
-            attr_conn = self.external_connection(cr, uid, referential_id, DEBUG, context=context)
-            filter = []
-            self.pool.get('magerp.product_attribute_set').mage_import_base(cr, uid, attr_conn, referential_id,{'referential_id':referential_id},{'ids_or_filter':filter})
-        return True
+        return self.import_resources(cr, uid, ids, 'magerp.product_attribute_set', method='search_read_no_loop', context=context)
 
     def sync_attrib_groups(self, cr, uid, ids, context=None):
         for referential_id in ids:
@@ -153,12 +149,9 @@ class external_referential(magerp_osv.magerp_osv):
             self.pool.get('magerp.product_attribute_groups').mage_import_base(cr, uid, attr_conn, referential_id, {'referential_id': referential_id}, {'ids_or_filter':filter})
         return True
 
-    def sync_customer_groups(self, cr, uid, ids, context=None):
-        for referential_id in ids:
-            attr_conn = self.external_connection(cr, uid, referential_id, DEBUG, context=context)
-            filter = []
-            self.pool.get('res.partner.category').mage_import_base(cr, uid, attr_conn, referential_id, {}, {'ids_or_filter':filter})
-        return True
+    @only_for_referential('magento')
+    def import_customer_groups(self, cr, uid, ids, context=None):
+        return self.import_resources(cr, uid, ids, 'res.partner.category', method='search_read_no_loop', context=context)
 
     def sync_customer_addresses(self, cr, uid, ids, context=None):
         for referential_id in ids:
