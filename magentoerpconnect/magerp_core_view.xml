@@ -8,6 +8,7 @@
 			<field name="model">external.referential</field>
 			<field name="inherit_id" ref="base_external_referentials.external_referential_form_view" />
 			<field name="type">form</field>
+			<field name="priority">32</field>
 			<field name="arch" type="xml">
 			    <xpath expr="/form/group[2]/notebook" position="replace">
 					<notebook colspan="4">

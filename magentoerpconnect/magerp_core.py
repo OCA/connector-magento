@@ -31,6 +31,7 @@ from magerp_osv import Connection
 import tools
 from tools.translate import _
 import os
+from base_external_referentials.decorator import only_for_referential
 
 DEBUG = True
 TIMEOUT = 2
@@ -76,15 +77,13 @@ class external_referential(magerp_osv.magerp_osv):
         'active': lambda *a: 1,
     }
 
-    def external_connection(self, cr, uid, id, DEBUG=False, context=None):
+    @only_for_referential('magento')
+    def external_connection(self, cr, uid, id, debug=False, context=None):
         if isinstance(id, list):
             id=id[0]
-        referential = self.browse(cr, uid, id)
-        if 'magento' in referential.type_id.name.lower():
-            attr_conn = Connection(referential.location, referential.apiusername, referential.apipass, DEBUG)
-            return attr_conn.connect() and attr_conn or False
-        else:
-            return super(external_referential, self).external_connection(cr, uid, id, DEBUG=DEBUG, context=context)
+        referential = self.browse(cr, uid, id, context=context)
+        attr_conn = Connection(referential.location, referential.apiusername, referential.apipass, debug)
+        return attr_conn.connect() and attr_conn or False
 
     def connect(self, cr, uid, id, context=None):
         if isinstance(id, (list, tuple)):
@@ -97,16 +96,12 @@ class external_referential(magerp_osv.magerp_osv):
                 return core_imp_conn
             else:
                 raise osv.except_osv(_("Connection Error"), _("Could not connect to server\nCheck location, username & password."))
-
         return False
 
     def core_sync(self, cr, uid, ids, context=None):
-        filter = []
-        for referential_id in ids:
-            core_imp_conn = self.external_connection(cr, uid, referential_id, DEBUG, context=context)
-            self.pool.get('external.shop.group').mage_import_base(cr, uid,core_imp_conn, referential_id, defaults={'referential_id':referential_id})
-            self.pool.get('sale.shop').mage_import_base(cr, uid, core_imp_conn, referential_id, {'magento_shop':True, 'company_id':self.pool.get('res.users').browse(cr, uid, uid).company_id.id})
-            self.pool.get('magerp.storeviews').mage_import_base(cr,uid,core_imp_conn, referential_id, defaults={})
+        self.import_resources(cr, uid, ids, 'external.shop.group', method='search_read_no_loop', context=context)
+        self.import_resources(cr, uid, ids, 'sale.shop', method='search_read_no_loop', context=context)
+        self.import_resources(cr, uid, ids, 'magerp.storeviews', method='search_read_no_loop', context=context)
         return True
 
     def sync_categs(self, cr, uid, ids, context=None):
@@ -416,7 +411,7 @@ class external_shop_group(magerp_osv.magerp_osv):
         res = {}
         for shop_group in self.browse(cr, uid, ids, context):
             if shop_group.default_shop_integer_id:
-                rid = self.pool.get('sale.shop').extid_to_oeid(cr, uid, shop_group.default_shop_integer_id, shop_group.referential_id.id)
+                rid = self.pool.get('sale.shop').extid_to_existing_oeid(cr, uid, shop_group.default_shop_integer_id, shop_group.referential_id.id)
                 res[shop_group.id] = rid
             else:
                 res[shop_group.id] = False

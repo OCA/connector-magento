@@ -31,7 +31,7 @@
 			<field name="type">ir.actions.act_window</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
-			<field name="domain">[('magento_shop', '=', True)]</field>
+			<field name="domain">[('type_id', 'ilike', 'magento')]</field>
 		</record>
 
 		<record id="magerp_view_shop_images_form" model="ir.ui.view">

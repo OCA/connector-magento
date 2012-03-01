@@ -34,7 +34,8 @@ import tools
 import time
 from tools import DEFAULT_SERVER_DATETIME_FORMAT
 
-from base_external_referentials import report
+#from base_external_referentials import report
+
 
 DEBUG = True
 NOTRY = False
@@ -91,7 +92,7 @@ class sale_shop(magerp_osv.magerp_osv):
         res = {}
         for shop in self.browse(cr, uid, ids, context):
             if shop.root_category_id and shop.shop_group_id.referential_id:
-                rid = self.pool.get('product.category').extid_to_oeid(cr, uid, shop.root_category_id, shop.shop_group_id.referential_id.id)
+                rid = self.pool.get('product.category').extid_to_existing_oeid(cr, uid, shop.root_category_id, shop.shop_group_id.referential_id.id)
                 res[shop.id] = rid
             else:
                 res[shop.id] = False
@@ -134,7 +135,7 @@ class sale_shop(magerp_osv.magerp_osv):
         'allow_magento_notification': lambda * a: False,
     }
 
-    @report.open_report
+#    @report.open_report
     def _import_orders_from_magento(self, cr, uid, shop, defaults, context=None):
         if context is None: context = {}
         result = {}
