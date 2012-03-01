@@ -32,6 +32,7 @@ import tools
 from tools.translate import _
 import os
 from base_external_referentials.decorator import only_for_referential
+from base_external_referentials.external_osv import ExternalSession
 
 DEBUG = True
 TIMEOUT = 2
@@ -97,12 +98,15 @@ class external_referential(magerp_osv.magerp_osv):
         self.import_resources(cr, uid, ids, 'product.category', method='search_then_read_no_loop', context=context)
         return True
 
+
+    #This function will be refactored latter, need to improve Magento API before
     def sync_attribs(self, cr, uid, ids, context=None):
         attr_obj = self.pool.get('magerp.product_attributes')
         attr_set_obj = self.pool.get('magerp.product_attribute_set')
         logger = netsvc.Logger()
         for referential in self.browse(cr, uid, ids, context=context):
-            attr_conn = referential.external_connection(DEBUG, context=context)
+            external_session = ExternalSession(referential)
+            attr_conn = external_session.connection
             attrib_set_ids = attr_set_obj.search(cr, uid, [('referential_id', '=', referential.id)])
             attrib_sets = attr_set_obj.read(cr, uid, attrib_set_ids, ['magento_id'])
             #Get all attribute set ids to get all attributes in one go
@@ -113,6 +117,8 @@ class external_referential(magerp_osv.magerp_osv):
             else:
                 attributes_imported = attr_obj.get_all_extid_from_referential(cr, uid, referential.id, context=context)
             import_cr = pooler.get_db(cr.dbname).cursor()
+
+            mapping = {'magerp.product_attributes' : attr_obj._get_mapping(cr, uid, referential.id, context=context)}
             try:
                 for attr_set_id in all_attr_set_ids:
                     mage_inp = attr_conn.call('ol_catalog_product_attribute.list', [attr_set_id])             #Get the tree
@@ -121,7 +127,11 @@ class external_referential(magerp_osv.magerp_osv):
                         ext_id = attribut['attribute_id']
                         if not ext_id in attributes_imported:
                             attributes_imported.append(ext_id)
-                            attr_obj.ext_import(import_cr, uid, [attribut], referential.id, defaults={'referential_id':referential.id}, context={'referential_id':referential.id})
+                            attr_obj._record_one_external_resource(import_cr, uid, external_session, attribut,
+                                                            defaults={'referential_id':referential.id},
+                                                            mapping=mapping,
+                                                            context=context,
+                                                        )
                             import_cr.commit()
                     logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "All attributs for the attributs set id %s was succesfully imported" %(attr_set_id))
                 #Relate attribute sets & attributes

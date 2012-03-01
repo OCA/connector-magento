@@ -228,7 +228,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
     def _get_group(self, cr, uid, ids, prop, unknow_none, context=None):
         res = {}
         for attribute in self.browse(cr, uid, ids, context):
-            res[attribute.id] = self.pool.get('magerp.product_attribute_groups').extid_to_oeid(cr, uid, attribute.group_id, attribute.referential_id.id)
+            res[attribute.id] = self.pool.get('magerp.product_attribute_groups').extid_to_existing_oeid(cr, uid, attribute.group_id, attribute.referential_id.id)
         return res
 
     _columns = {
@@ -391,7 +391,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
             
             #Fetch Options
             if 'frontend_input' in all_vals.keys() and all_vals['frontend_input'] in ['select', 'multiselect']:
-                core_imp_conn = self.pool.get('external.referential').connect(cr, uid, [referential_id])
+                core_imp_conn = self.pool.get('external.referential').external_connection(cr, uid, [referential_id])
                 options_data = core_imp_conn.call('ol_catalog_product_attribute.options', [all_vals['magento_id']])
                 if options_data:
                     self.pool.get('magerp.product_attribute_options').data_to_save(cr, uid, options_data, update=True, context={'attribute_id': id, 'referential_id': referential_id})
@@ -423,7 +423,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
             if crid:
                 #Fetch Options
                 if 'frontend_input' in vals.keys() and vals['frontend_input'] in ['select',  'multiselect']:
-                    core_imp_conn = self.pool.get('external.referential').connect(cr, uid, [vals['referential_id']])
+                    core_imp_conn = self.pool.get('external.referential').external_connection(cr, uid, [vals['referential_id']])
                     options_data = core_imp_conn.call('ol_catalog_product_attribute.options', [vals['magento_id']])
                     if options_data:
                         self.pool.get('magerp.product_attribute_options').data_to_save(cr, uid, options_data, update=False, context={'attribute_id': crid, 'referential_id': vals['referential_id']})
