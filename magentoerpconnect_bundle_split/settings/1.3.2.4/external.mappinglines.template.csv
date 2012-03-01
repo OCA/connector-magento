@@ -1,0 +1,3 @@
+"id","type_id:id","model_id:id","external_field","type","external_type","in_function","out_function"
+"mag_1324_erp_prd_item_id","magentoerpconnect.magento1324","sale.model_sale_order_line","item_id","in","int","result=[('magento_item_id', ifield)]",
+"mag_1324_erp_prd_parent_item_id","magentoerpconnect.magento1324","sale.model_sale_order_line","parent_item_id","in","int","result=[('magento_parent_item_id', ifield)]",

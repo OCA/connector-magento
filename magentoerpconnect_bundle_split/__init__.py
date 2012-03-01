@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    Author: Guewen Baconnier
-#    Copyright 2011-2012 Camptocamp SA
+#    Copyright 2012 Camptocamp SA
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -18,17 +18,6 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-{
-    'name' : 'magento_product_auto_sku',
-    'version' : '1.0',
-    'depends' : ['base', 'product', 'magentoerpconnect'],
-    'author' : 'Camptocamp',
-    'license': 'AGPL-3',
-    'description': """Auto incrementation of the Magento SKU column on products""",
-    'website': 'http://www.camptocamp.com',
-    'init_xml': [],
-    'update_xml': ['data.xml', ],
-    'demo_xml': [],
-    'installable': True,
-    'active': False,
-}
+
+import sale
+import stock

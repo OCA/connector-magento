@@ -21,5 +21,45 @@
 		<menuitem id="menu_magerp_categ_att_option" name="Category Attribute Options" parent="menu_magerp_categ_att" action="act_magerp_product_category_attribute_options_form" />
 
         <menuitem id="menu_magerp_product_type" name="Product Types" parent="menu_magerp" action="act_magerp_product_type_form" />
+
+
+        <menuitem id="menu_magerp_reporting" name="Reporting" parent="menu_magerp" />
+
+        <record id="action_magerp_external_report" model="ir.actions.act_window">
+            <field name="name">External Reports</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">external.report</field>
+            <field name="view_type">form</field>
+            <field name="domain">[('external_referential_id.type_id.name', 'like', 'Magento')]</field> <!-- erk -->
+            <field name="view_id" ref="base_external_referentials.external_report_tree_view"/>
+            <field name="search_view_id" ref="base_external_referentials.external_report_search_form_view"/>
+        </record>
+        <menuitem id="menu_magerp_reporting_report" name="Synchronisation Report"
+                  parent="menu_magerp_reporting" action="action_magerp_external_report" sequence="20"/>
+
+        <record id="action_magerp_external_report_history" model="ir.actions.act_window">
+            <field name="name">External Report History</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">external.report.history</field>
+            <field name="view_type">form</field>
+            <field name="domain">[('external_report_id.external_referential_id.type_id.name', 'like', 'Magento')]</field> <!-- erk -->
+            <field name="view_id" ref="base_external_referentials.external_report_history_tree_view"/>
+            <field name="search_view_id" ref="base_external_referentials.external_report_history_search_view"/>
+        </record>
+
+        <menuitem id="menu_magerp_reporting_report_history" name="Synchronisation History"
+                  parent="menu_magerp_reporting" action="action_magerp_external_report_history" sequence="25" />
+
+        <record id="action_magerp_external_report_line" model="ir.actions.act_window">
+            <field name="name">External Report Lines</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">external.report.line</field>
+            <field name="view_type">form</field>
+            <field name="domain">[('external_report_id.external_referential_id.type_id.name', 'like', 'Magento')]</field> <!-- erk -->
+            <field name="view_id" ref="base_external_referentials.external_report_line_tree_view"/>
+            <field name="search_view_id" ref="base_external_referentials.external_report_line_search_view"/>
+        </record>
+        <menuitem id="menu_magerp_reporting_report_line" name="Last Synchronisation Details"
+                  parent="menu_magerp_reporting" action="action_magerp_external_report_line" sequence="30"/>
 	</data>
 </openerp>
