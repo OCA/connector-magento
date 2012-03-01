@@ -79,11 +79,11 @@ class external_referential(magerp_osv.magerp_osv):
     }
 
     @only_for_referential('magento')
-    def external_connection(self, cr, uid, id, debug=False, context=None):
+    def external_connection(self, cr, uid, id, debug=False, logger=False, context=None):
         if isinstance(id, list):
             id=id[0]
         referential = self.browse(cr, uid, id, context=context)
-        attr_conn = Connection(referential.location, referential.apiusername, referential.apipass, debug)
+        attr_conn = Connection(referential.location, referential.apiusername, referential.apipass, debug, logger)
         return attr_conn.connect() and attr_conn or False
 
     @only_for_referential('magento')
@@ -167,22 +167,28 @@ class external_referential(magerp_osv.magerp_osv):
             self.pool.get('res.partner.address').mage_import_base(cr, uid, attr_conn, referential_id, {}, {'ids_or_filter':filter})
         return True
 
-    def _sync_product_storeview(self, cr, uid, referential_id, mag_connection, ext_product_id, storeview, context=None):
+    def _sync_product_storeview(self, cr, uid, external_session, referential_id, ext_product_id, storeview, mapping=None, context=None):
         if context is None: context = {}
         #we really need to clean all magento call and give the posibility to force everythere to use the id as identifier
-        product_info = mag_connection.call('catalog_product.info', [ext_product_id, storeview.code, False, 'id'])
+        product_info = external_session.connection.call('catalog_product.info', [ext_product_id, storeview.code, False, 'id'])
         ctx = context.copy()
         ctx.update({'magento_sku': product_info['sku']})
         defaults={'magento_exportable': True}
-        return self.pool.get('product.product').ext_import(cr, uid, [product_info], referential_id, defaults=defaults , context=ctx)
-
+        return self.pool.get('product.product')._record_one_external_resource(cr, uid, external_session, product_info,
+                                                            defaults=defaults,
+                                                            mapping=mapping,
+                                                            context=ctx,
+                                                        )
+    #This function will be refactored latter, maybe it will be better to improve the magento API before
     def sync_products(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
         prod_obj = self.pool.get('product.product')
 #        context.update({'dont_raise_error': True})
         for referential in self.browse(cr, uid, ids, context):
-            attr_conn = referential.external_connection(DEBUG)
+            external_session = ExternalSession(referential)
+            attr_conn = external_session.connection
+            mapping = {'product.product' : prod_obj._get_mapping(cr, uid, referential.id, context=context)}
             filter = []
             if referential.last_imported_product_id:
                 filters = {'product_id': {'gt': referential.last_imported_product_id}}
@@ -220,8 +226,8 @@ class external_referential(magerp_osv.magerp_osv):
                     for lang, storeview in lang_2_storeview.iteritems():
                         ctx = context.copy()
                         ctx.update({'lang': lang})
-                        res = self._sync_product_storeview(import_cr, uid, referential.id, attr_conn, ext_product_id, storeview, context=ctx)
-                    product_id = (res.get('create_ids') or res.get('write_ids'))[0]
+                        res = self._sync_product_storeview(import_cr, uid, external_session, referential.id, ext_product_id, storeview, mapping=mapping, context=ctx)
+                    product_id = (res.get('create_id') or res.get('write_id'))
                     if referential.import_image_with_product:
                         prod_obj.import_product_image(import_cr, uid, product_id, referential.id, attr_conn, ext_id=ext_product_id, context=context)
                     if referential.import_links_with_product:

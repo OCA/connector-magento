@@ -196,7 +196,7 @@ else:
     result = [('type_id','simple')]"
 "mag_1324_erp_prd_15","magento1324","product.model_product_product","websites",,"in_out","function","list",,"websites_ids = []
 for ext_id in ifield:
-    websites_ids.append(self.pool.get('external.shop.group').extid_to_oeid(cr, uid, external_session, ext_id, referential_id))
+    websites_ids.append(self.pool.get('external.shop.group').extid_to_oeid(cr, uid, external_session, ext_id, context=context))
 
 ##### OPTION START, with this if the field websites of the product is empty the product is exported on every website
 all_oe_websites_ids = self.pool.get('external.shop.group').search(cr,uid,[('referential_id', '=', referential_id)])
