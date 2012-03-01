@@ -85,34 +85,16 @@ class external_referential(magerp_osv.magerp_osv):
         attr_conn = Connection(referential.location, referential.apiusername, referential.apipass, debug)
         return attr_conn.connect() and attr_conn or False
 
-    def connect(self, cr, uid, id, context=None):
-        if isinstance(id, (list, tuple)):
-            if not len(id) == 1:
-                raise osv.except_osv(_("Error"), _("Connect should be only call with one id"))
-            else:
-                id = id[0]
-            core_imp_conn = self.external_connection(cr, uid, id, DEBUG, context=context)
-            if core_imp_conn.connect():
-                return core_imp_conn
-            else:
-                raise osv.except_osv(_("Connection Error"), _("Could not connect to server\nCheck location, username & password."))
-        return False
-
-    def core_sync(self, cr, uid, ids, context=None):
+    @only_for_referential('magento')
+    def import_referentials(self, cr, uid, ids, context=None):
         self.import_resources(cr, uid, ids, 'external.shop.group', method='search_read_no_loop', context=context)
         self.import_resources(cr, uid, ids, 'sale.shop', method='search_read_no_loop', context=context)
         self.import_resources(cr, uid, ids, 'magerp.storeviews', method='search_read_no_loop', context=context)
         return True
 
-    def sync_categs(self, cr, uid, ids, context=None):
-        for referential_id in ids:
-            pro_cat_conn = self.external_connection(cr, uid, referential_id, DEBUG, context=context)
-            confirmation = pro_cat_conn.call('catalog_category.currentStore', [0])   #Set browse to root store
-            if confirmation:
-                categ_tree = pro_cat_conn.call('catalog_category.tree')             #Get the tree
-                self.pool.get('product.category').record_entire_tree(cr, uid, referential_id, pro_cat_conn, categ_tree, DEBUG)
-                #exp_ids = self.pool.get('product.category').search(cr,uid,[('exportable','=',True)])
-                #self.pool.get('product.category').ext_export(cr,uid,exp_ids,[referential_id],{},{'conn_obj':pro_cat_conn})
+    @only_for_referential('magento')
+    def import_product_categories(self, cr, uid, ids, context=None):
+        self.import_resources(cr, uid, ids, 'product.category', method='search_then_read_no_loop', context=context)
         return True
 
     def sync_attribs(self, cr, uid, ids, context=None):

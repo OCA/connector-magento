@@ -52,12 +52,15 @@ osv.osv._mag_get_external_resources = osv.osv._get_external_resources
 
 @only_for_referential('magento', super_function = osv.osv._mag_get_external_resources)
 def _get_external_resources(self, cr, uid, external_session, external_id=None, resource_filter=None, mapping=None, fields=None, context=None):
-    print 'get external resource'
     if mapping is None:
         mapping = {self._name : self._get_mapping(cr, uid, external_session.referential_id.id, context=context)}
     ext_resource = mapping[self._name]['external_resource_name']
-    search_read_method = mapping[self._name]['external_list_method']
-    return external_session.connection.call(search_read_method, [resource_filter or {}])
+    if external_id:
+        read_method = mapping[self._name]['external_get_method']
+        return external_session.connection.call(read_method, [external_id])
+    else:
+        search_read_method = mapping[self._name]['external_list_method']
+        return external_session.connection.call(search_read_method, [resource_filter or {}])
 
 osv.osv._get_external_resources = _get_external_resources
 

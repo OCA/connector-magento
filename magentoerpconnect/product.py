@@ -150,17 +150,19 @@ class product_category(magerp_osv.magerp_osv):
             vals['magerp_stamp'] = time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         return super(product_category, self).write(cr, uid, ids, vals, context)
 
-    def record_entire_tree(self, cr, uid, id, conn, categ_tree, DEBUG=False):
-        self.record_category(cr, uid, id, conn, int(categ_tree['category_id']))
-        for each in categ_tree['children']:
-            self.record_entire_tree(cr, uid, id, conn, each)
-        return True
-
-    def record_category(self, cr, uid, external_referential_id, conn, category_id):
-        #This function should record a category
-        #The parent has to be created before creating child
-        imp_vals = conn.call('category.info', [category_id])
-        self.ext_import(cr, uid, [imp_vals], external_referential_id, defaults={}, context={'conn_obj':conn})
+    def _get_external_resource_ids(self, cr, uid, external_session, resource_filter=None, mapping=None, context=None):
+        def get_child_ids(tree):
+            result=[]
+            result.append(tree['category_id'])
+            for categ in tree['children']:
+                result += get_child_ids(categ)
+            return result
+        ids=[]
+        confirmation = external_session.connection.call('catalog_category.currentStore', [0])   #Set browse to root store
+        if confirmation:
+            categ_tree = external_session.connection.call('catalog_category.tree')             #Get the tree
+            ids = get_child_ids(categ_tree)
+        return ids
 
     def ext_export(self, cr, uid, ids, external_referential_ids=None, defaults=None, context=None): # We export all the categories if at least one has been modified since last export
         #TODO Move this function in base_sale_multichannels
