@@ -243,32 +243,35 @@ class external_referential(magerp_osv.magerp_osv):
             conn = self.external_connection(cr, uid, ids, DEBUG, context=context)
         return conn.call('catalog_product_link.types')
 
+    #TODO refactore me base on base_external_referentials
     def sync_images(self, cr, uid, ids, context=None):
-        logger = netsvc.Logger()
         product_obj = self.pool.get('product.product')
         image_obj = self.pool.get('product.images')
         import_cr = pooler.get_db(cr.dbname).cursor()
         try:
-            for referential_id in ids:
-                conn = self.external_connection(cr, uid, referential_id, DEBUG, context=context)
-                product_ids = product_obj.get_all_oeid_from_referential(cr, uid, referential_id, context=context)
+            for referential in self.browse(cr, uid, ids, context=context):
+                external_session = ExternalSession(referential)
+                conn = external_session.connection
+                product_ids = product_obj.get_all_oeid_from_referential(cr, uid, referential.id, context=context)
                 for product_id in product_ids:
-                    product_obj.import_product_image(import_cr, uid, product_id, referential_id, conn, context=context)
+                    product_obj.import_product_image(import_cr, uid, product_id, referential.id, conn, context=context)
                     import_cr.commit()
         finally:
             import_cr.close()
         return True
 
+    #TODO refactore me base on base_external_referentials
     def sync_product_links(self, cr, uid, ids, context=None):
         if context is None: context = {}
         for referential in self.browse(cr, uid, ids, context):
-            conn = referential.external_connection(DEBUG)
+            external_session = ExternalSession(referential)
+            conn = external_session.connection
             exportable_product_ids= []
             for shop_group in referential.shop_group_ids:
                 for shop in shop_group.shop_ids:
                     exportable_product_ids.extend([product.id for product in shop.exportable_product_ids])
             exportable_product_ids = list(set(exportable_product_ids))
-            self.pool.get('product.product').mag_import_product_links(cr, uid, exportable_product_ids, referential.id, conn, context=context)
+            self.pool.get('product.product').mag_import_product_links(cr, uid, exportable_product_ids, external_session, context=context)
         return True
 
     def export_products(self, cr, uid, ids, context=None):
