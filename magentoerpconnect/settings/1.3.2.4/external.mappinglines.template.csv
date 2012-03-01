@@ -7,13 +7,13 @@
 "mag_1324_erp_s_gpid","magento1324","base_sale_multichannels.model_external_shop_group","default_group_id",,"in_out","function","int",,"result=[('default_shop_integer_id',ifield)]",
 "mag_1324_erp_sv_name","magento1324","model_magerp_storeviews","name",,"in_out","function","unicode",,"result=[('name',ifield)]","result=[('name',record['name'])]"
 "mag_1324_erp_sv_code","magento1324","model_magerp_storeviews","code",,"in_out","function","unicode",,"result=[('code',ifield)]",
-"mag_1324_erp_sv_sg","magento1324","model_magerp_storeviews","website_id",,"in_out","function","int",,"result=[('website_id',self.pool.get('external.shop.group').extid_to_oeid(cr, uid, ifield, external_referential_id))]",
+"mag_1324_erp_sv_sg","magento1324","model_magerp_storeviews","website_id",,"in_out","function","int",,"result=[('website_id',self.pool.get('external.shop.group').extid_to_oeid(cr, uid, external_session, ifield, referential_id))]",
 "mag_1324_erp_sv_isa","magento1324","model_magerp_storeviews","is_active",,"in_out","function","unicode",,"result=[('is_active',bool(eval(ifield)))]",
 "mag_1324_erp_sv_stord","magento1324","model_magerp_storeviews","sort_order",,"in_out","function","int",,"result=[('sort_order',ifield)]",
-"mag_1324_erp_sv_gpid","magento1324","model_magerp_storeviews","group_id",,"in_out","function","int",,"result=[('shop_id',self.pool.get('sale.shop').extid_to_oeid(cr, uid, ifield, external_referential_id))]",
+"mag_1324_erp_sv_gpid","magento1324","model_magerp_storeviews","group_id",,"in_out","function","int",,"result=[('shop_id',self.pool.get('sale.shop').extid_to_oeid(cr, uid, external_session, ifield, referential_id))]",
 "mag_1324_erp_st_name","magento1324","sale.model_sale_shop","name",,"in_out","function","unicode",,"result=[('name',ifield)]","result=[('name',record['name'])]"
 "mag_1324_erp_st_gpid","magento1324","sale.model_sale_shop","group_id",,"in_out","function","int",,"result=[('group_id',ifield)]",
-"mag_1324_erp_st_grp","magento1324","sale.model_sale_shop","website_id",,"in_out","function","int",,"result=[('shop_group_id',self.pool.get('external.shop.group').extid_to_oeid(cr, uid, ifield, external_referential_id))]",
+"mag_1324_erp_st_grp","magento1324","sale.model_sale_shop","website_id",,"in_out","function","int",,"result=[('shop_group_id',self.pool.get('external.shop.group').extid_to_oeid(cr, uid, external_session, ifield, referential_id))]",
 "mag_1324_erp_st_default_st","magento1324","sale.model_sale_shop","default_store_id",,"in_out","function","int",,"result=[('default_storeview_integer_id',ifield)]",
 "mag_1324_erp_st_root_categ","magento1324","sale.model_sale_shop","root_category_id",,"in_out","function","int",,"result=[('root_category_id',ifield)]",
 "mag_1324_erp_so_total_amount","magento1324","sale.model_sale_order","grand_total",,"in_out","function","float",,"result=[('ext_total_amount',str(ifield))]",
@@ -47,7 +47,7 @@ result=[('order_policy', ifield['method'] in payments_mapping and payments_mappi
     result=[('notes',  """".join(options_label).replace('""""', '\n').replace('""', ''))]
 ",
 "mag_1324_erp_soline_pid","magento1324","sale.model_sale_order_line","product_id",,"in_out","function","unicode",,"context['alternative_key'] = data['sku']
-result=[('product_id',self.pool.get('product.product').extid_to_oeid(cr, uid, ifield, external_referential_id))]",
+result=[('product_id',self.pool.get('product.product').extid_to_oeid(cr, uid, external_session, ifield, referential_id))]",
 "mag_1324_erp_soline_uomqty","magento1324","sale.model_sale_order_line","qty_ordered",,"in_out","function","unicode",,"result=[('product_uom_qty',ifield)]",
 "mag_1324_erp_soline_uosqty","magento1324","sale.model_sale_order_line","qty_ordered",,"in","function","unicode",,"result=[('product_uos_qty',ifield)]",
 "mag_1324_erp_soline_price","magento1324","sale.model_sale_order_line","price",,"in","function","unicode",,"if context.get('price_is_tax_included', False):             
@@ -64,10 +64,10 @@ if record_id:
 	parent_id=parent_rec.get('res_id',False)
 result=[('magento_parent_id',ifield),('parent_id',parent_id)]","magento_parent_id = False
 if record.get('parent_id',False):
-	magento_parent_id = self.oeid_to_extid(cr, uid, record.get('parent_id')[0], external_referential_id)
+	magento_parent_id = self.oeid_to_extid(cr, uid, record.get('parent_id')[0], referential_id)
 	if not magento_parent_id:
-		self.ext_export(cr,uid,[record.get('parent_id',[False])[0]],[external_referential_id],{},context=context)
-		magento_parent_id = self.oeid_to_extid(cr, uid, record.get('parent_id')[0], external_referential_id)
+		self.ext_export(cr,uid,[record.get('parent_id',[False])[0]],[referential_id],{},context=context)
+		magento_parent_id = self.oeid_to_extid(cr, uid, record.get('parent_id')[0], referential_id)
 if magento_parent_id:
 	result = [('parent_id',magento_parent_id)]"
 "mag_1324_erp_procat_4","magento1324","product.model_product_category","is_active",,"in_out","function","unicode",,"result=[('is_active',ifield and (eval(ifield)) or False)]","result=[('is_active',record['is_active'])]"
@@ -164,22 +164,22 @@ result=[('page_layout',att_id)]","result=[('page_layout', record['page_layout'][
 "mag_1324_erp_prd_7","magento1324","product.model_product_product","category_ids",,"in_out","function","list",,"categ_ids =[]
 if ifield and len(ifield) > 0:
     for category_ids in ifield:
-        categ_ids.append(self.pool.get('product.category').extid_to_oeid(cr, uid, category_ids, external_referential_id))
+        categ_ids.append(self.pool.get('product.category').extid_to_oeid(cr, uid, external_session, category_ids, referential_id))
     categ_id = categ_ids.pop()
 else:
-    categ_id = self.pool.get('external.referential').browse(cr, uid, external_referential_id).default_pro_cat.id
+    categ_id = self.pool.get('external.referential').browse(cr, uid, referential_id).default_pro_cat.id
 result = [('categ_id', categ_id), ('categ_ids',[(6, 0, categ_ids)])]","
 product = self.browse(cr, uid, record['id'])
-main_categ_id = self.pool.get('product.category').oeid_to_extid(cr, uid, product.categ_id.id, external_referential_id)
+main_categ_id = self.pool.get('product.category').oeid_to_extid(cr, uid, product.categ_id.id, referential_id)
 categ_ids = [main_categ_id]
 for categ in product.categ_ids: #deal with extra m2m categories
-    categ_id =  self.pool.get('product.category').oeid_to_extid(cr, uid, categ.id, external_referential_id)
+    categ_id =  self.pool.get('product.category').oeid_to_extid(cr, uid, categ.id, referential_id)
     if categ_id:
         categ_ids.append(categ_id)
 result=[('category_ids', categ_ids)]"
 "mag_1324_erp_prd_8","magento1324","product.model_product_product","price",,"in_out","function","float",,"result=[('list_price',ifield)]","result=[]#map later"
 "mag_1324_erp_prd_9","magento1324","product.model_product_product","cost",,"in_out","function","float",,"result=[('standard_price',ifield)]","result = [('cost',record['standard_price'] or 0)]"
-"mag_1324_erp_prd_10","magento1324","product.model_product_product","set",,"in_out","function","unicode",,"result=[('set',self.pool.get('magerp.product_attribute_set').extid_to_oeid(cr, uid, ifield, external_referential_id))]",
+"mag_1324_erp_prd_10","magento1324","product.model_product_product","set",,"in_out","function","unicode",,"result=[('set',self.pool.get('magerp.product_attribute_set').extid_to_oeid(cr, uid, external_session, ifield, referential_id))]",
 "mag_1324_erp_prd_11","magento1324","product.model_product_product","special_price",,"in_out","function","float",,"result = [('x_magerp_special_price',ifield)]",
 "mag_1324_erp_prd_12","magento1324","product.model_product_product","tier_price",,"in_out","function","unicode",,"result=[]#no mapping by default","result=[]#no mapping by default"
 "mag_1324_erp_prd_13","magento1324","product.model_product_product","minimal_price",,"in_out","function","float",,"result = [('x_magerp_minimal_price',ifield)]","
@@ -196,22 +196,22 @@ else:
     result = [('type_id','simple')]"
 "mag_1324_erp_prd_15","magento1324","product.model_product_product","websites",,"in_out","function","list",,"websites_ids = []
 for ext_id in ifield:
-    websites_ids.append(self.pool.get('external.shop.group').extid_to_oeid(cr, uid, ext_id, external_referential_id))
+    websites_ids.append(self.pool.get('external.shop.group').extid_to_oeid(cr, uid, external_session, ext_id, referential_id))
 
 ##### OPTION START, with this if the field websites of the product is empty the product is exported on every website
-all_oe_websites_ids = self.pool.get('external.shop.group').search(cr,uid,[('referential_id', '=', external_referential_id)])
+all_oe_websites_ids = self.pool.get('external.shop.group').search(cr,uid,[('referential_id', '=', referential_id)])
 if set(websites_ids) == set(all_oe_websites_ids):
     websites_ids =[]
 ##### OPTION END
 
 result=[('websites_ids', [(6,0, websites_ids)])]","##### OPTION START, with this if the field websites of the product is empty the product is exported on every website
 if not record['websites_ids']:
-    record['websites_ids'] = self.pool.get('external.shop.group').search(cr,uid,[('referential_id', '=', external_referential_id)])
+    record['websites_ids'] = self.pool.get('external.shop.group').search(cr,uid,[('referential_id', '=', referential_id)])
 ##### OPTION END
 
 ext_websites_ids = []
 for oe_id in record['websites_ids']:
-    ext_websites_ids.append(self.pool.get('external.shop.group').oeid_to_extid(cr, uid, oe_id, external_referential_id))
+    ext_websites_ids.append(self.pool.get('external.shop.group').oeid_to_extid(cr, uid, oe_id, referential_id))
 
 result=[('websites', ext_websites_ids)]"
 "mag_1324_erp_prd_16","magento1324","product.model_product_product","has_options",,"in","function","unicode",,"result =[('x_magerp_has_options',ifield)]",
@@ -244,7 +244,7 @@ else:
 		result=[]
 else:
 	result=[]",
-"magento_1324_prt_adr_13","magento1324","base.model_res_partner_address","customer_id",,"in_out","function","int",,"result=self.pool.get('res.partner').extid_to_oeid(cr,uid,ifield,external_referential_id)
+"magento_1324_prt_adr_13","magento1324","base.model_res_partner_address","customer_id",,"in_out","function","int",,"result=self.pool.get('res.partner').extid_to_oeid(cr,uid,ifield,referential_id)
 if result:
 	result=[('partner_id',result)]
 else:
@@ -257,16 +257,16 @@ else:
 	result=[]",
 "magento_1324_prt_adr_15","magento1324","base.model_res_partner_address","email",,"in_out","function","unicode",,"result=[('email',ifield)]",
 "magento_1324_prt_2","magento1324","base.model_res_partner","group_id",,"in_out","function","int",,"if ifield:
-	result=self.pool.get('res.partner.category').extid_to_oeid(cr,uid,ifield,external_referential_id)
+	result=self.pool.get('res.partner.category').extid_to_oeid(cr,uid,ifield,referential_id)
 	if result:
 		result=[('group_id',result)]",
 "magento_1324_prt_3","magento1324","base.model_res_partner","store_id",,"in_out","function","int",,"if ifield:
-	result=self.pool.get('magerp.storeviews').extid_to_oeid(cr,uid,ifield,external_referential_id)
+	result=self.pool.get('magerp.storeviews').extid_to_oeid(cr,uid,ifield,referential_id)
 	if result:
 		lang = self.pool.get('magerp.storeviews').browse(cr, uid, result).lang_id
 		result=[('store_id',result),('lang',lang and lang.code or False)]",
 "magento_1324_prt_4","magento1324","base.model_res_partner","website_id",,"in_out","function","int",,"if ifield:
-	result=self.pool.get('external.shop.group').extid_to_oeid(cr,uid,ifield,external_referential_id)
+	result=self.pool.get('external.shop.group').extid_to_oeid(cr,uid,ifield,referential_id)
 	if result:
 		result=[('website_id',result)]",
 "magento_1324_prt_5","magento1324","base.model_res_partner","created_in",,"in_out","function","unicode",,"result=[('created_in',ifield)]",
