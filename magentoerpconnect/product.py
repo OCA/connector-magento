@@ -665,6 +665,10 @@ class magerp_product_attribute_groups(magerp_osv.magerp_osv):
             res[attribute_group.id] = self.pool.get('magerp.product_attribute_set').extid_to_oeid(cr, uid, attribute_group.attribute_set_id, attribute_group.referential_id.id)
         return res
     
+    def _get_filter(self, cr, uid, external_session, step, previous_filter=None, context=None):
+        attrset_ids = self.pool.get('magerp.product_attribute_set').get_all_extid_from_referential(cr, uid, external_session.referential_id.id, context=context)
+        return {'attribute_set_id':{'in':attrset_ids}}
+
     _columns = {
         'attribute_set_id':fields.integer('Attribute Set ID'),
         'attribute_set':fields.function(_get_set, type="many2one", relation="magerp.product_attribute_set", method=True, string="Attribute Set"),
