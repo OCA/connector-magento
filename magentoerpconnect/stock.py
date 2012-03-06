@@ -106,8 +106,14 @@ class stock_picking(osv.osv):
             carrier_tracking_ref = self.read(cr, uid, id, ['carrier_tracking_ref'], context)['carrier_tracking_ref']
         else:
             carrier_tracking_ref = ''
+
+        # in Magento, the delivery method is something like that:
+        # tntmodule2_tnt_basic
+        # where the first part before the _ is always the carrier code
+        # in this example, the carrier code is tntmodule2
+        carrier_code = carrier['magento_code'].split('_')[0]
             
-        res= conn.call('sales_order_shipment.addTrack', [ext_shipping_id, carrier['magento_code'], carrier['magento_tracking_title'] or '', carrier_tracking_ref or ''])
+        res = conn.call('sales_order_shipment.addTrack', [ext_shipping_id, carrier_code, carrier['magento_tracking_title'] or '', carrier_tracking_ref or ''])
         if res:
             logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "Successfully adding a tracking reference to the shipping with OpenERP id %s and ext id %s in external sale system" % (id, ext_shipping_id))       
         return True
