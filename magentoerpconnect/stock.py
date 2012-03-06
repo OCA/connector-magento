@@ -100,22 +100,16 @@ class stock_picking(osv.osv):
         if context is None: context = {}
         logger = netsvc.Logger()
         conn = context.get('conn_obj', False)
-        carrier = self.pool.get('delivery.carrier').read(cr, uid, carrier_id, ['magento_code', 'magento_tracking_title'], context)
+        carrier = self.pool.get('delivery.carrier').read(cr, uid, carrier_id, ['magento_carrier_code', 'magento_tracking_title'], context)
         
         if self.pool.get('ir.model.fields').search(cr, uid, [('name', '=', 'carrier_tracking_ref'), ('model', '=', 'stock.picking')]): #OpenERP v6 have the field carrier_tracking_ref on the stock_picking but v5 doesn't have it
             carrier_tracking_ref = self.read(cr, uid, id, ['carrier_tracking_ref'], context)['carrier_tracking_ref']
         else:
             carrier_tracking_ref = ''
-
-        # in Magento, the delivery method is something like that:
-        # tntmodule2_tnt_basic
-        # where the first part before the _ is always the carrier code
-        # in this example, the carrier code is tntmodule2
-        carrier_code = carrier['magento_code'].split('_')[0]
             
-        res = conn.call('sales_order_shipment.addTrack', [ext_shipping_id, carrier_code, carrier['magento_tracking_title'] or '', carrier_tracking_ref or ''])
+        res = conn.call('sales_order_shipment.addTrack', [ext_shipping_id, carrier['magento_carrier_code'], carrier['magento_tracking_title'] or '', carrier_tracking_ref or ''])
         if res:
-            logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "Successfully adding a tracking reference to the shipping with OpenERP id %s and ext id %s in external sale system" % (id, ext_shipping_id))       
+            logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "Successfully adding a tracking reference to the shipping with OpenERP id %s and ext id %s in external sale system" % (id, ext_shipping_id))
         return True
 
 stock_picking()
