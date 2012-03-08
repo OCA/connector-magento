@@ -838,8 +838,8 @@ class product_mag_osv(magerp_osv.magerp_osv):
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         if context is None:
             context = {}
-
         result = super(product_mag_osv, self).fields_view_get(cr, uid, view_id,view_type,context,toolbar=toolbar)
+        print 'fields view get', result
         if view_type == 'form':
             result['arch'] = result['arch'].decode('utf8') #in order to support special character, the arch for the product view will be a unicode and not a str
             if context.get('set', False):
@@ -876,9 +876,9 @@ class product_mag_osv(magerp_osv.magerp_osv):
             else:
                 magento_button = (
                     "<button name='open_magento_fields' string='Open Magento Fields' icon='gtk-go-forward' type='object'"
-                    " colspan='2' attrs=\"{'invisible':[('magento_exportable','!=', True)]}\"/>"
+                    " colspan='2' attrs=\"{'invisible':[('magento_exportable','!=', True)]}\""
                     )
-                result['arch'] = result['arch'].replace('<button name="open_magento_fields"/>', magento_button)
+                result['arch'] = result['arch'].replace('<button name="open_magento_fields"', magento_button)
                 result['arch'] = result['arch'].replace('<page string="attributes_placeholder"/>', "")
         return result
 
