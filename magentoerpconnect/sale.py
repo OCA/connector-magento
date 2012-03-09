@@ -313,6 +313,8 @@ class sale_order(magerp_osv.magerp_osv):
             data_record['shipping_address'].update(self.get_mage_customer_address_id(data_record['shipping_address']))
         shipping_default = {}
         billing_default = {}
+        if res is None:
+            res = {}
         res['partner_id'] = self.pool.get('res.partner').extid_to_oeid(cr, uid, data_record['customer_id'], external_referential_id)
         if res.get('partner_id', False):
             shipping_default = {'partner_id': res.get('partner_id', False)}
@@ -407,14 +409,6 @@ class sale_order(magerp_osv.magerp_osv):
         product = self.pool.get('product.product').browse(cr, uid, product_id, context)
         is_tax_included = context.get('price_is_tax_included', False)
         amount = float(data_record[ext_field]) * sign
-        tax_id = []
-        if ext_tax_field:
-            if data_record[ext_tax_field] and float(data_record[ext_tax_field]) != 0:
-                line_tax_vat_rate = abs(float(data_record[ext_tax_field]) / amount)
-                line_tax_id = self.pool.get('account.tax').get_tax_from_rate(cr, uid, line_tax_vat_rate, is_tax_included, context)
-                if line_tax_id:
-                    tax_id = [(6, 0, [line_tax_id])]
-
         name = product.name
         if ext_code_field and data_record.get(ext_code_field, False):
             name = "%s [%s]" % (name, data_record[ext_code_field])
@@ -424,14 +418,25 @@ class sale_order(magerp_osv.magerp_osv):
         else:
             price_unit = float(amount)
 
-        res['order_line'].append((0, 0, {
-                                    'product_id': product.id,
-                                    'name': name,
-                                    'product_uom': product.uom_id.id,
-                                    'product_uom_qty': 1,
-                                    'price_unit': price_unit,
-                                    'tax_id': tax_id
-                                }))
+        extra_line = {
+                        'product_id': product.id,
+                        'name': name,
+                        'product_uom': product.uom_id.id,
+                        'product_uom_qty': 1,
+                        'price_unit': price_unit,
+                    }
+
+        if not res.get('order_line'):
+            res['order_line'] = []
+
+        if context.get('play_sale_order_onchange'):
+            extra_line = self.pool.get('sale.order.line').play_sale_order_line_onchange(cr, uid, extra_line, res, res['order_line'], defaults, context=context)
+        if context.get('use_external_tax'):
+            tax_vat = abs(float(data_record[ext_tax_field]) / amount)
+            line_tax_id = self.pool.get('account.tax').get_tax_from_rate(cr, uid, tax_vat, context.get('is_tax_included'), context=context)
+            extra_line['tax_id'] = [(6, 0, line_tax_id)]
+        res['order_line'].append((0, 0, extra_line))
+
         return res
     
     def add_order_shipping(self, cr, uid, res, external_referential_id, data_record, defaults, context=None):
@@ -657,7 +662,7 @@ class sale_order(magerp_osv.magerp_osv):
             context = {}
         logger = netsvc.Logger()
         conn = context.get('conn_obj', False)
-        #conn.call('sales_order.done', [external_id])
+        conn.call('sales_order.done', [external_id])
         logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "Successfully set the imported flag on Magento on sale order %s" % external_id)
         return True
 
