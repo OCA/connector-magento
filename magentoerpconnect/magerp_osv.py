@@ -43,7 +43,7 @@ class Connection(object):
         self.location = str(location + "index.php/api/xmlrpc")
         self.username = username
         self.password = password
-        self.debug = True
+        self.debug = False
         self.result = {}
         self.logger = netsvc.Logger()
 

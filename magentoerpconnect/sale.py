@@ -32,6 +32,8 @@ import string
 #from datetime import datetime
 import tools
 import time
+from tools import DEFAULT_SERVER_DATETIME_FORMAT
+
 DEBUG = True
 NOTRY = False
 
@@ -66,7 +68,7 @@ class sale_shop(magerp_osv.magerp_osv):
     def export_images(self, cr, uid, ids, context=None):
         if context is None: context = {}
         logger = netsvc.Logger()
-        start_date = time.strftime('%Y-%m-%d %H:%M:%S')
+        start_date = time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         image_obj = self.pool.get('product.images')
         for shop in self.browse(cr, uid, ids):
             context['shop_id'] = shop.id
@@ -86,7 +88,7 @@ class sale_shop(magerp_osv.magerp_osv):
     def _get_rootcategory(self, cr, uid, ids, prop, unknow_none, context=None):
         res = {}
         for shop in self.browse(cr, uid, ids, context):
-            if shop.root_category_id:
+            if shop.root_category_id and shop.shop_group_id.referential_id:
                 rid = self.pool.get('product.category').extid_to_oeid(cr, uid, shop.root_category_id, shop.shop_group_id.referential_id.id)
                 res[shop.id] = rid
             else:
@@ -139,7 +141,9 @@ class sale_shop(magerp_osv.magerp_osv):
             self.check_need_to_update(cr, uid, [shop.id], context=context)
             for storeview in shop.storeview_ids:
                 magento_storeview_id = self.pool.get('magerp.storeviews').oeid_to_extid(cr, uid, storeview.id, shop.referential_id.id, context={})
-                ids_or_filter = [{'store_id': {'eq': magento_storeview_id}, 'state': {'neq': 'canceled'}}]
+                ids_or_filter = {'store_id': {'eq': magento_storeview_id}, 'state': {'neq': 'canceled'}}
+                if shop.import_orders_from_date:
+                    ids_or_filter.update({'created_at' : {'gt': shop.import_orders_from_date}})
                 nb_last_created_ids = SALE_ORDER_IMPORT_STEP
                 while nb_last_created_ids:
                     defaults['magento_storeview_id'] = storeview.id
@@ -282,19 +286,10 @@ class sale_order(magerp_osv.magerp_osv):
     }
     
     def _auto_init(self, cr, context=None):
-        sale_margin_installed = False
-        #check if sale_margin is installed
-        cr.execute('select * from ir_module_module where name=%s and state=%s', ('sale_margin','installed'))
-        data_record = cr.fetchone()
-        if data_record and 'sale_margin' in data_record:
-            sale_margin_installed=True
-            tools.drop_view_if_exists(cr, 'report_account_invoice_product')
         tools.drop_view_if_exists(cr, 'sale_report')
         cr.execute("ALTER TABLE sale_order_line ALTER COLUMN discount TYPE numeric(16,6);")
         cr.execute("ALTER TABLE account_invoice_line ALTER COLUMN discount TYPE numeric(16,6);")
         self.pool.get('sale.report').init(cr)
-        if sale_margin_installed:
-            self.pool.get('report.account.invoice.product').init(cr)
         super(sale_order, self)._auto_init(cr, context)
         
     def get_mage_customer_address_id(self, address_data):
@@ -358,27 +353,33 @@ class sale_order(magerp_osv.magerp_osv):
             partner_obj.write(cr, uid, [partner_id], {'store_ids': [(6,0,store_ids)]})
 
         # Adds vat number (country code+magento vat) if base_vat module is installed and Magento sends customer_taxvat
-        cr.execute('select * from ir_module_module where name=%s and state=%s', ('base_vat','installed'))
-        if cr.fetchone() and 'customer_taxvat' in data_record and data_record['customer_taxvat']:
-            allchars = string.maketrans('', '')
-            delchars = ''.join([c for c in allchars if c not in string.letters + string.digits])
-            vat = data_record['customer_taxvat'].translate(allchars, delchars).upper()
-            vat_country, vat_number = vat[:2].lower(), vat[2:]
-            if 'check_vat_' + vat_country in dir(partner_obj):
-                check = getattr(partner_obj, 'check_vat_' + vat_country)
-                vat_ok = check(vat_number)
-            else:
-                # Maybe magento vat number has not country code prefix. Take it from billing address.
-                if 'country_id' in data_record['billing_address']:
-                    fnct = 'check_vat_' + data_record['billing_address']['country_id'].lower()
-                    if fnct in dir(partner_obj):
-                        check = getattr(partner_obj, fnct)
-                        vat_ok = check(vat)
-                        vat = data_record['billing_address']['country_id'] + vat
-                    else:
-                        vat_ok = False
-            if vat_ok:    
-                partner_obj.write(cr, uid, [partner_id], {'vat_subjected':True, 'vat':vat})
+        #TODO replace me by a generic function maybe the best solution will to have a field vat and a flag vat_ok and a flag force vat_ok
+        #And so it's will be possible to have an invalid vat number (imported from magento for exemple) but the flag will be not set
+        #Also we should think about the way to update customer. Indeed by default there are never updated
+        if data_record.get('customer_taxvat'):
+            partner_vals = {'mag_vat': data_record.get('customer_taxvat')}
+            cr.execute('select * from ir_module_module where name=%s and state=%s', ('base_vat','installed'))
+            if cr.fetchone(): 
+                allchars = string.maketrans('', '')
+                delchars = ''.join([c for c in allchars if c not in string.letters + string.digits])
+                vat = data_record['customer_taxvat'].translate(allchars, delchars).upper()
+                vat_country, vat_number = vat[:2].lower(), vat[2:]
+                if 'check_vat_' + vat_country in dir(partner_obj):
+                    check = getattr(partner_obj, 'check_vat_' + vat_country)
+                    vat_ok = check(vat_number)
+                else:
+                    # Maybe magento vat number has not country code prefix. Take it from billing address.
+                    if 'country_id' in data_record['billing_address']:
+                        fnct = 'check_vat_' + data_record['billing_address']['country_id'].lower()
+                        if fnct in dir(partner_obj):
+                            check = getattr(partner_obj, fnct)
+                            vat_ok = check(vat)
+                            vat = data_record['billing_address']['country_id'] + vat
+                        else:
+                            vat_ok = False
+                if vat_ok:
+                    partner_vals.update({'vat_subjected':True, 'vat':vat})
+            partner_obj.write(cr, uid, [partner_id], partner_vals)
         return res
     
 
@@ -488,33 +489,54 @@ class sale_order(magerp_osv.magerp_osv):
         res = self.add_cash_on_delivery(cr, uid, res, external_referential_id, external_data, defaults, context)
         return [res]
 
-    def merge_parent_item_line_with_child(self, cr, uid, item, items_child, context=None):
-        if item['product_type'] == 'configurable':
-            #For configurable product all information regarding the price is in the configurable item
-            #In the child a lot of information is empty, but containt the right sku and product_id
-            #So the real product_id and the sku and the name have to be extracted from the child
-            for field in ['sku', 'product_id', 'name']:
-                item[field] = items_child[item['item_id']][0][field]
-        return item 
-    
-    def data_record_filter(self, cr, uid, data_record, context=None):
-        items_child = {}
-        items_to_import = []
+    def _merge_sub_items(self, cr, uid, product_type, top_item, child_items, context=None):
+        """
+        Manage the sub items of the magento sale order lines. A top item contains one
+        or many child_items. For some product types, we want to merge them in the main
+        item, or keep them as order line.
 
-        #First all child are remove for the order line
+        A list may be returned to add many items (ie to keep all child_items as items.
+
+        :param top_item: main item (bundle, configurable)
+        :param child_items: list of childs of the top item
+        :return: item or list of items
+        """
+        if product_type == 'configurable':
+            item = top_item.copy()
+            # For configurable product all information regarding the price is in the configurable item
+            # In the child a lot of information is empty, but contains the right sku and product_id
+            # So the real product_id and the sku and the name have to be extracted from the child
+            for field in ['sku', 'product_id', 'name']:
+                item[field] = child_items[0][field]
+            return item
+        return top_item
+
+    def data_record_filter(self, cr, uid, data_record, context=None):
+        child_items = {}  # key is the parent item id
+        top_items = []
+
+        # Group the childs with their parent
         for item in data_record['items']:
-            if item['parent_item_id']:
-                if items_child.get(item['parent_item_id'], False):
-                    items_child[item['parent_item_id']].append(item)
-                else:
-                    items_child[item['parent_item_id']] = [item]
+            if item.get('parent_item_id'):
+                child_items.setdefault(item['parent_item_id'], []).append(item)
             else:
-                items_to_import.append(item)
+                top_items.append(item)
+
+        all_items = []
+        for top_item in top_items:
+            if top_item['item_id'] in child_items:
+                item_modified = self._merge_sub_items(cr, uid,
+                                                      top_item['product_type'],
+                                                      top_item,
+                                                      child_items[top_item['item_id']],
+                                                      context=context)
+                if not isinstance(item_modified, list):
+                    item_modified = [item_modified]
+                all_items.extend(item_modified)
+            else:
+                all_items.append(top_item)
         
-        for item in items_to_import:
-            item = self.merge_parent_item_line_with_child(cr, uid, item, items_child, context=context)
-        
-        data_record['items'] = items_to_import 
+        data_record['items'] = all_items
         return data_record
 
     def oevals_from_extdata(self, cr, uid, external_referential_id, data_record, key_field, mapping_lines, parent_data=None, previous_lines=None, defaults=None, context=None):
@@ -552,7 +574,7 @@ class sale_order(magerp_osv.magerp_osv):
             paid = super(sale_order, self).create_payments(cr, uid, order_id, data_record, context=context)
         return paid
 
-    def chain_cancel_orders(self, cr, uid, external_id, external_referential_id, defaults=None, context=None):
+    def _chain_cancel_orders(self, cr, uid, external_id, external_referential_id, defaults=None, context=None):
         """ Get all the chain of edited orders (an edited order is canceled on Magento)
          and cancel them on OpenERP. If an order cannot be canceled (confirmed for example)
          A request is created to inform the user.
@@ -621,7 +643,7 @@ class sale_order(magerp_osv.magerp_osv):
 
                 # if a created order has a relation_parent_real_id, the new one replaces the original, so we have to cancel the old one
                 if data[0].get('relation_parent_real_id', False): # data[0] because orders are imported one by one so data always has 1 element
-                    self.chain_cancel_orders(order_cr, uid, ext_order_id, external_referential_id, defaults=defaults, context=context)
+                    self._chain_cancel_orders(order_cr, uid, ext_order_id, external_referential_id, defaults=defaults, context=context)
 
             # set the "imported" flag to true on Magento
             self.ext_set_order_imported(order_cr, uid, ext_order_id, external_referential_id, context)
@@ -635,7 +657,7 @@ class sale_order(magerp_osv.magerp_osv):
             context = {}
         logger = netsvc.Logger()
         conn = context.get('conn_obj', False)
-        conn.call('sales_order.done', [external_id])
+        #conn.call('sales_order.done', [external_id])
         logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "Successfully set the imported flag on Magento on sale order %s" % external_id)
         return True
 
@@ -656,21 +678,21 @@ class sale_order(magerp_osv.magerp_osv):
             order_retrieve_params = {
                 'imported': False,
                 'limit': SALE_ORDER_IMPORT_STEP,
-                'filters': context['ids_or_filter'][0],
+                'filters': context['ids_or_filter'],
             }
-            data = conn.call('sales_order.retrieve', [order_retrieve_params])
-            data_filtred=[]
+            ext_order_ids = conn.call('sales_order.search', [order_retrieve_params])
+            order_ids_filtred=[]
             unchanged_ids=[]
-            for order in data:
-                existing_id = self.extid_to_existing_oeid(cr, uid, order['increment_id'], external_referential_id, context=context)
+            for ext_order_id in ext_order_ids:
+                existing_id = self.extid_to_existing_oeid(cr, uid, ext_order_id, external_referential_id, context=context)
                 if existing_id:
                     unchanged_ids.append(existing_id)
-                    logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "the order %s already exist in OpenERP" % (order['increment_id'],))
-                    self.ext_set_order_imported(cr, uid, order['increment_id'], external_referential_id, context=context)
+                    logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "the order %s already exist in OpenERP" % (ext_order_id,))
+                    self.ext_set_order_imported(cr, uid, ext_order_id, external_referential_id, context=context)
                 else:
-                    data_filtred.append(order)
+                    order_ids_filtred.append({'increment_id' : ext_order_id})
             context['conn_obj'] = conn # we will need the connection to set the flag to "imported" on magento after each order import
-            result = self.mage_import_one_by_one(cr, uid, conn, external_referential_id, mapping_id[0], data_filtred, defaults, context)
+            result = self.mage_import_one_by_one(cr, uid, conn, external_referential_id, mapping_id[0], order_ids_filtred, defaults, context)
             result['unchanged_ids'] = unchanged_ids
         return result
 

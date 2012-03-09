@@ -77,6 +77,12 @@ class stock_picking(osv.osv):
 
 
     def create_ext_shipping(self, cr, uid, id, picking_type, external_referential_id, context=None):
+        """
+        Create the shipping on Magento. It can be a partial or a complete shipment.
+
+        :param str picking_type: 'partial' or 'complete'
+        :return: the picking id on magento
+        """
         magento_incrementid = self.browse(cr, uid, id, ['sale_id'], context).sale_id.magento_incrementid
         carrier_id = self.pool.get('stock.picking').read(cr, uid, id, ['carrier_id'], context)['carrier_id']
         if carrier_id:
@@ -100,8 +106,14 @@ class stock_picking(osv.osv):
             carrier_tracking_ref = self.read(cr, uid, id, ['carrier_tracking_ref'], context)['carrier_tracking_ref']
         else:
             carrier_tracking_ref = ''
+
+        # in Magento, the delivery method is something like that:
+        # tntmodule2_tnt_basic
+        # where the first part before the _ is always the carrier code
+        # in this example, the carrier code is tntmodule2
+        carrier_code = carrier['magento_code'].split('_')[0]
             
-        res= conn.call('sales_order_shipment.addTrack', [ext_shipping_id, carrier['magento_code'], carrier['magento_tracking_title'] or '', carrier_tracking_ref or ''])
+        res = conn.call('sales_order_shipment.addTrack', [ext_shipping_id, carrier_code, carrier['magento_tracking_title'] or '', carrier_tracking_ref or ''])
         if res:
             logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "Successfully adding a tracking reference to the shipping with OpenERP id %s and ext id %s in external sale system" % (id, ext_shipping_id))       
         return True

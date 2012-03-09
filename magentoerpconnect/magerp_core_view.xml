@@ -17,14 +17,22 @@
             				<button name="core_sync" string="2 - Synchronize Referential Settings" colspan="2" type="object" attrs="{'readonly':[('mapping_ids','=',[])]}"/>
             				<separator string="Optional - Initial import only" colspan="4" />
 							<button name="sync_customer_groups" string="1 - Import Customer Groups (Partner Categories)" colspan="2" type="object" />
-							<button name="sync_attribs" string="5 - Import Product Attributes" colspan="2" type="object" />
-							<button name="sync_categs" string="2 - Import Product Categories" colspan="2" type="object" />
 							<group colspan="2" col="12">
-								<button name="sync_products" string="6 - Import Products" colspan="10" type="object" />
+							    <button name="sync_attribs" string="5 - Import Product Attributes" colspan="10" type="object" />
+    							<field name="import_all_attributs"/>
+							</group>
+							<button name="sync_categs" string="2 - Import Product Categories" colspan="2" type="object" />
+							<group colspan="2" col="14">
+                                <group colspan="8">
+								    <button name="sync_products" string="6 - Import Products" type="object" attrs="{'invisible':[('import_image_with_product','=',True)]}" />
+                                    <button name="sync_products" string="6 - Import Products And Images" type="object" attrs="{'invisible':[('import_image_with_product','=',False)]}" />
+                                </group>
+								<field name="import_image_with_product"/>
+                                <field name="import_links_with_product"/>
 								<field name="last_imported_product_id" string=""/>
 							</group>
 							<button name="sync_attrib_sets" string="3 - Import Product Attribute Sets" colspan="2" type="object" />
-							<button name="sync_images" string="7 - Import Images" colspan="2" type="object" />
+							<button name="sync_images" string="7 - Import Images" colspan="2" type="object" attrs="{'invisible':[('import_image_with_product','=',True)]}"/>
 							<button name="sync_attrib_groups" string="4 - Import Attribute Groups" colspan="2" type="object" />
                             <button name="sync_product_links" string="8 - Import Product Links" colspan="2" type="object" />
             				<separator string="Default values" colspan="4" />

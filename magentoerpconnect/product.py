@@ -30,22 +30,48 @@ import pooler
 import magerp_osv
 from tools.translate import _
 import netsvc
+import unicodedata
+import base64, urllib
+import os
 
+from tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 #Enabling this to True will put all custom attributes into One page in
 #the products view
 GROUP_CUSTOM_ATTRS_TOGETHER = False
 
+
+#TODO find a good method to replace all of the special caracter allowed by magento as name for product fields
+special_character_to_replace = [
+    (u"\xf8", u"diam"),
+    (u'\xb5', u'micro'),
+    (u'\xb2', u'2'),
+    (u'\u0153', u'oe'),
+]
+
+def convert_to_ascii(my_unicode):
+    '''Convert to ascii, with clever management of accents (é -> e, è -> e)'''
+    if isinstance(my_unicode, unicode):
+        my_unicode_with_ascii_chars_only = ''.join((char for char in unicodedata.normalize('NFD', my_unicode) if unicodedata.category(char) != 'Mn'))
+        for special_caracter in special_character_to_replace:
+            my_unicode_with_ascii_chars_only = my_unicode_with_ascii_chars_only.replace(special_caracter[0], special_caracter[1])
+        return str(my_unicode_with_ascii_chars_only)
+    # If the argument is already of string type, we return it with the same value
+    elif isinstance(my_unicode, str):
+        return my_unicode
+    else:
+        return False
+
 class magerp_product_category_attribute_options(magerp_osv.magerp_osv):
     _name = "magerp.product_category_attribute_options"
     _description = "Option products category Attributes"
     _rec_name = "label"
-    
+
     def _get_default_option(self, cr, uid, field_name, value, context=None):
         res = self.search(cr, uid, [['attribute_name', '=', field_name], ['value', '=', value]], context=context)
         return res and res[0] or False
-        
-    
+
+
     def get_create_option_id(self, cr, uid, value, attribute_name, context=None):
         id = self.search(cr, uid, [['attribute_name', '=', attribute_name], ['value', '=', value]], context=context)
         if id:
@@ -65,14 +91,14 @@ class magerp_product_category_attribute_options(magerp_osv.magerp_osv):
         #'ipcast':fields.char('Type cast', size=50),
         'label':fields.char('Label', size=100),
     }
-    
-    
+
+
 magerp_product_category_attribute_options()
 
 
 class product_category(magerp_osv.magerp_osv):
     _inherit = "product.category"
-    
+
     def ext_create(self, cr, uid, data, conn, method, oe_id, context=None):
         return conn.call(method, [data.get('parent_id', 1), data])
 
@@ -107,9 +133,9 @@ class product_category(magerp_osv.magerp_osv):
         'include_in_menu': fields.boolean('Include in Navigation Menu'),
         'page_layout': fields.many2one('magerp.product_category_attribute_options', 'Page Layout', domain="[('attribute_name', '=', 'page_layout')]"),
         }
-    
 
-    
+
+
     _defaults = {
         'display_mode':lambda * a:'PRODUCTS',
         'use_default_available_sort_by': lambda * a:True,
@@ -118,24 +144,24 @@ class product_category(magerp_osv.magerp_osv):
         'include_in_menu': lambda * a:True,
         'page_layout': lambda self,cr,uid,c: self.pool.get('magerp.product_category_attribute_options')._get_default_option(cr, uid, 'page_layout', 'None', context=c),
                  }
-    
+
     def write(self, cr, uid, ids, vals, context=None):
         if not 'magerp_stamp' in vals.keys():
-            vals['magerp_stamp'] = time.strftime('%Y-%m-%d %H:%M:%S')
+            vals['magerp_stamp'] = time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         return super(product_category, self).write(cr, uid, ids, vals, context)
-    
+
     def record_entire_tree(self, cr, uid, id, conn, categ_tree, DEBUG=False):
         self.record_category(cr, uid, id, conn, int(categ_tree['category_id']))
         for each in categ_tree['children']:
             self.record_entire_tree(cr, uid, id, conn, each)
         return True
-            
+
     def record_category(self, cr, uid, external_referential_id, conn, category_id):
         #This function should record a category
         #The parent has to be created before creating child
         imp_vals = conn.call('category.info', [category_id])
         self.ext_import(cr, uid, [imp_vals], external_referential_id, defaults={}, context={'conn_obj':conn})
-        
+
     def ext_export(self, cr, uid, ids, external_referential_ids=None, defaults=None, context=None): # We export all the categories if at least one has been modified since last export
         #TODO Move this function in base_sale_multichannels
         if context is None:
@@ -143,13 +169,13 @@ class product_category(magerp_osv.magerp_osv):
 
         if defaults is None:
             defaults = {}
-            
+
         res = False
         ids_exportable = self.search(cr, uid, [('id', 'in', ids), ('magento_exportable', '=', True)]) #restrict export to only exportable products
         ids = [id for id in ids if id in ids_exportable] #we need to kept the order of the categories
-        
+
         shop = self.pool.get('sale.shop').browse(cr, uid, context['shop_id'])
-        
+
         context_dic = [context.copy()]
         context_dic[0]['export_url'] = True # for the magento version 1.3.2.4, only one url is autorized by category, so we only export with the MAPPING TEMPLATE the url of the default language
         context_dic[0]['lang'] = shop.referential_id.default_lang_id.code
@@ -158,12 +184,12 @@ class product_category(magerp_osv.magerp_osv):
             if storeview.lang_id and storeview.lang_id.code != shop.referential_id.default_lang_id.code:
                 context_dic += [context.copy()]
                 context_dic[len(context_dic)-1].update({'storeview_code': storeview.code, 'lang': storeview.lang_id.code})
-        
+
         if shop.last_products_export_date:
-            last_exported_time = datetime.datetime.fromtimestamp(time.mktime(time.strptime(shop.last_products_export_date, '%Y-%m-%d %H:%M:%S')))
+            last_exported_time = datetime.datetime.fromtimestamp(time.mktime(time.strptime(shop.last_products_export_date[:19], DEFAULT_SERVER_DATETIME_FORMAT)))
         else:
             last_exported_time = False
-        
+
         if not last_exported_time:
             for ctx_storeview in context_dic:
                 ctx_storeview['force'] = True
@@ -173,7 +199,7 @@ class product_category(magerp_osv.magerp_osv):
             read = cr.fetchall()
             for categ in read:
                 last_updated_categ = categ[0] and categ[0].split('.')[0] or categ[1] and categ[1].split('.')[0] or False
-                last_updated_categ_time = datetime.datetime.fromtimestamp(time.mktime(time.strptime(last_updated_categ, '%Y-%m-%d %H:%M:%S')))
+                last_updated_categ_time = datetime.datetime.fromtimestamp(time.mktime(time.strptime(last_updated_categ[:19], DEFAULT_SERVER_DATETIME_FORMAT)))
                 if last_updated_categ_time and last_exported_time:
                     if last_exported_time - datetime.timedelta(seconds=1) < last_updated_categ_time:
                         for ctx_storeview in context_dic:
@@ -181,14 +207,14 @@ class product_category(magerp_osv.magerp_osv):
                             res = super(product_category, self).ext_export(cr, uid, ids, external_referential_ids, defaults, ctx_storeview)
                         break
         return res
-    
+
     def try_ext_update(self, cr, uid, data, conn, method, oe_id, external_id, ir_model_data_id, create_method, context=None):
         if context is None: context = {}
         if context.get('storeview_code', False):
             return conn.call(method, [external_id, data, context.get('storeview_code', False)])
         else:
-            return conn.call(method, [external_id, data])    
-                
+            return conn.call(method, [external_id, data])
+
 product_category()
 
 
@@ -196,13 +222,13 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
     _name = "magerp.product_attributes"
     _description = "Attributes of products"
     _rec_name = "attribute_code"
-    
+
     def _get_group(self, cr, uid, ids, prop, unknow_none, context=None):
         res = {}
         for attribute in self.browse(cr, uid, ids, context):
             res[attribute.id] = self.pool.get('magerp.product_attribute_groups').extid_to_oeid(cr, uid, attribute.group_id, attribute.referential_id.id)
         return res
-    
+
     _columns = {
         'attribute_code':fields.char('Code', size=200),
         'magento_id':fields.integer('ID'),
@@ -299,7 +325,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
         'short_description',
         'url_key',
     ]
-    
+
     _type_conversion = {
         '':'char',
         'text':'char',
@@ -315,7 +341,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
         False:'char',
         'file':'char', #this option is not a magento native field it will be better to found a generic solutionto manage this kind of custom option
     }
-    
+
     _type_casts = {
         '':'unicode',
         'text':'unicode',
@@ -333,11 +359,11 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
     }
 
     _variant_fields = [
-        'color',   
+        'color',
         'dimension',
         'visibility',
     ]
-    
+
     def _is_attribute_translatable(self, vals):
         """Tells if field associated to attribute should be translatable or not.
         For now we are using a default list, later we could say that any attribute
@@ -382,6 +408,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
             context = {}
         if not vals['attribute_code'] in self._no_create_list:
             field_name = "x_magerp_" + vals['attribute_code']
+            field_name = convert_to_ascii(field_name)
             vals['field_name']= field_name
         if 'attribute_set_info' in vals.keys():
             attr_set_info = eval(vals.get('attribute_set_info',{}))
@@ -682,6 +709,7 @@ class product_product_type(osv.osv):
     _columns = {
         'name': fields.char('Name', size=100, required=True, translate=True),
         'product_type': fields.char('Type', size=100, required=True, help="Use the same name of Magento product type, for example 'simple'."),
+        'default_type': fields.selection([('product','Stockable Product'),('consu', 'Consumable'),('service','Service')], 'Default Product Type', required=True, help="Default product's type (Procurement) when a product is imported from Magento."),
     }
 product_product_type()
 
@@ -822,7 +850,7 @@ class product_mag_osv(magerp_osv.magerp_osv):
                 ir_model_field_ids = self.pool.get('ir.model.fields').search(cr, uid, [('model_id', 'in', ir_model_ids)])
                 field_names = ['product_type']
                 for field in self.pool.get('ir.model.fields').browse(cr, uid, ir_model_field_ids):
-                    if str(field.name).startswith('x_'):
+                    if field.name.startswith('x_'):
                         field_names.append(field.name)
                 if len(self.pool.get('external.shop.group').search(cr,uid,[('referential_type', 'ilike', 'mag')])) >1 :
                     context['multiwebsite'] = True
@@ -868,6 +896,58 @@ product_template()
 
 class product_product(product_mag_osv):
     _inherit = "product.product"
+
+    #TODO base the import on the mapping and the function ext_import
+    def import_product_image(self, cr, uid, id, referential_id, conn, ext_id=None, context=None):
+        image_obj = self.pool.get('product.images')
+        logger = netsvc.Logger()
+        if not ext_id:
+            ext_id = self.oeid_to_extid(cr, uid, id, referential_id, context=None)
+        # TODO everythere will should pass the params 'id' for magento api in order to force 
+        # to use the id as external key instead of mixed id/sku
+        img_list = conn.call('catalog_product_attribute_media.list', [ext_id, False, 'id'])
+        logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "Magento image for product ext_id %s: %s" %(ext_id, img_list))
+        images_name = []
+        for image in img_list:
+            img=False
+            try:
+                (filename, header) = urllib.urlretrieve(image['url'])
+                f = open(filename , 'rb')
+                data = f.read()
+                f.close()
+                if "DOCTYPE html PUBLIC" in data:
+                    logger.notifyChannel('ext synchro', netsvc.LOG_WARNING, "failed to open the image %s from Magento" % (image['url'],))
+                    continue
+                else:
+                    img = base64.encodestring(data)
+            except Exception, e:
+                #TODO raise correctly the error
+                logger.notifyChannel('ext synchro', netsvc.LOG_WARNING, "failed to open the image %s from Magento, error : %s" % (image['url'],e))
+                continue
+            mag_filename, extention = os.path.splitext(os.path.basename(image['file']))
+            data = {'name': image['label'] and not image['label'] in images_name and image['label'] or mag_filename,
+                'extention': extention,
+                'link': False,
+                'file': img,
+                'product_id': id,
+                'small_image': image['types'].count('small_image') == 1,
+                'base_image': image['types'].count('image') == 1,
+                'thumbnail': image['types'].count('thumbnail') == 1,
+                'exclude': bool(eval(image['exclude'] or 'False')),
+                'position': image['position']
+                }
+            #the character '/' is not allowed in the name of the image
+            data['name'] = data['name'].replace('/', ' ')
+            images_name.append(data['name'])
+            image_oe_id = image_obj.extid_to_existing_oeid(cr, uid, image['file'], referential_id, context=None)
+            if image_oe_id:
+                # update existing image
+                image_obj.write(cr, uid, image_oe_id, data, context=context)
+            else:
+                # create new image
+                new_image_id = image_obj.create(cr, uid, data, context=context)
+                image_obj.create_external_id_vals(cr, uid, new_image_id, image['file'], referential_id, context=context)
+        return True
     
     def extid_to_existing_oeid(self, cr, uid, id, external_referential_id, context=None):
         """Returns the OpenERP id of a resource by its external id.
@@ -875,7 +955,7 @@ class product_product(product_mag_osv):
         if not context:
             context={}
         res = super(product_mag_osv, self).extid_to_existing_oeid(cr, uid, id, external_referential_id, context=context)
-        # TODO : check if this can be replaced by _search_existing_id_by_vals (see example in res.partner)
+        # TODO : check if this can be replaced by _existing_oeid_for_extid_import (see example in res.partner)
         # thus when importing a product which do not already exists in OpenERP, ext_import will create the binding and update it directly
         if not res and context.get('magento_sku', False):
             product_id = self.search(cr, uid, [('magento_sku', '=', context['magento_sku'])], context=context)
@@ -1046,6 +1126,16 @@ class product_product(product_mag_osv):
             product_data.update({'meta_description': product.description_sale and product.description_sale[:255]})
        
         return product_data
+
+    def oevals_from_extdata(self, cr, uid, external_referential_id, data_record, mapping_lines, key_for_external_id=None, parent_data=None, previous_lines=None, defaults=None, context=None):
+        res = super(product_product, self).oevals_from_extdata(cr, uid, external_referential_id, data_record, mapping_lines, key_for_external_id=key_for_external_id, parent_data=parent_data, previous_lines=previous_lines, defaults=defaults, context=context)
+        # assign a default product type (Procurement, not the magento's one)
+        if not res.get('type'):
+            magerp_type_obj = self.pool.get('magerp.product_product_type')
+            magerp_type_ids = magerp_type_obj.search(cr, uid, [('product_type', '=', data_record['type_id'])], context=context)
+            if magerp_type_ids:
+                res['type'] = magerp_type_obj.read(cr, uid, magerp_type_ids[0], ['default_type'], context=context)['default_type']
+        return res
 
     def product_to_sku(self, cr, uid, product):
         if product.magento_sku:
@@ -1311,13 +1401,10 @@ class product_product(product_mag_osv):
             images_to_update_ids = image_obj.search(cr, uid, [('id', 'in', images_to_update_ids), '|', ('create_date', '>', context['last_images_export_date']), ('write_date', '>', context['last_images_export_date'])], context=context)
         return {'to_create' : images_to_create, 'to_update' : images_to_update_ids}
 
-    def _mag_import_product_links_type(self, cr, uid, product, link_type, external_referential_id, context=None):
+    def _mag_import_product_links_type(self, cr, uid, product, link_type, external_referential_id, conn, context=None):
         if context is None: context = {}
         logger = netsvc.Logger()
-        conn = context.get('conn')
         product_link_obj = self.pool.get('product.link')
-        if not conn:
-            raise Exception('Connection is missing ')
         selection_link_types = product_link_obj._columns['type'].selection(cr, uid, context)
         # This method could be completed to import grouped products too, you know, for Magento a product link is as
         # well a cross-sell, up-sell, related than the assignment between grouped products
@@ -1347,20 +1434,27 @@ class product_product(product_mag_osv):
                     ], context=context)
                 if existing_link:
                     product_link_obj.write(cr, uid, existing_link, link_data, context=context)
-                    logger.notifyChannel('Import Product Links', netsvc.LOG_INFO, "Successfully updated product link of type %s on product %s to product %s" %(link_type, product.id, linked_product_id))
                 else:
                     product_link_obj.create(cr, uid, link_data, context=context)
-                    logger.notifyChannel('Import Product Links', netsvc.LOG_INFO, "Successfully created product link of type %s on product %s to product %s" %(link_type, product.id, linked_product_id))
-
+                logger.notifyChannel('Import Product Links', netsvc.LOG_INFO, "Successfully imported product link of type %s on product %s to product %s" %(link_type, product.id, linked_product_id))
         return True
 
-    def mag_import_product_links(self, cr, uid, ids, link_types, external_referential_id, context=None):
+    def mag_import_product_links_types(self, cr, uid, ids, link_types, external_referential_id, conn, context=None):
+        if isinstance(ids, (int, long)): ids = [ids]
+        for product in self.browse(cr, uid, ids, context=context):
+            for link_type in link_types:
+                self._mag_import_product_links_type(cr, uid, product, link_type, external_referential_id, conn, context=context)
+        return True
+
+    def mag_import_product_links(self, cr, uid, ids, external_referential_id, conn, context=None):
+        link_types = self.pool.get('external.referential').get_magento_product_link_types(cr, uid, external_referential_id, conn, context=context)
         local_cr = pooler.get_db(cr.dbname).cursor()
-        for product in self.browse(local_cr, uid, ids, context=context):
-            [self._mag_import_product_links_type(local_cr, uid, product, link_type, external_referential_id, context=context)
-             for link_type in link_types]
-            local_cr.commit()
-        local_cr.close()
+        try:
+            for product_id in ids:
+                self.mag_import_product_links_types(local_cr, uid, [product_id], link_types, external_referential_id, conn, context=context)
+                local_cr.commit()
+        finally:
+            local_cr.close()
         return True
 
 product_product()

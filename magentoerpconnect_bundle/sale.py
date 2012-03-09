@@ -19,18 +19,23 @@
 #                                                                               #
 #################################################################################
 
-from osv import osv, fields
-import netsvc
+from osv import osv
 
 
 class sale_order(osv.osv):
     _inherit = "sale.order"
-    
-    def merge_parent_item_line_with_child(self, cr, uid, item, items_child, context=None):
-        if item['product_type'] == 'bundle':
+
+    def _merge_sub_items(self, cr, uid, product_type, top_item, child_items, context=None):
+        if product_type == 'bundle':
+            item = top_item.copy()
             item['bundle_configuration'] = []
-            for child in items_child[item['item_id']]:
-                item['bundle_configuration'].append({'product_id' : int(child['product_id']) , 'qty_ordered' : float(child['qty_ordered'])})
-        return super(sale_order, self).merge_parent_item_line_with_child(cr, uid, item, items_child, context=context)
+            for child in child_items:
+                item['bundle_configuration'].append(
+                        {'product_id': int(child['product_id']),
+                         'qty_ordered': float(child['qty_ordered'])})
+            return item
+        else:
+            return super(sale_order, self)._merge_sub_items(cr, uid, product_type,
+                                            top_item, child_items, context=context)
     
 sale_order()
