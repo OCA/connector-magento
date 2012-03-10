@@ -839,7 +839,6 @@ class product_mag_osv(magerp_osv.magerp_osv):
         if context is None:
             context = {}
         result = super(product_mag_osv, self).fields_view_get(cr, uid, view_id,view_type,context,toolbar=toolbar)
-        print 'fields view get', result
         if view_type == 'form':
             result['arch'] = result['arch'].decode('utf8') #in order to support special character, the arch for the product view will be a unicode and not a str
             if context.get('set', False):
