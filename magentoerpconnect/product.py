@@ -1180,6 +1180,7 @@ class product_product(product_mag_osv):
                     self.ext_export(cr, uid, child_ids, external_referential_ids, defaults, context) #so we export them
         else:
             logger.notifyChannel('ext synchro', netsvc.LOG_ERROR, "OpenERP 'grouped' products will export to Magento as 'grouped products' only if they have a BOM and if the 'mrp' BOM module is installed")
+            return False
         return quantities, child_ids
 
     def action_before_exporting(self, cr, uid, id, product_type, external_referential_ids=None, defaults=None, context=None):
