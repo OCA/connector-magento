@@ -329,113 +329,6 @@ class sale_order(magerp_osv.magerp_osv):
 #        return res
 #    
 
-    def add_order_extra_line(self, cr, uid, res, data_record, ext_field, product_ref, defaults, context=None):
-        """ Add or substract amount on order as a separate line item with single quantity for each type of amounts like :
-        shipping, cash on delivery, discount, gift certificates...
-
-        @param res: dict of the order to create
-        @param data_record: full data dict of the order
-        @param ext_field: name of the field in data_record where the amount of the extra lineis stored
-        @param product_ref: tuple with module and xml_id (module, xml_id) of the product to use for the extra line
-
-        Optional arguments in context:
-        sign: multiply the amount with the sign to add or substract it from the sale order
-        ext_tax_field: name of the field in data_record where the tax amount is stored
-        ext_code_field: name of the field in data_record containing a code (for coupons and gift certificates) which will be printed on the product name
-        """
-        if context is None: context = {}
-        model_data_obj = self.pool.get('ir.model.data')
-        sign = 'sign' in context and context['sign'] or 1
-        ext_tax_field = 'ext_tax_field' in context and context['ext_tax_field'] or None
-        ext_code_field = 'ext_code_field' in context and context['ext_code_field'] or None
-
-        model, product_id = model_data_obj.get_object_reference(cr, uid, *product_ref)
-        product = self.pool.get('product.product').browse(cr, uid, product_id, context)
-        is_tax_included = context.get('price_is_tax_included', False)
-        amount = float(data_record[ext_field]) * sign
-        tax_id = []
-        if ext_tax_field:
-            if data_record[ext_tax_field] and float(data_record[ext_tax_field]) != 0:
-                line_tax_vat_rate = abs(float(data_record[ext_tax_field]) / amount)
-                line_tax_id = self.pool.get('account.tax').get_tax_from_rate(cr, uid, line_tax_vat_rate, is_tax_included, context)
-                if line_tax_id:
-                    tax_id = [(6, 0, [line_tax_id])]
-
-        name = product.name
-        if ext_code_field and data_record.get(ext_code_field, False):
-            name = "%s [%s]" % (name, data_record[ext_code_field])
-		
-        if is_tax_included:
-            price_unit = float(amount) + float(data_record[ext_tax_field])
-        else:
-            price_unit = float(amount)
-
-        res['order_line'].append((0, 0, {
-                                    'product_id': product.id,
-                                    'name': name,
-                                    'product_uom': product.uom_id.id,
-                                    'product_uom_qty': 1,
-                                    'price_unit': price_unit,
-                                    'tax_id': tax_id
-                                }))
-        return res
-    
-    def add_order_shipping(self, cr, uid, res, external_referential_id, data_record, defaults, context=None):
-        if context is None: context = {}
-        if data_record.get('shipping_amount', False) and float(data_record.get('shipping_amount', False)) > 0:
-            ctx = context.copy()
-            ctx.update({
-                'ext_tax_field': 'shipping_tax_amount',
-            })
-            product_ref = ('base_sale_multichannels', 'product_product_shipping')
-            res = self.add_order_extra_line(cr, uid, res, data_record, 'shipping_amount', product_ref, defaults, ctx)
-        return res
-
-    def add_gift_certificates(self, cr, uid, res, external_referential_id, data_record, defaults, context=None):
-        if context is None: context = {}
-        if data_record.get('giftcert_amount', False) and float(data_record.get('giftcert_amount', False)) > 0:
-            ctx = context.copy()
-            ctx.update({
-                'ext_code_field': 'giftcert_code',
-                'sign': -1,
-            })
-            product_ref = ('magentoerpconnect', 'product_product_gift')
-            res = self.add_order_extra_line(cr, uid, res, data_record, 'giftcert_amount', product_ref, defaults, ctx)
-        return res
-
-    def add_discount(self, cr, uid, res, external_referential_id, data_record, defaults, context=None):
-        #TODO fix me rev 476
-        #if data_record.get('discount_amount', False) and float(data_record.get('discount_amount', False)) < 0:
-        #    ctx = context.copy()
-        #    ctx.update({
-        #        'ext_code_field': 'coupon_code',
-        #    })
-        #    product_ref = ('magentoerpconnect', 'product_product_discount')
-        #    res = self.add_order_extra_line(cr, uid, res, data_record, 'discount_amount', product_ref, defaults, ctx)
-        return res
-
-    def add_cash_on_delivery(self, cr, uid, res, external_referential_id, data_record, defaults, context=None):
-        if context is None: context = {}
-        if data_record.get('cod_fee', False) and float(data_record.get('cod_fee', False)) > 0:
-            ctx = context.copy()
-            ctx.update({
-                'ext_tax_field': 'cod_tax_amount',
-            })
-            product_ref = ('magentoerpconnect', 'product_product_cash_on_delivery')
-            res = self.add_order_extra_line(cr, uid, res, data_record, 'cod_fee', product_ref, defaults, ctx)
-        return res
-
-#DEPRECATED
-    def convert_extdata_into_oedata(self, cr, uid, external_data, external_referential_id, parent_data=None, defaults=None, context=None):
-        res = super(sale_order, self).convert_extdata_into_oedata(cr, uid, external_data, external_referential_id, parent_data=parent_data, defaults=defaults, context=context)
-        res=res[0]
-        external_data = external_data[0]
-        res = self.add_order_shipping(cr, uid, res, external_referential_id, external_data, defaults, context)
-        res = self.add_gift_certificates(cr, uid, res, external_referential_id, external_data, defaults, context)
-        res = self.add_discount(cr, uid, res, external_referential_id, external_data, defaults, context)
-        res = self.add_cash_on_delivery(cr, uid, res, external_referential_id, external_data, defaults, context)
-        return [res]
-
     def _merge_sub_items(self, cr, uid, product_type, top_item, child_items, context=None):
         """
         Manage the sub items of the magento sale order lines. A top item contains one
@@ -486,21 +379,12 @@ class sale_order(magerp_osv.magerp_osv):
         data_record['items'] = all_items
         return data_record
 
-    def oevals_from_extdata(self, cr, uid, external_referential_id, data_record, key_field, mapping_lines, parent_data=None, previous_lines=None, defaults=None, context=None):
-        if context is None: context = {}
-        if data_record.get('items', False):
-            data_record = self.data_record_filter(cr, uid, data_record, context=context)
-        #TODO refactor this code regarding the new feature of sub-mapping in base_external_referential
-        if not context.get('one_by_one', False):
-            if data_record.get('billing_address', False):
-                defaults = self.get_order_addresses(cr, uid, defaults, external_referential_id, data_record, key_field, mapping_lines, defaults, context)
-        res = super(magerp_osv.magerp_osv, self).oevals_from_extdata(cr, uid, external_referential_id, data_record, key_field, mapping_lines, parent_data, previous_lines, defaults, context)
 
-        #Move me in a mapping
-        if not context.get('one_by_one', False):            
-            if data_record.get('status_history', False) and len(data_record['status_history']) > 0:
-                res['date_order'] = data_record['status_history'][len(data_record['status_history'])-1]['created_at']
-        return res
+#        #TODO Move me in a mapping
+#        if not context.get('one_by_one', False):            
+#            if data_record.get('status_history', False) and len(data_record['status_history']) > 0:
+#                res['date_order'] = data_record['status_history'][len(data_record['status_history'])-1]['created_at']
+#        return res
     
     def create_payments(self, cr, uid, order_id, data_record, context=None):
         if context is None: context = {}
@@ -568,6 +452,12 @@ class sale_order(magerp_osv.magerp_osv):
                                     })
 
 #NEW FEATURE
+
+#TODO reimplement chain cancel orders
+#                # if a created order has a relation_parent_real_id, the new one replaces the original, so we have to cancel the old one
+#                if data[0].get('relation_parent_real_id', False): # data[0] because orders are imported one by one so data always has 1 element
+#                    self._chain_cancel_orders(order_cr, uid, ext_order_id, external_referential_id, defaults=defaults, context=context)
+
 
     def _get_filter(self, cr, uid, external_session, step, previous_filter=None, context=None):
         return {
