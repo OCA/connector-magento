@@ -34,6 +34,8 @@ import tools
 import time
 from tools import DEFAULT_SERVER_DATETIME_FORMAT
 
+from base_external_referentials.decorator import only_for_referential
+
 #from base_external_referentials import report
 
 
@@ -294,97 +296,38 @@ class sale_order(magerp_osv.magerp_osv):
         cr.execute("ALTER TABLE account_invoice_line ALTER COLUMN discount TYPE numeric(16,6);")
         self.pool.get('sale.report').init(cr)
         super(sale_order, self)._auto_init(cr, context)
-        
-    def get_mage_customer_address_id(self, address_data):
-        if address_data.get('customer_address_id', False):
-            return {'customer_address_id': address_data['customer_address_id'], 'is_magento_order_address': False}
-        else:
-            return {'customer_address_id': 'mag_order' + str(address_data['address_id']), 'is_magento_order_address': True}
-    
-    def get_order_addresses(self, cr, uid, res, external_referential_id, data_record, key_field, mapping_lines, defaults, context=None):
-        partner_obj = self.pool.get('res.partner')
-        partner_address_obj = self.pool.get('res.partner.address')
-        del(data_record['billing_address']['parent_id'])
-        if 'parent_id' in data_record['shipping_address']:
-            del(data_record['shipping_address']['parent_id'])
-        
-        #Magento uses to create same addresses over and over, try to detect if customer already have such an address (Magento won't tell it!)
-        #We also create new addresses for each command here, passing a custom magento_id key in the following is what
-        #avoid the base_external_referentials framework to try to update existing partner addresses
-        data_record['billing_address'].update(self.get_mage_customer_address_id(data_record['billing_address']))
-        if 'address_type' in data_record['shipping_address']:
-            data_record['shipping_address'].update(self.get_mage_customer_address_id(data_record['shipping_address']))
-        shipping_default = {}
-        billing_default = {}
-        res['partner_id'] = self.pool.get('res.partner').extid_to_oeid(cr, uid, data_record['customer_id'], external_referential_id)
-        if res.get('partner_id', False):
-            shipping_default = {'partner_id': res.get('partner_id', False)}
-        billing_default = shipping_default.copy()
-        billing_default.update({'email' : data_record.get('customer_email', False)})
 
-        inv_res = partner_address_obj.ext_import(cr, uid, [data_record['billing_address']], external_referential_id, billing_default, context)
-        if 'address_type' in data_record['shipping_address']:
-            ship_res = partner_address_obj.ext_import(cr, uid, [data_record['shipping_address']], external_referential_id, shipping_default, context)
-        else:
-            ship_res = partner_address_obj.ext_import(cr, uid, [data_record['billing_address']], external_referential_id, shipping_default, context)
-
-        res['partner_order_id'] = len(inv_res['create_ids']) > 0 and inv_res['create_ids'][0] or inv_res['write_ids'][0]
-        res['partner_invoice_id'] = res['partner_order_id']
-        res['partner_shipping_id'] = (len(ship_res['create_ids']) > 0 and ship_res['create_ids'][0]) or (len(ship_res['write_ids']) > 0 and ship_res['write_ids'][0]) or res['partner_order_id'] #shipping might be the same as invoice address
-        
-        result = partner_address_obj.read(cr, uid, res['partner_order_id'], ['partner_id'])
-        if result and result['partner_id']:
-            partner_id = result['partner_id'][0]
-        else: #seems like a guest order, create partner on the fly from billing address to make OpenERP happy:
-            #TODO fix the bug in magento, indeed some order have as value for the customer_id : None. It's why we create a customer on the fly, with this method some parameter are maybe not mapped, be careful
-            vals = {}
-            store_id = self.pool.get('magerp.storeviews').extid_to_oeid(cr, uid, data_record['store_id'], external_referential_id)
-            if store_id:
-		        lang = self.pool.get('magerp.storeviews').browse(cr, uid, store_id).lang_id
-		        vals.update({'store_id' : store_id, 'lang' : lang and lang.code or False})
-            vals.update({'name': data_record['billing_address'].get('lastname', '') + ' ' + data_record['billing_address'].get('firstname', '')})
-            partner_id = partner_obj.create(cr, uid, vals, context)
-            partner_address_obj.write(cr, uid, [res['partner_order_id'], res['partner_invoice_id'], res['partner_shipping_id']], {'partner_id': partner_id})
-        res['partner_id'] = partner_id
-
-        # Adds last store view (m2o field store_id) to the list of store views (m2m field store_ids)
-        partner = partner_obj.browse(cr, uid, partner_id)
-        if partner.store_id:
-            store_ids = [store.id for store in partner.store_ids]
-            if partner.store_id.id not in store_ids:
-                store_ids.append(partner.store_id.id)
-            partner_obj.write(cr, uid, [partner_id], {'store_ids': [(6,0,store_ids)]})
-
-        # Adds vat number (country code+magento vat) if base_vat module is installed and Magento sends customer_taxvat
-        #TODO replace me by a generic function maybe the best solution will to have a field vat and a flag vat_ok and a flag force vat_ok
-        #And so it's will be possible to have an invalid vat number (imported from magento for exemple) but the flag will be not set
-        #Also we should think about the way to update customer. Indeed by default there are never updated
-        if data_record.get('customer_taxvat'):
-            partner_vals = {'mag_vat': data_record.get('customer_taxvat')}
-            cr.execute('select * from ir_module_module where name=%s and state=%s', ('base_vat','installed'))
-            if cr.fetchone(): 
-                allchars = string.maketrans('', '')
-                delchars = ''.join([c for c in allchars if c not in string.letters + string.digits])
-                vat = data_record['customer_taxvat'].translate(allchars, delchars).upper()
-                vat_country, vat_number = vat[:2].lower(), vat[2:]
-                if 'check_vat_' + vat_country in dir(partner_obj):
-                    check = getattr(partner_obj, 'check_vat_' + vat_country)
-                    vat_ok = check(vat_number)
-                else:
-                    # Maybe magento vat number has not country code prefix. Take it from billing address.
-                    if 'country_id' in data_record['billing_address']:
-                        fnct = 'check_vat_' + data_record['billing_address']['country_id'].lower()
-                        if fnct in dir(partner_obj):
-                            check = getattr(partner_obj, fnct)
-                            vat_ok = check(vat)
-                            vat = data_record['billing_address']['country_id'] + vat
-                        else:
-                            vat_ok = False
-                if vat_ok:
-                    partner_vals.update({'vat_subjected':True, 'vat':vat})
-            partner_obj.write(cr, uid, [partner_id], partner_vals)
-        return res
-    
+#TODO reimplement the check on tva in a good way
+#        # Adds vat number (country code+magento vat) if base_vat module is installed and Magento sends customer_taxvat
+#        #TODO replace me by a generic function maybe the best solution will to have a field vat and a flag vat_ok and a flag force vat_ok
+#        #And so it's will be possible to have an invalid vat number (imported from magento for exemple) but the flag will be not set
+#        #Also we should think about the way to update customer. Indeed by default there are never updated
+#        if data_record.get('customer_taxvat'):
+#            partner_vals = {'mag_vat': data_record.get('customer_taxvat')}
+#            cr.execute('select * from ir_module_module where name=%s and state=%s', ('base_vat','installed'))
+#            if cr.fetchone(): 
+#                allchars = string.maketrans('', '')
+#                delchars = ''.join([c for c in allchars if c not in string.letters + string.digits])
+#                vat = data_record['customer_taxvat'].translate(allchars, delchars).upper()
+#                vat_country, vat_number = vat[:2].lower(), vat[2:]
+#                if 'check_vat_' + vat_country in dir(partner_obj):
+#                    check = getattr(partner_obj, 'check_vat_' + vat_country)
+#                    vat_ok = check(vat_number)
+#                else:
+#                    # Maybe magento vat number has not country code prefix. Take it from billing address.
+#                    if 'country_id' in data_record['billing_address']:
+#                        fnct = 'check_vat_' + data_record['billing_address']['country_id'].lower()
+#                        if fnct in dir(partner_obj):
+#                            check = getattr(partner_obj, fnct)
+#                            vat_ok = check(vat)
+#                            vat = data_record['billing_address']['country_id'] + vat
+#                        else:
+#                            vat_ok = False
+#                if vat_ok:
+#                    partner_vals.update({'vat_subjected':True, 'vat':vat})
+#            partner_obj.write(cr, uid, [partner_id], partner_vals)
+#        return res
+#    
 
     def add_order_extra_line(self, cr, uid, res, data_record, ext_field, product_ref, defaults, context=None):
         """ Add or substract amount on order as a separate line item with single quantity for each type of amounts like :
@@ -482,7 +425,7 @@ class sale_order(magerp_osv.magerp_osv):
             res = self.add_order_extra_line(cr, uid, res, data_record, 'cod_fee', product_ref, defaults, ctx)
         return res
 
-    
+#DEPRECATED
     def convert_extdata_into_oedata(self, cr, uid, external_data, external_referential_id, parent_data=None, defaults=None, context=None):
         res = super(sale_order, self).convert_extdata_into_oedata(cr, uid, external_data, external_referential_id, parent_data=parent_data, defaults=defaults, context=context)
         res=res[0]
@@ -624,82 +567,69 @@ class sale_order(magerp_osv.magerp_osv):
                                     'priority': '2'
                                     })
 
-    def ext_import(self, cr, uid, data, external_referential_id, defaults=None, context=None):
-        """
-        Inherit the method to flag the order to "Imported" on Magento right after the importation
-        Before the import, check if the order is already imported and in a such case, skip the import
-         and flag "imported" on Magento.
-        """
+#NEW FEATURE
 
-        #This check should be done by a decorator
-
-        if context is None: context = {}
-        if not (context.get('external_referential_type', False) and 'Magento' in context['external_referential_type']):
-            return super(sale_order, self).ext_import(cr, uid, data, external_referential_id, defaults=defaults, context=context)
-
-        res = {'create_ids': [], 'write_ids': []}
-        ext_order_id = data[0]['increment_id']
-        #the new cursor should be replaced by a beautiful decorator on ext_import
-        order_cr = pooler.get_db(cr.dbname).cursor()
-        try:
-            if not self.extid_to_existing_oeid(order_cr, uid, ext_order_id, external_referential_id, context):
-                res = super(sale_order, self).ext_import(order_cr, uid, data, external_referential_id, defaults=defaults, context=context)
-
-                # if a created order has a relation_parent_real_id, the new one replaces the original, so we have to cancel the old one
-                if data[0].get('relation_parent_real_id', False): # data[0] because orders are imported one by one so data always has 1 element
-                    self._chain_cancel_orders(order_cr, uid, ext_order_id, external_referential_id, defaults=defaults, context=context)
-
-            # set the "imported" flag to true on Magento
-            self.ext_set_order_imported(order_cr, uid, ext_order_id, external_referential_id, context)
-            order_cr.commit()
-        finally:
-            order_cr.close()
-        return res
-
-    def ext_set_order_imported(self, cr, uid, external_id, external_referential_id, context=None):
-        if context is None:
-            context = {}
-        logger = netsvc.Logger()
-        conn = context.get('conn_obj', False)
-        conn.call('sales_order.done', [external_id])
-        logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "Successfully set the imported flag on Magento on sale order %s" % external_id)
-        return True
-
-    def mage_import_base(self, cr, uid, conn, external_referential_id, defaults=None, context=None):
-        """ Inherited method for Sales orders in order to import only order not flagged as "imported" on Magento
-        """
-        logger = netsvc.Logger()
-        if context is None:
-            context = {}
-        if not 'ids_or_filter' in context.keys():
-            context['ids_or_filter'] = []
-        result = {'create_ids': [], 'write_ids': []}
-
-        mapping_id = self.pool.get('external.mapping').search(cr,uid,[('model', '=', self._name),
-                                                                      ('referential_id', '=', external_referential_id)])
-        if mapping_id:
-            # returns the non already imported order (limit returns the n first orders)
-            order_retrieve_params = {
-                'imported': False,
-                'limit': SALE_ORDER_IMPORT_STEP,
-                'filters': context['ids_or_filter'],
+    def _get_filter(self, cr, uid, external_session, step, previous_filter=None, context=None):
+        return {
+            'imported': False,
+            'limit': step,
             }
-            ext_order_ids = conn.call('sales_order.search', [order_retrieve_params])
-            order_ids_filtred=[]
-            unchanged_ids=[]
-            for ext_order_id in ext_order_ids:
-                existing_id = self.extid_to_existing_oeid(cr, uid, ext_order_id, external_referential_id, context=context)
-                if existing_id:
-                    unchanged_ids.append(existing_id)
-                    logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "the order %s already exist in OpenERP" % (ext_order_id,))
-                    self.ext_set_order_imported(cr, uid, ext_order_id, external_referential_id, context=context)
-                else:
-                    order_ids_filtred.append({'increment_id' : ext_order_id})
-            context['conn_obj'] = conn # we will need the connection to set the flag to "imported" on magento after each order import
-            result = self.mage_import_one_by_one(cr, uid, conn, external_referential_id, mapping_id[0], order_ids_filtred, defaults, context)
-            result['unchanged_ids'] = unchanged_ids
-        return result
 
+
+    @only_for_referential('magento')
+    def _transform_one_resource(self, cr, uid, external_session, convertion_type, resource, mapping, mapping_id, \
+                     mapping_line_filter_ids=None, parent_data=None, previous_result=None, defaults=None, context=None):
+        #Magento copy each address in a address sale table.
+        #Keeping the extid of this table 'address_id' is useless because we don't need it later
+        #And it's dangerous because we will have various external id for the same resource and the same referential
+        #Getting the ext_id of the table customer address is also not posible because Magento LIE
+        #Indeed if a customer create a new address on fly magento will give us the default id instead of False
+        #So it better to NOT trust magento and not based the address on external_id
+        #To avoid any erreur we remove the key
+        local_defaults = defaults.copy()
+        del resource['billing_address']['customer_address_id']
+        del resource['shipping_address']['customer_address_id']
+        del resource['billing_address']['address_id']
+        del resource['shipping_address']['address_id']
+        #Magento is a liar :S
+        if not resource['ext_customer_id']:
+            if resource['billing_address']['customer_id']:
+                resource['ext_customer_id'] = resource['billing_address']['customer_id']
+            else:
+                #Remove guest information
+                #And create a partner on fly
+                del resource['ext_customer_id']
+                del resource['billing_address']['customer_id']
+                del resource['shipping_address']['customer_id']
+                resource['firstname'] = resource['customer_firstname']
+                resource['lastname'] = resource['customer_email']
+                resource['email'] = resource['customer_email']
+                shop = self.pool.get('sale.shop').browse(cr, uid, defaults['shop_id'], context=context)
+                partner_defaults = {'website_id': shop.shop_group_id.id}
+                res = self.pool.get('res.partner')._record_one_external_resource(cr, uid, external_session, resource,\
+                                        mapping=mapping, defaults=partner_defaults, context=context)
+                partner_id = res.get('create_id') or res.get('write_id')
+                local_defaults['partner_id'] = partner_id
+                for address_key in ['partner_invoice_id', 'partner_shipping_id']:
+                    if not defaults.get(address_key): local_defaults[address_key] = {}
+                    local_defaults[address_key]['partner_id'] = partner_id
+
+        return super(sale_order, self)._transform_one_resource(cr, uid, external_session, convertion_type, resource,\
+                 mapping, mapping_id,  mapping_line_filter_ids=mapping_line_filter_ids, parent_data=parent_data,\
+                 previous_result=previous_result, defaults=local_defaults, context=context)
+
+    @only_for_referential('magento')
+    def _get_external_resource_ids(self, cr, uid, external_session, resource_filter=None, mapping=None, mapping_id=None, context=None):
+        res = super(sale_order, self)._get_external_resource_ids(cr, uid, external_session, resource_filter=resource_filter, mapping=mapping, mapping_id=mapping_id, context=context)
+        order_ids_to_import=[]
+        for external_id in res:
+            existing_id = self.extid_to_existing_oeid(cr, uid, external_session.referential_id.id, external_id, context=context)
+            if existing_id:
+                external_session.logger.info(_("the order %s already exist in OpenERP") % (external_id,))
+                self.ext_set_resource_as_imported(cr, uid, external_session, external_id, mapping=mapping, mapping_id=mapping_id, context=context)
+            else:
+                order_ids_to_import.append(external_id)
+        return order_ids_to_import
 
 sale_order()
 

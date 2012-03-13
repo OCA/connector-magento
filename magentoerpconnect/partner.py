@@ -40,7 +40,7 @@ class res_partner_address(magerp_osv.magerp_osv):
     _columns = {
                     'firstname':fields.char('First Name', size=100),
                     'lastname':fields.char('Last Name', size=100),
-                    'is_magento_order_address':fields.boolean('Magento Order Address?'),
+                    'is_magento_order_address':fields.boolean('Magento Order Address?'), #TODO still needed?
                 }
     _defaults = {
                     'is_magento_order_address': lambda * a:False,
@@ -80,45 +80,5 @@ class res_partner(magerp_osv.magerp_osv):
                 }
 
     _sql_constraints = [('emailid_uniq', 'unique(emailid, website_id)', 'A partner already exists with this email address on the selected website.')]
-
-    def _existing_oeid_for_extid_import(self, cr, uid, vals, external_id, external_referential_id, context=None):
-        """
-        When importing a new customer from Magento (no external_id found in ir.model.data), we search
-        for a partner not already linked with magento with the same emailid and website than the imported one
-        (fields must be filled in advance).
-
-        The external customer will update the partner returned in the tuple.
-        The external id will be create on this partner with the external resource if the value is False in the tuple.
-
-        @param vals: vals to create in OpenERP, already evaluated by oevals_from_extdata
-        @param external_id: external id of the resource to create
-        @param external_referential_id: external referential id from where we import the resource
-        @return: tuple of (ir.model.data id / False: external id to create, model resource id / False: resource to create)
-        """
-        existing_ir_model_data_id, existing_res_id = super(res_partner, self)\
-        ._existing_oeid_for_extid_import(cr, uid, vals, external_id, external_referential_id, context=context)
-
-        if existing_res_id:
-            return existing_ir_model_data_id, existing_res_id
-
-        magento_mail = vals['emailid']
-        website_id = self.pool.get('external.shop.group').\
-        extid_to_existing_oeid(cr, uid, vals['website_id'], external_referential_id, context=context)
-        partner_ids = self.search(cr, uid,
-                                  [('emailid', '=', magento_mail),
-                                   ('website_id', '=', website_id)],
-                                  context=context)
-        # when the partner has been created, the website is not necessarily
-        # filled, in such case we search the first occurrence
-        # with the same email not already binded with a magento customer
-        if not partner_ids:
-            partner_ids = self.search(cr, uid,
-                                      [('emailid', '=', magento_mail),
-                                       ('website_id', '=', False)],
-                                      context=context)
-        partner_ids = [partner.id for partner
-                       in self.browse(cr, uid, partner_ids[:], context=context)
-                       if not partner.magento_exported]
-        return False, partner_ids and partner_ids[0] or False
 
 res_partner()
