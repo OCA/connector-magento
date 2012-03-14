@@ -1319,8 +1319,7 @@ class product_product(product_mag_osv):
         sku = self.product_to_sku(cr, uid, product)
         return super(magerp_osv.magerp_osv, self).ext_update(cr, uid, data, conn, method, oe_id, sku, ir_model_data_id, create_method, context)
 
-    def _prepare_inventory_magento_vals(self, cr, uid, product, stock,
-                                        stock_field, referential,
+    def _prepare_inventory_magento_vals(self, cr, uid, product, stock, shop,
                                         context=None):
         """
         Prepare the values to send to Magento (message product_stock.update).
@@ -1328,33 +1327,32 @@ class product_product(product_mag_osv):
 
         :param browse_record product: browseable product
         :param browse_record stock: browseable stock location
-        :param str stock_field: name of the product's field which hold
-        the stock quantity
-        :param browse_record referential: browseable external referential
-        :return: a dict of values to send to Magento with a call to :
+        :param browse_record shop: browseable shop
+        :return: a dict of values which will be sent to Magento with a call to:
         product_stock.update
         """
-        # Changing Stock Availability to "Out of Stock" in Magento
-        # if a product has qty lt or equal to 0.
+        stock_field = (shop.product_stock_field_id and
+                       shop.product_stock_field_id.name or
+                       'virtual_available')
         stock_quantity = product[stock_field]
         return {'qty': stock_quantity,
                 # put the stock availability to "out of stock"
                 'is_in_stock': int(stock_quantity > 0)}
 
-    def export_inventory(self, cr, uid, ids, stock_field, context=None):
+    def export_inventory(self, cr, uid, ids, shop_id,
+                         connection, context=None):
         """
         Export to Magento the stock quantity for the products in ids which
         are already exported on Magento and are not service products.
 
-        :param str stock_field: name of the product's field which hold
-                the stock quantity
+        :param int shop_id: id of the shop where the stock inventory has
+        to be exported
+        :param Connection connection: connection object
         :return: True
         """
         if context is None: context = {}
         logger = netsvc.Logger()
 
-        conn = context['conn_obj']
-        shop_id = context['shop_id']
         shop = self.pool.get('sale.shop').browse(
             cr, uid, shop_id, context=context)
         referential = shop.referential_id
@@ -1369,8 +1367,7 @@ class product_product(product_mag_osv):
 
         # use the stock location defined on the sale shop
         # to compute the stock value
-        stock = self.pool.get('sale.shop').browse(
-                    cr, uid, context['shop_id']).warehouse_id.lot_stock_id
+        stock = shop.warehouse_id.lot_stock_id
         location_ctx = context.copy()
         location_ctx['location'] = stock.id
         products = self.browse(
@@ -1382,13 +1379,10 @@ class product_product(product_mag_osv):
             if not mag_product_id:
                 continue  # skip products which are not exported
             inventory_vals = self._prepare_inventory_magento_vals(
-                cr, uid, product, stock, stock_field,
-                referential, context=location_ctx)
+                cr, uid, product, stock, shop, context=location_ctx)
 
-            conn.call(
-                'product_stock.update',
-                [mag_product_id,
-                inventory_vals])
+            connection.call('product_stock.update',
+                            [mag_product_id, inventory_vals])
 
             logger.notifyChannel(
                 'ext synchro',
