@@ -279,8 +279,8 @@ class sale_shop(magerp_osv.magerp_osv):
         if ids:
             callback(cr, uid, ids, context=context)
 
-        tools.debug(callback)
-        tools.debug(ids)
+        # tools.debug(callback)
+        # tools.debug(ids)
         return True
 
     # Schedules functions ============ #
