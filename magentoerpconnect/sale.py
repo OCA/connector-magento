@@ -137,33 +137,6 @@ class sale_shop(magerp_osv.magerp_osv):
         'allow_magento_notification': lambda * a: False,
     }
 
-#    @report.open_report
-    def _import_orders_from_magento(self, cr, uid, shop, defaults, context=None):
-        if context is None: context = {}
-        result = {}
-        [result.setdefault(key, []) for key in ['create_ids', 'write_ids', 'unchanged_ids']]
-        if shop.magento_shop:
-            self.check_need_to_update(cr, uid, [shop.id], context=context)
-            for storeview in shop.storeview_ids:
-                magento_storeview_id = self.pool.get('magerp.storeviews').oeid_to_extid(cr, uid, storeview.id, shop.referential_id.id, context={})
-                ids_or_filter = {'store_id': {'eq': magento_storeview_id}, 'state': {'neq': 'canceled'}}
-                if shop.import_orders_from_date:
-                    ids_or_filter.update({'created_at' : {'gt': shop.import_orders_from_date}})
-                nb_last_created_ids = SALE_ORDER_IMPORT_STEP
-                while nb_last_created_ids:
-                    defaults['magento_storeview_id'] = storeview.id
-                    ctx = context.copy()
-                    ctx['ids_or_filter'] = ids_or_filter
-                    resp = self.pool.get('sale.order').mage_import_base(cr, uid, context.get('conn_obj', False),
-                                                                        shop.referential_id.id, defaults=defaults,
-                                                                        context=ctx)
-                    result['create_ids'] += resp.get('create_ids', [])
-                    result['write_ids'] += resp.get('write_ids', [])
-                    result['unchanged_ids'] += resp.get('unchanged_ids', [])
-                    nb_last_created_ids = len(resp.get('create_ids', []) + resp.get('write_ids', []) + resp.get('unchanged_ids', []))
-                    print nb_last_created_ids
-        return result
-
     def check_need_to_update(self, cr, uid, ids, context=None):
         '''This function will update the order status in OpenERP for the order which are in the state 'need to update' '''
         logger = netsvc.Logger()
@@ -329,6 +302,8 @@ class sale_order(magerp_osv.magerp_osv):
 #        return res
 #    
 
+
+#TODO reimplement me
     def _merge_sub_items(self, cr, uid, product_type, top_item, child_items, context=None):
         """
         Manage the sub items of the magento sale order lines. A top item contains one
@@ -351,6 +326,7 @@ class sale_order(magerp_osv.magerp_osv):
             return item
         return top_item
 
+#TODO reimplement me
     def data_record_filter(self, cr, uid, data_record, context=None):
         child_items = {}  # key is the parent item id
         top_items = []
@@ -458,6 +434,8 @@ class sale_order(magerp_osv.magerp_osv):
 #                if data[0].get('relation_parent_real_id', False): # data[0] because orders are imported one by one so data always has 1 element
 #                    self._chain_cancel_orders(order_cr, uid, ext_order_id, external_referential_id, defaults=defaults, context=context)
 
+#TODO reimplement need to update maybe in base_sale
+# check_need_to_update(self, cr, uid, ids, context=None):
 
     def _get_filter(self, cr, uid, external_session, step, previous_filter=None, context=None):
         return {
@@ -465,6 +443,13 @@ class sale_order(magerp_osv.magerp_osv):
             'limit': step,
             }
 
+    def create_onfly_partner(self, cr, uid, external_session, convertion_type, resource, mapping, mapping_id, \
+                     mapping_line_filter_ids=None, parent_data=None, previous_result=None, defaults=None, context=None):
+        return defaults
+
+    def clean_magento_resource(self, cr, uid, resource, context=None):
+        
+        return resource
 
     @only_for_referential('magento')
     def _transform_one_resource(self, cr, uid, external_session, convertion_type, resource, mapping, mapping_id, \
@@ -494,6 +479,7 @@ class sale_order(magerp_osv.magerp_osv):
                 resource['firstname'] = resource['customer_firstname']
                 resource['lastname'] = resource['customer_email']
                 resource['email'] = resource['customer_email']
+
                 shop = self.pool.get('sale.shop').browse(cr, uid, defaults['shop_id'], context=context)
                 partner_defaults = {'website_id': shop.shop_group_id.id}
                 res = self.pool.get('res.partner')._record_one_external_resource(cr, uid, external_session, resource,\
@@ -520,6 +506,14 @@ class sale_order(magerp_osv.magerp_osv):
             else:
                 order_ids_to_import.append(external_id)
         return order_ids_to_import
+
+    @only_for_referential('magento')
+    def _record_one_external_resource(self, cr, uid, external_session, resource, defaults=None, mapping=None, mapping_id=None, context=None):
+        res = super(sale_order, self)._record_one_external_resource(cr, uid, external_session, resource, defaults=defaults, mapping=mapping, mapping_id=mapping_id, context=context)
+        resource_id = res.get('create_id') or res.get('write_id')
+        external_id = self.oeid_to_extid(cr, uid, resource_id, external_session.referential_id.id, context=context)
+        self.ext_set_resource_as_imported(cr, uid, external_session, external_id, mapping=mapping, mapping_id=mapping_id, context=context)
+        return res
 
 sale_order()
 
