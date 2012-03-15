@@ -137,7 +137,10 @@ class sale_shop(magerp_osv.magerp_osv):
         'allow_magento_notification': lambda * a: False,
     }
 
-    def check_need_to_update(self, cr, uid, ids, context=None):
+
+    #TODO refactor me and move me in base_sale_multichannels
+    @only_for_referential('magento')
+    def _check_need_to_update(self, cr, uid, external_session, ids, context=None):
         '''This function will update the order status in OpenERP for the order which are in the state 'need to update' '''
         logger = netsvc.Logger()
         so_obj = self.pool.get('sale.order')
@@ -331,57 +334,6 @@ class sale_order(magerp_osv.magerp_osv):
 #    
 
 
-#TODO reimplement me
-    def _merge_sub_items(self, cr, uid, product_type, top_item, child_items, context=None):
-        """
-        Manage the sub items of the magento sale order lines. A top item contains one
-        or many child_items. For some product types, we want to merge them in the main
-        item, or keep them as order line.
-
-        A list may be returned to add many items (ie to keep all child_items as items.
-
-        :param top_item: main item (bundle, configurable)
-        :param child_items: list of childs of the top item
-        :return: item or list of items
-        """
-        if product_type == 'configurable':
-            item = top_item.copy()
-            # For configurable product all information regarding the price is in the configurable item
-            # In the child a lot of information is empty, but contains the right sku and product_id
-            # So the real product_id and the sku and the name have to be extracted from the child
-            for field in ['sku', 'product_id', 'name']:
-                item[field] = child_items[0][field]
-            return item
-        return top_item
-
-#TODO reimplement me
-    def data_record_filter(self, cr, uid, data_record, context=None):
-        child_items = {}  # key is the parent item id
-        top_items = []
-
-        # Group the childs with their parent
-        for item in data_record['items']:
-            if item.get('parent_item_id'):
-                child_items.setdefault(item['parent_item_id'], []).append(item)
-            else:
-                top_items.append(item)
-
-        all_items = []
-        for top_item in top_items:
-            if top_item['item_id'] in child_items:
-                item_modified = self._merge_sub_items(cr, uid,
-                                                      top_item['product_type'],
-                                                      top_item,
-                                                      child_items[top_item['item_id']],
-                                                      context=context)
-                if not isinstance(item_modified, list):
-                    item_modified = [item_modified]
-                all_items.extend(item_modified)
-            else:
-                all_items.append(top_item)
-        
-        data_record['items'] = all_items
-        return data_record
 
 
 #        #TODO Move me in a mapping
@@ -462,65 +414,55 @@ class sale_order(magerp_osv.magerp_osv):
 #                if data[0].get('relation_parent_real_id', False): # data[0] because orders are imported one by one so data always has 1 element
 #                    self._chain_cancel_orders(order_cr, uid, ext_order_id, external_referential_id, defaults=defaults, context=context)
 
-#TODO reimplement need to update maybe in base_sale
-# check_need_to_update(self, cr, uid, ids, context=None):
-
     def _get_filter(self, cr, uid, external_session, step, previous_filter=None, context=None):
         return {
             'imported': False,
             'limit': step,
             }
 
-    def create_onfly_partner(self, cr, uid, external_session, convertion_type, resource, mapping, mapping_id, \
-                     mapping_line_filter_ids=None, parent_data=None, previous_result=None, defaults=None, context=None):
-        return defaults
+    def create_onfly_partner(self, cr, uid, external_session, resource, mapping, defaults, context=None):
+        """
+        As magento allow guest order we have to create an on fly partner without any external id
+        """
+        if not defaults: defaults={}
+        local_defaults = defaults.copy()
 
-    def clean_magento_resource(self, cr, uid, resource, context=None):
-        
-        return resource
+        resource['firstname'] = resource['customer_firstname']
+        resource['lastname'] = resource['customer_email']
+        resource['email'] = resource['customer_email']
+
+        shop = self.pool.get('sale.shop').browse(cr, uid, defaults['shop_id'], context=context)
+        partner_defaults = {'website_id': shop.shop_group_id.id}
+        res = self.pool.get('res.partner')._record_one_external_resource(cr, uid, external_session, resource,\
+                                mapping=mapping, defaults=partner_defaults, context=context)
+        partner_id = res.get('create_id') or res.get('write_id')
+
+        local_defaults['partner_id'] = partner_id
+        for address_key in ['partner_invoice_id', 'partner_shipping_id']:
+            if not defaults.get(address_key): local_defaults[address_key] = {}
+            local_defaults[address_key]['partner_id'] = partner_id
+        return local_defaults
+
+
+
 
     @only_for_referential('magento')
     def _transform_one_resource(self, cr, uid, external_session, convertion_type, resource, mapping, mapping_id, \
                      mapping_line_filter_ids=None, parent_data=None, previous_result=None, defaults=None, context=None):
-        #Magento copy each address in a address sale table.
-        #Keeping the extid of this table 'address_id' is useless because we don't need it later
-        #And it's dangerous because we will have various external id for the same resource and the same referential
-        #Getting the ext_id of the table customer address is also not posible because Magento LIE
-        #Indeed if a customer create a new address on fly magento will give us the default id instead of False
-        #So it better to NOT trust magento and not based the address on external_id
-        #To avoid any erreur we remove the key
-        local_defaults = defaults.copy()
-        del resource['billing_address']['customer_address_id']
-        del resource['shipping_address']['customer_address_id']
-        del resource['billing_address']['address_id']
-        del resource['shipping_address']['address_id']
-        #Magento is a liar :S
-        if not resource['ext_customer_id']:
-            if resource['billing_address']['customer_id']:
-                resource['ext_customer_id'] = resource['billing_address']['customer_id']
-            else:
-                #Remove guest information
-                #And create a partner on fly
-                del resource['ext_customer_id']
-                del resource['billing_address']['customer_id']
-                del resource['shipping_address']['customer_id']
-                resource['firstname'] = resource['customer_firstname']
-                resource['lastname'] = resource['customer_email']
-                resource['email'] = resource['customer_email']
 
-                shop = self.pool.get('sale.shop').browse(cr, uid, defaults['shop_id'], context=context)
-                partner_defaults = {'website_id': shop.shop_group_id.id}
-                res = self.pool.get('res.partner')._record_one_external_resource(cr, uid, external_session, resource,\
-                                        mapping=mapping, defaults=partner_defaults, context=context)
-                partner_id = res.get('create_id') or res.get('write_id')
-                local_defaults['partner_id'] = partner_id
-                for address_key in ['partner_invoice_id', 'partner_shipping_id']:
-                    if not defaults.get(address_key): local_defaults[address_key] = {}
-                    local_defaults[address_key]['partner_id'] = partner_id
+        resource = self.clean_magento_resource(cr, uid, resource, context=context)
+        if not resource['ext_customer_id']:
+            #If there is not partner it's a guest order
+            #So we remove the useless information
+            #And create a partner on fly and set the data in the default value
+            del resource['ext_customer_id']
+            del resource['billing_address']['customer_id']
+            del resource['shipping_address']['customer_id']
+            defaults = self.create_onfly_partner(cr, uid, external_session, resource, mapping, defaults, context=context)
 
         return super(sale_order, self)._transform_one_resource(cr, uid, external_session, convertion_type, resource,\
                  mapping, mapping_id,  mapping_line_filter_ids=mapping_line_filter_ids, parent_data=parent_data,\
-                 previous_result=previous_result, defaults=local_defaults, context=context)
+                 previous_result=previous_result, defaults=defaults, context=context)
 
     @only_for_referential('magento')
     def _get_external_resource_ids(self, cr, uid, external_session, resource_filter=None, mapping=None, mapping_id=None, context=None):
@@ -542,6 +484,86 @@ class sale_order(magerp_osv.magerp_osv):
         external_id = self.oeid_to_extid(cr, uid, resource_id, external_session.referential_id.id, context=context)
         self.ext_set_resource_as_imported(cr, uid, external_session, external_id, mapping=mapping, mapping_id=mapping_id, context=context)
         return res
+
+
+########################################################################################################################
+#
+#           CODE THAT CLEAN MAGENTO DATA BEFORE IMPORTING IT THE BEST WILL BE TO REFACTOR MAGENTO API
+#
+########################################################################################################################
+
+
+    def _merge_sub_items(self, cr, uid, product_type, top_item, child_items, context=None):
+        """
+        Manage the sub items of the magento sale order lines. A top item contains one
+        or many child_items. For some product types, we want to merge them in the main
+        item, or keep them as order line.
+
+        A list may be returned to add many items (ie to keep all child_items as items.
+
+        :param top_item: main item (bundle, configurable)
+        :param child_items: list of childs of the top item
+        :return: item or list of items
+        """
+        if product_type == 'configurable':
+            item = top_item.copy()
+            # For configurable product all information regarding the price is in the configurable item
+            # In the child a lot of information is empty, but contains the right sku and product_id
+            # So the real product_id and the sku and the name have to be extracted from the child
+            for field in ['sku', 'product_id', 'name']:
+                item[field] = child_items[0][field]
+            return item
+        return top_item
+
+    def clean_magento_items(self, cr, uid, resource, context=None):
+        """
+        Method that clean the sale order line given by magento before importing it
+        """
+        child_items = {}  # key is the parent item id
+        top_items = []
+
+        # Group the childs with their parent
+        for item in resource['items']:
+            if item.get('parent_item_id'):
+                child_items.setdefault(item['parent_item_id'], []).append(item)
+            else:
+                top_items.append(item)
+
+        all_items = []
+        for top_item in top_items:
+            if top_item['item_id'] in child_items:
+                item_modified = self._merge_sub_items(cr, uid,
+                                                      top_item['product_type'],
+                                                      top_item,
+                                                      child_items[top_item['item_id']],
+                                                      context=context)
+                if not isinstance(item_modified, list):
+                    item_modified = [item_modified]
+                all_items.extend(item_modified)
+            else:
+                all_items.append(top_item)
+        
+        resource['items'] = all_items
+        return resource
+
+    def clean_magento_resource(self, cr, uid, resource, context=None):
+        """
+        Magento copy each address in a address sale table.
+        Keeping the extid of this table 'address_id' is useless because we don't need it later
+        And it's dangerous because we will have various external id for the same resource and the same referential
+        Getting the ext_id of the table customer address is also not posible because Magento LIE
+        Indeed if a customer create a new address on fly magento will give us the default id instead of False
+        So it better to NOT trust magento and not based the address on external_id
+        To avoid any erreur we remove the key
+        """
+        del resource['billing_address']['customer_address_id']
+        del resource['shipping_address']['customer_address_id']
+        del resource['billing_address']['address_id']
+        del resource['shipping_address']['address_id']
+        if not resource['ext_customer_id']:
+            if resource['billing_address']['customer_id']:
+                resource['ext_customer_id'] = resource['billing_address']['customer_id']
+        return resource
 
 sale_order()
 
