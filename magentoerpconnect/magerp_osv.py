@@ -34,32 +34,41 @@ from osv import osv, fields
 from base_external_referentials.decorator import only_for_referential
 import netsvc
 
+
+
+
+
 osv.osv._mag_get_external_resource_ids = osv.osv._get_external_resource_ids
 
 @only_for_referential('magento', super_function = osv.osv._get_external_resource_ids)
-def _get_external_resource_ids(self, cr, uid, external_session, resource_filter=None, mapping=None, context=None):
-    if mapping is None:
-        mapping = {self._name : self._get_mapping(cr, uid, external_session.referential_id.id, context=context)}
-    ext_resource = mapping[self._name]['external_resource_name']
-    print 'TODO'
-    return []
+def _get_external_resource_ids(self, cr, uid, external_session, resource_filter=None, mapping=None, mapping_id=None, context=None):
+    mapping, mapping_id = self._init_mapping(cr, uid, external_session.referential_id.id, mapping=mapping, mapping_id=mapping_id, context=context)
+    ext_resource = mapping[mapping_id]['external_resource_name']
+    search_method = mapping[mapping_id]['external_search_method']
+    if not search_method:
+        #TODO don't forget to replace model by nam ewhen name will be implemented
+        raise osv.except_osv(_('User Error'), _('There is not search method for the mapping %s')%(mapping[mapping_id]['model'],))
+    return external_session.connection.call(search_method, [resource_filter])
 
 osv.osv._get_external_resource_ids = _get_external_resource_ids
-
-
 
 osv.osv._mag_get_external_resources = osv.osv._get_external_resources
 
 @only_for_referential('magento', super_function = osv.osv._mag_get_external_resources)
-def _get_external_resources(self, cr, uid, external_session, external_id=None, resource_filter=None, mapping=None, fields=None, context=None):
-    if mapping is None:
-        mapping = {self._name : self._get_mapping(cr, uid, external_session.referential_id.id, context=context)}
-    ext_resource = mapping[self._name]['external_resource_name']
+def _get_external_resources(self, cr, uid, external_session, external_id=None, resource_filter=None, mapping=None, mapping_id=None, fields=None, context=None):
+    mapping, mapping_id = self._init_mapping(cr, uid, external_session.referential_id.id, mapping=mapping, mapping_id=mapping_id, context=context)
+    ext_resource = mapping[mapping_id]['external_resource_name']
     if external_id:
-        read_method = mapping[self._name]['external_get_method']
+        read_method = mapping[mapping_id]['external_get_method']
+        if not read_method:
+            #TODO don't forget to replace model by nam ewhen name will be implemented
+            raise osv.except_osv(_('User Error'), _('There is not read method for the mapping %s')%(mapping[mapping_id]['model'],))
         return external_session.connection.call(read_method, [external_id])
     else:
-        search_read_method = mapping[self._name]['external_list_method']
+        search_read_method = mapping[mapping_id]['external_list_method']
+        if not search_read_method:
+            #TODO don't forget to replace model by nam ewhen name will be implemented
+            raise osv.except_osv(_('User Error'), _('There is not list method for the mapping %s')%(mapping[mapping_id]['model'],))
         return external_session.connection.call(search_read_method, [resource_filter or {}])
 
 osv.osv._get_external_resources = _get_external_resources
@@ -67,10 +76,14 @@ osv.osv._get_external_resources = _get_external_resources
 
 
 
+def ext_set_resource_as_imported(self, cr, uid, external_session, external_id, mapping=None, mapping_id=None, context=None):
+    mapping, mapping_id = self._init_mapping(cr, uid, external_session.referential_id.id, mapping=mapping, mapping_id=mapping_id, context=context)
+    done_method = mapping[mapping_id]['external_done_method']
+    if done_method:
+        return external_session.connection.call(done_method, [external_id])
+    return False
 
-
-
-
+osv.osv.ext_set_resource_as_imported = ext_set_resource_as_imported
 
 #DEPRECATED FEATURE!! YES ALL FUNCTION UNDER HIS LINE ARE DEPRECATED
 

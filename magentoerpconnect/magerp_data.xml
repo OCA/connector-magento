@@ -2,35 +2,6 @@
 <openerp>
 	<data noupdate="1">
 		
-		<record id="product_product_cash_on_delivery" model="product.product">
-			<field name="default_code">CASH ON DELIVERY MAGENTO</field>
-			<field name="list_price">0.0</field>
-			<field name="standard_price">0.0</field>
-			<field name="type">service</field>
-			<field name="name">Cash on delivery</field>
-			<field name="magento_exportable" eval="False" />
-			<field name="categ_id" ref="base_sale_multichannels.product_categ_services"/>
-		</record>
-
-		<record id="product_product_gift" model="product.product">
-			<field name="default_code">GIFT CERTIFICATE</field>
-			<field name="list_price">0.0</field>
-			<field name="standard_price">0.0</field>
-			<field name="type">service</field>
-			<field name="name">Gift Certificate</field>
-			<field name="magento_exportable" eval="False" />
-			<field name="categ_id" ref="base_sale_multichannels.product_categ_services"/>
-		</record>
-
-		<record id="product_product_discount" model="product.product">
-			<field name="default_code">DISCOUNT MAGENTO</field>
-			<field name="list_price">0.0</field>
-			<field name="standard_price">0.0</field>
-			<field name="type">service</field>
-			<field name="name">Discount Coupon</field>
-			<field name="magento_exportable" eval="False" />
-			<field name="categ_id" ref="base_sale_multichannels.product_categ_services"/>
-		</record>
 
         <record forcecreate="True" id="ir_cron_import_orders_scheduler_action" model="ir.cron">
             <field name="name">Magento Import Orders</field>
