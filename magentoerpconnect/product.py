@@ -838,8 +838,8 @@ class product_mag_osv(magerp_osv.magerp_osv):
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         if context is None:
             context = {}
-
         result = super(product_mag_osv, self).fields_view_get(cr, uid, view_id,view_type,context,toolbar=toolbar)
+        print 'fields view get', result
         if view_type == 'form':
             result['arch'] = result['arch'].decode('utf8') #in order to support special character, the arch for the product view will be a unicode and not a str
             if context.get('set', False):
@@ -876,9 +876,9 @@ class product_mag_osv(magerp_osv.magerp_osv):
             else:
                 magento_button = (
                     "<button name='open_magento_fields' string='Open Magento Fields' icon='gtk-go-forward' type='object'"
-                    " colspan='2' attrs=\"{'invisible':[('magento_exportable','!=', True)]}\"/>"
+                    " colspan='2' attrs=\"{'invisible':[('magento_exportable','!=', True)]}\""
                     )
-                result['arch'] = result['arch'].replace('<button name="open_magento_fields"/>', magento_button)
+                result['arch'] = result['arch'].replace('<button name="open_magento_fields"', magento_button)
                 result['arch'] = result['arch'].replace('<page string="attributes_placeholder"/>', "")
         return result
 
@@ -1312,19 +1312,78 @@ class product_product(product_mag_osv):
         product = self.browse(cr, uid, oe_id)
         sku = self.product_to_sku(cr, uid, product)
         return super(magerp_osv.magerp_osv, self).ext_update(cr, uid, data, conn, method, oe_id, sku, ir_model_data_id, create_method, context)
-    
-    def export_inventory(self, cr, uid, ids, stock_field, context=None):
+
+    def _prepare_inventory_magento_vals(self, cr, uid, product, stock, shop,
+                                        context=None):
+        """
+        Prepare the values to send to Magento (message product_stock.update).
+        Can be inherited to customize the values to send.
+
+        :param browse_record product: browseable product
+        :param browse_record stock: browseable stock location
+        :param browse_record shop: browseable shop
+        :return: a dict of values which will be sent to Magento with a call to:
+        product_stock.update
+        """
+        stock_field = (shop.product_stock_field_id and
+                       shop.product_stock_field_id.name or
+                       'virtual_available')
+        stock_quantity = product[stock_field]
+        return {'qty': stock_quantity,
+                # put the stock availability to "out of stock"
+                'is_in_stock': int(stock_quantity > 0)}
+
+    def export_inventory(self, cr, uid, ids, shop_id,
+                         connection, context=None):
+        """
+        Export to Magento the stock quantity for the products in ids which
+        are already exported on Magento and are not service products.
+
+        :param int shop_id: id of the shop where the stock inventory has
+        to be exported
+        :param Connection connection: connection object
+        :return: True
+        """
         if context is None: context = {}
         logger = netsvc.Logger()
-        stock_id = self.pool.get('sale.shop').browse(cr, uid, context['shop_id']).warehouse_id.lot_stock_id.id
-        for product in self.browse(cr, uid, ids):
-            if product.magento_sku and product.type != 'service':
-                stock_available = self.read(cr, uid, product.id, [stock_field], {'location': stock_id})[stock_field]
-                # Changing Stock Availability to "Out of Stock" in Magento
-                # if a product has qty lt or equal to 0.
-                is_in_stock = int(stock_available > 0)
-                context['conn_obj'].call('product_stock.update', [product.magento_sku, {'qty': stock_available, 'is_in_stock': is_in_stock}])
-                logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "Successfully updated stock level at %s for product with SKU %s " %(stock_available, product.magento_sku))
+
+        shop = self.pool.get('sale.shop').browse(
+            cr, uid, shop_id, context=context)
+        referential = shop.referential_id
+
+        # exclude service products
+        stock_product_ids = self.search(
+            cr, uid,
+            [('id', 'in', ids),
+             ('type', '!=', 'service'),
+             ('magento_exportable', '=', True)],
+            context=context)
+
+        # use the stock location defined on the sale shop
+        # to compute the stock value
+        stock = shop.warehouse_id.lot_stock_id
+        location_ctx = context.copy()
+        location_ctx['location'] = stock.id
+        products = self.browse(
+            cr, uid, stock_product_ids, context=location_ctx)
+
+        for product in products:
+            mag_product_id = self.oeid_to_extid(
+                cr, uid, product.id, referential.id, context=context)
+            if not mag_product_id:
+                continue  # skip products which are not exported
+            inventory_vals = self._prepare_inventory_magento_vals(
+                cr, uid, product, stock, shop, context=location_ctx)
+
+            connection.call('product_stock.update',
+                            [mag_product_id, inventory_vals])
+
+            logger.notifyChannel(
+                'ext synchro',
+                netsvc.LOG_INFO,
+                "Successfully updated stock level at %s for "
+                "product with SKU %s " %
+                (inventory_vals['qty'], product.magento_sku))
         return True
     
     def ext_assign_links(self, cr, uid, ids, external_referential_ids=None, defaults=None, context=None):
