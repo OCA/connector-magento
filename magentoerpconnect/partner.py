@@ -6,7 +6,7 @@
 #                                                                       #
 # Copyright (C) 2009  Sharoon Thomas, Raphaël Valyi                     #
 # Copyright (C) 2011 Akretion Sébastien BEAU sebastien.beau@akretion.com#
-# Copyright (C) 2011 Camptocamp Guewen Baconnier                        # 
+# Copyright (C) 2011-2012 Camptocamp Guewen Baconnier                   #
 #                                                                       #
 #This program is free software: you can redistribute it and/or modify   #
 #it under the terms of the GNU General Public License as published by   #
@@ -28,7 +28,7 @@ import magerp_osv
 
 class res_partner_category(magerp_osv.magerp_osv):
     _inherit = "res.partner.category"
-    
+
     _columns = {
                     'tax_class_id':fields.integer('Tax Class ID'),
                 }
@@ -36,7 +36,7 @@ res_partner_category()
 
 class res_partner_address(magerp_osv.magerp_osv):
     _inherit = "res.partner.address"
-    
+
     _columns = {
                     'firstname':fields.char('First Name', size=100),
                     'lastname':fields.char('Last Name', size=100),
@@ -44,7 +44,7 @@ class res_partner_address(magerp_osv.magerp_osv):
                 }
     _defaults = {
                     'is_magento_order_address': lambda * a:False,
-                 }    
+                 }
 res_partner_address()
 
 class res_partner(magerp_osv.magerp_osv):
