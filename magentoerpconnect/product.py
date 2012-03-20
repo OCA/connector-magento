@@ -1285,7 +1285,7 @@ class product_product(product_mag_osv):
             child_ids = []
             product_type = self.read(cr, uid, id, ['product_type'])['product_type']
             if product_type == 'grouped': # lookup for Magento "grouped product"
-                quantities, childs_ids = self.action_before_exporting_grouped_product(cr, uid, id, external_referential_ids, defaults, context)
+                quantities, child_ids = self.action_before_exporting_grouped_product(cr, uid, id, external_referential_ids, defaults, context)
             
             self.action_before_exporting(cr, uid, id, product_type, external_referential_ids, defaults, context=context)
             
