@@ -199,7 +199,7 @@ class sale_shop(magerp_osv.magerp_osv):
                     sale_obj.write(
                         cr, uid, order.id, {'need_to_update': False})
 
-            sale_obj._export_invoice(
+            sale_obj.export_invoice(
                 cr, uid, order, conn, ext_id, context=context)
         return result
 
