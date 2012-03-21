@@ -40,7 +40,7 @@
     ],
     "website" : "https://launchpad.net/magentoerpconnect",
     "category" : "Generic Modules",
-    "init_xml" : [],
+    "init_xml" : ['settings/magerp.product_category_attribute_options.csv',],
     "demo_xml" : [],
     "update_xml" : [
             'security/ir.model.access.csv',

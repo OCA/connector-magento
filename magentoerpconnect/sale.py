@@ -155,52 +155,15 @@ class sale_shop(magerp_osv.magerp_osv):
                  ('shop_id', '=', shop.id)],
                 context=context)
             so_obj.check_need_to_update(
-                cr, uid, orders_to_update, shop, conn, context=context)
+                cr, uid, orders_to_update, conn, context=context)
         return False
-
-    def _create_magento_invoice(self, cr, uid, order, conn, ext_id, context=None):
-        """ Creation of an invoice on Magento."""
-        cr.execute("select account_invoice.id "
-                   "from account_invoice "
-                   "inner join sale_order_invoice_rel "
-                   "on invoice_id = account_invoice.id "
-                   "where order_id = %s" % order.id)
-        resultset = cr.fetchone()
-        created = False
-        if resultset and len(resultset) == 1:
-            invoice = self.pool.get("account.invoice").browse(
-                cr, uid, resultset[0], context=context)
-            if (invoice.amount_total == order.amount_total and
-                not invoice.magento_ref):
-                try:
-                    magento_invoice_ref = conn.call(
-                        'sales_order_invoice.create',
-                        [order.magento_incrementid,
-                         [],
-                         _("Invoice Created"),
-                         True,
-                         order.shop_id.allow_magento_notification])
-                    self.pool.get("account.invoice").write(
-                        cr, uid,
-                        invoice.id,
-                        {'magento_ref': magento_invoice_ref})
-                    self.log(cr, uid, order.id,
-                             "created Magento invoice for order %s" %
-                             (order.id,))
-                    created = True
-                except Exception, e:
-                    self.log(cr, uid, order.id,
-                             "failed to create Magento invoice for order %s" %
-                             (order.id,))
-                    # TODO make sure that's because Magento invoice already
-                    # exists and then re-attach it!
-        return created
 
     def update_shop_orders(self, cr, uid, order, ext_id, context=None):
         if context is None: context = {}
         result = {}
 
         if order.shop_id.allow_magento_order_status_push:
+            sale_obj = self.pool.get('sale.order')
             #status update:
             conn = context.get('conn_obj', False)
             status = ORDER_STATUS_MAPPING.get(order.state, False)
@@ -213,10 +176,10 @@ class sale_shop(magerp_osv.magerp_osv):
                 # then we consider the update is done
                 # remove the 'need_to_update': True
                 if order.need_to_update:
-                    self.pool.get('sale.order').write(
+                    sale_obj.write(
                         cr, uid, order.id, {'need_to_update': False})
 
-            self._create_magento_invoice(
+            sale_obj.export_invoice(
                 cr, uid, order, conn, ext_id, context=context)
         return result
 
@@ -260,8 +223,11 @@ class sale_order(magerp_osv.magerp_osv):
     _inherit = "sale.order"
     
     _columns = {
-                'magento_incrementid': fields.char('Magento Increment ID', size=32),
-                'magento_storeview_id': fields.many2one('magerp.storeviews', 'Magento Store View'),
+        'magento_incrementid': fields.char('Magento Increment ID', size=32),
+        'magento_storeview_id': fields.many2one('magerp.storeviews', 'Magento Store View'),
+        'is_magento': fields.related(
+            'shop_id', 'referential_id', 'magento_referential',
+            string='Is a Magento Sale Order')
     }
     
     def _auto_init(self, cr, context=None):
@@ -328,8 +294,8 @@ class sale_order(magerp_osv.magerp_osv):
     def create_payments(self, cr, uid, order_id, data_record, context=None):
         if context is None:
             context = {}
-        if context.get('external_referential_type', False) and \
-           'Magento' in context['external_referential_type']:
+
+        if 'Magento' in context.get('external_referential_type', ''):
             payment_info = data_record.get('payment')
             paid, amount = self._parse_external_payment(
                 cr, uid, data_record, context=context)
@@ -475,65 +441,118 @@ class sale_order(magerp_osv.magerp_osv):
         self.ext_set_resource_as_imported(cr, uid, external_session, external_id, mapping=mapping, mapping_id=mapping_id, context=context)
         return res
 
-    def check_need_to_update(self, cr, uid, ids, shop, conn, context=None):
+    def _check_need_to_update_single(self, cr, uid, order, conn, context=None):
+        """
+        For one order, check on Magento if it has been paid since last
+        check. If so, it will launch the defined flow based on the
+        payment type (validate order, invoice, ...)
+
+        :param browse_record order: browseable sale.order
+        :param Connection conn: connection with Magento
+        :return: True
+        """
+        model_data_obj = self.pool.get('ir.model.data')
+        # check if the status has changed in Magento
+        # We don't use oeid_to_extid function cause it only handles integer ids
+        # Magento can have something like '100000077-2'
+        model_data_ids = model_data_obj.search(
+            cr, uid,
+            [('model', '=', self._name),
+             ('res_id', '=', order.id),
+             ('external_referential_id', '=', order.shop_id.referential_id.id)],
+            context=context)
+
+        if model_data_ids:
+            prefixed_id = model_data_obj.read(
+                cr, uid, model_data_ids[0], ['name'], context=context)['name']
+            ext_id = self.id_from_prefixed_id(prefixed_id)
+        else:
+            return False
+
+        data_record = conn.call('sales_order.info', [ext_id])
+
+        if data_record['status'] == 'canceled':
+            wf_service = netsvc.LocalService("workflow")
+            wf_service.trg_validate(uid, 'sale.order', order.id, 'cancel', cr)
+            updated = True
+            self.log(cr, uid, order.id, "order %s canceled when updated from external system" % (order.id,))
+        # If the order isn't canceled and was waiting for a payment,
+        # so we follow the standard flow according to ext_payment_method:
+        else:
+            paid, __ = self._parse_external_payment(
+                cr, uid, data_record, context=context)
+            self.oe_status(cr, uid, order.id, paid, context)
+            # create_payments has to be done after oe_status
+            # because oe_status creates the invoice
+            # and create_payment could reconcile the payment
+            # with the invoice
+
+            updated = self.create_payments(
+                cr, uid, order.id, data_record, context)
+            if updated:
+                self.log(
+                    cr, uid, order.id,
+                    "order %s paid when updated from external system" %
+                    (order.id,))
+        # Untick the need_to_update if updated (if so was canceled in magento
+        # or if it has been paid through magento)
+        if updated:
+            self.write(cr, uid, order.id, {'need_to_update': False})
+        cr.commit()
+        return True
+
+    def check_need_to_update(self, cr, uid, ids, conn, context=None):
         """
         For each order, check on Magento if it has been paid since last
         check. If so, it will launch the defined flow based on the
         payment type (validate order, invoice, ...)
 
         :param Connection conn: connection with Magento
-        :param browse_record shop: browseable sale.shop
         :return: True
         """
-        model_data_obj = self.pool.get('ir.model.data')
         for order in self.browse(cr, uid, ids, context=context):
-            # For each one, check if the status has change in Magento
-            # We dont use oeid_to_extid function cause it only handle int id
-            # Magento can have something like '100000077-2'
-            model_data_ids = model_data_obj.search(
-                cr, uid,
-                [('model', '=', self._name),
-                 ('res_id', '=', order.id),
-                 ('external_referential_id', '=', shop.referential_id.id)],
-                context=context)
-
-            if model_data_ids:
-                prefixed_id = model_data_obj.read(
-                    cr, uid, model_data_ids[0], ['name'], context=context)['name']
-                ext_id = self.id_from_prefixed_id(prefixed_id)
-            else:
-                continue
-
-            data_record = conn.call('sales_order.info', [ext_id])
-
-            if data_record['status'] == 'canceled':
-                wf_service = netsvc.LocalService("workflow")
-                wf_service.trg_validate(uid, 'sale.order', order.id, 'cancel', cr)
-                updated = True
-                self.log(cr, uid, order.id, "order %s canceled when updated from external system" % (order.id,))
-            # If the order isn't canceled and was waiting for a payment,
-            # so we follow the standard flow according to ext_payment_method:
-            else:
-                paid, __ = self._parse_external_payment(
-                    cr, uid, data_record, context=context)
-                self.oe_status(cr, uid, order.id, paid, context)
-                # create_payments has to be done after oe_status
-                # because oe_status creates the invoice
-                # and create_payment could reconcile the payment
-                # with the invoice
-                updated = self.create_payments(
-                    cr, uid, order.id, data_record, context)
-                if updated:
-                    self.log(
-                        cr, uid, order.id,
-                        "order %s paid when updated from external system" %
-                        (order.id,))
-            # Untick the need_to_update if updated (if so was canceled in magento
-            # or if it has been paid through magento)
-            if updated:
-                self.write(cr, uid, order.id, {'need_to_update': False})
-            cr.commit()
+            self._check_need_to_update_single(
+                cr, uid, order, conn, context=context)
         return True
+
+    def _create_external_invoice(self, cr, uid, order, conn, ext_id,
+                                context=None):
+        """ Creation of an invoice on Magento."""
+        magento_invoice_ref = conn.call(
+            'sales_order_invoice.create',
+            [order.magento_incrementid,
+            [],
+             _("Invoice Created"),
+             True,
+             order.shop_id.allow_magento_notification])
+        return magento_invoice_ref
+
+    # TODO Move in base_sale_multichannels?
+    def export_invoice(self, cr, uid, order, conn, ext_id, context=None):
+        """ Export an invoice on external referential """
+        cr.execute("select account_invoice.id "
+                   "from account_invoice "
+                   "inner join sale_order_invoice_rel "
+                   "on invoice_id = account_invoice.id "
+                   "where order_id = %s" % order.id)
+        resultset = cr.fetchone()
+        created = False
+        if resultset and len(resultset) == 1:
+            invoice = self.pool.get("account.invoice").browse(
+                cr, uid, resultset[0], context=context)
+            if (invoice.amount_total == order.amount_total and
+                not invoice.magento_ref):
+                try:
+                    self._create_external_invoice(
+                        cr, uid, order, conn, ext_id, context=context)
+                    created = True
+                except Exception, e:
+                    self.log(cr, uid, order.id,
+                             "failed to create Magento invoice for order %s" %
+                             (order.id,))
+                    # TODO make sure that's because Magento invoice already
+                    # exists and then re-attach it!
+        return created
 
 ########################################################################################################################
 #
