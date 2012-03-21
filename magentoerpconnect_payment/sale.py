@@ -18,6 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+import xmlrpclib
 
 from osv import osv, fields
 from tools.translate import _
@@ -27,26 +28,56 @@ class sale_order(osv.osv):
 
     _inherit = 'sale.order'
 
-    _columns = {'magento_ref': fields.char('Magento Invoice ID', size=32)}
+    _columns = {'magento_ref': fields.char('Magento Invoice ID', size=32),
+                'allow_magento_manual_invoice': fields.related(
+                'base_payment_type_id', 'allow_magento_manual_invoice',
+                string="Allow Manual Creation of Magento Invoice")}
 
     def magento_create_invoice(self, cr, uid, ids, context=None):
         if isinstance(ids, (int, long)):
             ids = [ids]
         for order in self.browse(cr, uid, ids, context=context):
-            if not order.magento_incrementid:
+            if order.state != 'draft':
+                raise osv.except_osv(
+                    _('Error'), _('This order is not a quotation.'))
+
+            if not order.is_magento:
                 raise osv.except_osv(
                     _('Error'), _('This is not a Magento sale order.'))
 
+            if not order.base_payment_type_id:
+                raise osv.except_osv(
+                    _('Error'), _('This order has no external '
+                                  'payment type settings.'))
+
+            if not order.base_payment_type_id.allow_magento_manual_invoice:
+                raise osv.except_osv(
+                    _('Error'), _(
+                        "Manual creation of the invoice on Magento "
+                        "is forbidden for external payment : %s" %
+                        order.ext_payment_method))
+
+            shop = order.shop_id
+
             ctx = context.copy()
             ctx.update({
-                'shop_id': order.shop_id.id,
+                'shop_id': shop.id,
                 'external_referential_type':
-                    order.shop_id.referential_id.type_id.name, })
+                    shop.referential_id.type_id.name, })
 
-            referential = order.shop_id.referential_id
+            referential = shop.referential_id
             connection = referential.external_connection()
-            external_invoice = self._create_external_invoice(
-                cr, uid, order, connection, referential.id, context=ctx)
+            try:
+                external_invoice = self._create_external_invoice(
+                    cr, uid, order, connection, referential.id, context=ctx)
+            except xmlrpclib.Fault, magento_error:
+                # TODO: in case of error on Magento because the invoice has
+                # already been created, get the invoice number
+                # and store it in magento_ref
+                raise osv.except_osv(
+                    _('Error'), _("Error on Magento on the invoice creation "
+                                  "for order %s :\n" \
+                                  "%s" % (order.name, magento_error)))
             self.write(
                 cr, uid, order.id,
                 {'magento_ref': external_invoice},
@@ -69,8 +100,8 @@ class sale_order(osv.osv):
            first.
 
            :param browse_record order: sale.order record to invoice
-           :param list(int) line: list of invoice line IDs that must be
-                                  attached to the invoice
+           :param list(int) lines: list of invoice line IDs that must be
+                                   attached to the invoice
            :return: dict of value to create() the invoice
         """
         vals = super(sale_order, self)._prepare_invoice(
