@@ -31,6 +31,7 @@ class sale_order(osv.osv):
     _columns = {'magento_ref': fields.char('Magento Invoice ID', size=32),
                 'allow_magento_manual_invoice': fields.related(
                 'base_payment_type_id', 'allow_magento_manual_invoice',
+                type='boolean',
                 string="Allow Manual Creation of Magento Invoice")}
 
     def magento_create_invoice(self, cr, uid, ids, context=None):
