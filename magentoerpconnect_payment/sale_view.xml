@@ -8,7 +8,16 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <button name="order_confirm" position="before">
-                    <button name="magento_create_invoice" states="draft" string="Create Invoice on Magento" type="object" icon="gtk-go-forward" />
+                    <field name="allow_magento_manual_invoice" invisible="True"/>
+                    <button name="magento_create_invoice"
+                            string="Create Invoice on Magento"
+                            type="object"
+                            attrs="{'invisible': ['|', '|', '|',
+                                                  ('is_magento', '=', False),
+                                                  ('state', '!=', 'draft'),
+                                                  ('base_payment_type_id', '=', False),
+                                                  ('allow_magento_manual_invoice', '=', False)]}"
+                            icon="gtk-go-forward" />
                 </button>
             </field>
         </record>

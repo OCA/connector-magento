@@ -19,5 +19,16 @@
 #
 ##############################################################################
 
-import sale
-import payment_type
+from osv import osv, fields
+
+
+class base_sale_payment_type(osv.osv):
+
+    _inherit = 'base.sale.payment.type'
+
+    _columns = {
+        'allow_magento_manual_invoice':
+            fields.boolean('Allow Manual Creation of Magento Invoice')
+    }
+
+base_sale_payment_type()
