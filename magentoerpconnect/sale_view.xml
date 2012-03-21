@@ -67,5 +67,27 @@
 			</field>
 		</record>
 
+        <record id="view_order_form_magento" model="ir.ui.view">
+            <field name="name">sale.order.form.magento</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <data>
+                    <page string="Other Information" position="after">
+                        <page string="Magento" attrs="{'invisible': [('is_magento', '=', False)]}">
+                            <separator string="Payment" colspan="4"/>
+                            <field name="ext_payment_method"/>
+                            <field name="base_payment_type_id"/>
+                            <separator string="History" colspan="4"/>
+                            <field name="magento_incrementid"/>
+                            <field name="magento_storeview_id" readonly="True"/>
+                            <field name="is_magento" invisible="True"/>
+                        </page>
+                    </page>
+                </data>
+            </field>
+        </record>
+        
 	</data>
 </openerp>
