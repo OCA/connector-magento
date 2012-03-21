@@ -243,8 +243,11 @@ class sale_order(magerp_osv.magerp_osv):
     _inherit = "sale.order"
     
     _columns = {
-                'magento_incrementid': fields.char('Magento Increment ID', size=32),
-                'magento_storeview_id': fields.many2one('magerp.storeviews', 'Magento Store View'),
+        'magento_incrementid': fields.char('Magento Increment ID', size=32),
+        'magento_storeview_id': fields.many2one('magerp.storeviews', 'Magento Store View'),
+        'is_magento': fields.related(
+            'shop_id', 'referential_id', 'magento_referential',
+            string='Is a Magento Sale Order')
     }
     
     def _auto_init(self, cr, context=None):
@@ -591,8 +594,7 @@ class sale_order(magerp_osv.magerp_osv):
         if context is None:
             context = {}
 
-        if context.get('external_referential_type', False) and \
-           'Magento' in context['external_referential_type']:
+        if 'Magento' in context.get('external_referential_type', ''):
             payment_info = data_record.get('payment')
             paid, amount = self._parse_external_payment(
                 cr, uid, data_record, context=context)
