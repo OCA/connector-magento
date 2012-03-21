@@ -80,7 +80,7 @@
                             <field name="ext_payment_method"/>
                             <field name="base_payment_type_id"/>
                             <separator string="History" colspan="4"/>
-                            <field name="magento_incrementid"/>
+                            <field name="magento_incrementid" readonly="True"/>
                             <field name="magento_storeview_id" readonly="True"/>
                             <field name="is_magento" invisible="True"/>
                         </page>
