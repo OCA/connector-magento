@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="view_order_form_magento_invoice">
+            <field name="name">sale.order.form.magento.invoice</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form" />
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <button name="order_confirm" position="before">
+                    <button name="magento_create_invoice" states="draft" string="Create Invoice on Magento" type="object" icon="gtk-go-forward" />
+                </button>
+            </field>
+        </record>
+
+    </data>
+</openerp>
