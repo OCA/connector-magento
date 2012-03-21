@@ -247,6 +247,7 @@ class sale_order(magerp_osv.magerp_osv):
         'magento_storeview_id': fields.many2one('magerp.storeviews', 'Magento Store View'),
         'is_magento': fields.related(
             'shop_id', 'referential_id', 'magento_referential',
+            type='boolean',
             string='Is a Magento Sale Order')
     }
     
