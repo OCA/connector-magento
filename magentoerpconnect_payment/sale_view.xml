@@ -9,7 +9,7 @@
             <field name="arch" type="xml">
                 <button name="button_order_confirm" position="before">
                     <field name="allow_magento_manual_invoice" invisible="True"/>
-                    <button name="magento_create_invoice"
+                    <button name="button_magento_create_invoice"
                             string="Create Invoice on Magento"
                             type="object"
                             attrs="{'invisible': ['|', '|', '|',
