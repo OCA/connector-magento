@@ -34,59 +34,71 @@ class sale_order(osv.osv):
                 type='boolean',
                 string="Allow Manual Creation of Magento Invoice")}
 
-    def magento_create_invoice(self, cr, uid, ids, context=None):
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        for order in self.browse(cr, uid, ids, context=context):
-            if order.state != 'draft':
-                raise osv.except_osv(
-                    _('Error'), _('This order is not a quotation.'))
+    def _magento_create_invoice(self, cr, uid, order, context=None):
+        shop = order.shop_id
 
-            if not order.is_magento:
-                raise osv.except_osv(
-                    _('Error'), _('This is not a Magento sale order.'))
+        ctx = context.copy()
+        ctx.update({
+            'shop_id': shop.id,
+            'external_referential_type':
+                shop.referential_id.type_id.name, })
 
-            if not order.base_payment_type_id:
-                raise osv.except_osv(
-                    _('Error'), _('This order has no external '
-                                  'payment type settings.'))
+        referential = shop.referential_id
+        connection = referential.external_connection()
+        try:
+            external_invoice = self._create_external_invoice(
+                cr, uid, order, connection, referential.id, context=ctx)
+        except xmlrpclib.Fault, magento_error:
+            # TODO: in case of error on Magento because the invoice has
+            # already been created, get the invoice number
+            # and store it in magento_ref
+            raise osv.except_osv(
+                _('Error'), _("Error on Magento on the invoice creation "
+                              "for order %s :\n" \
+                              "%s" % (order.name, magento_error)))
+        self.write(
+            cr, uid, order.id,
+            {'magento_ref': external_invoice},
+            context=context)
+        cr.commit()
 
-            if not order.base_payment_type_id.allow_magento_manual_invoice:
-                raise osv.except_osv(
-                    _('Error'), _(
-                        "Manual creation of the invoice on Magento "
-                        "is forbidden for external payment : %s" %
-                        order.ext_payment_method))
+        self._check_need_to_update_single(
+            cr, uid, order, connection, context=ctx)
+        return True
 
-            shop = order.shop_id
+    def button_magento_create_invoice(self, cr, uid, ids, context=None):
+        order = self.browse(cr, uid, ids[0], context=context)
+        if order.state != 'draft':
+            raise osv.except_osv(
+                _('Error'), _('This order is not a quotation.'))
 
-            ctx = context.copy()
-            ctx.update({
-                'shop_id': shop.id,
-                'external_referential_type':
-                    shop.referential_id.type_id.name, })
+        if not order.is_magento:
+            raise osv.except_osv(
+                _('Error'), _('This is not a Magento sale order.'))
 
-            referential = shop.referential_id
-            connection = referential.external_connection()
-            try:
-                external_invoice = self._create_external_invoice(
-                    cr, uid, order, connection, referential.id, context=ctx)
-            except xmlrpclib.Fault, magento_error:
-                # TODO: in case of error on Magento because the invoice has
-                # already been created, get the invoice number
-                # and store it in magento_ref
-                raise osv.except_osv(
-                    _('Error'), _("Error on Magento on the invoice creation "
-                                  "for order %s :\n" \
-                                  "%s" % (order.name, magento_error)))
-            self.write(
-                cr, uid, order.id,
-                {'magento_ref': external_invoice},
-                context=context)
-            cr.commit()
+        if not order.base_payment_type_id:
+            raise osv.except_osv(
+                _('Error'), _('This order has no external '
+                              'payment type settings.'))
 
-            self._check_need_to_update_single(
-                cr, uid, order, connection, context=ctx)
+        if not order.base_payment_type_id.allow_magento_manual_invoice:
+            raise osv.except_osv(
+                _('Error'), _(
+                    "Manual creation of the invoice on Magento "
+                    "is forbidden for external payment : %s" %
+                    order.ext_payment_method))
+
+        # sale_exceptions module methods
+        # in order to check if the order is valid
+        # before create the invoice on magento
+        # it maybe has something to correct
+        exception_ids = self.detect_exceptions(
+            cr, uid, [order.id], context=context)
+        if exception_ids:
+            return self._popup_exceptions(
+                cr, uid, order.id,  context=context)
+
+        self._magento_create_invoice(cr, uid, order, context=context)
         return True
 
     def _prepare_invoice(self, cr, uid, order, lines, context=None):
