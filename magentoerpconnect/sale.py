@@ -259,7 +259,10 @@ class sale_order(magerp_osv.magerp_osv):
         super(sale_order, self)._auto_init(cr, context)
         
     def get_mage_customer_address_id(self, address_data):
-        if address_data.get('customer_address_id', False):
+        # sometimes magento put nothing or '0' for the id, in such case
+        # we have to create an new address
+        if address_data.get('customer_address_id') and \
+           address_data['customer_address_id'] != '0':
             return {'customer_address_id': address_data['customer_address_id'], 'is_magento_order_address': False}
         else:
             return {'customer_address_id': 'mag_order' + str(address_data['address_id']), 'is_magento_order_address': True}
