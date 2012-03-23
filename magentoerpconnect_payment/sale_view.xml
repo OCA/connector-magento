@@ -4,10 +4,10 @@
         <record model="ir.ui.view" id="view_order_form_magento_invoice">
             <field name="name">sale.order.form.magento.invoice</field>
             <field name="model">sale.order</field>
-            <field name="inherit_id" ref="sale.view_order_form" />
+            <field name="inherit_id" ref="sale_exceptions.view_order_form" />
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <button name="order_confirm" position="before">
+                <button name="button_order_confirm" position="before">
                     <field name="allow_magento_manual_invoice" invisible="True"/>
                     <button name="magento_create_invoice"
                             string="Create Invoice on Magento"
@@ -21,6 +21,5 @@
                 </button>
             </field>
         </record>
-
     </data>
 </openerp>
