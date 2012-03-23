@@ -7,7 +7,7 @@
 "magento_1500_pro_cat","magento1500","product.model_product_category","category.list","category.info","catalog_category.update","catalog_category.create",,"category_id"
 "magento_1500_attr_grp","magento1500","model_magerp_product_attribute_groups","ol_catalog_product_attribute_group.list","ol_catalog_product_attribute_group.list",,,,"attribute_group_id"
 "magento_1500_attr_set","magento1500","model_magerp_product_attribute_set","ol_catalog_product_attributeset.list",,,,,"attribute_set_id"
-"magento_1500_attr","magento1500","model_magerp_product_attributes","ol_catalog_product_attribute.list",,,,,"magento_id"
+"magento_1500_attr","magento1500","model_magerp_product_attributes","ol_catalog_product_attribute.list",,,,,"attribute_id"
 "magento_1500_prd","magento1500","product.model_product_product","catalog_product.list","catalog_product.info","ol_catalog_product.update","ol_catalog_product.create",,"product_id"
 "magento_1500_cst_grp","magento1500","base.model_res_partner_category","ol_customer_groups.list",,,,,"customer_group_id"
 "magento_1500_prt_adr","magento1500","base.model_res_partner_address","ol_customer_address.list","ol_customer_address.info",,,,"customer_address_id"
