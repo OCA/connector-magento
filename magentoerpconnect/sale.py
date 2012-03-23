@@ -395,12 +395,14 @@ class sale_order(magerp_osv.magerp_osv):
         if not res.get('order_line'):
             res['order_line'] = []
 
-        if context.get('play_sale_order_onchange'):
-            extra_line = self.pool.get('sale.order.line').play_sale_order_line_onchange(cr, uid, extra_line, res, res['order_line'], defaults, context=context)
         if context.get('use_external_tax'):
+            # get the tax computed by the external system
             tax_vat = abs(float(data_record[ext_tax_field]) / amount)
             line_tax_id = self.pool.get('account.tax').get_tax_from_rate(cr, uid, tax_vat, context.get('is_tax_included'), context=context)
             extra_line['tax_id'] = [(6, 0, line_tax_id)]
+        else:
+            # compute the taxes, apply fiscal positions, default values and so on
+            extra_line = self.pool.get('sale.order.line').play_sale_order_line_onchange(cr, uid, extra_line, res, res['order_line'], defaults, context=context)
         res['order_line'].append((0, 0, extra_line))
 
         return res
