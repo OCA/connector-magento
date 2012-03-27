@@ -1,0 +1,5 @@
+id,type_id:id,model_id:id,external_field,field_id:id,type,evaluation_type,external_type,child_mapping_id:id,in_function,out_function
+magentoerpconnect.magento_1500_prt_2,magentoerpconnect.magento1500,base.model_res_partner,group_id,,in_out,function,int,,"if ifield:
+	result=self.pool.get('res.partner.category').extid_to_oeid(cr,uid,ifield,external_referential_id)
+	if result:
+		result=[('group_id', result), ('fiscal_category_id', result)]",
