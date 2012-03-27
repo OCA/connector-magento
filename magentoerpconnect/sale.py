@@ -299,16 +299,22 @@ class sale_order(magerp_osv.magerp_osv):
         billing_default = shipping_default.copy()
         billing_default.update({'email' : data_record.get('customer_email', False)})
 
-        inv_res = partner_address_obj.ext_import(cr, uid, [data_record['billing_address']], external_referential_id, billing_default, context)
-        if 'address_type' in data_record['shipping_address']:
-            ship_res = partner_address_obj.ext_import(cr, uid, [data_record['shipping_address']], external_referential_id, shipping_default, context)
-        else:
-            ship_res = partner_address_obj.ext_import(cr, uid, [data_record['billing_address']], external_referential_id, shipping_default, context)
-
-        res['partner_order_id'] = len(inv_res['create_ids']) > 0 and inv_res['create_ids'][0] or inv_res['write_ids'][0]
+        inv_res = partner_address_obj.ext_import(
+            cr, uid, [data_record['billing_address']], external_referential_id, billing_default, context)
+        res['partner_order_id'] = inv_res.get('create_ids') and inv_res['create_ids'][0] or inv_res['write_ids'][0]
         res['partner_invoice_id'] = res['partner_order_id']
-        res['partner_shipping_id'] = (len(ship_res['create_ids']) > 0 and ship_res['create_ids'][0]) or (len(ship_res['write_ids']) > 0 and ship_res['write_ids'][0]) or res['partner_order_id'] #shipping might be the same as invoice address
-        
+
+        if data_record['shipping_address']:
+            ship_res = partner_address_obj.ext_import(
+                cr, uid, [data_record['shipping_address']], external_referential_id, shipping_default, context)
+            res['partner_shipping_id'] = (ship_res.get('create_ids') and ship_res['create_ids'][0]) or \
+                                         (ship_res.get('write_ids') and ship_res['write_ids'][0]) \
+                                         or False
+
+        # when there is no shipping address, use the order's one
+        if not res.get('partner_shipping_id'):
+            res['partner_shipping_id'] = res['partner_order_id']
+
         result = partner_address_obj.read(cr, uid, res['partner_order_id'], ['partner_id'])
         if result and result['partner_id']:
             partner_id = result['partner_id'][0]
