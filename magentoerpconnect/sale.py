@@ -281,10 +281,19 @@ class sale_order(magerp_osv.magerp_osv):
         if 'address_type' in data_record['shipping_address']:
             data_record['shipping_address'].update(self.get_mage_customer_address_id(data_record['shipping_address']))
         shipping_default = {}
-        billing_default = {}
+
         if res is None:
             res = {}
-        res['partner_id'] = self.pool.get('res.partner').extid_to_oeid(cr, uid, data_record['customer_id'], external_referential_id)
+
+        # always update the customer when importing an order
+        partner_obj.get_external_data(
+            cr, uid,
+            context.get('conn_obj'),
+            external_referential_id,
+            defaults={},
+            context={'id': data_record['customer_id']})
+        res['partner_id'] = partner_obj.extid_to_oeid(cr, uid, data_record['customer_id'], external_referential_id)
+
         if res.get('partner_id', False):
             shipping_default = {'partner_id': res.get('partner_id', False)}
         billing_default = shipping_default.copy()
