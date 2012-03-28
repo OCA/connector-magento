@@ -864,8 +864,7 @@ class product_mag_osv(magerp_osv.magerp_osv):
             etree.SubElement(
                 website_page, 'field', name='website_ids', nolabel="1")
 
-        xml = etree.tostring(notebook, pretty_print=True)
-        return xml
+        return notebook
     
     def _filter_fields_to_return(self, cr, uid, field_names, context=None):
         '''This function is a hook in order to filter the fields that appears on the view'''
@@ -874,48 +873,88 @@ class product_mag_osv(magerp_osv.magerp_osv):
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         if context is None:
             context = {}
-        result = super(product_mag_osv, self).fields_view_get(cr, uid, view_id,view_type,context,toolbar=toolbar)
+        result = super(product_mag_osv, self).fields_view_get(
+            cr, uid, view_id,view_type,context,toolbar=toolbar)
         if view_type == 'form':
-            result['arch'] = result['arch'].decode('utf8') #in order to support special character, the arch for the product view will be a unicode and not a str
-            if context.get('set', False):
+            eview = etree.fromstring(result['arch'])
+            btn = eview.xpath("//button[@name='open_magento_fields']")
+            if btn:
+                btn = btn[0]
+            page_placeholder = eview.xpath(
+                "//page[@string='attributes_placeholder']")
+            if context.get('set'):
+                fields_obj = self.pool.get('ir.model.fields')
                 models = ['product.template']
                 if self._name == 'product.product':
                     models.append('product.product')
 
-                ir_model_ids = self.pool.get('ir.model').search(cr, uid, [('model', 'in', models)])
-                ir_model_field_ids = self.pool.get('ir.model.fields').search(cr, uid, [('model_id', 'in', ir_model_ids)])
+                model_ids = self.pool.get('ir.model').search(
+                    cr, uid, [('model', 'in', models)], context=context)
+                field_ids = fields_obj.search(
+                    cr, uid,
+                    [('model_id', 'in', model_ids)],
+                    context=context)
                 field_names = ['product_type']
-                for field in self.pool.get('ir.model.fields').browse(cr, uid, ir_model_field_ids):
+                fields = fields_obj.browse(cr, uid, field_ids, context=context)
+                for field in fields:
                     if field.name.startswith('x_'):
                         field_names.append(field.name)
-                if len(self.pool.get('external.shop.group').search(cr,uid,[('referential_type', 'ilike', 'mag')])) >1 :
+                website_ids = self.pool.get('external.shop.group').search(
+                    cr, uid,
+                    [('referential_type', '=ilike', 'mag%')],
+                    context=context)
+                if len(website_ids) > 1:
                     context['multiwebsite'] = True
                     field_names.append('websites_ids')
-                    
-                field_names = self._filter_fields_to_return(cr, uid, field_names, context)
-                result['fields'].update(self.fields_get(cr, uid, field_names, context))
 
-                view_part = self.redefine_prod_view(cr, uid, field_names, context)
-                if '<page string="attributes_placeholder"/>' in result['arch']:
-                    # If the view have the tag '<page string="attributes_placeholder"/>' the view asked is the main view
-                    # Else it's the pop up with specific fields
-                    magento_tab = (
-                        "<page string='" + _('Magento Information') + " ' attrs=\"{'invisible':[('magento_exportable','!=',1)]}\">"
-                            "<field name='product_type' attrs=\"{'required':[('magento_exportable','=',True)]}\"/>\n"
-                            + view_part +
-                        "</page>"
-                        )
-                    result['arch'] = result['arch'].replace('<page string="attributes_placeholder"/>', magento_tab)
-                    result['arch'] = result['arch'].replace('<button name="open_magento_fields"/>', '')
+                field_names = self._filter_fields_to_return(
+                    cr, uid, field_names, context)
+                result['fields'].update(
+                    self.fields_get(cr, uid, field_names, context))
+
+                attributes_notebook = self.redefine_prod_view(
+                                    cr, uid, field_names, context)
+
+                # if the placeholder is a "page", that means we are
+                # in the product main form. If it is a "separator", it
+                # means we are in the attributes popup
+                if page_placeholder:
+                    placeholder = page_placeholder[0]
+                    magento_page = etree.Element(
+                        'page',
+                        string=_('Magento Information'),
+                        attrs="{'invisible': [('magento_exportable', '=', False)]}")
+                    orm.setup_modifiers(magento_page, context=context)
+                    f = etree.SubElement(
+                        magento_page,
+                        'field',
+                        name='product_type',
+                        attrs="{'required': [('magento_exportable', '=', True)]}")
+                    orm.setup_modifiers(
+                        f, field=result['fields']['product_type'], context=context)
+                    magento_page.append(attributes_notebook)
+                    btn.getparent().remove(btn)
                 else:
-                    result['arch'] = result['arch'].replace('<separator string="attributes_placeholder" colspan="4"/>', view_part)
+                    placeholder = eview.xpath(
+                        "//separator[@string='attributes_placeholder']")[0]
+                    magento_page = attributes_notebook
+
+                placeholder.getparent().replace(placeholder, magento_page)
             else:
-                magento_button = (
-                    "<button name='open_magento_fields' string='Open Magento Fields' icon='gtk-go-forward' type='object'"
-                    " colspan='2' attrs=\"{'invisible':[('magento_exportable','!=', True)]}\""
-                    )
-                result['arch'] = result['arch'].replace('<button name="open_magento_fields"', magento_button)
-                result['arch'] = result['arch'].replace('<page string="attributes_placeholder"/>', "")
+                new_btn = etree.Element(
+                    'button',
+                    name='open_magento_fields',
+                    string=_('Open Magento Fields'),
+                    icon='gtk-go-forward',
+                    type='object',
+                    colspan='2',
+                    attrs="{'invisible': [('magento_exportable', '=', False)]}")
+                orm.setup_modifiers(new_btn, context=context)
+                btn.getparent().replace(btn, new_btn)
+                placeholder = page_placeholder[0]
+                placeholder.getparent().remove(placeholder)
+
+            result['arch'] = etree.tostring(eview, pretty_print=True)
         return result
 
 class product_template(product_mag_osv):
