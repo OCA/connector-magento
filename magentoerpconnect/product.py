@@ -1253,13 +1253,12 @@ class product_product(product_mag_osv):
             bom_ids = self.read(cr, uid, id, ['bom_ids'])['bom_ids']
             if len(bom_ids): # it has or is part of a BoM
                 cr.execute("SELECT product_id, product_qty FROM mrp_bom WHERE bom_id = %s", (bom_ids[0],)) #FIXME What if there is more than a materials list?
-                results = cr.fetchall()
+                results = cr.dictfetchall()
                 child_ids = []
                 quantities = {}
-                for x in results:
-                    child_ids += [x[0]]
-                    sku = self.read(cr, uid, x[0], ['magento_sku'])['magento_sku']
-                    quantities.update({sku: x[1]})
+                for row in results:
+                    child_ids.append(row['product_id'])
+                    quantities.update({row['product_id']: row['product_qty']})
                 if child_ids: #it is an assembly and it contains the products child_ids: 
                     self.ext_export(cr, uid, child_ids, external_referential_ids, defaults, context) #so we export them
         else:
@@ -1482,7 +1481,7 @@ class product_product(product_mag_osv):
                 for link in product.product_link_ids:
                     if link.type == link_type:
                         linked_product_ids.append(link.linked_product_id.id)
-                        position[link.linked_product_id.magento_sku] = link.sequence
+                        position[link.linked_product_id.id] = link.sequence
                 self.ext_product_assign(cr, uid, link_type, product.id, linked_product_ids, position=position,
                                         external_referential_ids=external_referential_ids, defaults=defaults, context=context)
         return True
@@ -1495,43 +1494,77 @@ class product_product(product_mag_osv):
         logger = netsvc.Logger()
         conn = context.get('conn_obj', False)
 
-        # ensure that the product to link is exported before assigning it, export it if necessary
-        for external_referential_id in external_referential_ids:
+        for ref_id in external_referential_ids:
+            # ensure that the product to link is exported before assigning it,
+            # export it if necessary
             ids_to_export = []
             for child_id in child_ids:
-                if not self.oeid_to_extid(cr, uid, child_id, external_referential_id, context=context):
+                if not self.oeid_to_extid(cr, uid, child_id, ref_id, context=context):
                     ids_to_export.append(child_id)
             export_ctx = context.copy()
             export_ctx['force_export'] = True
-            self.ext_export(cr, uid, ids_to_export, [external_referential_id], defaults, export_ctx)
+            self.ext_export(
+                cr, uid, ids_to_export, [ref_id], defaults=defaults, context=export_ctx)
 
-        parent_sku = self.read(cr, uid, parent_id, ['magento_sku'])['magento_sku']
-        new_child_skus = self.read(cr, uid, child_ids, ['magento_sku']) # get the sku of the products to be assigned
-        new_child_skus = [x['magento_sku'] for x in new_child_skus]
-        
-        data = [type, parent_sku]
-        child_list = conn.call('product_link.list', data) # get the sku of the products already assigned
-        old_child_skus = [x['sku'] for x in child_list]
-        skus_to_remove = []
-        skus_to_assign = []
-        skus_to_update = []
-        for old_child_sku in old_child_skus:
-            if old_child_sku not in new_child_skus:
-                skus_to_remove += [old_child_sku]
-        for new_child_sku in new_child_skus:
-            if new_child_sku in old_child_skus:
-                skus_to_update += [new_child_sku]
-            else:
-                skus_to_assign += [new_child_sku]
-        for old_child_sku in skus_to_remove:
-            conn.call('product_link.remove', data + [old_child_sku]) # remove the products that are no more used
-            logger.notifyChannel('ext assign', netsvc.LOG_INFO, "Successfully removed assignment of type %s for product %s to product %s" % (type, parent_sku, old_child_sku))
-        for child_sku in skus_to_assign:
-            conn.call('product_link.assign', data + [child_sku, {'position': position.get(child_sku, 0), 'qty': quantities.get(child_sku, 1)}]) # assign new product
-            logger.notifyChannel('ext assign', netsvc.LOG_INFO, "Successfully assigned product %s to product %s with type %s" %(parent_sku, child_sku, type))
-        for child_sku in skus_to_update:
-            conn.call('product_link.update', data + [child_sku, {'position': position.get(child_sku, 0), 'qty': quantities.get(child_sku, 1)}]) # update products already assigned
-            logger.notifyChannel('ext assign', netsvc.LOG_INFO, "Successfully updated assignment of type %s of product %s to product %s" %(type, parent_sku, child_sku))
+            ext_id = self.oeid_to_extid(
+                cr, uid, parent_id, ref_id, context=context)
+            if not ext_id:
+                continue
+
+            # get the sku of the products already assigned
+            magento_args = [type, ext_id]
+
+            # magento existing children ids
+            child_list = conn.call('product_link.list', magento_args)
+            old_child_ext_ids = [x['product_id'] for x in child_list]
+
+            ext_id_to_remove = []
+            ext_id_to_assign = []
+            ext_id_to_update = []
+
+            # list of children setup on openerp
+            new_child_ext_ids = dict([(self.oeid_to_extid(cr, uid, child_id, ref_id, context=context),
+                                       child_id)
+                                      for child_id in child_ids])
+
+            skus = dict([(p.id, p.magento_sku)
+                    for p in
+                    self.browse(
+                        cr, uid, child_ids + [parent_id], context=context)])
+
+            # compute the diff between openerp and magento
+            for c_ext_id in old_child_ext_ids:
+                if c_ext_id not in new_child_ext_ids:
+                    ext_id_to_remove.append(c_ext_id)
+            for c_ext_id in new_child_ext_ids.keys():
+                if c_ext_id in old_child_ext_ids:
+                    ext_id_to_update.append(c_ext_id)
+                else:
+                    ext_id_to_assign.append(c_ext_id)
+
+            # calls to magento to delete, create or update the links
+            for c_ext_id in ext_id_to_remove:
+                 # remove the product links that are no more setup on openerp
+                conn.call('product_link.remove', magento_args + [c_ext_id])
+                logger.notifyChannel('ext assign', netsvc.LOG_INFO, "Successfully removed assignment of type %s for product %s to product %s" % (type, skus[parent_id], c_ext_id))
+            for child_ext_id in ext_id_to_assign:
+                # assign new product links
+                product_id = new_child_ext_ids[child_ext_id]
+                conn.call('product_link.assign',
+                          magento_args +
+                          [child_ext_id,
+                              {'position': position.get(product_id, 0),
+                               'qty': quantities.get(product_id, 1)}])
+                logger.notifyChannel('ext assign', netsvc.LOG_INFO, "Successfully assigned product %s to product %s with type %s" %(skus[parent_id], skus[product_id], type))
+            for child_ext_id in ext_id_to_update:
+                # update products links already assigned
+                product_id = new_child_ext_ids[child_ext_id]
+                conn.call('product_link.update',
+                          magento_args +
+                          [child_ext_id,
+                              {'position': position.get(product_id, 0),
+                               'qty': quantities.get(product_id, 1)}])
+                logger.notifyChannel('ext assign', netsvc.LOG_INFO, "Successfully updated assignment of type %s of product %s to product %s" %(type, skus[parent_id], skus[product_id]))
         return True
 
     #TODO move this code (get exportable image) and also some code in product_image.py and sale.py in base_sale_multichannel or in a new module in order to be more generic
