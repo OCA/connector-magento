@@ -22,9 +22,8 @@
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.  #
 #########################################################################
 
-from osv import osv, fields
+from osv import osv, orm, fields
 import datetime
-import base64
 import time
 import pooler
 import magerp_osv
@@ -33,6 +32,7 @@ import netsvc
 import unicodedata
 import base64, urllib
 import os
+from lxml import etree
 
 from tools import DEFAULT_SERVER_DATETIME_FORMAT
 
@@ -755,87 +755,122 @@ class product_mag_osv(magerp_osv.magerp_osv):
         '''this empty function will save the magento field'''
         return {'type': 'ir.actions.act_window_close'}
 
-    def redefine_prod_view(self,cr,uid, field_names, context=None):
-        def clean_for_xml(string):
-            for key, key_replace in [('&', '&amp;'), ('>','&gt;'),  ('<', '&lt;')]:
-                string = string.replace(key, key_replace)
-            return string
-        #This function will rebuild the view for product from instances, attribute groups etc
-        #Get all objects needed
-        #inst_obj = self.pool.get('external.referential')
+    def redefine_prod_view(self, cr, uid, field_names, context=None):
+        """
+        Rebuild the product view with attribute groups and attributes
+        """
         if context is None: context = {}
         attr_set_obj = self.pool.get('magerp.product_attribute_set')
         attr_group_obj = self.pool.get('magerp.product_attribute_groups')
         attr_obj = self.pool.get('magerp.product_attributes')
         translation_obj = self.pool.get('ir.translation')
-        xml = u"<notebook colspan='4'>\n"
-        attr_grp_ids = attr_group_obj.search(cr,uid,[])
-        attr_groups = attr_group_obj.browse(cr,uid,attr_grp_ids)
+
         attribute_set_id = context['set']
         attr_set = attr_set_obj.browse(cr, uid, attribute_set_id)
         attr_group_fields_rel = {}
-        cr.execute("select attr_id, group_id, attribute_code, frontend_input, frontend_label, is_required, apply_to, field_name  from magerp_attrset_attr_rel left join magerp_product_attributes on magerp_product_attributes.id = attr_id where magerp_attrset_attr_rel.set_id=%s" % attribute_set_id)
-        results = cr.fetchall()
-        result = results.pop()
-        while len(results) > 0:
-            mag_group_id = result[1]
-            oerp_group_id = attr_group_obj.extid_to_oeid(cr, uid, mag_group_id, attr_set.referential_id.id)
-            if not oerp_group_id: #FIXME workaround in multi-Magento instances (databases) where attribute group might not be found due to the way we share attributes currently
-                for ref_id in self.pool.get('external.referential').search(cr, uid, []):
+
+        cr.execute("select attr_id, group_id, attribute_code, frontend_input, "
+                   "frontend_label, is_required, apply_to, field_name "
+                   "from magerp_attrset_attr_rel "
+                   "left join magerp_product_attributes "
+                   "on magerp_product_attributes.id = attr_id "
+                   "where magerp_attrset_attr_rel.set_id=%s" %
+                   attribute_set_id)
+
+        results = cr.dictfetchall()
+        attribute = results.pop()
+        while results:
+            mag_group_id = attribute['group_id']
+            oerp_group_id = attr_group_obj.extid_to_oeid(
+                cr, uid, mag_group_id, attr_set.referential_id.id)
+            # FIXME: workaround in multi-Magento instances (databases)
+            # where attribute group might not be found due to the way we
+            # share attributes currently
+            if not oerp_group_id:
+                ref_ids = self.pool.get(
+                    'external.referential').search(cr, uid, [])
+                for ref_id in ref_ids:
                      if ref_id != attr_set.referential_id.id:
-                         oerp_group_id = attr_group_obj.extid_to_oeid(cr, uid, mag_group_id, ref_id)
+                         oerp_group_id = attr_group_obj.extid_to_oeid(
+                             cr, uid, mag_group_id, ref_id)
                          if oerp_group_id:
                              break
-            group_name = attr_group_obj.read(cr, uid, oerp_group_id, ['attribute_group_name'])['attribute_group_name']
+
+            group_name = attr_group_obj.read(
+                cr, uid, oerp_group_id,
+                ['attribute_group_name'],
+                context=context)['attribute_group_name']
             
-            #Create a page for the attribute group
-            if not attr_group_fields_rel.get(group_name, False):
-                attr_group_fields_rel[group_name] = []
+            # Create a page for each attribute group
+            attr_group_fields_rel.setdefault(group_name, [])
             while True:
-                field_xml=""
-                if result[1] != mag_group_id:
+                if attribute['group_id'] != mag_group_id:
                     break
-                if result[7] in field_names:
-                    if not result[2] in attr_obj._no_create_list:
-                        if result[3] in ['textarea']:
-                            trans = translation_obj._get_source(cr, uid, 'product.product', 'view', context.get('lang', ''), result[4])
-                            trans = trans or result[4]
-                            field_xml+="<newline/><separator colspan='4' string='%s'/>" % (clean_for_xml(trans),)
-                        field_xml+="<field name='" +  clean_for_xml(result[7]) + "'"
-                        if result[5] and (result[6] == "" or "simple" in result[6] or "configurable" in result[6]) and result[2] not in self._magento_fake_mandatory_attrs:
-                            field_xml+=""" attrs="{'required':[('magento_exportable','=',True)]}" """
-                        if result[3] in ['textarea']:
-                            field_xml+=" colspan='4' nolabel='1' " 
-                        field_xml+=" />\n"
-                        if (group_name in  [
-                                            u'Meta Information', 
-                                            u'General', 
-                                            u'Custom Layout Update', 
-                                            u'Prices', 
-                                            u'Design', 
-                                            ]) or GROUP_CUSTOM_ATTRS_TOGETHER==False:
-                            attr_group_fields_rel[group_name].append(field_xml)
+
+                if attribute['field_name'] in field_names:
+                    if not attribute['attribute_code'] in attr_obj._no_create_list:
+                        if (group_name in  ['Meta Information',
+                                            'General',
+                                            'Custom Layout Update',
+                                            'Prices',
+                                            'Design']) or \
+                           GROUP_CUSTOM_ATTRS_TOGETHER==False:
+                            attr_group_fields_rel[group_name].append(attribute)
                         else:
-                            custom_attributes = attr_group_fields_rel.get(u"Custom Attributes",[])
-                            custom_attributes.append(field_xml)
-                            attr_group_fields_rel[u"Custom Attributes"] = custom_attributes
-                if len(results) > 0:
-                    result = results.pop()
+                            attr_group_fields_rel.setdefault(
+                                'Custom Attributes', []).append(attribute)
+                if results:
+                    attribute = results.pop()
                 else:
                     break
+
+        fields_get = self.fields_get(cr, uid, field_names, context)
+
+        notebook = etree.Element('notebook', colspan="4")
+
         attribute_groups = attr_group_fields_rel.keys()
         attribute_groups.sort()
-        for each_attribute_group in attribute_groups:
-            trans = translation_obj._get_source(cr, uid, 'product.product', 'view', context.get('lang', ''), each_attribute_group)
-            trans = trans or each_attribute_group
-            if attr_group_fields_rel.get(each_attribute_group,False):
-                xml+="<page string='" + clean_for_xml(trans) + "'>\n<group colspan='4' col='4'>"
-                xml+="\n".join(attr_group_fields_rel.get(each_attribute_group,[]))
-                xml+="</group></page>\n"
+        for group in attribute_groups:
+            lang = context.get('lang', '')
+            trans = translation_obj._get_source(
+                cr, uid, 'product.product', 'view', lang, group)
+            trans = trans or group
+            if attr_group_fields_rel.get(group):
+                page = etree.SubElement(notebook, 'page', string=trans)
+                for attribute in attr_group_fields_rel.get(group, []):
+                    if attribute['frontend_input'] == 'textarea':
+                        field_label = translation_obj._get_source(
+                            cr, uid, 'product.product',
+                            'view', lang, attribute['frontend_label'])
+                        field_label = field_label or \
+                                      attribute['frontend_label']
+                        etree.SubElement(page, 'newline')
+                        etree.SubElement(
+                            page, 'separator', colspan="4", string=field_label)
+
+                    f = etree.SubElement(
+                        page, 'field', name=attribute['field_name'])
+
+                    if attribute['is_required'] and \
+                        attribute['apply_to'] in ('', 'simple', 'configurable') and \
+                        attribute['attribute_code'] not in self._magento_fake_mandatory_attrs:
+                        f.set('attrs', "{'required': [('magento_exportable', '=', True)]}")
+
+                    if attribute['frontend_input'] == 'textarea':
+                        f.set('nolabel', "1")
+                        f.set('colspan', "4")
+
+                    orm.setup_modifiers(
+                        f, fields_get[attribute['field_name']],
+                        context=context)
+
         if context.get('multiwebsite', False):
-            xml+="""<page string='Websites'>\n<field name='websites_ids' nolabel="1"/>\n</page>\n"""
-        xml+="</notebook>"
-        return xml
+            website_page = etree.SubElement(
+                notebook, 'page', string=_('Websites'))
+            etree.SubElement(
+                website_page, 'field', name='website_ids', nolabel="1")
+
+        return notebook
     
     def _filter_fields_to_return(self, cr, uid, field_names, context=None):
         '''This function is a hook in order to filter the fields that appears on the view'''
@@ -844,47 +879,92 @@ class product_mag_osv(magerp_osv.magerp_osv):
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         if context is None:
             context = {}
-        result = super(product_mag_osv, self).fields_view_get(cr, uid, view_id,view_type,context,toolbar=toolbar)
+        result = super(product_mag_osv, self).fields_view_get(
+            cr, uid, view_id,view_type,context,toolbar=toolbar)
         if view_type == 'form':
-            result['arch'] = result['arch'].decode('utf8') #in order to support special character, the arch for the product view will be a unicode and not a str
-            if context.get('set', False):
+
+            eview = etree.fromstring(result['arch'])
+            btn = eview.xpath("//button[@name='open_magento_fields']")
+            if btn:
+                btn = btn[0]
+            page_placeholder = eview.xpath(
+                "//page[@string='attributes_placeholder']")
+
+            attrs_mag_notebook = "{'invisible': [('set', '=', False)]}"
+
+            if context.get('set'):
+                fields_obj = self.pool.get('ir.model.fields')
                 models = ['product.template']
                 if self._name == 'product.product':
                     models.append('product.product')
-                ir_model_ids = self.pool.get('ir.model').search(cr, uid, [('model', 'in', models)])
-                ir_model_field_ids = self.pool.get('ir.model.fields').search(cr, uid, [('model_id', 'in', ir_model_ids)])
+
+                model_ids = self.pool.get('ir.model').search(
+                    cr, uid, [('model', 'in', models)], context=context)
+                field_ids = fields_obj.search(
+                    cr, uid,
+                    [('model_id', 'in', model_ids)],
+                    context=context)
                 field_names = ['product_type']
-                for field in self.pool.get('ir.model.fields').browse(cr, uid, ir_model_field_ids):
+                fields = fields_obj.browse(cr, uid, field_ids, context=context)
+                for field in fields:
                     if field.name.startswith('x_'):
                         field_names.append(field.name)
-                if len(self.pool.get('external.shop.group').search(cr,uid,[('referential_type', 'ilike', 'mag')])) >1 :
+                website_ids = self.pool.get('external.shop.group').search(
+                    cr, uid,
+                    [('referential_type', '=ilike', 'mag%')],
+                    context=context)
+                if len(website_ids) > 1:
                     context['multiwebsite'] = True
                     field_names.append('websites_ids')
-                    
-                field_names = self._filter_fields_to_return(cr, uid, field_names, context)
-                result['fields'].update(self.fields_get(cr, uid, field_names, context))
 
-                view_part = self.redefine_prod_view(cr, uid, field_names, context)
-                if '<page string="attributes_placeholder"/>' in result['arch']:
-                    # If the view have the tag '<page string="attributes_placeholder"/>' the view asked is the main view
-                    # Else it's the pop up with specific fields
-                    magento_tab = (
-                        "<page string='" + _('Magento Information') + " ' attrs=\"{'invisible':[('magento_exportable','!=',1)]}\">"
-                            "<field name='product_type' attrs=\"{'required':[('magento_exportable','=',True)]}\"/>\n"
-                            + view_part +
-                        "</page>"
-                        )
-                    result['arch'] = result['arch'].replace('<page string="attributes_placeholder"/>', magento_tab)
-                    result['arch'] = result['arch'].replace('<button name="open_magento_fields"/>', '')
+                field_names = self._filter_fields_to_return(
+                    cr, uid, field_names, context)
+                result['fields'].update(
+                    self.fields_get(cr, uid, field_names, context))
+
+                attributes_notebook = self.redefine_prod_view(
+                                    cr, uid, field_names, context)
+
+                # if the placeholder is a "page", that means we are
+                # in the product main form. If it is a "separator", it
+                # means we are in the attributes popup
+                if page_placeholder:
+                    placeholder = page_placeholder[0]
+                    magento_page = etree.Element(
+                        'page',
+                        string=_('Magento Information'),
+                        attrs=attrs_mag_notebook)
+                    orm.setup_modifiers(magento_page, context=context)
+                    f = etree.SubElement(
+                        magento_page,
+                        'field',
+                        name='product_type',
+                        attrs="{'required': [('magento_exportable', '=', True)]}")
+                    orm.setup_modifiers(
+                        f, field=result['fields']['product_type'], context=context)
+                    magento_page.append(attributes_notebook)
+                    btn.getparent().remove(btn)
                 else:
-                    result['arch'] = result['arch'].replace('<separator string="attributes_placeholder" colspan="4"/>', view_part)
+                    placeholder = eview.xpath(
+                        "//separator[@string='attributes_placeholder']")[0]
+                    magento_page = attributes_notebook
+
+                placeholder.getparent().replace(placeholder, magento_page)
             else:
-                magento_button = (
-                    "<button name='open_magento_fields' string='Open Magento Fields' icon='gtk-go-forward' type='object'"
-                    " colspan='2' attrs=\"{'invisible':[('magento_exportable','!=', True)]}\""
-                    )
-                result['arch'] = result['arch'].replace('<button name="open_magento_fields"', magento_button)
-                result['arch'] = result['arch'].replace('<page string="attributes_placeholder"/>', "")
+                new_btn = etree.Element(
+                    'button',
+                    name='open_magento_fields',
+                    string=_('Open Magento Fields'),
+                    icon='gtk-go-forward',
+                    type='object',
+                    colspan='2',
+                    attrs=attrs_mag_notebook)
+                orm.setup_modifiers(new_btn, context=context)
+                btn.getparent().replace(btn, new_btn)
+                placeholder = page_placeholder[0]
+                placeholder.getparent().remove(placeholder)
+
+            result['arch'] = etree.tostring(eview, pretty_print=True)
         return result
 
 class product_template(product_mag_osv):
