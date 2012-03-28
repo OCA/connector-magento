@@ -769,6 +769,10 @@ class product_mag_osv(magerp_osv.magerp_osv):
         attr_set = attr_set_obj.browse(cr, uid, attribute_set_id)
         attr_group_fields_rel = {}
 
+        multiwebsites = context.get('multiwebsite', False)
+
+        fields_get = self.fields_get(cr, uid, field_names, context)
+
         cr.execute("select attr_id, group_id, attribute_code, frontend_input, "
                    "frontend_label, is_required, apply_to, field_name "
                    "from magerp_attrset_attr_rel "
@@ -824,8 +828,6 @@ class product_mag_osv(magerp_osv.magerp_osv):
                 else:
                     break
 
-        fields_get = self.fields_get(cr, uid, field_names, context)
-
         notebook = etree.Element('notebook', colspan="4")
 
         attribute_groups = attr_group_fields_rel.keys()
@@ -839,14 +841,12 @@ class product_mag_osv(magerp_osv.magerp_osv):
                 page = etree.SubElement(notebook, 'page', string=trans)
                 for attribute in attr_group_fields_rel.get(group, []):
                     if attribute['frontend_input'] == 'textarea':
-                        field_label = translation_obj._get_source(
-                            cr, uid, 'product.product',
-                            'view', lang, attribute['frontend_label'])
-                        field_label = field_label or \
-                                      attribute['frontend_label']
                         etree.SubElement(page, 'newline')
                         etree.SubElement(
-                            page, 'separator', colspan="4", string=field_label)
+                            page,
+                            'separator',
+                            colspan="4",
+                            string=fields_get[attribute['field_name']]['string'])
 
                     f = etree.SubElement(
                         page, 'field', name=attribute['field_name'])
@@ -869,11 +869,13 @@ class product_mag_osv(magerp_osv.magerp_osv):
                         f, fields_get[attribute['field_name']],
                         context=context)
 
-        if context.get('multiwebsite', False):
+        if multiwebsites:
             website_page = etree.SubElement(
                 notebook, 'page', string=_('Websites'))
-            etree.SubElement(
-                website_page, 'field', name='website_ids', nolabel="1")
+            wf = etree.SubElement(
+                website_page, 'field', name='websites_ids', nolabel="1")
+            orm.setup_modifiers(
+                wf, fields_get['websites_ids'], context=context)
 
         return notebook
     
@@ -887,7 +889,6 @@ class product_mag_osv(magerp_osv.magerp_osv):
         result = super(product_mag_osv, self).fields_view_get(
             cr, uid, view_id,view_type,context,toolbar=toolbar)
         if view_type == 'form':
-
             eview = etree.fromstring(result['arch'])
             btn = eview.xpath("//button[@name='open_magento_fields']")
             if btn:
