@@ -876,12 +876,16 @@ class product_mag_osv(magerp_osv.magerp_osv):
         result = super(product_mag_osv, self).fields_view_get(
             cr, uid, view_id,view_type,context,toolbar=toolbar)
         if view_type == 'form':
+
             eview = etree.fromstring(result['arch'])
             btn = eview.xpath("//button[@name='open_magento_fields']")
             if btn:
                 btn = btn[0]
             page_placeholder = eview.xpath(
                 "//page[@string='attributes_placeholder']")
+
+            attrs_mag_notebook = "{'invisible': [('set', '=', False)]}"
+
             if context.get('set'):
                 fields_obj = self.pool.get('ir.model.fields')
                 models = ['product.template']
@@ -923,7 +927,7 @@ class product_mag_osv(magerp_osv.magerp_osv):
                     magento_page = etree.Element(
                         'page',
                         string=_('Magento Information'),
-                        attrs="{'invisible': [('magento_exportable', '=', False)]}")
+                        attrs=attrs_mag_notebook)
                     orm.setup_modifiers(magento_page, context=context)
                     f = etree.SubElement(
                         magento_page,
@@ -948,7 +952,7 @@ class product_mag_osv(magerp_osv.magerp_osv):
                     icon='gtk-go-forward',
                     type='object',
                     colspan='2',
-                    attrs="{'invisible': [('magento_exportable', '=', False)]}")
+                    attrs=attrs_mag_notebook)
                 orm.setup_modifiers(new_btn, context=context)
                 btn.getparent().replace(btn, new_btn)
                 placeholder = page_placeholder[0]
