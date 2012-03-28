@@ -845,8 +845,13 @@ class product_mag_osv(magerp_osv.magerp_osv):
                     f = etree.SubElement(
                         page, 'field', name=attribute['field_name'])
 
+                    # apply_to is a string like
+                    # "simple,configurable,virtual,bundle,downloadable"
+                    req_apply_to = attribute['apply_to'] == '' or \
+                        'simple' in attribute['apply_to'] or \
+                        'configurable' in attribute['apply_to']
                     if attribute['is_required'] and \
-                        attribute['apply_to'] in ('', 'simple', 'configurable') and \
+                       req_apply_to and \
                         attribute['attribute_code'] not in self._magento_fake_mandatory_attrs:
                         f.set('attrs', "{'required': [('magento_exportable', '=', True)]}")
 
