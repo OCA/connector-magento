@@ -1263,6 +1263,8 @@ class product_product(product_mag_osv):
                     quantities.update({sku: x[1]})
                 if child_ids: #it is an assembly and it contains the products child_ids: 
                     self.ext_export(cr, uid, child_ids, external_referential_ids, defaults, context) #so we export them
+            else:
+                return False
         else:
             logger.notifyChannel('ext synchro', netsvc.LOG_ERROR, "OpenERP 'grouped' products will export to Magento as 'grouped products' only if they have a BOM and if the 'mrp' BOM module is installed")
         return quantities, child_ids
@@ -1371,7 +1373,7 @@ class product_product(product_mag_osv):
             child_ids = []
             product_type = self.read(cr, uid, id, ['product_type'])['product_type']
             if product_type == 'grouped': # lookup for Magento "grouped product"
-                quantities, childs_ids = self.action_before_exporting_grouped_product(cr, uid, id, external_referential_ids, defaults, context)
+                quantities, child_ids = self.action_before_exporting_grouped_product(cr, uid, id, external_referential_ids, defaults, context)
             
             self.action_before_exporting(cr, uid, id, product_type, external_referential_ids, defaults, context=context)
             
