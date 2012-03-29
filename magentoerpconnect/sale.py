@@ -543,16 +543,24 @@ class sale_order(magerp_osv.magerp_osv):
                 cr, uid, resultset[0], context=context)
             if (invoice.amount_total == order.amount_total and
                 not invoice.magento_ref):
+                magento_invoice_ref = False
                 try:
-                    self._create_external_invoice(
+                    magento_invoice_ref = self._create_external_invoice(
                         cr, uid, order, conn, ext_id, context=context)
-                    created = True
                 except Exception, e:
                     self.log(cr, uid, order.id,
                              "failed to create Magento invoice for order %s" %
                              (order.id,))
                     # TODO make sure that's because Magento invoice already
                     # exists and then re-attach it!
+                if magento_invoice_ref:
+                    self.pool.get("account.invoice").write(
+                        cr, uid,
+                        invoice.id,
+                        {'magento_ref': magento_invoice_ref},
+                        context=context)
+                    created = True
+
         return created
 
 ########################################################################################################################
