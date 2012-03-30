@@ -28,11 +28,11 @@ class product_product(osv.osv):
     
     def get_bundle_component(self, cr, uid, ids, context):
         res = {}
-        for product in self.browse(cr, uid, product_read[0], context=context):
+        for product in self.browse(cr, uid, ids, context=context):
             res[product.id] = []
             for product_item_set in product.item_set_ids:
                 for product_item_set_line in product_item_set.item_set_line_ids:
-                    res[product.id] += product_item_set_line.product.id
+                    res[product.id].append(product_item_set_line.product_id.id)
         return res
     
     def action_before_exporting(self, cr, uid, id, product_type, external_referential_ids, defaults, context=None):
@@ -43,7 +43,7 @@ class product_product(osv.osv):
             for id in component_ids:
                 if not self.oeid_to_extid(cr, uid, id, shop.referential_id.id):
                     self.ext_export(cr, uid, [id], external_referential_ids, defaults, context)
-        return super(self, product_product).action_before_exporting(cr, uid, id, product_type, external_referential_ids, defaults, context=context)
+        return super(product_product, self).action_before_exporting(cr, uid, id, product_type, external_referential_ids, defaults, context=context)
     
 
     def add_data_to_create_bundle_product(self, cr, uid, oe_id, data, context=None):

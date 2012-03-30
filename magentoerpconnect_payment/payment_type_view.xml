@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_base_sale_payment_type_form_pay" model="ir.ui.view">
+            <field name="name">base.sale.payment.type.pay</field>
+            <field name="model">base.sale.payment.type</field>
+            <field name="inherit_id" ref="base_sale_multichannels.view_base_sale_payment_type_form"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <data>
+                    <form position="inside">
+                        <separator string="Payment" colspan="4" />
+                        <field name="allow_magento_manual_invoice"/>
+                    </form>
+
+                </data>
+            </field>
+        </record>
+
+    </data>
+</openerp>

@@ -19,23 +19,24 @@
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.  #
 #########################################################################
 
-from osv import fields,osv
-from tools.translate import _
+import xmlrpclib
 import netsvc
 
-class stock_picking(osv.osv):
-    _inherit = "stock.picking"
+from osv import fields,osv
+from tools.translate import _
 
+from openerp.addons.base_sale_multichannels.sale import \
+    ExternalShippingCreateError
+
+
+class stock_picking(osv.osv):
+
+    _inherit = "stock.picking"
 
     def create_ext_complete_shipping(self, cr, uid, id, external_referential_id, magento_incrementid, context=None):
         if context is None: context = {}
-        logger = netsvc.Logger()
         conn = context.get('conn_obj', False)
-        ext_shipping_id = False
-        try:
-            ext_shipping_id = conn.call('sales_order_shipment.create', [magento_incrementid, {}, _("Shipping Created"), True, True])
-        except Exception, e:
-            logger.notifyChannel(_("Magento Call"), netsvc.LOG_ERROR, _("The picking from the order %s can't be created on Magento, please attach it manually, %s") % (magento_incrementid, e))
+        ext_shipping_id = conn.call('sales_order_shipment.create', [magento_incrementid, {}, _("Shipping Created"), True, True])
         return ext_shipping_id
     
     def add_picking_line(self, cr, uid, lines, picking_line, context=None):
@@ -46,10 +47,8 @@ class stock_picking(osv.osv):
         lines.append(line_info)
         return lines        
 
-
     def create_ext_partial_shipping(self, cr, uid, id, external_referential_id, magento_incrementid, context=None):
         if context is None: context = {}
-        logger = netsvc.Logger()
         conn = context.get('conn_obj', False)
         ext_shipping_id = False
         order_items = conn.call('sales_order.info', [magento_incrementid])['items']
@@ -69,12 +68,9 @@ class stock_picking(osv.osv):
                 item_qty[product_2_item[line['product_id']]] += line['product_qty']
             else:
                 item_qty.update({product_2_item[line['product_id']]: line['product_qty']})
-        try:
-            ext_shipping_id = conn.call('sales_order_shipment.create', [magento_incrementid, item_qty, _("Shipping Created"), True, True])
-        except Exception, e:
-            logger.notifyChannel(_("Magento Call"), netsvc.LOG_ERROR, _("The picking from the order %s can't be created on Magento, please attach it manually, %s") % (magento_incrementid, e))
-        return ext_shipping_id 
 
+            ext_shipping_id = conn.call('sales_order_shipment.create', [magento_incrementid, item_qty, _("Shipping Created"), True, True])
+        return ext_shipping_id 
 
     def create_ext_shipping(self, cr, uid, id, picking_type, external_referential_id, context=None):
         """
@@ -84,17 +80,29 @@ class stock_picking(osv.osv):
         :return: the picking id on magento
         """
         magento_incrementid = self.browse(cr, uid, id, ['sale_id'], context).sale_id.magento_incrementid
-        carrier_id = self.pool.get('stock.picking').read(cr, uid, id, ['carrier_id'], context)['carrier_id']
+        carrier_id = self.read(cr, uid, id, ['carrier_id'], context)['carrier_id']
         if carrier_id:
             carrier_id = carrier_id[0]
             self.pool.get('delivery.carrier').check_ext_carrier_reference(cr, uid, carrier_id, magento_incrementid, context)
 
-        ext_shipping_id = eval('self.create_ext_' + picking_type + '_shipping(cr, uid, id, external_referential_id, magento_incrementid, context)')
+        ext_shipping_id = False
+        meth = getattr(self, "create_ext_%s_shipping" % picking_type)
+        try:
+            ext_shipping_id = meth(
+                cr, uid, id, external_referential_id,
+                magento_incrementid, context=context)
+        except xmlrpclib.Fault, e:
+            # When Magento is not able to create the shipping, it returns:
+            # fault 102 is : <Fault 102: u"Impossible de faire l\'exp\xe9dition de la commande.">
+            # In such case, we raise an ExternalShippingCreateError so
+            # base_sale_multichannels will flag "do_not_export"
+            # in order to exclude it from the future exports
+            if e.faultCode == 102:
+                raise ExternalShippingCreateError(e)
 
         if ext_shipping_id and carrier_id:
             self.add_ext_tracking_reference(cr, uid, id, carrier_id, ext_shipping_id, context)
         return ext_shipping_id
-
 
     def add_ext_tracking_reference(self, cr, uid, id, carrier_id, ext_shipping_id, context=None):
         if context is None: context = {}
@@ -113,4 +121,3 @@ class stock_picking(osv.osv):
         return True
 
 stock_picking()
-

@@ -22,9 +22,8 @@
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.  #
 #########################################################################
 
-from osv import osv, fields
+from osv import osv, orm, fields
 import datetime
-import base64
 import time
 import pooler
 import magerp_osv
@@ -33,6 +32,7 @@ import netsvc
 import unicodedata
 import base64, urllib
 import os
+from lxml import etree
 
 from tools import DEFAULT_SERVER_DATETIME_FORMAT
 
@@ -764,87 +764,129 @@ class product_mag_osv(magerp_osv.magerp_osv):
         '''this empty function will save the magento field'''
         return {'type': 'ir.actions.act_window_close'}
 
-    def redefine_prod_view(self,cr,uid, field_names, context=None):
-        def clean_for_xml(string):
-            for key, key_replace in [('&', '&amp;'), ('>','&gt;'),  ('<', '&lt;')]:
-                string = string.replace(key, key_replace)
-            return string
-        #This function will rebuild the view for product from instances, attribute groups etc
-        #Get all objects needed
-        #inst_obj = self.pool.get('external.referential')
+    def redefine_prod_view(self, cr, uid, field_names, context=None):
+        """
+        Rebuild the product view with attribute groups and attributes
+        """
         if context is None: context = {}
         attr_set_obj = self.pool.get('magerp.product_attribute_set')
         attr_group_obj = self.pool.get('magerp.product_attribute_groups')
         attr_obj = self.pool.get('magerp.product_attributes')
         translation_obj = self.pool.get('ir.translation')
-        xml = u"<notebook colspan='4'>\n"
-        attr_grp_ids = attr_group_obj.search(cr,uid,[])
-        attr_groups = attr_group_obj.browse(cr,uid,attr_grp_ids)
+
         attribute_set_id = context['set']
         attr_set = attr_set_obj.browse(cr, uid, attribute_set_id)
         attr_group_fields_rel = {}
-        cr.execute("select attr_id, group_id, attribute_code, frontend_input, frontend_label, is_required, apply_to, field_name  from magerp_attrset_attr_rel left join magerp_product_attributes on magerp_product_attributes.id = attr_id where magerp_attrset_attr_rel.set_id=%s" % attribute_set_id)
-        results = cr.fetchall()
-        result = results.pop()
-        while len(results) > 0:
-            mag_group_id = result[1]
-            oerp_group_id = attr_group_obj.extid_to_oeid(cr, uid, mag_group_id, attr_set.referential_id.id)
-            if not oerp_group_id: #FIXME workaround in multi-Magento instances (databases) where attribute group might not be found due to the way we share attributes currently
-                for ref_id in self.pool.get('external.referential').search(cr, uid, []):
+
+        multiwebsites = context.get('multiwebsite', False)
+
+        fields_get = self.fields_get(cr, uid, field_names, context)
+
+        cr.execute("select attr_id, group_id, attribute_code, frontend_input, "
+                   "frontend_label, is_required, apply_to, field_name "
+                   "from magerp_attrset_attr_rel "
+                   "left join magerp_product_attributes "
+                   "on magerp_product_attributes.id = attr_id "
+                   "where magerp_attrset_attr_rel.set_id=%s" %
+                   attribute_set_id)
+
+        results = cr.dictfetchall()
+        attribute = results.pop()
+        while results:
+            mag_group_id = attribute['group_id']
+            oerp_group_id = attr_group_obj.extid_to_oeid(
+                cr, uid, mag_group_id, attr_set.referential_id.id)
+            # FIXME: workaround in multi-Magento instances (databases)
+            # where attribute group might not be found due to the way we
+            # share attributes currently
+            if not oerp_group_id:
+                ref_ids = self.pool.get(
+                    'external.referential').search(cr, uid, [])
+                for ref_id in ref_ids:
                      if ref_id != attr_set.referential_id.id:
-                         oerp_group_id = attr_group_obj.extid_to_oeid(cr, uid, mag_group_id, ref_id)
+                         oerp_group_id = attr_group_obj.extid_to_oeid(
+                             cr, uid, mag_group_id, ref_id)
                          if oerp_group_id:
                              break
-            group_name = attr_group_obj.read(cr, uid, oerp_group_id, ['attribute_group_name'])['attribute_group_name']
+
+            group_name = attr_group_obj.read(
+                cr, uid, oerp_group_id,
+                ['attribute_group_name'],
+                context=context)['attribute_group_name']
             
-            #Create a page for the attribute group
-            if not attr_group_fields_rel.get(group_name, False):
-                attr_group_fields_rel[group_name] = []
+            # Create a page for each attribute group
+            attr_group_fields_rel.setdefault(group_name, [])
             while True:
-                field_xml=""
-                if result[1] != mag_group_id:
+                if attribute['group_id'] != mag_group_id:
                     break
-                if result[7] in field_names:
-                    if not result[2] in attr_obj._no_create_list:
-                        if result[3] in ['textarea']:
-                            trans = translation_obj._get_source(cr, uid, 'product.product', 'view', context.get('lang', ''), result[4])
-                            trans = trans or result[4]
-                            field_xml+="<newline/><separator colspan='4' string='%s'/>" % (clean_for_xml(trans),)
-                        field_xml+="<field name='" +  clean_for_xml(result[7]) + "'"
-                        if result[5] and (result[6] == "" or "simple" in result[6] or "configurable" in result[6]) and result[2] not in self._magento_fake_mandatory_attrs:
-                            field_xml+=""" attrs="{'required':[('magento_exportable','=',True)]}" """
-                        if result[3] in ['textarea']:
-                            field_xml+=" colspan='4' nolabel='1' " 
-                        field_xml+=" />\n"
-                        if (group_name in  [
-                                            u'Meta Information', 
-                                            u'General', 
-                                            u'Custom Layout Update', 
-                                            u'Prices', 
-                                            u'Design', 
-                                            ]) or GROUP_CUSTOM_ATTRS_TOGETHER==False:
-                            attr_group_fields_rel[group_name].append(field_xml)
+
+                if attribute['field_name'] in field_names:
+                    if not attribute['attribute_code'] in attr_obj._no_create_list:
+                        if (group_name in  ['Meta Information',
+                                            'General',
+                                            'Custom Layout Update',
+                                            'Prices',
+                                            'Design']) or \
+                           GROUP_CUSTOM_ATTRS_TOGETHER==False:
+                            attr_group_fields_rel[group_name].append(attribute)
                         else:
-                            custom_attributes = attr_group_fields_rel.get(u"Custom Attributes",[])
-                            custom_attributes.append(field_xml)
-                            attr_group_fields_rel[u"Custom Attributes"] = custom_attributes
-                if len(results) > 0:
-                    result = results.pop()
+                            attr_group_fields_rel.setdefault(
+                                'Custom Attributes', []).append(attribute)
+                if results:
+                    attribute = results.pop()
                 else:
                     break
+
+        notebook = etree.Element('notebook', colspan="4")
+
         attribute_groups = attr_group_fields_rel.keys()
         attribute_groups.sort()
-        for each_attribute_group in attribute_groups:
-            trans = translation_obj._get_source(cr, uid, 'product.product', 'view', context.get('lang', ''), each_attribute_group)
-            trans = trans or each_attribute_group
-            if attr_group_fields_rel.get(each_attribute_group,False):
-                xml+="<page string='" + clean_for_xml(trans) + "'>\n<group colspan='4' col='4'>"
-                xml+="\n".join(attr_group_fields_rel.get(each_attribute_group,[]))
-                xml+="</group></page>\n"
-        if context.get('multiwebsite', False):
-            xml+="""<page string='Websites'>\n<field name='websites_ids' nolabel="1"/>\n</page>\n"""
-        xml+="</notebook>"
-        return xml
+        for group in attribute_groups:
+            lang = context.get('lang', '')
+            trans = translation_obj._get_source(
+                cr, uid, 'product.product', 'view', lang, group)
+            trans = trans or group
+            if attr_group_fields_rel.get(group):
+                page = etree.SubElement(notebook, 'page', string=trans)
+                for attribute in attr_group_fields_rel.get(group, []):
+                    if attribute['frontend_input'] == 'textarea':
+                        etree.SubElement(page, 'newline')
+                        etree.SubElement(
+                            page,
+                            'separator',
+                            colspan="4",
+                            string=fields_get[attribute['field_name']]['string'])
+
+                    f = etree.SubElement(
+                        page, 'field', name=attribute['field_name'])
+
+                    # apply_to is a string like
+                    # "simple,configurable,virtual,bundle,downloadable"
+                    req_apply_to = attribute['apply_to'] == '' or \
+                        'simple' in attribute['apply_to'] or \
+                        'configurable' in attribute['apply_to']
+                    if attribute['is_required'] and \
+                       req_apply_to and \
+                        attribute['attribute_code'] not in self._magento_fake_mandatory_attrs:
+                        f.set('attrs', "{'required': [('magento_exportable', '=', True)]}")
+
+                    if attribute['frontend_input'] == 'textarea':
+                        f.set('nolabel', "1")
+                        f.set('colspan', "4")
+
+                    orm.setup_modifiers(
+                        f, fields_get[attribute['field_name']],
+                        context=context)
+
+        if multiwebsites:
+            website_page = etree.SubElement(
+                notebook, 'page', string=_('Websites'))
+            wf = etree.SubElement(
+                website_page, 'field', name='websites_ids', nolabel="1")
+            orm.setup_modifiers(
+                wf, fields_get['websites_ids'], context=context)
+
+        return notebook
     
     def _filter_fields_to_return(self, cr, uid, field_names, context=None):
         '''This function is a hook in order to filter the fields that appears on the view'''
@@ -853,48 +895,91 @@ class product_mag_osv(magerp_osv.magerp_osv):
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         if context is None:
             context = {}
-        result = super(product_mag_osv, self).fields_view_get(cr, uid, view_id,view_type,context,toolbar=toolbar)
-        print 'fields view get', result
+        result = super(product_mag_osv, self).fields_view_get(
+            cr, uid, view_id,view_type,context,toolbar=toolbar)
         if view_type == 'form':
-            result['arch'] = result['arch'].decode('utf8') #in order to support special character, the arch for the product view will be a unicode and not a str
-            if context.get('set', False):
+            eview = etree.fromstring(result['arch'])
+            btn = eview.xpath("//button[@name='open_magento_fields']")
+            if btn:
+                btn = btn[0]
+            page_placeholder = eview.xpath(
+                "//page[@string='attributes_placeholder']")
+
+            attrs_mag_notebook = "{'invisible': [('set', '=', False)]}"
+
+            if context.get('set'):
+                fields_obj = self.pool.get('ir.model.fields')
                 models = ['product.template']
                 if self._name == 'product.product':
                     models.append('product.product')
-                ir_model_ids = self.pool.get('ir.model').search(cr, uid, [('model', 'in', models)])
-                ir_model_field_ids = self.pool.get('ir.model.fields').search(cr, uid, [('model_id', 'in', ir_model_ids)])
+
+                model_ids = self.pool.get('ir.model').search(
+                    cr, uid, [('model', 'in', models)], context=context)
+                field_ids = fields_obj.search(
+                    cr, uid,
+                    [('model_id', 'in', model_ids)],
+                    context=context)
                 field_names = ['product_type']
-                for field in self.pool.get('ir.model.fields').browse(cr, uid, ir_model_field_ids):
+                fields = fields_obj.browse(cr, uid, field_ids, context=context)
+                for field in fields:
                     if field.name.startswith('x_'):
                         field_names.append(field.name)
-                if len(self.pool.get('external.shop.group').search(cr,uid,[('referential_type', 'ilike', 'mag')])) >1 :
+                website_ids = self.pool.get('external.shop.group').search(
+                    cr, uid,
+                    [('referential_type', '=ilike', 'mag%')],
+                    context=context)
+                if len(website_ids) > 1:
                     context['multiwebsite'] = True
                     field_names.append('websites_ids')
-                    
-                field_names = self._filter_fields_to_return(cr, uid, field_names, context)
-                result['fields'].update(self.fields_get(cr, uid, field_names, context))
 
-                view_part = self.redefine_prod_view(cr, uid, field_names, context)
-                if '<page string="attributes_placeholder"/>' in result['arch']:
-                    # If the view have the tag '<page string="attributes_placeholder"/>' the view asked is the main view
-                    # Else it's the pop up with specific fields
-                    magento_tab = (
-                        "<page string='" + _('Magento Information') + " ' attrs=\"{'invisible':[('magento_exportable','!=',1)]}\">"
-                            "<field name='product_type' attrs=\"{'required':[('magento_exportable','=',True)]}\"/>\n"
-                            + view_part +
-                        "</page>"
-                        )
-                    result['arch'] = result['arch'].replace('<page string="attributes_placeholder"/>', magento_tab)
-                    result['arch'] = result['arch'].replace('<button name="open_magento_fields"/>', '')
+                field_names = self._filter_fields_to_return(
+                    cr, uid, field_names, context)
+                result['fields'].update(
+                    self.fields_get(cr, uid, field_names, context))
+
+                attributes_notebook = self.redefine_prod_view(
+                                    cr, uid, field_names, context)
+
+                # if the placeholder is a "page", that means we are
+                # in the product main form. If it is a "separator", it
+                # means we are in the attributes popup
+                if page_placeholder:
+                    placeholder = page_placeholder[0]
+                    magento_page = etree.Element(
+                        'page',
+                        string=_('Magento Information'),
+                        attrs=attrs_mag_notebook)
+                    orm.setup_modifiers(magento_page, context=context)
+                    f = etree.SubElement(
+                        magento_page,
+                        'field',
+                        name='product_type',
+                        attrs="{'required': [('magento_exportable', '=', True)]}")
+                    orm.setup_modifiers(
+                        f, field=result['fields']['product_type'], context=context)
+                    magento_page.append(attributes_notebook)
+                    btn.getparent().remove(btn)
                 else:
-                    result['arch'] = result['arch'].replace('<separator string="attributes_placeholder" colspan="4"/>', view_part)
+                    placeholder = eview.xpath(
+                        "//separator[@string='attributes_placeholder']")[0]
+                    magento_page = attributes_notebook
+
+                placeholder.getparent().replace(placeholder, magento_page)
             else:
-                magento_button = (
-                    "<button name='open_magento_fields' string='Open Magento Fields' icon='gtk-go-forward' type='object'"
-                    " colspan='2' attrs=\"{'invisible':[('magento_exportable','!=', True)]}\""
-                    )
-                result['arch'] = result['arch'].replace('<button name="open_magento_fields"', magento_button)
-                result['arch'] = result['arch'].replace('<page string="attributes_placeholder"/>', "")
+                new_btn = etree.Element(
+                    'button',
+                    name='open_magento_fields',
+                    string=_('Open Magento Fields'),
+                    icon='gtk-go-forward',
+                    type='object',
+                    colspan='2',
+                    attrs=attrs_mag_notebook)
+                orm.setup_modifiers(new_btn, context=context)
+                btn.getparent().replace(btn, new_btn)
+                placeholder = page_placeholder[0]
+                placeholder.getparent().remove(placeholder)
+
+            result['arch'] = etree.tostring(eview, pretty_print=True)
         return result
 
 class product_template(product_mag_osv):
@@ -1190,15 +1275,16 @@ class product_product(product_mag_osv):
             bom_ids = self.read(cr, uid, id, ['bom_ids'])['bom_ids']
             if len(bom_ids): # it has or is part of a BoM
                 cr.execute("SELECT product_id, product_qty FROM mrp_bom WHERE bom_id = %s", (bom_ids[0],)) #FIXME What if there is more than a materials list?
-                results = cr.fetchall()
+                results = cr.dictfetchall()
                 child_ids = []
                 quantities = {}
-                for x in results:
-                    child_ids += [x[0]]
-                    sku = self.read(cr, uid, x[0], ['magento_sku'])['magento_sku']
-                    quantities.update({sku: x[1]})
+                for row in results:
+                    child_ids.append(row['product_id'])
+                    quantities.update({row['product_id']: row['product_qty']})
                 if child_ids: #it is an assembly and it contains the products child_ids: 
                     self.ext_export(cr, uid, child_ids, external_referential_ids, defaults, context) #so we export them
+            else:
+                return False
         else:
             logger.notifyChannel('ext synchro', netsvc.LOG_ERROR, "OpenERP 'grouped' products will export to Magento as 'grouped products' only if they have a BOM and if the 'mrp' BOM module is installed")
         return quantities, child_ids
@@ -1307,7 +1393,7 @@ class product_product(product_mag_osv):
             child_ids = []
             product_type = self.read(cr, uid, id, ['product_type'])['product_type']
             if product_type == 'grouped': # lookup for Magento "grouped product"
-                quantities, childs_ids = self.action_before_exporting_grouped_product(cr, uid, id, external_referential_ids, defaults, context)
+                quantities, child_ids = self.action_before_exporting_grouped_product(cr, uid, id, external_referential_ids, defaults, context)
             
             self.action_before_exporting(cr, uid, id, product_type, external_referential_ids, defaults, context=context)
             
@@ -1419,7 +1505,7 @@ class product_product(product_mag_osv):
                 for link in product.product_link_ids:
                     if link.type == link_type:
                         linked_product_ids.append(link.linked_product_id.id)
-                        position[link.linked_product_id.magento_sku] = link.sequence
+                        position[link.linked_product_id.id] = link.sequence
                 self.ext_product_assign(cr, uid, link_type, product.id, linked_product_ids, position=position,
                                         external_referential_ids=external_referential_ids, defaults=defaults, context=context)
         return True
@@ -1432,43 +1518,77 @@ class product_product(product_mag_osv):
         logger = netsvc.Logger()
         conn = context.get('conn_obj', False)
 
-        # ensure that the product to link is exported before assigning it, export it if necessary
-        for external_referential_id in external_referential_ids:
+        for ref_id in external_referential_ids:
+            # ensure that the product to link is exported before assigning it,
+            # export it if necessary
             ids_to_export = []
             for child_id in child_ids:
-                if not self.oeid_to_extid(cr, uid, child_id, external_referential_id, context=context):
+                if not self.oeid_to_extid(cr, uid, child_id, ref_id, context=context):
                     ids_to_export.append(child_id)
             export_ctx = context.copy()
             export_ctx['force_export'] = True
-            self.ext_export(cr, uid, ids_to_export, [external_referential_id], defaults, export_ctx)
+            self.ext_export(
+                cr, uid, ids_to_export, [ref_id], defaults=defaults, context=export_ctx)
 
-        parent_sku = self.read(cr, uid, parent_id, ['magento_sku'])['magento_sku']
-        new_child_skus = self.read(cr, uid, child_ids, ['magento_sku']) # get the sku of the products to be assigned
-        new_child_skus = [x['magento_sku'] for x in new_child_skus]
-        
-        data = [type, parent_sku]
-        child_list = conn.call('product_link.list', data) # get the sku of the products already assigned
-        old_child_skus = [x['sku'] for x in child_list]
-        skus_to_remove = []
-        skus_to_assign = []
-        skus_to_update = []
-        for old_child_sku in old_child_skus:
-            if old_child_sku not in new_child_skus:
-                skus_to_remove += [old_child_sku]
-        for new_child_sku in new_child_skus:
-            if new_child_sku in old_child_skus:
-                skus_to_update += [new_child_sku]
-            else:
-                skus_to_assign += [new_child_sku]
-        for old_child_sku in skus_to_remove:
-            conn.call('product_link.remove', data + [old_child_sku]) # remove the products that are no more used
-            logger.notifyChannel('ext assign', netsvc.LOG_INFO, "Successfully removed assignment of type %s for product %s to product %s" % (type, parent_sku, old_child_sku))
-        for child_sku in skus_to_assign:
-            conn.call('product_link.assign', data + [child_sku, {'position': position.get(child_sku, 0), 'qty': quantities.get(child_sku, 1)}]) # assign new product
-            logger.notifyChannel('ext assign', netsvc.LOG_INFO, "Successfully assigned product %s to product %s with type %s" %(parent_sku, child_sku, type))
-        for child_sku in skus_to_update:
-            conn.call('product_link.update', data + [child_sku, {'position': position.get(child_sku, 0), 'qty': quantities.get(child_sku, 1)}]) # update products already assigned
-            logger.notifyChannel('ext assign', netsvc.LOG_INFO, "Successfully updated assignment of type %s of product %s to product %s" %(type, parent_sku, child_sku))
+            ext_id = self.oeid_to_extid(
+                cr, uid, parent_id, ref_id, context=context)
+            if not ext_id:
+                continue
+
+            # get the sku of the products already assigned
+            magento_args = [type, ext_id]
+
+            # magento existing children ids
+            child_list = conn.call('product_link.list', magento_args)
+            old_child_ext_ids = [x['product_id'] for x in child_list]
+
+            ext_id_to_remove = []
+            ext_id_to_assign = []
+            ext_id_to_update = []
+
+            # list of children setup on openerp
+            new_child_ext_ids = dict([(self.oeid_to_extid(cr, uid, child_id, ref_id, context=context),
+                                       child_id)
+                                      for child_id in child_ids])
+
+            skus = dict([(p.id, p.magento_sku)
+                    for p in
+                    self.browse(
+                        cr, uid, child_ids + [parent_id], context=context)])
+
+            # compute the diff between openerp and magento
+            for c_ext_id in old_child_ext_ids:
+                if c_ext_id not in new_child_ext_ids:
+                    ext_id_to_remove.append(c_ext_id)
+            for c_ext_id in new_child_ext_ids.keys():
+                if c_ext_id in old_child_ext_ids:
+                    ext_id_to_update.append(c_ext_id)
+                else:
+                    ext_id_to_assign.append(c_ext_id)
+
+            # calls to magento to delete, create or update the links
+            for c_ext_id in ext_id_to_remove:
+                 # remove the product links that are no more setup on openerp
+                conn.call('product_link.remove', magento_args + [c_ext_id])
+                logger.notifyChannel('ext assign', netsvc.LOG_INFO, "Successfully removed assignment of type %s for product %s to product %s" % (type, skus[parent_id], c_ext_id))
+            for child_ext_id in ext_id_to_assign:
+                # assign new product links
+                product_id = new_child_ext_ids[child_ext_id]
+                conn.call('product_link.assign',
+                          magento_args +
+                          [child_ext_id,
+                              {'position': position.get(product_id, 0),
+                               'qty': quantities.get(product_id, 1)}])
+                logger.notifyChannel('ext assign', netsvc.LOG_INFO, "Successfully assigned product %s to product %s with type %s" %(skus[parent_id], skus[product_id], type))
+            for child_ext_id in ext_id_to_update:
+                # update products links already assigned
+                product_id = new_child_ext_ids[child_ext_id]
+                conn.call('product_link.update',
+                          magento_args +
+                          [child_ext_id,
+                              {'position': position.get(product_id, 0),
+                               'qty': quantities.get(product_id, 1)}])
+                logger.notifyChannel('ext assign', netsvc.LOG_INFO, "Successfully updated assignment of type %s of product %s to product %s" %(type, skus[parent_id], skus[product_id]))
         return True
 
     #TODO move this code (get exportable image) and also some code in product_image.py and sale.py in base_sale_multichannel or in a new module in order to be more generic

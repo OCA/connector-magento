@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="view_order_form_magento_invoice">
+            <field name="name">sale.order.form.magento.invoice</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale_exceptions.view_order_form" />
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <button name="button_order_confirm" position="before">
+                    <field name="allow_magento_manual_invoice" invisible="True"/>
+                    <button name="button_magento_create_invoice"
+                            string="Create Invoice on Magento"
+                            type="object"
+                            attrs="{'invisible': ['|', '|', '|',
+                                                  ('is_magento', '=', False),
+                                                  ('state', '!=', 'draft'),
+                                                  ('base_payment_type_id', '=', False),
+                                                  ('allow_magento_manual_invoice', '=', False)]}"
+                            icon="gtk-go-forward" />
+                </button>
+            </field>
+        </record>
+    </data>
+</openerp>

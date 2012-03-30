@@ -67,5 +67,24 @@
 			</field>
 		</record>
 
+        <record id="base_sale_multichannel_view_order_form_magento" model="ir.ui.view">
+            <field name="name">base_sale_multichannel_view_order_form.magento</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="base_sale_multichannels.base_sale_multichannel_view_order_form"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <data>
+                    <page string="External Information" position="inside">
+                        <group colspan="4" attrs="{'invisible': [('is_magento', '=', False)]}">
+                            <field name="is_magento" invisible="True"/>
+                            <separator string="Magento History" colspan="4"/>
+                            <field name="magento_incrementid" readonly="True"/>
+                            <field name="magento_storeview_id" readonly="True"/>
+                        </group>
+                    </page>
+                </data>
+            </field>
+        </record>
+        
 	</data>
 </openerp>

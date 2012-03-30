@@ -6,7 +6,7 @@
 # Copyright (C) 2011  Sharoon Thomas                                    #
 # Copyright (C) 2009  Raphaël Valyi                                     #
 # Copyright (C) 2011 Akretion Sébastien BEAU sebastien.beau@akretion.com#
-# Copyright (C) 2011 Camptocamp Guewen Baconnier                        #
+# Copyright (C) 2011-2012 Camptocamp Guewen Baconnier                   #
 #                                                                       #
 #This program is free software: you can redistribute it and/or modify   #
 #it under the terms of the GNU General Public License as published by   #
@@ -27,7 +27,6 @@ import pooler
 import magerp_osv
 import netsvc
 from tools.translate import _
-from collections import defaultdict
 import string
 #from datetime import datetime
 import tools
@@ -108,7 +107,8 @@ class sale_shop(magerp_osv.magerp_osv):
         res = {}
         for shop in self.browse(cr, uid, ids, context):
             if shop.root_category_id and shop.shop_group_id.referential_id:
-                rid = self.pool.get('product.category').extid_to_existing_oeid(cr, uid, shop.root_category_id, shop.shop_group_id.referential_id.id)
+                rid = self.pool.get('product.category').extid_to_existing_oeid(
+				    cr, uid, shop.root_category_id, shop.shop_group_id.referential_id.id)
                 res[shop.id] = rid
             else:
                 res[shop.id] = False
@@ -151,12 +151,10 @@ class sale_shop(magerp_osv.magerp_osv):
         'allow_magento_notification': lambda * a: False,
     }
 
-
-    #TODO refactor me and move me in base_sale_multichannels
     @only_for_referential('magento')
     def _check_need_to_update(self, cr, uid, external_session, ids, context=None):
-        '''This function will update the order status in OpenERP for the order which are in the state 'need to update' '''
-        logger = netsvc.Logger()
+        """ This function will update the order status in OpenERP for
+        the order which are in the state 'need to update' """
         so_obj = self.pool.get('sale.order')
 
         for shop in self.browse(cr, uid, ids):
@@ -165,86 +163,21 @@ class sale_shop(magerp_osv.magerp_osv):
             # from the Magento's corresponding orders
     
             # Get all need_to_update orders in OERP
-            orders_to_update = so_obj.search(cr,uid,[('need_to_update', '=', True), ('shop_id', '=', shop.id)])
-            for order in so_obj.browse(cr, uid, orders_to_update):
-                mag_status = ORDER_STATUS_MAPPING.get(order.state, False)
-                # For each one, check if the status has change in Magento
-                # We dont use oeid_to_extid function cause it only handle int id
-                # Magento can have something like '100000077-2'
-                model_data_ids = self.pool.get('ir.model.data').search(cr, uid, [('model', '=', so_obj._name), ('res_id', '=', order.id), ('external_referential_id', '=', shop.referential_id.id)])
-                if model_data_ids:
-                    prefixed_id = self.pool.get('ir.model.data').read(cr, uid, model_data_ids[0], ['name'])['name']
-                    ext_id = so_obj.id_from_prefixed_id(prefixed_id)
-                else:
-                    return False
-                data_record=conn.call('sales_order.info', [ext_id])
-                updated = False
-                if data_record['status'] == 'canceled':
-                    wf_service = netsvc.LocalService("workflow")
-                    wf_service.trg_validate(uid, 'sale.order', order.id, 'cancel', cr)
-                    updated = True
-                    self.log(cr, uid, order.id, "order %s canceled when updated from external system" % (order.id,))
-                    logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "order %s canceled when updated from external system" % (order.id,))
-                # If the order isn't canceled and was blocked, 
-                # so we follow the standard flow according to ext_payment_method:
-                else:
-                    paid = so_obj.create_payments(cr, uid, order.id, data_record, context)                        
-                    so_obj.oe_status(cr, uid, order.id, paid, context)
-                    updated = paid
-                    if paid:
-                        self.log(cr, uid, order.id, "order %s paid when updated from external system" % (order.id,))
-                        logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "order %s paid when updated from external system" % (order.id,))
-                # Untick the need_to_update if updated (if so was canceled in magento
-                # or if it has been paid through magento)
-                if updated:
-                    so_obj.write(cr, uid, order.id, {'need_to_update': False})
-                cr.commit();
+            orders_to_update = so_obj.search(
+                cr, uid,
+                [('need_to_update', '=', True),
+                 ('shop_id', '=', shop.id)],
+                context=context)
+            so_obj.check_need_to_update(
+                cr, uid, orders_to_update, conn, context=context)
         return False
-
-    def _create_magento_invoice(self, cr, uid, order, conn, ext_id, context=None):
-        """ Creation of an invoice on Magento."""
-        cr.execute("select account_invoice.id "
-                   "from account_invoice "
-                   "inner join sale_order_invoice_rel "
-                   "on invoice_id = account_invoice.id "
-                   "where order_id = %s" % order.id)
-        resultset = cr.fetchone()
-        created = False
-        if resultset and len(resultset) == 1:
-            invoice = self.pool.get("account.invoice").browse(
-                cr, uid, resultset[0], context=context)
-            if (invoice.amount_total == order.amount_total and
-                not invoice.magento_ref):
-                try:
-                    magento_invoice_ref = conn.call(
-                        'sales_order_invoice.create',
-                        [order.magento_incrementid,
-                         [],
-                         _("Invoice Created"),
-                         True,
-                         order.shop_id.allow_magento_notification])
-                    self.pool.get("account.invoice").write(
-                        cr, uid,
-                        invoice.id,
-                        {'magento_ref': magento_invoice_ref,
-                         'origin': magento_invoice_ref})
-                    self.log(cr, uid, order.id,
-                             "created Magento invoice for order %s" %
-                             (order.id,))
-                    created = True
-                except Exception, e:
-                    self.log(cr, uid, order.id,
-                             "failed to create Magento invoice for order %s" %
-                             (order.id,))
-                    # TODO make sure that's because Magento invoice already
-                    # exists and then re-attach it!
-        return created
 
     def update_shop_orders(self, cr, uid, order, ext_id, context=None):
         if context is None: context = {}
         result = {}
 
         if order.shop_id.allow_magento_order_status_push:
+            sale_obj = self.pool.get('sale.order')
             #status update:
             conn = context.get('conn_obj', False)
             status = ORDER_STATUS_MAPPING.get(order.state, False)
@@ -257,10 +190,10 @@ class sale_shop(magerp_osv.magerp_osv):
                 # then we consider the update is done
                 # remove the 'need_to_update': True
                 if order.need_to_update:
-                    self.pool.get('sale.order').write(
+                    sale_obj.write(
                         cr, uid, order.id, {'need_to_update': False})
 
-            self._create_magento_invoice(
+            sale_obj.export_invoice(
                 cr, uid, order, conn, ext_id, context=context)
         return result
 
@@ -274,8 +207,8 @@ class sale_shop(magerp_osv.magerp_osv):
         if ids:
             callback(cr, uid, ids, context=context)
 
-        tools.debug(callback)
-        tools.debug(ids)
+        # tools.debug(callback)
+        # tools.debug(ids)
         return True
 
     # Schedules functions ============ #
@@ -304,8 +237,12 @@ class sale_order(magerp_osv.magerp_osv):
     _inherit = "sale.order"
     
     _columns = {
-                'magento_incrementid': fields.char('Magento Increment ID', size=32),
-                'magento_storeview_id': fields.many2one('magerp.storeviews', 'Magento Store View'),
+        'magento_incrementid': fields.char('Magento Increment ID', size=32),
+        'magento_storeview_id': fields.many2one('magerp.storeviews', 'Magento Store View'),
+        'is_magento': fields.related(
+            'shop_id', 'referential_id', 'magento_referential',
+            type='boolean',
+            string='Is a Magento Sale Order')
     }
     
     def _auto_init(self, cr, context=None):
@@ -347,32 +284,52 @@ class sale_order(magerp_osv.magerp_osv):
 #        return res
 #    
 
+    def _parse_external_payment(self, cr, uid, order_data, context=None):
+        """
+        Parse the external order data and return if the sale order
+        has been paid and the amount to pay or to be paid
 
+        :param dict order_data: payment information of the magento sale
+            order
+        :return: tuple where :
+            - first item indicates if the payment has been done (True or False)
+            - second item represents the amount paid or to be paid
+        """
+        paid = amount = False
+        payment_info = order_data.get('payment')
+        if payment_info:
+            amount = False
+            if payment_info.get('amount_paid', False):
+                amount =  payment_info.get('amount_paid', False)
+                paid = True
+            elif payment_info.get('amount_ordered', False):
+                amount = payment_info.get('amount_ordered', False)
+        return paid, amount
 
-
-#        #TODO Move me in a mapping
-#        if not context.get('one_by_one', False):            
-#            if data_record.get('status_history', False) and len(data_record['status_history']) > 0:
-#                res['date_order'] = data_record['status_history'][len(data_record['status_history'])-1]['created_at']
-#        return res
-    
     def create_payments(self, cr, uid, order_id, data_record, context=None):
-        if context is None: context = {}
-        if context.get('external_referential_type', False) and 'Magento' in context['external_referential_type']:
-            paid = False
-            if data_record.get('payment', False):
-                payment = data_record['payment']
-                amount = False
-                if payment.get('amount_paid', False):
-                    amount =  payment.get('amount_paid', False)
-                    paid = True
-                elif payment.get('amount_ordered', False):
-                    amount =  payment.get('amount_ordered', False)
-                if amount:
-                    order = self.pool.get('sale.order').browse(cr, uid, order_id, context)
-                    self.generate_payment_with_pay_code(cr, uid, payment['method'], order.partner_id.id, float(amount), "mag_" + payment['payment_id'], "mag_" + data_record['increment_id'], order.date_order, paid, context)
+        if context is None:
+            context = {}
+
+        if 'Magento' in context.get('external_referential_type', ''):
+            payment_info = data_record.get('payment')
+            paid, amount = self._parse_external_payment(
+                cr, uid, data_record, context=context)
+            if amount:
+                order = self.pool.get('sale.order').browse(
+                    cr, uid, order_id, context)
+                self.generate_payment_with_pay_code(
+                    cr, uid,
+                    payment_info['method'],
+                    order.partner_id.id,
+                    float(amount),
+                    "mag_" + payment_info['payment_id'],
+                    "mag_" + data_record['increment_id'],
+                    order.date_order,
+                    paid,
+                    context=context)
         else:
-            paid = super(sale_order, self).create_payments(cr, uid, order_id, data_record, context=context)
+            paid = super(sale_order, self).create_payments(
+                cr, uid, order_id, data_record, context=context)
         return paid
 
     def _chain_cancel_orders(self, cr, uid, external_id, external_referential_id, defaults=None, context=None):
@@ -499,6 +456,126 @@ class sale_order(magerp_osv.magerp_osv):
         self.ext_set_resource_as_imported(cr, uid, external_session, external_id, mapping=mapping, mapping_id=mapping_id, context=context)
         return res
 
+    def _check_need_to_update_single(self, cr, uid, order, conn, context=None):
+        """
+        For one order, check on Magento if it has been paid since last
+        check. If so, it will launch the defined flow based on the
+        payment type (validate order, invoice, ...)
+
+        :param browse_record order: browseable sale.order
+        :param Connection conn: connection with Magento
+        :return: True
+        """
+        model_data_obj = self.pool.get('ir.model.data')
+        # check if the status has changed in Magento
+        # We don't use oeid_to_extid function cause it only handles integer ids
+        # Magento can have something like '100000077-2'
+        model_data_ids = model_data_obj.search(
+            cr, uid,
+            [('model', '=', self._name),
+             ('res_id', '=', order.id),
+             ('external_referential_id', '=', order.shop_id.referential_id.id)],
+            context=context)
+
+        if model_data_ids:
+            prefixed_id = model_data_obj.read(
+                cr, uid, model_data_ids[0], ['name'], context=context)['name']
+            ext_id = self.id_from_prefixed_id(prefixed_id)
+        else:
+            return False
+
+        data_record = conn.call('sales_order.info', [ext_id])
+
+        if data_record['status'] == 'canceled':
+            wf_service = netsvc.LocalService("workflow")
+            wf_service.trg_validate(uid, 'sale.order', order.id, 'cancel', cr)
+            updated = True
+            self.log(cr, uid, order.id, "order %s canceled when updated from external system" % (order.id,))
+        # If the order isn't canceled and was waiting for a payment,
+        # so we follow the standard flow according to ext_payment_method:
+        else:
+            paid, __ = self._parse_external_payment(
+                cr, uid, data_record, context=context)
+            self.oe_status(cr, uid, order.id, paid, context)
+            # create_payments has to be done after oe_status
+            # because oe_status creates the invoice
+            # and create_payment could reconcile the payment
+            # with the invoice
+
+            updated = self.create_payments(
+                cr, uid, order.id, data_record, context)
+            if updated:
+                self.log(
+                    cr, uid, order.id,
+                    "order %s paid when updated from external system" %
+                    (order.id,))
+        # Untick the need_to_update if updated (if so was canceled in magento
+        # or if it has been paid through magento)
+        if updated:
+            self.write(cr, uid, order.id, {'need_to_update': False})
+        cr.commit()
+        return True
+
+    def check_need_to_update(self, cr, uid, ids, conn, context=None):
+        """
+        For each order, check on Magento if it has been paid since last
+        check. If so, it will launch the defined flow based on the
+        payment type (validate order, invoice, ...)
+
+        :param Connection conn: connection with Magento
+        :return: True
+        """
+        for order in self.browse(cr, uid, ids, context=context):
+            self._check_need_to_update_single(
+                cr, uid, order, conn, context=context)
+        return True
+
+    def _create_external_invoice(self, cr, uid, order, conn, ext_id,
+                                context=None):
+        """ Creation of an invoice on Magento."""
+        magento_invoice_ref = conn.call(
+            'sales_order_invoice.create',
+            [order.magento_incrementid,
+            [],
+             _("Invoice Created"),
+             True,
+             order.shop_id.allow_magento_notification])
+        return magento_invoice_ref
+
+    # TODO Move in base_sale_multichannels?
+    def export_invoice(self, cr, uid, order, conn, ext_id, context=None):
+        """ Export an invoice on external referential """
+        cr.execute("select account_invoice.id "
+                   "from account_invoice "
+                   "inner join sale_order_invoice_rel "
+                   "on invoice_id = account_invoice.id "
+                   "where order_id = %s" % order.id)
+        resultset = cr.fetchone()
+        created = False
+        if resultset and len(resultset) == 1:
+            invoice = self.pool.get("account.invoice").browse(
+                cr, uid, resultset[0], context=context)
+            if (invoice.amount_total == order.amount_total and
+                not invoice.magento_ref):
+                magento_invoice_ref = False
+                try:
+                    magento_invoice_ref = self._create_external_invoice(
+                        cr, uid, order, conn, ext_id, context=context)
+                except Exception, e:
+                    self.log(cr, uid, order.id,
+                             "failed to create Magento invoice for order %s" %
+                             (order.id,))
+                    # TODO make sure that's because Magento invoice already
+                    # exists and then re-attach it!
+                if magento_invoice_ref:
+                    self.pool.get("account.invoice").write(
+                        cr, uid,
+                        invoice.id,
+                        {'magento_ref': magento_invoice_ref},
+                        context=context)
+                    created = True
+
+        return created
 
 ########################################################################################################################
 #
@@ -512,6 +589,9 @@ class sale_order(magerp_osv.magerp_osv):
         Manage the sub items of the magento sale order lines. A top item contains one
         or many child_items. For some product types, we want to merge them in the main
         item, or keep them as order line.
+
+        This method has to stay because it allow to customize the behavior of the sale
+        order according to the product type.
 
         A list may be returned to add many items (ie to keep all child_items as items.
 
@@ -532,6 +612,10 @@ class sale_order(magerp_osv.magerp_osv):
     def clean_magento_items(self, cr, uid, resource, context=None):
         """
         Method that clean the sale order line given by magento before importing it
+
+        This method has to stay here because it allow to customize the behavior of the sale
+        order.
+
         """
         child_items = {}  # key is the parent item id
         top_items = []
