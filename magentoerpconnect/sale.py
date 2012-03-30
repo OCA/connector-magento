@@ -50,6 +50,20 @@ SALE_ORDER_IMPORT_STEP = 200
 class sale_shop(magerp_osv.magerp_osv):
     _inherit = "sale.shop"
     
+
+    def init_context_before_exporting_resource(self, cr, uid, object_id, resource_name, context=None):
+        context = super(sale_shop, self).init_context_before_exporting_resource(cr, uid, object_id, resource_name, context=context)
+        shop = self.browse(cr, uid, object_id, context=context)
+        context['main_lang']= shop.referential_id.default_lang_id.code
+        context['storeview_to_lang'] = {}
+        for storeview in shop.storeview_ids:
+            if storeview.lang_id and storeview.lang_id.code != shop.referential_id.default_lang_id.code:
+                context['storeview_to_lang'][storeview.code] = storeview.lang_id.code
+        print context
+        return context
+
+
+
     def _get_exportable_product_ids(self, cr, uid, ids, name, args, context=None):
         res = super(sale_shop, self)._get_exportable_product_ids(cr, uid, ids, name, args, context=None)
         for shop_id in res:

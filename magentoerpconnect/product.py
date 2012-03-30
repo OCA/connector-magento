@@ -36,6 +36,8 @@ import os
 
 from tools import DEFAULT_SERVER_DATETIME_FORMAT
 
+from base_external_referentials.decorator import only_for_referential
+
 #Enabling this to True will put all custom attributes into One page in
 #the products view
 GROUP_CUSTOM_ATTRS_TOGETHER = False
@@ -365,6 +367,13 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
         'dimension',
         'visibility',
     ]
+
+
+    #TODO check if this field have to be in only one way and if yes add this feature
+    _sync_way = {
+        'has_options' : 'in',
+        'special_price' : 'in',
+        }
 
     def _is_attribute_translatable(self, vals):
         """Tells if field associated to attribute should be translatable or not.
@@ -902,6 +911,12 @@ product_template()
 
 class product_product(product_mag_osv):
     _inherit = "product.product"
+
+    @only_for_referential('magento')
+    def send_to_external(self, cr, uid, external_session, resource, update_date, context=None):
+        print 'send context', context
+        return True
+
 
     #TODO base the import on the mapping and the function ext_import
     def import_product_image(self, cr, uid, id, referential_id, conn, ext_id=None, context=None):
