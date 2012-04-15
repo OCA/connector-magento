@@ -1,0 +1,5 @@
+id,mapping_id:id,external_field,field_id:id,type,evaluation_type,external_type,child_mapping_id:id,alternative_key,in_function,out_function
+mag1500_sale_shop_default_store_id,magentoerpconnect.mag1500_sale_shop,default_store_id,magentoerpconnect.field_sale_shop_default_storeview_integer_id,in,direct,int,,False,,
+mag1500_sale_shop_root_category_id,magentoerpconnect.mag1500_sale_shop,root_category_id,magentoerpconnect.field_sale_shop_root_category_id,in,direct,int,,False,,
+mag1500_sale_shop_name,magentoerpconnect.mag1500_sale_shop,name,sale.field_sale_shop_name,in,direct,unicode,,False,,
+mag1500_sale_shop_website_id,magentoerpconnect.mag1500_sale_shop,website_id,base_sale_multichannels.field_sale_shop_shop_group_id,in,direct,int,,False,,

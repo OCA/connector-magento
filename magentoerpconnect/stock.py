@@ -25,8 +25,8 @@ import netsvc
 from osv import fields,osv
 from tools.translate import _
 
-from openerp.addons.base_sale_multichannels.sale import \
-    ExternalShippingCreateError
+#from openerp.addons.base_sale_multichannels.sale import \
+#    ExternalShippingCreateError
 
 
 class stock_picking(osv.osv):

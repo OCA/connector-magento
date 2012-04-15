@@ -75,6 +75,37 @@ osv.osv._get_external_resources = _get_external_resources
 
 
 
+#@only_for_referential('magento', super_function = osv.osv.send_to_external)
+#def send_to_external(self, cr, uid, external_session, resource, update_date, context=None):
+#    print 'send this data to the external system', update_date
+#    print 'data', resource
+#    self._set_last_exported_date(cr, uid, external_session, update_date, context=context)
+#    import pdb; pdb.set_trace()
+#    return True
+
+#osv.osv.send_to_external = send_to_external
+
+
+#osv.osv.ori_mag_init_context_before_exporting_resource = osv.osv.init_context_before_exporting_resource
+
+#@only_for_referential('magento', super_function = osv.osv.init_context_before_exporting_resource)
+#def init_context_before_exporting_resource(self, cr, uid, object_id, resource_name, context=None):
+#    context = osv.osv.ori_mag_init_context_before_exporting_resource(cr, uid, object_id, resource_name, context=context)
+#    if self._name == 'external.referential':
+#        referential = self.browse(cr, uid, object_id, context=context)
+#    elif 'referential_id' in self._columns.keys():
+#        referential = self.browse(cr, uid, object_id, context=context).referential_id
+
+#    context['store_to_lang'] = {'default' : referential.default_lang_id.code}
+#    if context.get('sale_shop_id'):
+#        shop = self.pool.get('sale.shop').browse(cr, uid, context['sale.shop'], context=context)
+#        for storeview in shop.storeview_ids:
+#            if storeview.lang_id and storeview.lang_id.code != context['store_to_lang']['default']:
+#                context['store_to_lang'][storeview.id] = storeview.lang_id.code
+#    return context
+
+#osv.osv.init_context_before_exporting_resource = osv.osv.init_context_before_exporting_resource
+
 
 def ext_set_resource_as_imported(self, cr, uid, external_session, external_id, mapping=None, mapping_id=None, context=None):
     mapping, mapping_id = self._init_mapping(cr, uid, external_session.referential_id.id, mapping=mapping, mapping_id=mapping_id, context=context)

@@ -1,0 +1,59 @@
+id,mapping_id:id,external_field,field_id:id,type,evaluation_type,external_type,child_mapping_id:id,alternative_key,in_function,out_function
+mag1500_product_product_price,mag1500_product_product,price,product.field_product_template_list_price,in,direct,float,,False,,
+mag1500_product_product_cost,mag1500_product_product,cost,product.field_product_template_standard_price,in,direct,float,,False,,
+mag1500_product_product_minimal_price,mag1500_product_product,minimal_price,,in_out,function,float,,False,"result = [('x_magerp_minimal_price',ifield)]","
+if 'x_magerp_minimal_price' in resource:
+    if resource['x_magerp_minimal_price'] and resource['x_magerp_minimal_price'] != 0:
+        result = [('minimal_price',resource['x_magerp_minimal_price'])]
+    else:
+        result = [('minimal_price',False)]"
+mag1500_product_product_weight,mag1500_product_product,weight,product.field_product_template_weight,in_out,direct,float,,False,,
+mag1500_product_product_type_id,mag1500_product_product,type_id,magentoerpconnect.field_product_product_product_type,in_out,function,unicode,,False,"if ifield:
+    product_type_ids  = self.pool.get('magerp.product_product_type').search(cr,uid,[('product_type','=',ifield)])
+    if product_type_ids:
+        result = [('product_type',ifield)]","if 'product_type' in resource and resource['product_type']:
+    result = [('type_id', resource['product_type'])]
+else:
+    result = [('type_id','simple')]"
+mag1500_product_product_websites,mag1500_product_product,websites,magentoerpconnect.field_product_template_websites_ids,in_out,function,list,,False,"websites_ids = []
+for ext_id in ifield:
+    websites_ids.append(self.pool.get('external.shop.group').extid_to_oeid(cr, uid, external_session, ext_id, context=context))
+
+##### OPTION START, with this if the field websites of the product is empty the product is exported on every website
+all_oe_websites_ids = self.pool.get('external.shop.group').search(cr,uid,[('referential_id', '=', referential_id)])
+if set(websites_ids) == set(all_oe_websites_ids):
+    websites_ids =[]
+##### OPTION END
+
+result=[('websites_ids', [(6,0, websites_ids)])]","##### OPTION START, with this if the field websites of the product is empty the product is exported on every website
+if 'websites_ids' in resource:
+    if not resource['websites_ids']:
+        resource['websites_ids'] = self.pool.get('external.shop.group').search(cr,uid,[('referential_id', '=', referential_id)])
+    ##### OPTION END
+
+    ext_websites_ids = []
+    for oe_id in resource['websites_ids']:
+        ext_websites_ids.append(self.pool.get('external.shop.group').oeid_to_extid(cr, uid, oe_id, referential_id))
+
+    result=[('websites', ext_websites_ids)]"
+mag1500_product_product_categories,mag1500_product_product,categories,product.field_product_template_categ_id,in_out,function,list,,False,"categ_ids =[]
+if ifield:
+    for category_id in ifield:
+        categ_ids.append(self.pool.get('product.category').extid_to_oeid(cr, uid, external_session, category_id, referential_id))
+    main_categ_id = categ_ids.pop()
+else:
+    main_categ_id = self.pool.get('external.referential').browse(cr, uid, referential_id).default_pro_cat.id
+result = [('categ_id', main_categ_id), ('categ_ids',[(6, 0, categ_ids)])]","
+product = self.browse(cr, uid, resource['id'])
+main_categ_id = self.pool.get('product.category').oeid_to_extid(cr, uid, product.categ_id.id, referential_id)
+categ_ids = [main_categ_id]
+for categ in product.categ_ids: #deal with extra m2m categories
+    categ_id =  self.pool.get('product.category').oeid_to_extid(cr, uid, categ.id, referential_id)
+    if categ_id:
+        categ_ids.append(categ_id)
+result=[('categories', categ_ids)]"
+mag1500_product_product_short_description,mag1500_product_product,short_description,product.field_product_template_description_sale,in_out,direct,unicode,,False,,
+mag1500_product_product_sku,mag1500_product_product,sku,magentoerpconnect.field_product_product_magento_sku,in_out,direct,unicode,,False,,
+mag1500_product_product_description,mag1500_product_product,description,product.field_product_template_description,in_out,direct,unicode,,False,,
+mag1500_product_product_name,mag1500_product_product,name,product.field_product_template_name,in_out,direct,unicode,,False,,
+mag1500_product_product_set,mag1500_product_product,set,magentoerpconnect.field_product_template_set,in_out,direct,int,,False,,

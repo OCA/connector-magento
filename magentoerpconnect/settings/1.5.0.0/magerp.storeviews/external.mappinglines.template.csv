@@ -1,0 +1,6 @@
+id,mapping_id:id,external_field,field_id:id,type,evaluation_type,external_type,child_mapping_id:id,alternative_key,in_function,out_function
+mag1500_magerp_storeviews_code,mag1500_magerp_storeviews,code,magentoerpconnect.field_magerp_storeviews_code,in,direct,unicode,,False,,
+mag1500_magerp_storeviews_website_id,mag1500_magerp_storeviews,website_id,magentoerpconnect.field_magerp_storeviews_website_id,in,direct,int,,False,,
+mag1500_magerp_storeviews_group_id,mag1500_magerp_storeviews,group_id,magentoerpconnect.field_magerp_storeviews_shop_id,in,direct,int,,False,,
+mag1500_magerp_storeviews_sort_order,mag1500_magerp_storeviews,sort_order,magentoerpconnect.field_magerp_storeviews_sort_order,in_out,direct,int,,False,,
+mag1500_magerp_storeviews_name,mag1500_magerp_storeviews,name,magentoerpconnect.field_magerp_storeviews_name,in,direct,unicode,,False,,

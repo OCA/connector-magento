@@ -49,16 +49,18 @@ SALE_ORDER_IMPORT_STEP = 200
 class sale_shop(magerp_osv.magerp_osv):
     _inherit = "sale.shop"
     
-
-    def init_context_before_exporting_resource(self, cr, uid, object_id, resource_name, context=None):
-        context = super(sale_shop, self).init_context_before_exporting_resource(cr, uid, object_id, resource_name, context=context)
+    @only_for_referential('magento')
+    def init_context_before_exporting_resource(self, cr, uid, external_session, object_id, resource_name, context=None):
+        context = super(sale_shop, self).init_context_before_exporting_resource(cr, uid, external_session, object_id, resource_name, context=context)
         shop = self.browse(cr, uid, object_id, context=context)
-        context['main_lang']= shop.referential_id.default_lang_id.code
+        context['main_lang'] = shop.referential_id.default_lang_id.code
+        context['lang_to_export'] = [shop.referential_id.default_lang_id.code]
         context['storeview_to_lang'] = {}
         for storeview in shop.storeview_ids:
             if storeview.lang_id and storeview.lang_id.code != shop.referential_id.default_lang_id.code:
                 context['storeview_to_lang'][storeview.code] = storeview.lang_id.code
-        print context
+                if not storeview.lang_id.code in context['lang_to_export']:
+                    context['lang_to_export'].append(storeview.lang_id.code)
         return context
 
 
@@ -103,12 +105,12 @@ class sale_shop(magerp_osv.magerp_osv):
         return True
                
   
-    def _get_rootcategory(self, cr, uid, ids, prop, unknow_none, context=None):
+    def _get_rootcategory(self, cr, uid, ids, name, value, context=None):
         res = {}
         for shop in self.browse(cr, uid, ids, context):
             if shop.root_category_id and shop.shop_group_id.referential_id:
                 rid = self.pool.get('product.category').extid_to_existing_oeid(
-				    cr, uid, shop.root_category_id, shop.shop_group_id.referential_id.id)
+                    cr, uid, shop.shop_group_id.referential_id.id, shop.root_category_id)
                 res[shop.id] = rid
             else:
                 res[shop.id] = False
@@ -542,7 +544,8 @@ class sale_order(magerp_osv.magerp_osv):
              order.shop_id.allow_magento_notification])
         return magento_invoice_ref
 
-    # TODO Move in base_sale_multichannels?
+    # TODO Move in base_sale_multichannels? 
+    # Seb said Yes ;)
     def export_invoice(self, cr, uid, order, conn, ext_id, context=None):
         """ Export an invoice on external referential """
         cr.execute("select account_invoice.id "

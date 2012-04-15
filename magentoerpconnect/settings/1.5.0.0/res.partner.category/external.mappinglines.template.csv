@@ -1,0 +1,3 @@
+id,mapping_id:id,external_field,field_id:id,type,evaluation_type,external_type,child_mapping_id:id,alternative_key,in_function,out_function
+mag1500_res_partner_category_customer_group_code,mag1500_res_partner_category,customer_group_code,base.field_res_partner_category_name,in,direct,unicode,,False,,
+mag1500_res_partner_category_tax_class_id,mag1500_res_partner_category,tax_class_id,magentoerpconnect.field_res_partner_category_tax_class_id,in,direct,int,,False,,

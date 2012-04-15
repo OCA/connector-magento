@@ -1,0 +1,5 @@
+id,mapping_id:id,external_field,field_id:id,type,evaluation_type,external_type,child_mapping_id:id,alternative_key,in_function,out_function
+mag1500_magerp_product_attribute_set_attribute_set_id,magentoerpconnect.mag1500_magerp_product_attribute_set,attribute_set_id,,in_out,function,int,,False,"#TODO use external id instead of this bullshit
+result=[('magento_id', ifield), ('referential_id', external_session.referential_id.id)]","result=[('attribute_set_id', record['magento_id'])]"
+mag1500_magerp_product_attribute_set_sort_order,magentoerpconnect.mag1500_magerp_product_attribute_set,sort_order,magentoerpconnect.field_magerp_product_attribute_set_sort_order,in_out,direct,int,,False,,
+mag1500_magerp_product_attribute_set_attribute_set_name,magentoerpconnect.mag1500_magerp_product_attribute_set,attribute_set_name,magentoerpconnect.field_magerp_product_attribute_set_attribute_set_name,in_out,direct,unicode,,False,,

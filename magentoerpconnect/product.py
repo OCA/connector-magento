@@ -101,8 +101,44 @@ magerp_product_category_attribute_options()
 class product_category(magerp_osv.magerp_osv):
     _inherit = "product.category"
 
-    def ext_create(self, cr, uid, data, conn, method, oe_id, context=None):
-        return conn.call(method, [data.get('parent_id', 1), data])
+    def multi_lang_read(self, cr, uid, ids, fields_to_read, langs, resources=None, use_multi_lang = True, context=None):
+        return super(product_category, self).multi_lang_read(cr, uid, ids, fields_to_read, langs,
+                                                            resources=resources,
+                                                            use_multi_lang = False,
+                                                            context=context)
+
+    def ext_create(self, cr, uid, external_session, resources, context=None):
+        ext_create_ids={}
+        storeview_to_lang = context['storeview_to_lang']
+        main_lang = context['main_lang']
+        for resource_id, resource in resources.items():
+            #Move this part of code in a python lib
+            parent_id = resource[main_lang]['parent_id']
+            del resource[main_lang]['parent_id']
+            ext_id = external_session.connection.call('catalog_category.create', [parent_id, resource[main_lang]])
+            for storeview, lang in storeview_to_lang.items():
+                external_session.connection.call('catalog_category.update', [parent_id, resource[lang], storeview])
+            ext_create_ids[resource_id] = ext_id
+        return ext_create_ids
+
+
+    def ext_update(self, cr, uid, external_session, resources, context=None):
+        ext_update_ids={}
+        storeview_to_lang = context['storeview_to_lang']
+        main_lang = context['main_lang']
+        for resource_id, resource in resources.items():
+            #Move this part of code in a python lib
+            ext_id = resource[main_lang]['ext_id']
+            del resource[main_lang]['ext_id']
+            external_session.connection.call('catalog_category.update', [ext_id, resource[main_lang], False])
+            for storeview, lang in storeview_to_lang.items():
+                del resource[lang]['ext_id']
+                external_session.connection.call('catalog_category.update', [ext_id, resource[lang], storeview])
+            ext_update_ids[resource_id] = ext_id
+        return ext_update_ids
+
+
+
 
     _columns = {
         'magerp_fields' : fields.serialized('Magento Product Categories Extra Fields'),
@@ -486,21 +522,23 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
         return crid
 
     def _default_mapping(self, cr, uid, ttype, field_name, vals, attribute_id, model_id, referential_id):
+        #TODO refactor me
         in_function = out_function = False
         if ttype in ['char', 'text', 'date', 'float', 'weee', 'boolean']:
-            in_function = "result = [('%s', ifield)]" % (field_name,)
-            out_function = "result = [('%s', record['%s'])]" % (vals['attribute_code'], field_name)
+            in_function = "if '%s' in resource: result = [('%s', ifield)]" % (field_name,field_name)
+            out_function = "if '%s' in resource: result = [('%s', resource['%s'])]" % (field_name, vals['attribute_code'], field_name)
         elif ttype in ['many2one']:
-            in_function = ("if ifield:\n"
+            in_function = ("if '%(field_name)s' in resource:\n"
                            "    option_id = self.pool.get('magerp.product_attribute_options').search(cr, uid, [('attribute_id','=',%(attribute_id)s),('value','=',ifield)])\n"
                            "    if option_id:\n"
                            "        result = [('%(field_name)s', option_id[0])]")  % ({'attribute_id': attribute_id, 'field_name': field_name})
-            # we browse on record['%(field_name)s'][0] because record[field_name] is in the form (id, name)
-            out_function = ("result = [('%(attribute_code)s', False)]\n"
-                            "if record.get('%(field_name)s'):\n"
-                            "    option = self.pool.get('magerp.product_attribute_options').browse(cr, uid, record['%(field_name)s'][0])\n"
-                            "    if option:\n"
-                            "        result = [('%(attribute_code)s', option.value)]") % ({'field_name': field_name, 'attribute_code': vals['attribute_code']})
+            # we browse on resource['%(field_name)s'][0] because resource[field_name] is in the form (id, name)
+            out_function = ("if '%(field_name)s' in resource:\n"
+                            "    result = [('%(attribute_code)s', False)]\n"
+                            "    if resource.get('%(field_name)s'):\n"
+                            "        option = self.pool.get('magerp.product_attribute_options').browse(cr, uid, resource['%(field_name)s'][0])\n"
+                            "        if option:\n"
+                            "            result = [('%(attribute_code)s', option.value)]") % ({'field_name': field_name, 'attribute_code': vals['attribute_code']})
         elif ttype in ['many2many']:
             in_function = ("option_ids = []\n"
                            "opt_obj = self.pool.get('magerp.product_attribute_options')\n"
@@ -508,8 +546,8 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
                            "    option_ids.extend(opt_obj.search(cr, uid, [('attribute_id','=',%(attribute_id)s), ('value','=',ext_option_id)]))\n"
                            "result = [('%(field_name)s', [(6, 0, option_ids)])]") % ({'attribute_id': attribute_id, 'field_name': field_name})
             out_function = ("result=[('%(attribute_code)s', [])]\n"
-                            "if record.get('%(field_name)s'):\n"
-                            "    options = self.pool.get('magerp.product_attribute_options').browse(cr, uid, record['%(field_name)s'])\n"
+                            "if resource.get('%(field_name)s'):\n"
+                            "    options = self.pool.get('magerp.product_attribute_options').browse(cr, uid, resource['%(field_name)s'])\n"
                             "    result = [('%(attribute_code)s', [option.value for option in options])]") % \
                            ({'field_name': field_name, 'attribute_code': vals['attribute_code']})
         elif ttype in ['binary']:
@@ -536,6 +574,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
                                 'external_type': self._type_casts[vals.get('frontend_input', False)],
                                 'field_id': field_id, }
                 mapping_line['in_function'], mapping_line['out_function'] = self._default_mapping(cr, uid, ttype, field_name, vals, attribute_id, model_id, referential_id)
+                mapping_line['evaluation_type'] = 'function'
                 self.pool.get('external.mapping.line').create(cr, uid, mapping_line)
         return True
 
@@ -658,7 +697,6 @@ class magerp_product_attribute_set(magerp_osv.magerp_osv):
                 query += ","
             query = query[0:len(query) - 1] + ";"
             cr.execute(query)
-
         return True
     
 magerp_product_attribute_set()
@@ -737,6 +775,59 @@ class product_mag_osv(magerp_osv.magerp_osv):
     #and will have a nice default vaule anyway, that's why we avoid making them mandatory in the product view
     _magento_fake_mandatory_attrs = ['created_at', 'updated_at', 'has_options', 'required_options', 'model']
 
+#    def send_to_external(self, cr, uid, external_session, resource, update_date, context=None):
+#        storeview_to_lang = context['storeview_to_lang']
+#        print ' lang_to_storeview', storeview_to_lang
+#        print 'send default store'
+#        print resource[context['main_lang']]
+#        for storeview, lang in storeview_to_lang.items():
+#            print 'send to storeview', storeview
+#            print 'product data', resource[lang]
+#        self._set_last_exported_date(cr, uid, external_session, update_date, context=context)
+#        import pdb; pdb.set_trace()
+#        return True
+
+    def ext_create(self, cr, uid, external_session, resources, context=None):
+        ext_create_ids={}
+        storeview_to_lang = context['storeview_to_lang']
+        main_lang = context['main_lang']
+        for resource_id, resource in resources.items():
+            #Move this part of code in a python lib
+            product_type = resource[main_lang]['type_id']
+            attr_set = resource[main_lang]['set']
+            sku = resource[main_lang]['sku']
+            del resource[main_lang]['type_id']
+            del resource[main_lang]['set']
+            del resource[main_lang]['sku']
+            ext_id = external_session.connection.call('ol_catalog_product.create', [product_type, attr_set, sku, resource[main_lang]])
+            for storeview, lang in storeview_to_lang.items():
+                external_session.connection.call('ol_catalog_product.update', [ext_id, resource[lang], storeview, 'id'])
+            ext_create_ids[resource_id] = ext_id
+        return ext_create_ids
+
+
+    def ext_update(self, cr, uid, external_session, resources, context=None):
+        ext_update_ids={}
+        storeview_to_lang = context['storeview_to_lang']
+        main_lang = context['main_lang']
+        for resource_id, resource in resources.items():
+            #Move this part of code in a python lib
+            product_type = resource[main_lang]['type_id']
+            attr_set = resource[main_lang]['set']
+            sku = resource[main_lang]['sku']
+            ext_id = resource[main_lang]['ext_id']
+            del resource[main_lang]['type_id']
+            del resource[main_lang]['set']
+            del resource[main_lang]['sku']
+            del resource[main_lang]['ext_id']
+            external_session.connection.call('ol_catalog_product.update', [ext_id, resource[main_lang], False, 'id'])
+            for storeview, lang in storeview_to_lang.items():
+                del resource[lang]['ext_id']
+                external_session.connection.call('ol_catalog_product.update', [ext_id, resource[lang], storeview, 'id'])
+            ext_update_ids[resource_id] = ext_id
+        return ext_update_ids
+
+
     def open_magento_fields(self, cr, uid, ids, context=None):
         ir_model_data_obj = self.pool.get('ir.model.data')
         ir_model_data_id = ir_model_data_obj.search(cr, uid, [['model', '=', 'ir.ui.view'], ['name', '=', self._name.replace('.','_') + '_wizard_form_view_magerpdynamic']], context=context)
@@ -794,8 +885,8 @@ class product_mag_osv(magerp_osv.magerp_osv):
         attribute = results.pop()
         while results:
             mag_group_id = attribute['group_id']
-            oerp_group_id = attr_group_obj.extid_to_oeid(
-                cr, uid, mag_group_id, attr_set.referential_id.id)
+            oerp_group_id = attr_group_obj.extid_to_existing_oeid(
+                cr, uid, attr_set.referential_id.id, mag_group_id)
             # FIXME: workaround in multi-Magento instances (databases)
             # where attribute group might not be found due to the way we
             # share attributes currently
@@ -862,7 +953,7 @@ class product_mag_osv(magerp_osv.magerp_osv):
 
                     # apply_to is a string like
                     # "simple,configurable,virtual,bundle,downloadable"
-                    req_apply_to = attribute['apply_to'] == '' or \
+                    req_apply_to = not attribute['apply_to'] or \
                         'simple' in attribute['apply_to'] or \
                         'configurable' in attribute['apply_to']
                     if attribute['is_required'] and \
@@ -997,12 +1088,6 @@ product_template()
 class product_product(product_mag_osv):
     _inherit = "product.product"
 
-    @only_for_referential('magento')
-    def send_to_external(self, cr, uid, external_session, resource, update_date, context=None):
-        print 'send context', context
-        return True
-
-
     #TODO base the import on the mapping and the function ext_import
     def import_product_image(self, cr, uid, id, referential_id, conn, ext_id=None, context=None):
         image_obj = self.pool.get('product.images')
@@ -1055,18 +1140,50 @@ class product_product(product_mag_osv):
                 image_obj.create_external_id_vals(cr, uid, new_image_id, image['file'], referential_id, context=context)
         return True
     
-    def extid_to_existing_oeid(self, cr, uid, id, external_referential_id, context=None):
-        """Returns the OpenERP id of a resource by its external id.
-           Returns False if the resource does not exist."""
-        if not context:
-            context={}
-        res = super(product_mag_osv, self).extid_to_existing_oeid(cr, uid, id, external_referential_id, context=context)
-        # TODO : check if this can be replaced by _existing_oeid_for_extid_import (see example in res.partner)
-        # thus when importing a product which do not already exists in OpenERP, ext_import will create the binding and update it directly
-        if not res and context.get('magento_sku', False):
-            product_id = self.search(cr, uid, [('magento_sku', '=', context['magento_sku'])], context=context)
-            return product_id and product_id[0] or False
-        return res
+#    def extid_to_existing_oeid(self, cr, uid, id, external_referential_id, context=None):
+#        """Returns the OpenERP id of a resource by its external id.
+#           Returns False if the resource does not exist."""
+#        if not context:
+#            context={}
+#        res = super(product_mag_osv, self).extid_to_existing_oeid(cr, uid, id, external_referential_id, context=context)
+#        # TODO : check if this can be replaced by _existing_oeid_for_extid_import (see example in res.partner)
+#        # thus when importing a product which do not already exists in OpenERP, ext_import will create the binding and update it directly
+#        if not res and context.get('magento_sku', False):
+#            product_id = self.search(cr, uid, [('magento_sku', '=', context['magento_sku'])], context=context)
+#            return product_id and product_id[0] or False
+#        return res
+
+    def get_field_to_export(self, cr, uid, ids, mapping, mapping_id, context=None):
+        res = super(product_product, self).get_field_to_export(cr, uid, ids, mapping, mapping_id, context=context)
+        if 'product_image' in res: res.remove('product_image')
+        if context.get('attribut_set_id'):
+            attr_set = self.pool.get('magerp.product_attribute_set').browse(cr, uid, \
+                                                context['attribut_set_id'], context=context)
+            magento_field = [attribut['field_name'] for attribut in attr_set.attributes]
+            return [field for field in res if (field[0:8] != "x_magerp_" or field in magento_field)]
+        else:
+            return res
+
+    def _get_oe_resources(self, cr, uid, external_session, ids, langs, smart_export=None,
+                            last_exported_date=None, mapping=None, mapping_id=None, context=None):
+        resources={}
+        set_to_product_ids = {}
+        for product in self.browse(cr, uid, ids, context=context):
+            if not set_to_product_ids.get(product.set.id):
+                set_to_product_ids[product.set.id] = [product.id]
+            else:
+                set_to_product_ids[product.set.id].append(product.id)
+        for attribut_id in set_to_product_ids:
+            context['attribut_set_id'] = attribut_id
+            resources.update(super(product_product, self)._get_oe_resources(
+                                                cr, uid, external_session, ids, langs,
+                                                smart_export=smart_export,
+                                                last_exported_date=last_exported_date,
+                                                mapping=mapping,
+                                                mapping_id=mapping_id,
+                                                context=context
+                                                ))
+        return resources
 
     def _product_type_get(self, cr, uid, context=None):
         ids = self.pool.get('magerp.product_product_type').search(cr, uid, [], order='id')
@@ -1256,18 +1373,20 @@ class product_product(product_mag_osv):
                 sku = code
         return sku
 
-    def ext_create(self, cr, uid, data, conn, method, oe_id, context=None):
-        if context is None: context = {}
-        product = self.browse(cr, uid, oe_id, context=context)
-        sku = self.product_to_sku(cr, uid, product)
-        shop = self.pool.get('sale.shop').browse(cr, uid, context['shop_id'])
-        attr_set_id = product.set and self.pool.get('magerp.product_attribute_set').oeid_to_extid(cr, uid, product.set.id, shop.referential_id.id) or context.get('default_set_id', 1)
-        
-        product_type = self.read(cr, uid, oe_id, ['product_type'])['product_type'] or 'simple'
+#    def ext_create(self, cr, uid, data, conn, method, oe_id, context=None):
+#        if context is None: context = {}
+#        product = self.browse(cr, uid, oe_id, context=context)
+#        sku = self.product_to_sku(cr, uid, product)
+#        shop = self.pool.get('sale.shop').browse(cr, uid, context['shop_id'])
+#        attr_set_id = product.set and self.pool.get('magerp.product_attribute_set').oeid_to_extid(cr, uid, product.set.id, shop.referential_id.id) or context.get('default_set_id', 1)
+#        
+#        product_type = self.read(cr, uid, oe_id, ['product_type'])['product_type'] or 'simple'
 
-        res = super(magerp_osv.magerp_osv, self).ext_create(cr, uid, [product_type, attr_set_id, sku, data], conn, method, oe_id, context)
-        self.write(cr, uid, oe_id, {'magento_sku': sku})
-        return res
+#        res = super(magerp_osv.magerp_osv, self).ext_create(cr, uid, [product_type, attr_set_id, sku, data], conn, method, oe_id, context)
+#        self.write(cr, uid, oe_id, {'magento_sku': sku})
+#        return res
+
+
     
     def action_before_exporting_grouped_product(self, cr, uid, id, external_referential_ids=None, defaults=None, context=None):
         logger = netsvc.Logger()
@@ -1415,10 +1534,10 @@ class product_product(product_mag_osv):
         else:
             return conn.call(method, [external_id, data])
     
-    def ext_update(self, cr, uid, data, conn, method, oe_id, external_id, ir_model_data_id, create_method, context=None):
-        product = self.browse(cr, uid, oe_id)
-        sku = self.product_to_sku(cr, uid, product)
-        return super(magerp_osv.magerp_osv, self).ext_update(cr, uid, data, conn, method, oe_id, sku, ir_model_data_id, create_method, context)
+#    def ext_update(self, cr, uid, data, conn, method, oe_id, external_id, ir_model_data_id, create_method, context=None):
+#        product = self.browse(cr, uid, oe_id)
+#        sku = self.product_to_sku(cr, uid, product)
+#        return super(magerp_osv.magerp_osv, self).ext_update(cr, uid, data, conn, method, oe_id, sku, ir_model_data_id, create_method, context)
 
     def _prepare_inventory_magento_vals(self, cr, uid, product, stock, shop,
                                         context=None):
