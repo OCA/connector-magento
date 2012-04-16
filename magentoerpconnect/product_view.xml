@@ -240,8 +240,10 @@
 				<data>
 					<xpath expr="/form/group/group/field[@name='ean13']" position="after">
                         <field name="magento_exported" invisible="True"/>
-						<field name="magento_sku" select="2" attrs="{'required':[('magento_exportable','==',True)], 'readonly':[('magento_exported', '==', True)]}"/>
 					</xpath>
+                    <xpath expr="/form/group/group/field[@name='default_code']" position="attributes">
+                        <attribute name="attrs">{'required':[('magento_exportable','==',True)], 'readonly':[('magento_exported', '==', True)]}</attribute>
+                    </xpath>
 					<xpath expr="/form/group/group/field[@name='variants']" position="after">
 						<field name="set" select="2" attrs="{'required':[('magento_exportable','==',True)], 'readonly': [('magento_exported', '=', True)]}"/>
 					</xpath>
@@ -278,7 +280,7 @@
                         <separator string="Magento Information" colspan="8"/>
                         <field name="name"/>
                         <field name="set" select="2" attrs="{'required':[('magento_exportable','==',True)], 'readonly': [('magento_exported', '=', True)]}"/>
-                        <field name="magento_sku" select="2" attrs="{'required':[('magento_exportable','==',True)]}"/>
+                        <field name="default_code" select="2" attrs="{'required':[('magento_exportable','==',True)]}"/>
                         <field name="product_type" select="2" attrs="{'required':[('magento_exportable','==',True)]}"/>
                         <field name="magento_exportable"/>
                         <field name="magento_exported" invisible="1" />

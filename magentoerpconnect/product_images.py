@@ -122,9 +122,9 @@ class product_images(magerp_osv.magerp_osv):
                 ext_file_name = each.oeid_to_extid(context['external_referential_id'])
                 if ext_file_name: #If update
                     try:
-                        logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "Updating %s's image: %s" %(each.product_id.magento_sku, each.name))
+                        logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "Updating %s's image: %s" %(each.product_id.default_code, each.name))
                         result = update_image(ext_file_name, each)
-                        logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "%s's image updated with sucess: %s" %(each.product_id.magento_sku, each.name))
+                        logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "%s's image updated with sucess: %s" %(each.product_id.default_code, each.name))
                         need_to_be_created = False
                     except Exception, e:
                         logger.notifyChannel(_("Magento Connection"), netsvc.LOG_ERROR, _("Error in connecting:%s") % (e))
@@ -138,10 +138,10 @@ class product_images(magerp_osv.magerp_osv):
                                 ir_model_data_obj.unlink(cr, uid, model_data_ids, context=context)
                             logger.notifyChannel(_("Magento Connection"), netsvc.LOG_ERROR, _("The image don't exist in magento, try to create it"))
                 if need_to_be_created:
-                    if each.product_id.magento_sku:
-                        logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "Sending %s's image: %s" %(each.product_id.magento_sku, each.name))
+                    if each.product_id.default_code:
+                        logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "Sending %s's image: %s" %(each.product_id.default_code, each.name))
                         result = conn.call('catalog_product_attribute_media.create',
-                                  [each.product_id.magento_sku,
+                                  [each.product_id.default_code,
                                    {'file':{
                                             'name':each.name,
                                             'content': each.file,
@@ -151,7 +151,7 @@ class product_images(magerp_osv.magerp_osv):
                                    ])
                         self.create_external_id_vals(cr, uid, each.id, result, context['external_referential_id'], context=context)
                         result = update_image(result, each)
-                        logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "%s's image send with sucess: %s" %(each.product_id.magento_sku, each.name))
+                        logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "%s's image send with sucess: %s" %(each.product_id.default_code, each.name))
                 if image_2_date[each.id] > context['last_images_export_date']: #indeed if a product was created a long time ago and checked as exportable recently, the write date of the image can be far away in the past
                     self.pool.get('sale.shop').write(cr,uid,context['shop_id'],{'last_images_export_date':image_2_date[each.id]})
                 cr.commit()

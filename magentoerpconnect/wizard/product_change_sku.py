@@ -34,7 +34,7 @@ class ProductChangeSkuWizard(osv.osv_memory):
 
         # TODO: rollback on all referential if one update fail
 
-        product_obj.write(cr, uid, product_id, {'magento_sku': new_magento_sku})
+        product_obj.write(cr, uid, product_id, {'default_code': new_magento_sku})
 
         return {'type': 'ir.actions.act_window_close'}
 

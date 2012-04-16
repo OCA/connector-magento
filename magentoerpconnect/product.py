@@ -202,59 +202,6 @@ class product_category(magerp_osv.magerp_osv):
             ids = get_child_ids(categ_tree)
         return ids
 
-    def ext_export(self, cr, uid, ids, external_referential_ids=None, defaults=None, context=None): # We export all the categories if at least one has been modified since last export
-        #TODO Move this function in base_sale_multichannels
-        if context is None:
-            context = {}
-
-        if defaults is None:
-            defaults = {}
-
-        res = False
-        ids_exportable = self.search(cr, uid, [('id', 'in', ids), ('magento_exportable', '=', True)]) #restrict export to only exportable products
-        ids = [id for id in ids if id in ids_exportable] #we need to kept the order of the categories
-
-        shop = self.pool.get('sale.shop').browse(cr, uid, context['shop_id'])
-
-        context_dic = [context.copy()]
-        context_dic[0]['export_url'] = True # for the magento version 1.3.2.4, only one url is autorized by category, so we only export with the MAPPING TEMPLATE the url of the default language
-        context_dic[0]['lang'] = shop.referential_id.default_lang_id.code
-
-        for storeview in shop.storeview_ids:
-            if storeview.lang_id and storeview.lang_id.code != shop.referential_id.default_lang_id.code:
-                context_dic += [context.copy()]
-                context_dic[len(context_dic)-1].update({'storeview_code': storeview.code, 'lang': storeview.lang_id.code})
-
-        if shop.last_products_export_date:
-            last_exported_time = datetime.datetime.fromtimestamp(time.mktime(time.strptime(shop.last_products_export_date[:19], DEFAULT_SERVER_DATETIME_FORMAT)))
-        else:
-            last_exported_time = False
-
-        if not last_exported_time:
-            for ctx_storeview in context_dic:
-                ctx_storeview['force'] = True
-                res = super(product_category, self).ext_export(cr, uid, ids, external_referential_ids, defaults, ctx_storeview)
-        else:
-            cr.execute("select write_date, create_date from product_category where id in %s", (tuple(ids),))
-            read = cr.fetchall()
-            for categ in read:
-                last_updated_categ = categ[0] and categ[0].split('.')[0] or categ[1] and categ[1].split('.')[0] or False
-                last_updated_categ_time = datetime.datetime.fromtimestamp(time.mktime(time.strptime(last_updated_categ[:19], DEFAULT_SERVER_DATETIME_FORMAT)))
-                if last_updated_categ_time and last_exported_time:
-                    if last_exported_time - datetime.timedelta(seconds=1) < last_updated_categ_time:
-                        for ctx_storeview in context_dic:
-                            ctx_storeview['force'] = True
-                            res = super(product_category, self).ext_export(cr, uid, ids, external_referential_ids, defaults, ctx_storeview)
-                        break
-        return res
-
-    def try_ext_update(self, cr, uid, data, conn, method, oe_id, external_id, ir_model_data_id, create_method, context=None):
-        if context is None: context = {}
-        if context.get('storeview_code', False):
-            return conn.call(method, [external_id, data, context.get('storeview_code', False)])
-        else:
-            return conn.call(method, [external_id, data])
-
 product_category()
 
 
@@ -895,8 +842,8 @@ class product_mag_osv(magerp_osv.magerp_osv):
                     'external.referential').search(cr, uid, [])
                 for ref_id in ref_ids:
                      if ref_id != attr_set.referential_id.id:
-                         oerp_group_id = attr_group_obj.extid_to_oeid(
-                             cr, uid, mag_group_id, ref_id)
+                         oerp_group_id = attr_group_obj.extid_to_existing_oeid(
+                             cr, uid, ref_id, mag_group_id)
                          if oerp_group_id:
                              break
 
@@ -1206,7 +1153,6 @@ class product_product(product_mag_osv):
 
     _columns = {
         'magerp_variant' : fields.serialized('Magento Variant Fields'),
-        'magento_sku':fields.char('Magento SKU', size=64),
         'magento_exportable':fields.boolean('Exported to Magento?'),
         'created_at':fields.date('Created'), #created_at & updated_at in magento side, to allow filtering/search inside OpenERP!
         'updated_at':fields.date('Created'),
@@ -1218,10 +1164,6 @@ class product_product(product_mag_osv):
     _defaults = {
         'magento_exportable':lambda * a:True
     }
-
-    _sql_constraints = [
-        ('magento_sku_uniq', 'unique (magento_sku)', 'The Magento SKU should be uniq!'),
-    ]
 
     def write(self, cr, uid, ids, vals, context=None):
         if vals.get('referential_id', False):
@@ -1291,7 +1233,6 @@ class product_product(product_mag_osv):
             default = {}
 
         default['magento_exportable'] = False
-        default['magento_sku'] = False
 
         return super(product_product, self).copy(cr, uid, id, default=default, context=context)
 
@@ -1361,33 +1302,6 @@ class product_product(product_mag_osv):
                 res['type'] = magerp_type_obj.read(cr, uid, magerp_type_ids[0], ['default_type'], context=context)['default_type']
         return res
 
-    def product_to_sku(self, cr, uid, product):
-        if product.magento_sku:
-            sku = product.magento_sku
-        else:
-            code = product.code or 'mag'
-            same_codes = self.search(cr, uid, [('magento_sku', '=', code)])
-            if same_codes and len(same_codes) > 0:
-                sku = code + "_" + str(product.id)
-            else:
-                sku = code
-        return sku
-
-#    def ext_create(self, cr, uid, data, conn, method, oe_id, context=None):
-#        if context is None: context = {}
-#        product = self.browse(cr, uid, oe_id, context=context)
-#        sku = self.product_to_sku(cr, uid, product)
-#        shop = self.pool.get('sale.shop').browse(cr, uid, context['shop_id'])
-#        attr_set_id = product.set and self.pool.get('magerp.product_attribute_set').oeid_to_extid(cr, uid, product.set.id, shop.referential_id.id) or context.get('default_set_id', 1)
-#        
-#        product_type = self.read(cr, uid, oe_id, ['product_type'])['product_type'] or 'simple'
-
-#        res = super(magerp_osv.magerp_osv, self).ext_create(cr, uid, [product_type, attr_set_id, sku, data], conn, method, oe_id, context)
-#        self.write(cr, uid, oe_id, {'magento_sku': sku})
-#        return res
-
-
-    
     def action_before_exporting_grouped_product(self, cr, uid, id, external_referential_ids=None, defaults=None, context=None):
         logger = netsvc.Logger()
         if context.get('mrp_is_installed', False):
@@ -1533,11 +1447,6 @@ class product_product(product_mag_osv):
             return conn.call(method, [external_id, data, context.get('storeview_code', False)])
         else:
             return conn.call(method, [external_id, data])
-    
-#    def ext_update(self, cr, uid, data, conn, method, oe_id, external_id, ir_model_data_id, create_method, context=None):
-#        product = self.browse(cr, uid, oe_id)
-#        sku = self.product_to_sku(cr, uid, product)
-#        return super(magerp_osv.magerp_osv, self).ext_update(cr, uid, data, conn, method, oe_id, sku, ir_model_data_id, create_method, context)
 
     def _prepare_inventory_magento_vals(self, cr, uid, product, stock, shop,
                                         context=None):

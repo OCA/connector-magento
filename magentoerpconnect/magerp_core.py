@@ -356,10 +356,7 @@ class external_referential(magerp_osv.magerp_osv):
             attr_conn = self.external_connection(cr, uid, referential_id, DEBUG, context=context)
             partner_ids  = partner_obj.search(cr, uid, [('mag_newsletter', '!=', 1), ('emailid', '!=', '')])
 
-            print partner_ids
-
             for partner in partner_obj.browse(cr, uid, partner_ids):
-                print partner.emailid
                 if partner.emailid:
                     attr_conn.call('ol_customer_subscriber.delete', [partner.emailid])
 

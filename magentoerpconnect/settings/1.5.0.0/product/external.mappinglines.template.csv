@@ -32,8 +32,8 @@ if 'websites_ids' in resource:
     ##### OPTION END
 
     ext_websites_ids = []
-    for oe_id in resource['websites_ids']:
-        ext_websites_ids.append(self.pool.get('external.shop.group').oeid_to_extid(cr, uid, oe_id, referential_id))
+    for oe_id in resource['websites_ids']:  
+        ext_websites_ids.append(self.pool.get('external.shop.group').oeid_to_existing_extid(cr, uid, oe_id, referential_id))
 
     result=[('websites', ext_websites_ids)]"
 mag1500_product_product_categories,mag1500_product_product,categories,product.field_product_template_categ_id,in_out,function,list,,False,"categ_ids =[]
@@ -45,10 +45,10 @@ else:
     main_categ_id = self.pool.get('external.referential').browse(cr, uid, referential_id).default_pro_cat.id
 result = [('categ_id', main_categ_id), ('categ_ids',[(6, 0, categ_ids)])]","
 product = self.browse(cr, uid, resource['id'])
-main_categ_id = self.pool.get('product.category').oeid_to_extid(cr, uid, product.categ_id.id, referential_id)
+main_categ_id = self.pool.get('product.category').oeid_to_existing_extid(cr, uid, product.categ_id.id, referential_id)
 categ_ids = [main_categ_id]
 for categ in product.categ_ids: #deal with extra m2m categories
-    categ_id =  self.pool.get('product.category').oeid_to_extid(cr, uid, categ.id, referential_id)
+    categ_id =  self.pool.get('product.category').oeid_to_existing_extid(cr, uid, categ.id, referential_id)
     if categ_id:
         categ_ids.append(categ_id)
 result=[('categories', categ_ids)]"
