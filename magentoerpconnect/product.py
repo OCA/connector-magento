@@ -104,6 +104,7 @@ class product_category(magerp_osv.magerp_osv):
     def _get_default_export_values(self, cr, uid, external_session, mapping_id=None, defaults=None, context=None):
         defaults = super(product_category, self)._get_default_export_values(cr, uid, external_session,
                                                 mapping_id=mapping_id, defaults=defaults, context=context)
+        if defaults == None: defaults={}
         defaults.update({'magento_exportable': True})
         return defaults
 
