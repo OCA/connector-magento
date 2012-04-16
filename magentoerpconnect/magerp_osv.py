@@ -32,10 +32,27 @@ from tools.translate import _
 
 from osv import osv, fields
 from base_external_referentials.decorator import only_for_referential
+from base_external_referentials.decorator import open_report
+from base_external_referentials.decorator import catch_error_in_report
 import netsvc
 
+osv.osv.mag_transform_and_send_one_resource = osv.osv._transform_and_send_one_resource
+
+@only_for_referential('magento', super_function = osv.osv.mag_transform_and_send_one_resource)
+@catch_error_in_report
+def _transform_and_send_one_resource(self, cr, uid, external_session, *args, **kwargs):
+    return self.mag_transform_and_send_one_resource(cr, uid, external_session, *args, **kwargs)
+
+osv.osv._transform_and_send_one_resource = _transform_and_send_one_resource
 
 
+osv.osv.mag_export_resources = osv.osv._export_resources
+
+@only_for_referential('magento', super_function = osv.osv.mag_export_resources)
+@open_report
+def _export_resources(self, *args, **kwargs):
+    return self.mag_export_resources( *args, **kwargs)
+osv.osv._export_resources = _export_resources
 
 
 osv.osv._mag_get_external_resource_ids = osv.osv._get_external_resource_ids

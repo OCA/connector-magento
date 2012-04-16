@@ -1195,11 +1195,11 @@ class product_product(product_mag_osv):
         """
         res = {}
         # get all magento external_referentials
-        referentials = self.pool.get('external.referential').search(cr, uid, [('magento_referential', '=', True)])
+        referential_ids = self.pool.get('external.referential').search(cr, uid, [('magento_referential', '=', True)])
         for product in self.browse(cr, uid, ids, context):
-            for referential in referentials:
+            for referential_id in referential_ids:
                 res[product.id] = False
-                if self.oeid_to_extid(cr, uid, product.id, referential, context):
+                if self.oeid_to_existing_extid(cr, uid, referential_id, product.id, context):
                     res[product.id] = True
                     break
         return res

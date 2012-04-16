@@ -1,7 +1,7 @@
 "id","mapping_id:id","external_field","field_id:id","type","evaluation_type","external_type","child_mapping_id:id","alternative_key","in_function","out_function"
 "mag1500_product_category_level","mag1500_product_category","level","product.field_product_category_sequence","in","direct","unicode",,"False",,
 "mag1500_product_category_name","mag1500_product_category","name",,"in_out","function","unicode",,"False","result=[('name', resource['name'] or 'UNDEFINED'),('magento_exportable',True)]","result=[('name',resource['name'])]"
-"mag1500_product_category_is_active","mag1500_product_category","is_active","magentoerpconnect.field_product_category_is_active","in_out","direct","unicode",,"False",,
+"mag1500_product_category_is_active","mag1500_product_category","is_active","magentoerpconnect.field_product_category_is_active","in_out","direct","int",,"False",,
 "mag1500_product_category_level","mag1500_product_category","level","magentoerpconnect.field_product_category_level","in","direct","int",,"False",,
 "mag1500_product_category_parent_id","mag1500_product_category","parent_id","product.field_product_category_parent_id","in_out","direct","int",,"False",,
 "mag1500_product_category_meta_keywords","mag1500_product_category","meta_keywords","magentoerpconnect.field_product_category_meta_keywords","in_out","direct","unicode",,"False",,
