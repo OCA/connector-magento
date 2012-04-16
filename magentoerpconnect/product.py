@@ -101,6 +101,12 @@ magerp_product_category_attribute_options()
 class product_category(magerp_osv.magerp_osv):
     _inherit = "product.category"
 
+    def _get_default_export_values(self, cr, uid, external_session, mapping_id=None, defaults=None, context=None):
+        defaults = super(product_category, self)._get_default_export_values(cr, uid, external_session,
+                                                mapping_id=mapping_id, defaults=defaults, context=context)
+        defaults.update({'magento_exportable': True})
+        return defaults
+
     def multi_lang_read(self, cr, uid, ids, fields_to_read, langs, resources=None, use_multi_lang = True, context=None):
         return super(product_category, self).multi_lang_read(cr, uid, ids, fields_to_read, langs,
                                                             resources=resources,
