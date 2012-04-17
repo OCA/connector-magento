@@ -1,21 +1,25 @@
-id,mapping_id:id,external_field,field_id:id,type,evaluation_type,external_type,child_mapping_id:id,alternative_key,in_function,out_function
-mag1500_product_product_price,mag1500_product_product,price,product.field_product_template_list_price,in,direct,float,,False,,
-mag1500_product_product_cost,mag1500_product_product,cost,product.field_product_template_standard_price,in,direct,float,,False,,
-mag1500_product_product_minimal_price,mag1500_product_product,minimal_price,,in_out,function,float,,False,"result = [('x_magerp_minimal_price',ifield)]","
+id,sequence,type,evaluation_type,external_field,field_id:id,external_type,alternative_key,mapping_id:id,function_name,in_function,out_function,child_mapping_id:id,datetime_format
+mag1500_product_product_price,,out,direct,price,product.field_product_product_price,float,False,magentoerpconnect.mag1500_product_product,,,,,
+magentoerpconnect.mag1500_product_product_minimal_price,,in_out,function,minimal_price,,float,False,magentoerpconnect.mag1500_product_product,x_magerp_minimal_price,"result = [('x_magerp_minimal_price',ifield)]","
 if 'x_magerp_minimal_price' in resource:
     if resource['x_magerp_minimal_price'] and resource['x_magerp_minimal_price'] != 0:
         result = [('minimal_price',resource['x_magerp_minimal_price'])]
     else:
-        result = [('minimal_price',False)]"
-mag1500_product_product_weight,mag1500_product_product,weight,product.field_product_template_weight,in_out,direct,float,,False,,
-mag1500_product_product_type_id,mag1500_product_product,type_id,magentoerpconnect.field_product_product_product_type,in_out,function,unicode,,False,"if ifield:
+        result = [('minimal_price',False)]",,
+magentoerpconnect.mag1500_product_product_weight,,in_out,direct,weight,product.field_product_template_weight,float,False,magentoerpconnect.mag1500_product_product,,,,,
+magentoerpconnect.mag1500_product_product_type_id,,in_out,function,type_id,magentoerpconnect.field_product_product_product_type,unicode,False,magentoerpconnect.mag1500_product_product,product_type,"if ifield:
     product_type_ids  = self.pool.get('magerp.product_product_type').search(cr,uid,[('product_type','=',ifield)])
     if product_type_ids:
         result = [('product_type',ifield)]","if 'product_type' in resource and resource['product_type']:
     result = [('type_id', resource['product_type'])]
 else:
-    result = [('type_id','simple')]"
-mag1500_product_product_websites,mag1500_product_product,websites,magentoerpconnect.field_product_template_websites_ids,in_out,function,list,,False,"websites_ids = []
+    result = [('type_id','simple')]",,
+magentoerpconnect.mag1500_product_product_price,,in,direct,price,product.field_product_template_list_price,float,False,magentoerpconnect.mag1500_product_product,,,,,
+magentoerpconnect.mag1500_product_product_cost,,in,direct,cost,product.field_product_template_standard_price,float,False,magentoerpconnect.mag1500_product_product,,,,,
+magentoerpconnect.mag1500_product_product_description,,in_out,direct,description,product.field_product_template_description,unicode,False,magentoerpconnect.mag1500_product_product,,,,,
+magentoerpconnect.mag1500_product_product_name,,in_out,direct,name,product.field_product_template_name,unicode,False,magentoerpconnect.mag1500_product_product,,,,,
+magentoerpconnect.mag1500_product_product_set,,in_out,direct,set,magentoerpconnect.field_product_template_set,int,False,magentoerpconnect.mag1500_product_product,,,,,
+magentoerpconnect.mag1500_product_product_websites,,in_out,function,websites,magentoerpconnect.field_product_template_websites_ids,list,False,magentoerpconnect.mag1500_product_product,websites,"websites_ids = []
 for ext_id in ifield:
     websites_ids.append(self.pool.get('external.shop.group').extid_to_oeid(cr, uid, external_session, ext_id, context=context))
 
@@ -32,11 +36,13 @@ if 'websites_ids' in resource:
     ##### OPTION END
 
     ext_websites_ids = []
-    for oe_id in resource['websites_ids']:  
-        ext_websites_ids.append(self.pool.get('external.shop.group').oeid_to_existing_extid(cr, uid, oe_id, referential_id))
+    for oe_id in resource['websites_ids']:
+        ext_websites_ids.append(self.pool.get('external.shop.group').oeid_to_existing_extid(cr, uid, referential_id, oe_id))
 
-    result=[('websites', ext_websites_ids)]"
-mag1500_product_product_categories,mag1500_product_product,categories,product.field_product_template_categ_id,in_out,function,list,,False,"categ_ids =[]
+    result=[('websites', ext_websites_ids)]",,
+magentoerpconnect.mag1500_product_product_short_description,,in_out,direct,short_description,product.field_product_template_description_sale,unicode,False,magentoerpconnect.mag1500_product_product,,,,,
+magentoerpconnect.mag1500_product_product_sku,,in_out,direct,sku,product.field_product_product_default_code,unicode,False,magentoerpconnect.mag1500_product_product,,,,,
+magentoerpconnect.mag1500_product_product_categories,,in_out,function,categories,product.field_product_template_categ_id,list,False,magentoerpconnect.mag1500_product_product,categories,"categ_ids =[]
 if ifield:
     for category_id in ifield:
         categ_ids.append(self.pool.get('product.category').extid_to_oeid(cr, uid, external_session, category_id, referential_id))
@@ -45,15 +51,15 @@ else:
     main_categ_id = self.pool.get('external.referential').browse(cr, uid, referential_id).default_pro_cat.id
 result = [('categ_id', main_categ_id), ('categ_ids',[(6, 0, categ_ids)])]","
 product = self.browse(cr, uid, resource['id'])
-main_categ_id = self.pool.get('product.category').oeid_to_existing_extid(cr, uid, product.categ_id.id, referential_id)
+main_categ_id = self.pool.get('product.category').oeid_to_existing_extid(cr, uid, referential_id, product.categ_id.id)
 categ_ids = [main_categ_id]
 for categ in product.categ_ids: #deal with extra m2m categories
-    categ_id =  self.pool.get('product.category').oeid_to_existing_extid(cr, uid, categ.id, referential_id)
+    categ_id =  self.pool.get('product.category').oeid_to_existing_extid(cr, uid,  referential_id, categ.id)
     if categ_id:
         categ_ids.append(categ_id)
-result=[('categories', categ_ids)]"
-mag1500_product_product_short_description,mag1500_product_product,short_description,product.field_product_template_description_sale,in_out,direct,unicode,,False,,
-mag1500_product_product_sku,mag1500_product_product,sku,magentoerpconnect.field_product_product_magento_sku,in_out,direct,unicode,,False,,
-mag1500_product_product_description,mag1500_product_product,description,product.field_product_template_description,in_out,direct,unicode,,False,,
-mag1500_product_product_name,mag1500_product_product,name,product.field_product_template_name,in_out,direct,unicode,,False,,
-mag1500_product_product_set,mag1500_product_product,set,magentoerpconnect.field_product_template_set,in_out,direct,int,,False,,
+result=[('categories', categ_ids)]",,
+mag1500_product_product_special_price,,in_out,function,special_price,,float,False,magentoerpconnect.mag1500_product_product,special_price,"if 'x_magerp_special_price' in resource: result = [('x_magerp_special_price', ifield)]","if 'x_magerp_special_price' in resource: 
+    if resource['x_magerp_special_price']:
+        result = [('special_price', resource['x_magerp_special_price'])]
+    else:
+        result = [('special_price', False)]",,
