@@ -241,9 +241,6 @@
 					<xpath expr="/form/group/group/field[@name='ean13']" position="after">
                         <field name="magento_exported" invisible="True"/>
 					</xpath>
-                    <xpath expr="/form/group/group/field[@name='default_code']" position="attributes">
-                        <attribute name="attrs">{'required':[('magento_exportable','==',True)], 'readonly':[('magento_exported', '==', True)]}</attribute>
-                    </xpath>
 					<xpath expr="/form/group/group/field[@name='variants']" position="after">
 						<field name="set" select="2" attrs="{'required':[('magento_exportable','==',True)], 'readonly': [('magento_exported', '=', True)]}"/>
 					</xpath>

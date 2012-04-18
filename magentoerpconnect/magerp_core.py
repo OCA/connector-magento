@@ -105,7 +105,7 @@ class external_referential(magerp_osv.magerp_osv):
         attr_set_obj = self.pool.get('magerp.product_attribute_set')
         logger = netsvc.Logger()
         for referential in self.browse(cr, uid, ids, context=context):
-            external_session = ExternalSession(referential)
+            external_session = ExternalSession(referential, referential)
             attr_conn = external_session.connection
             attrib_set_ids = attr_set_obj.search(cr, uid, [('referential_id', '=', referential.id)])
             attrib_sets = attr_set_obj.read(cr, uid, attrib_set_ids, ['magento_id'])
@@ -186,7 +186,7 @@ class external_referential(magerp_osv.magerp_osv):
         prod_obj = self.pool.get('product.product')
 #        context.update({'dont_raise_error': True})
         for referential in self.browse(cr, uid, ids, context):
-            external_session = ExternalSession(referential)
+            external_session = ExternalSession(referential, referential)
             attr_conn = external_session.connection
             mapping = {'product.product' : prod_obj._get_mapping(cr, uid, referential.id, context=context)}
             filter = []
@@ -250,7 +250,7 @@ class external_referential(magerp_osv.magerp_osv):
         import_cr = pooler.get_db(cr.dbname).cursor()
         try:
             for referential in self.browse(cr, uid, ids, context=context):
-                external_session = ExternalSession(referential)
+                external_session = ExternalSession(referential, referential)
                 conn = external_session.connection
                 product_ids = product_obj.get_all_oeid_from_referential(cr, uid, referential.id, context=context)
                 for product_id in product_ids:
@@ -264,7 +264,7 @@ class external_referential(magerp_osv.magerp_osv):
     def sync_product_links(self, cr, uid, ids, context=None):
         if context is None: context = {}
         for referential in self.browse(cr, uid, ids, context):
-            external_session = ExternalSession(referential)
+            external_session = ExternalSession(referential, referential)
             conn = external_session.connection
             exportable_product_ids= []
             for shop_group in referential.shop_group_ids:

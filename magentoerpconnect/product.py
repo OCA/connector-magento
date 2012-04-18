@@ -101,9 +101,15 @@ magerp_product_category_attribute_options()
 class product_category(magerp_osv.magerp_osv):
     _inherit = "product.category"
 
-    def _get_default_export_values(self, cr, uid, external_session, mapping_id=None, defaults=None, context=None):
-        defaults = super(product_category, self)._get_default_export_values(cr, uid, external_session,
-                                                mapping_id=mapping_id, defaults=defaults, context=context)
+    def _merge_with_default_values(self, cr, uid, external_session, ressource, vals, sub_mapping_list, defaults=None, context=None):
+        vals = super(product_category, self)._merge_with_default_values(cr, uid, external_session, ressource, vals, sub_mapping_list, defaults=defaults, context=context)
+        #some time magento category doesn't have a name
+        if not vals.get('name'):
+            vals['name'] = 'Undefined'
+        return vals
+
+    def _get_default_export_values(self, *args, **kwargs):
+        defaults = super(product_category, self)._get_default_export_values(*args, **kwargs)
         if defaults == None: defaults={}
         defaults.update({'magento_exportable': True})
         return defaults
@@ -475,35 +481,47 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
                             
         return crid
 
-    def _default_mapping(self, cr, uid, ttype, field_name, vals, attribute_id, model_id, referential_id):
-        #TODO refactor me
-        in_function = out_function = False
+    def _default_mapping(self, cr, uid, ttype, field_name, vals, attribute_id, model_id, mapping_line, referential_id):
+        #TODO refactor me and use the direct mapping
+        #If the field have restriction on domain
+        #Maybe we can give the posibility to map directly m2m and m2o field_description
+        #by filtrering directly with the domain and the string value
         if ttype in ['char', 'text', 'date', 'float', 'weee', 'boolean']:
-            in_function = "if '%s' in resource: result = [('%s', ifield)]" % (field_name,field_name)
-            out_function = "if '%s' in resource: result = [('%s', resource['%s'])]" % (field_name, vals['attribute_code'], field_name)
+            mapping_line['evaluation_type'] = 'direct'
+            if ttype == 'float':
+                mapping_line['external_type'] = 'float'
+            elif ttype == 'boolean':
+                mapping_line['external_type'] = 'int'
+            else:
+                mapping_line['external_type'] = 'unicode'
+                
         elif ttype in ['many2one']:
-            in_function = ("if '%(field_name)s' in resource:\n"
-                           "    option_id = self.pool.get('magerp.product_attribute_options').search(cr, uid, [('attribute_id','=',%(attribute_id)s),('value','=',ifield)])\n"
-                           "    if option_id:\n"
-                           "        result = [('%(field_name)s', option_id[0])]")  % ({'attribute_id': attribute_id, 'field_name': field_name})
+            mapping_line['evaluation_type'] = 'function'
+            mapping_line['in_function'] = \
+               ("if '%(attribute_code)s' in resource:\n"
+                "    option_id = self.pool.get('magerp.product_attribute_options').search(cr, uid, [('attribute_id','=',%(attribute_id)s),('value','=',ifield)])\n"
+                "    if option_id:\n"
+                "        result = [('%(field_name)s', option_id[0])]")  % ({'attribute_code': vals['attribute_code'], 'attribute_id': attribute_id, 'field_name': field_name})
             # we browse on resource['%(field_name)s'][0] because resource[field_name] is in the form (id, name)
-            out_function = ("if '%(field_name)s' in resource:\n"
-                            "    result = [('%(attribute_code)s', False)]\n"
-                            "    if resource.get('%(field_name)s'):\n"
-                            "        option = self.pool.get('magerp.product_attribute_options').browse(cr, uid, resource['%(field_name)s'][0])\n"
-                            "        if option:\n"
-                            "            result = [('%(attribute_code)s', option.value)]") % ({'field_name': field_name, 'attribute_code': vals['attribute_code']})
+            mapping_line['out_function'] = \
+               ("if '%(field_name)s' in resource:\n"
+                "    result = [('%(attribute_code)s', False)]\n"
+                "    if resource.get('%(field_name)s'):\n"
+                "        option = self.pool.get('magerp.product_attribute_options').browse(cr, uid, resource['%(field_name)s'][0])\n"
+                "        if option:\n"
+                "            result = [('%(attribute_code)s', option.value)]") % ({'field_name': field_name, 'attribute_code': vals['attribute_code']})
         elif ttype in ['many2many']:
-            in_function = ("option_ids = []\n"
-                           "opt_obj = self.pool.get('magerp.product_attribute_options')\n"
-                           "for ext_option_id in ifield:\n"
-                           "    option_ids.extend(opt_obj.search(cr, uid, [('attribute_id','=',%(attribute_id)s), ('value','=',ext_option_id)]))\n"
-                           "result = [('%(field_name)s', [(6, 0, option_ids)])]") % ({'attribute_id': attribute_id, 'field_name': field_name})
-            out_function = ("result=[('%(attribute_code)s', [])]\n"
-                            "if resource.get('%(field_name)s'):\n"
-                            "    options = self.pool.get('magerp.product_attribute_options').browse(cr, uid, resource['%(field_name)s'])\n"
-                            "    result = [('%(attribute_code)s', [option.value for option in options])]") % \
-                           ({'field_name': field_name, 'attribute_code': vals['attribute_code']})
+            mapping_line['evaluation_type'] = 'function'
+            mapping_line['in_function'] = ("option_ids = []\n"
+                "opt_obj = self.pool.get('magerp.product_attribute_options')\n"
+                "for ext_option_id in ifield:\n"
+                "    option_ids.extend(opt_obj.search(cr, uid, [('attribute_id','=',%(attribute_id)s), ('value','=',ext_option_id)]))\n"
+                "result = [('%(field_name)s', [(6, 0, option_ids)])]") % ({'attribute_id': attribute_id, 'field_name': field_name})
+            mapping_line['out_function'] = ("result=[('%(attribute_code)s', [])]\n"
+                "if resource.get('%(field_name)s'):\n"
+                "    options = self.pool.get('magerp.product_attribute_options').browse(cr, uid, resource['%(field_name)s'])\n"
+                "    result = [('%(attribute_code)s', [option.value for option in options])]") % \
+               ({'field_name': field_name, 'attribute_code': vals['attribute_code']})
         elif ttype in ['binary']:
             logger = netsvc.Logger()
             warning_text = "Binary mapping is actually not supported (attribute: %s)" % (vals['attribute_code'],)
@@ -511,8 +529,8 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
             warning_msg = ("import netsvc\n"
                            "logger = netsvc.Logger()\n"
                            "logger.notifyChannel('ext synchro mapping', netsvc.LOG_WARNING, '%s')") % (warning_text,)
-            in_function = out_function = warning_msg
-        return in_function, out_function
+            mapping_line['in_function'] = mapping_line['out_function'] = warning_msg
+        return mapping_line
 
     def _create_mapping(self, cr, uid, ttype, field_id, field_name, referential_id, model_id, vals, attribute_id):
         """Search & create mapping entries"""
@@ -527,8 +545,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
                                 'type': 'in_out',
                                 'external_type': self._type_casts[vals.get('frontend_input', False)],
                                 'field_id': field_id, }
-                mapping_line['in_function'], mapping_line['out_function'] = self._default_mapping(cr, uid, ttype, field_name, vals, attribute_id, model_id, referential_id)
-                mapping_line['evaluation_type'] = 'function'
+                mapping_line = self._default_mapping(cr, uid, ttype, field_name, vals, attribute_id, model_id, mapping_line, referential_id)
                 self.pool.get('external.mapping.line').create(cr, uid, mapping_line)
         return True
 
@@ -766,13 +783,7 @@ class product_mag_osv(magerp_osv.magerp_osv):
         main_lang = context['main_lang']
         for resource_id, resource in resources.items():
             #Move this part of code in a python lib
-            product_type = resource[main_lang]['type_id']
-            attr_set = resource[main_lang]['set']
-            sku = resource[main_lang]['sku']
             ext_id = resource[main_lang]['ext_id']
-            del resource[main_lang]['type_id']
-            del resource[main_lang]['set']
-            del resource[main_lang]['sku']
             del resource[main_lang]['ext_id']
             external_session.connection.call('ol_catalog_product.update', [ext_id, resource[main_lang], False, 'id'])
             for storeview, lang in storeview_to_lang.items():
