@@ -1,0 +1,43 @@
+id,sequence,type,evaluation_type,external_field,field_id:id,external_type,alternative_key,mapping_id:id,function_name,in_function,out_function,child_mapping_id:id,datetime_format
+mag1500_res_partner_address_email,,in_out,direct,email,base.field_res_partner_address_email,unicode,False,mag1500_res_partner_address,,,,,
+mag1500_res_partner_address_postcode,,in_out,direct,postcode,base.field_res_partner_address_zip,unicode,True,mag1500_res_partner_address,,"result=[('zip',ifield)]",,,
+mag1500_res_partner_address_name,,in_out,function,firstname,magentoerpconnect.field_res_partner_address_firstname,unicode,True,mag1500_res_partner_address,name,"result = [('name', (data.get('company', False) and (data['company'] + ' ; ') or '') + ifield + ' ' + (data['lastname'] or '')), ('firstname', ifield), ('lastname', (data['lastname'] or ''))]",,,
+mag1500_res_partner_address_telephone,,in_out,direct,telephone,base.field_res_partner_address_phone,unicode,False,mag1500_res_partner_address,,,,,
+mag1500_res_partner_address_region,,in_out,function,region,,unicode,False,mag1500_res_partner_address,region,"if ifield:
+	result = self.pool.get('res.country.state').search(cr,uid,[('name','ilike',ifield)])
+	if result and len(result)==1:
+		result = [('state_id',result[0])]
+	else:
+		result=[]
+else:
+	result=[]",,,
+mag1500_res_partner_address_customer_id,,in_out,direct,customer_id,base.field_res_partner_address_partner_id,int,True,mag1500_res_partner_address,,,,,
+mag1500_res_partner_address_address_type,,in_out,function,address_type,,unicode,False,mag1500_res_partner_address,address_type,"if ifield=='billing':
+	result=[('type','invoice')]
+elif ifield=='shipping':
+	result=[('type','delivery')]
+else:
+	result=[]",,,
+mag1500_res_partner_address_is_active,,in_out,direct,is_active,base.field_res_partner_address_active,unicode,False,mag1500_res_partner_address,,,,,
+mag1500_res_partner_address_country code,,in_out,function,country_id,,unicode,False,mag1500_res_partner_address,country code,"result = self.pool.get('res.country').search(cr,uid,[('code','=',ifield)])
+if result and len(result)==1:
+	result=[('country_id',result[0])]
+else:
+	result=[]
+",,,
+mag1500_res_partner_address_street,,in_out,function,street,base.field_res_partner_address_street,unicode,True,mag1500_res_partner_address,street,"if ifield:
+	if len(ifield.split('\n')) ==2 :
+		result = [('street', ifield.split('\n')[0]) , ('street2', ifield.split('\n')[1])]
+	else :
+		result = [('street',ifield.replace('\\n',','))]
+else:
+	result = []",,,
+mag1500_res_partner_address_prefix,,in_out,function,prefix,,unicode,False,mag1500_res_partner_address,prefix,"if ifield:
+    title_ids = self.pool.get('res.partner.title').search(cr, uid, [('domain', '=', 'contact'), ('shortcut', '=', ifield)])
+    if title_ids:
+        title_id = title_ids[0]
+    else:
+        title_id = self.pool.get('res.partner.title').create(cr, uid, {'domain': 'contact', 'shortcut': ifield, 'name' : ifield})
+    result=[('title', title_id)]",,,
+mag1500_res_partner_address_city,,in_out,direct,city,base.field_res_partner_address_city,unicode,True,mag1500_res_partner_address,,"result=[('city',ifield)]",,,
+mag1500_res_partner_address_fax,,in_out,direct,fax,base.field_res_partner_address_fax,unicode,False,mag1500_res_partner_address,,,,,

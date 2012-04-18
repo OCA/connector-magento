@@ -453,8 +453,7 @@ class sale_order(magerp_osv.magerp_osv):
     @only_for_referential('magento')
     def _record_one_external_resource(self, cr, uid, external_session, resource, defaults=None, mapping=None, mapping_id=None, context=None):
         res = super(sale_order, self)._record_one_external_resource(cr, uid, external_session, resource, defaults=defaults, mapping=mapping, mapping_id=mapping_id, context=context)
-        resource_id = res.get('create_id') or res.get('write_id')
-        external_id = self.oeid_to_extid(cr, uid, resource_id, external_session.referential_id.id, context=context)
+        external_id = resource['increment_id'] # TODO it will be better to not hardcode this parameter
         self.ext_set_resource_as_imported(cr, uid, external_session, external_id, mapping=mapping, mapping_id=mapping_id, context=context)
         return res
 

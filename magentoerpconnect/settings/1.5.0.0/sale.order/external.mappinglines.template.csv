@@ -1,0 +1,27 @@
+id,sequence,type,evaluation_type,external_field,field_id:id,external_type,alternative_key,mapping_id:id,function_name,in_function,out_function,child_mapping_id:id,datetime_format
+mag1500_sale_order_magento_incrementid=>,,in,function,increment_id,,unicode,False,mag1500_sale_order,magento_incrementid,"result=[('magento_incrementid',str(ifield)), ('name','mag_' + str(ifield))]",,,
+mag1500_sale_order_grand_total=>,,in,direct,grand_total,base_sale_multichannels.field_sale_order_ext_total_amount,float,False,mag1500_sale_order,,,,,
+mag1500_sale_order_payments_mapping=>,,in,function,payment,,unicode,False,mag1500_sale_order,payments_mapping,"
+payments_mapping = {'checkmo': 'manual', 'ccsave': 'prepaid', 'free':'prepaid','googlecheckout':'prepaid','paypayl_express':'prepaid', 'paybox_system': 'prepaid', 'paypal_standard': 'prepaid', 'cashondelivery': 'manual', 'servired_standard': 'prepaid', 'bbva': 'prepaid', 'cofidis': 'prepaid'}
+ifield=eval(ifield)
+result=[('order_policy', ifield['method'] in payments_mapping and payments_mapping[ifield['method']] or 'prepaid'), ('ext_payment_method', ifield['method'])]",,,
+mag1500_sale_order_ext_customer_id=>,,in,direct,ext_customer_id,sale.field_sale_order_partner_id,int,False,mag1500_sale_order,,"result=[('ext_total_amount',str(ifield))]",,,
+mag1500_sale_order_billing_address=>,,in,sub-mapping,billing_address,sale.field_sale_order_partner_invoice_id,dict,False,mag1500_sale_order,,,,mag1500_res_partner_address,
+mag1500_sale_order_shipping_address=>,,in,sub-mapping,shipping_address,sale.field_sale_order_partner_shipping_id,dict,False,mag1500_sale_order,,,,mag1500_res_partner_address,
+mag1500_sale_order_items=>,,in,sub-mapping,items,sale.field_sale_order_order_line,dict,False,mag1500_sale_order,,"result=[('shippping_amout_tax_excluded', ifield)]",,mag1500_sale_order_line,
+mag1500_sale_order_cod_fee=>,,in,function,cod_fee,,float,False,mag1500_sale_order,cod_fee,"#TODO map me
+",,,
+mag1500_sale_order_gift_certificates_amount=>,,in,function,giftcert_amount,,float,False,mag1500_sale_order,gift_certificates_amount,"result=[('gift_certificates_amount', ifield)]",,,
+mag1500_sale_order_shipping_amount_tax_excluded=>,,in,function,shipping_amount,,float,False,mag1500_sale_order,shipping_amount_tax_excluded,"result=[('shipping_amount_tax_excluded', ifield)]",,,
+mag1500_sale_order_gift_certificates_code=>,,in,function,giftcert_code,,unicode,False,mag1500_sale_order,gift_certificates_code,"result = [('gift_certificates_code', ifield)]",,,
+mag1500_sale_order_carrier_id=>,,in,function,shipping_method,,unicode,False,mag1500_sale_order,carrier_id,"if ifield:
+    carrier_ids = self.pool.get('delivery.carrier').search(cr, uid, [('magento_code', '=', ifield)])
+    if carrier_ids:
+        result=[('carrier_id', carrier_ids[0])]
+    else:
+        fake_partner_id = self.pool.get('res.partner').search(cr, uid, [])[0]
+        model_data_obj = self.pool.get('ir.model.data')
+        model, product_id = model_data_obj.get_object_reference(cr, uid, 'base_sale_multichannels', 'product_product_shipping')
+        carrier_id = self.pool.get('delivery.carrier').create(cr, uid, {'partner_id' : fake_partner_id, 'product_id' : product_id, 'name' : ifield, 'magento_code' : ifield})
+        result=[('carrier_id', carrier_id)]",,,
+mag1500_sale_order_shipping_amount_tax_included=>,,in,function,base_shipping_incl_tax,,float,False,mag1500_sale_order,shipping_amount_tax_included,"result=[('shipping_amount_tax_included', ifield), ('shipping_tax_rate', ifield/float(data['shipping_amount'])-1)]",,,
