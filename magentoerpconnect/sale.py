@@ -28,7 +28,6 @@ import magerp_osv
 import netsvc
 from tools.translate import _
 import string
-#from datetime import datetime
 import tools
 import time
 from tools import DEFAULT_SERVER_DATETIME_FORMAT
@@ -153,26 +152,6 @@ class sale_shop(magerp_osv.magerp_osv):
         'allow_magento_notification': lambda * a: False,
     }
 
-    @only_for_referential('magento')
-    def _check_need_to_update(self, cr, uid, external_session, ids, context=None):
-        """ This function will update the order status in OpenERP for
-        the order which are in the state 'need to update' """
-        so_obj = self.pool.get('sale.order')
-
-        for shop in self.browse(cr, uid, ids):
-            conn = shop.referential_id.external_connection()
-            # Update the state of orders in OERP that are in "need_to_update":True
-            # from the Magento's corresponding orders
-    
-            # Get all need_to_update orders in OERP
-            orders_to_update = so_obj.search(
-                cr, uid,
-                [('need_to_update', '=', True),
-                 ('shop_id', '=', shop.id)],
-                context=context)
-            so_obj.check_need_to_update(
-                cr, uid, orders_to_update, conn, context=context)
-        return False
 
     def update_shop_orders(self, cr, uid, order, ext_id, context=None):
         if context is None: context = {}
@@ -286,53 +265,17 @@ class sale_order(magerp_osv.magerp_osv):
 #        return res
 #    
 
-    def _parse_external_payment(self, cr, uid, order_data, context=None):
+
+    def _get_payment_information(self, cr, uid, external_session, order_id, resource, context=None):
         """
-        Parse the external order data and return if the sale order
-        has been paid and the amount to pay or to be paid
-
-        :param dict order_data: payment information of the magento sale
-            order
-        :return: tuple where :
-            - first item indicates if the payment has been done (True or False)
-            - second item represents the amount paid or to be paid
+        Parse the external resource and return a dict of data converted
         """
-        paid = amount = False
-        payment_info = order_data.get('payment')
-        if payment_info:
-            amount = False
-            if payment_info.get('amount_paid', False):
-                amount =  payment_info.get('amount_paid', False)
-                paid = True
-            elif payment_info.get('amount_ordered', False):
-                amount = payment_info.get('amount_ordered', False)
-        return paid, amount
-
-    def create_payments(self, cr, uid, order_id, data_record, context=None):
-        if context is None:
-            context = {}
-
-        if 'Magento' in context.get('external_referential_type', ''):
-            payment_info = data_record.get('payment')
-            paid, amount = self._parse_external_payment(
-                cr, uid, data_record, context=context)
-            if amount:
-                order = self.pool.get('sale.order').browse(
-                    cr, uid, order_id, context)
-                self.generate_payment_with_pay_code(
-                    cr, uid,
-                    payment_info['method'],
-                    order.partner_id.id,
-                    float(amount),
-                    "mag_" + payment_info['payment_id'],
-                    "mag_" + data_record['increment_id'],
-                    order.date_order,
-                    paid,
-                    context=context)
-        else:
-            paid = super(sale_order, self).create_payments(
-                cr, uid, order_id, data_record, context=context)
-        return paid
+        vals = super(sale_order, self)._get_payment_information(cr, uid, external_session, order_id, resource, context=context)
+        payment_info = resource.get('payment')
+        if payment_info and payment_info.get('amount_paid'):
+            vals['paid'] = True
+            vals['amount'] = float(payment_info['amount_paid'])
+        return vals
 
     def _chain_cancel_orders(self, cr, uid, external_id, external_referential_id, defaults=None, context=None):
         """ Get all the chain of edited orders (an edited order is canceled on Magento)
@@ -457,7 +400,7 @@ class sale_order(magerp_osv.magerp_osv):
         self.ext_set_resource_as_imported(cr, uid, external_session, external_id, mapping=mapping, mapping_id=mapping_id, context=context)
         return res
 
-    def _check_need_to_update_single(self, cr, uid, order, conn, context=None):
+    def _check_need_to_update_single(self, cr, uid, external_session, order, context=None):
         """
         For one order, check on Magento if it has been paid since last
         check. If so, it will launch the defined flow based on the
@@ -467,6 +410,10 @@ class sale_order(magerp_osv.magerp_osv):
         :param Connection conn: connection with Magento
         :return: True
         """
+
+        #TODO improve me and replace me by a generic function in base_sale_multichannels
+        #Only the call to magento should be here
+
         model_data_obj = self.pool.get('ir.model.data')
         # check if the status has changed in Magento
         # We don't use oeid_to_extid function cause it only handles integer ids
@@ -475,7 +422,7 @@ class sale_order(magerp_osv.magerp_osv):
             cr, uid,
             [('model', '=', self._name),
              ('res_id', '=', order.id),
-             ('external_referential_id', '=', order.shop_id.referential_id.id)],
+             ('referential_id', '=', order.shop_id.referential_id.id)],
             context=context)
 
         if model_data_ids:
@@ -485,9 +432,9 @@ class sale_order(magerp_osv.magerp_osv):
         else:
             return False
 
-        data_record = conn.call('sales_order.info', [ext_id])
+        resource = external_session.connection.call('sales_order.info', [ext_id])
 
-        if data_record['status'] == 'canceled':
+        if resource['status'] == 'canceled':
             wf_service = netsvc.LocalService("workflow")
             wf_service.trg_validate(uid, 'sale.order', order.id, 'cancel', cr)
             updated = True
@@ -495,16 +442,7 @@ class sale_order(magerp_osv.magerp_osv):
         # If the order isn't canceled and was waiting for a payment,
         # so we follow the standard flow according to ext_payment_method:
         else:
-            paid, __ = self._parse_external_payment(
-                cr, uid, data_record, context=context)
-            self.oe_status(cr, uid, order.id, paid, context)
-            # create_payments has to be done after oe_status
-            # because oe_status creates the invoice
-            # and create_payment could reconcile the payment
-            # with the invoice
-
-            updated = self.create_payments(
-                cr, uid, order.id, data_record, context)
+            updated = self.paid_and_update(cr, uid, external_session, order.id, resource, context=context)
             if updated:
                 self.log(
                     cr, uid, order.id,
@@ -514,21 +452,7 @@ class sale_order(magerp_osv.magerp_osv):
         # or if it has been paid through magento)
         if updated:
             self.write(cr, uid, order.id, {'need_to_update': False})
-        cr.commit()
-        return True
-
-    def check_need_to_update(self, cr, uid, ids, conn, context=None):
-        """
-        For each order, check on Magento if it has been paid since last
-        check. If so, it will launch the defined flow based on the
-        payment type (validate order, invoice, ...)
-
-        :param Connection conn: connection with Magento
-        :return: True
-        """
-        for order in self.browse(cr, uid, ids, context=context):
-            self._check_need_to_update_single(
-                cr, uid, order, conn, context=context)
+        cr.commit() #Ugly we should not commit in the current cursor
         return True
 
     def _create_external_invoice(self, cr, uid, order, conn, ext_id,

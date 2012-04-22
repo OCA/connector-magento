@@ -74,14 +74,14 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <data>
-                    <page string="External Information" position="inside">
+                    <field name="need_to_update" position="after">
                         <group colspan="4" attrs="{'invisible': [('is_magento', '=', False)]}">
                             <field name="is_magento" invisible="True"/>
                             <separator string="Magento History" colspan="4"/>
                             <field name="magento_incrementid" readonly="True"/>
                             <field name="magento_storeview_id" readonly="True"/>
                         </group>
-                    </page>
+                    </field>
                 </data>
             </field>
         </record>

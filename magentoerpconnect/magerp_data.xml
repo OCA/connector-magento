@@ -106,6 +106,7 @@
             <field eval="'run_import_newsletter_unsubscriber_scheduler'" name="function"/>
             <field eval="'()'" name="args"/>
         </record>
+<!--
 
         <record id="payment_type1" model="base.sale.payment.type">
 			<field name="name">checkmo;cashondelivery</field>
@@ -117,5 +118,6 @@
 			<field name="order_policy">prepaid</field>
 		</record>
 
+-->
 	</data>
 </openerp>
