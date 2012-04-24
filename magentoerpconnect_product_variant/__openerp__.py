@@ -40,7 +40,7 @@ NB: in magento the variant are called 'configurable product'""",
     'init_xml': [],
     'update_xml': [ 
             'product_view.xml',
-            'settings/1.3.2.4/external.mappinglines.template.csv',
+#            'settings/1.3.2.4/external.mappinglines.template.csv',
             'settings/1.5.0.0/external.mappinglines.template.csv',
     ],
     'demo_xml': [],

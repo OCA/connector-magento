@@ -52,14 +52,8 @@ class product_product(osv.osv):
     
     _inherit = "product.product"
 
-    def get_last_update_date(self, cr, uid, product_read, context=None):
-        #A configurable product have to be updated if a variant is added
-        last_updated_date=super(product_product, self).get_last_update_date(cr, uid, product_read, context=context)
-        if product_read['product_type']=='configurable':
-            variant_ids = self.read(cr, uid, product_read['id'], ['variant_ids'], context=context)['variant_ids']
-            for variant_id in variant_ids:
-                self.oeid_to_extid(cr, uid, variant_id, context['external_referential_id'])
-        return last_updated_date
+
+#TODO for update A configurable product have to be updated if a variant is added
 
     def build_product_code_and_properties(self, cr, uid, ids, context=None):
         super(product_product, self).build_product_code_and_properties(cr, uid, ids, context=context)
@@ -73,9 +67,6 @@ class product_product(osv.osv):
             option_id = self.pool.get('magerp.product_attribute_options').search(cr, uid, [('attribute_id', '=', visibility_attribut_id[0]), ('label', '=', 'Not Visible Individually')], context=context)[0]
             vals['x_magerp_visibility'] = option_id
         self.write(cr, uid, magento_product_exportable_ids, vals, context=context)
-        return True
-
-    def configurable_product_are_supported(self):
         return True
     
     def generate_variant_name(self, cr, uid, product_id, context=None):
@@ -95,92 +86,6 @@ class product_product(osv.osv):
             else:
                 vals['product_type'] = 'simple'
         return super(product_product, self).create(cr, uid, vals, context)
-
-    def action_before_exporting(self, cr, uid, id, product_type, external_referential_ids, defaults, context):
-        #When the export of a configurable product is forced we should check if all variant are already exported
-        if context.get('force_export', False) and product_type == 'configurable':
-            conn = context.get('conn_obj', False)
-            shop = self.pool.get('sale.shop').browse(cr, uid, context['shop_id'])
-            variant_ids = self.read(cr, uid, id, ['variant_ids'], context)['variant_ids']
-            variant_ids.remove(id)
-            for variant in self.browse(cr, uid, variant_ids, context=context):
-                if variant.magento_exportable:
-                    if not self.oeid_to_extid(cr, uid, variant.id, shop.referential_id.id):
-                        conn.logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "Force the export of the product %s as it was not exported before" %(id))
-                        self.ext_export(cr, uid, [variant.id], external_referential_ids, defaults, context)
-        return True
-
-    def add_data_to_create_configurable_product(self, cr, uid, oe_id, data, context=None):
-        shop = self.pool.get('sale.shop').browse(cr, uid, context['shop_id'])
-        # check if not already created
-        products_data = {} # values of the attributes used on the element products
-        attributes_data = {} # params of the attributes to use on the configurable product
-
-        variant_ids = self.read(cr, uid, oe_id, ['variant_ids'], context=context)['variant_ids']
-        variant_ids.remove(oe_id)
-        if variant_ids:
-            associated_skus = []
-            # create a dict with all values used on the configurable products
-            for product in self.browse(cr, uid, variant_ids):
-                if product.magento_exportable:
-                    associated_skus += [product.magento_sku]
-                    attr_list = set()
-                    # get values for each attribute of the product
-                    mag_prod_id = str(self.oeid_to_extid(cr, uid, product.id, shop.referential_id.id))
-                    products_data[mag_prod_id] = {}
-                    index=0
-                    for value in product.dimension_value_ids:
-                        # get the option selected on the product
-                        option = value.option_id.magento_attribut_option
-                        attr = option.attribute_id
-                        attr_list = attr_list.union(set([attr]))
-                        prod_data = {
-                            'attribute_id': attr.magento_id, # id of the attribute
-                            'label': option.label, # label of the option
-                            'value_index': int(option.value), # id of the option
-                            'is_percent': 0, # modification of the price
-                            'pricing_value': '', # modification of the price
-                        }
-                        #products_data[mag_prod_id][str(attribute_set.configurable_attributes.index(attr))] = prod_data
-                        products_data[mag_prod_id][str(index)] = prod_data
-                        index += 1
-
-            # create a dict with attributes used on the configurable product
-            index=-1
-            for attr in attr_list:
-                index += 1
-                attr_data = {
-                             #'id': False,
-                             'label': '',
-                             #'position': False,
-                             'values': [],
-                             'attribute_id': attr.magento_id, # id of the attribute on magento
-                             'attribute_code': attr.attribute_code, # code of the attribute on magento
-                             'frontend_label': attr.frontend_label, # label of the attribute on magento
-                             'html_id': "config_super_product__attribute_%s" % index, # must be config_super_product__attribute_ with an increment
-                }
-                attr_values = []
-                for prod_id in products_data:
-                    [attr_values.append(products_data[prod_id][key]) for key in products_data[prod_id] if products_data[prod_id][key]['attribute_id'] == attr.magento_id]
-                attr_data.update({'values': attr_values})
-                attributes_data.update({str(index): attr_data})
-        data.update({'configurable_products_data': products_data, 'configurable_attributes_data': attributes_data, 'associated_skus':associated_skus})
-        return data
-
-
-    def ext_create(self, cr, uid, data, conn, method, oe_id, context):
-        if data.get('type_id', False) == 'configurable':
-            data = self.add_data_to_create_configurable_product(cr, uid, oe_id, data, context)
-        return super(product_product, self).ext_create(cr, uid, data, conn, method, oe_id, context)
-
-    def extdata_from_oevals(self, cr, uid, external_referential_id, data_record, mapping_lines, defaults, context=None):
-        #TODO maybe this mapping can be in the mapping template but the problem is that this mapping have to be apply at the end
-        #because they will overwrite other mapping result. Maybe adding a sequence on the mapping will be the solution
-        res = super(product_product, self).extdata_from_oevals(cr, uid, external_referential_id, data_record, mapping_lines, defaults, context)
-        if data_record.get('is_multi_variants', False):
-            for dim_value in self.pool.get('product.variant.dimension.value').browse(cr, uid, data_record['dimension_value_ids'], context=context):
-                res[dim_value.dimension_id.magento_attribut.attribute_code] = dim_value.option_id.magento_attribut_option.value
-        return res
     
     def _filter_fields_to_return(self, cr, uid, field_names, context):
         #In the cas that the magento view is open from the button 'open magento fields', we can give a very customize view because only on for one product
@@ -193,6 +98,53 @@ class product_product(osv.osv):
         return field_names
 
 
+    def ext_create(self, cr, uid, external_session, resources, context=None):
+        conn = external_session.connection
+        ext_create_ids = {}
+        for resource_id in resources:
+            resource = resources[resource_id][context['main_lang']]
+            if resource['type_id'] == 'configurable':
+                is_configurable = True
+                conf_attr_ids = resource.get('conf_attr_ids')
+                conf_variant_ids = resource.get('conf_variant_ids')
+            else:
+                is_configurable = False
+            ext_create_ids[resource_id] = super(product_product, self).ext_create(cr, uid, external_session, {resource_id: resources[resource_id]}, context=context)[resource_id]
+
+            if is_configurable:
+                if conf_attr_ids:
+                    product_ext_id = ext_create_ids[resource_id]
+                    for conf_attr_id in conf_attr_ids:
+                        conn.call('ol_catalog_product_link.setSuperAttributeValues',[product_ext_id, conf_attr_id])
+                    conn.call('ol_catalog_product_link.assign', [product_ext_id, conf_variant_ids])
+
+        return ext_create_ids
+
+
+    def ext_update(self, cr, uid, external_session, resources, context=None):
+        conn = external_session.connection
+        ext_update_ids = {}
+        for resource_id in resources:
+            resource = resources[resource_id][context['main_lang']]
+            if resource['type_id'] == 'configurable':
+                is_configurable = True
+                product_ext_id = resource['ext_id']
+                conf_attr_ids = resource.get('conf_attr_ids')
+                conf_variant_ids = resource.get('conf_variant_ids')
+            else:
+                is_configurable = False
+
+            ext_update_ids = super(product_product, self).ext_update(cr, uid, external_session, resources, context=context)
+
+            if is_configurable:
+                if conf_attr_ids:
+                    for conf_attr_id in conf_attr_ids:
+                        conn.call('ol_catalog_product_link.setSuperAttributeValues',[product_ext_id, conf_attr_id])
+                    conn.call('ol_catalog_product_link.assign', [product_ext_id, conf_variant_ids])
+
+        return ext_update_ids
+
+
 product_product()
 
 class product_template(osv.osv):
@@ -203,6 +155,8 @@ class product_template(osv.osv):
         'magento_exportable':fields.boolean('Exported all variant to Magento?'),
     }
 
+
+    #TODO improve me, it will be great to have the posibility to create various configurable per template
     def _create_variant_list(self, cr, ids, uid, vals, context=None):
         res = super(product_template, self)._create_variant_list(cr, ids, uid, vals, context)
         res = res + [[]]

@@ -1021,7 +1021,7 @@ class product_mag_osv(magerp_osv.magerp_osv):
                     magento_page = attributes_notebook
 
                 placeholder.getparent().replace(placeholder, magento_page)
-            else:
+            elif btn != []:
                 new_btn = etree.Element(
                     'button',
                     name='open_magento_fields',
@@ -1032,8 +1032,9 @@ class product_mag_osv(magerp_osv.magerp_osv):
                     attrs=attrs_mag_notebook)
                 orm.setup_modifiers(new_btn, context=context)
                 btn.getparent().replace(btn, new_btn)
-                placeholder = page_placeholder[0]
-                placeholder.getparent().remove(placeholder)
+                if page_placeholder:
+                    placeholder = page_placeholder[0]
+                    placeholder.getparent().remove(placeholder)
 
             result['arch'] = etree.tostring(eview, pretty_print=True)
         return result
@@ -1052,6 +1053,14 @@ product_template()
 
 class product_product(product_mag_osv):
     _inherit = "product.product"
+
+    @only_for_referential('magento')
+    def _check_if_export(self, cr, uid, external_session, product, context=None):
+        if context.get('export_product') == 'simple' and product.product_type == 'simple':
+            return True
+        elif context.get('export_product') == 'special' and product.product_type != 'simple':
+            return True
+        return False
 
     #TODO base the import on the mapping and the function ext_import
     def import_product_image(self, cr, uid, id, referential_id, conn, ext_id=None, context=None):
