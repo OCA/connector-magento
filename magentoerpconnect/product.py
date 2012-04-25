@@ -1226,12 +1226,13 @@ class product_product(product_mag_osv):
         'created_at':fields.date('Created'), #created_at & updated_at in magento side, to allow filtering/search inside OpenERP!
         'updated_at':fields.date('Created'),
         'tier_price':fields.one2many('product.tierprice', 'product', 'Tier Price'),
-        'product_type': fields.selection(_product_type_get, 'Product Type'),
+        'product_type': fields.selection(_product_type_get, 'Magento Product Type'),
         'magento_exported': fields.function(_is_magento_exported, type="boolean", method=True, string="Exists on Magento"),  # used to set the sku readonly when already exported
         }
 
     _defaults = {
-        'magento_exportable':lambda * a:True
+        'magento_exportable': True,
+        'product_type': 'simple',
     }
 
     def write(self, cr, uid, ids, vals, context=None):
