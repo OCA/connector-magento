@@ -49,6 +49,8 @@ special_character_to_replace = [
     (u'\xb5', u'micro'),
     (u'\xb2', u'2'),
     (u'\u0153', u'oe'),
+    (u'\uff92', u'_'),
+    (u'\ufffd', u'_'),
 ]
 
 def convert_to_ascii(my_unicode):
@@ -120,7 +122,7 @@ class product_category(magerp_osv.magerp_osv):
                                                             use_multi_lang = False,
                                                             context=context)
 
-    def ext_create(self, cr, uid, external_session, resources, context=None):
+    def ext_create(self, cr, uid, external_session, resources, mapping=None, mapping_id=None, context=None):
         ext_create_ids={}
         storeview_to_lang = context['storeview_to_lang']
         main_lang = context['main_lang']
@@ -135,7 +137,7 @@ class product_category(magerp_osv.magerp_osv):
         return ext_create_ids
 
 
-    def ext_update(self, cr, uid, external_session, resources, context=None):
+    def ext_update(self, cr, uid, external_session, resources, mapping=None, mapping_id=None, context=None):
         ext_update_ids={}
         storeview_to_lang = context['storeview_to_lang']
         main_lang = context['main_lang']
@@ -758,7 +760,7 @@ class product_mag_osv(magerp_osv.magerp_osv):
 #        import pdb; pdb.set_trace()
 #        return True
 
-    def ext_create(self, cr, uid, external_session, resources, context=None):
+    def ext_create(self, cr, uid, external_session, resources, mapping=None, mapping_id=None, context=None):
         ext_create_ids={}
         storeview_to_lang = context['storeview_to_lang']
         main_lang = context['main_lang']
@@ -777,7 +779,7 @@ class product_mag_osv(magerp_osv.magerp_osv):
         return ext_create_ids
 
 
-    def ext_update(self, cr, uid, external_session, resources, context=None):
+    def ext_update(self, cr, uid, external_session, resources, mapping=None, mapping_id=None, context=None):
         ext_update_ids={}
         storeview_to_lang = context['storeview_to_lang']
         main_lang = context['main_lang']
@@ -1652,7 +1654,6 @@ class product_product(product_mag_osv):
         images_exportable_ids = image_obj.search(cr, uid, [('product_id', 'in', ids)], context=context)
         images_to_update_ids = image_obj.get_all_oeid_from_referential(cr, uid, context['external_referential_id'], context=None)
         images_to_create = [x for x in images_exportable_ids if not x in images_to_update_ids]
-
         if context.get('last_images_export_date', False):
             images_to_update_ids = image_obj.search(cr, uid, [('id', 'in', images_to_update_ids), '|', ('create_date', '>', context['last_images_export_date']), ('write_date', '>', context['last_images_export_date'])], context=context)
         return {'to_create' : images_to_create, 'to_update' : images_to_update_ids}

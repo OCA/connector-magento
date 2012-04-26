@@ -102,8 +102,17 @@ class sale_shop(magerp_osv.magerp_osv):
                 image_obj.update_remote_images(cr, uid, res['to_update']+res['to_create'], context)
             self.write(cr,uid,context['shop_id'],{'last_images_export_date': start_date})
         return True
-               
-  
+
+    #TODO refactor the ay to export images
+    #No time for doing it now so I just overwrite the generic function
+    #In order to use the actual implementation
+
+    def export_resources(self, cr, uid, ids, resource_name, context=None):
+        if resource_name == 'product.images':
+            return self.export_images(cr, uid, ids, context=context)
+        else:
+            return super(sale_shop, self).export_resources(cr, uid, ids, resource_name, context=context)
+
     def _get_rootcategory(self, cr, uid, ids, name, value, context=None):
         res = {}
         for shop in self.browse(cr, uid, ids, context):

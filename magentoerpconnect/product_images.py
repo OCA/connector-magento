@@ -85,7 +85,7 @@ class product_images(magerp_osv.magerp_osv):
         #TODO update the image file
         def update_image(image_name, image):
             result = conn.call('catalog_product_attribute_media.update',
-                               [image.product_id.magento_sku,
+                               [image.product_id.default_code,
                                 image_name,
                                 {'label':image.name,
                                  'exclude':image.exclude,
@@ -119,7 +119,7 @@ class product_images(magerp_osv.magerp_osv):
             product_images = self.browse_w_order(cr, uid, ids[:1000], context=context)
             for each in product_images:
                 need_to_be_created = True
-                ext_file_name = each.oeid_to_extid(context['external_referential_id'])
+                ext_file_name = each.get_extid(context['external_referential_id'])
                 if ext_file_name: #If update
                     try:
                         logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "Updating %s's image: %s" %(each.product_id.default_code, each.name))

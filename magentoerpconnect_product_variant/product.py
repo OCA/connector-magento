@@ -98,7 +98,7 @@ class product_product(osv.osv):
         return field_names
 
 
-    def ext_create(self, cr, uid, external_session, resources, context=None):
+    def ext_create(self, cr, uid, external_session, resources, mapping=None, mapping_id=None, context=None):
         conn = external_session.connection
         ext_create_ids = {}
         for resource_id in resources:
@@ -121,7 +121,7 @@ class product_product(osv.osv):
         return ext_create_ids
 
 
-    def ext_update(self, cr, uid, external_session, resources, context=None):
+    def ext_update(self, cr, uid, external_session, resources, mapping=None, mapping_id=None, context=None):
         conn = external_session.connection
         ext_update_ids = {}
         for resource_id in resources:
