@@ -1133,10 +1133,13 @@ class product_product(product_mag_osv):
         res = super(product_product, self).get_field_to_export(cr, uid, ids, mapping, mapping_id, context=context)
         if 'product_image' in res: res.remove('product_image')
         if context.get('attribut_set_id'):
+            #TODO to avoid reading all of the time is the db we should add a cache system
+            #for exemple in the external session we can add a cache dict
+            #that will store the information between the attribut and the field to read
             attr_set = self.pool.get('magerp.product_attribute_set').browse(cr, uid, \
                                                 context['attribut_set_id'], context=context)
             magento_field = [attribut['field_name'] for attribut in attr_set.attributes]
-            return [field for field in res if (field[0:8] != "x_magerp_" or field in magento_field)]
+            return [field for field in res if (field[0:9] != "x_magerp_" or field in magento_field)]
         else:
             return res
 
