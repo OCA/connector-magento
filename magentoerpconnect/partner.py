@@ -55,11 +55,11 @@ class res_partner(magerp_osv.magerp_osv):
         """
         res = {}
         # get all magento external_referentials
-        referentials = self.pool.get('external.referential').search(cr, uid, [('magento_referential', '=', True)])
+        referential_ids = self.pool.get('external.referential').search(cr, uid, [('magento_referential', '=', True)])
         for partner in self.browse(cr, uid, ids, context):
-            for referential in referentials:
+            for referential_id in referential_ids:
                 res[partner.id] = False
-                if self.oeid_to_extid(cr, uid, partner.id, referential, context):
+                if partner.get_extid(referential_id, context=context):
                     res[partner.id] = True
                     break
         return res

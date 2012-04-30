@@ -1,0 +1,10 @@
+id,sequence,type,evaluation_type,external_field,field_id:id,external_type,alternative_key,mapping_id:id,function_name,in_function,out_function,child_mapping_id:id,datetime_format
+mag1500_account_invoice_customer_id,,out,direct,customer_id,account.field_account_invoice_partner_id,int,False,mag1500_account_invoice,,,,,
+mag1500_account_invoice_order_increment_id,,out,function,,sale_automatic_workflow.field_account_invoice_sale_ids,unicode,False,mag1500_account_invoice,order_increment_id,,"sale_id = resource['sale_ids'] and resource['sale_ids'][0]
+if sale_id:
+    order_increment_id = self.pool.get('sale.order').get_extid(cr, uid, sale_id, external_session.referential_id.id, context=context)
+    result = [('order_increment_id', order_increment_id)]",,
+mag1500_account_invoice_amount,,out,direct,amount,account.field_account_invoice_amount_total,float,False,mag1500_account_invoice,,,,,
+mag1500_account_invoice_date,,out,direct,date,account.field_account_invoice_date_invoice,unicode,False,mag1500_account_invoice,,,,,
+mag1500_account_invoice_customer_name,,out,direct,customer_name,account.field_account_invoice_partner_id,unicode,False,mag1500_account_invoice,,,,,
+mag1500_account_invoice_type,,out,direct,type,account.field_account_invoice_type,unicode,False,mag1500_account_invoice,,,,,
