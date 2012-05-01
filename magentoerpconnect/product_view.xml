@@ -265,7 +265,7 @@
 			</field>
 		</record>
 
-        <!--Magento Product Product Wizard Form view  -->
+        <!--Magento Product Product Wizard Form view-->
 
         <record model="ir.ui.view" id="product_product_wizard_form_view_magerpdynamic">
             <field name="name">product.normal.wizard.form_magerp_dynamic</field>
@@ -279,6 +279,7 @@
                         <field name="set" select="2" attrs="{'required':[('magento_exportable','==',True)], 'readonly': [('magento_exported', '=', True)]}"/>
                         <field name="default_code" select="2" attrs="{'required':[('magento_exportable','==',True)]}"/>
                         <field name="product_type" select="2" attrs="{'required':[('magento_exportable','==',True)]}"/>
+                        <field name="mag_manage_stock" select="2" attrs="{'required':[('magento_exportable','==',True)]}"/>
                         <field name="magento_exportable"/>
                         <field name="magento_exported" invisible="1" />
                     </group>

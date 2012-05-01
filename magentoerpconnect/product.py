@@ -977,6 +977,8 @@ class product_mag_osv(magerp_osv.magerp_osv):
                     cr, uid,
                     [('model_id', 'in', model_ids)],
                     context=context)
+                #TODO it will be better to avoid adding fields here
+                #Moreover we should also add the field mag_manage_stock
                 field_names = ['product_type']
                 fields = fields_obj.browse(cr, uid, field_ids, context=context)
                 for field in fields:
@@ -1048,6 +1050,11 @@ class product_template(product_mag_osv):
         'magerp_tmpl' : fields.serialized('Magento Template Fields'),
         'set':fields.many2one('magerp.product_attribute_set', 'Attribute Set'),
         'websites_ids': fields.many2many('external.shop.group', 'magerp_product_shop_group_rel', 'product_id', 'shop_group_id', 'Websites', help='By defaut product will be exported on every website, if you want to export it only on some website select them here'),
+        'mag_manage_stock': fields.selection([
+                                ('use_default','Use Default Config'),
+                                ('no', 'Do Not Manage Stock'),
+                                ('yes','Manage Stock')],
+                                'Manage Stock Level'),
     }
 
 product_template()
@@ -1497,6 +1504,8 @@ class product_product(product_mag_osv):
                        'virtual_available')
         stock_quantity = product[stock_field]
         return {'qty': stock_quantity,
+                'manage_stock': int(product.mag_manage_stock == 'yes'),
+                'use_config_manage_stock': int(product.mag_manage_stock == 'use_default'),
                 # put the stock availability to "out of stock"
                 'is_in_stock': int(stock_quantity > 0)}
 
@@ -1511,6 +1520,8 @@ class product_product(product_mag_osv):
         :param Connection connection: connection object
         :return: True
         """
+        #TODO get also the list of product which the option mag_manage_stock have changed
+        #This can be base on the group_fields that can try tle last write date of a group of fields
         if context is None: context = {}
         logger = netsvc.Logger()
 
@@ -1535,7 +1546,7 @@ class product_product(product_mag_osv):
             cr, uid, stock_product_ids, context=location_ctx)
 
         for product in products:
-            mag_product_id = self.oeid_to_extid(
+            mag_product_id = self.get_extid(
                 cr, uid, product.id, referential.id, context=context)
             if not mag_product_id:
                 continue  # skip products which are not exported
@@ -1549,8 +1560,8 @@ class product_product(product_mag_osv):
                 'ext synchro',
                 netsvc.LOG_INFO,
                 "Successfully updated stock level at %s for "
-                "product with SKU %s " %
-                (inventory_vals['qty'], product.magento_sku))
+                "product with code %s " %
+                (inventory_vals['qty'], product.default_code))
         return True
     
     def ext_assign_links(self, cr, uid, ids, external_referential_ids=None, defaults=None, context=None):
