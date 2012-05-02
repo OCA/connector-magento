@@ -748,53 +748,6 @@ class product_mag_osv(magerp_osv.magerp_osv):
     #and will have a nice default vaule anyway, that's why we avoid making them mandatory in the product view
     _magento_fake_mandatory_attrs = ['created_at', 'updated_at', 'has_options', 'required_options', 'model']
 
-#    def send_to_external(self, cr, uid, external_session, resource, update_date, context=None):
-#        storeview_to_lang = context['storeview_to_lang']
-#        print ' lang_to_storeview', storeview_to_lang
-#        print 'send default store'
-#        print resource[context['main_lang']]
-#        for storeview, lang in storeview_to_lang.items():
-#            print 'send to storeview', storeview
-#            print 'product data', resource[lang]
-#        self._set_last_exported_date(cr, uid, external_session, update_date, context=context)
-#        import pdb; pdb.set_trace()
-#        return True
-
-    def ext_create(self, cr, uid, external_session, resources, mapping=None, mapping_id=None, context=None):
-        ext_create_ids={}
-        storeview_to_lang = context['storeview_to_lang']
-        main_lang = context['main_lang']
-        for resource_id, resource in resources.items():
-            #Move this part of code in a python lib
-            product_type = resource[main_lang]['type_id']
-            attr_set = resource[main_lang]['set']
-            sku = resource[main_lang]['sku']
-            del resource[main_lang]['type_id']
-            del resource[main_lang]['set']
-            del resource[main_lang]['sku']
-            ext_id = external_session.connection.call('ol_catalog_product.create', [product_type, attr_set, sku, resource[main_lang]])
-            for storeview, lang in storeview_to_lang.items():
-                external_session.connection.call('ol_catalog_product.update', [ext_id, resource[lang], storeview, 'id'])
-            ext_create_ids[resource_id] = ext_id
-        return ext_create_ids
-
-
-    def ext_update(self, cr, uid, external_session, resources, mapping=None, mapping_id=None, context=None):
-        ext_update_ids={}
-        storeview_to_lang = context['storeview_to_lang']
-        main_lang = context['main_lang']
-        for resource_id, resource in resources.items():
-            #Move this part of code in a python lib
-            ext_id = resource[main_lang]['ext_id']
-            del resource[main_lang]['ext_id']
-            external_session.connection.call('ol_catalog_product.update', [ext_id, resource[main_lang], False, 'id'])
-            for storeview, lang in storeview_to_lang.items():
-                del resource[lang]['ext_id']
-                external_session.connection.call('ol_catalog_product.update', [ext_id, resource[lang], storeview, 'id'])
-            ext_update_ids[resource_id] = ext_id
-        return ext_update_ids
-
-
     def open_magento_fields(self, cr, uid, ids, context=None):
         ir_model_data_obj = self.pool.get('ir.model.data')
         ir_model_data_id = ir_model_data_obj.search(cr, uid, [['model', '=', 'ir.ui.view'], ['name', '=', self._name.replace('.','_') + '_wizard_form_view_magerpdynamic']], context=context)
@@ -1057,11 +1010,55 @@ class product_template(product_mag_osv):
                                 'Manage Stock Level'),
     }
 
+    _defaults = {
+        'mag_manage_stock': 'use_default',
+    }
+
 product_template()
 
 
 class product_product(product_mag_osv):
     _inherit = "product.product"
+
+
+    def send_to_external(self, cr, uid, external_session, resources, mapping, mapping_id, update_date=None, context=None):
+        product_ids = resources.keys()
+        res = super(product_product, self).send_to_external(cr, uid, external_session, resources, mapping, mapping_id, update_date=update_date, context=context)
+        self.export_inventory(cr, uid, external_session, product_ids, context=context)
+        return res
+
+    def ext_create(self, cr, uid, external_session, resources, mapping=None, mapping_id=None, context=None):
+        ext_create_ids={}
+        storeview_to_lang = context['storeview_to_lang']
+        main_lang = context['main_lang']
+        for resource_id, resource in resources.items():
+            #Move this part of code in a python lib
+            product_type = resource[main_lang]['type_id']
+            attr_set = resource[main_lang]['set']
+            sku = resource[main_lang]['sku']
+            del resource[main_lang]['type_id']
+            del resource[main_lang]['set']
+            del resource[main_lang]['sku']
+            ext_id = external_session.connection.call('ol_catalog_product.create', [product_type, attr_set, sku, resource[main_lang]])
+            for storeview, lang in storeview_to_lang.items():
+                external_session.connection.call('ol_catalog_product.update', [ext_id, resource[lang], storeview, 'id'])
+            ext_create_ids[resource_id] = ext_id
+        return ext_create_ids
+
+    def ext_update(self, cr, uid, external_session, resources, mapping=None, mapping_id=None, context=None):
+        ext_update_ids={}
+        storeview_to_lang = context['storeview_to_lang']
+        main_lang = context['main_lang']
+        for resource_id, resource in resources.items():
+            #Move this part of code in a python lib
+            ext_id = resource[main_lang]['ext_id']
+            del resource[main_lang]['ext_id']
+            external_session.connection.call('ol_catalog_product.update', [ext_id, resource[main_lang], False, 'id'])
+            for storeview, lang in storeview_to_lang.items():
+                del resource[lang]['ext_id']
+                external_session.connection.call('ol_catalog_product.update', [ext_id, resource[lang], storeview, 'id'])
+            ext_update_ids[resource_id] = ext_id
+        return ext_update_ids
 
     @only_for_referential('magento')
     def _check_if_export(self, cr, uid, external_session, product, context=None):
@@ -1509,8 +1506,7 @@ class product_product(product_mag_osv):
                 # put the stock availability to "out of stock"
                 'is_in_stock': int(stock_quantity > 0)}
 
-    def export_inventory(self, cr, uid, ids, shop_id,
-                         connection, context=None):
+    def export_inventory(self, cr, uid, external_session, ids, context=None):
         """
         Export to Magento the stock quantity for the products in ids which
         are already exported on Magento and are not service products.
@@ -1525,9 +1521,7 @@ class product_product(product_mag_osv):
         if context is None: context = {}
         logger = netsvc.Logger()
 
-        shop = self.pool.get('sale.shop').browse(
-            cr, uid, shop_id, context=context)
-        referential = shop.referential_id
+        shop = external_session.sync_from_object
 
         # exclude service products
         stock_product_ids = self.search(
@@ -1547,22 +1541,21 @@ class product_product(product_mag_osv):
 
         for product in products:
             mag_product_id = self.get_extid(
-                cr, uid, product.id, referential.id, context=context)
+                cr, uid, product.id, external_session.referential_id.id, context=context)
             if not mag_product_id:
                 continue  # skip products which are not exported
             inventory_vals = self._prepare_inventory_magento_vals(
                 cr, uid, product, stock, shop, context=location_ctx)
 
-            connection.call('product_stock.update',
+            external_session.connection.call('product_stock.update',
                             [mag_product_id, inventory_vals])
 
-            logger.notifyChannel(
-                'ext synchro',
-                netsvc.LOG_INFO,
+            external_session.logger.info(
                 "Successfully updated stock level at %s for "
                 "product with code %s " %
                 (inventory_vals['qty'], product.default_code))
         return True
+
     
     def ext_assign_links(self, cr, uid, ids, external_referential_ids=None, defaults=None, context=None):
         """ Assign links of type up-sell, cross-sell, related """
