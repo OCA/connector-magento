@@ -131,7 +131,7 @@ class product_images(magerp_osv.magerp_osv):
                     if ext_file_name: #If update
                         try:
                             logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "Updating %s's image: %s" %(each.product_id.default_code, each.name))
-                            result = update_image(ext_file_name, each)
+                            result = update_image(product_extid, ext_file_name, each)
                             logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "%s's image updated with sucess: %s" %(each.product_id.default_code, each.name))
                             need_to_be_created = False
                         except Exception, e:
