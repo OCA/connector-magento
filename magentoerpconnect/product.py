@@ -145,7 +145,10 @@ class product_category(magerp_osv.magerp_osv):
             #Move this part of code in a python lib
             ext_id = resource[main_lang]['ext_id']
             del resource[main_lang]['ext_id']
+            parent_id = resource[main_lang]['parent_id']
+            del resource[main_lang]['parent_id']
             external_session.connection.call('catalog_category.update', [ext_id, resource[main_lang], False])
+            external_session.connection.call('catalog_category.move', [ext_id, parent_id])
             for storeview, lang in storeview_to_lang.items():
                 del resource[lang]['ext_id']
                 external_session.connection.call('catalog_category.update', [ext_id, resource[lang], storeview])
@@ -172,7 +175,7 @@ class product_category(magerp_osv.magerp_osv):
         'meta_title': fields.char('Title (Meta)', size=75),
         'meta_keywords': fields.text('Meta Keywords'),
         'meta_description': fields.text('Meta Description'),
-        'url_key': fields.char('URL-key', size=100, readonly=True), #Readonly
+        'url_key': fields.char('URL-key', size=100), #Readonly
         #==== Display Settings ====
         'display_mode': fields.selection([
                     ('PRODUCTS', 'Products Only'),
@@ -579,6 +582,7 @@ class magerp_product_attribute_options(magerp_osv.magerp_osv):
         'label':fields.char('Label', size=100),
         'referential_id':fields.many2one('external.referential', 'Magento Instance', readonly=True),
     }
+
 
     def data_to_save(self, cr, uid, vals_list, update=False, context=None):
         """This method will take data from vals and use context to create record"""
