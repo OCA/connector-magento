@@ -1544,21 +1544,26 @@ class product_product(product_mag_osv):
             cr, uid, stock_product_ids, context=location_ctx)
 
         for product in products:
-            mag_product_id = self.get_extid(
-                cr, uid, product.id, external_session.referential_id.id, context=context)
-            if not mag_product_id:
-                continue  # skip products which are not exported
-            inventory_vals = self._prepare_inventory_magento_vals(
-                cr, uid, product, stock, shop, context=location_ctx)
-
-            external_session.connection.call('product_stock.update',
-                            [mag_product_id, inventory_vals])
-
-            external_session.logger.info(
-                "Successfully updated stock level at %s for "
-                "product with code %s " %
-                (inventory_vals['qty'], product.default_code))
+            self._export_inventory(cr, uid, external_session, product, stock, context=location_ctx)
         return True
+
+    def _export_inventory(self, cr, uid, external_session, product, stock, context=None):
+        mag_product_id = self.get_extid(
+            cr, uid, product.id, external_session.referential_id.id, context=context)
+        if not mag_product_id:
+            return False  # skip products which are not exported
+        inventory_vals = self._prepare_inventory_magento_vals(
+            cr, uid, product, stock, external_session.sync_from_object, context=context)
+
+        external_session.connection.call('product_stock.update',
+                        [mag_product_id, inventory_vals])
+
+        external_session.logger.info(
+            "Successfully updated stock level at %s for "
+            "product with code %s " %
+            (inventory_vals['qty'], product.default_code))
+        return True
+
 
     
     def ext_assign_links(self, cr, uid, ids, external_referential_ids=None, defaults=None, context=None):
