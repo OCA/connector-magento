@@ -13,7 +13,7 @@ magentoerpconnect.mag1500_product_category_default_sort_by,magentoerpconnect.mag
     cat_attr_option = self.pool.get('magerp.product_category_attribute_options').browse(cr, uid, resource['default_sort_by'][0], context=context)
     result=[('default_sort_by', cat_attr_option.value)]"
 magentoerpconnect.mag1500_product_category_updated_at,magentoerpconnect.mag1500_product_category,updated_at,magentoerpconnect.field_product_category_magerp_stamp,in,direct,unicode,,False,,
-magentoerpconnect.mag1500_product_category_include_in_menu,magentoerpconnect.mag1500_product_category,include_in_menu,magentoerpconnect.field_product_category_include_in_menu,in_out,direct,unicode,,False,,
+magentoerpconnect.mag1500_product_category_include_in_menu,magentoerpconnect.mag1500_product_category,include_in_menu,magentoerpconnect.field_product_category_include_in_menu,in_out,direct,int,,False,,
 magentoerpconnect.mag1500_product_category_page_layout,magentoerpconnect.mag1500_product_category,page_layout,,in_out,function,unicode,,False,"if resource['page_layout']:
     att_id = self.pool.get('magerp.product_category_attribute_options').get_create_option_id(cr, uid, resource['page_layout'],'page_layout', context=context)
 else:
