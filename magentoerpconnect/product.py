@@ -1141,9 +1141,9 @@ class product_product(product_mag_osv):
         res = super(product_product, self).get_field_to_export(cr, uid, ids, mapping, mapping_id, context=context)
         if 'product_image' in res: res.remove('product_image')
         if context.get('attribut_set_id'):
-            #TODO to avoid reading all of the time is the db we should add a cache system
-            #for exemple in the external session we can add a cache dict
-            #that will store the information between the attribut and the field to read
+            #When OpenERP will be clean, maybe we can add some cache here (@ormcache)
+            #But for now the bottle of neck is the read the computed fields
+            #So no need to do it for now
             attr_set = self.pool.get('magerp.product_attribute_set').browse(cr, uid, \
                                                 context['attribut_set_id'], context=context)
             magento_field = [attribut['field_name'] for attribut in attr_set.attributes]
