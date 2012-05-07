@@ -120,11 +120,11 @@ class res_partner(magerp_osv.magerp_osv):
                             update_date, mapping, mapping_id, defaults=None, context=None):
         res = super(res_partner, self)._transform_and_send_one_resource(cr, uid, external_session, 
             resource, resource_id, update_date, mapping, mapping_id, defaults=defaults, context=context)
-        address_obj = self.pool.get('res.partner.address')
-        resource_ids = address_obj.search(cr, uid, [('partner_id', '=', resource_id)], context=context)
-        import pdb;pdb.set_trace()
-        for resource_id in resource_ids:
-            result = address_obj._export_one_resource(cr, uid, external_session, resource_id, context=context)
+        if res:
+            address_obj = self.pool.get('res.partner.address')
+            resource_ids = address_obj.search(cr, uid, [('partner_id', '=', resource_id)], context=context)
+            for resource_id in resource_ids:
+                result = address_obj._export_one_resource(cr, uid, external_session, resource_id, context=context)
         return res
 
 res_partner()
