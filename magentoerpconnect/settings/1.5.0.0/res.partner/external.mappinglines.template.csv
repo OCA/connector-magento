@@ -1,1 +1,20 @@
 id,sequence,type,evaluation_type,external_field,field_id:id,external_type,alternative_key,mapping_id:id,function_name,in_function,out_function,child_mapping_id:id,datetime_format
+mag1500_res_partner_password,,in_out,direct,password,magentoerpconnect.field_res_partner_magento_pwd,unicode,False,magentoerpconnect.mag1500_res_partner,,,,,
+mag1500_res_partner_group_id,,in_out,direct,group_id,magentoerpconnect.field_res_partner_group_id,int,False,magentoerpconnect.mag1500_res_partner,,,,,
+mag1500_res_partner_storeview,,in_out,function,store_id,magentoerpconnect.field_res_partner_store_id,int,False,magentoerpconnect.mag1500_res_partner,storeview,"if ifield:
+	result=self.pool.get('magerp.storeviews').extid_to_existing_oeid(cr,uid,ifield,referential_id)
+	if result:
+		lang = self.pool.get('magerp.storeviews').browse(cr, uid, result).lang_id
+		result=[('store_id',result),('lang',lang and lang.code or False)]","if resource['store_id']:
+    result = [('store_id', resource['store_id'][0])]",,
+mag1500_res_partner_website_id,,in_out,direct,website_id,magentoerpconnect.field_res_partner_website_id,int,True,magentoerpconnect.mag1500_res_partner,,,,,
+mag1500_res_partner_created_in,,in_out,direct,created_in,magentoerpconnect.field_res_partner_created_in,unicode,False,magentoerpconnect.mag1500_res_partner,,,,,
+mag1500_res_partner_created_at,,in_out,direct,created_at,magentoerpconnect.field_res_partner_created_at,unicode,False,magentoerpconnect.mag1500_res_partner,,,,,
+mag1500_res_partner_updated_at,,in_out,direct,updated_at,magentoerpconnect.field_res_partner_updated_at,unicode,False,magentoerpconnect.mag1500_res_partner,,,,,%Y-%m-%d %H:%M:%S
+mag1500_res_partner_name,,in_out,function,firstname,,unicode,False,magentoerpconnect.mag1500_res_partner,name,"result = [('name',resource['firstname'] + ' ' + resource['lastname'])]","add_id = self.browse(cr, uid, resource['id'])
+fn = add_id.address[0].firstname
+ln = add_id.address[0].lastname
+result=[('firstname', fn), ('lastname', ln)]",,
+mag1500_res_partner_email,,in_out,direct,email,magentoerpconnect.field_res_partner_emailid,unicode,True,magentoerpconnect.mag1500_res_partner,,"result=[('emailid',ifield)]",,,
+mag1500_res_partner_taxvat,,in_out,direct,taxvat,magentoerpconnect.field_res_partner_mag_vat,unicode,False,magentoerpconnect.mag1500_res_partner,,,,,
+mag1500_res_partner_dob,,in_out,direct,dob,magentoerpconnect.field_res_partner_mag_birthday,datetime,False,magentoerpconnect.mag1500_res_partner,,,,,%Y-%m-%d
