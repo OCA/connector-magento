@@ -338,10 +338,25 @@ class sale_order(magerp_osv.magerp_osv):
 #                    self._chain_cancel_orders(order_cr, uid, ext_order_id, external_referential_id, defaults=defaults, context=context)
 
     def _get_filter(self, cr, uid, external_session, step, previous_filter=None, context=None):
+        magento_storeview_ids=[]
+        shop = external_session.sync_from_object
+        for storeview in shop.storeview_ids:
+            magento_storeview_id = self.pool.get('magerp.storeviews').get_extid(cr, uid, storeview.id, shop.referential_id.id, context={})
+            if magento_storeview_id:
+                magento_storeview_ids.append(magento_storeview_id)
+
+        mag_filter = {
+            'state': {'neq': 'canceled'},
+            'store_id': {'in': magento_storeview_ids},
+            }
+
+        if shop.import_orders_from_date:
+            mag_filter.update({'created_at' : {'gt': shop.import_orders_from_date}})
         return {
             'imported': False,
             'limit': step,
-            }
+            'filters': mag_filter,
+        }
 
     def create_onfly_partner(self, cr, uid, external_session, resource, mapping, defaults, context=None):
         """
