@@ -25,6 +25,8 @@
 from osv import osv, fields
 from tools.translate import _
 import magerp_osv
+from base_external_referentials.decorator import only_for_referential
+import hashlib
 
 class res_partner_category(magerp_osv.magerp_osv):
     _inherit = "res.partner.category"
@@ -45,6 +47,17 @@ class res_partner_address(magerp_osv.magerp_osv):
     _defaults = {
                     'is_magento_order_address': lambda * a:False,
                  }
+
+    @only_for_referential('magento')
+    def ext_create(self, cr, uid, external_session, resources, mapping, mapping_id, context=None):
+        ext_create_ids = {}
+        main_lang = context['main_lang']
+        for resource_id, resource in resources.items():
+            ext_id = external_session.connection.call(mapping[mapping_id]['external_create_method'],
+                                         [resource[main_lang]['customer_id'], resource[main_lang]])
+            ext_create_ids[resource_id] = ext_id
+        return ext_create_ids
+
 res_partner_address()
 
 class res_partner(magerp_osv.magerp_osv):
@@ -66,8 +79,8 @@ class res_partner(magerp_osv.magerp_osv):
 
     _columns = {
                     'group_id':fields.many2one('res.partner.category', 'Magento Group(Category)'),
-                    'store_id':fields.many2one('magerp.storeviews', 'Last Store View', readonly=True, help="Last store view where the customer has bought."),
-                    'store_ids':fields.many2many('magerp.storeviews', 'magerp_storeid_rel', 'partner_id', 'store_id', 'Store Views', readonly=True),
+                    'store_id':fields.many2one('magerp.storeviews', 'Last Store View', help="Last store view where the customer has bought."),
+                    'store_ids':fields.many2many('magerp.storeviews', 'magerp_storeid_rel', 'partner_id', 'store_id', 'Store Views'),
                     'website_id':fields.many2one('external.shop.group', 'Magento Website', help='Select a website for which the Magento customer will be bound.'),
                     'created_in':fields.char('Created in', size=100),
                     'created_at':fields.datetime('Created Date'),
@@ -77,8 +90,41 @@ class res_partner(magerp_osv.magerp_osv):
                     'mag_birthday':fields.date('Birthday', help="To be able to receive customer birthday you must set it in Magento Admin Panel, menu System / Configuration / Client Configuration / Name and Address Options."),
                     'mag_newsletter':fields.boolean('Newsletter'),
                     'magento_exported': fields.function(_is_magento_exported, type="boolean", method=True, string="Exists on Magento"),
+                    'magento_pwd': fields.char('Magento Password', size=256),
                 }
 
     _sql_constraints = [('emailid_uniq', 'unique(emailid, website_id)', 'A partner already exists with this email address on the selected website.')]
+
+    @only_for_referential('magento')
+    def get_ids_and_update_date(self, cr, uid, external_session, ids=None, last_exported_date=None, context=None):
+        store_ids = [store.id for store in external_session.sync_from_object.storeview_ids]
+        query = """
+        SELECT DISTINCT partner_id
+        FROM magerp_storeid_rel
+        LEFT JOIN res_partner
+            ON magerp_storeid_rel.partner_id = res_partner.id
+        LEFT JOIN ir_model_data
+            ON res_partner.id = ir_model_data.res_id
+            AND ir_model_data.model = 'res.partner'
+            AND ir_model_data.referential_id = %(ref_id)s
+        WHERE ir_model_data.res_id IS NULL AND magerp_storeid_rel.store_id IN %(store_ids)s"""
+        params = {'ref_id': external_session.referential_id.id, 
+                  'store_ids': tuple(store_ids)}
+        cr.execute(query,params)
+        results = cr.dictfetchall()
+        ids = [dict_id['partner_id'] for dict_id in results]
+        return ids, {}
+
+    @only_for_referential('magento')
+    def _transform_and_send_one_resource(self, cr, uid, external_session, resource, resource_id,
+                            update_date, mapping, mapping_id, defaults=None, context=None):
+        res = super(res_partner, self)._transform_and_send_one_resource(cr, uid, external_session, 
+            resource, resource_id, update_date, mapping, mapping_id, defaults=defaults, context=context)
+        address_obj = self.pool.get('res.partner.address')
+        resource_ids = address_obj.search(cr, uid, [('partner_id', '=', resource_id)], context=context)
+        import pdb;pdb.set_trace()
+        for resource_id in resource_ids:
+            result = address_obj._export_one_resource(cr, uid, external_session, resource_id, context=context)
+        return res
 
 res_partner()

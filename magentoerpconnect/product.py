@@ -132,7 +132,7 @@ class product_category(magerp_osv.magerp_osv):
             del resource[main_lang]['parent_id']
             ext_id = external_session.connection.call('catalog_category.create', [parent_id, resource[main_lang]])
             for storeview, lang in storeview_to_lang.items():
-                external_session.connection.call('catalog_category.update', [parent_id, resource[lang], storeview])
+                external_session.connection.call('catalog_category.update', [ext_id, resource[lang], storeview])
             ext_create_ids[resource_id] = ext_id
         return ext_create_ids
 

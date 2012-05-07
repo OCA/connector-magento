@@ -90,6 +90,18 @@ def _get_external_resources(self, cr, uid, external_session, external_id=None, r
 
 osv.osv._get_external_resources = _get_external_resources
 
+osv.osv._mag_ext_create = osv.osv.ext_create
+
+@only_for_referential('magento', super_function = osv.osv._mag_ext_create)
+def ext_create(self, cr, uid, external_session, resources, mapping, mapping_id, context=None):
+    ext_create_ids = {}
+    main_lang = context['main_lang']
+    for resource_id, resource in resources.items():
+        ext_id = external_session.connection.call(mapping[mapping_id]['external_create_method'], [resource[main_lang]])
+        ext_create_ids[resource_id] = ext_id
+    return ext_create_ids
+
+osv.osv.ext_create = ext_create
 
 
 #@only_for_referential('magento', super_function = osv.osv.send_to_external)
