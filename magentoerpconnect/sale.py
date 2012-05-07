@@ -151,7 +151,7 @@ class sale_shop(magerp_osv.magerp_osv):
         'exportable_root_category_ids': fields.function(_get_exportable_root_category_ids, type="many2many", relation="product.category", method=True, string="Root Category"), #fields.function(_get_exportable_root_category_ids, type="many2one", relation="product.category", method=True, 'Exportable Root Categories'),
         'storeview_ids': fields.one2many('magerp.storeviews', 'shop_id', 'Store Views'),
         'exportable_product_ids': fields.function(_get_exportable_product_ids, method=True, type='one2many', relation="product.product", string='Exportable Products'),
-        'magento_shop': fields.boolean('Magento Shop', readonly=True),
+        'magento_shop': fields.related('referential_id', 'magento_referential',type="boolean", string='Magento Shop', readonly=True),
         'allow_magento_order_status_push': fields.boolean('Allow Magento Order Status push', help='Allow to send back order status to Magento if order status changed in OpenERP first?'),
         'allow_magento_notification': fields.boolean('Allow Magento Notification', help='Allow Magento to notify customer (mail) if OpenERP update Magento order status?'),
     }   
@@ -161,18 +161,19 @@ class sale_shop(magerp_osv.magerp_osv):
         'allow_magento_notification': lambda * a: False,
     }
 
+    def _get_magento_status(self, cr, uid, order, context=None):
+        return ORDER_STATUS_MAPPING.get(order.state)
 
-    def update_shop_orders(self, cr, uid, order, ext_id, context=None):
+    def update_shop_orders(self, cr, uid, external_session, order, ext_id, context=None):
         if context is None: context = {}
-        result = {}
+        result = False
 
         if order.shop_id.allow_magento_order_status_push:
             sale_obj = self.pool.get('sale.order')
             #status update:
-            conn = context.get('conn_obj', False)
-            status = ORDER_STATUS_MAPPING.get(order.state, False)
+            status = self._get_magento_status(cr, uid, order, context=context)
             if status:
-                result['status_change'] = conn.call(
+                result = external_session.connection.call(
                     'sales_order.addComment',
                     [ext_id, status, '',
                      order.shop_id.allow_magento_notification])
@@ -182,9 +183,6 @@ class sale_shop(magerp_osv.magerp_osv):
                 if order.need_to_update:
                     sale_obj.write(
                         cr, uid, order.id, {'need_to_update': False})
-
-            sale_obj.export_invoice(
-                cr, uid, order, conn, ext_id, context=context)
         return result
 
     def _sale_shop(self, cr, uid, callback, context=None):

@@ -51,14 +51,10 @@ class external_referential(magerp_osv.magerp_osv):
         """
         res = {}
         for referential in self.browse(cr, uid, ids, context):
-            res[referential.id] = False
-            for group in referential.shop_group_ids:
-                for shop in group.shop_ids:
-                    if shop.magento_shop:
-                        res[referential.id] = True
-                        break
-                if res[referential.id]:
-                    break
+            if referential.type_id.name == 'magento':
+                res[referential.id] = True
+            else:
+                res[referential.id] = False
         return res
 
     _columns = {
