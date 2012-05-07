@@ -27,4 +27,4 @@ mag1500_sale_order_carrier_id=>,,in,function,shipping_method,,unicode,False,mag1
         model, product_id = model_data_obj.get_object_reference(cr, uid, 'base_sale_multichannels', 'product_product_shipping')
         carrier_id = self.pool.get('delivery.carrier').create(cr, uid, {'partner_id' : fake_partner_id, 'product_id' : product_id, 'name' : ifield, 'magento_code' : ifield})
         result=[('carrier_id', carrier_id)]",,,
-mag1500_sale_order_shipping_amount_tax_included=>,,in,function,base_shipping_incl_tax,,float,False,mag1500_sale_order,shipping_amount_tax_included,"result=[('shipping_amount_tax_included', ifield), ('shipping_tax_rate', ifield/float(data['shipping_amount'])-1)]",,,
+mag1500_sale_order_shipping_amount_tax_included=>,,in,function,base_shipping_incl_tax,,float,False,mag1500_sale_order,shipping_amount_tax_included,"result=[('shipping_amount_tax_included', ifield), ('shipping_tax_rate', ifield and (ifield/float(data['shipping_amount'])-1)) or 0]",,,
