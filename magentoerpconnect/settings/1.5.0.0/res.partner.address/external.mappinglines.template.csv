@@ -2,41 +2,35 @@ id,sequence,type,evaluation_type,external_field,field_id:id,external_type,altern
 magentoerpconnect.mag1500_res_partner_address_name,,in_out,function,firstname,magentoerpconnect.field_res_partner_address_firstname,unicode,True,magentoerpconnect.mag1500_res_partner_address,name,"result = [('name', (resource.get('company', False) and (resource['company'] + ' ; ') or '') + resource['firstname'] + ' ' + (resource['lastname'] or '')), ('firstname', resource['firstname']), ('lastname', (resource['lastname'] or ''))]","result = [('firstname', resource['firstname'])]",,
 magentoerpconnect.mag1500_res_partner_address_telephone,,in_out,direct,telephone,base.field_res_partner_address_phone,unicode,False,magentoerpconnect.mag1500_res_partner_address,,,,,
 magentoerpconnect.mag1500_res_partner_address_region,,in_out,function,region,,unicode,False,magentoerpconnect.mag1500_res_partner_address,region,"if ifield:
-	result = self.pool.get('res.country.state').search(cr,uid,[('name','ilike',ifield)])
-	if result and len(result)==1:
-		result = [('state_id',result[0])]
-	else:
-		result=[]
+    result = self.pool.get('res.country.state').search(cr,uid,[('name','ilike',ifield)])
+    if result and len(result)==1:
+        result = [('state_id',result[0])]
+    else:
+        result=[]
 else:
-	result=[]",result = [],,
+    result=[]",result = [],,
 magentoerpconnect.mag1500_res_partner_address_customer_id,,in_out,direct,customer_id,base.field_res_partner_address_partner_id,int,True,magentoerpconnect.mag1500_res_partner_address,,,,,
 magentoerpconnect.mag1500_res_partner_address_address_type,,in_out,function,address_type,,unicode,False,magentoerpconnect.mag1500_res_partner_address,address_type,"if ifield=='billing':
-	result=[('type','invoice')]
+    result=[('type','invoice')]
 elif ifield=='shipping':
-	result=[('type','delivery')]
+    result=[('type','delivery')]
 else:
-	result=[]","if resource['type']:
-    if resource['type'] == 'invoice':
-        result=[('address_type', 'billing'),('is_default_billing',True)]
-    elif resource['type']== 'delivery':
-        result = [('address_type', 'shipping'),('is_default_shipping',True)]
-else:
-    result = [('is_default_billing',True),('is_default_shipping',True)]",,
+    result=[]","result = [('is_default_billing',True),('is_default_shipping',True)]",,
 magentoerpconnect.mag1500_res_partner_address_is_active,,in_out,direct,is_active,base.field_res_partner_address_active,unicode,False,magentoerpconnect.mag1500_res_partner_address,,,,,
 magentoerpconnect.mag1500_res_partner_address_country code,,in_out,function,country_id,,unicode,False,magentoerpconnect.mag1500_res_partner_address,country code,"result = self.pool.get('res.country').search(cr,uid,[('code','=',ifield)])
 if result and len(result)==1:
-	result=[('country_id',result[0])]
+    result=[('country_id',result[0])]
 else:
-	result=[]
+    result=[]
 ","country = self.pool.get('res.country').browse(cr, uid, resource['country_id'][0], context=context)
 result = [('country_id', country.code)]",,
 magentoerpconnect.mag1500_res_partner_address_street,,in_out,function,street,base.field_res_partner_address_street,unicode,True,magentoerpconnect.mag1500_res_partner_address,street,"if ifield:
-	if len(ifield.split('\n')) ==2 :
-		result = [('street', ifield.split('\n')[0]) , ('street2', ifield.split('\n')[1])]
-	else :
-		result = [('street',ifield.replace('\\n',','))]
+    if len(ifield.split('\n')) ==2 :
+        result = [('street', ifield.split('\n')[0]) , ('street2', ifield.split('\n')[1])]
+    else :
+        result = [('street',ifield.replace('\\n',','))]
 else:
-	result = []","address = resource['street']+'\n' + (resource['street2'] or '')
+    result = []","address = resource['street']+'\n' + (resource['street2'] or '')
 result = [('street', [address])]",,
 magentoerpconnect.mag1500_res_partner_address_prefix,,in_out,function,prefix,,unicode,False,magentoerpconnect.mag1500_res_partner_address,prefix,"if ifield:
     title_ids = self.pool.get('res.partner.title').search(cr, uid, [('domain', '=', 'contact'), ('shortcut', '=', ifield)])
