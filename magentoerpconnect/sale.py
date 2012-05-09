@@ -613,3 +613,20 @@ class sale_order(magerp_osv.magerp_osv):
 
 sale_order()
 
+
+class sale_order_line(osv.osv):
+
+    _inherit = 'sale.order.line'
+
+    _columns = {
+        # Rised the precision of the sale.order.line discount field
+        # from 2 to 3 digits in order to be able to have the same amount as Magento.
+        # Example: Magento has a sale line of 299€ and 150€ of discount, so a line at 149€.
+        # We translate it to a percent in the openerp sale order
+        # With a 2 digits precision, we can have 50.17 % => 148.99 or 50.16% => 149.02.
+        # Rise the digits to 3 allows to have 50.167% => 149€
+        'discount': fields.float('Discount (%)', digits=(16, 3), readonly=True, states={'draft': [('readonly', False)]}),
+    }
+
+sale_order_line()
+
