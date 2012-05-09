@@ -1,6 +1,6 @@
 id,sequence,type,evaluation_type,external_field,field_id:id,external_type,alternative_key,mapping_id:id,function_name,in_function,out_function,child_mapping_id:id,datetime_format
 magentoerpconnect.mag1500_product_product_weight,,in_out,direct,weight,product_variant_multi.field_product_product_total_weight,float,False,magentoerpconnect.mag1500_product_product,,,,,
-mag1500_product_product_dim_value,10,in_out,function,,,unicode,False,magentoerpconnect.mag1500_product_product,dim_value,,"result = []
+mag1500_product_product_dim_value,10,out,function,,,unicode,False,magentoerpconnect.mag1500_product_product,dim_value,,"result = []
 if resource.get('is_multi_variants'):
     for dim_value in self.pool.get('product.variant.dimension.value').browse(cr, uid, resource['dimension_value_ids'], context=context):
         result.append((dim_value.dimension_id.magento_attribut.attribute_code, dim_value.option_id.magento_attribut_option.value))",,
