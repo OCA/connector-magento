@@ -1072,6 +1072,16 @@ class product_product(product_mag_osv):
             return True
         return False
 
+    #TODO make me generic when image export will be refactor
+    def export_product_images(self, cr, uid, external_session, ids, context=None):
+        image_obj = self.pool.get('product.images')
+        for product in self.browse(cr, uid, ids, context=context):
+            image_ids = [image.id for image in product.image_ids]
+            external_session.logger.info('export %s images for product %s'%(len(image_ids), product.name))
+            image_obj.update_remote_images(cr, uid, external_session, image_ids, context=context)
+        return True
+
+
     #TODO base the import on the mapping and the function ext_import
     def import_product_image(self, cr, uid, id, referential_id, conn, ext_id=None, context=None):
         image_obj = self.pool.get('product.images')
