@@ -31,7 +31,7 @@ import string
 import tools
 import time
 from tools import DEFAULT_SERVER_DATETIME_FORMAT
-
+from base_external_referentials.external_osv import ExternalSession
 from base_external_referentials.decorator import only_for_referential
 
 #from base_external_referentials import report
@@ -90,13 +90,14 @@ class sale_shop(magerp_osv.magerp_osv):
         start_date = time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         image_obj = self.pool.get('product.images')
         for shop in self.browse(cr, uid, ids):
+            external_session = ExternalSession(shop.referential_id, shop)
             exportable_product_ids = self.read(cr, uid, shop.id, ['exportable_product_ids'], context=context)['exportable_product_ids']
-            res = self.pool.get('product.product').get_exportable_images(cr, uid, exportable_product_ids, context=context)
+            res = self.pool.get('product.product').get_exportable_images(cr, uid, external_session, exportable_product_ids, context=context)
             if res:
                 logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "Creating %s images" %(len(res['to_create'])))
                 logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "Updating %s images" %(len(res['to_update'])))
-                image_obj.update_remote_images(cr, uid, exteral_session, res['to_update']+res['to_create'], context)
-            self.write(cr,uid,context['shop_id'],{'last_images_export_date': start_date})
+                image_obj.update_remote_images(cr, uid, external_session, res['to_update']+res['to_create'], context)
+            shop.write({'last_images_export_date': start_date})
         return True
 
     #TODO refactor the ay to export images

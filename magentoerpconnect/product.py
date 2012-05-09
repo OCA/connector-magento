@@ -1679,10 +1679,10 @@ class product_product(product_mag_osv):
         return True
 
     #TODO move this code (get exportable image) and also some code in product_image.py and sale.py in base_sale_multichannel or in a new module in order to be more generic
-    def get_exportable_images(self, cr, uid, ids, context=None):
+    def get_exportable_images(self, cr, uid, external_session, ids, context=None):
         image_obj = self.pool.get('product.images')
         images_exportable_ids = image_obj.search(cr, uid, [('product_id', 'in', ids)], context=context)
-        images_to_update_ids = image_obj.get_all_oeid_from_referential(cr, uid, context['external_referential_id'], context=None)
+        images_to_update_ids = image_obj.get_all_oeid_from_referential(cr, uid, external_session.referential_id.id, context=None)
         images_to_create = [x for x in images_exportable_ids if not x in images_to_update_ids]
         if context.get('last_images_export_date', False):
             images_to_update_ids = image_obj.search(cr, uid, [('id', 'in', images_to_update_ids), '|', ('create_date', '>', context['last_images_export_date']), ('write_date', '>', context['last_images_export_date'])], context=context)
