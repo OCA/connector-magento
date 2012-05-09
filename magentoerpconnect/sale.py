@@ -42,7 +42,7 @@ NOTRY = False
 
 #TODO, may be move that on out CSV mapping, but not sure we can easily
 #see OpenERP sale/sale.py and Magento app/code/core/Mage/Sales/Model/Order.php for details
-ORDER_STATUS_MAPPING = {'draft': 'processing', 'progress': 'processing', 'shipping_except': 'complete', 'invoice_except': 'complete', 'done': 'closed', 'cancel': 'canceled', 'waiting_date': 'holded'}
+ORDER_STATUS_MAPPING = {'manual': 'processing', 'progress': 'processing', 'shipping_except': 'complete', 'invoice_except': 'complete', 'done': 'closed', 'cancel': 'canceled', 'waiting_date': 'holded'}
 SALE_ORDER_IMPORT_STEP = 200
 
 class sale_shop(magerp_osv.magerp_osv):
@@ -90,16 +90,12 @@ class sale_shop(magerp_osv.magerp_osv):
         start_date = time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         image_obj = self.pool.get('product.images')
         for shop in self.browse(cr, uid, ids):
-            context['shop_id'] = shop.id
-            context['external_referential_id'] = shop.referential_id.id
-            context['conn_obj'] = shop.referential_id.external_connection()
-            context['last_images_export_date'] = shop.last_images_export_date
             exportable_product_ids = self.read(cr, uid, shop.id, ['exportable_product_ids'], context=context)['exportable_product_ids']
             res = self.pool.get('product.product').get_exportable_images(cr, uid, exportable_product_ids, context=context)
             if res:
                 logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "Creating %s images" %(len(res['to_create'])))
                 logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "Updating %s images" %(len(res['to_update'])))
-                image_obj.update_remote_images(cr, uid, res['to_update']+res['to_create'], context)
+                image_obj.update_remote_images(cr, uid, exteral_session, res['to_update']+res['to_create'], context)
             self.write(cr,uid,context['shop_id'],{'last_images_export_date': start_date})
         return True
 
@@ -167,7 +163,6 @@ class sale_shop(magerp_osv.magerp_osv):
     def update_shop_orders(self, cr, uid, external_session, order, ext_id, context=None):
         if context is None: context = {}
         result = False
-
         if order.shop_id.allow_magento_order_status_push:
             sale_obj = self.pool.get('sale.order')
             #status update:

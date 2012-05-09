@@ -61,18 +61,14 @@ class product_images(magerp_osv.magerp_osv):
     def del_image_name(self, cr, uid, id, context=None):
         if context is None: context = {}
         image_ext_name_obj = self.pool.get('product.images.external.name')
-        name_id = image_ext_name_obj.search(cr, uid, [('image_id', '=', id), ('external_referential_id', '=', context['external_referential_id'])], context=context)
+        name_id = image_ext_name_obj.search(cr, uid, [('image_id', '=', id), ('external_referential_id', '=', context['referential_id'])], context=context)
         if name_id:
             return image_ext_name_obj.unlink(cr, uid, name_id, context=context)
         return False
 
-    def update_remote_images(self, cr, uid, ids, context=None):
+    def update_remote_images(self, cr, uid, external_session, ids, context=None):
         if context is None:
             context = {}
-        logger = netsvc.Logger()
-        conn = context.get('conn_obj', False)
-        if not conn:
-            return False
 
         ir_model_data_obj = self.pool.get('ir.model.data')
 
@@ -88,7 +84,7 @@ class product_images(magerp_osv.magerp_osv):
 
         #TODO update the image file
         def update_image(product_extid, image_name, image):
-            result = conn.call('catalog_product_attribute_media.update',
+            result = external_session.connection.call('catalog_product_attribute_media.update',
                                [product_extid,
                                 image_name,
                                 {'label':image.name,
@@ -122,34 +118,34 @@ class product_images(magerp_osv.magerp_osv):
         while ids:
             product_images = self.browse_w_order(cr, uid, ids[:1000], context=context)
             for each in product_images:
-                product_extid = each.product_id.get_extid(context['external_referential_id'])
+                product_extid = each.product_id.get_extid(external_session.referential_id.id)
                 if not product_extid:
-                    logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "The product %s do not exist on magento" %(each.product_id.default_code))
+                    external_session.logger.info("The product %s do not exist on magento" %(each.product_id.default_code))
                 else:
                     need_to_be_created = True
-                    ext_file_name = each.get_extid(context['external_referential_id'])
+                    ext_file_name = each.get_extid(external_session.referential_id.id)
                     if ext_file_name: #If update
                         try:
-                            logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "Updating %s's image: %s" %(each.product_id.default_code, each.name))
+                            external_session.logger.info("Updating %s's image: %s" %(each.product_id.default_code, each.name))
                             result = update_image(product_extid, ext_file_name, each)
-                            logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "%s's image updated with sucess: %s" %(each.product_id.default_code, each.name))
+                            external_session.logger.info("%s's image updated with sucess: %s" %(each.product_id.default_code, each.name))
                             need_to_be_created = False
                         except Exception, e:
-                            logger.notifyChannel(_("Magento Connection"), netsvc.LOG_ERROR, _("Error in connecting:%s") % (e))
+                            external_session.logger.error(_("Error in connecting:%s") % (e))
                             if not "Fault 103" in str(e):
-                                logger.notifyChannel(_("Magento Connection"), netsvc.LOG_ERROR, _("Unknow error stop export"))
+                                external_session.logger.error(_("Unknow error stop export"))
                                 raise
                             else:
                                 #If the image was deleded in magento, the external name is automatically deleded before trying to re-create the image in magento
-                                model_data_ids = ir_model_data_obj.search(cr, uid, [('model', '=', self._name), ('res_id', '=', each.id), ('external_referential_id', '=', context['external_referential_id'])])
+                                model_data_ids = ir_model_data_obj.search(cr, uid, [('model', '=', self._name), ('res_id', '=', each.id), ('referential_id', '=', external_session.referential_id.id)])
                                 if model_data_ids and len(model_data_ids) > 0:
                                     ir_model_data_obj.unlink(cr, uid, model_data_ids, context=context)
-                                logger.notifyChannel(_("Magento Connection"), netsvc.LOG_ERROR, _("The image don't exist in magento, try to create it"))
+                                external_session.logger.error(_("The image don't exist in magento, try to create it"))
                     if need_to_be_created:
                         if each.product_id.default_code:
                             pas_ok = True
                             suceed = False
-                            logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "Sending %s's image: %s" %(each.product_id.default_code, each.name))
+                            external_session.logger.info("Sending %s's image: %s" %(each.product_id.default_code, each.name))
                             data = {
                                 'file':{
                                     'name':each.name,
@@ -159,17 +155,18 @@ class product_images(magerp_osv.magerp_osv):
                                             or 'image/jpeg',
                                     }
                             }
-                            result = conn.call('catalog_product_attribute_media.create', [product_extid, data, False, 'id'])
+                            result = external_session.connection.call('catalog_product_attribute_media.create', [product_extid, data, False, 'id'])
 
-                            self.create_external_id_vals(cr, uid, each.id, result, context['external_referential_id'], context=context)
+                            self.create_external_id_vals(cr, uid, each.id, result, external_session.referential_id.id, context=context)
                             result = update_image(product_extid, result, each)
-                            logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "%s's image send with sucess: %s" %(each.product_id.default_code, each.name))
+                            external_session.logger.info("%s's image send with sucess: %s" %(each.product_id.default_code, each.name))
 
-                if image_2_date[each.id] > context['last_images_export_date']: #indeed if a product was created a long time ago and checked as exportable recently, the write date of the image can be far away in the past
+
+                if context.get('last_images_export_date') and image_2_date[each.id] > context['last_images_export_date']: #indeed if a product was created a long time ago and checked as exportable recently, the write date of the image can be far away in the past
                     self.pool.get('sale.shop').write(cr,uid,context['shop_id'],{'last_images_export_date':image_2_date[each.id]})
                 cr.commit()
             ids = ids[1000:]
-            logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "still %s image to export" %len(ids))
+            external_session.logger.info("still %s image to export" %len(ids))
         return True
         
 product_images()
