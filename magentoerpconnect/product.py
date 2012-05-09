@@ -586,27 +586,31 @@ class magerp_product_attribute_options(magerp_osv.magerp_osv):
 
     def data_to_save(self, cr, uid, vals_list, update=False, context=None):
         """This method will take data from vals and use context to create record"""
-        
         if context is None:
             context = {}
         to_remove_ids = []
         if update:
             to_remove_ids = self.search(cr, uid, [('attribute_id', '=', context['attribute_id'])])
-        
+
         for vals in vals_list:
             if vals.get('value', False) and vals.get('label', False):
+                value = unicode(vals['value'])
                 #Fixme: What to do when Magento offers emty options which open erp doesnt?
                 #Such cases dictionary is: {'value':'','label':''}
                 if update:
-                    existing_ids = self.search(cr, uid, [('attribute_id', '=', context['attribute_id']), ('label', '=', vals['label'])])
+                    existing_ids = self.search(
+                        cr, uid,
+                        [('attribute_id', '=', context['attribute_id']),
+                         ('value', '=', value)],
+                        context=context)
                     if len(existing_ids) == 1:
                         to_remove_ids.remove(existing_ids[0])
-                        self.write(cr, uid, existing_ids[0], {'value': vals.get('value', False)})
+                        self.write(cr, uid, existing_ids[0], {'label': vals.get('label', False)})
                         continue
 
                 self.create(cr, uid, {
                                         'attribute_id': context['attribute_id'],
-                                        'value': vals['value'],
+                                        'value': value,
                                         'label': vals['label'],
                                         'referential_id': context['referential_id'],
                                     }
