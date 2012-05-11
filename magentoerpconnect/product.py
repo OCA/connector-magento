@@ -1693,20 +1693,24 @@ class product_product(product_mag_osv):
         conn = external_session.connection
         product_link_obj = self.pool.get('product.link')
         selection_link_types = product_link_obj._columns['type'].selection(cr, uid, context)
+        mag_product_id = self.get_extid(
+            cr, uid, product.id, external_session.referential_id.id, context=context)
         # This method could be completed to import grouped products too, you know, for Magento a product link is as
         # well a cross-sell, up-sell, related than the assignment between grouped products
         if link_type in [ltype[0] for ltype in selection_link_types]:
             product_links = []
             try:
-                product_links = conn.call('product_link.list', [link_type, product.magento_sku])
+                product_links = conn.call('product_link.list', [link_type, mag_product_id])
             except Exception, e:
-                self.log(cr, uid, product.id, "Error when retrieving the list of links in Magento for product with sku %s and product id %s !" % (product.magento_sku, product.id,))
-                conn.logger.debug("Error when retrieving the list of links in Magento for product with sku %s and product id %s !" % (product.magento_sku, product.id,))
+                self.log(cr, uid, product.id, "Error when retrieving the list of links in Magento for product with reference %s and product id %s !" % (product.default_code, product.id,))
+                conn.logger.debug("Error when retrieving the list of links in Magento for product with reference %s and product id %s !" % (product.magento_sku, product.id,))
 
             for product_link in product_links:
-                ctx = context.copy()
-                ctx['alternative_key'] = product_link['sku']
-                linked_product_id = self.extid_to_oeid(cr, uid, external_session, product_link['product_id'], context=context)
+                linked_product_id = self.get_or_create_oeid(
+                    cr, uid,
+                    external_session,
+                    product_link['product_id'],
+                    context=context)
                 link_data = {
                     'product_id': product.id,
                     'type': link_type,
