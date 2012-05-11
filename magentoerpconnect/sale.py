@@ -150,7 +150,7 @@ class sale_shop(magerp_osv.magerp_osv):
         'exportable_product_ids': fields.function(_get_exportable_product_ids, method=True, type='one2many', relation="product.product", string='Exportable Products'),
         'magento_shop': fields.related('referential_id', 'magento_referential',type="boolean", string='Magento Shop', readonly=True),
         'allow_magento_order_status_push': fields.boolean('Allow Magento Order Status push', help='Allow to send back order status to Magento if order status changed in OpenERP first?'),
-        'allow_magento_notification': fields.boolean('Allow Magento Notification', help='Allow Magento to notify customer (mail) if OpenERP update Magento order status?'),
+        'allow_magento_notification': fields.boolean('Allow Magento Notification', help='Allow Magento to notify customer with an e-mail when OpenERP change an order status, create an invoice or a delivery order on Magento.'),
     }   
 
     _defaults = {
