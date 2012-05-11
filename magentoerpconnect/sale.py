@@ -481,8 +481,8 @@ class sale_order(magerp_osv.magerp_osv):
             [order.magento_incrementid,
             [],
              _("Invoice Created"),
-             True,
-             order.shop_id.allow_magento_notification])
+             order.shop_id.allow_magento_notification,
+             True])
         return magento_invoice_ref
 
     # TODO Move in base_sale_multichannels? 

@@ -32,10 +32,10 @@ class stock_picking(osv.osv):
 
     _inherit = "stock.picking"
 
-    def create_ext_complete_shipping(self, cr, uid, id, external_referential_id, magento_incrementid, context=None):
+    def create_ext_complete_shipping(self, cr, uid, id, external_referential_id, magento_incrementid, mail_notification=True, context=None):
         if context is None: context = {}
         conn = context.get('conn_obj', False)
-        ext_shipping_id = conn.call('sales_order_shipment.create', [magento_incrementid, {}, _("Shipping Created"), True, True])
+        ext_shipping_id = conn.call('sales_order_shipment.create', [magento_incrementid, {}, _("Shipping Created"), mail_notification, True])
         return ext_shipping_id
     
     def add_picking_line(self, cr, uid, lines, picking_line, context=None):
@@ -46,7 +46,7 @@ class stock_picking(osv.osv):
         lines.append(line_info)
         return lines        
 
-    def create_ext_partial_shipping(self, cr, uid, id, external_referential_id, magento_incrementid, context=None):
+    def create_ext_partial_shipping(self, cr, uid, id, external_referential_id, magento_incrementid, mail_notification=True, context=None):
         if context is None: context = {}
         conn = context.get('conn_obj', False)
         ext_shipping_id = False
@@ -68,7 +68,7 @@ class stock_picking(osv.osv):
             else:
                 item_qty.update({product_2_item[line['product_id']]: line['product_qty']})
 
-            ext_shipping_id = conn.call('sales_order_shipment.create', [magento_incrementid, item_qty, _("Shipping Created"), True, True])
+            ext_shipping_id = conn.call('sales_order_shipment.create', [magento_incrementid, item_qty, _("Shipping Created"), mail_notification, True])
         return ext_shipping_id 
 
     def create_ext_shipping(self, cr, uid, id, picking_type, external_referential_id, context=None):
@@ -78,7 +78,8 @@ class stock_picking(osv.osv):
         :param str picking_type: 'partial' or 'complete'
         :return: the picking id on magento
         """
-        magento_incrementid = self.browse(cr, uid, id, ['sale_id'], context).sale_id.magento_incrementid
+        sale = self.browse(cr, uid, id, ['sale_id'], context).sale_id
+        magento_incrementid = sale.magento_incrementid
         carrier_id = self.read(cr, uid, id, ['carrier_id'], context)['carrier_id']
         if carrier_id:
             carrier_id = carrier_id[0]
@@ -88,8 +89,11 @@ class stock_picking(osv.osv):
         meth = getattr(self, "create_ext_%s_shipping" % picking_type)
         try:
             ext_shipping_id = meth(
-                cr, uid, id, external_referential_id,
-                magento_incrementid, context=context)
+                cr, uid, id,
+                external_referential_id,
+                magento_incrementid,
+                sale.shop_id.allow_magento_notification,
+                context=context)
         except xmlrpclib.Fault, e:
             # When Magento is not able to create the shipping, it returns:
             # fault 102 is : <Fault 102: u"Impossible de faire l\'exp\xe9dition de la commande.">
