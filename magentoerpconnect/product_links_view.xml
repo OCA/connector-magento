@@ -10,9 +10,13 @@
             <field name="inherit_id" ref="product_links.product_link_form" />
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Product Links" position="inside">
+                <field name="type" position="after">
                     <field name="sequence"/>
-                </form>
+                </field>
+
+                <field name="linked_product_id" position="replace">
+                    <field name="linked_product_id" domain="[('magento_exportable', '!=', False)]" />
+                </field>
             </field>
         </record>
 
@@ -24,30 +28,11 @@
             <field name="inherit_id" ref="product_links.product_link_tree" />
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Product Links" position="inside">
+                <field name="type" position="after">
                     <field name="sequence"/>
-                </tree>
+                </field>
             </field>
         </record>
 
-        <record model="ir.ui.view" id="product_product_link_form_magento">
-            <field name="name">product.normal.form.custom.link.magento</field>
-            <field name="model">product.product</field>
-            <field name="inherit_id" ref="product_links.product_product_link_form"/>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <data>
-                    <field name="linked_product_id" position="replace">
-                        <field name="linked_product_id" domain="[('magento_sku','!=',False), ('magento_exportable', '!=', False)]" />
-                    </field>
-                    <form string="Product Links" position="inside">
-                        <field name="sequence"/>
-                    </form>
-                    <tree string="Product Links" position="inside">
-                        <field name="sequence"/>
-                    </tree>
-                </data>
-            </field>
-        </record>
     </data>
 </openerp>
