@@ -104,6 +104,22 @@ def ext_create(self, cr, uid, external_session, resources, mapping, mapping_id, 
 osv.osv.ext_create = ext_create
 
 
+osv.osv._mag_ext_update= osv.osv.ext_update
+@only_for_referential('magento', super_function = osv.osv._mag_ext_update)
+def ext_update(self, cr, uid, external_session, resources, mapping=None, mapping_id=None, context=None):
+    if not mapping[mapping_id]['external_update_method']:
+        external_session.logger.warning(_("Not update method for mapping %s")%mapping[mapping_id]['model'])
+        return False
+    else:
+        main_lang = context['main_lang']
+        for resource_id, resource in resources.items():
+            ext_id = resource[main_lang].pop('ext_id')
+            ext_id = external_session.connection.call(mapping[mapping_id]['external_update_method'],
+                                                                    [ext_id, resource[main_lang]])
+    return True
+
+osv.osv.ext_update = ext_update
+
 #@only_for_referential('magento', super_function = osv.osv.send_to_external)
 #def send_to_external(self, cr, uid, external_session, resource, update_date, context=None):
 #    print 'send this data to the external system', update_date
