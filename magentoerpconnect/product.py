@@ -1197,11 +1197,11 @@ class product_product(product_mag_osv):
         res = {}
         # get all magento external_referentials
         referential_ids = self.pool.get('external.referential').search(cr, uid, [('magento_referential', '=', True)])
-        for product in self.browse(cr, uid, ids, context):
+        for product_id in ids:
             for referential_id in referential_ids:
-                res[product.id] = False
-                if self.oeid_to_existing_extid(cr, uid, referential_id, product.id, context):
-                    res[product.id] = True
+                res[product_id] = False
+                if self.get_extid(cr, uid, product_id, referential_id, context):
+                    res[product_id] = True
                     break
         return res
 
