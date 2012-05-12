@@ -1035,6 +1035,7 @@ class product_product(product_mag_osv):
         self.export_inventory(cr, uid, external_session, product_ids, context=context)
         return res
 
+    #TODO reimplement the grouped product
     def ext_create(self, cr, uid, external_session, resources, mapping=None, mapping_id=None, context=None):
         ext_create_ids={}
         storeview_to_lang = context['storeview_to_lang']
@@ -1137,19 +1138,6 @@ class product_product(product_mag_osv):
                 new_image_id = image_obj.create(cr, uid, data, context=context)
                 image_obj.create_external_id_vals(cr, uid, new_image_id, image['file'], referential_id, context=context)
         return True
-    
-#    def extid_to_existing_oeid(self, cr, uid, id, external_referential_id, context=None):
-#        """Returns the OpenERP id of a resource by its external id.
-#           Returns False if the resource does not exist."""
-#        if not context:
-#            context={}
-#        res = super(product_mag_osv, self).extid_to_existing_oeid(cr, uid, id, external_referential_id, context=context)
-#        # TODO : check if this can be replaced by _existing_oeid_for_extid_import (see example in res.partner)
-#        # thus when importing a product which do not already exists in OpenERP, ext_import will create the binding and update it directly
-#        if not res and context.get('magento_sku', False):
-#            product_id = self.search(cr, uid, [('magento_sku', '=', context['magento_sku'])], context=context)
-#            return product_id and product_id[0] or False
-#        return res
 
     def get_field_to_export(self, cr, uid, ids, mapping, mapping_id, context=None):
         res = super(product_product, self).get_field_to_export(cr, uid, ids, mapping, mapping_id, context=context)
@@ -1312,195 +1300,6 @@ class product_product(product_mag_osv):
                 raise osv.except_osv(_('Warning!'), _('This product is related to Magento. It can not be deleted!\nYou can change it Magento status to "Disabled" and uncheck the active box to hide it from OpenERP.'))
         else:
             return super(product_product, self).unlink(cr, uid, ids, context)
-    
-    #TODO move part of this to declarative mapping CSV template
-    def extdata_from_oevals(self, cr, uid, external_referential_id, data_record, mapping_lines, defaults, context=None):
-        product_data = super(product_product, self).extdata_from_oevals(cr, uid, external_referential_id, data_record, mapping_lines, defaults, context) #Aapply custom/attributes mappings
-        if context is None: context = {}
-        product = self.browse(cr, uid, data_record['id'], context)
-        shop = self.pool.get('sale.shop').browse(cr, uid, context['shop_id'], context)
-
-        if not product_data.get('price', False):
-            pl_default_id = shop.pricelist_id and shop.pricelist_id.id or self.pool.get('product.pricelist').search(cr, uid, [('type', '=', 'sale')])
-            if isinstance(pl_default_id, int):
-                pl_default_id = [pl_default_id]
-            product_data.update({'price': self.pool.get('product.pricelist').price_get(cr, uid, pl_default_id, product.id, 1.0)[pl_default_id[0]]})
-            
-        if not product_data.get('tax_class_id', False):
-            product_data.update({'tax_class_id': 2}) #FIXME hugly!
-            
-        if not product_data.get('status', False):
-            product_data.update({'status': product.active and 1 or 0})
-
-        if not product_data.get('description', False):
-            product_data.update({'description': product.description or _("description")})
-        if not product_data.get('short_description', False):
-            product_data.update({'short_description': product.description_sale or _("short description")})
-        if not product_data.get('meta_title', False):
-            product_data.update({'meta_title': product.name})
-        if not product_data.get('meta_keyword', False):
-            product_data.update({'meta_keyword': product.name})
-        if not product_data.get('meta_description', False):
-            product_data.update({'meta_description': product.description_sale and product.description_sale[:255]})
-       
-        return product_data
-
-    def oevals_from_extdata(self, cr, uid, external_referential_id, data_record, mapping_lines, key_for_external_id=None, parent_data=None, previous_lines=None, defaults=None, context=None):
-        res = super(product_product, self).oevals_from_extdata(cr, uid, external_referential_id, data_record, mapping_lines, key_for_external_id=key_for_external_id, parent_data=parent_data, previous_lines=previous_lines, defaults=defaults, context=context)
-
-        # assign a default product type (Procurement, not the magento's one)
-        if not res.get('type'):
-            magerp_type_obj = self.pool.get('magerp.product_product_type')
-            magerp_type_ids = magerp_type_obj.search(cr, uid, [('product_type', '=', data_record['type_id'])], context=context)
-            if magerp_type_ids:
-                res['type'] = magerp_type_obj.read(cr, uid, magerp_type_ids[0], ['default_type'], context=context)['default_type']
-        return res
-
-    def action_before_exporting_grouped_product(self, cr, uid, id, external_referential_ids=None, defaults=None, context=None):
-        logger = netsvc.Logger()
-        if context.get('mrp_is_installed', False):
-            bom_ids = self.read(cr, uid, id, ['bom_ids'])['bom_ids']
-            if len(bom_ids): # it has or is part of a BoM
-                cr.execute("SELECT product_id, product_qty FROM mrp_bom WHERE bom_id = %s", (bom_ids[0],)) #FIXME What if there is more than a materials list?
-                results = cr.dictfetchall()
-                child_ids = []
-                quantities = {}
-                for row in results:
-                    child_ids.append(row['product_id'])
-                    quantities.update({row['product_id']: row['product_qty']})
-                if child_ids: #it is an assembly and it contains the products child_ids: 
-                    self.ext_export(cr, uid, child_ids, external_referential_ids, defaults, context) #so we export them
-            else:
-                return False
-        else:
-            logger.notifyChannel('ext synchro', netsvc.LOG_ERROR, "OpenERP 'grouped' products will export to Magento as 'grouped products' only if they have a BOM and if the 'mrp' BOM module is installed")
-        return quantities, child_ids
-
-    def action_before_exporting(self, cr, uid, id, product_type, external_referential_ids=None, defaults=None, context=None):
-        '''Hook to allow your external module to execute some code before exporting a product'''
-        return True
-    
-    #todo move this code to a generic module
-    def get_last_update_date(self, cr, uid, product_read, context=None):
-        """if a product have a depends on other object like bom for grouped product, or other product for configurable
-        the date of last update should be based on the last update of the dependence object"""
-        conn = context.get('conn_obj', False)
-        last_updated_date = product_read['write_date'] or product_read['create_date'] or False
-        if product_read['product_type'] == 'grouped':
-            if context.get('mrp_is_installed', False):
-                #TODO improve this part of code as the group product can be based on nan_product_pack
-                cr.execute("select id, write_date, create_date from mrp_bom where product_id = %s", (product_read['id'],))
-                read_bom = cr.dictfetchall()
-                for bom in read_bom:
-                    last_updated_bom_date = bom['write_date'] or bom['create_date'] or False
-                    if last_updated_bom_date > last_updated_date:
-                        last_updated_date=last_updated_bom_date
-            else:
-                conn.logger.notifyChannel('ext synchro', netsvc.LOG_ERROR, "OpenERP 'grouped' products will export to Magento as 'grouped products' only if they have a BOM and if the 'mrp' BOM module is installed")   
-        return last_updated_date
-                    
-    
-    def get_ordered_ids(self, cr, uid, ids, external_referential_ids=None, defaults=None, context=None):
-        #TODO pass the shop better than the referentials
-        dates_2_ids = []
-        ids_2_dates = {}
-        shop = self.pool.get('sale.shop').browse(cr, uid, context['shop_id'])
-        if shop.last_products_export_date:
-            last_exported_date = shop.last_products_export_date
-        else:
-            last_exported_date = False
-        #strangely seems that on inherits structure, write_date/create_date are False for children
-        #TODO check previous comment and check the write date on product template also for variant of product
-        cr.execute("select id, write_date, create_date, product_type from product_product where id in %s", (tuple(ids),))
-        read = cr.dictfetchall()
-        ids = []
-        context['force']=True
-        
-        for product_read in read:
-            last_updated_date = self.get_last_update_date(cr, uid, product_read, context=context)
-            if last_exported_date and last_updated_date < last_exported_date:
-                continue
-            dates_2_ids += [(last_updated_date, product_read['id'])]
-            ids_2_dates[product_read['id']] = last_updated_date
-
-        dates_2_ids.sort()
-        ids = [x[1] for x in dates_2_ids]
-
-        return ids, ids_2_dates
-        
-
-    def ext_export(self, cr, uid, ids, external_referential_ids=None, defaults=None, context=None):
-        #check if mrp is installed
-        cr.execute('select * from ir_module_module where name=%s and state=%s', ('mrp','installed'))
-        data_record = cr.fetchone()
-        if data_record and 'mrp' in data_record:
-            context['mrp_is_installed']=True
-
-        if context is None:
-            context = {}
-
-        if defaults is None:
-            defaults = {}
-        #TODO Is external_referential_ids is still used?
-        if external_referential_ids is None:
-            external_referential_ids = []
-
-        result = {'create_ids':[], 'write_ids':[]}
-        shop = self.pool.get('sale.shop').browse(cr, uid, context['shop_id'])
-        context['external_referential_id']=shop.referential_id.id
-        #TODO It will be better if this check was done before
-        ids = self.search(cr, uid, [('id', 'in', ids), ('magento_exportable', '=', True)]) #restrict export to only exportable products
-        if not ids:
-            return result
-        
-        if not context.get('force_export', False):
-            ids, ids_2_dates = self.get_ordered_ids(cr, uid, ids, external_referential_ids, defaults, context)
-
-        #set the default_set_id in context and avoid extra request for each product upload
-        
-        conn = context.get('conn_obj', False)
-        attr_sets = conn.call('product_attribute_set.list')
-        default_set_id = 1
-        for attr_set in attr_sets:
-            if attr_set['name'] == 'Default':
-                default_set_id = attr_set['set_id']
-                break
-        context['default_set_id'] = default_set_id
-        
-        context_dic = [context.copy()]
-        context_dic[0]['export_url'] = True # for the magento version 1.3.2.4, only one url is autorized by product, so we only export with the MAPPING TEMPLATE the url of the default language 
-        context_dic[0]['lang'] = shop.referential_id.default_lang_id.code
-
-        for storeview in shop.storeview_ids:
-            if storeview.lang_id and storeview.lang_id.code != shop.referential_id.default_lang_id.code:
-                context_dic += [context.copy()]
-                context_dic[len(context_dic)-1].update({'storeview_code': storeview.code, 'lang': storeview.lang_id.code})
-
-        for id in ids:
-            child_ids = []
-            product_type = self.read(cr, uid, id, ['product_type'])['product_type']
-            if product_type == 'grouped': # lookup for Magento "grouped product"
-                quantities, child_ids = self.action_before_exporting_grouped_product(cr, uid, id, external_referential_ids, defaults, context)
-            
-            self.action_before_exporting(cr, uid, id, product_type, external_referential_ids, defaults, context=context)
-            
-            for context_storeview in context_dic:
-                temp_result = super(magerp_osv.magerp_osv, self).ext_export(cr, uid, [id], external_referential_ids, defaults, context_storeview)
-                #TODO maybe refactor this part, did we need to assign and make the link for every store?
-                if child_ids:
-                    self.ext_product_assign(cr, uid, 'grouped', id, child_ids, quantities=quantities, external_referential_ids=external_referential_ids, defaults=defaults, context=context_storeview)
-                self.ext_assign_links(cr, uid, id, external_referential_ids=external_referential_ids, defaults=defaults, context=context_storeview)
-            not context.get('force_export', False) and self.pool.get('sale.shop').write(cr, uid,context['shop_id'], {'last_products_export_date': ids_2_dates[id]})
-            result['create_ids'] += temp_result['create_ids']
-            result['write_ids'] += temp_result['write_ids']
-        return result
-    
-    def try_ext_update(self, cr, uid, data, conn, method, oe_id, external_id, ir_model_data_id, create_method, context=None):
-        if context is None: context = {}
-        if context.get('storeview_code', False):
-            return conn.call(method, [external_id, data, context.get('storeview_code', False)])
-        else:
-            return conn.call(method, [external_id, data])
 
     def _prepare_inventory_magento_vals(self, cr, uid, product, stock, shop,
                                         context=None):
@@ -1578,8 +1377,6 @@ class product_product(product_mag_osv):
             (inventory_vals['qty'], product.default_code))
         return True
 
-
-    
     def ext_assign_links(self, cr, uid, ids, external_referential_ids=None, defaults=None, context=None):
         """ Assign links of type up-sell, cross-sell, related """
         if isinstance(ids, (int, long)):
