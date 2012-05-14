@@ -33,6 +33,7 @@ import unicodedata
 import base64, urllib
 import os
 from lxml import etree
+import xmlrpclib
 
 from tools import DEFAULT_SERVER_DATETIME_FORMAT
 
@@ -1036,6 +1037,12 @@ class product_product(product_mag_osv):
             self.export_inventory(cr, uid, external_session, product_ids, context=context)
         return res
 
+    def map_and_update_product(self, cr, uid, external_session, resource, sku, context=None):
+        res = external_session.connection.call('catalog_product.info', [sku, False, 'sku'])
+        ext_id = res['product_id']
+        external_session.connection.call('ol_catalog_product.update', [ext_id, resource, False, 'id'])
+        return ext_id
+
     #TODO reimplement the grouped product
     def ext_create(self, cr, uid, external_session, resources, mapping=None, mapping_id=None, context=None):
         ext_create_ids={}
@@ -1049,7 +1056,16 @@ class product_product(product_mag_osv):
             del resource[main_lang]['type_id']
             del resource[main_lang]['set']
             del resource[main_lang]['sku']
-            ext_id = external_session.connection.call('ol_catalog_product.create', [product_type, attr_set, sku, resource[main_lang]])
+            try:
+                ext_id = external_session.connection.call('ol_catalog_product.create', [product_type, attr_set, sku, resource[main_lang]])
+            except xmlrpclib.Fault, e:
+                if e.faultCode == 1:
+                    #Guewen did this should be optionnal? what do you think
+                    ext_id = self.map_and_update_product(cr, uid, external_session, resource[main_lang], sku, context=context)
+                else:
+                    raise
+            except:
+                raise
             for storeview, lang in storeview_to_lang.items():
                 external_session.connection.call('ol_catalog_product.update', [ext_id, resource[lang], storeview, 'id'])
             ext_create_ids[resource_id] = ext_id
