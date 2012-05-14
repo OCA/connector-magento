@@ -78,7 +78,7 @@ class stock_picking(osv.osv):
         :param str picking_type: 'partial' or 'complete'
         :return: the picking id on magento
         """
-        sale = self.browse(cr, uid, id, ['sale_id'], context).sale_id
+        sale = self.browse(cr, uid, id, context=context).sale_id
         magento_incrementid = sale.magento_incrementid
         carrier_id = self.read(cr, uid, id, ['carrier_id'], context)['carrier_id']
         if carrier_id:
