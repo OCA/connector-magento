@@ -53,7 +53,7 @@ class stock_picking(osv.osv):
         order_items = conn.call('sales_order.info', [magento_incrementid])['items']
         product_2_item = {}
         for item in order_items:
-            product_2_item.update({self.pool.get('product.product').extid_to_oeid(cr, uid, item['product_id'], external_referential_id, context={}): item['item_id']})
+            product_2_item.update({self.pool.get('product.product').get_oeid(cr, uid, item['product_id'], external_referential_id, context={}): item['item_id']})
         picking = self.pool.get('stock.picking').browse(cr, uid, id, context)
         item_qty = {}
         
