@@ -1060,12 +1060,11 @@ class product_product(product_mag_osv):
                 ext_id = external_session.connection.call('ol_catalog_product.create', [product_type, attr_set, sku, resource[main_lang]])
             except xmlrpclib.Fault, e:
                 if e.faultCode == 1:
-                    #Guewen did this should be optionnal? what do you think
+                    # a product with same SKU exists on Magento, we rebind it
                     ext_id = self.map_and_update_product(cr, uid, external_session, resource[main_lang], sku, context=context)
                 else:
                     raise
-            except:
-                raise
+
             for storeview, lang in storeview_to_lang.items():
                 external_session.connection.call('ol_catalog_product.update', [ext_id, resource[lang], storeview, 'id'])
             ext_create_ids[resource_id] = ext_id
