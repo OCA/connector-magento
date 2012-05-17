@@ -1311,7 +1311,7 @@ class product_product(product_mag_osv):
 
         for shop in sale_obj.browse(cr, uid, shops_ids, context):
             for product_id in ids:
-                mgn_product = self.oeid_to_extid(cr, uid, product_id, shop.referential_id.id)
+                mgn_product = self.get_extid(cr, uid, product_id, shop.referential_id.id)
                 if mgn_product:
                     not_delete = True
                     break
