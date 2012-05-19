@@ -62,6 +62,7 @@
             'settings/1.5.0.0/res.partner/external.mappinglines.template.csv',
             'settings/1.5.0.0/res.partner.address/external.mappinglines.template.csv',
             'settings/1.5.0.0/account.invoice/external.mappinglines.template.csv',
+            'settings/1.5.0.0/product.link/external.mappinglines.template.csv',
             'settings/magerp_product_product_type.xml',
             'magerp_data.xml',
             'magerp_core_view.xml',
