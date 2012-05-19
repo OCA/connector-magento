@@ -45,3 +45,4 @@ magentoerpconnect.mag1500_res_partner_address_fax,,in_out,direct,fax,base.field_
 magentoerpconnect.mag1500_res_partner_address_lastname,,in_out,direct,lastname,magentoerpconnect.field_res_partner_address_lastname,unicode,False,magentoerpconnect.mag1500_res_partner_address,,,,,
 mag1500_res_partner_address_email,,in_out,direct,email,base.field_res_partner_address_email,unicode,False,magentoerpconnect.mag1500_res_partner_address,,,,,
 mag1500_res_partner_address_company,,in_out,direct,company,magentoerpconnect.field_res_partner_address_company,unicode,True,magentoerpconnect.mag1500_res_partner_address,,,,,
+magentoerpconnect.mag1500_res_partner_address_zip,,in_out,direct,postcode,base.field_res_partner_address_zip,unicode,True,magentoerpconnect.mag1500_res_partner_address,,"result=[('zip',ifield)]",,,
