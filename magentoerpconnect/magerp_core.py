@@ -166,7 +166,7 @@ class external_referential(magerp_osv.magerp_osv):
     def _sync_product_storeview(self, cr, uid, external_session, referential_id, ext_product_id, storeview, mapping=None, context=None):
         if context is None: context = {}
         #we really need to clean all magento call and give the posibility to force everythere to use the id as identifier
-        product_info = external_session.connection.call('catalog_product.info', [ext_product_id, storeview.code, 'id'])
+        product_info = external_session.connection.call('catalog_product.info', [ext_product_id, storeview.code, False, 'id'])
         ctx = context.copy()
         ctx.update({'magento_sku': product_info['sku']})
         defaults={'magento_exportable': True}

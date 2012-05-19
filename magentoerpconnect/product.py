@@ -1038,7 +1038,7 @@ class product_product(product_mag_osv):
         return res
 
     def map_and_update_product(self, cr, uid, external_session, resource, sku, context=None):
-        res = external_session.connection.call('catalog_product.info', [sku, False, 'sku'])
+        res = external_session.connection.call('catalog_product.info', [sku, False, False, 'sku'])
         ext_id = res['product_id']
         external_session.connection.call('ol_catalog_product.update', [ext_id, resource, False, 'id'])
         return ext_id
@@ -1061,7 +1061,11 @@ class product_product(product_mag_osv):
             except xmlrpclib.Fault, e:
                 if e.faultCode == 1:
                     # a product with same SKU exists on Magento, we rebind it
-                    ext_id = self.map_and_update_product(cr, uid, external_session, resource[main_lang], sku, context=context)
+                    #TODO fix magento API. Indeed catalog_product.info seem to be broken
+                    try:
+                        ext_id = self.map_and_update_product(cr, uid, external_session, resource[main_lang], sku, context=context)
+                    except:
+                        raise osv.except_osv(_('Error!'), _("Product %s already exist in Magento. Failed to rebind it. Please do it manually")%(sku))
                 else:
                     raise
 
