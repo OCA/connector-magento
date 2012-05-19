@@ -39,13 +39,30 @@ res_partner_category()
 class res_partner_address(magerp_osv.magerp_osv):
     _inherit = "res.partner.address"
 
+
+    #TODO maybe move the fields company, firstname, lastname in an extra module
+    #On v7 the partner address model will totaly change so maybe it's not worth
+    def _get_partner_name(self, cr, uid, ids, field_name, arg, context=None):
+        res ={}
+        for partner in self.browse(cr, uid, ids, context=context):
+            res[partner.id] = ((partner.company and partner.company + ' : ') or '') + \
+                              (partner.title and partner.title.name + ' ' or '') + \
+                              (partner.lastname and partner.lastname + ' ' or '') + \
+                              (partner.firstname or '')
+        return res
+
     _columns = {
-                    'firstname':fields.char('First Name', size=100),
-                    'lastname':fields.char('Last Name', size=100),
-                    'is_magento_order_address':fields.boolean('Magento Order Address?'), #TODO still needed?
+        'name': fields.function(_get_partner_name, obj="res.partner.address", type = 'char', size = 256,
+                store = {
+                    'res.partner.address' : (lambda self, cr, uid, ids, c={}: ids,
+                                                    ['company', 'firstname', 'lastname', 'title'], 10)}),
+        'company':fields.char('Company', size=100),
+        'firstname':fields.char('First Name', size=100),
+        'lastname':fields.char('Last Name', size=100),
+        'is_magento_order_address':fields.boolean('Magento Order Address?'), #TODO still needed?
                 }
     _defaults = {
-                    'is_magento_order_address': lambda * a:False,
+        'is_magento_order_address': lambda * a:False,
                  }
 
     @only_for_referential('magento')
