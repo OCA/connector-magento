@@ -35,6 +35,8 @@ from base_external_referentials.decorator import only_for_referential
 from base_external_referentials.decorator import open_report
 from base_external_referentials.decorator import catch_error_in_report
 import netsvc
+import logging
+_logger = logging.getLogger(__name__)
 
 osv.osv.mag_transform_and_send_one_resource = osv.osv._transform_and_send_one_resource
 
@@ -178,28 +180,28 @@ class Connection(object):
         self.password = password
         self.debug = debug
         self.result = {}
-        self.logger = logger
+        self.logger = logger or _logger
 
     
     def connect(self):
         if not self.location[-1] == '/':
             self.location += '/'
         if self.debug:
-            self.logger.info(_("Attempting connection with Settings:%s,%s,%s") % (self.location, self.username, self.password))
+            self.logger.info("Attempting connection with Settings:%s,%s,%s" % (self.location, self.username, self.password))
         self.ser = xmlrpclib.ServerProxy(self.location)
         for sleep_time in [1, 3, 6]:
             try:
                 self.session = self.ser.login(self.username, self.password)
                 if self.debug:
-                    self.logger.info(_("Login Successful"))
+                    self.logger.info("Login Successful")
                 return True
             except IOError, e:
-                self.logger.error(_("Error in connecting:%s") % (e))
-                self.logger.warning(_("Webservice Failure, sleeping %s second before next attempt") % (sleep_time))
+                self.logger.error("Error in connecting:%s" % e)
+                self.logger.warning("Webservice Failure, sleeping %s second before next attempt" % sleep_time)
                 time.sleep(sleep_time)
             except Exception,e:
-                self.logger.error(_("Magento Connection"), netsvc.LOG_ERROR, _("Error in connecting:%s") % (e))
-                self.logger.warning(_("Webservice Failure, sleeping %s second before next attempt") % (sleep_time))
+                self.logger.error("Magento Connection" + netsvc.LOG_ERROR +  "Error in connecting:%s" % e)
+                self.logger.warning("Webservice Failure, sleeping %s second before next attempt" % sleep_time)
                 time.sleep(sleep_time)  
         raise osv.except_osv(_('User Error'), _('Error when try to connect to magento, are your sure that your login is right? Did openerp can access to your magento?'))
 
