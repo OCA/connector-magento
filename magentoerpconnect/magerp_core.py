@@ -227,7 +227,7 @@ class external_referential(magerp_osv.magerp_osv):
                     if referential.import_image_with_product:
                         prod_obj.import_product_image(import_cr, uid, product_id, referential.id, attr_conn, ext_id=ext_product_id, context=context)
                     if referential.import_links_with_product:
-                        prod_obj.mag_import_product_links_types(import_cr, uid, product_id, link_types, referential.id, attr_conn, context=context)
+                        prod_obj.mag_import_product_links_types(import_cr, uid, product_id, link_types,  external_session, context=context)
                     self.write(import_cr, uid, referential.id, {'last_imported_product_id': int(ext_product_id)}, context=context)
                     import_cr.commit()
             finally:
