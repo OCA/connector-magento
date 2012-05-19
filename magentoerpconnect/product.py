@@ -1314,11 +1314,12 @@ class product_product(product_mag_osv):
         shops_ids = sale_obj.search(cr, uid, search_params)
 
         for shop in sale_obj.browse(cr, uid, shops_ids, context):
-            for product_id in ids:
-                mgn_product = self.get_extid(cr, uid, product_id, shop.referential_id.id)
-                if mgn_product:
-                    not_delete = True
-                    break
+            if shop.referential_id and shop.referential_id.type_id.name == 'Magento':
+                for product_id in ids:
+                    mgn_product = self.get_extid(cr, uid, product_id, shop.referential_id.id)
+                    if mgn_product:
+                        not_delete = True
+                        break
         if not_delete:
             if len(ids) > 1:
                 raise osv.except_osv(_('Warning!'), _('They are some products related to Magento. They can not be deleted!\nYou can change their Magento status to "Disabled" and uncheck the active box to hide them from OpenERP.'))
