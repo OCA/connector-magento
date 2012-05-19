@@ -44,8 +44,9 @@ magentoerpconnect_bundle_split: sub-items are managed as normal products in Open
     "website" : "https://launchpad.net/magentoerpconnect",
     'depends': ['magentoerpconnect'],
     'init_xml': [],
-    'update_xml': ['settings/1.3.2.4/external.mappinglines.template.csv',
-                   'settings/1.5.0.0/external.mappinglines.template.csv',],
+    'update_xml': [
+           'settings/1.5.0.0/external.mappinglines.template.csv'
+    ],
     'demo_xml': [],
     'installable': True,
     'auto_install': False,
