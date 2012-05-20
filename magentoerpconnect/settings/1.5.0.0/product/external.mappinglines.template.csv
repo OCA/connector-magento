@@ -43,7 +43,7 @@ if 'websites_ids' in resource:
 
     result=[('websites', ext_websites_ids)]",,
 "magentoerpconnect.mag1500_product_product_short_description",,"in_out","direct","short_description","product.field_product_template_description_sale","unicode","False","magentoerpconnect.mag1500_product_product",,,,,
-"magentoerpconnect.mag1500_product_product_sku",,"in_out","direct","sku","product.field_product_product_default_code","unicode","False","magentoerpconnect.mag1500_product_product",,,,,
+"magentoerpconnect.mag1500_product_product_sku",,"in_out","direct","sku","product.field_product_product_default_code","unicode",1,"magentoerpconnect.mag1500_product_product",,,,,
 "magentoerpconnect.mag1500_product_product_categories",,"in_out","function","categories","product.field_product_template_categ_id","list","False","magentoerpconnect.mag1500_product_product","categories","categ_ids =[]
 if ifield:
     for category_id in ifield:
