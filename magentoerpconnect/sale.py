@@ -390,6 +390,7 @@ class sale_order(magerp_osv.magerp_osv):
     def _transform_one_resource(self, cr, uid, external_session, convertion_type, resource, mapping, mapping_id, \
                      mapping_line_filter_ids=None, parent_data=None, previous_result=None, defaults=None, context=None):
         resource = self.clean_magento_resource(cr, uid, resource, context=context)
+        resource = self.clean_magento_items(cr, uid, resource, context=context)
         if not resource['customer_id']:
             #If there is not partner it's a guest order
             #So we remove the useless information
