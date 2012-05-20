@@ -1118,7 +1118,7 @@ class product_product(product_mag_osv):
         image_obj = self.pool.get('product.images')
         logger = netsvc.Logger()
         if not ext_id:
-            ext_id = self.oeid_to_extid(cr, uid, id, referential_id, context=None)
+            ext_id = self.get_extid(cr, uid, id, referential_id, context=context)
         # TODO everythere will should pass the params 'id' for magento api in order to force 
         # to use the id as external key instead of mixed id/sku
         img_list = conn.call('catalog_product_attribute_media.list', [ext_id, False, 'id'])
