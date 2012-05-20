@@ -362,7 +362,7 @@ class sale_order(magerp_osv.magerp_osv):
         local_defaults = defaults.copy()
 
         resource['firstname'] = resource['customer_firstname']
-        resource['lastname'] = resource['customer_email']
+        resource['lastname'] = resource['customer_lastname']
         resource['email'] = resource['customer_email']
 
         shop = self.pool.get('sale.shop').browse(cr, uid, defaults['shop_id'], context=context)
@@ -377,18 +377,15 @@ class sale_order(magerp_osv.magerp_osv):
             local_defaults[address_key]['partner_id'] = partner_id
         return local_defaults
 
-
-
-
     @only_for_referential('magento')
     def _transform_one_resource(self, cr, uid, external_session, convertion_type, resource, mapping, mapping_id, \
                      mapping_line_filter_ids=None, parent_data=None, previous_result=None, defaults=None, context=None):
         resource = self.clean_magento_resource(cr, uid, resource, context=context)
-        if not resource['ext_customer_id']:
+        if not resource['customer_id']:
             #If there is not partner it's a guest order
             #So we remove the useless information
             #And create a partner on fly and set the data in the default value
-            del resource['ext_customer_id']
+            del resource['customer_id']
             del resource['billing_address']['customer_id']
             del resource['shipping_address']['customer_id']
             defaults = self.create_onfly_partner(cr, uid, external_session, resource, mapping, defaults, context=context)
@@ -414,7 +411,8 @@ class sale_order(magerp_osv.magerp_osv):
     def _record_one_external_resource(self, cr, uid, external_session, resource, defaults=None, mapping=None, mapping_id=None, context=None):
         res = super(sale_order, self)._record_one_external_resource(cr, uid, external_session, resource, defaults=defaults, mapping=mapping, mapping_id=mapping_id, context=context)
         external_id = resource['increment_id'] # TODO it will be better to not hardcode this parameter
-        self.ext_set_resource_as_imported(cr, uid, external_session, external_id, mapping=mapping, mapping_id=mapping_id, context=context)
+        if res:
+            self.ext_set_resource_as_imported(cr, uid, external_session, external_id, mapping=mapping, mapping_id=mapping_id, context=context)
         return res
 
     def _check_need_to_update_single(self, cr, uid, external_session, order, context=None):
@@ -601,9 +599,20 @@ class sale_order(magerp_osv.magerp_osv):
         del resource['shipping_address']['customer_address_id']
         del resource['billing_address']['address_id']
         del resource['shipping_address']['address_id']
-        if not resource['ext_customer_id']:
+
+        # For really strange and unknow reason magento want to play with me and make me some joke.
+        # Depending of the customer installation some time the field customer_id is equal to NONE
+        # in the sale order and sometime it's equal to NONE in the address but at least the 
+        # the information is correct in one of this field
+        # So I make this ugly code to try to fix it.
+        if not resource['customer_id']:
             if resource['billing_address']['customer_id']:
-                resource['ext_customer_id'] = resource['billing_address']['customer_id']
+                resource['customer_id'] = resource['billing_address']['customer_id']
+        else:
+            if not resource['billing_address']['customer_id']:
+                resource['billing_address']['customer_id'] = resource['customer_id']
+            if not resource['shipping_address']['customer_id']:
+                resource['shipping_address']['customer_id'] = resource['customer_id']
         return resource
 
 sale_order()
