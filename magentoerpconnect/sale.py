@@ -140,6 +140,13 @@ class sale_shop(magerp_osv.magerp_osv):
             res[shop.id] = res1[shop.id] and [res1[shop.id]] or []
         return res
 
+    @only_for_referential('magento')
+    def _get_default_import_values(self, cr, uid, external_session, **kwargs):
+        defaults = super(sale_shop, self)._get_default_import_values(cr, uid, external_session, **kwargs)
+        if not defaults: defaults={}
+        defaults.update({'magento_shop' : True})
+        return defaults
+
     _columns = {
         'default_storeview_integer_id':fields.integer('Magento default Storeview ID'), #This field can't be a many2one because store field will be mapped before creating storeviews
         'default_storeview_id':fields.function(_get_default_storeview_id, type="many2one", relation="magerp.storeviews", method=True, string="Default Storeview"),
@@ -148,7 +155,9 @@ class sale_shop(magerp_osv.magerp_osv):
         'exportable_root_category_ids': fields.function(_get_exportable_root_category_ids, type="many2many", relation="product.category", method=True, string="Root Category"), #fields.function(_get_exportable_root_category_ids, type="many2one", relation="product.category", method=True, 'Exportable Root Categories'),
         'storeview_ids': fields.one2many('magerp.storeviews', 'shop_id', 'Store Views'),
         'exportable_product_ids': fields.function(_get_exportable_product_ids, method=True, type='one2many', relation="product.product", string='Exportable Products'),
-        'magento_shop': fields.related('referential_id', 'magento_referential',type="boolean", string='Magento Shop', readonly=True),
+        #TODO fix me, it's look like related field on a function fielf doesn't work.
+        #'magento_shop': fields.related('referential_id', 'magento_referential',type="boolean", string='Magento Shop', readonly=True),
+        'magento_shop': fields.boolean('Magento Shop', readonly=True),
         'allow_magento_order_status_push': fields.boolean('Allow Magento Order Status push', help='Allow to send back order status to Magento if order status changed in OpenERP first?'),
         'allow_magento_notification': fields.boolean('Allow Magento Notification', help='Allow Magento to notify customer with an e-mail when OpenERP change an order status, create an invoice or a delivery order on Magento.'),
     }   
