@@ -10,7 +10,9 @@ if 'x_magerp_minimal_price' in resource:
 "magentoerpconnect.mag1500_product_product_type_id",,"in_out","function","type_id","magentoerpconnect.field_product_product_product_type","unicode","False","magentoerpconnect.mag1500_product_product","product_type","if ifield:
     product_type_ids  = self.pool.get('magerp.product_product_type').search(cr,uid,[('product_type','=',ifield)])
     if product_type_ids:
-        result = [('product_type',ifield)]","if 'product_type' in resource and resource['product_type']:
+        result = [('product_type',ifield)]
+if ifield == 'simple':
+    result.append(('type', 'product'))","if 'product_type' in resource and resource['product_type']:
     result = [('type_id', resource['product_type'])]
 else:
     result = [('type_id','simple')]",,
