@@ -26,7 +26,7 @@ from tools.translate import _
 
 class account_invoice(osv.osv):
     _inherit = "account.invoice"
-    
+
     _columns = {
         'magento_ref':fields.char('Magento REF', size=32),
     }
@@ -107,3 +107,19 @@ class account_invoice(osv.osv):
 
 
 account_invoice()
+
+
+class account_invoice_line(osv.osv):
+
+    _inherit = 'account.invoice.line'
+
+    _columns = {
+        # Forced the precision of the account.invoice.line discount field
+        # to 3 digits in order to be able to have the same amount as Magento.
+        # Example: Magento has a sale line of 299€ and 150€ of discount, so a line at 149€.
+        # We translate it to a percent in the openerp invoice line
+        # With a 2 digits precision, we can have 50.17 % => 148.99 or 50.16% => 149.02.
+        # Force the digits to 3 allows to have 50.167% => 149€
+        'discount': fields.float('Discount (%)', digits=(16, 3)),
+    }
+account_invoice_line()
