@@ -65,3 +65,4 @@ result=[('categories', categ_ids)]",,
         result = [('special_price', resource['x_magerp_special_price'])]
     else:
         result = [('special_price', False)]",,
+mag1500_product_product_product_link,,out,sub-mapping,product_link,product_links.field_product_product_product_link_ids,list,False,magentoerpconnect.mag1500_product_product,,,,magentoerpconnect.mag1500_product_link,
