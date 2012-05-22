@@ -547,6 +547,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
             existing_line = self.pool.get('external.mapping.line').search(cr, uid, [('external_field', '=', vals['attribute_code']), ('mapping_id', '=', mapping_id[0])])
             if not existing_line:
                 mapping_line = {'external_field': vals['attribute_code'],
+                                'sequence': 0,
                                 'mapping_id': mapping_id[0],
                                 'type': 'in_out',
                                 'external_type': self._type_casts[vals.get('frontend_input', False)],
