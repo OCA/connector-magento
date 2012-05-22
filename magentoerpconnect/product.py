@@ -1495,7 +1495,7 @@ class product_product(product_mag_osv):
         if context is None: context = {}
         conn = external_session.connection
         product_link_obj = self.pool.get('product.link')
-        selection_link_types = product_link_obj._columns['type'].selection(cr, uid, context)
+        selection_link_types = product_link_obj.get_link_type_selection(cr, uid, context)
         mag_product_id = self.get_extid(
             cr, uid, product.id, external_session.referential_id.id, context=context)
         # This method could be completed to import grouped products too, you know, for Magento a product link is as
