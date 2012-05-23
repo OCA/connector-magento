@@ -47,15 +47,15 @@ class sale_order(osv.osv):
         else:
             return super(sale_order, self)._merge_sub_items(cr, uid, product_type,
                                             top_item, child_items, context=context)
+    def oe_create(self, cr, uid, 
+		  external_session, vals, resource, defaults, context):
 
-    def oe_create(self, cr, uid, vals,
-                  external_referential_id, defaults=None, context=None):
-
-        order_id = super(sale_order, self).\
-            oe_create(cr, uid, vals,
-                      external_referential_id,
-                      defaults=defaults,
-                      context=context)
+	order_id = super(sale_order, self).\
+	    oe_create(cr, uid, external_session,
+		      vals, 
+		      resource, 
+		      defaults=defaults, 
+		      context=context)
 
         order_line_obj = self.pool.get('sale.order.line')
         order = self.browse(cr, uid, order_id, context=context)
