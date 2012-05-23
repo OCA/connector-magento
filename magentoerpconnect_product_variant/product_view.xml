@@ -95,6 +95,9 @@
                             <button name="open_magento_fields" string="Open Magento Fields" icon="gtk-go-forward" type="object"/>
                         </group>
                     </xpath>
+                    <xpath expr="/form/notebook" position="inside">
+                        <page string="attributes_placeholder"/>
+                    </xpath>
 					<field name="variant_track_outgoing" position="after">
 						<field name="magento_exportable"/>
 					</field>
