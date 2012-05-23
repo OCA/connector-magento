@@ -26,7 +26,7 @@ class stock_picking(osv.osv):
 
     _inherit = 'stock.picking'
 
-    def create_ext_shipping(self, cr, uid, id,picking_type,
+    def create_ext_shipping(self, cr, uid, id, picking_type,
                             external_referential_id, context):
         """
         Create the shipping on Magento. It can be a partial
