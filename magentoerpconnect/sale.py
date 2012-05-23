@@ -226,7 +226,7 @@ class sale_shop(magerp_osv.magerp_osv):
 sale_shop()
 
 
-class sale_order(magerp_osv.magerp_osv):
+class sale_order(osv.osv):
     _inherit = "sale.order"
     
     _columns = {
@@ -421,8 +421,7 @@ class sale_order(magerp_osv.magerp_osv):
     def _record_one_external_resource(self, cr, uid, external_session, resource, defaults=None, mapping=None, mapping_id=None, context=None):
         res = super(sale_order, self)._record_one_external_resource(cr, uid, external_session, resource, defaults=defaults, mapping=mapping, mapping_id=mapping_id, context=context)
         external_id = resource['increment_id'] # TODO it will be better to not hardcode this parameter
-        if res:
-            self.ext_set_resource_as_imported(cr, uid, external_session, external_id, mapping=mapping, mapping_id=mapping_id, context=context)
+        self.ext_set_resource_as_imported(cr, uid, external_session, external_id, mapping=mapping, mapping_id=mapping_id, context=context)
         return res
 
     def _check_need_to_update_single(self, cr, uid, external_session, order, context=None):
