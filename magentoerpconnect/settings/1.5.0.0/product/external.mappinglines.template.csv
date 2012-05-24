@@ -52,13 +52,16 @@ if ifield:
 else:
     main_categ_id = self.pool.get('external.referential').browse(cr, uid, referential_id).default_pro_cat.id
 result = [('categ_id', main_categ_id), ('categ_ids',[(6, 0, categ_ids)])]","
-product = self.browse(cr, uid, resource['id'])
-main_categ_id = self.pool.get('product.category').oeid_to_existing_extid(cr, uid, referential_id, product.categ_id.id)
-categ_ids = [main_categ_id]
-for categ in product.categ_ids: #deal with extra m2m categories
-    categ_id =  self.pool.get('product.category').oeid_to_existing_extid(cr, uid,  referential_id, categ.id)
-    if categ_id:
-        categ_ids.append(categ_id)
+cat_obj = self.pool.get('product.category')
+product = self.browse(cr, uid, record['id'])
+categ_ids = [product.categ_id.id] + [categ.id for categ in product.categ_ids]
+mag_categ_ids = []
+for categ_id in categ_ids:
+    mag_categ_id = cat_obj.oeid_to_extid(cr, uid, categ_id, external_referential_id)
+    if not mag_categ_id:
+        cat_obj.ext_export(cr, uid, [categ_id], [external_referential_id], context=context)
+        mag_categ_id = cat_obj.oeid_to_extid(cr, uid, categ_id, external_referential_id)
+    mag_categ_ids.append(mag_categ_id)
 result=[('categories', categ_ids)]",,
 "mag1500_product_product_special_price",,"in_out","function","special_price",,"float","False","magentoerpconnect.mag1500_product_product","special_price","if 'x_magerp_special_price' in resource: result = [('x_magerp_special_price', ifield)]","if 'x_magerp_special_price' in resource: 
     if resource['x_magerp_special_price']:
