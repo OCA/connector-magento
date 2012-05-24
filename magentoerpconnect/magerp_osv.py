@@ -81,13 +81,17 @@ def _get_external_resources(self, cr, uid, external_session, external_id=None, r
         read_method = mapping[mapping_id]['external_get_method']
         if not read_method:
             #TODO don't forget to replace model by nam ewhen name will be implemented
-            raise osv.except_osv(_('User Error'), _('There is not read method for the mapping %s')%(mapping[mapping_id]['model'],))
+            raise osv.except_osv(_('User Error'),
+                _('There is no "Get Method" configured on the mapping %s') %
+                mapping[mapping_id]['model'])
         return external_session.connection.call(read_method, [external_id])
     else:
         search_read_method = mapping[mapping_id]['external_list_method']
         if not search_read_method:
             #TODO don't forget to replace model by nam ewhen name will be implemented
-            raise osv.except_osv(_('User Error'), _('There is not list method for the mapping %s')%(mapping[mapping_id]['model'],))
+            raise osv.except_osv(_('User Error'),
+                _('There is no "List Method" configured on the mapping %s') %
+                mapping[mapping_id]['model'])
         return external_session.connection.call(search_read_method, [resource_filter or {}])
 
 osv.osv._get_external_resources = _get_external_resources
