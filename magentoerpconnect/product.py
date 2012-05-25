@@ -34,6 +34,9 @@ import os
 from lxml import etree
 import xmlrpclib
 
+import logging
+_logger = logging.getLogger(__name__)
+
 from tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 from base_external_referentials.decorator import only_for_referential
@@ -1041,7 +1044,22 @@ class product_product(product_mag_osv):
         ext_id = res['product_id']
         external_session.connection.call('ol_catalog_product.update', [ext_id, resource, False, 'id'])
         return ext_id
-
+    
+    @only_for_referential('magento')
+    def _get_external_resources(self, cr, uid, external_session, external_id=None, resource_filter=None,
+                                         mapping=None, mapping_id=None, fields=None, context=None):
+        if external_id:
+            return external_session.connection.call('catalog_product.info', [external_id, False, False, 'id'])
+        else:
+            return super(product_product, self)._get_external_resources(cr, uid, external_session,
+                                                                    external_id=external_id,
+                                                                    resource_filter=resource_filter,
+                                                                    mapping=mapping,
+                                                                    mapping_id=mapping_id,
+                                                                    fields=fields,
+                                                                    context=context)
+        
+        
     #TODO reimplement the grouped product
     def ext_create(self, cr, uid, external_session, resources, mapping=None, mapping_id=None, context=None):
         ext_create_ids={}
