@@ -36,6 +36,8 @@ from base_external_referentials.decorator import only_for_referential
 
 #from base_external_referentials import report
 
+import logging
+_logger = logging.getLogger(__name__)
 
 DEBUG = True
 NOTRY = False
@@ -54,7 +56,7 @@ SALE_ORDER_IMPORT_STEP = 200
 
 class sale_shop(magerp_osv.magerp_osv):
     _inherit = "sale.shop"
-    
+
     @only_for_referential('magento')
     def init_context_before_exporting_resource(self, cr, uid, external_session, object_id, resource_name, context=None):
         context = super(sale_shop, self).init_context_before_exporting_resource(cr, uid, external_session, object_id, resource_name, context=context)
@@ -90,10 +92,9 @@ class sale_shop(magerp_osv.magerp_osv):
             else:
                 res[shop.id] = False
         return res
-    
+
     def export_images(self, cr, uid, ids, context=None):
         if context is None: context = {}
-        logger = netsvc.Logger()
         start_date = time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         image_obj = self.pool.get('product.images')
         for shop in self.browse(cr, uid, ids):
@@ -101,8 +102,8 @@ class sale_shop(magerp_osv.magerp_osv):
             exportable_product_ids = self.read(cr, uid, shop.id, ['exportable_product_ids'], context=context)['exportable_product_ids']
             res = self.pool.get('product.product').get_exportable_images(cr, uid, external_session, exportable_product_ids, context=context)
             if res:
-                logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "Creating %s images" %(len(res['to_create'])))
-                logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "Updating %s images" %(len(res['to_update'])))
+                _logger.info("Creating %s images", len(res['to_create']))
+                _logger.info("Updating %s images", len(res['to_update']))
                 image_obj.update_remote_images(cr, uid, external_session, res['to_update']+res['to_create'], context)
             shop.write({'last_images_export_date': start_date})
         return True
@@ -167,7 +168,7 @@ class sale_shop(magerp_osv.magerp_osv):
         'magento_shop': fields.boolean('Magento Shop', readonly=True),
         'allow_magento_order_status_push': fields.boolean('Allow Magento Order Status push', help='Allow to send back order status to Magento if order status changed in OpenERP first?'),
         'allow_magento_notification': fields.boolean('Allow Magento Notification', help='Allow Magento to notify customer with an e-mail when OpenERP change an order status, create an invoice or a delivery order on Magento.'),
-    }   
+    }
 
     _defaults = {
         'allow_magento_order_status_push': lambda * a: False,
@@ -226,7 +227,7 @@ class sale_shop(magerp_osv.magerp_osv):
 
     def run_update_images_scheduler(self, cr, uid, context=None):
         self._sale_shop(cr, uid, self.export_images, context=context)
-                   
+
     def run_export_shipping_scheduler(self, cr, uid, context=None):
         self._sale_shop(cr, uid, self.export_shipping, context=context)
 
@@ -235,7 +236,7 @@ sale_shop()
 
 class sale_order(osv.osv):
     _inherit = "sale.order"
-    
+
     _columns = {
         'magento_incrementid': fields.char('Magento Increment ID', size=32),
         'magento_storeview_id': fields.many2one('magerp.storeviews', 'Magento Store View'),
@@ -244,7 +245,7 @@ class sale_order(osv.osv):
             type='boolean',
             string='Is a Magento Sale Order')
     }
-    
+
     def _auto_init(self, cr, context=None):
         tools.drop_view_if_exists(cr, 'sale_report')
         cr.execute("ALTER TABLE sale_order_line ALTER COLUMN discount TYPE numeric(16,6);")
@@ -260,7 +261,7 @@ class sale_order(osv.osv):
 #        if data_record.get('customer_taxvat'):
 #            partner_vals = {'mag_vat': data_record.get('customer_taxvat')}
 #            cr.execute('select * from ir_module_module where name=%s and state=%s', ('base_vat','installed'))
-#            if cr.fetchone(): 
+#            if cr.fetchone():
 #                allchars = string.maketrans('', '')
 #                delchars = ''.join([c for c in allchars if c not in string.letters + string.digits])
 #                vat = data_record['customer_taxvat'].translate(allchars, delchars).upper()
@@ -282,7 +283,7 @@ class sale_order(osv.osv):
 #                    partner_vals.update({'vat_subjected':True, 'vat':vat})
 #            partner_obj.write(cr, uid, [partner_id], partner_vals)
 #        return res
-#    
+#
 
 
     def _get_payment_information(self, cr, uid, external_session, order_id, resource, context=None):
@@ -303,7 +304,6 @@ class sale_order(osv.osv):
         """
         if context is None:
             context = {}
-        logger = netsvc.Logger()
         conn = context.get('conn_obj', False)
         parent_list = []
         # get all parents orders (to cancel) of the sale orders
@@ -319,7 +319,7 @@ class sale_order(osv.osv):
                 try:
                     wf_service.trg_validate(uid, 'sale.order', canceled_order_id, 'cancel', cr)
                     self.log(cr, uid, canceled_order_id, "order %s canceled when updated from external system" % (canceled_order_id,))
-                    logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "Order %s canceled when updated from external system because it has been replaced by a new one" % (canceled_order_id,))
+                    _logger.info("Order %s canceled when updated from external system because it has been replaced by a new one", canceled_order_id)
                 except osv.except_osv, e:
                     #TODO: generic reporting of errors in magentoerpconnect
                     # except if the sale order has been confirmed for example, we cannot cancel the order
@@ -498,7 +498,7 @@ class sale_order(osv.osv):
              True])
         return magento_invoice_ref
 
-    # TODO Move in base_sale_multichannels? 
+    # TODO Move in base_sale_multichannels?
     # Seb said Yes ;)
     def export_invoice(self, cr, uid, order, conn, ext_id, context=None):
         """ Export an invoice on external referential """
@@ -597,7 +597,7 @@ class sale_order(osv.osv):
                 all_items.extend(item_modified)
             else:
                 all_items.append(top_item)
-        
+
         resource['items'] = all_items
         return resource
 
@@ -618,7 +618,7 @@ class sale_order(osv.osv):
 
         # For really strange and unknow reason magento want to play with me and make me some joke.
         # Depending of the customer installation some time the field customer_id is equal to NONE
-        # in the sale order and sometime it's equal to NONE in the address but at least the 
+        # in the sale order and sometime it's equal to NONE in the address but at least the
         # the information is correct in one of this field
         # So I make this ugly code to try to fix it.
         if not resource['customer_id']:

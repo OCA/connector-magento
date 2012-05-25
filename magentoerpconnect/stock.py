@@ -20,13 +20,14 @@
 #########################################################################
 
 import xmlrpclib
-import netsvc
 
 from osv import fields,osv
 from tools.translate import _
 from openerp.addons.base_sale_multichannels.sale import \
     ExternalShippingCreateError
 
+import logging
+_logger = logging.getLogger(__name__)
 
 class stock_picking(osv.osv):
 
@@ -37,14 +38,14 @@ class stock_picking(osv.osv):
         conn = context.get('conn_obj', False)
         ext_shipping_id = conn.call('sales_order_shipment.create', [magento_incrementid, {}, _("Shipping Created"), mail_notification, True])
         return ext_shipping_id
-    
+
     def add_picking_line(self, cr, uid, lines, picking_line, context=None):
         """ A line to add in the shipping is a dict with : product_id and product_qty keys."""
         line_info = {'product_id': picking_line.product_id.id,
                      'product_qty': picking_line.product_qty,
         }
         lines.append(line_info)
-        return lines        
+        return lines
 
     def create_ext_partial_shipping(self, cr, uid, id, external_referential_id, magento_incrementid, mail_notification=True, context=None):
         if context is None: context = {}
@@ -56,7 +57,7 @@ class stock_picking(osv.osv):
             product_2_item.update({self.pool.get('product.product').get_oeid(cr, uid, item['product_id'], external_referential_id, context={}): item['item_id']})
         picking = self.pool.get('stock.picking').browse(cr, uid, id, context)
         item_qty = {}
-        
+
         lines = []
         # get product and quantities to ship from the picking
         for line in picking.move_lines:
@@ -69,7 +70,7 @@ class stock_picking(osv.osv):
                 item_qty.update({product_2_item[line['product_id']]: line['product_qty']})
 
             ext_shipping_id = conn.call('sales_order_shipment.create', [magento_incrementid, item_qty, _("Shipping Created"), mail_notification, True])
-        return ext_shipping_id 
+        return ext_shipping_id
 
     def create_ext_shipping(self, cr, uid, id, picking_type, external_referential_id, context=None):
         """
@@ -109,18 +110,17 @@ class stock_picking(osv.osv):
 
     def add_ext_tracking_reference(self, cr, uid, id, carrier_id, ext_shipping_id, context=None):
         if context is None: context = {}
-        logger = netsvc.Logger()
         conn = context.get('conn_obj', False)
         carrier = self.pool.get('delivery.carrier').read(cr, uid, carrier_id, ['magento_carrier_code', 'magento_tracking_title'], context)
-        
+
         if self.pool.get('ir.model.fields').search(cr, uid, [('name', '=', 'carrier_tracking_ref'), ('model', '=', 'stock.picking')]): #OpenERP v6 have the field carrier_tracking_ref on the stock_picking but v5 doesn't have it
             carrier_tracking_ref = self.read(cr, uid, id, ['carrier_tracking_ref'], context)['carrier_tracking_ref']
         else:
             carrier_tracking_ref = ''
-            
+
         res = conn.call('sales_order_shipment.addTrack', [ext_shipping_id, carrier['magento_carrier_code'], carrier['magento_tracking_title'] or '', carrier_tracking_ref or ''])
         if res:
-            logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "Successfully adding a tracking reference to the shipping with OpenERP id %s and ext id %s in external sale system" % (id, ext_shipping_id))
+            _logger.info("Successfully adding a tracking reference to the shipping with OpenERP id %s and ext id %s in external sale system", id, ext_shipping_id)
         return True
 
 stock_picking()
