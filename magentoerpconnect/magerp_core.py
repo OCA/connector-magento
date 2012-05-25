@@ -25,7 +25,6 @@
 from osv import osv, fields
 import magerp_osv
 import pooler
-import netsvc
 import base64, urllib
 from magerp_osv import Connection
 import tools
@@ -33,6 +32,9 @@ from tools.translate import _
 import os
 from base_external_referentials.decorator import only_for_referential
 from base_external_referentials.external_osv import ExternalSession
+
+import logging
+_logger = logging.getLogger(__name__)
 
 DEBUG = True
 TIMEOUT = 2
@@ -65,7 +67,7 @@ class external_referential(magerp_osv.magerp_osv):
         'magento_referential': fields.function(_is_magento_referential, type="boolean", method=True, string="Magento Referential"),
         'last_imported_product_id': fields.integer('Last Imported Product Id', help="Product are imported one by one. This is the magento id of the last product imported. If you clear it all product will be imported"),
         'last_imported_partner_id': fields.integer('Last Imported Partner Id', help="Partners are imported one by one. This is the magento id of the last partner imported. If you clear it all partners will be imported"),
-        'import_all_attributs': fields.boolean('Import all attributs', help="If the option is uncheck only the attributs that doesn't exist in OpenERP will be imported"), 
+        'import_all_attributs': fields.boolean('Import all attributs', help="If the option is uncheck only the attributs that doesn't exist in OpenERP will be imported"),
         'import_image_with_product': fields.boolean('With image', help="If the option is check the product's image and the product will be imported at the same time and so the step '7-import images' is not needed"),
         'import_links_with_product': fields.boolean('With links', help="If the option is check the product's links (Up-Sell, Cross-Sell, Related) and the product will be imported at the same time and so the step '8-import links' is not needed"),
     }
@@ -99,7 +101,6 @@ class external_referential(magerp_osv.magerp_osv):
     def sync_attribs(self, cr, uid, ids, context=None):
         attr_obj = self.pool.get('magerp.product_attributes')
         attr_set_obj = self.pool.get('magerp.product_attribute_set')
-        logger = netsvc.Logger()
         for referential in self.browse(cr, uid, ids, context=context):
             external_session = ExternalSession(referential, referential)
             attr_conn = external_session.connection
@@ -129,7 +130,7 @@ class external_referential(magerp_osv.magerp_osv):
                                                             context=context,
                                                         )
                             import_cr.commit()
-                    logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "All attributs for the attributs set id %s was succesfully imported" %(attr_set_id))
+                    _logger.info("All attributs for the attributs set id %s was succesfully imported", attr_set_id)
                 #Relate attribute sets & attributes
                 mage_inp = {}
                 #Pass in {attribute_set_id:{attributes},attribute_set_id2:{attributes}}

@@ -28,7 +28,6 @@ import time
 import pooler
 import magerp_osv
 from tools.translate import _
-import netsvc
 import unicodedata
 import base64, urllib
 import os
@@ -393,13 +392,13 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
 
         if type(ids) == int:
             ids = [ids]
-        result = super(magerp_product_attributes, self).write(cr, uid, ids, vals, context) 
+        result = super(magerp_product_attributes, self).write(cr, uid, ids, vals, context)
         model_ids = self.pool.get('ir.model').search(cr, uid, [('model', 'in', ['product.product', 'product.template'])])
         product_model_id = self.pool.get('ir.model').search(cr, uid, [('model', 'in', ['product.product'])])[0]
         referential_id = context.get('referential_id', False)
         for id in ids:
             all_vals = self.read(cr, uid, id, [], context)
-            
+
             #Fetch Options
             if 'frontend_input' in all_vals.keys() and all_vals['frontend_input'] in ['select', 'multiselect']:
                 core_imp_conn = self.pool.get('external.referential').external_connection(cr, uid, [referential_id])
@@ -407,7 +406,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
                 if options_data:
                     self.pool.get('magerp.product_attribute_options').data_to_save(cr, uid, options_data, update=True, context={'attribute_id': id, 'referential_id': referential_id})
 
-            
+
             field_name = all_vals['field_name']
             #TODO refactor me it will be better to add a one2many between the magerp_product_attributes and the ir.model.fields
             field_ids = self.pool.get('ir.model.fields').search(cr, uid, [('name', '=', field_name), ('model_id', 'in', model_ids)])
@@ -427,7 +426,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
             attr_set_info = eval(vals.get('attribute_set_info',{}))
             for each_key in attr_set_info.keys():
                 vals['group_id'] = attr_set_info[each_key].get('group_id', False)
-        
+
         crid = super(magerp_product_attributes, self).create(cr, uid, vals, context)
         if not vals['attribute_code'] in self._no_create_list:
             #If the field has to be created
@@ -438,7 +437,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
                     options_data = core_imp_conn.call('ol_catalog_product_attribute.options', [vals['magento_id']])
                     if options_data:
                         self.pool.get('magerp.product_attribute_options').data_to_save(cr, uid, options_data, update=False, context={'attribute_id': crid, 'referential_id': vals['referential_id']})
-      
+
                 #Manage fields
                 if vals['attribute_code'] and vals.get('frontend_input', False):
                     #Code for dynamically generating field name and attaching to this
@@ -484,7 +483,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
                             # mapping have to be based on product.product
                             model_id = self.pool.get('ir.model').search(cr, uid, [('model', '=', 'product.product')])[0]
                             self._create_mapping(cr, uid, field_vals['ttype'], field_id, field_name, referential_id, model_id, vals, crid)
-                            
+
         return crid
 
     def _default_mapping(self, cr, uid, ttype, field_name, vals, attribute_id, model_id, mapping_line, referential_id):
@@ -500,7 +499,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
                 mapping_line['external_type'] = 'int'
             else:
                 mapping_line['external_type'] = 'unicode'
-                
+
         elif ttype in ['many2one']:
             mapping_line['evaluation_type'] = 'function'
             mapping_line['in_function'] = \
@@ -529,12 +528,11 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
                 "    result = [('%(attribute_code)s', [option.value for option in options])]") % \
                ({'field_name': field_name, 'attribute_code': vals['attribute_code']})
         elif ttype in ['binary']:
-            logger = netsvc.Logger()
             warning_text = "Binary mapping is actually not supported (attribute: %s)" % (vals['attribute_code'],)
-            logger.notifyChannel('ext synchro mapping', netsvc.LOG_WARNING, warning_text)
-            warning_msg = ("import netsvc\n"
-                           "logger = netsvc.Logger()\n"
-                           "logger.notifyChannel('ext synchro mapping', netsvc.LOG_WARNING, '%s')") % (warning_text,)
+            _logger.warn(warning_text)
+            warning_msg = ("import logging\n"
+                           "logger = logging.getLogger('in/out_function')\n"
+                           "logger.warn('%s')") % (warning_text,)
             mapping_line['in_function'] = mapping_line['out_function'] = warning_msg
         return mapping_line
 
@@ -633,7 +631,7 @@ class magerp_product_attribute_set(magerp_osv.magerp_osv):
     _name = "magerp.product_attribute_set"
     _description = "Attribute sets in products"
     _rec_name = 'attribute_set_name'
-    
+
     _columns = {
         'sort_order':fields.integer('Sort Order'),
         'attribute_set_name':fields.char('Set Name', size=100),
@@ -681,7 +679,7 @@ class magerp_product_attribute_set(magerp_osv.magerp_osv):
             query = query[0:len(query) - 1] + ";"
             cr.execute(query)
         return True
-    
+
 magerp_product_attribute_set()
 
 class magerp_product_attribute_groups(magerp_osv.magerp_osv):
@@ -694,7 +692,7 @@ class magerp_product_attribute_groups(magerp_osv.magerp_osv):
         for attribute_group in self.browse(cr, uid, ids, context):
             res[attribute_group.id] = self.pool.get('magerp.product_attribute_set').extid_to_oeid(cr, uid, attribute_group.attribute_set_id, attribute_group.referential_id.id)
         return res
-    
+
     def _get_filter(self, cr, uid, external_session, step, previous_filter=None, context=None):
         attrset_ids = self.pool.get('magerp.product_attribute_set').get_all_extid_from_referential(cr, uid, external_session.referential_id.id, context=context)
         return {'attribute_set_id':{'in':attrset_ids}}
@@ -712,7 +710,7 @@ magerp_product_attribute_groups()
 class product_tierprice(osv.osv):
     _name = "product.tierprice"
     _description = "Implements magento tier pricing"
-    
+
     _columns = {
         'web_scope':fields.selection([
             ('all', 'All Websites'),
@@ -753,7 +751,7 @@ product_product_type()
 
 class product_mag_osv(magerp_osv.magerp_osv):
     _register = False # Set to false if the model shouldn't be automatically discovered.
-    
+
     #remember one thing in life: Magento lies: it tells attributes are required while they are awkward to fill
     #and will have a nice default vaule anyway, that's why we avoid making them mandatory in the product view
     _magento_fake_mandatory_attrs = ['created_at', 'updated_at', 'has_options', 'required_options', 'model']
@@ -834,7 +832,7 @@ class product_mag_osv(magerp_osv.magerp_osv):
                 cr, uid, oerp_group_id,
                 ['attribute_group_name'],
                 context=context)['attribute_group_name']
-            
+
             # Create a page for each attribute group
             attr_group_fields_rel.setdefault(group_name, [])
             while True:
@@ -908,7 +906,7 @@ class product_mag_osv(magerp_osv.magerp_osv):
                 wf, fields_get['websites_ids'], context=context)
 
         return notebook
-    
+
     def _filter_fields_to_return(self, cr, uid, field_names, context=None):
         '''This function is a hook in order to filter the fields that appears on the view'''
         return field_names
@@ -1117,13 +1115,12 @@ class product_product(product_mag_osv):
     #TODO base the import on the mapping and the function ext_import
     def import_product_image(self, cr, uid, id, referential_id, conn, ext_id=None, context=None):
         image_obj = self.pool.get('product.images')
-        logger = netsvc.Logger()
         if not ext_id:
             ext_id = self.get_extid(cr, uid, id, referential_id, context=context)
-        # TODO everythere will should pass the params 'id' for magento api in order to force 
+        # TODO everythere will should pass the params 'id' for magento api in order to force
         # to use the id as external key instead of mixed id/sku
         img_list = conn.call('catalog_product_attribute_media.list', [ext_id, False, 'id'])
-        logger.notifyChannel('ext synchro', netsvc.LOG_INFO, "Magento image for product ext_id %s: %s" %(ext_id, img_list))
+        _logger.info("Magento image for product ext_id %s: %s", ext_id, img_list)
         images_name = []
         for image in img_list:
             img=False
@@ -1133,13 +1130,13 @@ class product_product(product_mag_osv):
                 data = f.read()
                 f.close()
                 if "DOCTYPE html PUBLIC" in data:
-                    logger.notifyChannel('ext synchro', netsvc.LOG_WARNING, "failed to open the image %s from Magento" % (image['url'],))
+                    _logger.warn("failed to open the image %s from Magento", image['url'])
                     continue
                 else:
                     img = base64.encodestring(data)
             except Exception, e:
                 #TODO raise correctly the error
-                logger.notifyChannel('ext synchro', netsvc.LOG_WARNING, "failed to open the image %s from Magento, error : %s" % (image['url'],e))
+                _logger.error("failed to open the image %s from Magento, error : %s", image['url'], e, exc_info=True)
                 continue
             mag_filename, extention = os.path.splitext(os.path.basename(image['file']))
             data = {'name': image['label'] and not image['label'] in images_name and image['label'] or mag_filename,
@@ -1247,7 +1244,7 @@ class product_product(product_mag_osv):
                 else:
                     return False
             tier_price = False
-            if 'x_magerp_tier_price' in vals.keys(): 
+            if 'x_magerp_tier_price' in vals.keys():
                 tier_price = vals.pop('x_magerp_tier_price')
             tp_obj = self.pool.get('product.tierprice')
             #Delete existing tier prices
@@ -1260,7 +1257,7 @@ class product_product(product_mag_osv):
         stat = super(product_product, self).write(cr, uid, ids, vals, context)
         #Perform other operation
         return stat
-    
+
     def create_tier_price(self, cr, uid, tier_price, instance, product_id):
         tp_obj = self.pool.get('product.tierprice')
         for each in eval(tier_price):
@@ -1282,13 +1279,13 @@ class product_product(product_mag_osv):
                 tier_vals['web_scope'] = 'specific'
                 tier_vals['website_id'] = self.pool.get('external.shop.group').mage_to_oe(cr, uid, int(each['website_id']), instance)
             tp_obj.create(cr, uid, tier_vals)
-    
+
     def create(self, cr, uid, vals, context=None):
         tier_price = False
         if vals.get('referential_id', False):
             instance = vals['referential_id']
             #Filter keys to be changed
-            if 'x_magerp_tier_price' in vals.keys(): 
+            if 'x_magerp_tier_price' in vals.keys():
                 tier_price = vals.pop('x_magerp_tier_price')
 
         crid = super(product_product, self).create(cr, uid, vals, context)
@@ -1365,7 +1362,6 @@ class product_product(product_mag_osv):
         #TODO get also the list of product which the option mag_manage_stock have changed
         #This can be base on the group_fields that can try tle last write date of a group of fields
         if context is None: context = {}
-        logger = netsvc.Logger()
 
         shop = external_session.sync_from_object
 
@@ -1419,11 +1415,11 @@ class product_product(product_mag_osv):
                         if link['is_active']:
                             linked_product_ids.append(link['link_product_id'])
                             position[link['link_product_id']] = link['position']
-                self.ext_product_assign(cr, uid, external_session, link_type, resource[context['main_lang']]['ext_id'], 
+                self.ext_product_assign(cr, uid, external_session, link_type, resource[context['main_lang']]['ext_id'],
                                             linked_product_ids, position=position, context=context)
         return True
 
-    def ext_product_assign(self, cr, uid, external_session, link_type, ext_parent_id, ext_child_ids, 
+    def ext_product_assign(self, cr, uid, external_session, link_type, ext_parent_id, ext_child_ids,
                                                     quantities=None, position=None, context=None):
         context = context or {}
         position = position or {}
