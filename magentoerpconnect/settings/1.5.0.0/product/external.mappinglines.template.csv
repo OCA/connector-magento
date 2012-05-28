@@ -47,20 +47,16 @@ if 'websites_ids' in resource:
 "magentoerpconnect.mag1500_product_product_categories",,"in_out","function","categories","product.field_product_template_categ_id","list","False","magentoerpconnect.mag1500_product_product","categories","categ_ids =[]
 if ifield:
     for category_id in ifield:
-        categ_ids.append(self.pool.get('product.category').extid_to_oeid(cr, uid, external_session, category_id, referential_id))
+        categ_ids.append(self.pool.get('product.category').get_or_create_oeid(cr, uid, external_session, category_id, context=context))
     main_categ_id = categ_ids.pop()
 else:
     main_categ_id = self.pool.get('external.referential').browse(cr, uid, referential_id).default_pro_cat.id
 result = [('categ_id', main_categ_id), ('categ_ids',[(6, 0, categ_ids)])]","
 cat_obj = self.pool.get('product.category')
-product = self.browse(cr, uid, record['id'])
-categ_ids = [product.categ_id.id] + [categ.id for categ in product.categ_ids]
+categ_ids = [resource['categ_id'][0]] + resource.get('categ_ids', [])
 mag_categ_ids = []
 for categ_id in categ_ids:
-    mag_categ_id = cat_obj.oeid_to_extid(cr, uid, categ_id, external_referential_id)
-    if not mag_categ_id:
-        cat_obj.ext_export(cr, uid, [categ_id], [external_referential_id], context=context)
-        mag_categ_id = cat_obj.oeid_to_extid(cr, uid, categ_id, external_referential_id)
+    mag_categ_id = cat_obj.get_or_create_extid(cr, uid, external_session, categ_id, context=context)
     mag_categ_ids.append(mag_categ_id)
 result=[('categories', categ_ids)]",,
 "mag1500_product_product_special_price",,"in_out","function","special_price",,"float","False","magentoerpconnect.mag1500_product_product","special_price","if 'x_magerp_special_price' in resource: result = [('x_magerp_special_price', ifield)]","if 'x_magerp_special_price' in resource: 
