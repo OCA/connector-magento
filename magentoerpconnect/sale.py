@@ -431,6 +431,7 @@ class sale_order(osv.osv):
         self.ext_set_resource_as_imported(cr, uid, external_session, external_id, mapping=mapping, mapping_id=mapping_id, context=context)
         return res
 
+    @only_for_referential('magento')
     def _check_need_to_update_single(self, cr, uid, external_session, order, context=None):
         """
         For one order, check on Magento if it has been paid since last
