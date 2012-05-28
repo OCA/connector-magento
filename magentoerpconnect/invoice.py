@@ -87,7 +87,6 @@ class account_invoice(osv.osv):
                 method = "synoopenerpadapter_creditmemo.addInfo"
             elif resource['type'] == 'out_invoice':
                 method = "synoopenerpadapter_invoice.addInfo"
-            del resource['type']
             resource['reference'] = context.get('report_name')
             ext_create_ids[resource_id] = external_session.connection.call(method, 
                         [
