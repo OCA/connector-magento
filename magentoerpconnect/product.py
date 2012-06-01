@@ -399,22 +399,23 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
         model_ids = self.pool.get('ir.model').search(cr, uid, [('model', 'in', ['product.product', 'product.template'])])
         product_model_id = self.pool.get('ir.model').search(cr, uid, [('model', 'in', ['product.product'])])[0]
         referential_id = context.get('referential_id', False)
-        for id in ids:
-            all_vals = self.read(cr, uid, id, [], context)
+        if referential_id:
+            for id in ids:
+                all_vals = self.read(cr, uid, id, [], context)
 
-            #Fetch Options
-            if 'frontend_input' in all_vals.keys() and all_vals['frontend_input'] in ['select', 'multiselect']:
-                core_imp_conn = self.pool.get('external.referential').external_connection(cr, uid, [referential_id])
-                options_data = core_imp_conn.call('ol_catalog_product_attribute.options', [all_vals['magento_id']])
-                if options_data:
-                    self.pool.get('magerp.product_attribute_options').data_to_save(cr, uid, options_data, update=True, context={'attribute_id': id, 'referential_id': referential_id})
+                #Fetch Options
+                if 'frontend_input' in all_vals.keys() and all_vals['frontend_input'] in ['select', 'multiselect']:
+                    core_imp_conn = self.pool.get('external.referential').external_connection(cr, uid, [referential_id])
+                    options_data = core_imp_conn.call('ol_catalog_product_attribute.options', [all_vals['magento_id']])
+                    if options_data:
+                        self.pool.get('magerp.product_attribute_options').data_to_save(cr, uid, options_data, update=True, context={'attribute_id': id, 'referential_id': referential_id})
 
 
-            field_name = all_vals['field_name']
-            #TODO refactor me it will be better to add a one2many between the magerp_product_attributes and the ir.model.fields
-            field_ids = self.pool.get('ir.model.fields').search(cr, uid, [('name', '=', field_name), ('model_id', 'in', model_ids)])
-            if field_ids:
-                self._create_mapping(cr, uid, self._type_conversion[all_vals.get('frontend_input', False)], field_ids[0], field_name, referential_id, product_model_id, all_vals, id)
+                field_name = all_vals['field_name']
+                #TODO refactor me it will be better to add a one2many between the magerp_product_attributes and the ir.model.fields
+                field_ids = self.pool.get('ir.model.fields').search(cr, uid, [('name', '=', field_name), ('model_id', 'in', model_ids)])
+                if field_ids:
+                    self._create_mapping(cr, uid, self._type_conversion[all_vals.get('frontend_input', False)], field_ids[0], field_name, referential_id, product_model_id, all_vals, id)
         return result
 
     def create(self, cr, uid, vals, context=None):
@@ -436,7 +437,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
             if crid:
                 #Fetch Options
                 if 'frontend_input' in vals.keys() and vals['frontend_input'] in ['select',  'multiselect']:
-                    core_imp_conn = self.pool.get('external.referential').external_connection(cr, uid, [vals['referential_id']])
+                    core_imp_conn = self.pool.get('external.referential').external_connection(cr, uid, vals['referential_id'])
                     options_data = core_imp_conn.call('ol_catalog_product_attribute.options', [vals['magento_id']])
                     if options_data:
                         self.pool.get('magerp.product_attribute_options').data_to_save(cr, uid, options_data, update=False, context={'attribute_id': crid, 'referential_id': vals['referential_id']})

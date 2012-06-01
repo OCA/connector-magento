@@ -46,16 +46,15 @@ class res_partner_address(magerp_osv.magerp_osv):
         res ={}
         for partner in self.browse(cr, uid, ids, context=context):
             res[partner.id] = ((partner.company and partner.company + ' : ') or '') + \
-                              (partner.title and partner.title.name + ' ' or '') + \
                               (partner.lastname and partner.lastname + ' ' or '') + \
                               (partner.firstname or '')
         return res
 
     _columns = {
-        'name': fields.function(_get_partner_name, obj="res.partner.address", type = 'char', size = 256,
+        'name': fields.function(_get_partner_name, obj="res.partner.address", type = 'char', size = 256, string='Name',
                 store = {
                     'res.partner.address' : (lambda self, cr, uid, ids, c={}: ids,
-                                                    ['company', 'firstname', 'lastname', 'title'], 10)}),
+                                                    ['company', 'firstname', 'lastname'], 10)}),
         'company':fields.char('Company', size=100),
         'firstname':fields.char('First Name', size=100),
         'lastname':fields.char('Last Name', size=100),
