@@ -54,7 +54,7 @@ ORDER_STATUS_MAPPING = {
     'waiting_date': 'holded'}
 SALE_ORDER_IMPORT_STEP = 200
 
-class sale_shop(magerp_osv.magerp_osv):
+class sale_shop(osv.osv):
     _inherit = "sale.shop"
 
     @only_for_referential('magento')
@@ -230,6 +230,9 @@ class sale_shop(magerp_osv.magerp_osv):
 
     def run_export_shipping_scheduler(self, cr, uid, context=None):
         self._sale_shop(cr, uid, self.export_shipping, context=context)
+
+    def run_import_check_need_to_update(self, cr, uid, context=None):
+        self._sale_shop(cr, uid, self.check_need_to_update, context=context)
 
 sale_shop()
 
@@ -416,7 +419,7 @@ class sale_order(osv.osv):
         res = super(sale_order, self)._get_external_resource_ids(cr, uid, external_session, resource_filter=resource_filter, mapping=mapping, mapping_id=mapping_id, context=context)
         order_ids_to_import=[]
         for external_id in res:
-            existing_id = self.extid_to_existing_oeid(cr, uid, external_session.referential_id.id, external_id, context=context)
+            existing_id = self.get_oeid(cr, uid, external_id, external_session.referential_id.id, context=context)
             if existing_id:
                 external_session.logger.info(_("the order %s already exist in OpenERP") % (external_id,))
                 self.ext_set_resource_as_imported(cr, uid, external_session, external_id, mapping=mapping, mapping_id=mapping_id, context=context)
