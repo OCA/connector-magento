@@ -40,6 +40,7 @@ _logger = logging.getLogger(__name__)
 from tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 from base_external_referentials.decorator import only_for_referential
+from base_external_referentials.external_osv import ExternalSession
 
 #Enabling this to True will put all custom attributes into One page in
 #the products view
@@ -370,6 +371,9 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
         'color',
         'dimension',
         'visibility',
+        'special_price',
+        'special_price_from_date',
+        'special_price_to_date',
     ]
 
 
@@ -643,6 +647,51 @@ class magerp_product_attribute_set(magerp_osv.magerp_osv):
         'referential_id':fields.many2one('external.referential', 'Magento Instance', readonly=True),
         'magento_id':fields.integer('Magento ID'),
         }
+        
+        
+    def update_attribute(self, cr, uid, ids, context=None):
+        ref_obj = self.pool.get('external.referential')
+        mag_ref_ids = ref_obj.search(cr, uid, [('version_id','ilike', 'magento')], context=context)
+        for referential in ref_obj.browse(cr, uid, mag_ref_ids, context=context):
+            external_session = ExternalSession(referential, referential)
+            for attr_set_id in ids:
+                attr_set_ext_id = self.get_extid(cr, uid, attr_set_id, referential.id, context=context)
+                if attr_set_ext_id:
+                    self._import_attribute(cr, uid, external_session, attr_set_ext_id, context=context)
+                    self._import_attribute_relation(cr, uid, external_session, [attr_set_ext_id], context=context)
+        return True
+
+    #TODO refactor me
+    def _import_attribute(self, cr, uid, external_session, attr_set_ext_id, attributes_imported=None, context=None):
+        attr_obj = self.pool.get('magerp.product_attributes')
+        mage_inp = external_session.connection.call('ol_catalog_product_attribute.list', [attr_set_ext_id])             #Get the tree
+        mapping = {'magerp.product_attributes' : attr_obj._get_mapping(cr, uid, external_session.referential_id.id, context=context)}
+        attribut_to_import = []
+        if not attributes_imported: attributes_imported=[]
+        for attribut in mage_inp:
+            ext_id = attribut['attribute_id']
+            if not ext_id in attributes_imported:
+                attributes_imported.append(ext_id)
+                attr_obj._record_one_external_resource(cr, uid, external_session, attribut,
+                                                defaults={'referential_id':external_session.referential_id.id},
+                                                mapping=mapping,
+                                                context=context,
+                                            )
+        external_session.logger.info("All attributs for the attributs set id %s was succesfully imported", attr_set_ext_id)
+        return True
+
+    #TODO refactor me
+    def _import_attribute_relation(self, cr, uid, external_session, attr_set_ext_ids, context=None):
+        #Relate attribute sets & attributes
+        mage_inp = {}
+        #Pass in {attribute_set_id:{attributes},attribute_set_id2:{attributes}}
+        #print "Attribute sets are:", attrib_sets
+        #TODO find a solution in order to import the relation in a incremental way (maybe splitting this function in two)
+        for attr_id in attr_set_ext_ids:
+            mage_inp[attr_id] = external_session.connection.call('ol_catalog_product_attribute.relations', [attr_id])
+        if mage_inp:
+            self.relate(cr, uid, mage_inp, external_session.referential_id.id, context)
+        return True
 
     def relate(self, cr, uid, mage_inp, instance, *args):
         #TODO: Build the relations code
