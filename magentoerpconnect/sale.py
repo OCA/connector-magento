@@ -105,7 +105,7 @@ class sale_shop(osv.osv):
                 _logger.info("Creating %s images", len(res['to_create']))
                 _logger.info("Updating %s images", len(res['to_update']))
                 image_obj.update_remote_images(cr, uid, external_session, res['to_update']+res['to_create'], context)
-            shop.write({'last_images_export_date': start_date})
+            self.pool.get('product.images')._set_last_exported_date(cr, uid, external_session, start_date, context=context)
         return True
 
     #TODO refactor the ay to export images
