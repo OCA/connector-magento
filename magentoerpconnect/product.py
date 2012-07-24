@@ -256,6 +256,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
                                            ('gallery', 'Gallery'),
                                            ('weee', 'Fixed Product Tax'),
                                            ('file', 'File'), #this option is not a magento native field it will be better to found a generic solutionto manage this kind of custom option
+                                           ('weight', 'Weight'),
                                            ], 'Frontend Input'
                                           ),
         'frontend_class':fields.char('Frontend Class', size=100),
