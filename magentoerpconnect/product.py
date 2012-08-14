@@ -120,8 +120,8 @@ class product_category(magerp_osv.magerp_osv):
         defaults.update({'magento_exportable': True})
         return defaults
 
-    def multi_lang_read(self, cr, uid, ids, fields_to_read, langs, resources=None, use_multi_lang = True, context=None):
-        return super(product_category, self).multi_lang_read(cr, uid, ids, fields_to_read, langs,
+    def multi_lang_read(self, cr, uid, external_session, ids, fields_to_read, langs, resources=None, use_multi_lang = True, context=None):
+        return super(product_category, self).multi_lang_read(cr, uid, external_session, ids, fields_to_read, langs,
                                                             resources=resources,
                                                             use_multi_lang = False,
                                                             context=context)
@@ -311,7 +311,8 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
         'category_ids',
         'price',
         'cost',
-        'set'
+        'set',
+        'ean',
     ]
 
     _translatable_default_codes = [
