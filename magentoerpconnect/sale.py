@@ -615,10 +615,9 @@ class sale_order(osv.osv):
         So it better to NOT trust magento and not based the address on external_id
         To avoid any erreur we remove the key
         """
-        del resource['billing_address']['customer_address_id']
-        del resource['shipping_address']['customer_address_id']
-        del resource['billing_address']['address_id']
-        del resource['shipping_address']['address_id']
+        for remove_key in ['customer_address_id', 'address_id']:
+            for key in ['billing_address', 'shipping_address']:
+                if remove_key in resource[key]: del resource[key][remove_key]
 
         # For really strange and unknow reason magento want to play with me and make me some joke.
         # Depending of the customer installation some time the field customer_id is equal to NONE
@@ -626,12 +625,12 @@ class sale_order(osv.osv):
         # the information is correct in one of this field
         # So I make this ugly code to try to fix it.
         if not resource['customer_id']:
-            if resource['billing_address']['customer_id']:
+            if resource['billing_address'].get('customer_id'):
                 resource['customer_id'] = resource['billing_address']['customer_id']
         else:
-            if not resource['billing_address']['customer_id']:
+            if resource['billing_address'].get('customer_id'):
                 resource['billing_address']['customer_id'] = resource['customer_id']
-            if not resource['shipping_address']['customer_id']:
+            if not resource['shipping_address'].get('customer_id'):
                 resource['shipping_address']['customer_id'] = resource['customer_id']
         return resource
 
