@@ -628,7 +628,7 @@ class sale_order(osv.osv):
             if resource['billing_address'].get('customer_id'):
                 resource['customer_id'] = resource['billing_address']['customer_id']
         else:
-            if resource['billing_address'].get('customer_id'):
+            if not resource['billing_address'].get('customer_id'):
                 resource['billing_address']['customer_id'] = resource['customer_id']
             if not resource['shipping_address'].get('customer_id'):
                 resource['shipping_address']['customer_id'] = resource['customer_id']
