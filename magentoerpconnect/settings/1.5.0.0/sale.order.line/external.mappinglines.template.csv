@@ -19,5 +19,5 @@ mag1500_sale_order_line_qty_ordered=>,,in,direct,qty_ordered,sale.field_sale_ord
 mag1500_sale_order_line_price=>,,in,function,price,,unicode,False,mag1500_sale_order_line,price,"result=[
 ('price_unit_tax_included', (float(resource['base_row_total_incl_tax']))/float(resource['qty_ordered'])),
 ('price_unit_tax_excluded', (float(resource['base_row_total']))/float(resource['qty_ordered'])),
-('tax_rate', (float(resource['base_row_total_incl_tax'])/float(resource['base_row_total'])-1)),
+('tax_rate', float(resource['base_row_total']) and (float(resource['base_row_total_incl_tax'])/float(resource['base_row_total'])-1)),
 ]",,,
