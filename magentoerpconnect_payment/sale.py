@@ -20,11 +20,13 @@
 ##############################################################################
 import xmlrpclib
 
-from osv import osv, fields
+from openerp.osv.orm import Model
+from openerp.osv import fields
+from openerp.osv.osv import except_osv
 from tools.translate import _
 
 
-class sale_order(osv.osv):
+class sale_order(Model):
 
     _inherit = 'sale.order'
 
@@ -52,10 +54,9 @@ class sale_order(osv.osv):
             # TODO: in case of error on Magento because the invoice has
             # already been created, get the invoice number
             # and store it in magento_ref
-            raise osv.except_osv(
-                _('Error'), _("Error on Magento on the invoice creation "
-                              "for order %s :\n" \
-                              "%s" % (order.name, magento_error)))
+            raise except_osv(_('Error'),
+                             _("Error on Magento on the invoice creation "
+                              "for order %s :\n%s") % (order.name, magento_error))
         self.write(
             cr, uid, order.id,
             {'magento_ref': external_invoice},
@@ -69,24 +70,23 @@ class sale_order(osv.osv):
     def button_magento_create_invoice(self, cr, uid, ids, context=None):
         order = self.browse(cr, uid, ids[0], context=context)
         if order.state != 'draft':
-            raise osv.except_osv(
-                _('Error'), _('This order is not a quotation.'))
+            raise except_osv(_('Error'),
+                             _('This order is not a quotation.'))
 
         if not order.is_magento:
-            raise osv.except_osv(
-                _('Error'), _('This is not a Magento sale order.'))
+            raise except_osv(_('Error'),
+                             _('This is not a Magento sale order.'))
 
         if not order.base_payment_type_id:
-            raise osv.except_osv(
-                _('Error'), _('This order has no external '
-                              'payment type settings.'))
+            raise except_osv(_('Error'),
+                             _('This order has no external '
+                               'payment type settings.'))
 
         if not order.base_payment_type_id.allow_magento_manual_invoice:
-            raise osv.except_osv(
-                _('Error'), _(
-                    "Manual creation of the invoice on Magento "
-                    "is forbidden for external payment : %s" %
-                    order.ext_payment_method))
+            raise except_osv(_('Error'),
+                             _("Manual creation of the invoice on Magento "
+                               "is forbidden for external payment : %s") %
+                               order.ext_payment_method)
 
         # sale_exceptions module methods
         # in order to check if the order is valid
@@ -122,5 +122,3 @@ class sale_order(osv.osv):
         if order.magento_ref:
             vals['magento_ref'] = order.magento_ref
         return vals
-
-sale_order()

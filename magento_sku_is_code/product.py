@@ -19,15 +19,13 @@
 #
 ##############################################################################
 
-from osv import osv, fields
+from openerp.osv.orm import Model
+from openerp.osv import fields
 
-
-class Product(osv.osv):
+class Product(Model):
     """Inherit product to use the default code as the Magento SKU. Copy the default code into the magento_sku field."""
     _inherit = 'product.product'
-
-    _columns = {'magento_sku':fields.char('Magento SKU', size=64, readonly=True),}
-
+    _columns = {'magento_sku': fields.char('Magento SKU', size=64, readonly=True),}
     _sql_constraints = [('code_uniq', 'unique(default_code)', 'The code must be unique')]
 
     def _get_sku(self, cr, uid, vals, product=None, context=None):
@@ -62,5 +60,3 @@ class Product(osv.osv):
         if not default is None: default = {}
         default['default_code'] = False
         return super(Product, self).copy(cr, uid, id, default=default, context=context)
-
-Product()

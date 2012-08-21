@@ -21,26 +21,25 @@
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.  #
 #########################################################################
 
-from osv import osv, fields
-from tools.translate import _
+from openerp.osv.orm import Model
+from openerp.osv import fields
+from openerp.tools.translate import _
 
-class account_invoice(osv.osv):
+class account_invoice(Model):
     _inherit = "account.invoice"
-
     _columns = {
         'magento_ref':fields.char('Magento REF', size=32),
-    }
+        }
 
 
-#TODO instead of calling again the sale order information 
-# it will be better to store the ext_id of each sale order line
-#Moreover some code should be share between the partial export of picking and invoice
-
+    #TODO instead of calling again the sale order information
+    # it will be better to store the ext_id of each sale order line
+    #Moreover some code should be share between the partial export of picking and invoice
     def add_invoice_line(self, cr, uid, lines, line, context=None):
         """ A line to add in the invoice is a dict with : product_id and product_qty keys."""
         line_info = {'product_id': line.product_id.id,
                      'product_qty': line.quantity,
-        }
+                     }
         lines.append(line_info)
         return lines
 
@@ -55,7 +54,7 @@ class account_invoice(osv.osv):
             for item in order_items:
                 product_2_item.update({self.pool.get('product.product').get_oeid(cr, uid, item['product_id'],
                                         external_session.referential_id.id, context={}): item['item_id']})
-            
+
             lines = []
             # get product and quantities to invoice from the invoice
             for line in invoice.invoice_line:
@@ -88,13 +87,9 @@ class account_invoice(osv.osv):
                                     resource_id, resource['order_increment_id'], context=context)
         return ext_create_ids
 
-account_invoice()
 
-
-class account_invoice_line(osv.osv):
-
+class account_invoice_line(Model):
     _inherit = 'account.invoice.line'
-
     _columns = {
         # Forced the precision of the account.invoice.line discount field
         # to 3 digits in order to be able to have the same amount as Magento.
@@ -103,5 +98,4 @@ class account_invoice_line(osv.osv):
         # With a 2 digits precision, we can have 50.17 % => 148.99 or 50.16% => 149.02.
         # Force the digits to 3 allows to have 50.167% => 149€
         'discount': fields.float('Discount (%)', digits=(16, 3)),
-    }
-account_invoice_line()
+        }

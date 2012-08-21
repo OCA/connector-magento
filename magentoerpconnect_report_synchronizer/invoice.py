@@ -19,10 +19,10 @@
 #                                                                             #
 ###############################################################################
 
-from osv import osv, fields
-from tools.translate import _
+from openerp.osv.orm import Model
+from openerp.osv import fields
 
-class account_invoice(osv.osv):
+class account_invoice(Model):
     _inherit = "account.invoice"
 
     def ext_create(self, cr, uid, external_session, resources, mapping=None, mapping_id=None, context=None):
@@ -34,7 +34,7 @@ class account_invoice(osv.osv):
             elif resource['type'] == 'out_invoice':
                 method = "synoopenerpadapter_invoice.addInfo"
             resource['reference'] = context.get('report_name')
-            ext_create_ids[resource_id] = external_session.connection.call(method, 
+            ext_create_ids[resource_id] = external_session.connection.call(method,
                         [
                             resource['customer_id'],
                             resource['order_increment_id'],
@@ -43,6 +43,6 @@ class account_invoice(osv.osv):
                             resource['date'],
                             resource['customer_name'],
                         ])
-            super(account_invoice, self).ext_create(cr, uid, external_session, resources, 
+            super(account_invoice, self).ext_create(cr, uid, external_session, resources,
                                                     mapping=mapping, mapping_id=mapping_id, context=context)
-        return ext_create_ids   
+        return ext_create_ids

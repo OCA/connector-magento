@@ -20,12 +20,11 @@
 ##############################################################################
 
 import logging
-from osv import osv
+from openerp.osv.orm import Model
 
 _logger = logging.getLogger(__name__)
 
-
-class product_product(osv.osv):
+class product_product(Model):
 
     _inherit = 'product.product'
 
@@ -52,5 +51,3 @@ class product_product(osv.osv):
         self._magento_init_stock(cr, uid, oe_id, magento_product_id,
                                  conn, context=context)
         return magento_product_id
-
-product_product()

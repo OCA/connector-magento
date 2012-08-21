@@ -21,7 +21,6 @@
 #########################################################################
 
 import time
-import datetime
 import xmlrpclib
 import urllib2
 import base64
@@ -30,7 +29,9 @@ from tools.translate import _
 
 #NEW FEATURE
 
-from osv import osv, fields
+from openerp.osv.orm import Model
+from openerp.osv.osv import except_osv
+from openerp import tools
 from base_external_referentials.decorator import only_for_referential
 from base_external_referentials.decorator import open_report
 from base_external_referentials.decorator import catch_error_in_report
@@ -38,42 +39,42 @@ import netsvc
 import logging
 _logger = logging.getLogger(__name__)
 
-osv.osv.mag_transform_and_send_one_resource = osv.osv._transform_and_send_one_resource
+Model.mag_transform_and_send_one_resource = Model._transform_and_send_one_resource
 
-@only_for_referential('magento', super_function = osv.osv.mag_transform_and_send_one_resource)
+@only_for_referential('magento', super_function = Model.mag_transform_and_send_one_resource)
 @catch_error_in_report
 def _transform_and_send_one_resource(self, cr, uid, external_session, *args, **kwargs):
     return self.mag_transform_and_send_one_resource(cr, uid, external_session, *args, **kwargs)
 
-osv.osv._transform_and_send_one_resource = _transform_and_send_one_resource
+Model._transform_and_send_one_resource = _transform_and_send_one_resource
 
 
-osv.osv.mag_export_resources = osv.osv._export_resources
+Model.mag_export_resources = Model._export_resources
 
-@only_for_referential('magento', super_function = osv.osv.mag_export_resources)
+@only_for_referential('magento', super_function = Model.mag_export_resources)
 @open_report
 def _export_resources(self, *args, **kwargs):
     return self.mag_export_resources( *args, **kwargs)
-osv.osv._export_resources = _export_resources
+Model._export_resources = _export_resources
 
 
-osv.osv._mag_get_external_resource_ids = osv.osv._get_external_resource_ids
+Model._mag_get_external_resource_ids = Model._get_external_resource_ids
 
-@only_for_referential('magento', super_function = osv.osv._get_external_resource_ids)
+@only_for_referential('magento', super_function = Model._get_external_resource_ids)
 def _get_external_resource_ids(self, cr, uid, external_session, resource_filter=None, mapping=None, mapping_id=None, context=None):
     mapping, mapping_id = self._init_mapping(cr, uid, external_session.referential_id.id, mapping=mapping, mapping_id=mapping_id, context=context)
     ext_resource = mapping[mapping_id]['external_resource_name']
     search_method = mapping[mapping_id]['external_search_method']
     if not search_method:
-        #TODO don't forget to replace model by nam ewhen name will be implemented
-        raise osv.except_osv(_('User Error'), _('There is not search method for the mapping %s')%(mapping[mapping_id]['model'],))
+        #TODO don't forget to replace model by name when name will be implemented
+        raise except_osv(_('User Error'), _('There is not search method for the mapping %s')%(mapping[mapping_id]['model'],))
     return external_session.connection.call(search_method, [resource_filter])
 
-osv.osv._get_external_resource_ids = _get_external_resource_ids
+Model._get_external_resource_ids = _get_external_resource_ids
 
-osv.osv._mag_get_external_resources = osv.osv._get_external_resources
+Model._mag_get_external_resources = Model._get_external_resources
 
-@only_for_referential('magento', super_function = osv.osv._mag_get_external_resources)
+@only_for_referential('magento', super_function = Model._mag_get_external_resources)
 def _get_external_resources(self, cr, uid, external_session, external_id=None, resource_filter=None, mapping=None, mapping_id=None, fields=None, context=None):
     mapping, mapping_id = self._init_mapping(cr, uid, external_session.referential_id.id, mapping=mapping, mapping_id=mapping_id, context=context)
     ext_resource = mapping[mapping_id]['external_resource_name']
@@ -81,7 +82,7 @@ def _get_external_resources(self, cr, uid, external_session, external_id=None, r
         read_method = mapping[mapping_id]['external_get_method']
         if not read_method:
             #TODO don't forget to replace model by nam ewhen name will be implemented
-            raise osv.except_osv(_('User Error'),
+            raise except_osv(_('User Error'),
                 _('There is no "Get Method" configured on the mapping %s') %
                 mapping[mapping_id]['model'])
         return external_session.connection.call(read_method, [external_id])
@@ -89,16 +90,16 @@ def _get_external_resources(self, cr, uid, external_session, external_id=None, r
         search_read_method = mapping[mapping_id]['external_list_method']
         if not search_read_method:
             #TODO don't forget to replace model by nam ewhen name will be implemented
-            raise osv.except_osv(_('User Error'),
+            raise except_osv(_('User Error'),
                 _('There is no "List Method" configured on the mapping %s') %
                 mapping[mapping_id]['model'])
         return external_session.connection.call(search_read_method, [resource_filter or {}])
 
-osv.osv._get_external_resources = _get_external_resources
+Model._get_external_resources = _get_external_resources
 
-osv.osv._mag_ext_create = osv.osv.ext_create
+Model._mag_ext_create = Model.ext_create
 
-@only_for_referential('magento', super_function = osv.osv._mag_ext_create)
+@only_for_referential('magento', super_function = Model._mag_ext_create)
 def ext_create(self, cr, uid, external_session, resources, mapping, mapping_id, context=None):
     ext_create_ids = {}
     main_lang = context['main_lang']
@@ -107,11 +108,11 @@ def ext_create(self, cr, uid, external_session, resources, mapping, mapping_id, 
         ext_create_ids[resource_id] = ext_id
     return ext_create_ids
 
-osv.osv.ext_create = ext_create
+Model.ext_create = ext_create
 
 
-osv.osv._mag_ext_update= osv.osv.ext_update
-@only_for_referential('magento', super_function = osv.osv._mag_ext_update)
+Model._mag_ext_update= Model.ext_update
+@only_for_referential('magento', super_function = Model._mag_ext_update)
 def ext_update(self, cr, uid, external_session, resources, mapping=None, mapping_id=None, context=None):
     if not mapping[mapping_id]['external_update_method']:
         external_session.logger.warning(_("Not update method for mapping %s")%mapping[mapping_id]['model'])
@@ -124,9 +125,9 @@ def ext_update(self, cr, uid, external_session, resources, mapping=None, mapping
                                                                     [ext_id, resource[main_lang]])
     return True
 
-osv.osv.ext_update = ext_update
+Model.ext_update = ext_update
 
-#@only_for_referential('magento', super_function = osv.osv.send_to_external)
+#@only_for_referential('magento', super_function = Model.send_to_external)
 #def send_to_external(self, cr, uid, external_session, resource, update_date, context=None):
 #    print 'send this data to the external system', update_date
 #    print 'data', resource
@@ -134,14 +135,14 @@ osv.osv.ext_update = ext_update
 #    import pdb; pdb.set_trace()
 #    return True
 
-#osv.osv.send_to_external = send_to_external
+#Model.send_to_external = send_to_external
 
 
-#osv.osv.ori_mag_init_context_before_exporting_resource = osv.osv.init_context_before_exporting_resource
+#Model.ori_mag_init_context_before_exporting_resource = Model.init_context_before_exporting_resource
 
-#@only_for_referential('magento', super_function = osv.osv.init_context_before_exporting_resource)
+#@only_for_referential('magento', super_function = Model.init_context_before_exporting_resource)
 #def init_context_before_exporting_resource(self, cr, uid, object_id, resource_name, context=None):
-#    context = osv.osv.ori_mag_init_context_before_exporting_resource(cr, uid, object_id, resource_name, context=context)
+#    context = Model.ori_mag_init_context_before_exporting_resource(cr, uid, object_id, resource_name, context=context)
 #    if self._name == 'external.referential':
 #        referential = self.browse(cr, uid, object_id, context=context)
 #    elif 'referential_id' in self._columns.keys():
@@ -155,7 +156,7 @@ osv.osv.ext_update = ext_update
 #                context['store_to_lang'][storeview.id] = storeview.lang_id.code
 #    return context
 
-#osv.osv.init_context_before_exporting_resource = osv.osv.init_context_before_exporting_resource
+#Model.init_context_before_exporting_resource = Model.init_context_before_exporting_resource
 
 
 def ext_set_resource_as_imported(self, cr, uid, external_session, external_id, mapping=None, mapping_id=None, context=None):
@@ -165,7 +166,7 @@ def ext_set_resource_as_imported(self, cr, uid, external_session, external_id, m
         return external_session.connection.call(done_method, [external_id])
     return False
 
-osv.osv.ext_set_resource_as_imported = ext_set_resource_as_imported
+Model.ext_set_resource_as_imported = ext_set_resource_as_imported
 
 #DEPRECATED FEATURE!! YES ALL FUNCTION UNDER HIS LINE ARE DEPRECATED
 
@@ -175,7 +176,7 @@ class Connection(object):
     def __init__(self, location, username, password, debug=False, logger=False):
         #Append / if not there
         if not location[-1] == '/':
-            location += '/' 
+            location += '/'
         self.corelocation = location
         #Please do not remove the str indeed xmlrpc lib require a string for the location
         #if an unicode is send it will raise you an error
@@ -186,7 +187,7 @@ class Connection(object):
         self.result = {}
         self.logger = logger or _logger
 
-    
+
     def connect(self):
         if not self.location[-1] == '/':
             self.location += '/'
@@ -206,11 +207,11 @@ class Connection(object):
             except Exception,e:
                 self.logger.error("Magento Connection" + netsvc.LOG_ERROR +  "Error in connecting:%s" % e)
                 self.logger.warning("Webservice Failure, sleeping %s second before next attempt" % sleep_time)
-                time.sleep(sleep_time)  
-        raise osv.except_osv(_('User Error'), _('Error when try to connect to magento, are your sure that your login is right? Did openerp can access to your magento?'))
+                time.sleep(sleep_time)
+        raise except_osv(_('User Error'), _('Error when try to connect to magento, are your sure that your login is right? Did openerp can access to your magento?'))
 
-    
-    def call(self, method, *arguments): 
+
+    def call(self, method, *arguments):
         if arguments:
             arguments = list(arguments)[0]
         else:
@@ -242,7 +243,7 @@ class Connection(object):
         except Exception, e:
             pass
 
-class magerp_osv(osv.osv):
+class MagerpModel(Model):
     _register = False # Set to false if the model shouldn't be automatically discovered.
 
     _MAGE_FIELD = 'magento_id'
@@ -254,7 +255,7 @@ class magerp_osv(osv.osv):
     _DELETE_METHOD = False
     _mapping = {}
     DEBUG = False
-    
+
     #TODO deprecated, remove use
     def mage_to_oe(self, cr, uid, mageid, instance, *arguments):
         """given a record id in the Magento referential, returns a tuple (id, name) with the id in the OpenERP referential; Magento instance wise"""
@@ -279,7 +280,7 @@ class magerp_osv(osv.osv):
                     read = self.read(cr, uid, oeid, [self._rec_name])
                     return (read[0]['id'], read[0][self._rec_name])
         return False
-    
+
     #TODO deprecated, remove use
     def sync_import(self, cr, uid, magento_records, instance, debug=False, defaults=None, *attrs):
 
@@ -314,7 +315,7 @@ class magerp_osv(osv.osv):
                     'temp_vars':{},
                     'mage2oe_filters':mage2oe_filters
                 }
-                
+
                 #now properly mapp known Magento attributes to OpenERP entity columns:
                 for each_valid_key in self._mapping:
                     if each_valid_key in magento_record.keys():
@@ -353,7 +354,7 @@ class magerp_osv(osv.osv):
                         self.record_save(cr, uid, rec_id, vals, defaults)
                 else:
                     self.record_save(cr, uid, rec_id, vals, defaults)
-                            
+
     def record_save(self, cr, uid, rec_id, vals, defaults):
         if defaults:
             for key in defaults.keys():
@@ -364,7 +365,7 @@ class magerp_osv(osv.osv):
         else:
             #Record is not there, create it
             self.create(cr, uid, vals,)
-            
+
     def cast_string(self, subject):
         """This function will convert string objects to the data type required. Example "0"/"1" to boolean conversion"""
         for key in subject.keys():
@@ -374,7 +375,7 @@ class magerp_osv(osv.osv):
                 else:
                     subject[key] = True
         return subject
-    
+
     def mage_import_base(self,cr,uid,conn, external_referential_id, defaults=None, context=None):
         if context is None:
             context = {}
@@ -396,7 +397,7 @@ class magerp_osv(osv.osv):
                 list_method = self.pool.get('external.mapping').read(cr,uid,mapping_id[0],['external_list_method']).get('external_list_method',False)
                 if list_method:
                     data = conn.call(list_method, context['ids_or_filter'])
-                    
+
                     #it may happen that list method doesn't provide enough information, forcing us to use get_method on each record (case for sale orders)
                     if context.get('one_by_one', False):
                         self.mage_import_one_by_one(cr, uid, conn, external_referential_id, mapping_id[0], data, defaults, context)
@@ -437,8 +438,8 @@ class magerp_osv(osv.osv):
             else:
                 self.sync_import(cr, uid, magento_records, instance, debug, defaults)
         else:
-            raise osv.except_osv(_('Undefined List method !'), _("list method is undefined for this object!"))
-    
+            raise except_osv(_('Undefined List method !'), _("list method is undefined for this object!"))
+
     #TODO deprecated, remove use
     def get_all_mage_ids(self, cr, uid, ids, instance=False):
         search_param = []
@@ -451,4 +452,6 @@ class magerp_osv(osv.osv):
         for each in reads:
             mageids.append(each[self._MAGE_FIELD])
         return mageids
-        
+
+# deprecated, bw compat
+magerp_osv = MagerpModel

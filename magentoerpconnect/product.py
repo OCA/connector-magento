@@ -22,25 +22,26 @@
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.  #
 #########################################################################
 
-from osv import osv, orm, fields
-import datetime
 import time
-import pooler
-import magerp_osv
-from tools.translate import _
 import unicodedata
 import base64, urllib
 import os
-from lxml import etree
 import xmlrpclib
-
+from lxml import etree
 import logging
-_logger = logging.getLogger(__name__)
 
-from tools import DEFAULT_SERVER_DATETIME_FORMAT
+from openerp.osv.orm import Model, setup_modifiers
+from openerp.osv import fields
+from openerp.osv.osv import except_osv
+from openerp import pooler
+from openerp.tools.translate import _
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
+from .magerp_osv import MagerpModel
 from base_external_referentials.decorator import only_for_referential
 from base_external_referentials.external_osv import ExternalSession
+
+_logger = logging.getLogger(__name__)
 
 #Enabling this to True will put all custom attributes into One page in
 #the products view
@@ -70,7 +71,7 @@ def convert_to_ascii(my_unicode):
     else:
         return False
 
-class magerp_product_category_attribute_options(magerp_osv.magerp_osv):
+class magerp_product_category_attribute_options(MagerpModel):
     _name = "magerp.product_category_attribute_options"
     _description = "Option products category Attributes"
     _rec_name = "label"
@@ -98,13 +99,10 @@ class magerp_product_category_attribute_options(magerp_osv.magerp_osv):
         'value':fields.char('Value', size=200),
         #'ipcast':fields.char('Type cast', size=50),
         'label':fields.char('Label', size=100),
-    }
+        }
 
 
-magerp_product_category_attribute_options()
-
-
-class product_category(magerp_osv.magerp_osv):
+class product_category(MagerpModel):
     _inherit = "product.category"
 
     def _merge_with_default_values(self, cr, uid, external_session, ressource, vals, sub_mapping_list, defaults=None, context=None):
@@ -159,9 +157,6 @@ class product_category(magerp_osv.magerp_osv):
             ext_update_ids[resource_id] = ext_id
         return ext_update_ids
 
-
-
-
     _columns = {
         'magerp_fields' : fields.serialized('Magento Product Categories Extra Fields'),
         'create_date': fields.datetime('Created date', readonly=True),
@@ -194,8 +189,6 @@ class product_category(magerp_osv.magerp_osv):
         'page_layout': fields.many2one('magerp.product_category_attribute_options', 'Page Layout', domain="[('attribute_name', '=', 'page_layout')]"),
         }
 
-
-
     _defaults = {
         'display_mode':lambda * a:'PRODUCTS',
         'use_default_available_sort_by': lambda * a:True,
@@ -203,7 +196,7 @@ class product_category(magerp_osv.magerp_osv):
         'level':lambda * a:1,
         'include_in_menu': lambda * a:True,
         'page_layout': lambda self,cr,uid,c: self.pool.get('magerp.product_category_attribute_options')._get_default_option(cr, uid, 'page_layout', 'None', context=c),
-                 }
+        }
 
     def write(self, cr, uid, ids, vals, context=None):
         if not 'magerp_stamp' in vals.keys():
@@ -224,10 +217,8 @@ class product_category(magerp_osv.magerp_osv):
             ids = get_child_ids(categ_tree)
         return ids
 
-product_category()
 
-
-class magerp_product_attributes(magerp_osv.magerp_osv):
+class magerp_product_attributes(MagerpModel):
     _name = "magerp.product_attributes"
     _description = "Attributes of products"
     _rec_name = "attribute_code"
@@ -295,95 +286,81 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
         'based_on':fields.selection([('product_product', 'Product Product'), ('product_template', 'Product Template')], 'Based On'),
         }
 
-    _defaults = {
-        'based_on': lambda*a: 'product_template',
-    }
-
+    _defaults = {'based_on': lambda*a: 'product_template',
+                 }
     #mapping magentofield:(openerpfield,typecast,)
     #have an entry for each mapped field
-    _no_create_list = [
-        'product_id',
-        'name',
-        'description',
-        'short_description',
-        'sku',
-        'weight',
-        'category_ids',
-        'price',
-        'cost',
-        'set',
-        'ean',
-    ]
-
-    _translatable_default_codes = [
-        'description',
-        'meta_description',
-        'meta_keyword',
-        'meta_title',
-        'name',
-        'short_description',
-        'url_key',
-    ]
-
-    _not_store_in_json = [
-        'minimal_price',
-        'special_price',
-        'description',
-        'meta_description',
-        'meta_keyword',
-        'meta_title',
-        'name',
-        'short_description',
-        'url_key',
-    ]
-
-    _type_conversion = {
-        '':'char',
-        'text':'char',
-        'textarea':'text',
-        'select':'many2one',
-        'date':'date',
-        'price':'float',
-        'media_image':'binary',
-        'gallery':'binary',
-        'multiselect':'many2many',
-        'boolean':'boolean',
-        'weee':'char',
-        False:'char',
-        'file':'char', #this option is not a magento native field it will be better to found a generic solutionto manage this kind of custom option
-    }
-
-    _type_casts = {
-        '':'unicode',
-        'text':'unicode',
-        'textarea':'unicode',
-        'select':'unicode',
-        'date':'unicode',
-        'price':'float',
-        'media_image':'False',
-        'gallery':'False',
-        'multiselect':'list',
-        'boolean':'int',
-        'weee':'unicode',
-        False:'unicode',
-        'file':'unicode', #this option is not a magento native field it will be better to found a generic solutionto manage this kind of custom option
-    }
-
-    _variant_fields = [
-        'color',
-        'dimension',
-        'visibility',
-        'special_price',
-        'special_price_from_date',
-        'special_price_to_date',
-    ]
+    _no_create_list = ['product_id',
+                       'name',
+                       'description',
+                       'short_description',
+                       'sku',
+                       'weight',
+                       'category_ids',
+                       'price',
+                       'cost',
+                       'set',
+                       'ean',
+                       ]
+    _translatable_default_codes = ['description',
+                                   'meta_description',
+                                   'meta_keyword',
+                                   'meta_title',
+                                   'name',
+                                   'short_description',
+                                   'url_key',
+                                   ]
+    _not_store_in_json = ['minimal_price',
+                          'special_price',
+                          'description',
+                          'meta_description',
+                          'meta_keyword',
+                          'meta_title',
+                          'name',
+                          'short_description',
+                          'url_key',
+                          ]
+    _type_conversion = {'':'char',
+                        'text':'char',
+                        'textarea':'text',
+                        'select':'many2one',
+                        'date':'date',
+                        'price':'float',
+                        'media_image':'binary',
+                        'gallery':'binary',
+                        'multiselect':'many2many',
+                        'boolean':'boolean',
+                        'weee':'char',
+                        False:'char',
+                        'file':'char', #this option is not a magento native field it will be better to found a generic solutionto manage this kind of custom option
+                        }
+    _type_casts = {'':'unicode',
+                   'text':'unicode',
+                   'textarea':'unicode',
+                   'select':'unicode',
+                   'date':'unicode',
+                   'price':'float',
+                   'media_image':'False',
+                   'gallery':'False',
+                   'multiselect':'list',
+                   'boolean':'int',
+                   'weee':'unicode',
+                   False:'unicode',
+                   'file':'unicode', #this option is not a magento native field it will be better to found a generic solutionto manage this kind of custom option
+                   }
+    _variant_fields = ['color',
+                       'dimension',
+                       'visibility',
+                       'special_price',
+                       'special_price_from_date',
+                       'special_price_to_date',
+                       ]
 
 
     #TODO check if this field have to be in only one way and if yes add this feature
-    _sync_way = {
-        'has_options' : 'in',
-        'special_price' : 'in',
-        }
+    _sync_way = {'has_options' : 'in',
+                 'special_price' : 'in',
+                 }
 
     def _is_attribute_translatable(self, vals):
         """Tells if field associated to attribute should be translatable or not.
@@ -493,7 +470,6 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
                             # mapping have to be based on product.product
                             model_id = self.pool.get('ir.model').search(cr, uid, [('model', '=', 'product.product')])[0]
                             self._create_mapping(cr, uid, field_vals['ttype'], field_id, field_name, referential_id, model_id, vals, crid)
-
         return crid
 
     def _default_mapping(self, cr, uid, ttype, field_name, vals, attribute_id, model_id, mapping_line, referential_id):
@@ -564,10 +540,9 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
                 self.pool.get('external.mapping.line').create(cr, uid, mapping_line)
         return True
 
-magerp_product_attributes()
 
 """Dont remove the code, we might need it --sharoon
-class magerp_product_attributes_set_info(osv.osv):
+class magerp_product_attributes_set_info(Model):
     _name="magerp.product_attributes.set_info"
     _description = "Attribute Set information for each attribute"
     _columns = {
@@ -579,7 +554,7 @@ class magerp_product_attributes_set_info(osv.osv):
                 }
 magerp_product_attributes_set_info()"""
 
-class magerp_product_attribute_options(magerp_osv.magerp_osv):
+class magerp_product_attribute_options(MagerpModel):
     _name = "magerp.product_attribute_options"
     _description = "Options  of selected attributes"
     _rec_name = "label"
@@ -635,9 +610,8 @@ class magerp_product_attribute_options(magerp_osv.magerp_osv):
         else:
             return False
 
-magerp_product_attribute_options()
 
-class magerp_product_attribute_set(magerp_osv.magerp_osv):
+class magerp_product_attribute_set(MagerpModel):
     _name = "magerp.product_attribute_set"
     _description = "Attribute sets in products"
     _rec_name = 'attribute_set_name'
@@ -649,8 +623,8 @@ class magerp_product_attribute_set(magerp_osv.magerp_osv):
         'referential_id':fields.many2one('external.referential', 'Magento Instance', readonly=True),
         'magento_id':fields.integer('Magento ID'),
         }
-        
-        
+
+
     def update_attribute(self, cr, uid, ids, context=None):
         ref_obj = self.pool.get('external.referential')
         mag_ref_ids = ref_obj.search(cr, uid, [('version_id','ilike', 'magento')], context=context)
@@ -735,9 +709,8 @@ class magerp_product_attribute_set(magerp_osv.magerp_osv):
             cr.execute(query)
         return True
 
-magerp_product_attribute_set()
 
-class magerp_product_attribute_groups(magerp_osv.magerp_osv):
+class magerp_product_attribute_groups(MagerpModel):
     _name = "magerp.product_attribute_groups"
     _description = "Attribute groups in Magento"
     _rec_name = 'attribute_group_name'
@@ -759,10 +732,9 @@ class magerp_product_attribute_groups(magerp_osv.magerp_osv):
         'sort_order':fields.integer('Sort Order'),
         'default_id':fields.integer('Default'),
         'referential_id':fields.many2one('external.referential', 'Magento Instance', readonly=True),
-    }
-magerp_product_attribute_groups()
+        }
 
-class product_tierprice(osv.osv):
+class product_tierprice(Model):
     _name = "product.tierprice"
     _description = "Implements magento tier pricing"
 
@@ -782,7 +754,7 @@ class product_tierprice(osv.osv):
         'price_qty':fields.float('Quantity Slab', digits=(10, 4), help="Slab & above eg.For 10 and above enter 10"),
         'product':fields.many2one('product.product', 'Product'),
         'referential_id':fields.many2one('external.referential', 'Magento Instance', readonly=True),
-    }
+        }
     _mapping = {
         'cust_group':(False, int, """result=self.pool.get('res.partner.category').mage_to_oe(cr,uid,cust_group,instance)\nif result:\n\tresult=[('cust_group',result[0])]\nelse:\n\tresult=[('cust_group',False)]"""),
         'all_groups':(False, str, """if all_groups=='1':\n\tresult=[('group_scope','1')]\nelse:\n\tresult=[('group_scope','1')]"""),
@@ -790,21 +762,18 @@ class product_tierprice(osv.osv):
         'price':('price', float),
         'website_id':(False, int, """result=self.pool.get('external.shop.group').mage_to_oe(cr,uid,website_id,instance)\nif result:\n\tresult=[('website_id',result[0])]\nelse:\n\tresult=[('website_id',False)]"""),
         'price_qty':('price_qty', float),
-    }
-product_tierprice()
+        }
 
-class product_product_type(osv.osv):
+class product_product_type(Model):
     _name = 'magerp.product_product_type'
     _columns = {
         'name': fields.char('Name', size=100, required=True, translate=True),
         'product_type': fields.char('Type', size=100, required=True, help="Use the same name of Magento product type, for example 'simple'."),
         'default_type': fields.selection([('product','Stockable Product'),('consu', 'Consumable'),('service','Service')], 'Default Product Type', required=True, help="Default product's type (Procurement) when a product is imported from Magento."),
-    }
-product_product_type()
+        }
 
 
-
-class product_mag_osv(magerp_osv.magerp_osv):
+class product_mag_osv(MagerpModel):
     _register = False # Set to false if the model shouldn't be automatically discovered.
 
     #remember one thing in life: Magento lies: it tells attributes are required while they are awkward to fill
@@ -819,7 +788,7 @@ class product_mag_osv(magerp_osv.magerp_osv):
         set_id = self.read(cr, uid, ids, fields=['set'], context=context)[0]['set']
 
         if not set_id:
-            raise osv.except_osv(_('User Error'), _('Please chose an attribut set before'))
+            raise except_osv(_('User Error'), _('Please chose an attribute set before'))
 
         return {
             'name': 'Magento Fields',
@@ -948,17 +917,15 @@ class product_mag_osv(magerp_osv.magerp_osv):
                         f.set('nolabel', "1")
                         f.set('colspan', "4")
 
-                    orm.setup_modifiers(
-                        f, fields_get[attribute['field_name']],
-                        context=context)
+                    setup_modifiers(f, fields_get[attribute['field_name']],
+                                    context=context)
 
         if multiwebsites:
             website_page = etree.SubElement(
                 notebook, 'page', string=_('Websites'))
             wf = etree.SubElement(
                 website_page, 'field', name='websites_ids', nolabel="1")
-            orm.setup_modifiers(
-                wf, fields_get['websites_ids'], context=context)
+            setup_modifiers(wf, fields_get['websites_ids'], context=context)
 
         return notebook
 
@@ -1025,14 +992,13 @@ class product_mag_osv(magerp_osv.magerp_osv):
                         'page',
                         string=_('Magento Information'),
                         attrs=attrs_mag_notebook)
-                    orm.setup_modifiers(magento_page, context=context)
+                    setup_modifiers(magento_page, context=context)
                     f = etree.SubElement(
                         magento_page,
                         'field',
                         name='product_type',
                         attrs="{'required': [('magento_exportable', '=', True)]}")
-                    orm.setup_modifiers(
-                        f, field=result['fields']['product_type'], context=context)
+                    setup_modifiers(f, field=result['fields']['product_type'], context=context)
                     magento_page.append(attributes_notebook)
                     btn.getparent().remove(btn)
                 else:
@@ -1050,7 +1016,7 @@ class product_mag_osv(magerp_osv.magerp_osv):
                     type='object',
                     colspan='2',
                     attrs=attrs_mag_notebook)
-                orm.setup_modifiers(new_btn, context=context)
+                setup_modifiers(new_btn, context=context)
                 btn.getparent().replace(btn, new_btn)
                 if page_placeholder:
                     placeholder = page_placeholder[0]
@@ -1061,7 +1027,6 @@ class product_mag_osv(magerp_osv.magerp_osv):
 
 class product_template(product_mag_osv):
     _inherit = "product.template"
-
     _columns = {
         'magerp_tmpl' : fields.serialized('Magento Template Fields'),
         'set':fields.many2one('magerp.product_attribute_set', 'Attribute Set'),
@@ -1071,18 +1036,14 @@ class product_template(product_mag_osv):
                                 ('no', 'Do Not Manage Stock'),
                                 ('yes','Manage Stock')],
                                 'Manage Stock Level'),
-    }
-
+        }
     _defaults = {
         'mag_manage_stock': 'use_default',
-    }
-
-product_template()
+        }
 
 
 class product_product(product_mag_osv):
     _inherit = "product.product"
-
 
     def send_to_external(self, cr, uid, external_session, resources, mapping, mapping_id, update_date=None, context=None):
         product_ids = resources.keys()
@@ -1096,7 +1057,7 @@ class product_product(product_mag_osv):
         ext_id = res['product_id']
         external_session.connection.call('ol_catalog_product.update', [ext_id, resource, False, 'id'])
         return ext_id
-    
+
     @only_for_referential('magento')
     def _get_external_resources(self, cr, uid, external_session, external_id=None, resource_filter=None,
                                          mapping=None, mapping_id=None, fields=None, context=None):
@@ -1110,8 +1071,8 @@ class product_product(product_mag_osv):
                                                                     mapping_id=mapping_id,
                                                                     fields=fields,
                                                                     context=context)
-        
-        
+
+
     #TODO reimplement the grouped product
     def ext_create(self, cr, uid, external_session, resources, mapping=None, mapping_id=None, context=None):
         ext_create_ids={}
@@ -1134,7 +1095,7 @@ class product_product(product_mag_osv):
                     try:
                         ext_id = self.map_and_update_product(cr, uid, external_session, resource[main_lang], sku, context=context)
                     except:
-                        raise osv.except_osv(_('Error!'), _("Product %s already exist in Magento. Failed to rebind it. Please do it manually")%(sku))
+                        raise except_osv(_('Error!'), _("Product %s already exist in Magento. Failed to rebind it. Please do it manually")%(sku))
                 else:
                     raise
 
@@ -1391,9 +1352,17 @@ class product_product(product_mag_osv):
                         break
         if not_delete:
             if len(ids) > 1:
-                raise osv.except_osv(_('Warning!'), _('They are some products related to Magento. They can not be deleted!\nYou can change their Magento status to "Disabled" and uncheck the active box to hide them from OpenERP.'))
+                raise except_osv(_('Warning!'),
+                                 _('They are some products related to Magento. '
+                                   'They can not be deleted!\n'
+                                   'You can change their Magento status to "Disabled" '
+                                   'and uncheck the active box to hide them from OpenERP.'))
             else:
-                raise osv.except_osv(_('Warning!'), _('This product is related to Magento. It can not be deleted!\nYou can change it Magento status to "Disabled" and uncheck the active box to hide it from OpenERP.'))
+                raise except_osv(_('Warning!'),
+                                 _('This product is related to Magento. '
+                                   'It can not be deleted!\n'
+                                   'You can change it Magento status to "Disabled" '
+                                   'and uncheck the active box to hide it from OpenERP.'))
         else:
             return super(product_product, self).unlink(cr, uid, ids, context)
 
@@ -1617,5 +1586,3 @@ class product_product(product_mag_osv):
         finally:
             local_cr.close()
         return True
-
-product_product()
