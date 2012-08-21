@@ -62,10 +62,10 @@ class product_product(osv.osv):
             if product.product_tmpl_id.magento_exportable:
                 magento_product_exportable_ids += [product.id]
         vals = {'magento_exportable':True}
-        visibility_attribut_id = self.pool.get('magerp.product_attributes').search(cr, uid, [('field_name', '=', 'x_magerp_visibility')], context=context)
-        if visibility_attribut_id:
-            option_id = self.pool.get('magerp.product_attribute_options').search(cr, uid, [('attribute_id', '=', visibility_attribut_id[0]), ('label', '=', 'Not Visible Individually')], context=context)[0]
-            vals['x_magerp_visibility'] = option_id
+#        visibility_attribut_id = self.pool.get('magerp.product_attributes').search(cr, uid, [('field_name', '=', 'x_magerp_visibility')], context=context)
+#        if visibility_attribut_id:
+#            option_id = self.pool.get('magerp.product_attribute_options').search(cr, uid, [('attribute_id', '=', visibility_attribut_id[0]), ('label', '=', 'Not Visible Individually')], context=context)[0]
+#            vals['x_magerp_visibility'] = option_id
         self.write(cr, uid, magento_product_exportable_ids, vals, context=context)
         return True
     

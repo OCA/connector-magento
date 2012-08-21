@@ -26,6 +26,8 @@ import mimetypes
 import netsvc
 from tools.translate import _
 import base64
+from base_external_referentials.decorator import commit_now
+from base_external_referentials.decorator import only_for_referential
 
 #TODO the option small_image, thumbnail, exclude, base_image, should be store diferently indeed this is not compatible with mutli instance (maybe serialized will be a good solution)
 #Moreover when a small is selected the flag on other image should be remove as magento does
@@ -65,6 +67,21 @@ class product_images(magerp_osv.magerp_osv):
         if name_id:
             return image_ext_name_obj.unlink(cr, uid, name_id, context=context)
         return False
+
+
+
+    @only_for_referential(ref_categ ='Multichannel Sale')
+    def _get_last_exported_date(self, cr, uid, external_session, context=None):
+        shop = external_session.sync_from_object
+        return shop.last_images_export_date
+
+    @only_for_referential(ref_categ ='Multichannel Sale')
+    @commit_now
+    def _set_last_exported_date(self, cr, uid, external_session, date, context=None):
+        shop = external_session.sync_from_object
+        return self.pool.get('sale.shop').write(cr, uid, shop.id, {'last_images_export_date': date}, context=context)
+
+
 
     def update_remote_images(self, cr, uid, external_session, ids, context=None):
         if context is None:
@@ -163,7 +180,7 @@ class product_images(magerp_osv.magerp_osv):
 
 
                 if context.get('last_images_export_date') and image_2_date[each.id] > context['last_images_export_date']: #indeed if a product was created a long time ago and checked as exportable recently, the write date of the image can be far away in the past
-                    self.pool.get('sale.shop').write(cr,uid,context['shop_id'],{'last_images_export_date':image_2_date[each.id]})
+                    self._set_last_exported_date(cr, uid, external_session, image_2_date[each.id], context=context)
                 cr.commit()
             ids = ids[1000:]
             external_session.logger.info("still %s image to export" %len(ids))

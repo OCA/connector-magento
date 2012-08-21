@@ -17,4 +17,4 @@ ln = add_id.address[0].lastname
 result=[('firstname', fn), ('lastname', ln)]",,
 mag1500_res_partner_email,,in_out,direct,email,magentoerpconnect.field_res_partner_emailid,unicode,True,magentoerpconnect.mag1500_res_partner,,"result=[('emailid',ifield)]",,,
 mag1500_res_partner_taxvat,,in_out,direct,taxvat,magentoerpconnect.field_res_partner_mag_vat,unicode,False,magentoerpconnect.mag1500_res_partner,,,,,
-mag1500_res_partner_dob,,in_out,direct,dob,magentoerpconnect.field_res_partner_mag_birthday,datetime,False,magentoerpconnect.mag1500_res_partner,,,,,%Y-%m-%d
+mag1500_res_partner_dob,,in_out,direct,dob,magentoerpconnect.field_res_partner_mag_birthday,datetime,False,magentoerpconnect.mag1500_res_partner,,,,,%Y-%m-%d %H:%M:%S

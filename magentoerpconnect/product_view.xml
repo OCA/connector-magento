@@ -95,6 +95,7 @@
 					<group col="4" colspan="4">
 						<field name="sort_order" readonly="1" />
 						<field name="attribute_set_name" readonly="1" />
+						<button name="update_attribute" string="Update Attributes" colspan="2" type="object" />
 					</group>
 					<separator string="Attributes in Set" colspan="4" />
 					<field name="attributes" nolabel="1" readonly="1" />

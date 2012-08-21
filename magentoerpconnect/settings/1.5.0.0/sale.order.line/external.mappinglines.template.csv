@@ -17,7 +17,7 @@ mag1500_sale_order_line_option=>,,in,function,product_options,,unicode,False,mag
 mag1500_sale_order_line_product_id=>,,in,direct,product_id,sale.field_sale_order_line_product_id,int,False,mag1500_sale_order_line,,,,,
 mag1500_sale_order_line_qty_ordered=>,,in,direct,qty_ordered,sale.field_sale_order_line_product_uom_qty,float,False,mag1500_sale_order_line,,,,,
 mag1500_sale_order_line_price=>,,in,function,price,,unicode,False,mag1500_sale_order_line,price,"result=[
-('price_unit_tax_included', (float(resource['row_total']) + float(resource['tax_amount']))/float(resource['qty_ordered'])),
-('price_unit_tax_excluded', (float(resource['row_total']))/float(resource['qty_ordered'])),
-('tax_rate', float(resource['row_total']) and (float(resource['tax_amount'])/float(resource['row_total']))),
+('price_unit_tax_included', (float(resource['base_row_total_incl_tax']))/float(resource['qty_ordered'])),
+('price_unit_tax_excluded', (float(resource['base_row_total']))/float(resource['qty_ordered'])),
+('tax_rate', float(resource['base_row_total']) and (float(resource['base_row_total_incl_tax'])/float(resource['base_row_total'])-1)),
 ]",,,

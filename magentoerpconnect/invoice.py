@@ -83,27 +83,10 @@ class account_invoice(osv.osv):
         ext_create_ids={}
         for resource_id, resource in resources.items():
             resource = resource[resource.keys()[0]]
-            if resource['type'] == 'out_refund':
-                method = "synoopenerpadapter_creditmemo.addInfo"
-            elif resource['type'] == 'out_invoice':
-                method = "synoopenerpadapter_invoice.addInfo"
-            resource['reference'] = context.get('report_name')
-            ext_create_ids[resource_id] = external_session.connection.call(method, 
-                        [
-                            resource['customer_id'],
-                            resource['order_increment_id'],
-                            resource['reference'],
-                            resource['amount'],
-                            resource['date'],
-                            resource['customer_name'],
-                        ])
             if resource['type'] == 'out_invoice':
-                self.create_magento_invoice(cr, uid,  external_session, resource_id, 
-                                                resource['order_increment_id'], context=context)
+                ext_create_ids[resource_id] = self.create_magento_invoice(cr, uid,  external_session,
+                                    resource_id, resource['order_increment_id'], context=context)
         return ext_create_ids
-
-
-
 
 account_invoice()
 

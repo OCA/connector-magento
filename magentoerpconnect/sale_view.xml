@@ -10,9 +10,6 @@
 			<field name="type">form</field>
 			<field name="arch" type="xml">
 				<data>
-					<field name="exportable_root_category_ids" position="replace">
-						<field name="exportable_root_category_ids" invisible="1" />
-					</field>
 					<field name="referential_id" position="replace">
 						<field name="referential_id" attrs="{'readonly': [('magento_shop','=',True)]}"/>	
 					</field>
@@ -25,6 +22,12 @@
 						<field name="allow_magento_order_status_push" />
 						<field name="allow_magento_notification"/>
 					</field>
+                    <button name="export_inventory" position="after">
+                        <button name="export_images" string="Export Images"	colspan="2" type="object" />
+                    </button>
+				    <field name="last_inventory_export_date" position="after">
+				    	<field name="last_images_export_date" />
+				    </field>
 				</data>
 			</field>
 		</record>
@@ -36,23 +39,6 @@
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
 			<field name="domain">[('magento_shop', '=', True)]</field>
-		</record>
-
-		<record id="magerp_view_shop_images_form" model="ir.ui.view">
-			<field name="name">magerp_view_shop_images_form</field>
-			<field name="model">sale.shop</field>
-			<field name="type">form</field>
-			<field name="inherit_id" ref="base_sale_multichannels.base_sale_multichannels_view_shop_form"/>
-			<field name="arch" type="xml">
-                <data>
-                    <button name="export_inventory" position="after">
-                        <button name="export_images" string="Export Images"	colspan="2" type="object" />
-                    </button>
-				    <field name="last_inventory_export_date" position="after">
-				    	<field name="last_images_export_date" />
-				    </field>
-                </data>
-			</field>
 		</record>
 
         <record id="base_sale_multichannel_view_order_form_magento" model="ir.ui.view">

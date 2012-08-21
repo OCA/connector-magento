@@ -40,6 +40,7 @@ _logger = logging.getLogger(__name__)
 from tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 from base_external_referentials.decorator import only_for_referential
+from base_external_referentials.external_osv import ExternalSession
 
 #Enabling this to True will put all custom attributes into One page in
 #the products view
@@ -119,8 +120,8 @@ class product_category(magerp_osv.magerp_osv):
         defaults.update({'magento_exportable': True})
         return defaults
 
-    def multi_lang_read(self, cr, uid, ids, fields_to_read, langs, resources=None, use_multi_lang = True, context=None):
-        return super(product_category, self).multi_lang_read(cr, uid, ids, fields_to_read, langs,
+    def multi_lang_read(self, cr, uid, external_session, ids, fields_to_read, langs, resources=None, use_multi_lang = True, context=None):
+        return super(product_category, self).multi_lang_read(cr, uid, external_session, ids, fields_to_read, langs,
                                                             resources=resources,
                                                             use_multi_lang = False,
                                                             context=context)
@@ -255,6 +256,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
                                            ('gallery', 'Gallery'),
                                            ('weee', 'Fixed Product Tax'),
                                            ('file', 'File'), #this option is not a magento native field it will be better to found a generic solutionto manage this kind of custom option
+                                           ('weight', 'Weight'),
                                            ], 'Frontend Input'
                                           ),
         'frontend_class':fields.char('Frontend Class', size=100),
@@ -309,7 +311,8 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
         'category_ids',
         'price',
         'cost',
-        'set'
+        'set',
+        'ean',
     ]
 
     _translatable_default_codes = [
@@ -370,6 +373,9 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
         'color',
         'dimension',
         'visibility',
+        'special_price',
+        'special_price_from_date',
+        'special_price_to_date',
     ]
 
 
@@ -399,22 +405,23 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
         model_ids = self.pool.get('ir.model').search(cr, uid, [('model', 'in', ['product.product', 'product.template'])])
         product_model_id = self.pool.get('ir.model').search(cr, uid, [('model', 'in', ['product.product'])])[0]
         referential_id = context.get('referential_id', False)
-        for id in ids:
-            all_vals = self.read(cr, uid, id, [], context)
+        if referential_id:
+            for id in ids:
+                all_vals = self.read(cr, uid, id, [], context)
 
-            #Fetch Options
-            if 'frontend_input' in all_vals.keys() and all_vals['frontend_input'] in ['select', 'multiselect']:
-                core_imp_conn = self.pool.get('external.referential').external_connection(cr, uid, [referential_id])
-                options_data = core_imp_conn.call('ol_catalog_product_attribute.options', [all_vals['magento_id']])
-                if options_data:
-                    self.pool.get('magerp.product_attribute_options').data_to_save(cr, uid, options_data, update=True, context={'attribute_id': id, 'referential_id': referential_id})
+                #Fetch Options
+                if 'frontend_input' in all_vals.keys() and all_vals['frontend_input'] in ['select', 'multiselect']:
+                    core_imp_conn = self.pool.get('external.referential').external_connection(cr, uid, [referential_id])
+                    options_data = core_imp_conn.call('ol_catalog_product_attribute.options', [all_vals['magento_id']])
+                    if options_data:
+                        self.pool.get('magerp.product_attribute_options').data_to_save(cr, uid, options_data, update=True, context={'attribute_id': id, 'referential_id': referential_id})
 
 
-            field_name = all_vals['field_name']
-            #TODO refactor me it will be better to add a one2many between the magerp_product_attributes and the ir.model.fields
-            field_ids = self.pool.get('ir.model.fields').search(cr, uid, [('name', '=', field_name), ('model_id', 'in', model_ids)])
-            if field_ids:
-                self._create_mapping(cr, uid, self._type_conversion[all_vals.get('frontend_input', False)], field_ids[0], field_name, referential_id, product_model_id, all_vals, id)
+                field_name = all_vals['field_name']
+                #TODO refactor me it will be better to add a one2many between the magerp_product_attributes and the ir.model.fields
+                field_ids = self.pool.get('ir.model.fields').search(cr, uid, [('name', '=', field_name), ('model_id', 'in', model_ids)])
+                if field_ids:
+                    self._create_mapping(cr, uid, self._type_conversion[all_vals.get('frontend_input', False)], field_ids[0], field_name, referential_id, product_model_id, all_vals, id)
         return result
 
     def create(self, cr, uid, vals, context=None):
@@ -436,7 +443,7 @@ class magerp_product_attributes(magerp_osv.magerp_osv):
             if crid:
                 #Fetch Options
                 if 'frontend_input' in vals.keys() and vals['frontend_input'] in ['select',  'multiselect']:
-                    core_imp_conn = self.pool.get('external.referential').external_connection(cr, uid, [vals['referential_id']])
+                    core_imp_conn = self.pool.get('external.referential').external_connection(cr, uid, vals['referential_id'])
                     options_data = core_imp_conn.call('ol_catalog_product_attribute.options', [vals['magento_id']])
                     if options_data:
                         self.pool.get('magerp.product_attribute_options').data_to_save(cr, uid, options_data, update=False, context={'attribute_id': crid, 'referential_id': vals['referential_id']})
@@ -642,6 +649,51 @@ class magerp_product_attribute_set(magerp_osv.magerp_osv):
         'referential_id':fields.many2one('external.referential', 'Magento Instance', readonly=True),
         'magento_id':fields.integer('Magento ID'),
         }
+        
+        
+    def update_attribute(self, cr, uid, ids, context=None):
+        ref_obj = self.pool.get('external.referential')
+        mag_ref_ids = ref_obj.search(cr, uid, [('version_id','ilike', 'magento')], context=context)
+        for referential in ref_obj.browse(cr, uid, mag_ref_ids, context=context):
+            external_session = ExternalSession(referential, referential)
+            for attr_set_id in ids:
+                attr_set_ext_id = self.get_extid(cr, uid, attr_set_id, referential.id, context=context)
+                if attr_set_ext_id:
+                    self._import_attribute(cr, uid, external_session, attr_set_ext_id, context=context)
+                    self._import_attribute_relation(cr, uid, external_session, [attr_set_ext_id], context=context)
+        return True
+
+    #TODO refactor me
+    def _import_attribute(self, cr, uid, external_session, attr_set_ext_id, attributes_imported=None, context=None):
+        attr_obj = self.pool.get('magerp.product_attributes')
+        mage_inp = external_session.connection.call('ol_catalog_product_attribute.list', [attr_set_ext_id])             #Get the tree
+        mapping = {'magerp.product_attributes' : attr_obj._get_mapping(cr, uid, external_session.referential_id.id, context=context)}
+        attribut_to_import = []
+        if not attributes_imported: attributes_imported=[]
+        for attribut in mage_inp:
+            ext_id = attribut['attribute_id']
+            if not ext_id in attributes_imported:
+                attributes_imported.append(ext_id)
+                attr_obj._record_one_external_resource(cr, uid, external_session, attribut,
+                                                defaults={'referential_id':external_session.referential_id.id},
+                                                mapping=mapping,
+                                                context=context,
+                                            )
+        external_session.logger.info("All attributs for the attributs set id %s was succesfully imported", attr_set_ext_id)
+        return True
+
+    #TODO refactor me
+    def _import_attribute_relation(self, cr, uid, external_session, attr_set_ext_ids, context=None):
+        #Relate attribute sets & attributes
+        mage_inp = {}
+        #Pass in {attribute_set_id:{attributes},attribute_set_id2:{attributes}}
+        #print "Attribute sets are:", attrib_sets
+        #TODO find a solution in order to import the relation in a incremental way (maybe splitting this function in two)
+        for attr_id in attr_set_ext_ids:
+            mage_inp[attr_id] = external_session.connection.call('ol_catalog_product_attribute.relations', [attr_id])
+        if mage_inp:
+            self.relate(cr, uid, mage_inp, external_session.referential_id.id, context)
+        return True
 
     def relate(self, cr, uid, mage_inp, instance, *args):
         #TODO: Build the relations code
