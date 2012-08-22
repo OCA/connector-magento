@@ -60,6 +60,7 @@ Model._export_resources = _export_resources
 
 Model._mag_get_external_resource_ids = Model._get_external_resource_ids
 
+# xxx a deplacer dans une méthode de search de MagentoConnector _default_ext_search
 @only_for_referential('magento', super_function = Model._get_external_resource_ids)
 def _get_external_resource_ids(self, cr, uid, external_session, resource_filter=None, mapping=None, mapping_id=None, context=None):
     mapping, mapping_id = self._init_mapping(cr, uid, external_session.referential_id.id, mapping=mapping, mapping_id=mapping_id, context=context)
@@ -74,6 +75,7 @@ Model._get_external_resource_ids = _get_external_resource_ids
 
 Model._mag_get_external_resources = Model._get_external_resources
 
+# xxx a deplacer dans MagentoConnect _default_ext_read
 @only_for_referential('magento', super_function = Model._mag_get_external_resources)
 def _get_external_resources(self, cr, uid, external_session, external_id=None, resource_filter=None, mapping=None, mapping_id=None, fields=None, context=None):
     mapping, mapping_id = self._init_mapping(cr, uid, external_session.referential_id.id, mapping=mapping, mapping_id=mapping_id, context=context)

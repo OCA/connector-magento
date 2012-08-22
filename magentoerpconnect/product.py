@@ -203,6 +203,7 @@ class product_category(MagerpModel):
             vals['magerp_stamp'] = time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         return super(product_category, self).write(cr, uid, ids, vals, context)
 
+    # XXX reimplement in Connector as _ext_search_product_category
     def _get_external_resource_ids(self, cr, uid, external_session, resource_filter=None, mapping=None, context=None):
         def get_child_ids(tree):
             result=[]
@@ -721,6 +722,7 @@ class magerp_product_attribute_groups(MagerpModel):
             res[attribute_group.id] = self.pool.get('magerp.product_attribute_set').extid_to_oeid(cr, uid, attribute_group.attribute_set_id, attribute_group.referential_id.id)
         return res
 
+    # XXX a deplacer dans MagentoConnector
     def _get_filter(self, cr, uid, external_session, step, previous_filter=None, context=None):
         attrset_ids = self.pool.get('magerp.product_attribute_set').get_all_extid_from_referential(cr, uid, external_session.referential_id.id, context=context)
         return {'attribute_set_id':{'in':attrset_ids}}
@@ -1058,6 +1060,7 @@ class product_product(product_mag_osv):
         external_session.connection.call('ol_catalog_product.update', [ext_id, resource, False, 'id'])
         return ext_id
 
+    # xxx a deplacer dans MagentoConnector _default_ext_read_product_product
     @only_for_referential('magento')
     def _get_external_resources(self, cr, uid, external_session, external_id=None, resource_filter=None,
                                          mapping=None, mapping_id=None, fields=None, context=None):

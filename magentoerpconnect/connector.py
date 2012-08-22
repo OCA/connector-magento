@@ -21,21 +21,76 @@
 ###############################################################################
 
 from base_external_referentials.connector import (REGISTRY,
-                                                  AbstractConnector,
                                                   AbstractMapping,
                                                   ModelMap)
+from base_sale_multichannel.connector import BaseConnector
 
-class MagentoConnector(AbstractConnector):
-    pass
+class MagentoConnector(BaseConnector):
+    '''need to recode
+    def _import_<model_name>(self, cr, uid, res_obj, defaults, context):
+        pass
+    def _get_import_defaults_<model_name>(self, cr, uid, context):
+        pass
+    def _import_<model_name>(self, cr, uid, res_obj, defaults, context):
+        pass
+    def _get_import_step_<model_name>(self, res_obj, context):
+        pass
+    def _record_one_<model_name>(self, cr, uid, res_obj, resource, defaults, context):
+        pass
+    def _oe_update_<model_name>(self, cr, uid, res_obj, existing_rec_id, vals, resource, defaults, context):
+        pass
+    * _oe_create_<model_name>(self, cr, uid, res_obj, vals, resource, defaults, context):
+        pass
+    '''
+    @classmethod
+    def match(cls, type, version):
+        raise NotImplementedError # do something smart here
+    
+    def _get_filter_sale_order(self, cr, uid, res_obj, step, previous_filter, context):
+        pass
+    def _get_filter_magerp_product_attribute_groups(self, cr, uid, res_obj, step, previous_filter,
+                                                    context):
+        pass
+
+    def _ext_search_product_category(self, xxx):
+        pass
+
+    def _ext_search_sale_order(self, xxx):
+        pass
+
+    def _get_import_defaults_sale_shop(self, cr, uid, context=None):
+        pass
+
+    def _default_ext_search(self, xxx):
+        pass
+
+    def _default_ext_read(self, xxx):
+        pass
+
+    def _default_ext_read_product_product(self, xxx):
+        pass
+
+    def _record_one_sale_order(self, cr, uid, res_obj, resource, defaults, context):
+        pass
+
+REGISTRY.register_connector(MagentoConnector)
+
 
 class MagentoMapping(AbstractConnector):
     pass
 
+class MagentoMapping1500(MagentoMapping)
+
+REGISTRY.register_mapping(MagentoMapping1500)
+
 class SaleOrderLineMap(ModelMap):
     model_name = 'sale.order.line'
+MagentoMapping1500.register_model_map(SaleOrderLineMap)
+
 
 class ResPartnerAddressMap(ModelMap):
     model_name = 'res.partner.address'
+MagentoMapping1500.register_model_map(ResPartnerAddressMap)
 
 class SaleOrderMap(ModelMap):
     model_name = 'sale.order'
@@ -62,3 +117,4 @@ class SaleOrderMap(ModelMap):
                          ('shipping_address', ('partner_shipping_id', ResPartnerAddressMap)),
                          ('billing_address', ('partner_invoice_id', ResPartnerAddressMap)),
                          ]
+MagentoMapping1500.register_model_map(SaleOrderMap)
