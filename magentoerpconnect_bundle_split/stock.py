@@ -19,11 +19,11 @@
 #
 ##############################################################################
 
-from osv import osv, fields
+from openerp.osv.orm import Model
+from openerp.osv import fields
 
 
-class stock_picking(osv.osv):
-
+class stock_picking(Model):
     _inherit = 'stock.picking'
 
     def create_ext_shipping(self, cr, uid, id, picking_type,
@@ -56,16 +56,10 @@ class stock_picking(osv.osv):
             cr, uid, id, picking_type,
             external_referential_id, context)
 
-stock_picking()
 
-
-class stock_move(osv.osv):
-
+class stock_move(Model):
     _inherit = 'stock.move'
-
     _columns = {
         'sale_line_bundle_id': fields.many2one('sale.order.line',
                                                string='Sale Order Line Bundle')
-    }
-
-stock_move()
+        }

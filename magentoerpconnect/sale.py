@@ -22,13 +22,12 @@
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.  #
 #########################################################################
 
-from osv import osv, fields
-import pooler
-import magerp_osv
+from openerp.osv.orm import Model
+from openerp.osv import fields
+from openerp.osv.osv import except_osv
 import netsvc
 from tools.translate import _
-import string
-import tools
+from openerp import tools
 import time
 from tools import DEFAULT_SERVER_DATETIME_FORMAT
 from base_external_referentials.external_osv import ExternalSession
@@ -54,7 +53,7 @@ ORDER_STATUS_MAPPING = {
     'waiting_date': 'holded'}
 SALE_ORDER_IMPORT_STEP = 200
 
-class sale_shop(osv.osv):
+class sale_shop(Model):
     _inherit = "sale.shop"
 
     @only_for_referential('magento')
@@ -71,14 +70,16 @@ class sale_shop(osv.osv):
                     context['lang_to_export'].append(storeview.lang_id.code)
         return context
 
-
-
     def _get_exportable_product_ids(self, cr, uid, ids, name, args, context=None):
         res = super(sale_shop, self)._get_exportable_product_ids(cr, uid, ids, name, args, context=None)
         for shop_id in res:
             website_id =  self.read(cr, uid, shop_id, ['shop_group_id'])
             if website_id.get('shop_group_id', False):
-                res[shop_id] = self.pool.get('product.product').search(cr, uid, [('magento_exportable', '=', True), ('id', 'in', res[shop_id]), "|", ('websites_ids', 'in', [website_id['shop_group_id'][0]]) , ('websites_ids', '=', False)])
+                res[shop_id] = self.pool.get('product.product').search(cr, uid,
+                                                                       [('magento_exportable', '=', True),
+                                                                        ('id', 'in', res[shop_id]),
+                                                                        "|", ('websites_ids', 'in', [website_id['shop_group_id'][0]]),
+                                                                             ('websites_ids', '=', False)])
             else:
                 res[shop_id] = []
         return res
@@ -138,7 +139,10 @@ class sale_shop(osv.osv):
             if model_data_id:
                 ir_model_data_obj.write(cr, uid, model_data_id, {'res_id' : value}, context=context)
             else:
-                raise osv.except_osv(_('Warning!'), _('No external id found, are you sure that the referential are syncronized? Please contact your administrator. (more information in magentoerpconnect/sale.py)'))
+                raise except_osv(_('Warning!'),
+                                 _('No external id found, are you sure that the referential are syncronized? '
+                                   'Please contact your administrator. '
+                                   '(more information in magentoerpconnect/sale.py)'))
         return True
 
     def _get_exportable_root_category_ids(self, cr, uid, ids, prop, unknow_none, context=None):
@@ -234,12 +238,9 @@ class sale_shop(osv.osv):
     def run_import_check_need_to_update(self, cr, uid, context=None):
         self._sale_shop(cr, uid, self.check_need_to_update, context=context)
 
-sale_shop()
 
-
-class sale_order(osv.osv):
+class sale_order(Model):
     _inherit = "sale.order"
-
     _columns = {
         'magento_incrementid': fields.char('Magento Increment ID', size=32),
         'magento_storeview_id': fields.many2one('magerp.storeviews', 'Magento Store View'),
@@ -247,7 +248,7 @@ class sale_order(osv.osv):
             'shop_id', 'referential_id', 'magento_referential',
             type='boolean',
             string='Is a Magento Sale Order')
-    }
+        }
 
     def _auto_init(self, cr, context=None):
         tools.drop_view_if_exists(cr, 'sale_report')
@@ -323,7 +324,7 @@ class sale_order(osv.osv):
                     wf_service.trg_validate(uid, 'sale.order', canceled_order_id, 'cancel', cr)
                     self.log(cr, uid, canceled_order_id, "order %s canceled when updated from external system" % (canceled_order_id,))
                     _logger.info("Order %s canceled when updated from external system because it has been replaced by a new one", canceled_order_id)
-                except osv.except_osv, e:
+                except except_osv, e:
                     #TODO: generic reporting of errors in magentoerpconnect
                     # except if the sale order has been confirmed for example, we cannot cancel the order
                     to_cancel_order_name = self.read(cr, uid, canceled_order_id, ['name'])['name']
@@ -634,13 +635,9 @@ class sale_order(osv.osv):
                 resource['shipping_address']['customer_id'] = resource['customer_id']
         return resource
 
-sale_order()
 
-
-class sale_order_line(osv.osv):
-
+class sale_order_line(Model):
     _inherit = 'sale.order.line'
-
     _columns = {
         # Rised the precision of the sale.order.line discount field
         # from 2 to 3 digits in order to be able to have the same amount as Magento.
@@ -649,7 +646,5 @@ class sale_order_line(osv.osv):
         # With a 2 digits precision, we can have 50.17 % => 148.99 or 50.16% => 149.02.
         # Rise the digits to 3 allows to have 50.167% => 149€
         'discount': fields.float('Discount (%)', digits=(16, 3), readonly=True, states={'draft': [('readonly', False)]}),
-    }
-
-sale_order_line()
+        }
 

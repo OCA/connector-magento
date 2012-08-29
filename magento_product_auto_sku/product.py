@@ -17,25 +17,19 @@
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-############################################################################## 
-from osv import osv, fields
+##############################################################################
+from openerp.osv.orm import Model
+from openerp.osv import fields
 
-
-class Product(osv.osv):
+class Product(Model):
     " Inherit product to add the sequence on the Magento SKU field"
     _inherit = 'product.product'
-
-    _columns = {
-                'magento_sku':fields.char('Magento SKU', size=64, readonly=True),
+    _columns = {'magento_sku':fields.char('Magento SKU', size=64, readonly=True),
                 }
-
-    _defaults = {
-                 'magento_sku':lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'product.magento.sku'),
-                }
+    _defaults = {'magento_sku':lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'product.magento.sku'),
+                 }
 
     def copy(self, cr, uid, id, default=None, context=None):
         default['magento_sku'] = self.pool.get('ir.sequence').get(cr, uid, 'product.magento.sku')
         return super(Product, self).copy(cr, uid, id, default=default, context=context)
-
-Product()
 

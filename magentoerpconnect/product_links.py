@@ -18,14 +18,10 @@
 #
 ##############################################################################
 
-from osv import fields, osv
+from openerp.osv.orm import Model
+from openerp.osv import fields
 
-
-class product_link(osv.osv):
+class product_link(Model):
     _inherit = 'product.link'
-
-    _columns = {
-        'sequence': fields.integer('Position'),
-    }
-
-product_link()
+    _columns = {'sequence': fields.integer('Position'),
+                }
