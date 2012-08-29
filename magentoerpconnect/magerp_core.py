@@ -26,6 +26,7 @@ import os
 import logging
 
 from openerp.osv import fields
+from openerp.osv.osv import except_osv
 from openerp import pooler
 from openerp import tools
 from openerp.tools.translate import _
@@ -33,6 +34,11 @@ from openerp.tools.translate import _
 from .magerp_osv import MagerpModel, Connection
 from base_external_referentials.decorator import only_for_referential
 from base_external_referentials.external_osv import ExternalSession
+
+from base_external_referentials.external_referentials import REF_VISIBLE_FIELDS
+
+REF_VISIBLE_FIELDS['Magento'] = ['location', 'apiusername', 'apipass']
+
 
 _logger = logging.getLogger(__name__)
 
@@ -209,7 +215,7 @@ class external_referential(MagerpModel):
                 if lang_id:
                     lang = lang_id.code
                 else:
-                    osv.except_osv(_('Warning!'), _('The storeviews have no language defined'))
+                    except_osv(_('Warning!'), _('The storeviews have no language defined')) #TODO needed?
                     lang = referential.default_lang_id.code
                 if not lang_2_storeview.get(lang, False):
                     lang_2_storeview[lang] = storeview
