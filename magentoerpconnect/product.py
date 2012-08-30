@@ -1023,6 +1023,10 @@ class product_mag_osv(MagerpModel):
                     placeholder.getparent().remove(placeholder)
 
             result['arch'] = etree.tostring(eview, pretty_print=True)
+            #TODO understand (and fix) why the orm fill the field size for the text field :S
+            for field in result['fields']:
+                if result['fields'][field]['type'] == 'text':
+                    if 'size' in result['fields'][field]: del result['fields'][field]['size']
         return result
 
 class product_template(product_mag_osv):
