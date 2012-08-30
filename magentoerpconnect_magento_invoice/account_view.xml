@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  magentoerpconnect_magento_invoice for OpenERP
+  Copyright (C) 2012-TODAY Akretion <http://www.akretion.com>. All Rights Reserved
+  The licence is in the file __openerp__.py
+-->
+
+<openerp>
+    <data>
+    
+        <!-- INHERITED VIEW FOR THE OBJECT : account_invoice -->
+
+        <record id="account_invoice_view_form" model="ir.ui.view">
+            <field name="name">magentoerpconnect_magento_invoice.account_invoice.view_form</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="module_name_to_inherit.view_id" />
+            <field eval="16" name="priority"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <data>
+                    <field name="field_reference" position="after">
+                    </field>
+                </data>
+            </field>
+        </record>
+
+        <record id="account_invoice_view_tree" model="ir.ui.view">
+            <field name="name">magentoerpconnect_magento_invoice.account_invoice.view_tree</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="module_name_to_inherit.view_id" />
+            <field eval="16" name="priority"/>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <data>
+                    <field name="field_reference" position="after">
+                    </field>
+                </data>
+            </field>
+        </record>
+    
+
+
+
+
+    </data>
+</openerp>

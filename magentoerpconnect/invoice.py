@@ -24,6 +24,8 @@
 from openerp.osv.orm import Model
 from openerp.osv import fields
 from openerp.tools.translate import _
+from base_external_referentials.external_osv import ExternalSession
+
 
 class account_invoice(Model):
     _inherit = "account.invoice"
@@ -86,6 +88,23 @@ class account_invoice(Model):
                 ext_create_ids[resource_id] = self.create_magento_invoice(cr, uid,  external_session,
                                     resource_id, resource['order_increment_id'], context=context)
         return ext_create_ids
+
+    def _export_one_invoice(self, cr, uid, invoice, context=None):
+        if invoice.sale_ids:
+            sale = invoice.sale_ids[0]
+            referential = sale.shop_id.referential_id
+            if referential and referential.type_name == 'Magento':
+                ext_id = invoice.get_extid(referential.id)
+                if ext_id:
+                    return ext_id
+                else:
+                    external_session = ExternalSession(referential, sale.shop_id)
+                    return self._export_one_resource(cr, uid, external_session, invoice.id,
+                                                     context=context)
+
+    def export_invoice(self, cr, uid, ids, context=None):
+        for invoice in self .browse(cr, uid, ids, context=context):
+            self._export_one_invoice(cr, uid, invoice, context=context)
 
 
 class account_invoice_line(Model):
