@@ -1,0 +1,1794 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* magentoerpconnect
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 6.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-09-05 07:53+0000\n"
+"PO-Revision-Date: 2012-09-05 07:53+0000\n"
+"Last-Translator: Joshua Jan(ShineIT)<joshua@openerp.cn>; Jeff Wang(ShineIT)<jeff@openerp.cn>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_product_link
+msgid "product.link"
+msgstr "product.link"
+
+#. module: magentoerpconnect
+#: field:external.shop.group,is_default:0
+msgid "Is Default?"
+msgstr "默认?"
+
+#. module: magentoerpconnect
+#: model:ir.ui.menu,name:magentoerpconnect.menu_magerp_reporting
+msgid "Reporting"
+msgstr "报表"
+
+#. module: magentoerpconnect
+#: view:external.referential:0
+msgid "Optional - Initial import only"
+msgstr "可选 - 只需要在初始化时导入"
+
+#. module: magentoerpconnect
+#: selection:magerp.product_product_type,default_type:0
+msgid "Service"
+msgstr "服务"
+
+#. module: magentoerpconnect
+#: field:sale.shop,magento_root_category:0
+msgid "Root Category"
+msgstr "根分类"
+
+#. module: magentoerpconnect
+#: selection:product.tierprice,group_scope:0
+msgid "All groups"
+msgstr "所有组"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/product_images.py:160
+#, python-format
+msgid "The image don't exist in magento, try to create it"
+msgstr "此图片在magento里不存在，正在尝试创建"
+
+#. module: magentoerpconnect
+#: model:magerp.product_product_type,name:magentoerpconnect.product_type_simple
+msgid "Simple Product"
+msgstr "简单产品"
+
+#. module: magentoerpconnect
+#: view:magerp.product_attribute_options:0
+msgid "Group By..."
+msgstr "分组..."
+
+#. module: magentoerpconnect
+#: view:open.product.by.attribut.set:0
+msgid "Open Product By Attribut"
+msgstr "按属性打开产品"
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,based_on:0
+msgid "Based On"
+msgstr "基于"
+
+#. module: magentoerpconnect
+#: field:product.images,small_image:0
+msgid "Small Image"
+msgstr "小图"
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,position:0
+#: field:product.images,position:0
+#: field:product.link,sequence:0
+msgid "Position"
+msgstr "位置"
+
+#. module: magentoerpconnect
+#: field:res.partner,group_id:0
+msgid "Magento Group(Category)"
+msgstr "Magento 组(分类)"
+
+#. module: magentoerpconnect
+#: field:product.tierprice,web_scope:0
+msgid "Scope"
+msgstr "范围"
+
+#. module: magentoerpconnect
+#: selection:product.category,display_mode:0
+msgid "Products Only"
+msgstr "仅显示产品"
+
+#. module: magentoerpconnect
+#: field:magerp.product_attribute_groups,attribute_group_name:0
+msgid "Group Name"
+msgstr "组名"
+
+#. module: magentoerpconnect
+#: view:external.referential:0
+msgid "8 - Import Product Links"
+msgstr "8 - 导入相关产品"
+
+#. module: magentoerpconnect
+#: selection:product.template,mag_manage_stock:0
+msgid "Do Not Manage Stock"
+msgstr "不管理库存"
+
+#. module: magentoerpconnect
+#: field:product.template,magerp_tmpl:0
+msgid "Magento Template Fields"
+msgstr "Magento 模版字段"
+
+#. module: magentoerpconnect
+#: field:product.category,available_sort_by:0
+msgid "Available Product Listing (Sort By)"
+msgstr "可用产品列表 (排序依据)"
+
+#. module: magentoerpconnect
+#: view:external.referential:0
+msgid "Referential Actions"
+msgstr "外部系统动作"
+
+#. module: magentoerpconnect
+#: view:external.referential:0
+msgid "6 - Import Products"
+msgstr "6 - 导入产品"
+
+#. module: magentoerpconnect
+#: view:product.category:0
+msgid "Available Sort By"
+msgstr "作为排序依据"
+
+#. module: magentoerpconnect
+#: field:magerp.product_attribute_set,magento_id:0
+msgid "Magento ID"
+msgstr "Magento ID"
+
+#. module: magentoerpconnect
+#: field:product.product,tier_price:0
+msgid "Tier Price"
+msgstr "层级定价"
+
+#. module: magentoerpconnect
+#: field:res.partner.address,company:0
+msgid "Company"
+msgstr "公司"
+
+#. module: magentoerpconnect
+#: field:product.category,default_sort_by:0
+msgid "Default Product Listing Sort (Sort By)"
+msgstr "默认的产品列表排序依据"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/product.py:1048
+#, python-format
+msgid "Open Magento Fields"
+msgstr "打开Magento字段"
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,is_used_for_price_rules:0
+msgid "Used for pricing rules?"
+msgstr "用于价格计算规则?"
+
+#. module: magentoerpconnect
+#: field:product.category,create_date:0
+#: field:product.images,create_date:0
+msgid "Created date"
+msgstr "创建日期"
+
+#. module: magentoerpconnect
+#: help:sale.shop,allow_magento_order_status_push:0
+msgid "Allow to send back order status to Magento if order status changed in OpenERP first?"
+msgstr "如果OpenERP中的订单状态先改变，是否把这个状态发送到Magento?"
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,is_filterable:0
+msgid "Filterable?"
+msgstr "可用做过滤条件?"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/product.py:1137
+#, python-format
+msgid "Product %s already exist in Magento. Failed to rebind it. Please do it manually"
+msgstr "%s 产品在Magento中已存在. 绑定失败. 请手工完成"
+
+#. module: magentoerpconnect
+#: selection:magerp.product_product_type,default_type:0
+msgid "Stockable Product"
+msgstr "可库存产品"
+
+#. module: magentoerpconnect
+#: field:product.images,base_image:0
+msgid "Base Image"
+msgstr "原图"
+
+#. module: magentoerpconnect
+#: field:sale.shop,allow_magento_notification:0
+msgid "Allow Magento Notification"
+msgstr "让Magento发通知邮件"
+
+#. module: magentoerpconnect
+#: selection:magerp.product_attributes,frontend_input:0
+msgid "Media Image"
+msgstr "媒体图片"
+
+#. module: magentoerpconnect
+#: model:magerp.product_product_type,name:magentoerpconnect.product_type_virtual
+msgid "Virtual Product"
+msgstr "虚拟产品"
+
+#. module: magentoerpconnect
+#: field:res.partner.address,is_magento_order_address:0
+msgid "Magento Order Address?"
+msgstr "Magento订单地址？"
+
+#. module: magentoerpconnect
+#: view:external.referential:0
+msgid "Compulsory"
+msgstr "必输的"
+
+#. module: magentoerpconnect
+#: view:magerp.product_attribute_set:0
+msgid "Update Attributes"
+msgstr "更新属性"
+
+#. module: magentoerpconnect
+#: selection:magerp.product_attributes,frontend_input:0
+msgid "Yes/No"
+msgstr "是/否"
+
+#. module: magentoerpconnect
+#: view:magerp.product_category_attribute_options:0
+msgid "Magento Product Category Attribute Option"
+msgstr "Magento产品类别属性选项"
+
+#. module: magentoerpconnect
+#: field:magerp.product_attribute_options,ipcast:0
+msgid "Type cast"
+msgstr "定型"
+
+#. module: magentoerpconnect
+#: field:product.category,level:0
+msgid "Level"
+msgstr "层级"
+
+#. module: magentoerpconnect
+#: field:res.partner,mag_vat:0
+msgid "Magento VAT"
+msgstr "Magento VAT"
+
+#. module: magentoerpconnect
+#: field:product.product,magento_exported:0
+#: field:res.partner,magento_exported:0
+msgid "Exists on Magento"
+msgstr "在Magento中存在"
+
+#. module: magentoerpconnect
+#: view:product.category:0
+msgid "Anchored categories will display all products associated to all child categories (and child of child, and child of child of child,etc.) on that category's page, along with the products associated directly to the parent category."
+msgstr "将列出本层分类以及本层分类的下层分类，以及下层分类的下层分类（依此类推）所包含的所有产品。"
+
+#. module: magentoerpconnect
+#: model:ir.ui.menu,name:magentoerpconnect.menu_magerp_attnsets_attribute_options
+#: field:magerp.product_attributes,options:0
+msgid "Attribute Options"
+msgstr "属性选项"
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,is_comparable:0
+msgid "Comparable?"
+msgstr "可比较?"
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,frontend_class:0
+msgid "Frontend Class"
+msgstr "前端分类"
+
+#. module: magentoerpconnect
+#: field:magerp.product_attribute_options,value:0
+#: field:magerp.product_category_attribute_options,value:0
+msgid "Value"
+msgstr "值"
+
+#. module: magentoerpconnect
+#: field:product.product,magerp_variant:0
+msgid "Magento Variant Fields"
+msgstr "Magento型号字段"
+
+#. module: magentoerpconnect
+#: view:external.referential:0
+msgid "7 - Import Images"
+msgstr "7 - 导入图片"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/product.py:1137
+#, python-format
+msgid "Error!"
+msgstr "错误!"
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,is_visible:0
+msgid "Visible?"
+msgstr "可见?"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/magerp_osv.py:227
+#: code:addons/magentoerpconnect/magerp_osv.py:229
+#, python-format
+msgid "Query Returned:%s"
+msgstr "查询返回:%s"
+
+#. module: magentoerpconnect
+#: model:ir.ui.menu,name:magentoerpconnect.menu_magerp_attnsets_attributes
+#: field:magerp.product_attribute_set,attributes:0
+msgid "Attributes"
+msgstr "属性"
+
+#. module: magentoerpconnect
+#: sql_constraint:product.product:0
+msgid "The reference must be unique"
+msgstr "编号必须唯一"
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_magerp_storeviews
+msgid "The magento store views information"
+msgstr "magento店铺信息"
+
+#. module: magentoerpconnect
+#: field:sale.shop,root_category_id:0
+msgid "Root product Category"
+msgstr "产品根分类"
+
+#. module: magentoerpconnect
+#: selection:magerp.product_attributes,backend_type:0
+#: selection:magerp.product_attributes,frontend_input:0
+msgid "Text"
+msgstr "文本"
+
+#. module: magentoerpconnect
+#: field:magerp.storeviews,shop_id:0
+msgid "Shop"
+msgstr "商店"
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,note:0
+msgid "Note"
+msgstr "备注"
+
+#. module: magentoerpconnect
+#: model:magerp.product_product_type,name:magentoerpconnect.product_type_configurable
+msgid "Configurable Product"
+msgstr "可配置产品"
+
+#. module: magentoerpconnect
+#: view:magerp.product_product_type:0
+msgid "Product Type"
+msgstr "产品类型"
+
+#. module: magentoerpconnect
+#: constraint:external.referential:0
+msgid "The name cannot contain a dot!"
+msgstr "名称不能包含小数点!"
+
+#. module: magentoerpconnect
+#: selection:magerp.product_attributes,frontend_input:0
+msgid "Selection"
+msgstr "下拉列表"
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,backend_model:0
+msgid "Backend Model"
+msgstr "后台模型"
+
+#. module: magentoerpconnect
+#: constraint:res.partner.category:0
+msgid "Error ! You can not create recursive categories."
+msgstr "错误！您不能创建循环分类。"
+
+#. module: magentoerpconnect
+#: field:magerp.storeviews,name:0
+msgid "Store View Name"
+msgstr "店铺名称"
+
+#. module: magentoerpconnect
+#: view:product.category:0
+msgid "Use Anchor"
+msgstr "使用锚点"
+
+#. module: magentoerpconnect
+#: selection:magerp.product_attributes,backend_type:0
+msgid "Datetime"
+msgstr "日期时间"
+
+#. module: magentoerpconnect
+#: field:sale.order,is_magento:0
+msgid "Is a Magento Sale Order"
+msgstr "是个Magento销售订单"
+
+#. module: magentoerpconnect
+#: view:sale.order:0
+msgid "Magento History"
+msgstr "Magento订单历史"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/product.py:822
+#, python-format
+msgid "Please chose an attribut set before"
+msgstr "请先选择一个属性集"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/magerp_core.py:212
+#: code:addons/magentoerpconnect/product.py:1394
+#: code:addons/magentoerpconnect/product.py:1396
+#: code:addons/magentoerpconnect/sale.py:141
+#, python-format
+msgid "Warning!"
+msgstr "警告!"
+
+#. module: magentoerpconnect
+#: view:magerp.product_attribute_options:0
+#: field:magerp.product_attribute_options,attribute_id:0
+msgid "Attribute"
+msgstr "属性"
+
+#. module: magentoerpconnect
+#: view:external.referential:0
+#: model:ir.model,name:magentoerpconnect.model_res_partner
+msgid "Partner"
+msgstr "业务伙伴"
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,is_required:0
+msgid "Required?"
+msgstr "必输?"
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,is_user_defined:0
+msgid "User Defined?"
+msgstr "用户自定义的?"
+
+#. module: magentoerpconnect
+#: field:external.shop.group,referential_type:0
+msgid "External Referential Type"
+msgstr "外部系统类型"
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "销售订单明细"
+
+#. module: magentoerpconnect
+#: field:res.partner,created_in:0
+msgid "Created in"
+msgstr "创建于"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/invoice.py:77
+#: code:addons/magentoerpconnect/sale.py:500
+#, python-format
+msgid "Invoice Created"
+msgstr "发票已创建"
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_account_invoice_line
+msgid "Invoice Line"
+msgstr "发票明细"
+
+#. module: magentoerpconnect
+#: field:product.category,write_date:0
+#: field:product.images,write_date:0
+msgid "Updated date"
+msgstr "更新日期"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/product.py:1026
+#: view:product.category:0
+#: view:product.product:0
+#: view:res.partner:0
+#, python-format
+msgid "Magento信息"
+msgstr "Magento信息"
+
+#. module: magentoerpconnect
+#: model:ir.actions.act_window,name:magentoerpconnect.open_product_by_attribut_set
+#: model:ir.ui.menu,name:magentoerpconnect.open_product_wizard
+msgid "Open Product By Attribut Set"
+msgstr "按属性集打开产品"
+
+#. module: magentoerpconnect
+#: field:sale.shop,default_storeview_integer_id:0
+msgid "Magento default Storeview ID"
+msgstr "Magento默认店铺ID"
+
+#. module: magentoerpconnect
+#: field:external.shop.group,default_shop_id:0
+#: field:external.shop.group,default_shop_integer_id:0
+msgid "Default Store"
+msgstr "默认店铺"
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,group:0
+msgid "Attribute Group"
+msgstr "属性组"
+
+#. module: magentoerpconnect
+#: field:magerp.product_attribute_options,label:0
+#: field:magerp.product_attributes,frontend_label:0
+#: field:magerp.product_category_attribute_options,label:0
+msgid "Label"
+msgstr "标签"
+
+#. module: magentoerpconnect
+#: view:external.referential:0
+msgid "1 - Import Customer Groups (Partner Categories)"
+msgstr "1 - 导入客户组(业务伙伴分类)"
+
+#. module: magentoerpconnect
+#: view:external.referential:0
+msgid "4 - Import Attribute Groups"
+msgstr "4 - 导入属性组"
+
+#. module: magentoerpconnect
+#: view:magerp.product_attribute_groups:0
+msgid "Magento Product Attribute groups"
+msgstr "Magento产品属性组"
+
+#. module: magentoerpconnect
+#: field:product.category,magento_exportable:0
+msgid "Export to Magento"
+msgstr "导出到Magento"
+
+#. module: magentoerpconnect
+#: field:product.category,magento_parent_id:0
+msgid "Magento Parent"
+msgstr "Magento商机分类"
+
+#. module: magentoerpconnect
+#: field:magerp.product_product_type,product_type:0
+msgid "Type"
+msgstr "类型"
+
+#. module: magentoerpconnect
+#: field:product.images,thumbnail:0
+msgid "Thumbnail"
+msgstr "缩略图"
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_magerp_product_attribute_set
+msgid "Attribute sets in products"
+msgstr "产品的属性集"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/magerp_osv.py:210
+#, python-format
+msgid "Error when try to connect to magento, are your sure that your login is right? Did openerp can access to your magento?"
+msgstr "连接magento出错, 请确认用户名密码正确? openerp能够访问你的magento么?"
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_product_category
+msgid "Product Category"
+msgstr "产品类别"
+
+#. module: magentoerpconnect
+#: help:external.referential,default_lang_id:0
+msgid "Choose the language which will be used for the Default Value in Magento"
+msgstr "Choose the language which will be used for the Default Value in Magento"
+
+#. module: magentoerpconnect
+#: help:res.partner,mag_birthday:0
+msgid "To be able to receive customer birthday you must set it in Magento Admin Panel, menu System / Configuration / Client Configuration / Name and Address Options."
+msgstr "要接收客户的生日，你需要先在 Magento 的管理面板上设置。菜单 系统/配置/客户配置/名字和地址选项."
+
+#. module: magentoerpconnect
+#: model:ir.ui.menu,name:magentoerpconnect.menu_magerp_reporting_report_history
+msgid "Synchronisation History"
+msgstr "同步历史"
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_magerp_product_product_type
+msgid "magerp.product_product_type"
+msgstr "magerp.product_product_type"
+
+#. module: magentoerpconnect
+#: field:product.template,mag_manage_stock:0
+msgid "Manage Stock Level"
+msgstr "是否管理库存"
+
+#. module: magentoerpconnect
+#: field:res.partner,store_ids:0
+#: field:sale.shop,storeview_ids:0
+msgid "Store Views"
+msgstr "店铺"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/magerp_osv.py:232
+#, python-format
+msgid "Method: %s\n"
+"Arguments:%s\n"
+"Error:%s"
+msgstr "方法: %s\n"
+"参数:%s\n"
+"错误:%s"
+
+#. module: magentoerpconnect
+#: field:delivery.carrier,magento_carrier_code:0
+msgid "Magento Base Carrier Code"
+msgstr "Magento默认送货代码"
+
+#. module: magentoerpconnect
+#: model:ir.ui.menu,name:magentoerpconnect.menu_magerp_categ_att_option
+msgid "Category Attribute Options"
+msgstr "类别属性选项"
+
+#. module: magentoerpconnect
+#: model:ir.actions.act_window,name:magentoerpconnect.act_magerp_shop_form
+#: model:ir.ui.menu,name:magentoerpconnect.menu_magerp_core_shops
+msgid "Magento Shops"
+msgstr "Magento商店"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/magerp_osv.py:69
+#: code:addons/magentoerpconnect/magerp_osv.py:84
+#: code:addons/magentoerpconnect/magerp_osv.py:92
+#: code:addons/magentoerpconnect/magerp_osv.py:210
+#: code:addons/magentoerpconnect/product.py:822
+#, python-format
+msgid "User Error"
+msgstr "用户错误"
+
+#. module: magentoerpconnect
+#: view:sale.shop:0
+msgid "Export Images"
+msgstr "导出图片"
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_magerp_product_attribute_options
+msgid "Options  of selected attributes"
+msgstr "所选属性的选项"
+
+#. module: magentoerpconnect
+#: view:product.category:0
+msgid "Category Image"
+msgstr "分类图片"
+
+#. module: magentoerpconnect
+#: selection:magerp.product_product_type,default_type:0
+msgid "Consumable"
+msgstr "消耗品"
+
+#. module: magentoerpconnect
+#: view:product.category:0
+msgid "Available Sorting method"
+msgstr "可用的排序方法"
+
+#. module: magentoerpconnect
+#: selection:magerp.product_attributes,frontend_input:0
+msgid "Multi-Selection"
+msgstr "多选"
+
+#. module: magentoerpconnect
+#: view:external.referential:0
+msgid "Advanced"
+msgstr "高级"
+
+#. module: magentoerpconnect
+#: model:ir.actions.act_window,name:magentoerpconnect.act_magerp_storeviews_form
+#: view:magerp.storeviews:0
+msgid "Magento storeviews"
+msgstr "Magento店铺"
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_product_template
+#: selection:magerp.product_attributes,based_on:0
+msgid "Product Template"
+msgstr "产品模板"
+
+#. module: magentoerpconnect
+#: selection:product.category,display_mode:0
+msgid "Static Block & Products"
+msgstr "静态区块和产品"
+
+#. module: magentoerpconnect
+#: field:product.product,created_at:0
+#: field:product.product,updated_at:0
+msgid "Created"
+msgstr "创建日期"
+
+#. module: magentoerpconnect
+#: model:ir.actions.act_window,name:magentoerpconnect.action_magerp_external_report
+msgid "External Reports"
+msgstr "外部系统运行报告"
+
+#. module: magentoerpconnect
+#: field:magerp.product_attribute_set,attribute_set_name:0
+msgid "Set Name"
+msgstr "属性集名称"
+
+#. module: magentoerpconnect
+#: view:product.category:0
+#: field:product.category,display_mode:0
+msgid "Display Mode"
+msgstr "显示模式"
+
+#. module: magentoerpconnect
+#: model:ir.actions.act_window,help:magentoerpconnect.open_product_by_attribut_set
+msgid "You can open your product by attributs, in this case the magento fields will be directly integrated in the main view"
+msgstr "你可以按属性打开产品，这样magento的字段会直接显示在主界面"
+
+#. module: magentoerpconnect
+#: help:magerp.product_product_type,product_type:0
+msgid "Use the same name of Magento product type, for example 'simple'."
+msgstr "用Magento中产品类型的名称，如'simple'."
+
+#. module: magentoerpconnect
+#: field:res.partner,created_at:0
+msgid "Created Date"
+msgstr "创建日期"
+
+#. module: magentoerpconnect
+#: view:open.product.by.attribut.set:0
+#: view:product.product:0
+msgid "Cancel"
+msgstr "取消"
+
+#. module: magentoerpconnect
+#: field:sale.order,magento_incrementid:0
+msgid "Magento Increment ID"
+msgstr "Magento自增ID"
+
+#. module: magentoerpconnect
+#: help:res.partner,mag_vat:0
+msgid "To be able to receive customer VAT number you must set it in Magento Admin Panel, menu System / Configuration / Client Configuration / Name and Address Options."
+msgstr "要接收客户的增值税编号，你需要先在 Magento 的管理面板上设置。菜单 系统/配置/客户配置/名字和地址选项."
+
+#. module: magentoerpconnect
+#: model:ir.actions.act_window,name:magentoerpconnect.act_magerp_product_type_form
+#: model:ir.ui.menu,name:magentoerpconnect.menu_magerp_product_type
+msgid "Product Types"
+msgstr "产品类型"
+
+#. module: magentoerpconnect
+#: selection:magerp.product_attributes,backend_type:0
+msgid "Varchar"
+msgstr "可变字符串"
+
+#. module: magentoerpconnect
+#: field:external.referential,attribute_sets:0
+#: model:ir.ui.menu,name:magentoerpconnect.menu_magerp_attnsets_sets
+msgid "Attribute Sets"
+msgstr "属性集"
+
+#. module: magentoerpconnect
+#: model:ir.actions.act_window,name:magentoerpconnect.act_magerp_product_category_attribute_options_form
+msgid "Magento Product Category Attribute Options"
+msgstr "Magento产品类别属性选项"
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_external_referential
+msgid "External Referential"
+msgstr "外部系统"
+
+#. module: magentoerpconnect
+#: field:product.images,sync_status:0
+msgid "Sync Status"
+msgstr "同步状态"
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_sale_order
+msgid "Sales Order"
+msgstr "销售订单"
+
+#. module: magentoerpconnect
+#: selection:magerp.product_attributes,frontend_input:0
+msgid "Text Area"
+msgstr "文本区域"
+
+#. module: magentoerpconnect
+#: selection:magerp.product_attributes,frontend_input:0
+msgid "Weight"
+msgstr "重量"
+
+#. module: magentoerpconnect
+#: view:magerp.product_attribute_set:0
+msgid "Magento Product Attribute Set"
+msgstr "Magento产品属性集"
+
+#. module: magentoerpconnect
+#: field:res.partner.address,lastname:0
+msgid "Last Name"
+msgstr "姓"
+
+#. module: magentoerpconnect
+#: field:product.category,image:0
+msgid "Image"
+msgstr "图片"
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_sale_shop
+msgid "Sales Shop"
+msgstr "销售商店"
+
+#. module: magentoerpconnect
+#: field:magerp.product_attribute_groups,attribute_set:0
+#: field:magerp.product_attributes,set_id:0
+#: field:product.template,set:0
+msgid "Attribute Set"
+msgstr "属性集"
+
+#. module: magentoerpconnect
+#: model:ir.ui.menu,name:magentoerpconnect.menu_magerp_reporting_report_line
+msgid "Last Synchronisation Details"
+msgstr "最后一次同步详细信息"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/sale.py:141
+#, python-format
+msgid "No external id found, are you sure that the referential are syncronized? Please contact your administrator. (more information in magentoerpconnect/sale.py)"
+msgstr "外部系统id未找到，您确认外部系统已同步么？请联系你的系统管理员"
+
+#. module: magentoerpconnect
+#: help:external.referential,default_pro_cat:0
+msgid "Products imported from magento may have many categories.\n"
+"OpenERP requires a specific category for a product to facilitate invoicing etc."
+msgstr "从magento导入的产品可能有很多类别。\n"
+"OpenERP需要一个指定的分类用来开发票。"
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_delivery_carrier
+msgid "Carrier"
+msgstr "承运方"
+
+#. module: magentoerpconnect
+#: selection:magerp.product_attributes,backend_type:0
+msgid "Static"
+msgstr "静态"
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_magerp_product_attribute_groups
+msgid "Attribute groups in Magento"
+msgstr "Magento的属性组"
+
+#. module: magentoerpconnect
+#: field:product.product,magento_exportable:0
+msgid "Exported to Magento?"
+msgstr "导出到Magento?"
+
+#. module: magentoerpconnect
+#: selection:magerp.product_attributes,frontend_input:0
+msgid "Fixed Product Tax"
+msgstr "固定产品税"
+
+#. module: magentoerpconnect
+#: field:res.partner,updated_at:0
+msgid "Updated At"
+msgstr "更新于"
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_res_partner_address
+msgid "Partner Addresses"
+msgstr "业务伙伴地址列表"
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_magerp_product_attributes
+msgid "Attributes of products"
+msgstr "产品的属性"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/product_images.py:153
+#, python-format
+msgid "Unknow error stop export"
+msgstr "导出过程因未知错误而停止"
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,frontend_input:0
+msgid "Frontend Input"
+msgstr "前台输入"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/magerp_osv.py:85
+#, python-format
+msgid "There is no \"Get Method\" configured on the mapping %s"
+msgstr "在映射 %s 中没有配置 Get方法"
+
+#. module: magentoerpconnect
+#: view:external.referential:0
+msgid "Default values"
+msgstr "默认值"
+
+#. module: magentoerpconnect
+#: field:product.category,is_active:0
+msgid "Active?"
+msgstr "有效?"
+
+#. module: magentoerpconnect
+#: model:ir.actions.act_window,name:magentoerpconnect.act_magerp_product_attribute_set_form
+#: view:magerp.product_attribute_set:0
+msgid "Magento Product Attribute Sets"
+msgstr "Magento产品属性集"
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,group_id:0
+msgid "Group"
+msgstr "组"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/product_images.py:151
+#, python-format
+msgid "Error in connecting:%s"
+msgstr "连接错误：%s"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/stock.py:39
+#: code:addons/magentoerpconnect/stock.py:72
+#, python-format
+msgid "Shipping Created"
+msgstr "已发货"
+
+#. module: magentoerpconnect
+#: help:res.partner,emailid:0
+msgid "Magento uses this email ID to match the customer. If filled, if a Magento customer is imported from the selected website with the exact same email, he will be bound with this partner and this latter will be updated with Magento's values."
+msgstr "Magento用这个邮件地址定位这个客户. 如果这里输入了，Magento导入的客户也有相同的邮件地址，这个客户会与这个业务伙伴绑定并按magentoi中的信息更新."
+
+#. module: magentoerpconnect
+#: view:magerp.product_attribute_options:0
+msgid "Magento instance"
+msgstr "Magento服务器"
+
+#. module: magentoerpconnect
+#: model:ir.actions.act_window,name:magentoerpconnect.act_magerp_instances_form
+#: model:ir.ui.menu,name:magentoerpconnect.menu_magerp_core_instances
+msgid "Magento Instances"
+msgstr "Magento服务器"
+
+#. module: magentoerpconnect
+#: field:product.category,magerp_stamp:0
+msgid "Magento stamp"
+msgstr "导出到Magento"
+
+#. module: magentoerpconnect
+#: constraint:product.template:0
+msgid "Error: The default UOM and the purchase UOM must be in the same category."
+msgstr "错误:默认的计量单位和采购的计量单位必须是同一类型."
+
+#. module: magentoerpconnect
+#: view:external.referential:0
+msgid "Export Newsletter UnSubscribers"
+msgstr "导出退订邮件"
+
+#. module: magentoerpconnect
+#: model:magerp.product_product_type,name:magentoerpconnect.product_type_grouped
+msgid "Grouped Product"
+msgstr "分组产品"
+
+#. module: magentoerpconnect
+#: view:magerp.product_attribute_groups:0
+msgid "Magento Product Attributes Groups"
+msgstr "Magento产品属性组"
+
+#. module: magentoerpconnect
+#: field:product.tierprice,price_qty:0
+msgid "Quantity Slab"
+msgstr "最小数量"
+
+#. module: magentoerpconnect
+#: field:magerp.product_product_type,name:0
+msgid "Name"
+msgstr "名称"
+
+#. module: magentoerpconnect
+#: model:ir.actions.act_window,name:magentoerpconnect.action_magerp_external_report_history
+msgid "External Report History"
+msgstr "外部系统运行历史报告"
+
+#. module: magentoerpconnect
+#: help:product.category,use_default_available_sort_by:0
+msgid "Use default config for available sort by"
+msgstr "用默认设置的排序依据"
+
+#. module: magentoerpconnect
+#: view:product.category:0
+#: selection:product.template,mag_manage_stock:0
+msgid "Use Default Config"
+msgstr "使用默认设置"
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,is_searchable:0
+msgid "Searchable ?"
+msgstr "可用作搜索条件 ?"
+
+#. module: magentoerpconnect
+#: field:magerp.storeviews,website_id:0
+#: field:product.tierprice,website_id:0
+#: view:res.partner:0
+msgid "Website"
+msgstr "网站"
+
+#. module: magentoerpconnect
+#: view:external.referential:0
+msgid "3 - Import Product Attribute Sets"
+msgstr "3 - 导入产品属性集"
+
+#. module: magentoerpconnect
+#: selection:magerp.product_attributes,based_on:0
+msgid "Product Product"
+msgstr "product.product"
+
+#. module: magentoerpconnect
+#: sql_constraint:external.referential:0
+msgid "Referential names must be unique !"
+msgstr "外部系统名称必须唯一 !"
+
+#. module: magentoerpconnect
+#: field:product.tierprice,group_scope:0
+msgid "unknown"
+msgstr "未知"
+
+#. module: magentoerpconnect
+#: field:product.category,meta_title:0
+msgid "Title (Meta)"
+msgstr "标题 (元数据)"
+
+#. module: magentoerpconnect
+#: view:external.referential:0
+msgid "1 - Reload Referential Mapping Templates"
+msgstr "1 - 重新载入外部系统映射模版"
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_product_tierprice
+msgid "Implements magento tier pricing"
+msgstr "实现magento的层级定价"
+
+#. module: magentoerpconnect
+#: field:res.partner,store_id:0
+msgid "Last Store View"
+msgstr "上一个店铺ID"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/product.py:1394
+#, python-format
+msgid "They are some products related to Magento. They can not be deleted!\n"
+"You can change their Magento status to \"Disabled\" and uncheck the active box to hide them from OpenERP."
+msgstr "这些产品与Magento相关. 不能删除!\n"
+"你可以把它们的Magento状态改为不可用，然后去掉有效这个勾来在OpenERP中隐藏它们."
+
+#. module: magentoerpconnect
+#: view:product.product:0
+msgid "attributes_placeholder"
+msgstr "attributes_placeholder"
+
+#. module: magentoerpconnect
+#: field:res.partner,mag_birthday:0
+msgid "Birthday"
+msgstr "生日"
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_magerp_product_category_attribute_options
+msgid "Option products category Attributes"
+msgstr "可选的产品类别属性"
+
+#. module: magentoerpconnect
+#: field:external.referential,default_pro_cat:0
+msgid "Default Product Category"
+msgstr "默认的产品类别"
+
+#. module: magentoerpconnect
+#: field:open.product.by.attribut.set,attributs_set:0
+msgid "Attributs Set"
+msgstr "属性集"
+
+#. module: magentoerpconnect
+#: field:external.referential,active:0
+msgid "Active"
+msgstr "有效"
+
+#. module: magentoerpconnect
+#: selection:magerp.product_attributes,backend_type:0
+msgid "Integer"
+msgstr "整数"
+
+#. module: magentoerpconnect
+#: model:ir.ui.menu,name:magentoerpconnect.menu_magerp_core_websites
+msgid "Magento Websites"
+msgstr "Magento网站"
+
+#. module: magentoerpconnect
+#: help:product.category,updated:0
+msgid "Set if the category underwent a change & has to be synched."
+msgstr "如果类别被修改过即必须同步一下，勾选这里."
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,is_visible_on_front:0
+msgid "Visible (Front)?"
+msgstr "前台可见?"
+
+#. module: magentoerpconnect
+#: view:res.partner.category:0
+msgid "Magento/Tax Information"
+msgstr "Magento税信息"
+
+#. module: magentoerpconnect
+#: field:product.product,product_type:0
+msgid "Magento Product Type"
+msgstr "Magento产品类型"
+
+#. module: magentoerpconnect
+#: field:magerp.storeviews,lang_id:0
+msgid "Language"
+msgstr "语言"
+
+#. module: magentoerpconnect
+#: field:magerp.product_attribute_groups,default_id:0
+msgid "Default"
+msgstr "默认"
+
+#. module: magentoerpconnect
+#: selection:magerp.product_attributes,frontend_input:0
+msgid "Gallery"
+msgstr "组图"
+
+#. module: magentoerpconnect
+#: selection:magerp.product_attributes,backend_type:0
+msgid "Decimal"
+msgstr "数字"
+
+#. module: magentoerpconnect
+#: view:external.referential:0
+msgid "Others"
+msgstr "其他"
+
+#. module: magentoerpconnect
+#: model:ir.ui.menu,name:magentoerpconnect.menu_magerp_attnsets
+msgid "Attributes and Sets"
+msgstr "属性和集"
+
+#. module: magentoerpconnect
+#: field:external.shop.group,sort_order:0
+#: field:magerp.product_attribute_groups,sort_order:0
+#: field:magerp.product_attribute_set,sort_order:0
+#: field:magerp.storeviews,sort_order:0
+msgid "Sort Order"
+msgstr "排序依据"
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,is_unique:0
+msgid "Unique?"
+msgstr "唯一?"
+
+#. module: magentoerpconnect
+#: selection:magerp.product_attributes,frontend_input:0
+msgid "Date"
+msgstr "日期"
+
+#. module: magentoerpconnect
+#: model:magerp.product_product_type,name:magentoerpconnect.product_type_bundle
+msgid "Bundle Product"
+msgstr "组合产品"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/magerp_osv.py:441
+#, python-format
+msgid "list method is undefined for this object!"
+msgstr "以下方法没有在当前对象上定义!"
+
+#. module: magentoerpconnect
+#: field:sale.shop,allow_magento_order_status_push:0
+msgid "Allow Magento Order Status push"
+msgstr "允许Magento推送订单状态"
+
+#. module: magentoerpconnect
+#: sql_constraint:stock.picking:0
+msgid "Reference must be unique per Company!"
+msgstr "编号必须在公司内唯一！"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/delivery.py:61
+#, python-format
+msgid "Error"
+msgstr "错误"
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_res_partner_category
+msgid "Partner Categories"
+msgstr "业务伙伴分类"
+
+#. module: magentoerpconnect
+#: view:magerp.product_attribute_set:0
+msgid "Attributes in Set"
+msgstr "属性集中的属性"
+
+#. module: magentoerpconnect
+#: view:product.category:0
+msgid "Products only means that the products associated to the category will display, but not any static blocks.Static block only means that the selected static block will display, but none of the products.Static block and products means that the static block will display with the products listed directly beneath it."
+msgstr "产品意味着这个分类的产品会被显示，不会显示静态区域。仅静态区域意味着所选的静态区域会被显示。产品和静态区域意味着会显示静态区域，在下面显示产品。"
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,backend_type:0
+msgid "Backend Type"
+msgstr "后台类型"
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,is_global:0
+msgid "Global ?"
+msgstr "全局 ?"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/magerp_core.py:212
+#, python-format
+msgid "The storeviews have no language defined"
+msgstr "没有指定店铺的语言"
+
+#. module: magentoerpconnect
+#: view:external.referential:0
+msgid "Import All Partners"
+msgstr "导入所有业务伙伴"
+
+#. module: magentoerpconnect
+#: sql_constraint:account.invoice:0
+msgid "Invoice Number must be unique per Company!"
+msgstr "发票号必须在公司范围内唯一"
+
+#. module: magentoerpconnect
+#: field:external.shop.group,code:0
+#: field:magerp.product_attributes,attribute_code:0
+#: field:magerp.storeviews,code:0
+msgid "Code"
+msgstr "编号"
+
+#. module: magentoerpconnect
+#: view:external.referential:0
+msgid "Product Attributes / Sets"
+msgstr "产品属性/集"
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_external_shop_group
+msgid "External Referential Shop Group"
+msgstr "外部系统门店组"
+
+#. module: magentoerpconnect
+#: view:external.referential:0
+msgid "2 - Import Product Categories"
+msgstr "2 - 导入产品类别"
+
+#. module: magentoerpconnect
+#: field:product.category,is_anchor:0
+msgid "Anchor?"
+msgstr "锚点?"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/sale.py:341
+#, python-format
+msgid "Could not cancel sale order %s during Magento's sale orders import"
+msgstr "不能取消订单 %s，因为Magento正在导入订单"
+
+#. module: magentoerpconnect
+#: field:product.category,updated:0
+msgid "To synchronize"
+msgstr "要同步"
+
+#. module: magentoerpconnect
+#: selection:product.category,display_mode:0
+msgid "Static Block Only"
+msgstr "仅静态区域"
+
+#. module: magentoerpconnect
+#: view:external.referential:0
+msgid "2 - Synchronize Referential Settings"
+msgstr "2 - 同步外部系统设置"
+
+#. module: magentoerpconnect
+#: view:product.category:0
+msgid "General Information"
+msgstr "一般信息"
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,field_name:0
+msgid "Open ERP Field name"
+msgstr "Open ERP 字段名"
+
+#. module: magentoerpconnect
+#: field:sale.order,magento_storeview_id:0
+msgid "Magento Store View"
+msgstr "Magento店铺"
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_account_invoice
+msgid "Invoice"
+msgstr "发票"
+
+#. module: magentoerpconnect
+#: field:product.tierprice,cust_group:0
+msgid "Customer Group"
+msgstr "客户组"
+
+#. module: magentoerpconnect
+#: view:product.category:0
+msgid "Default Sorting method"
+msgstr "默认排序方法"
+
+#. module: magentoerpconnect
+#: field:product.images,exclude:0
+msgid "Exclude"
+msgstr "排除"
+
+#. module: magentoerpconnect
+#: field:delivery.carrier,magento_code:0
+msgid "Magento Carrier Code"
+msgstr "Magento 送货方式编码"
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,is_visible_in_advanced_search:0
+msgid "Visible in advanced search?"
+msgstr "不允许高级搜索?"
+
+#. module: magentoerpconnect
+#: view:sale.shop:0
+msgid "Magento Option"
+msgstr "Magento 选项"
+
+#. module: magentoerpconnect
+#: field:product.category,image_name:0
+msgid "File Name"
+msgstr "文件名"
+
+#. module: magentoerpconnect
+#: field:res.partner.category,tax_class_id:0
+msgid "Tax Class ID"
+msgstr "税类别 ID"
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,apply_to:0
+msgid "Apply to"
+msgstr "适用于"
+
+#. module: magentoerpconnect
+#: sql_constraint:sale.order:0
+msgid "Order Reference must be unique per Company!"
+msgstr "订单号必须在一个公司范围内唯一"
+
+#. module: magentoerpconnect
+#: field:external.referential,magento_referential:0
+msgid "Magento Referential"
+msgstr "Magento 外部系统"
+
+#. module: magentoerpconnect
+#: field:magerp.product_product_type,default_type:0
+msgid "Default Product Type"
+msgstr "默认产品类型"
+
+#. module: magentoerpconnect
+#: help:product.template,websites_ids:0
+msgid "By defaut product will be exported on every website, if you want to export it only on some website select them here"
+msgstr "默认产品会导出到每一个网站，在这里选择只是导出到某个特定网站"
+
+#. module: magentoerpconnect
+#: selection:product.tierprice,group_scope:0
+msgid "Specific group"
+msgstr "特殊组"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/magerp_osv.py:441
+#, python-format
+msgid "Undefined List method !"
+msgstr "没定义列表方法 !"
+
+#. module: magentoerpconnect
+#: model:ir.actions.act_window,name:magentoerpconnect.act_magerp_product_attribute_groups_form
+msgid "Magento Product Attribute Groups"
+msgstr "Magento 产品属性组"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/invoice.py:79
+#, python-format
+msgid "Can not create the invoice for the order %s in the external system. Error : %s"
+msgstr "外部系统不能为订单 %s 创建发票。错误 : %s"
+
+#. module: magentoerpconnect
+#: model:ir.actions.act_window,name:magentoerpconnect.act_magerp_product_attribute_options_form
+#: view:magerp.product_attribute_options:0
+msgid "Magento Product Attribute Options"
+msgstr "Magento 产品属性值"
+
+#. module: magentoerpconnect
+#: help:magerp.product_product_type,default_type:0
+msgid "Default product's type (Procurement) when a product is imported from Magento."
+msgstr "从Magento导入的产品的默认产品类型"
+
+#. module: magentoerpconnect
+#: view:external.referential:0
+msgid "5 - Import Product Attributes"
+msgstr "5 - 导入产品属性"
+
+#. module: magentoerpconnect
+#: field:res.partner.address,firstname:0
+msgid "First Name"
+msgstr "名字"
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,attribute_set_info:0
+msgid "Attribute Set Information"
+msgstr "属性集信息"
+
+#. module: magentoerpconnect
+#: help:product.tierprice,price_qty:0
+msgid "Slab & above eg.For 10 and above enter 10"
+msgstr "等于或大于 例如：10或大于10填10"
+
+#. module: magentoerpconnect
+#: model:ir.ui.menu,name:magentoerpconnect.menu_magerp_core_storeviews
+msgid "Magento Store Views"
+msgstr "Magento 店铺"
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,entity_type_id:0
+msgid "Entity Type"
+msgstr "实体类型"
+
+#. module: magentoerpconnect
+#: help:res.partner,store_id:0
+msgid "Last store view where the customer has bought."
+msgstr "客户上次购买的店铺。"
+
+#. module: magentoerpconnect
+#: view:open.product.by.attribut.set:0
+msgid "Open product by attributs set"
+msgstr "通过属性集打开产品"
+
+#. module: magentoerpconnect
+#: field:product.category,meta_keywords:0
+msgid "Meta Keywords"
+msgstr "元关键字"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/magerp_osv.py:233
+#, python-format
+msgid "Webservice Failure, sleeping %s second before next attempt"
+msgstr "网络服务访问失败，休眠 %s 秒后进行下次尝试"
+
+#. module: magentoerpconnect
+#: model:ir.ui.menu,name:magentoerpconnect.menu_magerp_attnsets_attribute_groups
+msgid "Attribute Groups"
+msgstr "属性组"
+
+#. module: magentoerpconnect
+#: field:product.category,magerp_fields:0
+msgid "Magento Product Categories Extra Fields"
+msgstr "Magento 产品分类的额外字段"
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_product_product
+#: view:product.product:0
+#: field:product.tierprice,product:0
+msgid "Product"
+msgstr "产品"
+
+#. module: magentoerpconnect
+#: view:external.shop.group:0
+#: model:ir.actions.act_window,name:magentoerpconnect.act_magerp_websites_form
+msgid "Magento websites"
+msgstr "Magento 网站"
+
+#. module: magentoerpconnect
+#: view:product.category:0
+#: field:product.category,description:0
+msgid "Description"
+msgstr "说明"
+
+#. module: magentoerpconnect
+#: field:product.category,url_key:0
+msgid "URL-key"
+msgstr "URL-key"
+
+#. module: magentoerpconnect
+#: field:product.category,use_default_available_sort_by:0
+msgid "Default Config For Available Sort By"
+msgstr "以默认配置来排序"
+
+#. module: magentoerpconnect
+#: selection:product.tierprice,web_scope:0
+msgid "All Websites"
+msgstr "所有网站"
+
+#. module: magentoerpconnect
+#: selection:magerp.product_attributes,frontend_input:0
+#: field:product.tierprice,price:0
+msgid "Price"
+msgstr "价格"
+
+#. module: magentoerpconnect
+#: field:account.invoice,magento_ref:0
+msgid "Magento REF"
+msgstr "Magento 编号"
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_stock_picking
+msgid "Picking List"
+msgstr "装箱单"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/product.py:1396
+#, python-format
+msgid "This product is related to Magento. It can not be deleted!\n"
+"You can change it Magento status to \"Disabled\" and uncheck the active box to hide it from OpenERP."
+msgstr "此产品已经关联到Magento。不能删除!\n"
+"你可以改变 Magento 的状态为 \"无效\" 和去掉有效的勾来让它在OpenERP中隐藏。"
+
+#. module: magentoerpconnect
+#: help:product.category,is_active:0
+msgid "Indicates whether active in magento"
+msgstr "标记是否在magento"
+
+#. module: magentoerpconnect
+#: field:sale.shop,magento_shop:0
+msgid "Magento Shop"
+msgstr "Magento 商店"
+
+#. module: magentoerpconnect
+#: field:product.tierprice,website_price:0
+msgid "Website Price"
+msgstr "网站价格"
+
+#. module: magentoerpconnect
+#: sql_constraint:res.partner:0
+msgid "A partner already exists with this email address on the selected website."
+msgstr "在选择的网站下已经存在相同的邮箱地址的业务伙伴"
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_product_images
+msgid "Products Image gallery"
+msgstr "产品图库"
+
+#. module: magentoerpconnect
+#: model:ir.ui.menu,name:magentoerpconnect.menu_magerp_core
+msgid "Core Settings"
+msgstr "核心设置"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/magerp_osv.py:221
+#, python-format
+msgid "Calling Method:%s,Arguments:%s"
+msgstr "调用方法:%s,参数:%s"
+
+#. module: magentoerpconnect
+#: view:product.category:0
+#: field:product.category,page_layout:0
+msgid "Page Layout"
+msgstr "页面布局"
+
+#. module: magentoerpconnect
+#: field:res.partner,emailid:0
+msgid "Email Address"
+msgstr "电子邮箱地址"
+
+#. module: magentoerpconnect
+#: field:res.partner,website_id:0
+msgid "Magento Website"
+msgstr "Magento 网站"
+
+#. module: magentoerpconnect
+#: help:sale.shop,allow_magento_notification:0
+msgid "Allow Magento to notify customer with an e-mail when OpenERP change an order status, create an invoice or a delivery order on Magento."
+msgstr "允许 Magento 在openERP改变Magneto的订单状态，创建发票或者发货单。发邮件通知客户。"
+
+#. module: magentoerpconnect
+#: sql_constraint:product.images:0
+msgid "A product can have only one image with the same name"
+msgstr "产品不能有相同名字的图片"
+
+#. module: magentoerpconnect
+#: model:ir.actions.act_window,name:magentoerpconnect.act_magerp_product_attributes_form
+#: view:magerp.product_attributes:0
+msgid "Magento Product Attributes"
+msgstr "Magento 产品属性"
+
+#. module: magentoerpconnect
+#: model:ir.ui.menu,name:magentoerpconnect.menu_magerp
+msgid "MagentoERPconnect"
+msgstr "Magento连接器"
+
+#. module: magentoerpconnect
+#: view:res.partner:0
+msgid "Store views"
+msgstr "店铺视图"
+
+#. module: magentoerpconnect
+#: field:magerp.product_attribute_groups,attribute_set_id:0
+msgid "Attribute Set ID"
+msgstr "属性集 ID"
+
+#. module: magentoerpconnect
+#: field:magerp.storeviews,is_active:0
+msgid "Default ?"
+msgstr "默认 ?"
+
+#. module: magentoerpconnect
+#: model:ir.ui.menu,name:magentoerpconnect.menu_magerp_reporting_report
+msgid "Synchronisation Report"
+msgstr "同步报告"
+
+#. module: magentoerpconnect
+#: field:external.referential,default_lang_id:0
+msgid "Default Language"
+msgstr "默认语言"
+
+#. module: magentoerpconnect
+#: view:external.referential:0
+msgid "Import Newsletter Subscribers"
+msgstr "导入新闻通讯订阅"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/product.py:957
+#: view:external.referential:0
+#: field:product.template,websites_ids:0
+#, python-format
+msgid "Websites"
+msgstr "网站"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/delivery.py:62
+#, python-format
+msgid "The carrier %s doesn't have a magento_code valid !The value %s is not in the carrier list %s allowed by Magento"
+msgstr "此运送方法 %s 没有一个合法 magento_code 。%s不在Magento的运送列表%s中"
+
+#. module: magentoerpconnect
+#: model:magerp.product_product_type,name:magentoerpconnect.product_type_downloadable
+msgid "Downloadable Product"
+msgstr "可下载产品"
+
+#. module: magentoerpconnect
+#: field:delivery.carrier,magento_tracking_title:0
+msgid "Magento Tracking Title"
+msgstr "Magento 记录标题"
+
+#. module: magentoerpconnect
+#: selection:product.template,mag_manage_stock:0
+msgid "Manage Stock"
+msgstr "管理库存"
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,magento_id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/magerp_osv.py:69
+#, python-format
+msgid "There is not search method for the mapping %s"
+msgstr "映射%s中没有搜索方法"
+
+#. module: magentoerpconnect
+#: field:product.category,meta_description:0
+msgid "Meta Description"
+msgstr "元描述"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/magerp_osv.py:117
+#, python-format
+msgid "Not update method for mapping %s"
+msgstr "不映射%s中没有更新方法 "
+
+#. module: magentoerpconnect
+#: field:res.partner,mag_newsletter:0
+msgid "Newsletter"
+msgstr "新闻通讯"
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_open_product_by_attribut_set
+msgid "Wizard to open product by attributs set"
+msgstr "根据属性值打开产品的向导"
+
+#. module: magentoerpconnect
+#: view:product.category:0
+msgid "Meta Information"
+msgstr "元信息"
+
+#. module: magentoerpconnect
+#: model:ir.ui.menu,name:magentoerpconnect.menu_magerp_categ_att
+msgid "Category Attributes"
+msgstr "分类属性"
+
+#. module: magentoerpconnect
+#: field:magerp.product_attribute_options,attribute_name:0
+#: field:magerp.product_category_attribute_options,attribute_name:0
+msgid "Attribute Code"
+msgstr "属性编号"
+
+#. module: magentoerpconnect
+#: field:sale.shop,default_storeview_id:0
+msgid "Default Storeview"
+msgstr "默认店铺"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/sale.py:424
+#, python-format
+msgid "the order %s already exist in OpenERP"
+msgstr "OpenERP里已存在 %s 此订单"
+
+#. module: magentoerpconnect
+#: constraint:product.category:0
+msgid "Error ! You cannot create recursive categories."
+msgstr "错误！您不能创建循环的类别。"
+
+#. module: magentoerpconnect
+#: field:res.partner,magento_pwd:0
+msgid "Magento Password"
+msgstr "Magento 密码"
+
+#. module: magentoerpconnect
+#: view:external.referential:0
+msgid "6 - Import Products And Images"
+msgstr "6 - 导入产品和图片"
+
+#. module: magentoerpconnect
+#: selection:product.tierprice,web_scope:0
+msgid "Specific Website"
+msgstr "特定网站"
+
+#. module: magentoerpconnect
+#: field:magerp.product_attribute_groups,referential_id:0
+#: field:magerp.product_attribute_options,referential_id:0
+#: field:magerp.product_attribute_set,referential_id:0
+#: field:magerp.product_attributes,referential_id:0
+#: field:product.tierprice,referential_id:0
+msgid "Magento Instance"
+msgstr "Magento 服务器"
+
+#. module: magentoerpconnect
+#: view:product.product:0
+msgid "Save and Close"
+msgstr "保存和关闭"
+
+#. module: magentoerpconnect
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
+msgstr "错误：无效的(EAN)条码"
+
+#. module: magentoerpconnect
+#: field:product.category,include_in_menu:0
+msgid "Include in Navigation Menu"
+msgstr "包括在导航菜单"
+
+#. module: magentoerpconnect
+#: view:magerp.product_attribute_options:0
+msgid "Search Product Attribute Options"
+msgstr "搜索产品属性值"
+
+#. module: magentoerpconnect
+#: selection:magerp.product_attributes,frontend_input:0
+msgid "File"
+msgstr "文件"
+
+#. module: magentoerpconnect
+#: help:res.partner,website_id:0
+msgid "Select a website for which the Magento customer will be bound."
+msgstr "为Magento的客户绑定一个网站。"
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,default_value:0
+msgid "Default Value"
+msgstr "默认值"
+
+#. module: magentoerpconnect
+#: field:magerp.product_attributes,is_configurable:0
+msgid "Configurable?"
+msgstr "可配置?"
+
+#. module: magentoerpconnect
+#: model:ir.actions.act_window,name:magentoerpconnect.action_magerp_external_report_line
+msgid "External Report Lines"
+msgstr "外部系统运行报告行"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/magerp_osv.py:93
+#, python-format
+msgid "There is no \"List Method\" configured on the mapping %s"
+msgstr "映射%s中没有配置 \"列表方法\""
+
+#. module: magentoerpconnect
+#: view:product.category:0
+msgid "Display Settings"
+msgstr "显示设置"
+
