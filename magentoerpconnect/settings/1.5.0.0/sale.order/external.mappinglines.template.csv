@@ -16,7 +16,6 @@ mag1500_sale_order_items=>,100,in,sub-mapping,items,sale.field_sale_order_order_
 mag1500_sale_order_cod_fee=>,,in,function,cod_fee,,float,False,mag1500_sale_order,cod_fee,"#TODO map me
 ",,,
 mag1500_sale_order_gift_certificates_amount=>,,in,function,giftcert_amount,,float,False,mag1500_sale_order,gift_certificates_amount,"result=[('gift_certificates_amount', ifield)]",,,
-mag1500_sale_order_shipping_amount_tax_excluded=>,,in,function,shipping_amount,,float,False,mag1500_sale_order,shipping_amount_tax_excluded,"result=[('shipping_amount_tax_excluded', ifield)]",,,
 mag1500_sale_order_gift_certificates_code=>,,in,function,giftcert_code,,unicode,False,mag1500_sale_order,gift_certificates_code,"result = [('gift_certificates_code', ifield)]",,,
 mag1500_sale_order_carrier_id=>,,in,function,shipping_method,,unicode,False,mag1500_sale_order,carrier_id,"if ifield:
     carrier_ids = self.pool.get('delivery.carrier').search(cr, uid, [('magento_code', '=', ifield)])
@@ -28,5 +27,5 @@ mag1500_sale_order_carrier_id=>,,in,function,shipping_method,,unicode,False,mag1
         model, product_id = model_data_obj.get_object_reference(cr, uid, 'base_sale_multichannels', 'product_product_shipping')
         carrier_id = self.pool.get('delivery.carrier').create(cr, uid, {'partner_id' : fake_partner_id, 'product_id' : product_id, 'name' : ifield, 'magento_code' : ifield})
         result=[('carrier_id', carrier_id)]",,,
-mag1500_sale_order_shipping_amount_tax_included=>,,in,function,base_shipping_incl_tax,,float,False,mag1500_sale_order,shipping_amount_tax_included,"result=[('shipping_amount_tax_included', ifield), ('shipping_tax_rate', ifield and (ifield/float(data['shipping_amount'])-1)) or 0]",,,
-mag1500_s   ale_order_date,,in,direct,created_at,sale.field_sale_order_date_order,datetime,False,mag1500_sale_order,,,,,%Y-%m-%d %H:%M:%S
+mag1500_sale_order_shipping_amount_tax_included=>,,in,function,base_shipping_incl_tax,,float,False,mag1500_sale_order,shipping_amount_tax_included,"result=[('shipping_amount_tax_included', ifield - float(resource.get('shipping_discount_amount', 0.0))), ('shipping_tax_rate', ifield and (ifield/float(data['shipping_amount'])-1)) or 0]",,,
+mag1500_sale_order_date,,in,direct,created_at,sale.field_sale_order_date_order,datetime,False,mag1500_sale_order,,,,,%Y-%m-%d %H:%M:%S
