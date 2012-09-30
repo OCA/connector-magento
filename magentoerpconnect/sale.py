@@ -31,7 +31,7 @@ from openerp import tools
 import time
 from tools import DEFAULT_SERVER_DATETIME_FORMAT
 from base_external_referentials.external_osv import ExternalSession
-from base_external_referentials.decorator import only_for_referential
+from base_external_referentials.decorator import only_for_referential, open_report
 
 #from base_external_referentials import report
 
@@ -158,6 +158,11 @@ class sale_shop(Model):
         if not defaults: defaults={}
         defaults.update({'magento_shop' : True})
         return defaults
+
+    @only_for_referential('magento')
+    @open_report
+    def _export_inventory(self, *args, **kwargs):
+        return super(product_product, self)._export_inventory(*args, **kwargs)
 
     _columns = {
         'default_storeview_integer_id':fields.integer('Magento default Storeview ID'), #This field can't be a many2one because store field will be mapped before creating storeviews

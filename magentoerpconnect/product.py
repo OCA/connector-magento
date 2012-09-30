@@ -38,7 +38,7 @@ from openerp.tools.translate import _
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 from .magerp_osv import MagerpModel
-from base_external_referentials.decorator import only_for_referential
+from base_external_referentials.decorator import only_for_referential, catch_error_in_report
 from base_external_referentials.external_osv import ExternalSession
 
 _logger = logging.getLogger(__name__)
@@ -1406,29 +1406,20 @@ class product_product(product_mag_osv):
         #This can be base on the group_fields that can try tle last write date of a group of fields
         if context is None: context = {}
 
-        shop = external_session.sync_from_object
-
-        # exclude service products
-        stock_product_ids = self.search(
-            cr, uid,
-            [('id', 'in', ids),
-             ('type', '!=', 'service'),
-             ('magento_exportable', '=', True)],
-            context=context)
-
         # use the stock location defined on the sale shop
         # to compute the stock value
-        stock = shop.warehouse_id.lot_stock_id
+        stock = external_session.sync_from_object.warehouse_id.lot_stock_id
         location_ctx = context.copy()
         location_ctx['location'] = stock.id
-        products = self.browse(
-            cr, uid, stock_product_ids, context=location_ctx)
+        for product_id in ids:
+            self._export_inventory(cr, uid, external_session, product_id, context=location_ctx)
 
-        for product in products:
-            self._export_inventory(cr, uid, external_session, product, stock, context=location_ctx)
         return True
 
-    def _export_inventory(self, cr, uid, external_session, product, stock, context=None):
+    @catch_error_in_report
+    def _export_inventory(self, cr, uid, external_session, product_id, context=None):
+        product = self.browse(cr, uid, product_id, context=context)
+        stock = external_session.sync_from_object.warehouse_id.lot_stock_id
         mag_product_id = self.get_extid(
             cr, uid, product.id, external_session.referential_id.id, context=context)
         if not mag_product_id:
