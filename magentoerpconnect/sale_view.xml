@@ -11,7 +11,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <field name="referential_id" position="replace">
-                    <field name="referential_id" attrs="{'readonly': [('magento_shop','=',True)]}"/>    
+                    <field name="referential_id" attrs="{'readonly': [('magento_shop','=',True)]}"/>
                 </field>
                 <page string="External Shop Settings" position="before">
                     <page string="Magento Actions">
@@ -89,6 +89,6 @@
                 </data>
             </field>
         </record>
-        
+
     </data>
 </openerp>

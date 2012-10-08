@@ -43,17 +43,17 @@ magentoerpconnect.mag1500_product_category_meta_title,magentoerpconnect.mag1500_
 magentoerpconnect.mag1500_product_category_is_anchor,magentoerpconnect.mag1500_product_category,is_anchor,magentoerpconnect.field_product_category_is_anchor,in_out,direct,int,,False,,
 magentoerpconnect.mag1500_product_category_image,magentoerpconnect.mag1500_product_category,image,,in_out,function,unicode,,False,"image_binary = False
 if resource['image'] and not resource['image']=='None':
-	try:
-		image_binary = conn.call('ol_catalog_category_media.info', [int(data['category_id'])])
-	except Exception, e:
-		print e
-		pass
-	if image_binary:
-		image_binary = base64.encodestring(base64.urlsafe_b64decode(image_binary[0]['image_data']))
+    try:
+        image_binary = conn.call('ol_catalog_category_media.info', [int(data['category_id'])])
+    except Exception, e:
+        print e
+        pass
+    if image_binary:
+        image_binary = base64.encodestring(base64.urlsafe_b64decode(image_binary[0]['image_data']))
 result=[('image_name',ifield),('image',image_binary)]","if 'image' in resource:
     if resource['image']:
         img = base64.decodestring(record['image'])
-        img_bin_enc = base64.encodestring(img) 
+        img_bin_enc = base64.encodestring(img)
         conn.call('ol_catalog_category_media.create', [record['image_name'], img_bin_enc])
         result = [('image',record['image_name'])]
     else:

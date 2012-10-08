@@ -118,7 +118,7 @@ class res_partner(MagerpModel):
             AND ir_model_data.model = 'res.partner'
             AND ir_model_data.referential_id = %(ref_id)s
         WHERE ir_model_data.res_id IS NULL AND magerp_storeid_rel.store_id IN %(store_ids)s"""
-        params = {'ref_id': external_session.referential_id.id, 
+        params = {'ref_id': external_session.referential_id.id,
                   'store_ids': tuple(store_ids)}
         cr.execute(query,params)
         results = cr.dictfetchall()
@@ -128,7 +128,7 @@ class res_partner(MagerpModel):
     @only_for_referential('magento')
     def _transform_and_send_one_resource(self, cr, uid, external_session, resource, resource_id,
                             update_date, mapping, mapping_id, defaults=None, context=None):
-        res = super(res_partner, self)._transform_and_send_one_resource(cr, uid, external_session, 
+        res = super(res_partner, self)._transform_and_send_one_resource(cr, uid, external_session,
             resource, resource_id, update_date, mapping, mapping_id, defaults=defaults, context=context)
         if res:
             address_obj = self.pool.get('res.partner.address')

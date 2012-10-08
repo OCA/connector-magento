@@ -7,37 +7,37 @@
 
 <openerp>
     <data>
-    
-        <!-- INHERITED VIEW FOR THE OBJECT : product_product 
 
-		<record id="product_view_form" model="ir.ui.view">
-			<field name="name">magentoerpconnect_bundle.product_product.view_form</field>
-			<field name="model">product.product</field>
-			<field name="inherit_id" ref="module_name_to_inherit.view_id" />
-            <field eval="16" name="priority"/>
-			<field name="type">form</field>
-			<field name="arch" type="xml">
-				<data>
-					<field name="field_reference" position="after">
-					</field>
-				</data>
-			</field>
-		</record>
+        <!-- INHERITED VIEW FOR THE OBJECT : product_product
 
-		<record id="product_view_tree" model="ir.ui.view">
-			<field name="name">magentoerpconnect_bundle.product_product.view_tree</field>
-			<field name="model">product.product</field>
-			<field name="inherit_id" ref="module_name_to_inherit.view_id" />
+        <record id="product_view_form" model="ir.ui.view">
+            <field name="name">magentoerpconnect_bundle.product_product.view_form</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="module_name_to_inherit.view_id" />
             <field eval="16" name="priority"/>
-			<field name="type">tree</field>
-			<field name="arch" type="xml">
-				<data>
-					<field name="field_reference" position="after">
-					</field>
-				</data>
-			</field>
-		</record>
-    
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <data>
+                    <field name="field_reference" position="after">
+                    </field>
+                </data>
+            </field>
+        </record>
+
+        <record id="product_view_tree" model="ir.ui.view">
+            <field name="name">magentoerpconnect_bundle.product_product.view_tree</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="module_name_to_inherit.view_id" />
+            <field eval="16" name="priority"/>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <data>
+                    <field name="field_reference" position="after">
+                    </field>
+                </data>
+            </field>
+        </record>
+
 -->
 
 

@@ -357,7 +357,7 @@ class magerp_product_attributes(MagerpModel):
                        ]
 
 
-    #For some field you can specify the syncronisation way 
+    #For some field you can specify the syncronisation way
     #in : Magento => OpenERP
     #out : Magento <= OpenERP
     #in_out (default_value) : Magento <=> OpenERP

@@ -59,7 +59,7 @@ result = [('categ_id', main_categ_id), ('categ_ids',[(6, 0, categ_ids)])]","if '
         mag_categ_id = cat_obj.get_or_create_extid(cr, uid, external_session, categ_id, context=context)
         mag_categ_ids.append(mag_categ_id)
     result=[('categories', mag_categ_ids)]",,
-"mag1500_product_product_special_price",,"in_out","function","special_price",,"float","False","magentoerpconnect.mag1500_product_product","special_price","if 'x_magerp_special_price' in resource: result = [('x_magerp_special_price', ifield)]","if 'x_magerp_special_price' in resource: 
+"mag1500_product_product_special_price",,"in_out","function","special_price",,"float","False","magentoerpconnect.mag1500_product_product","special_price","if 'x_magerp_special_price' in resource: result = [('x_magerp_special_price', ifield)]","if 'x_magerp_special_price' in resource:
     if resource['x_magerp_special_price']:
         result = [('special_price', resource['x_magerp_special_price'])]
     else:

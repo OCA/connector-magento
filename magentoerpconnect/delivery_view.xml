@@ -10,8 +10,8 @@
             <field name="arch" type="xml">
                  <data>
                     <field name="product_id" select="1" position="after">
-                    	<field name="magento_code"/>
-                    	<field name="magento_tracking_title"/>
+                        <field name="magento_code"/>
+                        <field name="magento_tracking_title"/>
                     </field>
                 </data>
             </field>

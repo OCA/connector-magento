@@ -9,9 +9,9 @@ mag1500_sale_order_line_option=>,,in,function,product_options,,unicode,False,mag
     clean = re.sub('\w:\w:|\w:\w+;', '', ifield)
     for each in clean.split('{'):
         if each.startswith('""label""'):
-            split_info = each.split(';')	
+            split_info = each.split(';')
             options_label.append('%s: %s [%s]' % (split_info[1], split_info[3], data['sku']))
-	
+
     result=[('notes',  """".join(options_label).replace('""""', '\n').replace('""', ''))]
 ",,,
 mag1500_sale_order_line_product_id=>,,in,direct,product_id,sale.field_sale_order_line_product_id,int,False,mag1500_sale_order_line,,,,,

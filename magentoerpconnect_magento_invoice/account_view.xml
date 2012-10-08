@@ -7,7 +7,7 @@
 
 <openerp>
     <data>
-    
+
         <!-- INHERITED VIEW FOR THE OBJECT : account_invoice -->
 
         <record id="account_invoice_view_form" model="ir.ui.view">
@@ -37,7 +37,7 @@
                 </data>
             </field>
         </record>
-    
+
 
 
 

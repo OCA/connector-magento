@@ -7,88 +7,88 @@
 
 <openerp>
     <data>
-    
+
         <!-- INHERITED VIEW FOR THE OBJECT : product_variant_dimension_option -->
 
-		<record id="magentoerpconnect_cp_product_variant_dimension_option_view_form" model="ir.ui.view">
-			<field name="name">magentoerpconnect_cp.product_variant_dimension_option.view_form</field>
-			<field name="model">product.variant.dimension.option</field>
-			<field name="inherit_id" ref="product_variant_multi.product_variant_multi_dimension_option_form" />
+        <record id="magentoerpconnect_cp_product_variant_dimension_option_view_form" model="ir.ui.view">
+            <field name="name">magentoerpconnect_cp.product_variant_dimension_option.view_form</field>
+            <field name="model">product.variant.dimension.option</field>
+            <field name="inherit_id" ref="product_variant_multi.product_variant_multi_dimension_option_form" />
             <field eval="16" name="priority"/>
-			<field name="type">form</field>
-			<field name="arch" type="xml">
-				<data>
-					<field name="sequence" position="after">
-						<field name="magento_attribut_option" />
-					</field>
-				</data>
-			</field>
-		</record>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <data>
+                    <field name="sequence" position="after">
+                        <field name="magento_attribut_option" />
+                    </field>
+                </data>
+            </field>
+        </record>
 
-		<record id="magentoerpconnect_cp_product_variant_dimension_option_view_tree" model="ir.ui.view">
-			<field name="name">magentoerpconnect_cp.product_variant_dimension_option.view_tree</field>
-			<field name="model">product.variant.dimension.option</field>
-			<field name="inherit_id" ref="product_variant_multi.product_variant_multi_dimension_option_tree" />
+        <record id="magentoerpconnect_cp_product_variant_dimension_option_view_tree" model="ir.ui.view">
+            <field name="name">magentoerpconnect_cp.product_variant_dimension_option.view_tree</field>
+            <field name="model">product.variant.dimension.option</field>
+            <field name="inherit_id" ref="product_variant_multi.product_variant_multi_dimension_option_tree" />
             <field eval="16" name="priority"/>
-			<field name="type">tree</field>
-			<field name="arch" type="xml">
-				<data>
-					<field name="sequence" position="after">
-						<field name="magento_attribut_option" />
-					</field>
-				</data>
-			</field>
-		</record>    
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <data>
+                    <field name="sequence" position="after">
+                        <field name="magento_attribut_option" />
+                    </field>
+                </data>
+            </field>
+        </record>
 
 
         <!-- INHERITED VIEW FOR THE OBJECT : product_variant_dimension_type -->
 
-		<record id="magentoerpconnect_cp_product_variant_dimension_type_view_form" model="ir.ui.view">
-			<field name="name">magentoerpconnect_cp.product_variant_dimension_type.view_form</field>
-			<field name="model">product.variant.dimension.type</field>
-			<field name="inherit_id" ref="product_variant_multi.product_variant_multi_dimension_type_form" />
+        <record id="magentoerpconnect_cp_product_variant_dimension_type_view_form" model="ir.ui.view">
+            <field name="name">magentoerpconnect_cp.product_variant_dimension_type.view_form</field>
+            <field name="model">product.variant.dimension.type</field>
+            <field name="inherit_id" ref="product_variant_multi.product_variant_multi_dimension_type_form" />
             <field eval="16" name="priority"/>
-			<field name="type">form</field>
-			<field name="arch" type="xml">
-				<data>
-					<field name="description" position="after">
-						<field name="magento_attribut" />
-					</field>
-				</data>
-			</field>
-		</record>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <data>
+                    <field name="description" position="after">
+                        <field name="magento_attribut" />
+                    </field>
+                </data>
+            </field>
+        </record>
 
-		<record id="magentoerpconnect_cp_product_variant_dimension_type_view_tree" model="ir.ui.view">
-			<field name="name">magentoerpconnect_cp.product_variant_dimension_type.view_tree</field>
-			<field name="model">product.variant.dimension.type</field>
-			<field name="inherit_id" ref="product_variant_multi.product_variant_multi_dimension_type_tree" />
+        <record id="magentoerpconnect_cp_product_variant_dimension_type_view_tree" model="ir.ui.view">
+            <field name="name">magentoerpconnect_cp.product_variant_dimension_type.view_tree</field>
+            <field name="model">product.variant.dimension.type</field>
+            <field name="inherit_id" ref="product_variant_multi.product_variant_multi_dimension_type_tree" />
             <field eval="16" name="priority"/>
-			<field name="type">tree</field>
-			<field name="arch" type="xml">
-				<data>
-					<field name="description" position="after">
-						<field name="magento_attribut" />
-					</field>
-				</data>
-			</field>
-		</record>
-    
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <data>
+                    <field name="description" position="after">
+                        <field name="magento_attribut" />
+                    </field>
+                </data>
+            </field>
+        </record>
+
         <!-- INHERITED VIEW FOR THE OBJECT : product_template -->
 
-		<record id="magentoerpconnect_cp_product_template_view_form" model="ir.ui.view">
-			<field name="name">magentoerpconnect_cp.product_template.view_form</field>
-			<field name="model">product.template</field>
-			<field name="inherit_id" ref="product_variant_multi.product_variant_multi_product_template_form_view" />
+        <record id="magentoerpconnect_cp_product_template_view_form" model="ir.ui.view">
+            <field name="name">magentoerpconnect_cp.product_template.view_form</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product_variant_multi.product_variant_multi_product_template_form_view" />
             <field eval="16" name="priority"/>
-			<field name="type">form</field>
-			<field name="arch" type="xml">
-				<data>
-					<field name="is_multi_variants" position="after">
-						<field name="set" />
-					</field>
-					<field name="variants" position="after">
-						<field name="product_type" />
-					</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <data>
+                    <field name="is_multi_variants" position="after">
+                        <field name="set" />
+                    </field>
+                    <field name="variants" position="after">
+                        <field name="product_type" />
+                    </field>
 
                     <xpath expr="/form/notebook" position="before">
                         <group colsan="1">
@@ -98,12 +98,12 @@
                     <xpath expr="/form/notebook" position="inside">
                         <page string="attributes_placeholder"/>
                     </xpath>
-					<field name="variant_track_outgoing" position="after">
-						<field name="magento_exportable"/>
-					</field>
-				</data>
-			</field>
-		</record>
+                    <field name="variant_track_outgoing" position="after">
+                        <field name="magento_exportable"/>
+                    </field>
+                </data>
+            </field>
+        </record>
 
         <!--Magento Product Template Wizard Form view  -->
 
