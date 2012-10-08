@@ -162,7 +162,7 @@ class sale_shop(Model):
     @only_for_referential('magento')
     @open_report
     def _export_inventory(self, *args, **kwargs):
-        return super(product_product, self)._export_inventory(*args, **kwargs)
+        return super(sale_shop, self)._export_inventory(*args, **kwargs)
 
     _columns = {
         'default_storeview_integer_id':fields.integer('Magento default Storeview ID'), #This field can't be a many2one because store field will be mapped before creating storeviews
