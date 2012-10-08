@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ###############################################################################
 #                                                                             #
-#   magentoerpconnect_report_synchronizer for OpenERP                         #
+#   magentoerpconnect_openerp_invoice for OpenERP                             #
 #   Copyright (C) 2012 Akretion Sébastien BEAU <sebastien.beau@akretion.com>  #
 #                                                                             #
 #   This program is free software: you can redistribute it and/or modify      #
@@ -22,7 +22,7 @@
 
 
 {
-    'name': 'magentoerpconnect_report_synchronizer',
+    'name': 'magentoerpconnect_openerp_invoice',
     'version': '0.1',
     'category': 'Generic Modules/Others',
     'license': 'AGPL-3',
