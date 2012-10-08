@@ -357,10 +357,13 @@ class magerp_product_attributes(MagerpModel):
                        ]
 
 
-    #TODO check if this field have to be in only one way and if yes add this feature
+    #For some field you can specify the syncronisation way 
+    #in : Magento => OpenERP
+    #out : Magento <= OpenERP
+    #in_out (default_value) : Magento <=> OpenERP
     _sync_way = {'has_options' : 'in',
-                 'special_price' : 'in',
-                 }
+                 'tier_price': 'in',
+               }
 
     def _is_attribute_translatable(self, vals):
         """Tells if field associated to attribute should be translatable or not.
@@ -533,7 +536,7 @@ class magerp_product_attributes(MagerpModel):
                 mapping_line = {'external_field': vals['attribute_code'],
                                 'sequence': 0,
                                 'mapping_id': mapping_id[0],
-                                'type': 'in_out',
+                                'type': self._sync_way.get(vals['attribute_code'], 'in_out'),
                                 'external_type': self._type_casts[vals.get('frontend_input', False)],
                                 'field_id': field_id, }
                 mapping_line = self._default_mapping(cr, uid, ttype, field_name, vals, attribute_id, model_id, mapping_line, referential_id)
