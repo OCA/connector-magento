@@ -83,11 +83,17 @@ class account_invoice(Model):
     def ext_create(self, cr, uid, external_session, resources, mapping=None, mapping_id=None, context=None):
         ext_create_ids={}
         for resource_id, resource in resources.items():
-            resource = resource[resource.keys()[0]]
-            if resource['type'] == 'out_invoice':
-                ext_create_ids[resource_id] = self.create_magento_invoice(cr, uid,  external_session,
-                                    resource_id, resource['order_increment_id'], context=context)
+            res = self.ext_create_one_invoice(cr, uid, external_session, resource_id, resource, context=context)
+            if res:
+                ext_create_ids[resource_id] = res
         return ext_create_ids
+
+    def ext_create_one_invoice(self, cr, uid, external_session, resource_id, resource, context=None):
+        resource = resource[resource.keys()[0]]
+        if resource['type'] == 'out_invoice':
+            return self.create_magento_invoice(cr, uid, external_session,
+                                resource_id, resource['order_increment_id'], context=context)
+        return False
 
     def _export_one_invoice(self, cr, uid, invoice, context=None):
         if invoice.sale_ids:
