@@ -32,9 +32,13 @@
     """,
     'author': 'Akretion',
     'website': 'http://www.akretion.com/',
-    'depends': ['base_sale_report_synchronizer'],
+    'depends': [
+        'base_sale_report_synchronizer',
+        'magentoerpconnect',
+        ],
     'init_xml': [],
     'update_xml': [
+        'external_referential_view.xml',
     ],
     'demo_xml': [],
     'installable': True,

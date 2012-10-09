@@ -21,28 +21,61 @@
 
 from openerp.osv.orm import Model
 from openerp.osv import fields
+from base_external_referentials.external_osv import ExternalSession
+import os
 
 class account_invoice(Model):
     _inherit = "account.invoice"
 
-    def ext_create(self, cr, uid, external_session, resources, mapping=None, mapping_id=None, context=None):
-        ext_create_ids={}
-        for resource_id, resource in resources.items():
-            resource = resource[resource.keys()[0]]
-            if resource['type'] == 'out_refund':
-                method = "synoopenerpadapter_creditmemo.addInfo"
-            elif resource['type'] == 'out_invoice':
-                method = "synoopenerpadapter_invoice.addInfo"
-            resource['reference'] = context.get('report_name')
-            ext_create_ids[resource_id] = external_session.connection.call(method,
-                        [
-                            resource['customer_id'],
-                            resource['order_increment_id'],
-                            resource['reference'],
-                            resource['amount'],
-                            resource['date'],
-                            resource['customer_name'],
-                        ])
-            super(account_invoice, self).ext_create(cr, uid, external_session, resources,
-                                                    mapping=mapping, mapping_id=mapping_id, context=context)
-        return ext_create_ids
+    def _export_one_resource(self, cr, uid, external_session, invoice_id, context=None):
+        #TODO think about a better solution to pass the report_name
+        context['report_name'] = self._send_invoice_report(cr, uid, external_session,
+                                                             invoice_id, context=context)
+        return super(account_invoice, self)._export_one_resource(cr, uid, external_session, 
+                                                                    invoice_id, context=context)
+
+    def _send_invoice_report(self, cr, uid, external_session, invoice_id, context=None):
+        invoice = self.browse(cr, uid, invoice_id, context=context)
+        invoice_number = invoice.number.replace('/', '-')
+        invoice_path = self._get_invoice_path(cr, uid, external_session, invoice, context=context)
+        if not external_session.sync_from_object.invoice_report:
+            raise except_osv(_("User Error"), _("You must define a report for the invoice for your sale shop"))
+        report_name = "report.%s"%external_session.sync_from_object.invoice_report.report_name
+        #Init the connection with the sftp/ftp/... referential
+        if not hasattr(external_session, 'file_session'):
+            external_session.file_session = ExternalSession(
+                                external_session.referential_id.ext_file_referential_id,
+                                external_session.sync_from_object,
+                                )
+        return self.send_report(cr, uid, external_session.file_session, [invoice.id], report_name, 
+                                                    invoice_number, invoice_path, context=context)
+
+    def _get_invoice_path(self, cr, uid, external_session, invoice, context=None):
+        ref_id = external_session.referential_id.id
+        ext_partner_id = invoice.partner_id.get_extid(ref_id, context=context)
+        ext_sale_id = invoice.sale_ids[0].get_extid(ref_id, context=context)
+        if invoice.type == 'out_invoice':
+            basepath = 'invoice'
+        elif invoice.type == 'out_refund':
+            basepath = 'creditmemo'
+        return os.path.join(basepath, str(ext_partner_id), str(ext_sale_id))
+
+    def ext_create_one_invoice(self, cr, uid, external_session, resource_id, resource, context=None):
+        data = resource[resource.keys()[0]]
+        if data['type'] == 'out_refund':
+            method = "synoopenerpadapter_creditmemo.addInfo"
+        elif data['type'] == 'out_invoice':
+            method = "synoopenerpadapter_invoice.addInfo"
+        data['reference'] = context.get('report_name')
+        res = external_session.connection.call(method,
+                    [
+                        data['customer_id'],
+                        data['order_increment_id'],
+                        data['reference'],
+                        data['amount'],
+                        data['date'],
+                        data['customer_name'],
+                    ])
+        super(account_invoice, self).ext_create_one_invoice(cr, uid, external_session,
+                                                    resource_id, resource, context=context)
+        return res
