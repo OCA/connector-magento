@@ -10,11 +10,8 @@
             <field name="type">form</field>
             <field name="priority">30</field>
             <field name="arch" type="xml">
-                <xpath expr="/form/group[2]/notebook/page[@string='Referential Actions']" position="replace">
-                    <page string="Referential Actions">
-                        <separator string="Compulsory" colspan="4" />
-                        <button name="refresh_mapping" string="1 - Reload Referential Mapping Templates" colspan="2" type="object" />
-                        <button name="import_referentials" string="2 - Synchronize Referential Settings" colspan="2" type="object" attrs="{'readonly':[('mapping_ids','=',[])]}"/>
+                <group name="compulsory" position="after">
+                    <group name="magento" col="4" colspan="4" attrs="{'invisible': [['type_name', '!=', 'Magento']]}">
                         <separator string="Optional - Initial import only" colspan="4" />
                         <button name="import_customer_groups" string="1 - Import Customer Groups (Partner Categories)" colspan="2" type="object" />
                         <group colspan="2" col="12">
@@ -36,15 +33,13 @@
                         <button name="sync_attrib_groups" string="4 - Import Attribute Groups" colspan="2" type="object" />
                         <button name="sync_product_links" string="8 - Import Product Links" colspan="2" type="object" />
                         <separator string="Default values" colspan="4" />
-                        <field name="default_pro_cat" required="1"/>
-                        <field name="default_lang_id" required="1"/>
-<!--                            <button name="sync_customer_addresses" string="Sync Customer Addresses" colspan="2" type="object" />-->
-<!--                            <button name="export_products" string="Export Products" colspan="2" type="object" />-->
-                    </page>
-                </xpath>
+                        <field name="default_pro_cat" attrs="{'required': [['type_name', '=', 'Magento']]}"/>
+                        <field name="default_lang_id" attrs="{'required': [['type_name', '=', 'Magento']]}"/>
+                    </group>
+                </group>
 
-                <xpath expr="/form/group[2]/notebook" position="inside">
-                    <page string="Websites">
+                <notebook position="inside">
+                    <page string="Websites" attrs="{'invisible': [['type_name', '!=', 'Magento']]}">
                         <field name="shop_group_ids" nolabel="1" />
                     </page>
                     <!--                            <page string="Store Views">
@@ -53,11 +48,11 @@
                     <page string="Groups (Stores)">
                             <field name="shop_ids" nolabel="1" />
                                                 </page>-->
-                    <page string="Product Attributes / Sets">
+                    <page string="Product Attributes / Sets" attrs="{'invisible': [['type_name', '!=', 'Magento']]}">
                         <newline />
                         <field name="attribute_sets" nolabel="1" colspan="4"/>
                     </page>
-                    <page string="Advanced">
+                    <page string="Advanced" attrs="{'invisible': [['type_name', '!=', 'Magento']]}">
                         <separator string="Partner" colspan="4"/>
                         <group colspan="2" col="12">
                             <button name="sync_partner" string="Import All Partners" colspan="10" type="object" />
@@ -68,7 +63,7 @@
                         <separator string="Others" colspan="4"/>
                         <field name="active" select="2"/>
                     </page>
-                </xpath>
+                </notebook>
             </field>
         </record>
         <record id="act_magerp_instances_form" model="ir.actions.act_window">
