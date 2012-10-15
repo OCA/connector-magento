@@ -25,7 +25,7 @@ from openerp.osv.orm import Model
 from openerp.osv import fields
 from openerp.tools.translate import _
 from base_external_referentials.external_osv import ExternalSession
-
+from openerp.osv.osv import except_osv
 
 class account_invoice(Model):
     _inherit = "account.invoice"
@@ -71,14 +71,29 @@ class account_invoice(Model):
                         item_qty.update({product_2_item[line['product_id']]: line['product_qty']})
         return item_qty
 
+    def map_magento_order(self, cr, uid, external_session, invoice_id, order_increment_id, context=None):
+        try:
+            external_session.logger.warning('Try to map the invoice with an existing order')
+            invoice_ids = external_session.connection.call('sales_order.get_invoice_ids', [order_increment_id])
+            #TODO support mapping for partiel invoice if needed
+            if len(invoice_ids) == 1:
+                external_session.logger.info('Success to map the invoice %s with an existing order for the order %s.'%(invoice_ids[0], order_increment_id))
+                return invoice_ids[0]
+        except Exception, e:
+            external_session.logger.error('Failed to map the invoice with an existing order for the order %s. Error : %s'%(order_increment_id, e))
+
     def create_magento_invoice(self, cr, uid, external_session, invoice_id, order_increment_id, context=None):
         item_qty = self.get_invoice_items(cr, uid, external_session, invoice_id, order_increment_id, context=context)
         try:
             return external_session.connection.call('sales_order_invoice.create', [order_increment_id,
                                                      item_qty, _('Invoice Created'), False, False])
         except Exception, e:
-            external_session.logger.warning(_('Can not create the invoice for the order %s in the external system. Error : %s')%(order_increment_id, e))
-        return False
+            external_session.logger.warning('Can not create the invoice for the order %s in the external system. Error : %s'%(order_increment_id, e))
+            invoice_id = self.map_magento_order(cr, uid, external_session, invoice_id, order_increment_id, context=context)
+            if invoice_id:
+                return invoice_id
+            else:
+                raise except_osv(_('Magento Error'), _('Failed to synchronise Magento invoice with OpenERP invoice'))
 
     def ext_create(self, cr, uid, external_session, resources, mapping=None, mapping_id=None, context=None):
         ext_create_ids={}
