@@ -288,6 +288,7 @@ class external_referential(MagerpModel):
                 shop.export_products(cr, uid, shop, context)
         return True
 
+    #TODO refactor me
     def sync_partner(self, cr, uid, ids, context=None):
         def next_partners(connection, start, step):
             filters = {'customer_id': {'in': range(start, start + step)}}
@@ -314,11 +315,10 @@ class external_referential(MagerpModel):
                             address_info = customer_address_info[0]
                             address_info['customer_id'] = ext_customer_id
                             address_info['email'] = customer_info['email']
-
-                        self.pool.get('res.partner').ext_import(import_cr, uid, [customer_info], referential.id, context=context)
+                        external_session = ExternalSession(referential, referential)
+                        self.pool.get('res.partner')._record_one_external_resource(import_cr, uid, external_session, customer_info, context=context)
                         if address_info:
-                            self.pool.get('res.partner.address').ext_import(import_cr, uid, [address_info], referential.id, context=context)
-
+                            self.pool.get('res.partner.address')._record_one_external_resource(import_cr, uid, external_session, address_info, context=context)
                         last_imported_id = int(ext_customer_id)
                         self.write(import_cr, uid, referential.id, {'last_imported_partner_id': last_imported_id}, context=context)
                         import_cr.commit()
