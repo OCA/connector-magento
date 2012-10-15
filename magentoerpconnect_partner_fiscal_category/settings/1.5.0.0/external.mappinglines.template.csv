@@ -1,7 +1,2 @@
-id,type_id:id,model_id:id,external_field,field_id:id,type,evaluation_type,external_type,child_mapping_id:id,in_function,out_function
-magento_1500_prt_tax_class_id,magentoerpconnect.magento1500,base.model_res_partner,tax_class_id,,in_out,function,int,,"result = [('fiscal_category_id', False)]
-if ifield:
-    category_obj = self.pool.get('res.partner.category')
-    category_ids = category_obj.search(cr, uid, [('tax_class_id', '=', ifield)])
-    if category_ids:
-        result = [('fiscal_category_id', category_ids[0])]",
+id,sequence,type,evaluation_type,external_field,field_id:id,external_type,alternative_key,mapping_id:id,function_name,in_function,out_function,child_mapping_id:id,datetime_format
+mag1500_res_partner_group_id,,in_out,direct,group_id,account_fiscal_rules_partner_category.field_res_partner_fiscal_category_id,int,False,magentoerpconnect.mag1500_res_partner,,,,,

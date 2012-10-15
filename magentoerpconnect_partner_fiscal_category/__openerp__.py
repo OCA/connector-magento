@@ -46,7 +46,7 @@ in lp:c2c-financial-addons branch
     'depends': ['magentoerpconnect',
                 'account_fiscal_rules_partner_category', ],
     'init_xml': [],
-    'update_xml': ['settings/1.3.2.4/external.mappinglines.template.csv',
+    'update_xml': [#'settings/1.3.2.4/external.mappinglines.template.csv',
                    'settings/1.5.0.0/external.mappinglines.template.csv', ],
     'demo_xml': [],
     'installable': True,
