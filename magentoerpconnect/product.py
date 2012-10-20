@@ -150,7 +150,7 @@ class product_category(MagerpModel):
             parent_id = resource[main_lang]['parent_id']
             del resource[main_lang]['parent_id']
             external_session.connection.call('catalog_category.update', [ext_id, resource[main_lang], False])
-            external_session.connection.call('catalog_category.move', [ext_id, parent_id])
+            external_session.connection.call('oerp_catalog_category.move', [ext_id, parent_id])
             for storeview, lang in storeview_to_lang.items():
                 del resource[lang]['ext_id']
                 external_session.connection.call('catalog_category.update', [ext_id, resource[lang], storeview])
@@ -1430,7 +1430,7 @@ class product_product(product_mag_osv):
         inventory_vals = self._prepare_inventory_magento_vals(
             cr, uid, product, stock, external_session.sync_from_object, context=context)
 
-        external_session.connection.call('product_stock.update',
+        external_session.connection.call('oerp_cataloginventory_stock_item.update',
                         [mag_product_id, inventory_vals])
 
         external_session.logger.info(
