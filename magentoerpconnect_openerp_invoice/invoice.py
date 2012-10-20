@@ -48,7 +48,7 @@ class account_invoice(Model):
                                 external_session.sync_from_object,
                                 )
         return self.send_report(cr, uid, external_session.file_session, [invoice.id], report_name, 
-                                                    invoice_number, invoice_path, context=context)
+                                                    invoice_number, invoice_path, add_extension=False, context=context)
 
     def _get_invoice_path(self, cr, uid, external_session, invoice, context=None):
         ref_id = external_session.referential_id.id
