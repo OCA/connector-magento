@@ -1,0 +1,3 @@
+id,sequence,type,evaluation_type,external_field,field_id:id,external_type,alternative_key,mapping_id:id,function_name,in_function,out_function,child_mapping_id:id,datetime_format
+magentoerpconnect.mag1500_res_partner_address_name,,in_out,direct,firstname,base_partner_surname.field_res_partner_address_first_name,unicode,True,magentoerpconnect.mag1500_res_partner_address,,,,,
+mag1500_res_partner_address_lastname,,in_out,direct,lastname,base_partner_surname.field_res_partner_address_last_name,unicode,True,magentoerpconnect.mag1500_res_partner_address,,,,,
