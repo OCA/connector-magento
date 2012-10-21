@@ -1,5 +1,17 @@
 id,sequence,type,evaluation_type,external_field,field_id:id,external_type,alternative_key,mapping_id:id,function_name,in_function,out_function,child_mapping_id:id,datetime_format
-magentoerpconnect.mag1500_res_partner_address_name,,in_out,direct,firstname,magentoerpconnect.field_res_partner_address_firstname,unicode,True,magentoerpconnect.mag1500_res_partner_address,name,,,,
+magentoerpconnect.mag1500_res_partner_address_name,,in_out,function,firstname,base.field_res_partner_address_name,unicode,True,magentoerpconnect.mag1500_res_partner_address,name,"if 'firstname' in resource or 'lastname' in resource:
+    result = [('name', resource.get('firstname', '') + (resource.get('firstname') and ' ') + resource.get('lastname', ''))]","if 'name' in resource:
+    name_split = name.split(' ')
+    if len(name_split) >= 2:
+        firstname = name_split[0]
+        lastname = name.replace(firstname, '').strip()
+    else:
+        firstname = '-'
+        lastname = name
+else:
+    firstname = ''
+    lastname = ''
+result = [('firstname', firstname), ('lastname', lastname)]",,
 magentoerpconnect.mag1500_res_partner_address_telephone,,in_out,direct,telephone,base.field_res_partner_address_phone,unicode,False,magentoerpconnect.mag1500_res_partner_address,,,,,
 magentoerpconnect.mag1500_res_partner_address_region,,in_out,function,region,,unicode,False,magentoerpconnect.mag1500_res_partner_address,region,"if ifield:
     result = self.pool.get('res.country.state').search(cr,uid,[('name','ilike',ifield)])
@@ -42,7 +54,6 @@ magentoerpconnect.mag1500_res_partner_address_prefix,,in_out,function,prefix,,un
     result = [('prefix',resource['title'][1])]",,
 magentoerpconnect.mag1500_res_partner_address_city,,in_out,direct,city,base.field_res_partner_address_city,unicode,True,magentoerpconnect.mag1500_res_partner_address,,"result=[('city',ifield)]",,,
 magentoerpconnect.mag1500_res_partner_address_fax,,in_out,direct,fax,base.field_res_partner_address_fax,unicode,False,magentoerpconnect.mag1500_res_partner_address,,,,,
-magentoerpconnect.mag1500_res_partner_address_lastname,,in_out,direct,lastname,magentoerpconnect.field_res_partner_address_lastname,unicode,False,magentoerpconnect.mag1500_res_partner_address,,,,,
 mag1500_res_partner_address_email,,in_out,direct,email,base.field_res_partner_address_email,unicode,False,magentoerpconnect.mag1500_res_partner_address,,,,,
 mag1500_res_partner_address_company,,in_out,direct,company,magentoerpconnect.field_res_partner_address_company,unicode,True,magentoerpconnect.mag1500_res_partner_address,,,,,
 magentoerpconnect.mag1500_res_partner_address_zip,,in_out,direct,postcode,base.field_res_partner_address_zip,unicode,True,magentoerpconnect.mag1500_res_partner_address,,"result=[('zip',ifield)]",,,

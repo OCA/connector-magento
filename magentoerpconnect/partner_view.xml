@@ -7,10 +7,8 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="base.view_partner_form" />
             <field name="arch" type="xml">
-                <xpath expr="/form/notebook/page/field/form/group/field[@name='name']" position="replace" >
+                <xpath expr="/form/notebook/page/field/form/group/field[@name='name']" position="after" >
                     <field name="company" />
-                    <field name="firstname" />
-                    <field name="lastname" />
                 </xpath>
                 <xpath expr="/form/notebook" position="inside">
                     <page string="Magento Information">
@@ -50,10 +48,8 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="base.view_partner_address_form1" />
             <field name="arch" type="xml">
-                <field name="name" position="replace">
+                <field name="name" position="after">
                     <field name="company" />
-                    <field name="firstname" />
-                    <field name="lastname" />
                 </field>
             </field>
         </record>

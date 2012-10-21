@@ -36,24 +36,33 @@ class res_partner_category(MagerpModel):
 class res_partner_address(MagerpModel):
     _inherit = "res.partner.address"
 
-    #TODO maybe move the fields company, firstname, lastname in an extra module
-    #On v7 the partner address model will totaly change so maybe it's not worth
-    def _get_partner_name(self, cr, uid, ids, field_name, arg, context=None):
-        res ={}
-        for partner in self.browse(cr, uid, ids, context=context):
-            res[partner.id] = ((partner.company and partner.company + ' : ') or '') + \
-                              (partner.lastname and partner.lastname + ' ' or '') + \
-                              (partner.firstname or '')
-        return res
+    #Migration script for 6.1.0 to 6.1.1
+    def _auto_init(self, cr, context=None):
+        # recompute the field name with firstname + lastname
+        # in order to have the same data as the data of base_partner_surname
+        first_install=False
+        cr.execute("SELECT column_name FROM information_schema.columns "
+                   "WHERE table_name = 'res_partner_address' "
+                   "AND column_name = 'firstname'")
+        if cr.fetchone():
+            cr.execute("UPDATE res_partner_address"
+                            " SET name = (firstname || ' ' || lastname)"
+                            " WHERE firstname is not Null"
+                            " AND lastname is not Null")
+            cr.execute("UPDATE res_partner_address"
+                            " SET name = lastname"
+                            " WHERE firstname is Null")
+            cr.execute("UPDATE res_partner_address"
+                            " SET name = firstname"
+                            " WHERE lastname is Null")
+            cr.execute("ALTER TABLE res_partner_address "
+                       "RENAME COLUMN firstname TO first_name")
+            cr.execute("ALTER TABLE res_partner_address "
+                       "RENAME COLUMN lastname TO last_name")
+        return super(res_partner_address, self)._auto_init(cr, context=context)
 
     _columns = {
-        'name': fields.function(_get_partner_name, obj="res.partner.address", type = 'char', size = 256, string='Name',
-                store = {
-                    'res.partner.address' : (lambda self, cr, uid, ids, c={}: ids,
-                                                    ['company', 'firstname', 'lastname'], 10)}),
         'company':fields.char('Company', size=100),
-        'firstname':fields.char('First Name', size=100),
-        'lastname':fields.char('Last Name', size=100),
         'is_magento_order_address':fields.boolean('Magento Order Address?'), #TODO still needed?
         }
     _defaults = {
