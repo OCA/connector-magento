@@ -73,6 +73,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="base_external_referentials.external_referential_tree_view" />
+            <field name="domain">[['type_name', '=', 'Magento']]</field>
         </record>
 
         <!--Magento Websites Tree/Form view  -->

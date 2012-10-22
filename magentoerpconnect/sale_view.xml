@@ -11,10 +11,10 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <field name="referential_id" position="replace">
-                    <field name="referential_id" attrs="{'readonly': [('magento_shop','=',True)]}"/>
+                    <field name="referential_id" attrs="{'readonly': [('type_name', '=', 'Magento')]}"/>
                 </field>
                 <page string="External Shop Settings" position="before">
-                    <page string="Magento Actions">
+                    <page string="Magento Actions" attrs="{'invisible': [('type_name', '!=', 'Magento')]}">
                         <group col="6" colspan="4">
                             <group col="3" colspan="3">
                                 <separator string="Catalog" colspan="3"/>
@@ -68,7 +68,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('magento_shop', '=', True)]</field>
+            <field name="domain">[['type_name', '=', 'Magento']]</field>
         </record>
 
         <record id="base_sale_multichannel_view_order_form_magento" model="ir.ui.view">
