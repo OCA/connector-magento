@@ -45,16 +45,15 @@ class res_partner_address(MagerpModel):
                    "WHERE table_name = 'res_partner_address' "
                    "AND column_name = 'firstname'")
         if cr.fetchone():
-            cr.execute("UPDATE res_partner_address"
-                            " SET name = (firstname || ' ' || lastname)"
-                            " WHERE firstname is not Null"
-                            " AND lastname is not Null")
-            cr.execute("UPDATE res_partner_address"
-                            " SET name = lastname"
-                            " WHERE firstname is Null")
-            cr.execute("UPDATE res_partner_address"
-                            " SET name = firstname"
-                            " WHERE lastname is Null")
+            cr.execute(
+                "UPDATE res_partner_address "
+                "SET name = CASE "
+                  "WHEN firstname IS NOT NULL AND lastname IS NOT NULL THEN (firstname || ' ' || lastname) "
+                  "WHEN firstname IS NOT NULL AND lastname IS NULL THEN firstname "
+                  "WHEN firstname IS NULL AND lastname IS NOT NULL THEN lastname "
+                  "ELSE name "
+                "END"
+                  )
             cr.execute("ALTER TABLE res_partner_address "
                        "RENAME COLUMN firstname TO first_name")
             cr.execute("ALTER TABLE res_partner_address "
