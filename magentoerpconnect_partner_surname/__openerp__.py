@@ -22,7 +22,7 @@
 
 {
     'name': 'magentoerpconnect_partner_surname',
-    'version': '0.1',
+    'version': '6.1.0',
     'category': 'Generic Modules/Others',
     'license': 'AGPL-3',
     'description': """

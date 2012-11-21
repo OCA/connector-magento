@@ -24,7 +24,7 @@
 
 {
     'name': 'magentoerpconnect_magento_invoice',
-    'version': '0.1',
+    'version': '6.1.1',
     'category': 'Generic Modules',
     'license': 'AGPL-3',
     'description': """This module will use the Magento invoice number for the OpenERP Invoice.

@@ -20,7 +20,7 @@
 ##############################################################################
 
 {'name' : 'Magentoerpconnect Initialize Stock',
- 'version' : '1.0',
+ 'version' : '6.1.0',
  'author' : 'Camptocamp',
  'maintainer': 'Camptocamp',
  'license': 'AGPL-3',

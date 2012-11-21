@@ -21,7 +21,7 @@
 
 {
     'name': 'Magentoerpconnect Partner Fiscal Category',
-    'version': '1.0',
+    'version': '6.1.0',
     'category': 'Generic Modules',
     "author" : "Camptocamp",
     'license': 'AGPL-3',

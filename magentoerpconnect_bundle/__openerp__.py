@@ -22,7 +22,7 @@
 
 {
     'name': 'magentoerpconnect_bundle',
-    'version': '0.1',
+    'version': '6.1.0',
     'category': 'Generic Modules',
     'license': 'AGPL-3',
     'description': """Module to extend the module magentoerpconnect, with it you will be able to create bundle product in magento directly from Openerp.
