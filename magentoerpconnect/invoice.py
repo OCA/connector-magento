@@ -81,6 +81,7 @@ class account_invoice(Model):
                 return invoice_ids[0]
         except Exception, e:
             external_session.logger.error('Failed to map the invoice with an existing order for the order %s. Error : %s'%(order_increment_id, e))
+        return True
 
     def create_magento_invoice(self, cr, uid, external_session, invoice_id, order_increment_id, context=None):
         item_qty = self.get_invoice_items(cr, uid, external_session, invoice_id, order_increment_id, context=context)
@@ -94,6 +95,7 @@ class account_invoice(Model):
                 return invoice_id
             else:
                 raise except_osv(_('Magento Error'), _('Failed to synchronise Magento invoice with OpenERP invoice'))
+        return True
 
     def ext_create(self, cr, uid, external_session, resources, mapping=None, mapping_id=None, context=None):
         ext_create_ids={}
@@ -126,6 +128,7 @@ class account_invoice(Model):
     def export_invoice(self, cr, uid, ids, context=None):
         for invoice in self .browse(cr, uid, ids, context=context):
             self._export_one_invoice(cr, uid, invoice, context=context)
+        return True
 
 
 class account_invoice_line(Model):
