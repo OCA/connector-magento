@@ -1,6 +1,6 @@
 id,sequence,type,evaluation_type,external_field,field_id:id,external_type,alternative_key,mapping_id:id,function_name,in_function,out_function,child_mapping_id:id,datetime_format
 magentoerpconnect.mag1500_res_partner_address_name,,in_out,function,firstname,base.field_res_partner_address_name,unicode,True,magentoerpconnect.mag1500_res_partner_address,name,"if 'firstname' in resource or 'lastname' in resource:
-    result = [('name', resource.get('firstname', '') + (resource.get('firstname') and ' ') + resource.get('lastname', ''))]","if 'name' in resource:
+    result = [('name', (resource.get('firstname') or '') + (resource.get('firstname') and ' ' or '') + (resource.get('lastname') or ''))]","if 'name' in resource:
     name_split = name.split(' ')
     if len(name_split) >= 2:
         firstname = name_split[0]

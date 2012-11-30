@@ -11,7 +11,8 @@ mag1500_res_partner_website_id,,in_out,direct,website_id,magentoerpconnect.field
 mag1500_res_partner_created_in,,in_out,direct,created_in,magentoerpconnect.field_res_partner_created_in,unicode,False,magentoerpconnect.mag1500_res_partner,,,,,
 mag1500_res_partner_created_at,,in_out,direct,created_at,magentoerpconnect.field_res_partner_created_at,unicode,False,magentoerpconnect.mag1500_res_partner,,,,,
 mag1500_res_partner_updated_at,,in_out,direct,updated_at,magentoerpconnect.field_res_partner_updated_at,unicode,False,magentoerpconnect.mag1500_res_partner,,,,,%Y-%m-%d %H:%M:%S
-mag1500_res_partner_name,,in_out,function,firstname,,unicode,False,magentoerpconnect.mag1500_res_partner,name,"result = [('name',resource['firstname'] + ' ' + resource['lastname'])]","add_id = self.browse(cr, uid, resource['id'])
+mag1500_res_partner_name,,in_out,function,firstname,,unicode,False,magentoerpconnect.mag1500_res_partner,name,"if 'firstname' in resource or 'lastname' in resource:
+    result = [('name', (resource.get('firstname') or '') + (resource.get('firstname') and ' ' or '') + (resource.get('lastname') or ''))]","add_id = self.browse(cr, uid, resource['id'])
 fn = add_id.address[0].firstname
 ln = add_id.address[0].lastname
 result=[('firstname', fn), ('lastname', ln)]",,
