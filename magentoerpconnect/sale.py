@@ -390,7 +390,7 @@ class sale_order(Model):
         resource['lastname'] = resource['customer_lastname']
         resource['email'] = resource['customer_email']
 
-        shop = self.pool.get('sale.shop').browse(cr, uid, defaults['shop_id'], context=context)
+        shop = external_session.sync_from_object
         partner_defaults = {'website_id': shop.shop_group_id.id}
         res = self.pool.get('res.partner')._record_one_external_resource(cr, uid, external_session, resource,\
                                 mapping=mapping, defaults=partner_defaults, context=context)
@@ -407,14 +407,17 @@ class sale_order(Model):
                      mapping_line_filter_ids=None, parent_data=None, previous_result=None, defaults=None, context=None):
         resource = self.clean_magento_resource(cr, uid, resource, context=context)
         resource = self.clean_magento_items(cr, uid, resource, context=context)
-        if not resource['customer_id']:
-            #If there is not partner it's a guest order
-            #So we remove the useless information
-            #And create a partner on fly and set the data in the default value
-            del resource['customer_id']
-            del resource['billing_address']['customer_id']
-            del resource['shipping_address']['customer_id']
-            defaults = self.create_onfly_partner(cr, uid, external_session, resource, mapping, defaults, context=context)
+        for line in mapping[mapping_id]['mapping_lines']:
+            if line['name'] == 'customer_id' and not resource.get('customer_id'):
+                #If there is not partner it's a guest order
+                #So we remove the useless information
+                #And create a partner on fly and set the data in the default value
+                #We only do this if the customer_id is in the mapping line
+                #Indeed when we check if a sale order exist only the name is asked for convertion
+                resource.pop('customer_id', None)
+                resource['billing_address'].pop('customer_id', None)
+                resource['shipping_address'].pop('customer_id', None)
+                defaults = self.create_onfly_partner(cr, uid, external_session, resource, mapping, defaults, context=context)
 
         return super(sale_order, self)._transform_one_resource(cr, uid, external_session, convertion_type, resource,\
                  mapping, mapping_id,  mapping_line_filter_ids=mapping_line_filter_ids, parent_data=parent_data,\
@@ -630,7 +633,7 @@ class sale_order(Model):
         # in the sale order and sometime it's equal to NONE in the address but at least the
         # the information is correct in one of this field
         # So I make this ugly code to try to fix it.
-        if not resource['customer_id']:
+        if not resource.get('customer_id'):
             if resource['billing_address'].get('customer_id'):
                 resource['customer_id'] = resource['billing_address']['customer_id']
         else:
