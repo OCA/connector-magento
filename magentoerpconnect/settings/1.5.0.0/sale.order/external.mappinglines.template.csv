@@ -27,5 +27,17 @@ mag1500_sale_order_carrier_id=>,,in,function,shipping_method,,unicode,False,mag1
         model, product_id = model_data_obj.get_object_reference(cr, uid, 'base_sale_multichannels', 'product_product_shipping')
         carrier_id = self.pool.get('delivery.carrier').create(cr, uid, {'partner_id' : fake_partner_id, 'product_id' : product_id, 'name' : ifield, 'magento_code' : ifield})
         result=[('carrier_id', carrier_id)]",,,
-mag1500_sale_order_shipping_amount_tax_included=>,,in,function,base_shipping_incl_tax,,float,False,mag1500_sale_order,shipping_amount_tax_included,"result=[('shipping_amount_tax_included', ifield - float(resource.get('shipping_discount_amount', 0.0))), ('shipping_tax_rate', ifield and (ifield/float(data['shipping_amount'])-1)) or 0]",,,
+mag1500_sale_order_shipping_amount_tax_included=>,,in,function,base_shipping_incl_tax,,float,False,mag1500_sale_order,shipping_amount_tax_included,"amount_tax_inc = float(resource.get('base_shipping_incl_tax', 0.0)) - float(resource.get('shipping_discount_amount', 0.0))
+amount_tax_exc = float(resource.get('shipping_amount', 0))
+
+if amount_tax_exc:
+    tax_rate = amount_tax_inc/amount_tax_exc -1
+else:
+    tax_rate = 0
+
+result=[
+    ('shipping_amount_tax_included', amount_tax_inc),
+    ('shipping_amount_tax_excluded', amount_tax_exc),
+    ('shipping_tax_rate', tax_rate),
+]",,,
 mag1500_sale_order_date,,in,direct,created_at,sale.field_sale_order_date_order,datetime,False,mag1500_sale_order,,,,,%Y-%m-%d %H:%M:%S
