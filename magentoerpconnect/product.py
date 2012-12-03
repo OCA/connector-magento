@@ -1224,7 +1224,7 @@ class product_product(product_mag_osv):
                 set_to_product_ids[product.set.id] = [product.id]
             else:
                 set_to_product_ids[product.set.id].append(product.id)
-        for attribut_id, product_ids in set_to_product_ids.items():
+        for attribut_id, product_ids in set_to_product_ids.iteritems():
             context['attribut_set_id'] = attribut_id
             resources.update(super(product_product, self)._get_oe_resources(
                                                 cr, uid, external_session, product_ids, langs,
