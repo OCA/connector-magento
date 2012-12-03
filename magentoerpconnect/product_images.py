@@ -30,13 +30,18 @@ from .magerp_osv import MagerpModel
 from base_external_referentials.decorator import commit_now
 from base_external_referentials.decorator import only_for_referential
 
-#TODO the option small_image, thumbnail, exclude, base_image, should
-#be store diferently indeed this is not compatible with mutli instance
-#(maybe serialized will be a good solution).  Moreover when a small is
-#selected the flag on other image should be remove as magento does
+#TODO Option on image should be compatible with multi-referential
+#Indeed when you have two Magento maybe you do not want to use the
+#same image for the base_image, thumbnail ot small_image
+#Maybe the solution will to use a serialized field that store the
+#value for each referential
+
+#TODO As only one image can be a small_image, thumbnail or base_image
+#We should add some constraint or automatically remove the flag on the
+#other image of the product.
 
 #TODO refactor all of this code and use the generic function from
-#base_external_referentials.  To must useless line of code
+#base_external_referentials.
 
 class product_images(MagerpModel):
     _inherit = "product.images"
