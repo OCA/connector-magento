@@ -19,24 +19,14 @@
 #                                                                               #
 #################################################################################
 
-from osv import osv, fields
-import netsvc
+from openerp.osv.orm import Model
+from openerp.osv import fields
 
 
-class product_item_set_line(osv.osv):
-    
+class product_item_set_line(Model):
     _inherit = "product.item.set"
-    
-
     _columns = {
         'magento_render_type': fields.selection((('list','List'), ('c','Check Box')), 'Magento Render'),
-
-    }
-
-    _defaults = {
-
-    }
-
-product_item_set_line()
+        }
 
 

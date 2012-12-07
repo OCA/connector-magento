@@ -18,14 +18,14 @@
 #########################################################################
 {
     "name" : "Magento e-commerce",
-    "version" : "1.0",
+    "version" : "6.1.1",
     "depends" : ["base",
                  "product",
                  "product_m2mcategories",
                  'delivery',
                  "base_sale_multichannels",
                  "product_images_olbs",
-                 "product_links",
+                 "product_links_sync",
                 ],
     "author" : "MagentoERPconnect Core Editors",
     "description": """Magento E-commerce management

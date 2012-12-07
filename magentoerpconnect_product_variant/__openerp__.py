@@ -22,7 +22,7 @@
 
 {
     'name': 'magentoerpconnect_configurable_product',
-    'version': '0.1',
+    'version': '6.1.0',
     'category': 'Generic Modules',
     'license': 'AGPL-3',
     'description': """Module to extend the module magentoerpconnect, with it you will be able to create variant of product in magento directly from Openerp. Enjoy it !
@@ -36,9 +36,9 @@ NB: in magento the variant are called 'configurable product'""",
         'images/magentoerpconnect.png',
     ],
     "website" : "https://launchpad.net/magentoerpconnect",
-    'depends': ['magentoerpconnect', 'product_variant_multi'], 
+    'depends': ['magentoerpconnect', 'product_variant_multi'],
     'init_xml': [],
-    'update_xml': [ 
+    'update_xml': [
             'product_view.xml',
 #            'settings/1.3.2.4/external.mappinglines.template.csv',
             'settings/1.5.0.0/external.mappinglines.template.csv',

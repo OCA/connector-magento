@@ -19,10 +19,11 @@
 #
 ##############################################################################
 
-from osv import osv, fields
+from openerp.osv.orm import Model
+from openerp.osv import fields
 
 
-class sale_order(osv.osv):
+class sale_order(Model):
     _inherit = "sale.order"
 
     def _merge_sub_items(self, cr, uid, product_type, top_item, child_items, context=None):
@@ -47,15 +48,15 @@ class sale_order(osv.osv):
         else:
             return super(sale_order, self)._merge_sub_items(cr, uid, product_type,
                                             top_item, child_items, context=context)
-    def oe_create(self, cr, uid, 
-		  external_session, vals, resource, defaults, context):
+    def oe_create(self, cr, uid,
+          external_session, vals, resource, defaults, context):
 
-	order_id = super(sale_order, self).\
-	    oe_create(cr, uid, external_session,
-		      vals, 
-		      resource, 
-		      defaults=defaults, 
-		      context=context)
+    order_id = super(sale_order, self).\
+        oe_create(cr, uid, external_session,
+              vals,
+              resource,
+              defaults=defaults,
+              context=context)
 
         order_line_obj = self.pool.get('sale.order.line')
         order = self.browse(cr, uid, order_id, context=context)
@@ -86,17 +87,11 @@ class sale_order(osv.osv):
             res['sale_line_bundle_id'] = line.bundle_parent_id.id
         return res
 
-sale_order()
 
-
-class sale_order_line(osv.osv):
-
+class sale_order_line(Model):
     _inherit = 'sale.order.line'
-
     _columns = {
         'bundle_parent_id': fields.many2one('sale.order.line', 'Bundle Line'),
         'magento_item_id': fields.integer('Magento Item ID'),
         'magento_parent_item_id': fields.integer('Magento Item ID'),
-    }
-
-sale_order_line()
+        }

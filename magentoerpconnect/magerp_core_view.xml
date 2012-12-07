@@ -1,172 +1,168 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-	<data>
-		<!--Magento Instances Tree/Form view  -->
+    <data>
+        <!--Magento Instances Tree/Form view  -->
 
-		<record model="ir.ui.view" id="magerp_instances_form">
-			<field name="name">External Referentials</field>
-			<field name="model">external.referential</field>
-			<field name="inherit_id" ref="base_external_referentials.external_referential_form_view" />
-			<field name="type">form</field>
-			<field name="priority">30</field>
-			<field name="arch" type="xml">
-			    <xpath expr="/form/group[2]/notebook/page[@string='Referential Actions']" position="replace">
-					<page string="Referential Actions">
-			        	<separator string="Compulsory" colspan="4" />
-			            <button name="refresh_mapping" string="1 - Reload Referential Mapping Templates" colspan="2" type="object" />
-        				<button name="import_referentials" string="2 - Synchronize Referential Settings" colspan="2" type="object" attrs="{'readonly':[('mapping_ids','=',[])]}"/>
-        				<separator string="Optional - Initial import only" colspan="4" />
-						<button name="import_customer_groups" string="1 - Import Customer Groups (Partner Categories)" colspan="2" type="object" />
-						<group colspan="2" col="12">
-						    <button name="sync_attribs" string="5 - Import Product Attributes" colspan="10" type="object" />
-							<field name="import_all_attributs"/>
-						</group>
-						<button name="import_product_categories" string="2 - Import Product Categories" colspan="2" type="object" />
-						<group colspan="2" col="14">
+        <record model="ir.ui.view" id="magerp_instances_form">
+            <field name="name">External Referentials</field>
+            <field name="model">external.referential</field>
+            <field name="inherit_id" ref="base_external_referentials.external_referential_form_view" />
+            <field name="type">form</field>
+            <field name="priority">30</field>
+            <field name="arch" type="xml">
+                <group name="compulsory" position="after">
+                    <group name="magento" col="4" colspan="4" attrs="{'invisible': [['type_name', '!=', 'Magento']]}">
+                        <separator string="Optional - Initial import only" colspan="4" />
+                        <button name="import_customer_groups" string="1 - Import Customer Groups (Partner Categories)" colspan="2" type="object" />
+                        <group colspan="2" col="12">
+                            <button name="sync_attribs" string="5 - Import Product Attributes" colspan="10" type="object" />
+                            <field name="import_all_attributs"/>
+                        </group>
+                        <button name="import_product_categories" string="2 - Import Product Categories" colspan="2" type="object" />
+                        <group colspan="2" col="14">
                             <group colspan="8">
-							    <button name="sync_products" string="6 - Import Products" type="object" attrs="{'invisible':[('import_image_with_product','=',True)]}" />
+                                <button name="sync_products" string="6 - Import Products" type="object" attrs="{'invisible':[('import_image_with_product','=',True)]}" />
                                 <button name="sync_products" string="6 - Import Products And Images" type="object" attrs="{'invisible':[('import_image_with_product','=',False)]}" />
                             </group>
-							<field name="import_image_with_product"/>
+                            <field name="import_image_with_product"/>
                             <field name="import_links_with_product"/>
-							<field name="last_imported_product_id" string=""/>
-						</group>
-						<button name="sync_attrib_sets" string="3 - Import Product Attribute Sets" colspan="2" type="object" />
-						<button name="sync_images" string="7 - Import Images" colspan="2" type="object" attrs="{'invisible':[('import_image_with_product','=',True)]}"/>
-						<button name="sync_attrib_groups" string="4 - Import Attribute Groups" colspan="2" type="object" />
+                            <field name="last_imported_product_id" string=""/>
+                        </group>
+                        <button name="sync_attrib_sets" string="3 - Import Product Attribute Sets" colspan="2" type="object" />
+                        <button name="sync_images" string="7 - Import Images" colspan="2" type="object" attrs="{'invisible':[('import_image_with_product','=',True)]}"/>
+                        <button name="sync_attrib_groups" string="4 - Import Attribute Groups" colspan="2" type="object" />
                         <button name="sync_product_links" string="8 - Import Product Links" colspan="2" type="object" />
-        				<separator string="Default values" colspan="4" />
-						<field name="default_pro_cat" required="1"/>
-						<field name="default_lang_id" required="1"/>
-<!--							<button name="sync_customer_addresses" string="Sync Customer Addresses" colspan="2" type="object" />-->
-<!--							<button name="export_products" string="Export Products" colspan="2" type="object" />-->
-                    </page>
-				</xpath>
+                        <separator string="Default values" colspan="4" />
+                        <field name="default_pro_cat" attrs="{'required': [['type_name', '=', 'Magento']]}"/>
+                        <field name="default_lang_id" attrs="{'required': [['type_name', '=', 'Magento']]}"/>
+                    </group>
+                </group>
 
-			    <xpath expr="/form/group[2]/notebook" position="inside">
-					<page string="Websites">
-						<field name="shop_group_ids" nolabel="1" />
-					</page>
-					<!--							<page string="Store Views">
-						<field name="storeviews" nolabel="1" />
-					</page>
-					<page string="Groups (Stores)">
-							<field name="shop_ids" nolabel="1" />
-												</page>-->
-					<page string="Product Attributes / Sets">
-						<newline />
-						<field name="attribute_sets" nolabel="1" colspan="4"/>
-					</page>
-					<page string="Advanced">
+                <notebook position="inside">
+                    <page string="Websites" attrs="{'invisible': [['type_name', '!=', 'Magento']]}">
+                        <field name="shop_group_ids" nolabel="1" />
+                    </page>
+                    <!--                            <page string="Store Views">
+                        <field name="storeviews" nolabel="1" />
+                    </page>
+                    <page string="Groups (Stores)">
+                            <field name="shop_ids" nolabel="1" />
+                                                </page>-->
+                    <page string="Product Attributes / Sets" attrs="{'invisible': [['type_name', '!=', 'Magento']]}">
+                        <newline />
+                        <field name="attribute_sets" nolabel="1" colspan="4"/>
+                    </page>
+                    <page string="Advanced" attrs="{'invisible': [['type_name', '!=', 'Magento']]}">
                         <separator string="Partner" colspan="4"/>
                         <group colspan="2" col="12">
-						    <button name="sync_partner" string="Import All Partners" colspan="10" type="object" />
+                            <button name="sync_partner" string="Import All Partners" colspan="10" type="object" />
                             <field name="last_imported_partner_id" string=""/>
                         </group>
-						<button name="sync_newsletter" string="Import Newsletter Subscribers" colspan="2" type="object" />
-						<button name="sync_newsletter_unsubscriber" string="Export Newsletter UnSubscribers" colspan="2" type="object" />
+                        <button name="sync_newsletter" string="Import Newsletter Subscribers" colspan="2" type="object" />
+                        <button name="sync_newsletter_unsubscriber" string="Export Newsletter UnSubscribers" colspan="2" type="object" />
                         <separator string="Others" colspan="4"/>
                         <field name="active" select="2"/>
-					</page>
-				</xpath>
-			</field>
-		</record>
-		<record id="act_magerp_instances_form" model="ir.actions.act_window">
-			<field name="name">Magento Instances</field>
-			<field name="res_model">external.referential</field>
-			<field name="type">ir.actions.act_window</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">tree,form</field>
-			<field name="view_id" ref="base_external_referentials.external_referential_tree_view" />
-		</record>
+                    </page>
+                </notebook>
+            </field>
+        </record>
+        <record id="act_magerp_instances_form" model="ir.actions.act_window">
+            <field name="name">Magento Instances</field>
+            <field name="res_model">external.referential</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="base_external_referentials.external_referential_tree_view" />
+            <field name="domain">[['type_name', '=', 'Magento']]</field>
+        </record>
 
-		<!--Magento Websites Tree/Form view  -->
-		<record model="ir.ui.view" id="magerp_websites_form">
-			<field name="name">external.shop.group.form</field>
-			<field name="model">external.shop.group</field>
-			<field name="type">form</field>
-			<field name="arch" type="xml">
-				<form string="Magento websites">
-					<group col="4" colspan="4">
-						<field name="name" readonly="1" />
-						<field name="code" readonly="1" />
-						<field name="is_default" readonly="1" />
-						<field name="sort_order" readonly="1" />
-						<field name="default_shop_id" readonly="1" />
-						<field name="referential_id" readonly="1" />
-					</group>
-					<group col="4" colspan="4">
-						<field name="shop_ids" readonly="1"/>
-					</group>
-				</form>
-			</field>
-		</record>
-		<record model="ir.ui.view" id="magerp_websites_tree">
-			<field name="name">external.shop.group.tree</field>
-			<field name="model">external.shop.group</field>
-			<field name="type">tree</field>
-			<field name="arch" type="xml">
-				<tree string="Magento websites">
-					<field name="name" readonly="1" select="1" />
-					<field name="code" readonly="1" select="1" />
-					<field name="is_default" readonly="1" select="2" />
-					<field name="sort_order" readonly="1" select="2" />
-					<field name="default_shop_id" readonly="1" select="2" />
-					<field name="shop_ids" readonly="1" />
-				</tree>
-			</field>
-		</record>
-		<record id="act_magerp_websites_form" model="ir.actions.act_window">
-			<field name="name">Magento websites</field>
-			<field name="res_model">external.shop.group</field>
-			<field name="type">ir.actions.act_window</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">tree,form</field>
-			<field name="view_id" ref="magerp_websites_tree" />
-		</record>
+        <!--Magento Websites Tree/Form view  -->
+        <record model="ir.ui.view" id="magerp_websites_form">
+            <field name="name">external.shop.group.form</field>
+            <field name="model">external.shop.group</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Magento websites">
+                    <group col="4" colspan="4">
+                        <field name="name" readonly="1" />
+                        <field name="code" readonly="1" />
+                        <field name="is_default" readonly="1" />
+                        <field name="sort_order" readonly="1" />
+                        <field name="default_shop_id" readonly="1" />
+                        <field name="referential_id" readonly="1" />
+                    </group>
+                    <group col="4" colspan="4">
+                        <field name="shop_ids" readonly="1"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="magerp_websites_tree">
+            <field name="name">external.shop.group.tree</field>
+            <field name="model">external.shop.group</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Magento websites">
+                    <field name="name" readonly="1" select="1" />
+                    <field name="code" readonly="1" select="1" />
+                    <field name="is_default" readonly="1" select="2" />
+                    <field name="sort_order" readonly="1" select="2" />
+                    <field name="default_shop_id" readonly="1" select="2" />
+                    <field name="shop_ids" readonly="1" />
+                </tree>
+            </field>
+        </record>
+        <record id="act_magerp_websites_form" model="ir.actions.act_window">
+            <field name="name">Magento websites</field>
+            <field name="res_model">external.shop.group</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="magerp_websites_tree" />
+        </record>
 
-		<!--Magento storeviews Tree/Form view  -->
-		<record model="ir.ui.view" id="magerp_storeviews_form">
-			<field name="name">magerp.storeviews.form</field>
-			<field name="model">magerp.storeviews</field>
-			<field name="type">form</field>
-			<field name="arch" type="xml">
-				<form string="Magento storeviews">
-					<group col="4" colspan="4">
-						<field name="name" readonly="1" />
-						<field name="code" readonly="1" />
-						<field name="shop_id" readonly="1" />
-						<field name="website_id" readonly="1" />
-						<field name="is_active" readonly="1" />
-						<field name="sort_order" readonly="1" />
-						<field name="lang_id" />
-					</group>
-				</form>
-			</field>
-		</record>
-		<record model="ir.ui.view" id="magerp_storeviews_tree">
-			<field name="name">magerp.storeviews.tree</field>
-			<field name="model">magerp.storeviews</field>
-			<field name="type">tree</field>
-			<field name="arch" type="xml">
-				<tree string="Magento storeviews">
-					<field name="name" readonly="1" select="1" />
-					<field name="code" readonly="1" select="1" />
-					<field name="shop_id" readonly="1" select="1" />
-					<field name="is_active" readonly="1" select="2" />
-					<field name="sort_order" readonly="1" select="2" />
-					<field name="lang_id" />
-				</tree>
-			</field>
-		</record>
-		<record id="act_magerp_storeviews_form" model="ir.actions.act_window">
-			<field name="name">Magento storeviews</field>
-			<field name="res_model">magerp.storeviews</field>
-			<field name="type">ir.actions.act_window</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">tree,form</field>
-			<field name="view_id" ref="magerp_storeviews_tree" />
-		</record>
+        <!--Magento storeviews Tree/Form view  -->
+        <record model="ir.ui.view" id="magerp_storeviews_form">
+            <field name="name">magerp.storeviews.form</field>
+            <field name="model">magerp.storeviews</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Magento storeviews">
+                    <group col="4" colspan="4">
+                        <field name="name" readonly="1" />
+                        <field name="code" readonly="1" />
+                        <field name="shop_id" readonly="1" />
+                        <field name="website_id" readonly="1" />
+                        <field name="is_active" readonly="1" />
+                        <field name="sort_order" readonly="1" />
+                        <field name="lang_id" />
+                    </group>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="magerp_storeviews_tree">
+            <field name="name">magerp.storeviews.tree</field>
+            <field name="model">magerp.storeviews</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Magento storeviews">
+                    <field name="name" readonly="1" select="1" />
+                    <field name="code" readonly="1" select="1" />
+                    <field name="shop_id" readonly="1" select="1" />
+                    <field name="is_active" readonly="1" select="2" />
+                    <field name="sort_order" readonly="1" select="2" />
+                    <field name="lang_id" />
+                </tree>
+            </field>
+        </record>
+        <record id="act_magerp_storeviews_form" model="ir.actions.act_window">
+            <field name="name">Magento storeviews</field>
+            <field name="res_model">magerp.storeviews</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="magerp_storeviews_tree" />
+        </record>
 
-	</data>
+    </data>
 </openerp>

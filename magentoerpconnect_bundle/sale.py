@@ -19,10 +19,10 @@
 #                                                                               #
 #################################################################################
 
-from osv import osv
+from openerp.osv.orm import Model
 
 
-class sale_order(osv.osv):
+class sale_order(Model):
     _inherit = "sale.order"
 
     def _merge_sub_items(self, cr, uid, product_type, top_item, child_items, context=None):
@@ -37,5 +37,3 @@ class sale_order(osv.osv):
         else:
             return super(sale_order, self)._merge_sub_items(cr, uid, product_type,
                                             top_item, child_items, context=context)
-    
-sale_order()

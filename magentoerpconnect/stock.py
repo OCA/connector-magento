@@ -21,15 +21,14 @@
 
 import xmlrpclib
 
-from osv import fields,osv
-from tools.translate import _
-from openerp.addons.base_sale_multichannels.sale import \
-    ExternalShippingCreateError
+from openerp.osv.orm import Model
+from openerp.tools.translate import _
+from base_sale_multichannels.sale import ExternalShippingCreateError
 
 import logging
 _logger = logging.getLogger(__name__)
 
-class stock_picking(osv.osv):
+class stock_picking(Model):
 
     _inherit = "stock.picking"
 
@@ -122,5 +121,3 @@ class stock_picking(osv.osv):
         if res:
             _logger.info("Successfully adding a tracking reference to the shipping with OpenERP id %s and ext id %s in external sale system", id, ext_shipping_id)
         return True
-
-stock_picking()

@@ -19,10 +19,12 @@
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.  #
 #########################################################################
 
-from osv import fields,osv
-from tools.translate import _
+from openerp.osv.orm import Model
+from openerp.osv import fields
+from openerp.osv.osv import except_osv
+from openerp.tools.translate import _
 
-class delivery_carrier(osv.osv):
+class delivery_carrier(Model):
     _inherit = "delivery.carrier"
 
     def _carrier_code(self, cr, uid, ids, name, args, context=None):
@@ -57,7 +59,7 @@ class delivery_carrier(osv.osv):
         carrier = self.read(
             cr, uid, id, ['magento_carrier_code', 'name'], context=context)
         if not carrier['magento_carrier_code'] in mag_carrier.keys():
-            raise osv.except_osv(
+            raise except_osv(
                 _("Error"),
                 _("The carrier %s doesn't have a magento_code valid !"
                   "The value %s is not in the carrier list %s "

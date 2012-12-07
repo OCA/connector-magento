@@ -20,7 +20,7 @@
 ##############################################################################
 {
     'name' : 'magento_product_auto_sku',
-    'version' : '1.0',
+    'version' : '6.1.0',
     'depends' : ['base', 'product', 'magentoerpconnect'],
     'author' : 'Camptocamp',
     'license': 'AGPL-3',

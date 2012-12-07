@@ -19,13 +19,13 @@
 #                                                                               #
 #################################################################################
 
-from osv import fields,osv
+from openerp.osv.orm import TransientModel
+from openerp.osv import fields
 
 
-class open_product_by_attribut_set(osv.osv_memory):
+class open_product_by_attribut_set(TransientModel):
     _name = 'open.product.by.attribut.set'
     _description = 'Wizard to open product by attributs set'
-
     _columns = {
         'attributs_set':fields.many2one('magerp.product_attribute_set', 'Attributs Set'),
         }
@@ -51,5 +51,3 @@ class open_product_by_attribut_set(osv.osv_memory):
         result['domain'] = "[('set', '=', %s)]" % attribute_set.id
         result['name'] = attribute_set.attribute_set_name
         return result
-
-open_product_by_attribut_set()

@@ -1,0 +1,2 @@
+id,sequence,type,evaluation_type,external_field,field_id:id,external_type,alternative_key,mapping_id:id,function_name,in_function,out_function,child_mapping_id:id,datetime_format
+mag1500_res_partner_group_id,,in_out,direct,group_id,account_fiscal_rules_partner_category.field_res_partner_fiscal_category_id,int,False,magentoerpconnect.mag1500_res_partner,,,,,

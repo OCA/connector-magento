@@ -41,16 +41,16 @@ result=[('order_policy', ifield['method'] in payments_mapping and payments_mappi
     clean = re.sub('\w:\w:|\w:\w+;', '', ifield)
     for each in clean.split('{'):
         if each.startswith('""label""'):
-            split_info = each.split(';')	
+            split_info = each.split(';')
             options_label.append('%s: %s [%s]' % (split_info[1], split_info[3], data['sku']))
-	
+
     result=[('notes',  """".join(options_label).replace('""""', '\n').replace('""', ''))]
 ",
 "mag_1324_erp_soline_pid","magento1324","sale.model_sale_order_line","product_id",,"in_out","function","unicode",,"context['alternative_key'] = data['sku']
 result=[('product_id',self.pool.get('product.product').extid_to_oeid(cr, uid, external_session, ifield, referential_id))]",
 "mag_1324_erp_soline_uomqty","magento1324","sale.model_sale_order_line","qty_ordered",,"in_out","function","unicode",,"result=[('product_uom_qty',ifield)]",
 "mag_1324_erp_soline_uosqty","magento1324","sale.model_sale_order_line","qty_ordered",,"in","function","unicode",,"result=[('product_uos_qty',ifield)]",
-"mag_1324_erp_soline_price","magento1324","sale.model_sale_order_line","price",,"in","function","unicode",,"if context.get('price_is_tax_included', False):             
+"mag_1324_erp_soline_price","magento1324","sale.model_sale_order_line","price",,"in","function","unicode",,"if context.get('price_is_tax_included', False):
     result=[('price_unit', (float(data['row_total']) + float(data['tax_amount']))/float(data['qty_ordered']))]
 else:
     result=[('price_unit', float(data['row_total'])/float(data['qty_ordered']))]",
@@ -60,16 +60,16 @@ else:
 "mag_1324_erp_procat_3","magento1324","product.model_product_category","parent_id",,"in_out","function","int",,"record_id = self.pool.get('ir.model.data').search(cr, uid, [('model', '=', self._name), ('name', '=', self.prefixed_id(ifield))])
 parent_id = False
 if record_id:
-	parent_rec = self.pool.get('ir.model.data').read(cr,uid,record_id[0],[])
-	parent_id=parent_rec.get('res_id',False)
+    parent_rec = self.pool.get('ir.model.data').read(cr,uid,record_id[0],[])
+    parent_id=parent_rec.get('res_id',False)
 result=[('magento_parent_id',ifield),('parent_id',parent_id)]","magento_parent_id = False
 if record.get('parent_id',False):
-	magento_parent_id = self.oeid_to_extid(cr, uid, record.get('parent_id')[0], referential_id)
-	if not magento_parent_id:
-		self.ext_export(cr,uid,[record.get('parent_id',[False])[0]],[referential_id],{},context=context)
-		magento_parent_id = self.oeid_to_extid(cr, uid, record.get('parent_id')[0], referential_id)
+    magento_parent_id = self.oeid_to_extid(cr, uid, record.get('parent_id')[0], referential_id)
+    if not magento_parent_id:
+        self.ext_export(cr,uid,[record.get('parent_id',[False])[0]],[referential_id],{},context=context)
+        magento_parent_id = self.oeid_to_extid(cr, uid, record.get('parent_id')[0], referential_id)
 if magento_parent_id:
-	result = [('parent_id',magento_parent_id)]"
+    result = [('parent_id',magento_parent_id)]"
 "mag_1324_erp_procat_4","magento1324","product.model_product_category","is_active",,"in_out","function","unicode",,"result=[('is_active',ifield and (eval(ifield)) or False)]","result=[('is_active',record['is_active'])]"
 "mag_1324_erp_procat_5","magento1324","product.model_product_category","description",,"in_out","function","unicode",,"result=[('description',ifield)]","result=[('description',record['description'])]"
 "mag_1324_erp_procat_6","magento1324","product.model_product_category","meta_title",,"in_out","function","unicode",,"result=[('meta_title',ifield)]","result=[('meta_title',record['meta_title'])]"
@@ -102,20 +102,20 @@ result=[('default_sort_by', cat_attr_option.value)]"
 "mag_1324_erp_procat_14","magento1324","product.model_product_category","updated_at",,"in","function","unicode",,"result=[('magerp_stamp',ifield)]",
 "mag_1324_erp_procat_15","magento1324","product.model_product_category","image",,"in_out","function","unicode",,"image_binary = False
 if ifield and not ifield=='None':
-	try:
-		image_binary = conn.call('ol_catalog_category_media.info', [int(data['category_id'])])
-	except Exception, e:
-		print e
-		pass
-	if image_binary:
-		image_binary = base64.encodestring(base64.urlsafe_b64decode(image_binary[0]['image_data']))
+    try:
+        image_binary = conn.call('ol_catalog_category_media.info', [int(data['category_id'])])
+    except Exception, e:
+        print e
+        pass
+    if image_binary:
+        image_binary = base64.encodestring(base64.urlsafe_b64decode(image_binary[0]['image_data']))
 result=[('image_name',ifield),('image',image_binary)]","if record['image']:
-	img = base64.decodestring(record['image'])
-        img_bin_enc = base64.encodestring(img) 
+    img = base64.decodestring(record['image'])
+        img_bin_enc = base64.encodestring(img)
         conn.call('ol_catalog_category_media.create', [record['image_name'], img_bin_enc])
-	result = [('image',record['image_name'])]
+    result = [('image',record['image_name'])]
 else:
-	result=[]"
+    result=[]"
 "mag_1324_erp_procat_16","magento1324","product.model_product_category","include_in_menu",,"in_out","function","unicode",,"result=[('include_in_menu', ifield and (eval(ifield)) or False)]","result=[('include_in_menu',record['include_in_menu'])]"
 "mag_1324_erp_procat_17","magento1324","product.model_product_category","page_layout",,"in_out","function","unicode",,"if ifield:
     att_id = self.pool.get('magerp.product_category_attribute_options').get_create_option_id(cr, uid, ifield,'page_layout', context=context)
@@ -226,52 +226,52 @@ result=[('websites', ext_websites_ids)]"
 "magento_1324_prt_adr_6","magento1324","base.model_res_partner_address","is_active",,"in_out","function","unicode",,"result=[('active',bool(eval(ifield)))]",
 "magento_1324_prt_adr_7","magento1324","base.model_res_partner_address","country_id",,"in_out","function","unicode",,"result = self.pool.get('res.country').search(cr,uid,[('code','=',ifield)])
 if result and len(result)==1:
-	result=[('country_id',result[0])]
+    result=[('country_id',result[0])]
 else:
-	result=[]
+    result=[]
 ",
 "magento_1324_prt_adr_8","magento1324","base.model_res_partner_address","street",,"in_out","function","unicode",,"if ifield:
-	if len(ifield.split('\n')) ==2 :
-		result = [('street', ifield.split('\n')[0]) , ('street2', ifield.split('\n')[1])]
-	else :
-		result = [('street',ifield.replace('\\n',','))]
+    if len(ifield.split('\n')) ==2 :
+        result = [('street', ifield.split('\n')[0]) , ('street2', ifield.split('\n')[1])]
+    else :
+        result = [('street',ifield.replace('\\n',','))]
 else:
-	result = []",
+    result = []",
 "magento_1324_prt_adr_9","magento1324","base.model_res_partner_address","postcode",,"in_out","function","unicode",,"result=[('zip',ifield)]",
 "magento_1324_prt_adr_10","magento1324","base.model_res_partner_address","telephone",,"in_out","function","unicode",,"result=[('phone',ifield)]",
 "magento_1324_prt_adr_11","magento1324","base.model_res_partner_address","region",,"in_out","function","unicode",,"if ifield:
-	result = self.pool.get('res.country.state').search(cr,uid,[('name','ilike',ifield)])
-	if result and len(result)==1:
-		result = [('state_id',result[0])]
-	else:
-		result=[]
+    result = self.pool.get('res.country.state').search(cr,uid,[('name','ilike',ifield)])
+    if result and len(result)==1:
+        result = [('state_id',result[0])]
+    else:
+        result=[]
 else:
-	result=[]",
+    result=[]",
 "magento_1324_prt_adr_13","magento1324","base.model_res_partner_address","customer_id",,"in_out","function","int",,"result=self.pool.get('res.partner').extid_to_oeid(cr,uid,ifield,referential_id)
 if result:
-	result=[('partner_id',result)]
+    result=[('partner_id',result)]
 else:
-	result=[('partner_id',False)]",
+    result=[('partner_id',False)]",
 "magento_1324_prt_adr_14","magento1324","base.model_res_partner_address","address_type",,"in_out","function","unicode",,"if ifield=='billing':
-	result=[('type','invoice')]
+    result=[('type','invoice')]
 elif ifield=='shipping':
-	result=[('type','delivery')]
+    result=[('type','delivery')]
 else:
-	result=[]",
+    result=[]",
 "magento_1324_prt_adr_15","magento1324","base.model_res_partner_address","email",,"in_out","function","unicode",,"result=[('email',ifield)]",
 "magento_1324_prt_2","magento1324","base.model_res_partner","group_id",,"in_out","function","int",,"if ifield:
-	result=self.pool.get('res.partner.category').extid_to_oeid(cr,uid,ifield,referential_id)
-	if result:
-		result=[('group_id',result)]",
+    result=self.pool.get('res.partner.category').extid_to_oeid(cr,uid,ifield,referential_id)
+    if result:
+        result=[('group_id',result)]",
 "magento_1324_prt_3","magento1324","base.model_res_partner","store_id",,"in_out","function","int",,"if ifield:
-	result=self.pool.get('magerp.storeviews').extid_to_oeid(cr,uid,ifield,referential_id)
-	if result:
-		lang = self.pool.get('magerp.storeviews').browse(cr, uid, result).lang_id
-		result=[('store_id',result),('lang',lang and lang.code or False)]",
+    result=self.pool.get('magerp.storeviews').extid_to_oeid(cr,uid,ifield,referential_id)
+    if result:
+        lang = self.pool.get('magerp.storeviews').browse(cr, uid, result).lang_id
+        result=[('store_id',result),('lang',lang and lang.code or False)]",
 "magento_1324_prt_4","magento1324","base.model_res_partner","website_id",,"in_out","function","int",,"if ifield:
-	result=self.pool.get('external.shop.group').extid_to_oeid(cr,uid,ifield,referential_id)
-	if result:
-		result=[('website_id',result)]",
+    result=self.pool.get('external.shop.group').extid_to_oeid(cr,uid,ifield,referential_id)
+    if result:
+        result=[('website_id',result)]",
 "magento_1324_prt_5","magento1324","base.model_res_partner","created_in",,"in_out","function","unicode",,"result=[('created_in',ifield)]",
 "magento_1324_prt_6","magento1324","base.model_res_partner","created_at",,"in_out","function","unicode",,"result=[('created_at',ifield)]",
 "magento_1324_prt_7","magento1324","base.model_res_partner","updated_at",,"in_out","function","unicode",,"result=[('updated_at',ifield)]",
@@ -281,10 +281,10 @@ ln = add_id.address[0].lastname
 result=[('firstname', fn), ('lastname', ln)]"
 "magento_1324_prt_10","magento1324","base.model_res_partner","email",,"in_out","function","unicode",,"result=[('emailid',ifield)]",
 "magento_1324_prt_11","magento1324","base.model_res_partner","taxvat",,"in_out","function","unicode",,"if ifield:
-	result=[('mag_vat',ifield)]
+    result=[('mag_vat',ifield)]
 else:
-	result=[]",
+    result=[]",
 "magento_1324_prt_12","magento1324","base.model_res_partner","dob",,"in_out","function","unicode",,"if ifield:
-	result =[('mag_birthday',ifield[:10])]
+    result =[('mag_birthday',ifield[:10])]
 else:
-	result=[]",
+    result=[]",

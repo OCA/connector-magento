@@ -19,42 +19,30 @@
 #                                                                               #
 #################################################################################
 
-from osv import osv, fields
+from openerp.osv.orm import Model
+from openerp.osv import fields
 import netsvc
 
-class product_variant_dimension_type(osv.osv):
-    
+class product_variant_dimension_type(Model):
     _inherit = "product.variant.dimension.type"
-    
-
     _columns = {
-        'magento_attribut': fields.many2one('magerp.product_attributes', 'magento_attributs', domain = "[('frontend_input', '=', 'select'), ('is_global', '=', True), ('is_configurable', '=', True)]"),
-    }
+        'magento_attribut': fields.many2one('magerp.product_attributes', 'magento_attributs',
+                                            domain="[('frontend_input', '=', 'select'), ('is_global', '=', True), ('is_configurable', '=', True)]"),
+        }
 
-product_variant_dimension_type()
 
-
-class product_variant_dimension_option(osv.osv):
-    
+class product_variant_dimension_option(Model):
     _inherit = "product.variant.dimension.option"
-    
-
     _columns = {
-        #'magento_attribut': fields.related('dimension_id', 'magento_attribut', type="many2one", relation="magerp.product_attributes", string="Magento attributs", readonly=True),
-        'magento_attribut_option': fields.many2one('magerp.product_attribute_options', 'magento_attributs_option', domain = "[('attribute_id', '=', parent.magento_attribut)]"),
+        'magento_attribut_option': fields.many2one('magerp.product_attribute_options', 'magento_attributs_option',
+                                                   domain="[('attribute_id', '=', parent.magento_attribut)]"),
+        }
 
-    }
 
-
-product_variant_dimension_option()
-
-class product_product(osv.osv):
-    
+class product_product(Model):
     _inherit = "product.product"
 
-
-#TODO for update A configurable product have to be updated if a variant is added
-
+    #TODO for update A configurable product have to be updated if a variant is added
     def build_product_code_and_properties(self, cr, uid, ids, context=None):
         super(product_product, self).build_product_code_and_properties(cr, uid, ids, context=context)
         magento_product_exportable_ids = []
@@ -68,7 +56,7 @@ class product_product(osv.osv):
 #            vals['x_magerp_visibility'] = option_id
         self.write(cr, uid, magento_product_exportable_ids, vals, context=context)
         return True
-    
+
     def generate_variant_name(self, cr, uid, product_id, context=None):
         res = super(product_product, self).generate_variant_name(cr, uid, product_id, context)
         if res == '':
@@ -86,7 +74,7 @@ class product_product(osv.osv):
             else:
                 vals['product_type'] = 'simple'
         return super(product_product, self).create(cr, uid, vals, context)
-    
+
     def _filter_fields_to_return(self, cr, uid, field_names, context):
         #In the cas that the magento view is open from the button 'open magento fields', we can give a very customize view because only on for one product
         field_names = super(product_product, self)._filter_fields_to_return(cr, uid, field_names, context)
@@ -145,15 +133,11 @@ class product_product(osv.osv):
         return ext_update_ids
 
 
-product_product()
-
-class product_template(osv.osv):
-
+class product_template(Model):
     _inherit = "product.template"
-
     _columns = {
         'magento_exportable':fields.boolean('Exported all variant to Magento?'),
-    }
+        }
 
 
     #TODO improve me, it will be great to have the posibility to create various configurable per template
@@ -161,8 +145,6 @@ class product_template(osv.osv):
         res = super(product_template, self)._create_variant_list(cr, ids, uid, vals, context)
         res = res + [[]]
         return res
-
-product_template()
 
 
 

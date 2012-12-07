@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ###############################################################################
 #                                                                             #
-#   magentoerpconnect_report_synchronizer for OpenERP                         #
+#   base_sale_report_synchronizer for OpenERP                                 #
 #   Copyright (C) 2012 Akretion Sébastien BEAU <sebastien.beau@akretion.com>  #
 #                                                                             #
 #   This program is free software: you can redistribute it and/or modify      #
@@ -19,30 +19,15 @@
 #                                                                             #
 ###############################################################################
 
-from osv import osv, fields
-from tools.translate import _
+from openerp.osv.orm import Model
+from openerp.osv import fields
+import netsvc
 
-class account_invoice(osv.osv):
-    _inherit = "account.invoice"
+class external_referential(Model):
+    _inherit = "external.referential"
 
-    def ext_create(self, cr, uid, external_session, resources, mapping=None, mapping_id=None, context=None):
-        ext_create_ids={}
-        for resource_id, resource in resources.items():
-            resource = resource[resource.keys()[0]]
-            if resource['type'] == 'out_refund':
-                method = "synoopenerpadapter_creditmemo.addInfo"
-            elif resource['type'] == 'out_invoice':
-                method = "synoopenerpadapter_invoice.addInfo"
-            resource['reference'] = context.get('report_name')
-            ext_create_ids[resource_id] = external_session.connection.call(method, 
-                        [
-                            resource['customer_id'],
-                            resource['order_increment_id'],
-                            resource['reference'],
-                            resource['amount'],
-                            resource['date'],
-                            resource['customer_name'],
-                        ])
-            super(account_invoice, self).ext_create(cr, uid, external_session, resources, 
-                                                    mapping=mapping, mapping_id=mapping_id, context=context)
-        return ext_create_ids   
+    _columns = {
+        'ext_file_referential_id': fields.many2one('external.referential', 'External Referential File',
+                    help='Referential file where the OpenERP report will be push'),
+        }
+    

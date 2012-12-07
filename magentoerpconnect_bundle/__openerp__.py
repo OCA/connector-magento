@@ -22,7 +22,7 @@
 
 {
     'name': 'magentoerpconnect_bundle',
-    'version': '0.1',
+    'version': '6.1.0',
     'category': 'Generic Modules',
     'license': 'AGPL-3',
     'description': """Module to extend the module magentoerpconnect, with it you will be able to create bundle product in magento directly from Openerp.
@@ -41,9 +41,9 @@ magentoerpconnect_bundle_split: sub-items are managed as normal products in Open
         'images/magentoerpconnect.png',
     ],
     "website" : "https://launchpad.net/magentoerpconnect",
-    'depends': ['magentoerpconnect','sale_bundle_product'], 
+    'depends': ['magentoerpconnect','sale_bundle_product'],
     'init_xml': [],
-    'update_xml': [ 
+    'update_xml': [
            'sale_bundle_product_view.xml',
            'product_view.xml',
            'settings/1.3.2.4/external.mappinglines.template.csv',

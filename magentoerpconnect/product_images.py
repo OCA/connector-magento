@@ -20,22 +20,30 @@
 #You should have received a copy of the GNU General Public License      #
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.  #
 #########################################################################
-from osv import osv, fields
-import magerp_osv
 import mimetypes
-import netsvc
-from tools.translate import _
-import base64
+
+from openerp.osv.orm import Model
+from openerp.osv import fields
+from openerp.tools.translate import _
+
+from .magerp_osv import MagerpModel
 from base_external_referentials.decorator import commit_now
 from base_external_referentials.decorator import only_for_referential
 
-#TODO the option small_image, thumbnail, exclude, base_image, should be store diferently indeed this is not compatible with mutli instance (maybe serialized will be a good solution)
-#Moreover when a small is selected the flag on other image should be remove as magento does
+#TODO Option on image should be compatible with multi-referential
+#Indeed when you have two Magento maybe you do not want to use the
+#same image for the base_image, thumbnail ot small_image
+#Maybe the solution will to use a serialized field that store the
+#value for each referential
 
-#TODO refactor all of this code and use the generic function from base_external_referentials.
-#To must useless line of code
+#TODO As only one image can be a small_image, thumbnail or base_image
+#We should add some constraint or automatically remove the flag on the
+#other image of the product.
 
-class product_images(magerp_osv.magerp_osv):
+#TODO refactor all of this code and use the generic function from
+#base_external_referentials.
+
+class product_images(MagerpModel):
     _inherit = "product.images"
     _columns = {
         'base_image':fields.boolean('Base Image'),
@@ -46,20 +54,20 @@ class product_images(magerp_osv.magerp_osv):
         'sync_status':fields.boolean('Sync Status', readonly=True),
         'create_date': fields.datetime('Created date', readonly=True),
         'write_date': fields.datetime('Updated date', readonly=True),
-    }
+        }
     _defaults = {
         'sync_status':lambda * a: False,
         'base_image':lambda * a:True,
         'small_image':lambda * a:True,
         'thumbnail':lambda * a:True,
         'exclude':lambda * a:False
-    }
-    
+        }
+
     def get_changed_ids(self, cr, uid, start_date=False):
         proxy = self.pool.get('product.images')
         domain = start_date and ['|', ('create_date', '>', start_date), ('write_date', '>', start_date)] or []
         return proxy.search(cr, uid, domain)
-     
+
     def del_image_name(self, cr, uid, id, context=None):
         if context is None: context = {}
         image_ext_name_obj = self.pool.get('product.images.external.name')
@@ -129,7 +137,7 @@ class product_images(magerp_osv.magerp_osv):
             image_2_date[image['id']] = image['write_date'] or image['create_date']
         list_date = date_2_image.keys()
         list_date.sort()
-        
+
         ids = [date_2_image[date] for date in list_date]
 
         while ids:
@@ -185,5 +193,3 @@ class product_images(magerp_osv.magerp_osv):
             ids = ids[1000:]
             external_session.logger.info("still %s image to export" %len(ids))
         return True
-        
-product_images()

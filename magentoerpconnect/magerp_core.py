@@ -22,24 +22,30 @@
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.  #
 #########################################################################
 
-from osv import osv, fields
-import magerp_osv
-import pooler
-import base64, urllib
-from magerp_osv import Connection
-import tools
-from tools.translate import _
 import os
+import logging
+
+from openerp.osv import fields
+from openerp.osv.osv import except_osv
+from openerp import pooler
+from openerp import tools
+from openerp.tools.translate import _
+
+from .magerp_osv import MagerpModel, Connection
 from base_external_referentials.decorator import only_for_referential
 from base_external_referentials.external_osv import ExternalSession
 
-import logging
+from base_external_referentials.external_referentials import REF_VISIBLE_FIELDS
+
+REF_VISIBLE_FIELDS['Magento'] = ['location', 'apiusername', 'apipass']
+
+
 _logger = logging.getLogger(__name__)
 
 DEBUG = True
 TIMEOUT = 2
 
-class external_referential(magerp_osv.magerp_osv):
+class external_referential(MagerpModel):
     #This class stores instances of magento to which the ERP will connect, so you can connect OpenERP to multiple Magento installations (eg different Magento databases)
     _inherit = "external.referential"
 
@@ -209,7 +215,7 @@ class external_referential(magerp_osv.magerp_osv):
                 if lang_id:
                     lang = lang_id.code
                 else:
-                    osv.except_osv(_('Warning!'), _('The storeviews have no language defined'))
+                    except_osv(_('Warning!'), _('The storeviews have no language defined')) #TODO needed?
                     lang = referential.default_lang_id.code
                 if not lang_2_storeview.get(lang, False):
                     lang_2_storeview[lang] = storeview
@@ -282,6 +288,7 @@ class external_referential(magerp_osv.magerp_osv):
                 shop.export_products(cr, uid, shop, context)
         return True
 
+    #TODO refactor me
     def sync_partner(self, cr, uid, ids, context=None):
         def next_partners(connection, start, step):
             filters = {'customer_id': {'in': range(start, start + step)}}
@@ -308,11 +315,10 @@ class external_referential(magerp_osv.magerp_osv):
                             address_info = customer_address_info[0]
                             address_info['customer_id'] = ext_customer_id
                             address_info['email'] = customer_info['email']
-
-                        self.pool.get('res.partner').ext_import(import_cr, uid, [customer_info], referential.id, context=context)
+                        external_session = ExternalSession(referential, referential)
+                        self.pool.get('res.partner')._record_one_external_resource(import_cr, uid, external_session, customer_info, context=context)
                         if address_info:
-                            self.pool.get('res.partner.address').ext_import(import_cr, uid, [address_info], referential.id, context=context)
-
+                            self.pool.get('res.partner.address')._record_one_external_resource(import_cr, uid, external_session, address_info, context=context)
                         last_imported_id = int(ext_customer_id)
                         self.write(import_cr, uid, referential.id, {'last_imported_partner_id': last_imported_id}, context=context)
                         import_cr.commit()
@@ -382,10 +388,8 @@ class external_referential(magerp_osv.magerp_osv):
         if DEBUG:
             print "run_import_newsletter_unsubscriber_scheduler: %s" % referential_ids
 
-external_referential()
 
-
-class external_shop_group(magerp_osv.magerp_osv):
+class external_shop_group(MagerpModel):
     _inherit = "external.shop.group"
     #Return format of API:{'code': 'base', 'name': 'Main', 'website_id': '1', 'is_default': '1', 'sort_order': '0', 'default_group_id': '1'}
     # default_group_id is the default shop of the external_shop_group (external_shop_group = website)
@@ -407,12 +411,10 @@ class external_shop_group(magerp_osv.magerp_osv):
         'default_shop_integer_id':fields.integer('Default Store'), #This field can't be a many2one because shop_group field will be mapped before creating Shop (Shop = Store, shop_group = website)
         'default_shop_id':fields.function(_get_default_shop_id, type="many2one", relation="sale.shop", method=True, string="Default Store"),
         'referential_type' : fields.related('referential_id', 'type_id', type='many2one', relation='external.referential.type', string='External Referential Type'),
-    }
-
-external_shop_group()
+        }
 
 
-class magerp_storeviews(magerp_osv.magerp_osv):
+class magerp_storeviews(MagerpModel):
     _name = "magerp.storeviews"
     _description = "The magento store views information"
 
@@ -427,5 +429,3 @@ class magerp_storeviews(magerp_osv.magerp_osv):
     }
 
     #Return format of API:{'code': 'default', 'store_id': '1', 'website_id': '1', 'is_active': '1', 'sort_order': '0', 'group_id': '1', 'name': 'Default Store View'}
-
-magerp_storeviews()
