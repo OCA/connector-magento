@@ -1043,9 +1043,17 @@ class product_template(product_mag_osv):
                                 ('no', 'Do Not Manage Stock'),
                                 ('yes','Manage Stock')],
                                 'Manage Stock Level'),
+        'mag_manage_stock_shortage': fields.selection([
+                                ('use_default','Use Default Config'),
+                                ('no', 'No Sell'),
+                                ('yes','Sell qty < 0'),
+                                ('yes-and-notification','Sell qty < 0 and Use Customer Notification')],
+                                'Manage Inventory Shortage'),
         }
+
     _defaults = {
         'mag_manage_stock': 'use_default',
+        'mag_manage_stock_shortage': 'use_default',
         }
 
 
@@ -1385,13 +1393,23 @@ class product_product(product_mag_osv):
         :return: a dict of values which will be sent to Magento with a call to:
         product_stock.update
         """
+        map_shortage = {
+            "use_default": 0,
+            "no": 0,
+            "yes": 1,
+            "yes-and-notification": 2,
+        }
+
         stock_field = (shop.product_stock_field_id and
                        shop.product_stock_field_id.name or
                        'virtual_available')
         stock_quantity = product[stock_field]
+        
         return {'qty': stock_quantity,
                 'manage_stock': int(product.mag_manage_stock == 'yes'),
                 'use_config_manage_stock': int(product.mag_manage_stock == 'use_default'),
+                'backorders': map_shortage[product.mag_manage_stock_shortage],
+                'use_config_backorders':int(product.mag_manage_stock_shortage == 'use_default'),
                 # put the stock availability to "out of stock"
                 'is_in_stock': int(stock_quantity > 0)}
 

@@ -281,6 +281,7 @@
                         <field name="default_code" select="2" attrs="{'required':[('magento_exportable','==',True)]}"/>
                         <field name="product_type" select="2" attrs="{'required':[('magento_exportable','==',True)]}"/>
                         <field name="mag_manage_stock" select="2" attrs="{'required':[('magento_exportable','==',True)]}"/>
+                        <field name="mag_manage_stock_shortage" select="2" attrs="{'required':[('magento_exportable','==',True)]}"/>
                         <field name="magento_exportable"/>
                         <field name="magento_exported" invisible="1" />
                     </group>
