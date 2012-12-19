@@ -18,7 +18,7 @@
 #########################################################################
 {
     "name" : "Magento e-commerce",
-    "version" : "6.1.1",
+    "version" : "6.1.2",
     "depends" : ["base",
                  "product",
                  "product_m2mcategories",
