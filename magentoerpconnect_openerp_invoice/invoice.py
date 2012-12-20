@@ -47,8 +47,9 @@ class account_invoice(Model):
                                 external_session.referential_id.ext_file_referential_id,
                                 external_session.sync_from_object,
                                 )
+        context['active_model'] = self._name
         return self.send_report(cr, uid, external_session.file_session, [invoice.id], report_name, 
-                                                    invoice_number, invoice_path, add_extension=False, context=context)
+                                                    invoice_number, invoice_path, add_extension=True, context=context)
 
     def _get_invoice_path(self, cr, uid, external_session, invoice, context=None):
         ref_id = external_session.referential_id.id
@@ -66,12 +67,17 @@ class account_invoice(Model):
             method = "synoopenerpadapter_creditmemo.addInfo"
         elif data['type'] == 'out_invoice':
             method = "synoopenerpadapter_invoice.addInfo"
-        data['reference'] = context.get('report_name')
+        filename, extension = context.get('report_name').rsplit('.', 1)
+        if extension != 'pdf':
+            raise except_osv(
+                _("User Error"),
+                _("The report selected for the invoice for your sale shop must be in the format pdf")
+                )
         res = external_session.connection.call(method,
                     [
                         data['customer_id'],
                         data['order_increment_id'],
-                        data['reference'],
+                        filename,
                         data['amount'],
                         data['date'],
                         data['customer_name'],
