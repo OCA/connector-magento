@@ -199,6 +199,7 @@ class sale_shop(Model):
                     'sales_order.addComment',
                     [ext_id, status, '',
                      order.shop_id.allow_magento_notification])
+                #TODO REMOVE ME
                 # If status has changed into OERP and the order need_to_update,
                 # then we consider the update is done
                 # remove the 'need_to_update': True
@@ -498,54 +499,6 @@ class sale_order(Model):
             self.write(cr, uid, order.id, {'need_to_update': False})
         cr.commit() #Ugly we should not commit in the current cursor
         return True
-
-    def _create_external_invoice(self, cr, uid, order, conn, ext_id,
-                                context=None):
-        """ Creation of an invoice on Magento."""
-        magento_invoice_ref = conn.call(
-            'sales_order_invoice.create',
-            [order.magento_incrementid,
-            [],
-             _("Invoice Created"),
-             order.shop_id.allow_magento_notification,
-             True])
-        return magento_invoice_ref
-
-    # TODO Move in base_sale_multichannels?
-    # Seb said Yes ;)
-    def export_invoice(self, cr, uid, order, conn, ext_id, context=None):
-        """ Export an invoice on external referential """
-        cr.execute("select account_invoice.id "
-                   "from account_invoice "
-                   "inner join sale_order_invoice_rel "
-                   "on invoice_id = account_invoice.id "
-                   "where order_id = %s" % order.id)
-        resultset = cr.fetchone()
-        created = False
-        if resultset and len(resultset) == 1:
-            invoice = self.pool.get("account.invoice").browse(
-                cr, uid, resultset[0], context=context)
-            if (invoice.amount_total == order.amount_total and
-                not invoice.magento_ref):
-                magento_invoice_ref = False
-                try:
-                    magento_invoice_ref = self._create_external_invoice(
-                        cr, uid, order, conn, ext_id, context=context)
-                except Exception, e:
-                    self.log(cr, uid, order.id,
-                             "failed to create Magento invoice for order %s" %
-                             (order.id,))
-                    # TODO make sure that's because Magento invoice already
-                    # exists and then re-attach it!
-                if magento_invoice_ref:
-                    self.pool.get("account.invoice").write(
-                        cr, uid,
-                        invoice.id,
-                        {'magento_ref': magento_invoice_ref},
-                        context=context)
-                    created = True
-
-        return created
 
 ########################################################################################################################
 #
