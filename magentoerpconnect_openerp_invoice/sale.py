@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ###############################################################################
 #                                                                             #
-#   magentoerpconnect_report_synchronizer for OpenERP                         #
+#   magentoerpconnect_openerp_invoice for OpenERP                             #
 #   Copyright (C) 2012 Akretion Sébastien BEAU <sebastien.beau@akretion.com>  #
 #                                                                             #
 #   This program is free software: you can redistribute it and/or modify      #
@@ -19,7 +19,20 @@
 #                                                                             #
 ###############################################################################
 
+from openerp.osv.orm import Model
+from base_external_referentials.external_osv import ExternalSession
 
-import invoice
-import external_referential
-import sale
+class sale_shop(Model):
+    _inherit='sale.shop'
+
+    def _export_invoice_for_shop(self, cr, uid, external_session, shop, context=None):
+        #Open the connection for pushing report
+        external_session.file_session = ExternalSession(
+                            external_session.referential_id.ext_file_referential_id,
+                            external_session.sync_from_object,
+                            )
+        external_session.file_session.connection.persistant=True
+        res = super(sale_shop, self)._export_invoice_for_shop(cr, uid, external_session, shop, context=context)
+        #close the connection
+        external_session.file_session.connection.close()
+        return res

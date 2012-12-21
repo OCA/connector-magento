@@ -21,7 +21,6 @@
 
 from openerp.osv.orm import Model
 from openerp.osv import fields
-from base_external_referentials.external_osv import ExternalSession
 import os
 
 class account_invoice(Model):
@@ -35,19 +34,14 @@ class account_invoice(Model):
                                                                     invoice_id, context=context)
 
     def _send_invoice_report(self, cr, uid, external_session, invoice_id, context=None):
+        if context is None: context={}
+        context['active_model'] = self._name
         invoice = self.browse(cr, uid, invoice_id, context=context)
         invoice_number = invoice.number.replace('/', '-')
         invoice_path = self._get_invoice_path(cr, uid, external_session, invoice, context=context)
         if not external_session.sync_from_object.invoice_report:
             raise except_osv(_("User Error"), _("You must define a report for the invoice for your sale shop"))
         report_name = "report.%s"%external_session.sync_from_object.invoice_report.report_name
-        #Init the connection with the sftp/ftp/... referential
-        if not hasattr(external_session, 'file_session'):
-            external_session.file_session = ExternalSession(
-                                external_session.referential_id.ext_file_referential_id,
-                                external_session.sync_from_object,
-                                )
-        context['active_model'] = self._name
         return self.send_report(cr, uid, external_session.file_session, [invoice.id], report_name, 
                                                     invoice_number, invoice_path, add_extension=True, context=context)
 
