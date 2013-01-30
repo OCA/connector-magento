@@ -35,7 +35,7 @@ from .magerp_osv import MagerpModel, Connection
 from base_external_referentials.decorator import only_for_referential
 from base_external_referentials.external_osv import ExternalSession
 
-from base_external_referentials.external_referentials import REF_VISIBLE_FIELDS
+from base_external_referentials.external_referential import REF_VISIBLE_FIELDS
 
 REF_VISIBLE_FIELDS['Magento'] = ['location', 'apiusername', 'apipass']
 
