@@ -7,7 +7,6 @@
             <field name="name">External Referentials</field>
             <field name="model">external.referential</field>
             <field name="inherit_id" ref="base_external_referentials.external_referential_form_view" />
-            <field name="type">form</field>
             <field name="priority">30</field>
             <field name="arch" type="xml">
                 <group name="compulsory" position="after">
@@ -80,7 +79,6 @@
         <record model="ir.ui.view" id="magerp_websites_form">
             <field name="name">external.shop.group.form</field>
             <field name="model">external.shop.group</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Magento websites">
                     <group col="4" colspan="4">
@@ -100,7 +98,6 @@
         <record model="ir.ui.view" id="magerp_websites_tree">
             <field name="name">external.shop.group.tree</field>
             <field name="model">external.shop.group</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Magento websites">
                     <field name="name" readonly="1" select="1" />
@@ -125,7 +122,6 @@
         <record model="ir.ui.view" id="magerp_storeviews_form">
             <field name="name">magerp.storeviews.form</field>
             <field name="model">magerp.storeviews</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Magento storeviews">
                     <group col="4" colspan="4">
@@ -143,7 +139,6 @@
         <record model="ir.ui.view" id="magerp_storeviews_tree">
             <field name="name">magerp.storeviews.tree</field>
             <field name="model">magerp.storeviews</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Magento storeviews">
                     <field name="name" readonly="1" select="1" />

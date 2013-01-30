@@ -7,7 +7,6 @@
             <field name="name">product.category.form_view_magerp2</field>
             <field name="model">product.category</field>
             <field name="inherit_id" ref="product.product_category_form_view" />
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <xpath expr="/form/field[@name='sequence']" position="after">
                     <group colspan="4" col="4" attrs="{'invisible':[('magento_exportable','!=',1)],'readonly':[('level','=',0)]}">
@@ -77,7 +76,6 @@
             <field name="name">product.category.form_view_magerp</field>
             <field name="model">product.category</field>
             <field name="inherit_id" ref="product.product_category_form_view" />
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <field name="sequence" position="after">
                     <field name="magento_exportable" />
@@ -89,7 +87,6 @@
         <record model="ir.ui.view" id="magerp_product_attribute_set_form">
             <field name="name">magerp.product_attribute_set.form</field>
             <field name="model">magerp.product_attribute_set</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Magento Product Attribute Sets">
                     <group col="4" colspan="4">
@@ -105,7 +102,6 @@
         <record model="ir.ui.view" id="magerp_product_attribute_set_tree">
             <field name="name">magerp.product_attribute_set.tree</field>
             <field name="model">magerp.product_attribute_set</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Magento Product Attribute Set">
                     <field name="sort_order" select="2" />
@@ -127,7 +123,6 @@
         <record model="ir.ui.view" id="magerp_product_attributes_form">
             <field name="name">magerp.product_attributes.form</field>
             <field name="model">magerp.product_attributes</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Magento Product Attributes">
                     <group col="4" colspan="4">
@@ -168,7 +163,6 @@
         <record model="ir.ui.view" id="magerp_product_attributes_tree">
             <field name="name">magerp.product_attributes.tree</field>
             <field name="model">magerp.product_attributes</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Magento Product Attributes">
                     <field name="attribute_code" select="1" />
@@ -196,7 +190,6 @@
         <record model="ir.ui.view" id="magerp_product_attribute_groups_form">
             <field name="name">magerp.product_attribute_groups.form</field>
             <field name="model">magerp.product_attribute_groups</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Magento Product Attributes Groups">
                     <group col="4" colspan="4">
@@ -211,7 +204,6 @@
         <record model="ir.ui.view" id="magerp_product_attribute_groups_tree">
             <field name="name">magerp.product_attribute_groups.tree</field>
             <field name="model">magerp.product_attribute_groups</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Magento Product Attribute groups">
                     <field name="attribute_group_name" select="1" />
@@ -236,7 +228,6 @@
             <field name="name">product.normal.form_magerp</field>
             <field name="model">product.product</field>
             <field name="inherit_id" ref="product.product_normal_form_view" />
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="/form/group/group/field[@name='ean13']" position="after">
@@ -258,7 +249,6 @@
             <field name="name">product.normal.form_magerp_dynamic</field>
             <field name="model">product.product</field>
             <field name="inherit_id" ref="product.product_normal_form_view" />
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <xpath expr="/form/notebook" position="inside">
                     <page string="attributes_placeholder"/>
@@ -271,7 +261,6 @@
         <record model="ir.ui.view" id="product_product_wizard_form_view_magerpdynamic">
             <field name="name">product.normal.wizard.form_magerp_dynamic</field>
             <field name="model">product.product</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Product">
                     <group colspan='4' col='8'>
@@ -298,7 +287,6 @@
         <record model="ir.ui.view" id="magerp_product_type_form">
             <field name="name">magerp.product_product_type.form</field>
             <field name="model">magerp.product_product_type</field>
-            <field name="type">form</field>
             <field name="priority" eval="5"/>
             <field name="arch" type="xml">
             <form string="Product Type">
@@ -312,7 +300,6 @@
         <record model="ir.ui.view" id="magerp_product_type_tree">
             <field name="name">magerp.product_product_type.tree</field>
             <field name="model">magerp.product_product_type</field>
-            <field name="type">tree</field>
             <field name="priority" eval="5"/>
             <field name="arch" type="xml">
                 <tree string="Product Type" editable="top">
@@ -335,7 +322,6 @@
         <record model="ir.ui.view" id="magerp_product_category_attribute_options_form">
             <field name="name">magerp.product_category_attribute_options.form</field>
             <field name="model">magerp.product_category_attribute_options</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Magento Product Category Attribute Option">
                     <group col="4" colspan="4">
@@ -350,7 +336,6 @@
         <record model="ir.ui.view" id="magerp_product_category_attribute_options_tree">
             <field name="name">magerp.product_category_attribute_options.tree</field>
             <field name="model">magerp.product_category_attribute_options</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Magento Product Category Attribute Option">
                     <field name="attribute_name" />
@@ -375,7 +360,6 @@
         <record id="magerp_product_attribute_options_search" model="ir.ui.view">
             <field name="name">magerp.product_attribute_options.search</field>
             <field name="model">magerp.product_attribute_options</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Product Attribute Options">
                     <field name="referential_id"/>
@@ -394,7 +378,6 @@
         <record model="ir.ui.view" id="magerp_product_attribute_options_form">
             <field name="name">magerp.product_attribute_options.form</field>
             <field name="model">magerp.product_attribute_options</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Magento Product Attribute Options">
                     <group col="4" colspan="4">
@@ -411,7 +394,6 @@
         <record model="ir.ui.view" id="magerp_product_attribute_options_tree">
             <field name="name">magerp.product_attribute_options.tree</field>
             <field name="model">magerp.product_attribute_options</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Magento Product Attribute Options">
                       <field name="attribute_id"/>

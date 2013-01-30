@@ -4,7 +4,6 @@
         <record model="ir.ui.view" id="open_product_by_attribut_set_view">
             <field name="name">open.product.by.attribut.set.view</field>
             <field name="model">open.product.by.attribut.set</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Open product by attributs set">
                     <field name="attributs_set" colspan="4"/>

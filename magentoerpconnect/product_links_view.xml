@@ -8,7 +8,6 @@
             <field name="model">product.link</field>
             <!--parent python entity -->
             <field name="inherit_id" ref="product_links.product_link_form" />
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <field name="type" position="after">
                     <field name="sequence"/>
@@ -26,7 +25,6 @@
             <field name="model">product.link</field>
             <!--parent python entity -->
             <field name="inherit_id" ref="product_links.product_link_tree" />
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <field name="type" position="after">
                     <field name="sequence"/>

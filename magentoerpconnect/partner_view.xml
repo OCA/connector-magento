@@ -4,7 +4,6 @@
         <record id="view_partner_form_magerp" model="ir.ui.view">
             <field name="name">res.partner.form_magerp</field>
             <field name="model">res.partner</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="base.view_partner_form" />
             <field name="arch" type="xml">
                 <xpath expr="/form/notebook/page/field/form/group/field[@name='name']" position="after" >
@@ -32,7 +31,6 @@
         <record id="view_partner_category_form_magerp" model="ir.ui.view">
             <field name="name">res.partner.category.form_magerp</field>
             <field name="model">res.partner.category</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="base.view_partner_category_form" />
             <field name="arch" type="xml">
                 <field name="parent_id" position="after">
