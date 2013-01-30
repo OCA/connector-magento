@@ -152,6 +152,7 @@ class sale_shop(Model):
             res[shop.id] = res1[shop.id] and [res1[shop.id]] or []
         return res
 
+    # xxx move to MagentoConnector._get_import_defaults_sale_shop
     @only_for_referential('magento')
     def _get_default_import_values(self, cr, uid, external_session, **kwargs):
         defaults = super(sale_shop, self)._get_default_import_values(cr, uid, external_session, **kwargs)
@@ -359,6 +360,7 @@ class sale_order(Model):
 #                if data[0].get('relation_parent_real_id', False): # data[0] because orders are imported one by one so data always has 1 element
 #                    self._chain_cancel_orders(order_cr, uid, ext_order_id, external_referential_id, defaults=defaults, context=context)
 
+    # XXX a deplacer dans MagentoConnector
     def _get_filter(self, cr, uid, external_session, step, previous_filter=None, context=None):
         magento_storeview_ids=[]
         shop = external_session.sync_from_object
@@ -424,6 +426,7 @@ class sale_order(Model):
                  mapping, mapping_id,  mapping_line_filter_ids=mapping_line_filter_ids, parent_data=parent_data,\
                  previous_result=previous_result, defaults=defaults, context=context)
 
+    # XXX move to MagentoConnector _ext_search_sale_order
     @only_for_referential('magento')
     def _get_external_resource_ids(self, cr, uid, external_session, resource_filter=None, mapping=None, mapping_id=None, context=None):
         res = super(sale_order, self)._get_external_resource_ids(cr, uid, external_session, resource_filter=resource_filter, mapping=mapping, mapping_id=mapping_id, context=context)
@@ -437,6 +440,7 @@ class sale_order(Model):
                 order_ids_to_import.append(external_id)
         return order_ids_to_import
 
+    # xxx a deplacer dans MagentoConnector _record_one_sale_order
     @only_for_referential('magento')
     def _record_one_external_resource(self, cr, uid, external_session, resource, defaults=None, mapping=None, mapping_id=None, context=None):
         res = super(sale_order, self)._record_one_external_resource(cr, uid, external_session, resource, defaults=defaults, mapping=mapping, mapping_id=mapping_id, context=context)
