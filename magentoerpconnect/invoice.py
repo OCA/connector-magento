@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 #########################################################################
 #This module intergrates Open ERP with the magento core                 #
 #Core settings are stored here                                          #
