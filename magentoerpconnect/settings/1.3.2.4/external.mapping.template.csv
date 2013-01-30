@@ -10,5 +10,4 @@
 "magento_1324_attr","magento1324","model_magerp_product_attributes","ol_catalog_product_attribute.list",,,,,"attribute_id"
 "magento_1324_prd","magento1324","product.model_product_product","catalog_product.list","catalog_product.info","ol_catalog_product.update","ol_catalog_product.create",,"product_id"
 "magento_1324_cst_grp","magento1324","base.model_res_partner_category","ol_customer_groups.list",,,,,"customer_group_id"
-"magento_1324_prt_adr","magento1324","base.model_res_partner_address","ol_customer_address.list","ol_customer_address.info",,,,"customer_address_id"
 "magento_1324_prt","magento1324","base.model_res_partner","customer.list","customer.info","customer.update",,,"customer_id"

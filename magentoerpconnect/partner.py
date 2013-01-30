@@ -33,50 +33,6 @@ class res_partner_category(MagerpModel):
     _columns = {'tax_class_id':fields.integer('Tax Class ID'),
                 }
 
-class res_partner_address(MagerpModel):
-    _inherit = "res.partner.address"
-
-    #Migration script for 6.1.0 to 6.1.1
-    def _auto_init(self, cr, context=None):
-        # recompute the field name with firstname + lastname
-        # in order to have the same data as the data of base_partner_surname
-        first_install=False
-        cr.execute("SELECT column_name FROM information_schema.columns "
-                   "WHERE table_name = 'res_partner_address' "
-                   "AND column_name = 'firstname'")
-        if cr.fetchone():
-            cr.execute(
-                "UPDATE res_partner_address "
-                "SET name = CASE "
-                  "WHEN firstname IS NOT NULL AND lastname IS NOT NULL THEN (firstname || ' ' || lastname) "
-                  "WHEN firstname IS NOT NULL AND lastname IS NULL THEN firstname "
-                  "WHEN firstname IS NULL AND lastname IS NOT NULL THEN lastname "
-                  "ELSE name "
-                "END"
-                  )
-            cr.execute("ALTER TABLE res_partner_address "
-                       "RENAME COLUMN firstname TO first_name")
-            cr.execute("ALTER TABLE res_partner_address "
-                       "RENAME COLUMN lastname TO last_name")
-        return super(res_partner_address, self)._auto_init(cr, context=context)
-
-    _columns = {
-        'company':fields.char('Company', size=100),
-        'is_magento_order_address':fields.boolean('Magento Order Address?'), #TODO still needed?
-        }
-    _defaults = {
-        'is_magento_order_address': lambda * a:False,
-        }
-
-    @only_for_referential('magento')
-    def ext_create(self, cr, uid, external_session, resources, mapping, mapping_id, context=None):
-        ext_create_ids = {}
-        main_lang = context['main_lang']
-        for resource_id, resource in resources.items():
-            ext_id = external_session.connection.call(mapping[mapping_id]['external_create_method'],
-                                         [resource[main_lang]['customer_id'], resource[main_lang]])
-            ext_create_ids[resource_id] = ext_id
-        return ext_create_ids
 
 class res_partner(MagerpModel):
     _inherit = "res.partner"

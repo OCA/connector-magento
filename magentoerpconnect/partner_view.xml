@@ -42,17 +42,5 @@
             </field>
         </record>
 
-        <record id="view_partner_address_form1_magerp1" model="ir.ui.view">
-            <field name="name">res.partner.address.form1magerp1</field>
-            <field name="model">res.partner.address</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="base.view_partner_address_form1" />
-            <field name="arch" type="xml">
-                <field name="name" position="after">
-                    <field name="company" />
-                </field>
-            </field>
-        </record>
-
     </data>
 </openerp>

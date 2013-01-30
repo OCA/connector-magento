@@ -8,7 +8,6 @@ mag1500_magerp_product_attribute_set,,magentoerpconnect.magento1500,magentoerpco
 mag1500_magerp_product_attributes,,magentoerpconnect.magento1500,magentoerpconnect.model_magerp_product_attributes,ol_catalog_product_attribute.list,,,,,,,attribute_id,
 mag1500_product_product,,magentoerpconnect.magento1500,product.model_product_product,catalog_product.list,catalog_product.info,catalog_product.update,catalog_product.create,,,,product_id,
 mag1500_res_partner_category,,magentoerpconnect.magento1500,base.model_res_partner_category,ol_customer_groups.list,,,,,,,customer_group_id,
-mag1500_res_partner_address,,magentoerpconnect.magento1500,base.model_res_partner_address,customer_address.list,customer_address.info,,customer_address.create,,,,customer_address_id,
 mag1500_res_partner,,magentoerpconnect.magento1500,account.model_res_partner,customer.list,customer.info,customer.update,customer.create,,,,customer_id,
 mag1500_sale_shop,,magentoerpconnect.magento1500,base_sale_multichannels.model_sale_shop,ol_groups.list,,,,,,,group_id,
 mag1500_sale_order,,magentoerpconnect.magento1500,base_sale_multichannels.model_sale_order,sales_order.list,sales_order.info,,,,sales_order.search,sales_order.done,increment_id,

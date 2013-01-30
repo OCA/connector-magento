@@ -220,45 +220,6 @@ result=[('websites', ext_websites_ids)]"
 "mag_1324_erp_prd_16","magento1324","product.model_product_product","has_options",,"in","function","unicode",,"result =[('x_magerp_has_options',ifield)]",
 "magento_1324_cst_grp_1","magento1324","base.model_res_partner_category","customer_group_code",,"in","function","unicode",,"result=[('name',ifield)]",
 "magento_1324_cst_grp_3","magento1324","base.model_res_partner_category","tax_class_id",,"in","function","int",,"result=[('tax_class_id',ifield)]",
-"magento_1324_prt_adr_2","magento1324","base.model_res_partner_address","city",,"in_out","function","unicode",,"result=[('city',ifield)]",
-"magento_1324_prt_adr_3","magento1324","base.model_res_partner_address","fax",,"in_out","function","unicode",,"result=[('fax',ifield)]",
-"magento_1324_prt_adr_4","magento1324","base.model_res_partner_address","firstname",,"in_out","function","unicode",,"result = [('name', (data.get('company', False) and (data['company'] + ' ; ') or '') + ifield + ' ' + (data['lastname'] or '')), ('firstname', ifield), ('lastname', (data['lastname'] or ''))]",
-"magento_1324_prt_adr_6","magento1324","base.model_res_partner_address","is_active",,"in_out","function","unicode",,"result=[('active',bool(eval(ifield)))]",
-"magento_1324_prt_adr_7","magento1324","base.model_res_partner_address","country_id",,"in_out","function","unicode",,"result = self.pool.get('res.country').search(cr,uid,[('code','=',ifield)])
-if result and len(result)==1:
-    result=[('country_id',result[0])]
-else:
-    result=[]
-",
-"magento_1324_prt_adr_8","magento1324","base.model_res_partner_address","street",,"in_out","function","unicode",,"if ifield:
-    if len(ifield.split('\n')) ==2 :
-        result = [('street', ifield.split('\n')[0]) , ('street2', ifield.split('\n')[1])]
-    else :
-        result = [('street',ifield.replace('\\n',','))]
-else:
-    result = []",
-"magento_1324_prt_adr_9","magento1324","base.model_res_partner_address","postcode",,"in_out","function","unicode",,"result=[('zip',ifield)]",
-"magento_1324_prt_adr_10","magento1324","base.model_res_partner_address","telephone",,"in_out","function","unicode",,"result=[('phone',ifield)]",
-"magento_1324_prt_adr_11","magento1324","base.model_res_partner_address","region",,"in_out","function","unicode",,"if ifield:
-    result = self.pool.get('res.country.state').search(cr,uid,[('name','ilike',ifield)])
-    if result and len(result)==1:
-        result = [('state_id',result[0])]
-    else:
-        result=[]
-else:
-    result=[]",
-"magento_1324_prt_adr_13","magento1324","base.model_res_partner_address","customer_id",,"in_out","function","int",,"result=self.pool.get('res.partner').extid_to_oeid(cr,uid,ifield,referential_id)
-if result:
-    result=[('partner_id',result)]
-else:
-    result=[('partner_id',False)]",
-"magento_1324_prt_adr_14","magento1324","base.model_res_partner_address","address_type",,"in_out","function","unicode",,"if ifield=='billing':
-    result=[('type','invoice')]
-elif ifield=='shipping':
-    result=[('type','delivery')]
-else:
-    result=[]",
-"magento_1324_prt_adr_15","magento1324","base.model_res_partner_address","email",,"in_out","function","unicode",,"result=[('email',ifield)]",
 "magento_1324_prt_2","magento1324","base.model_res_partner","group_id",,"in_out","function","int",,"if ifield:
     result=self.pool.get('res.partner.category').extid_to_oeid(cr,uid,ifield,referential_id)
     if result:

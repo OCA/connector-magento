@@ -79,7 +79,8 @@ REGISTRY.register_connector(MagentoConnector)
 class MagentoMapping(AbstractConnector):
     pass
 
-class MagentoMapping1500(MagentoMapping)
+class MagentoMapping1500(MagentoMapping):
+    pass
 
 REGISTRY.register_mapping(MagentoMapping1500)
 
@@ -87,10 +88,6 @@ class SaleOrderLineMap(ModelMap):
     model_name = 'sale.order.line'
 MagentoMapping1500.register_model_map(SaleOrderLineMap)
 
-
-class ResPartnerAddressMap(ModelMap):
-    model_name = 'res.partner.address'
-MagentoMapping1500.register_model_map(ResPartnerAddressMap)
 
 class SaleOrderMap(ModelMap):
     model_name = 'sale.order'
