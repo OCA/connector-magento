@@ -2,6 +2,7 @@
 #                                                                       #
 # Copyright (C) 2009  Sharoon Thomas                                    #
 # Copyright (C) 2011 Akretion Sébastien BEAU sebastien.beau@akretion.com#
+# Copyright 2011-2013 Camptocamp SA                                     #
 #                                                                       #
 #This program is free software: you can redistribute it and/or modify   #
 #it under the terms of the GNU General Public License as published by   #
@@ -17,18 +18,23 @@
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.  #
 #########################################################################
 {
-    "name" : "Magento e-commerce",
-    "version" : "6.1.2",
-    "depends" : ["base",
+    "name" : "Magento Connector New Generation",
+    "version" : "7.0",
+    "depends" : [
                  "product",
-                 "product_m2mcategories",
                  'delivery',
                  "base_sale_multichannels",
-                 "product_images_olbs",
-                 "product_links_sync",
-                ],
+                 "product_m2mcategories",
+                 "product_images",
+                 "product_links",
+            ],
     "author" : "MagentoERPconnect Core Editors",
-    "description": """Magento E-commerce management
+    "description": """
+Magento E-commerce management
+=============================
+
+TODO
+
 """,
     'images': [
         'images/main_menu.png',
@@ -74,10 +80,8 @@
             'delivery_view.xml',
             'product_links_view.xml',
             'wizard/open_product_by_attribut_set.xml',
-                    ],
+            ],
     "auto_install": False,
     "installable": True,
     'application': True,
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
