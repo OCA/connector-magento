@@ -231,22 +231,22 @@
             <field name="model">product.product</field>
             <field name="inherit_id" ref="product.product_normal_form_view" />
             <field name="arch" type="xml">
-                <data>
-                    <xpath expr="/form" position="inside">
-                        <field name="magento_exported" invisible="True"/>
-                    </xpath>
-                    <xpath expr="/form/sheet/div[1]/h1" position="after">
-                        <group>
-                            <field name="set" select="2" attrs="{'required': [('magento_exportable', '=', True)], 'readonly': [('magento_exported', '=', True)]}"/>
-                        </group>
-                    </xpath>
-                    <xpath expr="//div[@name='buttons']" position="inside">
-                        <button name="open_magento_fields"/>
-                    </xpath>
-                    <xpath expr="/form/sheet/notebook" position="before">
-                        <field name="magento_exportable" select="2"/>
-                    </xpath>
-                </data>
+                <div name="options" position="inside">
+                    <field name="magento_exportable"/>
+                    <label for="magento_exportable"/>
+                </div>
+                <xpath expr="/form" position="inside">
+                    <field name="magento_exported" invisible="True"/>
+                </xpath>
+                <xpath expr="/form/sheet/div[1]/h1" position="after">
+                    <group>
+                        <field name="set" select="2" attrs="{'required': [('magento_exportable', '=', True)], 'readonly': [('magento_exported', '=', True)]}"/>
+                    </group>
+                </xpath>
+                <div name="buttons" position="inside">
+                    <button string="Open Magento Fields"
+                        name="open_magento_fields" type="object"/>
+                </div>
             </field>
         </record>
 

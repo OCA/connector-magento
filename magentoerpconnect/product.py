@@ -1270,7 +1270,7 @@ class product_product(product_mag_osv):
 
     _columns = {
         'magerp_variant' : fields.serialized('Magento Variant Fields'),
-        'magento_exportable':fields.boolean('Exported to Magento?'),
+        'magento_exportable':fields.boolean('Export to Magento'),
         'created_at':fields.date('Created'), #created_at & updated_at in magento side, to allow filtering/search inside OpenERP!
         'updated_at':fields.date('Created'),
         'tier_price':fields.one2many('product.tierprice', 'product', 'Tier Price'),
