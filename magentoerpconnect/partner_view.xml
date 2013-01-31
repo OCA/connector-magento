@@ -6,23 +6,24 @@
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="base.view_partner_form" />
             <field name="arch" type="xml">
-                <xpath expr="/form/notebook/page/field/form/group/field[@name='name']" position="after" >
-                    <field name="company" />
-                </xpath>
-                <xpath expr="/form/notebook" position="inside">
+                <xpath expr="/form/sheet/notebook" position="inside">
                     <page string="Magento Information">
-                        <field name="magento_exported" invisible="True"/>
-                        <field name="magento_pwd" attrs="{'readonly': [('magento_exported', '=', True)]}" password="True"/>
-                        <field name="emailid" attrs="{'readonly': [('magento_exported', '=', True)]}"/>
-                        <field name="website_id" attrs="{'readonly': [('magento_exported', '=', True)]}" string="Website"/>
-                        <field name="group_id" />
-                        <field name="mag_vat" />
-                        <field name="mag_birthday" />
-                        <field name="mag_newsletter" select="2"/>
-                        <field name="store_id" />
-                        <newline/>
-                        <separator string="Store views" colspan="4" />
-                        <field name="store_ids" colspan="4" nolabel="1" attrs="{'readonly': [('magento_exported', '=', True)]}"/>
+                        <group>
+                            <field name="magento_exported" invisible="True"/>
+                            <field name="magento_pwd" attrs="{'readonly': [('magento_exported', '=', True)]}" password="True"/>
+                            <field name="emailid" attrs="{'readonly': [('magento_exported', '=', True)]}"/>
+                            <field name="website_id" attrs="{'readonly': [('magento_exported', '=', True)]}" string="Website"/>
+                            <field name="group_id" />
+                            <field name="mag_vat" />
+                            <field name="mag_birthday" />
+                            <field name="mag_newsletter"/>
+                            <field name="store_id" />
+                            <newline/>
+                        </group>
+                        <group>
+                            <separator string="Store views" colspan="4" />
+                            <field name="store_ids" colspan="4" nolabel="1" attrs="{'readonly': [('magento_exported', '=', True)]}"/>
+                        </group>
                     </page>
                 </xpath>
             </field>

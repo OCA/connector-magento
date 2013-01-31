@@ -8,10 +8,10 @@
             <field name="model">product.category</field>
             <field name="inherit_id" ref="product.product_category_form_view" />
             <field name="arch" type="xml">
-                <xpath expr="/form/field[@name='sequence']" position="after">
-                    <group colspan="4" col="4" attrs="{'invisible':[('magento_exportable','!=',1)],'readonly':[('level','=',0)]}">
+                <xpath expr="/form/sheet/group[1]" position="after">
+                    <group attrs="{'invisible': [('magento_exportable', '=', False)], 'readonly': [('level', '=', 0)]}">
                         <separator string="Magento Information" colspan="4" />
-                        <notebook attrs="{'invisible':[('magento_exportable','!=',1)]}" colspan="4">
+                        <notebook attrs="{'invisible': [('magento_exportable', '=', False)]}" colspan="4">
                             <page string="General Information">
                                 <group cols="2" colspan="4">
                                     <group col="2" colspan="1">
@@ -77,9 +77,11 @@
             <field name="model">product.category</field>
             <field name="inherit_id" ref="product.product_category_form_view" />
             <field name="arch" type="xml">
-                <field name="sequence" position="after">
-                    <field name="magento_exportable" />
-                </field>
+                <group name="parent" position="after">
+                    <group>
+                        <field name="magento_exportable" />
+                    </group>
+                </group>
             </field>
         </record>
 
@@ -230,27 +232,30 @@
             <field name="inherit_id" ref="product.product_normal_form_view" />
             <field name="arch" type="xml">
                 <data>
-                    <xpath expr="/form/group/group/field[@name='ean13']" position="after">
+                    <xpath expr="/form" position="inside">
                         <field name="magento_exported" invisible="True"/>
                     </xpath>
-                    <xpath expr="/form/group/group/field[@name='variants']" position="after">
-                        <field name="set" select="2" attrs="{'required':[('magento_exportable','==',True)], 'readonly': [('magento_exported', '=', True)]}"/>
+                    <xpath expr="/form/sheet/div[1]/h1" position="after">
+                        <group>
+                            <field name="set" select="2" attrs="{'required': [('magento_exportable', '=', True)], 'readonly': [('magento_exported', '=', True)]}"/>
+                        </group>
                     </xpath>
-                    <xpath expr="/form/group/group/field[@name='sale_ok']" position="before">
+                    <xpath expr="//div[@name='buttons']" position="inside">
                         <button name="open_magento_fields"/>
                     </xpath>
-                    <xpath expr="/form/notebook" position="before">
+                    <xpath expr="/form/sheet/notebook" position="before">
                         <field name="magento_exportable" select="2"/>
                     </xpath>
                 </data>
             </field>
         </record>
+
         <record model="ir.ui.view" id="product_product_form_view_magerpdynamic">
             <field name="name">product.normal.form_magerp_dynamic</field>
             <field name="model">product.product</field>
             <field name="inherit_id" ref="product.product_normal_form_view" />
             <field name="arch" type="xml">
-                <xpath expr="/form/notebook" position="inside">
+                <xpath expr="/form/sheet/notebook" position="inside">
                     <page string="attributes_placeholder"/>
                 </xpath>
             </field>
@@ -316,9 +321,7 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-
-
-    <!--Magento product_category attribute_option Tree/Form view  -->
+        <!--Magento product_category attribute_option Tree/Form view  -->
         <record model="ir.ui.view" id="magerp_product_category_attribute_options_form">
             <field name="name">magerp.product_category_attribute_options.form</field>
             <field name="model">magerp.product_category_attribute_options</field>
