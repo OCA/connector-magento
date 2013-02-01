@@ -25,7 +25,7 @@
 import os
 import logging
 
-from openerp.osv import fields
+from openerp.osv import fields, orm
 from openerp.osv.osv import except_osv
 from openerp import pooler
 from openerp import tools
@@ -35,7 +35,9 @@ from .magerp_osv import MagerpModel, Connection
 from base_external_referentials.decorator import only_for_referential
 from base_external_referentials.external_osv import ExternalSession
 
-from base_external_referentials.external_referential import REF_VISIBLE_FIELDS
+from base_external_referentials.external_referential import (
+        REF_VISIBLE_FIELDS,
+        add_backend)
 
 REF_VISIBLE_FIELDS['Magento'] = ['location', 'apiusername', 'apipass']
 
@@ -45,6 +47,35 @@ _logger = logging.getLogger(__name__)
 DEBUG = True
 TIMEOUT = 2
 
+MAGENTO_BACKEND = 'magento.backend'
+add_backend(MAGENTO_BACKEND)
+
+
+class magento_backend(orm.Model):
+    _name = MAGENTO_BACKEND
+    _doc = 'Magento Backend'
+    _inherit = 'external.backend'
+
+    def _select_versions(self, cr, uid, context=None):
+        return [('1.5', '1.5'),
+                ('1.7', '1.7')]
+
+    _columns = {
+        'version': fields.selection(
+            _select_versions,
+            string='Version',
+            required=True),
+        'location': fields.char('Location'),
+        'username': fields.char('Username'),
+        'password': fields.char('Password'),
+    }
+
+    _defaults = {
+        'type': MAGENTO_BACKEND,  # useless?
+    }
+
+
+# TODO: move all the stuff related to Magento in magento.backend
 class external_referential(MagerpModel):
     #This class stores instances of magento to which the ERP will connect, so you can connect OpenERP to multiple Magento installations (eg different Magento databases)
     _inherit = "external.referential"

@@ -66,7 +66,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[['referential_id.type', '=', 'magento']]</field>
+            <field name="domain">[['type_name', '=', 'Magento']]</field>
         </record>
 
         <record id="base_sale_multichannel_view_order_form_magento" model="ir.ui.view">

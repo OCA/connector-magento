@@ -8,52 +8,54 @@
             <field name="model">external.referential</field>
             <field name="inherit_id" ref="base_external_referentials.external_referential_view_form" />
             <field name="arch" type="xml">
-                <page name="configuration" position="before">
-                    <page name="synchronisations" string="Synchronisation Actions">
-                        <group name="magento" col="4" colspan="4" attrs="{'invisible': [['type', '!=', 'magento']]}">
-                            <separator string="Optional - Initial import only" colspan="4" />
-                            <button name="import_customer_groups" string="1 - Import Customer Groups (Partner Categories)" colspan="2" type="object" />
-                            <group colspan="2" col="12">
-                                <button name="sync_attribs" string="5 - Import Product Attributes" colspan="10" type="object" />
-                                <field name="import_all_attributs"/>
+                <page name="old_synchros" position="inside">
+                    <group name="magento" col="4" colspan="4" attrs="{'invisible': [['type_name', '!=', 'Magento']]}">
+                        <separator string="Optional - Initial import only" colspan="4" />
+                        <button name="import_customer_groups" string="1 - Import Customer Groups (Partner Categories)" colspan="2" type="object" />
+                        <group colspan="2" col="12">
+                            <button name="sync_attribs" string="5 - Import Product Attributes" colspan="10" type="object" />
+                            <field name="import_all_attributs"/>
+                        </group>
+                        <button name="import_product_categories" string="2 - Import Product Categories" colspan="2" type="object" />
+                        <group colspan="2" col="14">
+                            <group colspan="8">
+                                <button name="sync_products" string="6 - Import Products" type="object" attrs="{'invisible':[('import_image_with_product','=',True)]}" />
+                                <button name="sync_products" string="6 - Import Products And Images" type="object" attrs="{'invisible':[('import_image_with_product','=',False)]}" />
                             </group>
-                            <button name="import_product_categories" string="2 - Import Product Categories" colspan="2" type="object" />
-                            <group colspan="2" col="14">
-                                <group colspan="8">
-                                    <button name="sync_products" string="6 - Import Products" type="object" attrs="{'invisible':[('import_image_with_product','=',True)]}" />
-                                    <button name="sync_products" string="6 - Import Products And Images" type="object" attrs="{'invisible':[('import_image_with_product','=',False)]}" />
-                                </group>
+                            <group>
                                 <field name="import_image_with_product"/>
                                 <field name="import_links_with_product"/>
                                 <field name="last_imported_product_id" string=""/>
                             </group>
-                            <button name="sync_attrib_sets" string="3 - Import Product Attribute Sets" colspan="2" type="object" />
-                            <button name="sync_images" string="7 - Import Images" colspan="2" type="object" attrs="{'invisible':[('import_image_with_product','=',True)]}"/>
-                            <button name="sync_attrib_groups" string="4 - Import Attribute Groups" colspan="2" type="object" />
-                            <button name="sync_product_links" string="8 - Import Product Links" colspan="2" type="object" />
-                            <separator string="Default values" colspan="4" />
-                            <field name="default_pro_cat" attrs="{'required': [['type', '=', 'magento']]}"/>
-                            <field name="default_lang_id" attrs="{'required': [['type', '=', 'magento']]}"/>
-                            <separator string="Partner" colspan="4"/>
-                            <group colspan="2" col="12">
-                                <button name="sync_partner" string="Import All Partners" colspan="10" type="object" />
-                                <field name="last_imported_partner_id" string=""/>
-                            </group>
-                            <button name="sync_newsletter" string="Import Newsletter Subscribers" colspan="2" type="object" />
-                            <button name="sync_newsletter_unsubscriber" string="Export Newsletter UnSubscribers" colspan="2" type="object" />
                         </group>
-                    </page>
+                        <button name="sync_attrib_sets" string="3 - Import Product Attribute Sets" colspan="2" type="object" />
+                        <button name="sync_images" string="7 - Import Images" colspan="2" type="object" attrs="{'invisible':[('import_image_with_product','=',True)]}"/>
+                        <button name="sync_attrib_groups" string="4 - Import Attribute Groups" colspan="2" type="object" />
+                        <button name="sync_product_links" string="8 - Import Product Links" colspan="2" type="object" />
+                        <separator string="Default values" colspan="4" />
+                        <field name="default_pro_cat" attrs="{'required': [['type_name', '=', 'Magento']]}"/>
+                        <field name="default_lang_id" attrs="{'required': [['type_name', '=', 'Magento']]}"/>
+                        <separator string="Partner" colspan="4"/>
+                        <group colspan="2" col="12">
+                            <button name="sync_partner" string="Import All Partners" colspan="10" type="object" />
+                            <field name="last_imported_partner_id" string=""/>
+                        </group>
+                        <button name="sync_newsletter" string="Import Newsletter Subscribers" colspan="2" type="object" />
+                        <button name="sync_newsletter_unsubscriber" string="Export Newsletter UnSubscribers" colspan="2" type="object" />
+                    </group>
                 </page>
                 <page name="configuration" position="after">
-                    <page string="Websites" attrs="{'invisible': [['type', '!=', 'magento']]}">
+                    <page string="Websites" attrs="{'invisible': [['type_name', '!=', 'Magento']]}">
                         <field name="shop_group_ids" nolabel="1" />
                     </page>
-                    <page string="Product Attributes / Sets" attrs="{'invisible': [['type', '!=', 'magento']]}">
+                    <page string="Product Attributes / Sets" attrs="{'invisible': [['type_name', '!=', 'Magento']]}">
                         <field name="attribute_sets" nolabel="1" colspan="4"/>
                     </page>
                 </page>
                 <page name="configuration" position="inside">
+                  <group>
                     <field name="active" select="2"/>
+                  </group>
                 </page>
             </field>
         </record>
@@ -64,7 +66,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="base_external_referentials.external_referential_view_tree" />
-            <field name="domain">[['type', '=', 'magento']]</field>
+            <field name="domain" eval="False"></field>
         </record>
 
         <!--Magento Websites Tree/Form view  -->
