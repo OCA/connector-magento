@@ -1,7 +1,22 @@
 <?xml version="1.0"?>
 <openerp>
-    <data noupdate="1">
+    <data noupdate="0">
+      <record model="external.referential.service" id="magento">
+        <field name="type">magento</field>
+      </record>
 
+      <record model="external.referential.service" id="magento1500">
+        <field name="type">magento</field>
+        <field name="version">1.5</field>
+      </record>
+
+      <record model="external.referential.service" id="magento1700">
+        <field name="type">magento</field>
+        <field name="version">1.7</field>
+      </record>
+    </data>
+
+    <data noupdate="1">
 
         <record forcecreate="True" id="ir_cron_import_orders_scheduler_action" model="ir.cron">
             <field name="name">Magento Import Orders</field>
