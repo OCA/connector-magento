@@ -137,10 +137,8 @@ class magento_storeview(orm.Model):
         'code': fields.char('Code'),
         'enabled': fields.boolean('Enabled'),
         'sort_order': fields.integer('Sort Order'),
-        'website_id': fields.many2one('magento.store', 'Website',
-                                      ondelete='cascade'),
-        'shop_id': fields.many2one('sale.shop', 'Shop',
-                                   ondelete='cascade'),
+        'store_id': fields.many2one('magento.store', 'Store',
+                                    ondelete='cascade'),
         'lang_id': fields.many2one('res.lang', 'Language'),
         # we can keep the id of the storeview on this
         # model, a record is a direct copy
