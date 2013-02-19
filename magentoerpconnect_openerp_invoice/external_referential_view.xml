@@ -10,7 +10,7 @@
         <record id="external_referential_form_view" model="ir.ui.view">
             <field name="name">base_sale_report_synchronizer.external_referential_form_view</field>
             <field name="model">external.referential</field>
-            <field name="inherit_id" ref="base_external_referentials.external_referential_form_view" />
+            <field name="inherit_id" ref="connector.external_referential_form_view" />
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <field name="location" position="after">

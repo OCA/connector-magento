@@ -30,10 +30,10 @@ from tools.translate import _
 from openerp import tools
 import time
 from tools import DEFAULT_SERVER_DATETIME_FORMAT
-from base_external_referentials.external_osv import ExternalSession
-from base_external_referentials.decorator import only_for_referential, open_report
+from connector.external_osv import ExternalSession
+from connector.decorator import only_for_referential, open_report
 
-#from base_external_referentials import report
+#from connector import report
 
 import logging
 _logger = logging.getLogger(__name__)

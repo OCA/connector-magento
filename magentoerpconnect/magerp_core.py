@@ -32,10 +32,10 @@ from openerp import tools
 from openerp.tools.translate import _
 
 from .magerp_osv import MagerpModel, Connection
-from base_external_referentials.decorator import only_for_referential
-from base_external_referentials.external_osv import ExternalSession
+from connector.decorator import only_for_referential
+from connector.external_osv import ExternalSession
 
-from base_external_referentials.external_referential import (
+from connector.external_referential import (
         REF_VISIBLE_FIELDS,
         add_backend)
 
@@ -277,7 +277,7 @@ class external_referential(MagerpModel):
             conn = self.external_connection(cr, uid, ids, DEBUG, context=context)
         return conn.call('catalog_product_link.types')
 
-    #TODO refactore me base on base_external_referentials
+    #TODO refactore me base on connector
     def sync_images(self, cr, uid, ids, context=None):
         product_obj = self.pool.get('product.product')
         image_obj = self.pool.get('product.images')
@@ -294,7 +294,7 @@ class external_referential(MagerpModel):
             import_cr.close()
         return True
 
-    #TODO refactore me base on base_external_referentials
+    #TODO refactore me base on connector
     def sync_product_links(self, cr, uid, ids, context=None):
         if context is None: context = {}
         for referential in self.browse(cr, uid, ids, context):

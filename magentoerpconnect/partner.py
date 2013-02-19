@@ -26,7 +26,7 @@ import hashlib
 
 from openerp.osv import fields
 from .magerp_osv import MagerpModel
-from base_external_referentials.decorator import only_for_referential
+from connector.decorator import only_for_referential
 
 class res_partner_category(MagerpModel):
     _inherit = "res.partner.category"

@@ -20,7 +20,7 @@
 #                                                                             #
 ###############################################################################
 
-from base_external_referentials.connector import (REGISTRY,
+from connector.connector import (REGISTRY,
                                                   AbstractMapping,
                                                   ModelMap)
 from base_sale_multichannel.connector import BaseConnector

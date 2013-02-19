@@ -31,8 +31,8 @@
       <field name="res_model">external.report</field>
       <field name="view_type">form</field>
       <field name="domain">[('referential_id.version_id.type_id.code', '=', 'mag')]</field>
-      <field name="view_id" ref="base_external_referentials.external_report_tree_view"/>
-      <field name="search_view_id" ref="base_external_referentials.external_report_search_form_view"/>
+      <field name="view_id" ref="connector.external_report_tree_view"/>
+      <field name="search_view_id" ref="connector.external_report_search_form_view"/>
     </record>
     <menuitem id="menu_magerp_reporting_report" name="Synchronisation Report"
       parent="menu_magerp_reporting" action="action_magerp_external_report" sequence="20"/>
@@ -43,8 +43,8 @@
       <field name="res_model">external.report.history</field>
       <field name="view_type">form</field>
       <field name="domain">[('report_id.referential_id.version_id.type_id.code', '=', 'mag')]</field>
-      <field name="view_id" ref="base_external_referentials.external_report_history_tree_view"/>
-      <field name="search_view_id" ref="base_external_referentials.external_report_history_search_view"/>
+      <field name="view_id" ref="connector.external_report_history_tree_view"/>
+      <field name="search_view_id" ref="connector.external_report_history_search_view"/>
     </record>
 
     <menuitem id="menu_magerp_reporting_report_history" name="Synchronisation History"
@@ -56,8 +56,8 @@
       <field name="res_model">external.report.line</field>
       <field name="view_type">form</field>
       <field name="domain">[('report_id.referential_id.version_id.type_id.code', '=', 'mag')]</field>
-      <field name="view_id" ref="base_external_referentials.external_report_line_tree_view"/>
-      <field name="search_view_id" ref="base_external_referentials.external_report_line_search_view"/>
+      <field name="view_id" ref="connector.external_report_line_tree_view"/>
+      <field name="search_view_id" ref="connector.external_report_line_search_view"/>
     </record>
     <menuitem id="menu_magerp_reporting_report_line" name="Last Synchronisation Details"
       parent="menu_magerp_reporting" action="action_magerp_external_report_line" sequence="30"/>

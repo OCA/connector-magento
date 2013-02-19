@@ -27,8 +27,8 @@ from openerp.osv import fields
 from openerp.tools.translate import _
 
 from .magerp_osv import MagerpModel
-from base_external_referentials.decorator import commit_now
-from base_external_referentials.decorator import only_for_referential
+from connector.decorator import commit_now
+from connector.decorator import only_for_referential
 
 #TODO Option on image should be compatible with multi-referential
 #Indeed when you have two Magento maybe you do not want to use the
@@ -41,7 +41,7 @@ from base_external_referentials.decorator import only_for_referential
 #other image of the product.
 
 #TODO refactor all of this code and use the generic function from
-#base_external_referentials.
+#connector.
 
 class product_images(MagerpModel):
     _inherit = "product.images"
