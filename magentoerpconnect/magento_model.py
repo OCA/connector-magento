@@ -39,6 +39,8 @@ from openerp.addons.connector.external_referential import (
         REF_VISIBLE_FIELDS,
         add_backend)
 
+import openerp.addons.connector as connector
+
 REF_VISIBLE_FIELDS['Magento'] = ['location', 'apiusername', 'apipass']
 
 
@@ -47,12 +49,9 @@ _logger = logging.getLogger(__name__)
 DEBUG = True
 TIMEOUT = 2
 
-MAGENTO_BACKEND = 'magento.backend'
-add_backend(MAGENTO_BACKEND)
-
 
 class magento_backend(orm.Model):
-    _name = MAGENTO_BACKEND
+    _name = 'magento.backend'
     _doc = 'Magento Backend'
     _inherit = 'external.backend'
 
@@ -75,11 +74,29 @@ class magento_backend(orm.Model):
     }
 
     _defaults = {
-        'type': MAGENTO_BACKEND,  # useless?
+        'type': 'magento',
     }
 
     def synchronize_metadata(self, cr, uid, ids, context=None):
+        if not hasattr(ids, '__iter__'):
+            ids = [ids]
+        session = connector.ConnectorSession(cr, uid, context=context)
+        for backend in self.browse(cr, uid, ids, context=context):
+            ref = connector.get_reference(backend.type, backend.version)
+            importer = ref.get_class(connector.ImportSynchronizer,
+                                     'magento.website')
+            importer(ref, session).run()
+
+            importer = ref.get_class(connector.ImportSynchronizer,
+                                     'magento.store')
+            importer(ref, session).run()
+
+            importer = ref.get_class(connector.ImportSynchronizer,
+                                     'magento.storeview')
+            importer(ref, session).run()
         return True
+
+add_backend(magento_backend._name)
 
 
 # TODO migrate from external.shop.group

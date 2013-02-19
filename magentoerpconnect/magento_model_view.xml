@@ -9,6 +9,7 @@
                 <form string="Magento Backend" version="7.0">
                     <header>
                       <button name="synchronize_metadata"
+                        type="object"
                         class="oe_highlight"
                         string="Synchronize Metadata"/>
                     </header>
