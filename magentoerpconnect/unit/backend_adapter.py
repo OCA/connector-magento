@@ -75,11 +75,15 @@ class MagentoCRUDAdapter(CRUDAdapter):
 @magento
 class WebsiteAdapter(MagentoCRUDAdapter):
 
+    # TODO use the magento name instead of the openerp name
     _model_name = 'magento.website'
 
     def search(self, filters=None):
         """ Search records according to some criterias
-        and returns a list of ids """
+        and returns a list of ids
+
+        :rtype: list
+        """
         with Website(self.magento.location,
                      self.magento.username,
                      self.magento.password) as api:
@@ -87,9 +91,12 @@ class WebsiteAdapter(MagentoCRUDAdapter):
         return []
 
     def read(self, id, attributes=None):
-        """ Returns the information of a record """
+        """ Returns the information of a record
+
+        :rtype: dict
+        """
         with Website(self.magento.location,
                      self.magento.username,
                      self.magento.password) as api:
-            return api.info(id)
-        return []
+            return api.info(id)[0]
+        return {}
