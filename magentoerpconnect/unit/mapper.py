@@ -19,6 +19,21 @@
 #
 ##############################################################################
 
-from .backend_adapter import *
-from .synchronizer import *
-from .mapper import *
+from openerp.tools.translate import _
+import openerp.addons.connector as connector
+from ..reference import magento
+
+
+@magento
+class WebsiteMapper(connector.Mapper):
+    _model_name = 'magento.website'
+
+    direct = [('code', 'code')]
+    method = [name]
+
+    # @mapping
+    def name(self, record):
+        name = record['name']
+        if name is None:
+            name = _('Undefined')
+        return {'name': name}
