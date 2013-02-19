@@ -70,7 +70,7 @@ TODO
             'settings/1.5.0.0/product.link/external.mappinglines.template.csv',
             'settings/magerp_product_product_type.xml',
             'magerp_data.xml',
-            'magerp_core_view.xml',
+            'magento_model_view.xml',
             'product_view.xml',
             'partner_view.xml',
             'sale_view.xml',
