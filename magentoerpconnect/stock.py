@@ -23,7 +23,7 @@ import xmlrpclib
 
 from openerp.osv.orm import Model
 from openerp.tools.translate import _
-from base_sale_multichannels.sale import ExternalShippingCreateError
+from openerp.addons.connector_ecommerce.sale import ExternalShippingCreateError
 
 import logging
 _logger = logging.getLogger(__name__)
@@ -98,7 +98,7 @@ class stock_picking(Model):
             # When Magento is not able to create the shipping, it returns:
             # fault 102 is : <Fault 102: u"Impossible de faire l\'exp\xe9dition de la commande.">
             # In such case, we raise an ExternalShippingCreateError so
-            # base_sale_multichannels will flag "do_not_export"
+            # connector_ecommerce will flag "do_not_export"
             # in order to exclude it from the future exports
             if e.faultCode == 102:
                 raise ExternalShippingCreateError(e)

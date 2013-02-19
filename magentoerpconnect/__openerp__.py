@@ -23,7 +23,7 @@
     "depends" : [
                  "product",
                  'delivery',
-                 "base_sale_multichannels",
+                 "connector_ecommerce",
                  "product_m2mcategories",
                  "product_images",
                  "product_links",

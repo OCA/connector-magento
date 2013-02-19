@@ -6,7 +6,7 @@
             <field name="name">magerp_view_shop_form</field>
             <field name="model">sale.shop</field>
             <field name="inherit_id"
-                ref="base_sale_multichannels.base_sale_multichannels_view_shop_form" />
+                ref="connector_ecommerce.connector_ecommerce_view_shop_form" />
             <field name="arch" type="xml">
                 <field name="referential_id" position="replace">
                     <field name="referential_id" attrs="{'readonly': [('type_name', '=', 'Magento')]}"/>
@@ -72,7 +72,7 @@
         <record id="base_sale_multichannel_view_order_form_magento" model="ir.ui.view">
             <field name="name">base_sale_multichannel_view_order_form.magento</field>
             <field name="model">sale.order</field>
-            <field name="inherit_id" ref="base_sale_multichannels.base_sale_multichannel_view_order_form"/>
+            <field name="inherit_id" ref="connector_ecommerce.base_sale_multichannel_view_order_form"/>
             <field name="arch" type="xml">
                 <field name="need_to_update" position="after">
                     <group colspan="4" attrs="{'invisible': [('is_magento', '=', False)]}">

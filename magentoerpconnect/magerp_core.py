@@ -32,10 +32,10 @@ from openerp import tools
 from openerp.tools.translate import _
 
 from .magerp_osv import MagerpModel, Connection
-from connector.decorator import only_for_referential
-from connector.external_osv import ExternalSession
+from openerp.addons.connector.decorator import only_for_referential
+from openerp.addons.connector.external_osv import ExternalSession
 
-from connector.external_referential import (
+from openerp.addons.connector.external_referential import (
         REF_VISIBLE_FIELDS,
         add_backend)
 

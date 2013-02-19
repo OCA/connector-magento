@@ -27,8 +27,8 @@ from openerp.osv import fields
 from openerp.tools.translate import _
 
 from .magerp_osv import MagerpModel
-from connector.decorator import commit_now
-from connector.decorator import only_for_referential
+from openerp.addons.connector.decorator import commit_now
+from openerp.addons.connector.decorator import only_for_referential
 
 #TODO Option on image should be compatible with multi-referential
 #Indeed when you have two Magento maybe you do not want to use the

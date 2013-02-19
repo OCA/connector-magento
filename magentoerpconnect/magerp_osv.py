@@ -32,9 +32,9 @@ from tools.translate import _
 from openerp.osv.orm import Model
 from openerp.osv.osv import except_osv
 from openerp import tools
-from connector.decorator import only_for_referential
-from connector.decorator import open_report
-from connector.decorator import catch_error_in_report
+from openerp.addons.connector.decorator import only_for_referential
+from openerp.addons.connector.decorator import open_report
+from openerp.addons.connector.decorator import catch_error_in_report
 import netsvc
 import logging
 _logger = logging.getLogger(__name__)

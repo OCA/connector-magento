@@ -30,8 +30,8 @@ from tools.translate import _
 from openerp import tools
 import time
 from tools import DEFAULT_SERVER_DATETIME_FORMAT
-from connector.external_osv import ExternalSession
-from connector.decorator import only_for_referential, open_report
+from openerp.addons.connector.external_osv import ExternalSession
+from openerp.addons.connector.decorator import only_for_referential, open_report
 
 #from connector import report
 
@@ -460,7 +460,7 @@ class sale_order(Model):
         :return: True
         """
 
-        #TODO improve me and replace me by a generic function in base_sale_multichannels
+        #TODO improve me and replace me by a generic function in connector_ecommerce
         #Only the call to magento should be here
 
         model_data_obj = self.pool.get('ir.model.data')

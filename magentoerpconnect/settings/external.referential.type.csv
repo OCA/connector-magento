@@ -1,2 +1,2 @@
 "id","name","categ_id:id","code"
-"magento","Magento","base_sale_multichannels.multichannels","mag"
+"magento","Magento","connector_ecommerce.multichannels","mag"

@@ -38,8 +38,8 @@ from openerp.tools.translate import _
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 from .magerp_osv import MagerpModel
-from connector.decorator import only_for_referential, catch_error_in_report
-from connector.external_osv import ExternalSession
+from openerp.addons.connector.decorator import only_for_referential, catch_error_in_report
+from openerp.addons.connector.external_osv import ExternalSession
 
 _logger = logging.getLogger(__name__)
 

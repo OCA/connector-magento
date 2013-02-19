@@ -20,10 +20,10 @@
 #                                                                             #
 ###############################################################################
 
-from connector.connector import (REGISTRY,
-                                                  AbstractMapping,
-                                                  ModelMap)
-from base_sale_multichannel.connector import BaseConnector
+from openerp.addons.connector.connector import (REGISTRY,
+                                                AbstractMapping,
+                                                ModelMap)
+from openerp.addons.connector_ecommerce.connector import BaseConnector
 
 class MagentoConnector(BaseConnector):
     '''need to recode

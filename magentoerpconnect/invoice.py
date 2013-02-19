@@ -24,7 +24,7 @@
 from openerp.osv.orm import Model
 from openerp.osv import fields
 from openerp.tools.translate import _
-from connector.external_osv import ExternalSession
+from openerp.addons.connector.external_osv import ExternalSession
 from openerp.osv.osv import except_osv
 
 class account_invoice(Model):

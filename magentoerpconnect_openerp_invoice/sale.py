@@ -20,7 +20,7 @@
 ###############################################################################
 
 from openerp.osv.orm import Model
-from connector.external_osv import ExternalSession
+from openerp.addons.connector.external_osv import ExternalSession
 
 class sale_shop(Model):
     _inherit='sale.shop'

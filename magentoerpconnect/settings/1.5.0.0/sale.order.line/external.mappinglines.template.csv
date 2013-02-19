@@ -21,4 +21,4 @@ mag1500_sale_order_line_price=>,,in,function,price,,unicode,False,mag1500_sale_o
 ('price_unit_tax_excluded', (float(resource['base_row_total']))/float(resource['qty_ordered'])),
 ('tax_rate', float(resource['base_row_total']) and (float(resource['base_row_total_incl_tax'])/float(resource['base_row_total'])-1)),
 ]",,,
-mag1500_sale_order_line_id,,in,direct,item_id,base_sale_multichannels.field_sale_order_line_ext_ref_line,int,False,mag1500_sale_order_line,,,,,
+mag1500_sale_order_line_id,,in,direct,item_id,connector_ecommerce.field_sale_order_line_ext_ref_line,int,False,mag1500_sale_order_line,,,,,
