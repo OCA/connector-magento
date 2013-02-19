@@ -19,4 +19,5 @@
 #
 ##############################################################################
 
-import backend_adapter
+from .backend_adapter import *
+from .synchronizer import *

@@ -20,6 +20,8 @@
 ##############################################################################
 
 from openerp.addons.connector.unit import CRUDAdapter
+from ..reference import magento
+from ..magento_api import Website
 
 
 class MagentoLocation(object):
@@ -68,3 +70,26 @@ class MagentoCRUDAdapter(CRUDAdapter):
     def delete(self, id):
         """ Delete a record on the external system """
         raise NotImplementedError
+
+
+@magento
+class WebsiteAdapter(MagentoCRUDAdapter):
+
+    _model_name = 'magento.website'
+
+    def search(self, filters=None):
+        """ Search records according to some criterias
+        and returns a list of ids """
+        with Website(self.magento.location,
+                     self.magento.username,
+                     self.magento.password) as api:
+            return [int(row['website_id']) for row in api.list(filters)]
+        return []
+
+    def read(self, id, attributes=None):
+        """ Returns the information of a record """
+        with Website(self.magento.location,
+                     self.magento.username,
+                     self.magento.password) as api:
+            return api.info(id)
+        return []

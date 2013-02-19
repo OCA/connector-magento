@@ -40,6 +40,7 @@ from openerp.addons.connector.external_referential import (
         add_backend)
 
 import openerp.addons.connector as connector
+from .unit.synchronizer import BatchImportSynchronizer
 
 REF_VISIBLE_FIELDS['Magento'] = ['location', 'apiusername', 'apipass']
 
@@ -83,17 +84,17 @@ class magento_backend(orm.Model):
         session = connector.ConnectorSession(cr, uid, context=context)
         for backend in self.browse(cr, uid, ids, context=context):
             ref = connector.get_reference(backend.type, backend.version)
-            importer = ref.get_class(connector.ImportSynchronizer,
+            importer = ref.get_class(BatchImportSynchronizer,
                                      'magento.website')
-            importer(ref, session).run()
+            importer(ref, session, backend).run()
 
-            importer = ref.get_class(connector.ImportSynchronizer,
+            importer = ref.get_class(BatchImportSynchronizer,
                                      'magento.store')
-            importer(ref, session).run()
+            importer(ref, session, backend).run()
 
-            importer = ref.get_class(connector.ImportSynchronizer,
+            importer = ref.get_class(BatchImportSynchronizer,
                                      'magento.storeview')
-            importer(ref, session).run()
+            importer(ref, session, backend).run()
         return True
 
 add_backend(magento_backend._name)
