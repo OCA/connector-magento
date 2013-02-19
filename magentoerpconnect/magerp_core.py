@@ -6,7 +6,7 @@
 #                                                                       #
 # Copyright (C) 2009  Sharoon Thomas                                    #
 # Copyright (C) 2011 Akretion Sébastien BEAU sebastien.beau@akretion.com#
-# Copyright (C) 2011 Camptocamp Guewen Baconnier                        #
+# Copyright (C) 2011-2013 Camptocamp Guewen Baconnier                        #
 #                                                                       #
 #This program is free software: you can redistribute it and/or modify   #
 #it under the terms of the GNU General Public License as published by   #
@@ -57,6 +57,10 @@ class magento_backend(orm.Model):
     _inherit = 'external.backend'
 
     def _select_versions(self, cr, uid, context=None):
+        """ Available versions
+
+        Can be inherited to add custom versions.
+        """
         return [('1.5', '1.5'),
                 ('1.7', '1.7')]
 
@@ -72,6 +76,75 @@ class magento_backend(orm.Model):
 
     _defaults = {
         'type': MAGENTO_BACKEND,  # useless?
+    }
+
+
+# TODO migrate from external.shop.group
+class magento_website(orm.Model):
+    _name = 'magento.website'
+
+    _columns = {
+        'name': fields.char('Name', required=True),
+        'code': fields.char('Code'),
+        'backend_id': fields.many2one(
+            'magento.backend',
+            'Magento Backend',
+            required=True),
+        'sort_order': fields.integer('Sort Order'),
+        # we can keep the id of the website on this
+        # model, a record is a direct copy
+        'magento_id': fields.integer('ID on Magento'),
+    }
+
+
+# TODO migrate from sale.shop (create a magento.store + associated
+# sale.shop)
+class magento_store(orm.Model):
+    _name = 'magento.store'
+    _description = 'Magento Store'
+
+    _columns = {
+        'name': fields.char('Name', required=True),
+        'website_id': fields.many2one(
+            'magento.website',
+            'Magento Website',
+            required=True),
+        # a shop should be created along the magento.store
+        'shop_id': fields.many2one(
+            'sale.shop',
+            'Sale Shop',
+            required=True,
+            ondelete="cascade"),
+        # what is the exact purpose of this field?
+        'default_category_id': fields.many2one(
+            'product.category',
+            'Default Product Category',
+            help="The category set on products when?? TODO."
+            "\nOpenERP requires a main category on products for accounting."),
+        # we can keep the id of the store on this
+        # model, a record is a direct copy
+        'magento_id': fields.integer('ID on Magento'),
+    }
+
+
+# TODO: migrate from magerp.storeviews
+class magento_storeview(orm.Model):
+    _name = 'magento.storeview'
+    _description = "Magento Storeview"
+
+    _columns = {
+        'name': fields.char('Name', required=True),
+        'code': fields.char('Code'),
+        'enabled': fields.boolean('Enabled'),
+        'sort_order': fields.integer('Sort Order'),
+        'website_id': fields.many2one('magento.store', 'Website',
+                                      ondelete='cascade'),
+        'shop_id': fields.many2one('sale.shop', 'Shop',
+                                   ondelete='cascade'),
+        'lang_id': fields.many2one('res.lang', 'Language'),
+        # we can keep the id of the storeview on this
+        # model, a record is a direct copy
+        'magento_id': fields.integer('ID on Magento'),
     }
 
 
@@ -420,6 +493,7 @@ class external_referential(MagerpModel):
             print "run_import_newsletter_unsubscriber_scheduler: %s" % referential_ids
 
 
+# TODO: remove
 class external_shop_group(MagerpModel):
     _inherit = "external.shop.group"
     #Return format of API:{'code': 'base', 'name': 'Main', 'website_id': '1', 'is_default': '1', 'sort_order': '0', 'default_group_id': '1'}
@@ -445,6 +519,7 @@ class external_shop_group(MagerpModel):
         }
 
 
+# TODO: remove
 class magerp_storeviews(MagerpModel):
     _name = "magerp.storeviews"
     _description = "The magento store views information"
@@ -458,5 +533,3 @@ class magerp_storeviews(MagerpModel):
         'shop_id':fields.many2one('sale.shop', 'Shop', select=True, ondelete='cascade'),
         'lang_id':fields.many2one('res.lang', 'Language'),
     }
-
-    #Return format of API:{'code': 'default', 'store_id': '1', 'website_id': '1', 'is_active': '1', 'sort_order': '0', 'group_id': '1', 'name': 'Default Store View'}
