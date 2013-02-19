@@ -78,6 +78,9 @@ class magento_backend(orm.Model):
         'type': MAGENTO_BACKEND,  # useless?
     }
 
+    def synchronize_metadata(self, cr, uid, ids, context=None):
+        return True
+
 
 # TODO migrate from external.shop.group
 class magento_website(orm.Model):

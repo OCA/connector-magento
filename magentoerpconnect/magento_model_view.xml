@@ -7,14 +7,21 @@
             <field name="model">magento.backend</field>
             <field name="arch" type="xml">
                 <form string="Magento Backend" version="7.0">
-                    <h1>
-                        <field name="name" class="oe_inline"/>
-                    </h1>
-                    <group col="4">
-                        <field name="location" colspan="4"/>
-                        <field name="username"/>
-                        <field name="password"/>
-                    </group>
+                    <header>
+                      <button name="synchronize_metadata"
+                        class="oe_highlight"
+                        string="Synchronize Metadata"/>
+                    </header>
+                    <sheet>
+                        <h1>
+                            <field name="name" class="oe_inline"/>
+                        </h1>
+                        <group col="4">
+                            <field name="location" colspan="4"/>
+                            <field name="username"/>
+                            <field name="password"/>
+                        </group>
+                    </sheet>
                 </form>
             </field>
         </record>
