@@ -52,7 +52,7 @@ class MagentoImportSynchronizer(connector.ImportSynchronizer, MagentoSynchronize
         """
 
         :param magento_identifier: identifier of the record on Magento
-        :type magento_identifier: :py:class:`connector.connector.ExternalIdentifier`
+        :type magento_identifier: :py:class:`connector.connector.RecordIdentifier`
         """
         super(MagentoImportSynchronizer, self).__init__(reference,
                                                         session,
@@ -105,11 +105,11 @@ class MagentoImportSynchronizer(connector.ImportSynchronizer, MagentoSynchronize
         _logger.debug('openerp_id: %d updated', openerp_id)
         return
 
-    def run(self, magento_identifier):
+    def run(self):
         """ Run the synchronization
 
         :param magento_identifier: identifier of the record on Magento
-        :type magento_identifier: :py:class:`connector.connector.ExternalIdentifier`
+        :type magento_identifier: :py:class:`connector.connector.RecordIdentifier`
         """
         self.magento_record = self._get_magento_data()
 
@@ -164,13 +164,14 @@ class WebsiteBatchImport(BatchImportSynchronizer):
 
     def _import_record(self, record):
         """ Import the website record directly """
-        ext_id = connector.ExternalIdentifier(record)
+        magento_id = connector.RecordIdentifier(id=record)
         importer = self.reference.get_class(
                 MagentoImportSynchronizer,
                 self._model_name)
         importer(self.reference,
                  self.session,
-                 self.backend).run(ext_id)
+                 self.backend,
+                 magento_id).run()
 
 
 @magento
