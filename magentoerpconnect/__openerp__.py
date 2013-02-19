@@ -18,9 +18,9 @@
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.  #
 #########################################################################
 {
-    "name" : "Magento Connector New Generation",
-    "version" : "7.0",
-    "depends" : [
+    "name": "Magento Connector New Generation",
+    "version": "2.0.0",
+    "depends": [
                  "product",
                  'delivery',
                  "connector_ecommerce",
@@ -28,10 +28,10 @@
                  "product_images",
                  "product_links",
             ],
-    "author" : "MagentoERPconnect Core Editors",
+    "author": "MagentoERPconnect Core Editors",
     "description": """
-Magento E-commerce management
-=============================
+Magento Connector
+=================
 
 TODO
 
@@ -44,11 +44,11 @@ TODO
         'images/magentocoreeditors.png',
         'images/magentoerpconnect.png',
     ],
-    "website" : "https://launchpad.net/magentoerpconnect",
-    "category" : "Generic Modules",
-    "init_xml" : ['settings/magerp.product_category_attribute_options.csv',],
-    "demo_xml" : [],
-    "update_xml" : [
+    "website": "https://launchpad.net/magentoerpconnect",
+    "category": "Connector",
+    "init_xml": ['settings/magerp.product_category_attribute_options.csv',],
+    "demo_xml": [],
+    "update_xml": [
             'security/ir.model.access.csv',
             'settings/magerp.product_category_attribute_options.csv',
             'settings/external.referential.type.csv',
@@ -80,7 +80,6 @@ TODO
             'product_links_view.xml',
             'wizard/open_product_by_attribut_set.xml',
             ],
-    "auto_install": False,
     "installable": True,
     'application': True,
 }
