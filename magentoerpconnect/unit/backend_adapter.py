@@ -71,6 +71,13 @@ class MagentoCRUDAdapter(CRUDAdapter):
         """ Delete a record on the external system """
         raise NotImplementedError
 
+# TODO: generic magento adapter:
+# using
+# with API(...) as api:
+#     api.call('%s.list' % self._magento_name..., ...)
+
+# allow to have many model for 1 ConnectorUnit
+
 
 @magento
 class WebsiteAdapter(MagentoCRUDAdapter):
