@@ -19,9 +19,9 @@
 #
 ##############################################################################
 
+from magento import API
 from openerp.addons.connector.unit import CRUDAdapter
 from ..reference import magento
-from ..magento_api import Website, Store, Storeview
 
 
 class MagentoLocation(object):
@@ -72,19 +72,12 @@ class MagentoCRUDAdapter(CRUDAdapter):
         """ Delete a record on the external system """
         raise NotImplementedError
 
-# TODO: generic magento adapter:
-# using
-# with API(...) as api:
-#     api.call('%s.list' % self._magento_name..., ...)
 
-# allow to have many model for 1 ConnectorUnit
-
-
-@magento
-class WebsiteAdapter(MagentoCRUDAdapter):
+class GenericAdapter(MagentoCRUDAdapter):
 
     # TODO use the magento name instead of the openerp name
     _model_name = 'magento.website'
+    _magento_model = None
 
     def search(self, filters=None):
         """ Search records according to some criterias
@@ -92,10 +85,12 @@ class WebsiteAdapter(MagentoCRUDAdapter):
 
         :rtype: list
         """
-        with Website(self.magento.location,
-                     self.magento.username,
-                     self.magento.password) as api:
-            return [int(row['website_id']) for row in api.list(filters)]
+        with API(self.magento.location,
+                 self.magento.username,
+                 self.magento.password) as api:
+            return [int(row['website_id']) for row
+                    in api.call('%s.list' % self._magento_model,
+                                [filters] if filters else [{}])]
         return []
 
     def read(self, id, attributes=None):
@@ -103,70 +98,27 @@ class WebsiteAdapter(MagentoCRUDAdapter):
 
         :rtype: dict
         """
-        with Website(self.magento.location,
+        with API(self.magento.location,
                      self.magento.username,
                      self.magento.password) as api:
-            return api.info(id)[0]
+            return api.call('%s.info' % self._magento_model, [id])[0]
         return {}
 
 
 @magento
-class StoreAdapter(MagentoCRUDAdapter):
-
+class WebsiteAdapter(GenericAdapter):
     # TODO use the magento name instead of the openerp name
-    # and factorize (same class for website, store, ...)
+    _model_name = 'magento.website'
+    _magento_model = 'ol_websites'
+
+
+@magento
+class StoreAdapter(GenericAdapter):
     _model_name = 'magento.store'
-
-    def search(self, filters=None):
-        """ Search records according to some criterias
-        and returns a list of ids
-
-        :rtype: list
-        """
-        with Store(self.magento.location,
-                     self.magento.username,
-                     self.magento.password) as api:
-            return [int(row['group_id']) for row in api.list(filters)]
-        return []
-
-    def read(self, id, attributes=None):
-        """ Returns the information of a record
-
-        :rtype: dict
-        """
-        with Store(self.magento.location,
-                     self.magento.username,
-                     self.magento.password) as api:
-            return api.info(id)[0]
-        return {}
+    _magento_model = 'ol_groups'
 
 
 @magento
-class StoreviewAdapter(MagentoCRUDAdapter):
-
-    # TODO use the magento name instead of the openerp name
-    # and factorize (same class for website, store, ...)
+class StoreviewAdapter(GenericAdapter):
     _model_name = 'magento.storeview'
-
-    def search(self, filters=None):
-        """ Search records according to some criterias
-        and returns a list of ids
-
-        :rtype: list
-        """
-        with Storeview(self.magento.location,
-                       self.magento.username,
-                       self.magento.password) as api:
-            return [int(row['store_id']) for row in api.list(filters)]
-        return []
-
-    def read(self, id, attributes=None):
-        """ Returns the information of a record
-
-        :rtype: dict
-        """
-        with Storeview(self.magento.location,
-                       self.magento.username,
-                       self.magento.password) as api:
-            return api.info(id)[0]
-        return {}
+    _magento_model = 'ol_storeviews'

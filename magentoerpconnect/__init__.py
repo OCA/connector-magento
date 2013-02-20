@@ -29,7 +29,6 @@ import stock
 import product_links
 import wizard
 
-import magento_api
 from .unit import *
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
