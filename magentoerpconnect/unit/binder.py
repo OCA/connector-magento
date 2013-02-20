@@ -165,8 +165,11 @@ class IrModelDataBinder(MagentoBinder):
 
 
 @magento
-class WebsiteBinder(MagentoBinder):
-    _model_name = 'magento.website'
+class InModelBinder(MagentoBinder):
+    """
+    Bindings are done directly on the model
+    """
+    _model_name = ['magento.website', 'magento.store']
 
     def to_openerp(self, backend, backend_identifier):
         """ Give the OpenERP ID for an external ID

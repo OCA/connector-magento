@@ -31,18 +31,6 @@ class MagentoSynchronizer(connector.Synchronizer):
 
     _model_name = None  # implement in sub-classes
 
-    @property
-    def backend_adapter(self):
-        if self._backend_adapter is None:
-            adapter_cls = self.reference.get_class(connector.BackendAdapter,
-                                                   self.model_name)
-
-            magento = MagentoLocation(self.backend.location,
-                                      self.backend.username,
-                                      self.backend.password)
-            self._backend_adapter = adapter_cls(self.reference, magento)
-        return self._backend_adapter
-
 
 class MagentoExportSynchronizer(connector.ExportSynchronizer, MagentoSynchronizer):
     """ Base exporter for Magento """
@@ -51,15 +39,14 @@ class MagentoExportSynchronizer(connector.ExportSynchronizer, MagentoSynchronize
 class MagentoImportSynchronizer(connector.ImportSynchronizer, MagentoSynchronizer):
     """ Base importer for Magento """
 
-    def __init__(self, reference, session, backend, magento_identifier):
+
+    def __init__(self, environment, magento_identifier):
         """
 
-        :param magento_identifier: identifier of the record on Magento
-        :type magento_identifier: :py:class:`connector.connector.RecordIdentifier`
+        :param environment: current environment (reference, backend, ...)
+        :type environment: :py:class:`connector.connector.SynchronizationEnvironment`
         """
-        super(MagentoImportSynchronizer, self).__init__(reference,
-                                                        session,
-                                                        backend)
+        super(MagentoImportSynchronizer, self).__init__(environment)
         self.magento_identifier = magento_identifier
         self.magento_record = None
 
@@ -157,28 +144,24 @@ class BatchImportSynchronizer(MagentoSynchronizer):
 
 
 @magento
-class WebsiteBatchImport(BatchImportSynchronizer):
+class SimpleBatchImport(BatchImportSynchronizer):
     """ Import the Magento Websites.
 
     They are imported directly because this is a rare and fast operation,
     performed from the UI.
     """
-    _model_name = 'magento.website'
+    _model_name = ['magento.website', 'magento.store']
 
     def _import_record(self, record):
         """ Import the website record directly """
         magento_id = connector.RecordIdentifier(id=record)
-        importer = self.reference.get_class(
-                MagentoImportSynchronizer,
-                self._model_name)
-        importer(self.reference,
-                 self.session,
-                 self.backend,
+        importer = self.reference.get_class(MagentoImportSynchronizer,
+                                            self.model._name)
+        importer(self.environment,
                  magento_id).run()
 
 
 @magento
 class WebsiteImport(MagentoImportSynchronizer):
     """ Import one Magento Website """
-    _model_name = 'magento.website'
-
+    _model_name = ['magento.website', 'magento.store']

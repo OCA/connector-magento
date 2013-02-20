@@ -84,9 +84,11 @@ class magento_backend(orm.Model):
         session = connector.ConnectorSession(cr, uid, context=context)
         for backend in self.browse(cr, uid, ids, context=context):
             ref = connector.get_reference(backend.type, backend.version)
+            env = connector.SynchronizationEnvironment(
+                    ref, backend, session, 'magento.website')
             importer = ref.get_class(BatchImportSynchronizer,
                                      'magento.website')
-            importer(ref, session, backend).run()
+            importer(env).run()
 
             # importer = ref.get_class(BatchImportSynchronizer,
             #                          'magento.store')

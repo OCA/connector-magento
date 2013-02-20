@@ -35,15 +35,16 @@ class MagentoLocation(object):
 class MagentoCRUDAdapter(CRUDAdapter):
     """ External Records Adapter for Magento """
 
-    def __init__(self, reference, magento):
+    def __init__(self, environment):
         """
-        :param reference: current reference
-        :type reference: :py:class:`connector.reference.Reference`
-        :param magento: Magento connection information
-        :type magento: :py:class:`magentoerpconnect.unit.backend_adapter.MagentoLocation`
+
+        :param environment: current environment (reference, backend, ...)
+        :type environment: :py:class:`connector.connector.SynchronizationEnvironment`
         """
-        super(MagentoCRUDAdapter, self).__init__(reference)
-        self.magento = magento
+        super(MagentoCRUDAdapter, self).__init__(environment)
+        self.magento = MagentoLocation(self.backend.location,
+                                       self.backend.username,
+                                       self.backend.password)
 
     def search(self, filters=None):
         """ Search records according to some criterias
