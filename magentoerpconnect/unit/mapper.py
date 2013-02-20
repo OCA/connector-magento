@@ -21,6 +21,7 @@
 
 from openerp.tools.translate import _
 import openerp.addons.connector as connector
+from openerp.addons.connector import mapping
 from ..reference import magento
 
 
@@ -30,18 +31,37 @@ class WebsiteMapper(connector.ImportMapper):
 
     direct = [('code', 'code')]
 
-    # @mapping
+    @mapping
     def name(self, record):
         name = record['name']
         if name is None:
             name = _('Undefined')
         return {'name': name}
 
-    # @mapping
-    def backend(self, record):
+    @mapping
+    def backend_id(self, record):
         return {'backend_id': self.backend.id}
 
-    method = [
-        name,
-        backend
-    ]
+
+@magento
+class StoreMapper(connector.ImportMapper):
+    _model_name = 'magento.store'
+
+    direct = [('name', 'name')]
+
+    @mapping
+    def website_id(self, record):
+        binder_cls = self.reference.get_class(connector.Binder, 'magento.website')
+        ext_id = connector.RecordIdentifier(id=record['website_id'])
+        # TODO helper to copy environment with another model
+        env = connector.SynchronizationEnvironment(
+                self.environment.reference,
+                self.environment.backend,
+                self.environment.session,
+                'magento.website')
+        openerp_id = binder_cls(env).to_openerp(self.backend, ext_id)
+        return {'website_id': openerp_id}
+
+    @mapping
+    def backend_id(self, record):
+        return {'backend_id': self.backend.id}

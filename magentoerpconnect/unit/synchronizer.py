@@ -157,8 +157,7 @@ class SimpleBatchImport(BatchImportSynchronizer):
         magento_id = connector.RecordIdentifier(id=record)
         importer = self.reference.get_class(MagentoImportSynchronizer,
                                             self.model._name)
-        importer(self.environment,
-                 magento_id).run()
+        importer(self.environment, magento_id).run()
 
 
 @magento

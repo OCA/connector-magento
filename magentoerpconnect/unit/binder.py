@@ -181,8 +181,7 @@ class InModelBinder(MagentoBinder):
         :return: OpenERP ID of the record
         :rtype: int
         """
-        website_obj = self.session.pool.get('magento.website')
-        website_ids = website_obj.search(
+        website_ids = self.environment.model.search(
                 self.session.cr,
                 self.session.uid,
                 [('magento_id', '=', backend_identifier.id),
@@ -200,8 +199,7 @@ class InModelBinder(MagentoBinder):
         :return: backend identifier of the record
         :rtype: :py:class:`connector.connector.RecordIdentifier`
         """
-        website_obj = self.session.pool.get('magento.website')
-        magento_id = website_obj.read(
+        magento_id = self.environment.model.read(
                 self.session.cr,
                 self.session.uid,
                 openerp_id,
@@ -218,8 +216,7 @@ class InModelBinder(MagentoBinder):
         :param openerp_id: OpenERP ID to bind
         :type openerp_id: int
         """
-        website_obj = self.session.pool.get('magento.website')
-        website_obj.write(
+        self.environment.model.write(
                 self.session.cr,
                 self.session.uid,
                 openerp_id,

@@ -84,15 +84,18 @@ class magento_backend(orm.Model):
         session = connector.ConnectorSession(cr, uid, context=context)
         for backend in self.browse(cr, uid, ids, context=context):
             ref = connector.get_reference(backend.type, backend.version)
+
             env = connector.SynchronizationEnvironment(
                     ref, backend, session, 'magento.website')
             importer = ref.get_class(BatchImportSynchronizer,
                                      'magento.website')
             importer(env).run()
 
-            # importer = ref.get_class(BatchImportSynchronizer,
-            #                          'magento.store')
-            # importer(ref, session, backend).run()
+            env = connector.SynchronizationEnvironment(
+                    ref, backend, session, 'magento.store')
+            importer = ref.get_class(BatchImportSynchronizer,
+                                     'magento.store')
+            importer(env).run()
 
             # importer = ref.get_class(BatchImportSynchronizer,
             #                          'magento.storeview')
@@ -136,7 +139,8 @@ class magento_store(orm.Model):
         'shop_id': fields.many2one(
             'sale.shop',
             'Sale Shop',
-            required=True,
+            # required=True,  # FIXME should be created along a
+            # magento.store
             ondelete="cascade"),
         # what is the exact purpose of this field?
         'default_category_id': fields.many2one(
@@ -147,6 +151,10 @@ class magento_store(orm.Model):
         # we can keep the id of the store on this
         # model, a record is a direct copy
         'magento_id': fields.integer('ID on Magento'),
+        'backend_id': fields.many2one(
+            'magento.backend',
+            'Magento Backend',
+            required=True),
     }
 
 
@@ -553,4 +561,8 @@ class magerp_storeviews(MagerpModel):
         'sort_order':fields.integer('Sort Order'),
         'shop_id':fields.many2one('sale.shop', 'Shop', select=True, ondelete='cascade'),
         'lang_id':fields.many2one('res.lang', 'Language'),
+        'backend_id': fields.many2one(
+            'magento.backend',
+            'Magento Backend',
+            required=True),
     }
