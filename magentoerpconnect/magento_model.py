@@ -88,13 +88,13 @@ class magento_backend(orm.Model):
                                      'magento.website')
             importer(ref, session, backend).run()
 
-            importer = ref.get_class(BatchImportSynchronizer,
-                                     'magento.store')
-            importer(ref, session, backend).run()
+            # importer = ref.get_class(BatchImportSynchronizer,
+            #                          'magento.store')
+            # importer(ref, session, backend).run()
 
-            importer = ref.get_class(BatchImportSynchronizer,
-                                     'magento.storeview')
-            importer(ref, session, backend).run()
+            # importer = ref.get_class(BatchImportSynchronizer,
+            #                          'magento.storeview')
+            # importer(ref, session, backend).run()
         return True
 
 add_backend(magento_backend._name)

@@ -19,9 +19,12 @@
 #
 ##############################################################################
 
+import logging
 import openerp.addons.connector as connector
 from .backend_adapter import MagentoLocation
 from ..reference import magento
+
+_logger = logging.getLogger(__name__)
 
 
 class MagentoSynchronizer(connector.Synchronizer):

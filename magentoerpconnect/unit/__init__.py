@@ -22,3 +22,4 @@
 from .backend_adapter import *
 from .synchronizer import *
 from .mapper import *
+from .binder import *

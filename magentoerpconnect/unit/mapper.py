@@ -25,11 +25,10 @@ from ..reference import magento
 
 
 @magento
-class WebsiteMapper(connector.Mapper):
+class WebsiteMapper(connector.ImportMapper):
     _model_name = 'magento.website'
 
     direct = [('code', 'code')]
-    method = [name]
 
     # @mapping
     def name(self, record):
@@ -37,3 +36,12 @@ class WebsiteMapper(connector.Mapper):
         if name is None:
             name = _('Undefined')
         return {'name': name}
+
+    # @mapping
+    def backend(self, record):
+        return {'backend_id': self.backend.id}
+
+    method = [
+        name,
+        backend
+    ]
