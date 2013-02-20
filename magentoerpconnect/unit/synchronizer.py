@@ -150,17 +150,25 @@ class SimpleBatchImport(BatchImportSynchronizer):
     They are imported directly because this is a rare and fast operation,
     performed from the UI.
     """
-    _model_name = ['magento.website', 'magento.store']
+    _model_name = [
+            'magento.website',
+            'magento.store',
+            'magento.storeview',
+            ]
 
     def _import_record(self, record):
         """ Import the website record directly """
         magento_id = connector.RecordIdentifier(id=record)
         importer = self.reference.get_class(MagentoImportSynchronizer,
-                                            self.model._name)
+                                            self.environment.model_name)
         importer(self.environment, magento_id).run()
 
 
 @magento
 class WebsiteImport(MagentoImportSynchronizer):
     """ Import one Magento Website """
-    _model_name = ['magento.website', 'magento.store']
+    _model_name = [
+            'magento.website',
+            'magento.store',
+            'magento.storeview'
+        ]

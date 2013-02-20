@@ -169,7 +169,11 @@ class InModelBinder(MagentoBinder):
     """
     Bindings are done directly on the model
     """
-    _model_name = ['magento.website', 'magento.store']
+    _model_name = [
+            'magento.website',
+            'magento.store',
+            'magento.storeview',
+        ]
 
     def to_openerp(self, backend, backend_identifier):
         """ Give the OpenERP ID for an external ID

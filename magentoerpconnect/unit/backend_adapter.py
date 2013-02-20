@@ -21,7 +21,7 @@
 
 from openerp.addons.connector.unit import CRUDAdapter
 from ..reference import magento
-from ..magento_api import Website, Store
+from ..magento_api import Website, Store, Storeview
 
 
 class MagentoLocation(object):
@@ -126,7 +126,7 @@ class StoreAdapter(MagentoCRUDAdapter):
         with Store(self.magento.location,
                      self.magento.username,
                      self.magento.password) as api:
-            return [int(row['website_id']) for row in api.list(filters)]
+            return [int(row['group_id']) for row in api.list(filters)]
         return []
 
     def read(self, id, attributes=None):
@@ -137,5 +137,36 @@ class StoreAdapter(MagentoCRUDAdapter):
         with Store(self.magento.location,
                      self.magento.username,
                      self.magento.password) as api:
+            return api.info(id)[0]
+        return {}
+
+
+@magento
+class StoreviewAdapter(MagentoCRUDAdapter):
+
+    # TODO use the magento name instead of the openerp name
+    # and factorize (same class for website, store, ...)
+    _model_name = 'magento.storeview'
+
+    def search(self, filters=None):
+        """ Search records according to some criterias
+        and returns a list of ids
+
+        :rtype: list
+        """
+        with Storeview(self.magento.location,
+                       self.magento.username,
+                       self.magento.password) as api:
+            return [int(row['store_id']) for row in api.list(filters)]
+        return []
+
+    def read(self, id, attributes=None):
+        """ Returns the information of a record
+
+        :rtype: dict
+        """
+        with Storeview(self.magento.location,
+                       self.magento.username,
+                       self.magento.password) as api:
             return api.info(id)[0]
         return {}

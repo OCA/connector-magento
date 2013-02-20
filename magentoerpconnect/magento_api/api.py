@@ -96,13 +96,13 @@ class Store(API):
         return self.call('ol_groups.info', [id])
 
 
-class StoreView(API):
+class Storeview(API):
     """
-    StoreView API
+    Storeview API
 
     Example usage::
 
-        with StoreView(url, username, password) as api:
+        with Storeview(url, username, password) as api:
             return api.list()
 
     """

@@ -65,3 +65,30 @@ class StoreMapper(connector.ImportMapper):
     @mapping
     def backend_id(self, record):
         return {'backend_id': self.backend.id}
+
+
+@magento
+class StoreviewMapper(connector.ImportMapper):
+    _model_name = 'magento.storeview'
+
+    direct = [
+        ('name', 'name'),
+        ('code', 'code')
+    ]
+
+    @mapping
+    def store_id(self, record):
+        binder_cls = self.reference.get_class(connector.Binder, 'magento.store')
+        ext_id = connector.RecordIdentifier(id=record['group_id'])
+        # TODO helper to copy environment with another model
+        env = connector.SynchronizationEnvironment(
+                self.environment.reference,
+                self.environment.backend,
+                self.environment.session,
+                'magento.store')
+        openerp_id = binder_cls(env).to_openerp(self.backend, ext_id)
+        return {'store_id': openerp_id}
+
+    @mapping
+    def backend_id(self, record):
+        return {'backend_id': self.backend.id}

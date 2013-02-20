@@ -97,9 +97,11 @@ class magento_backend(orm.Model):
                                      'magento.store')
             importer(env).run()
 
-            # importer = ref.get_class(BatchImportSynchronizer,
-            #                          'magento.storeview')
-            # importer(ref, session, backend).run()
+            env = connector.SynchronizationEnvironment(
+                    ref, backend, session, 'magento.storeview')
+            importer = ref.get_class(BatchImportSynchronizer,
+                                     'magento.storeview')
+            importer(env).run()
         return True
 
 add_backend(magento_backend._name)
@@ -174,6 +176,10 @@ class magento_storeview(orm.Model):
         # we can keep the id of the storeview on this
         # model, a record is a direct copy
         'magento_id': fields.integer('ID on Magento'),
+        'backend_id': fields.many2one(
+            'magento.backend',
+            'Magento Backend',
+            required=True),
     }
 
 
@@ -561,8 +567,4 @@ class magerp_storeviews(MagerpModel):
         'sort_order':fields.integer('Sort Order'),
         'shop_id':fields.many2one('sale.shop', 'Shop', select=True, ondelete='cascade'),
         'lang_id':fields.many2one('res.lang', 'Language'),
-        'backend_id': fields.many2one(
-            'magento.backend',
-            'Magento Backend',
-            required=True),
     }
