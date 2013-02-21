@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from magento import API
+import magento as magentolib
 from openerp.addons.connector.unit import CRUDAdapter
 from ..reference import magento
 
@@ -78,6 +78,7 @@ class GenericAdapter(MagentoCRUDAdapter):
     # TODO use the magento name instead of the openerp name
     _model_name = 'magento.website'
     _magento_model = None
+    _id_field = None
 
     def search(self, filters=None):
         """ Search records according to some criterias
@@ -85,10 +86,10 @@ class GenericAdapter(MagentoCRUDAdapter):
 
         :rtype: list
         """
-        with API(self.magento.location,
-                 self.magento.username,
-                 self.magento.password) as api:
-            return [int(row['website_id']) for row
+        with magentolib.API(self.magento.location,
+                            self.magento.username,
+                            self.magento.password) as api:
+            return [int(row[self._id_field]) for row
                     in api.call('%s.list' % self._magento_model,
                                 [filters] if filters else [{}])]
         return []
@@ -98,10 +99,10 @@ class GenericAdapter(MagentoCRUDAdapter):
 
         :rtype: dict
         """
-        with API(self.magento.location,
-                     self.magento.username,
-                     self.magento.password) as api:
-            return api.call('%s.info' % self._magento_model, [id])[0]
+        with magentolib.API(self.magento.location,
+                            self.magento.username,
+                            self.magento.password) as api:
+            return api.call('%s.info' % self._magento_model, [id.id])
         return {}
 
 
@@ -110,15 +111,18 @@ class WebsiteAdapter(GenericAdapter):
     # TODO use the magento name instead of the openerp name
     _model_name = 'magento.website'
     _magento_model = 'ol_websites'
+    _id_field = 'website_id'
 
 
 @magento
 class StoreAdapter(GenericAdapter):
     _model_name = 'magento.store'
     _magento_model = 'ol_groups'
+    _id_field = 'group_id'
 
 
 @magento
 class StoreviewAdapter(GenericAdapter):
     _model_name = 'magento.storeview'
     _magento_model = 'ol_storeviews'
+    _id_field = 'store_id'

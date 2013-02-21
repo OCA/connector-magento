@@ -84,21 +84,19 @@ class magento_backend(orm.Model):
         session = connector.ConnectorSession(cr, uid, context=context)
         for backend in self.browse(cr, uid, ids, context=context):
             ref = connector.get_reference(backend.type, backend.version)
+            env_cls = connector.SynchronizationEnvironment
 
-            env = connector.SynchronizationEnvironment(
-                    ref, backend, session, 'magento.website')
+            env = env_cls(ref, backend, session, 'magento.website')
             importer = ref.get_class(BatchImportSynchronizer,
                                      'magento.website')
             importer(env).run()
 
-            env = connector.SynchronizationEnvironment(
-                    ref, backend, session, 'magento.store')
+            env = env_cls(ref, backend, session, 'magento.store')
             importer = ref.get_class(BatchImportSynchronizer,
                                      'magento.store')
             importer(env).run()
 
-            env = connector.SynchronizationEnvironment(
-                    ref, backend, session, 'magento.storeview')
+            env = env_cls(ref, backend, session, 'magento.storeview')
             importer = ref.get_class(BatchImportSynchronizer,
                                      'magento.storeview')
             importer(env).run()
@@ -122,6 +120,11 @@ class magento_website(orm.Model):
         # we can keep the id of the website on this
         # model, a record is a direct copy
         'magento_id': fields.integer('ID on Magento'),
+        'store_ids': fields.one2many(
+            'magento.store',
+            'website_id',
+            string="Stores",
+            readonly=True),
     }
 
 
@@ -157,6 +160,11 @@ class magento_store(orm.Model):
             'magento.backend',
             'Magento Backend',
             required=True),
+        'storeview_ids': fields.one2many(
+            'magento.storeview',
+            'store_id',
+            string="Storeviews",
+            readonly=True),
     }
 
 
