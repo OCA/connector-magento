@@ -55,7 +55,6 @@ class StoreMapper(connector.ImportMapper):
         ext_id = connector.RecordIdentifier(id=record['website_id'])
         # TODO helper to copy environment with another model
         env = connector.SynchronizationEnvironment(
-                self.environment.backend,
                 self.environment.backend_record,
                 self.environment.session,
                 'magento.website')
@@ -82,7 +81,6 @@ class StoreviewMapper(connector.ImportMapper):
         ext_id = connector.RecordIdentifier(id=record['group_id'])
         # TODO helper to copy environment with another model
         env = connector.SynchronizationEnvironment(
-                self.environment.backend,
                 self.environment.backend_record,
                 self.environment.session,
                 'magento.store')

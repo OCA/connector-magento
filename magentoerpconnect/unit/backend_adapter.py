@@ -126,3 +126,10 @@ class StoreviewAdapter(GenericAdapter):
     _model_name = 'magento.storeview'
     _magento_model = 'ol_storeviews'
     _id_field = 'store_id'
+
+
+@magento
+class PartnerAdapter(GenericAdapter):
+    _model_name = 'res.partner'
+    _magento_model = 'customer'
+    _id_field = 'customer_id'

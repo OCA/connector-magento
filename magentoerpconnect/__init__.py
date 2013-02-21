@@ -19,6 +19,9 @@
 #########################################################################
 import backend
 import magento_model
+import queue
+from .unit import *
+
 import product
 import partner
 import sale
@@ -29,6 +32,5 @@ import stock
 import product_links
 import wizard
 
-from .unit import *
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

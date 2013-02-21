@@ -83,14 +83,12 @@ class magento_backend(orm.Model):
             ids = [ids]
         session = connector.ConnectorSession(cr, uid, context=context)
         for backend_record in self.browse(cr, uid, ids, context=context):
-            backend = connector.get_backend(backend_record.type,
-                                        backend_record.version)
             env_cls = connector.SynchronizationEnvironment
             for model in ('magento.website',
                           'magento.store',
                           'magento.storeview'):
-                env = env_cls(backend, backend_record, session, model)
-                importer = backend.get_class(BatchImportSynchronizer, model)
+                env = env_cls(backend_record, session, model)
+                importer = env.backend.get_class(BatchImportSynchronizer, model)
                 importer(env).run()
 
         return True

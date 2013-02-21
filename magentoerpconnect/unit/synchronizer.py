@@ -146,7 +146,7 @@ class BatchImportSynchronizer(MagentoSynchronizer):
 
 @magento
 class SimpleBatchImport(BatchImportSynchronizer):
-    """ Import the Magento Websites.
+    """ Import the Magento Websites, Stores, Storeviews
 
     They are imported directly because this is a rare and fast operation,
     performed from the UI.
@@ -158,10 +158,10 @@ class SimpleBatchImport(BatchImportSynchronizer):
             ]
 
     def _import_record(self, record):
-        """ Import the website record directly """
+        """ Import the record directly """
         magento_id = connector.RecordIdentifier(id=record)
         importer = self.backend.get_class(MagentoImportSynchronizer,
-                                            self.environment.model_name)
+                                          self.environment.model_name)
         importer(self.environment, magento_id).run()
 
 
@@ -173,3 +173,21 @@ class WebsiteImport(MagentoImportSynchronizer):
             'magento.store',
             'magento.storeview'
         ]
+
+
+@magento
+class DelayBatchImport(BatchImportSynchronizer):
+    """ Import the Magento Partners.
+
+    For every partner in the list, a delayed job is created.
+    """
+    _model_name = [
+            'res.partner',
+            ]
+
+    def _import_record(self, record):
+        """ Delay a job for the import """
+        magento_id = connector.RecordIdentifier(id=record)
+        importer = self.backend.get_class(MagentoImportSynchronizer,
+                                          self.environment.model_name)
+
