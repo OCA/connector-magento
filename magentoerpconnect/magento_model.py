@@ -54,7 +54,7 @@ TIMEOUT = 2
 class magento_backend(orm.Model):
     _name = 'magento.backend'
     _doc = 'Magento Backend'
-    _inherit = 'external.backend'
+    _inherit = 'connector.backend'
 
     def _select_versions(self, cr, uid, context=None):
         """ Available versions
@@ -82,24 +82,17 @@ class magento_backend(orm.Model):
         if not hasattr(ids, '__iter__'):
             ids = [ids]
         session = connector.ConnectorSession(cr, uid, context=context)
-        for backend in self.browse(cr, uid, ids, context=context):
-            ref = connector.get_reference(backend.type, backend.version)
+        for backend_record in self.browse(cr, uid, ids, context=context):
+            backend = connector.get_backend(backend_record.type,
+                                        backend_record.version)
             env_cls = connector.SynchronizationEnvironment
+            for model in ('magento.website',
+                          'magento.store',
+                          'magento.storeview'):
+                env = env_cls(backend, backend_record, session, model)
+                importer = backend.get_class(BatchImportSynchronizer, model)
+                importer(env).run()
 
-            env = env_cls(ref, backend, session, 'magento.website')
-            importer = ref.get_class(BatchImportSynchronizer,
-                                     'magento.website')
-            importer(env).run()
-
-            env = env_cls(ref, backend, session, 'magento.store')
-            importer = ref.get_class(BatchImportSynchronizer,
-                                     'magento.store')
-            importer(env).run()
-
-            env = env_cls(ref, backend, session, 'magento.storeview')
-            importer = ref.get_class(BatchImportSynchronizer,
-                                     'magento.storeview')
-            importer(env).run()
         return True
 
 add_backend(magento_backend._name)

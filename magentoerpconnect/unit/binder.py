@@ -20,7 +20,7 @@
 ##############################################################################
 
 import openerp.addons.connector as connector
-from ..reference import magento
+from ..backend import magento
 
 
 class MagentoBinder(connector.Binder):

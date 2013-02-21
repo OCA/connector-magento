@@ -21,7 +21,7 @@
 
 import magento as magentolib
 from openerp.addons.connector.unit import CRUDAdapter
-from ..reference import magento
+from ..backend import magento
 
 
 class MagentoLocation(object):
@@ -38,13 +38,13 @@ class MagentoCRUDAdapter(CRUDAdapter):
     def __init__(self, environment):
         """
 
-        :param environment: current environment (reference, backend, ...)
+        :param environment: current environment (backend, session, ...)
         :type environment: :py:class:`connector.connector.SynchronizationEnvironment`
         """
         super(MagentoCRUDAdapter, self).__init__(environment)
-        self.magento = MagentoLocation(self.backend.location,
-                                       self.backend.username,
-                                       self.backend.password)
+        self.magento = MagentoLocation(self.backend_record.location,
+                                       self.backend_record.username,
+                                       self.backend_record.password)
 
     def search(self, filters=None):
         """ Search records according to some criterias

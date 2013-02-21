@@ -22,7 +22,7 @@
 import logging
 import openerp.addons.connector as connector
 from .backend_adapter import MagentoLocation
-from ..reference import magento
+from ..backend import magento
 
 _logger = logging.getLogger(__name__)
 
@@ -43,7 +43,7 @@ class MagentoImportSynchronizer(connector.ImportSynchronizer, MagentoSynchronize
     def __init__(self, environment, magento_identifier):
         """
 
-        :param environment: current environment (reference, backend, ...)
+        :param environment: current environment (backend, session, ...)
         :type environment: :py:class:`connector.connector.SynchronizationEnvironment`
         """
         super(MagentoImportSynchronizer, self).__init__(environment)
@@ -114,14 +114,15 @@ class MagentoImportSynchronizer(connector.ImportSynchronizer, MagentoSynchronize
         # special check on data before import
         self._validate_data(record)
 
-        openerp_id = self.binder.to_openerp(self.backend,
+        backend_record = self.environment.backend_record
+        openerp_id = self.binder.to_openerp(backend_record,
                                             self.magento_identifier)
 
         if openerp_id:
             self._update(openerp_id, record)
         else:
             openerp_id = self._create(record)
-            self.binder.bind(self.backend,
+            self.binder.bind(backend_record,
                              self.magento_identifier,
                              openerp_id)
 
@@ -159,7 +160,7 @@ class SimpleBatchImport(BatchImportSynchronizer):
     def _import_record(self, record):
         """ Import the website record directly """
         magento_id = connector.RecordIdentifier(id=record)
-        importer = self.reference.get_class(MagentoImportSynchronizer,
+        importer = self.backend.get_class(MagentoImportSynchronizer,
                                             self.environment.model_name)
         importer(self.environment, magento_id).run()
 

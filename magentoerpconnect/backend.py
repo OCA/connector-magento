@@ -22,5 +22,5 @@
 import openerp.addons.connector as connector
 
 
-magento = connector.Reference('magento')
-magento1700 = connector.Reference(parent=magento, version='1.7')
+magento = connector.Backend('magento')
+magento1700 = connector.Backend(parent=magento, version='1.7')
