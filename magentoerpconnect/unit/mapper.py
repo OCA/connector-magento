@@ -54,7 +54,7 @@ class StoreMapper(connector.ImportMapper):
         binder_cls = self.backend.get_class(connector.Binder, 'magento.website')
         ext_id = connector.RecordIdentifier(id=record['website_id'])
         # TODO helper to copy environment with another model
-        env = connector.SynchronizationEnvironment(
+        env = connector.Environment(
                 self.environment.backend_record,
                 self.environment.session,
                 'magento.website')
@@ -80,7 +80,7 @@ class StoreviewMapper(connector.ImportMapper):
         binder_cls = self.backend.get_class(connector.Binder, 'magento.store')
         ext_id = connector.RecordIdentifier(id=record['group_id'])
         # TODO helper to copy environment with another model
-        env = connector.SynchronizationEnvironment(
+        env = connector.Environment(
                 self.environment.backend_record,
                 self.environment.session,
                 'magento.store')

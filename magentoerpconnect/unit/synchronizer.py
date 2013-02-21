@@ -44,7 +44,7 @@ class MagentoImportSynchronizer(connector.ImportSynchronizer, MagentoSynchronize
         """
 
         :param environment: current environment (backend, session, ...)
-        :type environment: :py:class:`connector.connector.SynchronizationEnvironment`
+        :type environment: :py:class:`connector.connector.Environment`
         """
         super(MagentoImportSynchronizer, self).__init__(environment)
         self.magento_identifier = magento_identifier

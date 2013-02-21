@@ -83,7 +83,7 @@ class magento_backend(orm.Model):
             ids = [ids]
         session = connector.ConnectorSession(cr, uid, context=context)
         for backend_record in self.browse(cr, uid, ids, context=context):
-            env_cls = connector.SynchronizationEnvironment
+            env_cls = connector.Environment
             for model in ('magento.website',
                           'magento.store',
                           'magento.storeview'):

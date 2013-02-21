@@ -39,7 +39,7 @@ class MagentoCRUDAdapter(CRUDAdapter):
         """
 
         :param environment: current environment (backend, session, ...)
-        :type environment: :py:class:`connector.connector.SynchronizationEnvironment`
+        :type environment: :py:class:`connector.connector.Environment`
         """
         super(MagentoCRUDAdapter, self).__init__(environment)
         self.magento = MagentoLocation(self.backend_record.location,

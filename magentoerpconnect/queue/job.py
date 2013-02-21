@@ -29,6 +29,6 @@ def import_partner_since(session, backend_id, since_date):
                                   session.uid,
                                   backend_id,
                                   session.context)
-    env = connector.SynchronizationEnvironment(
+    env = connector.Environment(
             backend_record, session, 'res.partner')
 
