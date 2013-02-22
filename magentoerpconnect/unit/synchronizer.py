@@ -35,6 +35,7 @@ class MagentoExportSynchronizer(connector.ExportSynchronizer):
 class MagentoImportSynchronizer(connector.ImportSynchronizer):
     """ Base importer for Magento """
 
+    _metadata_model = None
 
     def __init__(self, environment):
         """
@@ -60,6 +61,16 @@ class MagentoImportSynchronizer(connector.ImportSynchronizer):
     def _map_data(self):
         """ Return the external record converted to OpenERP """
         return self.mapper.convert(self.magento_record)
+
+    def _map_metadata(self):
+        """ Return the metadata for the record converted to OpenERP """
+        if self._metadata_model is None:
+            return
+        mapper = connector.Environment(
+                self.backend_record,
+                self.session,
+                self._metadata_model).get_connector_unit(connector.ImportMapper)
+        return mapper.convert(self.magento_record)
 
     def _validate_data(self, data):
         """ Check if the values to import are correct
@@ -106,6 +117,7 @@ class MagentoImportSynchronizer(connector.ImportSynchronizer):
         self._import_dependencies()
 
         record = self._map_data()
+        metadata = self._map_metadata()
 
         # special check on data before import
         self._validate_data(record)
@@ -116,7 +128,8 @@ class MagentoImportSynchronizer(connector.ImportSynchronizer):
             self._update(openerp_id, record)
         else:
             openerp_id = self._create(record)
-            self.binder.bind(self.magento_id, openerp_id)
+
+        self.binder.bind(self.magento_id, openerp_id, metadata=metadata)
 
 
 class BatchImportSynchronizer(connector.ImportSynchronizer):
@@ -189,3 +202,4 @@ class PartnerBatchImport(BatchImportSynchronizer):
 @magento
 class PartnerImport(MagentoImportSynchronizer):
     _model_name = ['res.partner']
+    _metadata_model = 'magento.res.partner'

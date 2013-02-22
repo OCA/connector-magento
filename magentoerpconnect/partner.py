@@ -53,7 +53,7 @@ class magento_res_partner(orm.Model):
         'created_in': fields.char('Created in'),
         'created_at': fields.datetime('Created At'),
         'updated_at': fields.datetime('Updated At'),
-        'emailid': fields.char('E-mail address'),
+        'email': fields.char('E-mail address'),
         'vat': fields.char('Magento VAT'),
         'birthday': fields.date('Birthday'),
         'newsletter': fields.boolean('Newsletter'),

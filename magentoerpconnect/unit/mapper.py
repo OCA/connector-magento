@@ -26,7 +26,7 @@ from ..backend import magento
 
 
 @magento
-class WebsiteMapper(connector.ImportMapper):
+class WebsiteImportMapper(connector.ImportMapper):
     _model_name = 'magento.website'
 
     direct = [('code', 'code')]
@@ -44,7 +44,7 @@ class WebsiteMapper(connector.ImportMapper):
 
 
 @magento
-class StoreMapper(connector.ImportMapper):
+class StoreImportMapper(connector.ImportMapper):
     _model_name = 'magento.store'
 
     direct = [('name', 'name')]
@@ -67,7 +67,7 @@ class StoreMapper(connector.ImportMapper):
 
 
 @magento
-class StoreviewMapper(connector.ImportMapper):
+class StoreviewImportMapper(connector.ImportMapper):
     _model_name = 'magento.storeview'
 
     direct = [
@@ -80,8 +80,8 @@ class StoreviewMapper(connector.ImportMapper):
         ext_id = connector.RecordIdentifier(id=record['group_id'])
         # TODO helper to copy environment with another model
         binder = connector.Environment(
-                self.environment.backend_record,
-                self.environment.session,
+                self.backend_record,
+                self.session,
                 'magento.store').get_connector_unit(connector.Binder)
         openerp_id = binder.to_openerp(ext_id)
         return {'store_id': openerp_id}
@@ -92,7 +92,36 @@ class StoreviewMapper(connector.ImportMapper):
 
 
 @magento
-class PartnerMapper(connector.ImportMapper):
+class PartnerImportMapper(connector.ImportMapper):
     _model_name = 'res.partner'
 
-    _direct = []
+    _direct = [('name', 'name')]
+
+    @mapping
+    def names(self, record):
+        parts = [part for part in(record['firstname'],
+                    record['middlename'], record['lastname'])
+                    if part]
+        return {'name': ' '.join(parts)}
+
+
+@magento
+class PartnerLinkImportMapper(connector.ImportMapper):
+    _model_name = 'magento.res.partner'
+
+    _direct = [('created_in', 'created_in')]
+
+    @mapping
+    def website_id(self, record):
+        # TODO get rid of RecordIdentifier
+        ext_id = connector.RecordIdentifier(id=record['website_id'])
+        binder = connector.Environment(
+                self.backend_record,
+                self.session,
+                'magento.website').get_connector_unit(connector.Binder)
+        website_id = binder.to_openerp(ext_id)
+        return {'website_id': website_id}
+
+    @mapping
+    def backend_id(self, record):
+        return {'backend_id': self.backend_record.id}

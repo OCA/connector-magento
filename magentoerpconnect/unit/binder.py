@@ -125,11 +125,13 @@ class IrModelDataBinder(MagentoBinder):
             return self._extid_from_prefixed_id(prefixed_id)
         return False
 
-    def bind(self, magento_identifier, openerp_id):
+    def bind(self, magento_identifier, openerp_id, metadata=None):
         """ Create the link between an magento ID and an OpenERP ID
 
         :param magento_identifier: `ExternalIdentifier` to bind
         :param openerp_id: OpenERP ID to bind
+        :param metadata: optional values to store on the relation model
+        :type metadata: dict
         """
         assert isinstance(magento_identifier, connector.RecordIdentifier), (
                 "magento_identifier must be an RecordIdentifier")
@@ -204,13 +206,15 @@ class InModelBinder(MagentoBinder):
                 self.session.context)['magento_id']
         return magento_id
 
-    def bind(self, backend_identifier, openerp_id):
+    def bind(self, backend_identifier, openerp_id, metadata=None):
         """ Create the link between an external ID and an OpenERP ID
 
         :param backend_identifier: Backend identifiers to bind
         :type backend_identifier: :py:class:`connector.connector.RecordIdentifier`
         :param openerp_id: OpenERP ID to bind
         :type openerp_id: int
+        :param metadata: optional values to store on the relation model
+        :type metadata: dict
         """
         self.environment.model.write(
                 self.session.cr,
@@ -228,24 +232,14 @@ class PartnerBinder(MagentoBinder):
         super(PartnerBinder, self).__init__(environment)
         self.model = self.session.pool.get('magento.res.partner')
 
-    def _openerp_website_id(self, magento_website_id):
-        binder = connector.Environment(
-                self.backend_record,
-                self.session,
-                'magento.website').env.get_connector_unit(Binder)
-        return binder.to_openerp(backend_identifier.website_id)
-
     def _openerp_bind_id(self, backend_identifier):
         """ Return the ID of the bind model (magento.res.partner)
         or None if the binding does not exist.
         """
-        website_id = self._openerp_website_id(backend_identifier.website_id)
-
         bind_ids = self.model.search(
                 self.session.cr,
                 self.session.uid,
-                [('magento_id', '=', backend_identifier.id),
-                 ('website_id', '=', website_id)],
+                [('magento_id', '=', backend_identifier.id)],
                 limit=1,
                 context=self.session.context)
         if bind_ids:
@@ -269,7 +263,7 @@ class PartnerBinder(MagentoBinder):
                                    context=self.session.context)['partner_id']
         return None
 
-    # need the website_id
+    # depends of the website_id
     def to_backend(self, openerp_id):
         raise NotImplementedError
 
@@ -284,12 +278,8 @@ class PartnerBinder(MagentoBinder):
         :type metadata: dict
         """
         bind_id = self._openerp_bind_id(backend_identifier)
-        # TODO all the values could come from the @metadata in the
-        # mapping
-        website_id = self._openerp_website_id(backend_identifier.website_id)
         bind_vals = {'partner_id': openerp_id,
-                     'magento_id': backend_identifier.id,
-                     'website_id': website_id}
+                     'magento_id': backend_identifier.id}
         if metadata is not None:
             bind_vals.update(metadata)
 
