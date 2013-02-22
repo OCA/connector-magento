@@ -22,16 +22,49 @@
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.  #
 #########################################################################
 
-import hashlib
-
-from openerp.osv import fields
+from openerp.osv import fields, orm
 from .magerp_osv import MagerpModel
 from openerp.addons.connector.decorator import only_for_referential
+
 
 class res_partner_category(MagerpModel):
     _inherit = "res.partner.category"
     _columns = {'tax_class_id':fields.integer('Tax Class ID'),
                 }
+
+
+# TODO common AbstractModel for the 'bind' models
+# TODO migrate from res.partner
+class magento_res_partner(orm.Model):
+    _name = 'magento.res.partner'
+
+    _columns = {
+        'partner_id': fields.many2one('res.partner', string='Partner'),
+        'magento_id': fields.integer('ID on Magento'),
+        'backend_id': fields.related('website_id', 'backend_id',
+                                     type='many2one',
+                                     relation='magento.backend',
+                                     string='Magento Backend'),
+        'website_id': fields.many2one('magento.website',
+                                      string='Magento Website'),
+
+        'group_id': fields.many2one('res.partner.category',
+                                    string='Magento Group (Category)'),
+        'created_in': fields.char('Created in'),
+        'created_at': fields.datetime('Created At'),
+        'updated_at': fields.datetime('Updated At'),
+        'emailid': fields.char('E-mail address'),
+        'vat': fields.char('Magento VAT'),
+        'birthday': fields.date('Birthday'),
+        'newsletter': fields.boolean('Newsletter'),
+    }
+
+    _sql_constraints = [
+        ('partner_uniq', 'unique(partner_id, website_id)',
+         'Partner with same ID on Magento already exists.'),
+    ]
+
+
 
 
 # TODO: review, move the fields to the relation table

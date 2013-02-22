@@ -54,11 +54,11 @@ class StoreMapper(connector.ImportMapper):
         binder_cls = self.backend.get_class(connector.Binder, 'magento.website')
         ext_id = connector.RecordIdentifier(id=record['website_id'])
         # TODO helper to copy environment with another model
-        env = connector.Environment(
+        binder = connector.Environment(
                 self.environment.backend_record,
                 self.environment.session,
-                'magento.website')
-        openerp_id = binder_cls(env).to_openerp(self.backend_record, ext_id)
+                'magento.website').get_connector_unit(connector.Binder)
+        openerp_id = binder.to_openerp(ext_id)
         return {'website_id': openerp_id}
 
     @mapping
@@ -77,14 +77,13 @@ class StoreviewMapper(connector.ImportMapper):
 
     @mapping
     def store_id(self, record):
-        binder_cls = self.backend.get_class(connector.Binder, 'magento.store')
         ext_id = connector.RecordIdentifier(id=record['group_id'])
         # TODO helper to copy environment with another model
-        env = connector.Environment(
+        binder = connector.Environment(
                 self.environment.backend_record,
                 self.environment.session,
-                'magento.store')
-        openerp_id = binder_cls(env).to_openerp(self.backend_record, ext_id)
+                'magento.store').get_connector_unit(connector.Binder)
+        openerp_id = binder.to_openerp(ext_id)
         return {'store_id': openerp_id}
 
     @mapping

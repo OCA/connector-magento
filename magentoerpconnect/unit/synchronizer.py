@@ -36,19 +36,18 @@ class MagentoImportSynchronizer(connector.ImportSynchronizer):
     """ Base importer for Magento """
 
 
-    def __init__(self, environment, magento_identifier):
+    def __init__(self, environment):
         """
-
         :param environment: current environment (backend, session, ...)
         :type environment: :py:class:`connector.connector.Environment`
         """
         super(MagentoImportSynchronizer, self).__init__(environment)
-        self.magento_identifier = magento_identifier
+        self.magento_id = None
         self.magento_record = None
 
     def _get_magento_data(self):
-        """ Return the raw Magento data for ``self.magento_identifier`` """
-        return self.backend_adapter.read(self.magento_identifier)
+        """ Return the raw Magento data for ``self.magento_id`` """
+        return self.backend_adapter.read(self.magento_id)
 
     def _has_to_skip(self):
         """ Return True if the import can be skipped """
@@ -91,12 +90,13 @@ class MagentoImportSynchronizer(connector.ImportSynchronizer):
         _logger.debug('openerp_id: %d updated', openerp_id)
         return
 
-    def run(self):
+    def run(self, magento_id):
         """ Run the synchronization
 
-        :param magento_identifier: identifier of the record on Magento
-        :type magento_identifier: :py:class:`connector.connector.RecordIdentifier`
+        :param magento_id: identifier of the record on Magento
+        :type magento_id: :py:class:`connector.connector.RecordIdentifier`
         """
+        self.magento_id = magento_id
         self.magento_record = self._get_magento_data()
 
         if self._has_to_skip():
@@ -110,17 +110,13 @@ class MagentoImportSynchronizer(connector.ImportSynchronizer):
         # special check on data before import
         self._validate_data(record)
 
-        backend_record = self.environment.backend_record
-        openerp_id = self.binder.to_openerp(backend_record,
-                                            self.magento_identifier)
+        openerp_id = self.binder.to_openerp(self.magento_id)
 
         if openerp_id:
             self._update(openerp_id, record)
         else:
             openerp_id = self._create(record)
-            self.binder.bind(backend_record,
-                             self.magento_identifier,
-                             openerp_id)
+            self.binder.bind(self.magento_id, openerp_id)
 
 
 class BatchImportSynchronizer(connector.ImportSynchronizer):
@@ -162,7 +158,7 @@ class SimpleBatchImport(BatchImportSynchronizer):
         magento_id = connector.RecordIdentifier(id=record)
         importer = self.backend.get_class(MagentoImportSynchronizer,
                                           self.environment.model_name)
-        importer(self.environment, magento_id).run()
+        importer(self.environment).run(magento_id)
 
 
 @magento
