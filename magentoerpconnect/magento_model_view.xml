@@ -22,6 +22,26 @@
                             <field name="username"/>
                             <field name="password"/>
                         </group>
+                        <notebook>
+                            <page name="import" string="Imports">
+                                <group>
+                                    <label for="import_partners_since">
+                                        Import partners since:
+                                    </label>
+                                    <div>
+                                        <field name="import_partners_since"
+                                            class="oe_inline"
+                                            nolabel="1"/>
+                                        <button name="import_partners_since"
+                                            type="object"
+                                            class="oe_highlight"
+                                            string="Import in background"/>
+                                    </div>
+                                </group>
+
+                            </page>
+
+                        </notebook>
                     </sheet>
                 </form>
             </field>

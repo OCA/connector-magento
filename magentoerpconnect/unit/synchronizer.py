@@ -27,16 +27,12 @@ from ..backend import magento
 _logger = logging.getLogger(__name__)
 
 
-class MagentoSynchronizer(connector.Synchronizer):
 
-    _model_name = None  # implement in sub-classes
-
-
-class MagentoExportSynchronizer(connector.ExportSynchronizer, MagentoSynchronizer):
+class MagentoExportSynchronizer(connector.ExportSynchronizer):
     """ Base exporter for Magento """
 
 
-class MagentoImportSynchronizer(connector.ImportSynchronizer, MagentoSynchronizer):
+class MagentoImportSynchronizer(connector.ImportSynchronizer):
     """ Base importer for Magento """
 
 
@@ -127,7 +123,7 @@ class MagentoImportSynchronizer(connector.ImportSynchronizer, MagentoSynchronize
                              openerp_id)
 
 
-class BatchImportSynchronizer(MagentoSynchronizer):
+class BatchImportSynchronizer(connector.ImportSynchronizer):
     """ The role of a BatchImportSynchronizer is to search for a list of
     items to import, then it can either import them directly or delay
     the import of each item separately.
@@ -142,6 +138,10 @@ class BatchImportSynchronizer(MagentoSynchronizer):
     def _import_record(self, record):
         """ Import a record directly or delay the import of the record """
         raise NotImplementedError
+
+
+# imported after base classes to avoid circular imports
+from ..queue.job import *
 
 
 @magento
@@ -176,18 +176,20 @@ class WebsiteImport(MagentoImportSynchronizer):
 
 
 @magento
-class DelayBatchImport(BatchImportSynchronizer):
+class PartnerBatchImport(BatchImportSynchronizer):
     """ Import the Magento Partners.
 
     For every partner in the list, a delayed job is created.
     """
-    _model_name = [
-            'res.partner',
-            ]
+    _model_name = ['res.partner']
 
     def _import_record(self, record):
         """ Delay a job for the import """
         magento_id = connector.RecordIdentifier(id=record)
-        importer = self.backend.get_class(MagentoImportSynchronizer,
-                                          self.environment.model_name)
+        import_partner.delay(self.session,
+                             self.backend_record.id,
+                             magento_id)
 
+@magento
+class PartnerImport(MagentoImportSynchronizer):
+    _model_name = ['res.partner']

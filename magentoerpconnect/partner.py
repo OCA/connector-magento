@@ -34,6 +34,8 @@ class res_partner_category(MagerpModel):
                 }
 
 
+# TODO: review, move the fields to the relation table
+# ('magento.partner.link (name to be defined))
 class res_partner(MagerpModel):
     _inherit = "res.partner"
 

@@ -20,15 +20,39 @@
 ##############################################################################
 
 import openerp.addons.connector as connector
+from ..unit.synchronizer import (BatchImportSynchronizer,
+                                 MagentoImportSynchronizer)
+
+__all__ = [
+    'import_partners_since',
+    'import_partner',
+    ]
 
 
-@connector.job
-def import_partner_since(session, backend_id, since_date):
+def get_environment(session, backend_id, model_name):
     model = session.pool.get('magento.backend')
     backend_record = model.browse(session.cr,
                                   session.uid,
                                   backend_id,
                                   session.context)
-    env = connector.Environment(
-            backend_record, session, 'res.partner')
+    return connector.Environment(backend_record, session, model_name)
 
+
+@connector.job
+def import_partners_since(session, backend_id, since_date=None):
+    """ Prepare the import of partners modified on Magento """
+    env = get_environment(session, backend_id, 'res.partner')
+    importer = env.get_connector_unit(BatchImportSynchronizer)
+    filters = None
+    if since_date:
+        filters = [{'created_at': {'gt': since_date}},  # OR
+                   {'updated_at': {'gt': since_date}}]
+    importer.run(filters)
+
+
+@connector.job
+def import_partner(session, backend_id, magento_id):
+    """ Import a partner from Magento """
+    env = get_environment(session, backend_id, 'res.partner')
+    importer = env.get_connector_unit(MagentoImportSynchronizer)
+    importer.run(magento_id)

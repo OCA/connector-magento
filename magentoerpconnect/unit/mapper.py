@@ -90,3 +90,10 @@ class StoreviewMapper(connector.ImportMapper):
     @mapping
     def backend_id(self, record):
         return {'backend_id': self.backend_record.id}
+
+
+@magento
+class PartnerMapper(connector.ImportMapper):
+    _model_name = 'res.partner'
+
+    _direct = []

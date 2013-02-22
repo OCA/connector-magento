@@ -24,6 +24,7 @@
 
 import os
 import logging
+from datetime import datetime
 
 from openerp.osv import fields, orm
 from openerp.osv.osv import except_osv
@@ -39,8 +40,10 @@ from openerp.addons.connector.external_referential import (
         REF_VISIBLE_FIELDS,
         add_backend)
 
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 import openerp.addons.connector as connector
 from .unit.synchronizer import BatchImportSynchronizer
+from .queue.job import *
 
 REF_VISIBLE_FIELDS['Magento'] = ['location', 'apiusername', 'apipass']
 
@@ -72,6 +75,9 @@ class magento_backend(orm.Model):
         'location': fields.char('Location'),
         'username': fields.char('Username'),
         'password': fields.char('Password'),
+
+        # add a field `auto_activate` -> activate a cron
+        'import_partners_since': fields.datetime('Import partners since'),
     }
 
     _defaults = {
@@ -83,15 +89,29 @@ class magento_backend(orm.Model):
             ids = [ids]
         session = connector.ConnectorSession(cr, uid, context=context)
         for backend_record in self.browse(cr, uid, ids, context=context):
-            env_cls = connector.Environment
             for model in ('magento.website',
                           'magento.store',
                           'magento.storeview'):
-                env = env_cls(backend_record, session, model)
-                importer = env.backend.get_class(BatchImportSynchronizer, model)
-                importer(env).run()
+                env = connector.Environment(backend_record, session, model)
+                importer = env.get_connector_unit(BatchImportSynchronizer)
+                importer.run()
+        return True
+
+    def import_partners_since(self, cr, uid, ids, context=None):
+        if not hasattr(ids, '__iter__'):
+            ids = [ids]
+        session = connector.ConnectorSession(cr, uid, context=context)
+        for backend_record in self.browse(cr, uid, ids, context=context):
+            since_date = None
+            if backend_record.import_partners_since:
+                since_date = datetime.strptime(
+                        backend_record.import_partners_since,
+                        DEFAULT_SERVER_DATETIME_FORMAT)
+            import_partners_since.delay(session, backend_record.id,
+                                        since_date=since_date)
 
         return True
+
 
 add_backend(magento_backend._name)
 

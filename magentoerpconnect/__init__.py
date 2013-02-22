@@ -19,8 +19,8 @@
 #########################################################################
 import backend
 import magento_model
-import queue
 from .unit import *
+import queue
 
 import product
 import partner
