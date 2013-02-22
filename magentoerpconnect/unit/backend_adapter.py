@@ -102,7 +102,7 @@ class GenericAdapter(MagentoCRUDAdapter):
         with magentolib.API(self.magento.location,
                             self.magento.username,
                             self.magento.password) as api:
-            return api.call('%s.info' % self._magento_model, [id.id])
+            return api.call('%s.info' % self._magento_model, [id])
         return {}
 
 

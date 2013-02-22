@@ -52,13 +52,12 @@ class StoreImportMapper(connector.ImportMapper):
     @mapping
     def website_id(self, record):
         binder_cls = self.backend.get_class(connector.Binder, 'magento.website')
-        ext_id = connector.RecordIdentifier(id=record['website_id'])
         # TODO helper to copy environment with another model
         binder = connector.Environment(
                 self.environment.backend_record,
                 self.environment.session,
                 'magento.website').get_connector_unit(connector.Binder)
-        openerp_id = binder.to_openerp(ext_id)
+        openerp_id = binder.to_openerp(record['website_id'])
         return {'website_id': openerp_id}
 
     @mapping
@@ -77,13 +76,12 @@ class StoreviewImportMapper(connector.ImportMapper):
 
     @mapping
     def store_id(self, record):
-        ext_id = connector.RecordIdentifier(id=record['group_id'])
         # TODO helper to copy environment with another model
         binder = connector.Environment(
                 self.backend_record,
                 self.session,
                 'magento.store').get_connector_unit(connector.Binder)
-        openerp_id = binder.to_openerp(ext_id)
+        openerp_id = binder.to_openerp(record['group_id'])
         return {'store_id': openerp_id}
 
     @mapping
@@ -113,13 +111,11 @@ class PartnerLinkImportMapper(connector.ImportMapper):
 
     @mapping
     def website_id(self, record):
-        # TODO get rid of RecordIdentifier
-        ext_id = connector.RecordIdentifier(id=record['website_id'])
         binder = connector.Environment(
                 self.backend_record,
                 self.session,
                 'magento.website').get_connector_unit(connector.Binder)
-        website_id = binder.to_openerp(ext_id)
+        website_id = binder.to_openerp(record['website_id'])
         return {'website_id': website_id}
 
     @mapping

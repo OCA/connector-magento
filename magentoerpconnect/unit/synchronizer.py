@@ -105,7 +105,6 @@ class MagentoImportSynchronizer(connector.ImportSynchronizer):
         """ Run the synchronization
 
         :param magento_id: identifier of the record on Magento
-        :type magento_id: :py:class:`connector.connector.RecordIdentifier`
         """
         self.magento_id = magento_id
         self.magento_record = self._get_magento_data()
@@ -168,10 +167,9 @@ class SimpleBatchImport(BatchImportSynchronizer):
 
     def _import_record(self, record):
         """ Import the record directly """
-        magento_id = connector.RecordIdentifier(id=record)
         importer = self.backend.get_class(MagentoImportSynchronizer,
                                           self.environment.model_name)
-        importer(self.environment).run(magento_id)
+        importer(self.environment).run(record)
 
 
 @magento
@@ -194,10 +192,9 @@ class PartnerBatchImport(BatchImportSynchronizer):
 
     def _import_record(self, record):
         """ Delay a job for the import """
-        magento_id = connector.RecordIdentifier(id=record)
         import_partner.delay(self.session,
                              self.backend_record.id,
-                             magento_id)
+                             record)
 
 @magento
 class PartnerImport(MagentoImportSynchronizer):
