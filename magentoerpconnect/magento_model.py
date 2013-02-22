@@ -43,7 +43,7 @@ from openerp.addons.connector.external_referential import (
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 import openerp.addons.connector as connector
 from .unit.synchronizer import BatchImportSynchronizer
-from .queue.job import *
+from .queue import job
 
 REF_VISIBLE_FIELDS['Magento'] = ['location', 'apiusername', 'apipass']
 
@@ -88,13 +88,15 @@ class magento_backend(orm.Model):
         if not hasattr(ids, '__iter__'):
             ids = [ids]
         session = connector.ConnectorSession(cr, uid, context=context)
-        for backend_record in self.browse(cr, uid, ids, context=context):
+        for backend_id in ids:
             for model in ('magento.website',
                           'magento.store',
                           'magento.storeview'):
-                env = connector.Environment(backend_record, session, model)
-                importer = env.get_connector_unit(BatchImportSynchronizer)
-                importer.run()
+                # import directly, do not delay because this
+                # is a fast operation, a direct return is fine
+                # and it is simpler to import them sequentially
+                job.import_batch(session, backend_id, model)
+
         return True
 
     def import_partners_since(self, cr, uid, ids, context=None):
@@ -107,8 +109,8 @@ class magento_backend(orm.Model):
                 since_date = datetime.strptime(
                         backend_record.import_partners_since,
                         DEFAULT_SERVER_DATETIME_FORMAT)
-            import_partners_since.delay(session, backend_record.id,
-                                        since_date=since_date)
+            job.import_partners_since.delay(session, backend_record.id,
+                                            since_date=since_date)
 
         return True
 

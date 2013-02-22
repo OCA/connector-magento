@@ -26,13 +26,8 @@ from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from ..unit.synchronizer import (BatchImportSynchronizer,
                                  MagentoImportSynchronizer)
 
-__all__ = [
-    'import_partners_since',
-    'import_partner',
-    ]
 
-
-def get_environment(session, backend_id, model_name):
+def _get_environment(session, backend_id, model_name):
     model = session.pool.get('magento.backend')
     backend_record = model.browse(session.cr,
                                   session.uid,
@@ -42,9 +37,25 @@ def get_environment(session, backend_id, model_name):
 
 
 @connector.job
+def import_batch(session, backend_id, model_name, filters=None):
+    """ Prepare an batch import of records from Magento """
+    env = _get_environment(session, backend_id, model_name)
+    importer = env.get_connector_unit(BatchImportSynchronizer)
+    importer.run(filters)
+
+
+@connector.job
+def import_record(session, backend_id, model_name, magento_id):
+    """ Import a record from Magento """
+    env = _get_environment(session, backend_id, model_name)
+    importer = env.get_connector_unit(MagentoImportSynchronizer)
+    importer.run(magento_id)
+
+
+@connector.job
 def import_partners_since(session, backend_id, since_date=None):
     """ Prepare the import of partners modified on Magento """
-    env = get_environment(session, backend_id, 'res.partner')
+    env = _get_environment(session, backend_id, 'res.partner')
     importer = env.get_connector_unit(BatchImportSynchronizer)
     filters = None
     if since_date:
@@ -63,6 +74,6 @@ def import_partners_since(session, backend_id, since_date=None):
 @connector.job
 def import_partner(session, backend_id, magento_id):
     """ Import a partner from Magento """
-    env = get_environment(session, backend_id, 'res.partner')
+    env = _get_environment(session, backend_id, 'res.partner')
     importer = env.get_connector_unit(MagentoImportSynchronizer)
     importer.run(magento_id)

@@ -149,7 +149,7 @@ class BatchImportSynchronizer(connector.ImportSynchronizer):
 
 
 # imported after base classes to avoid circular imports
-from ..queue.job import *
+from ..queue import job
 
 
 @magento
@@ -167,9 +167,10 @@ class SimpleBatchImport(BatchImportSynchronizer):
 
     def _import_record(self, record):
         """ Import the record directly """
-        importer = self.backend.get_class(MagentoImportSynchronizer,
-                                          self.environment.model_name)
-        importer(self.environment).run(record)
+        job.import_record(self.session,
+                          self.backend_record.id,
+                          self.model._name,
+                          record)
 
 
 @magento
@@ -192,9 +193,9 @@ class PartnerBatchImport(BatchImportSynchronizer):
 
     def _import_record(self, record):
         """ Delay a job for the import """
-        import_partner.delay(self.session,
-                             self.backend_record.id,
-                             record)
+        job.import_partner.delay(self.session,
+                                 self.backend_record.id,
+                                 record)
 
 @magento
 class PartnerImport(MagentoImportSynchronizer):
