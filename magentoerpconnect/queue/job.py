@@ -19,7 +19,10 @@
 #
 ##############################################################################
 
+from datetime import datetime
+
 import openerp.addons.connector as connector
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from ..unit.synchronizer import (BatchImportSynchronizer,
                                  MagentoImportSynchronizer)
 
@@ -47,7 +50,14 @@ def import_partners_since(session, backend_id, since_date=None):
     if since_date:
         filters = [{'created_at': {'gt': since_date}},  # OR
                    {'updated_at': {'gt': since_date}}]
+    now_fmt = datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
     importer.run(filters)
+    session.pool.get('magento.backend').write(
+            session.cr,
+            session.uid,
+            backend_id,
+            {'import_partners_since': now_fmt},
+            context=session.context)
 
 
 @connector.job
