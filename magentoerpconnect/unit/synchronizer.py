@@ -220,3 +220,21 @@ class PartnerBatchImport(BatchImportSynchronizer):
 class PartnerImport(MagentoImportSynchronizer):
     _model_name = ['res.partner']
     _metadata_model = 'magento.res.partner'
+
+
+"""
+TODO
+
+Notes on the partner export.
+
+2 synchronizers should be created:
+    on 'res.partner'
+    on 'magento.res.partner'
+
+The latter has a dependency on 'res.partner', so if the partner
+is not already exported, it export it.
+
+The 'res.partner' export should do an export per website in
+'magento.res.partner'
+
+"""
