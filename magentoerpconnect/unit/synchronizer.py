@@ -20,6 +20,7 @@
 ##############################################################################
 
 import logging
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 import openerp.addons.connector as connector
 from .backend_adapter import MagentoLocation
 from ..backend import magento
@@ -139,9 +140,9 @@ class BatchImportSynchronizer(connector.ImportSynchronizer):
 
     def run(self, filters=None):
         """ Run the synchronization """
-        records = self.backend_adapter.search(filters)
-        for record in records:
-            self._import_record(record)
+        record_ids = self.backend_adapter.search(filters)
+        for record_id in record_ids:
+            self._import_record(record_id)
 
     def _import_record(self, record):
         """ Import a record directly or delay the import of the record """
@@ -196,6 +197,24 @@ class PartnerBatchImport(BatchImportSynchronizer):
         job.import_partner.delay(self.session,
                                  self.backend_record.id,
                                  record)
+
+    def run(self, since=None, filters=None):
+        """ Run the synchronization """
+        # Magento API does not support OR, so we search 2 times
+        # one time > created_at and a second > updated_at
+        if filters is None:
+            filters = {}
+        if since:
+            since_fmt = since.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+            record_ids = []
+
+            for at in ('created_at', 'updated_at'):
+                since_filter = {at: {'from': since_fmt}}
+                since_filter.update(filters)
+                record_ids = self.backend_adapter.search(since_filter)
+
+        for record_id in record_ids:
+            self._import_record(record_id)
 
 @magento
 class PartnerImport(MagentoImportSynchronizer):

@@ -120,7 +120,7 @@ class PartnerBinder(MagentoBinder):
                                    self.session.uid,
                                    bind_id,
                                    ['partner_id'],
-                                   context=self.session.context)['partner_id']
+                                   context=self.session.context)['partner_id'][0]
         return None
 
     # depends of the website_id

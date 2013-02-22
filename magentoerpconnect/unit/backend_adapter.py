@@ -75,8 +75,7 @@ class MagentoCRUDAdapter(CRUDAdapter):
 
 class GenericAdapter(MagentoCRUDAdapter):
 
-    # TODO use the magento name instead of the openerp name
-    _model_name = 'magento.website'
+    _model_name = None
     _magento_model = None
     _id_field = None
 
@@ -133,3 +132,16 @@ class PartnerAdapter(GenericAdapter):
     _model_name = 'res.partner'
     _magento_model = 'customer'
     _id_field = 'customer_id'
+
+    def search(self, filters=None):
+        """ Search records according to some criterias
+        and returns a list of ids
+
+        :rtype: list
+        """
+        with magentolib.API(self.magento.location,
+                            self.magento.username,
+                            self.magento.password) as api:
+            return api.call('ol_customer.search',
+                            [filters] if filters else [{}])
+        return []
