@@ -88,15 +88,20 @@ class StoreviewImportMapper(connector.ImportMapper):
     def backend_id(self, record):
         return {'backend_id': self.backend_record.id}
 
-
 @magento
 class PartnerImportMapper(connector.ImportMapper):
     _model_name = 'res.partner'
 
-    _direct = [('name', 'name')]
+    direct = [
+            ('email', 'email'),
+            ('dob', 'birthday'),
+        ]
+
+    # TODO addresses
 
     @mapping
     def names(self, record):
+        # TODO create a glue module for base_surname
         parts = [part for part in(record['firstname'],
                     record['middlename'], record['lastname'])
                     if part]
@@ -107,7 +112,14 @@ class PartnerImportMapper(connector.ImportMapper):
 class PartnerLinkImportMapper(connector.ImportMapper):
     _model_name = 'magento.res.partner'
 
-    _direct = [('created_in', 'created_in')]
+    direct = [
+            ('created_at', 'created_at'),
+            ('updated_at', 'updated_at'),
+            ('email', 'email'),
+            ('taxvat', 'taxvat'),
+            ]
+
+    # TODO group_id
 
     @mapping
     def website_id(self, record):

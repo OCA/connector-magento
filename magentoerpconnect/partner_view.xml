@@ -1,6 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+
+        <record id="view_partner_form" model="ir.ui.view">
+            <field name="name">res.partner.form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="connector.view_partner_connector_form" />
+            <field name="arch" type="xml">
+                <field name="date" position="after">
+                    <field name="birthday"/>
+                </field>
+                <page name="connector" position="attributes">
+                    <attribute name="invisible">0</attribute>
+                </page>
+                <page name="connector" position="inside">
+                    <group string="Magento Bindings">
+                        <field name="magento_bind_ids" nolabel="1"/>
+                    </group>
+                </page>
+            </field>
+        </record>
+
+        <record id="view_magento_res_partner_form" model="ir.ui.view">
+            <field name="name">magento.res.partner.form</field>
+            <field name="model">magento.res.partner</field>
+            <field name="arch" type="xml">
+                <form string="Magento Partner" version="7.0">
+                    <group>
+                        <field name="website_id"/>
+                        <field name="backend_id"/>
+                        <field name="magento_id"/>
+                    </group>
+                    <group>
+                        <field name="created_at"/>
+                        <field name="updated_at"/>
+                    </group>
+                    <group>
+                        <field name="group_id"/>
+                        <field name="email"/>
+                        <field name="taxvat"/>
+                        <field name="newsletter"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_magento_res_partner_tree" model="ir.ui.view">
+            <field name="name">magento.res.partner.tree</field>
+            <field name="model">magento.res.partner</field>
+            <field name="arch" type="xml">
+                <tree string="Magento Partner" version="7.0">
+                    <field name="backend_id"/>
+                    <field name="website_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- below: to review -->
         <record id="view_partner_form_magerp" model="ir.ui.view">
             <field name="name">res.partner.form_magerp</field>
             <field name="model">res.partner</field>

@@ -38,6 +38,8 @@ class res_partner_category(MagerpModel):
 class magento_res_partner(orm.Model):
     _name = 'magento.res.partner'
 
+    _rec_name = 'website_id'
+
     _columns = {
         'partner_id': fields.many2one('res.partner', string='Partner'),
         'magento_id': fields.integer('ID on Magento'),
@@ -50,12 +52,10 @@ class magento_res_partner(orm.Model):
 
         'group_id': fields.many2one('res.partner.category',
                                     string='Magento Group (Category)'),
-        'created_in': fields.char('Created in'),
         'created_at': fields.datetime('Created At'),
         'updated_at': fields.datetime('Updated At'),
         'email': fields.char('E-mail address'),
-        'vat': fields.char('Magento VAT'),
-        'birthday': fields.date('Birthday'),
+        'taxvat': fields.char('Magento VAT'),
         'newsletter': fields.boolean('Newsletter'),
     }
 
@@ -64,6 +64,16 @@ class magento_res_partner(orm.Model):
          'Partner with same ID on Magento already exists.'),
     ]
 
+
+class res_partner(orm.Model):
+    _inherit = 'res.partner'
+
+    _columns = {
+        'magento_bind_ids': fields.one2many(
+            'magento.res.partner', 'partner_id',
+            string="Magento Bindings"),
+        'birthday': fields.date('Birthday'),
+    }
 
 
 
