@@ -65,11 +65,3 @@ def import_partners_since(session, backend_id, since_date=None):
             backend_id,
             {'import_partners_since': now_fmt},
             context=session.context)
-
-
-@connector.job
-def import_partner(session, backend_id, magento_id):
-    """ Import a partner from Magento """
-    env = _get_environment(session, backend_id, 'res.partner')
-    importer = env.get_connector_unit(MagentoImportSynchronizer)
-    importer.run(magento_id)

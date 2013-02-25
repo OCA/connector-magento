@@ -194,9 +194,10 @@ class PartnerBatchImport(BatchImportSynchronizer):
 
     def _import_record(self, record):
         """ Delay a job for the import """
-        job.import_partner.delay(self.session,
-                                 self.backend_record.id,
-                                 record)
+        job.import_record.delay(self.session,
+                                self.backend_record.id,
+                                self.model._name,
+                                record)
 
     def run(self, since=None, filters=None):
         """ Run the synchronization """
