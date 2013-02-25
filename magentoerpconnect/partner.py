@@ -30,35 +30,6 @@ from openerp.addons.connector.decorator import only_for_referential
 
 # TODO common AbstractModel for the 'bind' models
 # TODO migrate from res.partner
-class magento_res_partner(orm.Model):
-    _name = 'magento.res.partner'
-
-    _rec_name = 'website_id'
-
-    _columns = {
-        'partner_id': fields.many2one('res.partner', string='Partner'),
-        'magento_id': fields.integer('ID on Magento'),
-        'backend_id': fields.related('website_id', 'backend_id',
-                                     type='many2one',
-                                     relation='magento.backend',
-                                     string='Magento Backend'),
-        'website_id': fields.many2one('magento.website',
-                                      string='Magento Website',
-                                      required=True),
-        'group_id': fields.many2one('magento.res.partner.category',
-                                    string='Magento Group (Category)'),
-        'created_at': fields.datetime('Created At'),
-        'updated_at': fields.datetime('Updated At'),
-        'email': fields.char('E-mail address'),
-        'taxvat': fields.char('Magento VAT'),
-        'newsletter': fields.boolean('Newsletter'),
-    }
-
-    _sql_constraints = [
-        ('partner_uniq', 'unique(partner_id, website_id)',
-         'Partner with same ID on Magento already exists.'),
-    ]
-
 
 class res_partner(orm.Model):
     _inherit = 'res.partner'
@@ -69,6 +40,47 @@ class res_partner(orm.Model):
             string="Magento Bindings"),
         'birthday': fields.date('Birthday'),
     }
+
+
+class magento_res_partner(orm.Model):
+    _name = 'magento.res.partner'
+    _inherits = {'res.partner': 'partner_id'}
+
+    _rec_name = 'website_id'
+
+    _columns = {
+        'partner_id': fields.many2one('res.partner',
+                                      string='Partner',
+                                      required=True,
+                                      ondelete='cascade'),
+        # fields.char because 0 is a valid Magento ID
+        'magento_id': fields.char('ID on Magento'),
+        'backend_id': fields.related('website_id', 'backend_id',
+                                     type='many2one',
+                                     relation='magento.backend',
+                                     string='Magento Backend',
+                                     readonly=True),
+        'website_id': fields.many2one('magento.website',
+                                      string='Magento Website',
+                                      required=True,
+                                      ondelete='restrict'),
+        'group_id': fields.many2one('magento.res.partner.category',
+                                    string='Magento Group (Category)'),
+        'created_at': fields.datetime('Created At'),
+        'updated_at': fields.datetime('Updated At'),
+        'emailid': fields.char('E-mail address'),
+        'taxvat': fields.char('Magento VAT'),
+        'newsletter': fields.boolean('Newsletter'),
+        # TODO inherit this column from a common model
+        # TODO write the date on import / export
+        # and skip import / export (avoid mega loop)
+        'sync_date': fields.date('Last synchronization date'),
+    }
+
+    _sql_constraints = [
+        ('magento_uniq', 'unique(website_id, magento_id)',
+         'Partner with same ID on Magento already exists.'),
+    ]
 
 
 class res_partner_category(orm.Model):
@@ -93,12 +105,14 @@ class magento_res_partner_category(orm.Model):
                                        string='Partner Category',
                                        required=True,
                                        ondelete='cascade'),
-        'magento_id': fields.integer('ID on Magento'),
+        'magento_id': fields.char('ID on Magento'),
         'backend_id': fields.many2one(
             'magento.backend',
             'Magento Backend',
-            required=True),
+            required=True,
+            ondelete='restrict'),
         'tax_class_id': fields.integer('Tax Class ID'),
+        'sync_date': fields.date('Last synchronization date'),
     }
 
     _sql_constraints = [
@@ -109,27 +123,26 @@ class magento_res_partner_category(orm.Model):
 
 
 # TODO: migrate the models below:
-# fields are left for data migration
-class res_partner(MagerpModel):
-    _inherit = "res.partner"
+# class res_partner(MagerpModel):
+#     _inherit = "res.partner"
 
-    _columns = {
-        'group_id':fields.many2one('res.partner.category', 'Magento Group(Category)'),
-        'store_id':fields.many2one('magerp.storeviews', 'Last Store View', help="Last store view where the customer has bought."),
-        'store_ids':fields.many2many('magerp.storeviews', 'magerp_storeid_rel', 'partner_id', 'store_id', 'Store Views'),
-        'website_id':fields.many2one('external.shop.group', 'Magento Website', help='Select a website for which the Magento customer will be bound.'),
-        'created_in':fields.char('Created in', size=100),
-        'created_at':fields.datetime('Created Date'),
-        'updated_at':fields.datetime('Updated At'),
-        'emailid':fields.char('Email Address', size=100, help="Magento uses this email ID to match the customer. If filled, if a Magento customer is imported from the selected website with the exact same email, he will be bound with this partner and this latter will be updated with Magento's values."),
-        'mag_vat':fields.char('Magento VAT', size=50, help="To be able to receive customer VAT number you must set it in Magento Admin Panel, menu System / Configuration / Client Configuration / Name and Address Options."),
-        'mag_birthday':fields.date('Birthday', help="To be able to receive customer birthday you must set it in Magento Admin Panel, menu System / Configuration / Client Configuration / Name and Address Options."),
-        'mag_newsletter':fields.boolean('Newsletter'),
-        'magento_pwd': fields.char('Magento Password', size=256),
-        }
+#     _columns = {
+#         'group_id':fields.many2one('res.partner.category', 'Magento Group(Category)'),
+#         'store_id':fields.many2one('magerp.storeviews', 'Last Store View', help="Last store view where the customer has bought."),
+#         'store_ids':fields.many2many('magerp.storeviews', 'magerp_storeid_rel', 'partner_id', 'store_id', 'Store Views'),
+#         'website_id':fields.many2one('external.shop.group', 'Magento Website', help='Select a website for which the Magento customer will be bound.'),
+#         'created_in':fields.char('Created in', size=100),
+#         'created_at':fields.datetime('Created Date'),
+#         'updated_at':fields.datetime('Updated At'),
+#         'emailid':fields.char('Email Address', size=100, help="Magento uses this email ID to match the customer. If filled, if a Magento customer is imported from the selected website with the exact same email, he will be bound with this partner and this latter will be updated with Magento's values."),
+#         'mag_vat':fields.char('Magento VAT', size=50, help="To be able to receive customer VAT number you must set it in Magento Admin Panel, menu System / Configuration / Client Configuration / Name and Address Options."),
+#         'mag_birthday':fields.date('Birthday', help="To be able to receive customer birthday you must set it in Magento Admin Panel, menu System / Configuration / Client Configuration / Name and Address Options."),
+#         'mag_newsletter':fields.boolean('Newsletter'),
+#         'magento_pwd': fields.char('Magento Password', size=256),
+#         }
 
 
-class res_partner_category(MagerpModel):
-    _inherit = "res.partner.category"
-    _columns = {'tax_class_id':fields.integer('Tax Class ID'),
-                }
+# class res_partner_category(MagerpModel):
+#     _inherit = "res.partner.category"
+#     _columns = {'tax_class_id':fields.integer('Tax Class ID'),
+#                 }

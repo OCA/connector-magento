@@ -55,7 +55,7 @@ def import_record(session, backend_id, model_name, magento_id):
 @connector.job
 def import_partners_since(session, backend_id, since_date=None):
     """ Prepare the import of partners modified on Magento """
-    env = _get_environment(session, backend_id, 'res.partner')
+    env = _get_environment(session, backend_id, 'magento.res.partner')
     importer = env.get_connector_unit(BatchImportSynchronizer)
     now_fmt = datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
     importer.run(since=since_date)

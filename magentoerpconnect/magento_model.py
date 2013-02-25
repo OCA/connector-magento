@@ -138,11 +138,11 @@ class magento_website(orm.Model):
         'backend_id': fields.many2one(
             'magento.backend',
             'Magento Backend',
-            required=True),
+            required=True,
+            ondelete='cascade'),
         'sort_order': fields.integer('Sort Order'),
-        # we can keep the id of the website on this
-        # model, a record is a direct copy
-        'magento_id': fields.integer('ID on Magento'),
+        # fields.char because 0 is a valid Magento ID
+        'magento_id': fields.char('ID on Magento'),
         'store_ids': fields.one2many(
             'magento.store',
             'website_id',
@@ -162,7 +162,8 @@ class magento_store(orm.Model):
         'website_id': fields.many2one(
             'magento.website',
             'Magento Website',
-            required=True),
+            required=True,
+            ondelete='cascade'),
         # a shop should be created along the magento.store
         'shop_id': fields.many2one(
             'sale.shop',
@@ -178,11 +179,13 @@ class magento_store(orm.Model):
             "\nOpenERP requires a main category on products for accounting."),
         # we can keep the id of the store on this
         # model, a record is a direct copy
-        'magento_id': fields.integer('ID on Magento'),
-        'backend_id': fields.many2one(
-            'magento.backend',
-            'Magento Backend',
-            required=True),
+        'magento_id': fields.char('ID on Magento'),
+        'backend_id': fields.related(
+            'website_id', 'backend_id',
+            type='many2one',
+            relation='magento.backend',
+            string='Magento Backend',
+            readonly=True),
         'storeview_ids': fields.one2many(
             'magento.storeview',
             'store_id',
@@ -206,11 +209,13 @@ class magento_storeview(orm.Model):
         'lang_id': fields.many2one('res.lang', 'Language'),
         # we can keep the id of the storeview on this
         # model, a record is a direct copy
-        'magento_id': fields.integer('ID on Magento'),
-        'backend_id': fields.many2one(
-            'magento.backend',
-            'Magento Backend',
-            required=True),
+        'magento_id': fields.char('ID on Magento'),
+        'backend_id': fields.related(
+            'store_id', 'website_id', 'backend_id',
+            type='many2one',
+            relation='magento.backend',
+            string='Magento Backend',
+            readonly=True),
     }
 
 

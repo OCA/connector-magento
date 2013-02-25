@@ -36,8 +36,6 @@ class MagentoExportSynchronizer(connector.ExportSynchronizer):
 class MagentoImportSynchronizer(connector.ImportSynchronizer):
     """ Base importer for Magento """
 
-    _metadata_model = None
-
     def __init__(self, environment):
         """
         :param environment: current environment (backend, session, ...)
@@ -62,16 +60,6 @@ class MagentoImportSynchronizer(connector.ImportSynchronizer):
     def _map_data(self):
         """ Return the external record converted to OpenERP """
         return self.mapper.convert(self.magento_record)
-
-    def _map_metadata(self):
-        """ Return the metadata for the record converted to OpenERP """
-        if self._metadata_model is None:
-            return
-        mapper = connector.Environment(
-                self.backend_record,
-                self.session,
-                self._metadata_model).get_connector_unit(connector.ImportMapper)
-        return mapper.convert(self.magento_record)
 
     def _validate_data(self, data):
         """ Check if the values to import are correct
@@ -117,7 +105,6 @@ class MagentoImportSynchronizer(connector.ImportSynchronizer):
         self._import_dependencies()
 
         record = self._map_data()
-        metadata = self._map_metadata()
 
         # special check on data before import
         self._validate_data(record)
@@ -129,7 +116,7 @@ class MagentoImportSynchronizer(connector.ImportSynchronizer):
         else:
             openerp_id = self._create(record)
 
-        self.binder.bind(self.magento_id, openerp_id, metadata=metadata)
+        self.binder.bind(self.magento_id, openerp_id)
 
 
 class BatchImportSynchronizer(connector.ImportSynchronizer):
@@ -206,7 +193,7 @@ class PartnerBatchImport(BatchImportSynchronizer):
 
     For every partner in the list, a delayed job is created.
     """
-    _model_name = ['res.partner']
+    _model_name = ['magento.res.partner']
 
     def _import_record(self, record):
         """ Delay a job for the import """
@@ -236,8 +223,7 @@ class PartnerBatchImport(BatchImportSynchronizer):
 
 @magento
 class PartnerImport(MagentoImportSynchronizer):
-    _model_name = ['res.partner']
-    _metadata_model = 'magento.res.partner'
+    _model_name = ['magento.res.partner']
 
     def _import_dependencies(self):
         """ Import the dependencies for the record"""
@@ -251,24 +237,3 @@ class PartnerImport(MagentoImportSynchronizer):
         if binder.to_openerp(record['group_id']) is None:
             importer = env.get_connector_unit(MagentoImportSynchronizer)
             importer.run(record['group_id'])
-
-
-
-
-
-"""
-TODO
-
-Notes on the partner export.
-
-2 synchronizers should be created:
-    on 'res.partner'
-    on 'magento.res.partner'
-
-The latter has a dependency on 'res.partner', so if the partner
-is not already exported, it export it.
-
-The 'res.partner' export should do an export per website in
-'magento.res.partner'
-
-"""

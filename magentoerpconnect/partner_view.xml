@@ -30,12 +30,8 @@
                         <field name="website_id"/>
                         <field name="backend_id"/>
                         <field name="magento_id"/>
-                    </group>
-                    <group>
                         <field name="created_at"/>
                         <field name="updated_at"/>
-                    </group>
-                    <group>
                         <field name="group_id"/>
                         <field name="email"/>
                         <field name="taxvat"/>

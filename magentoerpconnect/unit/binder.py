@@ -36,6 +36,7 @@ class InModelBinder(MagentoBinder):
             'magento.website',
             'magento.store',
             'magento.storeview',
+            'magento.res.partner',
             'magento.res.partner.category',
         ]
 
@@ -70,14 +71,12 @@ class InModelBinder(MagentoBinder):
                 self.session.context)['magento_id']
         return magento_id
 
-    def bind(self, backend_id, openerp_id, metadata=None):
+    def bind(self, backend_id, openerp_id):
         """ Create the link between an external ID and an OpenERP ID
 
         :param backend_id: Backend ID to bind
         :param openerp_id: OpenERP ID to bind
         :type openerp_id: int
-        :param metadata: optional values to store on the relation model
-        :type metadata: dict
         """
         self.environment.model.write(
                 self.session.cr,
@@ -128,20 +127,16 @@ class PartnerBinder(MagentoBinder):
     def to_backend(self, openerp_id):
         raise NotImplementedError
 
-    def bind(self, backend_id, openerp_id, metadata=None):
+    def bind(self, backend_id, openerp_id):
         """ Create the link between an external ID and an OpenERP ID
 
         :param backend_id: Backend ID to bind
         :param openerp_id: OpenERP ID to bind
         :type openerp_id: int
-        :param metadata: optional values to store on the relation model
-        :type metadata: dict
         """
         bind_id = self._openerp_bind_id(backend_id)
         bind_vals = {'partner_id': openerp_id,
                      'magento_id': backend_id}
-        if metadata is not None:
-            bind_vals.update(metadata)
 
         if bind_id is None:
             self.model.create(self.session.cr,

@@ -77,7 +77,6 @@ class GenericAdapter(MagentoCRUDAdapter):
 
     _model_name = None
     _magento_model = None
-    _id_field = None
 
     def search(self, filters=None):
         """ Search records according to some criterias
@@ -88,9 +87,8 @@ class GenericAdapter(MagentoCRUDAdapter):
         with magentolib.API(self.magento.location,
                             self.magento.username,
                             self.magento.password) as api:
-            return [int(row[self._id_field]) for row
-                    in api.call('%s.list' % self._magento_model,
-                                [filters] if filters else [{}])]
+            return api.call('%s.search' % self._magento_model,
+                            [filters] if filters else [{}])
         return []
 
     def read(self, id, attributes=None):
@@ -107,31 +105,26 @@ class GenericAdapter(MagentoCRUDAdapter):
 
 @magento
 class WebsiteAdapter(GenericAdapter):
-    # TODO use the magento name instead of the openerp name
     _model_name = 'magento.website'
     _magento_model = 'ol_websites'
-    _id_field = 'website_id'
 
 
 @magento
 class StoreAdapter(GenericAdapter):
     _model_name = 'magento.store'
     _magento_model = 'ol_groups'
-    _id_field = 'group_id'
 
 
 @magento
 class StoreviewAdapter(GenericAdapter):
     _model_name = 'magento.storeview'
     _magento_model = 'ol_storeviews'
-    _id_field = 'store_id'
 
 
 @magento
 class PartnerAdapter(GenericAdapter):
-    _model_name = 'res.partner'
+    _model_name = 'magento.res.partner'
     _magento_model = 'customer'
-    _id_field = 'customer_id'
 
     def search(self, filters=None):
         """ Search records according to some criterias
@@ -151,4 +144,17 @@ class PartnerAdapter(GenericAdapter):
 class PartnerCategoryAdapter(GenericAdapter):
     _model_name = 'magento.res.partner.category'
     _magento_model = 'ol_customer_groups'
-    _id_field = 'customer_group_id'
+
+    def search(self, filters=None):
+        """ Search records according to some criterias
+        and returns a list of ids
+
+        :rtype: list
+        """
+        with magentolib.API(self.magento.location,
+                            self.magento.username,
+                            self.magento.password) as api:
+            return [int(row['customer_group_id']) for row
+                       in api.call('%s.list' % self._magento_model,
+                                   [filters] if filters else [{}])]
+        return []

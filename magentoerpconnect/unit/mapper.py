@@ -88,16 +88,20 @@ class StoreviewImportMapper(connector.ImportMapper):
     def backend_id(self, record):
         return {'backend_id': self.backend_record.id}
 
+
 @magento
 class PartnerImportMapper(connector.ImportMapper):
-    _model_name = 'res.partner'
+    _model_name = 'magento.res.partner'
 
     direct = [
             ('email', 'email'),
             ('dob', 'birthday'),
+            ('created_at', 'created_at'),
+            ('updated_at', 'updated_at'),
+            ('email', 'emailid'),
+            ('taxvat', 'taxvat'),
+            ('group_id', 'group_id'),
         ]
-
-    # TODO addresses
 
     @mapping
     def names(self, record):
@@ -117,9 +121,10 @@ class PartnerImportMapper(connector.ImportMapper):
         mag_cat_id = binder.to_openerp(record['group_id'])
 
         if mag_cat_id is None:
-            raise MappingError("Can not find an existing %s for "
-                               "external record %s" %
-                               (env.model._name, record['group_id']))
+            raise connector.MappingError(
+                    "The partner category with "
+                    "magento id %s does not exist" %
+                    record['group_id'])
         model = self.session.pool.get('magento.res.partner.category')
         category_id = model.read(self.session.cr,
                    self.session.uid,
@@ -128,19 +133,6 @@ class PartnerImportMapper(connector.ImportMapper):
                    context=self.session.context)['category_id'][0]
 
         return {'category_id': [(4, category_id)]}
-
-
-@magento
-class PartnerLinkImportMapper(connector.ImportMapper):
-    _model_name = 'magento.res.partner'
-
-    direct = [
-            ('created_at', 'created_at'),
-            ('updated_at', 'updated_at'),
-            ('email', 'email'),
-            ('taxvat', 'taxvat'),
-            ('group_id', 'group_id'),
-            ]
 
     @mapping
     def website_id(self, record):
