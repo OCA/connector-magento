@@ -79,22 +79,9 @@ class res_partner(orm.Model):
 
 # TODO: review, move the fields to the relation table
 # ('magento.partner.link (name to be defined))
+# fields are left for data migration
 class res_partner(MagerpModel):
     _inherit = "res.partner"
-
-    def _is_magento_exported(self, cr, uid, ids, field_name, arg, context=None):
-        """Return True if the partner is already exported to at least one magento shop
-        """
-        res = {}
-        # get all magento external_referentials
-        referential_ids = self.pool.get('external.referential').search(cr, uid, [('magento_referential', '=', True)])
-        for partner in self.browse(cr, uid, ids, context):
-            for referential_id in referential_ids:
-                res[partner.id] = False
-                if partner.get_extid(referential_id, context=context):
-                    res[partner.id] = True
-                    break
-        return res
 
     _columns = {
         'group_id':fields.many2one('res.partner.category', 'Magento Group(Category)'),
@@ -108,40 +95,5 @@ class res_partner(MagerpModel):
         'mag_vat':fields.char('Magento VAT', size=50, help="To be able to receive customer VAT number you must set it in Magento Admin Panel, menu System / Configuration / Client Configuration / Name and Address Options."),
         'mag_birthday':fields.date('Birthday', help="To be able to receive customer birthday you must set it in Magento Admin Panel, menu System / Configuration / Client Configuration / Name and Address Options."),
         'mag_newsletter':fields.boolean('Newsletter'),
-        'magento_exported': fields.function(_is_magento_exported, type="boolean", method=True, string="Exists on Magento"),
         'magento_pwd': fields.char('Magento Password', size=256),
         }
-
-    _sql_constraints = [('emailid_uniq', 'unique(emailid, website_id)', 'A partner already exists with this email address on the selected website.')]
-
-    @only_for_referential('magento')
-    def get_ids_and_update_date(self, cr, uid, external_session, ids=None, last_exported_date=None, context=None):
-        store_ids = [store.id for store in external_session.sync_from_object.storeview_ids]
-        query = """
-        SELECT DISTINCT partner_id
-        FROM magerp_storeid_rel
-        LEFT JOIN res_partner
-            ON magerp_storeid_rel.partner_id = res_partner.id
-        LEFT JOIN ir_model_data
-            ON res_partner.id = ir_model_data.res_id
-            AND ir_model_data.model = 'res.partner'
-            AND ir_model_data.referential_id = %(ref_id)s
-        WHERE ir_model_data.res_id IS NULL AND magerp_storeid_rel.store_id IN %(store_ids)s"""
-        params = {'ref_id': external_session.referential_id.id,
-                  'store_ids': tuple(store_ids)}
-        cr.execute(query,params)
-        results = cr.dictfetchall()
-        ids = [dict_id['partner_id'] for dict_id in results]
-        return ids, {}
-
-    @only_for_referential('magento')
-    def _transform_and_send_one_resource(self, cr, uid, external_session, resource, resource_id,
-                            update_date, mapping, mapping_id, defaults=None, context=None):
-        res = super(res_partner, self)._transform_and_send_one_resource(cr, uid, external_session,
-            resource, resource_id, update_date, mapping, mapping_id, defaults=defaults, context=context)
-        if res:
-            address_obj = self.pool.get('res.partner.address')
-            resource_ids = address_obj.search(cr, uid, [('partner_id', '=', resource_id)], context=context)
-            for resource_id in resource_ids:
-                result = address_obj._export_one_resource(cr, uid, external_session, resource_id, context=context)
-        return res
