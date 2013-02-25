@@ -133,3 +133,21 @@ class PartnerLinkImportMapper(connector.ImportMapper):
     @mapping
     def backend_id(self, record):
         return {'backend_id': self.backend_record.id}
+
+
+@magento
+class PartnerCategoryImportMapper(connector.ImportMapper):
+    _model_name = 'magento.res.partner.category'
+
+    direct = [
+            ('customer_group_code', 'name'),
+            ('tax_class_id', 'tax_class_id'),
+            ]
+
+    @mapping
+    def magento_id(self, record):
+        return {'magento_id': record['customer_group_id']}
+
+    @mapping
+    def backend_id(self, record):
+        return {'backend_id': self.backend_record.id}

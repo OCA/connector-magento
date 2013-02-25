@@ -36,6 +36,7 @@ class InModelBinder(MagentoBinder):
             'magento.website',
             'magento.store',
             'magento.storeview',
+            'magento.res.partner.category',
         ]
 
     def to_openerp(self, backend_id):

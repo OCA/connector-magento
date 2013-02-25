@@ -27,11 +27,6 @@ from .magerp_osv import MagerpModel
 from openerp.addons.connector.decorator import only_for_referential
 
 
-class res_partner_category(MagerpModel):
-    _inherit = "res.partner.category"
-    _columns = {'tax_class_id':fields.integer('Tax Class ID'),
-                }
-
 
 # TODO common AbstractModel for the 'bind' models
 # TODO migrate from res.partner
@@ -48,8 +43,8 @@ class magento_res_partner(orm.Model):
                                      relation='magento.backend',
                                      string='Magento Backend'),
         'website_id': fields.many2one('magento.website',
-                                      string='Magento Website'),
-
+                                      string='Magento Website',
+                                      required=True),
         'group_id': fields.many2one('res.partner.category',
                                     string='Magento Group (Category)'),
         'created_at': fields.datetime('Created At'),
@@ -76,9 +71,39 @@ class res_partner(orm.Model):
     }
 
 
+class res_partner_category(orm.Model):
+    _inherit = 'res.partner.category'
 
-# TODO: review, move the fields to the relation table
-# ('magento.partner.link (name to be defined))
+    _columns = {
+        'magento_bind_ids': fields.one2many(
+            'magento.res.partner.category',
+            'category_id',
+            string='Magento Bindings',
+            readonly=True),
+    }
+
+
+class magento_res_partner_category(orm.Model):
+    _name = 'magento.res.partner.category'
+
+    _inherits = {'res.partner.category': 'category_id'}
+
+    _columns = {
+        'category_id': fields.many2one('res.partner.category',
+                                       string='Partner Category',
+                                       required=True,
+                                       ondelete='cascade'),
+        'magento_id': fields.integer('ID on Magento'),
+        'backend_id': fields.many2one(
+            'magento.backend',
+            'Magento Backend',
+            required=True),
+        'tax_class_id': fields.integer('Tax Class ID'),
+    }
+
+
+
+# TODO: migrate the models below:
 # fields are left for data migration
 class res_partner(MagerpModel):
     _inherit = "res.partner"
@@ -97,3 +122,9 @@ class res_partner(MagerpModel):
         'mag_newsletter':fields.boolean('Newsletter'),
         'magento_pwd': fields.char('Magento Password', size=256),
         }
+
+
+class res_partner_category(MagerpModel):
+    _inherit = "res.partner.category"
+    _columns = {'tax_class_id':fields.integer('Tax Class ID'),
+                }

@@ -145,3 +145,10 @@ class PartnerAdapter(GenericAdapter):
             return api.call('ol_customer.search',
                             [filters] if filters else [{}])
         return []
+
+
+@magento
+class PartnerCategoryAdapter(GenericAdapter):
+    _model_name = 'magento.res.partner.category'
+    _magento_model = 'ol_customer_groups'
+    _id_field = 'customer_group_id'

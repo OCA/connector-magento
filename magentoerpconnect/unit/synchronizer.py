@@ -154,7 +154,7 @@ from ..queue import job
 
 
 @magento
-class SimpleBatchImport(BatchImportSynchronizer):
+class DirectBatchImport(BatchImportSynchronizer):
     """ Import the Magento Websites, Stores, Storeviews
 
     They are imported directly because this is a rare and fast operation,
@@ -175,12 +175,28 @@ class SimpleBatchImport(BatchImportSynchronizer):
 
 
 @magento
-class WebsiteImport(MagentoImportSynchronizer):
+class DelayedBatchImport(BatchImportSynchronizer):
+    """ Delay import of the records """
+    _model_name = [
+            'magento.res.partner.category',
+            ]
+
+    def _import_record(self, record):
+        """ Delay the import of the records"""
+        job.import_record.delay(self.session,
+                                self.backend_record.id,
+                                self.model._name,
+                                record)
+
+
+@magento
+class SimpleRecordImport(MagentoImportSynchronizer):
     """ Import one Magento Website """
     _model_name = [
             'magento.website',
             'magento.store',
-            'magento.storeview'
+            'magento.storeview',
+            'magento.res.partner.category',
         ]
 
 
