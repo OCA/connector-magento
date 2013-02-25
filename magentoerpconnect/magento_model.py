@@ -157,28 +157,26 @@ class magento_store(orm.Model):
     _name = 'magento.store'
     _description = 'Magento Store'
 
+    _inherits = {'sale.shop': 'shop_id'}
+
     _columns = {
-        'name': fields.char('Name', required=True),
         'website_id': fields.many2one(
             'magento.website',
             'Magento Website',
             required=True,
             ondelete='cascade'),
-        # a shop should be created along the magento.store
         'shop_id': fields.many2one(
             'sale.shop',
-            'Sale Shop',
-            # required=True,  # FIXME should be created along a
-            # magento.store
-            ondelete="cascade"),
+            string='Sale Shop',
+            required=True,
+            readonly=True,
+            ondelete='cascade'),
         # what is the exact purpose of this field?
         'default_category_id': fields.many2one(
             'product.category',
             'Default Product Category',
             help="The category set on products when?? TODO."
             "\nOpenERP requires a main category on products for accounting."),
-        # we can keep the id of the store on this
-        # model, a record is a direct copy
         'magento_id': fields.char('ID on Magento'),
         'backend_id': fields.related(
             'website_id', 'backend_id',
