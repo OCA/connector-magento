@@ -35,7 +35,7 @@
                                 </group>
                                 <group>
                                     <div>
-                                        <label string="Import partners since:" class="oe_inline"/>
+                                        <label string="Import partners since" class="oe_inline"/>
                                         <field name="import_partners_since"
                                             class="oe_inline"
                                             nolabel="1"/>

@@ -221,14 +221,15 @@ class PartnerBatchImport(BatchImportSynchronizer):
         # one time > created_at and a second > updated_at
         if filters is None:
             filters = {}
-        if since:
-            since_fmt = since.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-            record_ids = []
 
-            for at in ('created_at', 'updated_at'):
+        record_ids = []
+        for at in ('created_at', 'updated_at'):
+            since_filter = {}
+            if since:
+                since_fmt = since.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
                 since_filter = {at: {'from': since_fmt}}
-                since_filter.update(filters)
-                record_ids = self.backend_adapter.search(since_filter)
+            since_filter.update(filters)
+            record_ids = self.backend_adapter.search(since_filter)
 
         for record_id in record_ids:
             self._import_record(record_id)
@@ -237,6 +238,22 @@ class PartnerBatchImport(BatchImportSynchronizer):
 class PartnerImport(MagentoImportSynchronizer):
     _model_name = ['res.partner']
     _metadata_model = 'magento.res.partner'
+
+    def _import_dependencies(self):
+        """ Import the dependencies for the record"""
+        record = self.magento_record
+
+        # import customer groups
+        env = connector.Environment(self.backend_record,
+                                    self.session,
+                                    'magento.res.partner.category')
+        binder = env.get_connector_unit(connector.Binder)
+        if binder.to_openerp(record['group_id']) is None:
+            importer = env.get_connector_unit(MagentoImportSynchronizer)
+            importer.run(record['group_id'])
+
+
+
 
 
 """

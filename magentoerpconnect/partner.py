@@ -45,7 +45,7 @@ class magento_res_partner(orm.Model):
         'website_id': fields.many2one('magento.website',
                                       string='Magento Website',
                                       required=True),
-        'group_id': fields.many2one('res.partner.category',
+        'group_id': fields.many2one('magento.res.partner.category',
                                     string='Magento Group (Category)'),
         'created_at': fields.datetime('Created At'),
         'updated_at': fields.datetime('Updated At'),
@@ -100,6 +100,11 @@ class magento_res_partner_category(orm.Model):
             required=True),
         'tax_class_id': fields.integer('Tax Class ID'),
     }
+
+    _sql_constraints = [
+        ('magento_uniq', 'unique(backend_id, magento_id)',
+         'Partner Tag with same ID on Magento already exists.'),
+    ]
 
 
 

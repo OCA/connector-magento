@@ -107,6 +107,28 @@ class PartnerImportMapper(connector.ImportMapper):
                     if part]
         return {'name': ' '.join(parts)}
 
+    @mapping
+    def customer_group_id(self, record):
+        # import customer groups
+        env = connector.Environment(self.backend_record,
+                                    self.session,
+                                    'magento.res.partner.category')
+        binder = env.get_connector_unit(connector.Binder)
+        mag_cat_id = binder.to_openerp(record['group_id'])
+
+        if mag_cat_id is None:
+            raise MappingError("Can not find an existing %s for "
+                               "external record %s" %
+                               (env.model._name, record['group_id']))
+        model = self.session.pool.get('magento.res.partner.category')
+        category_id = model.read(self.session.cr,
+                   self.session.uid,
+                   mag_cat_id,
+                   ['category_id'],
+                   context=self.session.context)['category_id'][0]
+
+        return {'category_id': [(4, category_id)]}
+
 
 @magento
 class PartnerLinkImportMapper(connector.ImportMapper):
@@ -117,9 +139,8 @@ class PartnerLinkImportMapper(connector.ImportMapper):
             ('updated_at', 'updated_at'),
             ('email', 'email'),
             ('taxvat', 'taxvat'),
+            ('group_id', 'group_id'),
             ]
-
-    # TODO group_id
 
     @mapping
     def website_id(self, record):
