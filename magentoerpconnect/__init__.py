@@ -21,6 +21,7 @@ import backend
 import magento_model
 from .unit import *
 import queue
+import consumer
 
 import product
 import partner

@@ -20,6 +20,7 @@
 ##############################################################################
 
 from .backend_adapter import *
-from .synchronizer import *
+from .import_synchronizer import *
+from .export_synchronizer import *
 from .mapper import *
 from .binder import *

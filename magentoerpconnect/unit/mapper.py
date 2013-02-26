@@ -21,7 +21,7 @@
 
 from openerp.tools.translate import _
 import openerp.addons.connector as connector
-from openerp.addons.connector import mapping
+from openerp.addons.connector import mapping, changed_by
 from ..backend import magento
 
 
@@ -146,6 +146,35 @@ class PartnerImportMapper(connector.ImportMapper):
     @mapping
     def backend_id(self, record):
         return {'backend_id': self.backend_record.id}
+
+
+@magento
+class PartnerExportMapper(connector.ExportMapper):
+    _model_name = 'magento.res.partner'
+
+    direct = [
+            ('emailid', 'email'),
+            ('birthday', 'dob'),
+            ('created_at', 'created_at'),
+            ('updated_at', 'updated_at'),
+            ('emailid', 'email'),
+            ('taxvat', 'taxvat'),
+            ('group_id', 'group_id'),
+            ('website_id', 'website_id'),
+        ]
+
+    @changed_by('name')
+    @mapping
+    def names(self, record):
+        # FIXME base_surname needed
+        if ' ' in record.name:
+            parts = record.name.split()
+            firstname = parts[0]
+            lastname = ' '.join(parts[1:])
+        else:
+            lastname = record.name
+            firstname = '-'
+        return {'firstname': firstname, 'lastname': lastname}
 
 
 @magento

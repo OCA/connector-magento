@@ -19,9 +19,13 @@
 #
 ##############################################################################
 
+import logging
+
 import magento as magentolib
 from openerp.addons.connector.unit import CRUDAdapter
 from ..backend import magento
+
+_logger = logging.getLogger(__name__)
 
 
 class MagentoLocation(object):
@@ -101,6 +105,23 @@ class GenericAdapter(MagentoCRUDAdapter):
                             self.magento.password) as api:
             return api.call('%s.info' % self._magento_model, [id])
         return {}
+
+    def create(self, data):
+        """ Create a record on the external system """
+        with magentolib.API(self.magento.location,
+                            self.magento.username,
+                            self.magento.password) as api:
+            _logger.debug("api.call(%s.create', [%s])", self._magento_model, data)
+            return api.call('%s.create' % self._magento_model, [data])
+
+    def write(self, id, data):
+        """ Update records on the external system """
+        with magentolib.API(self.magento.location,
+                            self.magento.username,
+                            self.magento.password) as api:
+            _logger.debug("api.call(%s.update', [%s, %s])",
+                    self._magento_model, id, data)
+            return api.call('%s.update' % self._magento_model, [id, data])
 
 
 @magento

@@ -23,8 +23,11 @@ from datetime import datetime
 
 import openerp.addons.connector as connector
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
-from ..unit.synchronizer import (BatchImportSynchronizer,
-                                 MagentoImportSynchronizer)
+from ..unit.import_synchronizer import (
+        BatchImportSynchronizer,
+        MagentoImportSynchronizer)
+from ..unit.export_synchronizer import (
+        MagentoExportSynchronizer)
 
 
 def _get_environment(session, backend_id, model_name):
@@ -65,3 +68,20 @@ def import_partners_since(session, backend_id, since_date=None):
             backend_id,
             {'import_partners_since': now_fmt},
             context=session.context)
+
+
+@connector.job
+def export_record(session, model_name, openerp_id, fields=None):
+    model = session.pool.get(model_name)
+    record = model.browse(session.cr, session.uid, openerp_id,
+                          context=session.context)
+    env = _get_environment(session, record.backend_id.id, model_name)
+    exporter = env.get_connector_unit(MagentoExportSynchronizer)
+    return exporter.run(openerp_id, fields=fields)
+
+
+@connector.job
+def export_delete_record(session, model_name, openerp_id):
+    print session
+    print model_name
+    print openerp_id

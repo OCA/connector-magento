@@ -78,12 +78,14 @@ class InModelBinder(MagentoBinder):
         :param openerp_id: OpenERP ID to bind
         :type openerp_id: int
         """
+        # avoid to trigger the export when we modify the `magento_id`
+        context = dict(self.session.context, connector_binding=True)
         self.environment.model.write(
                 self.session.cr,
                 self.session.uid,
                 openerp_id,
                 {'magento_id': backend_id},
-                self.session.context)
+                context=context)
 
 
 @magento

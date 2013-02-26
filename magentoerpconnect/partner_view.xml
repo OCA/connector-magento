@@ -33,7 +33,7 @@
                         <field name="created_at"/>
                         <field name="updated_at"/>
                         <field name="group_id"/>
-                        <field name="email"/>
+                        <field name="emailid"/>
                         <field name="taxvat"/>
                         <field name="newsletter"/>
                     </group>

@@ -42,7 +42,7 @@ from openerp.addons.connector.external_referential import (
 
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 import openerp.addons.connector as connector
-from .unit.synchronizer import BatchImportSynchronizer
+from .unit import BatchImportSynchronizer
 from .queue import job
 
 REF_VISIBLE_FIELDS['Magento'] = ['location', 'apiusername', 'apipass']
