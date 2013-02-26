@@ -123,6 +123,15 @@ class GenericAdapter(MagentoCRUDAdapter):
                     self._magento_model, id, data)
             return api.call('%s.update' % self._magento_model, [id, data])
 
+    def delete(self, id):
+        """ Delete a record on the external system """
+        with magentolib.API(self.magento.location,
+                            self.magento.username,
+                            self.magento.password) as api:
+            _logger.debug("api.call(%s.delete', [%s])",
+                    self._magento_model, id)
+            return api.call('%s.delete' % self._magento_model, [id])
+
 
 @magento
 class WebsiteAdapter(GenericAdapter):

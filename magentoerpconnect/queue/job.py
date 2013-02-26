@@ -28,6 +28,8 @@ from ..unit.import_synchronizer import (
         MagentoImportSynchronizer)
 from ..unit.export_synchronizer import (
         MagentoExportSynchronizer)
+from ..unit.delete_synchronizer import (
+        MagentoDeleteSynchronizer)
 
 
 def _get_environment(session, backend_id, model_name):
@@ -72,6 +74,7 @@ def import_partners_since(session, backend_id, since_date=None):
 
 @connector.job
 def export_record(session, model_name, openerp_id, fields=None):
+    """ Export a record on Magento """
     model = session.pool.get(model_name)
     record = model.browse(session.cr, session.uid, openerp_id,
                           context=session.context)
@@ -81,7 +84,8 @@ def export_record(session, model_name, openerp_id, fields=None):
 
 
 @connector.job
-def export_delete_record(session, model_name, openerp_id):
-    print session
-    print model_name
-    print openerp_id
+def export_delete_record(session, backend_id, model_name, magento_id):
+    """ Delete a record on Magento """
+    env = _get_environment(session, backend_id, model_name)
+    deleter = env.get_connector_unit(MagentoDeleteSynchronizer)
+    return deleter.run(magento_id)

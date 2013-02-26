@@ -19,9 +19,24 @@
 #
 ##############################################################################
 
-from .backend_adapter import *
-from .import_synchronizer import *
-from .export_synchronizer import *
-from .delete_synchronizer import *
-from .mapper import *
-from .binder import *
+from openerp.tools.translate import _
+import openerp.addons.connector as connector
+from ..backend import magento
+
+
+class MagentoDeleteSynchronizer(connector.DeleteSynchronizer):
+    """ Base deleter for Magento """
+
+    def run(self, magento_id):
+        """ Run the synchronization, delete the record on Magento
+
+        :param magento_id: identifier of the record to delete
+        """
+        self.backend_adapter.delete(magento_id)
+        return _('Record %s deleted on Magento') % magento_id
+
+
+@magento
+class PartnerDeleteSynchronizer(MagentoDeleteSynchronizer):
+    """ Partner deleter for Magento """
+    _model_name = ['magento.res.partner']

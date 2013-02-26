@@ -20,10 +20,8 @@
 ##############################################################################
 
 import logging
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tools.translate import _
 import openerp.addons.connector as connector
-from .backend_adapter import MagentoLocation
 from ..backend import magento
 
 _logger = logging.getLogger(__name__)

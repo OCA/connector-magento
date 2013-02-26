@@ -54,6 +54,12 @@ def delay_export_all_bindings(session, model_name, record_id, fields=None):
 
 @on_record_unlink(model_names=_BIND_MODEL_NAMES)
 def delay_unlink(session, model_name, record_id):
-    # FIXME the record has been deleted so we have to keep the magento
-    # id just before the unlink
-    job.export_delete_record.delay(session, model_name, record_id)
+    model = session.pool.get(model_name)
+    record = model.browse(session.cr, session.uid,
+                          record_id, context=session.context)
+    env = connector.Environment(record.backend_id, session, model_name)
+    binder = env.get_connector_unit(connector.Binder)
+    magento_id = binder.to_backend(record_id)
+    if magento_id:
+        job.export_delete_record.delay(session, record.backend_id.id,
+                                       model_name, magento_id)
