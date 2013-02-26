@@ -23,20 +23,17 @@ import unittest2
 import mock
 import magento
 
+import openerp.addons.connector as connector
 from openerp.addons.connector.connector import ConnectorUnit
+from openerp.addons.magentoerpconnect.queue import job
 import openerp.tests.common as common
 
 DB = common.DB
 ADMIN_USER_ID = common.ADMIN_USER_ID
 
 def magento_responses(method, args):
-    if method == 'ol_websites.list':
-        return [{'code': 'base',
-                 'name': 'Main Website Test',
-                 'website_id': '1',
-                 'is_default': '1',
-                 'sort_order': '0',
-                 'default_group_id': '1'}]
+    if method == 'ol_websites.search':
+        return [1]
     elif method == 'ol_websites.info' and args == [1]:
         return {'code': 'base',
                 'name': 'Main Website Test',
@@ -44,17 +41,8 @@ def magento_responses(method, args):
                 'is_default': '1',
                 'sort_order': '0',
                 'default_group_id': '1'}
-    elif method == 'ol_groups.list':
-        return [{'default_store_id': '1',
-                 'group_id': '1',
-                 'website_id': '1',
-                 'name': 'Main Website Store Test',
-                 'root_category_id': '2'},
-                {'default_store_id': '2',
-                 'group_id': '2',
-                 'website_id': '1',
-                 'name': 'Shop 2 Test',
-                 'root_category_id': '2'}]
+    elif method == 'ol_groups.search':
+        return [1, 2]
     elif method == 'ol_groups.info' and args == [1]:
         return {'default_store_id': '1',
                 'group_id': '1',
@@ -67,21 +55,8 @@ def magento_responses(method, args):
                 'website_id': '1',
                 'name': 'Shop 2 Test',
                 'root_category_id': '2'}
-    elif method == 'ol_storeviews.list':
-        return [{'code': 'default',
-                 'store_id': '1',
-                 'website_id': '1',
-                 'is_active': '1',
-                 'sort_order': '0',
-                 'group_id': '1',
-                 'name': 'Default Store View Test'},
-                {'code': 'sv2',
-                 'store_id': '2',
-                 'website_id': '1',
-                 'is_active': '1',
-                 'sort_order': '0',
-                 'group_id': '2',
-                 'name': 'Store View 2 Test'}]
+    elif method == 'ol_storeviews.search':
+        return [1, 2]
     elif method == 'ol_storeviews.info' and args == [1]:
         return {'code': 'default',
                 'store_id': '1',
@@ -99,12 +74,14 @@ def magento_responses(method, args):
                 'group_id': '2',
                 'name': 'Store View 2 Test'}
 
+
 class test_import_magento(common.SingleTransactionCase):
     """ Test the imports from a Magento Mock """
 
     def setUp(self):
         super(test_import_magento, self).setUp()
         self.backend_model = self.registry('magento.backend')
+        self.session = connector.ConnectorSession(self.cr, self.uid)
 
     def test_00_import_backend(self):
         backend_id = self.backend_model.create(
@@ -122,9 +99,10 @@ class test_import_magento(common.SingleTransactionCase):
             API.return_value = api_mock
             api_mock.__enter__.return_value = api_mock
             api_mock.call.side_effect = magento_responses
-            self.backend_model.synchronize_metadata(self.cr,
-                                                    self.uid,
-                                                    backend_id)
+            job.import_batch(self.session, backend_id, 'magento.website')
+            job.import_batch(self.session, backend_id, 'magento.store')
+            job.import_batch(self.session, backend_id, 'magento.storeview')
+
 
         website_model = self.registry('magento.website')
         website_ids = website_model.search(self.cr,
