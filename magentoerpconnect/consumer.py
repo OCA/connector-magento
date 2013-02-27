@@ -35,14 +35,14 @@ _BIND_MODEL_NAMES = ('magento.res.partner',)
 @on_record_create(model_names=_BIND_MODEL_NAMES)
 @on_record_write(model_names=_BIND_MODEL_NAMES)
 def delay_export(session, model_name, record_id, fields=None):
-    if session.context.get('connector_binding'):
+    if session.context.get('connector_no_export'):
         return
     job.export_record.delay(session, model_name, record_id, fields=fields)
 
 
 @on_record_write(model_names=_MODEL_NAMES)
 def delay_export_all_bindings(session, model_name, record_id, fields=None):
-    if session.context.get('connector_binding'):
+    if session.context.get('connector_no_export'):
         return
     model = session.pool.get(model_name)
     record = model.browse(session.cr, session.uid,

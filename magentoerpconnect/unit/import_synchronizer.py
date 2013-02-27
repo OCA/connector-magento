@@ -67,21 +67,25 @@ class MagentoImportSynchronizer(connector.ImportSynchronizer):
 
     def _create(self, data):
         """ Create the OpenERP record """
+        context = dict(self.session.context, connector_no_export=True)
         openerp_id = self.model.create(self.session.cr,
                                        self.session.uid,
                                        data,
-                                       self.session.context)
-        _logger.debug('openerp_id: %d created', openerp_id)
+                                       context=context)
+        _logger.debug('%s %d created from magento %s',
+                      self.model._name, openerp_id, self.magento_id)
         return openerp_id
 
     def _update(self, openerp_id, data):
         """ Update an OpenERP record """
+        context = dict(self.session.context, connector_no_export=True)
         self.model.write(self.session.cr,
                          self.session.uid,
                          openerp_id,
                          data,
-                         self.session.context)
-        _logger.debug('openerp_id: %d updated', openerp_id)
+                         context=context)
+        _logger.debug('%s %d updated from magento %s',
+                      self.model._name, openerp_id, self.magento_id)
         return
 
     def _after_import(self, openerp_id):
