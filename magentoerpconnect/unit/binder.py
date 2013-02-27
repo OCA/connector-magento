@@ -37,6 +37,7 @@ class InModelBinder(MagentoBinder):
             'magento.store',
             'magento.storeview',
             'magento.res.partner',
+            'magento.address',
             'magento.res.partner.category',
         ]
 

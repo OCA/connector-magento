@@ -66,8 +66,10 @@ class magento_res_partner(orm.Model):
                                       ondelete='restrict'),
         'group_id': fields.many2one('magento.res.partner.category',
                                     string='Magento Group (Category)'),
-        'created_at': fields.datetime('Created At', readonly=True),
-        'updated_at': fields.datetime('Updated At', readonly=True),
+        'created_at': fields.datetime('Created At (on Magento)',
+                                      readonly=True),
+        'updated_at': fields.datetime('Updated At (on Magento)',
+                                      readonly=True),
         'emailid': fields.char('E-mail address'),
         'taxvat': fields.char('Magento VAT'),
         'newsletter': fields.boolean('Newsletter'),
@@ -79,6 +81,42 @@ class magento_res_partner(orm.Model):
 
     _sql_constraints = [
         ('magento_uniq', 'unique(website_id, magento_id)',
+         'Partner with same ID on Magento already exists.'),
+    ]
+
+
+class magento_address(orm.Model):
+    _name = 'magento.address'
+    _inherits = {'res.partner': 'openerp_id'}
+
+    _rec_name = 'backend_id'
+
+    _columns = {
+        'openerp_id': fields.many2one('res.partner',
+                                      string='Partner',
+                                      required=True,
+                                      ondelete='cascade'),
+        # fields.char because 0 is a valid Magento ID
+        'magento_id': fields.char('ID on Magento'),
+        'backend_id': fields.many2one(
+            'magento.backend',
+            'Magento Backend',
+            required=True,
+            ondelete='cascade'),
+        'created_at': fields.datetime('Created At (on Magento)',
+                                      readonly=True),
+        'updated_at': fields.datetime('Updated At (on Magento)',
+                                      readonly=True),
+        # TODO inherit this column from a common model
+        # TODO write the date on import / export
+        # and skip import / export (avoid mega loop)
+        'sync_date': fields.date('Last synchronization date'),
+        'is_default_billing': fields.boolean('Default Invoice'),
+        'is_default_shipping': fields.boolean('Default Invoice'),
+    }
+
+    _sql_constraints = [
+        ('magento_uniq', 'unique(backend_id, magento_id)',
          'Partner with same ID on Magento already exists.'),
     ]
 

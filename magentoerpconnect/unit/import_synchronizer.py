@@ -84,6 +84,10 @@ class MagentoImportSynchronizer(connector.ImportSynchronizer):
         _logger.debug('openerp_id: %d updated', openerp_id)
         return
 
+    def _after_import(self, openerp_id):
+        """ Hook called at the end of the import """
+        return
+
     def run(self, magento_id):
         """ Run the synchronization
 
@@ -111,6 +115,8 @@ class MagentoImportSynchronizer(connector.ImportSynchronizer):
             openerp_id = self._create(record)
 
         self.binder.bind(self.magento_id, openerp_id)
+
+        self._after_import(openerp_id)
 
 
 class BatchImportSynchronizer(connector.ImportSynchronizer):
@@ -215,6 +221,7 @@ class PartnerBatchImport(BatchImportSynchronizer):
         for record_id in record_ids:
             self._import_record(record_id)
 
+
 @magento
 class PartnerImport(MagentoImportSynchronizer):
     _model_name = ['magento.res.partner']
@@ -231,3 +238,41 @@ class PartnerImport(MagentoImportSynchronizer):
         if binder.to_openerp(record['group_id']) is None:
             importer = env.get_connector_unit(MagentoImportSynchronizer)
             importer.run(record['group_id'])
+
+    def _after_import(self, openerp_id):
+        """ Import the addresses """
+        env = connector.Environment(self.backend_record,
+                                    self.session,
+                                    'magento.address')
+        addresses_adapter = env.get_connector_unit(connector.BackendAdapter)
+        mag_address_ids = addresses_adapter.search(
+                {'customer_id': {'eq': self.magento_id}})
+        if mag_address_ids:
+            importer = env.get_connector_unit(MagentoImportSynchronizer)
+            partner_row = self.model.read(self.session.cr,
+                                         self.session.uid,
+                                         openerp_id,
+                                         ['partner_id'],
+                                         context=self.session.context)
+            for address_id in mag_address_ids:
+                importer.run(address_id, partner_row['partner_id'][0])
+
+
+@magento
+class AddressImport(MagentoImportSynchronizer):
+    _model_name = ['magento.address']
+
+    def run(self, magento_id, partner_id):
+        """ Run the synchronization """
+        self.partner_id = partner_id
+        super(AddressImport, self).run(magento_id)
+
+    def _create(self, data):
+        """ Create the OpenERP record """
+        data['parent_id'] = self.partner_id
+        return super(AddressImport, self)._create(data)
+
+    def _update(self, openerp_id, data):
+        """ Update an OpenERP record """
+        data['parent_id'] = self.partner_id
+        return super(AddressImport, self)._update(openerp_id, data)

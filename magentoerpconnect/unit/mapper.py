@@ -104,6 +104,12 @@ class PartnerImportMapper(connector.ImportMapper):
         ]
 
     @mapping
+    def is_company(self, record):
+        # partners are companies so we can bind
+        # addresses on them
+        return {'is_company': True}
+
+    @mapping
     def names(self, record):
         # TODO create a glue module for base_surname
         parts = [part for part in(record['firstname'],
@@ -189,6 +195,76 @@ class PartnerCategoryImportMapper(connector.ImportMapper):
     @mapping
     def magento_id(self, record):
         return {'magento_id': record['customer_group_id']}
+
+    @mapping
+    def backend_id(self, record):
+        return {'backend_id': self.backend_record.id}
+
+
+@magento
+class AddressImportMapper(connector.ImportMapper):
+    _model_name = 'magento.address'
+
+# TODO fields not mapped:
+#   "company"=>"a",
+#   "prefix"=>"a",
+#   "suffix"=>"a",
+#   "vat_id"=>"12334",
+
+    direct = [
+            ('postcode', 'zip'),
+            ('city', 'city'),
+            ('created_at', 'created_at'),
+            ('updated_at', 'updated_at'),
+            ('telephone', 'phone'),
+            ('fax', 'fax'),
+            ('is_default_billing', 'is_default_billing'),
+            ('is_default_shipping', 'is_default_shipping'),
+        ]
+
+    @mapping
+    def names(self, record):
+        # TODO create a glue module for base_surname
+        parts = [part for part in(record['firstname'],
+                    record.get('middlename'), record['lastname'])
+                    if part]
+        return {'name': ' '.join(parts)}
+
+    @mapping
+    def state(self, record):
+        if not record.get('state'):
+            return
+        model = self.session.pool.get('res.country.state')
+        state_ids = model.search(self.session.cr,
+                                 self.session.uid,
+                                 [('name', 'ilike', record['state'])],
+                                 context=self.session.context)
+        if state_ids:
+            return {'state_id': state_ids[0]}
+
+    @mapping
+    def country(self, record):
+        if not record.get('country_id'):
+            return
+        model = self.session.pool.get('res.country')
+        country_ids = model.search(self.session.cr,
+                                   self.session.uid,
+                                   [('code', '=', record['country_id'])],
+                                   context=self.session.context)
+        if country_ids:
+            return {'country_id': country_ids[0]}
+
+    @mapping
+    def street(self, record):
+        value = record['street']
+        if not value:
+            return
+        parts = value.split('\n')
+        if len(parts) == 2:
+            result = {'street': parts[0],
+                      'street2': parts[1]}
+        else:
+            result = {'street': value.replace('\\n', ',')}
 
     @mapping
     def backend_id(self, record):
