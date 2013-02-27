@@ -25,7 +25,7 @@
                         <notebook>
                             <page name="import" string="Imports">
                                 <group>
-                                    <label string="Import customer groups" class="oe_inline"/>
+                                    <label string="Import all customer groups" class="oe_inline"/>
                                     <div>
                                         <button name="import_customer_groups"
                                             type="object"
