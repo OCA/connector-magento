@@ -32,6 +32,7 @@ DB = common.DB
 ADMIN_USER_ID = common.ADMIN_USER_ID
 
 def magento_responses(method, args):
+    # TODO: a dict is better
     if method == 'ol_websites.search':
         return [1]
     elif method == 'ol_websites.info' and args == [1]:
