@@ -206,22 +206,9 @@ class PartnerBatchImport(BatchImportSynchronizer):
                                 self.model._name,
                                 record)
 
-    def run(self, since=None, filters=None):
+    def run(self, filters=None):
         """ Run the synchronization """
-        # Magento API does not support OR, so we search 2 times
-        # one time > created_at and a second > updated_at
-        if filters is None:
-            filters = {}
-
-        record_ids = []
-        for at in ('created_at', 'updated_at'):
-            since_filter = {}
-            if since:
-                since_fmt = since.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-                since_filter = {at: {'from': since_fmt}}
-            since_filter.update(filters)
-            record_ids = self.backend_adapter.search(since_filter)
-
+        record_ids = self.backend_adapter.search(filters)
         for record_id in record_ids:
             self._import_record(record_id)
 

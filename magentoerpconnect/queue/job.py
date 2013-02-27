@@ -63,7 +63,12 @@ def import_partners_since(session, backend_id, since_date=None):
     env = _get_environment(session, backend_id, 'magento.res.partner')
     importer = env.get_connector_unit(BatchImportSynchronizer)
     now_fmt = datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-    importer.run(since=since_date)
+    filters = {}
+    if since_date:
+        since_fmt = since_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        # updated_at include the created records
+        filters['updated_at'] = {'from': since_fmt}
+    importer.run(filters=filters)
     session.pool.get('magento.backend').write(
             session.cr,
             session.uid,
