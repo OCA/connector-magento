@@ -98,7 +98,7 @@ class MagentoExportSynchronizer(connector.ExportSynchronizer):
 
         record = self._map_data(fields=fields)
         if not record:
-            return _("Nothing to do")
+            raise connector.NothingToDoJob
 
         # special check on data before import
         self._validate_data(record)
