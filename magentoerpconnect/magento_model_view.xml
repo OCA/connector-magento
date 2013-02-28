@@ -45,6 +45,15 @@
                                         class="oe_highlight"
                                         string="Import in background"/>
                                 </group>
+                                <group>
+                                    <label string="Import all product categories" class="oe_inline"/>
+                                    <div>
+                                        <button name="import_product_categories"
+                                            type="object"
+                                            class="oe_highlight"
+                                            string="Import in background"/>
+                                    </div>
+                                </group>
 
                             </page>
 

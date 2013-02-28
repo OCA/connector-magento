@@ -269,3 +269,43 @@ class AddressImportMapper(connector.ImportMapper):
     @mapping
     def backend_id(self, record):
         return {'backend_id': self.backend_record.id}
+
+
+@magento
+class ProductCategoryImportMapper(connector.ImportMapper):
+    _model_name = 'magento.product.category'
+
+    direct = [
+            ('name', 'name'),
+            ('description', 'description'),
+            ]
+
+    @mapping
+    def magento_id(self, record):
+        return {'magento_id': record['category_id']}
+
+    @mapping
+    def backend_id(self, record):
+        return {'backend_id': self.backend_record.id}
+
+    @mapping
+    def parent_id(self, record):
+        if not record.get('parent_id'):
+            return
+        env = self.environment
+        binder = env.get_connector_unit(connector.Binder)
+        mag_cat_id = binder.to_openerp(record['parent_id'])
+
+        if mag_cat_id is None:
+            raise connector.MappingError(
+                    "The product category with "
+                    "magento id %s does not exist" %
+                    record['parent_id'])
+        category_id = self.model.read(
+                   self.session.cr,
+                   self.session.uid,
+                   mag_cat_id,
+                   ['openerp_id'],
+                   context=self.session.context)['openerp_id'][0]
+
+        return {'parent_id': category_id}

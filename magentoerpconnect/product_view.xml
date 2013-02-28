@@ -1,8 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+
+        <record id="view_product_category_form" model="ir.ui.view">
+            <field name="name">product.category.form.magento</field>
+            <field name="model">product.category</field>
+            <field name="inherit_id" ref="product.product_category_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet/group[1]" position="inside">
+                    <newline/>
+                    <group name="magento" string="Magento Bindings">
+                        <field name="magento_bind_ids" nolabel="1"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_magento_product_category_form" model="ir.ui.view">
+            <field name="name">magento.product.category.form</field>
+            <field name="model">magento.product.category</field>
+            <field name="arch" type="xml">
+                <form string="Magento Product Category" version="7.0">
+                    <group>
+                        <field name="backend_id"/>
+                        <field name="magento_id"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_magento_product_category_tree" model="ir.ui.view">
+            <field name="name">magento.product.category.tree</field>
+            <field name="model">magento.product.category</field>
+            <field name="arch" type="xml">
+                <tree string="Magento Product Category" version="7.0">
+                    <field name="backend_id"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <!-- below: to review -->
+
         <!--Magento Product Category Tree/Form view  -->
 
+        <!--
         <record model="ir.ui.view" id="product_category_form_view_magerp2">
             <field name="name">product.category.form_view_magerp2</field>
             <field name="model">product.category</field>
@@ -71,19 +113,7 @@
                 </xpath>
             </field>
         </record>
-
-        <record model="ir.ui.view" id="product_category_form_view_magerp">
-            <field name="name">product.category.form_view_magerp</field>
-            <field name="model">product.category</field>
-            <field name="inherit_id" ref="product.product_category_form_view" />
-            <field name="arch" type="xml">
-                <group name="parent" position="after">
-                    <group>
-                        <field name="magento_exportable" />
-                    </group>
-                </group>
-            </field>
-        </record>
+        -->
 
         <!--Magento product_attribute_set Tree/Form view  -->
         <record model="ir.ui.view" id="magerp_product_attribute_set_form">

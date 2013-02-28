@@ -22,6 +22,7 @@
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.  #
 #########################################################################
 
+# TODO review imports
 import time
 import unicodedata
 import base64, urllib
@@ -31,7 +32,7 @@ from lxml import etree
 import logging
 
 from openerp.osv.orm import Model, setup_modifiers
-from openerp.osv import fields
+from openerp.osv import orm, fields
 from openerp.osv.osv import except_osv
 from openerp import pooler
 from openerp.tools.translate import _
@@ -42,6 +43,46 @@ from openerp.addons.connector.decorator import only_for_referential, catch_error
 from openerp.addons.connector.external_osv import ExternalSession
 
 _logger = logging.getLogger(__name__)
+
+
+class magento_product_category(orm.Model):
+    _name = 'magento.product.category'
+
+    _inherits = {'product.category': 'openerp_id'}
+
+    _columns = {
+        'openerp_id': fields.many2one('product.category',
+                                      string='Product Category',
+                                      required=True,
+                                      ondelete='cascade'),
+        'magento_id': fields.char('ID on Magento'),
+        'backend_id': fields.many2one(
+            'magento.backend',
+            'Magento Backend',
+            required=True,
+            ondelete='restrict'),
+        'sync_date': fields.date('Last synchronization date'),
+    }
+
+    _sql_constraints = [
+        ('magento_uniq', 'unique(backend_id, magento_id)',
+         'Product category with same ID on Magento already exists.'),
+    ]
+
+
+class product_category(orm.Model):
+    _inherit = 'product.category'
+
+    _columns = {
+        'magento_bind_ids': fields.one2many(
+            'magento.product.category', 'openerp_id',
+            string="Magento Bindings"),
+    }
+
+
+
+# Below: to review
+
 
 #Enabling this to True will put all custom attributes into One page in
 #the products view

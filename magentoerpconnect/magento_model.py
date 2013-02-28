@@ -124,6 +124,16 @@ class magento_backend(orm.Model):
 
         return True
 
+    def import_product_categories(self, cr, uid, ids, context=None):
+        if not hasattr(ids, '__iter__'):
+            ids = [ids]
+        session = connector.ConnectorSession(cr, uid, context=context)
+        for backend_id in ids:
+            job.import_batch.delay(session, backend_id,
+                                   'magento.product.category')
+
+        return True
+
 
 add_backend(magento_backend._name)
 

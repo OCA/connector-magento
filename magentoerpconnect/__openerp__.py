@@ -21,6 +21,7 @@
     "name": "Magento Connector New Generation",
     "version": "2.0.0",
     "depends": [
+                 'account',
                  "product",
                  'delivery',
                  "connector_ecommerce",

@@ -208,3 +208,38 @@ class AddressAdapter(GenericAdapter):
                        in api.call('%s.list' % self._magento_model,
                                    [filters] if filters else [{}])]
         return []
+
+
+@magento
+class ProductCategoryAdapter(GenericAdapter):
+    _model_name = 'magento.product.category'
+    _magento_model = 'catalog_category'
+
+    def search(self, filters=None):
+        """ Search records according to some criterias
+        and returns a list of ids
+
+        :rtype: list
+        """
+        raise NotImplementedError('No search on product categories, '
+                                  'use "tree" method')
+
+    def tree(self, parent_id=None, store_view=None):
+        """ Returns a tree of product categories
+
+        :rtype: dict
+        """
+        def filter_ids(tree):
+            children = {}
+            if tree['children']:
+                for node in tree['children']:
+                    children.update(filter_ids(node))
+            category_id = {tree['category_id']: children}
+            return category_id
+
+        with magentolib.API(self.magento.location,
+                            self.magento.username,
+                            self.magento.password) as api:
+            tree = api.call('%s.tree' % self._magento_model, [parent_id,
+                                                              store_view])
+            return filter_ids(tree)

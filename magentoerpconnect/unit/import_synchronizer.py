@@ -267,3 +267,53 @@ class AddressImport(MagentoImportSynchronizer):
         """ Update an OpenERP record """
         data['parent_id'] = self.partner_id
         return super(AddressImport, self)._update(openerp_id, data)
+
+
+@magento
+class ProductCategoryBatchImport(BatchImportSynchronizer):
+    """ Import the Magento Product Categories.
+
+    For every partner in the list, a delayed job is created.
+    """
+    _model_name = ['magento.product.category']
+
+    def _import_record(self, magento_id, priority=None):
+        """ Delay a job for the import """
+        job.import_record.delay(self.session,
+                                self.backend_record.id,
+                                self.model._name,
+                                magento_id,
+                                priority=priority)
+
+    def run(self, filters=None):
+        """ Run the synchronization """
+        assert not filters, "filters are not used for product categories"
+        base_priority = 10
+        def import_nodes(tree, level=0):
+            for node_id, children in tree.iteritems():
+                # By changing the priority, the top level category have
+                # more chance to be imported before the childrens.
+                # However, importers have to ensure that their parent is
+                # there and import it if it doesn't exist
+                self._import_record(node_id, priority=base_priority+level)
+                import_nodes(children, level=level+1)
+        tree = self.backend_adapter.tree()
+        import_nodes(tree)
+
+
+@magento
+class ProductCategoryImport(MagentoImportSynchronizer):
+    _model_name = ['magento.product.category']
+
+    def _import_dependencies(self):
+        """ Import the dependencies for the record"""
+        record = self.magento_record
+        env = self.environment
+
+        # import parent category
+        # the root category has a 0 parent_id
+        if record.get('parent_id'):
+            binder = env.get_connector_unit(connector.Binder)
+            if binder.to_openerp(record['parent_id']) is None:
+                importer = env.get_connector_unit(MagentoImportSynchronizer)
+                importer.run(record['parent_id'])
