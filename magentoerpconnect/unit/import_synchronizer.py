@@ -160,8 +160,8 @@ class DirectBatchImport(BatchImportSynchronizer):
     def _import_record(self, record):
         """ Import the record directly """
         job.import_record(self.session,
-                          self.backend_record.id,
                           self.model._name,
+                          self.backend_record.id,
                           record)
 
 
@@ -175,8 +175,8 @@ class DelayedBatchImport(BatchImportSynchronizer):
     def _import_record(self, record):
         """ Delay the import of the records"""
         job.import_record.delay(self.session,
-                                self.backend_record.id,
                                 self.model._name,
+                                self.backend_record.id,
                                 record)
 
 
@@ -202,8 +202,8 @@ class PartnerBatchImport(BatchImportSynchronizer):
     def _import_record(self, record):
         """ Delay a job for the import """
         job.import_record.delay(self.session,
-                                self.backend_record.id,
                                 self.model._name,
+                                self.backend_record.id,
                                 record)
 
     def run(self, filters=None):
@@ -280,8 +280,8 @@ class ProductCategoryBatchImport(BatchImportSynchronizer):
     def _import_record(self, magento_id, priority=None):
         """ Delay a job for the import """
         job.import_record.delay(self.session,
-                                self.backend_record.id,
                                 self.model._name,
+                                self.backend_record.id,
                                 magento_id,
                                 priority=priority)
 

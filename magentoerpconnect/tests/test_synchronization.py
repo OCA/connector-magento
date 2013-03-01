@@ -100,9 +100,9 @@ class test_import_magento(common.SingleTransactionCase):
             API.return_value = api_mock
             api_mock.__enter__.return_value = api_mock
             api_mock.call.side_effect = magento_responses
-            job.import_batch(self.session, backend_id, 'magento.website')
-            job.import_batch(self.session, backend_id, 'magento.store')
-            job.import_batch(self.session, backend_id, 'magento.storeview')
+            job.import_batch(self.session, 'magento.website', backend_id)
+            job.import_batch(self.session, 'magento.store', backend_id)
+            job.import_batch(self.session, 'magento.storeview', backend_id)
 
 
         website_model = self.registry('magento.website')

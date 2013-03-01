@@ -95,7 +95,7 @@ class magento_backend(orm.Model):
                 # import directly, do not delay because this
                 # is a fast operation, a direct return is fine
                 # and it is simpler to import them sequentially
-                job.import_batch(session, backend_id, model)
+                job.import_batch(session, model, backend_id)
 
         return True
 
@@ -109,7 +109,8 @@ class magento_backend(orm.Model):
                 since_date = datetime.strptime(
                         backend_record.import_partners_since,
                         DEFAULT_SERVER_DATETIME_FORMAT)
-            job.import_partners_since.delay(session, backend_record.id,
+            job.import_partners_since.delay(session, 'magento.res.partner',
+                                            backend_record.id,
                                             since_date=since_date)
 
         return True
@@ -119,8 +120,8 @@ class magento_backend(orm.Model):
             ids = [ids]
         session = connector.ConnectorSession(cr, uid, context=context)
         for backend_id in ids:
-            job.import_batch.delay(session, backend_id,
-                                   'magento.res.partner.category')
+            job.import_batch.delay(session, 'magento.res.partner.category',
+                                   backend_id)
 
         return True
 
@@ -129,9 +130,8 @@ class magento_backend(orm.Model):
             ids = [ids]
         session = connector.ConnectorSession(cr, uid, context=context)
         for backend_id in ids:
-            job.import_batch.delay(session, backend_id,
-                                   'magento.product.category')
-
+            job.import_batch.delay(session, 'magento.product.category',
+                                   backend_id)
         return True
 
 

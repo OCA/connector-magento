@@ -32,7 +32,7 @@ from ..unit.delete_synchronizer import (
         MagentoDeleteSynchronizer)
 
 
-def _get_environment(session, backend_id, model_name):
+def _get_environment(session, model_name, backend_id):
     model = session.pool.get('magento.backend')
     backend_record = model.browse(session.cr,
                                   session.uid,
@@ -42,25 +42,25 @@ def _get_environment(session, backend_id, model_name):
 
 
 @connector.job
-def import_batch(session, backend_id, model_name, filters=None):
+def import_batch(session, model_name, backend_id, filters=None):
     """ Prepare an batch import of records from Magento """
-    env = _get_environment(session, backend_id, model_name)
+    env = _get_environment(session, model_name, backend_id)
     importer = env.get_connector_unit(BatchImportSynchronizer)
     importer.run(filters)
 
 
 @connector.job
-def import_record(session, backend_id, model_name, magento_id):
+def import_record(session, model_name, backend_id, magento_id):
     """ Import a record from Magento """
-    env = _get_environment(session, backend_id, model_name)
+    env = _get_environment(session, model_name, backend_id)
     importer = env.get_connector_unit(MagentoImportSynchronizer)
     importer.run(magento_id)
 
 
 @connector.job
-def import_partners_since(session, backend_id, since_date=None):
+def import_partners_since(session, model_name, backend_id, since_date=None):
     """ Prepare the import of partners modified on Magento """
-    env = _get_environment(session, backend_id, 'magento.res.partner')
+    env = _get_environment(session, model_name, backend_id)
     importer = env.get_connector_unit(BatchImportSynchronizer)
     now_fmt = datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
     filters = {}
@@ -83,14 +83,14 @@ def export_record(session, model_name, openerp_id, fields=None):
     model = session.pool.get(model_name)
     record = model.browse(session.cr, session.uid, openerp_id,
                           context=session.context)
-    env = _get_environment(session, record.backend_id.id, model_name)
+    env = _get_environment(session, model_name, record.backend_id.id)
     exporter = env.get_connector_unit(MagentoExportSynchronizer)
     return exporter.run(openerp_id, fields=fields)
 
 
 @connector.job
-def export_delete_record(session, backend_id, model_name, magento_id):
+def export_delete_record(session, model_name, backend_id, magento_id):
     """ Delete a record on Magento """
-    env = _get_environment(session, backend_id, model_name)
+    env = _get_environment(session, model_name, backend_id)
     deleter = env.get_connector_unit(MagentoDeleteSynchronizer)
     return deleter.run(magento_id)
