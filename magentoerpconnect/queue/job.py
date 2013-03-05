@@ -43,7 +43,7 @@ def _get_environment(session, model_name, backend_id):
 
 @connector.job
 def import_batch(session, model_name, backend_id, filters=None):
-    """ Prepare an batch import of records from Magento """
+    """ Prepare a batch import of records from Magento """
     env = _get_environment(session, model_name, backend_id)
     importer = env.get_connector_unit(BatchImportSynchronizer)
     importer.run(filters)

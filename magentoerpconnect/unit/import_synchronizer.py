@@ -291,7 +291,7 @@ class ProductCategoryBatchImport(BatchImportSynchronizer):
         base_priority = 10
         def import_nodes(tree, level=0):
             for node_id, children in tree.iteritems():
-                # By changing the priority, the top level category have
+                # By changing the priority, the top level category has
                 # more chance to be imported before the childrens.
                 # However, importers have to ensure that their parent is
                 # there and import it if it doesn't exist
