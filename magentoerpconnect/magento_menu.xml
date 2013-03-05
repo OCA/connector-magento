@@ -3,7 +3,7 @@
   <data>
 
     <menuitem id="menu_magento_root"
-        parent="connector.menu_connectors_root"
+        parent="connector.menu_connector_root"
         name="Magento"
         sequence="10"
         groups="connector.group_connector_manager"/> <!-- TODO group: Magento Manager -->
