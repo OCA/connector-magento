@@ -17,6 +17,9 @@
                         <h1>
                             <field name="name" class="oe_inline"/>
                         </h1>
+                        <group>
+                            <field name="version"/>
+                        </group>
                         <group col="4">
                             <field name="location" colspan="4"/>
                             <field name="username"/>
