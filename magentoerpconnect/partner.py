@@ -36,7 +36,7 @@ class res_partner(orm.Model):
 
     _columns = {
         'magento_bind_ids': fields.one2many(
-            'magento.res.partner', 'partner_id',
+            'magento.res.partner', 'openerp_id',
             string="Magento Bindings"),
         'birthday': fields.date('Birthday'),
     }
@@ -44,17 +44,16 @@ class res_partner(orm.Model):
 
 class magento_res_partner(orm.Model):
     _name = 'magento.res.partner'
-    _inherits = {'res.partner': 'partner_id'}
+    _inherit = 'magento.binding'
+    _inherits = {'res.partner': 'openerp_id'}
 
     _rec_name = 'website_id'
 
     _columns = {
-        'partner_id': fields.many2one('res.partner',
+        'openerp_id': fields.many2one('res.partner',
                                       string='Partner',
                                       required=True,
                                       ondelete='cascade'),
-        # fields.char because 0 is a valid Magento ID
-        'magento_id': fields.char('ID on Magento'),
         'backend_id': fields.related('website_id', 'backend_id',
                                      type='many2one',
                                      relation='magento.backend',
@@ -73,20 +72,17 @@ class magento_res_partner(orm.Model):
         'emailid': fields.char('E-mail address'),
         'taxvat': fields.char('Magento VAT'),
         'newsletter': fields.boolean('Newsletter'),
-        # TODO inherit this column from a common model
-        # TODO write the date on import / export
-        # and skip import / export (avoid mega loop)
-        'sync_date': fields.date('Last synchronization date'),
     }
 
     _sql_constraints = [
         ('magento_uniq', 'unique(website_id, magento_id)',
-         'Partner with same ID on Magento already exists.'),
+         'A partner with same ID on Magento already exists for this website.'),
     ]
 
 
 class magento_address(orm.Model):
     _name = 'magento.address'
+    _inherit = 'magento.binding'
     _inherits = {'res.partner': 'openerp_id'}
 
     _rec_name = 'backend_id'
@@ -96,29 +92,13 @@ class magento_address(orm.Model):
                                       string='Partner',
                                       required=True,
                                       ondelete='cascade'),
-        # fields.char because 0 is a valid Magento ID
-        'magento_id': fields.char('ID on Magento'),
-        'backend_id': fields.many2one(
-            'magento.backend',
-            'Magento Backend',
-            required=True,
-            ondelete='cascade'),
         'created_at': fields.datetime('Created At (on Magento)',
                                       readonly=True),
         'updated_at': fields.datetime('Updated At (on Magento)',
                                       readonly=True),
-        # TODO inherit this column from a common model
-        # TODO write the date on import / export
-        # and skip import / export (avoid mega loop)
-        'sync_date': fields.date('Last synchronization date'),
         'is_default_billing': fields.boolean('Default Invoice'),
         'is_default_shipping': fields.boolean('Default Invoice'),
     }
-
-    _sql_constraints = [
-        ('magento_uniq', 'unique(backend_id, magento_id)',
-         'Partner with same ID on Magento already exists.'),
-    ]
 
 
 class res_partner_category(orm.Model):
@@ -127,7 +107,7 @@ class res_partner_category(orm.Model):
     _columns = {
         'magento_bind_ids': fields.one2many(
             'magento.res.partner.category',
-            'category_id',
+            'openerp_id',
             string='Magento Bindings',
             readonly=True),
     }
@@ -135,28 +115,16 @@ class res_partner_category(orm.Model):
 
 class magento_res_partner_category(orm.Model):
     _name = 'magento.res.partner.category'
-
-    _inherits = {'res.partner.category': 'category_id'}
+    _inherit = 'magento.binding'
+    _inherits = {'res.partner.category': 'openerp_id'}
 
     _columns = {
-        'category_id': fields.many2one('res.partner.category',
+        'openerp_id': fields.many2one('res.partner.category',
                                        string='Partner Category',
                                        required=True,
                                        ondelete='cascade'),
-        'magento_id': fields.char('ID on Magento'),
-        'backend_id': fields.many2one(
-            'magento.backend',
-            'Magento Backend',
-            required=True,
-            ondelete='restrict'),
         'tax_class_id': fields.integer('Tax Class ID'),
-        'sync_date': fields.date('Last synchronization date'),
     }
-
-    _sql_constraints = [
-        ('magento_uniq', 'unique(backend_id, magento_id)',
-         'Partner Tag with same ID on Magento already exists.'),
-    ]
 
 
 

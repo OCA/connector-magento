@@ -47,7 +47,7 @@ _logger = logging.getLogger(__name__)
 
 class magento_product_category(orm.Model):
     _name = 'magento.product.category'
-
+    _inherit = 'magento.binding'
     _inherits = {'product.category': 'openerp_id'}
 
     _columns = {
@@ -55,19 +55,7 @@ class magento_product_category(orm.Model):
                                       string='Product Category',
                                       required=True,
                                       ondelete='cascade'),
-        'magento_id': fields.char('ID on Magento'),
-        'backend_id': fields.many2one(
-            'magento.backend',
-            'Magento Backend',
-            required=True,
-            ondelete='restrict'),
-        'sync_date': fields.date('Last synchronization date'),
     }
-
-    _sql_constraints = [
-        ('magento_uniq', 'unique(backend_id, magento_id)',
-         'Product category with same ID on Magento already exists.'),
-    ]
 
 
 class product_category(orm.Model):

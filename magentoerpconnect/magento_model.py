@@ -36,16 +36,10 @@ from .magerp_osv import MagerpModel, Connection
 from openerp.addons.connector.decorator import only_for_referential
 from openerp.addons.connector.external_osv import ExternalSession
 
-from openerp.addons.connector.external_referential import (
-        REF_VISIBLE_FIELDS,
-        add_backend)
-
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 import openerp.addons.connector as connector
 from .unit import BatchImportSynchronizer
 from .queue import job
-
-REF_VISIBLE_FIELDS['Magento'] = ['location', 'apiusername', 'apipass']
 
 
 _logger = logging.getLogger(__name__)
@@ -78,10 +72,6 @@ class magento_backend(orm.Model):
 
         # add a field `auto_activate` -> activate a cron
         'import_partners_since': fields.datetime('Import partners since'),
-    }
-
-    _defaults = {
-        'type': 'magento',
     }
 
     def synchronize_metadata(self, cr, uid, ids, context=None):
@@ -135,24 +125,37 @@ class magento_backend(orm.Model):
         return True
 
 
-add_backend(magento_backend._name)
+class magento_binding(orm.AbstractModel):
+    _name = 'magento.binding'
+    _inherit = 'external.binding'
+    _description = 'Magento Binding (abstract)'
+
+    _columns = {
+        # openerp_id to declare in concrete model
+        'backend_id': fields.many2one(
+            'magento.backend',
+            'Magento Backend',
+            required=True,
+            ondelete='restrict'),
+        # fields.char because 0 is a valid Magento ID
+        'magento_id': fields.char('ID on Magento'),
+    }
+
+    _sql_constraints = [
+        ('magento_uniq', 'unique(backend_id, magento_id)',
+         'A record with same ID on Magento already exists.'),
+    ]
 
 
 # TODO migrate from external.shop.group
 class magento_website(orm.Model):
     _name = 'magento.website'
+    _inherit = 'magento.binding'
 
     _columns = {
         'name': fields.char('Name', required=True),
         'code': fields.char('Code'),
-        'backend_id': fields.many2one(
-            'magento.backend',
-            'Magento Backend',
-            required=True,
-            ondelete='cascade'),
         'sort_order': fields.integer('Sort Order'),
-        # fields.char because 0 is a valid Magento ID
-        'magento_id': fields.char('ID on Magento'),
         'store_ids': fields.one2many(
             'magento.store',
             'website_id',
@@ -165,6 +168,7 @@ class magento_website(orm.Model):
 # sale.shop)
 class magento_store(orm.Model):
     _name = 'magento.store'
+    _inherit = 'magento.binding'
     _description = 'Magento Store'
 
     _inherits = {'sale.shop': 'shop_id'}
@@ -187,7 +191,6 @@ class magento_store(orm.Model):
             'Default Product Category',
             help="The category set on products when?? TODO."
             "\nOpenERP requires a main category on products for accounting."),
-        'magento_id': fields.char('ID on Magento'),
         'backend_id': fields.related(
             'website_id', 'backend_id',
             type='many2one',
@@ -205,6 +208,7 @@ class magento_store(orm.Model):
 # TODO: migrate from magerp.storeviews
 class magento_storeview(orm.Model):
     _name = 'magento.storeview'
+    _inherit = 'magento.binding'
     _description = "Magento Storeview"
 
     _columns = {
@@ -215,9 +219,6 @@ class magento_storeview(orm.Model):
         'store_id': fields.many2one('magento.store', 'Store',
                                     ondelete='cascade'),
         'lang_id': fields.many2one('res.lang', 'Language'),
-        # we can keep the id of the storeview on this
-        # model, a record is a direct copy
-        'magento_id': fields.char('ID on Magento'),
         'backend_id': fields.related(
             'store_id', 'website_id', 'backend_id',
             type='many2one',
