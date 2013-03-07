@@ -51,6 +51,7 @@ TODO
     "demo_xml": [],
     "update_xml": [
             'security/ir.model.access.csv',
+            'setting_view.xml',
             'settings/magerp.product_category_attribute_options.csv',
             'settings/external.referential.type.csv',
             'settings/1.5.0.0/external.referential.version.csv',
