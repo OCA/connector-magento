@@ -57,6 +57,11 @@ class magento_product_category(orm.Model):
                                       ondelete='cascade'),
     }
 
+    _sql_constraints = [
+        ('magento_uniq', 'unique(backend_id, magento_id)',
+         'A product category with same ID on Magento already exists.'),
+    ]
+
 
 class product_category(orm.Model):
     _inherit = 'product.category'

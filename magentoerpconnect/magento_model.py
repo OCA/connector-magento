@@ -141,10 +141,9 @@ class magento_binding(orm.AbstractModel):
         'magento_id': fields.char('ID on Magento'),
     }
 
-    _sql_constraints = [
-        ('magento_uniq', 'unique(backend_id, magento_id)',
-         'A record with same ID on Magento already exists.'),
-    ]
+    # the _sql_contraints cannot be there due to this bug:
+    # https://bugs.launchpad.net/openobject-server/+bug/1151703
+
 
 
 # TODO migrate from external.shop.group
@@ -162,6 +161,11 @@ class magento_website(orm.Model):
             string="Stores",
             readonly=True),
     }
+
+    _sql_constraints = [
+        ('magento_uniq', 'unique(backend_id, magento_id)',
+         'A website with same ID on Magento already exists.'),
+    ]
 
 
 # TODO migrate from sale.shop (create a magento.store + associated
@@ -196,6 +200,7 @@ class magento_store(orm.Model):
             type='many2one',
             relation='magento.backend',
             string='Magento Backend',
+            store=True,
             readonly=True),
         'storeview_ids': fields.one2many(
             'magento.storeview',
@@ -203,6 +208,11 @@ class magento_store(orm.Model):
             string="Storeviews",
             readonly=True),
     }
+
+    _sql_constraints = [
+        ('magento_uniq', 'unique(backend_id, magento_id)',
+         'A store with same ID on Magento already exists.'),
+    ]
 
 
 # TODO: migrate from magerp.storeviews
@@ -224,8 +234,14 @@ class magento_storeview(orm.Model):
             type='many2one',
             relation='magento.backend',
             string='Magento Backend',
+            store=True,
             readonly=True),
     }
+
+    _sql_constraints = [
+        ('magento_uniq', 'unique(backend_id, magento_id)',
+         'A storeview with same ID on Magento already exists.'),
+    ]
 
 
 # TODO: move all the stuff related to Magento in magento.backend

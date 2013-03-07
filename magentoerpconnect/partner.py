@@ -58,6 +58,7 @@ class magento_res_partner(orm.Model):
                                      type='many2one',
                                      relation='magento.backend',
                                      string='Magento Backend',
+                                     store=True,
                                      readonly=True),
         'website_id': fields.many2one('magento.website',
                                       string='Magento Website',
@@ -100,6 +101,11 @@ class magento_address(orm.Model):
         'is_default_shipping': fields.boolean('Default Invoice'),
     }
 
+    _sql_constraints = [
+        ('magento_uniq', 'unique(backend_id, magento_id)',
+         'A partner address with same ID on Magento already exists.'),
+    ]
+
 
 class res_partner_category(orm.Model):
     _inherit = 'res.partner.category'
@@ -125,6 +131,11 @@ class magento_res_partner_category(orm.Model):
                                        ondelete='cascade'),
         'tax_class_id': fields.integer('Tax Class ID'),
     }
+
+    _sql_constraints = [
+        ('magento_uniq', 'unique(backend_id, magento_id)',
+         'A partner tag with same ID on Magento already exists.'),
+    ]
 
 
 
