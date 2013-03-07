@@ -216,20 +216,20 @@ class product_category(MagerpModel):
                     ('PRODUCTS_AND_PAGE', 'Static Block & Products')], 'Display Mode', required=True),
         'is_anchor': fields.boolean('Anchor?'),
         'use_default_available_sort_by': fields.boolean('Default Config For Available Sort By', help="Use default config for available sort by"),
-        'available_sort_by': fields.sparse(type='many2many', relation='magerp.product_category_attribute_options', string='Available Product Listing (Sort By)', serialization_field='magerp_fields', domain="[('attribute_name', '=', 'sort_by'), ('value', '!=','None')]"),
-        'default_sort_by': fields.many2one('magerp.product_category_attribute_options', 'Default Product Listing Sort (Sort By)', domain="[('attribute_name', '=', 'sort_by')]", require=True),
+        # 'available_sort_by': fields.sparse(type='many2many', relation='magerp.product_category_attribute_options', string='Available Product Listing (Sort By)', serialization_field='magerp_fields', domain="[('attribute_name', '=', 'sort_by'), ('value', '!=','None')]"),
+        # 'default_sort_by': fields.many2one('magerp.product_category_attribute_options', 'Default Product Listing Sort (Sort By)', domain="[('attribute_name', '=', 'sort_by')]", require=True),
         'magerp_stamp':fields.datetime('Magento stamp'),
         'include_in_menu': fields.boolean('Include in Navigation Menu'),
-        'page_layout': fields.many2one('magerp.product_category_attribute_options', 'Page Layout', domain="[('attribute_name', '=', 'page_layout')]"),
+        # 'page_layout': fields.many2one('magerp.product_category_attribute_options', 'Page Layout', domain="[('attribute_name', '=', 'page_layout')]"),
         }
 
     _defaults = {
         'display_mode':lambda * a:'PRODUCTS',
         'use_default_available_sort_by': lambda * a:True,
-        'default_sort_by': lambda self,cr,uid,c: self.pool.get('magerp.product_category_attribute_options')._get_default_option(cr, uid, 'sort_by', 'None', context=c),
+        # 'default_sort_by': lambda self,cr,uid,c: self.pool.get('magerp.product_category_attribute_options')._get_default_option(cr, uid, 'sort_by', 'None', context=c),
         'level':lambda * a:1,
         'include_in_menu': lambda * a:True,
-        'page_layout': lambda self,cr,uid,c: self.pool.get('magerp.product_category_attribute_options')._get_default_option(cr, uid, 'page_layout', 'None', context=c),
+        # 'page_layout': lambda self,cr,uid,c: self.pool.get('magerp.product_category_attribute_options')._get_default_option(cr, uid, 'page_layout', 'None', context=c),
         }
 
     def write(self, cr, uid, ids, vals, context=None):
