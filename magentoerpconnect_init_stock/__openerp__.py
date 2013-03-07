@@ -42,6 +42,6 @@ configuration directly.
  'update_xml': [],
  'demo_xml': [],
  'tests': [],
- 'installable': True,
+ 'installable': False,
  'auto_install': False,
 }

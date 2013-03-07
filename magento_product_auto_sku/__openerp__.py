@@ -29,6 +29,6 @@
     'init_xml': [],
     'update_xml': ['data.xml', ],
     'demo_xml': [],
-    'installable': True,
+    'installable': False,
     'active': False,
 }

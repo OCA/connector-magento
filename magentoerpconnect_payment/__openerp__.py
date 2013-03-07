@@ -56,6 +56,6 @@ This allow to have one and only one Magento -> OpenERP payment worlflow.
                 'invoice_view.xml',
                 'payment_type_view.xml'],
  'demo_xml': [],
- 'installable': True,
+ 'installable': False,
  'auto_install': False
 }

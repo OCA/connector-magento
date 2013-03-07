@@ -49,6 +49,6 @@ in lp:c2c-financial-addons branch
     'update_xml': [#'settings/1.3.2.4/external.mappinglines.template.csv',
                    'settings/1.5.0.0/external.mappinglines.template.csv', ],
     'demo_xml': [],
-    'installable': True,
+    'installable': False,
     'auto_install': True,
 }

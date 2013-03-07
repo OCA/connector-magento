@@ -44,7 +44,7 @@ NB: in magento the variant are called 'configurable product'""",
             'settings/1.5.0.0/external.mappinglines.template.csv',
     ],
     'demo_xml': [],
-    'installable': True,
+    'installable': False,
     'active': False,
 }
 

@@ -38,6 +38,6 @@
            'settings/1.5.0.0/res.partner.address/external.mappinglines.template.csv',
     ],
     'demo_xml': [],
-    'installable': True,
+    'installable': False,
     'auto_install': True,
 }
