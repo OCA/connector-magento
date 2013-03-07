@@ -19,6 +19,8 @@
 #
 ##############################################################################
 
+from functools import wraps
+
 import openerp.addons.connector as connector
 
 from openerp.addons.connector.event import (
@@ -31,9 +33,24 @@ from .queue import job
 _MODEL_NAMES = ('res.partner',)
 _BIND_MODEL_NAMES = ('magento.res.partner',)
 
+def magento_consumer(func):
+    """ Use this decorator on all the consumers of magentoerpconnect.
+
+    It will prevent the consumers to be fired when the magentoerpconnect
+    addon is not installed.
+    """
+    @wraps(func)
+    def wrapped(*args, **kwargs):
+        session = args[0]
+        if session.pool.get('magentoerpconnect.installed'):
+            return func(*args, **kwargs)
+
+    return wrapped
+
 
 @on_record_create(model_names=_BIND_MODEL_NAMES)
 @on_record_write(model_names=_BIND_MODEL_NAMES)
+@magento_consumer
 def delay_export(session, model_name, record_id, fields=None):
     if session.context.get('connector_no_export'):
         return
@@ -41,6 +58,7 @@ def delay_export(session, model_name, record_id, fields=None):
 
 
 @on_record_write(model_names=_MODEL_NAMES)
+@magento_consumer
 def delay_export_all_bindings(session, model_name, record_id, fields=None):
     if session.context.get('connector_no_export'):
         return
@@ -53,6 +71,7 @@ def delay_export_all_bindings(session, model_name, record_id, fields=None):
 
 
 @on_record_unlink(model_names=_BIND_MODEL_NAMES)
+@magento_consumer
 def delay_unlink(session, model_name, record_id):
     model = session.pool.get(model_name)
     record = model.browse(session.cr, session.uid,
