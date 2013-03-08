@@ -28,7 +28,7 @@ class MagentoBinder(connector.Binder):
 
 
 @magento
-class InModelBinder(MagentoBinder):
+class MagentoModelBinder(MagentoBinder):
     """
     Bindings are done directly on the model
     """
