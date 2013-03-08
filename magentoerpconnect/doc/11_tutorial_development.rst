@@ -46,12 +46,16 @@ which has to fire it::
           by the :py:class:`connector.event.Event`
 
 
+Find the good class for a model
+-------------------------------
+
+
 Create an import
 ----------------
 
 You'll need to work on at least 4 pieces of the connector:
 
-* a Synchronizer (presumably 2, we'll why)
+* a Synchronizer (presumably 2, we'll see why soon)
 * a Mapper
 * a Backend Adapter
 * a Binder
@@ -73,6 +77,9 @@ phases:
 2. The second synchronizer imports all the ids atomically.
 
 We'll see in details a simple import: customer groups.
+
+Models
+''''''
 
 First, we'll create the model::
 
@@ -128,6 +135,9 @@ OpenERP category!
 
 Ok, we're done with the models. Now the synchronizations!
 
+Batch Importer
+''''''''''''''
+
 The first Synchronizer, which get the full list of ids to import is
 usually a subclass of
 :py:class:`magentoerpconnect.unit.import_synchronizer.BatchImportSynchronizer`.
@@ -150,17 +160,205 @@ The customer groups are simple enough to use a generic class::
 
 Observations:
 
-* Decorated by ``@magento``: it means that this synchronizer will be
-  available for all versions of Magento. If it was available only for
-  Magento 1.7, I would have decorated it with ``@magento1700``.
-* ``_model_name``: the list of models synchronized, we'll be able to
-  just drop new model names here later.
+* Decorated by ``@magento``: this synchronizer will be available for all
+  versions of Magento. Decorate for instance with ``@magento1700`` to
+  activate it for Magento 1.7 only.
+* ``_model_name``: the list of models allowed to use this synchronizer
 * We just override the ``_import_record`` hook, the search has already
   be done in
   :py:class:`magentoerpconnect.unit.import_synchronizer.BatchImportSynchronizer`.
-* Here, we delay the import of each record, that means a job will be
-  created for each record id.
+* ``import_record`` is a job to import a record from its ID.
+* Delay the import of each record, a job will be created for each record id.
 * This synchronization does not need any Binder nor Mapper, but does
-  need a Backend Adapter to be able to speak with Magento!
+  need a Backend Adapter to be able to speak with Magento.
 
-So, let's implement the **Backend Adapter**::
+So, let's implement the **Backend Adapter**.
+
+Backend Adapter
+'''''''''''''''
+
+Most of the Magento objects can use the generic class
+:py:class`magentoerpconnect.unit.backend_adapter.GenericAdapter`.
+However, the ``search`` entry point is not implemented in the API for
+customer groups.
+
+We'll replace it using ``list`` and select only the ids::
+
+    @magento
+    class PartnerCategoryAdapter(GenericAdapter):
+        _model_name = 'magento.res.partner.category'
+        _magento_model = 'ol_customer_groups'
+
+        def search(self, filters=None):
+            """ Search records according to some criterias
+            and returns a list of ids
+
+            :rtype: list
+            """
+            with magentolib.API(self.magento.location,
+                                self.magento.username,
+                                self.magento.password) as api:
+                return [int(row['customer_group_id']) for row
+                           in api.call('%s.list' % self._magento_model,
+                                       [filters] if filters else [{}])]
+            return []
+
+Observations:
+
+* ``_magento_model`` is the first part of the entry points in the API
+  (ie. ``ol_customer_groups.list``)
+* Only the ``search`` method is overriden.
+
+We have all the pieces for the first part of the synchronization, just
+need to...
+
+Call the Batch Import
+'''''''''''''''''''''
+
+This import will be called from the **Magento Backend**, we modify it in
+``magentoerpconnect/magento_model.py`` and add a method (to add in the
+view as well, I won't write the view code here)::
+
+    def import_customer_groups(self, cr, uid, ids, context=None):
+        if not hasattr(ids, '__iter__'):
+            ids = [ids]
+        session = connector.ConnectorSession(cr, uid, context=context)
+        for backend_id in ids:
+            job.import_batch.delay(session, 'magento.res.partner.category',
+                                   backend_id)
+
+        return True
+
+Observations:
+
+* Declare a :py:class:`connector.connector.ConnectorSession`.
+* Delay the job ``import_batch``.
+
+Overview on the jobs
+''''''''''''''''''''
+
+We used 2 jobs: ``import_record`` and ``import_batch``. These jobs are
+already there so you don't need to write them, but we can have a look
+on them to understand what they do::
+
+    def _get_environment(session, model_name, backend_id):
+        model = session.pool.get('magento.backend')
+        backend_record = model.browse(session.cr,
+                                      session.uid,
+                                      backend_id,
+                                      session.context)
+        return connector.Environment(backend_record, session, model_name)
+
+
+    @connector.job
+    def import_batch(session, model_name, backend_id, filters=None):
+        """ Prepare a batch import of records from Magento """
+        env = _get_environment(session, model_name, backend_id)
+        importer = env.get_connector_unit(BatchImportSynchronizer)
+        importer.run(filters)
+
+
+    @connector.job
+    def import_record(session, model_name, backend_id, magento_id):
+        """ Import a record from Magento """
+        env = _get_environment(session, model_name, backend_id)
+        importer = env.get_connector_unit(MagentoImportSynchronizer)
+        importer.run(magento_id)
+
+Observations:
+
+* Decorated by :py:class:`connector.connector.queue.job.job`, allow to
+  ``delay`` the function.
+* We create a new environment and ask for the good importer, respectively
+  for batch imports and record imports. The environment returns an
+  instance of the importer to use.
+
+At this point, if one click on the button to import the categories, the
+batch import would run, generate one job for each category to import,
+and then all these jobs would fail. We need to create the second
+synchronizer, the mapper and the binder.
+
+Record Importer
+'''''''''''''''
+
+The import of customer groups is so simple that they can use a generic
+class
+:py:class:`magentoerpconnect.unit.import_synchronizer.SimpleRecordImport`.
+We just need to add the model in the ``_model_name`` attribute::
+
+    @magento
+    class SimpleRecordImport(MagentoImportSynchronizer):
+        """ Import one Magento Website """
+        _model_name = [
+                'magento.website',
+                'magento.store',
+                'magento.storeview',
+                'magento.res.partner.category',
+            ]
+
+However, most of the imports will be more complicated than that. You
+will often need to create a new class for a model, where you will need
+to use some of the hooks to change the behavior
+(``_import_dependencies``, ``_after_import`` for example).
+Refers to the importers already created in the module and to the base
+class
+:py:class:`magentoerpconnect.unit.import_synchronizer.MagentoImportSynchronizer`.
+
+The synchronizer asks to the appropriate **Mapper** to transform the data
+(in ``_map_data``). Here is how we'll create the **Mapper**.
+
+Mapper
+''''''
+
+The mapper takes the record in input from Magento, and generates the
+OpenERP record. (or the reverse for the export Mappers)
+
+The mapper for the customer groups is as follows::
+
+    @magento
+    class PartnerCategoryImportMapper(connector.ImportMapper):
+        _model_name = 'magento.res.partner.category'
+
+        direct = [
+                ('customer_group_code', 'name'),
+                ('tax_class_id', 'tax_class_id'),
+                ]
+
+        @mapping
+        def magento_id(self, record):
+            return {'magento_id': record['customer_group_id']}
+
+        @mapping
+        def backend_id(self, record):
+            return {'backend_id': self.backend_record.id}
+
+
+Observations:
+
+* Some mappings are in ``direct`` and some use a method with a
+  ``@mapping`` decorator.
+* Methods allow to have more complex mappings.
+
+Binder
+''''''
+
+For the last piece of the construct, it will be an easy one, because
+normally all the Magento Models will use the same Binder, the so called
+:py:class:`magentoerpconnect.unit.binder.MagentoModelBinder`.
+
+We just need to add our model in the ``_model_name`` attribute::
+
+    @magento
+    class MagentoModelBinder(MagentoBinder):
+        """
+        Bindings are done directly on the model
+        """
+        _model_name = [
+                'magento.website',
+                'magento.store',
+                'magento.storeview',
+                'magento.res.partner.category',
+            ]
+
+    [...]
+
