@@ -46,8 +46,38 @@ which has to fire it::
           by the :py:class:`connector.event.Event`
 
 
-Find the good class for a model
--------------------------------
+Find the good 'unit' class for a model
+--------------------------------------
+
+Assume that you already have an ``Environment``.
+
+.. note:: An ``Environment`` is the scope where the synchronizations are
+          done. It contains the browse record of the backend
+          (``magento.backend``), a ``ConnectorSession`` (container for
+          ``cr``, ``uid``, ``context``) and the name of the model we are
+          working with).
+
+You can get an instance of the ``ConnectorUnit`` to use from the
+environment.  You'll need to ask a connector unit with the base class
+which interests you.  Say you want a Synchronizer which import records
+from Magento::
+
+    importer = environment.get_connector_unit(MagentoImportSynchronizer)
+
+``importer`` is an instance of the importer to use for the model of the
+environment.
+
+Say you want a binder for your model::
+
+    binder = environment.get_connector_unit(connector.Binder)
+
+``binder`` is an instance of the binder for your model.
+
+And so on...
+
+.. note:: Every ``ConnectorUnit`` instance keeps the environment as
+          attribute. It means that you can access to the environment
+          from a synchronizer with ``self.environment``.
 
 
 Create an import
