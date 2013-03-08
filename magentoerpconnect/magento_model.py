@@ -53,6 +53,8 @@ class magento_backend(orm.Model):
     _doc = 'Magento Backend'
     _inherit = 'connector.backend'
 
+    _backend_type = 'magento'
+
     def _select_versions(self, cr, uid, context=None):
         """ Available versions
 
