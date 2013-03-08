@@ -46,8 +46,8 @@ which has to fire it::
           by the :py:class:`connector.event.Event`
 
 
-Find the good 'unit' class for a model
---------------------------------------
+Find the 'connector unit' for a model
+-------------------------------------
 
 Assume that you already have an ``Environment``.
 
@@ -83,7 +83,7 @@ And so on...
 Create an import
 ----------------
 
-You'll need to work on at least 4 pieces of the connector:
+You'll need to work on at least 4 connector units:
 
 * a Synchronizer (presumably 2, we'll see why soon)
 * a Mapper
@@ -92,8 +92,8 @@ You'll need to work on at least 4 pieces of the connector:
 
 You will also need to create / change the OpenERP models.
 
-.. note:: Keep that in mind: try to modify at least as possible the
-          OpenERP models and classes.
+.. note:: Keep in mind: try to modify at least as possible the OpenERP
+          models and classes.
 
 The synchronizer will handle the flow of the synchronization. It will
 get the data from Magento using the Backend Adapter, transform it using
@@ -107,11 +107,13 @@ phases:
 2. The second synchronizer imports all the ids atomically.
 
 We'll see in details a simple import: customer groups.
+Customer groups are importer as categories of partners
+(``res.partner.category``).
 
 Models
 ''''''
 
-First, we'll create the model::
+First, we create the model::
 
     class magento_res_partner_category(orm.Model):
         _name = 'magento.res.partner.category'
@@ -163,7 +165,7 @@ OpenERP category!
 
 .. note:: The name of the field ``magento_bind_ids`` is a convention.
 
-Ok, we're done with the models. Now the synchronizations!
+Ok, we're done with the models. Now the **synchronizations**!
 
 Batch Importer
 ''''''''''''''
@@ -191,8 +193,8 @@ The customer groups are simple enough to use a generic class::
 Observations:
 
 * Decorated by ``@magento``: this synchronizer will be available for all
-  versions of Magento. Decorate for instance with ``@magento1700`` to
-  activate it for Magento 1.7 only.
+  versions of Magento. Decorated with ``@magento1700`` it would be only
+  available for Magento 1.7.
 * ``_model_name``: the list of models allowed to use this synchronizer
 * We just override the ``_import_record`` hook, the search has already
   be done in
@@ -235,6 +237,8 @@ We'll replace it using ``list`` and select only the ids::
 
 Observations:
 
+* ``_model_name`` is just ``magento.res.partner.category``, this adapter
+  is available only for this model.
 * ``_magento_model`` is the first part of the entry points in the API
   (ie. ``ol_customer_groups.list``)
 * Only the ``search`` method is overriden.
@@ -242,8 +246,8 @@ Observations:
 We have all the pieces for the first part of the synchronization, just
 need to...
 
-Call the Batch Import
-'''''''''''''''''''''
+Delay execution of our Batch Import
+'''''''''''''''''''''''''''''''''''
 
 This import will be called from the **Magento Backend**, we modify it in
 ``magentoerpconnect/magento_model.py`` and add a method (to add in the
@@ -262,12 +266,14 @@ view as well, I won't write the view code here)::
 Observations:
 
 * Declare a :py:class:`connector.connector.ConnectorSession`.
-* Delay the job ``import_batch``.
+* Delay the job ``import_batch`` when we click on the button.
+* if the arguments were given to ``import_batch`` directly, the import
+  would be done synchronously.
 
 Overview on the jobs
 ''''''''''''''''''''
 
-We used 2 jobs: ``import_record`` and ``import_batch``. These jobs are
+We use 2 jobs: ``import_record`` and ``import_batch``. These jobs are
 already there so you don't need to write them, but we can have a look
 on them to understand what they do::
 
@@ -302,6 +308,7 @@ Observations:
 * We create a new environment and ask for the good importer, respectively
   for batch imports and record imports. The environment returns an
   instance of the importer to use.
+* The docstring of the job is its description for the user.
 
 At this point, if one click on the button to import the categories, the
 batch import would run, generate one job for each category to import,
@@ -311,7 +318,7 @@ synchronizer, the mapper and the binder.
 Record Importer
 '''''''''''''''
 
-The import of customer groups is so simple that they can use a generic
+The import of customer groups is so simple that it can use a generic
 class
 :py:class:`magentoerpconnect.unit.import_synchronizer.SimpleRecordImport`.
 We just need to add the model in the ``_model_name`` attribute::
@@ -340,8 +347,8 @@ The synchronizer asks to the appropriate **Mapper** to transform the data
 Mapper
 ''''''
 
-The mapper takes the record in input from Magento, and generates the
-OpenERP record. (or the reverse for the export Mappers)
+The mapper takes the record from Magento, and generates the OpenERP
+record. (or the reverse for the export Mappers)
 
 The mapper for the customer groups is as follows::
 
