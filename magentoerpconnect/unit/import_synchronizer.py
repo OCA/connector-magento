@@ -243,10 +243,10 @@ class PartnerImport(MagentoImportSynchronizer):
             partner_row = self.model.read(self.session.cr,
                                          self.session.uid,
                                          openerp_id,
-                                         ['partner_id'],
+                                         ['openerp_id'],
                                          context=self.session.context)
             for address_id in mag_address_ids:
-                importer.run(address_id, partner_row['partner_id'][0])
+                importer.run(address_id, partner_row['openerp_id'][0])
 
 
 @magento

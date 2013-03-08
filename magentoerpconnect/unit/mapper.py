@@ -135,9 +135,11 @@ class PartnerImportMapper(connector.ImportMapper):
         category_id = model.read(self.session.cr,
                    self.session.uid,
                    mag_cat_id,
-                   ['category_id'],
-                   context=self.session.context)['category_id'][0]
+                   ['openerp_id'],
+                   context=self.session.context)['openerp_id'][0]
 
+        # FIXME: should remove the previous tag (all the other tags from
+        # the same backend)
         return {'category_id': [(4, category_id)]}
 
     @mapping
