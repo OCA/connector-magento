@@ -213,7 +213,7 @@
 
         <!--Magento Instances Tree/Form view  -->
 
-        <record model="ir.ui.view" id="magerp_instances_form">
+        <!--record model="ir.ui.view" id="magerp_instances_form">
             <field name="name">External Referentials</field>
             <field name="model">external.referential</field>
             <field name="inherit_id" ref="connector.external_referential_view_form" />
@@ -268,8 +268,8 @@
                   </group>
                 </page>
             </field>
-        </record>
-        <record id="act_magerp_instances_form" model="ir.actions.act_window">
+        </record-->
+        <!--record id="act_magerp_instances_form" model="ir.actions.act_window">
             <field name="name">Magento Instances</field>
             <field name="res_model">external.referential</field>
             <field name="type">ir.actions.act_window</field>
@@ -277,10 +277,10 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="connector.external_referential_view_tree" />
             <field name="domain" eval="False"></field>
-        </record>
+        </record-->
 
         <!--Magento Websites Tree/Form view  -->
-        <record model="ir.ui.view" id="magerp_websites_form">
+        <!--record model="ir.ui.view" id="magerp_websites_form">
             <field name="name">external.shop.group.form</field>
             <field name="model">external.shop.group</field>
             <field name="arch" type="xml">
@@ -298,8 +298,8 @@
                     </group>
                 </form>
             </field>
-        </record>
-        <record model="ir.ui.view" id="magerp_websites_tree">
+        </record-->
+        <!--record model="ir.ui.view" id="magerp_websites_tree">
             <field name="name">external.shop.group.tree</field>
             <field name="model">external.shop.group</field>
             <field name="arch" type="xml">
@@ -312,18 +312,18 @@
                     <field name="shop_ids" readonly="1" />
                 </tree>
             </field>
-        </record>
-        <record id="act_magerp_websites_form" model="ir.actions.act_window">
+        </record-->
+        <!--record id="act_magerp_websites_form" model="ir.actions.act_window">
             <field name="name">Magento websites</field>
             <field name="res_model">external.shop.group</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="magerp_websites_tree" />
-        </record>
+        </record-->
 
         <!--Magento storeviews Tree/Form view  -->
-        <record model="ir.ui.view" id="magerp_storeviews_form">
+        <!--record model="ir.ui.view" id="magerp_storeviews_form">
             <field name="name">magerp.storeviews.form</field>
             <field name="model">magerp.storeviews</field>
             <field name="arch" type="xml">
@@ -339,8 +339,8 @@
                     </group>
                 </form>
             </field>
-        </record>
-        <record model="ir.ui.view" id="magerp_storeviews_tree">
+        </record-->
+        <!--record model="ir.ui.view" id="magerp_storeviews_tree">
             <field name="name">magerp.storeviews.tree</field>
             <field name="model">magerp.storeviews</field>
             <field name="arch" type="xml">
@@ -353,15 +353,15 @@
                     <field name="lang_id" />
                 </tree>
             </field>
-        </record>
-        <record id="act_magerp_storeviews_form" model="ir.actions.act_window">
+        </record-->
+        <!--record id="act_magerp_storeviews_form" model="ir.actions.act_window">
             <field name="name">Magento storeviews</field>
             <field name="res_model">magerp.storeviews</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="magerp_storeviews_tree" />
-        </record>
+        </record-->
 
     </data>
 </openerp>
