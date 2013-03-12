@@ -28,6 +28,7 @@ from openerp.addons.connector.event import (
     on_record_create,
     on_record_unlink
     )
+from openerp.addons.connector_ecommerce.event import on_picking_done
 from .queue import job
 
 _MODEL_NAMES = ('res.partner',)
