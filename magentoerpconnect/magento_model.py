@@ -197,7 +197,8 @@ class magento_store(orm.Model):
             readonly=True),
         'send_picking_done_mail': fields.boolean(
             'Send email notification on picking done',
-            help="Does the picking export/creation should send an email notification on Magento side ?"),
+            help="Does the picking export/creation should send "
+                 "an email notification on Magento side ?"),
     }
 
     _sql_constraints = [
@@ -205,17 +206,16 @@ class magento_store(orm.Model):
          'A store with same ID on Magento already exists.'),
     ]
 
+
 class sale_shop(orm.Model):
     _inherit = 'sale.shop'
 
     _columns = {
         'magento_bind_ids': fields.one2many(
-            'magento.store',
-            'openerp_id',
+            'magento.store', 'openerp_id',
             string='Magento Bindings',
             readonly=True),
     }
-    
 
 
 # TODO: migrate from magerp.storeviews

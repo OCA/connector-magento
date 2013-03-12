@@ -249,6 +249,3 @@ class ProductCategoryAdapter(GenericAdapter):
 class StockPickingAdapter(GenericAdapter):
     _model_name = 'magento.stock.picking'
     _magento_model = 'sales_order_shipment'
-    
-
-

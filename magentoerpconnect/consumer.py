@@ -82,7 +82,7 @@ def delay_unlink(session, model_name, record_id):
     if magento_id:
         job.export_delete_record.delay(session, model_name,
                                        record.backend_id.id, magento_id)
-                                       
+
 
 @on_picking_done(model_names='stock.picking')
 @magento_consumer
@@ -90,9 +90,8 @@ def delay_export_picking_done(session, model_name, record_id, picking_type):
     """
     Call a job to export the picking with args to ask for partial or complete
     picking.
-   
-    @params: picking_type as string, can be 'complete' or 'partial'
+
+    :param picking_type: picking_type, can be 'complete' or 'partial'
+    :type picking_type: str
     """
     job.export_picking_done.delay(session, model_name, record_id, picking_type)
-
-
