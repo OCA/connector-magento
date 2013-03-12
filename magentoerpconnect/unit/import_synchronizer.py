@@ -222,10 +222,7 @@ class PartnerImport(MagentoImportSynchronizer):
         record = self.magento_record
 
         # import customer groups
-        env = connector.Environment(self.backend_record,
-                                    self.session,
-                                    'magento.res.partner.category')
-        binder = env.get_connector_unit(connector.Binder)
+        binder = self.get_binder_for_model('magento.res.partner.category')
         if binder.to_openerp(record['group_id']) is None:
             importer = env.get_connector_unit(MagentoImportSynchronizer)
             importer.run(record['group_id'])
@@ -309,11 +306,10 @@ class ProductCategoryImport(MagentoImportSynchronizer):
         """ Import the dependencies for the record"""
         record = self.magento_record
         env = self.environment
-
         # import parent category
         # the root category has a 0 parent_id
         if record.get('parent_id'):
-            binder = env.get_connector_unit(connector.Binder)
+            binder = self.get_binder_for_model()
             if binder.to_openerp(record['parent_id']) is None:
                 importer = env.get_connector_unit(MagentoImportSynchronizer)
                 importer.run(record['parent_id'])
