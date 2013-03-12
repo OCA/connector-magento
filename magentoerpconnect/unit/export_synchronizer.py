@@ -118,3 +118,66 @@ class MagentoExportSynchronizer(connector.ExportSynchronizer):
 @magento
 class PartnerExport(MagentoExportSynchronizer):
     _model_name = ['magento.res.partner']
+
+@magento
+class MagentoPickingSynchronizer(connector.ExportSynchronizer):
+    _model_name = ['magento.stock.picking']
+    
+    def _get_data(self, magento_sale_id, mail_notification=True, lines_info=None):
+        if lines_info is None:
+            lines_info = {}
+        data = [magento_sale_id, lines_info,  _("Shipping Created"), mail_notification, True]
+        return data
+    
+    def _get_lines_info(self, picking):
+        """
+        @params: picking is an instance of a stock.picking browse record
+        
+        return : dict of {magento_product_id: quantity}
+        """
+        
+        # TODO: Implement the binder for so lines !
+        so_line_binder = self.get_binder_for_model('magento.sale.order.line')
+        item_qty = {}
+        # get product and quantities to ship from the picking
+        for line in picking.move_lines:
+            item_id = so_line_binder.to_backend(line.sale_line_id.id)
+            item_qty.setdefault(item_id, 0)
+            item_qty[item_id] += line.product_qty
+        return item_qty
+    
+    def _get_picking_mail_option(self, picking):
+        """
+        @params: picking is an instance of a stock.picking browse record
+        
+        return : The boolean value of send_picking_done_mail chosen on 
+        magento shop
+        """
+        magento_shop = picking.sale_id.shop_id.magento_bind_ids[0]
+        return magento_shop.send_picking_done_mail
+        
+    def run(self, openerp_id, picking_type):
+        """
+        Run the job to export the picking with args to ask for partial or complete
+        picking.
+
+        @params: picking_type as string, can be 'complete' or 'partial'
+        """
+        picking_obj = self.pool.get('stock.picking')
+        picking = picking_obj.browse(self.session.cr, self.session.uid,
+            openerp_id, context=self.session.context)
+        sale_id = picking.sale_id.id
+        binder = self.get_binder_for_model('magento.sale.order')
+        magento_sale_id = binder.to_backend(sale_id)
+        mail_notification = self._get_picking_mail_option(picking)
+        if picking_type == 'complete':
+            data = self._get_data(magento_sale_id, mail_notification)
+        elif picking_type == 'partial':
+            lines_info = self._get_lines_info(picking)
+            data = self._get_data(magento_sale_id, mail_notification, lines_info)
+        else:
+            raise ValueError("Wrong value for picking_type, authorized value are 'partial' or \
+                'complete', found: %s" %picking_type)
+        self.backend_adapter.create(data)
+
+

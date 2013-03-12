@@ -40,6 +40,7 @@ class MagentoModelBinder(MagentoBinder):
             'magento.address',
             'magento.res.partner.category',
             'magento.product.category',
+            'magento.stock.picking',
         ]
 
     def to_openerp(self, backend_id):

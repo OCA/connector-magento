@@ -94,3 +94,22 @@ def export_delete_record(session, model_name, backend_id, magento_id):
     env = _get_environment(session, model_name, backend_id)
     deleter = env.get_connector_unit(MagentoDeleteSynchronizer)
     return deleter.run(magento_id)
+
+
+@connector.job
+def export_picking_done(session, model_name, record_id, picking_type):
+    """
+    Launch the job to export the picking with args to ask for partial or complete
+    picking.
+   
+    @params: picking_type as string, can be 'complete' or 'partial'
+    """
+    env = _get_environment(session, model_name, backend_id)
+    picking_exporter = env.get_connector_unit(MagentoPickingSynchronizer)
+    return picking_exporter.run(record_id, picking_type)
+    
+    
+    
+    
+    
+    

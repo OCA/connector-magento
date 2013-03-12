@@ -243,3 +243,12 @@ class ProductCategoryAdapter(GenericAdapter):
             tree = api.call('%s.tree' % self._magento_model, [parent_id,
                                                               store_view])
             return filter_ids(tree)
+
+
+@magento
+class StockPickingAdapter(GenericAdapter):
+    _model_name = 'magento.stock.picking'
+    _magento_model = 'sales_order_shipment'
+    
+
+
