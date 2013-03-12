@@ -442,18 +442,4 @@ class MagerpModel(Model):
         else:
             raise except_osv(_('Undefined List method !'), _("list method is undefined for this object!"))
 
-    #TODO deprecated, remove use
-    def get_all_mage_ids(self, cr, uid, ids, instance=False):
-        search_param = []
-        if instance:
-            search_param = [('referential_id', '=', instance)]
-        if not ids:
-            ids = self.search(cr, uid, search_param)
-        reads = self.read(cr, uid, ids, [self._MAGE_FIELD])
-        mageids = []
-        for each in reads:
-            mageids.append(each[self._MAGE_FIELD])
-        return mageids
 
-# deprecated, bw compat
-magerp_osv = MagerpModel

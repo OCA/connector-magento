@@ -60,10 +60,6 @@ class StoreImportMapper(connector.ImportMapper):
         openerp_id = binder.to_openerp(record['website_id'])
         return {'website_id': openerp_id}
 
-    @mapping
-    def backend_id(self, record):
-        return {'backend_id': self.backend_record.id}
-
 
 @magento
 class StoreviewImportMapper(connector.ImportMapper):
@@ -83,10 +79,6 @@ class StoreviewImportMapper(connector.ImportMapper):
                 'magento.store').get_connector_unit(connector.Binder)
         openerp_id = binder.to_openerp(record['group_id'])
         return {'store_id': openerp_id}
-
-    @mapping
-    def backend_id(self, record):
-        return {'backend_id': self.backend_record.id}
 
 
 @magento
