@@ -135,7 +135,7 @@
                     </h1>
                     <group>
                         <field name="website_id"/>
-                        <field name="shop_id"/>
+                        <field name="openerp_id"/>
                     </group>
                     <group>
                         <field name="default_category_id"/>
@@ -151,7 +151,7 @@
                 <tree string="Magento Store" version="7.0">
                     <field name="name"/>
                     <field name="website_id"/>
-                    <field name="shop_id"/>
+                    <field name="openerp_id"/>
                 </tree>
             </field>
         </record>

@@ -4,9 +4,8 @@
 #Core settings are stored here                                          #
 #########################################################################
 #                                                                       #
-# Copyright (C) 2009  Sharoon Thomas                                    #
-# Copyright (C) 2011 Akretion Sébastien BEAU sebastien.beau@akretion.com#
-# Copyright (C) 2011-2013 Camptocamp Guewen Baconnier                        #
+# Copyright (C) 2011-2013 Akretion   Sébastien Beau                     #
+# Copyright (C) 2011-2013 Camptocamp Guewen Baconnier                   #
 #                                                                       #
 #This program is free software: you can redistribute it and/or modify   #
 #it under the terms of the GNU General Public License as published by   #
@@ -120,7 +119,7 @@ class magento_binding(orm.AbstractModel):
     _description = 'Magento Binding (abstract)'
 
     _columns = {
-        # openerp_id to declare in concrete model
+        # 'openerp_id': openerp-side id must be declared in concrete model
         'backend_id': fields.many2one(
             'magento.backend',
             'Magento Backend',
@@ -164,7 +163,7 @@ class magento_store(orm.Model):
     _inherit = 'magento.binding'
     _description = 'Magento Store'
 
-    _inherits = {'sale.shop': 'shop_id'}
+    _inherits = {'sale.shop': 'openerp_id'}
 
     _columns = {
         'website_id': fields.many2one(
@@ -172,7 +171,7 @@ class magento_store(orm.Model):
             'Magento Website',
             required=True,
             ondelete='cascade'),
-        'shop_id': fields.many2one(
+        'openerp_id': fields.many2one(
             'sale.shop',
             string='Sale Shop',
             required=True,
