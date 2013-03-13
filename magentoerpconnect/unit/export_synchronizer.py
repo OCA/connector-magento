@@ -241,7 +241,7 @@ class MagentoTrackingSynchronizer(ExportSynchronizer):
 
 
 @magento
-class MagentoInvoiceSynchronizer(connector.ExportSynchronizer):
+class MagentoInvoiceSynchronizer(ExportSynchronizer):
     _model_name = ['magento.account.invoice']
 
     def _export_invoice(self, magento_id, lines_info, mail_notification):
