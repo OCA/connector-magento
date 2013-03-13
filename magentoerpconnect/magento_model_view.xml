@@ -143,6 +143,7 @@
                     <group>
                         <field name="default_category_id"/>
                         <field name="send_picking_done_mail"/>
+                        <field name="send_invoice_paid_mail"/>
                     </group>
                 </form>
             </field>

@@ -31,7 +31,8 @@ from openerp.addons.connector.event import (
 from openerp.addons.connector.connector import Environment
 
 from openerp.addons.connector_ecommerce.event import (on_picking_done,
-                                                      on_tracking_number_added)
+                                                      on_tracking_number_added,
+                                                      on_invoice_paid)
 from .unit.export_synchronizer import (
     export_record,
     export_picking_done,
@@ -125,9 +126,7 @@ def delay_export_tracking_number(session, model_name,
     :param tracking_number: tracking number of the picking
     :type tracking_number: str
     """
-    model = session.pool.get(model_name)
-    picking = model.browse(session.cr, session.uid,
-                           record_id, context=session.context)
+    picking = session.browse(model_name, record_id)
     # the related sale order has a relation to the backend
     magento_sale = picking.sale_id.magento_bind_ids[0]
     # Set the priority to 20 to have more chance that it would be
@@ -138,3 +137,20 @@ def delay_export_tracking_number(session, model_name,
                                  record_id,
                                  tracking_number,
                                  priority=20)
+
+
+@on_invoice_paid(model_names='account.invoice')
+@magento_consumer
+def delay_export_invoice_paid(session, model_name, record_id):
+    """
+    Call a job to export the invoice payment. Remember that on Magento
+    an invoice represent a payment as well.
+    """
+    invoice = session.browse(model_name, record_id)
+    # find the magento store to retrieve the backend
+    # we use the shop as many sale orders can be related to an invoice
+    shop = invoice._model._get_related_so_shop(invoice)
+    magento_store = shop.magento_bind_ids[0]
+    export_invoice_paid.delay(session, model_name,
+                              magento_store.backend_id.id,
+                              record_id)

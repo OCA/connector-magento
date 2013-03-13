@@ -21,18 +21,44 @@
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.  #
 #########################################################################
 
-from openerp.osv.orm import Model
-from openerp.osv import fields
+from openerp.osv import fields, orm
 from openerp.tools.translate import _
 from openerp.addons.connector.external_osv import ExternalSession
 from openerp.osv.osv import except_osv
 
-class account_invoice(Model):
-    _inherit = "account.invoice"
-    _columns = {
-        'magento_ref':fields.char('Magento REF', size=32),
-        }
 
+
+class magento_account_invoice(orm.Model):
+    _name = 'magento.account.invoice'
+    _inherit = 'magento.binding'
+    _inherits = {'account.invoice': 'openerp_id'}
+
+    _columns = {
+        'openerp_id': fields.many2one('account.invoice',
+                                      string='Invoice',
+                                      required=True,
+                                      ondelete='cascade'),
+    }
+
+    _sql_constraints = [
+        ('magento_uniq', 'unique(backend_id, magento_id)',
+         'An invoice with the same ID on Magento already exists.'),
+    ]
+
+
+class account_invoice(orm.Model):
+    _inherit = 'account.invoice'
+
+    _columns = {
+        'magento_bind_ids': fields.one2many(
+            'magento.account.invoice', 'openerp_id',
+            string="Magento Bindings"),
+
+        #  TO REVIEW, DO WE STILL NEED THIS
+        # 'magento_ref':fields.char('Magento REF', size=32),
+    }
+
+# TO REVIEW
 
     #TODO instead of calling again the sale order information
     # it will be better to store the ext_id of each sale order line
@@ -143,14 +169,47 @@ class account_invoice(Model):
         return True
 
 
-class account_invoice_line(Model):
-    _inherit = 'account.invoice.line'
+
+class magento_account_invoice_line(orm.Model):
+    _name = 'magento.account.invoice.line'
+    _inherit = 'magento.binding'
+    _inherits = {'account.invoice.line': 'openerp_id'}
+
     _columns = {
+        'openerp_id': fields.many2one('account.invoice.line',
+                                      string='Invoice Line',
+                                      required=True,
+                                      ondelete='cascade'),
+        'magento_order_line_id': fields.many2one(
+                                      'magento.sale.order.line',
+                                      string='Magento Sale Order Lines',
+                                      required=True,
+                                      ondelete='cascade'),
+    }
+
+    _sql_constraints = [
+        ('magento_uniq', 'unique(backend_id, magento_id)',
+         'An invoice line with the same ID on Magento already exists.'),
+    ]
+
+
+class account_invoice(orm.Model):
+    _inherit = 'account.invoice.line'
+
+    _columns = {
+        'magento_bind_ids': fields.one2many(
+            'magento.account.invoice.line', 'openerp_id',
+            string="Magento Bindings"),
+
+        #  TO REVIEW, DO WE STILL NEED THIS
         # Forced the precision of the account.invoice.line discount field
         # to 3 digits in order to be able to have the same amount as Magento.
         # Example: Magento has a sale line of 299€ and 150€ of discount, so a line at 149€.
         # We translate it to a percent in the openerp invoice line
         # With a 2 digits precision, we can have 50.17 % => 148.99 or 50.16% => 149.02.
         # Force the digits to 3 allows to have 50.167% => 149€
-        'discount': fields.float('Discount (%)', digits=(16, 3)),
-        }
+
+        # 'discount': fields.float('Discount (%)', digits=(16, 3)),
+
+    }
+

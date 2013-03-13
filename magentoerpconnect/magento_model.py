@@ -217,6 +217,10 @@ class magento_store(orm.Model):
             'Send email notification on picking done',
             help="Does the picking export/creation should send "
                  "an email notification on Magento side ?"),
+        'send_invoice_paid_mail': fields.boolean(
+            'Send email notification on invoice paid',
+            help="Does the invoice export/creation should send "
+                 "an email notification on Magento side ?"),
     }
 
     _sql_constraints = [

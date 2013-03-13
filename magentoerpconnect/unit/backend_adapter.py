@@ -276,3 +276,8 @@ class StockPickingAdapter(GenericAdapter):
             return api.call('%s.addTrack' % self._magento_model,
                             [magento_id, carrier_code,
                              tracking_title, tracking_number])
+
+@magento
+class AccountInvoiceAdapter(GenericAdapter):
+    _model_name = 'magento.account.invoice'
+    _magento_model = 'sales_order_invoice'
