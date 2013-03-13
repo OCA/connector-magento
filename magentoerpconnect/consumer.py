@@ -93,6 +93,12 @@ def delay_export_picking_done(session, model_name, record_id, picking_type):
    
     @params: picking_type as string, can be 'complete' or 'partial'
     """
-    job.export_picking_done.delay(session, model_name, record_id, picking_type)
+    model = session.pool.get(model_name)
+    picking = model.browse(session.cr, session.uid,
+                          record_id, context=session.context)
+    # find the magento SO to retrieve the backend
+    magento_sale = picking.sale_id.magento_bind_ids[0]
+    job.export_picking_done.delay(session, model_name, magento_sale.backend_id.id,
+        record_id, picking_type)
 
 
