@@ -263,11 +263,7 @@ class ProductCategoryImportMapper(ImportMapper):
 
     @mapping
     def name(self, record):
-        if record['name'] == None:
-            name = 'Undefined'
-        else:
-            name = record['name']
-        return {'name': name}
+        return {'name': record['name'] or _('Undefined')}
 
     @mapping
     def magento_id(self, record):
