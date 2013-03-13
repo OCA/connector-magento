@@ -31,7 +31,8 @@ from openerp.addons.connector.event import (
 from openerp.addons.connector.connector import Environment
 
 from openerp.addons.connector_ecommerce.event import (on_picking_done,
-                                                      on_tracking_number_added)
+                                                      on_tracking_number_added,
+                                                      on_invoice_paid)
 from .unit.export_synchronizer import (
     export_record,
     export_picking_done,
