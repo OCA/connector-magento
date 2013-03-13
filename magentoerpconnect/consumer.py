@@ -46,7 +46,7 @@ _BIND_MODEL_NAMES = ('magento.res.partner',)
 def magento_consumer(func):
     """ Use this decorator on all the consumers of magentoerpconnect.
 
-    It will prevent the consumers to be fired when the magentoerpconnect
+    It will prevent the consumers from being fired when the magentoerpconnect
     addon is not installed.
     """
     @wraps(func)
