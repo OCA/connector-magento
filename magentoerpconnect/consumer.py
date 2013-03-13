@@ -30,10 +30,11 @@ from openerp.addons.connector.event import (
     )
 from openerp.addons.connector.connector import Environment
 
-from openerp.addons.connector_ecommerce.event import on_picking_done
+from openerp.addons.connector_ecommerce.event import (on_picking_done,
+                                                      on_tracking_number_added)
 from .unit.export_synchronizer import (
-    export_record, 
-    export_picking_done, 
+    export_record,
+    export_picking_done,
     export_tracking_number
     )
 from .unit.delete_synchronizer import export_delete_record
@@ -113,25 +114,31 @@ def delay_export_picking_done(session, model_name, record_id, picking_type):
                               record_id, picking_type)
 
 
-@on_tracking_number_added(model_name='stock.picking')
+@on_tracking_number_added(model_names='stock.picking')
 @magento_consumer
-def delay_export_tracking_number(session, model_name, record_id, tracking_number):
+def delay_export_tracking_number(session, model_name,
+                                 record_id, tracking_number):
     """
-    Call a job to export the tracking number to a existing picking that must be in done
-    state.
-   
-    @param: tracking_number is the carrier tracking number of the picking
-    @type: string
+    Call a job to export the tracking number to a existing picking that
+    must be in done state.
+
+    :param tracking_number: tracking number of the picking
+    :type tracking_number: str
     """
     model = session.pool.get(model_name)
     picking = model.browse(session.cr, session.uid,
-                          record_id, context=session.context)
-    # find the magento SO to retrieve the backend
+                           record_id, context=session.context)
+    # the related sale order has a relation to the backend
     magento_sale = picking.sale_id.magento_bind_ids[0]
-    # Set the priority to 20 to have more chance that it would be executed after 
-    # the picking creation
-    export_tracking_number.delay(session, model_name, magento_sale.backend_id.id,
-        record_id, tracking_number, priority=20)
+    # Set the priority to 20 to have more chance that it would be
+    # executed after the picking creation
+    export_tracking_number.delay(session,
+                                 model_name,
+                                 magento_sale.backend_id.id,
+                                 record_id,
+                                 tracking_number,
+                                 priority=20)
+
 
 @on_invoice_paid(model_name='account.invoice')
 @magento_consumer
