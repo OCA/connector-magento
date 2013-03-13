@@ -39,6 +39,10 @@ class res_partner(orm.Model):
             'magento.res.partner', 'openerp_id',
             string="Magento Bindings"),
         'birthday': fields.date('Birthday'),
+        'magento_address_bind_ids': fields.one2many(
+            'magento.address', 'openerp_id',
+            string="Magento Address Bindings"),
+        'company': fields.char('Company', size=64),
     }
 
 
@@ -49,6 +53,12 @@ class magento_res_partner(orm.Model):
 
     _rec_name = 'website_id'
 
+    def _get_mag_partner_from_website(self, cr, uid, ids, context=None):
+        mag_partner_obj = self.pool.get('magento.res.partner')
+        return mag_partner_obj.search(cr, uid,
+                                [('website_id', 'in', ids)],
+                                context=context)
+
     _columns = {
         'openerp_id': fields.many2one('res.partner',
                                       string='Partner',
@@ -58,7 +68,14 @@ class magento_res_partner(orm.Model):
                                      type='many2one',
                                      relation='magento.backend',
                                      string='Magento Backend',
-                                     store=True,
+                                     store={
+                                        'magento.res.partner':
+                                        (lambda self, cr, uid, ids, c=None:
+                                            ids, ['website_id'], 10),
+                                        'magento.website':
+                                        (_get_mag_partner_from_website,
+                                            ['backend_id'], 20),
+                                        },
                                      readonly=True),
         'website_id': fields.many2one('magento.website',
                                       string='Magento Website',
@@ -88,6 +105,13 @@ class magento_address(orm.Model):
 
     _rec_name = 'backend_id'
 
+    def _get_mag_address_from_partner(self, cr, uid, ids, context=None):
+        mag_address_obj = self.pool.get('magento.address')
+        print "inv func"
+        return mag_address_obj.search(cr, uid,
+                                [('magento_partner_id', 'in', ids)],
+                                context=context)
+
     _columns = {
         'openerp_id': fields.many2one('res.partner',
                                       string='Partner',
@@ -98,7 +122,37 @@ class magento_address(orm.Model):
         'updated_at': fields.datetime('Updated At (on Magento)',
                                       readonly=True),
         'is_default_billing': fields.boolean('Default Invoice'),
-        'is_default_shipping': fields.boolean('Default Invoice'),
+        'is_default_shipping': fields.boolean('Default Shipping'),
+        'magento_partner_id': fields.many2one('magento.res.partner',
+                                              string='Magento Partner',
+                                              required=True,
+                                              ondelete='cascade'),
+        'backend_id': fields.related('magento_partner_id', 'backend_id',
+                                     type='many2one',
+                                     relation='magento.backend',
+                                     string='Magento Backend',
+                                     store={
+                                        'magento.address':
+                                        (lambda self, cr, uid, ids, c=None:
+                                            ids, ['magento_partner_id'], 10),
+                                        'magento.res.partner':
+                                        (_get_mag_address_from_partner,
+                                            ['backend_id', 'website_id'], 20),
+                                        },
+                                     readonly=True),
+        'website_id': fields.related('magento_partner_id', 'website_id',
+                                     type='many2one',
+                                     relation='magento.website',
+                                     string='Magento Website',
+                                     store={
+                                        'magento.address':
+                                        (lambda self, cr, uid, ids, c=None:
+                                            ids, ['magento_partner_id'], 10),
+                                        'magento.res.partner':
+                                        (_get_mag_address_from_partner,
+                                            ['website_id'], 20),
+                                        },
+                                     readonly=True),
     }
 
     _sql_constraints = [
