@@ -135,7 +135,7 @@ class BatchImportSynchronizer(connector.ImportSynchronizer):
         for record_id in record_ids:
             self._import_record(record_id)
 
-    def _import_record(self, record):
+    def _import_record(self, record_id):
         """ Import a record directly or delay the import of the record """
         raise NotImplementedError
 
@@ -157,12 +157,12 @@ class DirectBatchImport(BatchImportSynchronizer):
             'magento.storeview',
             ]
 
-    def _import_record(self, record):
+    def _import_record(self, record_id):
         """ Import the record directly """
         job.import_record(self.session,
                           self.model._name,
                           self.backend_record.id,
-                          record)
+                          record_id)
 
 
 @magento
@@ -172,12 +172,12 @@ class DelayedBatchImport(BatchImportSynchronizer):
             'magento.res.partner.category',
             ]
 
-    def _import_record(self, record):
+    def _import_record(self, record_id):
         """ Delay the import of the records"""
         job.import_record.delay(self.session,
                                 self.model._name,
                                 self.backend_record.id,
-                                record)
+                                record_id)
 
 
 @magento
@@ -199,12 +199,12 @@ class PartnerBatchImport(BatchImportSynchronizer):
     """
     _model_name = ['magento.res.partner']
 
-    def _import_record(self, record):
+    def _import_record(self, record_id):
         """ Delay a job for the import """
         job.import_record.delay(self.session,
                                 self.model._name,
                                 self.backend_record.id,
-                                record)
+                                record_id)
 
     def run(self, filters=None):
         """ Run the synchronization """
