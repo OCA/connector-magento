@@ -29,7 +29,8 @@ from openerp.osv import fields, orm
 
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 import openerp.addons.connector as connector
-from .queue import job
+from openerp.addons.connector.session import ConnectorSession
+from .unit.import_synchronizer import import_batch, import_partners_since
 
 _logger = logging.getLogger(__name__)
 
@@ -65,7 +66,7 @@ class magento_backend(orm.Model):
     def synchronize_metadata(self, cr, uid, ids, context=None):
         if not hasattr(ids, '__iter__'):
             ids = [ids]
-        session = connector.ConnectorSession(cr, uid, context=context)
+        session = ConnectorSession(cr, uid, context=context)
         for backend_id in ids:
             for model in ('magento.website',
                           'magento.store',
@@ -73,43 +74,43 @@ class magento_backend(orm.Model):
                 # import directly, do not delay because this
                 # is a fast operation, a direct return is fine
                 # and it is simpler to import them sequentially
-                job.import_batch(session, model, backend_id)
+                import_batch(session, model, backend_id)
 
         return True
 
     def import_partners_since(self, cr, uid, ids, context=None):
         if not hasattr(ids, '__iter__'):
             ids = [ids]
-        session = connector.ConnectorSession(cr, uid, context=context)
+        session = ConnectorSession(cr, uid, context=context)
         for backend_record in self.browse(cr, uid, ids, context=context):
             since_date = None
             if backend_record.import_partners_since:
                 since_date = datetime.strptime(
                         backend_record.import_partners_since,
                         DEFAULT_SERVER_DATETIME_FORMAT)
-            job.import_partners_since.delay(session, 'magento.res.partner',
-                                            backend_record.id,
-                                            since_date=since_date)
+            import_partners_since.delay(session, 'magento.res.partner',
+                                        backend_record.id,
+                                        since_date=since_date)
 
         return True
 
     def import_customer_groups(self, cr, uid, ids, context=None):
         if not hasattr(ids, '__iter__'):
             ids = [ids]
-        session = connector.ConnectorSession(cr, uid, context=context)
+        session = ConnectorSession(cr, uid, context=context)
         for backend_id in ids:
-            job.import_batch.delay(session, 'magento.res.partner.category',
-                                   backend_id)
+            import_batch.delay(session, 'magento.res.partner.category',
+                               backend_id)
 
         return True
 
     def import_product_categories(self, cr, uid, ids, context=None):
         if not hasattr(ids, '__iter__'):
             ids = [ids]
-        session = connector.ConnectorSession(cr, uid, context=context)
+        session = ConnectorSession(cr, uid, context=context)
         for backend_id in ids:
-            job.import_batch.delay(session, 'magento.product.category',
-                                   backend_id)
+            import_batch.delay(session, 'magento.product.category',
+                               backend_id)
         return True
 
 

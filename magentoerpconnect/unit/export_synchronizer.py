@@ -22,13 +22,15 @@
 import logging
 from openerp.tools.translate import _
 import openerp.addons.connector as connector
+from openerp.addons.connector.queue.job import job
+from openerp.addons.connector.unit.synchronizer import ExportSynchronizer
 from ..backend import magento
+from ..connector import get_environment
 
 _logger = logging.getLogger(__name__)
 
 
-
-class MagentoExportSynchronizer(connector.ExportSynchronizer):
+class MagentoExportSynchronizer(ExportSynchronizer):
     """ Base exporter for Magento """
 
     def __init__(self, environment):
@@ -98,7 +100,7 @@ class MagentoExportSynchronizer(connector.ExportSynchronizer):
 
         record = self._map_data(fields=fields)
         if not record:
-            raise connector.NothingToDoJob
+            raise connector.exception.NothingToDoJob
 
         # special check on data before import
         self._validate_data(record)
@@ -122,7 +124,7 @@ class PartnerExport(MagentoExportSynchronizer):
 
 
 @magento
-class MagentoPickingSynchronizer(connector.ExportSynchronizer):
+class MagentoPickingSynchronizer(ExportSynchronizer):
     _model_name = ['magento.stock.picking']
 
     def _get_data(self, magento_sale_id,
@@ -191,3 +193,29 @@ class MagentoPickingSynchronizer(connector.ExportSynchronizer):
                              "values are 'partial' or 'complete', "
                              "found: %s" % picking_type)
         self.backend_adapter.create(data)
+
+
+@job
+def export_record(session, model_name, openerp_id, fields=None):
+    """ Export a record on Magento """
+    model = session.pool.get(model_name)
+    record = model.browse(session.cr, session.uid, openerp_id,
+                          context=session.context)
+    env = get_environment(session, model_name, record.backend_id.id)
+    exporter = env.get_connector_unit(MagentoExportSynchronizer)
+    return exporter.run(openerp_id, fields=fields)
+
+
+@job
+def export_picking_done(session, model_name, record_id, picking_type):
+    """
+    Launch the job to export the picking with args to ask for partial or
+    complete picking.
+
+    :param picking_type: picking_type, can be 'complete' or 'partial'
+    :type picking_type: str
+    """
+    # FIXME: no backend_id
+    env = get_environment(session, model_name, backend_id)
+    picking_exporter = env.get_connector_unit(MagentoPickingSynchronizer)
+    return picking_exporter.run(record_id, picking_type)

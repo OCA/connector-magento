@@ -23,13 +23,15 @@ import unittest2
 import mock
 import magento
 
-import openerp.addons.connector as connector
 from openerp.addons.connector.connector import ConnectorUnit
-from openerp.addons.magentoerpconnect.queue import job
+from openerp.addons.magentoerpconnect.unit.import_synchronizer import (
+        import_batch)
+from openerp.addons.connector.session import ConnectorSession
 import openerp.tests.common as common
 
 DB = common.DB
 ADMIN_USER_ID = common.ADMIN_USER_ID
+
 
 def magento_responses(method, args):
     # TODO: a dict is better
@@ -82,7 +84,7 @@ class test_import_magento(common.SingleTransactionCase):
     def setUp(self):
         super(test_import_magento, self).setUp()
         self.backend_model = self.registry('magento.backend')
-        self.session = connector.ConnectorSession(self.cr, self.uid)
+        self.session = ConnectorSession(self.cr, self.uid)
 
     def test_00_import_backend(self):
         backend_id = self.backend_model.create(
@@ -100,9 +102,9 @@ class test_import_magento(common.SingleTransactionCase):
             API.return_value = api_mock
             api_mock.__enter__.return_value = api_mock
             api_mock.call.side_effect = magento_responses
-            job.import_batch(self.session, 'magento.website', backend_id)
-            job.import_batch(self.session, 'magento.store', backend_id)
-            job.import_batch(self.session, 'magento.storeview', backend_id)
+            import_batch(self.session, 'magento.website', backend_id)
+            import_batch(self.session, 'magento.store', backend_id)
+            import_batch(self.session, 'magento.storeview', backend_id)
 
 
         website_model = self.registry('magento.website')
