@@ -340,11 +340,11 @@ class ProductCategoryImport(MagentoImportSynchronizer):
                                           storeview_ids,
                                           context=context)
         lang_storeviews = [sv for sv in storeviews
-                           if sv.lang_id and storeview.lang_id != default_lang]
+                           if sv.lang_id and sv.lang_id != default_lang]
         if not lang_storeviews:
             return
 
-        fields = self.fields_get(cr, uid, context=context)
+        fields = self.model.fields_get(cr, uid, context=context)
         translatable_fields = [field for field, attrs in fields.iteritems()
                                if attrs.get('translate')]
 
