@@ -267,3 +267,9 @@ class StockPickingAdapter(GenericAdapter):
             _logger.debug("api.call(%s.addTrack', [%s])", self._magento_model, data)
             return api.call('%s.addTrack' % self._magento_model, [data])
 
+@magento
+class AccountInvoiceAdapter(GenericAdapter):
+    _model_name = 'magento.account.invoice'
+    _magento_model = 'sales_order_invoice'
+
+

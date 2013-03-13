@@ -128,7 +128,7 @@ class MagentoPickingSynchronizer(ExportSynchronizer):
     _model_name = ['magento.stock.picking']
 
     def _get_data(self, magento_sale_id,
-                  mail_notification=True, lines_info=None):
+                  mail_notification=False, lines_info=None):
         if lines_info is None:
             lines_info = {}
         data = [magento_sale_id, lines_info,
@@ -137,6 +137,9 @@ class MagentoPickingSynchronizer(ExportSynchronizer):
 
     def _get_lines_info(self, picking):
         """
+        Get the line to export to Magento. In case some lines doesn't have
+        a matching on Magento, we ignore them. This allow to add line manualy.
+        
         :param picking: picking is an instance of a stock.picking browse record
         :type picking: browse_record
         :return: dict of {magento_product_id: quantity}
@@ -147,8 +150,9 @@ class MagentoPickingSynchronizer(ExportSynchronizer):
         # get product and quantities to ship from the picking
         for line in picking.move_lines:
             item_id = so_line_binder.to_backend(line.sale_line_id.id)
-            item_qty.setdefault(item_id, 0)
-            item_qty[item_id] += line.product_qty
+            if item_id:
+                item_qty.setdefault(item_id, 0)
+                item_qty[item_id] += line.product_qty
         return item_qty
 
     def _get_picking_mail_option(self, picking):
@@ -228,6 +232,67 @@ class MagentoTrackingSynchronizer(connector.ExportSynchronizer):
         data = self._get_data(magento_picking_id, picking, tracking_number)
         self.backend_adapter.add_tracking_number(data)
 
+@magento
+class MagentoInvoiceSynchronizer(connector.ExportSynchronizer):
+    _model_name = ['magento.account.invoice']
+    
+    def _get_data(self, magento_sale_id,
+                  mail_notification=False, lines_info=None):
+        if lines_info is None:
+            lines_info = {}
+        data = [magento_sale_id, lines_info,
+                _("Invoice Created"), mail_notification, False]
+        return data
+
+    def _get_lines_info(self, invoice):
+        """
+        Get the line to export to Magento. In case some lines doesn't have
+        a matching on Magento, we ignore them. This allow to add line manualy.
+        
+        :param invoice: invoice is an instance of a account.invoice browse record
+        :type invoice: browse_record
+        :return: dict of {magento_product_id: quantity}
+        :rtype: dict
+        """
+        so_line_binder = self.get_binder_for_model('magento.sale.order.line')
+        item_qty = {}
+        # get product and quantities to invoice
+        # if no magento id found, do not export it
+        for line in invoice.invoice_line:
+            if not line.magento_order_line_id:
+                continue
+            item_id = so_line_binder.to_backend(line.magento_order_line_id.openerp_id.id)
+            item_qty.setdefault(item_id, 0)
+            item_qty[item_id] += line.product_qty
+        return item_qty
+
+    def run(self, openerp_id):
+        """
+        Run the job to export the paid invoice
+        """
+        invoice_obj = self.pool.get('account.invoice')
+        invoice = invoice_obj.browse(self.session.cr, self.session.uid,
+            openerp_id, context=self.session.context)
+        if len(invoice.sale_order_ids) != 1:
+            raise ValueError("Wrong value for sale_order_ids, you must have only one sale order "
+                "related to the invoice in order to export it.")
+        binder = self.get_binder_for_model('magento.sale.order')
+        magento_so_id = binder.to_backend(invoice.sale_order_ids[0])        
+        mail_notification = invoice.sale_order_ids[0].shop_id.send_invoice_paid_mail
+        
+        balance = invoice.sale_order_ids[0].amount_total - invoice.amount_total
+        precision = self.pool.get('decimal.precision').precision_get(cr, uid, 'Account')
+        if round(balance, precision):
+            lines_info = self._get_lines_info()
+        else:
+            lines_info = {}
+        data = self._get_data(magento_so_id, mail_notification, lines_info)
+        # TODO
+        # WARNING: Think of the case that invoice exits..
+        # => Add try except on the right exception. This is to handle the case that the invoice
+        # is already created. So the task is considered as done !
+        self.backend_adapter.create(data)
+
 
 @job
 def export_record(session, model_name, openerp_id, fields=None):
@@ -238,7 +303,6 @@ def export_record(session, model_name, openerp_id, fields=None):
     env = get_environment(session, model_name, record.backend_id.id)
     exporter = env.get_connector_unit(MagentoExportSynchronizer)
     return exporter.run(openerp_id, fields=fields)
-
 
 
 @job
@@ -273,3 +337,14 @@ def export_tracking_number(session, model_name, backend_id, record_id, tracking_
     res = tracking_exporter.run(record_id, tracking_number)
     return res
 
+@job
+def export_invoice_paid(session, model_name, backend_id, record_id):
+    """
+    Launch the job to export the paid invoice. 
+
+    """
+    env = get_environment(session, model_name, backend_id)
+    invoice_exporter = env.get_connector_unit(MagentoInvoiceSynchronizer)
+    res = invoice_exporter.run(record_id)
+    return res
+    
