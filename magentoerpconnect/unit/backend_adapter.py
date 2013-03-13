@@ -250,20 +250,18 @@ class StockPickingAdapter(GenericAdapter):
     _model_name = 'magento.stock.picking'
     _magento_model = 'sales_order_shipment'
 
-    def add_tracking_number(self, data):
+    def add_tracking_number(self, magento_id, carrier_code,
+                            tracking_title, tracking_number):
         """ Add new tracking number.
-        
-        @param: data
-        @type: array of [
-              string shipmentIncrementId - shipment increment id
-              string carrier - carrier code
-              string title - tracking title
-              string trackNumber - tracking number
-            ]
+
+        :param magento_id: shipment increment id
+        :param carrier_code: code of the carrier on Magento
+        :param tracking_title: title displayed on Magento for the tracking
+        :param tracking_number: tracking number
         """
         with magentolib.API(self.magento.location,
                             self.magento.username,
                             self.magento.password) as api:
-            _logger.debug("api.call(%s.addTrack', [%s])", self._magento_model, data)
-            return api.call('%s.addTrack' % self._magento_model, [data])
-
+            return api.call('%s.addTrack' % self._magento_model,
+                            [magento_id, carrier_code,
+                             tracking_title, tracking_number])
