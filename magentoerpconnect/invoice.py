@@ -43,7 +43,7 @@ class magento_account_invoice(orm.Model):
 
     _sql_constraints = [
         ('magento_uniq', 'unique(backend_id, magento_id)',
-         'An invoice with same ID on Magento already exists.'),
+         'An invoice with the same ID on Magento already exists.'),
     ]
 
 
@@ -54,7 +54,7 @@ class account_invoice(orm.Model):
         'magento_bind_ids': fields.one2many(
             'magento.account.invoice', 'openerp_id',
             string="Magento Bindings"),
-            
+
         #  TO REVIEW, DO WE STILL NEED THIS
         # 'magento_ref':fields.char('Magento REF', size=32),
     }
@@ -181,7 +181,8 @@ class magento_account_invoice_line(orm.Model):
                                       string='Invoice Line',
                                       required=True,
                                       ondelete='cascade'),
-        'magento_order_line_id': fields.many2one('magento.sale.order.line',
+        'magento_order_line_id': fields.many2one(
+                                      'magento.sale.order.line',
                                       string='Magento Sale Order Lines',
                                       required=True,
                                       ondelete='cascade'),
@@ -189,7 +190,7 @@ class magento_account_invoice_line(orm.Model):
 
     _sql_constraints = [
         ('magento_uniq', 'unique(backend_id, magento_id)',
-         'An invoice line with same ID on Magento already exists.'),
+         'An invoice line with the same ID on Magento already exists.'),
     ]
 
 
@@ -208,8 +209,8 @@ class account_invoice(orm.Model):
         # We translate it to a percent in the openerp invoice line
         # With a 2 digits precision, we can have 50.17 % => 148.99 or 50.16% => 149.02.
         # Force the digits to 3 allows to have 50.167% => 149€
-        
+
         # 'discount': fields.float('Discount (%)', digits=(16, 3)),
-        
+
     }
 

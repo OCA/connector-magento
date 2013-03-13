@@ -125,9 +125,7 @@ def delay_export_tracking_number(session, model_name,
     :param tracking_number: tracking number of the picking
     :type tracking_number: str
     """
-    model = session.pool.get(model_name)
-    picking = model.browse(session.cr, session.uid,
-                           record_id, context=session.context)
+    picking = session.browse(model_name, record_id)
     # the related sale order has a relation to the backend
     magento_sale = picking.sale_id.magento_bind_ids[0]
     # Set the priority to 20 to have more chance that it would be
@@ -144,17 +142,14 @@ def delay_export_tracking_number(session, model_name,
 @magento_consumer
 def delay_export_invoice_paid(session, model_name, record_id):
     """
-    Call a job to export the invoice payment. Remember that on Magento an invoice
-    represent a payment as well.
+    Call a job to export the invoice payment. Remember that on Magento
+    an invoice represent a payment as well.
     """
-    model = session.pool.get(model_name)
-    invoice = model.browse(session.cr, session.uid,
-                          record_id, context=session.context)
+    invoice = session.browse(model_name, record_id)
     # find the magento store to retrieve the backend
     # we use the shop as many sale orders can be related to an invoice
-    shop = model._get_related_so_shop(invoice)
+    shop = invoice._model._get_related_so_shop(invoice)
     magento_store = shop.magento_bind_ids[0]
     export_invoice_paid.delay(session, model_name,
                               magento_store.backend_id.id,
                               record_id)
-

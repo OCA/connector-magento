@@ -281,5 +281,3 @@ class StockPickingAdapter(GenericAdapter):
 class AccountInvoiceAdapter(GenericAdapter):
     _model_name = 'magento.account.invoice'
     _magento_model = 'sales_order_invoice'
-
-
