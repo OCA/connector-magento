@@ -207,7 +207,8 @@ def export_record(session, model_name, openerp_id, fields=None):
 
 
 @job
-def export_picking_done(session, model_name, record_id, picking_type):
+def export_picking_done(session, model_name, backend_id,
+                        record_id, picking_type):
     """
     Launch the job to export the picking with args to ask for partial or
     complete picking.
