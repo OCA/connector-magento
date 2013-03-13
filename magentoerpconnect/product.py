@@ -1153,7 +1153,7 @@ class magento_product_product(orm.Model):
         'manage_stock_shortage': 'use_default',
         }
 
-    _sql_constaints = [
+    _sql_constraints = [
         ('magento_uniq', 'unique(backend_id, magento_id)',
          "A product with the same ID on Magento already exists")
     ]
