@@ -114,12 +114,10 @@ class PartnerImportMapper(ImportMapper):
                     "The partner category with "
                     "magento id %s does not exist" %
                     record['group_id'])
-        model = self.session.pool.get('magento.res.partner.category')
-        category_id = model.read(self.session.cr,
-                   self.session.uid,
-                   mag_cat_id,
-                   ['openerp_id'],
-                   context=self.session.context)['openerp_id'][0]
+
+        category_id = self.session.read('magento.res.partner.category',
+                                        mag_cat_id,
+                                        ['openerp_id'])['openerp_id'][0]
 
         # FIXME: should remove the previous tag (all the other tags from
         # the same backend)
@@ -216,11 +214,8 @@ class AddressImportMapper(ImportMapper):
     def state(self, record):
         if not record.get('state'):
             return
-        model = self.session.pool.get('res.country.state')
-        state_ids = model.search(self.session.cr,
-                                 self.session.uid,
-                                 [('name', 'ilike', record['state'])],
-                                 context=self.session.context)
+        state_ids = self.session.search('res.country.state',
+                                        [('name', 'ilike', record['state'])])
         if state_ids:
             return {'state_id': state_ids[0]}
 
@@ -228,11 +223,8 @@ class AddressImportMapper(ImportMapper):
     def country(self, record):
         if not record.get('country_id'):
             return
-        model = self.session.pool.get('res.country')
-        country_ids = model.search(self.session.cr,
-                                   self.session.uid,
-                                   [('code', '=', record['country_id'])],
-                                   context=self.session.context)
+        country_ids = self.session.search('res.country',
+                                          [('code', '=', record['country_id'])])
         if country_ids:
             return {'country_id': country_ids[0]}
 
@@ -285,12 +277,9 @@ class ProductCategoryImportMapper(ImportMapper):
                     "The product category with "
                     "magento id %s does not exist" %
                     record['parent_id'])
-        category_id = self.model.read(
-                   self.session.cr,
-                   self.session.uid,
-                   mag_cat_id,
-                   ['openerp_id'],
-                   context=self.session.context)['openerp_id'][0]
+        category_id = self.session.read(self.model._name,
+                                        mag_cat_id,
+                                        ['openerp_id'])['openerp_id'][0]
 
         return {'parent_id': category_id, 'magento_parent_id': mag_cat_id}
 

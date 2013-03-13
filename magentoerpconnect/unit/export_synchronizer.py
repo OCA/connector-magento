@@ -24,6 +24,8 @@ from openerp.tools.translate import _
 import openerp.addons.connector as connector
 from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.unit.synchronizer import ExportSynchronizer
+from openerp.addons.connector.exception import FailedJobError, NoExternalId
+from openerp.addons.connector_ecommerce.event import on_tracking_number_added
 from ..backend import magento
 from ..connector import get_environment
 
@@ -142,7 +144,6 @@ class MagentoPickingSynchronizer(ExportSynchronizer):
         :return: dict of {magento_product_id: quantity}
         :rtype: dict
         """
-        # TODO: Implement the binder for so lines !
         so_line_binder = self.get_binder_for_model('magento.sale.order.line')
         item_qty = {}
         # get product and quantities to ship from the picking
@@ -195,6 +196,46 @@ class MagentoPickingSynchronizer(ExportSynchronizer):
         self.backend_adapter.create(data)
 
 
+@magento
+class MagentoTrackingSynchronizer(ExportSynchronizer):
+    _model_name = ['magento.stock.picking']
+
+    def _get_tracking_args(self, picking, tracking_number):
+        return (picking.carrier_id.magento_carrier_code,
+                picking.carrier_id.magento_tracking_title or '',
+                packing.carrier_tracking_ref)
+
+    def _validate(self, picking):
+        # should not happen: event fired only after 'done'
+        if picking.state != 'done':
+            raise ValueError("Wrong value for picking state, "
+                             "it must be 'done', found: %s" % picking.state)
+        if not picking.carrier_id:
+            raise FailedJobError("No carrier selected on the picking, "
+                             "it must be defined.")
+        if not picking.carrier_id.magento_carrier_code:
+            raise FailedJobError("Wrong value for the Magento carrier code "
+                                 "defined in the picking.")
+
+    def run(self, openerp_id):
+        """ Export the tracking number of a picking to Magento """
+        # verify the picking is done + magento id exists
+        picking = self.session.browse('stock.picking', openerp_id)
+        if not picking.tracking_number:
+            return _('No tracking number to send.')
+
+        binder = self.get_binder_for_model('magento.stock.picking')
+        magento_picking_id = binder.to_backend(picking.id)
+        if magento_picking_id is None:
+            raise NoExternalId("No value found for the picking ID on "
+                               "Magento side, the job will be retried later.")
+
+        self.validate(picking)
+        tracking_args = self._get_tracking_args(picking)
+        self.backend_adapter.add_tracking_number(magento_picking_id,
+                                                 *tracking_args)
+
+
 @job
 def export_record(session, model_name, openerp_id, fields=None):
     """ Export a record on Magento """
@@ -207,8 +248,7 @@ def export_record(session, model_name, openerp_id, fields=None):
 
 
 @job
-def export_picking_done(session, model_name, backend_id,
-                        record_id, picking_type):
+def export_picking_done(session, model_name, backend_id, record_id, picking_type):
     """
     Launch the job to export the picking with args to ask for partial or
     complete picking.
@@ -216,7 +256,21 @@ def export_picking_done(session, model_name, backend_id,
     :param picking_type: picking_type, can be 'complete' or 'partial'
     :type picking_type: str
     """
-    # FIXME: no backend_id
     env = get_environment(session, model_name, backend_id)
     picking_exporter = env.get_connector_unit(MagentoPickingSynchronizer)
-    return picking_exporter.run(record_id, picking_type)
+    res = picking_exporter.run(record_id, picking_type)
+
+    picking = session.browse(model_name, record_id)
+    if picking.carrier_tracking_ref:
+        on_tracking_number_added.fire(session, self._name, record_id)
+    return res
+
+
+@job
+def export_tracking_number(session, model_name, backend_id, record_id):
+    """
+    Export the tracking number of a stock.picking
+    """
+    env = get_environment(session, model_name, backend_id)
+    tracking_exporter = env.get_connector_unit(MagentoTrackingSynchronizer)
+    return tracking_exporter.run(record_id)
