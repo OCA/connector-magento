@@ -7,8 +7,8 @@ import backend
 import magento_model
 import product
 import partner
-import sale
 import invoice
+import sale
 import product_images
 import delivery
 import stock
