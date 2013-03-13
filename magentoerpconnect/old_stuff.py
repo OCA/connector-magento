@@ -614,327 +614,327 @@ if False:
         def run_import_check_need_to_update(self, cr, uid, context=None):
             self._sale_shop(cr, uid, self.check_need_to_update, context=context)
 
-class sale_order(Model):
-    _inherit = "sale.order"
-    _columns = {
-        'magento_incrementid': fields.char('Magento Increment ID', size=32),
-        'magento_storeview_id': fields.many2one('magerp.storeviews', 'Magento Store View'),
-        'is_magento': fields.related(
-            'shop_id', 'referential_id', 'magento_referential',
-            type='boolean',
-            string='Is a Magento Sale Order')
-        }
-
-    def _auto_init(self, cr, context=None):
-        tools.drop_view_if_exists(cr, 'sale_report')
-        cr.execute("ALTER TABLE sale_order_line ALTER COLUMN discount TYPE numeric(16,6);")
-        cr.execute("ALTER TABLE account_invoice_line ALTER COLUMN discount TYPE numeric(16,6);")
-        self.pool.get('sale.report').init(cr)
-        super(sale_order, self)._auto_init(cr, context)
-
-
-    def _get_payment_information(self, cr, uid, external_session, order_id, resource, context=None):
-        """
-        Parse the external resource and return a dict of data converted
-        """
-        vals = super(sale_order, self)._get_payment_information(cr, uid, external_session, order_id, resource, context=context)
-        payment_info = resource.get('payment')
-        if payment_info and payment_info.get('amount_paid'):
-            vals['paid'] = True
-            vals['amount'] = float(payment_info['amount_paid'])
-        return vals
-
-    def _chain_cancel_orders(self, cr, uid, external_id, external_referential_id, defaults=None, context=None):
-        """ Get all the chain of edited orders (an edited order is canceled on Magento)
-         and cancel them on OpenERP. If an order cannot be canceled (confirmed for example)
-         A request is created to inform the user.
-        """
-        if context is None:
-            context = {}
-        conn = context.get('conn_obj', False)
-        parent_list = []
-        # get all parents orders (to cancel) of the sale orders
-        parent = conn.call('sales_order.get_parent', [external_id])
-        while parent:
-            parent_list.append(parent)
-            parent = conn.call('sales_order.get_parent', [parent])
-
-        wf_service = netsvc.LocalService("workflow")
-        for parent_incr_id in parent_list:
-            canceled_order_id = self.extid_to_existing_oeid(cr, uid, parent_incr_id, external_referential_id)
-            if canceled_order_id:
-                try:
-                    wf_service.trg_validate(uid, 'sale.order', canceled_order_id, 'cancel', cr)
-                    self.log(cr, uid, canceled_order_id, "order %s canceled when updated from external system" % (canceled_order_id,))
-                    _logger.info("Order %s canceled when updated from external system because it has been replaced by a new one", canceled_order_id)
-                except except_osv, e:
-                    #TODO: generic reporting of errors in magentoerpconnect
-                    # except if the sale order has been confirmed for example, we cannot cancel the order
-                    to_cancel_order_name = self.read(cr, uid, canceled_order_id, ['name'])['name']
-                    request = self.pool.get('res.request')
-                    summary = _(("The sale order %s has been replaced by the sale order %s on Magento.\n"
-                                 "The sale order %s has to be canceled on OpenERP but it is currently impossible.\n\n"
-                                 "Error:\n"
-                                 "%s\n"
-                                 "%s")) % (parent_incr_id,
-                                          external_id,
-                                          to_cancel_order_name,
-                                          e.name,
-                                          e.value)
-                    request.create(cr, uid,
-                                   {'name': _("Could not cancel sale order %s during Magento's sale orders import") % (to_cancel_order_name,),
-                                    'act_from': uid,
-                                    'act_to': uid,
-                                    'body': summary,
-                                    'priority': '2'
-                                    })
-
-#NEW FEATURE
-
-#TODO reimplement chain cancel orders
-#                # if a created order has a relation_parent_real_id, the new one replaces the original, so we have to cancel the old one
-#                if data[0].get('relation_parent_real_id', False): # data[0] because orders are imported one by one so data always has 1 element
-#                    self._chain_cancel_orders(order_cr, uid, ext_order_id, external_referential_id, defaults=defaults, context=context)
-
-    # XXX a deplacer dans MagentoConnector
-    def _get_filter(self, cr, uid, external_session, step, previous_filter=None, context=None):
-        magento_storeview_ids=[]
-        shop = external_session.sync_from_object
-        for storeview in shop.storeview_ids:
-            magento_storeview_id = self.pool.get('magerp.storeviews').get_extid(cr, uid, storeview.id, shop.referential_id.id, context={})
-            if magento_storeview_id:
-                magento_storeview_ids.append(magento_storeview_id)
-
-        mag_filter = {
-            'state': {'neq': 'canceled'},
-            'store_id': {'in': magento_storeview_ids},
+    class sale_order(Model):
+        _inherit = "sale.order"
+        _columns = {
+            'magento_incrementid': fields.char('Magento Increment ID', size=32),
+            'magento_storeview_id': fields.many2one('magerp.storeviews', 'Magento Store View'),
+            'is_magento': fields.related(
+                'shop_id', 'referential_id', 'magento_referential',
+                type='boolean',
+                string='Is a Magento Sale Order')
             }
 
-        if shop.import_orders_from_date:
-            mag_filter.update({'created_at' : {'gt': shop.import_orders_from_date}})
-        return {
-            'imported': False,
-            'limit': step,
-            'filters': mag_filter,
-        }
+        def _auto_init(self, cr, context=None):
+            tools.drop_view_if_exists(cr, 'sale_report')
+            cr.execute("ALTER TABLE sale_order_line ALTER COLUMN discount TYPE numeric(16,6);")
+            cr.execute("ALTER TABLE account_invoice_line ALTER COLUMN discount TYPE numeric(16,6);")
+            self.pool.get('sale.report').init(cr)
+            super(sale_order, self)._auto_init(cr, context)
 
-    def create_onfly_partner(self, cr, uid, external_session, resource, mapping, defaults, context=None):
-        """
-        As magento allow guest order we have to create an on fly partner without any external id
-        """
-        if not defaults: defaults={}
-        local_defaults = defaults.copy()
 
-        resource['firstname'] = resource['customer_firstname']
-        resource['lastname'] = resource['customer_lastname']
-        resource['email'] = resource['customer_email']
+        def _get_payment_information(self, cr, uid, external_session, order_id, resource, context=None):
+            """
+            Parse the external resource and return a dict of data converted
+            """
+            vals = super(sale_order, self)._get_payment_information(cr, uid, external_session, order_id, resource, context=context)
+            payment_info = resource.get('payment')
+            if payment_info and payment_info.get('amount_paid'):
+                vals['paid'] = True
+                vals['amount'] = float(payment_info['amount_paid'])
+            return vals
 
-        shop = external_session.sync_from_object
-        partner_defaults = {'website_id': shop.shop_group_id.id}
-        res = self.pool.get('res.partner')._record_one_external_resource(cr, uid, external_session, resource,\
-                                mapping=mapping, defaults=partner_defaults, context=context)
-        partner_id = res.get('create_id') or res.get('write_id')
+        def _chain_cancel_orders(self, cr, uid, external_id, external_referential_id, defaults=None, context=None):
+            """ Get all the chain of edited orders (an edited order is canceled on Magento)
+             and cancel them on OpenERP. If an order cannot be canceled (confirmed for example)
+             A request is created to inform the user.
+            """
+            if context is None:
+                context = {}
+            conn = context.get('conn_obj', False)
+            parent_list = []
+            # get all parents orders (to cancel) of the sale orders
+            parent = conn.call('sales_order.get_parent', [external_id])
+            while parent:
+                parent_list.append(parent)
+                parent = conn.call('sales_order.get_parent', [parent])
 
-        local_defaults['partner_id'] = partner_id
-        for address_key in ['partner_invoice_id', 'partner_shipping_id']:
-            if not defaults.get(address_key): local_defaults[address_key] = {}
-            local_defaults[address_key]['partner_id'] = partner_id
-        return local_defaults
-
-    @only_for_referential('magento')
-    def _transform_one_resource(self, cr, uid, external_session, convertion_type, resource, mapping, mapping_id, \
-                     mapping_line_filter_ids=None, parent_data=None, previous_result=None, defaults=None, context=None):
-        resource = self.clean_magento_resource(cr, uid, resource, context=context)
-        resource = self.clean_magento_items(cr, uid, resource, context=context)
-        for line in mapping[mapping_id]['mapping_lines']:
-            if line['name'] == 'customer_id' and not resource.get('customer_id'):
-                #If there is not partner it's a guest order
-                #So we remove the useless information
-                #And create a partner on fly and set the data in the default value
-                #We only do this if the customer_id is in the mapping line
-                #Indeed when we check if a sale order exist only the name is asked for convertion
-                resource.pop('customer_id', None)
-                resource['billing_address'].pop('customer_id', None)
-                resource['shipping_address'].pop('customer_id', None)
-                defaults = self.create_onfly_partner(cr, uid, external_session, resource, mapping, defaults, context=context)
-
-        return super(sale_order, self)._transform_one_resource(cr, uid, external_session, convertion_type, resource,\
-                 mapping, mapping_id,  mapping_line_filter_ids=mapping_line_filter_ids, parent_data=parent_data,\
-                 previous_result=previous_result, defaults=defaults, context=context)
-
-    # XXX move to MagentoConnector _ext_search_sale_order
-    @only_for_referential('magento')
-    def _get_external_resource_ids(self, cr, uid, external_session, resource_filter=None, mapping=None, mapping_id=None, context=None):
-        res = super(sale_order, self)._get_external_resource_ids(cr, uid, external_session, resource_filter=resource_filter, mapping=mapping, mapping_id=mapping_id, context=context)
-        order_ids_to_import=[]
-        for external_id in res:
-            existing_id = self.get_oeid(cr, uid, external_id, external_session.referential_id.id, context=context)
-            if existing_id:
-                external_session.logger.info(_("the order %s already exist in OpenERP") % (external_id,))
-                self.ext_set_resource_as_imported(cr, uid, external_session, external_id, mapping=mapping, mapping_id=mapping_id, context=context)
-            else:
-                order_ids_to_import.append(external_id)
-        return order_ids_to_import
-
-    # xxx a deplacer dans MagentoConnector _record_one_sale_order
-    @only_for_referential('magento')
-    def _record_one_external_resource(self, cr, uid, external_session, resource, defaults=None, mapping=None, mapping_id=None, context=None):
-        res = super(sale_order, self)._record_one_external_resource(cr, uid, external_session, resource, defaults=defaults, mapping=mapping, mapping_id=mapping_id, context=context)
-        external_id = resource['increment_id'] # TODO it will be better to not hardcode this parameter
-        self.ext_set_resource_as_imported(cr, uid, external_session, external_id, mapping=mapping, mapping_id=mapping_id, context=context)
-        return res
-
-    @only_for_referential('magento')
-    def _check_need_to_update_single(self, cr, uid, external_session, order, context=None):
-        """
-        For one order, check on Magento if it has been paid since last
-        check. If so, it will launch the defined flow based on the
-        payment type (validate order, invoice, ...)
-
-        :param browse_record order: browseable sale.order
-        :param Connection conn: connection with Magento
-        :return: True
-        """
-
-        #TODO improve me and replace me by a generic function in connector_ecommerce
-        #Only the call to magento should be here
-
-        model_data_obj = self.pool.get('ir.model.data')
-        # check if the status has changed in Magento
-        # We don't use oeid_to_extid function cause it only handles integer ids
-        # Magento can have something like '100000077-2'
-        model_data_ids = model_data_obj.search(
-            cr, uid,
-            [('model', '=', self._name),
-             ('res_id', '=', order.id),
-             ('referential_id', '=', order.shop_id.referential_id.id)],
-            context=context)
-
-        if model_data_ids:
-            prefixed_id = model_data_obj.read(
-                cr, uid, model_data_ids[0], ['name'], context=context)['name']
-            ext_id = self.id_from_prefixed_id(prefixed_id)
-        else:
-            return False
-
-        resource = external_session.connection.call('sales_order.info', [ext_id])
-
-        if resource['status'] == 'canceled':
             wf_service = netsvc.LocalService("workflow")
-            wf_service.trg_validate(uid, 'sale.order', order.id, 'cancel', cr)
-            updated = True
-            self.log(cr, uid, order.id, "order %s canceled when updated from external system" % (order.id,))
-        # If the order isn't canceled and was waiting for a payment,
-        # so we follow the standard flow according to ext_payment_method:
-        else:
-            updated = self.paid_and_update(cr, uid, external_session, order.id, resource, context=context)
+            for parent_incr_id in parent_list:
+                canceled_order_id = self.extid_to_existing_oeid(cr, uid, parent_incr_id, external_referential_id)
+                if canceled_order_id:
+                    try:
+                        wf_service.trg_validate(uid, 'sale.order', canceled_order_id, 'cancel', cr)
+                        self.log(cr, uid, canceled_order_id, "order %s canceled when updated from external system" % (canceled_order_id,))
+                        _logger.info("Order %s canceled when updated from external system because it has been replaced by a new one", canceled_order_id)
+                    except except_osv, e:
+                        #TODO: generic reporting of errors in magentoerpconnect
+                        # except if the sale order has been confirmed for example, we cannot cancel the order
+                        to_cancel_order_name = self.read(cr, uid, canceled_order_id, ['name'])['name']
+                        request = self.pool.get('res.request')
+                        summary = _(("The sale order %s has been replaced by the sale order %s on Magento.\n"
+                                     "The sale order %s has to be canceled on OpenERP but it is currently impossible.\n\n"
+                                     "Error:\n"
+                                     "%s\n"
+                                     "%s")) % (parent_incr_id,
+                                              external_id,
+                                              to_cancel_order_name,
+                                              e.name,
+                                              e.value)
+                        request.create(cr, uid,
+                                       {'name': _("Could not cancel sale order %s during Magento's sale orders import") % (to_cancel_order_name,),
+                                        'act_from': uid,
+                                        'act_to': uid,
+                                        'body': summary,
+                                        'priority': '2'
+                                        })
+
+    #NEW FEATURE
+
+    #TODO reimplement chain cancel orders
+    #                # if a created order has a relation_parent_real_id, the new one replaces the original, so we have to cancel the old one
+    #                if data[0].get('relation_parent_real_id', False): # data[0] because orders are imported one by one so data always has 1 element
+    #                    self._chain_cancel_orders(order_cr, uid, ext_order_id, external_referential_id, defaults=defaults, context=context)
+
+        # XXX a deplacer dans MagentoConnector
+        def _get_filter(self, cr, uid, external_session, step, previous_filter=None, context=None):
+            magento_storeview_ids=[]
+            shop = external_session.sync_from_object
+            for storeview in shop.storeview_ids:
+                magento_storeview_id = self.pool.get('magerp.storeviews').get_extid(cr, uid, storeview.id, shop.referential_id.id, context={})
+                if magento_storeview_id:
+                    magento_storeview_ids.append(magento_storeview_id)
+
+            mag_filter = {
+                'state': {'neq': 'canceled'},
+                'store_id': {'in': magento_storeview_ids},
+                }
+
+            if shop.import_orders_from_date:
+                mag_filter.update({'created_at' : {'gt': shop.import_orders_from_date}})
+            return {
+                'imported': False,
+                'limit': step,
+                'filters': mag_filter,
+            }
+
+        def create_onfly_partner(self, cr, uid, external_session, resource, mapping, defaults, context=None):
+            """
+            As magento allow guest order we have to create an on fly partner without any external id
+            """
+            if not defaults: defaults={}
+            local_defaults = defaults.copy()
+
+            resource['firstname'] = resource['customer_firstname']
+            resource['lastname'] = resource['customer_lastname']
+            resource['email'] = resource['customer_email']
+
+            shop = external_session.sync_from_object
+            partner_defaults = {'website_id': shop.shop_group_id.id}
+            res = self.pool.get('res.partner')._record_one_external_resource(cr, uid, external_session, resource,\
+                                    mapping=mapping, defaults=partner_defaults, context=context)
+            partner_id = res.get('create_id') or res.get('write_id')
+
+            local_defaults['partner_id'] = partner_id
+            for address_key in ['partner_invoice_id', 'partner_shipping_id']:
+                if not defaults.get(address_key): local_defaults[address_key] = {}
+                local_defaults[address_key]['partner_id'] = partner_id
+            return local_defaults
+
+        @only_for_referential('magento')
+        def _transform_one_resource(self, cr, uid, external_session, convertion_type, resource, mapping, mapping_id, \
+                         mapping_line_filter_ids=None, parent_data=None, previous_result=None, defaults=None, context=None):
+            resource = self.clean_magento_resource(cr, uid, resource, context=context)
+            resource = self.clean_magento_items(cr, uid, resource, context=context)
+            for line in mapping[mapping_id]['mapping_lines']:
+                if line['name'] == 'customer_id' and not resource.get('customer_id'):
+                    #If there is not partner it's a guest order
+                    #So we remove the useless information
+                    #And create a partner on fly and set the data in the default value
+                    #We only do this if the customer_id is in the mapping line
+                    #Indeed when we check if a sale order exist only the name is asked for convertion
+                    resource.pop('customer_id', None)
+                    resource['billing_address'].pop('customer_id', None)
+                    resource['shipping_address'].pop('customer_id', None)
+                    defaults = self.create_onfly_partner(cr, uid, external_session, resource, mapping, defaults, context=context)
+
+            return super(sale_order, self)._transform_one_resource(cr, uid, external_session, convertion_type, resource,\
+                     mapping, mapping_id,  mapping_line_filter_ids=mapping_line_filter_ids, parent_data=parent_data,\
+                     previous_result=previous_result, defaults=defaults, context=context)
+
+        # XXX move to MagentoConnector _ext_search_sale_order
+        @only_for_referential('magento')
+        def _get_external_resource_ids(self, cr, uid, external_session, resource_filter=None, mapping=None, mapping_id=None, context=None):
+            res = super(sale_order, self)._get_external_resource_ids(cr, uid, external_session, resource_filter=resource_filter, mapping=mapping, mapping_id=mapping_id, context=context)
+            order_ids_to_import=[]
+            for external_id in res:
+                existing_id = self.get_oeid(cr, uid, external_id, external_session.referential_id.id, context=context)
+                if existing_id:
+                    external_session.logger.info(_("the order %s already exist in OpenERP") % (external_id,))
+                    self.ext_set_resource_as_imported(cr, uid, external_session, external_id, mapping=mapping, mapping_id=mapping_id, context=context)
+                else:
+                    order_ids_to_import.append(external_id)
+            return order_ids_to_import
+
+        # xxx a deplacer dans MagentoConnector _record_one_sale_order
+        @only_for_referential('magento')
+        def _record_one_external_resource(self, cr, uid, external_session, resource, defaults=None, mapping=None, mapping_id=None, context=None):
+            res = super(sale_order, self)._record_one_external_resource(cr, uid, external_session, resource, defaults=defaults, mapping=mapping, mapping_id=mapping_id, context=context)
+            external_id = resource['increment_id'] # TODO it will be better to not hardcode this parameter
+            self.ext_set_resource_as_imported(cr, uid, external_session, external_id, mapping=mapping, mapping_id=mapping_id, context=context)
+            return res
+
+        @only_for_referential('magento')
+        def _check_need_to_update_single(self, cr, uid, external_session, order, context=None):
+            """
+            For one order, check on Magento if it has been paid since last
+            check. If so, it will launch the defined flow based on the
+            payment type (validate order, invoice, ...)
+
+            :param browse_record order: browseable sale.order
+            :param Connection conn: connection with Magento
+            :return: True
+            """
+
+            #TODO improve me and replace me by a generic function in connector_ecommerce
+            #Only the call to magento should be here
+
+            model_data_obj = self.pool.get('ir.model.data')
+            # check if the status has changed in Magento
+            # We don't use oeid_to_extid function cause it only handles integer ids
+            # Magento can have something like '100000077-2'
+            model_data_ids = model_data_obj.search(
+                cr, uid,
+                [('model', '=', self._name),
+                 ('res_id', '=', order.id),
+                 ('referential_id', '=', order.shop_id.referential_id.id)],
+                context=context)
+
+            if model_data_ids:
+                prefixed_id = model_data_obj.read(
+                    cr, uid, model_data_ids[0], ['name'], context=context)['name']
+                ext_id = self.id_from_prefixed_id(prefixed_id)
+            else:
+                return False
+
+            resource = external_session.connection.call('sales_order.info', [ext_id])
+
+            if resource['status'] == 'canceled':
+                wf_service = netsvc.LocalService("workflow")
+                wf_service.trg_validate(uid, 'sale.order', order.id, 'cancel', cr)
+                updated = True
+                self.log(cr, uid, order.id, "order %s canceled when updated from external system" % (order.id,))
+            # If the order isn't canceled and was waiting for a payment,
+            # so we follow the standard flow according to ext_payment_method:
+            else:
+                updated = self.paid_and_update(cr, uid, external_session, order.id, resource, context=context)
+                if updated:
+                    self.log(
+                        cr, uid, order.id,
+                        "order %s paid when updated from external system" %
+                        (order.id,))
+            # Untick the need_to_update if updated (if so was canceled in magento
+            # or if it has been paid through magento)
             if updated:
-                self.log(
-                    cr, uid, order.id,
-                    "order %s paid when updated from external system" %
-                    (order.id,))
-        # Untick the need_to_update if updated (if so was canceled in magento
-        # or if it has been paid through magento)
-        if updated:
-            self.write(cr, uid, order.id, {'need_to_update': False})
-        cr.commit() #Ugly we should not commit in the current cursor
-        return True
+                self.write(cr, uid, order.id, {'need_to_update': False})
+            cr.commit() #Ugly we should not commit in the current cursor
+            return True
 
-########################################################################################################################
-#
-#           CODE THAT CLEAN MAGENTO DATA BEFORE IMPORTING IT THE BEST WILL BE TO REFACTOR MAGENTO API
-#
-########################################################################################################################
+    ########################################################################################################################
+    #
+    #           CODE THAT CLEAN MAGENTO DATA BEFORE IMPORTING IT THE BEST WILL BE TO REFACTOR MAGENTO API
+    #
+    ########################################################################################################################
 
 
-    def _merge_sub_items(self, cr, uid, product_type, top_item, child_items, context=None):
-        """
-        Manage the sub items of the magento sale order lines. A top item contains one
-        or many child_items. For some product types, we want to merge them in the main
-        item, or keep them as order line.
+        def _merge_sub_items(self, cr, uid, product_type, top_item, child_items, context=None):
+            """
+            Manage the sub items of the magento sale order lines. A top item contains one
+            or many child_items. For some product types, we want to merge them in the main
+            item, or keep them as order line.
 
-        This method has to stay because it allow to customize the behavior of the sale
-        order according to the product type.
+            This method has to stay because it allow to customize the behavior of the sale
+            order according to the product type.
 
-        A list may be returned to add many items (ie to keep all child_items as items.
+            A list may be returned to add many items (ie to keep all child_items as items.
 
-        :param top_item: main item (bundle, configurable)
-        :param child_items: list of childs of the top item
-        :return: item or list of items
-        """
-        if product_type == 'configurable':
-            item = top_item.copy()
-            # For configurable product all information regarding the price is in the configurable item
-            # In the child a lot of information is empty, but contains the right sku and product_id
-            # So the real product_id and the sku and the name have to be extracted from the child
-            for field in ['sku', 'product_id', 'name']:
-                item[field] = child_items[0][field]
-            return item
-        return top_item
+            :param top_item: main item (bundle, configurable)
+            :param child_items: list of childs of the top item
+            :return: item or list of items
+            """
+            if product_type == 'configurable':
+                item = top_item.copy()
+                # For configurable product all information regarding the price is in the configurable item
+                # In the child a lot of information is empty, but contains the right sku and product_id
+                # So the real product_id and the sku and the name have to be extracted from the child
+                for field in ['sku', 'product_id', 'name']:
+                    item[field] = child_items[0][field]
+                return item
+            return top_item
 
-    def clean_magento_items(self, cr, uid, resource, context=None):
-        """
-        Method that clean the sale order line given by magento before importing it
+        def clean_magento_items(self, cr, uid, resource, context=None):
+            """
+            Method that clean the sale order line given by magento before importing it
 
-        This method has to stay here because it allow to customize the behavior of the sale
-        order.
+            This method has to stay here because it allow to customize the behavior of the sale
+            order.
 
-        """
-        child_items = {}  # key is the parent item id
-        top_items = []
+            """
+            child_items = {}  # key is the parent item id
+            top_items = []
 
-        # Group the childs with their parent
-        for item in resource['items']:
-            if item.get('parent_item_id'):
-                child_items.setdefault(item['parent_item_id'], []).append(item)
+            # Group the childs with their parent
+            for item in resource['items']:
+                if item.get('parent_item_id'):
+                    child_items.setdefault(item['parent_item_id'], []).append(item)
+                else:
+                    top_items.append(item)
+
+            all_items = []
+            for top_item in top_items:
+                if top_item['item_id'] in child_items:
+                    item_modified = self._merge_sub_items(cr, uid,
+                                                          top_item['product_type'],
+                                                          top_item,
+                                                          child_items[top_item['item_id']],
+                                                          context=context)
+                    if not isinstance(item_modified, list):
+                        item_modified = [item_modified]
+                    all_items.extend(item_modified)
+                else:
+                    all_items.append(top_item)
+
+            resource['items'] = all_items
+            return resource
+
+        def clean_magento_resource(self, cr, uid, resource, context=None):
+            """
+            Magento copy each address in a address sale table.
+            Keeping the extid of this table 'address_id' is useless because we don't need it later
+            And it's dangerous because we will have various external id for the same resource and the same referential
+            Getting the ext_id of the table customer address is also not posible because Magento LIE
+            Indeed if a customer create a new address on fly magento will give us the default id instead of False
+            So it better to NOT trust magento and not based the address on external_id
+            To avoid any erreur we remove the key
+            """
+            for remove_key in ['customer_address_id', 'address_id']:
+                for key in ['billing_address', 'shipping_address']:
+                    if remove_key in resource[key]: del resource[key][remove_key]
+
+            # For really strange and unknow reason magento want to play with me and make me some joke.
+            # Depending of the customer installation some time the field customer_id is equal to NONE
+            # in the sale order and sometime it's equal to NONE in the address but at least the
+            # the information is correct in one of this field
+            # So I make this ugly code to try to fix it.
+            if not resource.get('customer_id'):
+                if resource['billing_address'].get('customer_id'):
+                    resource['customer_id'] = resource['billing_address']['customer_id']
             else:
-                top_items.append(item)
-
-        all_items = []
-        for top_item in top_items:
-            if top_item['item_id'] in child_items:
-                item_modified = self._merge_sub_items(cr, uid,
-                                                      top_item['product_type'],
-                                                      top_item,
-                                                      child_items[top_item['item_id']],
-                                                      context=context)
-                if not isinstance(item_modified, list):
-                    item_modified = [item_modified]
-                all_items.extend(item_modified)
-            else:
-                all_items.append(top_item)
-
-        resource['items'] = all_items
-        return resource
-
-    def clean_magento_resource(self, cr, uid, resource, context=None):
-        """
-        Magento copy each address in a address sale table.
-        Keeping the extid of this table 'address_id' is useless because we don't need it later
-        And it's dangerous because we will have various external id for the same resource and the same referential
-        Getting the ext_id of the table customer address is also not posible because Magento LIE
-        Indeed if a customer create a new address on fly magento will give us the default id instead of False
-        So it better to NOT trust magento and not based the address on external_id
-        To avoid any erreur we remove the key
-        """
-        for remove_key in ['customer_address_id', 'address_id']:
-            for key in ['billing_address', 'shipping_address']:
-                if remove_key in resource[key]: del resource[key][remove_key]
-
-        # For really strange and unknow reason magento want to play with me and make me some joke.
-        # Depending of the customer installation some time the field customer_id is equal to NONE
-        # in the sale order and sometime it's equal to NONE in the address but at least the
-        # the information is correct in one of this field
-        # So I make this ugly code to try to fix it.
-        if not resource.get('customer_id'):
-            if resource['billing_address'].get('customer_id'):
-                resource['customer_id'] = resource['billing_address']['customer_id']
-        else:
-            if not resource['billing_address'].get('customer_id'):
-                resource['billing_address']['customer_id'] = resource['customer_id']
-            if not resource['shipping_address'].get('customer_id'):
-                resource['shipping_address']['customer_id'] = resource['customer_id']
-        return resource
+                if not resource['billing_address'].get('customer_id'):
+                    resource['billing_address']['customer_id'] = resource['customer_id']
+                if not resource['shipping_address'].get('customer_id'):
+                    resource['shipping_address']['customer_id'] = resource['customer_id']
+            return resource
 
 
     class sale_order_line(Model):
