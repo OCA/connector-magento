@@ -106,10 +106,25 @@ def export_picking_done(session, model_name, backend_id, record_id, picking_type
     """
     env = _get_environment(session, model_name, backend_id)
     picking_exporter = env.get_connector_unit(MagentoPickingSynchronizer)
-    return picking_exporter.run(record_id, picking_type)
+    res = picking_exporter.run(record_id, picking_type)
+    picking_obj = session.pool.get(model_name)
+    picking = picking_obj.browse(session.cr, session.uid, record_id, context=session.context)
+    if picking.carrier_tracking_ref:
+        on_tracking_number_added.fire(session, self._name, record_id, picking.carrier_tracking_ref)
+    return res
     
-    
-    
+@connector.job
+def export_tracking_number(session, model_name, backend_id, record_id, tracking_number):
+    """
+    Launch the job to export the tracking number.
+   
+    @param: tracking_number is the carrier tracking number
+    @type: string
+    """
+    env = _get_environment(session, model_name, backend_id)
+    tracking_exporter = env.get_connector_unit(MagentoTrackingSynchronizer)
+    res = tracking_exporter.run(record_id, tracking_number)
+    return res
     
     
     

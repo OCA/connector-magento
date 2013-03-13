@@ -101,4 +101,24 @@ def delay_export_picking_done(session, model_name, record_id, picking_type):
     job.export_picking_done.delay(session, model_name, magento_sale.backend_id.id,
         record_id, picking_type)
 
-
+@on_tracking_number_added(model_name='stock.picking')
+@magento_consumer
+def delay_export_tracking_number(session, model_name, record_id, tracking_number):
+    """
+    Call a job to export the tracking number to a existing picking that must be in done
+    state.
+   
+    @param: tracking_number is the carrier tracking number of the picking
+    @type: string
+    """
+    model = session.pool.get(model_name)
+    picking = model.browse(session.cr, session.uid,
+                          record_id, context=session.context)
+    # find the magento SO to retrieve the backend
+    magento_sale = picking.sale_id.magento_bind_ids[0]
+    # Set the priority to 20 to have more chance that it would be executed after 
+    # the picking creation
+    job.export_tracking_number.delay(session, model_name, magento_sale.backend_id.id,
+        record_id, tracking_number, priority=20)
+    
+    

@@ -135,8 +135,6 @@ class MagentoPickingSynchronizer(connector.ExportSynchronizer):
         
         return : dict of {magento_product_id: quantity}
         """
-        
-        # TODO: Implement the binder for so lines !
         so_line_binder = self.get_binder_for_model('magento.sale.order.line')
         item_qty = {}
         # get product and quantities to ship from the picking
@@ -181,3 +179,43 @@ class MagentoPickingSynchronizer(connector.ExportSynchronizer):
         self.backend_adapter.create(data)
 
 
+@magento
+class MagentoTrackingSynchronizer(connector.ExportSynchronizer):
+    _model_name = ['magento.stock.picking']
+    
+    def _get_data(self, magento_picking_id, picking, tracking_number):
+        return [magento_picking_id, picking.carrier_id.magento_carrier_code, 
+            picking.carrier_id.magento_tracking_title or '', tracking_number]
+        
+    def run(self, openerp_id, tracking_number):
+        """
+        Run the job to export the tracking_number to a 'done' picking
+
+        @param: tracking_number of the carrier
+        @type: string
+        """
+        # verify the picking is done + magento id exists
+        picking_obj = self.pool.get('stock.picking')
+        picking = picking_obj.browse(self.session.cr, self.session.uid,
+            openerp_id, context=self.session.context)
+        binder = self.get_binder_for_model('magento.stock.picking')
+        magento_picking_id = binder.to_backend(picking.id)
+        if picking.state != 'done':
+            raise ValueError("Wrong value for picking state, it must be 'done', found: %s" %picking.state)
+        if not picking.carrier_id:
+            raise ValueError("Wrong value for picking carrier_id, you must know the carrier of a picking.")
+        if not tracking_number:
+            raise ValueError("Wrong value for tracking number, you must provide one.")
+        if not picking.carrier_id.magento_carrier_code:
+            raise ValueError("Wrong value for the Magento carrier code defined in the picking.")
+        if magento_picking_id is None:
+            raise connector.NoExternalId("No value found for the picking ID on Magento side, the job will be retry later.")
+        data = self._get_data(magento_picking_id, picking, tracking_number)
+        self.backend_adapter.add_tracking_number(data)
+
+
+
+
+    
+    
+    
