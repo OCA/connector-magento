@@ -158,7 +158,7 @@ class magento_website(orm.Model):
 
     _sql_constraints = [
         ('magento_uniq', 'unique(backend_id, magento_id)',
-         'A website with same ID on Magento already exists.'),
+         'A website with the same ID on Magento already exists.'),
     ]
 
 
@@ -170,6 +170,11 @@ class magento_store(orm.Model):
     _description = 'Magento Store'
 
     _inherits = {'sale.shop': 'openerp_id'}
+
+
+    def _get_store_from_website(self, cr, uid, ids, context=None):
+        return self.pool.get('magento.store').search(cr, uid, [('website_id', 'in', ids)], context=context)
+
 
     _columns = {
         'website_id': fields.many2one(
@@ -194,7 +199,10 @@ class magento_store(orm.Model):
             type='many2one',
             relation='magento.backend',
             string='Magento Backend',
-            store=True,
+            store={
+                'magento.store': (lambda self, cr, uid, ids, c={}: ids, ['website_id'], 10),
+                'magento.website': (_get_store_from_website, ['backend_id'], 20),
+                  },
             readonly=True),
         'storeview_ids': fields.one2many(
             'magento.storeview',
@@ -209,7 +217,7 @@ class magento_store(orm.Model):
 
     _sql_constraints = [
         ('magento_uniq', 'unique(backend_id, magento_id)',
-         'A store with same ID on Magento already exists.'),
+         'A store with the same ID on Magento already exists.'),
     ]
 
 
