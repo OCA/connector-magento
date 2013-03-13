@@ -112,9 +112,10 @@ class test_import_magento(common.SingleTransactionCase):
         super(test_import_magento, self).setUp()
         self.backend_model = self.registry('magento.backend')
         self.session = connector.ConnectorSession(self.cr, self.uid)
+        self.backend_id = None
 
     def test_00_import_backend(self):
-        backend_id = self.backend_model.create(
+        backend_id = self.backend_id = self.backend_model.create(
                 self.cr,
                 self.uid,
                 {'name': 'Test Magento',
@@ -132,8 +133,6 @@ class test_import_magento(common.SingleTransactionCase):
             job.import_batch(self.session, 'magento.website', backend_id)
             job.import_batch(self.session, 'magento.store', backend_id)
             job.import_batch(self.session, 'magento.storeview', backend_id)
-            job.import_batch(self.session, 'magento.product.category', backend_id)
-
 
         website_model = self.registry('magento.website')
         website_ids = website_model.search(self.cr,
@@ -161,31 +160,23 @@ class test_import_magento(common.SingleTransactionCase):
         self.assertEqual(storeview2.name, 'Store View 2 Test')
 
     def test_10_import_product_category(self):
-        backend_id = self.backend_model.create(
-                self.cr,
-                self.uid,
-                {'name': 'Test Magento',
-                 'type': 'magento',
-                 'version': '1.7',
-                 'location': 'nearby',
-                 'username': 'guewen',
-                 'password': '42'})
 
         with mock.patch('magento.API') as API:
             api_mock = mock.MagicMock(name='magento.api')
             API.return_value = api_mock
             api_mock.__enter__.return_value = api_mock
             api_mock.call.side_effect = magento_responses
-            job.import_batch(self.session, 'magento.product.category', backend_id)
+            job.import_batch(self.session, 'magento.product.category',
+                             backend_id)
 
         category_model =self.registry('magento.product.category')
-        category_ids = category_model.search(self.cr,
-                                             self.uid)
+        category_ids = category_model.search(
+                self.cr, self.uid, [('backend_id', '=', backend_id)])
         self.assertEqual(len(category_ids), 4)
         category_ids.sort()
         first_category = category_model.browse(self.cr,
-                                              self.uid,
-                                              category_ids[0])
+                                               self.uid,
+                                               category_ids[0])
         self.assertEqual(first_category.name, 'Category parent test')
         self.assertEqual(first_category.description, 'Description 1 Test')
 
