@@ -55,6 +55,15 @@ class magento_product_category(orm.Model):
                                       string='Product Category',
                                       required=True,
                                       ondelete='cascade'),
+        'description': fields.text('Description', translate=True),
+        'magento_parent_id': fields.many2one(
+            'magento.product.category',
+             string='Magento Parent Category',
+             ondelete='cascade'),
+        'magento_child_ids': fields.one2many(
+            'magento.product.category',
+             'magento_parent_id',
+             string='Magento Child Categories'),
     }
 
     _sql_constraints = [
@@ -1162,550 +1171,327 @@ class product_product(orm.Model):
     }
 
 
+    def write(self, cr, uid, ids, vals, context=None):
+        if vals.get('referential_id', False):
+            instance = vals['referential_id']
+            #Filter the keys to be changes
+            if ids:
+                if type(ids) == list and len(ids) == 1:
+                    ids = ids[0]
+                elif type(ids) == int or type(ids) == long:
+                    ids = ids
+                else:
+                    return False
+            tier_price = False
+            if 'x_magerp_tier_price' in vals.keys():
+                tier_price = vals.pop('x_magerp_tier_price')
+            tp_obj = self.pool.get('product.tierprice')
+            #Delete existing tier prices
+            tier_price_ids = tp_obj.search(cr, uid, [('product', '=', ids)])
+            if tier_price_ids:
+                tp_obj.unlink(cr, uid, tier_price_ids)
+            #Save the tier price
+            if tier_price:
+                self.create_tier_price(cr, uid, tier_price, instance, ids)
+        stat = super(product_product, self).write(cr, uid, ids, vals, context)
+        #Perform other operation
+        return stat
 
-#class product_product(product_mag_osv):
-#    _inherit = "product.product"
-#
-#    def send_to_external(self, cr, uid, external_session, resources, mapping, mapping_id, update_date=None, context=None):
-#        product_ids = resources.keys()
-#        res = super(product_product, self).send_to_external(cr, uid, external_session, resources, mapping, mapping_id, update_date=update_date, context=context)
-#        if context.get('export_product') != 'link':
-#            self.export_inventory(cr, uid, external_session, product_ids, context=context)
-#        return res
-#
-#    def map_and_update_product(self, cr, uid, external_session, resource, sku, context=None):
-#        res = external_session.connection.call('catalog_product.info', [sku, False, False, 'sku'])
-#        ext_id = res['product_id']
-#        external_session.connection.call('ol_catalog_product.update', [ext_id, resource, False, 'id'])
-#        return ext_id
-#
-#    # xxx a deplacer dans MagentoConnector _default_ext_read_product_product
-#    @only_for_referential('magento')
-#    def _get_external_resources(self, cr, uid, external_session, external_id=None, resource_filter=None,
-#                                         mapping=None, mapping_id=None, fields=None, context=None):
-#        if external_id:
-#            return external_session.connection.call('catalog_product.info', [external_id, False, False, 'id'])
-#        else:
-#            return super(product_product, self)._get_external_resources(cr, uid, external_session,
-#                                                                    external_id=external_id,
-#                                                                    resource_filter=resource_filter,
-#                                                                    mapping=mapping,
-#                                                                    mapping_id=mapping_id,
-#                                                                    fields=fields,
-#                                                                    context=context)
-#
-#
-#    #TODO reimplement the grouped product
-#    def ext_create(self, cr, uid, external_session, resources, mapping=None, mapping_id=None, context=None):
-#        ext_create_ids={}
-#        storeview_to_lang = context['storeview_to_lang']
-#        main_lang = context['main_lang']
-#        for resource_id, resource in resources.items():
-#            #Move this part of code in a python lib
-#            product_type = resource[main_lang]['type_id']
-#            attr_set = resource[main_lang]['set']
-#            sku = resource[main_lang]['sku']
-#            del resource[main_lang]['type_id']
-#            del resource[main_lang]['set']
-#            del resource[main_lang]['sku']
-#            try:
-#                ext_id = external_session.connection.call('ol_catalog_product.create', [product_type, attr_set, sku, resource[main_lang]])
-#            except xmlrpclib.Fault, e:
-#                if e.faultCode == 1:
-#                    # a product with same SKU exists on Magento, we rebind it
-#                    #TODO fix magento API. Indeed catalog_product.info seem to be broken
-#                    try:
-#                        ext_id = self.map_and_update_product(cr, uid, external_session, resource[main_lang], sku, context=context)
-#                    except:
-#                        raise except_osv(_('Error!'), _("Product %s already exist in Magento. Failed to rebind it. Please do it manually")%(sku))
-#                else:
-#                    raise
-#
-#            for storeview, lang in storeview_to_lang.items():
-#                external_session.connection.call('ol_catalog_product.update', [ext_id, resource[lang], storeview, 'id'])
-#            ext_create_ids[resource_id] = ext_id
-#        return ext_create_ids
-#
-#    def ext_update(self, cr, uid, external_session, resources, mapping=None, mapping_id=None, context=None):
-#        if context.get('export_product') == 'link':
-#            return self.ext_update_link_data(cr, uid, external_session, resources, mapping=mapping,
-#                                                            mapping_id=mapping_id, context=context)
-#        else:
-#            ext_update_ids={}
-#            storeview_to_lang = context['storeview_to_lang']
-#            main_lang = context['main_lang']
-#            for resource_id, resource in resources.items():
-#                #Move this part of code in a python lib
-#                ext_id = resource[main_lang]['ext_id']
-#                del resource[main_lang]['ext_id']
-#                external_session.connection.call('ol_catalog_product.update', [ext_id, resource[main_lang], False, 'id'])
-#                for storeview, lang in storeview_to_lang.items():
-#                    del resource[lang]['ext_id']
-#                    external_session.connection.call('ol_catalog_product.update', [ext_id, resource[lang], storeview, 'id'])
-#                ext_update_ids[resource_id] = ext_id
-#            return ext_update_ids
-#
-#    @only_for_referential('magento')
-#    def _check_if_export(self, cr, uid, external_session, product, context=None):
-#        if context.get('export_product') == 'simple' and product.product_type == 'simple':
-#            return True
-#        elif context.get('export_product') == 'special' and product.product_type != 'simple':
-#            return True
-#        elif context.get('export_product') == 'link':
-#            return True
-#        return False
-#
-#    #TODO make me generic when image export will be refactor
-#    def export_product_images(self, cr, uid, external_session, ids, context=None):
-#        image_obj = self.pool.get('product.images')
-#        for product in self.browse(cr, uid, ids, context=context):
-#            image_ids = [image.id for image in product.image_ids]
-#            external_session.logger.info('export %s images for product %s'%(len(image_ids), product.name))
-#            image_obj.update_remote_images(cr, uid, external_session, image_ids, context=context)
-#        return True
-#
-#
-#    #TODO base the import on the mapping and the function ext_import
-#    def import_product_image(self, cr, uid, id, referential_id, conn, ext_id=None, context=None):
-#        image_obj = self.pool.get('product.images')
-#        if not ext_id:
-#            ext_id = self.get_extid(cr, uid, id, referential_id, context=context)
-#        # TODO everythere will should pass the params 'id' for magento api in order to force
-#        # to use the id as external key instead of mixed id/sku
-#        img_list = conn.call('catalog_product_attribute_media.list', [ext_id, False, 'id'])
-#        _logger.info("Magento image for product ext_id %s: %s", ext_id, img_list)
-#        images_name = []
-#        for image in img_list:
-#            img=False
-#            try:
-#                (filename, header) = urllib.urlretrieve(image['url'])
-#                f = open(filename , 'rb')
-#                data = f.read()
-#                f.close()
-#                if "DOCTYPE html PUBLIC" in data:
-#                    _logger.warn("failed to open the image %s from Magento", image['url'])
-#                    continue
-#                else:
-#                    img = base64.encodestring(data)
-#            except Exception, e:
-#                #TODO raise correctly the error
-#                _logger.error("failed to open the image %s from Magento, error : %s", image['url'], e, exc_info=True)
-#                continue
-#            mag_filename, extention = os.path.splitext(os.path.basename(image['file']))
-#            data = {'name': image['label'] and not image['label'] in images_name and image['label'] or mag_filename,
-#                'extention': extention,
-#                'link': False,
-#                'file': img,
-#                'product_id': id,
-#                'small_image': image['types'].count('small_image') == 1,
-#                'base_image': image['types'].count('image') == 1,
-#                'thumbnail': image['types'].count('thumbnail') == 1,
-#                'exclude': bool(eval(image['exclude'] or 'False')),
-#                'position': image['position']
-#                }
-#            #the character '/' is not allowed in the name of the image
-#            data['name'] = data['name'].replace('/', ' ')
-#            images_name.append(data['name'])
-#            image_oe_id = image_obj.extid_to_existing_oeid(cr, uid, image['file'], referential_id, context=None)
-#            if image_oe_id:
-#                # update existing image
-#                image_obj.write(cr, uid, image_oe_id, data, context=context)
-#            else:
-#                # create new image
-#                new_image_id = image_obj.create(cr, uid, data, context=context)
-#                image_obj.create_external_id_vals(cr, uid, new_image_id, image['file'], referential_id, context=context)
-#        return True
-#
-#    def get_field_to_export(self, cr, uid, ids, mapping, mapping_id, context=None):
-#        res = super(product_product, self).get_field_to_export(cr, uid, ids, mapping, mapping_id, context=context)
-#        if 'product_image' in res: res.remove('product_image')
-#        if context.get('attribut_set_id'):
-#            #When OpenERP will be clean, maybe we can add some cache here (@ormcache)
-#            #But for now the bottle of neck is the read the computed fields
-#            #So no need to do it for now
-#            attr_set = self.pool.get('magerp.product_attribute_set').browse(cr, uid, \
-#                                                context['attribut_set_id'], context=context)
-#            magento_field = [attribut['field_name'] for attribut in attr_set.attributes]
-#            return [field for field in res if (field[0:9] != "x_magerp_" or field in magento_field)]
-#        else:
-#            return res
-#
-#    def _get_oe_resources(self, cr, uid, external_session, ids, langs, smart_export=None,
-#                            last_exported_date=None, mapping=None, mapping_id=None, context=None):
-#        resources={}
-#        set_to_product_ids = {}
-#        for product in self.browse(cr, uid, ids, context=context):
-#            if not set_to_product_ids.get(product.set.id):
-#                set_to_product_ids[product.set.id] = [product.id]
-#            else:
-#                set_to_product_ids[product.set.id].append(product.id)
-#        for attribut_id, product_ids in set_to_product_ids.iteritems():
-#            context['attribut_set_id'] = attribut_id
-#            resources.update(super(product_product, self)._get_oe_resources(
-#                                                cr, uid, external_session, product_ids, langs,
-#                                                smart_export=smart_export,
-#                                                last_exported_date=last_exported_date,
-#                                                mapping=mapping,
-#                                                mapping_id=mapping_id,
-#                                                context=context
-#                                                ))
-#        return resources
-#
-#    def _product_type_get(self, cr, uid, context=None):
-#        ids = self.pool.get('magerp.product_product_type').search(cr, uid, [], order='id')
-#        product_types = self.pool.get('magerp.product_product_type').read(cr, uid, ids, ['product_type','name'], context=context)
-#        return [(pt['product_type'], pt['name']) for pt in product_types]
-#
-#    def _is_magento_exported(self, cr, uid, ids, field_name, arg, context=None):
-#        """Return True if the product is already exported to at least one magento shop
-#        """
-#        res = {}
-#        # get all magento external_referentials
-#        referential_ids = self.pool.get('external.referential').search(cr, uid, [('magento_referential', '=', True)])
-#        for product_id in ids:
-#            for referential_id in referential_ids:
-#                res[product_id] = False
-#                if self.get_extid(cr, uid, product_id, referential_id, context):
-#                    res[product_id] = True
-#                    break
-#        return res
-#
-#    _columns = {
-#        'magerp_variant' : fields.serialized('Magento Variant Fields'),
-#        'magento_exportable':fields.boolean('Export to Magento'),
-#        'created_at':fields.date('Created'), #created_at & updated_at in magento side, to allow filtering/search inside OpenERP!
-#        'updated_at':fields.date('Created'),
-#        'tier_price':fields.one2many('product.tierprice', 'product', 'Tier Price'),
-#        'product_type': fields.selection(_product_type_get, 'Magento Product Type'),
-#        'magento_exported': fields.function(_is_magento_exported, type="boolean", method=True, string="Exists on Magento"),  # used to set the sku readonly when already exported
-#        }
-#
-#    _defaults = {
-#        'magento_exportable': True,
-#        'product_type': 'simple',
-#    }
-#
-#    def write(self, cr, uid, ids, vals, context=None):
-#        if vals.get('referential_id', False):
-#            instance = vals['referential_id']
-#            #Filter the keys to be changes
-#            if ids:
-#                if type(ids) == list and len(ids) == 1:
-#                    ids = ids[0]
-#                elif type(ids) == int or type(ids) == long:
-#                    ids = ids
-#                else:
-#                    return False
-#            tier_price = False
-#            if 'x_magerp_tier_price' in vals.keys():
-#                tier_price = vals.pop('x_magerp_tier_price')
-#            tp_obj = self.pool.get('product.tierprice')
-#            #Delete existing tier prices
-#            tier_price_ids = tp_obj.search(cr, uid, [('product', '=', ids)])
-#            if tier_price_ids:
-#                tp_obj.unlink(cr, uid, tier_price_ids)
-#            #Save the tier price
-#            if tier_price:
-#                self.create_tier_price(cr, uid, tier_price, instance, ids)
-#        stat = super(product_product, self).write(cr, uid, ids, vals, context)
-#        #Perform other operation
-#        return stat
-#
-#    def create_tier_price(self, cr, uid, tier_price, instance, product_id):
-#        tp_obj = self.pool.get('product.tierprice')
-#        for each in eval(tier_price):
-#            tier_vals = {}
-#            cust_group = self.pool.get('res.partner.category').mage_to_oe(cr, uid, int(each['cust_group']), instance)
-#            if cust_group:
-#                tier_vals['cust_group'] = cust_group[0]
-#            else:
-#                tier_vals['cust_group'] = False
-#            tier_vals['website_price'] = float(each['website_price'])
-#            tier_vals['price'] = float(each['price'])
-#            tier_vals['price_qty'] = float(each['price_qty'])
-#            tier_vals['product'] = product_id
-#            tier_vals['referential_id'] = instance
-#            tier_vals['group_scope'] = each['all_groups']
-#            if each['website_id'] == '0':
-#                tier_vals['web_scope'] = 'all'
-#            else:
-#                tier_vals['web_scope'] = 'specific'
-#                tier_vals['website_id'] = self.pool.get('external.shop.group').mage_to_oe(cr, uid, int(each['website_id']), instance)
-#            tp_obj.create(cr, uid, tier_vals)
-#
-#    def create(self, cr, uid, vals, context=None):
-#        tier_price = False
-#        if vals.get('referential_id', False):
-#            instance = vals['referential_id']
-#            #Filter keys to be changed
-#            if 'x_magerp_tier_price' in vals.keys():
-#                tier_price = vals.pop('x_magerp_tier_price')
-#
-#        crid = super(product_product, self).create(cr, uid, vals, context)
-#        #Save the tier price
-#        if tier_price:
-#            self.create_tier_price(cr, uid, tier_price, instance, crid)
-#        #Perform other operations
-#        return crid
-#
-#    def copy(self, cr, uid, id, default=None, context=None):
-#        if default is None:
-#            default = {}
-#
-#        default['magento_exportable'] = False
-#
-#        return super(product_product, self).copy(cr, uid, id, default=default, context=context)
-#
-#    def unlink(self, cr, uid, ids, context=None):
-#        #if product is mapped to magento, not delete it
-#        not_delete = False
-#        sale_obj = self.pool.get('sale.shop')
-#        search_params = [
-#            ('magento_shop', '=', True),
-#        ]
-#        shops_ids = sale_obj.search(cr, uid, search_params)
-#
-#        for shop in sale_obj.browse(cr, uid, shops_ids, context):
-#            if shop.referential_id and shop.referential_id.type_id.name == 'Magento':
-#                for product_id in ids:
-#                    mgn_product = self.get_extid(cr, uid, product_id, shop.referential_id.id)
-#                    if mgn_product:
-#                        not_delete = True
-#                        break
-#        if not_delete:
-#            if len(ids) > 1:
-#                raise except_osv(_('Warning!'),
-#                                 _('They are some products related to Magento. '
-#                                   'They can not be deleted!\n'
-#                                   'You can change their Magento status to "Disabled" '
-#                                   'and uncheck the active box to hide them from OpenERP.'))
-#            else:
-#                raise except_osv(_('Warning!'),
-#                                 _('This product is related to Magento. '
-#                                   'It can not be deleted!\n'
-#                                   'You can change it Magento status to "Disabled" '
-#                                   'and uncheck the active box to hide it from OpenERP.'))
-#        else:
-#            return super(product_product, self).unlink(cr, uid, ids, context)
-#
-#    def _prepare_inventory_magento_vals(self, cr, uid, product, stock, shop,
-#                                        context=None):
-#        """
-#        Prepare the values to send to Magento (message product_stock.update).
-#        Can be inherited to customize the values to send.
-#
-#        :param browse_record product: browseable product
-#        :param browse_record stock: browseable stock location
-#        :param browse_record shop: browseable shop
-#        :return: a dict of values which will be sent to Magento with a call to:
-#        product_stock.update
-#        """
-#        map_shortage = {
-#            "use_default": 0,
-#            "no": 0,
-#            "yes": 1,
-#            "yes-and-notification": 2,
-#        }
-#
-#        stock_field = (shop.product_stock_field_id and
-#                       shop.product_stock_field_id.name or
-#                       'virtual_available')
-#        stock_quantity = product[stock_field]
-#
-#        return {'qty': stock_quantity,
-#                'manage_stock': int(product.mag_manage_stock == 'yes'),
-#                'use_config_manage_stock': int(product.mag_manage_stock == 'use_default'),
-#                'backorders': map_shortage[product.mag_manage_stock_shortage],
-#                'use_config_backorders':int(product.mag_manage_stock_shortage == 'use_default'),
-#                # put the stock availability to "out of stock"
-#                'is_in_stock': int(stock_quantity > 0)}
-#
-#    def export_inventory(self, cr, uid, external_session, ids, context=None):
-#        """
-#        Export to Magento the stock quantity for the products in ids which
-#        are already exported on Magento and are not service products.
-#
-#        :param int shop_id: id of the shop where the stock inventory has
-#        to be exported
-#        :param Connection connection: connection object
-#        :return: True
-#        """
-#        #TODO get also the list of product which the option mag_manage_stock have changed
-#        #This can be base on the group_fields that can try tle last write date of a group of fields
-#        if context is None: context = {}
-#
-#        # use the stock location defined on the sale shop
-#        # to compute the stock value
-#        stock = external_session.sync_from_object.warehouse_id.lot_stock_id
-#        location_ctx = context.copy()
-#        location_ctx['location'] = stock.id
-#        for product_id in ids:
-#            self._export_inventory(cr, uid, external_session, product_id, context=location_ctx)
-#
-#        return True
-#
-#    @catch_error_in_report
-#    def _export_inventory(self, cr, uid, external_session, product_id, context=None):
-#        product = self.browse(cr, uid, product_id, context=context)
-#        stock = external_session.sync_from_object.warehouse_id.lot_stock_id
-#        mag_product_id = self.get_extid(
-#            cr, uid, product.id, external_session.referential_id.id, context=context)
-#        if not mag_product_id:
-#            return False  # skip products which are not exported
-#        inventory_vals = self._prepare_inventory_magento_vals(
-#            cr, uid, product, stock, external_session.sync_from_object, context=context)
-#
-#        external_session.connection.call('oerp_cataloginventory_stock_item.update',
-#                        [mag_product_id, inventory_vals])
-#
-#        external_session.logger.info(
-#            "Successfully updated stock level at %s for "
-#            "product with code %s " %
-#            (inventory_vals['qty'], product.default_code))
-#        return True
-#
-#    #TODO change the magento api to be able to change the link direct from the function
-#    # ol_catalog_product.update
-#    def ext_update_link_data(self, cr, uid, external_session, resources, mapping=None, mapping_id=None, context=None):
-#        for resource_id, resource in resources.items():
-#            for type_selection in self.pool.get('product.link').get_link_type_selection(cr, uid, context):
-#                link_type = type_selection[0]
-#                position = {}
-#                linked_product_ids = []
-#                for link in resource[context['main_lang']].get('product_link', []):
-#                    if link['type'] == link_type:
-#                        if link['is_active']:
-#                            linked_product_ids.append(link['link_product_id'])
-#                            position[link['link_product_id']] = link['position']
-#                self.ext_product_assign(cr, uid, external_session, link_type, resource[context['main_lang']]['ext_id'],
-#                                            linked_product_ids, position=position, context=context)
-#        return True
-#
-#    def ext_product_assign(self, cr, uid, external_session, link_type, ext_parent_id, ext_child_ids,
-#                                                    quantities=None, position=None, context=None):
-#        context = context or {}
-#        position = position or {}
-#        quantities = quantities or {}
-#
-#
-#        #Patch for magento api prototype
-#        #for now the method for goodies is freeproduct
-#        #It will be renammed soon and so this patch will be remove too
-#        if link_type == 'goodies': link_type= 'freeproduct'
-#        #END PATCH
-#
-#        magento_args = [link_type, ext_parent_id]
-#        # magento existing children ids
-#        child_list = external_session.connection.call('product_link.list', magento_args)
-#        old_child_ext_ids = [x['product_id'] for x in child_list]
-#
-#        ext_id_to_remove = []
-#        ext_id_to_assign = []
-#        ext_id_to_update = []
-#
-#        # compute the diff between openerp and magento
-#        for c_ext_id in old_child_ext_ids:
-#            if c_ext_id not in ext_child_ids:
-#                ext_id_to_remove.append(c_ext_id)
-#        for c_ext_id in ext_child_ids:
-#            if c_ext_id in old_child_ext_ids:
-#                ext_id_to_update.append(c_ext_id)
-#            else:
-#                ext_id_to_assign.append(c_ext_id)
-#
-#        # calls to magento to delete, create or update the links
-#        for c_ext_id in ext_id_to_remove:
-#             # remove the product links that are no more setup on openerp
-#            external_session.connection.call('product_link.remove', magento_args + [c_ext_id])
-#            external_session.logger.info(("Successfully removed assignment of type %s for"
-#                                 "product %s to product %s") % (link_type, ext_parent_id, c_ext_id))
-#        for c_ext_id in ext_id_to_assign:
-#            # assign new product links
-#            external_session.connection.call('product_link.assign',
-#                      magento_args +
-#                      [c_ext_id,
-#                          {'position': position.get(c_ext_id, 0),
-#                           'qty': quantities.get(c_ext_id, 1)}])
-#            external_session.logger.info(("Successfully assigned product %s to product %s"
-#                                            "with type %s") %(link_type, ext_parent_id, c_ext_id))
-#        for child_ext_id in ext_id_to_update:
-#            # update products links already assigned
-#            external_session.connection.call('product_link.update',
-#                      magento_args +
-#                      [c_ext_id,
-#                          {'position': position.get(c_ext_id, 0),
-#                           'qty': quantities.get(c_ext_id, 1)}])
-#            external_session.logger.info(("Successfully updated assignment of type %s of"
-#                                 "product %s to product %s") %(link_type, ext_parent_id, c_ext_id))
-#        return True
-#
-#    #TODO move this code (get exportable image) and also some code in product_image.py and sale.py in base_sale_multichannel or in a new module in order to be more generic
-#    def get_exportable_images(self, cr, uid, external_session, ids, context=None):
-#        shop = external_session.sync_from_object
-#        image_obj = self.pool.get('product.images')
-#        images_exportable_ids = image_obj.search(cr, uid, [('product_id', 'in', ids)], context=context)
-#        images_to_update_ids = image_obj.get_all_oeid_from_referential(cr, uid, external_session.referential_id.id, context=None)
-#        images_to_create = [x for x in images_exportable_ids if not x in images_to_update_ids]
-#        if shop.last_images_export_date:
-#            images_to_update_ids = image_obj.search(cr, uid, [('id', 'in', images_to_update_ids), '|', ('create_date', '>', shop.last_images_export_date), ('write_date', '>', shop.last_images_export_date)], context=context)
-#        return {'to_create' : images_to_create, 'to_update' : images_to_update_ids}
-#
-#    def _mag_import_product_links_type(self, cr, uid, product, link_type, external_session, context=None):
-#        if context is None: context = {}
-#        conn = external_session.connection
-#        product_link_obj = self.pool.get('product.link')
-#        selection_link_types = product_link_obj.get_link_type_selection(cr, uid, context)
-#        mag_product_id = self.get_extid(
-#            cr, uid, product.id, external_session.referential_id.id, context=context)
-#        # This method could be completed to import grouped products too, you know, for Magento a product link is as
-#        # well a cross-sell, up-sell, related than the assignment between grouped products
-#        if link_type in [ltype[0] for ltype in selection_link_types]:
-#            product_links = []
-#            try:
-#                product_links = conn.call('product_link.list', [link_type, mag_product_id])
-#            except Exception, e:
-#                self.log(cr, uid, product.id, "Error when retrieving the list of links in Magento for product with reference %s and product id %s !" % (product.default_code, product.id,))
-#                conn.logger.debug("Error when retrieving the list of links in Magento for product with reference %s and product id %s !" % (product.magento_sku, product.id,))
-#
-#            for product_link in product_links:
-#                linked_product_id = self.get_or_create_oeid(
-#                    cr, uid,
-#                    external_session,
-#                    product_link['product_id'],
-#                    context=context)
-#                link_data = {
-#                    'product_id': product.id,
-#                    'type': link_type,
-#                    'linked_product_id': linked_product_id,
-#                    'sequence': product_link['position'],
-#                }
-#
-#                existing_link = product_link_obj.search(cr, uid,
-#                    [('product_id', '=', link_data['product_id']),
-#                     ('type', '=', link_data['type']),
-#                     ('linked_product_id', '=', link_data['linked_product_id'])
-#                    ], context=context)
-#                if existing_link:
-#                    product_link_obj.write(cr, uid, existing_link, link_data, context=context)
-#                else:
-#                    product_link_obj.create(cr, uid, link_data, context=context)
-#                conn.logger.info("Successfully imported product link of type %s on product %s to product %s" %(link_type, product.id, linked_product_id))
-#        return True
-#
-#    def mag_import_product_links_types(self, cr, uid, ids, link_types, external_session, context=None):
-#        if isinstance(ids, (int, long)): ids = [ids]
-#        for product in self.browse(cr, uid, ids, context=context):
-#            for link_type in link_types:
-#                self._mag_import_product_links_type(cr, uid, product, link_type, external_session, context=context)
-#        return True
-#
-#    def mag_import_product_links(self, cr, uid, ids, external_session, context=None):
-#        link_types = self.pool.get('external.referential').get_magento_product_link_types(cr, uid, external_session.referential_id.id, external_session.connection, context=context)
-#        local_cr = pooler.get_db(cr.dbname).cursor()
-#        try:
-#            for product_id in ids:
-#                self.mag_import_product_links_types(local_cr, uid, [product_id], link_types, external_session, context=context)
-#                local_cr.commit()
-#        finally:
-#            local_cr.close()
-#        return True
+    def create_tier_price(self, cr, uid, tier_price, instance, product_id):
+        tp_obj = self.pool.get('product.tierprice')
+        for each in eval(tier_price):
+            tier_vals = {}
+            cust_group = self.pool.get('res.partner.category').mage_to_oe(cr, uid, int(each['cust_group']), instance)
+            if cust_group:
+                tier_vals['cust_group'] = cust_group[0]
+            else:
+                tier_vals['cust_group'] = False
+            tier_vals['website_price'] = float(each['website_price'])
+            tier_vals['price'] = float(each['price'])
+            tier_vals['price_qty'] = float(each['price_qty'])
+            tier_vals['product'] = product_id
+            tier_vals['referential_id'] = instance
+            tier_vals['group_scope'] = each['all_groups']
+            if each['website_id'] == '0':
+                tier_vals['web_scope'] = 'all'
+            else:
+                tier_vals['web_scope'] = 'specific'
+                tier_vals['website_id'] = self.pool.get('external.shop.group').mage_to_oe(cr, uid, int(each['website_id']), instance)
+            tp_obj.create(cr, uid, tier_vals)
+
+    def create(self, cr, uid, vals, context=None):
+        tier_price = False
+        if vals.get('referential_id', False):
+            instance = vals['referential_id']
+            #Filter keys to be changed
+            if 'x_magerp_tier_price' in vals.keys():
+                tier_price = vals.pop('x_magerp_tier_price')
+
+        crid = super(product_product, self).create(cr, uid, vals, context)
+        #Save the tier price
+        if tier_price:
+            self.create_tier_price(cr, uid, tier_price, instance, crid)
+        #Perform other operations
+        return crid
+
+    def copy(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+
+        default['magento_exportable'] = False
+
+        return super(product_product, self).copy(cr, uid, id, default=default, context=context)
+
+    def unlink(self, cr, uid, ids, context=None):
+        #if product is mapped to magento, not delete it
+        not_delete = False
+        sale_obj = self.pool.get('sale.shop')
+        search_params = [
+            ('magento_shop', '=', True),
+        ]
+        shops_ids = sale_obj.search(cr, uid, search_params)
+
+        for shop in sale_obj.browse(cr, uid, shops_ids, context):
+            if shop.referential_id and shop.referential_id.type_id.name == 'Magento':
+                for product_id in ids:
+                    mgn_product = self.get_extid(cr, uid, product_id, shop.referential_id.id)
+                    if mgn_product:
+                        not_delete = True
+                        break
+        if not_delete:
+            if len(ids) > 1:
+                raise except_osv(_('Warning!'),
+                                 _('They are some products related to Magento. '
+                                   'They can not be deleted!\n'
+                                   'You can change their Magento status to "Disabled" '
+                                   'and uncheck the active box to hide them from OpenERP.'))
+            else:
+                raise except_osv(_('Warning!'),
+                                 _('This product is related to Magento. '
+                                   'It can not be deleted!\n'
+                                   'You can change it Magento status to "Disabled" '
+                                   'and uncheck the active box to hide it from OpenERP.'))
+        else:
+            return super(product_product, self).unlink(cr, uid, ids, context)
+
+    def _prepare_inventory_magento_vals(self, cr, uid, product, stock, shop,
+                                        context=None):
+        """
+        Prepare the values to send to Magento (message product_stock.update).
+        Can be inherited to customize the values to send.
+
+        :param browse_record product: browseable product
+        :param browse_record stock: browseable stock location
+        :param browse_record shop: browseable shop
+        :return: a dict of values which will be sent to Magento with a call to:
+        product_stock.update
+        """
+        map_shortage = {
+            "use_default": 0,
+            "no": 0,
+            "yes": 1,
+            "yes-and-notification": 2,
+        }
+
+        stock_field = (shop.product_stock_field_id and
+                       shop.product_stock_field_id.name or
+                       'virtual_available')
+        stock_quantity = product[stock_field]
+
+        return {'qty': stock_quantity,
+                'manage_stock': int(product.mag_manage_stock == 'yes'),
+                'use_config_manage_stock': int(product.mag_manage_stock == 'use_default'),
+                'backorders': map_shortage[product.mag_manage_stock_shortage],
+                'use_config_backorders':int(product.mag_manage_stock_shortage == 'use_default'),
+                # put the stock availability to "out of stock"
+                'is_in_stock': int(stock_quantity > 0)}
+
+    def export_inventory(self, cr, uid, external_session, ids, context=None):
+        """
+        Export to Magento the stock quantity for the products in ids which
+        are already exported on Magento and are not service products.
+
+        :param int shop_id: id of the shop where the stock inventory has
+        to be exported
+        :param Connection connection: connection object
+        :return: True
+        """
+        #TODO get also the list of product which the option mag_manage_stock have changed
+        #This can be base on the group_fields that can try tle last write date of a group of fields
+        if context is None: context = {}
+
+        # use the stock location defined on the sale shop
+        # to compute the stock value
+        stock = external_session.sync_from_object.warehouse_id.lot_stock_id
+        location_ctx = context.copy()
+        location_ctx['location'] = stock.id
+        for product_id in ids:
+            self._export_inventory(cr, uid, external_session, product_id, context=location_ctx)
+
+        return True
+
+    @catch_error_in_report
+    def _export_inventory(self, cr, uid, external_session, product_id, context=None):
+        product = self.browse(cr, uid, product_id, context=context)
+        stock = external_session.sync_from_object.warehouse_id.lot_stock_id
+        mag_product_id = self.get_extid(
+            cr, uid, product.id, external_session.referential_id.id, context=context)
+        if not mag_product_id:
+            return False  # skip products which are not exported
+        inventory_vals = self._prepare_inventory_magento_vals(
+            cr, uid, product, stock, external_session.sync_from_object, context=context)
+
+        external_session.connection.call('oerp_cataloginventory_stock_item.update',
+                        [mag_product_id, inventory_vals])
+
+        external_session.logger.info(
+            "Successfully updated stock level at %s for "
+            "product with code %s " %
+            (inventory_vals['qty'], product.default_code))
+        return True
+
+    #TODO change the magento api to be able to change the link direct from the function
+    # ol_catalog_product.update
+    def ext_update_link_data(self, cr, uid, external_session, resources, mapping=None, mapping_id=None, context=None):
+        for resource_id, resource in resources.items():
+            for type_selection in self.pool.get('product.link').get_link_type_selection(cr, uid, context):
+                link_type = type_selection[0]
+                position = {}
+                linked_product_ids = []
+                for link in resource[context['main_lang']].get('product_link', []):
+                    if link['type'] == link_type:
+                        if link['is_active']:
+                            linked_product_ids.append(link['link_product_id'])
+                            position[link['link_product_id']] = link['position']
+                self.ext_product_assign(cr, uid, external_session, link_type, resource[context['main_lang']]['ext_id'],
+                                            linked_product_ids, position=position, context=context)
+        return True
+
+    def ext_product_assign(self, cr, uid, external_session, link_type, ext_parent_id, ext_child_ids,
+                                                    quantities=None, position=None, context=None):
+        context = context or {}
+        position = position or {}
+        quantities = quantities or {}
+
+
+        #Patch for magento api prototype
+        #for now the method for goodies is freeproduct
+        #It will be renammed soon and so this patch will be remove too
+        if link_type == 'goodies': link_type= 'freeproduct'
+        #END PATCH
+
+        magento_args = [link_type, ext_parent_id]
+        # magento existing children ids
+        child_list = external_session.connection.call('product_link.list', magento_args)
+        old_child_ext_ids = [x['product_id'] for x in child_list]
+
+        ext_id_to_remove = []
+        ext_id_to_assign = []
+        ext_id_to_update = []
+
+        # compute the diff between openerp and magento
+        for c_ext_id in old_child_ext_ids:
+            if c_ext_id not in ext_child_ids:
+                ext_id_to_remove.append(c_ext_id)
+        for c_ext_id in ext_child_ids:
+            if c_ext_id in old_child_ext_ids:
+                ext_id_to_update.append(c_ext_id)
+            else:
+                ext_id_to_assign.append(c_ext_id)
+
+        # calls to magento to delete, create or update the links
+        for c_ext_id in ext_id_to_remove:
+             # remove the product links that are no more setup on openerp
+            external_session.connection.call('product_link.remove', magento_args + [c_ext_id])
+            external_session.logger.info(("Successfully removed assignment of type %s for"
+                                 "product %s to product %s") % (link_type, ext_parent_id, c_ext_id))
+        for c_ext_id in ext_id_to_assign:
+            # assign new product links
+            external_session.connection.call('product_link.assign',
+                      magento_args +
+                      [c_ext_id,
+                          {'position': position.get(c_ext_id, 0),
+                           'qty': quantities.get(c_ext_id, 1)}])
+            external_session.logger.info(("Successfully assigned product %s to product %s"
+                                            "with type %s") %(link_type, ext_parent_id, c_ext_id))
+        for child_ext_id in ext_id_to_update:
+            # update products links already assigned
+            external_session.connection.call('product_link.update',
+                      magento_args +
+                      [c_ext_id,
+                          {'position': position.get(c_ext_id, 0),
+                           'qty': quantities.get(c_ext_id, 1)}])
+            external_session.logger.info(("Successfully updated assignment of type %s of"
+                                 "product %s to product %s") %(link_type, ext_parent_id, c_ext_id))
+        return True
+
+    #TODO move this code (get exportable image) and also some code in product_image.py and sale.py in base_sale_multichannel or in a new module in order to be more generic
+    def get_exportable_images(self, cr, uid, external_session, ids, context=None):
+        shop = external_session.sync_from_object
+        image_obj = self.pool.get('product.images')
+        images_exportable_ids = image_obj.search(cr, uid, [('product_id', 'in', ids)], context=context)
+        images_to_update_ids = image_obj.get_all_oeid_from_referential(cr, uid, external_session.referential_id.id, context=None)
+        images_to_create = [x for x in images_exportable_ids if not x in images_to_update_ids]
+        if shop.last_images_export_date:
+            images_to_update_ids = image_obj.search(cr, uid, [('id', 'in', images_to_update_ids), '|', ('create_date', '>', shop.last_images_export_date), ('write_date', '>', shop.last_images_export_date)], context=context)
+        return {'to_create' : images_to_create, 'to_update' : images_to_update_ids}
+
+    def _mag_import_product_links_type(self, cr, uid, product, link_type, external_session, context=None):
+        if context is None: context = {}
+        conn = external_session.connection
+        product_link_obj = self.pool.get('product.link')
+        selection_link_types = product_link_obj.get_link_type_selection(cr, uid, context)
+        mag_product_id = self.get_extid(
+            cr, uid, product.id, external_session.referential_id.id, context=context)
+        # This method could be completed to import grouped products too, you know, for Magento a product link is as
+        # well a cross-sell, up-sell, related than the assignment between grouped products
+        if link_type in [ltype[0] for ltype in selection_link_types]:
+            product_links = []
+            try:
+                product_links = conn.call('product_link.list', [link_type, mag_product_id])
+            except Exception, e:
+                self.log(cr, uid, product.id, "Error when retrieving the list of links in Magento for product with reference %s and product id %s !" % (product.default_code, product.id,))
+                conn.logger.debug("Error when retrieving the list of links in Magento for product with reference %s and product id %s !" % (product.magento_sku, product.id,))
+
+            for product_link in product_links:
+                linked_product_id = self.get_or_create_oeid(
+                    cr, uid,
+                    external_session,
+                    product_link['product_id'],
+                    context=context)
+                link_data = {
+                    'product_id': product.id,
+                    'type': link_type,
+                    'linked_product_id': linked_product_id,
+                    'sequence': product_link['position'],
+                }
+
+                existing_link = product_link_obj.search(cr, uid,
+                    [('product_id', '=', link_data['product_id']),
+                     ('type', '=', link_data['type']),
+                     ('linked_product_id', '=', link_data['linked_product_id'])
+                    ], context=context)
+                if existing_link:
+                    product_link_obj.write(cr, uid, existing_link, link_data, context=context)
+                else:
+                    product_link_obj.create(cr, uid, link_data, context=context)
+                conn.logger.info("Successfully imported product link of type %s on product %s to product %s" %(link_type, product.id, linked_product_id))
+        return True
+
+    def mag_import_product_links_types(self, cr, uid, ids, link_types, external_session, context=None):
+        if isinstance(ids, (int, long)): ids = [ids]
+        for product in self.browse(cr, uid, ids, context=context):
+            for link_type in link_types:
+                self._mag_import_product_links_type(cr, uid, product, link_type, external_session, context=context)
+        return True
+
+    def mag_import_product_links(self, cr, uid, ids, external_session, context=None):
+        link_types = self.pool.get('external.referential').get_magento_product_link_types(cr, uid, external_session.referential_id.id, external_session.connection, context=context)
+        local_cr = pooler.get_db(cr.dbname).cursor()
+        try:
+            for product_id in ids:
+                self.mag_import_product_links_types(local_cr, uid, [product_id], link_types, external_session, context=context)
+                local_cr.commit()
+        finally:
+            local_cr.close()
+        return True

@@ -70,25 +70,30 @@ class MagentoImportSynchronizer(ImportSynchronizer):
         """
         return
 
+    def _context(self, **kwargs):
+        if not 'lang' in kwargs:
+            lang = self.backend_record.default_lang_id
+            if lang:
+                kwargs['lang'] = lang.code
+        return dict(self.session.context, connector_no_export=True, **kwargs)
+
     def _create(self, data):
         """ Create the OpenERP record """
-        context = dict(self.session.context, connector_no_export=True)
         openerp_id = self.model.create(self.session.cr,
                                        self.session.uid,
                                        data,
-                                       context=context)
+                                       context=self._context())
         _logger.debug('%s %d created from magento %s',
                       self.model._name, openerp_id, self.magento_id)
         return openerp_id
 
     def _update(self, openerp_id, data):
         """ Update an OpenERP record """
-        context = dict(self.session.context, connector_no_export=True)
         self.model.write(self.session.cr,
                          self.session.uid,
                          openerp_id,
                          data,
-                         context=context)
+                         context=self._context())
         _logger.debug('%s %d updated from magento %s',
                       self.model._name, openerp_id, self.magento_id)
         return
@@ -305,6 +310,10 @@ class ProductCategoryBatchImport(BatchImportSynchronizer):
 class ProductCategoryImport(MagentoImportSynchronizer):
     _model_name = ['magento.product.category']
 
+    def _get_magento_data(self, lang_id=None):
+        """ Return the raw Magento data for ``self.magento_id`` """
+        return self.backend_adapter.read(self.magento_id, lang_id)
+
     def _import_dependencies(self):
         """ Import the dependencies for the record"""
         record = self.magento_record
@@ -316,6 +325,39 @@ class ProductCategoryImport(MagentoImportSynchronizer):
             if binder.to_openerp(record['parent_id']) is None:
                 importer = env.get_connector_unit(MagentoImportSynchronizer)
                 importer.run(record['parent_id'])
+
+    def _after_import(self, openerp_id):
+        session = self.session
+        storeview_obj = session.pool.get('magento.storeview')
+        model_fields_obj = session.pool.get('ir.model.fields')
+        cr, uid, context = (session.cr,
+                            session.uid,
+                            session.context)
+        storeview_ids = storeview_obj.search(
+                cr, uid,
+                [('backend_id', '=', self.backend_record.id)],
+                context=context)
+        default_lang = self.backend_record.default_lang_id
+        storeviews = storeview_obj.browse(cr, uid,
+                                          storeview_ids,
+                                          context=context)
+        lang_storeviews = [sv for sv in storeviews
+                           if sv.lang_id and sv.lang_id != default_lang]
+        if not lang_storeviews:
+            return
+
+        fields = self.model.fields_get(cr, uid, context=context)
+        translatable_fields = [field for field, attrs in fields.iteritems()
+                               if attrs.get('translate')]
+
+        for storeview in lang_storeviews:
+            context = self._context(lang=storeview.lang_id.code)
+            lang_record = self._get_magento_data(storeview.magento_id)
+            record = self.mapper.convert(lang_record)
+
+            data = dict((field, value) for field, value in record.iteritems()
+                        if field in translatable_fields)
+            self.model.write(cr, uid, openerp_id, data, context=context)
 
 
 @job

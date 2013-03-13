@@ -25,6 +25,9 @@
                             <field name="username"/>
                             <field name="password"/>
                         </group>
+                        <group col="4">
+                            <field name="default_lang_id"/>
+                        </group>
                         <notebook>
                             <page name="import" string="Imports">
                                 <group>
