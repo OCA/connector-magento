@@ -171,10 +171,11 @@ class magento_store(orm.Model):
 
     _inherits = {'sale.shop': 'openerp_id'}
 
-
     def _get_store_from_website(self, cr, uid, ids, context=None):
-        return self.pool.get('magento.store').search(cr, uid, [('website_id', 'in', ids)], context=context)
-
+        store_obj = self.pool.get('magento.store')
+        return store_obj.search(cr, uid,
+                                [('website_id', 'in', ids)],
+                                context=context)
 
     _columns = {
         'website_id': fields.many2one(
@@ -200,8 +201,11 @@ class magento_store(orm.Model):
             relation='magento.backend',
             string='Magento Backend',
             store={
-                'magento.store': (lambda self, cr, uid, ids, c={}: ids, ['website_id'], 10),
-                'magento.website': (_get_store_from_website, ['backend_id'], 20),
+                'magento.store':
+                    (lambda self, cr, uid, ids, c=None:
+                        ids, ['website_id'], 10),
+                'magento.website':
+                    (_get_store_from_website, ['backend_id'], 20),
                   },
             readonly=True),
         'storeview_ids': fields.one2many(
