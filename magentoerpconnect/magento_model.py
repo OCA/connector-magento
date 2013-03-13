@@ -58,6 +58,11 @@ class magento_backend(orm.Model):
         'location': fields.char('Location'),
         'username': fields.char('Username'),
         'password': fields.char('Password'),
+        'default_lang_id': fields.many2one(
+                'res.lang',
+                'Default Language',
+                help="Choose the language which will be used for the "
+                     "Default Value in Magento"),
 
         # add a field `auto_activate` -> activate a cron
         'import_partners_since': fields.datetime('Import partners since'),

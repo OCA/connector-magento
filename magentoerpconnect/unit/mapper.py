@@ -258,9 +258,12 @@ class ProductCategoryImportMapper(ImportMapper):
     _model_name = 'magento.product.category'
 
     direct = [
-            ('name', 'name'),
             ('description', 'description'),
             ]
+
+    @mapping
+    def name(self, record):
+        return {'name': record['name'] or _('Undefined')}
 
     @mapping
     def magento_id(self, record):
@@ -289,4 +292,4 @@ class ProductCategoryImportMapper(ImportMapper):
                    ['openerp_id'],
                    context=self.session.context)['openerp_id'][0]
 
-        return {'parent_id': category_id}
+        return {'parent_id': category_id, 'magento_parent_id': mag_cat_id}

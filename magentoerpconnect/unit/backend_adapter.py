@@ -103,7 +103,7 @@ class GenericAdapter(MagentoCRUDAdapter):
         with magentolib.API(self.magento.location,
                             self.magento.username,
                             self.magento.password) as api:
-            return api.call('%s.info' % self._magento_model, [id])
+            return api.call('%s.info' % self._magento_model, [id, attributes])
         return {}
 
     def create(self, data):
@@ -223,6 +223,17 @@ class ProductCategoryAdapter(GenericAdapter):
         """
         raise NotImplementedError('No search on product categories, '
                                   'use "tree" method')
+
+    def read(self, id, storeview_id=None, attributes=None):
+        """ Returns the information of a record
+
+        :rtype: dict
+        """
+        with magentolib.API(self.magento.location,
+                            self.magento.username,
+                            self.magento.password) as api:
+            return api.call('%s.info' % self._magento_model, [id, storeview_id, attributes])
+        return {}
 
     def tree(self, parent_id=None, store_view=None):
         """ Returns a tree of product categories
