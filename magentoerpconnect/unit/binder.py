@@ -19,11 +19,11 @@
 #
 ##############################################################################
 
-import openerp.addons.connector as connector
+from openerp.addons.connector.connector import Binder
 from ..backend import magento
 
 
-class MagentoBinder(connector.Binder):
+class MagentoBinder(Binder):
     """ Generic Binder for Magento """
 
 
@@ -41,6 +41,7 @@ class MagentoModelBinder(MagentoBinder):
             'magento.res.partner.category',
             'magento.product.category',
             'magento.product.product',
+            'magento.stock.picking',
         ]
 
     def to_openerp(self, external_id):
