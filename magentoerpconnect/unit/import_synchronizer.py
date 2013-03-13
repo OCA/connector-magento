@@ -65,25 +65,31 @@ class MagentoImportSynchronizer(connector.ImportSynchronizer):
         """
         return
 
+    def _context(self, **kwargs):
+        if not 'lang' in kwargs:
+            lang = self.backend_record.default_lang_id
+            if lang:
+                kwargs['lang'] = lang.code
+        return dict(self.session.context, connector_no_export=True, **kwargs)
+
     def _create(self, data):
         """ Create the OpenERP record """
-        context = dict(self.session.context, connector_no_export=True)
+
         openerp_id = self.model.create(self.session.cr,
                                        self.session.uid,
                                        data,
-                                       context=context)
+                                       context=self._context())
         _logger.debug('%s %d created from magento %s',
                       self.model._name, openerp_id, self.magento_id)
         return openerp_id
 
     def _update(self, openerp_id, data):
         """ Update an OpenERP record """
-        context = dict(self.session.context, connector_no_export=True)
         self.model.write(self.session.cr,
                          self.session.uid,
                          openerp_id,
                          data,
-                         context=context)
+                         context=self._context())
         _logger.debug('%s %d updated from magento %s',
                       self.model._name, openerp_id, self.magento_id)
         return
@@ -305,6 +311,10 @@ class ProductCategoryBatchImport(BatchImportSynchronizer):
 class ProductCategoryImport(MagentoImportSynchronizer):
     _model_name = ['magento.product.category']
 
+    def _get_magento_data(self, lang_id=None):
+        """ Return the raw Magento data for ``self.magento_id`` """
+        return self.backend_adapter.read(self.magento_id, lang_id)
+
     def _import_dependencies(self):
         """ Import the dependencies for the record"""
         record = self.magento_record
@@ -317,3 +327,36 @@ class ProductCategoryImport(MagentoImportSynchronizer):
             if binder.to_openerp(record['parent_id']) is None:
                 importer = env.get_connector_unit(MagentoImportSynchronizer)
                 importer.run(record['parent_id'])
+
+    def _after_import(self, openerp_id):
+        storeview_obj = self.session.pool.get('magento.storeview')
+        model_fields_obj = self.session.pool.get('ir.model.fields')
+        storeview_ids = storeview_obj.search(self.session.cr,
+                                         self.session.uid,
+                                         [('backend_id', '=', self.backend_record.id)])
+        for storeview in storeview_obj.browse(self.session.cr,
+                                          self.session.uid,
+                                          storeview_ids):
+            if storeview.lang_id and storeview.lang_id != self.backend_record.default_lang_id:
+                context = self._context(lang=storeview.lang_id.code)
+                self.magento_record = self._get_magento_data(storeview.magento_id)
+                record = self._map_data()
+                models = self.model._inherits.keys() + [self.model._name]
+                translate_field_ids = model_fields_obj.search(
+                                            self.session.cr,
+                                            self.session.uid,
+                                            [('name', 'in', record.keys()),
+                                            ('translate', '=', True),
+                                            ('model', 'in', models)
+                                            ])
+                data = {}
+                for field in model_fields_obj.read(self.session.cr,
+                                                   self.session.uid,
+                                                   translate_field_ids,
+                                                   ['name']):
+                    data[field['name']] = record[field['name']]
+                self.model.write(self.session.cr,
+                         self.session.uid,
+                         openerp_id,
+                         data,
+                         context=context)

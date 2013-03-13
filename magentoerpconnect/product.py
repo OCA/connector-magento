@@ -55,6 +55,13 @@ class magento_product_category(orm.Model):
                                       string='Product Category',
                                       required=True,
                                       ondelete='cascade'),
+        'description': fields.text('Description', translate=True),
+        'magento_parent_id': fields.many2one('magento.product.category',
+                                             string='Magento Parent Category',
+                                             ondelete='cascade'),
+        'magento_child_ids': fields.one2many('magento.product.category',
+                                             'magento_parent_id',
+                                             string='Magento Child Categories'),
     }
 
     _sql_constraints = [
@@ -1443,7 +1450,7 @@ class product_product(product_mag_osv):
                        shop.product_stock_field_id.name or
                        'virtual_available')
         stock_quantity = product[stock_field]
-        
+
         return {'qty': stock_quantity,
                 'manage_stock': int(product.mag_manage_stock == 'yes'),
                 'use_config_manage_stock': int(product.mag_manage_stock == 'use_default'),
