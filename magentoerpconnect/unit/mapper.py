@@ -311,3 +311,28 @@ class ProductCategoryImportMapper(connector.ImportMapper):
                    context=self.session.context)['openerp_id'][0]
 
         return {'parent_id': category_id}
+
+
+@magento
+class ProductProductImportMapper(connector.ImportMapper):
+    _model_name = 'magento.product.product'
+    #TODO :     website, type, categ,
+    #special_price => minimal_price
+    direct = [
+            ('name', 'name'),
+            ('description', 'description'),
+            ('weight', 'weight'),
+            ('price', 'list_price'),
+            ('cost', 'standard_price'),
+            ('short_description', 'description_sale'),
+            ('sku', 'default_code'),
+            ('type_id', 'product_type'),
+            ]
+
+    @mapping
+    def magento_id(self, record):
+        return {'magento_id': record['product_id']}
+
+    @mapping
+    def backend_id(self, record):
+        return {'backend_id': self.backend_record.id}

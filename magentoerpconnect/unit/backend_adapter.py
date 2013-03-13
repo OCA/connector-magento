@@ -243,3 +243,22 @@ class ProductCategoryAdapter(GenericAdapter):
             tree = api.call('%s.tree' % self._magento_model, [parent_id,
                                                               store_view])
             return filter_ids(tree)
+
+@magento
+class ProductProductAdapter(GenericAdapter):
+    _model_name = 'magento.product.product'
+    _magento_model = 'catalog_product'
+
+    def search(self, filters=None):
+        """ Search records according to some criterias
+        and returns a list of ids
+
+        :rtype: list
+        """
+        with magentolib.API(self.magento.location,
+                            self.magento.username,
+                            self.magento.password) as api:
+            return [int(row['product_id']) for row
+                       in api.call('%s.list' % self._magento_model,
+                                   [filters] if filters else [{}])]
+        return []

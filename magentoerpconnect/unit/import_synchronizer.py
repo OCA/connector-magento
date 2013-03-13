@@ -170,6 +170,7 @@ class DelayedBatchImport(BatchImportSynchronizer):
     """ Delay import of the records """
     _model_name = [
             'magento.res.partner.category',
+            'magento.product.product',
             ]
 
     def _import_record(self, record_id):
@@ -186,6 +187,7 @@ class SimpleRecordImport(MagentoImportSynchronizer):
     _model_name = [
             'magento.website',
             'magento.store',
+            'magento.product.product',
             'magento.storeview',
             'magento.res.partner.category',
         ]
