@@ -56,12 +56,14 @@ class magento_product_category(orm.Model):
                                       required=True,
                                       ondelete='cascade'),
         'description': fields.text('Description', translate=True),
-        'magento_parent_id': fields.many2one('magento.product.category',
-                                             string='Magento Parent Category',
-                                             ondelete='cascade'),
-        'magento_child_ids': fields.one2many('magento.product.category',
-                                             'magento_parent_id',
-                                             string='Magento Child Categories'),
+        'magento_parent_id': fields.many2one(
+            'magento.product.category',
+             string='Magento Parent Category',
+             ondelete='cascade'),
+        'magento_child_ids': fields.one2many(
+            'magento.product.category',
+             'magento_parent_id',
+             string='Magento Child Categories'),
     }
 
     _sql_constraints = [

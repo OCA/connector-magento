@@ -58,7 +58,7 @@ class magento_backend(orm.Model):
         'location': fields.char('Location'),
         'username': fields.char('Username'),
         'password': fields.char('Password'),
-        'default_lang_id':fields.many2one(
+        'default_lang_id': fields.many2one(
                 'res.lang',
                 'Default Language',
                 help="Choose the language which will be used for the "
