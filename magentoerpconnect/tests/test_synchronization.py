@@ -25,7 +25,8 @@ import magento
 
 from openerp.addons.connector.connector import ConnectorUnit
 from openerp.addons.magentoerpconnect.unit.import_synchronizer import (
-        import_batch)
+        import_batch,
+        import_record)
 from openerp.addons.connector.session import ConnectorSession
 import openerp.tests.common as common
 
@@ -37,7 +38,7 @@ def magento_responses(method, args):
     # TODO: a dict is better
     if method == 'ol_websites.search':
         return [1]
-    elif method == 'ol_websites.info' and args == [1]:
+    elif method == 'ol_websites.info' and args == [1, None]:
         return {'code': 'base',
                 'name': 'Main Website Test',
                 'website_id': '1',
@@ -46,13 +47,13 @@ def magento_responses(method, args):
                 'default_group_id': '1'}
     elif method == 'ol_groups.search':
         return [1, 2]
-    elif method == 'ol_groups.info' and args == [1]:
+    elif method == 'ol_groups.info' and args == [1, None]:
         return {'default_store_id': '1',
                 'group_id': '1',
                 'website_id': '1',
                 'name': 'Main Website Store Test',
                 'root_category_id': '2'}
-    elif method == 'ol_groups.info' and args == [2]:
+    elif method == 'ol_groups.info' and args == [2, None]:
         return {'default_store_id': '2',
                 'group_id': '2',
                 'website_id': '1',
@@ -60,7 +61,7 @@ def magento_responses(method, args):
                 'root_category_id': '2'}
     elif method == 'ol_storeviews.search':
         return [1, 2]
-    elif method == 'ol_storeviews.info' and args == [1]:
+    elif method == 'ol_storeviews.info' and args == [1, None]:
         return {'code': 'default',
                 'store_id': '1',
                 'website_id': '1',
@@ -68,7 +69,7 @@ def magento_responses(method, args):
                 'sort_order': '0',
                 'group_id': '1',
                 'name': 'Default Store View Test'}
-    elif method == 'ol_storeviews.info' and args == [2]:
+    elif method == 'ol_storeviews.info' and args == [2, None]:
         return {'code': 'sv2',
                 'store_id': '2',
                 'website_id': '1',
@@ -90,22 +91,23 @@ def magento_responses(method, args):
                          'category_id': '13',
                          'children': []}]
                     }]}
-    elif method == 'catalog_category.info' and args == [1]:
+    elif method == 'catalog_category.info' and args == [1, None, None]:
         return {'description': 'Description 1 Test',
                 'name': 'Category parent test',
                 'category_id': '1',}
-    elif method == 'catalog_category.info' and args == [3]:
+    elif method == 'catalog_category.info' and args == [3, None, None]:
         return {'description': 'Description 2 Test',
                 'name': 'Category child level 1 test',
                 'category_id': '3',}
-    elif method == 'catalog_category.info' and args == [10]:
+    elif method == 'catalog_category.info' and args == [10, None, None]:
         return {'description': 'Description 3 Test',
                 'name': 'Category 1 child level 2 test',
                 'category_id': '10',}
-    elif method == 'catalog_category.info' and args == [13]:
+    elif method == 'catalog_category.info' and args == [13, None, None]:
         return {'description': 'Description 1 Test',
                 'name': 'Category 2 child level 2 test',
                 'category_id': '13',}
+
 
 class test_import_magento(common.SingleTransactionCase):
     """ Test the imports from a Magento Mock """
@@ -114,10 +116,13 @@ class test_import_magento(common.SingleTransactionCase):
         super(test_import_magento, self).setUp()
         self.backend_model = self.registry('magento.backend')
         self.session = ConnectorSession(self.cr, self.uid)
-        self.backend_id = None
+        backend_ids = self.backend_model.search(
+                self.cr, self.uid,
+                [('name', '=', 'Test Magento')])
+        self.backend_id = backend_ids[0] if backend_ids else None
 
     def test_00_import_backend(self):
-        backend_id = self.backend_id = self.backend_model.create(
+        backend_id = self.backend_model.create(
                 self.cr,
                 self.uid,
                 {'name': 'Test Magento',
@@ -169,9 +174,16 @@ class test_import_magento(common.SingleTransactionCase):
             API.return_value = api_mock
             api_mock.__enter__.return_value = api_mock
             api_mock.call.side_effect = magento_responses
-            import_batch(self.session, 'magento.product.category', backend_id)
+            import_record(self.session, 'magento.product.category',
+                          backend_id, 1)
+            import_record(self.session, 'magento.product.category',
+                          backend_id, 3)
+            import_record(self.session, 'magento.product.category',
+                          backend_id, 10)
+            import_record(self.session, 'magento.product.category',
+                          backend_id, 13)
 
-        category_model =self.registry('magento.product.category')
+        category_model = self.registry('magento.product.category')
         category_ids = category_model.search(
                 self.cr, self.uid, [('backend_id', '=', backend_id)])
         self.assertEqual(len(category_ids), 4)
@@ -182,17 +194,17 @@ class test_import_magento(common.SingleTransactionCase):
         self.assertEqual(first_category.name, 'Category parent test')
         self.assertEqual(first_category.description, 'Description 1 Test')
 
-        self.assertEqual(len(first_category.child_ids), 1)
+        self.assertEqual(len(first_category.child_id), 1)
 
-        category_lvl1 = first_category.child_ids[0]
+        category_lvl1 = first_category.child_id[0]
 
         self.assertEqual(category_lvl1.name, 'Category child level 1 test')
         self.assertEqual(category_lvl1.description, 'Description 2 Test')
         self.assertEqual(category_lvl1.parent_id, fisrt_category.openerp_id)
         self.assertEqual(category_lvl1.magento_parent_id, first_category.id)
-        self.assertEqual(len(category_lvl1.child_ids), 2)
+        self.assertEqual(len(category_lvl1.child_id), 2)
 
-        child1, child2 = category_lvl1.child_ids
+        child1, child2 = category_lvl1.child_id
 
         self.assertEqual(child1.name, 'Category child 1 level 2 test')
         self.assertEqual(child1.description, 'Description 3 Test')
