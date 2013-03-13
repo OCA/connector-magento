@@ -47,7 +47,8 @@ TODO
     ],
     "website": "https://launchpad.net/magentoerpconnect",
     "category": "Connector",
-    "init_xml": ['settings/magerp.product_category_attribute_options.csv',],
+    "init_xml": ['settings/magerp.product_category_attribute_options.csv',
+                 'magentoerpconnect_data.xml'],
     "demo_xml": [],
     "update_xml": [
             'security/ir.model.access.csv',
