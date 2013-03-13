@@ -358,11 +358,64 @@ class ProductCategoryImport(MagentoImportSynchronizer):
             self.model.write(cr, uid, openerp_id, data, context=context)
 
 
+@magento
+class SaleOrderBatchImport(DelayedBatchImport):
+    _model_name = ['magento.sale.order']
+    def run(self, filters=None):
+        """ Run the synchronization """
+        from_date = filters.pop('from_date', None)
+        magento_storeview_ids = [filters.pop('magento_storeview_id')]
+        record_ids = self.backend_adapter.search(filters,
+                                                 from_date,
+                                                 magento_storeview_ids)
+        for record_id in record_ids:
+            self._import_record(record_id)
+
+@magento
+class SaleOrderImport(MagentoImportSynchronizer):
+    _model_name = ['magento.sale.order']
+    def _import_dependencies(self):
+        record = self.magento_record
+        env = self.environment
+        if 'customer_id' in record:
+            binder = self.get_binder_for_model('magento.res.partner')
+            if binder.to_openerp(record['customer_id']) is None:
+                env = Environment(self.backend_record,
+                                  self.session,
+                                  'magento.res.partner')
+                importer = env.get_connector_unit(MagentoImportSynchronizer)
+                importer.run(record['customer_id'])
+
+@magento
+class SaleOrderLineImport(MagentoImportSynchronizer):
+    _model_name = ['magento.sale.order.line']
+    def _import_dependencies(self):
+        record = self.magento_record
+        env = self.environment
+        if 'item_id' in record:
+            binder = self.get_binder_for_model('magento.product.product')
+            if binder.to_openerp(record['item_id']) is None:
+                env = Environment(self.backend_record,
+                                  self.session,
+                                  'magento.product.product')
+                importer = env.get_connector_unit(MagentoImportSynchronizer)
+                importer.run(record['item_id'])
+
 @job
 def import_batch(session, model_name, backend_id, filters=None):
     """ Prepare a batch import of records from Magento """
     env = get_environment(session, model_name, backend_id)
     importer = env.get_connector_unit(BatchImportSynchronizer)
+    importer.run(filters)
+
+@job
+def sale_order_import_batch(session, model_name, backend_id, filters=None):
+    """ Prepare a batch import of records from Magento """
+    if filters is None:
+        filters = {}
+    assert 'magento_storeview_id' in filters, 'Missing information about Magento Storeview'
+    env = get_environment(session, model_name, backend_id)
+    importer = env.get_connector_unit(SaleOrderBatchImport)
     importer.run(filters)
 
 
@@ -377,6 +430,10 @@ def import_record(session, model_name, backend_id, magento_id):
 @job
 def import_partners_since(session, model_name, backend_id, since_date=None):
     """ Prepare the import of partners modified on Magento """
+    # FIXME: this may run a long time after the user has clicked the
+    # import button -> the use of datetime.now() should be done in the
+    # method called by the button, and not in the async. processing
+    # see what is done by the import_sale_orders
     env = get_environment(session, model_name, backend_id)
     importer = env.get_connector_unit(BatchImportSynchronizer)
     now_fmt = datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)

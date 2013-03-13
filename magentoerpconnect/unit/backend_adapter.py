@@ -281,3 +281,30 @@ class StockPickingAdapter(GenericAdapter):
 class AccountInvoiceAdapter(GenericAdapter):
     _model_name = 'magento.account.invoice'
     _magento_model = 'sales_order_invoice'
+
+
+@magento
+class SaleOrderAdapter(GenericAdapter):
+    _model_name = 'magento.sale.order'
+    _magento_model = 'sales_order'
+
+    def search(self, filters=None, from_date=None, magento_storeview_ids=None):
+        """ Search records according to some criterias
+        and returns a list of ids
+
+        :rtype: list
+        """
+        if filters is None:
+            filters = {}
+        filters['state'] = {'neq': 'canceled'},
+        if from_date is not None:
+            filters['created_at'] = {'gt': from_date}
+        if magento_storeview_ids is not None:
+            filters['store_id'] = {'in': magento_storeview_ids}
+
+        arguments = {'imported': False ,
+                     # 'limit': 200,
+                     'filters': filters,
+                     }
+        return super(SaleOrderAdapter, self).search(arguments)
+# XXX do we need an adapter for sale.order.line? 

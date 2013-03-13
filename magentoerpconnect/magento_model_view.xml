@@ -189,6 +189,20 @@
                     <group>
                         <field name="lang_id"/>
                     </group>
+                    <group colspan="4">
+                      <div>
+                        <label string="Import Sale Orders since"
+                               class="oe_inline"/>
+                        <field name='import_orders_from_date'
+                               class="oe_inline"
+                               nolabel="1"/>
+                      </div>
+                      <button name="import_sale_orders"
+                              type="object"
+                              class="oe_highlight"
+                              string="Import Sale Orders"/>
+
+                    </group>
                 </form>
             </field>
         </record>

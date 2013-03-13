@@ -31,7 +31,6 @@ ORDER_STATUS_MAPPING = {
     'cancel': 'canceled',
     'waiting_date': 'holded'}
 
-
 class magento_sale_order(orm.Model):
     _name = 'magento.sale.order'
     _inherit = 'magento.binding'
@@ -43,13 +42,18 @@ class magento_sale_order(orm.Model):
                                       string='Sale Order',
                                       required=True,
                                       ondelete='cascade'),
+        'magento_order_lines': fields.one2many('magento.sale.order.line', 'magento_order_id',
+                                               'Magento Order Lines'),
+        'total_amount': fields.float(),
+        'total_amount_tax': fields.float(),
+        'tax_amount': fields.float(),
+        #'cod_fee':  XXX
+        #gift_cert_code':
         }
-
     _sql_constraints = [
         ('magento_uniq', 'unique(backend_id, magento_id)',
          'A sale order line with the same ID on Magento already exists.'),
     ]
-
 
 class sale_order(orm.Model):
     _inherit = 'sale.order'
@@ -60,6 +64,30 @@ class sale_order(orm.Model):
                 string="Magento Bindings"),
         }
 
+
+class magento_sale_order_line(orm.Model):
+    _name = 'magento.sale.order.line'
+    _inherit = 'magento.binding'
+    _description = 'Magento Sale Order Line'
+    _inherits = {'sale.order.line': 'openerp_id'}
+
+    _columns = {
+        'magento_order_id': fields.many2one('magento.sale.order', 'Magento Sale Order',
+                                           required=True, ondelete='cascade',
+                                           select=True),
+        'magento_invoice_line_ids': fields.one2many(
+                'magento.account.invoice.line', 'magento_order_line_id',
+                string="Related invoice lines"),
+        'openerp_id': fields.many2one('sale.order.line',
+                                      string='Sale Order Line',
+                                      required=True,
+                                      ondelete='cascade'),
+        }
+
+    _sql_constraints = [
+        ('magento_uniq', 'unique(backend_id, magento_id)',
+         'A sale order line with the same ID on Magento already exists.'),
+    ]
 
 class sale_order_line(orm.Model):
     _inherit = 'sale.order.line'
@@ -95,28 +123,3 @@ class sale_order_line(orm.Model):
             created_line_ids.append(created_line_id[0])
         return created_line_ids
 
-
-class magento_sale_order_line(orm.Model):
-    _name = 'magento.sale.order.line'
-    _inherit = 'magento.binding'
-    _description = 'Magento Sale Order Line'
-    _inherits = {'sale.order.line': 'openerp_id'}
-
-    _columns = {
-        'magento_order_id': fields.many2one(
-            'magento.sale.order', 'Magento Sale Order',
-            required=True, ondelete='cascade',
-            select=True),
-        'magento_invoice_line_ids': fields.one2many(
-                'magento.account.invoice.line', 'magento_order_line_id',
-                string="Related invoice lines"),
-        'openerp_id': fields.many2one('sale.order.line',
-                                      string='Sale Order Line',
-                                      required=True,
-                                      ondelete='cascade'),
-        }
-
-    _sql_constraints = [
-        ('magento_uniq', 'unique(backend_id, magento_id)',
-         'A sale order line with the same ID on Magento already exists.'),
-    ]
