@@ -22,7 +22,7 @@
 import logging
 
 import magento as magentolib
-from openerp.addons.connector.unit import CRUDAdapter
+from openerp.addons.connector.unit.backend_adapter import CRUDAdapter
 from ..backend import magento
 
 _logger = logging.getLogger(__name__)
@@ -249,6 +249,3 @@ class ProductCategoryAdapter(GenericAdapter):
 class StockPickingAdapter(GenericAdapter):
     _model_name = 'magento.stock.picking'
     _magento_model = 'sales_order_shipment'
-    
-
-

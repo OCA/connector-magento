@@ -19,12 +19,7 @@
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.  #
 #########################################################################
 
-import xmlrpclib
-
-from openerp.osv.orm import Model
-from openerp.tools.translate import _
-from openerp.addons.connector_ecommerce.sale import ExternalShippingCreateError
-from .magerp_osv import MagerpModel
+from openerp.osv import orm, fields
 
 import logging
 _logger = logging.getLogger(__name__)
@@ -60,7 +55,7 @@ class stock_picking(orm.Model):
 
 
 # TO REVIEW 
-class stock_picking(Model):
+class stock_picking(orm.Model):
 
     _inherit = "stock.picking"
 

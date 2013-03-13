@@ -20,7 +20,7 @@
 ##############################################################################
 
 from openerp.osv import orm
-import openerp.addons.connector as connector
+from openerp.addons.connector.connector import Environment
 
 
 class magentoerpconnect_installed(orm.AbstractModel):
@@ -30,3 +30,12 @@ class magentoerpconnect_installed(orm.AbstractModel):
     If the model is in the registry, the module is installed.
     """
     _name = 'magentoerpconnect.installed'
+
+
+def get_environment(session, model_name, backend_id):
+    model = session.pool.get('magento.backend')
+    backend_record = model.browse(session.cr,
+                                  session.uid,
+                                  backend_id,
+                                  session.context)
+    return Environment(backend_record, session, model_name)
