@@ -162,14 +162,14 @@ class test_import_magento(common.SingleTransactionCase):
         self.assertEqual(storeview2.name, 'Store View 2 Test')
 
     def test_10_import_product_category(self):
+        backend_id = self.backend_id
 
         with mock.patch('magento.API') as API:
             api_mock = mock.MagicMock(name='magento.api')
             API.return_value = api_mock
             api_mock.__enter__.return_value = api_mock
             api_mock.call.side_effect = magento_responses
-            job.import_batch(self.session, 'magento.product.category',
-                             backend_id)
+            import_batch(self.session, 'magento.product.category', backend_id)
 
         category_model =self.registry('magento.product.category')
         category_ids = category_model.search(
