@@ -116,9 +116,9 @@ class magento_backend(orm.Model):
     def import_product_product(self, cr, uid, ids, context=None):
         if not hasattr(ids, '__iter__'):
             ids = [ids]
-        session = connector.ConnectorSession(cr, uid, context=context)
+        session = ConnectorSession(cr, uid, context=context)
         for backend_id in ids:
-            job.import_batch.delay(session, 'magento.product.product',
+            import_batch.delay(session, 'magento.product.product',
                                    backend_id)
         return True
 
@@ -255,6 +255,3 @@ class magento_storeview(orm.Model):
         ('magento_uniq', 'unique(backend_id, magento_id)',
          'A storeview with same ID on Magento already exists.'),
     ]
-
-
-

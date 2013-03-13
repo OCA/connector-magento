@@ -293,10 +293,9 @@ class ProductCategoryImportMapper(ImportMapper):
 
 
 @magento
-class ProductProductImportMapper(connector.ImportMapper):
+class ProductProductImportMapper(ImportMapper):
     _model_name = 'magento.product.product'
-    #TODO :     website, type, categ,
-    #special_price => minimal_price
+    #TODO :     categ, special_price => minimal_price
     direct = [
             ('name', 'name'),
             ('description', 'description'),
@@ -307,6 +306,21 @@ class ProductProductImportMapper(connector.ImportMapper):
             ('sku', 'default_code'),
             ('type_id', 'product_type'),
             ]
+
+    @mapping
+    def type(self, record):
+        if record['type_id'] == 'simple':
+            return {'type': 'product'}
+        return
+
+    @mapping
+    def website_ids(self, record):
+        website_ids = []
+        for record_id in record:
+            binder = self.get_binder_for_model('magento.website')
+            website_id = binder.to_openerp(record['websites'])
+            website_ids.append(website_id)
+        return {'website_ids': website_ids}
 
     @mapping
     def magento_id(self, record):

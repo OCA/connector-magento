@@ -71,7 +71,7 @@ TODO
             'settings/magerp_product_product_type.xml',
             'magerp_data.xml',
             'magento_model_view.xml',
-            #'product_view.xml',
+            'product_view.xml',
             'partner_view.xml',
             'sale_view.xml',
             'product_images_view.xml',

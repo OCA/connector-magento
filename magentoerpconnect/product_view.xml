@@ -255,103 +255,53 @@
             <field name="view_id" ref="magerp_product_attribute_groups_tree" />
         </record>
 
-        <!-- This is a product inherited form that will be dynamically populated-->
-        <record model="ir.ui.view" id="product_product_form_view_magerp">
-            <field name="name">product.normal.form_magerp</field>
-            <field name="model">product.product</field>
-            <field name="inherit_id" ref="product.product_normal_form_view" />
-            <field name="arch" type="xml">
-                <div name="options" position="inside">
-                    <field name="magento_exportable"/>
-                    <label for="magento_exportable"/>
-                </div>
-                <xpath expr="/form" position="inside">
-                    <field name="magento_exported" invisible="True"/>
-                </xpath>
-                <xpath expr="/form/sheet/div[1]/h1" position="after">
-                    <group>
-                        <field name="set" select="2" attrs="{'required': [('magento_exportable', '=', True)], 'readonly': [('magento_exported', '=', True)]}"/>
+        <!--This is a product inherited form that will be dynamically populated-->
+        <record id="product_normal_form_view" model="ir.ui.view">
+           <field name="model">product.product</field>
+           <field name="inherit_id" ref="connector_ecommerce.product_normal_form_view" />
+           <field name="arch" type="xml">
+               <xpath expr="//page[@name='connector']" position="attributes">
+                    <attribute name="invisible">0</attribute>
+               </xpath>
+               <xpath expr="//page[@name='connector']" position="inside">
+                    <group string="Magento Bindings">
+                        <field name="magento_bind_ids" nolabel="1"/>
                     </group>
-                </xpath>
-                <div name="buttons" position="inside">
-                    <button string="Open Magento Fields"
-                        name="open_magento_fields" type="object"/>
-                </div>
-            </field>
+               </xpath>
+           </field>
         </record>
 
-        <record model="ir.ui.view" id="product_product_form_view_magerpdynamic">
-            <field name="name">product.normal.form_magerp_dynamic</field>
-            <field name="model">product.product</field>
-            <field name="inherit_id" ref="product.product_normal_form_view" />
-            <field name="arch" type="xml">
-                <xpath expr="/form/sheet/notebook" position="inside">
-                    <page string="attributes_placeholder"/>
-                </xpath>
-            </field>
-        </record>
-
-        <!--Magento Product Product Wizard Form view-->
-
-        <record model="ir.ui.view" id="product_product_wizard_form_view_magerpdynamic">
-            <field name="name">product.normal.wizard.form_magerp_dynamic</field>
-            <field name="model">product.product</field>
-            <field name="arch" type="xml">
-                <form string="Product">
-                    <group colspan='4' col='8'>
-                        <separator string="Magento Information" colspan="8"/>
-                        <field name="name"/>
-                        <field name="set" select="2" attrs="{'required':[('magento_exportable','==',True)], 'readonly': [('magento_exported', '=', True)]}"/>
-                        <field name="default_code" select="2" attrs="{'required':[('magento_exportable','==',True)]}"/>
-                        <field name="product_type" select="2" attrs="{'required':[('magento_exportable','==',True)]}"/>
-                        <field name="mag_manage_stock" select="2" attrs="{'required':[('magento_exportable','==',True)]}"/>
-                        <field name="mag_manage_stock_shortage" select="2" attrs="{'required':[('magento_exportable','==',True)]}"/>
-                        <field name="magento_exportable"/>
-                        <field name="magento_exported" invisible="1" />
-                    </group>
-                    <separator string="attributes_placeholder" colspan="4"/>
-                    <group colspan='4' col='4'>
-                        <button icon="gtk-cancel" special="cancel" string="Cancel"/>
-                        <button icon="gtk-ok" name="save_and_close_magento_fields" string="Save and Close" type="object"/>
+        <record id="product_connector_mag_form_view" model="ir.ui.view">
+           <field name="model">magento.product.product</field>
+           <field name="arch" type="xml">
+                <form string="Magento fields" version="7.0">
+                    <group col="4" colspan="4">
+                        <field name="manage_stock"/>
+                        <field name="manage_stock_shortage"/>
+                        <field name="product_type"/>
+                        <field name="website_ids"/>
+                        <field name="created_at"/>
+                        <field name="updated_at"/>
                     </group>
                 </form>
-            </field>
+           </field>
         </record>
 
-        <!--Magento Product Type Tree/Form view  -->
-        <record model="ir.ui.view" id="magerp_product_type_form">
-            <field name="name">magerp.product_product_type.form</field>
-            <field name="model">magerp.product_product_type</field>
-            <field name="priority" eval="5"/>
+        <record id="product_connector_mag_tree_view" model="ir.ui.view">
+            <field name="model">magento.product.product</field>
             <field name="arch" type="xml">
-            <form string="Product Type">
-                <field name="product_type"/>
-                <field name="name"/>
-                <field name="default_type"/>
-            </form>
-            </field>
-        </record>
-
-        <record model="ir.ui.view" id="magerp_product_type_tree">
-            <field name="name">magerp.product_product_type.tree</field>
-            <field name="model">magerp.product_product_type</field>
-            <field name="priority" eval="5"/>
-            <field name="arch" type="xml">
-                <tree string="Product Type" editable="top">
-                    <field name="name" select="1"/>
-                    <field name="product_type" select="1"/>
-                    <field name="default_type" select="1"/>
+                <tree string="Magento product" version="7.0">
+                    <field name="manage_stock"/>
+                    <field name="manage_stock_shortage"/>
+                    <field name="website_ids"/>
+                    <field name="created_at"/>
+                    <field name="updated_at"/>
+                    <field name="backend_id" string="Backend"/>
                 </tree>
             </field>
         </record>
 
-        <record model="ir.actions.act_window" id="act_magerp_product_type_form">
-            <field name="name">Product Types</field>
-            <field name="res_model">magerp.product_product_type</field>
-            <field name="view_mode">tree,form</field>
-        </record>
-
-        <!--Magento product_category attribute_option Tree/Form view  -->
+       <!--Magento product_category attribute_option Tree/Form view  -->
         <record model="ir.ui.view" id="magerp_product_category_attribute_options_form">
             <field name="name">magerp.product_category_attribute_options.form</field>
             <field name="model">magerp.product_category_attribute_options</field>

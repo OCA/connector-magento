@@ -1118,7 +1118,7 @@ class magento_product_product(orm.Model):
                                       string='Product',
                                       required=True,
                                       ondelete='cascade'),
-        'websites_ids': fields.many2many('external.shop.group',
+        'website_ids': fields.many2many('external.shop.group',
             'magerp_product_shop_group_rel', 'product_id',
             'shop_group_id', 'Websites',
             help='By defaut product will be exported on every website, if you want to export it only on some website select them here'),
@@ -1158,8 +1158,7 @@ class product_product(orm.Model):
         'magento_bind_ids': fields.one2many(
             'magento.product.product',
             'openerp_id',
-            string='Magento Bindings',
-            readonly=True),
+            string='Magento Bindings',),
     }
 
 
