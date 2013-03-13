@@ -19,8 +19,8 @@
 #
 ##############################################################################
 
-import openerp.addons.connector as connector
+import openerp.addons.connector.backend as backend
 
 
-magento = connector.Backend('magento')
-magento1700 = connector.Backend(parent=magento, version='1.7')
+magento = backend.Backend('magento')
+magento1700 = backend.Backend(parent=magento, version='1.7')

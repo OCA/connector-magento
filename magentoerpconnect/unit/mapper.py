@@ -21,12 +21,15 @@
 
 from openerp.tools.translate import _
 import openerp.addons.connector as connector
-from openerp.addons.connector import mapping, changed_by
+from openerp.addons.connector.unit.mapper import (mapping,
+                                                  changed_by,
+                                                  ImportMapper,
+                                                  ExportMapper)
 from ..backend import magento
 
 
 @magento
-class WebsiteImportMapper(connector.ImportMapper):
+class WebsiteImportMapper(ImportMapper):
     _model_name = 'magento.website'
 
     direct = [('code', 'code')]
@@ -44,29 +47,20 @@ class WebsiteImportMapper(connector.ImportMapper):
 
 
 @magento
-class StoreImportMapper(connector.ImportMapper):
+class StoreImportMapper(ImportMapper):
     _model_name = 'magento.store'
 
     direct = [('name', 'name')]
 
     @mapping
     def website_id(self, record):
-        binder_cls = self.backend.get_class(connector.Binder, 'magento.website')
-        # TODO helper to copy environment with another model
-        binder = connector.Environment(
-                self.environment.backend_record,
-                self.environment.session,
-                'magento.website').get_connector_unit(connector.Binder)
+        binder = self.get_binder_for_model('magento.website')
         openerp_id = binder.to_openerp(record['website_id'])
         return {'website_id': openerp_id}
 
-    @mapping
-    def backend_id(self, record):
-        return {'backend_id': self.backend_record.id}
-
 
 @magento
-class StoreviewImportMapper(connector.ImportMapper):
+class StoreviewImportMapper(ImportMapper):
     _model_name = 'magento.storeview'
 
     direct = [
@@ -76,21 +70,13 @@ class StoreviewImportMapper(connector.ImportMapper):
 
     @mapping
     def store_id(self, record):
-        # TODO helper to copy environment with another model
-        binder = connector.Environment(
-                self.backend_record,
-                self.session,
-                'magento.store').get_connector_unit(connector.Binder)
+        binder = self.get_binder_for_model('magento.store')
         openerp_id = binder.to_openerp(record['group_id'])
         return {'store_id': openerp_id}
 
-    @mapping
-    def backend_id(self, record):
-        return {'backend_id': self.backend_record.id}
-
 
 @magento
-class PartnerImportMapper(connector.ImportMapper):
+class PartnerImportMapper(ImportMapper):
     _model_name = 'magento.res.partner'
 
     direct = [
@@ -120,14 +106,11 @@ class PartnerImportMapper(connector.ImportMapper):
     @mapping
     def customer_group_id(self, record):
         # import customer groups
-        env = connector.Environment(self.backend_record,
-                                    self.session,
-                                    'magento.res.partner.category')
-        binder = env.get_connector_unit(connector.Binder)
+        binder = self.get_binder_for_model('magento.res.partner.category')
         mag_cat_id = binder.to_openerp(record['group_id'])
 
         if mag_cat_id is None:
-            raise connector.MappingError(
+            raise connector.exception.MappingError(
                     "The partner category with "
                     "magento id %s does not exist" %
                     record['group_id'])
@@ -144,10 +127,7 @@ class PartnerImportMapper(connector.ImportMapper):
 
     @mapping
     def website_id(self, record):
-        binder = connector.Environment(
-                self.backend_record,
-                self.session,
-                'magento.website').get_connector_unit(connector.Binder)
+        binder = self.get_binder_for_model('magento.website')
         website_id = binder.to_openerp(record['website_id'])
         return {'website_id': website_id}
 
@@ -157,7 +137,7 @@ class PartnerImportMapper(connector.ImportMapper):
 
 
 @magento
-class PartnerExportMapper(connector.ExportMapper):
+class PartnerExportMapper(ExportMapper):
     _model_name = 'magento.res.partner'
 
     direct = [
@@ -186,7 +166,7 @@ class PartnerExportMapper(connector.ExportMapper):
 
 
 @magento
-class PartnerCategoryImportMapper(connector.ImportMapper):
+class PartnerCategoryImportMapper(ImportMapper):
     _model_name = 'magento.res.partner.category'
 
     direct = [
@@ -204,7 +184,7 @@ class PartnerCategoryImportMapper(connector.ImportMapper):
 
 
 @magento
-class AddressImportMapper(connector.ImportMapper):
+class AddressImportMapper(ImportMapper):
     _model_name = 'magento.address'
 
 # TODO fields not mapped:
@@ -274,7 +254,7 @@ class AddressImportMapper(connector.ImportMapper):
 
 
 @magento
-class ProductCategoryImportMapper(connector.ImportMapper):
+class ProductCategoryImportMapper(ImportMapper):
     _model_name = 'magento.product.category'
 
     direct = [
@@ -301,12 +281,11 @@ class ProductCategoryImportMapper(connector.ImportMapper):
     def parent_id(self, record):
         if not record.get('parent_id'):
             return
-        env = self.environment
-        binder = env.get_connector_unit(connector.Binder)
+        binder = self.get_binder_for_model()
         mag_cat_id = binder.to_openerp(record['parent_id'])
 
         if mag_cat_id is None:
-            raise connector.MappingError(
+            raise connector.exception.MappingError(
                     "The product category with "
                     "magento id %s does not exist" %
                     record['parent_id'])
