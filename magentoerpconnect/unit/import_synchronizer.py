@@ -20,14 +20,19 @@
 ##############################################################################
 
 import logging
+from datetime import datetime
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
-import openerp.addons.connector as connector
+from openerp.addons.connector.queue.job import job
+from openerp.addons.connector.connector import Environment
+from openerp.addons.connector.unit.synchronizer import ImportSynchronizer
+from openerp.addons.connector.unit.backend_adapter import BackendAdapter
 from ..backend import magento
+from ..connector import get_environment
 
 _logger = logging.getLogger(__name__)
 
 
-class MagentoImportSynchronizer(connector.ImportSynchronizer):
+class MagentoImportSynchronizer(ImportSynchronizer):
     """ Base importer for Magento """
 
     def __init__(self, environment):
@@ -123,7 +128,7 @@ class MagentoImportSynchronizer(connector.ImportSynchronizer):
         self._after_import(openerp_id)
 
 
-class BatchImportSynchronizer(connector.ImportSynchronizer):
+class BatchImportSynchronizer(ImportSynchronizer):
     """ The role of a BatchImportSynchronizer is to search for a list of
     items to import, then it can either import them directly or delay
     the import of each item separately.
@@ -138,10 +143,6 @@ class BatchImportSynchronizer(connector.ImportSynchronizer):
     def _import_record(self, record):
         """ Import a record directly or delay the import of the record """
         raise NotImplementedError
-
-
-# imported after base classes to avoid circular imports
-from ..queue import job
 
 
 @magento
@@ -159,10 +160,10 @@ class DirectBatchImport(BatchImportSynchronizer):
 
     def _import_record(self, record):
         """ Import the record directly """
-        job.import_record(self.session,
-                          self.model._name,
-                          self.backend_record.id,
-                          record)
+        import_record(self.session,
+                      self.model._name,
+                      self.backend_record.id,
+                      record)
 
 
 @magento
@@ -174,10 +175,10 @@ class DelayedBatchImport(BatchImportSynchronizer):
 
     def _import_record(self, record):
         """ Delay the import of the records"""
-        job.import_record.delay(self.session,
-                                self.model._name,
-                                self.backend_record.id,
-                                record)
+        import_record.delay(self.session,
+                            self.model._name,
+                            self.backend_record.id,
+                            record)
 
 
 @magento
@@ -201,10 +202,10 @@ class PartnerBatchImport(BatchImportSynchronizer):
 
     def _import_record(self, record):
         """ Delay a job for the import """
-        job.import_record.delay(self.session,
-                                self.model._name,
-                                self.backend_record.id,
-                                record)
+        import_record.delay(self.session,
+                            self.model._name,
+                            self.backend_record.id,
+                            record)
 
     def run(self, filters=None):
         """ Run the synchronization """
@@ -229,10 +230,10 @@ class PartnerImport(MagentoImportSynchronizer):
 
     def _after_import(self, openerp_id):
         """ Import the addresses """
-        env = connector.Environment(self.backend_record,
-                                    self.session,
-                                    'magento.address')
-        addresses_adapter = env.get_connector_unit(connector.BackendAdapter)
+        env = Environment(self.backend_record,
+                          self.session,
+                          'magento.address')
+        addresses_adapter = env.get_connector_unit(BackendAdapter)
         mag_address_ids = addresses_adapter.search(
                 {'customer_id': {'eq': self.magento_id}})
         if mag_address_ids:
@@ -276,11 +277,11 @@ class ProductCategoryBatchImport(BatchImportSynchronizer):
 
     def _import_record(self, magento_id, priority=None):
         """ Delay a job for the import """
-        job.import_record.delay(self.session,
-                                self.model._name,
-                                self.backend_record.id,
-                                magento_id,
-                                priority=priority)
+        import_record.delay(self.session,
+                            self.model._name,
+                            self.backend_record.id,
+                            magento_id,
+                            priority=priority)
 
     def run(self, filters=None):
         """ Run the synchronization """
@@ -313,3 +314,39 @@ class ProductCategoryImport(MagentoImportSynchronizer):
             if binder.to_openerp(record['parent_id']) is None:
                 importer = env.get_connector_unit(MagentoImportSynchronizer)
                 importer.run(record['parent_id'])
+
+
+@job
+def import_batch(session, model_name, backend_id, filters=None):
+    """ Prepare a batch import of records from Magento """
+    env = get_environment(session, model_name, backend_id)
+    importer = env.get_connector_unit(BatchImportSynchronizer)
+    importer.run(filters)
+
+
+@job
+def import_record(session, model_name, backend_id, magento_id):
+    """ Import a record from Magento """
+    env = get_environment(session, model_name, backend_id)
+    importer = env.get_connector_unit(MagentoImportSynchronizer)
+    importer.run(magento_id)
+
+
+@job
+def import_partners_since(session, model_name, backend_id, since_date=None):
+    """ Prepare the import of partners modified on Magento """
+    env = get_environment(session, model_name, backend_id)
+    importer = env.get_connector_unit(BatchImportSynchronizer)
+    now_fmt = datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+    filters = {}
+    if since_date:
+        since_fmt = since_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        # updated_at include the created records
+        filters['updated_at'] = {'from': since_fmt}
+    importer.run(filters=filters)
+    session.pool.get('magento.backend').write(
+            session.cr,
+            session.uid,
+            backend_id,
+            {'import_partners_since': now_fmt},
+            context=session.context)

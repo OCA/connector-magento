@@ -28,10 +28,19 @@ from openerp.addons.connector.event import (
     on_record_create,
     on_record_unlink
     )
-from .queue import job
+from openerp.addons.connector.connector import Environment
+
+from openerp.addons.connector_ecommerce.event import on_picking_done
+from .unit.export_synchronizer import (
+    export_record, 
+    export_picking_done, 
+    export_tracking_number
+    )
+from .unit.delete_synchronizer import export_delete_record
 
 _MODEL_NAMES = ('res.partner',)
 _BIND_MODEL_NAMES = ('magento.res.partner',)
+
 
 def magento_consumer(func):
     """ Use this decorator on all the consumers of magentoerpconnect.
@@ -54,7 +63,7 @@ def magento_consumer(func):
 def delay_export(session, model_name, record_id, fields=None):
     if session.context.get('connector_no_export'):
         return
-    job.export_record.delay(session, model_name, record_id, fields=fields)
+    export_record.delay(session, model_name, record_id, fields=fields)
 
 
 @on_record_write(model_names=_MODEL_NAMES)
@@ -66,8 +75,8 @@ def delay_export_all_bindings(session, model_name, record_id, fields=None):
     record = model.browse(session.cr, session.uid,
                           record_id, context=session.context)
     for binding in record.magento_bind_ids:
-        job.export_record.delay(session, binding._model._name, binding.id,
-                                fields=fields)
+        export_record.delay(session, binding._model._name, binding.id,
+                            fields=fields)
 
 
 @on_record_unlink(model_names=_BIND_MODEL_NAMES)
@@ -76,13 +85,13 @@ def delay_unlink(session, model_name, record_id):
     model = session.pool.get(model_name)
     record = model.browse(session.cr, session.uid,
                           record_id, context=session.context)
-    env = connector.Environment(record.backend_id, session, model_name)
-    binder = env.get_connector_unit(connector.Binder)
+    env = Environment(record.backend_id, session, model_name)
+    binder = env.get_connector_unit(connector.connector.Binder)
     magento_id = binder.to_backend(record_id)
     if magento_id:
-        job.export_delete_record.delay(session, model_name,
-                                       record.backend_id.id, magento_id)
-                                       
+        export_delete_record.delay(session, model_name,
+                                   record.backend_id.id, magento_id)
+
 
 @on_picking_done(model_names='stock.picking')
 @magento_consumer
@@ -90,16 +99,19 @@ def delay_export_picking_done(session, model_name, record_id, picking_type):
     """
     Call a job to export the picking with args to ask for partial or complete
     picking.
-   
-    @params: picking_type as string, can be 'complete' or 'partial'
+
+    :param picking_type: picking_type, can be 'complete' or 'partial'
+    :type picking_type: str
     """
     model = session.pool.get(model_name)
     picking = model.browse(session.cr, session.uid,
                           record_id, context=session.context)
     # find the magento SO to retrieve the backend
     magento_sale = picking.sale_id.magento_bind_ids[0]
-    job.export_picking_done.delay(session, model_name, magento_sale.backend_id.id,
-        record_id, picking_type)
+    export_picking_done.delay(session, model_name,
+                              magento_sale.backend_id.id,
+                              record_id, picking_type)
+
 
 @on_tracking_number_added(model_name='stock.picking')
 @magento_consumer
@@ -118,7 +130,6 @@ def delay_export_tracking_number(session, model_name, record_id, tracking_number
     magento_sale = picking.sale_id.magento_bind_ids[0]
     # Set the priority to 20 to have more chance that it would be executed after 
     # the picking creation
-    job.export_tracking_number.delay(session, model_name, magento_sale.backend_id.id,
+    export_tracking_number.delay(session, model_name, magento_sale.backend_id.id,
         record_id, tracking_number, priority=20)
-    
-    
+
