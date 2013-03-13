@@ -325,16 +325,20 @@ class ProductCategoryImport(MagentoImportSynchronizer):
                 importer.run(record['parent_id'])
 
     def _after_import(self, openerp_id):
-        storeview_obj = self.pool.get('magento.storeview')
-        model_fields_obj = self.pool.get('ir.model.fields')
-        cr, uid, context = (self.session.cr,
-                            self.session.uid,
-                            self.session.context)
-        storeview_ids = storeview_obj.search(cr, uid,
-                                             [('backend_id', '=', self.backend_record.id)],
-                                             context=context)
+        session = self.session
+        storeview_obj = session.pool.get('magento.storeview')
+        model_fields_obj = session.pool.get('ir.model.fields')
+        cr, uid, context = (session.cr,
+                            session.uid,
+                            session.context)
+        storeview_ids = storeview_obj.search(
+                cr, uid,
+                [('backend_id', '=', self.backend_record.id)],
+                context=context)
         default_lang = self.backend_record.default_lang_id
-        storeviews = storeview_obj.browse(cr, uid, storeview_ids, context=context)
+        storeviews = storeview_obj.browse(cr, uid,
+                                          storeview_ids,
+                                          context=context)
         lang_storeviews = [sv for sv in storeviews
                            if sv.lang_id and storeview.lang_id != default_lang]
         if not lang_storeviews:
