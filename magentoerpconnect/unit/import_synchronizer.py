@@ -70,6 +70,10 @@ class MagentoImportSynchronizer(ImportSynchronizer):
         """
         return
 
+    def _get_openerp_id(self):
+        """Return the openerp id from the magento id"""
+        return self.binder.to_openerp(self.magento_id)
+
     def _context(self, **kwargs):
         if not 'lang' in kwargs:
             lang = self.backend_record.default_lang_id
@@ -121,7 +125,7 @@ class MagentoImportSynchronizer(ImportSynchronizer):
         # special check on data before import
         self._validate_data(record)
 
-        openerp_id = self.binder.to_openerp(self.magento_id)
+        openerp_id = self._get_openerp_id()
 
         if openerp_id:
             self._update(openerp_id, record)
@@ -244,31 +248,55 @@ class PartnerImport(MagentoImportSynchronizer):
         if mag_address_ids:
             importer = env.get_connector_unit(MagentoImportSynchronizer)
             partner_row = self.model.read(self.session.cr,
-                                         self.session.uid,
-                                         openerp_id,
-                                         ['openerp_id'],
-                                         context=self.session.context)
-            for address_id in mag_address_ids:
-                importer.run(address_id, partner_row['openerp_id'][0])
+                                             self.session.uid,
+                                             openerp_id,
+                                             ['openerp_id'],
+                                             context=self.session.context)
+            mag_addresses = {}
+            if len(mag_address_ids) == 1:
+                mag_addresses[mag_address_ids[0]] = True
+            else:
+                billing_address = False
+                for address_id in mag_address_ids:
+                    magento_record = addresses_adapter.read(address_id)
+
+                    if magento_record['is_default_billing']:
+                        mag_addresses[address_id] = True
+                        billing_address = True
+                    else:
+                        mag_addresses[address_id] = False
+                if not billing_address:
+                    mag_addresses[mag_addresses.keys()[0]] = True
+            for address_id, to_link in mag_addresses.items():
+                importer.run(address_id, openerp_id, partner_row['openerp_id'][0], to_link)
 
 
 @magento
 class AddressImport(MagentoImportSynchronizer):
     _model_name = ['magento.address']
 
-    def run(self, magento_id, partner_id):
+    def run(self, magento_id, openerp_id, partner_id, link_with_partner):
         """ Run the synchronization """
         self.partner_id = partner_id
+        self.magento_partner_id = openerp_id
+        self.link_with_partner = link_with_partner
         super(AddressImport, self).run(magento_id)
 
     def _create(self, data):
         """ Create the OpenERP record """
-        data['parent_id'] = self.partner_id
+        if self.link_with_partner:
+            data['openerp_id'] = self.partner_id
+        else:
+            data['parent_id'] = self.partner_id
+        data['magento_partner_id'] = self.magento_partner_id
+        print "datat create ==>", data
         return super(AddressImport, self)._create(data)
 
     def _update(self, openerp_id, data):
         """ Update an OpenERP record """
         data['parent_id'] = self.partner_id
+        data['magento_partner_id'] = self.magento_partner_id
+        print "datat update ==>", data
         return super(AddressImport, self)._update(openerp_id, data)
 
 
