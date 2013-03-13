@@ -107,7 +107,8 @@ class magento_sale_order_line(orm.Model):
                                       required=True,
                                       ondelete='cascade'),
         }
-        _sql_constraints = [
-            ('magento_uniq', 'unique(backend_id, magento_id)',
-             'A sale order line with the same ID on Magento already exists.'),
-        ]
+
+    _sql_constraints = [
+        ('magento_uniq', 'unique(backend_id, magento_id)',
+         'A sale order line with the same ID on Magento already exists.'),
+    ]
