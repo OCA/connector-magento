@@ -30,7 +30,8 @@ from openerp.addons.connector.event import (
     )
 from openerp.addons.connector.connector import Environment
 
-from openerp.addons.connector_ecommerce.event import on_picking_done
+from openerp.addons.connector_ecommerce.event import (on_picking_done,
+                                                      on_tracking_number_added)
 from .unit.export_synchronizer import (
     export_record,
     export_picking_done,
@@ -113,7 +114,7 @@ def delay_export_picking_done(session, model_name, record_id, picking_type):
                               record_id, picking_type)
 
 
-@on_tracking_number_added(model_name='stock.picking')
+@on_tracking_number_added(model_names='stock.picking')
 @magento_consumer
 def delay_export_tracking_number(session, model_name,
                                  record_id, tracking_number):
