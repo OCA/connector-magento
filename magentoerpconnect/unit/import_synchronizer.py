@@ -349,7 +349,7 @@ class TranslatableImport(object):
 
 
 @magento
-class ProductImport(MagentoImportSynchronizer, TranslatableImport):
+class ProductImport(TranslatableImport, MagentoImportSynchronizer):
     _model_name = ['magento.product.product']
 
     def _import_dependencies(self):
@@ -365,7 +365,7 @@ class ProductImport(MagentoImportSynchronizer, TranslatableImport):
 
 
 @magento
-class ProductCategoryImport(MagentoImportSynchronizer, TranslatableImport):
+class ProductCategoryImport(TranslatableImport, MagentoImportSynchronizer):
     _model_name = ['magento.product.category']
 
     def _import_dependencies(self):
