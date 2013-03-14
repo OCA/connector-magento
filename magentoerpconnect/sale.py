@@ -20,6 +20,7 @@
 ##############################################################################
 
 from openerp.osv import fields, orm
+import openerp.addons.decimal_precision as dp
 
 
 ORDER_STATUS_MAPPING = {
@@ -49,6 +50,13 @@ class magento_sale_order(orm.Model):
         'tax_amount': fields.float(),
         #'cod_fee':  XXX
         #gift_cert_code':
+        'shipping_amount_tax_included': fields.float('Shipping amount (w.tax)',
+                                                     digits_compute=dp.get_precision('Account')),
+        'shipping_amount_tax_excluded': fields.float('Shipping amount (wo.tax)',
+                                                     digits_compute=dp.get_precision('Account')),
+        'shipping_tax_rate': fields.float('Shipping tax rate',
+                                                     digits_compute=dp.get_precision('Account')),
+        
         }
     _sql_constraints = [
         ('magento_uniq', 'unique(backend_id, magento_id)',
@@ -95,6 +103,13 @@ class magento_sale_order_line(orm.Model):
                                      string='Magento Backend',
                                      store=True,
                                      readonly=True),
+        'tax_rate': fields.float('Tax Rate',
+                                 digits_compute=dp.get_precision('Account')),
+        'notes': fields.char('Notes'),
+        'price_unit_tax_excluded': fields.float('Unit Price wo. tax',
+                                                digits_compute=dp.get_precision('Account')),
+        'price_unit_tax_included': fields.float('Unit Price w. tax',
+                                              digits_compute=dp.get_precision('Account')),
         }
 
     _sql_constraints = [
