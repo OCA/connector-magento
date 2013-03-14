@@ -109,16 +109,12 @@ class PartnerImportMapper(ImportMapper):
     def customer_group_id(self, record):
         # import customer groups
         binder = self.get_binder_for_model('magento.res.partner.category')
-        mag_cat_id = binder.to_openerp(record['group_id'])
+        category_id = binder.to_openerp(record['group_id'], unwrap=True)
 
-        if mag_cat_id is None:
+        if category_id is None:
             raise MappingError("The partner category with "
                                "magento id %s does not exist" %
                                record['group_id'])
-
-        category_id = self.session.read('magento.res.partner.category',
-                                        mag_cat_id,
-                                        ['openerp_id'])['openerp_id'][0]
 
         # FIXME: should remove the previous tag (all the other tags from
         # the same backend)
@@ -300,16 +296,12 @@ class ProductCategoryImportMapper(ImportMapper):
         if not record.get('parent_id'):
             return
         binder = self.get_binder_for_model()
-        mag_cat_id = binder.to_openerp(record['parent_id'])
+        category_id = binder.to_openerp(record['parent_id'], unwrap=True)
 
-        if mag_cat_id is None:
+        if category_id is None:
             raise MappingError("The product category with "
                                "magento id %s is not imported." %
                                record['parent_id'])
-        category_id = self.session.read(self.model._name,
-                                        mag_cat_id,
-                                        ['openerp_id'])['openerp_id'][0]
-
         return {'parent_id': category_id, 'magento_parent_id': mag_cat_id}
 
 @magento
@@ -342,13 +334,10 @@ class SaleOrderImportMapper(ImportMapper):
     @mapping
     def customer_id(self, record):
         binder = self.get_binder_for_model('magento.res.partner')
-        magento_partner_id = binder.to_openerp(record['customer_id'])
-        assert magento_partner_id is not None, \
+        partner_id = binder.to_openerp(record['customer_id'], unwrap=True)
+        assert partner_id is not None, \
                ("customer_id %s should have been imported in "
                 "SaleOrderImport._import_dependencies" % record['customer_id'])
-        partner_id = self.session.read('magento.res.partner',
-                                       magento_partner_id,
-                                       ['openerp_id'])['openerp_id'][0]
         return {'partner_id': partner_id}
 
     @mapping
@@ -452,13 +441,10 @@ class SaleOrderLineImportMapper(ImportMapper):
     @mapping
     def product_id(self, record):
         binder = self.get_binder_for_model('magento.product.product')
-        mag_product_id = binder.to_openerp(record['product_id'])
-        assert mag_product_id is not None, \
+        product_id = binder.to_openerp(record['product_id'], unwrap=True)
+        assert product_id is not None, \
                ("product_id %s should have been imported in "
                 "SaleOrderImport._import_dependencies" % record['product_id'])
-        product_id = self.session.read('magento.product.product',
-                                       mag_product_id,
-                                       ['openerp_id'])['openerp_id'][0]
         return {'product_id': product_id}
 
     @mapping
@@ -541,15 +527,13 @@ class ProductImportMapper(ImportMapper):
         main_categ_id = None
 
         for mag_category_id in mag_categories:
-            bind_id = binder.to_openerp(mag_category_id)
-            if bind_id is None:
+            cat_id = binder.to_openerp(mag_category_id, unwrap=True)
+            if cat_id is None:
                 raise MappingError("The product category with "
                                    "magento id %s is not imported." %
                                    mag_category_id)
 
-            cat = self.session.read('magento.product.category',
-                                    bind_id, ['openerp_id'])
-            category_ids.append(cat['openerp_id'][0])
+            category_ids.append(cat_id)
 
         if category_ids:
             main_categ_id = category_ids.pop(0)

@@ -249,7 +249,6 @@ class magento_store(orm.Model):
          'A store with the same ID on Magento already exists.'),
     ]
 
-                               
 
 class sale_shop(orm.Model):
     _inherit = 'sale.shop'

@@ -46,11 +46,14 @@ class MagentoModelBinder(MagentoBinder):
             'magento.sale.order.line',
         ]
 
-    def to_openerp(self, external_id):
+    def to_openerp(self, external_id, unwrap=False):
         """ Give the OpenERP ID for an external ID
 
         :param external_id: external ID for which we want the OpenERP ID
-        :return: OpenERP ID of the record
+        :param unwrap: if True, returns the openerp_id of the magento_xxxx record,
+                       else return the id of that record
+        :return: a record ID, depending on the value of unwrap,
+                 or None if the external_id is not mapped
         :rtype: int
         """
         openerp_ids = self.environment.model.search(
@@ -60,8 +63,15 @@ class MagentoModelBinder(MagentoBinder):
                  ('backend_id', '=', self.backend_record.id)],
                 limit=1,
                 context=self.session.context)
-        if openerp_ids:
-            return openerp_ids[0]
+        if not openerp_ids:
+            return None
+        openerp_id = openerp_ids[0]
+        if unwrap:
+            return self.session.read(self.environment._model_name,
+                                     openerp_id,
+                                     ['openerp_id'])['openerp_id'][0]
+        else:
+            return openerp_id
 
     def to_backend(self, openerp_id):
         """ Give the external ID for an OpenERP ID
