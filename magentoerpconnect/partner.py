@@ -54,7 +54,7 @@ class magento_res_partner(orm.Model):
     _rec_name = 'website_id'
 
     def _get_mag_partner_from_website(self, cr, uid, ids, context=None):
-        mag_partner_obj = self.pool.get('magento.res.partner')
+        mag_partner_obj = self.pool['magento.res.partner']
         return mag_partner_obj.search(cr, uid,
                                 [('website_id', 'in', ids)],
                                 context=context)
@@ -70,11 +70,13 @@ class magento_res_partner(orm.Model):
                                      string='Magento Backend',
                                      store={
                                         'magento.res.partner':
-                                        (lambda self, cr, uid, ids, c=None:
-                                            ids, ['website_id'], 10),
+                                        (lambda self, cr, uid, ids, c=None: ids, 
+                                         ['website_id'], 
+                                         10),
                                         'magento.website':
                                         (_get_mag_partner_from_website,
-                                            ['backend_id'], 20),
+                                         ['backend_id'], 
+                                         20),
                                         },
                                      readonly=True),
         'website_id': fields.many2one('magento.website',
@@ -106,8 +108,7 @@ class magento_address(orm.Model):
     _rec_name = 'backend_id'
 
     def _get_mag_address_from_partner(self, cr, uid, ids, context=None):
-        mag_address_obj = self.pool.get('magento.address')
-        print "inv func"
+        mag_address_obj = self.pool['magento.address']
         return mag_address_obj.search(cr, uid,
                                 [('magento_partner_id', 'in', ids)],
                                 context=context)
@@ -133,11 +134,13 @@ class magento_address(orm.Model):
                                      string='Magento Backend',
                                      store={
                                         'magento.address':
-                                        (lambda self, cr, uid, ids, c=None:
-                                            ids, ['magento_partner_id'], 10),
+                                        (lambda self, cr, uid, ids, c=None: ids, 
+                                         ['magento_partner_id'], 
+                                         10),
                                         'magento.res.partner':
                                         (_get_mag_address_from_partner,
-                                            ['backend_id', 'website_id'], 20),
+                                         ['backend_id', 'website_id'], 
+                                         20),
                                         },
                                      readonly=True),
         'website_id': fields.related('magento_partner_id', 'website_id',
@@ -146,11 +149,13 @@ class magento_address(orm.Model):
                                      string='Magento Website',
                                      store={
                                         'magento.address':
-                                        (lambda self, cr, uid, ids, c=None:
-                                            ids, ['magento_partner_id'], 10),
+                                        (lambda self, cr, uid, ids, c=None: ids, 
+                                         ['magento_partner_id'], 
+                                         10),
                                         'magento.res.partner':
                                         (_get_mag_address_from_partner,
-                                            ['website_id'], 20),
+                                         ['website_id'], 
+                                         20),
                                         },
                                      readonly=True),
     }

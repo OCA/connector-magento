@@ -230,14 +230,13 @@ class AddressImportMapper(ImportMapper):
     @mapping
     def street(self, record):
         value = record['street']
-        if not value:
-            return
-        parts = value.split('\n')
-        if len(parts) == 2:
-            result = {'street': parts[0],
-                      'street2': parts[1]}
+        lines = [line.strip() for line in value.split('\n') if line.strip()]
+        if len(lines) == 1:
+            result = {'street': lines[0], 'street2': False}
+        elif len(lines) >= 2:
+            result = {'street': lines[0], 'street2': u' - '.join(lines[1:])}
         else:
-            result = {'street': value.replace('\\n', ',')}
+            result = {}
         return result
 
     @mapping
