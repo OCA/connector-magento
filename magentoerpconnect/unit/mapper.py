@@ -285,7 +285,7 @@ class ProductCategoryImportMapper(ImportMapper):
 
 
 @magento
-class ProductProductImportMapper(ImportMapper):
+class ProductImportMapper(ImportMapper):
     _model_name = 'magento.product.product'
     #TODO :     categ, special_price => minimal_price
     direct = [
@@ -308,9 +308,9 @@ class ProductProductImportMapper(ImportMapper):
     @mapping
     def website_ids(self, record):
         website_ids = []
-        for record_id in record:
+        for mag_website_id in record['websites']:
             binder = self.get_binder_for_model('magento.website')
-            website_id = binder.to_openerp(record['websites'])
+            website_id = binder.to_openerp(mag_website_id)
             website_ids.append(website_id)
         return {'website_ids': website_ids}
 
