@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    Author: Guewen Baconnier
-#    Copyright 2013 Camptocamp SA
+#    Author: David Beal
+#    Copyright 2013 Akretion
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -21,22 +21,22 @@
 
 import unittest2
 import mock
-import magento
 
-import openerp.addons.connector as connector
-from openerp.addons.connector.connector import ConnectorUnit
-from openerp.addons.magentoerpconnect.queue import job
 import openerp.tests.common as common
+import openerp.addons.connector as connector
+from openerp.addons.magentoerpconnect.unit.import_synchronizer import (
+        import_record)
 
 DB = common.DB
 ADMIN_USER_ID = common.ADMIN_USER_ID
+
 
 def magento_responses(method, args):
     # TODO: a dict is better
     print method, args
     if method == 'catalog_product.list':
         return [{'product_id': '1'}]
-    elif method == 'catalog_product.info' and args == [1]:
+    elif method == 'catalog_product.info' and args == [1, None]:
         return {'product_id': '1',
                 'name': 'My Test Product',
                 'description': "Mon produit de la mort qui tue",
@@ -46,6 +46,7 @@ def magento_responses(method, args):
                 'short_description': 'best product',
                 'sku': '12556LKJ99',
                 'type_id': 'simple',
+                'websites': [],
         }
 
 
@@ -55,9 +56,9 @@ class test_import_magento(common.SingleTransactionCase):
     def setUp(self):
         super(test_import_magento, self).setUp()
         self.backend_model = self.registry('magento.backend')
-        self.session = connector.ConnectorSession(self.cr, self.uid)
+        self.session = connector.session.ConnectorSession(self.cr, self.uid)
 
-    def test_00_import_backend(self):
+    def test_00_import_product(self):
         backend_id = self.backend_model.create(
                 self.cr,
                 self.uid,
@@ -73,13 +74,13 @@ class test_import_magento(common.SingleTransactionCase):
             API.return_value = api_mock
             api_mock.__enter__.return_value = api_mock
             api_mock.call.side_effect = magento_responses
-            job.import_record(self.session,
-                            'magento.product.product',
-                            backend_id,
-                            1)
+            import_record(self.session,
+                          'magento.product.product',
+                          backend_id,
+                          1)
 
         product_model = self.registry('magento.product.product')
         product_ids = product_model.search(self.cr,
-                                          self.uid,
-                                          [('name', '=', 'My Test Product')])
+                                           self.uid,
+                                           [('name', '=', 'My Test Product')])
         self.assertEqual(len(product_ids), 1)
