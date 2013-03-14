@@ -72,9 +72,16 @@ class magento_sale_order_line(orm.Model):
     _inherits = {'sale.order.line': 'openerp_id'}
 
     _columns = {
+        ## 'order_id': fields.related('magento_order_id', 'openerp_id',
+        ##                            type='many2one',
+        ##                            relation='sale.order',
+        ##                            string='Sale Order',
+        ##                            readonly=True,
+        ##                            store=True),
         'magento_order_id': fields.many2one('magento.sale.order', 'Magento Sale Order',
-                                           required=True, ondelete='cascade',
-                                           select=True),
+                                            required=True,
+                                            ondelete='cascade',
+                                            select=True),
         'magento_invoice_line_ids': fields.one2many(
                 'magento.account.invoice.line', 'magento_order_line_id',
                 string="Related invoice lines"),
@@ -82,12 +89,28 @@ class magento_sale_order_line(orm.Model):
                                       string='Sale Order Line',
                                       required=True,
                                       ondelete='cascade'),
+        'backend_id': fields.related('magento_order_id', 'backend_id',
+                                     type='many2one',
+                                     relation='magento.backend',
+                                     string='Magento Backend',
+                                     store=True,
+                                     readonly=True),
         }
 
     _sql_constraints = [
         ('magento_uniq', 'unique(backend_id, magento_id)',
          'A sale order line with the same ID on Magento already exists.'),
     ]
+    def create(self, cr, uid, vals, context=None):
+        magento_order_id = vals['magento_order_id']
+        info = self.pool['magento.sale.order'].read(cr, uid,
+                                                    [magento_order_id],
+                                                    ['openerp_id'],
+                                                    context=context)
+        order_id = info[0]['openerp_id']
+        vals['order_id'] = order_id[0]
+        super(magento_sale_order_line, self).create(cr, uid, vals, context)
+
 
 class sale_order_line(orm.Model):
     _inherit = 'sale.order.line'

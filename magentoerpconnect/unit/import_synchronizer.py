@@ -406,6 +406,13 @@ class SaleOrderImport(MagentoImportSynchronizer):
                 importer = self.get_connector_unit_for_model(MagentoImportSynchronizer,
                                                              'magento.res.partner')
                 importer.run(record['customer_id'])
+        prod_binder = self.get_binder_for_model('magento.product.product')
+        prod_importer = self.get_connector_unit_for_model(MagentoImportSynchronizer,
+                                                          'magento.product.product')
+        for line in record.get('items', []):
+            _logger.info('line: %s', line)
+            if 'product_id' in line and prod_binder.to_openerp(line['product_id']) is None:
+                prod_importer.run(line['product_id'])
 
 @magento
 class SaleOrderLineImport(MagentoImportSynchronizer):
@@ -460,7 +467,7 @@ def import_batch(session, model_name, backend_id, filters=None, from_date=None):
     """ Prepare a batch import of records from Magento """
     env = get_environment(session, model_name, backend_id)
     importer = env.get_connector_unit(BatchImportSynchronizer)
-    importer.run(filters)
+    importer.run(filters=filters, from_date=from_date)
 
 @job
 def sale_order_import_batch(session, model_name, backend_id, filters=None):

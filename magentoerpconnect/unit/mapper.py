@@ -26,6 +26,7 @@ from openerp.addons.connector.unit.mapper import (mapping,
                                                   changed_by,
                                                   ImportMapper,
                                                   ExportMapper)
+from openerp.addons.connector_ecommerce.unit.sale_order_onchange import SaleOrderOnChange
 from ..backend import magento
 
 
@@ -322,16 +323,32 @@ class SaleOrderImportMapper(ImportMapper):
               ('created_at', 'date_order'),
               ]
 
-    children = [('items', 'order_lines', 'magento.sale.order.line'),
+    children = [('items', 'magento_order_lines', 'magento.sale.order.line'),
                 ]
+
+    def _after_mapping(self, result):
+        onchange = self.get_connector_unit_for_model(SaleOrderOnChange)
+        return onchange.play(result, 'magento_order_lines')
+
+    @mapping
+    def store_id(self, record):
+        binder = self.get_binder_for_model('magento.storeview')
+        storeview_id = binder.to_openerp(record['store_id'])
+        assert storeview_id is not None, 'cannot import sale orders from non existinge storeview'
+        storeview = self.session.browse('magento.storeview', storeview_id)
+        shop_id = storeview.store_id.openerp_id.id
+        return {'shop_id': shop_id}
 
     @mapping
     def customer_id(self, record):
         binder = self.get_binder_for_model('magento.res.partner')
-        partner_id = binder.to_openerp(record['customer_id'])
-        assert partner_id is not None, \
+        magento_partner_id = binder.to_openerp(record['customer_id'])
+        assert magento_partner_id is not None, \
                ("customer_id %s should have been imported in "
                 "SaleOrderImport._import_dependencies" % record['customer_id'])
+        partner_id = self.session.read('magento.res.partner',
+                                       magento_partner_id,
+                                       ['openerp_id'])['openerp_id'][0]
         return {'partner_id': partner_id}
 
     @mapping
@@ -413,7 +430,13 @@ class SaleOrderImportMapper(ImportMapper):
     # TODO:
     # billing address
     # shipping address
+    @mapping
+    def backend_id(self, record):
+        return {'backend_id': self.backend_record.id}
 
+@magento
+class MagentoSaleOrderOnChange(SaleOrderOnChange):
+    _model_name = 'magento.sale.order'
 
 
 @magento
@@ -423,15 +446,19 @@ class SaleOrderLineImportMapper(ImportMapper):
     direct = [('qty_ordered', 'product_uom_qty'),
               ('qty_ordered', 'product_uos_qty'),
               ('name', 'name'),
+              ('item_id', 'magento_id'),
             ]
 
     @mapping
-    def item_id(self, record):
+    def product_id(self, record):
         binder = self.get_binder_for_model('magento.product.product')
-        product_id = binder.to_openerp(record['item_id'])
-        assert product_id is not None, \
-               ("item_id %s should have been imported in "
-                "SaleOrderLineImport._import_dependencies" % record['item_id'])
+        mag_product_id = binder.to_openerp(record['product_id'])
+        assert mag_product_id is not None, \
+               ("product_id %s should have been imported in "
+                "SaleOrderImport._import_dependencies" % record['product_id'])
+        product_id = self.session.read('magento.product.product',
+                                       mag_product_id,
+                                       ['openerp_id'])['openerp_id'][0]
         return {'product_id': product_id}
 
     @mapping
@@ -442,7 +469,7 @@ class SaleOrderLineImportMapper(ImportMapper):
             price = float(record['price'])
             qty_ordered = float(record['qty_ordered'])
             if price and qty_ordered:
-                discount = float(100*ifield) / price * qty_ordered
+                discount = 100 * float(ifield) / price * qty_ordered
         result = {'discount': discount}
         return result
 
