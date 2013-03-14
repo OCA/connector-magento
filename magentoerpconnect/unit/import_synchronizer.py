@@ -306,43 +306,15 @@ class ProductCategoryBatchImport(BatchImportSynchronizer):
         import_nodes(tree)
 
 
-@magento
-class ProductImport(MagentoImportSynchronizer):
-    _model_name = ['magento.product.product']
+class TranslatableImport(object):
+    """ Mixin for imports with translations """
 
-    def _import_dependencies(self):
-        """ Import the dependencies for the record"""
-        record = self.magento_record
-        # import related categories
-        binder = self.get_binder_for_model('magento.product.category')
-        for mag_category_id in record['categories']:
-            if binder.to_openerp(mag_category_id) is None:
-                importer = self.get_connector_unit_for_model(
-                                MagentoImportSynchronizer)
-                importer.run(mag_category_id)
-
-
-@magento
-class ProductCategoryImport(MagentoImportSynchronizer):
-    _model_name = ['magento.product.category']
-
-    def _get_magento_data(self, lang_id=None):
+    def _get_magento_data(self, storeview_id=None):
         """ Return the raw Magento data for ``self.magento_id`` """
-        return self.backend_adapter.read(self.magento_id, lang_id)
-
-    def _import_dependencies(self):
-        """ Import the dependencies for the record"""
-        record = self.magento_record
-        env = self.environment
-        # import parent category
-        # the root category has a 0 parent_id
-        if record.get('parent_id'):
-            binder = self.get_binder_for_model()
-            if binder.to_openerp(record['parent_id']) is None:
-                importer = env.get_connector_unit(MagentoImportSynchronizer)
-                importer.run(record['parent_id'])
+        return self.backend_adapter.read(self.magento_id, storeview_id)
 
     def _after_import(self, openerp_id):
+        super(TranslatableImport, self)._after_import(openerp_id)
         session = self.session
         storeview_obj = session.pool.get('magento.storeview')
         model_fields_obj = session.pool.get('ir.model.fields')
@@ -374,6 +346,39 @@ class ProductCategoryImport(MagentoImportSynchronizer):
             data = dict((field, value) for field, value in record.iteritems()
                         if field in translatable_fields)
             self.model.write(cr, uid, openerp_id, data, context=context)
+
+
+@magento
+class ProductImport(MagentoImportSynchronizer, TranslatableImport):
+    _model_name = ['magento.product.product']
+
+    def _import_dependencies(self):
+        """ Import the dependencies for the record"""
+        record = self.magento_record
+        # import related categories
+        binder = self.get_binder_for_model('magento.product.category')
+        for mag_category_id in record['categories']:
+            if binder.to_openerp(mag_category_id) is None:
+                importer = self.get_connector_unit_for_model(
+                                MagentoImportSynchronizer)
+                importer.run(mag_category_id)
+
+
+@magento
+class ProductCategoryImport(MagentoImportSynchronizer, TranslatableImport):
+    _model_name = ['magento.product.category']
+
+    def _import_dependencies(self):
+        """ Import the dependencies for the record"""
+        record = self.magento_record
+        env = self.environment
+        # import parent category
+        # the root category has a 0 parent_id
+        if record.get('parent_id'):
+            binder = self.get_binder_for_model()
+            if binder.to_openerp(record['parent_id']) is None:
+                importer = env.get_connector_unit(MagentoImportSynchronizer)
+                importer.run(record['parent_id'])
 
 
 @job

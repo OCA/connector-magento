@@ -232,7 +232,8 @@ class ProductCategoryAdapter(GenericAdapter):
         with magentolib.API(self.magento.location,
                             self.magento.username,
                             self.magento.password) as api:
-            return api.call('%s.info' % self._magento_model, [id, storeview_id, attributes])
+            return api.call('%s.info' % self._magento_model,
+                             [id, storeview_id, attributes])
         return {}
 
     def tree(self, parent_id=None, store_view=None):
@@ -273,6 +274,18 @@ class ProductProductAdapter(GenericAdapter):
                        in api.call('%s.list' % self._magento_model,
                                    [filters] if filters else [{}])]
         return []
+
+    def read(self, id, store_view_id=None, attributes=None):
+        """ Returns the information of a record
+
+        :rtype: dict
+        """
+        with magentolib.API(self.magento.location,
+                            self.magento.username,
+                            self.magento.password) as api:
+            return api.call('%s.info' % self._magento_model,
+                            [id, store_view_id, attributes, 'id'])
+        return {}
 
 
 @magento

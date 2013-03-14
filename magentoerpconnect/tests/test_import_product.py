@@ -36,7 +36,7 @@ def magento_responses(method, args):
     print method, args
     if method == 'catalog_product.list':
         return [{'product_id': '1'}]
-    elif method == 'catalog_product.info' and args == [1, None]:
+    elif method == 'catalog_product.info' and args == [1, None, None, 'id']:
         return {'product_id': '1',
                 'name': 'My Test Product',
                 'description': "Mon produit de la mort qui tue",
