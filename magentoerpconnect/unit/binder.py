@@ -67,7 +67,7 @@ class MagentoModelBinder(MagentoBinder):
             return None
         openerp_id = openerp_ids[0]
         if unwrap:
-            return self.session.read(self.environment._model_name,
+            return self.session.read(self.environment.model._name,
                                      openerp_id,
                                      ['openerp_id'])['openerp_id'][0]
         else:
