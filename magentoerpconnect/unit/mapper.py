@@ -186,8 +186,6 @@ class AddressImportMapper(ImportMapper):
     _model_name = 'magento.address'
 
 # TODO fields not mapped:
-#   "company"=>"a",
-#   "prefix"=>"a",
 #   "suffix"=>"a",
 #   "vat_id"=>"12334",
 
@@ -200,6 +198,7 @@ class AddressImportMapper(ImportMapper):
             ('fax', 'fax'),
             ('is_default_billing', 'is_default_billing'),
             ('is_default_shipping', 'is_default_shipping'),
+            ('company', 'company'),
         ]
 
     @mapping
@@ -231,18 +230,48 @@ class AddressImportMapper(ImportMapper):
     @mapping
     def street(self, record):
         value = record['street']
-        if not value:
-            return
-        parts = value.split('\n')
-        if len(parts) == 2:
-            result = {'street': parts[0],
-                      'street2': parts[1]}
+        lines = [line.strip() for line in value.split('\n') if line.strip()]
+        if len(lines) == 1:
+            result = {'street': lines[0], 'street2': False}
+        elif len(lines) >= 2:
+            result = {'street': lines[0], 'street2': u' - '.join(lines[1:])}
         else:
-            result = {'street': value.replace('\\n', ',')}
+            result = {}
+        return result
 
     @mapping
     def backend_id(self, record):
         return {'backend_id': self.backend_record.id}
+
+    @mapping
+    def use_parent_address(self, record):
+        return {'use_parent_address': False}
+
+    @mapping
+    def type(self, record):
+        #TODO select type from sale order datas
+        if record.get('is_default_shipping'):
+            address_type = 'delivery'
+        else:
+            address_type = 'default'
+        return {'type': address_type}
+
+    @mapping
+    def title(self, record):
+        prefix = record['prefix']
+        title_id = False
+        if prefix:
+            title_ids = self.session.search('res.partner.title',
+                                            [('domain', '=', 'contact'),
+                                            ('shortcut', 'ilike', prefix)])
+            if title_ids:
+                title_id = title_ids[0]
+            else:
+                title_id = self.session.create('res.partner.title',
+                                               {'domain': 'contact',
+                                               'shortcut': prefix,
+                                               'name' : prefix})
+        return {'title': title_id}
 
 
 @magento
