@@ -230,6 +230,9 @@ class PartnerImport(MagentoImportSynchronizer):
         # import customer groups
         binder = self.get_binder_for_model('magento.res.partner.category')
         if binder.to_openerp(record['group_id']) is None:
+            env = Environment(self.backend_record,
+                              self.session,
+                              'magento.res.partner.category')
             importer = env.get_connector_unit(MagentoImportSynchronizer)
             importer.run(record['group_id'])
 
@@ -368,6 +371,8 @@ class SaleOrderBatchImport(DelayedBatchImport):
         record_ids = self.backend_adapter.search(filters,
                                                  from_date,
                                                  magento_storeview_ids)
+        _logger.info('search for magento saleorders %s  returned %s',
+                     filters, record_ids)
         for record_id in record_ids:
             self._import_record(record_id)
 
@@ -376,7 +381,6 @@ class SaleOrderImport(MagentoImportSynchronizer):
     _model_name = ['magento.sale.order']
     def _import_dependencies(self):
         record = self.magento_record
-        env = self.environment
         if 'customer_id' in record:
             binder = self.get_binder_for_model('magento.res.partner')
             if binder.to_openerp(record['customer_id']) is None:
@@ -391,7 +395,6 @@ class SaleOrderLineImport(MagentoImportSynchronizer):
     _model_name = ['magento.sale.order.line']
     def _import_dependencies(self):
         record = self.magento_record
-        env = self.environment
         if 'item_id' in record:
             binder = self.get_binder_for_model('magento.product.product')
             if binder.to_openerp(record['item_id']) is None:

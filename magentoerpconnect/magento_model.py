@@ -289,7 +289,7 @@ class magento_storeview(orm.Model):
             else:
                 from_date = None
             sale_order_import_batch(session, 'magento.sale.order', backend_id,
-                                    {'magento_storeview_id': storeview.id,
+                                    {'magento_storeview_id': storeview.magento_id,
                                      'from_date': from_date,
                                      })
         self.write(cr, uid, ids, {'import_orders_from_date': import_start_time})

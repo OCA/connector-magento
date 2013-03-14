@@ -292,7 +292,10 @@ class SaleOrderImportMapper(ImportMapper):
               ('grand_total', 'total_amount'),
               ('tax_amount', 'total_amount_tax'),
               ('created_at', 'date_order'),
-            ]
+              ]
+
+    children = [('items', 'order_lines', 'magento.sale.order.line'),
+                ]
 
     @mapping
     def customer_id(self, record):
@@ -322,13 +325,19 @@ class SaleOrderImportMapper(ImportMapper):
 
     @mapping
     def gift_cert_amount(self, record):
-        result={'gift_certificates_amount': record['gift_cert_amount']}
+        if 'gift_cert_amount' in record:
+            result = {'gift_certificates_amount': record['gift_cert_amount']}
+        else:
+            result = {}
         return result
 
 
     @mapping
     def gift_cert_code(self, record):
-        result = {'gift_certificates_code': record['gift_cert_code']}
+        if 'gift_cert_code' in record:
+            result = {'gift_certificates_code': record['gift_cert_code']}
+        else:
+            result = {}
         return result
 
     @mapping
@@ -376,12 +385,7 @@ class SaleOrderImportMapper(ImportMapper):
     # TODO:
     # billing address
     # shipping address
-    # items (sale order lines)
 
-    @mapping
-    def items(self, record):
-        for item in record['items']:
-            pass
 
 
 @magento
@@ -391,15 +395,11 @@ class SaleOrderLineImportMapper(ImportMapper):
     direct = [('qty_ordered', 'product_uom_qty'),
               ('qty_ordered', 'product_uos_qty'),
               ('name', 'name'),
-              ('product_id', 'product_id'),
-              ('created_at', 'date_order'),
-              ('customer_id', 'partner_id'),
-              ('line_ext_id', 'magento_id'),
             ]
 
     @mapping
     def item_id(self, record):
-        binder = self.get_binder_for_model('magento.product_product')
+        binder = self.get_binder_for_model('magento.product.product')
         product_id = binder.to_openerp(record['item_id'])
         assert product_id is not None, \
                ("item_id %s should have been imported in "
