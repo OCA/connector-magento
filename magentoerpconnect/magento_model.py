@@ -30,7 +30,10 @@ from openerp.osv import fields, orm
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 import openerp.addons.connector as connector
 from openerp.addons.connector.session import ConnectorSession
-from .unit.import_synchronizer import import_batch, import_partners_since
+from .unit.import_synchronizer import (import_batch,
+                                       import_partners_since,
+                                       sale_order_import_batch,
+                                       )
 
 _logger = logging.getLogger(__name__)
 
@@ -234,11 +237,11 @@ class magento_store(orm.Model):
         'send_picking_done_mail': fields.boolean(
             'Send email notification on picking done',
             help="Does the picking export/creation should send "
-                 "an email notification on Magento side ?"),
+                 "an email notification on Magento side?"),
         'send_invoice_paid_mail': fields.boolean(
             'Send email notification on invoice paid',
             help="Does the invoice export/creation should send "
-                 "an email notification on Magento side ?"),
+                 "an email notification on Magento side?"),
     }
 
     _sql_constraints = [
@@ -279,9 +282,32 @@ class magento_storeview(orm.Model):
             string='Magento Backend',
             store=True,
             readonly=True),
+        'import_orders_from_date': fields.datetime(
+            'Import sale orders from date',
+            help='do not consider non-imported sale orders before this date. '
+                 'Leave empty to import all sale orders'),
     }
 
     _sql_constraints = [
         ('magento_uniq', 'unique(backend_id, magento_id)',
          'A storeview with same ID on Magento already exists.'),
     ]
+
+
+    def import_sale_orders(self, cr, uid, ids, context=None):
+        session = ConnectorSession(cr, uid, context=context)
+        import_start_time = datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        for storeview in self.browse(cr, uid, ids, context=context):
+            backend_id = storeview.backend_id.id
+            if storeview.import_orders_from_date:
+                from_date = datetime.strptime(
+                        storeview.import_orders_from_date,
+                        DEFAULT_SERVER_DATETIME_FORMAT)
+            else:
+                from_date = None
+            sale_order_import_batch(session, 'magento.sale.order', backend_id,
+                                    {'magento_storeview_id': storeview.magento_id,
+                                     'from_date': from_date,
+                                     })
+        self.write(cr, uid, ids, {'import_orders_from_date': import_start_time})
+        return True

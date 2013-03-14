@@ -26,6 +26,7 @@ from openerp.addons.connector.unit.mapper import (mapping,
                                                   changed_by,
                                                   ImportMapper,
                                                   ExportMapper)
+from openerp.addons.connector_ecommerce.unit.sale_order_onchange import SaleOrderOnChange
 from ..backend import magento
 
 
@@ -108,16 +109,12 @@ class PartnerImportMapper(ImportMapper):
     def customer_group_id(self, record):
         # import customer groups
         binder = self.get_binder_for_model('magento.res.partner.category')
-        mag_cat_id = binder.to_openerp(record['group_id'])
+        category_id = binder.to_openerp(record['group_id'], unwrap=True)
 
-        if mag_cat_id is None:
+        if category_id is None:
             raise MappingError("The partner category with "
                                "magento id %s does not exist" %
                                record['group_id'])
-
-        category_id = self.session.read('magento.res.partner.category',
-                                        mag_cat_id,
-                                        ['openerp_id'])['openerp_id'][0]
 
         # FIXME: should remove the previous tag (all the other tags from
         # the same backend)
@@ -299,17 +296,196 @@ class ProductCategoryImportMapper(ImportMapper):
         if not record.get('parent_id'):
             return
         binder = self.get_binder_for_model()
-        mag_cat_id = binder.to_openerp(record['parent_id'])
+        category_id = binder.to_openerp(record['parent_id'], unwrap=True)
 
-        if mag_cat_id is None:
+        if category_id is None:
             raise MappingError("The product category with "
                                "magento id %s is not imported." %
                                record['parent_id'])
-        category_id = self.session.read(self.model._name,
-                                        mag_cat_id,
-                                        ['openerp_id'])['openerp_id'][0]
-
         return {'parent_id': category_id, 'magento_parent_id': mag_cat_id}
+
+@magento
+class SaleOrderImportMapper(ImportMapper):
+    _model_name = 'magento.sale.order'
+
+    direct = [('increment_id', 'name'),
+              ('increment_id', 'magento_id'),
+              ('grand_total', 'total_amount'),
+              ('tax_amount', 'total_amount_tax'),
+              ('created_at', 'date_order'),
+              ]
+
+    children = [('items', 'magento_order_lines', 'magento.sale.order.line'),
+                ]
+
+    def _after_mapping(self, result):
+        onchange = self.get_connector_unit_for_model(SaleOrderOnChange)
+        return onchange.play(result, 'magento_order_lines')
+
+    @mapping
+    def store_id(self, record):
+        binder = self.get_binder_for_model('magento.storeview')
+        storeview_id = binder.to_openerp(record['store_id'])
+        assert storeview_id is not None, 'cannot import sale orders from non existinge storeview'
+        storeview = self.session.browse('magento.storeview', storeview_id)
+        shop_id = storeview.store_id.openerp_id.id
+        return {'shop_id': shop_id}
+
+    @mapping
+    def customer_id(self, record):
+        binder = self.get_binder_for_model('magento.res.partner')
+        partner_id = binder.to_openerp(record['customer_id'], unwrap=True)
+        assert partner_id is not None, \
+               ("customer_id %s should have been imported in "
+                "SaleOrderImport._import_dependencies" % record['customer_id'])
+        return {'partner_id': partner_id}
+
+    @mapping
+    def payment(self, record):
+        method_ids = self.session.search('payment.method',
+                                         [['name', '=', record['payment']['method']]])
+        if method_ids:
+            method_id = method_ids[0]
+        else:
+            method_id = self.session.create('payment.method',
+                                            {'name': record['payment']['method']})
+        result = {'payment_method_id': method_id}
+        return result
+
+    @mapping
+    def cod_fee(self, record): # cash on delivery
+        # TODO Map Me (sic)
+        pass
+
+    @mapping
+    def gift_cert_amount(self, record):
+        if 'gift_cert_amount' in record:
+            result = {'gift_certificates_amount': record['gift_cert_amount']}
+        else:
+            result = {}
+        return result
+
+
+    @mapping
+    def gift_cert_code(self, record):
+        if 'gift_cert_code' in record:
+            result = {'gift_certificates_code': record['gift_cert_code']}
+        else:
+            result = {}
+        return result
+
+    @mapping
+    def shipping_method(self, record):
+        session = self.session
+        ifield = record.get('shipping_method')
+        if ifield:
+            carrier_ids = session.search('delivery.carrier',
+                                         [('magento_code', '=', ifield)])
+        if carrier_ids:
+            result = {'carrier_id': carrier_ids[0]}
+        else:
+            fake_partner_id = session.search('res.partner', [])[0]
+            model_data_obj = session.pool['ir.model.data']
+            model, product_id = model_data_obj.get_object_reference(session.cr, session.uid,
+                                                                    'connector_ecommerce',
+                                                                    'product_product_shipping')
+            carrier_id = session.create('delivery.carrier',
+                                        {'partner_id': fake_partner_id,
+                                         'product_id': product_id,
+                                         'name': ifield,
+                                         'magento_code': ifield,
+                                         })
+            result = {'carrier_id': carrier_id}
+        return result
+
+    @mapping
+    def base_shipping_incl_tax(self, record):
+        amount_tax_inc = float(record.get('base_shipping_incl_tax', 0.0))
+        discount = float(record.get('shipping_discount_amount', 0.0))
+        amount_tax_inc -=  discount
+        amount_tax_exc = float(record.get('shipping_amount', 0.0))
+
+        if amount_tax_exc and amount_tax_inc:
+            tax_rate = amount_tax_inc / amount_tax_exc -1
+        else:
+            tax_rate = 0
+
+        result = {'shipping_amount_tax_included': amount_tax_inc,
+                  'shipping_amount_tax_excluded': amount_tax_exc,
+                  'shipping_tax_rate': tax_rate,
+                  }
+        return result
+
+    # TODO:
+    # billing address
+    # shipping address
+    @mapping
+    def backend_id(self, record):
+        return {'backend_id': self.backend_record.id}
+
+@magento
+class MagentoSaleOrderOnChange(SaleOrderOnChange):
+    _model_name = 'magento.sale.order'
+
+
+@magento
+class SaleOrderLineImportMapper(ImportMapper):
+    _model_name = 'magento.sale.order.line'
+
+    direct = [('qty_ordered', 'product_uom_qty'),
+              ('qty_ordered', 'product_uos_qty'),
+              ('name', 'name'),
+              ('item_id', 'magento_id'),
+            ]
+
+    @mapping
+    def product_id(self, record):
+        binder = self.get_binder_for_model('magento.product.product')
+        product_id = binder.to_openerp(record['product_id'], unwrap=True)
+        assert product_id is not None, \
+               ("product_id %s should have been imported in "
+                "SaleOrderImport._import_dependencies" % record['product_id'])
+        return {'product_id': product_id}
+
+    @mapping
+    def discount_amount(self, record):
+        ifield = record.get('discount_amount')
+        discount = 0
+        if ifield:
+            price = float(record['price'])
+            qty_ordered = float(record['qty_ordered'])
+            if price and qty_ordered:
+                discount = 100 * float(ifield) / price * qty_ordered
+        result = {'discount': discount}
+        return result
+
+    @mapping
+    def product_options(self, record):
+        result = {}
+        ifield = record['product_options']
+        if ifield:
+            import re
+            options_label = []
+            clean = re.sub('\w:\w:|\w:\w+;', '', ifield)
+            for each in clean.split('{'):
+                if each.startswith('"label"'):
+                    split_info = each.split(';')
+                    options_label.append('%s: %s [%s]' % (split_info[1],
+                                                          split_info[3],
+                                                          record['sku']))
+            result = {'notes':  "".join(options_label).replace('""', '\n').replace('"', '')}
+        return result
+
+    @mapping
+    def price(self, record):
+        base_row_total = float(record['base_row_total'])
+        base_row_total_incl_tax = float(record['base_row_total_incl_tax'])
+        qty_ordered = float(record['qty_ordered'])
+        result = {'price_unit_tax_included': base_row_total_incl_tax / qty_ordered,
+                  'price_unit_tax_excluded': base_row_total / qty_ordered,
+                  'tax_rate': base_row_total and base_row_total_incl_tax / base_row_total - 1,
+                  }
+        return result
 
 
 @magento
@@ -351,15 +527,13 @@ class ProductImportMapper(ImportMapper):
         main_categ_id = None
 
         for mag_category_id in mag_categories:
-            bind_id = binder.to_openerp(mag_category_id)
-            if bind_id is None:
+            cat_id = binder.to_openerp(mag_category_id, unwrap=True)
+            if cat_id is None:
                 raise MappingError("The product category with "
                                    "magento id %s is not imported." %
                                    mag_category_id)
 
-            cat = self.session.read('magento.product.category',
-                                    bind_id, ['openerp_id'])
-            category_ids.append(cat['openerp_id'][0])
+            category_ids.append(cat_id)
 
         if category_ids:
             main_categ_id = category_ids.pop(0)
