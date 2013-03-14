@@ -230,22 +230,19 @@ class PartnerImport(MagentoImportSynchronizer):
         # import customer groups
         binder = self.get_binder_for_model('magento.res.partner.category')
         if binder.to_openerp(record['group_id']) is None:
-            env = Environment(self.backend_record,
-                              self.session,
-                              'magento.res.partner.category')
-            importer = env.get_connector_unit(MagentoImportSynchronizer)
+            importer = self.get_connector_unit_for_model(MagentoImportSynchronizer,
+                                                         'magento.res.partner.category')
             importer.run(record['group_id'])
 
     def _after_import(self, openerp_id):
         """ Import the addresses """
-        env = Environment(self.backend_record,
-                          self.session,
-                          'magento.address')
-        addresses_adapter = env.get_connector_unit(BackendAdapter)
+        addresses_adapter  = self.get_connector_unit_for_model(BackendAdapter,
+                                                               'magento.address')
         mag_address_ids = addresses_adapter.search(
                 {'customer_id': {'eq': self.magento_id}})
         if mag_address_ids:
-            importer = env.get_connector_unit(MagentoImportSynchronizer)
+            importer = self.get_connector_unit_for_model(MagentoImportSynchronizer,
+                                                         'magento.address')
             partner_row = self.model.read(self.session.cr,
                                          self.session.uid,
                                          openerp_id,
@@ -318,13 +315,12 @@ class ProductCategoryImport(MagentoImportSynchronizer):
     def _import_dependencies(self):
         """ Import the dependencies for the record"""
         record = self.magento_record
-        env = self.environment
         # import parent category
         # the root category has a 0 parent_id
         if record.get('parent_id'):
             binder = self.get_binder_for_model()
             if binder.to_openerp(record['parent_id']) is None:
-                importer = env.get_connector_unit(MagentoImportSynchronizer)
+                importer = self.get_connector_unit_for_model(MagentoImportSynchronizer)
                 importer.run(record['parent_id'])
 
     def _after_import(self, openerp_id):
@@ -384,10 +380,8 @@ class SaleOrderImport(MagentoImportSynchronizer):
         if 'customer_id' in record:
             binder = self.get_binder_for_model('magento.res.partner')
             if binder.to_openerp(record['customer_id']) is None:
-                env = Environment(self.backend_record,
-                                  self.session,
-                                  'magento.res.partner')
-                importer = env.get_connector_unit(MagentoImportSynchronizer)
+                importer = self.get_connector_unit_for_model(MagentoImportSynchronizer,
+                                                             'magento.res.partner')
                 importer.run(record['customer_id'])
 
 @magento
@@ -398,10 +392,8 @@ class SaleOrderLineImport(MagentoImportSynchronizer):
         if 'item_id' in record:
             binder = self.get_binder_for_model('magento.product.product')
             if binder.to_openerp(record['item_id']) is None:
-                env = Environment(self.backend_record,
-                                  self.session,
-                                  'magento.product.product')
-                importer = env.get_connector_unit(MagentoImportSynchronizer)
+                importer = self.get_connector_unit_for_model(MagentoImportSynchronizer,
+                                                             'magento.product.product')
                 importer.run(record['item_id'])
 
 @job
