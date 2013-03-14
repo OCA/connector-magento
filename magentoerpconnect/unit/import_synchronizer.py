@@ -236,25 +236,25 @@ class PartnerImport(MagentoImportSynchronizer):
         # import customer groups
         binder = self.get_binder_for_model('magento.res.partner.category')
         if binder.to_openerp(record['group_id']) is None:
-            importer = env.get_connector_unit(MagentoImportSynchronizer)
+            importer = self.get_connector_unit_for_model(MagentoImportSynchronizer,
+                                                         'magento.res.partner.category')
             importer.run(record['group_id'])
 
     def _after_import(self, magento_res_partner_openerp_id):
         """ Import the addresses """
-        env = Environment(self.backend_record,
-                          self.session,
-                          'magento.address')
-        addresses_adapter = env.get_connector_unit(BackendAdapter)
+        addresses_adapter  = self.get_connector_unit_for_model(BackendAdapter,
+                                                               'magento.address')
         mag_address_ids = addresses_adapter.search(
                 {'customer_id': {'eq': self.magento_id}})
         if not mag_address_ids:
             return
-        importer = env.get_connector_unit(MagentoImportSynchronizer)
+        importer = self.get_connector_unit_for_model(MagentoImportSynchronizer,
+                                                     'magento.address')
         partner_row = self.model.read(self.session.cr,
-                                         self.session.uid,
-                                         magento_res_partner_openerp_id,
-                                         ['openerp_id'],
-                                         context=self.session.context)
+                                      self.session.uid,
+                                      magento_res_partner_openerp_id,
+                                      ['openerp_id'],
+                                      context=self.session.context)
         res_partner_openerp_id = partner_row['openerp_id'][0]
         mag_addresses = {} # mag_address_id -> True if address is linked to existing partner, 
                            #                   False otherwise
@@ -381,6 +381,47 @@ class TranslatableImport(object):
 
 
 @magento
+class SaleOrderBatchImport(DelayedBatchImport):
+    _model_name = ['magento.sale.order']
+    def run(self, filters=None):
+        """ Run the synchronization """
+        from_date = filters.pop('from_date', None)
+        magento_storeview_ids = [filters.pop('magento_storeview_id')]
+        record_ids = self.backend_adapter.search(filters,
+                                                 from_date,
+                                                 magento_storeview_ids)
+        _logger.info('search for magento saleorders %s  returned %s',
+                     filters, record_ids)
+        for record_id in record_ids:
+            self._import_record(record_id)
+
+@magento
+class SaleOrderImport(MagentoImportSynchronizer):
+    _model_name = ['magento.sale.order']
+    def _import_dependencies(self):
+        record = self.magento_record
+        if 'customer_id' in record:
+            binder = self.get_binder_for_model('magento.res.partner')
+            if binder.to_openerp(record['customer_id']) is None:
+                importer = self.get_connector_unit_for_model(MagentoImportSynchronizer,
+                                                             'magento.res.partner')
+                importer.run(record['customer_id'])
+
+@magento
+class SaleOrderLineImport(MagentoImportSynchronizer):
+    _model_name = ['magento.sale.order.line']
+    def _import_dependencies(self):
+        record = self.magento_record
+        if 'item_id' in record:
+            binder = self.get_binder_for_model('magento.product.product')
+            if binder.to_openerp(record['item_id']) is None:
+                importer = self.get_connector_unit_for_model(MagentoImportSynchronizer,
+                                                             'magento.product.product')
+                importer.run(record['item_id'])
+
+
+
+@magento
 class ProductImport(TranslatableImport, MagentoImportSynchronizer):
     _model_name = ['magento.product.product']
 
@@ -419,7 +460,17 @@ def import_batch(session, model_name, backend_id, filters=None, from_date=None):
     """ Prepare a batch import of records from Magento """
     env = get_environment(session, model_name, backend_id)
     importer = env.get_connector_unit(BatchImportSynchronizer)
-    importer.run(filters=filters, from_date=from_date)
+    importer.run(filters)
+
+@job
+def sale_order_import_batch(session, model_name, backend_id, filters=None):
+    """ Prepare a batch import of records from Magento """
+    if filters is None:
+        filters = {}
+    assert 'magento_storeview_id' in filters, 'Missing information about Magento Storeview'
+    env = get_environment(session, model_name, backend_id)
+    importer = env.get_connector_unit(SaleOrderBatchImport)
+    importer.run(filters)
 
 
 @job
@@ -433,6 +484,10 @@ def import_record(session, model_name, backend_id, magento_id):
 @job
 def import_partners_since(session, model_name, backend_id, since_date=None):
     """ Prepare the import of partners modified on Magento """
+    # FIXME: this may run a long time after the user has clicked the
+    # import button -> the use of datetime.now() should be done in the
+    # method called by the button, and not in the async. processing
+    # see what is done by the import_sale_orders
     env = get_environment(session, model_name, backend_id)
     importer = env.get_connector_unit(BatchImportSynchronizer)
     now_fmt = datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
