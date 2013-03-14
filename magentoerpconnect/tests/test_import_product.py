@@ -47,6 +47,7 @@ def magento_responses(method, args):
                 'sku': '12556LKJ99',
                 'type_id': 'simple',
                 'websites': [],
+                'categories': [],
         }
 
 

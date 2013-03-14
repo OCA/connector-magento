@@ -307,6 +307,22 @@ class ProductCategoryBatchImport(BatchImportSynchronizer):
 
 
 @magento
+class ProductImport(MagentoImportSynchronizer):
+    _model_name = ['magento.product.product']
+
+    def _import_dependencies(self):
+        """ Import the dependencies for the record"""
+        record = self.magento_record
+        # import related categories
+        binder = self.get_binder_for_model('magento.product.category')
+        for mag_category_id in record['categories']:
+            if binder.to_openerp(mag_category_id) is None:
+                importer = self.get_connector_unit_for_model(
+                                MagentoImportSynchronizer)
+                importer.run(mag_category_id)
+
+
+@magento
 class ProductCategoryImport(MagentoImportSynchronizer):
     _model_name = ['magento.product.category']
 
