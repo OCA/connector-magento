@@ -282,3 +282,42 @@ class ProductCategoryImportMapper(ImportMapper):
                                         ['openerp_id'])['openerp_id'][0]
 
         return {'parent_id': category_id, 'magento_parent_id': mag_cat_id}
+
+
+@magento
+class ProductImportMapper(ImportMapper):
+    _model_name = 'magento.product.product'
+    #TODO :     categ, special_price => minimal_price
+    direct = [
+            ('name', 'name'),
+            ('description', 'description'),
+            ('weight', 'weight'),
+            ('price', 'list_price'),
+            ('cost', 'standard_price'),
+            ('short_description', 'description_sale'),
+            ('sku', 'default_code'),
+            ('type_id', 'product_type'),
+            ]
+
+    @mapping
+    def type(self, record):
+        if record['type_id'] == 'simple':
+            return {'type': 'product'}
+        return
+
+    @mapping
+    def website_ids(self, record):
+        website_ids = []
+        for mag_website_id in record['websites']:
+            binder = self.get_binder_for_model('magento.website')
+            website_id = binder.to_openerp(mag_website_id)
+            website_ids.append(website_id)
+        return {'website_ids': website_ids}
+
+    @mapping
+    def magento_id(self, record):
+        return {'magento_id': record['product_id']}
+
+    @mapping
+    def backend_id(self, record):
+        return {'backend_id': self.backend_record.id}

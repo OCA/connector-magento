@@ -145,7 +145,7 @@ class BatchImportSynchronizer(ImportSynchronizer):
         for record_id in record_ids:
             self._import_record(record_id)
 
-    def _import_record(self, record):
+    def _import_record(self, record_id):
         """ Import a record directly or delay the import of the record """
         raise NotImplementedError
 
@@ -163,12 +163,12 @@ class DirectBatchImport(BatchImportSynchronizer):
             'magento.storeview',
             ]
 
-    def _import_record(self, record):
+    def _import_record(self, record_id):
         """ Import the record directly """
         import_record(self.session,
                       self.model._name,
                       self.backend_record.id,
-                      record)
+                      record_id)
 
 
 @magento
@@ -176,14 +176,15 @@ class DelayedBatchImport(BatchImportSynchronizer):
     """ Delay import of the records """
     _model_name = [
             'magento.res.partner.category',
+            'magento.product.product',
             ]
 
-    def _import_record(self, record):
+    def _import_record(self, record_id):
         """ Delay the import of the records"""
         import_record.delay(self.session,
                             self.model._name,
                             self.backend_record.id,
-                            record)
+                            record_id)
 
 
 @magento
@@ -192,6 +193,7 @@ class SimpleRecordImport(MagentoImportSynchronizer):
     _model_name = [
             'magento.website',
             'magento.store',
+            'magento.product.product',
             'magento.storeview',
             'magento.res.partner.category',
         ]
@@ -205,12 +207,12 @@ class PartnerBatchImport(BatchImportSynchronizer):
     """
     _model_name = ['magento.res.partner']
 
-    def _import_record(self, record):
+    def _import_record(self, record_id):
         """ Delay a job for the import """
         import_record.delay(self.session,
                             self.model._name,
                             self.backend_record.id,
-                            record)
+                            record_id)
 
     def run(self, filters=None):
         """ Run the synchronization """

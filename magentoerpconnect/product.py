@@ -1104,227 +1104,72 @@ class product_template(product_mag_osv):
         }
 
 
-class product_product(product_mag_osv):
-    _inherit = "product.product"
+class magento_product_product(orm.Model):
+    _name = 'magento.product.product'
+    _inherit = 'magento.binding'
+    _inherits = {'product.product': 'openerp_id'}
 
-    def send_to_external(self, cr, uid, external_session, resources, mapping, mapping_id, update_date=None, context=None):
-        product_ids = resources.keys()
-        res = super(product_product, self).send_to_external(cr, uid, external_session, resources, mapping, mapping_id, update_date=update_date, context=context)
-        if context.get('export_product') != 'link':
-            self.export_inventory(cr, uid, external_session, product_ids, context=context)
-        return res
-
-    def map_and_update_product(self, cr, uid, external_session, resource, sku, context=None):
-        res = external_session.connection.call('catalog_product.info', [sku, False, False, 'sku'])
-        ext_id = res['product_id']
-        external_session.connection.call('ol_catalog_product.update', [ext_id, resource, False, 'id'])
-        return ext_id
-
-    # xxx a deplacer dans MagentoConnector _default_ext_read_product_product
-    @only_for_referential('magento')
-    def _get_external_resources(self, cr, uid, external_session, external_id=None, resource_filter=None,
-                                         mapping=None, mapping_id=None, fields=None, context=None):
-        if external_id:
-            return external_session.connection.call('catalog_product.info', [external_id, False, False, 'id'])
-        else:
-            return super(product_product, self)._get_external_resources(cr, uid, external_session,
-                                                                    external_id=external_id,
-                                                                    resource_filter=resource_filter,
-                                                                    mapping=mapping,
-                                                                    mapping_id=mapping_id,
-                                                                    fields=fields,
-                                                                    context=context)
-
-
-    #TODO reimplement the grouped product
-    def ext_create(self, cr, uid, external_session, resources, mapping=None, mapping_id=None, context=None):
-        ext_create_ids={}
-        storeview_to_lang = context['storeview_to_lang']
-        main_lang = context['main_lang']
-        for resource_id, resource in resources.items():
-            #Move this part of code in a python lib
-            product_type = resource[main_lang]['type_id']
-            attr_set = resource[main_lang]['set']
-            sku = resource[main_lang]['sku']
-            del resource[main_lang]['type_id']
-            del resource[main_lang]['set']
-            del resource[main_lang]['sku']
-            try:
-                ext_id = external_session.connection.call('ol_catalog_product.create', [product_type, attr_set, sku, resource[main_lang]])
-            except xmlrpclib.Fault, e:
-                if e.faultCode == 1:
-                    # a product with same SKU exists on Magento, we rebind it
-                    #TODO fix magento API. Indeed catalog_product.info seem to be broken
-                    try:
-                        ext_id = self.map_and_update_product(cr, uid, external_session, resource[main_lang], sku, context=context)
-                    except:
-                        raise except_osv(_('Error!'), _("Product %s already exist in Magento. Failed to rebind it. Please do it manually")%(sku))
-                else:
-                    raise
-
-            for storeview, lang in storeview_to_lang.items():
-                external_session.connection.call('ol_catalog_product.update', [ext_id, resource[lang], storeview, 'id'])
-            ext_create_ids[resource_id] = ext_id
-        return ext_create_ids
-
-    def ext_update(self, cr, uid, external_session, resources, mapping=None, mapping_id=None, context=None):
-        if context.get('export_product') == 'link':
-            return self.ext_update_link_data(cr, uid, external_session, resources, mapping=mapping,
-                                                            mapping_id=mapping_id, context=context)
-        else:
-            ext_update_ids={}
-            storeview_to_lang = context['storeview_to_lang']
-            main_lang = context['main_lang']
-            for resource_id, resource in resources.items():
-                #Move this part of code in a python lib
-                ext_id = resource[main_lang]['ext_id']
-                del resource[main_lang]['ext_id']
-                external_session.connection.call('ol_catalog_product.update', [ext_id, resource[main_lang], False, 'id'])
-                for storeview, lang in storeview_to_lang.items():
-                    del resource[lang]['ext_id']
-                    external_session.connection.call('ol_catalog_product.update', [ext_id, resource[lang], storeview, 'id'])
-                ext_update_ids[resource_id] = ext_id
-            return ext_update_ids
-
-    @only_for_referential('magento')
-    def _check_if_export(self, cr, uid, external_session, product, context=None):
-        if context.get('export_product') == 'simple' and product.product_type == 'simple':
-            return True
-        elif context.get('export_product') == 'special' and product.product_type != 'simple':
-            return True
-        elif context.get('export_product') == 'link':
-            return True
-        return False
-
-    #TODO make me generic when image export will be refactor
-    def export_product_images(self, cr, uid, external_session, ids, context=None):
-        image_obj = self.pool.get('product.images')
-        for product in self.browse(cr, uid, ids, context=context):
-            image_ids = [image.id for image in product.image_ids]
-            external_session.logger.info('export %s images for product %s'%(len(image_ids), product.name))
-            image_obj.update_remote_images(cr, uid, external_session, image_ids, context=context)
-        return True
-
-
-    #TODO base the import on the mapping and the function ext_import
-    def import_product_image(self, cr, uid, id, referential_id, conn, ext_id=None, context=None):
-        image_obj = self.pool.get('product.images')
-        if not ext_id:
-            ext_id = self.get_extid(cr, uid, id, referential_id, context=context)
-        # TODO everythere will should pass the params 'id' for magento api in order to force
-        # to use the id as external key instead of mixed id/sku
-        img_list = conn.call('catalog_product_attribute_media.list', [ext_id, False, 'id'])
-        _logger.info("Magento image for product ext_id %s: %s", ext_id, img_list)
-        images_name = []
-        for image in img_list:
-            img=False
-            try:
-                (filename, header) = urllib.urlretrieve(image['url'])
-                f = open(filename , 'rb')
-                data = f.read()
-                f.close()
-                if "DOCTYPE html PUBLIC" in data:
-                    _logger.warn("failed to open the image %s from Magento", image['url'])
-                    continue
-                else:
-                    img = base64.encodestring(data)
-            except Exception, e:
-                #TODO raise correctly the error
-                _logger.error("failed to open the image %s from Magento, error : %s", image['url'], e, exc_info=True)
-                continue
-            mag_filename, extention = os.path.splitext(os.path.basename(image['file']))
-            data = {'name': image['label'] and not image['label'] in images_name and image['label'] or mag_filename,
-                'extention': extention,
-                'link': False,
-                'file': img,
-                'product_id': id,
-                'small_image': image['types'].count('small_image') == 1,
-                'base_image': image['types'].count('image') == 1,
-                'thumbnail': image['types'].count('thumbnail') == 1,
-                'exclude': bool(eval(image['exclude'] or 'False')),
-                'position': image['position']
-                }
-            #the character '/' is not allowed in the name of the image
-            data['name'] = data['name'].replace('/', ' ')
-            images_name.append(data['name'])
-            image_oe_id = image_obj.extid_to_existing_oeid(cr, uid, image['file'], referential_id, context=None)
-            if image_oe_id:
-                # update existing image
-                image_obj.write(cr, uid, image_oe_id, data, context=context)
-            else:
-                # create new image
-                new_image_id = image_obj.create(cr, uid, data, context=context)
-                image_obj.create_external_id_vals(cr, uid, new_image_id, image['file'], referential_id, context=context)
-        return True
-
-    def get_field_to_export(self, cr, uid, ids, mapping, mapping_id, context=None):
-        res = super(product_product, self).get_field_to_export(cr, uid, ids, mapping, mapping_id, context=context)
-        if 'product_image' in res: res.remove('product_image')
-        if context.get('attribut_set_id'):
-            #When OpenERP will be clean, maybe we can add some cache here (@ormcache)
-            #But for now the bottle of neck is the read the computed fields
-            #So no need to do it for now
-            attr_set = self.pool.get('magerp.product_attribute_set').browse(cr, uid, \
-                                                context['attribut_set_id'], context=context)
-            magento_field = [attribut['field_name'] for attribut in attr_set.attributes]
-            return [field for field in res if (field[0:9] != "x_magerp_" or field in magento_field)]
-        else:
-            return res
-
-    def _get_oe_resources(self, cr, uid, external_session, ids, langs, smart_export=None,
-                            last_exported_date=None, mapping=None, mapping_id=None, context=None):
-        resources={}
-        set_to_product_ids = {}
-        for product in self.browse(cr, uid, ids, context=context):
-            if not set_to_product_ids.get(product.set.id):
-                set_to_product_ids[product.set.id] = [product.id]
-            else:
-                set_to_product_ids[product.set.id].append(product.id)
-        for attribut_id, product_ids in set_to_product_ids.iteritems():
-            context['attribut_set_id'] = attribut_id
-            resources.update(super(product_product, self)._get_oe_resources(
-                                                cr, uid, external_session, product_ids, langs,
-                                                smart_export=smart_export,
-                                                last_exported_date=last_exported_date,
-                                                mapping=mapping,
-                                                mapping_id=mapping_id,
-                                                context=context
-                                                ))
-        return resources
+    def product_type_get(self, cr, uid, context=None):
+        return [
+            ('simple', 'Simple Product'),
+            ('grouped', 'Grouped Product'),
+            ('configurable', 'Configurable Product'),
+            ('virtual', 'Virtual Product'),
+            ('bundle', 'Bundle Product'),
+            ('downloadable', 'Downloadable Product'),
+        ]
 
     def _product_type_get(self, cr, uid, context=None):
-        ids = self.pool.get('magerp.product_product_type').search(cr, uid, [], order='id')
-        product_types = self.pool.get('magerp.product_product_type').read(cr, uid, ids, ['product_type','name'], context=context)
-        return [(pt['product_type'], pt['name']) for pt in product_types]
-
-    def _is_magento_exported(self, cr, uid, ids, field_name, arg, context=None):
-        """Return True if the product is already exported to at least one magento shop
-        """
-        res = {}
-        # get all magento external_referentials
-        referential_ids = self.pool.get('external.referential').search(cr, uid, [('magento_referential', '=', True)])
-        for product_id in ids:
-            for referential_id in referential_ids:
-                res[product_id] = False
-                if self.get_extid(cr, uid, product_id, referential_id, context):
-                    res[product_id] = True
-                    break
-        return res
+        return self.product_type_get(cr, uid, context=context)
 
     _columns = {
-        'magerp_variant' : fields.serialized('Magento Variant Fields'),
-        'magento_exportable':fields.boolean('Export to Magento'),
-        'created_at':fields.date('Created'), #created_at & updated_at in magento side, to allow filtering/search inside OpenERP!
-        'updated_at':fields.date('Created'),
-        'tier_price':fields.one2many('product.tierprice', 'product', 'Tier Price'),
+        'openerp_id': fields.many2one('product.product',
+                                      string='Product',
+                                      required=True,
+                                      ondelete='cascade'),
+        'website_ids': fields.many2many('external.shop.group',
+            'magerp_product_shop_group_rel', 'product_id',
+            'shop_group_id', 'Websites',
+            help='By defaut product will be exported on every website, if you want to export it only on some website select them here'),
+        'created_at':fields.date('Created At (on Magento)'),
+        'updated_at':fields.date('Updated At (on Magento)'),
         'product_type': fields.selection(_product_type_get, 'Magento Product Type'),
-        'magento_exported': fields.function(_is_magento_exported, type="boolean", method=True, string="Exists on Magento"),  # used to set the sku readonly when already exported
+        'manage_stock': fields.selection([
+            ('use_default','Use Default Config'),
+            ('no', 'Do Not Manage Stock'),
+            ('yes','Manage Stock')
+            ], 'Manage Stock Level'),
+        'manage_stock_shortage': fields.selection([
+            ('use_default','Use Default Config'),
+            ('no', 'No Sell'),
+            ('yes','Sell qty < 0'),
+            ('yes-and-notification','Sell qty < 0 and Use Customer Notification'),
+            ], 'Manage Inventory Shortage'),
         }
 
     _defaults = {
-        'magento_exportable': True,
         'product_type': 'simple',
+        'manage_stock': 'use_default',
+        'manage_stock_shortage': 'use_default',
+        }
+
+    _sql_constraints = [
+        ('magento_uniq', 'unique(backend_id, magento_id)',
+         "A product with the same ID on Magento already exists")
+    ]
+
+
+class product_product(orm.Model):
+    _inherit = 'product.product'
+
+
+    _columns = {
+        'magento_bind_ids': fields.one2many(
+            'magento.product.product',
+            'openerp_id',
+            string='Magento Bindings',),
     }
+
 
     def write(self, cr, uid, ids, vals, context=None):
         if vals.get('referential_id', False):

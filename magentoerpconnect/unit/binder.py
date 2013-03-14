@@ -40,20 +40,21 @@ class MagentoModelBinder(MagentoBinder):
             'magento.address',
             'magento.res.partner.category',
             'magento.product.category',
+            'magento.product.product',
             'magento.stock.picking',
         ]
 
-    def to_openerp(self, backend_id):
+    def to_openerp(self, external_id):
         """ Give the OpenERP ID for an external ID
 
-        :param backend_id: backend ID for which we want the OpenERP ID
+        :param external_id: external ID for which we want the OpenERP ID
         :return: OpenERP ID of the record
         :rtype: int
         """
         openerp_ids = self.environment.model.search(
                 self.session.cr,
                 self.session.uid,
-                [('magento_id', '=', backend_id),
+                [('magento_id', '=', external_id),
                  ('backend_id', '=', self.backend_record.id)],
                 limit=1,
                 context=self.session.context)
@@ -61,9 +62,9 @@ class MagentoModelBinder(MagentoBinder):
             return openerp_ids[0]
 
     def to_backend(self, openerp_id):
-        """ Give the backend ID for an OpenERP ID
+        """ Give the external ID for an OpenERP ID
 
-        :param openerp_id: OpenERP ID for which we want the backend id
+        :param openerp_id: OpenERP ID for which we want the external id
         :return: backend identifier of the record
         """
         magento_id = self.environment.model.read(
@@ -74,10 +75,10 @@ class MagentoModelBinder(MagentoBinder):
                 self.session.context)['magento_id']
         return magento_id
 
-    def bind(self, backend_id, openerp_id):
+    def bind(self, external_id, openerp_id):
         """ Create the link between an external ID and an OpenERP ID
 
-        :param backend_id: Backend ID to bind
+        :param external_id: External ID to bind
         :param openerp_id: OpenERP ID to bind
         :type openerp_id: int
         """
@@ -87,5 +88,5 @@ class MagentoModelBinder(MagentoBinder):
                 self.session.cr,
                 self.session.uid,
                 openerp_id,
-                {'magento_id': backend_id},
+                {'magento_id': external_id},
                 context=context)

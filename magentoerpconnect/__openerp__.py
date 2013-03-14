@@ -64,7 +64,7 @@ TODO
             'settings/1.5.0.0/attribut.set/external.mappinglines.template.csv',
             'settings/1.5.0.0/attribut.group/external.mappinglines.template.csv',
             'settings/1.5.0.0/attribut/external.mappinglines.template.csv',
-            'settings/1.5.0.0/product/external.mappinglines.template.csv',
+            #'settings/1.5.0.0/product/external.mappinglines.template.csv',
             # 'settings/1.5.0.0/sale.order/external.mappinglines.template.csv',
             # 'settings/1.5.0.0/sale.order.line/external.mappinglines.template.csv',
             'settings/1.5.0.0/account.invoice/external.mappinglines.template.csv',

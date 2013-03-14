@@ -129,6 +129,7 @@ class magento_res_partner_category(orm.Model):
                                        string='Partner Category',
                                        required=True,
                                        ondelete='cascade'),
+        #TODO : replace by a m2o when tax class will be implemented
         'tax_class_id': fields.integer('Tax Class ID'),
     }
 
