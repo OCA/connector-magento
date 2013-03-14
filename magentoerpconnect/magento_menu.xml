@@ -47,9 +47,6 @@
     <menuitem id="menu_magerp_categ_att" name="Category Attributes" parent="menu_magerp" />
     <menuitem id="menu_magerp_categ_att_option" name="Category Attribute Options" parent="menu_magerp_categ_att" action="act_magerp_product_category_attribute_options_form" />
 
-    <menuitem id="menu_magerp_product_type" name="Product Types" parent="menu_magerp" action="act_magerp_product_type_form" />
-
-
     <menuitem id="menu_magerp_reporting" name="Reporting" parent="menu_magerp" />
 
     <record id="action_magerp_external_report" model="ir.actions.act_window">
