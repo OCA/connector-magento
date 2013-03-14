@@ -66,6 +66,7 @@ class magento_backend(orm.Model):
 
         # add a field `auto_activate` -> activate a cron
         'import_partners_since': fields.datetime('Import partners since'),
+        'import_products_since': fields.datetime('Import products since'),
     }
 
     def synchronize_metadata(self, cr, uid, ids, context=None):
@@ -122,9 +123,18 @@ class magento_backend(orm.Model):
         if not hasattr(ids, '__iter__'):
             ids = [ids]
         session = ConnectorSession(cr, uid, context=context)
-        for backend_id in ids:
+        import_start_time = datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        for backend in self.browse(cr, uid, ids, context=context):
+            if backend.import_products_since:
+                from_date = datetime.strptime(
+                        backend.import_products_since,
+                        DEFAULT_SERVER_DATETIME_FORMAT)
+            else:
+                from_date = None
             import_batch.delay(session, 'magento.product.product',
-                                   backend_id)
+                               backend.id, from_date=from_date)
+        self.write(cr, uid, ids,
+                   {'import_products_since': import_start_time})
         return True
 
 

@@ -261,12 +261,17 @@ class ProductProductAdapter(GenericAdapter):
     _model_name = 'magento.product.product'
     _magento_model = 'catalog_product'
 
-    def search(self, filters=None):
+    def search(self, filters=None, from_date=None):
         """ Search records according to some criterias
         and returns a list of ids
 
         :rtype: list
         """
+        if filters is None:
+            filters = {}
+        if from_date is not None:
+            filters['updated_at'] = {'from': from_date.strftime('%Y/%m/%d %H:%M:%S')}
+        _logger.debug("api.call(%s.list', [%s])", self._magento_model, filters)
         with magentolib.API(self.magento.location,
                             self.magento.username,
                             self.magento.password) as api:

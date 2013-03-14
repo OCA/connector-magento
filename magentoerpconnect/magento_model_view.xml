@@ -61,13 +61,16 @@
                                     </div>
                                 </group>
                                 <group>
-                                    <label string="Import all product " class="oe_inline"/>
                                     <div>
-                                        <button name="import_product_product"
-                                            type="object"
-                                            class="oe_highlight"
-                                            string="Import in background"/>
+                                        <label string="Import products since" class="oe_inline"/>
+                                        <field name="import_products_since"
+                                            class="oe_inline"
+                                            nolabel="1"/>
                                     </div>
+                                      <button name="import_product_product"
+                                          type="object"
+                                          class="oe_highlight"
+                                          string="Import in background"/>
                                 </group>
 
                             </page>
