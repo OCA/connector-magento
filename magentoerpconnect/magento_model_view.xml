@@ -27,6 +27,7 @@
                         </group>
                         <group col="4">
                             <field name="default_lang_id"/>
+                            <field name="default_category_id"/>
                         </group>
                         <notebook>
                             <page name="import" string="Imports">
@@ -153,7 +154,6 @@
                         <field name="openerp_id"/>
                     </group>
                     <group>
-                        <field name="default_category_id"/>
                         <field name="send_picking_done_mail"/>
                         <field name="send_invoice_paid_mail"/>
                     </group>

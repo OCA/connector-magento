@@ -21,6 +21,7 @@
 
 from openerp.tools.translate import _
 import openerp.addons.connector as connector
+from openerp.addons.connector.exception import MappingError
 from openerp.addons.connector.unit.mapper import (mapping,
                                                   changed_by,
                                                   ImportMapper,
@@ -110,10 +111,9 @@ class PartnerImportMapper(ImportMapper):
         mag_cat_id = binder.to_openerp(record['group_id'])
 
         if mag_cat_id is None:
-            raise connector.exception.MappingError(
-                    "The partner category with "
-                    "magento id %s does not exist" %
-                    record['group_id'])
+            raise MappingError("The partner category with "
+                               "magento id %s does not exist" %
+                               record['group_id'])
 
         category_id = self.session.read('magento.res.partner.category',
                                         mag_cat_id,
@@ -302,10 +302,9 @@ class ProductCategoryImportMapper(ImportMapper):
         mag_cat_id = binder.to_openerp(record['parent_id'])
 
         if mag_cat_id is None:
-            raise connector.exception.MappingError(
-                    "The product category with "
-                    "magento id %s does not exist" %
-                    record['parent_id'])
+            raise MappingError("The product category with "
+                               "magento id %s is not imported." %
+                               record['parent_id'])
         category_id = self.session.read(self.model._name,
                                         mag_cat_id,
                                         ['openerp_id'])['openerp_id'][0]
@@ -342,6 +341,38 @@ class ProductImportMapper(ImportMapper):
             website_id = binder.to_openerp(mag_website_id)
             website_ids.append(website_id)
         return {'website_ids': website_ids}
+
+    @mapping
+    def categories(self, record):
+        mag_categories = record['categories']
+        binder = self.get_binder_for_model('magento.product.category')
+
+        category_ids = []
+        main_categ_id = None
+
+        for mag_category_id in mag_categories:
+            bind_id = binder.to_openerp(mag_category_id)
+            if bind_id is None:
+                raise MappingError("The product category with "
+                                   "magento id %s is not imported." %
+                                   mag_category_id)
+
+            cat = self.session.read('magento.product.category',
+                                    bind_id, ['openerp_id'])
+            category_ids.append(cat['openerp_id'][0])
+
+        if category_ids:
+            main_categ_id = category_ids.pop(0)
+
+        if main_categ_id is None:
+            default_categ = self.backend_record.default_category_id
+            if default_categ:
+                main_categ_id = default_categ.id
+
+        result = {'categ_ids': [(6, 0, category_ids)]}
+        if main_categ_id:  # OpenERP assign 'All Products' if not specified
+            result['categ_id'] = main_categ_id
+        return result
 
     @mapping
     def magento_id(self, record):

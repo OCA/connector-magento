@@ -392,7 +392,8 @@ class ProductImport(TranslatableImport, MagentoImportSynchronizer):
         for mag_category_id in record['categories']:
             if binder.to_openerp(mag_category_id) is None:
                 importer = self.get_connector_unit_for_model(
-                                MagentoImportSynchronizer)
+                                MagentoImportSynchronizer,
+                                model='magento.product.category')
                 importer.run(mag_category_id)
 
 

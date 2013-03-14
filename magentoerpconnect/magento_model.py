@@ -63,6 +63,11 @@ class magento_backend(orm.Model):
                 'Default Language',
                 help="Choose the language which will be used for the "
                      "Default Value in Magento"),
+        'default_category_id': fields.many2one(
+            'product.category',
+            string='Default Product Category',
+            help='If a default category is selected, products imported '
+                 'without a category will be linked to it.'),
 
         # add a field `auto_activate` -> activate a cron
         'import_partners_since': fields.datetime('Import partners since'),
@@ -208,12 +213,6 @@ class magento_store(orm.Model):
             required=True,
             readonly=True,
             ondelete='cascade'),
-        # what is the exact purpose of this field?
-        'default_category_id': fields.many2one(
-            'product.category',
-            'Default Product Category',
-            help="The category set on products when?? TODO."
-            "\nOpenERP requires a main category on products for accounting."),
         'backend_id': fields.related(
             'website_id', 'backend_id',
             type='many2one',
