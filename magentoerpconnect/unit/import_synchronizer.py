@@ -143,9 +143,9 @@ class BatchImportSynchronizer(ImportSynchronizer):
     the import of each item separately.
     """
 
-    def run(self, filters=None, from_date=None):
+    def run(self, filters=None):
         """ Run the synchronization """
-        record_ids = self.backend_adapter.search(filters, from_date)
+        record_ids = self.backend_adapter.search(filters)
         for record_id in record_ids:
             self._import_record(record_id)
 
@@ -463,11 +463,12 @@ class ProductCategoryImport(TranslatableImport, MagentoImportSynchronizer):
 
 
 @job
-def import_batch(session, model_name, backend_id, filters=None, from_date=None):
+def import_batch(session, model_name, backend_id, filters=None):
     """ Prepare a batch import of records from Magento """
     env = get_environment(session, model_name, backend_id)
     importer = env.get_connector_unit(BatchImportSynchronizer)
-    importer.run(filters=filters, from_date=from_date)
+    importer.run(filters=filters)
+
 
 @job
 def sale_order_import_batch(session, model_name, backend_id, filters=None):

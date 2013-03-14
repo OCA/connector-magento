@@ -140,7 +140,7 @@ class magento_backend(orm.Model):
             else:
                 from_date = None
             import_batch.delay(session, 'magento.product.product',
-                               backend.id, from_date=from_date)
+                               backend.id, filters={'from_date': from_date})
         self.write(cr, uid, ids,
                    {'import_products_since': import_start_time})
         return True
