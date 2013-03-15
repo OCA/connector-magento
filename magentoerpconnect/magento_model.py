@@ -140,6 +140,24 @@ class magento_backend(orm.Model):
                    {'import_products_since': import_start_time})
         return True
 
+    def _magento_backend(self, cr, uid, callback, context=None):
+            if context is None:
+                context = {}
+            proxy = self.pool.get('magento.backend')
+            domain = []
+            ids = proxy.search(cr, uid, domain, context=context)
+            if ids:
+                callback(cr, uid, ids, context=context)
+
+    # Schedules functions ============ #
+    def run_import_customer_groups_scheduler(self, cr, uid, context=None):
+        self._magento_backend(cr, uid, self.import_customer_groups, context=context)
+
+    def run_import_partners_scheduler(self, cr, uid, context=None):
+        self._magento_backend(cr, uid, self.import_partners, context=context)
+
+    def run_import_product_categories_scheduler(self, cr, uid, context=None):
+        self._magento_backend(cr, uid, self.import_product_categories, context=context)
 
 class magento_binding(orm.AbstractModel):
     _name = 'magento.binding'
