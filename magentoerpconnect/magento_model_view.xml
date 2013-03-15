@@ -26,7 +26,7 @@
                             <field name="password"/>
                         </group>
                         <group col="4">
-                            <field name="default_lang_id"/>
+                            <field name="default_lang_id" widget="selection"/>
                             <field name="default_category_id"/>
                         </group>
                         <notebook>
@@ -212,7 +212,7 @@
                         <field name="enabled"/>
                     </group>
                     <group>
-                        <field name="lang_id"/>
+                        <field name="lang_id" widget="selection"/>
                     </group>
                     <group colspan="4">
                       <div>
@@ -242,7 +242,6 @@
                     <field name="enabled"/>
                     <field name="sort_order"/>
                     <field name="store_id"/>
-                    <field name="lang_id"/>
                 </tree>
             </field>
         </record>
