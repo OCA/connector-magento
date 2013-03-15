@@ -27,10 +27,6 @@ from .magerp_osv import MagerpModel
 from openerp.addons.connector.decorator import only_for_referential
 
 
-
-# TODO common AbstractModel for the 'bind' models
-# TODO migrate from res.partner
-
 class res_partner(orm.Model):
     _inherit = 'res.partner'
 
@@ -42,10 +38,11 @@ class res_partner(orm.Model):
         'magento_address_bind_ids': fields.one2many(
             'magento.address', 'openerp_id',
             string="Magento Address Bindings"),
-        'company': fields.char('Company', size=64),
+        'company': fields.char('Company'),
     }
 
 
+# TODO migrate from res.partner
 class magento_res_partner(orm.Model):
     _name = 'magento.res.partner'
     _inherit = 'magento.binding'
