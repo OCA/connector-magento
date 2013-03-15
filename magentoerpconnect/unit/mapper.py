@@ -502,9 +502,9 @@ class SaleOrderLineImportMapper(ImportMapper):
         base_row_total_incl_tax = float(record['base_row_total_incl_tax'])
         qty_ordered = float(record['qty_ordered'])
         if backend.catalog_price_tax_included:
-            result['price'] = base_row_total_incl_tax / qty_ordered
+            result['price_unit'] = base_row_total_incl_tax / qty_ordered
         else:
-            result['price'] = base_row_total / qty_ordered
+            result['price_unit'] = base_row_total / qty_ordered
         return result
 
 
