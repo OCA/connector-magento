@@ -220,7 +220,13 @@ class PartnerBatchImport(BatchImportSynchronizer):
 
     def run(self, filters=None):
         """ Run the synchronization """
-        record_ids = self.backend_adapter.search(filters)
+        from_date = filters.pop('from_date', None)
+        magento_website_ids = [filters.pop('magento_website_id')]
+        record_ids = self.backend_adapter.search(filters,
+                                                 from_date,
+                                                 magento_website_ids)
+        _logger.info('search for magento partners %s returned %s',
+                     filters, record_ids)
         for record_id in record_ids:
             self._import_record(record_id)
 
@@ -395,6 +401,7 @@ class SaleOrderBatchImport(DelayedBatchImport):
         for record_id in record_ids:
             self._import_record(record_id)
 
+
 @magento
 class SaleOrderImport(MagentoImportSynchronizer):
     _model_name = ['magento.sale.order']
@@ -490,24 +497,12 @@ def import_record(session, model_name, backend_id, magento_id):
 
 
 @job
-def import_partners_since(session, model_name, backend_id, since_date=None):
+def partner_import_batch(session, model_name, backend_id, filters=None):
     """ Prepare the import of partners modified on Magento """
-    # FIXME: this may run a long time after the user has clicked the
-    # import button -> the use of datetime.now() should be done in the
-    # method called by the button, and not in the async. processing
-    # see what is done by the import_sale_orders
+    if filters is None:
+        filters = {}
+    assert 'magento_website_id' in filters, (
+            'Missing information about Magento Website')
     env = get_environment(session, model_name, backend_id)
-    importer = env.get_connector_unit(BatchImportSynchronizer)
-    now_fmt = datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-    filters = {}
-    if since_date:
-        since_fmt = since_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-        # updated_at include the created records
-        filters['updated_at'] = {'from': since_fmt}
+    importer = env.get_connector_unit(PartnerBatchImport)
     importer.run(filters=filters)
-    session.pool.get('magento.backend').write(
-            session.cr,
-            session.uid,
-            backend_id,
-            {'import_partners_since': now_fmt},
-            context=session.context)

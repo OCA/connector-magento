@@ -31,7 +31,7 @@ from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 import openerp.addons.connector as connector
 from openerp.addons.connector.session import ConnectorSession
 from .unit.import_synchronizer import (import_batch,
-                                       import_partners_since,
+                                       partner_import_batch,
                                        sale_order_import_batch,
                                        )
 
@@ -61,6 +61,9 @@ class magento_backend(orm.Model):
         'location': fields.char('Location'),
         'username': fields.char('Username'),
         'password': fields.char('Password'),
+        'website_ids': fields.one2many(
+            'magento.website', 'backend_id',
+            string='Website', readonly=True),
         'default_lang_id': fields.many2one(
                 'res.lang',
                 'Default Language',
@@ -73,7 +76,6 @@ class magento_backend(orm.Model):
                  'without a category will be linked to it.'),
 
         # add a field `auto_activate` -> activate a cron
-        'import_partners_since': fields.datetime('Import partners since'),
         'import_products_since': fields.datetime('Import products since'),
     }
 
@@ -92,20 +94,13 @@ class magento_backend(orm.Model):
 
         return True
 
-    def import_partners_since(self, cr, uid, ids, context=None):
+    def import_partners(self, cr, uid, ids, context=None):
+        """ Import partners from all websites """
         if not hasattr(ids, '__iter__'):
             ids = [ids]
-        session = ConnectorSession(cr, uid, context=context)
-        for backend_record in self.browse(cr, uid, ids, context=context):
-            since_date = None
-            if backend_record.import_partners_since:
-                since_date = datetime.strptime(
-                        backend_record.import_partners_since,
-                        DEFAULT_SERVER_DATETIME_FORMAT)
-            import_partners_since.delay(session, 'magento.res.partner',
-                                        backend_record.id,
-                                        since_date=since_date)
-
+        for backend in self.browse(cr, uid, ids, context=context):
+            for website in backend.website_ids:
+                website.import_partners()
         return True
 
     def import_customer_groups(self, cr, uid, ids, context=None):
@@ -181,12 +176,34 @@ class magento_website(orm.Model):
             'website_id',
             string="Stores",
             readonly=True),
+        'import_partners_from_date': fields.datetime('Import partners since'),
     }
 
     _sql_constraints = [
         ('magento_uniq', 'unique(backend_id, magento_id)',
          'A website with the same ID on Magento already exists.'),
     ]
+
+    def import_partners(self, cr, uid, ids, context=None):
+        if not hasattr(ids, '__iter__'):
+            ids = [ids]
+        session = ConnectorSession(cr, uid, context=context)
+        import_start_time = datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        for website in self.browse(cr, uid, ids, context=context):
+            backend_id = website.backend_id.id
+            if website.import_partners_from_date:
+                from_date = datetime.strptime(
+                        website.import_partners_from_date,
+                        DEFAULT_SERVER_DATETIME_FORMAT)
+            else:
+                from_date = None
+            partner_import_batch.delay(
+                    session, 'magento.res.partner', backend_id,
+                    {'magento_website_id': website.magento_id,
+                     'from_date': from_date})
+        self.write(cr, uid, ids,
+                   {'import_partners_from_date': import_start_time})
+        return True
 
 
 # TODO migrate from sale.shop (create a magento.store + associated

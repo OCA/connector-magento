@@ -156,15 +156,45 @@ class PartnerAdapter(GenericAdapter):
     _model_name = 'magento.res.partner'
     _magento_model = 'customer'
 
-    def search(self, filters=None):
+    def search(self, filters=None, from_date=None, magento_storeview_ids=None):
         """ Search records according to some criterias
         and returns a list of ids
 
         :rtype: list
         """
+        if filters is None:
+            filters = {}
+        filters['state'] = {'neq': 'canceled'}
+        if from_date is not None:
+            filters['created_at'] = {'gt': from_date.strftime('%Y/%m/%d %H:%M:%S')}
+        if magento_storeview_ids is not None:
+            filters['store_id'] = {'in': magento_storeview_ids}
+
+        arguments = {'imported': False ,
+                     # 'limit': 200,
+                     'filters': filters,
+                     }
+        return super(SaleOrderAdapter, self).search(arguments)
+
+    def search(self, filters=None, from_date=None, magento_website_ids=None):
+        """ Search records according to some criterias and returns a
+        list of ids
+
+        :rtype: list
+        """
+        if filters is None:
+            filters = {}
+
+        if from_date is not None:
+            # updated_at include the created records
+            filters['updated_at'] = {'from': from_date.strftime('%Y/%m/%d %H:%M:%S')}
+        if magento_website_ids is not None:
+            filters['website_id'] = {'in': magento_website_ids}
+
         with magentolib.API(self.magento.location,
                             self.magento.username,
                             self.magento.password) as api:
+            # the search method is on ol_customer instead of customer
             return api.call('ol_customer.search',
                             [filters] if filters else [{}])
         return []
