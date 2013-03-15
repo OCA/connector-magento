@@ -197,7 +197,6 @@ class SimpleRecordImport(MagentoImportSynchronizer):
     _model_name = [
             'magento.website',
             'magento.store',
-            'magento.product.product',
             'magento.storeview',
             'magento.res.partner.category',
         ]
