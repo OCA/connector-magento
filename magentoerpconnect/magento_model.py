@@ -77,6 +77,7 @@ class magento_backend(orm.Model):
 
         # add a field `auto_activate` -> activate a cron
         'import_products_since': fields.datetime('Import products since'),
+        'catalog_price_tax_included': fields.boolean('Prices include tax')
     }
 
     def synchronize_metadata(self, cr, uid, ids, context=None):
