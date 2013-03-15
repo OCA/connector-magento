@@ -23,7 +23,6 @@
 #########################################################################
 
 from openerp.osv import fields, orm
-from .magerp_osv import MagerpModel
 from openerp.addons.connector.decorator import only_for_referential
 
 
@@ -67,12 +66,12 @@ class magento_res_partner(orm.Model):
                                      string='Magento Backend',
                                      store={
                                         'magento.res.partner':
-                                        (lambda self, cr, uid, ids, c=None: ids, 
-                                         ['website_id'], 
+                                        (lambda self, cr, uid, ids, c=None: ids,
+                                         ['website_id'],
                                          10),
                                         'magento.website':
                                         (_get_mag_partner_from_website,
-                                         ['backend_id'], 
+                                         ['backend_id'],
                                          20),
                                         },
                                      readonly=True),
@@ -131,12 +130,12 @@ class magento_address(orm.Model):
                                      string='Magento Backend',
                                      store={
                                         'magento.address':
-                                        (lambda self, cr, uid, ids, c=None: ids, 
-                                         ['magento_partner_id'], 
+                                        (lambda self, cr, uid, ids, c=None: ids,
+                                         ['magento_partner_id'],
                                          10),
                                         'magento.res.partner':
                                         (_get_mag_address_from_partner,
-                                         ['backend_id', 'website_id'], 
+                                         ['backend_id', 'website_id'],
                                          20),
                                         },
                                      readonly=True),
@@ -146,12 +145,12 @@ class magento_address(orm.Model):
                                      string='Magento Website',
                                      store={
                                         'magento.address':
-                                        (lambda self, cr, uid, ids, c=None: ids, 
-                                         ['magento_partner_id'], 
+                                        (lambda self, cr, uid, ids, c=None: ids,
+                                         ['magento_partner_id'],
                                          10),
                                         'magento.res.partner':
                                         (_get_mag_address_from_partner,
-                                         ['website_id'], 
+                                         ['website_id'],
                                          20),
                                         },
                                      readonly=True),
