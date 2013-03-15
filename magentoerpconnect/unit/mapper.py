@@ -18,6 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+import logging
 
 from openerp.tools.translate import _
 import openerp.addons.connector as connector
@@ -29,7 +30,7 @@ from openerp.addons.connector.unit.mapper import (mapping,
 from openerp.addons.connector_ecommerce.unit.sale_order_onchange import SaleOrderOnChange
 from ..backend import magento
 
-
+_logger = logging.getLogger(__name__)
 @magento
 class WebsiteImportMapper(ImportMapper):
     _model_name = 'magento.website'
@@ -330,8 +331,14 @@ class SaleOrderImportMapper(ImportMapper):
                 ]
 
     def _after_mapping(self, result):
+        sess = self.session
+        result = sess.pool['sale.order']._convert_special_fields(sess.cr,
+                                                                 sess.uid,
+                                                                 result,
+                                                                 result['magento_order_lines'],
+                                                                 sess.context)
         onchange = self.get_connector_unit_for_model(SaleOrderOnChange)
-        return onchange.play(result, 'magento_order_lines')
+        return onchange.play(result, result['magento_order_lines'])
 
     @mapping
     def store_id(self, record):
@@ -489,13 +496,15 @@ class SaleOrderLineImportMapper(ImportMapper):
 
     @mapping
     def price(self, record):
+        result = {}
+        backend = self.backend_record
         base_row_total = float(record['base_row_total'])
         base_row_total_incl_tax = float(record['base_row_total_incl_tax'])
         qty_ordered = float(record['qty_ordered'])
-        result = {'price_unit_tax_included': base_row_total_incl_tax / qty_ordered,
-                  'price_unit_tax_excluded': base_row_total / qty_ordered,
-                  'tax_rate': base_row_total and base_row_total_incl_tax / base_row_total - 1,
-                  }
+        if backend.catalog_price_tax_included:
+            result['price'] = base_row_total_incl_tax / qty_ordered
+        else:
+            result['price'] = base_row_total / qty_ordered
         return result
 
 

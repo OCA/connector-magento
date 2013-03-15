@@ -45,18 +45,10 @@ class magento_sale_order(orm.Model):
                                       ondelete='cascade'),
         'magento_order_lines': fields.one2many('magento.sale.order.line', 'magento_order_id',
                                                'Magento Order Lines'),
-        'total_amount': fields.float(),
-        'total_amount_tax': fields.float(),
-        'tax_amount': fields.float(),
-        #'cod_fee':  XXX
-        #gift_cert_code':
-        'shipping_amount_tax_included': fields.float('Shipping amount (w.tax)',
-                                                     digits_compute=dp.get_precision('Account')),
-        'shipping_amount_tax_excluded': fields.float('Shipping amount (wo.tax)',
-                                                     digits_compute=dp.get_precision('Account')),
-        'shipping_tax_rate': fields.float('Shipping tax rate',
-                                                     digits_compute=dp.get_precision('Account')),
-        
+        'total_amount': fields.float('Total amount',
+                                     digits_compute=dp.get_precision('Account')), # XXX common to all ecom sale orders
+        'total_amount_tax': fields.float('Total amount w. tax',
+                                         digits_compute=dp.get_precision('Account')), # XXX common to all ecom sale orders
         }
     _sql_constraints = [
         ('magento_uniq', 'unique(backend_id, magento_id)',
@@ -105,11 +97,7 @@ class magento_sale_order_line(orm.Model):
                                      readonly=True),
         'tax_rate': fields.float('Tax Rate',
                                  digits_compute=dp.get_precision('Account')),
-        'notes': fields.char('Notes'),
-        'price_unit_tax_excluded': fields.float('Unit Price wo. tax',
-                                                digits_compute=dp.get_precision('Account')),
-        'price_unit_tax_included': fields.float('Unit Price w. tax',
-                                              digits_compute=dp.get_precision('Account')),
+        'notes': fields.char('Notes'), # XXX common to all ecom sale orders
         }
 
     _sql_constraints = [
