@@ -23,7 +23,7 @@ import logging
 from datetime import datetime
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.addons.connector.queue.job import job
-from openerp.addons.connector.connector import Environment, ConnectorUnit
+from openerp.addons.connector.connector import Environment
 from openerp.addons.connector.unit.synchronizer import ImportSynchronizer
 from openerp.addons.connector.unit.backend_adapter import BackendAdapter
 from ..backend import magento
@@ -342,7 +342,7 @@ class ProductCategoryBatchImport(BatchImportSynchronizer):
 
 
 @magento
-class TranslationImporter(ConnectorUnit):
+class TranslationImporter(ImportSynchronizer):
     """ Import translations for a record.
 
     Usually called from importers, in ``_after_import``.
@@ -371,7 +371,8 @@ class TranslationImporter(ConnectorUnit):
             return
 
         # find the translatable fields of the model
-        fields = self.model.fields_get(cr, uid, context=context)
+        fields = self.model.fields_get(session.cr, session.uid,
+                                       context=session.context)
         translatable_fields = [field for field, attrs in fields.iteritems()
                                if attrs.get('translate')]
 
