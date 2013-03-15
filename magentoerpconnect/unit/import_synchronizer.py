@@ -23,7 +23,7 @@ import logging
 from datetime import datetime
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.addons.connector.queue.job import job
-from openerp.addons.connector.connector import Environment
+from openerp.addons.connector.connector import Environment, ConnectorUnit
 from openerp.addons.connector.unit.synchronizer import ImportSynchronizer
 from openerp.addons.connector.unit.backend_adapter import BackendAdapter
 from ..backend import magento
@@ -74,12 +74,10 @@ class MagentoImportSynchronizer(ImportSynchronizer):
         """Return the openerp id from the magento id"""
         return self.binder.to_openerp(self.magento_id)
 
-    def _context(self, **kwargs):
-        if not 'lang' in kwargs:
-            lang = self.backend_record.default_lang_id
-            if lang:
-                kwargs['lang'] = lang.code
-        return dict(self.session.context, connector_no_export=True, **kwargs)
+    def _context(self):
+        context = self.session.context.copy()
+        context['connector_no_export'] = True
+        return context
 
     def _create(self, data):
         """ Create the OpenERP record """
@@ -261,7 +259,7 @@ class PartnerImport(MagentoImportSynchronizer):
                                       ['openerp_id'],
                                       context=self.session.context)
         res_partner_openerp_id = partner_row['openerp_id'][0]
-        mag_addresses = {} # mag_address_id -> True if address is linked to existing partner,
+        mag_addresses = {} # mag_address_id -> True if address is linked to existing partner, 
                            #                   False otherwise
         if len(mag_address_ids) == 1:
             mag_addresses[mag_address_ids[0]] = True
@@ -278,9 +276,9 @@ class PartnerImport(MagentoImportSynchronizer):
             if not billing_address:
                 mag_addresses[min(mag_addresses)] = True
         for address_id, to_link in mag_addresses.iteritems():
-            importer.run(address_id,
-                         magento_res_partner_openerp_id,
-                         res_partner_openerp_id,
+            importer.run(address_id, 
+                         magento_res_partner_openerp_id, 
+                         res_partner_openerp_id, 
                          to_link)
 
 
@@ -295,18 +293,20 @@ class AddressImport(MagentoImportSynchronizer):
         self.link_with_partner = link_with_partner
         super(AddressImport, self).run(magento_id)
 
-    def _map_data(self):
-        """ Return the external record converted to OpenERP """
-        data = super(AddressImport, self)._map_data()
+    def _create(self, data):
+        """ Create the OpenERP record """
         if self.link_with_partner:
             data['openerp_id'] = self.partner_id
         else:
             data['parent_id'] = self.partner_id
-            partner = self.session.browse('res.partner',
-                                          self.partner_id)
-            data['lang'] = partner.lang
         data['magento_partner_id'] = self.magento_partner_id
-        return data
+        return super(AddressImport, self)._create(data)
+
+    def _update(self, openerp_id, data):
+        """ Update an OpenERP record """
+        data['parent_id'] = self.partner_id
+        data['magento_partner_id'] = self.magento_partner_id
+        return super(AddressImport, self)._update(openerp_id, data)
 
 
 @magento
@@ -341,46 +341,50 @@ class ProductCategoryBatchImport(BatchImportSynchronizer):
         import_nodes(tree)
 
 
-class TranslatableImport(object):
-    """ Mixin for imports with translations """
+@magento
+class TranslationImporter(ConnectorUnit):
+    """ Import translations for a record.
+
+    Usually called from importers, in ``_after_import``.
+    For instance from the products and products' categories importers.
+    """
+
+    _model_name = ['magento.product.category',
+                   'magento.product.product',
+                   ]
 
     def _get_magento_data(self, storeview_id=None):
         """ Return the raw Magento data for ``self.magento_id`` """
         return self.backend_adapter.read(self.magento_id, storeview_id)
 
-    def _after_import(self, openerp_id):
-        super(TranslatableImport, self)._after_import(openerp_id)
+    def run(self, magento_id, openerp_id):
+        self.magento_id = magento_id
         session = self.session
-        storeview_obj = session.pool.get('magento.storeview')
-        model_fields_obj = session.pool.get('ir.model.fields')
-        cr, uid, context = (session.cr,
-                            session.uid,
-                            session.context)
-        storeview_ids = storeview_obj.search(
-                cr, uid,
-                [('backend_id', '=', self.backend_record.id)],
-                context=context)
+        storeview_ids = session.search(
+                'magento.storeview',
+                [('backend_id', '=', self.backend_record.id)])
+        storeviews = session.browse('magento.storeview', storeview_ids)
         default_lang = self.backend_record.default_lang_id
-        storeviews = storeview_obj.browse(cr, uid,
-                                          storeview_ids,
-                                          context=context)
         lang_storeviews = [sv for sv in storeviews
                            if sv.lang_id and sv.lang_id != default_lang]
         if not lang_storeviews:
             return
 
+        # find the translatable fields of the model
         fields = self.model.fields_get(cr, uid, context=context)
         translatable_fields = [field for field, attrs in fields.iteritems()
                                if attrs.get('translate')]
 
         for storeview in lang_storeviews:
-            context = self._context(lang=storeview.lang_id.code)
+            context = session.context.copy()
+            context['lang'] = storeview.lang_id.code
+
             lang_record = self._get_magento_data(storeview.magento_id)
             record = self.mapper.convert(lang_record)
 
             data = dict((field, value) for field, value in record.iteritems()
                         if field in translatable_fields)
-            self.model.write(cr, uid, openerp_id, data, context=context)
+            session.write(self.model._name, openerp_id, data)
 
 
 @magento
@@ -418,6 +422,7 @@ class SaleOrderImport(MagentoImportSynchronizer):
             if 'product_id' in line and prod_binder.to_openerp(line['product_id']) is None:
                 prod_importer.run(line['product_id'])
 
+
 @magento
 class SaleOrderLineImport(MagentoImportSynchronizer):
     _model_name = ['magento.sale.order.line']
@@ -431,9 +436,8 @@ class SaleOrderLineImport(MagentoImportSynchronizer):
                 importer.run(record['item_id'])
 
 
-
 @magento
-class ProductImport(TranslatableImport, MagentoImportSynchronizer):
+class ProductImport(MagentoImportSynchronizer):
     _model_name = ['magento.product.product']
 
     def _import_dependencies(self):
@@ -448,9 +452,15 @@ class ProductImport(TranslatableImport, MagentoImportSynchronizer):
                                 model='magento.product.category')
                 importer.run(mag_category_id)
 
+    def _after_import(self, openerp_id):
+        """ Hook called at the end of the import """
+        translation_importer = self.get_connector_unit_for_model(
+                TranslationImporter, self.model._name)
+        translation_importer.run(self.magento_id, openerp_id)
+
 
 @magento
-class ProductCategoryImport(TranslatableImport, MagentoImportSynchronizer):
+class ProductCategoryImport(MagentoImportSynchronizer):
     _model_name = ['magento.product.category']
 
     def _import_dependencies(self):
@@ -461,9 +471,16 @@ class ProductCategoryImport(TranslatableImport, MagentoImportSynchronizer):
         # the root category has a 0 parent_id
         if record.get('parent_id'):
             binder = self.get_binder_for_model()
-            if binder.to_openerp(record['parent_id']) is None:
+            parent_id = record['parent_id']
+            if binder.to_openerp(parent_id) is None:
                 importer = env.get_connector_unit(MagentoImportSynchronizer)
-                importer.run(record['parent_id'])
+                importer.run(parent_id)
+
+    def _after_import(self, openerp_id):
+        """ Hook called at the end of the import """
+        translation_importer = self.get_connector_unit_for_model(
+                TranslationImporter, self.model._name)
+        translation_importer.run(self.magento_id, openerp_id)
 
 
 @job
