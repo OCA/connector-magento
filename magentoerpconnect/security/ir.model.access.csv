@@ -1,14 +1,26 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_magentoerpconnect_magerp_product_category_attribute_options,magerp_product_category_attribute_options,model_magerp_product_category_attribute_options,base.group_user,1,0,0,0
-access_magentoerpconnect_magerp_product_attributes,magerp_product_attributes,model_magerp_product_attributes,base.group_user,1,0,0,0
-access_magentoerpconnect_magerp_product_attribute_set,magerp_product_attribute_set,model_magerp_product_attribute_set,base.group_user,1,0,0,0
-access_magentoerpconnect_magerp_product_attribute_groups,magerp_product_attribute_groups,model_magerp_product_attribute_groups,base.group_user,1,0,0,0
-access_magentoerpconnect_magerp_product_attribute_options,magerp_product_attribute_options,model_magerp_product_attribute_options,base.group_user,1,0,0,0
-access_magentoerpconnect_model_magerp_product_product_type,model_magerp_product_product_type,model_magerp_product_product_type,base.group_user,1,0,0,0
-access_magentoerpconnect_product_tierprice,product_tierprice,model_product_tierprice,base.group_sale_manager,1,1,1,1
-access_magentoerpconnect_magerp_product_attributes_manager,magerp_product_attributes,model_magerp_product_attributes,stock.group_stock_manager,1,1,1,1
-access_magentoerpconnect_magerp_product_category_attribute_options_manager,magerp_product_category_attribute_options,model_magerp_product_category_attribute_options,stock.group_stock_manager,1,1,1,1
-access_magentoerpconnect_magerp_product_attribute_set_manager,magerp_product_attribute_set,model_magerp_product_attribute_set,stock.group_stock_manager,1,1,1,1
-access_magentoerpconnect_magerp_product_attribute_groups_manager,magerp_product_attribute_groups,model_magerp_product_attribute_groups,stock.group_stock_manager,1,1,1,1
-access_magentoerpconnect_magerp_product_attribute_options_manager,magerp_product_attribute_options,model_magerp_product_attribute_options,stock.group_stock_manager,1,1,1,1
-access_magentoerpconnect_model_magerp_product_product_type_manager,model_magerp_product_product_type,model_magerp_product_product_type,stock.group_stock_manager,1,1,1,1
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+"access_magentoerpconnect_magerp_backend","magerp_backend","model_magento_backend","base.group_sale_salesman",1,0,0,0
+"access_magentoerpconnect_magerp_backend_sale_manager","magerp_backend","model_magento_backend","base.group_sale_manager",1,0,0,0
+"access_magentoerpconnect_magerp_binding","magerp_binding","model_magento_binding","base.group_sale_salesman",1,0,0,0
+"access_magentoerpconnect_magerp_binding_sale_manager","magerp_binding","model_magento_binding","base.group_sale_manager",1,0,0,0
+"access_magentoerpconnect_magerp_product_product","magerp_product_product","model_magento_product_product","base.group_sale_salesman",1,0,0,0
+"access_magentoerpconnect_magerp_product_product_sale_manager","magerp_product_product","model_magento_product_product","base.group_sale_manager",1,1,1,1
+"access_magentoerpconnect_magerp_store","magerp_store","model_magento_store","base.group_sale_salesman",1,0,0,0
+"access_magentoerpconnect_magerp_store_sale_manager","magerp_store","model_magento_store","base.group_sale_manager",1,0,0,0
+"access_magentoerpconnect_magerp_storeview","magerp_storeview","model_magento_storeview","base.group_sale_salesman",1,0,0,0
+"access_magentoerpconnect_magerp_storeview_sale_manager","magerp_storeview","model_magento_storeview","base.group_sale_manager",1,0,0,0
+"access_magentoerpconnect_magerp_website","magerp_website","model_magento_website","base.group_sale_salesman",1,0,0,0
+"access_magentoerpconnect_magerp_website_sale_manager","magerp_website","model_magento_website","base.group_sale_manager",1,0,0,0
+"access_magentoerpconnect_magerp_sale_order_sale_salesman","magerp_sale_order","model_magento_sale_order","base.group_sale_salesman",1,1,1,1
+"access_magentoerpconnect_magerp_sale_order_sale_manager","magerp_sale_order","model_magento_sale_order","base.group_sale_manager",1,1,1,1
+"access_magentoerpconnect_magerp_sale_order_line_sale_salesman","magerp_sale_order_line","model_magento_sale_order_line","base.group_sale_salesman",1,1,1,1
+"access_magentoerpconnect_magerp_sale_order_line_sale_manager","magerp_sale_order_line","model_magento_sale_order_line","base.group_sale_manager",1,1,1,1
+"access_magentoerpconnect_account_invoice_uinvoice","magerp_account.invoice","model_magento_account_invoice","account.group_account_invoice",1,1,1,1
+"access_magentoerpconnect_account_invoice_line_uinvoice","magerp_account.invoice.line","model_magento_account_invoice_line","account.group_account_invoice",1,1,1,1
+"access_magentoerpconnect_product_category_sale_manager","magerp_product.category salemanager","model_magento_product_category","base.group_sale_manager",1,1,1,1
+"access_magentoerpconnect_product_category_user","magerp_product.category.user","model_magento_product_category","base.group_user",1,0,0,0
+"access_magentoerpconnect_res_partner_group_user","magerp_res_partner group_user","model_magento_res_partner","base.group_user",1,0,0,0
+"access_magentoerpconnect_res_partner_category_group_user","magerp_res_partner_category group_user","model_magento_res_partner_category","base.group_user",1,0,0,0
+"access_magentoerpconnect_address_group_user","magerp_address_group_user","model_magento_address","base.group_user",1,0,0,0
+"access_magentoerpconnect_stock_picking_out_user","magerp_stock.picking.out","model_magento_stock_picking","stock.group_stock_user",1,1,1,1
+"access_magentoerpconnect_stock_picking_out_manager","magerp_stock.picking out manager","model_magento_stock_picking","stock.group_stock_manager",1,1,1,1
