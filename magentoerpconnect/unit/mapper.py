@@ -297,6 +297,7 @@ class ProductCategoryImportMapper(ImportMapper):
             return
         binder = self.get_binder_for_model()
         category_id = binder.to_openerp(record['parent_id'], unwrap=True)
+        mag_cat_id = binder.to_openerp(record['parent_id'])
 
         if category_id is None:
             raise MappingError("The product category with "
