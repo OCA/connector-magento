@@ -53,7 +53,7 @@ TODO
     "update_xml": [
             'security/ir.model.access.csv',
             'setting_view.xml',
-            'magerp_data.xml',
+            'magento_data.xml',
             'magento_model_view.xml',
             'product_view.xml',
             'partner_view.xml',
