@@ -130,6 +130,16 @@ class PartnerImportMapper(ImportMapper):
     def backend_id(self, record):
         return {'backend_id': self.backend_record.id}
 
+    @mapping
+    def lang(self, record):
+        binder = self.get_binder_for_model('magento.storeview')
+        openerp_id = binder.to_openerp(record['store_id'])
+        lang = False
+        if openerp_id:
+            storeview = self.session.browse('magento.storeview',
+                                            openerp_id)
+            lang = storeview.lang_id and storeview.lang_id.code
+        return {'lang': lang}
 
 @magento
 class PartnerExportMapper(ExportMapper):
