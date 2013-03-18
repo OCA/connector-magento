@@ -26,7 +26,7 @@
                             <field name="password"/>
                         </group>
                         <group col="4">
-                            <field name="default_lang_id"/>
+                            <field name="default_lang_id" widget="selection"/>
                             <field name="default_category_id"/>
                         </group>
                         <notebook>
@@ -48,25 +48,28 @@
                                         string="Import in background"/>
                                 </group>
                                 <group>
-                                    <label string="Import all product categories" class="oe_inline"/>
                                     <div>
-                                        <button name="import_product_categories"
-                                            type="object"
-                                            class="oe_highlight"
-                                            string="Import in background"/>
+                                        <label string="Import products categories since" class="oe_inline"/>
+                                        <field name="import_categories_from_date"
+                                            class="oe_inline"
+                                            nolabel="1"/>
                                     </div>
+                                    <button name="import_product_categories"
+                                        type="object"
+                                        class="oe_highlight"
+                                        string="Import in background"/>
                                 </group>
                                 <group>
                                     <div>
                                         <label string="Import products since" class="oe_inline"/>
-                                        <field name="import_products_since"
+                                        <field name="import_products_from_date"
                                             class="oe_inline"
                                             nolabel="1"/>
                                     </div>
-                                      <button name="import_product_product"
-                                          type="object"
-                                          class="oe_highlight"
-                                          string="Import in background"/>
+                                    <button name="import_product_product"
+                                        type="object"
+                                        class="oe_highlight"
+                                        string="Import in background"/>
                                 </group>
 
                             </page>
@@ -212,7 +215,7 @@
                         <field name="enabled"/>
                     </group>
                     <group>
-                        <field name="lang_id"/>
+                        <field name="lang_id" widget="selection"/>
                     </group>
                     <group colspan="4">
                       <div>
@@ -242,7 +245,6 @@
                     <field name="enabled"/>
                     <field name="sort_order"/>
                     <field name="store_id"/>
-                    <field name="lang_id"/>
                 </tree>
             </field>
         </record>

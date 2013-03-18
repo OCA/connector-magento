@@ -156,26 +156,6 @@ class PartnerAdapter(GenericAdapter):
     _model_name = 'magento.res.partner'
     _magento_model = 'customer'
 
-    def search(self, filters=None, from_date=None, magento_storeview_ids=None):
-        """ Search records according to some criterias
-        and returns a list of ids
-
-        :rtype: list
-        """
-        if filters is None:
-            filters = {}
-        filters['state'] = {'neq': 'canceled'}
-        if from_date is not None:
-            filters['created_at'] = {'gt': from_date.strftime('%Y/%m/%d %H:%M:%S')}
-        if magento_storeview_ids is not None:
-            filters['store_id'] = {'in': magento_storeview_ids}
-
-        arguments = {'imported': False ,
-                     # 'limit': 200,
-                     'filters': filters,
-                     }
-        return super(SaleOrderAdapter, self).search(arguments)
-
     def search(self, filters=None, from_date=None, magento_website_ids=None):
         """ Search records according to some criterias and returns a
         list of ids
@@ -245,14 +225,26 @@ class ProductCategoryAdapter(GenericAdapter):
     _model_name = 'magento.product.category'
     _magento_model = 'catalog_category'
 
-    def search(self, filters=None):
-        """ Search records according to some criterias
-        and returns a list of ids
+    def search(self, filters=None, from_date=None):
+        """ Search records according to some criterias and returns a
+        list of ids
 
         :rtype: list
         """
-        raise NotImplementedError('No search on product categories, '
-                                  'use "tree" method')
+        if filters is None:
+            filters = {}
+
+        if from_date is not None:
+            # updated_at include the created records
+            filters['updated_at'] = {'from': from_date.strftime('%Y/%m/%d %H:%M:%S')}
+
+        with magentolib.API(self.magento.location,
+                            self.magento.username,
+                            self.magento.password) as api:
+            # the search method is on ol_customer instead of customer
+            return api.call('oerp_catalog_category.search',
+                            [filters] if filters else [{}])
+        return []
 
     def read(self, id, storeview_id=None, attributes=None):
         """ Returns the information of a record

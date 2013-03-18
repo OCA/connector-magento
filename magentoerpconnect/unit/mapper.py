@@ -292,7 +292,8 @@ class ProductCategoryImportMapper(ImportMapper):
 
     @mapping
     def name(self, record):
-        return {'name': record['name'] or _('Undefined')}
+        if record['name']:  # may be empty in storeviews
+            return {'name': record['name']}
 
     @mapping
     def magento_id(self, record):
@@ -315,6 +316,7 @@ class ProductCategoryImportMapper(ImportMapper):
                                "magento id %s is not imported." %
                                record['parent_id'])
         return {'parent_id': category_id, 'magento_parent_id': mag_cat_id}
+
 
 @magento
 class SaleOrderImportMapper(ImportMapper):
