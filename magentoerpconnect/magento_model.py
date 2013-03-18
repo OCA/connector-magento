@@ -81,6 +81,17 @@ class magento_backend(orm.Model):
         'catalog_price_tax_included': fields.boolean('Prices include tax')
     }
 
+    def check_magento_structure(self, cr, uid, ids, context=None):
+        """ Used in each data import.
+        Verify if a website exists for each backend before starting the import.
+        """
+        for backend_id in ids:
+            website_ids = self.pool['magento.website'].search(
+                cr, uid, [('backend_id', '=', backend_id)], context=context)
+            if not website_ids:
+                self.synchronize_metadata(cr, uid, backend_id, context=context)
+        return True
+
     def synchronize_metadata(self, cr, uid, ids, context=None):
         if not hasattr(ids, '__iter__'):
             ids = [ids]
@@ -100,6 +111,7 @@ class magento_backend(orm.Model):
         """ Import partners from all websites """
         if not hasattr(ids, '__iter__'):
             ids = [ids]
+        self.check_magento_structure(cr, uid, ids, context=context)
         for backend in self.browse(cr, uid, ids, context=context):
             for website in backend.website_ids:
                 website.import_partners()
@@ -108,6 +120,7 @@ class magento_backend(orm.Model):
     def import_customer_groups(self, cr, uid, ids, context=None):
         if not hasattr(ids, '__iter__'):
             ids = [ids]
+        self.check_magento_structure(cr, uid, ids, context=context)
         session = ConnectorSession(cr, uid, context=context)
         for backend_id in ids:
             import_batch.delay(session, 'magento.res.partner.category',
@@ -118,6 +131,7 @@ class magento_backend(orm.Model):
     def _import_from_date(self, cr, uid, ids, model, from_date_field, context=None):
         if not hasattr(ids, '__iter__'):
             ids = [ids]
+        self.check_magento_structure(cr, uid, ids, context=context)
         session = ConnectorSession(cr, uid, context=context)
         import_start_time = datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         for backend in self.browse(cr, uid, ids, context=context):
