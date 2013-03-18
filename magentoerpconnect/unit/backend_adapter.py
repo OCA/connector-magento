@@ -293,10 +293,10 @@ class ProductProductAdapter(GenericAdapter):
             filters = {}
         if from_date is not None:
             filters['updated_at'] = {'from': from_date.strftime('%Y/%m/%d %H:%M:%S')}
-        _logger.debug("api.call(%s.list', [%s])", self._magento_model, filters)
         with magentolib.API(self.magento.location,
                             self.magento.username,
                             self.magento.password) as api:
+            # TODO add a search entry point on the Magento API
             return [int(row['product_id']) for row
                        in api.call('%s.list' % self._magento_model,
                                    [filters] if filters else [{}])]
