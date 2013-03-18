@@ -76,7 +76,8 @@ class magento_backend(orm.Model):
                  'without a category will be linked to it.'),
 
         # add a field `auto_activate` -> activate a cron
-        'import_products_since': fields.datetime('Import products since'),
+        'import_products_from_date': fields.datetime('Import products from date'),
+        'import_categories_from_date': fields.datetime('Import categories from date'),
         'catalog_price_tax_included': fields.boolean('Prices include tax')
     }
 
@@ -114,31 +115,31 @@ class magento_backend(orm.Model):
 
         return True
 
-    def import_product_categories(self, cr, uid, ids, context=None):
-        if not hasattr(ids, '__iter__'):
-            ids = [ids]
-        session = ConnectorSession(cr, uid, context=context)
-        for backend_id in ids:
-            import_batch.delay(session, 'magento.product.category',
-                               backend_id)
-        return True
-
-    def import_product_product(self, cr, uid, ids, context=None):
+    def _import_from_date(self, cr, uid, ids, model, from_date_field, context=None):
         if not hasattr(ids, '__iter__'):
             ids = [ids]
         session = ConnectorSession(cr, uid, context=context)
         import_start_time = datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         for backend in self.browse(cr, uid, ids, context=context):
-            if backend.import_products_since:
-                from_date = datetime.strptime(
-                        backend.import_products_since,
-                        DEFAULT_SERVER_DATETIME_FORMAT)
+            from_date = getattr(backend, from_date_field)
+            if from_date:
+                from_date = datetime.strptime(from_date,
+                                              DEFAULT_SERVER_DATETIME_FORMAT)
             else:
                 from_date = None
-            import_batch.delay(session, 'magento.product.product',
+            import_batch.delay(session, model,
                                backend.id, filters={'from_date': from_date})
         self.write(cr, uid, ids,
-                   {'import_products_since': import_start_time})
+                   {from_date_field: import_start_time})
+
+    def import_product_categories(self, cr, uid, ids, context=None):
+        self._import_from_date(cr, uid, ids, 'magento.product.category',
+                               'import_categories_from_date', context=context)
+        return True
+
+    def import_product_product(self, cr, uid, ids, context=None):
+        self._import_from_date(cr, uid, ids, 'magento.product.product',
+                               'import_products_from_date', context=context)
         return True
 
     def _magento_backend(self, cr, uid, callback, domain=None, context=None):
@@ -196,7 +197,7 @@ class magento_website(orm.Model):
             'website_id',
             string="Stores",
             readonly=True),
-        'import_partners_from_date': fields.datetime('Import partners since'),
+        'import_partners_from_date': fields.datetime('Import partners from date'),
     }
 
     _sql_constraints = [

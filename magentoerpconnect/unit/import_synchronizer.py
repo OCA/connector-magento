@@ -329,7 +329,12 @@ class ProductCategoryBatchImport(BatchImportSynchronizer):
 
     def run(self, filters=None):
         """ Run the synchronization """
-        assert not filters, "filters are not used for product categories"
+        from_date = filters.pop('from_date', None)
+        if from_date is not None:
+            updated_ids = self.backend_adapter.search(filters, from_date)
+        else:
+            updated_ids = None
+
         base_priority = 10
         def import_nodes(tree, level=0):
             for node_id, children in tree.iteritems():
@@ -337,7 +342,8 @@ class ProductCategoryBatchImport(BatchImportSynchronizer):
                 # more chance to be imported before the childrens.
                 # However, importers have to ensure that their parent is
                 # there and import it if it doesn't exist
-                self._import_record(node_id, priority=base_priority+level)
+                if updated_ids is None or node_id in updated_ids:
+                    self._import_record(node_id, priority=base_priority+level)
                 import_nodes(children, level=level+1)
         tree = self.backend_adapter.tree()
         import_nodes(tree)
