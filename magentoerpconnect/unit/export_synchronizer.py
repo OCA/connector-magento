@@ -131,7 +131,7 @@ class PartnerExport(MagentoExportSynchronizer):
 
 @magento
 class MagentoPickingExport(ExportSynchronizer):
-    _model_name = ['magento.stock.picking']
+    _model_name = ['magento.stock.picking.out']
 
     def _get_args(self, magento_sale_id,
                   mail_notification=False, lines_info=None):
@@ -210,39 +210,62 @@ class MagentoPickingExport(ExportSynchronizer):
 
 @magento
 class MagentoTrackingExport(ExportSynchronizer):
-    _model_name = ['magento.stock.picking']
+    _model_name = ['magento.stock.picking.out']
 
-    def _get_tracking_args(self, picking, tracking_number):
+    def _get_tracking_args(self, picking):
         return (picking.carrier_id.magento_carrier_code,
                 picking.carrier_id.magento_tracking_title or '',
-                packing.carrier_tracking_ref)
+                picking.carrier_tracking_ref)
 
     def _validate(self, picking):
-        # should not happen: event fired only after 'done'
-        if picking.state != 'done':
+        if picking.state != 'done':  # should not happen
             raise ValueError("Wrong value for picking state, "
                              "it must be 'done', found: %s" % picking.state)
-        if not picking.carrier_id:
-            raise FailedJobError("No carrier selected on the picking, "
-                             "it must be defined.")
         if not picking.carrier_id.magento_carrier_code:
             raise FailedJobError("Wrong value for the Magento carrier code "
                                  "defined in the picking.")
 
+    def _check_allowed_carrier(self, picking, magento_id):
+        allowed_carriers = self.backend_adapter.get_carriers(magento_id)
+        carrier = picking.carrier_id
+        if carrier.magento_carrier_code not in allowed_carriers:
+            raise FailedJobError("The carrier %(name)s does not accept "
+                                 "tracking numbers on Magento.\n\n"
+                                 "Tracking codes accepted by Magento:\n"
+                                 "%(allowed)s.\n\n"
+                                 "Actual tracking code:\n%(code)s\n\n"
+                                 "Resolution:\n"
+                                 "* Add support of %(code)s in Magento\n"
+                                 "* Or deactivate the export of tracking "
+                                 "numbers in the setup of the carrier %(name)s." %
+                                 {'name': carrier.name,
+                                  'allowed': allowed_carriers,
+                                  'code': carrier.magento_carrier_code})
+
     def run(self, openerp_id):
         """ Export the tracking number of a picking to Magento """
         # verify the picking is done + magento id exists
-        picking = self.session.browse('stock.picking', openerp_id)
-        if not picking.tracking_number:
+        picking = self.session.browse(self.model._name, openerp_id)
+        carrier = picking.carrier_id
+        if not carrier:
+            return FailedJobError('The carrier is missing on the picking %s.' %
+                                  picking.name)
+
+        if not carrier.magento_export_tracking:
+            return _('The carrier %s does not export '
+                     'tracking numbers.') % carrier.name
+        if not picking.carrier_tracking_ref:
             return _('No tracking number to send.')
 
-        binder = self.get_binder_for_model('magento.stock.picking')
+        binder = self.get_binder_for_model()
         magento_picking_id = binder.to_backend(picking.id)
         if magento_picking_id is None:
             raise NoExternalId("No value found for the picking ID on "
                                "Magento side, the job will be retried later.")
 
         self._validate(picking)
+        self._check_allowed_carrier(picking, magento_picking_id)
+
         tracking_args = self._get_tracking_args(picking)
         self.backend_adapter.add_tracking_number(magento_picking_id,
                                                  *tracking_args)
@@ -327,7 +350,7 @@ def export_picking_done(session, model_name, backend_id, record_id, picking_type
     :param picking_type: picking_type, can be 'complete' or 'partial'
         :type picking_type: str
     """
-    env = get_environment(session, 'magento.stock.picking', backend_id)
+    env = get_environment(session, model_name, backend_id)
     picking_exporter = env.get_connector_unit(MagentoPickingExport)
     res = picking_exporter.run(record_id, picking_type)
 

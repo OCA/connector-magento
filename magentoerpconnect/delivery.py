@@ -23,6 +23,7 @@
 from openerp.osv import fields, orm
 
 
+# TODO magento.delivery.carrier & move specific stuff
 class delivery_carrier(orm.Model):
     _inherit = "delivery.carrier"
 
@@ -52,5 +53,10 @@ class delivery_carrier(orm.Model):
             fields.function(_carrier_code,
                             string='Magento Base Carrier Code',
                             size=32,
-                            type='char')
+                            type='char'),
+        'magento_export_tracking': fields.boolean('Export tracking numbers')
+    }
+
+    _defaults = {
+        'magento_export_tracking': True,
     }

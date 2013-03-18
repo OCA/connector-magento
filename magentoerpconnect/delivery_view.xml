@@ -11,6 +11,7 @@
                     <field name="product_id" select="1" position="after">
                         <field name="magento_code"/>
                         <field name="magento_tracking_title"/>
+                        <field name="magento_export_tracking"/>
                     </field>
                 </data>
             </field>

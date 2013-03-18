@@ -30,7 +30,7 @@ from openerp.addons.connector.event import (
     )
 from openerp.addons.connector.connector import Environment
 
-from openerp.addons.connector_ecommerce.event import (on_picking_done,
+from openerp.addons.connector_ecommerce.event import (on_picking_out_done,
                                                       on_tracking_number_added,
                                                       on_invoice_paid)
 from .unit.export_synchronizer import (
@@ -95,7 +95,7 @@ def delay_unlink(session, model_name, record_id):
                                    record.backend_id.id, magento_id)
 
 
-@on_picking_done(model_names='stock.picking')
+@on_picking_out_done()
 @magento_consumer
 def delay_export_picking_done(session, model_name, record_id, picking_type):
     """
@@ -112,7 +112,7 @@ def delay_export_picking_done(session, model_name, record_id, picking_type):
                                   binding.id, picking_type)
 
 
-@on_tracking_number_added(model_names='stock.picking')
+@on_tracking_number_added()
 @magento_consumer
 def delay_export_tracking_number(session, model_name, record_id):
     """

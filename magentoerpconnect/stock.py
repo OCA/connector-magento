@@ -23,12 +23,12 @@ from openerp.osv import orm, fields
 
 
 class magento_stock_picking(orm.Model):
-    _name = 'magento.stock.picking'
+    _name = 'magento.stock.picking.out'
     _inherit = 'magento.binding'
     _inherits = {'stock.picking': 'openerp_id'}
 
     _columns = {
-        'openerp_id': fields.many2one('stock.picking',
+        'openerp_id': fields.many2one('stock.picking.out',
                                       string='Stock Picking',
                                       required=True,
                                       ondelete='cascade'),
@@ -44,11 +44,11 @@ class magento_stock_picking(orm.Model):
 
 
 class stock_picking(orm.Model):
-    _inherit = 'stock.picking'
+    _inherit = 'stock.picking.out'
 
     _columns = {
         'magento_bind_ids': fields.one2many(
-            'magento.stock.picking', 'openerp_id',
+            'magento.stock.picking.out', 'openerp_id',
             string="Magento Bindings"),
     }
 

@@ -317,7 +317,7 @@ class ProductProductAdapter(GenericAdapter):
 
 @magento
 class StockPickingAdapter(GenericAdapter):
-    _model_name = 'magento.stock.picking'
+    _model_name = 'magento.stock.picking.out'
     _magento_model = 'sales_order_shipment'
 
     def create(self, order_id, items, comment, email, include_comment):
@@ -345,6 +345,19 @@ class StockPickingAdapter(GenericAdapter):
             return api.call('%s.addTrack' % self._magento_model,
                             [magento_id, carrier_code,
                              tracking_title, tracking_number])
+
+    def get_carriers(self, magento_id):
+        """ Get the list of carrier codes allowed for the shipping.
+
+        :param magento_id: shipment increment id
+        :rtype: list
+        """
+        with magentolib.API(self.magento.location,
+                            self.magento.username,
+                            self.magento.password) as api:
+            return api.call('%s.getCarriers' % self._magento_model,
+                            [magento_id])
+
 
 @magento
 class AccountInvoiceAdapter(GenericAdapter):
