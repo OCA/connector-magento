@@ -24,6 +24,7 @@
                  'account',
                  "product",
                  'delivery',
+                 'sale_stock',
                  "connector_ecommerce",
                  "product_m2mcategories",
                  "product_images",

@@ -179,10 +179,9 @@ class MagentoPickingExport(ExportSynchronizer):
         :param picking_type: picking_type, can be 'complete' or 'partial'
         :type picking_type: str
         """
-        picking = self.session.browse('stock.picking', openerp_id)
-        sale_id = picking.sale_id.id
+        picking = self.session.browse(self.model._name, openerp_id)
         binder = self.get_binder_for_model('magento.sale.order')
-        magento_sale_id = binder.to_backend(sale_id)
+        magento_sale_id = binder.to_backend(picking.magento_order_id.id)
         mail_notification = self._get_picking_mail_option(picking)
         if picking_type == 'complete':
             args = self._get_args(magento_sale_id, mail_notification)

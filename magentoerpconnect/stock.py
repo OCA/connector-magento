@@ -32,6 +32,9 @@ class magento_stock_picking(orm.Model):
                                       string='Stock Picking',
                                       required=True,
                                       ondelete='cascade'),
+        'magento_order_id': fields.many2one('magento.sale.order',
+                                            string='Magento Sale Order',
+                                            ondelete='set null'),
     }
 
     _sql_constraints = [

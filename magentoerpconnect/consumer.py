@@ -105,17 +105,11 @@ def delay_export_picking_done(session, model_name, record_id, picking_type):
     :param picking_type: picking_type, can be 'complete' or 'partial'
     :type picking_type: str
     """
-    model = session.pool.get(model_name)
-    picking = model.browse(session.cr, session.uid,
-                           record_id, context=session.context)
-    if not picking.sale_id or not picking.sale_id.magento_bind_ids:
-        # not linked with Magento
-        return
-    # find the magento SO to retrieve the backend
-    magento_sale = picking.sale_id.magento_bind_ids[0]
-    export_picking_done.delay(session, model_name,
-                              magento_sale.backend_id.id,
-                              record_id, picking_type)
+    picking = session.browse(model_name, record_id)
+    for binding in picking.magento_bind_ids:
+        export_picking_done.delay(session, binding._model._name,
+                                  binding.backend_id.id,
+                                  binding.id, picking_type)
 
 
 @on_tracking_number_added(model_names='stock.picking')
@@ -126,18 +120,14 @@ def delay_export_tracking_number(session, model_name, record_id):
     must be in done state.
     """
     picking = session.browse(model_name, record_id)
-    if not picking.sale_id or not picking.sale_id.magento_bind_ids:
-        # not linked with Magento
-        return
-    # the related sale order has a relation to the backend
-    magento_sale = picking.sale_id.magento_bind_ids[0]
-    # Set the priority to 20 to have more chance that it would be
-    # executed after the picking creation
-    export_tracking_number.delay(session,
-                                 model_name,
-                                 magento_sale.backend_id.id,
-                                 record_id,
-                                 priority=20)
+    for binding in picking.magento_bind_ids:
+        # Set the priority to 20 to have more chance that it would be
+        # executed after the picking creation
+        export_tracking_number.delay(session,
+                                     binding._model._name,
+                                     binding.backend_id.id,
+                                     binding.id,
+                                     priority=20)
 
 
 @on_invoice_paid(model_names='account.invoice')
