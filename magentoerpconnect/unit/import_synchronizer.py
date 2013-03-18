@@ -313,7 +313,9 @@ class AddressImport(MagentoImportSynchronizer):
 class ProductCategoryBatchImport(BatchImportSynchronizer):
     """ Import the Magento Product Categories.
 
-    For every partner in the list, a delayed job is created.
+    For every product category in the list, a delayed job is created.
+    A priority is set on the jobs according to their level to rise the
+    chance to have the top level categories imported first.
     """
     _model_name = ['magento.product.category']
 

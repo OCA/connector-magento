@@ -317,6 +317,7 @@ class ProductCategoryImportMapper(ImportMapper):
                                record['parent_id'])
         return {'parent_id': category_id, 'magento_parent_id': mag_cat_id}
 
+
 @magento
 class SaleOrderImportMapper(ImportMapper):
     _model_name = 'magento.sale.order'
