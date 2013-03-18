@@ -292,7 +292,8 @@ class ProductCategoryImportMapper(ImportMapper):
 
     @mapping
     def name(self, record):
-        return {'name': record['name'] or _('Undefined')}
+        if record['name']:  # may be empty in storeviews
+            return {'name': record['name']}
 
     @mapping
     def magento_id(self, record):

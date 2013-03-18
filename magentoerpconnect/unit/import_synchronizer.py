@@ -377,15 +377,19 @@ class TranslationImporter(ImportSynchronizer):
                                if attrs.get('translate')]
 
         for storeview in lang_storeviews:
-            context = session.context.copy()
-            context['lang'] = storeview.lang_id.code
-
             lang_record = self._get_magento_data(storeview.magento_id)
             record = self.mapper.convert(lang_record)
 
             data = dict((field, value) for field, value in record.iteritems()
                         if field in translatable_fields)
-            session.write(self.model._name, openerp_id, data)
+
+            context = session.context.copy()
+            context['lang'] = storeview.lang_id.code
+            session.pool.get('magento.product.category').write(session.cr,
+                                                               session.uid,
+                                                               openerp_id,
+                                                               data,
+                                                               context=context)
 
 
 @magento
