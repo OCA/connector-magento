@@ -320,6 +320,16 @@ class StockPickingAdapter(GenericAdapter):
     _model_name = 'magento.stock.picking'
     _magento_model = 'sales_order_shipment'
 
+    def create(self, order_id, items, comment, email, include_comment):
+        """ Create a record on the external system """
+        with magentolib.API(self.magento.location,
+                            self.magento.username,
+                            self.magento.password) as api:
+            _logger.debug("api.call(%s.create', [%s])", self._magento_model,
+                          [order_id, items, comment, email, include_comment])
+            return api.call('%s.create' % self._magento_model,
+                            [order_id, items, comment, email, include_comment])
+
     def add_tracking_number(self, magento_id, carrier_code,
                             tracking_title, tracking_number):
         """ Add new tracking number.

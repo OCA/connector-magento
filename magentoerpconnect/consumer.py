@@ -107,7 +107,10 @@ def delay_export_picking_done(session, model_name, record_id, picking_type):
     """
     model = session.pool.get(model_name)
     picking = model.browse(session.cr, session.uid,
-                          record_id, context=session.context)
+                           record_id, context=session.context)
+    if not picking.sale_id or not picking.sale_id.magento_bind_ids:
+        # not linked with Magento
+        return
     # find the magento SO to retrieve the backend
     magento_sale = picking.sale_id.magento_bind_ids[0]
     export_picking_done.delay(session, model_name,
@@ -117,16 +120,15 @@ def delay_export_picking_done(session, model_name, record_id, picking_type):
 
 @on_tracking_number_added(model_names='stock.picking')
 @magento_consumer
-def delay_export_tracking_number(session, model_name,
-                                 record_id, tracking_number):
+def delay_export_tracking_number(session, model_name, record_id):
     """
     Call a job to export the tracking number to a existing picking that
     must be in done state.
-
-    :param tracking_number: tracking number of the picking
-    :type tracking_number: str
     """
     picking = session.browse(model_name, record_id)
+    if not picking.sale_id or not picking.sale_id.magento_bind_ids:
+        # not linked with Magento
+        return
     # the related sale order has a relation to the backend
     magento_sale = picking.sale_id.magento_bind_ids[0]
     # Set the priority to 20 to have more chance that it would be
@@ -135,7 +137,6 @@ def delay_export_tracking_number(session, model_name,
                                  model_name,
                                  magento_sale.backend_id.id,
                                  record_id,
-                                 tracking_number,
                                  priority=20)
 
 
