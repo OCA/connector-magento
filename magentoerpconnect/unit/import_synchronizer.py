@@ -393,11 +393,11 @@ class TranslationImporter(ImportSynchronizer):
 
             context = session.context.copy()
             context['lang'] = storeview.lang_id.code
-            session.pool.get('magento.product.category').write(session.cr,
-                                                               session.uid,
-                                                               openerp_id,
-                                                               data,
-                                                               context=context)
+            self.model.write(session.cr,
+                             session.uid,
+                             openerp_id,
+                             data,
+                             context=context)
 
 
 @magento
