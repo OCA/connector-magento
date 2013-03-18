@@ -178,7 +178,6 @@ class DelayedBatchImport(BatchImportSynchronizer):
     """ Delay import of the records """
     _model_name = [
             'magento.res.partner.category',
-            'magento.product.product',
             ]
 
     def _import_record(self, record_id):
@@ -347,6 +346,32 @@ class ProductCategoryBatchImport(BatchImportSynchronizer):
                 import_nodes(children, level=level+1)
         tree = self.backend_adapter.tree()
         import_nodes(tree)
+
+
+@magento
+class ProductBatchImport(BatchImportSynchronizer):
+    """ Import the Magento Products.
+
+    For every product category in the list, a delayed job is created.
+    Import from a date
+    """
+    _model_name = ['magento.product.product']
+
+    def _import_record(self, magento_id, priority=None):
+        """ Delay a job for the import """
+        import_record.delay(self.session,
+                            self.model._name,
+                            self.backend_record.id,
+                            magento_id)
+
+    def run(self, filters=None):
+        """ Run the synchronization """
+        from_date = filters.pop('from_date', None)
+        record_ids = self.backend_adapter.search(filters, from_date)
+        _logger.info('search for magento products %s returned %s',
+                     filters, record_ids)
+        for record_id in record_ids:
+            self._import_record(record_id)
 
 
 @magento
