@@ -31,6 +31,7 @@
                  "product_links",
             ],
     "author": "MagentoERPconnect Core Editors",
+    "license": "AGPL-3",  # TODO change the headers
     "description": """
 Magento Connector
 =================
@@ -38,7 +39,7 @@ Magento Connector
 TODO
 
 """,
-    'images': [
+    'images': [  # TODO new images
         'images/main_menu.png',
         'images/instance.png',
         'images/sale_shop.png',
@@ -48,23 +49,20 @@ TODO
     ],
     "website": "https://launchpad.net/magentoerpconnect",
     "category": "Connector",
-    "init_xml": ['settings/magerp.product_category_attribute_options.csv',
-                 'magentoerpconnect_data.xml'],
-    "demo_xml": [],
-    "update_xml": [
+    "demo": [],
+    "data": [
             'security/ir.model.access.csv',
             'setting_view.xml',
-            'magento_data.xml',
+            'magentoerpconnect_data.xml',
             'magento_model_view.xml',
             'product_view.xml',
             'partner_view.xml',
             'sale_view.xml',
             'product_images_view.xml',
-            'magento_menu.xml',
+            'magentoerpconnect_menu.xml',
             'delivery_view.xml',
             'product_links_view.xml',
             'stock_view.xml',
-            'wizard/open_product_by_attribut_set.xml',
             ],
     "installable": True,
     'application': True,
