@@ -27,6 +27,7 @@
                     <group>
                         <field name="backend_id"/>
                         <field name="magento_id"/>
+                        <field name="picking_method"/>
                     </group>
                 </form>
             </field>
@@ -40,6 +41,7 @@
                         create="false" delete="false" version="7.0">
                     <field name="backend_id"/>
                     <field name="magento_id"/>
+                    <field name="picking_method"/>
                 </tree>
             </field>
         </record>
