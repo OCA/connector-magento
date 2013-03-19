@@ -258,7 +258,7 @@ class PartnerImport(MagentoImportSynchronizer):
                                       ['openerp_id'],
                                       context=self.session.context)
         res_partner_openerp_id = partner_row['openerp_id'][0]
-        mag_addresses = {} # mag_address_id -> True if address is linked to existing partner, 
+        mag_addresses = {} # mag_address_id -> True if address is linked to existing partner,
                            #                   False otherwise
         if len(mag_address_ids) == 1:
             mag_addresses[mag_address_ids[0]] = True
@@ -275,9 +275,9 @@ class PartnerImport(MagentoImportSynchronizer):
             if not billing_address:
                 mag_addresses[min(mag_addresses)] = True
         for address_id, to_link in mag_addresses.iteritems():
-            importer.run(address_id, 
-                         magento_res_partner_openerp_id, 
-                         res_partner_openerp_id, 
+            importer.run(address_id,
+                         magento_res_partner_openerp_id,
+                         res_partner_openerp_id,
                          to_link)
 
 
@@ -292,20 +292,18 @@ class AddressImport(MagentoImportSynchronizer):
         self.link_with_partner = link_with_partner
         super(AddressImport, self).run(magento_id)
 
-    def _create(self, data):
-        """ Create the OpenERP record """
+    def _map_data(self):
+        """ Return the external record converted to OpenERP """
+        data = super(AddressImport, self)._map_data()
         if self.link_with_partner:
             data['openerp_id'] = self.partner_id
         else:
             data['parent_id'] = self.partner_id
+            partner = self.session.browse('res.partner',
+                                          self.partner_id)
+            data['lang'] = partner.lang
         data['magento_partner_id'] = self.magento_partner_id
-        return super(AddressImport, self)._create(data)
-
-    def _update(self, openerp_id, data):
-        """ Update an OpenERP record """
-        data['parent_id'] = self.partner_id
-        data['magento_partner_id'] = self.magento_partner_id
-        return super(AddressImport, self)._update(openerp_id, data)
+        return data
 
 
 @magento
