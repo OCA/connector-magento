@@ -117,6 +117,19 @@ class magento_backend(orm.Model):
                 website.import_partners()
         return True
 
+    def import_sale_orders(self, cr, uid, ids, context=None):
+        """ Import sale orders from all store views """
+        if not hasattr(ids, '__iter__'):
+            ids = [ids]
+        storeview_obj = self.pool.get('magento.storeview')
+        storeview_ids = storeview_obj.search(cr, uid,
+                                             [('backend_id', 'in', ids)],
+                                             context=context)
+        storeviews = storeview_obj.browse(cr, uid, storeview_ids, context=context)
+        for storeview in storeviews:
+            storeview.import_sale_orders()
+        return True
+
     def import_customer_groups(self, cr, uid, ids, context=None):
         if not hasattr(ids, '__iter__'):
             ids = [ids]

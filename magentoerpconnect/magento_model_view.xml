@@ -71,6 +71,13 @@
                                         class="oe_highlight"
                                         string="Import in background"/>
                                 </group>
+                                <group>
+                                    <label string="Import sales orders from all store views" class="oe_inline"/>
+                                    <button name="import_sale_orders"
+                                        type="object"
+                                        class="oe_highlight"
+                                        string="Import in background"/>
+                                </group>
 
                             </page>
 
