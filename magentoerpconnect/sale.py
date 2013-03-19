@@ -23,7 +23,7 @@ from openerp.osv import fields, orm
 import openerp.addons.decimal_precision as dp
 
 
-ORDER_STATUS_MAPPING = {
+ORDER_STATUS_MAPPING = {  # XXX check if still needed
     'manual': 'processing',
     'progress': 'processing',
     'shipping_except': 'complete',

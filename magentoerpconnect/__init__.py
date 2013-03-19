@@ -13,9 +13,5 @@ import product_images
 import delivery
 import stock
 import product_links
-import wizard
 
 import consumer
-
-
-import old_stuff # TODO remove
