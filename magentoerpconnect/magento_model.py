@@ -188,10 +188,12 @@ class magento_website(orm.Model):
     _name = 'magento.website'
     _inherit = 'magento.binding'
 
+    _order = 'sort_order ASC'
+
     _columns = {
-        'name': fields.char('Name', required=True),
-        'code': fields.char('Code'),
-        'sort_order': fields.integer('Sort Order'),
+        'name': fields.char('Name', required=True, readonly=True),
+        'code': fields.char('Code', readonly=True),
+        'sort_order': fields.integer('Sort Order', readonly=True),
         'store_ids': fields.one2many(
             'magento.store',
             'website_id',
@@ -247,6 +249,7 @@ class magento_store(orm.Model):
             'magento.website',
             'Magento Website',
             required=True,
+            readonly=True,
             ondelete='cascade'),
         'openerp_id': fields.many2one(
             'sale.shop',
@@ -305,13 +308,15 @@ class magento_storeview(orm.Model):
     _inherit = 'magento.binding'
     _description = "Magento Storeview"
 
+    _order = 'sort_order ASC'
+
     _columns = {
-        'name': fields.char('Name', required=True),
-        'code': fields.char('Code'),
-        'enabled': fields.boolean('Enabled'),
-        'sort_order': fields.integer('Sort Order'),
+        'name': fields.char('Name', required=True, readonly=True),
+        'code': fields.char('Code', readonly=True),
+        'enabled': fields.boolean('Enabled', readonly=True),
+        'sort_order': fields.integer('Sort Order', readonly=True),
         'store_id': fields.many2one('magento.store', 'Store',
-                                    ondelete='cascade'),
+                                    ondelete='cascade', readonly=True),
         'lang_id': fields.many2one('res.lang', 'Language'),
         'backend_id': fields.related(
             'store_id', 'website_id', 'backend_id',

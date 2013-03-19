@@ -35,7 +35,8 @@ _logger = logging.getLogger(__name__)
 class WebsiteImportMapper(ImportMapper):
     _model_name = 'magento.website'
 
-    direct = [('code', 'code')]
+    direct = [('code', 'code'),
+              ('sort_order', 'sort_order')]
 
     @mapping
     def name(self, record):
@@ -68,7 +69,9 @@ class StoreviewImportMapper(ImportMapper):
 
     direct = [
         ('name', 'name'),
-        ('code', 'code')
+        ('code', 'code'),
+        ('is_active', 'enabled'),
+        ('sort_order', 'sort_order'),
     ]
 
     @mapping
