@@ -5,6 +5,19 @@
             <field name="digits">3</field>
         </record>
 
+        <record forcecreate="True" id="ir_cron_import_sale_orders" model="ir.cron">
+            <field name="name">Magento - Import Sales Orders</field>
+            <field eval="False" name="active"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field eval="False" name="doall"/>
+            <field eval="'magento.backend'" name="model"/>
+            <field eval="'_scheduler_import_sale_orders'" name="function"/>
+            <field eval="'()'" name="args"/>
+        </record>
+
         <record forcecreate="True" id="ir_cron_import_customer_groups" model="ir.cron">
             <field name="name">Magento - Import Customer Groups</field>
             <field eval="False" name="active"/>

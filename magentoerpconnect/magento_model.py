@@ -176,6 +176,10 @@ class magento_backend(orm.Model):
         if ids:
             callback(cr, uid, ids, context=context)
 
+    def _scheduler_import_sale_orders(self, cr, uid, domain=None, context=None):
+        self._magento_backend(cr, uid, self.import_sale_orders,
+                              domain=domain, context=context)
+
     def _scheduler_import_customer_groups(self, cr, uid, domain=None, context=None):
         self._magento_backend(cr, uid, self.import_customer_groups,
                               domain=domain, context=context)
