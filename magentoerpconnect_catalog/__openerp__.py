@@ -3,6 +3,7 @@
 #
 #    Author: Guewen Baconnier
 #    Copyright 2013 Camptocamp SA
+#    Copyright 2013 Akretion
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,17 +20,32 @@
 #
 ##############################################################################
 
-from openerp.osv import orm, fields
 
+{'name': 'Magento Connector - Catalog',
+ 'version': '2.0.0',
+ 'category': 'Connector',
+ 'depends': ['magentoerpconnect',
+             'product_links',
+             'product_images',
+             ],
+ 'author': 'MagentoERPconnect Core Editors',
+ 'license': 'AGPL-3',
+ 'website': 'https://launchpad.net/magentoerpconnect',
+ 'description': """
+Magento Connector - Catalog
+===========================
 
-class magento_config_settings(orm.TransientModel):
-    _inherit = 'connector.config.settings'
+Extension for **Magento Connector**, add management of the product's catalog:
 
-    _columns = {
-        'module_magentoerpconnect_export_partner': fields.boolean(
-            "Export Partners to Magento (experimental)",
-            help="This installs the module magentoerpconnect_export_partner."),
-        'module_magentoerpconnect_catalog': fields.boolean(
-            "Handle the product's catalog (not implemented)",
-            help="This installs the module magentoerpconnect_catalog."),
-    }
+* product links
+* product images
+* export of products, categories, links and images
+
+""",
+ 'images': [],
+ 'demo': [],
+ 'data': [],
+ 'installable': True,
+ 'application': False,
+}
+

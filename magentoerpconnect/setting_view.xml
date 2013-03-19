@@ -16,6 +16,17 @@
                 <xpath expr="/form/group[1]" position="after">
                     <separator string="Magentoerpconnect"/>
                     <group>
+                        <label for="id" string="Extensions"/>
+                        <div>
+                            <div>
+                                <field name="module_magentoerpconnect_export_partner" class="oe_inline"/>
+                                <label for="module_magentoerpconnect_export_partner"/>
+                            </div>
+                            <div>
+                                <field name="module_magentoerpconnect_catalog" class="oe_inline"/>
+                                <label for="module_magentoerpconnect_catalog"/>
+                            </div>
+                        </div>
                     </group>
                 </xpath>
             </field>
