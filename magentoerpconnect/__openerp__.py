@@ -63,6 +63,7 @@ TODO
             'magento_menu.xml',
             'delivery_view.xml',
             'product_links_view.xml',
+            'stock_view.xml',
             'wizard/open_product_by_attribut_set.xml',
             ],
     "installable": True,
