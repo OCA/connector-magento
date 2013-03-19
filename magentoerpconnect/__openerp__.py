@@ -17,53 +17,46 @@
 #You should have received a copy of the GNU General Public License      #
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.  #
 #########################################################################
-{
-    "name": "Magento Connector New Generation",
-    "version": "2.0.0",
-    "depends": [
-                 'account',
-                 "product",
-                 'delivery',
-                 'sale_stock',
-                 "connector_ecommerce",
-                 "product_m2mcategories",
-                 "product_images",
-                 "product_links",
-            ],
-    "author": "MagentoERPconnect Core Editors",
-    "license": "AGPL-3",  # TODO change the headers
-    "description": """
+{'name': 'Magento Connector',
+ 'version': '2.0.0',
+ 'category': 'Connector',
+ 'depends': ['account',
+             'product',
+             'delivery',
+             'sale_stock',
+             'connector_ecommerce',
+             'product_m2mcategories',
+             ],
+ 'author': 'MagentoERPconnect Core Editors',
+ 'license': 'AGPL-3',
+ 'website': 'https://launchpad.net/magentoerpconnect',
+ 'description': """
 Magento Connector
 =================
 
-TODO
+Use the **Connector** module to synchronize OpenERP with Magento.
 
 """,
-    'images': [  # TODO new images
-        'images/main_menu.png',
-        'images/instance.png',
-        'images/sale_shop.png',
-        'images/product.png',
-        'images/magentocoreeditors.png',
-        'images/magentoerpconnect.png',
-    ],
-    "website": "https://launchpad.net/magentoerpconnect",
-    "category": "Connector",
-    "demo": [],
-    "data": [
-            'security/ir.model.access.csv',
-            'setting_view.xml',
-            'magentoerpconnect_data.xml',
-            'magento_model_view.xml',
-            'product_view.xml',
-            'partner_view.xml',
-            'sale_view.xml',
-            'product_images_view.xml',
-            'magentoerpconnect_menu.xml',
-            'delivery_view.xml',
-            'product_links_view.xml',
-            'stock_view.xml',
+ # TODO change images
+ 'images': ['images/main_menu.png',
+            'images/instance.png',
+            'images/sale_shop.png',
+            'images/product.png',
+            'images/magentocoreeditors.png',
+            'images/magentoerpconnect.png',
             ],
-    "installable": True,
-    'application': True,
+ 'demo': [],
+ 'data': ['security/ir.model.access.csv',
+          'setting_view.xml',
+          'magentoerpconnect_data.xml',
+          'magento_model_view.xml',
+          'product_view.xml',
+          'partner_view.xml',
+          'sale_view.xml',
+          'magentoerpconnect_menu.xml',
+          'delivery_view.xml',
+          'stock_view.xml',
+          ],
+ 'installable': True,
+ 'application': True,
 }

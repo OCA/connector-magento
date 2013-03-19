@@ -9,9 +9,7 @@ import product
 import partner
 import invoice
 import sale
-import product_images
 import delivery
 import stock
-import product_links
 
 import consumer
