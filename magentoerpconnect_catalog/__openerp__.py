@@ -20,46 +20,32 @@
 #
 ##############################################################################
 
-{'name': 'Magento Connector',
+
+{'name': 'Magento Connector - Catalog',
  'version': '2.0.0',
  'category': 'Connector',
- 'depends': ['account',
-             'product',
-             'delivery',
-             'sale_stock',
-             'connector_ecommerce',
-             'product_m2mcategories',
+ 'depends': ['magentoerpconnect',
+             'product_links',
+             'product_images',
              ],
  'author': 'MagentoERPconnect Core Editors',
  'license': 'AGPL-3',
  'website': 'https://launchpad.net/magentoerpconnect',
  'description': """
-Magento Connector
-=================
+Magento Connector - Catalog
+===========================
 
-Use the **Connector** module to synchronize OpenERP with Magento.
+Extension for **Magento Connector**, add management of the product's catalog:
+
+* product links
+* product images
+* export of products, categories, links and images
 
 """,
- # TODO change images
- 'images': ['images/main_menu.png',
-            'images/instance.png',
-            'images/sale_shop.png',
-            'images/product.png',
-            'images/magentocoreeditors.png',
-            'images/magentoerpconnect.png',
-            ],
+ 'images': [],
  'demo': [],
- 'data': ['security/ir.model.access.csv',
-          'setting_view.xml',
-          'magentoerpconnect_data.xml',
-          'magento_model_view.xml',
-          'product_view.xml',
-          'partner_view.xml',
-          'sale_view.xml',
-          'magentoerpconnect_menu.xml',
-          'delivery_view.xml',
-          'stock_view.xml',
-          ],
+ 'data': [],
  'installable': True,
- 'application': True,
+ 'application': False,
 }
+

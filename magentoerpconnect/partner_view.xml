@@ -31,7 +31,8 @@
             <field name="name">magento.res.partner.form</field>
             <field name="model">magento.res.partner</field>
             <field name="arch" type="xml">
-                <form string="Magento Partner" version="7.0">
+                <form string="Magento Partner" create="false"
+                       delete="false" version="7.0">
                     <group>
                         <field name="website_id"/>
                         <field name="backend_id"/>
@@ -51,7 +52,8 @@
             <field name="name">magento.res.partner.tree</field>
             <field name="model">magento.res.partner</field>
             <field name="arch" type="xml">
-                <tree string="Magento Partner" version="7.0">
+                <tree string="Magento Partner" create="false"
+                       delete="false" version="7.0">
                     <field name="backend_id"/>
                     <field name="website_id"/>
                 </tree>
@@ -62,7 +64,8 @@
             <field name="name">magento.address.form</field>
             <field name="model">magento.address</field>
             <field name="arch" type="xml">
-                <form string="Magento Address" version="7.0">
+                <form string="Magento Address" create="false"
+                       delete="false" version="7.0">
                     <group>
                         <field name="website_id"/>
                         <field name="backend_id"/>
@@ -81,7 +84,8 @@
             <field name="name">magento.address.tree</field>
             <field name="model">magento.address</field>
             <field name="arch" type="xml">
-                <tree string="Magento Address" version="7.0">
+                <tree string="Magento Address" create="false"
+                       delete="false" version="7.0">
                     <field name="backend_id"/>
                     <field name="website_id"/>
                 </tree>

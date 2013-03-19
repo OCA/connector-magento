@@ -1,32 +1,29 @@
 # -*- coding: utf-8 -*-
-#########################################################################
-#This module intergrates Open ERP with the magento core                 #
-#Core settings are stored here                                          #
-#########################################################################
-#                                                                       #
-# Copyright (C) 2011-2013 Akretion   Sébastien Beau                     #
-# Copyright (C) 2011-2013 Camptocamp Guewen Baconnier                   #
-#                                                                       #
-#This program is free software: you can redistribute it and/or modify   #
-#it under the terms of the GNU General Public License as published by   #
-#the Free Software Foundation, either version 3 of the License, or      #
-#(at your option) any later version.                                    #
-#                                                                       #
-#This program is distributed in the hope that it will be useful,        #
-#but WITHOUT ANY WARRANTY; without even the implied warranty of         #
-#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the          #
-#GNU General Public License for more details.                           #
-#                                                                       #
-#You should have received a copy of the GNU General Public License      #
-#along with this program.  If not, see <http://www.gnu.org/licenses/>.  #
-#########################################################################
+##############################################################################
+#
+#    Author: Guewen Baconnier
+#    Copyright 2013 Camptocamp SA
+#    Copyright 2013 Akretion
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+##############################################################################
 
 import logging
 from datetime import datetime
 
 from openerp.osv import fields, orm
-
-
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 import openerp.addons.connector as connector
 from openerp.addons.connector.session import ConnectorSession
@@ -175,6 +172,10 @@ class magento_backend(orm.Model):
         ids = self.search(cr, uid, domain, context=context)
         if ids:
             callback(cr, uid, ids, context=context)
+
+    def _scheduler_import_sale_orders(self, cr, uid, domain=None, context=None):
+        self._magento_backend(cr, uid, self.import_sale_orders,
+                              domain=domain, context=context)
 
     def _scheduler_import_customer_groups(self, cr, uid, domain=None, context=None):
         self._magento_backend(cr, uid, self.import_customer_groups,
@@ -362,7 +363,6 @@ class magento_storeview(orm.Model):
         ('magento_uniq', 'unique(backend_id, magento_id)',
          'A storeview with same ID on Magento already exists.'),
     ]
-
 
     def import_sale_orders(self, cr, uid, ids, context=None):
         session = ConnectorSession(cr, uid, context=context)

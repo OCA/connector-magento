@@ -21,14 +21,12 @@
 
 from functools import wraps
 
-import openerp.addons.connector as connector
-
 from openerp.addons.connector.event import (
     on_record_write,
     on_record_create,
     on_record_unlink
     )
-from openerp.addons.connector.connector import Environment
+from openerp.addons.connector.connector import Environment, Binder
 
 from openerp.addons.connector_ecommerce.event import (on_picking_out_done,
                                                       on_tracking_number_added,
@@ -40,8 +38,8 @@ from .unit.export_synchronizer import (
     )
 from .unit.delete_synchronizer import export_delete_record
 
-_MODEL_NAMES = ('res.partner',)
-_BIND_MODEL_NAMES = ('magento.res.partner',)
+_MODEL_NAMES = ()
+_BIND_MODEL_NAMES = ()
 
 
 def magento_consumer(func):
@@ -88,7 +86,7 @@ def delay_unlink(session, model_name, record_id):
     record = model.browse(session.cr, session.uid,
                           record_id, context=session.context)
     env = Environment(record.backend_id, session, model_name)
-    binder = env.get_connector_unit(connector.connector.Binder)
+    binder = env.get_connector_unit(Binder)
     magento_id = binder.to_backend(record_id)
     if magento_id:
         export_delete_record.delay(session, model_name,
@@ -121,7 +119,7 @@ def picking_out_done(session, model_name, record_id, picking_method):
 
 @on_record_create(model_names='magento.stock.picking.out')
 @magento_consumer
-def delay_export(session, model_name, record_id):
+def delay_export_picking_out(session, model_name, record_id):
     export_picking_done.delay(session, model_name, record_id)
 
 

@@ -20,11 +20,9 @@
 ##############################################################################
 
 from openerp.tools.translate import _
-import openerp.addons.connector as connector
 from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.unit.synchronizer import DeleteSynchronizer
 from ..connector import get_environment
-from ..backend import magento
 
 
 class MagentoDeleteSynchronizer(DeleteSynchronizer):
@@ -37,12 +35,6 @@ class MagentoDeleteSynchronizer(DeleteSynchronizer):
         """
         self.backend_adapter.delete(magento_id)
         return _('Record %s deleted on Magento') % magento_id
-
-
-@magento
-class PartnerDeleteSynchronizer(MagentoDeleteSynchronizer):
-    """ Partner deleter for Magento """
-    _model_name = ['magento.res.partner']
 
 
 @job

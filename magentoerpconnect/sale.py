@@ -23,7 +23,7 @@ from openerp.osv import fields, orm
 import openerp.addons.decimal_precision as dp
 
 
-ORDER_STATUS_MAPPING = {
+ORDER_STATUS_MAPPING = {  # XXX check if still needed
     'manual': 'processing',
     'progress': 'processing',
     'shipping_except': 'complete',
@@ -165,4 +165,3 @@ class sale_order_line(orm.Model):
                 mag_inv_line_obj.create(cr, uid, ids, vals, context)
             created_line_ids.append(created_line_id[0])
         return created_line_ids
-

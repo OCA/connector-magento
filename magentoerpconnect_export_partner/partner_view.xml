@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+        <record id="view_magento_res_partner_form" model="ir.ui.view">
+            <field name="name">magento.res.partner.form</field>
+            <field name="model">magento.res.partner</field>
+            <field name="inherit_id" ref="magentoerpconnect.view_magento_res_partner_form"/>
+            <field name="arch" type="xml">
+                <form position="attributes">
+                    <attribute name="create">true</attribute>
+                    <attribute name="delete">true</attribute>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_magento_res_partner_tree" model="ir.ui.view">
+            <field name="name">magento.res.partner.tree</field>
+            <field name="model">magento.res.partner</field>
+            <field name="inherit_id" ref="magentoerpconnect.view_magento_res_partner_tree"/>
+            <field name="arch" type="xml">
+                <tree position="attributes">
+                    <attribute name="create">true</attribute>
+                    <attribute name="delete">true</attribute>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_magento_address_form" model="ir.ui.view">
+            <field name="name">magento.address.form</field>
+            <field name="model">magento.address</field>
+            <field name="inherit_id" ref="magentoerpconnect.view_magento_address_form"/>
+            <field name="arch" type="xml">
+                <form position="attributes">
+                    <attribute name="create">true</attribute>
+                    <attribute name="delete">true</attribute>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_magento_address_tree" model="ir.ui.view">
+            <field name="name">magento.address.tree</field>
+            <field name="model">magento.address</field>
+            <field name="inherit_id" ref="magentoerpconnect.view_magento_address_tree"/>
+            <field name="arch" type="xml">
+                <tree position="attributes">
+                    <attribute name="create">true</attribute>
+                    <attribute name="delete">true</attribute>
+                </tree>
+            </field>
+        </record>
+
+    </data>
+</openerp>

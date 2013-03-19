@@ -24,3 +24,12 @@ from openerp.osv import orm, fields
 
 class magento_config_settings(orm.TransientModel):
     _inherit = 'connector.config.settings'
+
+    _columns = {
+        'module_magentoerpconnect_export_partner': fields.boolean(
+            "Export Partners to Magento (experimental)",
+            help="This installs the module magentoerpconnect_export_partner."),
+        'module_magentoerpconnect_catalog': fields.boolean(
+            "Handle the product's catalog (not implemented)",
+            help="This installs the module magentoerpconnect_catalog."),
+    }

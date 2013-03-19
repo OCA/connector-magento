@@ -3,7 +3,6 @@
 #
 #    Author: Guewen Baconnier
 #    Copyright 2013 Camptocamp SA
-#    Copyright 2013 Akretion
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -20,46 +19,28 @@
 #
 ##############################################################################
 
-{'name': 'Magento Connector',
+{'name': 'Magento Connector - Export Partners (Experimental)',
  'version': '2.0.0',
  'category': 'Connector',
- 'depends': ['account',
-             'product',
-             'delivery',
-             'sale_stock',
-             'connector_ecommerce',
-             'product_m2mcategories',
+ 'depends': ['magentoerpconnect',
              ],
  'author': 'MagentoERPconnect Core Editors',
  'license': 'AGPL-3',
  'website': 'https://launchpad.net/magentoerpconnect',
  'description': """
-Magento Connector
-=================
+Magento Connector - Export Partners
+===================================
 
-Use the **Connector** module to synchronize OpenERP with Magento.
+Extension for **Magento Connector**, export the partners to Magento.
 
+This module is considered as experimental, the creation of the partners
+is not guaranted to work correctly.  No password are defined on the
+customer accounts.
 """,
- # TODO change images
- 'images': ['images/main_menu.png',
-            'images/instance.png',
-            'images/sale_shop.png',
-            'images/product.png',
-            'images/magentocoreeditors.png',
-            'images/magentoerpconnect.png',
-            ],
+ 'images': [],
  'demo': [],
- 'data': ['security/ir.model.access.csv',
-          'setting_view.xml',
-          'magentoerpconnect_data.xml',
-          'magento_model_view.xml',
-          'product_view.xml',
-          'partner_view.xml',
-          'sale_view.xml',
-          'magentoerpconnect_menu.xml',
-          'delivery_view.xml',
-          'stock_view.xml',
+ 'data': ['partner_view.xml',
           ],
  'installable': True,
- 'application': True,
+ 'application': False,
 }

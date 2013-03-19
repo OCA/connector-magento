@@ -21,7 +21,6 @@
 import logging
 
 from openerp.tools.translate import _
-import openerp.addons.connector as connector
 from openerp.addons.connector.exception import MappingError
 from openerp.addons.connector.unit.mapper import (mapping,
                                                   changed_by,
@@ -31,6 +30,8 @@ from openerp.addons.connector_ecommerce.unit.sale_order_onchange import SaleOrde
 from ..backend import magento
 
 _logger = logging.getLogger(__name__)
+
+
 @magento
 class WebsiteImportMapper(ImportMapper):
     _model_name = 'magento.website'
@@ -144,34 +145,6 @@ class PartnerImportMapper(ImportMapper):
                                             openerp_id)
             lang = storeview.lang_id and storeview.lang_id.code
         return {'lang': lang}
-
-@magento
-class PartnerExportMapper(ExportMapper):
-    _model_name = 'magento.res.partner'
-
-    direct = [
-            ('emailid', 'email'),
-            ('birthday', 'dob'),
-            ('created_at', 'created_at'),
-            ('updated_at', 'updated_at'),
-            ('emailid', 'email'),
-            ('taxvat', 'taxvat'),
-            ('group_id', 'group_id'),
-            ('website_id', 'website_id'),
-        ]
-
-    @changed_by('name')
-    @mapping
-    def names(self, record):
-        # FIXME base_surname needed
-        if ' ' in record.name:
-            parts = record.name.split()
-            firstname = parts[0]
-            lastname = ' '.join(parts[1:])
-        else:
-            lastname = record.name
-            firstname = '-'
-        return {'firstname': firstname, 'lastname': lastname}
 
 
 @magento
