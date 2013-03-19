@@ -56,18 +56,16 @@ class MagentoModelBinder(MagentoBinder):
                  or None if the external_id is not mapped
         :rtype: int
         """
-        openerp_ids = self.environment.model.search(
-                self.session.cr,
-                self.session.uid,
+        openerp_ids = self.session.search(
+                self.model._name,
                 [('magento_id', '=', external_id),
-                 ('backend_id', '=', self.backend_record.id)],
-                limit=1,
-                context=self.session.context)
+                 ('backend_id', '=', self.backend_record.id)])
         if not openerp_ids:
             return None
+        assert len(openerp_ids) == 1, "Several records found: %s" % openerp_ids
         openerp_id = openerp_ids[0]
         if unwrap:
-            return self.session.read(self.environment.model._name,
+            return self.session.read(self.model._name,
                                      openerp_id,
                                      ['openerp_id'])['openerp_id'][0]
         else:
@@ -79,13 +77,11 @@ class MagentoModelBinder(MagentoBinder):
         :param openerp_id: OpenERP ID for which we want the external id
         :return: backend identifier of the record
         """
-        magento_id = self.environment.model.read(
-                self.session.cr,
-                self.session.uid,
-                openerp_id,
-                ['magento_id'],
-                self.session.context)['magento_id']
-        return magento_id
+        magento_record = self.session.read(self.model._name,
+                                           openerp_id,
+                                           ['magento_id'])
+        assert magento_record
+        return magento_record['magento_id']
 
     def bind(self, external_id, openerp_id):
         """ Create the link between an external ID and an OpenERP ID
@@ -95,7 +91,8 @@ class MagentoModelBinder(MagentoBinder):
         :type openerp_id: int
         """
         # avoid to trigger the export when we modify the `magento_id`
-        context = dict(self.session.context, connector_no_export=True)
+        context = self.session.context.copy()
+        context['connector_no_export'] = True
         self.environment.model.write(
                 self.session.cr,
                 self.session.uid,

@@ -152,14 +152,20 @@ class MagentoPickingExport(ExportSynchronizer):
         :return: dict of {magento_product_id: quantity}
         :rtype: dict
         """
-        order_line_binder = self.get_binder_for_model('magento.sale.order.line')
         item_qty = {}
         # get product and quantities to ship from the picking
         for line in picking.move_lines:
-            item_id = order_line_binder.to_backend(line.sale_line_id.id)
-            if item_id:
-                item_qty.setdefault(item_id, 0)
-                item_qty[item_id] += line.product_qty
+            sale_line = line.sale_line_id
+            if not sale_line.magento_bind_ids:
+                continue
+            magento_sale_line = next((line for line in sale_line.magento_bind_ids
+                                      if line.backend_id.id == picking.backend_id.id),
+                                     None)
+            if not magento_sale_line:
+                continue
+            item_id = magento_sale_line.magento_id
+            item_qty.setdefault(item_id, 0)
+            item_qty[item_id] += line.product_qty
         return item_qty
 
     def _get_picking_mail_option(self, picking):
@@ -183,6 +189,9 @@ class MagentoPickingExport(ExportSynchronizer):
             args = self._get_args(picking)
         elif picking_method == 'partial':
             lines_info = self._get_lines_info(picking)
+            if not lines_info:
+                raise NothingToDoJob(_('Canceled: the delivery order does not '
+                                       'contain lines from the original sale order.'))
             args = self._get_args(picking, lines_info)
         else:
             raise ValueError("Wrong value for picking_method, authorized "
@@ -195,7 +204,8 @@ class MagentoPickingExport(ExportSynchronizer):
             # <Fault 102: u"Impossible de faire l\'exp\xe9dition de la commande.">
             # In
             if err.faultCode == 102:
-                raise NothingToDoJob
+                raise NothingToDoJob('Canceled: the delivery order already '
+                                     'exists on Magento (fault 102).')
             else:
                 raise
         else:

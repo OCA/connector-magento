@@ -74,6 +74,12 @@ class magento_sale_order_line(orm.Model):
     _description = 'Magento Sale Order Line'
     _inherits = {'sale.order.line': 'openerp_id'}
 
+
+    def _get_lines_from_order(self, cr, uid, ids, context=None):
+        line_obj = self.pool.get('magento.sale.order.line')
+        return line_obj.search(cr, uid,
+                               [('magento_order_id', 'in', ids)],
+                               context=context)
     _columns = {
         ## 'order_id': fields.related('magento_order_id', 'openerp_id',
         ##                            type='many2one',
@@ -92,12 +98,19 @@ class magento_sale_order_line(orm.Model):
                                       string='Sale Order Line',
                                       required=True,
                                       ondelete='cascade'),
-        'backend_id': fields.related('magento_order_id', 'backend_id',
-                                     type='many2one',
-                                     relation='magento.backend',
-                                     string='Magento Backend',
-                                     store=True,
-                                     readonly=True),
+        'backend_id': fields.related(
+            'magento_order_id', 'backend_id',
+             type='many2one',
+             relation='magento.backend',
+             string='Magento Backend',
+             store={'magento.sale.order.line':
+                        (lambda self, cr, uid, ids, c=None: ids,
+                         ['magento_order_id'],
+                         10),
+                 'magento.sale.order':
+                     (_get_lines_from_order, ['backend_id'], 20),
+                   },
+             readonly=True),
         'tax_rate': fields.float('Tax Rate',
                                  digits_compute=dp.get_precision('Account')),
         'notes': fields.char('Notes'), # XXX common to all ecom sale orders
