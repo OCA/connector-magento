@@ -500,8 +500,8 @@ class SaleOrderLineImportMapper(ImportMapper):
     def price(self, record):
         result = {}
         backend = self.backend_record
-        base_row_total = float(record['base_row_total'])
-        base_row_total_incl_tax = float(record['base_row_total_incl_tax'])
+        base_row_total = float(record['base_row_total'] or 0.)
+        base_row_total_incl_tax = float(record['base_row_total_incl_tax'] or 0.)
         qty_ordered = float(record['qty_ordered'])
         if backend.catalog_price_tax_included:
             result['price_unit'] = base_row_total_incl_tax / qty_ordered
