@@ -35,6 +35,10 @@ class magento_stock_picking(orm.Model):
         'magento_order_id': fields.many2one('magento.sale.order',
                                             string='Magento Sale Order',
                                             ondelete='set null'),
+        'picking_method': fields.selection([('complete', 'Complete'),
+                                            ('partial', 'Partial')],
+                                           string='Picking Method',
+                                           required=True),
     }
 
     _sql_constraints = [

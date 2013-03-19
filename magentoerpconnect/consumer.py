@@ -95,24 +95,37 @@ def delay_unlink(session, model_name, record_id):
                                    record.backend_id.id, magento_id)
 
 
-@on_picking_out_done()
+@on_picking_out_done
 @magento_consumer
-def delay_export_picking_done(session, model_name, record_id, picking_type):
+def picking_out_done(session, model_name, record_id, picking_method):
     """
-    Call a job to export the picking with args to ask for partial or complete
-    picking.
+    Create a ``magento.stock.picking.out`` record. This record will then
+    be exported to Magento.
 
-    :param picking_type: picking_type, can be 'complete' or 'partial'
-    :type picking_type: str
+    :param picking_method: picking_method, can be 'complete' or 'partial'
+    :type picking_method: str
     """
     picking = session.browse(model_name, record_id)
-    for binding in picking.magento_bind_ids:
-        export_picking_done.delay(session, binding._model._name,
-                                  binding.backend_id.id,
-                                  binding.id, picking_type)
+    sale = picking.sale_id
+    if sale:
+        if not sale.magento_bind_ids:
+            return  # not linked with Magento
+        # a sale order is linked with one backend only
+        magento_sale = sale.magento_bind_ids[0]
+        session.create('magento.stock.picking.out',
+                       {'backend_id': magento_sale.backend_id.id,
+                        'openerp_id': picking.id,
+                        'magento_order_id': magento_sale.id,
+                        'picking_method': picking_method})
 
 
-@on_tracking_number_added()
+@on_record_create(model_names='magento.stock.picking.out')
+@magento_consumer
+def delay_export(session, model_name, record_id):
+    export_picking_done.delay(session, model_name, record_id)
+
+
+@on_tracking_number_added
 @magento_consumer
 def delay_export_tracking_number(session, model_name, record_id):
     """
@@ -125,7 +138,6 @@ def delay_export_tracking_number(session, model_name, record_id):
         # executed after the picking creation
         export_tracking_number.delay(session,
                                      binding._model._name,
-                                     binding.backend_id.id,
                                      binding.id,
                                      priority=20)
 

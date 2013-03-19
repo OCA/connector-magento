@@ -133,10 +133,12 @@ class PartnerExport(MagentoExportSynchronizer):
 class MagentoPickingExport(ExportSynchronizer):
     _model_name = ['magento.stock.picking.out']
 
-    def _get_args(self, magento_sale_id,
-                  mail_notification=False, lines_info=None):
+    def _get_args(self, picking, lines_info=None):
         if lines_info is None:
             lines_info = {}
+        sale_binder = self.get_binder_for_model('magento.sale.order')
+        magento_sale_id = sale_binder.to_backend(picking.magento_order_id.id)
+        mail_notification = self._get_picking_mail_option(picking)
         return (magento_sale_id, lines_info,
                 _("Shipping Created"), mail_notification, True)
 
@@ -171,29 +173,21 @@ class MagentoPickingExport(ExportSynchronizer):
         magento_shop = picking.sale_id.shop_id.magento_bind_ids[0]
         return magento_shop.send_picking_done_mail
 
-    def run(self, openerp_id, picking_type):
+    def run(self, openerp_id):
         """
-        Run the job to export the picking with args to ask for partial or
-        complete picking.
-
-        :param picking_type: picking_type, can be 'complete' or 'partial'
-        :type picking_type: str
+        Export the picking to Magento
         """
         picking = self.session.browse(self.model._name, openerp_id)
-        binder = self.get_binder_for_model('magento.sale.order')
-        magento_sale_id = binder.to_backend(picking.magento_order_id.id)
-        mail_notification = self._get_picking_mail_option(picking)
-        if picking_type == 'complete':
-            args = self._get_args(magento_sale_id, mail_notification)
-        elif picking_type == 'partial':
+        picking_method = picking.picking_method
+        if picking_method == 'complete':
+            args = self._get_args(picking)
+        elif picking_method == 'partial':
             lines_info = self._get_lines_info(picking)
-            args = self._get_args(magento_sale_id,
-                                  mail_notification,
-                                  lines_info)
+            args = self._get_args(picking, lines_info)
         else:
-            raise ValueError("Wrong value for picking_type, authorized "
+            raise ValueError("Wrong value for picking_method, authorized "
                              "values are 'partial' or 'complete', "
-                             "found: %s" % picking_type)
+                             "found: %s" % picking_method)
         try:
             magento_id = self.backend_adapter.create(*args)
         except xmlrpclib.Fault as err:
@@ -257,15 +251,13 @@ class MagentoTrackingExport(ExportSynchronizer):
         if not picking.carrier_tracking_ref:
             return _('No tracking number to send.')
 
-        binder = self.get_binder_for_model()
-        magento_picking_id = binder.to_backend(picking.id)
+        magento_picking_id = picking.magento_id
         if magento_picking_id is None:
             raise NoExternalId("No value found for the picking ID on "
                                "Magento side, the job will be retried later.")
 
         self._validate(picking)
         self._check_allowed_carrier(picking, magento_picking_id)
-
         tracking_args = self._get_tracking_args(picking)
         self.backend_adapter.add_tracking_number(magento_picking_id,
                                                  *tracking_args)
@@ -333,36 +325,31 @@ class MagentoInvoiceSynchronizer(ExportSynchronizer):
 @job
 def export_record(session, model_name, openerp_id, fields=None):
     """ Export a record on Magento """
-    model = session.pool.get(model_name)
-    record = model.browse(session.cr, session.uid, openerp_id,
-                          context=session.context)
+    record = session.browse(model_name, openerp_id)
     env = get_environment(session, model_name, record.backend_id.id)
     exporter = env.get_connector_unit(MagentoExportSynchronizer)
     return exporter.run(openerp_id, fields=fields)
 
 
 @job
-def export_picking_done(session, model_name, backend_id, record_id, picking_type):
+def export_picking_done(session, model_name, record_id):
     """ Export a complete or partial delivery order. """
-    # TODO: job's description is the docstring currently. Could we take
-    # only the first paragraph or move the description to a decorator?
-    """
-    :param picking_type: picking_type, can be 'complete' or 'partial'
-        :type picking_type: str
-    """
+    picking = session.browse(model_name, record_id)
+    backend_id = picking.backend_id.id
     env = get_environment(session, model_name, backend_id)
     picking_exporter = env.get_connector_unit(MagentoPickingExport)
-    res = picking_exporter.run(record_id, picking_type)
+    res = picking_exporter.run(record_id)
 
-    picking = session.browse(model_name, record_id)
     if picking.carrier_tracking_ref:
-        export_tracking_number.delay(session, model_name, backend_id, record_id)
+        export_tracking_number.delay(session, model_name, record_id)
     return res
 
 
 @job
-def export_tracking_number(session, model_name, backend_id, record_id):
+def export_tracking_number(session, model_name, record_id):
     """ Export the tracking number of a delivery order. """
+    picking = session.browse(model_name, record_id)
+    backend_id = picking.backend_id.id
     env = get_environment(session, model_name, backend_id)
     tracking_exporter = env.get_connector_unit(MagentoTrackingExport)
     return tracking_exporter.run(record_id)

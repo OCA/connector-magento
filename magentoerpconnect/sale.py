@@ -67,26 +67,6 @@ class sale_order(orm.Model):
                 string="Magento Bindings"),
         }
 
-    def action_ship_create(self, cr, uid, ids, context=None):
-        """ When shippings are created from sale orders, we need to
-        create the ``magento.stock.picking.out`` records so they will be
-        ready to be exported to the right Magento backend.
-        """
-        result = super(sale_order, self).action_ship_create(cr, uid, ids, context=context)
-        magento_picking_obj = self.pool.get('magento.stock.picking.out')
-        for order in self.browse(cr, uid, ids, context=context):
-            if not order.magento_bind_ids:
-                continue
-            magento_order = order.magento_bind_ids[0]
-            for picking in order.picking_ids:
-                magento_picking_obj.create(
-                        cr, uid,
-                        {'backend_id': magento_order.backend_id.id,
-                         'openerp_id': picking.id,
-                         'magento_order_id': magento_order.id},
-                        context=context)
-        return result
-
 
 class magento_sale_order_line(orm.Model):
     _name = 'magento.sale.order.line'
@@ -127,6 +107,7 @@ class magento_sale_order_line(orm.Model):
         ('magento_uniq', 'unique(backend_id, magento_id)',
          'A sale order line with the same ID on Magento already exists.'),
     ]
+
     def create(self, cr, uid, vals, context=None):
         magento_order_id = vals['magento_order_id']
         info = self.pool['magento.sale.order'].read(cr, uid,
