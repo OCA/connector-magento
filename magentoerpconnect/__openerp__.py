@@ -56,6 +56,7 @@ Use the **Connector** module to synchronize OpenERP with Magento.
           'product_view.xml',
           'partner_view.xml',
           'sale_view.xml',
+          'invoice_view.xml',
           'magentoerpconnect_menu.xml',
           'delivery_view.xml',
           'stock_view.xml',
