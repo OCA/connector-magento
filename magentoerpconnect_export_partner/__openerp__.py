@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-{'name': 'Magento Connector - Export Partners',
+{'name': 'Magento Connector - Export Partners (Experimental)',
  'version': '2.0.0',
  'category': 'Connector',
  'depends': ['magentoerpconnect',
@@ -32,6 +32,10 @@ Magento Connector - Export Partners
 ===================================
 
 Extension for **Magento Connector**, export the partners to Magento.
+
+This module is considered as experimental, the creation of the partners
+is not guaranted to work correctly.  No password are defined on the
+customer accounts.
 """,
  'images': [],
  'demo': [],

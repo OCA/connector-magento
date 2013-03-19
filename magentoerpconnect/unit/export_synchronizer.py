@@ -125,11 +125,6 @@ class MagentoExportSynchronizer(ExportSynchronizer):
 
 
 @magento
-class PartnerExport(MagentoExportSynchronizer):
-    _model_name = ['magento.res.partner']
-
-
-@magento
 class MagentoPickingExport(ExportSynchronizer):
     _model_name = ['magento.stock.picking.out']
 
