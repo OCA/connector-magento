@@ -110,27 +110,41 @@
             <field name="name">magento.website.form</field>
             <field name="model">magento.website</field>
             <field name="arch" type="xml">
-                <form string="Magento Website" version="7.0">
-                    <h1>
-                        <field name="name" class="oe_inline"/>
-                    </h1>
-                    <group>
-                        <field name="backend_id"/>
-                        <field name="code"/>
-                        <field name="sort_order"/>
-                    </group>
-                    <group>
-                        <div>
-                            <label string="Import partners since" class="oe_inline"/>
-                            <field name="import_partners_from_date"
-                                class="oe_inline"
-                                nolabel="1"/>
-                        </div>
-                        <button name="import_partners"
-                            type="object"
-                            class="oe_highlight"
-                            string="Import in background"/>
-                    </group>
+                <form string="Magento Website" create="false"
+                        delete="false" version="7.0">
+                    <sheet>
+                        <h1>
+                            <field name="name" class="oe_inline"/>
+                        </h1>
+                        <group string="Informations">
+                            <field name="backend_id" readonly="1"/>
+                            <field name="code"/>
+                            <field name="sort_order"/>
+                        </group>
+                        <notebook>
+                            <page name="import" string="Imports">
+                                <group>
+                                    <div>
+                                        <label string="Import partners since" class="oe_inline"/>
+                                        <field name="import_partners_from_date"
+                                            class="oe_inline"
+                                            nolabel="1"/>
+                                    </div>
+                                    <button name="import_partners"
+                                        type="object"
+                                        class="oe_highlight"
+                                        string="Import in background"/>
+                                </group>
+                            </page>
+
+                            <page name="store" string="Stores">
+                                <group string="Stores">
+                                    <field name="store_ids" nolabel="1"/>
+                                </group>
+                            </page>
+
+                        </notebook>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -139,7 +153,8 @@
             <field name="name">magento.website.tree</field>
             <field name="model">magento.website</field>
             <field name="arch" type="xml">
-                <tree string="Magento Website" version="7.0">
+                <tree string="Magento Website" create="false"
+                        delete="false" version="7.0">
                     <field name="name"/>
                     <field name="backend_id"/>
                     <field name="code"/>
@@ -161,18 +176,29 @@
             <field name="name">magento.store.form</field>
             <field name="model">magento.store</field>
             <field name="arch" type="xml">
-                <form string="Magento Store" version="7.0">
-                    <h1>
-                        <field name="name" class="oe_inline"/>
-                    </h1>
-                    <group>
-                        <field name="website_id"/>
-                        <field name="openerp_id"/>
-                    </group>
-                    <group>
-                        <field name="send_picking_done_mail"/>
-                        <field name="send_invoice_paid_mail"/>
-                    </group>
+                <form string="Magento Store" create="false"
+                        delete="false" version="7.0">
+                    <sheet>
+                        <h1>
+                            <field name="name" class="oe_inline"/>
+                        </h1>
+                        <group string="Informations">
+                            <field name="website_id"/>
+                            <field name="openerp_id"/>
+                        </group>
+                        <group string="Options">
+                            <field name="send_picking_done_mail"/>
+                            <field name="send_invoice_paid_mail"/>
+                        </group>
+
+                        <notebook>
+                            <page name="storeview" string="Storeviews">
+                                <group string="Storeviews">
+                                    <field name="storeview_ids" nolabel="1"/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -181,7 +207,8 @@
             <field name="name">magento.store.tree</field>
             <field name="model">magento.store</field>
             <field name="arch" type="xml">
-                <tree string="Magento Store" version="7.0">
+                <tree string="Magento Store" create="false"
+                        delete="false" version="7.0">
                     <field name="name"/>
                     <field name="website_id"/>
                     <field name="openerp_id"/>
@@ -202,35 +229,41 @@
             <field name="name">magento.storeview.form</field>
             <field name="model">magento.storeview</field>
             <field name="arch" type="xml">
-                <form string="Magento Storeview" version="7.0">
-                    <h1>
-                        <field name="name" class="oe_inline"/>
-                    </h1>
-                    <group>
-                        <field name="code"/>
-                        <field name="store_id"/>
-                    </group>
-                    <group>
-                        <field name="sort_order"/>
-                        <field name="enabled"/>
-                    </group>
-                    <group>
-                        <field name="lang_id" widget="selection"/>
-                    </group>
-                    <group colspan="4">
-                      <div>
-                        <label string="Import Sale Orders since"
-                               class="oe_inline"/>
-                        <field name='import_orders_from_date'
-                               class="oe_inline"
-                               nolabel="1"/>
-                      </div>
-                      <button name="import_sale_orders"
-                              type="object"
-                              class="oe_highlight"
-                              string="Import Sale Orders"/>
+                <form string="Magento Storeview" create="false"
+                        delete="false" version="7.0">
+                    <sheet>
+                        <h1>
+                            <field name="name" class="oe_inline"/>
+                        </h1>
+                        <group string="Informations">
+                            <field name="code"/>
+                            <field name="store_id"/>
+                            <field name="sort_order"/>
+                            <field name="enabled"/>
+                        </group>
+                        <group string="Options">
+                            <field name="lang_id" widget="selection"/>
+                        </group>
+                        <notebook>
+                            <page name="import" string="Imports">
+                                <group colspan="4">
+                                  <div>
+                                    <label string="Import Sale Orders since"
+                                           class="oe_inline"/>
+                                    <field name='import_orders_from_date'
+                                           class="oe_inline"
+                                           nolabel="1"/>
+                                  </div>
+                                  <button name="import_sale_orders"
+                                          type="object"
+                                          class="oe_highlight"
+                                          string="Import Sale Orders"/>
 
-                    </group>
+                                </group>
+                            </page>
+
+                        </notebook>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -239,7 +272,8 @@
             <field name="name">magento.storeview.tree</field>
             <field name="model">magento.storeview</field>
             <field name="arch" type="xml">
-                <tree string="Magento Storeview" version="7.0">
+                <tree string="Magento Storeview" create="false"
+                        delete="false" version="7.0">
                     <field name="name"/>
                     <field name="code"/>
                     <field name="enabled"/>
