@@ -74,7 +74,6 @@ class magento_sale_order_line(orm.Model):
     _description = 'Magento Sale Order Line'
     _inherits = {'sale.order.line': 'openerp_id'}
 
-
     def _get_lines_from_order(self, cr, uid, ids, context=None):
         line_obj = self.pool.get('magento.sale.order.line')
         return line_obj.search(cr, uid,
@@ -129,7 +128,8 @@ class magento_sale_order_line(orm.Model):
                                                     context=context)
         order_id = info[0]['openerp_id']
         vals['order_id'] = order_id[0]
-        super(magento_sale_order_line, self).create(cr, uid, vals, context)
+        return super(magento_sale_order_line, self).create(cr, uid, vals,
+                                                           context=context)
 
 
 class sale_order_line(orm.Model):
@@ -140,7 +140,7 @@ class sale_order_line(orm.Model):
                 string="Magento Bindings"),
         }
 
-    def invoice_line_create(self, cr, uid, ids, context):
+    def invoice_line_create(self, cr, uid, ids, context=None):
         """ In order to have a one2many link between the sale order line
         and the various invoice line, we overwrite this method.  We made
         that cause there is only a many2many link between them by
@@ -154,14 +154,15 @@ class sale_order_line(orm.Model):
         mag_inv_line_obj = self.pool.get('magento.account.invoice.line')
         for line in self.browse(cr, uid, ids, context=context):
             created_line_id = super(sale_order_line, self).invoice_line_create(
-                    cr, uid, [line.id], context)
+                    cr, uid, [line.id], context=context)
             # Test if magento_sale_order_line exists, if yes create a
             # magento_invoice_line
-            if line.magento_bind_ids:
+            for binding in line.magento_bind_ids:
                 vals = {
+                    'backend_id': binding.backend_id.id,
                     'openerp_id': created_line_id[0],
-                    'magento_order_line_id': line.id
+                    'magento_order_line_id': binding.id
                 }
-                mag_inv_line_obj.create(cr, uid, ids, vals, context)
+                mag_inv_line_obj.create(cr, uid, vals, context=context)
             created_line_ids.append(created_line_id[0])
         return created_line_ids
