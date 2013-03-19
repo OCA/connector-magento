@@ -165,4 +165,3 @@ class sale_order_line(orm.Model):
                 mag_inv_line_obj.create(cr, uid, ids, vals, context)
             created_line_ids.append(created_line_id[0])
         return created_line_ids
-
