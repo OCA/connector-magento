@@ -30,7 +30,7 @@ from openerp.addons.connector.event import (
     )
 from openerp.addons.connector.connector import Environment
 
-from openerp.addons.connector_ecommerce.event import (on_picking_done,
+from openerp.addons.connector_ecommerce.event import (on_picking_out_done,
                                                       on_tracking_number_added,
                                                       on_invoice_paid)
 from .unit.export_synchronizer import (
@@ -95,48 +95,51 @@ def delay_unlink(session, model_name, record_id):
                                    record.backend_id.id, magento_id)
 
 
-@on_picking_done(model_names='stock.picking')
+@on_picking_out_done
 @magento_consumer
-def delay_export_picking_done(session, model_name, record_id, picking_type):
+def picking_out_done(session, model_name, record_id, picking_method):
     """
-    Call a job to export the picking with args to ask for partial or complete
-    picking.
+    Create a ``magento.stock.picking.out`` record. This record will then
+    be exported to Magento.
 
-    :param picking_type: picking_type, can be 'complete' or 'partial'
-    :type picking_type: str
+    :param picking_method: picking_method, can be 'complete' or 'partial'
+    :type picking_method: str
     """
-    model = session.pool.get(model_name)
-    picking = model.browse(session.cr, session.uid,
-                          record_id, context=session.context)
-    # find the magento SO to retrieve the backend
-    magento_sale = picking.sale_id.magento_bind_ids[0]
-    export_picking_done.delay(session, model_name,
-                              magento_sale.backend_id.id,
-                              record_id, picking_type)
+    picking = session.browse(model_name, record_id)
+    sale = picking.sale_id
+    if sale:
+        if not sale.magento_bind_ids:
+            return  # not linked with Magento
+        # a sale order is linked with one backend only
+        magento_sale = sale.magento_bind_ids[0]
+        session.create('magento.stock.picking.out',
+                       {'backend_id': magento_sale.backend_id.id,
+                        'openerp_id': picking.id,
+                        'magento_order_id': magento_sale.id,
+                        'picking_method': picking_method})
 
 
-@on_tracking_number_added(model_names='stock.picking')
+@on_record_create(model_names='magento.stock.picking.out')
 @magento_consumer
-def delay_export_tracking_number(session, model_name,
-                                 record_id, tracking_number):
+def delay_export(session, model_name, record_id):
+    export_picking_done.delay(session, model_name, record_id)
+
+
+@on_tracking_number_added
+@magento_consumer
+def delay_export_tracking_number(session, model_name, record_id):
     """
     Call a job to export the tracking number to a existing picking that
     must be in done state.
-
-    :param tracking_number: tracking number of the picking
-    :type tracking_number: str
     """
     picking = session.browse(model_name, record_id)
-    # the related sale order has a relation to the backend
-    magento_sale = picking.sale_id.magento_bind_ids[0]
-    # Set the priority to 20 to have more chance that it would be
-    # executed after the picking creation
-    export_tracking_number.delay(session,
-                                 model_name,
-                                 magento_sale.backend_id.id,
-                                 record_id,
-                                 tracking_number,
-                                 priority=20)
+    for binding in picking.magento_bind_ids:
+        # Set the priority to 20 to have more chance that it would be
+        # executed after the picking creation
+        export_tracking_number.delay(session,
+                                     binding._model._name,
+                                     binding.id,
+                                     priority=20)
 
 
 @on_invoice_paid(model_names='account.invoice')

@@ -183,8 +183,7 @@ class magento_account_invoice_line(orm.Model):
         'magento_order_line_id': fields.many2one(
                                       'magento.sale.order.line',
                                       string='Magento Sale Order Lines',
-                                      required=True,
-                                      ondelete='cascade'),
+                                      ondelete='set null'),
     }
 
     _sql_constraints = [

@@ -32,6 +32,7 @@ ORDER_STATUS_MAPPING = {
     'cancel': 'canceled',
     'waiting_date': 'holded'}
 
+
 class magento_sale_order(orm.Model):
     _name = 'magento.sale.order'
     _inherit = 'magento.binding'
@@ -50,10 +51,12 @@ class magento_sale_order(orm.Model):
         'total_amount_tax': fields.float('Total amount w. tax',
                                          digits_compute=dp.get_precision('Account')), # XXX common to all ecom sale orders
         }
+
     _sql_constraints = [
         ('magento_uniq', 'unique(backend_id, magento_id)',
          'A sale order line with the same ID on Magento already exists.'),
     ]
+
 
 class sale_order(orm.Model):
     _inherit = 'sale.order'
@@ -104,6 +107,7 @@ class magento_sale_order_line(orm.Model):
         ('magento_uniq', 'unique(backend_id, magento_id)',
          'A sale order line with the same ID on Magento already exists.'),
     ]
+
     def create(self, cr, uid, vals, context=None):
         magento_order_id = vals['magento_order_id']
         info = self.pool['magento.sale.order'].read(cr, uid,
