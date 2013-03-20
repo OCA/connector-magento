@@ -32,6 +32,9 @@ class magento_account_invoice(orm.Model):
                                       string='Invoice',
                                       required=True,
                                       ondelete='cascade'),
+        'magento_order_id': fields.many2one('magento.sale.order',
+                                            string='Magento Sale Order',
+                                            ondelete='set null'),
     }
 
     _sql_constraints = [

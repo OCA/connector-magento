@@ -80,6 +80,7 @@ class magento_backend(orm.Model):
 
     def check_magento_structure(self, cr, uid, ids, context=None):
         """ Used in each data import.
+
         Verify if a website exists for each backend before starting the import.
         """
         for backend_id in ids:
