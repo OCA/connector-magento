@@ -44,6 +44,8 @@ class MagentoModelBinder(MagentoBinder):
             'magento.stock.picking.out',
             'magento.sale.order',
             'magento.sale.order.line',
+            'magento.account.invoice',
+            'magento.account.invoice.line',
         ]
 
     def to_openerp(self, external_id, unwrap=False):

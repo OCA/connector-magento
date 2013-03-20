@@ -364,6 +364,16 @@ class AccountInvoiceAdapter(GenericAdapter):
     _model_name = 'magento.account.invoice'
     _magento_model = 'sales_order_invoice'
 
+    def create(self, order_id, items, comment, email, include_comment):
+        """ Create a record on the external system """
+        with magentolib.API(self.magento.location,
+                            self.magento.username,
+                            self.magento.password) as api:
+            _logger.debug("api.call(%s.create', [%s])", self._magento_model,
+                          [order_id, items, comment, email, include_comment])
+            return api.call('%s.create' % self._magento_model,
+                            [order_id, items, comment, email, include_comment])
+
 
 @magento
 class SaleOrderAdapter(GenericAdapter):
