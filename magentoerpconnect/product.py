@@ -74,11 +74,12 @@ class magento_product_product(orm.Model):
     def product_type_get(self, cr, uid, context=None):
         return [
             ('simple', 'Simple Product'),
-            ('grouped', 'Grouped Product'),
-            ('configurable', 'Configurable Product'),
-            ('virtual', 'Virtual Product'),
-            ('bundle', 'Bundle Product'),
-            ('downloadable', 'Downloadable Product'),
+            # XXX activate when supported
+            # ('grouped', 'Grouped Product'),
+            # ('configurable', 'Configurable Product'),
+            # ('virtual', 'Virtual Product'),
+            # ('bundle', 'Bundle Product'),
+            # ('downloadable', 'Downloadable Product'),
         ]
 
     def _product_type_get(self, cr, uid, context=None):
@@ -88,25 +89,29 @@ class magento_product_product(orm.Model):
         'openerp_id': fields.many2one('product.product',
                                       string='Product',
                                       required=True,
-                                      ondelete='cascade'),
-        'website_ids': fields.many2many('external.shop.group',
-            'magerp_product_shop_group_rel', 'product_id',
-            'shop_group_id', 'Websites',
-            help='By defaut product will be exported on every website, if you want to export it only on some website select them here'),
-        'created_at':fields.date('Created At (on Magento)'),
-        'updated_at':fields.date('Updated At (on Magento)'),
-        'product_type': fields.selection(_product_type_get, 'Magento Product Type'),
-        'manage_stock': fields.selection([
-            ('use_default','Use Default Config'),
-            ('no', 'Do Not Manage Stock'),
-            ('yes','Manage Stock')
-            ], 'Manage Stock Level'),
-        'manage_stock_shortage': fields.selection([
-            ('use_default','Use Default Config'),
-            ('no', 'No Sell'),
-            ('yes','Sell qty < 0'),
-            ('yes-and-notification','Sell qty < 0 and Use Customer Notification'),
-            ], 'Manage Inventory Shortage'),
+                                      ondelete='restrict'),
+        # XXX website_ids can be computed from categories
+        'website_ids': fields.many2many('magento.website',
+                                        string='Websites',
+                                        readonly=True),
+        'created_at': fields.date('Created At (on Magento)'),
+        'updated_at': fields.date('Updated At (on Magento)'),
+        'product_type': fields.selection(_product_type_get,
+                                         'Magento Product Type',
+                                         required=True),
+        'manage_stock': fields.selection(
+            [('use_default', 'Use Default Config'),
+             ('no', 'Do Not Manage Stock'),
+             ('yes', 'Manage Stock')],
+            string='Manage Stock Level',
+            required=True),
+        'manage_stock_shortage': fields.selection(
+            [('use_default', 'Use Default Config'),
+             ('no', 'No Sell'),
+             ('yes', 'Sell Quantity < 0'),
+             ('yes-and-notification', 'Sell Quantity < 0 and Use Customer Notification')],
+            string='Manage Inventory Shortage',
+            required=True),
         }
 
     _defaults = {
