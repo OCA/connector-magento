@@ -22,5 +22,5 @@
 "access_magentoerpconnect_res_partner_group_user","magerp_res_partner group_user","model_magento_res_partner","base.group_user",1,0,0,0
 "access_magentoerpconnect_res_partner_category_group_user","magerp_res_partner_category group_user","model_magento_res_partner_category","base.group_user",1,0,0,0
 "access_magentoerpconnect_address_group_user","magerp_address_group_user","model_magento_address","base.group_user",1,0,0,0
-"access_magentoerpconnect_stock_picking_out_user","magerp_stock.picking.out","model_magento_stock_picking","stock.group_stock_user",1,1,1,1
-"access_magentoerpconnect_stock_picking_out_manager","magerp_stock.picking out manager","model_magento_stock_picking","stock.group_stock_manager",1,1,1,1
+"access_magentoerpconnect_stock_picking_out_user","magerp_stock.picking.out user","model_magento_stock_picking_out","stock.group_stock_user",1,1,1,1
+"access_magentoerpconnect_stock_picking_out_manager","magerp_stock.picking.out manager","model_magento_stock_picking_out","stock.group_stock_manager",1,1,1,1
