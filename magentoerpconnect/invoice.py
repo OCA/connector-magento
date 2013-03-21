@@ -32,6 +32,9 @@ class magento_account_invoice(orm.Model):
                                       string='Invoice',
                                       required=True,
                                       ondelete='cascade'),
+        'magento_order_id': fields.many2one('magento.sale.order',
+                                            string='Magento Sale Order',
+                                            ondelete='set null'),
     }
 
     _sql_constraints = [
@@ -46,37 +49,5 @@ class account_invoice(orm.Model):
     _columns = {
         'magento_bind_ids': fields.one2many(
             'magento.account.invoice', 'openerp_id',
-            string="Magento Bindings"),
-    }
-
-
-class magento_account_invoice_line(orm.Model):
-    _name = 'magento.account.invoice.line'
-    _inherit = 'magento.binding'
-    _inherits = {'account.invoice.line': 'openerp_id'}
-
-    _columns = {
-        'openerp_id': fields.many2one('account.invoice.line',
-                                      string='Invoice Line',
-                                      required=True,
-                                      ondelete='cascade'),
-        'magento_order_line_id': fields.many2one(
-                                      'magento.sale.order.line',
-                                      string='Magento Sale Order Lines',
-                                      ondelete='set null'),
-    }
-
-    _sql_constraints = [
-        ('magento_uniq', 'unique(backend_id, magento_id)',
-         'An invoice line with the same ID on Magento already exists.'),
-    ]
-
-
-class account_invoice(orm.Model):
-    _inherit = 'account.invoice.line'
-
-    _columns = {
-        'magento_bind_ids': fields.one2many(
-            'magento.account.invoice.line', 'openerp_id',
             string="Magento Bindings"),
     }

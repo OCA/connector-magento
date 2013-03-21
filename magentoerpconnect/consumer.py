@@ -34,7 +34,8 @@ from openerp.addons.connector_ecommerce.event import (on_picking_out_done,
 from .unit.export_synchronizer import (
     export_record,
     export_picking_done,
-    export_tracking_number
+    export_tracking_number,
+    export_invoice_paid
     )
 from .unit.delete_synchronizer import export_delete_record
 
@@ -105,11 +106,9 @@ def picking_out_done(session, model_name, record_id, picking_method):
     """
     picking = session.browse(model_name, record_id)
     sale = picking.sale_id
-    if sale:
-        if not sale.magento_bind_ids:
-            return  # not linked with Magento
-        # a sale order is linked with one backend only
-        magento_sale = sale.magento_bind_ids[0]
+    if not sale:
+        return
+    for magento_sale in sale.magento_bind_ids:
         session.create('magento.stock.picking.out',
                        {'backend_id': magento_sale.backend_id.id,
                         'openerp_id': picking.id,
@@ -140,18 +139,28 @@ def delay_export_tracking_number(session, model_name, record_id):
                                      priority=20)
 
 
-@on_invoice_paid(model_names='account.invoice')
+@on_invoice_paid
 @magento_consumer
-def delay_export_invoice_paid(session, model_name, record_id):
+def invoice_paid_create_bindings(session, model_name, record_id):
     """
-    Call a job to export the invoice payment. Remember that on Magento
-    an invoice represent a payment as well.
+    Create a ``magento.account.invoice`` record. This record will then
+    be exported to Magento.
     """
     invoice = session.browse(model_name, record_id)
     # find the magento store to retrieve the backend
     # we use the shop as many sale orders can be related to an invoice
-    shop = invoice._model._get_related_so_shop(invoice)
-    magento_store = shop.magento_bind_ids[0]
-    export_invoice_paid.delay(session, model_name,
-                              magento_store.backend_id.id,
-                              record_id)
+    for sale in invoice.sale_ids:
+        for magento_sale in sale.magento_bind_ids:
+            session.create('magento.account.invoice',
+                           {'backend_id': magento_sale.backend_id.id,
+                            'openerp_id': invoice.id,
+                            'magento_order_id': magento_sale.id})
+
+
+@on_record_create(model_names='magento.account.invoice')
+@magento_consumer
+def delay_export_account_invoice(session, model_name, record_id):
+    """
+    Delay the job to export the magento invoice.
+    """
+    export_invoice_paid.delay(session, model_name, record_id)

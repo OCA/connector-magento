@@ -106,6 +106,15 @@ class GenericAdapter(MagentoCRUDAdapter):
             return api.call('%s.info' % self._magento_model, [id, attributes])
         return {}
 
+    def search_read(self, filters=None):
+        """ Search records according to some criterias
+        and returns their information"""
+        with magentolib.API(self.magento.location,
+                            self.magento.username,
+                            self.magento.password) as api:
+            return api.call('%s.list' % self._magento_model, [filters])
+        return []
+
     def create(self, data):
         """ Create a record on the external system """
         with magentolib.API(self.magento.location,
@@ -364,6 +373,29 @@ class AccountInvoiceAdapter(GenericAdapter):
     _model_name = 'magento.account.invoice'
     _magento_model = 'sales_order_invoice'
 
+    def create(self, order_increment_id, items, comment, email, include_comment):
+        """ Create a record on the external system """
+        with magentolib.API(self.magento.location,
+                            self.magento.username,
+                            self.magento.password) as api:
+            _logger.debug("api.call('%s.create', %s)", self._magento_model,
+                          [order_increment_id, items, comment, email, include_comment])
+            return api.call('%s.create' % self._magento_model,
+                            [order_increment_id, items, comment, email, include_comment])
+
+    def search_read(self, filters=None, order_id=None):
+        """ Search records according to some criterias
+        and returns their information
+
+        :param order_id: 'order_id' field of the magento sale order, this
+                         is not the same field than 'increment_id'
+        """
+        if filters is None:
+            filters = {}
+        if order_id is not None:
+            filters['order_id'] = {'eq': order_id}
+        return super(AccountInvoiceAdapter, self).search_read(filters=filters)
+
 
 @magento
 class SaleOrderAdapter(GenericAdapter):
@@ -389,4 +421,3 @@ class SaleOrderAdapter(GenericAdapter):
                      'filters': filters,
                      }
         return super(SaleOrderAdapter, self).search(arguments)
-# XXX do we need an adapter for sale.order.line? 
