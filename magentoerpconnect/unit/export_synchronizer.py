@@ -332,12 +332,33 @@ class MagentoInvoiceSynchronizer(ExportSynchronizer):
         mail_notification = magento_store.send_invoice_paid_mail
 
         lines_info = self._get_lines_info(invoice)
-        # TODO: trap error 102 -> already created
-        magento_id = self._export_invoice(magento_order.magento_id,
-                                          lines_info,
-                                          mail_notification)
-        if magento_id:
-            self.binder.bind(magento_id, openerp_id)
+        try:
+            magento_id = self._export_invoice(magento_order.magento_id,
+                                              lines_info,
+                                              mail_notification)
+        except xmlrpclib.Fault as err:
+            # When the invoice is already created on Magento, it returns:
+            # <Fault 102: 'Cannot do invoice for order.'>
+            # We'll search the Magento invoice ID to store it in OpenERP
+            if err.faultCode == 102:
+                _logger.debug('Invoice already exists on Magento for '
+                              'sale order with magento id %s, trying to find '
+                              'the invoice id.',
+                              magento_order.magento_id)
+                magento_id = self._get_existing_invoice(magento_order)
+            else:
+                raise
+
+        self.binder.bind(magento_id, openerp_id)
+
+    def _get_existing_invoice(self, magento_order):
+        invoices = self.backend_adapter.search_read(
+                order_id=magento_order.magento_order_id)
+        if not invoices:
+            raise
+        if len(invoices) > 1:
+            raise
+        return invoices[0]['increment_id']
 
 
 @job

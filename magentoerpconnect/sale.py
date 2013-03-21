@@ -50,6 +50,8 @@ class magento_sale_order(orm.Model):
                                      digits_compute=dp.get_precision('Account')), # XXX common to all ecom sale orders
         'total_amount_tax': fields.float('Total amount w. tax',
                                          digits_compute=dp.get_precision('Account')), # XXX common to all ecom sale orders
+        'magento_order_id': fields.integer('Magento Order ID',
+                                           help="'order_id' field in Magento"),
         }
 
     _sql_constraints = [
