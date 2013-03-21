@@ -415,9 +415,9 @@ class SaleOrderImportMapper(ImportMapper):
                   }
         return result
 
-    # TODO:
-    # billing address
-    # shipping address
+    # partner_id, partner_invoice_id, partner_shipping_id
+    # are done in the importer
+
     @mapping
     def backend_id(self, record):
         return {'backend_id': self.backend_record.id}

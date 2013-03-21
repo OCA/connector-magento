@@ -84,6 +84,7 @@ class magento_res_partner(orm.Model):
         'emailid': fields.char('E-mail address'),
         'taxvat': fields.char('Magento VAT'),
         'newsletter': fields.boolean('Newsletter'),
+        'guest_customer': fields.boolean('Guest Customer'),
     }
 
     _sql_constraints = [
@@ -150,6 +151,7 @@ class magento_address(orm.Model):
                                          20),
                                         },
                                      readonly=True),
+        'is_magento_order_address': fields.boolean('Address from a Magento Order'),
     }
 
     _sql_constraints = [

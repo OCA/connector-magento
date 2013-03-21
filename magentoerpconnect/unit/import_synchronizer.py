@@ -26,6 +26,7 @@ from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.connector import Environment
 from openerp.addons.connector.unit.synchronizer import ImportSynchronizer
 from openerp.addons.connector.unit.backend_adapter import BackendAdapter
+from openerp.addons.connector.unit.mapper import ImportMapper
 from ..backend import magento
 from ..connector import get_environment
 
@@ -244,8 +245,8 @@ class PartnerImport(MagentoImportSynchronizer):
 
     def _after_import(self, magento_res_partner_openerp_id):
         """ Import the addresses """
-        addresses_adapter  = self.get_connector_unit_for_model(BackendAdapter,
-                                                               'magento.address')
+        addresses_adapter = self.get_connector_unit_for_model(BackendAdapter,
+                                                              'magento.address')
         mag_address_ids = addresses_adapter.search(
                 {'customer_id': {'eq': self.magento_id}})
         if not mag_address_ids:
@@ -442,14 +443,161 @@ class SaleOrderBatchImport(DelayedBatchImport):
 @magento
 class SaleOrderImport(MagentoImportSynchronizer):
     _model_name = ['magento.sale.order']
+
+    def _import_customer_group(self, group_id):
+        binder = self.get_binder_for_model('magento.res.partner.category')
+        if binder.to_openerp(group_id) is None:
+            importer = self.get_connector_unit_for_model(MagentoImportSynchronizer,
+                                                         'magento.res.partner.category')
+            importer.run(group_id)
+
+    def _import_addresses(self):
+        record = self.magento_record
+        sess = self.session
+
+        # Magento allows to create a sale order not registered as a user
+        is_guest_order = bool(int(record.get('customer_is_guest', 0)))
+
+        # For a guest order or when magento does not provide customer_id
+        # on a non-guest order (it happens, Magento inconsistencies are
+        # common)
+        if (is_guest_order or not record.get('customer_id')):
+
+            # sometimes we don't have website_id...
+            if record.get('website_id'):
+                website_binder = self.get_binder_for_model('magento.website')
+                oe_website_id = website_binder.to_openerp(record['website_id'])
+            else:
+                # deduce it from the store
+                store_binder = self.get_binder_for_model('magento.store')
+                oe_store_id = store_binder.to_openerp(record['store_id'])
+                store = sess.browse('magento.store', oe_store_id)
+                oe_website_id = store.website_id.id
+                # "fix" the record
+                record['website_id'] = store.website_id.magento_id
+
+            # search an existing partner with the same email
+            partner_ids = sess.search('magento.res.partner',
+                                      [('emailid', '=', record['customer_email']),
+                                       ('website_id', '=', oe_website_id)])
+
+            # if we have found one, we "fix" the record with the magento
+            # customer id
+            if partner_ids:
+                partner = sess.read('magento.res.partner',
+                                    partner_ids[0],
+                                    ['magento_id'])
+                record['customer_id'] = partner['magento_id']
+
+            # no partner matching, it means that we have to consider it
+            # as a guest order
+            else:
+                is_guest_order = True
+
+        partner_binder = self.get_binder_for_model('magento.res.partner')
+        if is_guest_order:
+            # ensure that the flag is correct in the record
+            record['customer_is_guest'] = True
+
+            address = record['billing_address']
+
+            customer_group = record.get('customer_group_id')
+            if customer_group:
+                self._import_customer_group(customer_group)
+
+            customer_record = {
+                'firstname': address['firstname'],
+                'middlename': address['middlename'],
+                'lastname': address['lastname'],
+                'prefix': address.get('prefix'),
+                'suffix': address.get('suffix'),
+                'email': record.get('customer_email'),
+                'taxvat': record.get('customer_taxvat'),
+                'group_id': customer_group,
+                'gender': record.get('customer_gender'),
+                'store_id': record['store_id'],
+                'created_at': record['created_at'],
+                'updated_at': False,
+                'created_in': False,
+                'dob': record.get('customer_dob'),
+                'website_id': record.get('website_id'),
+            }
+            mapper = self.get_connector_unit_for_model(ImportMapper,
+                                                      'magento.res.partner')
+            oe_record = mapper.convert(customer_record)
+            oe_record['guest_customer'] = True
+            partner_bind_id = sess.create('magento.res.partner', oe_record)
+        else:
+
+            # we always update the customer when importing an order
+            importer = self.get_connector_unit_for_model(MagentoImportSynchronizer,
+                                                         'magento.res.partner')
+            importer.run(record['customer_id'])
+            partner_bind_id = partner_binder.to_openerp(record['customer_id'])
+
+        partner_id = sess.read('magento.res.partner',
+                               partner_bind_id, ['openerp_id'])['openerp_id'][0]
+
+        # Import of addresses. We just can't rely on the
+        # ``customer_address_id`` field given by Magento, because it is
+        # sometimes empty and sometimes wrong.
+
+        # The addresses of the sale order are imported as active=false
+        # so they are linked with the sale order but they are not displayed
+        # in the customer form and the searches.
+
+        # We import the addresses of the sale order as Active = False
+        # so they will be available in the documents generated as the
+        # sale order or the picking, but they won't be available on
+        # the partner form or the searches. Too many adresses would
+        # be displayed.
+        # They are never synchronized.
+
+        # For the orders which are from guests, we let the addresses
+        # as active because they don't have an address book.
+        addresses_defaults = {'parent_id': partner_id,
+                              'magento_partner_id': partner_bind_id,
+                              'email': record.get('customer_email', False),
+                              'active': is_guest_order,
+                              'is_magento_order_address': True}
+
+        addr_mapper = self.get_connector_unit_for_model(ImportMapper,
+                                                       'magento.address')
+
+        def create_address(address_record):
+            oe_address = addr_mapper.convert(address_record)
+            oe_address.update(addresses_defaults)
+            address_bind_id = sess.create('magento.address', oe_address)
+            return sess.read('magento.address',
+                             address_bind_id,
+                             ['openerp_id'])['openerp_id'][0]
+
+        billing_id = create_address(record['billing_address'])
+
+        shipping_id = None
+        if record['shipping_address']:
+            shipping_id = create_address(record['shipping_address'])
+
+        self.partner_id = partner_id
+        self.partner_invoice_id = billing_id
+        self.partner_shipping_id = shipping_id or billing_id
+
+    def _map_data(self):
+        """ Return the external record converted to OpenERP """
+        data = super(SaleOrderImport, self)._map_data()
+        assert self.partner_id, "self.partner_id should have been defined in SaleOrderImport._import_addresses"
+        assert self.partner_invoice_id, "self.partner_id should have been defined in SaleOrderImport._import_addresses"
+        assert self.partner_shipping_id, "self.partner_id should have been defined in SaleOrderImport._import_addresses"
+        data['partner_id'] = self.partner_id
+        data['partner_invoice_id'] = self.partner_invoice_id
+        data['partner_shipping_id'] = self.partner_shipping_id
+        return data
+
     def _import_dependencies(self):
         record = self.magento_record
-        if 'customer_id' in record:
-            binder = self.get_binder_for_model('magento.res.partner')
-            if binder.to_openerp(record['customer_id']) is None:
-                importer = self.get_connector_unit_for_model(MagentoImportSynchronizer,
-                                                             'magento.res.partner')
-                importer.run(record['customer_id'])
+
+        self._import_addresses()
+
         prod_binder = self.get_binder_for_model('magento.product.product')
         prod_importer = self.get_connector_unit_for_model(MagentoImportSynchronizer,
                                                           'magento.product.product')
