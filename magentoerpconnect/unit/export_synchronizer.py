@@ -312,7 +312,6 @@ class MagentoInvoiceSynchronizer(ExportSynchronizer):
             item_id = mag_line.magento_order_line_id.magento_id
             item_qty.setdefault(item_id, 0)
             item_qty[item_id] += line.quantity
-            # FIXME: items should be wrong, the full invoice is created
         return item_qty
 
     def run(self, openerp_id):

@@ -369,7 +369,7 @@ class AccountInvoiceAdapter(GenericAdapter):
         with magentolib.API(self.magento.location,
                             self.magento.username,
                             self.magento.password) as api:
-            _logger.debug("api.call(%s.create', [%s])", self._magento_model,
+            _logger.debug("api.call('%s.create', %s)", self._magento_model,
                           [order_id, items, comment, email, include_comment])
             return api.call('%s.create' % self._magento_model,
                             [order_id, items, comment, email, include_comment])
