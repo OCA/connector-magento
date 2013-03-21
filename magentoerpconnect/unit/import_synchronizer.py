@@ -444,6 +444,13 @@ class SaleOrderBatchImport(DelayedBatchImport):
 class SaleOrderImport(MagentoImportSynchronizer):
     _model_name = ['magento.sale.order']
 
+    def _import_customer_group(self, group_id):
+        binder = self.get_binder_for_model('magento.res.partner.category')
+        if binder.to_openerp(group_id) is None:
+            importer = self.get_connector_unit_for_model(MagentoImportSynchronizer,
+                                                         'magento.res.partner.category')
+            importer.run(group_id)
+
     def _import_addresses(self):
         record = self.magento_record
         sess = self.session
@@ -454,12 +461,20 @@ class SaleOrderImport(MagentoImportSynchronizer):
         # For a guest order or when magento does not provide customer_id
         # on a non-guest order (it happens, Magento inconsistencies are
         # common)
-        if (is_guest_order or
-               (record.get('website_id') and
-               not record.get('customer_id'))):
+        if (is_guest_order or not record.get('customer_id')):
 
-            website_binder = self.get_binder_for_model('magento.website')
-            oe_website_id = website_binder.to_openerp(record.get['website_id'])
+            # sometimes we don't have website_id...
+            if record.get('website_id'):
+                website_binder = self.get_binder_for_model('magento.website')
+                oe_website_id = website_binder.to_openerp(record['website_id'])
+            else:
+                # deduce it from the store
+                store_binder = self.get_binder_for_model('magento.store')
+                oe_store_id = store_binder.to_openerp(record['store_id'])
+                store = sess.browse('magento.store', oe_store_id)
+                oe_website_id = store.website_id.id
+                # "fix" the record
+                record['website_id'] = store.website_id.magento_id
 
             # search an existing partner with the same email
             partner_ids = sess.search('magento.res.partner',
@@ -486,6 +501,10 @@ class SaleOrderImport(MagentoImportSynchronizer):
 
             address = record['billing_address']
 
+            customer_group = record.get('customer_group_id')
+            if customer_group:
+                self._import_customer_group(customer_group)
+
             customer_record = {
                 'firstname': address['firstname'],
                 'middlename': address['middlename'],
@@ -494,9 +513,9 @@ class SaleOrderImport(MagentoImportSynchronizer):
                 'suffix': address.get('suffix'),
                 'email': record.get('customer_email'),
                 'taxvat': record.get('customer_taxvat'),
-                'group_id': record.get('customer_group_id'),  # XXX dependency
+                'group_id': customer_group,
                 'gender': record.get('customer_gender'),
-                'store_id': record['store_id'],  # XXX dependency
+                'store_id': record['store_id'],
                 'created_at': record['created_at'],
                 'updated_at': False,
                 'created_in': False,
