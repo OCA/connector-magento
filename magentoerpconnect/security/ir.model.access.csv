@@ -16,7 +16,6 @@
 "access_magentoerpconnect_magerp_sale_order_line_sale_salesman","magerp_sale_order_line","model_magento_sale_order_line","base.group_sale_salesman",1,1,1,1
 "access_magentoerpconnect_magerp_sale_order_line_sale_manager","magerp_sale_order_line","model_magento_sale_order_line","base.group_sale_manager",1,1,1,1
 "access_magentoerpconnect_account_invoice_uinvoice","magerp_account.invoice","model_magento_account_invoice","account.group_account_invoice",1,1,1,1
-"access_magentoerpconnect_account_invoice_line_uinvoice","magerp_account.invoice.line","model_magento_account_invoice_line","account.group_account_invoice",1,1,1,1
 "access_magentoerpconnect_product_category_sale_manager","magerp_product.category salemanager","model_magento_product_category","base.group_sale_manager",1,1,1,1
 "access_magentoerpconnect_product_category_user","magerp_product.category.user","model_magento_product_category","base.group_user",1,0,0,0
 "access_magentoerpconnect_res_partner_group_user","magerp_res_partner group_user","model_magento_res_partner","base.group_user",1,0,0,0

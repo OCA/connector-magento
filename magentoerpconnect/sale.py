@@ -90,9 +90,6 @@ class magento_sale_order_line(orm.Model):
                                             required=True,
                                             ondelete='cascade',
                                             select=True),
-        'magento_invoice_line_ids': fields.one2many(
-                'magento.account.invoice.line', 'magento_order_line_id',
-                string="Related invoice lines"),
         'openerp_id': fields.many2one('sale.order.line',
                                       string='Sale Order Line',
                                       required=True,
@@ -139,30 +136,3 @@ class sale_order_line(orm.Model):
                 'magento.sale.order.line', 'openerp_id',
                 string="Magento Bindings"),
         }
-
-    def invoice_line_create(self, cr, uid, ids, context=None):
-        """ In order to have a one2many link between the sale order line
-        and the various invoice line, we overwrite this method.  We made
-        that cause there is only a many2many link between them by
-        default. We were not able to retrieve the sale order line ID on
-        magento side from an invoice line.
-
-        This is mainly used in the MagentoInvoiceSynchronizer.
-
-        """
-        created_line_ids = []
-        mag_inv_line_obj = self.pool.get('magento.account.invoice.line')
-        for line in self.browse(cr, uid, ids, context=context):
-            created_line_id = super(sale_order_line, self).invoice_line_create(
-                    cr, uid, [line.id], context=context)
-            # Test if magento_sale_order_line exists, if yes create a
-            # magento_invoice_line
-            for binding in line.magento_bind_ids:
-                vals = {
-                    'backend_id': binding.backend_id.id,
-                    'openerp_id': created_line_id[0],
-                    'magento_order_line_id': binding.id
-                }
-                mag_inv_line_obj.create(cr, uid, vals, context=context)
-            created_line_ids.append(created_line_id[0])
-        return created_line_ids
