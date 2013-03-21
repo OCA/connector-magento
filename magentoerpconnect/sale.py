@@ -44,7 +44,7 @@ class magento_sale_order(orm.Model):
                                       string='Sale Order',
                                       required=True,
                                       ondelete='cascade'),
-        'magento_order_lines': fields.one2many('magento.sale.order.line', 'magento_order_id',
+        'magento_order_line_ids': fields.one2many('magento.sale.order.line', 'magento_order_id',
                                                'Magento Order Lines'),
         'total_amount': fields.float('Total amount',
                                      digits_compute=dp.get_precision('Account')), # XXX common to all ecom sale orders

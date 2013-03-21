@@ -307,7 +307,7 @@ class SaleOrderImportMapper(ImportMapper):
               ('created_at', 'date_order'),
               ]
 
-    children = [('items', 'magento_order_lines', 'magento.sale.order.line'),
+    children = [('items', 'magento_order_line_ids', 'magento.sale.order.line'),
                 ]
 
     def _after_mapping(self, result):
@@ -315,10 +315,10 @@ class SaleOrderImportMapper(ImportMapper):
         result = sess.pool['sale.order']._convert_special_fields(sess.cr,
                                                                  sess.uid,
                                                                  result,
-                                                                 result['magento_order_lines'],
+                                                                 result['magento_order_line_ids'],
                                                                  sess.context)
         onchange = self.get_connector_unit_for_model(SaleOrderOnChange)
-        return onchange.play(result, result['magento_order_lines'])
+        return onchange.play(result, result['magento_order_line_ids'])
 
     @mapping
     def store_id(self, record):
