@@ -23,12 +23,14 @@ import logging
 from datetime import datetime
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.addons.connector.queue.job import job
-from openerp.addons.connector.connector import Environment
+from openerp.addons.connector.exception import FailedJobError, NothingToDoJob
+from openerp.addons.connector.connector import Environment, ConnectorUnit
 from openerp.addons.connector.unit.synchronizer import ImportSynchronizer
 from openerp.addons.connector.unit.backend_adapter import BackendAdapter
 from openerp.addons.connector.unit.mapper import ImportMapper
 from ..backend import magento
 from ..connector import get_environment
+from ..exception import OrderImportRuleRetry
 
 _logger = logging.getLogger(__name__)
 
@@ -49,9 +51,10 @@ class MagentoImportSynchronizer(ImportSynchronizer):
         """ Return the raw Magento data for ``self.magento_id`` """
         return self.backend_adapter.read(self.magento_id)
 
-    def _has_to_skip(self):
-        """ Return True if the import can be skipped """
-        return False
+    def _before_import(self):
+        """ Hook called before the import, when we have the Magento
+        data"""
+
 
     def _import_dependencies(self):
         """ Import the dependencies for the record"""
@@ -113,8 +116,7 @@ class MagentoImportSynchronizer(ImportSynchronizer):
         self.magento_id = magento_id
         self.magento_record = self._get_magento_data()
 
-        if self._has_to_skip():
-            return
+        self._before_import()
 
         # import the missing linked resources
         self._import_dependencies()
@@ -429,6 +431,9 @@ class SaleOrderBatchImport(DelayedBatchImport):
     _model_name = ['magento.sale.order']
     def run(self, filters=None):
         """ Run the synchronization """
+        if filters is None:
+            filters = {}
+        filters['state'] = {'neq': 'canceled'}
         from_date = filters.pop('from_date', None)
         magento_storeview_ids = [filters.pop('magento_storeview_id')]
         record_ids = self.backend_adapter.search(filters,
@@ -441,6 +446,63 @@ class SaleOrderBatchImport(DelayedBatchImport):
 
 
 @magento
+class SaleImportRule(ConnectorUnit):
+    _model_name = ['magento.sale.order']
+
+    def _rule_always(self, record):
+        """ Always import the order """
+        return True
+
+    def _rule_never(self, record):
+        """ Never import the order """
+        raise NothingToDoJob('Orders with payment method %s '
+                             'are never imported.' %
+                             record['payment']['method'])
+
+    def _rule_paid(self, record):
+        """ Import the order only if it has received a payment """
+        if not record.get('payment', {}).get('amount_paid'):
+            raise OrderImportRuleRetry('The order has not been paid.\n'
+                                       'Will retry later.')
+
+    _rules = {'always': _rule_always,
+              'paid': _rule_paid,
+              'never': _rule_never,
+              }
+
+    def _rule_global(self, record):
+        """ Rule always executed, whichever is the selected rule """
+        # the order has been canceled since the job has been created
+        if record['state'] == 'canceled':
+            raise NothingToDoJob('Order %s canceled' % record['increment_id'])
+
+    def check(self, record):
+        """ Check whether the current sale order should be imported
+        or not. It will actually use the payment method configuration
+        and see if the choosed rule is fullfilled.
+
+        :returns: True if the sale order should be imported
+        :rtype: boolean
+        """
+        session = self.session
+        payment_method = record['payment']['method']
+        method_ids = session.search('payment.method',
+                                    [('name', '=', payment_method)])
+        if not method_ids:
+            raise FailedJobError(
+                    "The configuration is missing for the Payment Method '%s'.\n\n"
+                    "Resolution:\n"
+                    "- Go to 'Sales > Configuration > Sales > Customer Payment Method\n"
+                    "- Create a new Payment Method with name '%s'\n"
+                    "-Eventually  link the Payment Method to an existing Workflow "
+                    "Process or create a new one." % (payment_method,
+                                                      payment_method))
+        method = session.browse('payment.method', method_ids[0])
+        self._rule_global(record)
+        self._rules[method.import_rule](self, record)
+
+
+@magento
 class SaleOrderImport(MagentoImportSynchronizer):
     _model_name = ['magento.sale.order']
 
@@ -450,6 +512,10 @@ class SaleOrderImport(MagentoImportSynchronizer):
             importer = self.get_connector_unit_for_model(MagentoImportSynchronizer,
                                                          'magento.res.partner.category')
             importer.run(group_id)
+
+    def _before_import(self):
+        rules = self.get_connector_unit_for_model(SaleImportRule)
+        rules.check(self.magento_record)
 
     def _import_addresses(self):
         record = self.magento_record

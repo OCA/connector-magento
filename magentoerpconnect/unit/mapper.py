@@ -343,13 +343,11 @@ class SaleOrderImportMapper(ImportMapper):
     def payment(self, record):
         method_ids = self.session.search('payment.method',
                                          [['name', '=', record['payment']['method']]])
-        if method_ids:
-            method_id = method_ids[0]
-        else:
-            method_id = self.session.create('payment.method',
-                                            {'name': record['payment']['method']})
-        result = {'payment_method_id': method_id}
-        return result
+        assert method_ids, ("method %s should exist because the import fails "
+                            "in SaleOrderImport._before_import when it is "
+                            " missing" % record['payment']['method'])
+        method_id = method_ids[0]
+        return {'payment_method_id': method_id}
 
     @mapping
     def cod_fee(self, record): # cash on delivery
@@ -363,7 +361,6 @@ class SaleOrderImportMapper(ImportMapper):
         else:
             result = {}
         return result
-
 
     @mapping
     def gift_cert_code(self, record):

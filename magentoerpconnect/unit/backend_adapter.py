@@ -410,7 +410,6 @@ class SaleOrderAdapter(GenericAdapter):
         """
         if filters is None:
             filters = {}
-        filters['state'] = {'neq': 'canceled'}
         if from_date is not None:
             filters['created_at'] = {'gt': from_date.strftime('%Y/%m/%d %H:%M:%S')}
         if magento_storeview_ids is not None:
