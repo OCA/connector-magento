@@ -59,7 +59,7 @@ class MagentoModelBinder(MagentoBinder):
         """
         openerp_ids = self.session.search(
                 self.model._name,
-                [('magento_id', '=', external_id),
+                [('magento_id', '=', str(external_id)),
                  ('backend_id', '=', self.backend_record.id)])
         if not openerp_ids:
             return None
