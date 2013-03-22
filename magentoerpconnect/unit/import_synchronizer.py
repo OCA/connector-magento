@@ -453,7 +453,7 @@ class SaleImportRule(ConnectorUnit):
         """ Import the order only if it has received a payment """
         if not record.get('payment', {}).get('amount_paid'):
             raise OrderImportRuleRetry('The order has not been paid.\n'
-                                       'Will retry later.')
+                                       'The import will be retried later.')
 
     _rules = {'always': _rule_always,
               'paid': _rule_paid,
