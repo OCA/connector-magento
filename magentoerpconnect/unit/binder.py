@@ -98,5 +98,5 @@ class MagentoModelBinder(MagentoBinder):
                 self.session.cr,
                 self.session.uid,
                 openerp_id,
-                {'magento_id': external_id},
+                {'magento_id': str(external_id)},
                 context=context)
