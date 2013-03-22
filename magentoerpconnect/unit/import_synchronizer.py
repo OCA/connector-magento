@@ -183,12 +183,13 @@ class DelayedBatchImport(BatchImportSynchronizer):
             'magento.res.partner.category',
             ]
 
-    def _import_record(self, record_id):
+    def _import_record(self, record_id, **kwargs):
         """ Delay the import of the records"""
         import_record.delay(self.session,
                             self.model._name,
                             self.backend_record.id,
-                            record_id)
+                            record_id,
+                            **kwargs)
 
 
 @magento
@@ -203,19 +204,12 @@ class SimpleRecordImport(MagentoImportSynchronizer):
 
 
 @magento
-class PartnerBatchImport(BatchImportSynchronizer):
+class PartnerBatchImport(DelayedBatchImport):
     """ Import the Magento Partners.
 
     For every partner in the list, a delayed job is created.
     """
     _model_name = ['magento.res.partner']
-
-    def _import_record(self, record_id):
-        """ Delay a job for the import """
-        import_record.delay(self.session,
-                            self.model._name,
-                            self.backend_record.id,
-                            record_id)
 
     def run(self, filters=None):
         """ Run the synchronization """
@@ -310,7 +304,7 @@ class AddressImport(MagentoImportSynchronizer):
 
 
 @magento
-class ProductCategoryBatchImport(BatchImportSynchronizer):
+class ProductCategoryBatchImport(DelayedBatchImport):
     """ Import the Magento Product Categories.
 
     For every product category in the list, a delayed job is created.
@@ -321,11 +315,8 @@ class ProductCategoryBatchImport(BatchImportSynchronizer):
 
     def _import_record(self, magento_id, priority=None):
         """ Delay a job for the import """
-        import_record.delay(self.session,
-                            self.model._name,
-                            self.backend_record.id,
-                            magento_id,
-                            priority=priority)
+        super(ProductCategoryBatchImport, self)._import_record(
+                magento_id, priority=priority)
 
     def run(self, filters=None):
         """ Run the synchronization """
@@ -350,20 +341,13 @@ class ProductCategoryBatchImport(BatchImportSynchronizer):
 
 
 @magento
-class ProductBatchImport(BatchImportSynchronizer):
+class ProductBatchImport(DelayedBatchImport):
     """ Import the Magento Products.
 
     For every product category in the list, a delayed job is created.
     Import from a date
     """
     _model_name = ['magento.product.product']
-
-    def _import_record(self, magento_id, priority=None):
-        """ Delay a job for the import """
-        import_record.delay(self.session,
-                            self.model._name,
-                            self.backend_record.id,
-                            magento_id)
 
     def run(self, filters=None):
         """ Run the synchronization """
@@ -429,6 +413,12 @@ class TranslationImporter(ImportSynchronizer):
 @magento
 class SaleOrderBatchImport(DelayedBatchImport):
     _model_name = ['magento.sale.order']
+
+    def _import_record(self, record_id, **kwargs):
+        """ Import the record directly """
+        return super(SaleOrderBatchImport, self)._import_record(
+                record_id, max_retries=0)
+
     def run(self, filters=None):
         """ Run the synchronization """
         if filters is None:
