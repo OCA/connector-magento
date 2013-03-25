@@ -47,8 +47,7 @@ class magento_backend(orm.Model):
 
         Can be inherited to add custom versions.
         """
-        return [('1.5', '1.5'),
-                ('1.7', '1.7')]
+        return [('1.7', '1.7')]
 
     _columns = {
         'version': fields.selection(
