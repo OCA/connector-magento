@@ -81,9 +81,12 @@ Actually the supported versions are referenced in
     magento = backend.Backend('magento')
     magento1700 = backend.Backend(parent=magento, version='1.7')
 
-In the above example, ``magento`` means Magento *globally*. The parts of
-code in the connector are linked with ``magento``, but parts specific to
-the version 1.7 are linked with ``magento1700``.
+In the connector, we are able to link pieces of code to a specific
+version of Magento. If I link a piece of code to ``magento1700``, it
+will be executed only if my Magento's version is actually Magento 1.7.
+
+``magento`` is the parent of ``magento1700``. When the latter has no
+specific piece of code, it will execute the former's one.
 
 As you want to change parts of code specifically to **your version** of
 Magento, you need to:
@@ -125,9 +128,9 @@ And in ``customize_example/magento_model.py``::
 
 Things to note:
 
-* The ``parent`` of my version is the 1.7 version. You have to set the
-  correct parent according to your Magento version. If your Magento
-  version does not exist, take the nearest version.
+* The ``parent`` argument of my version is the 1.7 version. You have to
+  set the correct parent according to your Magento version. If your
+  Magento version does not exist, take the nearest version.
 * the version should be the same in the ``backend.Backend`` and the
   model.
 * We add the version in the model ``magento.backend`` so we'll be able to
@@ -139,7 +142,7 @@ Use it in OpenERP
 
 Great, you now have the minimal stuff required to customize your
 connector. When you create your backend in OpenERP (menu ``Connectors >
-Magento > Backends``), you should now select **1.7 - My Version**.
+Magento > Backends``), you have now to select **1.7 - My Version**.
 
 In the next chapter, we'll cover the most common personalization:
 `Add mappings of fields`_.
@@ -155,6 +158,9 @@ To be able to customize the mappings, you need to already have a
 customization module, if that's not already done, you can go through the
 previous chapter: `Bootstrap your own customization module`_.
 
+We'll see how to map new fields on the imports, because there is
+currently no mappings for exports in the connector.
+
 A bit of theory
 ===============
 
@@ -163,12 +169,14 @@ The mappings of the fields are defined in subclasses of
 :py:class:`connector.connector.unit.mapper.ExportMapper`, respectively
 for the imports and the exports.
 
-.. important:: The connector almost never works with the OpenERP Models
-               directly. Instead, it works with its own models, which
-               ``_inherits`` (note the final ``s``) the base models. For
-               instance, the Magento model for ``res.partner`` is
-               ``magento.res.partner``. More details in `Magento
-               Models`_.
+.. note:: The connector almost never works with the OpenERP Models
+          directly. Instead, it works with its own models, which
+          ``_inherits`` (note the final ``s``) the base models. For
+          instance, the Magento model for ``res.partner`` is
+          ``magento.res.partner``. That's why you'll see
+          ``magento.res.partner`` below.
+
+          More details in `Magento Models`_.
 
 When you need to change the mappings, you'll need to dive in the
 ``magentoerpconnect``'s code and locate the class which do this job for
@@ -231,9 +239,9 @@ on top of the base ones. The connector's models are usually in the form
 
 Basically, a Magento Model is an ``_inherits`` from the base model, so
 it knows all the original fields along with its own. Its own fields are
-the ID of the record on Magento, the ``many2one`` to the
-``magento.backend`` or ``magento.website`` and the attributes which are
-peculiar to Magento.
+the ID of the record on Magento, the ``many2one`` relations to the
+``magento.backend`` or to the ``magento.website`` and the attributes
+which are peculiar to Magento.
 
 Example with an excerpt of the fields for ``magento.res.partner``:
 
@@ -244,11 +252,10 @@ Example with an excerpt of the fields for ``magento.res.partner``:
 * ``website_id``: ``many2one`` to the ``magento.website`` model
 * ``magento_id``: the ID of the customer on Magento
 * ``group_id``: ``many2one`` to the ``magento.res.partner.category``,
-  itself a Magento model for ``res.partner.category``, which are the
-  Customer Groups.
+  itself a Magento model for ``res.partner.category`` (Customer Groups)
 * ``created_at``: created_at field from Magento
 * ``taxvat``: taxvat field from Magento
-* plus of course all the fields from ``res.partner``
+* and all the fields from ``res.partner``
 
 This datamodel allows to:
 
@@ -276,8 +283,9 @@ I want to import the field ``created_in`` from customers.
 I add it on ``magento.res.partner`` because it doesn't make sense on
 ``res.partner``.
 
-This field is a string on Magento. I add it in ``customize_example/partner.py``
-(I let you add it in the views as well)::
+For this field, the Magento API returns a string. I add it in
+``customize_example/partner.py`` (I skip the part 'add them in the
+views')::
 
   # -*- coding: utf-8 -*-
   from openerp.osv import orm, fields
@@ -296,7 +304,7 @@ current mapper::
   from openerp.addons.magentoerpconnect.partner import PartnerImportMapper
   from .backend import magento_myversion
 
-And I subclass the partner's mapper, decorated with
+And I extend the partner's mapper, decorated with
 ``@magento_myversion``::
 
   @magento_myversion
@@ -305,25 +313,24 @@ And I subclass the partner's mapper, decorated with
 
       direct = PartnerImportMapper.direct + [('created_in', 'created_in')]
 
-And that's it! The field will be imported along with the other fields
-the next time the records will be imported.
+And that's it! The field will be imported along with the other fields.
 
 .. attention:: Verify that you have selected the right version when you
-               created your backend in ``Connectors > Magento > Backends``
+               have created your backend in ``Connectors > Magento > Backends``
                otherwise your code will not be used.
 
 Example 2.
 ----------
 
-I want to import the ``gender`` field. This is a bit special because
+I want to import the ``gender`` field. This one is a bit special because
 Magento maps 'Male' to ``123`` and 'Female' to ``124``. They are surely
 the identifiers of the attributes in Magento, and there's maybe an entry
 point in the API to get the proper values, but for the sake of the
 example, we'll assume we can hard-code theses values in the mappings.
 
-This one, I will create the field in ``res.partner``, because the value
-will likely be the same for each ``magento.res.partner`` and this
-information can be useful at this level.
+This time, I will create the field in ``res.partner``, because the value
+will likely be the same even if we have many ``magento.res.partner`` and
+this information can be useful at this level.
 
 In ``customize_example/partner.py``, I write::
 
@@ -346,7 +353,8 @@ import ``mapping`` too::
   from openerp.addons.magentoerpconnect.partner import PartnerImportMapper
   from .backend import magento_myversion
 
-But this time, I will use a method to define the ``gender`` value::
+This is not a `direct` mapping, I will use a method to define the
+``gender`` value::
 
   MAGENTO_GENDER = {'123': 'male',
                     '124': 'female'}
