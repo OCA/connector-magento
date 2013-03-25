@@ -22,6 +22,7 @@
 import logging
 import magento as magentolib
 from openerp.osv import fields, orm
+from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.unit.backend_adapter import BackendAdapter
 from openerp.addons.connector.unit.mapper import (mapping,
                                                   ImportMapper
@@ -478,3 +479,15 @@ class AddressImportMapper(ImportMapper):
                                                'shortcut': prefix,
                                                'name' : prefix})
         return {'title': title_id}
+
+
+@job
+def partner_import_batch(session, model_name, backend_id, filters=None):
+    """ Prepare the import of partners modified on Magento """
+    if filters is None:
+        filters = {}
+    assert 'magento_website_id' in filters, (
+            'Missing information about Magento Website')
+    env = get_environment(session, model_name, backend_id)
+    importer = env.get_connector_unit(PartnerBatchImport)
+    importer.run(filters=filters)

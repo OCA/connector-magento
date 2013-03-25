@@ -213,28 +213,3 @@ class AccountInvoiceAdapter(GenericAdapter):
         if order_id is not None:
             filters['order_id'] = {'eq': order_id}
         return super(AccountInvoiceAdapter, self).search_read(filters=filters)
-
-
-@magento
-class SaleOrderAdapter(GenericAdapter):
-    _model_name = 'magento.sale.order'
-    _magento_model = 'sales_order'
-
-    def search(self, filters=None, from_date=None, magento_storeview_ids=None):
-        """ Search records according to some criterias
-        and returns a list of ids
-
-        :rtype: list
-        """
-        if filters is None:
-            filters = {}
-        if from_date is not None:
-            filters['created_at'] = {'gt': from_date.strftime('%Y/%m/%d %H:%M:%S')}
-        if magento_storeview_ids is not None:
-            filters['store_id'] = {'in': magento_storeview_ids}
-
-        arguments = {'imported': False ,
-                     # 'limit': 200,
-                     'filters': filters,
-                     }
-        return super(SaleOrderAdapter, self).search(arguments)

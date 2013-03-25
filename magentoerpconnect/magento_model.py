@@ -32,10 +32,10 @@ from openerp.addons.connector.unit.mapper import (mapping,
                                                   )
 from .unit.backend_adapter import GenericAdapter
 from .unit.import_synchronizer import (import_batch,
-                                       partner_import_batch,
-                                       sale_order_import_batch,
                                        DirectBatchImport,
                                        )
+from .partner import partner_import_batch
+from .sale import sale_order_import_batch
 from .backend import magento
 
 _logger = logging.getLogger(__name__)
@@ -194,27 +194,6 @@ class magento_backend(orm.Model):
     def _scheduler_import_product_categories(self, cr, uid, domain=None, context=None):
         self._magento_backend(cr, uid, self.import_product_categories,
                               domain=domain, context=context)
-
-
-class magento_binding(orm.AbstractModel):
-    _name = 'magento.binding'
-    _inherit = 'external.binding'
-    _description = 'Magento Binding (abstract)'
-
-    _columns = {
-        # 'openerp_id': openerp-side id must be declared in concrete model
-        'backend_id': fields.many2one(
-            'magento.backend',
-            'Magento Backend',
-            required=True,
-            ondelete='restrict'),
-        # fields.char because 0 is a valid Magento ID
-        'magento_id': fields.char('ID on Magento'),
-    }
-
-    # the _sql_contraints cannot be there due to this bug:
-    # https://bugs.launchpad.net/openobject-server/+bug/1151703
-
 
 
 # TODO migrate from external.shop.group
