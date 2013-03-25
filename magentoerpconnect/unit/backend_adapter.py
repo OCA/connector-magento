@@ -143,24 +143,6 @@ class GenericAdapter(MagentoCRUDAdapter):
 
 
 @magento
-class WebsiteAdapter(GenericAdapter):
-    _model_name = 'magento.website'
-    _magento_model = 'ol_websites'
-
-
-@magento
-class StoreAdapter(GenericAdapter):
-    _model_name = 'magento.store'
-    _magento_model = 'ol_groups'
-
-
-@magento
-class StoreviewAdapter(GenericAdapter):
-    _model_name = 'magento.storeview'
-    _magento_model = 'ol_storeviews'
-
-
-@magento
 class ProductCategoryAdapter(GenericAdapter):
     _model_name = 'magento.product.category'
     _magento_model = 'catalog_category'

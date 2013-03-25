@@ -22,15 +22,21 @@
 
 import logging
 from datetime import datetime
-
+import magento as magentolib
 from openerp.osv import fields, orm
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 import openerp.addons.connector as connector
 from openerp.addons.connector.session import ConnectorSession
+from openerp.addons.connector.unit.mapper import (mapping,
+                                                  ImportMapper
+                                                  )
+from .unit.backend_adapter import GenericAdapter
 from .unit.import_synchronizer import (import_batch,
                                        partner_import_batch,
                                        sale_order_import_batch,
+                                       DirectBatchImport,
                                        )
+from .backend import magento
 
 _logger = logging.getLogger(__name__)
 
@@ -381,3 +387,87 @@ class magento_storeview(orm.Model):
                                      })
         self.write(cr, uid, ids, {'import_orders_from_date': import_start_time})
         return True
+
+
+@magento
+class WebsiteAdapter(GenericAdapter):
+    _model_name = 'magento.website'
+    _magento_model = 'ol_websites'
+
+
+@magento
+class StoreAdapter(GenericAdapter):
+    _model_name = 'magento.store'
+    _magento_model = 'ol_groups'
+
+
+@magento
+class StoreviewAdapter(GenericAdapter):
+    _model_name = 'magento.storeview'
+    _magento_model = 'ol_storeviews'
+
+
+@magento
+class MetadataBatchImport(DirectBatchImport):
+    """ Import the records directly, without delaying the jobs.
+
+    Import the Magento Websites, Stores, Storeviews
+
+    They are imported directly because this is a rare and fast operation,
+    performed from the UI.
+    """
+    _model_name = [
+            'magento.website',
+            'magento.store',
+            'magento.storeview',
+            ]
+
+
+@magento
+class WebsiteImportMapper(ImportMapper):
+    _model_name = 'magento.website'
+
+    direct = [('code', 'code'),
+              ('sort_order', 'sort_order')]
+
+    @mapping
+    def name(self, record):
+        name = record['name']
+        if name is None:
+            name = _('Undefined')
+        return {'name': name}
+
+    @mapping
+    def backend_id(self, record):
+        return {'backend_id': self.backend_record.id}
+
+
+@magento
+class StoreImportMapper(ImportMapper):
+    _model_name = 'magento.store'
+
+    direct = [('name', 'name')]
+
+    @mapping
+    def website_id(self, record):
+        binder = self.get_binder_for_model('magento.website')
+        openerp_id = binder.to_openerp(record['website_id'])
+        return {'website_id': openerp_id}
+
+
+@magento
+class StoreviewImportMapper(ImportMapper):
+    _model_name = 'magento.storeview'
+
+    direct = [
+        ('name', 'name'),
+        ('code', 'code'),
+        ('is_active', 'enabled'),
+        ('sort_order', 'sort_order'),
+    ]
+
+    @mapping
+    def store_id(self, record):
+        binder = self.get_binder_for_model('magento.store')
+        openerp_id = binder.to_openerp(record['group_id'])
+        return {'store_id': openerp_id}

@@ -24,9 +24,8 @@ import magento as magentolib
 from openerp.osv import fields, orm
 from openerp.addons.connector.unit.backend_adapter import BackendAdapter
 from openerp.addons.connector.unit.mapper import (mapping,
-                                                  changed_by,
-                                                  ImportMapper,
-                                                  ExportMapper)
+                                                  ImportMapper
+                                                  )
 from .unit.backend_adapter import GenericAdapter
 from .unit.import_synchronizer import (DelayedBatchImport,
                                        MagentoImportSynchronizer

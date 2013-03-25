@@ -155,18 +155,9 @@ class BatchImportSynchronizer(ImportSynchronizer):
         raise NotImplementedError
 
 
-@magento
 class DirectBatchImport(BatchImportSynchronizer):
-    """ Import the Magento Websites, Stores, Storeviews
-
-    They are imported directly because this is a rare and fast operation,
-    performed from the UI.
-    """
-    _model_name = [
-            'magento.website',
-            'magento.store',
-            'magento.storeview',
-            ]
+    """ Import the records directly, without delaying the jobs. """
+    _model_name = None
 
     def _import_record(self, record_id):
         """ Import the record directly """
@@ -176,12 +167,9 @@ class DirectBatchImport(BatchImportSynchronizer):
                       record_id)
 
 
-@magento
 class DelayedBatchImport(BatchImportSynchronizer):
     """ Delay import of the records """
-    _model_name = [
-            'magento.res.partner.category',
-            ]
+    _model_name = None
 
     def _import_record(self, record_id, **kwargs):
         """ Delay the import of the records"""

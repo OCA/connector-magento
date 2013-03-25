@@ -31,55 +31,6 @@ from ..backend import magento
 _logger = logging.getLogger(__name__)
 
 
-@magento
-class WebsiteImportMapper(ImportMapper):
-    _model_name = 'magento.website'
-
-    direct = [('code', 'code'),
-              ('sort_order', 'sort_order')]
-
-    @mapping
-    def name(self, record):
-        name = record['name']
-        if name is None:
-            name = _('Undefined')
-        return {'name': name}
-
-    @mapping
-    def backend_id(self, record):
-        return {'backend_id': self.backend_record.id}
-
-
-@magento
-class StoreImportMapper(ImportMapper):
-    _model_name = 'magento.store'
-
-    direct = [('name', 'name')]
-
-    @mapping
-    def website_id(self, record):
-        binder = self.get_binder_for_model('magento.website')
-        openerp_id = binder.to_openerp(record['website_id'])
-        return {'website_id': openerp_id}
-
-
-@magento
-class StoreviewImportMapper(ImportMapper):
-    _model_name = 'magento.storeview'
-
-    direct = [
-        ('name', 'name'),
-        ('code', 'code'),
-        ('is_active', 'enabled'),
-        ('sort_order', 'sort_order'),
-    ]
-
-    @mapping
-    def store_id(self, record):
-        binder = self.get_binder_for_model('magento.store')
-        openerp_id = binder.to_openerp(record['group_id'])
-        return {'store_id': openerp_id}
-
 
 @magento
 class ProductCategoryImportMapper(ImportMapper):
@@ -241,6 +192,7 @@ class SaleOrderImportMapper(ImportMapper):
     @mapping
     def backend_id(self, record):
         return {'backend_id': self.backend_record.id}
+
 
 @magento
 class MagentoSaleOrderOnChange(SaleOrderOnChange):
