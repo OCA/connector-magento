@@ -303,9 +303,9 @@ class PartnerImportMapper(ImportMapper):
     @mapping
     def names(self, record):
         # TODO create a glue module for base_surname
-        parts = [part for part in(record['firstname'],
-                    record['middlename'], record['lastname'])
-                    if part]
+        parts = [part for part in (record['firstname'],
+                                   record['middlename'],
+                                   record['lastname']) if part]
         return {'name': ' '.join(parts)}
 
     @mapping
@@ -413,9 +413,9 @@ class AddressImportMapper(ImportMapper):
     @mapping
     def names(self, record):
         # TODO create a glue module for base_surname
-        parts = [part for part in(record['firstname'],
-                    record.get('middlename'), record['lastname'])
-                    if part]
+        parts = [part for part in (record['firstname'],
+                                   record.get('middlename'),
+                                   record['lastname']) if part]
         return {'name': ' '.join(parts)}
 
     @mapping
