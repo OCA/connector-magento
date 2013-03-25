@@ -30,12 +30,11 @@ from openerp.addons.connector.connector import Environment, Binder
 
 from openerp.addons.connector_ecommerce.event import (on_picking_out_done,
                                                       on_tracking_number_added,
-                                                      on_invoice_paid)
+                                                      )
 from .unit.export_synchronizer import (
     export_record,
     export_picking_done,
     export_tracking_number,
-    export_invoice_paid
     )
 from .unit.delete_synchronizer import export_delete_record
 
@@ -137,30 +136,3 @@ def delay_export_tracking_number(session, model_name, record_id):
                                      binding._model._name,
                                      binding.id,
                                      priority=20)
-
-
-@on_invoice_paid
-@magento_consumer
-def invoice_paid_create_bindings(session, model_name, record_id):
-    """
-    Create a ``magento.account.invoice`` record. This record will then
-    be exported to Magento.
-    """
-    invoice = session.browse(model_name, record_id)
-    # find the magento store to retrieve the backend
-    # we use the shop as many sale orders can be related to an invoice
-    for sale in invoice.sale_ids:
-        for magento_sale in sale.magento_bind_ids:
-            session.create('magento.account.invoice',
-                           {'backend_id': magento_sale.backend_id.id,
-                            'openerp_id': invoice.id,
-                            'magento_order_id': magento_sale.id})
-
-
-@on_record_create(model_names='magento.account.invoice')
-@magento_consumer
-def delay_export_account_invoice(session, model_name, record_id):
-    """
-    Delay the job to export the magento invoice.
-    """
-    export_invoice_paid.delay(session, model_name, record_id)
