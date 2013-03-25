@@ -192,25 +192,6 @@ class SimpleRecordImport(MagentoImportSynchronizer):
 
 
 @magento
-class ProductBatchImport(DelayedBatchImport):
-    """ Import the Magento Products.
-
-    For every product category in the list, a delayed job is created.
-    Import from a date
-    """
-    _model_name = ['magento.product.product']
-
-    def run(self, filters=None):
-        """ Run the synchronization """
-        from_date = filters.pop('from_date', None)
-        record_ids = self.backend_adapter.search(filters, from_date)
-        _logger.info('search for magento products %s returned %s',
-                     filters, record_ids)
-        for record_id in record_ids:
-            self._import_record(record_id)
-
-
-@magento
 class TranslationImporter(ImportSynchronizer):
     """ Import translations for a record.
 
@@ -525,29 +506,6 @@ class SaleOrderLineImport(MagentoImportSynchronizer):
                 importer = self.get_connector_unit_for_model(MagentoImportSynchronizer,
                                                              'magento.product.product')
                 importer.run(record['item_id'])
-
-
-@magento
-class ProductImport(MagentoImportSynchronizer):
-    _model_name = ['magento.product.product']
-
-    def _import_dependencies(self):
-        """ Import the dependencies for the record"""
-        record = self.magento_record
-        # import related categories
-        binder = self.get_binder_for_model('magento.product.category')
-        for mag_category_id in record['categories']:
-            if binder.to_openerp(mag_category_id) is None:
-                importer = self.get_connector_unit_for_model(
-                                MagentoImportSynchronizer,
-                                model='magento.product.category')
-                importer.run(mag_category_id)
-
-    def _after_import(self, openerp_id):
-        """ Hook called at the end of the import """
-        translation_importer = self.get_connector_unit_for_model(
-                TranslationImporter, self.model._name)
-        translation_importer.run(self.magento_id, openerp_id)
 
 
 @job

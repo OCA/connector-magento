@@ -143,43 +143,6 @@ class GenericAdapter(MagentoCRUDAdapter):
 
 
 @magento
-class ProductProductAdapter(GenericAdapter):
-    _model_name = 'magento.product.product'
-    _magento_model = 'catalog_product'
-
-    def search(self, filters=None, from_date=None):
-        """ Search records according to some criterias
-        and returns a list of ids
-
-        :rtype: list
-        """
-        if filters is None:
-            filters = {}
-        if from_date is not None:
-            filters['updated_at'] = {'from': from_date.strftime('%Y/%m/%d %H:%M:%S')}
-        with magentolib.API(self.magento.location,
-                            self.magento.username,
-                            self.magento.password) as api:
-            # TODO add a search entry point on the Magento API
-            return [int(row['product_id']) for row
-                       in api.call('%s.list' % self._magento_model,
-                                   [filters] if filters else [{}])]
-        return []
-
-    def read(self, id, store_view_id=None, attributes=None):
-        """ Returns the information of a record
-
-        :rtype: dict
-        """
-        with magentolib.API(self.magento.location,
-                            self.magento.username,
-                            self.magento.password) as api:
-            return api.call('%s.info' % self._magento_model,
-                            [id, store_view_id, attributes, 'id'])
-        return {}
-
-
-@magento
 class StockPickingAdapter(GenericAdapter):
     _model_name = 'magento.stock.picking.out'
     _magento_model = 'sales_order_shipment'
