@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from openerp.osv import orm
+from openerp.osv import orm, fields
 from openerp.addons.connector.connector import Environment
 
 
@@ -39,3 +39,25 @@ def get_environment(session, model_name, backend_id):
                                   backend_id,
                                   session.context)
     return Environment(backend_record, session, model_name)
+
+
+class magento_binding(orm.AbstractModel):
+    _name = 'magento.binding'
+    _inherit = 'external.binding'
+    _description = 'Magento Binding (abstract)'
+
+    _columns = {
+        # 'openerp_id': openerp-side id must be declared in concrete model
+        'backend_id': fields.many2one(
+            'magento.backend',
+            'Magento Backend',
+            required=True,
+            ondelete='restrict'),
+        # fields.char because 0 is a valid Magento ID
+        'magento_id': fields.char('ID on Magento'),
+    }
+
+    # the _sql_contraints cannot be there due to this bug:
+    # https://bugs.launchpad.net/openobject-server/+bug/1151703
+
+

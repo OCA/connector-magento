@@ -22,15 +22,21 @@
 
 import logging
 from datetime import datetime
-
+import magento as magentolib
 from openerp.osv import fields, orm
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 import openerp.addons.connector as connector
 from openerp.addons.connector.session import ConnectorSession
+from openerp.addons.connector.unit.mapper import (mapping,
+                                                  ImportMapper
+                                                  )
+from .unit.backend_adapter import GenericAdapter
 from .unit.import_synchronizer import (import_batch,
-                                       partner_import_batch,
-                                       sale_order_import_batch,
+                                       DirectBatchImport,
                                        )
+from .partner import partner_import_batch
+from .sale import sale_order_import_batch
+from .backend import magento
 
 _logger = logging.getLogger(__name__)
 
@@ -47,8 +53,7 @@ class magento_backend(orm.Model):
 
         Can be inherited to add custom versions.
         """
-        return [('1.5', '1.5'),
-                ('1.7', '1.7')]
+        return [('1.7', '1.7')]
 
     _columns = {
         'version': fields.selection(
@@ -189,27 +194,6 @@ class magento_backend(orm.Model):
     def _scheduler_import_product_categories(self, cr, uid, domain=None, context=None):
         self._magento_backend(cr, uid, self.import_product_categories,
                               domain=domain, context=context)
-
-
-class magento_binding(orm.AbstractModel):
-    _name = 'magento.binding'
-    _inherit = 'external.binding'
-    _description = 'Magento Binding (abstract)'
-
-    _columns = {
-        # 'openerp_id': openerp-side id must be declared in concrete model
-        'backend_id': fields.many2one(
-            'magento.backend',
-            'Magento Backend',
-            required=True,
-            ondelete='restrict'),
-        # fields.char because 0 is a valid Magento ID
-        'magento_id': fields.char('ID on Magento'),
-    }
-
-    # the _sql_contraints cannot be there due to this bug:
-    # https://bugs.launchpad.net/openobject-server/+bug/1151703
-
 
 
 # TODO migrate from external.shop.group
@@ -382,3 +366,87 @@ class magento_storeview(orm.Model):
                                      })
         self.write(cr, uid, ids, {'import_orders_from_date': import_start_time})
         return True
+
+
+@magento
+class WebsiteAdapter(GenericAdapter):
+    _model_name = 'magento.website'
+    _magento_model = 'ol_websites'
+
+
+@magento
+class StoreAdapter(GenericAdapter):
+    _model_name = 'magento.store'
+    _magento_model = 'ol_groups'
+
+
+@magento
+class StoreviewAdapter(GenericAdapter):
+    _model_name = 'magento.storeview'
+    _magento_model = 'ol_storeviews'
+
+
+@magento
+class MetadataBatchImport(DirectBatchImport):
+    """ Import the records directly, without delaying the jobs.
+
+    Import the Magento Websites, Stores, Storeviews
+
+    They are imported directly because this is a rare and fast operation,
+    performed from the UI.
+    """
+    _model_name = [
+            'magento.website',
+            'magento.store',
+            'magento.storeview',
+            ]
+
+
+@magento
+class WebsiteImportMapper(ImportMapper):
+    _model_name = 'magento.website'
+
+    direct = [('code', 'code'),
+              ('sort_order', 'sort_order')]
+
+    @mapping
+    def name(self, record):
+        name = record['name']
+        if name is None:
+            name = _('Undefined')
+        return {'name': name}
+
+    @mapping
+    def backend_id(self, record):
+        return {'backend_id': self.backend_record.id}
+
+
+@magento
+class StoreImportMapper(ImportMapper):
+    _model_name = 'magento.store'
+
+    direct = [('name', 'name')]
+
+    @mapping
+    def website_id(self, record):
+        binder = self.get_binder_for_model('magento.website')
+        openerp_id = binder.to_openerp(record['website_id'])
+        return {'website_id': openerp_id}
+
+
+@magento
+class StoreviewImportMapper(ImportMapper):
+    _model_name = 'magento.storeview'
+
+    direct = [
+        ('name', 'name'),
+        ('code', 'code'),
+        ('is_active', 'enabled'),
+        ('sort_order', 'sort_order'),
+    ]
+
+    @mapping
+    def store_id(self, record):
+        binder = self.get_binder_for_model('magento.store')
+        openerp_id = binder.to_openerp(record['group_id'])
+        return {'store_id': openerp_id}
