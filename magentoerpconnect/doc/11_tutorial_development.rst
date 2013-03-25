@@ -4,9 +4,6 @@
 Tutorial: development
 =====================
 
-This tutorial demonstrates some features of ERPpeek in the interactive
-shell.
-
 This tutorial explains how to take part in the development of
 Magentoerpconnect. It will explain how to use the different pieces of
 the ``Connector`` addon to synchronize records with Magento.
