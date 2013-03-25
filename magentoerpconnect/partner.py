@@ -158,35 +158,3 @@ class magento_address(orm.Model):
         ('magento_uniq', 'unique(backend_id, magento_id)',
          'A partner address with same ID on Magento already exists.'),
     ]
-
-
-class res_partner_category(orm.Model):
-    _inherit = 'res.partner.category'
-
-    _columns = {
-        'magento_bind_ids': fields.one2many(
-            'magento.res.partner.category',
-            'openerp_id',
-            string='Magento Bindings',
-            readonly=True),
-    }
-
-
-class magento_res_partner_category(orm.Model):
-    _name = 'magento.res.partner.category'
-    _inherit = 'magento.binding'
-    _inherits = {'res.partner.category': 'openerp_id'}
-
-    _columns = {
-        'openerp_id': fields.many2one('res.partner.category',
-                                       string='Partner Category',
-                                       required=True,
-                                       ondelete='cascade'),
-        #TODO : replace by a m2o when tax class will be implemented
-        'tax_class_id': fields.integer('Tax Class ID'),
-    }
-
-    _sql_constraints = [
-        ('magento_uniq', 'unique(backend_id, magento_id)',
-         'A partner tag with same ID on Magento already exists.'),
-    ]

@@ -190,26 +190,6 @@ class PartnerAdapter(GenericAdapter):
 
 
 @magento
-class PartnerCategoryAdapter(GenericAdapter):
-    _model_name = 'magento.res.partner.category'
-    _magento_model = 'ol_customer_groups'
-
-    def search(self, filters=None):
-        """ Search records according to some criterias
-        and returns a list of ids
-
-        :rtype: list
-        """
-        with magentolib.API(self.magento.location,
-                            self.magento.username,
-                            self.magento.password) as api:
-            return [int(row['customer_group_id']) for row
-                       in api.call('%s.list' % self._magento_model,
-                                   [filters] if filters else [{}])]
-        return []
-
-
-@magento
 class AddressAdapter(GenericAdapter):
     _model_name = 'magento.address'
     _magento_model = 'customer_address'
