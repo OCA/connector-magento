@@ -28,7 +28,6 @@ from .unit.backend_adapter import GenericAdapter
 from .backend import magento
 
 
-
 class res_partner_category(orm.Model):
     _inherit = 'res.partner.category'
 
