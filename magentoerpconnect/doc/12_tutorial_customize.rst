@@ -371,7 +371,7 @@ This is not a `direct` mapping, I will use a method to define the
 The ``gender`` field will now be imported.
 
 Conclusion
-----------
+==========
 
 With theses principles, you should now be able to extend the original
 mappings and add your own ones. This is applicable for the customers but
