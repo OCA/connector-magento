@@ -34,6 +34,7 @@ from .unit.backend_adapter import GenericAdapter
 from .unit.import_synchronizer import (DelayedBatchImport,
                                        MagentoImportSynchronizer
                                        )
+from .exception import OrderImportRuleRetry
 from .backend import magento
 
 _logger = logging.getLogger(__name__)

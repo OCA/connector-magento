@@ -12,6 +12,7 @@ import invoice
 import sale
 import delivery
 import stock
+import stock_tracking
 import payment_method
 
 import consumer

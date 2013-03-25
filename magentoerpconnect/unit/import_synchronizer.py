@@ -20,17 +20,10 @@
 ##############################################################################
 
 import logging
-from datetime import datetime
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.addons.connector.queue.job import job
-from openerp.addons.connector.exception import FailedJobError, NothingToDoJob
-from openerp.addons.connector.connector import Environment, ConnectorUnit
 from openerp.addons.connector.unit.synchronizer import ImportSynchronizer
-from openerp.addons.connector.unit.backend_adapter import BackendAdapter
-from openerp.addons.connector.unit.mapper import ImportMapper
 from ..backend import magento
 from ..connector import get_environment
-from ..exception import OrderImportRuleRetry
 
 _logger = logging.getLogger(__name__)
 

@@ -23,7 +23,6 @@ import logging
 
 import magento as magentolib
 from openerp.addons.connector.unit.backend_adapter import CRUDAdapter
-from ..backend import magento
 
 _logger = logging.getLogger(__name__)
 
@@ -140,47 +139,3 @@ class GenericAdapter(MagentoCRUDAdapter):
             _logger.debug("api.call(%s.delete', [%s])",
                     self._magento_model, id)
             return api.call('%s.delete' % self._magento_model, [id])
-
-
-@magento
-class StockPickingAdapter(GenericAdapter):
-    _model_name = 'magento.stock.picking.out'
-    _magento_model = 'sales_order_shipment'
-
-    def create(self, order_id, items, comment, email, include_comment):
-        """ Create a record on the external system """
-        with magentolib.API(self.magento.location,
-                            self.magento.username,
-                            self.magento.password) as api:
-            _logger.debug("api.call(%s.create', [%s])", self._magento_model,
-                          [order_id, items, comment, email, include_comment])
-            return api.call('%s.create' % self._magento_model,
-                            [order_id, items, comment, email, include_comment])
-
-    def add_tracking_number(self, magento_id, carrier_code,
-                            tracking_title, tracking_number):
-        """ Add new tracking number.
-
-        :param magento_id: shipment increment id
-        :param carrier_code: code of the carrier on Magento
-        :param tracking_title: title displayed on Magento for the tracking
-        :param tracking_number: tracking number
-        """
-        with magentolib.API(self.magento.location,
-                            self.magento.username,
-                            self.magento.password) as api:
-            return api.call('%s.addTrack' % self._magento_model,
-                            [magento_id, carrier_code,
-                             tracking_title, tracking_number])
-
-    def get_carriers(self, magento_id):
-        """ Get the list of carrier codes allowed for the shipping.
-
-        :param magento_id: shipment increment id
-        :rtype: list
-        """
-        with magentolib.API(self.magento.location,
-                            self.magento.username,
-                            self.magento.password) as api:
-            return api.call('%s.getCarriers' % self._magento_model,
-                            [magento_id])
