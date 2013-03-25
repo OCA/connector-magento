@@ -29,43 +29,6 @@ from openerp.tools.translate import _
 _logger = logging.getLogger(__name__)
 
 
-class magento_product_category(orm.Model):
-    _name = 'magento.product.category'
-    _inherit = 'magento.binding'
-    _inherits = {'product.category': 'openerp_id'}
-
-    _columns = {
-        'openerp_id': fields.many2one('product.category',
-                                      string='Product Category',
-                                      required=True,
-                                      ondelete='cascade'),
-        'description': fields.text('Description', translate=True),
-        'magento_parent_id': fields.many2one(
-            'magento.product.category',
-             string='Magento Parent Category',
-             ondelete='cascade'),
-        'magento_child_ids': fields.one2many(
-            'magento.product.category',
-             'magento_parent_id',
-             string='Magento Child Categories'),
-    }
-
-    _sql_constraints = [
-        ('magento_uniq', 'unique(backend_id, magento_id)',
-         'A product category with same ID on Magento already exists.'),
-    ]
-
-
-class product_category(orm.Model):
-    _inherit = 'product.category'
-
-    _columns = {
-        'magento_bind_ids': fields.one2many(
-            'magento.product.category', 'openerp_id',
-            string="Magento Bindings"),
-    }
-
-
 class magento_product_product(orm.Model):
     _name = 'magento.product.product'
     _inherit = 'magento.binding'

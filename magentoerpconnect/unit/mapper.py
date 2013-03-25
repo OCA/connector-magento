@@ -31,45 +31,6 @@ from ..backend import magento
 _logger = logging.getLogger(__name__)
 
 
-
-@magento
-class ProductCategoryImportMapper(ImportMapper):
-    _model_name = 'magento.product.category'
-
-    direct = [
-            ('description', 'description'),
-            ]
-
-    @mapping
-    def name(self, record):
-        if record['level'] == '0':  # top level category; has no name
-            return {'name': self.backend_record.name}
-        if record['name']:  # may be empty in storeviews
-            return {'name': record['name']}
-
-    @mapping
-    def magento_id(self, record):
-        return {'magento_id': record['category_id']}
-
-    @mapping
-    def backend_id(self, record):
-        return {'backend_id': self.backend_record.id}
-
-    @mapping
-    def parent_id(self, record):
-        if not record.get('parent_id'):
-            return
-        binder = self.get_binder_for_model()
-        category_id = binder.to_openerp(record['parent_id'], unwrap=True)
-        mag_cat_id = binder.to_openerp(record['parent_id'])
-
-        if category_id is None:
-            raise MappingError("The product category with "
-                               "magento id %s is not imported." %
-                               record['parent_id'])
-        return {'parent_id': category_id, 'magento_parent_id': mag_cat_id}
-
-
 @magento
 class SaleOrderImportMapper(ImportMapper):
     _model_name = 'magento.sale.order'

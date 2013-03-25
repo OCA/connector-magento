@@ -143,64 +143,6 @@ class GenericAdapter(MagentoCRUDAdapter):
 
 
 @magento
-class ProductCategoryAdapter(GenericAdapter):
-    _model_name = 'magento.product.category'
-    _magento_model = 'catalog_category'
-
-    def search(self, filters=None, from_date=None):
-        """ Search records according to some criterias and returns a
-        list of ids
-
-        :rtype: list
-        """
-        if filters is None:
-            filters = {}
-
-        if from_date is not None:
-            # updated_at include the created records
-            filters['updated_at'] = {'from': from_date.strftime('%Y/%m/%d %H:%M:%S')}
-
-        with magentolib.API(self.magento.location,
-                            self.magento.username,
-                            self.magento.password) as api:
-            # the search method is on ol_customer instead of customer
-            return api.call('oerp_catalog_category.search',
-                            [filters] if filters else [{}])
-        return []
-
-    def read(self, id, storeview_id=None, attributes=None):
-        """ Returns the information of a record
-
-        :rtype: dict
-        """
-        with magentolib.API(self.magento.location,
-                            self.magento.username,
-                            self.magento.password) as api:
-            return api.call('%s.info' % self._magento_model,
-                             [id, storeview_id, attributes])
-        return {}
-
-    def tree(self, parent_id=None, store_view=None):
-        """ Returns a tree of product categories
-
-        :rtype: dict
-        """
-        def filter_ids(tree):
-            children = {}
-            if tree['children']:
-                for node in tree['children']:
-                    children.update(filter_ids(node))
-            category_id = {tree['category_id']: children}
-            return category_id
-
-        with magentolib.API(self.magento.location,
-                            self.magento.username,
-                            self.magento.password) as api:
-            tree = api.call('%s.tree' % self._magento_model, [parent_id,
-                                                              store_view])
-            return filter_ids(tree)
-
-@magento
 class ProductProductAdapter(GenericAdapter):
     _model_name = 'magento.product.product'
     _magento_model = 'catalog_product'

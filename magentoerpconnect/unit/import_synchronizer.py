@@ -192,43 +192,6 @@ class SimpleRecordImport(MagentoImportSynchronizer):
 
 
 @magento
-class ProductCategoryBatchImport(DelayedBatchImport):
-    """ Import the Magento Product Categories.
-
-    For every product category in the list, a delayed job is created.
-    A priority is set on the jobs according to their level to rise the
-    chance to have the top level categories imported first.
-    """
-    _model_name = ['magento.product.category']
-
-    def _import_record(self, magento_id, priority=None):
-        """ Delay a job for the import """
-        super(ProductCategoryBatchImport, self)._import_record(
-                magento_id, priority=priority)
-
-    def run(self, filters=None):
-        """ Run the synchronization """
-        from_date = filters.pop('from_date', None)
-        if from_date is not None:
-            updated_ids = self.backend_adapter.search(filters, from_date)
-        else:
-            updated_ids = None
-
-        base_priority = 10
-        def import_nodes(tree, level=0):
-            for node_id, children in tree.iteritems():
-                # By changing the priority, the top level category has
-                # more chance to be imported before the childrens.
-                # However, importers have to ensure that their parent is
-                # there and import it if it doesn't exist
-                if updated_ids is None or node_id in updated_ids:
-                    self._import_record(node_id, priority=base_priority+level)
-                import_nodes(children, level=level+1)
-        tree = self.backend_adapter.tree()
-        import_nodes(tree)
-
-
-@magento
 class ProductBatchImport(DelayedBatchImport):
     """ Import the Magento Products.
 
@@ -579,30 +542,6 @@ class ProductImport(MagentoImportSynchronizer):
                                 MagentoImportSynchronizer,
                                 model='magento.product.category')
                 importer.run(mag_category_id)
-
-    def _after_import(self, openerp_id):
-        """ Hook called at the end of the import """
-        translation_importer = self.get_connector_unit_for_model(
-                TranslationImporter, self.model._name)
-        translation_importer.run(self.magento_id, openerp_id)
-
-
-@magento
-class ProductCategoryImport(MagentoImportSynchronizer):
-    _model_name = ['magento.product.category']
-
-    def _import_dependencies(self):
-        """ Import the dependencies for the record"""
-        record = self.magento_record
-        env = self.environment
-        # import parent category
-        # the root category has a 0 parent_id
-        if record.get('parent_id'):
-            binder = self.get_binder_for_model()
-            parent_id = record['parent_id']
-            if binder.to_openerp(parent_id) is None:
-                importer = env.get_connector_unit(MagentoImportSynchronizer)
-                importer.run(parent_id)
 
     def _after_import(self, openerp_id):
         """ Hook called at the end of the import """
