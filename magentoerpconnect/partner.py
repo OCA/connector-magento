@@ -23,6 +23,7 @@ import logging
 import magento as magentolib
 from openerp.osv import fields, orm
 from openerp.addons.connector.queue.job import job
+from openerp.addons.connector.exception import MappingError
 from openerp.addons.connector.unit.backend_adapter import BackendAdapter
 from openerp.addons.connector.unit.mapper import (mapping,
                                                   ImportMapper
@@ -32,6 +33,7 @@ from .unit.import_synchronizer import (DelayedBatchImport,
                                        MagentoImportSynchronizer
                                        )
 from .backend import magento
+from .connector import get_environment
 
 _logger = logging.getLogger(__name__)
 
