@@ -18,26 +18,3 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
-from openerp.osv import orm, fields
-
-
-# XXX should be in connector_ecommerce or in a magento.payment.method model
-class payment_method(orm.Model):
-    _inherit = 'payment.method'
-
-    def _get_import_rules(self, cr, uid, context=None):
-        return [('always', 'Always'),
-                ('never', 'Never'),
-                ('paid', 'Paid'),
-                ]
-
-    _columns = {
-        'import_rule': fields.selection(_get_import_rules,
-                                        string="Import Rule",
-                                        required=True)
-    }
-
-    _defaults = {
-        'import_rule': 'always',
-    }
