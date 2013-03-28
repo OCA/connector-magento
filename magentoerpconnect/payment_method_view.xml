@@ -2,27 +2,5 @@
 <openerp>
     <data noupdate="0">
 
-        <record id="view_payment_method_form" model="ir.ui.view">
-            <field name="name">payment.method.magento.form</field>
-            <field name="model">payment.method</field>
-            <field name="inherit_id" ref="sale_automatic_workflow.payment_method_view_form" />
-            <field name="arch" type="xml">
-                <field name="workflow_process_id" position="after">
-                    <field name="import_rule"/>
-                </field>
-            </field>
-        </record>
-
-        <record id="view_payment_method_tree" model="ir.ui.view">
-            <field name="name">payment.method.magento.tree</field>
-            <field name="model">payment.method</field>
-            <field name="inherit_id" ref="sale_automatic_workflow.payment_method_view_tree" />
-            <field name="arch" type="xml">
-                <field name="workflow_process_id" position="after">
-                    <field name="import_rule"/>
-                </field>
-            </field>
-        </record>
-
     </data>
 </openerp>
