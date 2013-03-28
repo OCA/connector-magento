@@ -433,6 +433,22 @@ class StoreImportMapper(ImportMapper):
         openerp_id = binder.to_openerp(record['website_id'])
         return {'website_id': openerp_id}
 
+    @mapping
+    def warehouse_id(self, record):
+        """ set the warehouse_id of the sale.shop (via _inherits)
+        because this is a mandatory field """
+        sess = self.session
+        cr, uid, pool, ctx = sess.cr, sess.uid, sess.pool, sess.context
+        company_obj = pool['res.company']
+        warehouse_obj = pool['stock.warehouse']
+        company_id = company_obj._company_default_get(cr, uid,
+                                                      'sale.shop',
+                                                      context=ctx)
+        warehouse_ids = warehouse_obj.search(cr, uid,
+                                             [('company_id', '=', company_id)],
+                                             context=ctx)
+        return {'warehouse_id': warehouse_ids[0]}
+
 
 @magento
 class StoreviewImportMapper(ImportMapper):
