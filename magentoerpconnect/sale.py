@@ -20,6 +20,7 @@
 ##############################################################################
 
 import logging
+from datetime import datetime, timedelta
 import magento as magentolib
 from openerp.osv import fields, orm
 import openerp.addons.decimal_precision as dp
@@ -214,17 +215,17 @@ class SaleOrderBatchImport(DelayedBatchImport):
 class SaleImportRule(ConnectorUnit):
     _model_name = ['magento.sale.order']
 
-    def _rule_always(self, record):
+    def _rule_always(self, record, method):
         """ Always import the order """
         return True
 
-    def _rule_never(self, record):
+    def _rule_never(self, record, method):
         """ Never import the order """
         raise NothingToDoJob('Orders with payment method %s '
                              'are never imported.' %
                              record['payment']['method'])
 
-    def _rule_paid(self, record):
+    def _rule_paid(self, record, method):
         """ Import the order only if it has received a payment """
         if not record.get('payment', {}).get('amount_paid'):
             raise OrderImportRuleRetry('The order has not been paid.\n'
@@ -235,11 +236,21 @@ class SaleImportRule(ConnectorUnit):
               'never': _rule_never,
               }
 
-    def _rule_global(self, record):
+    def _rule_global(self, record, method):
         """ Rule always executed, whichever is the selected rule """
         # the order has been canceled since the job has been created
+        order_id = record['increment_id']
         if record['state'] == 'canceled':
-            raise NothingToDoJob('Order %s canceled' % record['increment_id'])
+            raise NothingToDoJob('Order %s canceled' % order_id)
+        max_days = method.days_before_cancel
+        if max_days:
+            fmt = '%Y-%m-%d %H:%M:%S'
+            order_date = datetime.strptime(record['created_at'], fmt)
+            if order_date + timedelta(days=max_days) < datetime.now():
+                raise NothingToDoJob('Import of the order %s canceled '
+                                     'because it has not been paid since %d '
+                                     'days' % (order_id, max_days))
+
 
     def check(self, record):
         """ Check whether the current sale order should be imported
@@ -263,8 +274,9 @@ class SaleImportRule(ConnectorUnit):
                     "Process or create a new one." % (payment_method,
                                                       payment_method))
         method = session.browse('payment.method', method_ids[0])
-        self._rule_global(record)
-        self._rules[method.import_rule](self, record)
+
+        self._rule_global(record, method)
+        self._rules[method.import_rule](self, record, method)
 
 
 @magento
