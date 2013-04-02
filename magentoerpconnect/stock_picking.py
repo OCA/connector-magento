@@ -33,6 +33,7 @@ from .unit.backend_adapter import GenericAdapter
 from .connector import get_environment
 from .consumer import magento_consumer
 from .backend import magento
+from .stock_tracking import export_tracking_number
 
 _logger = logging.getLogger(__name__)
 
