@@ -446,8 +446,17 @@ class StoreImportMapper(ImportMapper):
                                                       context=ctx)
         warehouse_ids = warehouse_obj.search(cr, uid,
                                              [('company_id', '=', company_id)],
+                                             limit=1,
                                              context=ctx)
-        return {'warehouse_id': warehouse_ids[0]}
+        # a company is allowed to not have warehouses
+        # take the first found... user will need to check the sale shops
+        # anyway
+        if not warehouse_ids:
+            warehouse_ids = warehouse_obj.search(cr, uid, [], limit=1,
+                                                 context=ctx)
+
+        if warehouse_ids:
+            return {'warehouse_id': warehouse_ids[0]}
 
 
 @magento
