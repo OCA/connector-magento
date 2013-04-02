@@ -23,6 +23,7 @@
 import logging
 import magento as magentolib
 from openerp.osv import orm, fields
+from openerp.addons.connector.exception import MappingError
 from openerp.addons.connector.unit.mapper import (mapping,
                                                   ImportMapper
                                                   )
@@ -127,8 +128,8 @@ class ProductProductAdapter(GenericAdapter):
                             self.magento.password) as api:
             # TODO add a search entry point on the Magento API
             return [int(row['product_id']) for row
-                       in api.call('%s.list' % self._magento_model,
-                                   [filters] if filters else [{}])]
+                    in api.call('%s.list' % self._magento_model,
+                                [filters] if filters else [{}])]
         return []
 
     def read(self, id, store_view_id=None, attributes=None):
@@ -175,14 +176,14 @@ class ProductImport(MagentoImportSynchronizer):
         for mag_category_id in record['categories']:
             if binder.to_openerp(mag_category_id) is None:
                 importer = self.get_connector_unit_for_model(
-                                MagentoImportSynchronizer,
-                                model='magento.product.category')
+                    MagentoImportSynchronizer,
+                    model='magento.product.category')
                 importer.run(mag_category_id)
 
     def _after_import(self, openerp_id):
         """ Hook called at the end of the import """
         translation_importer = self.get_connector_unit_for_model(
-                TranslationImporter, self.model._name)
+            TranslationImporter, self.model._name)
         translation_importer.run(self.magento_id, openerp_id)
 
 
@@ -190,16 +191,17 @@ class ProductImport(MagentoImportSynchronizer):
 class ProductImportMapper(ImportMapper):
     _model_name = 'magento.product.product'
     #TODO :     categ, special_price => minimal_price
-    direct = [
-            ('name', 'name'),
-            ('description', 'description'),
-            ('weight', 'weight'),
-            ('price', 'list_price'),
-            ('cost', 'standard_price'),
-            ('short_description', 'description_sale'),
-            ('sku', 'default_code'),
-            ('type_id', 'product_type'),
-            ]
+    direct = [('name', 'name'),
+              ('description', 'description'),
+              ('weight', 'weight'),
+              ('price', 'list_price'),
+              ('cost', 'standard_price'),
+              ('short_description', 'description_sale'),
+              ('sku', 'default_code'),
+              ('type_id', 'product_type'),
+              ('created_at', 'created_at'),
+              ('updated_at', 'updated_at'),
+              ]
 
     @mapping
     def type(self, record):
