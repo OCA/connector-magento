@@ -27,7 +27,8 @@ from operator import itemgetter
 import magento as magentolib
 from openerp.osv import orm, fields
 from openerp.addons.connector.unit.synchronizer import ImportSynchronizer
-from openerp.addons.connector.exception import MappingError
+from openerp.addons.connector.exception import (MappingError,
+                                                InvalidDataError)
 from openerp.addons.connector.unit.mapper import (mapping,
                                                   ImportMapper
                                                   )
@@ -240,6 +241,31 @@ class ProductImport(MagentoImportSynchronizer):
                     MagentoImportSynchronizer,
                     model='magento.product.category')
                 importer.run(mag_category_id)
+
+    def _validate_product_type(self, data):
+        """ Check if the product type is in the selection (so we can
+        prevent the `except_orm` and display a better error message).
+        """
+        sess = self.session
+        product_type = data['product_type']
+        cr, uid, context = sess.cr, sess.uid, sess.context
+        product_obj = sess.pool['magento.product.product']
+        types = product_obj.product_type_get(cr, uid, context=context)
+        available_types = [typ[0] for typ in types]
+        if product_type not in available_types:
+            raise InvalidDataError("The product type '%s' is not "
+                                   "yet supported in the connector." %
+                                   product_type)
+
+    def _validate_data(self, data):
+        """ Check if the values to import are correct
+
+        Pro-actively check before the ``_create`` or
+        ``_update`` if some fields are missing or invalid
+
+        Raise `InvalidDataError`
+        """
+        self._validate_product_type(data)
 
     def _after_import(self, openerp_id):
         """ Hook called at the end of the import """

@@ -60,8 +60,8 @@ class MagentoImportSynchronizer(ImportSynchronizer):
     def _validate_data(self, data):
         """ Check if the values to import are correct
 
-        Pro-actively check before the ``Model.create`` or
-        ``Model.update`` if some fields are missing
+        Pro-actively check before the ``_create`` or
+        ``_update`` if some fields are missing or invalid.
 
         Raise `InvalidDataError`
         """
