@@ -83,8 +83,9 @@ class magento_backend(orm.Model):
         'default_lang_id': fields.many2one(
             'res.lang',
             'Default Language',
-            help="Choose the language which will be used for the "
-                 "Default Value in Magento"),
+            help="If a default language is selected, the records "
+                 "will be imported in the translation of this language.\n"
+                 "Note that a similar configuration exists for each storeview."),
         'default_category_id': fields.many2one(
             'product.category',
             string='Default Product Category',
