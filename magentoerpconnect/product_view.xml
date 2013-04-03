@@ -72,7 +72,7 @@
                     </group>
                     <group string="Inventory Options">
                         <field name="manage_stock"/>
-                        <field name="manage_stock_shortage"/>
+                        <field name="backorders"/>
                         <div class="oe_inline">
                             <label for="magento_qty" class="oe_inline" />
                             <field name="magento_qty" readonly="1" class="oe_inline"
