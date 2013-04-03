@@ -199,6 +199,17 @@ class magento_backend(orm.Model):
                                'import_products_from_date', context=context)
         return True
 
+    def update_product_stock_qty(self, cr, uid, ids, context=None):
+        if not hasattr(ids, '__iter__'):
+            ids = [ids]
+        mag_product_obj = self.pool.get('magento.product.product')
+        product_ids = mag_product_obj.search(cr, uid,
+                                             [('backend_id', 'in', ids)],
+                                             context=context)
+        mag_product_obj.recompute_magento_qty(cr, uid, product_ids,
+                                              context=context)
+        return True
+
     def _magento_backend(self, cr, uid, callback, domain=None, context=None):
         if domain is None:
             domain = []
@@ -220,6 +231,10 @@ class magento_backend(orm.Model):
 
     def _scheduler_import_product_categories(self, cr, uid, domain=None, context=None):
         self._magento_backend(cr, uid, self.import_product_categories,
+                              domain=domain, context=context)
+
+    def _scheduler_update_product_stock_qty(self, cr, uid, domain=None, context=None):
+        self._magento_backend(cr, uid, self.update_product_stock_qty,
                               domain=domain, context=context)
 
 

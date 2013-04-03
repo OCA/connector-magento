@@ -78,6 +78,13 @@
                                         class="oe_highlight"
                                         string="Import in background"/>
                                 </group>
+                                <group>
+                                    <label string="Update all the products stock quantities" class="oe_inline"/>
+                                    <button name="update_product_stock_qty"
+                                        type="object"
+                                        class="oe_highlight"
+                                        string="Update"/>
+                                </group>
 
                             </page>
 
