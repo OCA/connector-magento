@@ -70,5 +70,38 @@
             <field eval="'()'" name="args"/>
         </record>
 
+        <record id="excep_wrong_total_amount" model="sale.exception">
+            <field name="name">Total Amount differs from Magento</field>
+            <field name="description">The amount computed in OpenERP doesn't match with the amount in Magento.
+
+Cause:
+The taxes are probably different between OpenERP and Magento. A fiscal position could have changed the final price.
+
+Resolution:
+Check your taxes and fiscal positions configuration and correct them if necessary.</field>
+            <field name="sequence">30</field>
+            <field name="model">sale.order</field>
+            <field name="code">if order.magento_bind_ids and abs(order.amount_total - order.magento_bind_ids[0].total_amount) >= 0.01:
+    failed = True</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="excep_wrong_total_amount_tax" model="sale.exception">
+            <field name="name">Total Tax Amount differs from Magento</field>
+            <field name="description">The tax amount computed in OpenERP doesn't match with the tax amount in Magento.
+
+Cause:
+The taxes are probably different between OpenERP and Magento. A fiscal position could have changed the final price.
+
+Resolution:
+Check your taxes and fiscal positions configuration and correct them if necessary.</field>
+            <field name="sequence">30</field>
+            <field name="model">sale.order</field>
+            <field name="code"># By default, a cent of difference for the tax amount is allowed, feel free to customise it in your own module
+if order.magento_bind_ids and abs(order.amount_tax - order.magento_bind_ids[0].total_amount_tax) > 0.01:
+    failed = True</field>
+            <field name="active" eval="True"/>
+        </record>
+
     </data>
 </openerp>
