@@ -206,7 +206,9 @@ class ProductProductAdapter(GenericAdapter):
         with magentolib.API(self.magento.location,
                             self.magento.username,
                             self.magento.password) as api:
-            return api.call('product_stock.update', [id, data])
+            # product_stock.update is too slow
+            return api.call('oerp_cataloginventory_stock_item.update',
+                            [id, data])
         return False
 
 
