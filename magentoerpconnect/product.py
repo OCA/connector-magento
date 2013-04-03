@@ -26,7 +26,11 @@ import base64
 from operator import itemgetter
 import magento as magentolib
 from openerp.osv import orm, fields
-from openerp.addons.connector.unit.synchronizer import ImportSynchronizer
+from openerp.addons.connector.queue.job import job
+from openerp.addons.connector.event import on_record_create, on_record_write
+from openerp.addons.connector.unit.synchronizer import (ImportSynchronizer,
+                                                        ExportSynchronizer
+                                                        )
 from openerp.addons.connector.exception import (MappingError,
                                                 InvalidDataError)
 from openerp.addons.connector.unit.mapper import (mapping,
@@ -37,6 +41,8 @@ from .unit.import_synchronizer import (DelayedBatchImport,
                                        MagentoImportSynchronizer,
                                        TranslationImporter,
                                        )
+from .connector import get_environment
+from .consumer import magento_consumer
 from .backend import magento
 
 _logger = logging.getLogger(__name__)
@@ -81,25 +87,58 @@ class magento_product_product(orm.Model):
              ('yes', 'Manage Stock')],
             string='Manage Stock Level',
             required=True),
-        'manage_stock_shortage': fields.selection(
+        'backorders': fields.selection(
             [('use_default', 'Use Default Config'),
              ('no', 'No Sell'),
              ('yes', 'Sell Quantity < 0'),
              ('yes-and-notification', 'Sell Quantity < 0 and Use Customer Notification')],
-            string='Manage Inventory Shortage',
+            string='Manage Inventory Backorders',
             required=True),
+        'magento_qty': fields.float('Computed Quantity',
+                                    help="Last computed quantity to send "
+                                         "on Magento."),
         }
 
     _defaults = {
         'product_type': 'simple',
         'manage_stock': 'use_default',
-        'manage_stock_shortage': 'use_default',
+        'backorders': 'use_default',
         }
 
     _sql_constraints = [
         ('magento_uniq', 'unique(backend_id, magento_id)',
          "A product with the same ID on Magento already exists")
     ]
+
+    def recompute_magento_qty(self, cr, uid, ids, context=None):
+        if not hasattr(ids, '__iter__'):
+            ids = [ids]
+
+        for product in self.browse(cr, uid, ids, context=context):
+            new_qty = self._magento_qty(cr, uid, product, context=context)
+            if new_qty != product.magento_qty:
+                self.write(cr, uid, product.id,
+                           {'magento_qty': new_qty},
+                           context=context)
+        return True
+
+    def _magento_qty(self, cr, uid, product, context=None):
+        if context is None:
+            context = {}
+        backend = product.backend_id
+        stock = backend.warehouse_id.lot_stock_id
+
+        if backend.product_stock_field_id:
+            stock_field = backend.product_stock_field_id.name
+        else:
+            stock_field = 'virtual_available'
+
+        location_ctx = context.copy()
+        location_ctx['location'] = stock.id
+        product_stk = self.read(cr, uid, product.id,
+                                [stock_field],
+                                context=location_ctx)
+        return product_stk[stock_field]
 
 
 class product_product(orm.Model):
@@ -162,6 +201,16 @@ class ProductProductAdapter(GenericAdapter):
                             self.magento.password) as api:
             return api.call('product_media.info', [id, image_name, storeview_id, 'id'])
         return {}
+
+    def update_inventory(self, id, data):
+        with magentolib.API(self.magento.location,
+                            self.magento.username,
+                            self.magento.password) as api:
+            # product_stock.update is too slow
+            return api.call('oerp_cataloginventory_stock_item.update',
+                            [id, data])
+        return False
+
 
 
 @magento
@@ -345,3 +394,74 @@ class ProductImportMapper(ImportMapper):
     @mapping
     def backend_id(self, record):
         return {'backend_id': self.backend_record.id}
+
+
+@magento
+class ProductInventoryExport(ExportSynchronizer):
+    _model_name = ['magento.product.product']
+
+    _map_backorders = {'use_default': 0,
+                       'no': 0,
+                       'yes': 1,
+                       'yes-and-notification': 2,
+                       }
+
+    def _get_data(self, product, fields):
+        result = {}
+        if 'magento_qty' in fields:
+            result.update({
+                'qty': product.magento_qty,
+                # put the stock availability to "out of stock"
+                'is_in_stock': int(product.magento_qty > 0)
+            })
+        if 'manage_stock' in fields:
+            manage = product.manage_stock
+            result.update({
+                'manage_stock': int(manage == 'yes'),
+                'use_config_manage_stock': int(manage == 'use_default'),
+            })
+        if 'backorders' in fields:
+            backorders = product.backorders
+            result.update({
+                'backorders': self._map_backorders[backorders],
+                'use_config_backorders': int(backorders == 'use_default'),
+            })
+        return result
+
+    def run(self, openerp_id, fields):
+        """ Export the product inventory to Magento """
+        product = self.session.browse(self.model._name, openerp_id)
+        binder = self.get_binder_for_model()
+        magento_id = binder.to_backend(product.id)
+        data = self._get_data(product, fields)
+        self.backend_adapter.update_inventory(magento_id, data)
+
+
+# fields which should not trigger an export of the products
+# but an export of their inventory
+INVENTORY_FIELDS = ('manage_stock',
+                    'backorders',
+                    'magento_qty',
+                    )
+
+
+@on_record_write(model_names='magento.product.product')
+@magento_consumer
+def magento_product_modified(session, model_name, record_id, fields=None):
+    if session.context.get('connector_no_export'):
+        return
+    inventory_fields = list(set(fields).intersection(INVENTORY_FIELDS))
+    if inventory_fields:
+        export_product_inventory.delay(session, model_name,
+                                       record_id, fields=inventory_fields,
+                                       priority=20)
+
+
+@job
+def export_product_inventory(session, model_name, record_id, fields=None):
+    """ Export the inventory configuration and quantity of a product. """
+    product = session.browse(model_name, record_id)
+    backend_id = product.backend_id.id
+    env = get_environment(session, model_name, backend_id)
+    inventory_exporter = env.get_connector_unit(ProductInventoryExport)
+    return inventory_exporter.run(record_id, fields)
