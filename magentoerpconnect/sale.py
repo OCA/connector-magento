@@ -294,17 +294,21 @@ class SaleOrderImport(MagentoImportSynchronizer):
         rules = self.get_connector_unit_for_model(SaleImportRule)
         rules.check(self.magento_record)
 
-    def _after_import(self, openerp_id):
+    def _create_payment(self, openerp_id):
         sess = self.session
+        mag_sale = sess.browse(self.model._name, openerp_id)
+        if not mag_sale.payment_method_id.journal_id:
+            return
         sale_obj = sess.pool['sale.order']
         amount = self.magento_record.get('payment', {}).get('amount_paid')
-        sale_id = sess.read('magento.sale.order',
-                            openerp_id, ['openerp_id'])['openerp_id'][0]
         if amount:
             amount = float(amount)  # magento gives a str
             cr, uid, context = sess.cr, sess.uid, sess.context
-            sale_obj.automatic_payment(cr, uid, sale_id, amount,
-                                       context=context)
+            sale_obj.automatic_payment(cr, uid, mag_sale.openerp_id.id,
+                                       amount, context=context)
+
+    def _after_import(self, openerp_id):
+        self._create_payment(openerp_id)
 
     def _import_addresses(self):
         record = self.magento_record
