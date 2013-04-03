@@ -107,26 +107,32 @@ class magento_product_product(orm.Model):
     def recompute_magento_qty(self, cr, uid, ids, context=None):
         if not hasattr(ids, '__iter__'):
             ids = [ids]
-        if context is None:
-            context = {}
-        ctx = context.copy()
 
-        products = self.read(cr, uid, ids, ['magento_qty'], context=context)
-        for product_id, qty in products:
-            new_qty = self._magento_qty(cr, uid, product_id, context=context)
-            if new_qty != qty:
+        for product in self.browse(cr, uid, ids, context=context):
+            new_qty = self._magento_qty(cr, uid, product, context=context)
+            if new_qty != product.magento_qty:
                 self.write(cr, uid, ids,
                            {'magento_qty': new_qty},
                            context=context)
         return True
 
-    def _magento_qty(self, cr, uid, product_id, context=None):
+    def _magento_qty(self, cr, uid, product, context=None):
+        if context is None:
+            context = {}
         backend = product.backend_id
+        stock = backend.warehouse_id.lot_stock_id
+
         if backend.product_stock_field_id:
             stock_field = backend.product_stock_field_id.name
         else:
             stock_field = 'virtual_available'
-        return product[stock_field]
+
+        location_ctx = context.copy()
+        location_ctx['location'] = stock.id
+        product_stk = self.read(cr, uid, product.id,
+                                [stock_field],
+                                context=location_ctx)
+        return product_stk[stock_field]
 
 
 class product_product(orm.Model):
