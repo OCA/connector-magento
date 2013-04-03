@@ -88,6 +88,9 @@ class magento_product_product(orm.Model):
              ('yes-and-notification', 'Sell Quantity < 0 and Use Customer Notification')],
             string='Manage Inventory Shortage',
             required=True),
+        'magento_qty': fields.float('Computed Quantity',
+                                    help="Last computed quantity to send "
+                                         "on Magento."),
         }
 
     _defaults = {
@@ -100,6 +103,30 @@ class magento_product_product(orm.Model):
         ('magento_uniq', 'unique(backend_id, magento_id)',
          "A product with the same ID on Magento already exists")
     ]
+
+    def recompute_magento_qty(self, cr, uid, ids, context=None):
+        if not hasattr(ids, '__iter__'):
+            ids = [ids]
+        if context is None:
+            context = {}
+        ctx = context.copy()
+
+        products = self.read(cr, uid, ids, ['magento_qty'], context=context)
+        for product_id, qty in products:
+            new_qty = self._magento_qty(cr, uid, product_id, context=context)
+            if new_qty != qty:
+                self.write(cr, uid, ids,
+                           {'magento_qty': new_qty},
+                           context=context)
+        return True
+
+    def _magento_qty(self, cr, uid, product_id, context=None):
+        backend = product.backend_id
+        if backend.product_stock_field_id:
+            stock_field = backend.product_stock_field_id.name
+        else:
+            stock_field = 'virtual_available'
+        return product[stock_field]
 
 
 class product_product(orm.Model):

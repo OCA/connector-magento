@@ -55,6 +55,15 @@ class magento_backend(orm.Model):
         """
         return [('1.7', '1.7')]
 
+    def _get_stock_field_id(self, cr, uid, context=None):
+        stock_field = 'virtual_available'
+        field_ids = self.pool.get('ir.model.fields').search(
+            cr, uid,
+            [('model', '=', 'product.product'),
+             ('name', '=', 'virtual_available')],
+            context=context)
+        return field_ids[0]
+
     _columns = {
         'version': fields.selection(
             _select_versions,
@@ -63,14 +72,19 @@ class magento_backend(orm.Model):
         'location': fields.char('Location'),
         'username': fields.char('Username'),
         'password': fields.char('Password'),
+        'warehouse_id': fields.many2one('stock.warehouse',
+                                        'Warehouse',
+                                        required=True,
+                                        help='Warehouse used to compute the '
+                                             'stock quantities.'),
         'website_ids': fields.one2many(
             'magento.website', 'backend_id',
             string='Website', readonly=True),
         'default_lang_id': fields.many2one(
-                'res.lang',
-                'Default Language',
-                help="Choose the language which will be used for the "
-                     "Default Value in Magento"),
+            'res.lang',
+            'Default Language',
+            help="Choose the language which will be used for the "
+                 "Default Value in Magento"),
         'default_category_id': fields.many2one(
             'product.category',
             string='Default Product Category',
@@ -80,7 +94,19 @@ class magento_backend(orm.Model):
         # add a field `auto_activate` -> activate a cron
         'import_products_from_date': fields.datetime('Import products from date'),
         'import_categories_from_date': fields.datetime('Import categories from date'),
-        'catalog_price_tax_included': fields.boolean('Prices include tax')
+        'catalog_price_tax_included': fields.boolean('Prices include tax'),
+        'product_stock_field_id': fields.many2one(
+            'ir.model.fields',
+            string='Stock Field',
+            domain="[('model', 'in', ['product.product', 'product.template']),"
+                   " ('ttype', '=', 'float')]",
+            help="Choose the field of the product which will be used for "
+                 "stock inventory updates.\nIf empty, Quantity Available "
+                 "is used."),
+    }
+
+    _defaults = {
+        'product_stock_field_id': _get_stock_field_id,
     }
 
     def check_magento_structure(self, cr, uid, ids, context=None):
@@ -298,6 +324,19 @@ class magento_store(orm.Model):
                  "an email notification on Magento side?"),
     }
 
+    def create(self, cr, uid, vals, context=None):
+        """ Assign the warehouse of the backend by default
+        if no warehouse is specified."""
+        if vals.get('warehouse_id') is None and vals.get('website_id'):
+            website_obj = self.pool.get('magento.website')
+            website = website_obj.browse(cr, uid,
+                                         vals['website_id'], context=context)
+            vals['warehouse_id'] = website.backend_id.warehouse_id.id
+
+        # if backend_id is missing, we call super anyhow so it
+        # will raise the required field error
+        return super(magento_store, self).create(cr, uid, vals, context=context)
+
     _sql_constraints = [
         ('magento_uniq', 'unique(backend_id, magento_id)',
          'A store with the same ID on Magento already exists.'),
@@ -432,31 +471,6 @@ class StoreImportMapper(ImportMapper):
         binder = self.get_binder_for_model('magento.website')
         openerp_id = binder.to_openerp(record['website_id'])
         return {'website_id': openerp_id}
-
-    @mapping
-    def warehouse_id(self, record):
-        """ set the warehouse_id of the sale.shop (via _inherits)
-        because this is a mandatory field """
-        sess = self.session
-        cr, uid, pool, ctx = sess.cr, sess.uid, sess.pool, sess.context
-        company_obj = pool['res.company']
-        warehouse_obj = pool['stock.warehouse']
-        company_id = company_obj._company_default_get(cr, uid,
-                                                      'sale.shop',
-                                                      context=ctx)
-        warehouse_ids = warehouse_obj.search(cr, uid,
-                                             [('company_id', '=', company_id)],
-                                             limit=1,
-                                             context=ctx)
-        # a company is allowed to not have warehouses
-        # take the first found... user will need to check the sale shops
-        # anyway
-        if not warehouse_ids:
-            warehouse_ids = warehouse_obj.search(cr, uid, [], limit=1,
-                                                 context=ctx)
-
-        if warehouse_ids:
-            return {'warehouse_id': warehouse_ids[0]}
 
 
 @magento
