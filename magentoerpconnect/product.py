@@ -21,8 +21,12 @@
 ##############################################################################
 
 import logging
+import urllib2
+import base64
+from operator import itemgetter
 import magento as magentolib
 from openerp.osv import orm, fields
+from openerp.addons.connector.unit.synchronizer import ImportSynchronizer
 from openerp.addons.connector.exception import MappingError
 from openerp.addons.connector.unit.mapper import (mapping,
                                                   ImportMapper
@@ -132,7 +136,7 @@ class ProductProductAdapter(GenericAdapter):
                                 [filters] if filters else [{}])]
         return []
 
-    def read(self, id, store_view_id=None, attributes=None):
+    def read(self, id, storeview_id=None, attributes=None):
         """ Returns the information of a record
 
         :rtype: dict
@@ -141,7 +145,21 @@ class ProductProductAdapter(GenericAdapter):
                             self.magento.username,
                             self.magento.password) as api:
             return api.call('%s.info' % self._magento_model,
-                            [id, store_view_id, attributes, 'id'])
+                            [id, storeview_id, attributes, 'id'])
+        return {}
+
+    def get_images(self, id, storeview_id=None):
+        with magentolib.API(self.magento.location,
+                            self.magento.username,
+                            self.magento.password) as api:
+            return api.call('product_media.list', [id, storeview_id, 'id'])
+        return []
+
+    def read_image(self, id, image_name, storeview_id=None):
+        with magentolib.API(self.magento.location,
+                            self.magento.username,
+                            self.magento.password) as api:
+            return api.call('product_media.info', [id, image_name, storeview_id, 'id'])
         return {}
 
 
@@ -165,6 +183,47 @@ class ProductBatchImport(DelayedBatchImport):
 
 
 @magento
+class CatalogImageImporter(ImportSynchronizer):
+    """ Import images for a record.
+
+    Usually called from importers, in ``_after_import``.
+    For instance from the products importer.
+    """
+
+    _model_name = ['magento.product.product',
+                   ]
+
+    def _get_images(self, storeview_id=None):
+        return self.backend_adapter.get_images(self.magento_id, storeview_id)
+
+    def _get_main_image_data(self, images):
+        if not images:
+            return {}
+        # search if we have a base image defined
+        image = next((img for img in images if 'base' in img['types']),
+                     None)
+        if image is None:
+            # take the first image by priority
+            images = sorted(images, key=itemgetter('position'))
+            image = images[0]
+        return image
+
+    def _get_binary_image(self, image_data):
+        url = image_data['url']
+        binary = urllib2.urlopen(url)
+        return binary.read()
+
+    def run(self, magento_id, openerp_id):
+        self.magento_id = magento_id
+        images = self._get_images()
+        main_image_data = self._get_main_image_data(images)
+        binary = self._get_binary_image(main_image_data)
+        self.session.write(self.model._name,
+                           openerp_id,
+                           {'image': base64.b64encode(binary)})
+
+
+@magento
 class ProductImport(MagentoImportSynchronizer):
     _model_name = ['magento.product.product']
 
@@ -185,6 +244,9 @@ class ProductImport(MagentoImportSynchronizer):
         translation_importer = self.get_connector_unit_for_model(
             TranslationImporter, self.model._name)
         translation_importer.run(self.magento_id, openerp_id)
+        image_importer = self.get_connector_unit_for_model(
+            CatalogImageImporter, self.model._name)
+        image_importer.run(self.magento_id, openerp_id)
 
 
 @magento

@@ -110,7 +110,7 @@ class ProductCategoryAdapter(GenericAdapter):
                              [id, storeview_id, attributes])
         return {}
 
-    def tree(self, parent_id=None, store_view=None):
+    def tree(self, parent_id=None, storeview_id=None):
         """ Returns a tree of product categories
 
         :rtype: dict
@@ -127,7 +127,7 @@ class ProductCategoryAdapter(GenericAdapter):
                             self.magento.username,
                             self.magento.password) as api:
             tree = api.call('%s.tree' % self._magento_model, [parent_id,
-                                                              store_view])
+                                                              storeview_id])
             return filter_ids(tree)
 
 
