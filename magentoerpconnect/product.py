@@ -217,6 +217,8 @@ class CatalogImageImporter(ImportSynchronizer):
         self.magento_id = magento_id
         images = self._get_images()
         main_image_data = self._get_main_image_data(images)
+        if not main_image_data:
+            return
         binary = self._get_binary_image(main_image_data)
         self.session.write(self.model._name,
                            openerp_id,
