@@ -193,7 +193,7 @@ class SaleOrderBatchImport(DelayedBatchImport):
     def _import_record(self, record_id, **kwargs):
         """ Import the record directly """
         return super(SaleOrderBatchImport, self)._import_record(
-                record_id, max_retries=0)
+            record_id, max_retries=0, priority=5)
 
     def run(self, filters=None):
         """ Run the synchronization """
