@@ -43,7 +43,7 @@ _logger = logging.getLogger(__name__)
 
 class magento_backend(orm.Model):
     _name = 'magento.backend'
-    _doc = 'Magento Backend'
+    _description = 'Magento Backend'
     _inherit = 'connector.backend'
 
     _backend_type = 'magento'
@@ -242,6 +242,7 @@ class magento_backend(orm.Model):
 class magento_website(orm.Model):
     _name = 'magento.website'
     _inherit = 'magento.binding'
+    _description = 'Magento Website'
 
     _order = 'sort_order ASC'
 

@@ -42,6 +42,7 @@ class magento_stock_picking(orm.Model):
     _name = 'magento.stock.picking.out'
     _inherit = 'magento.binding'
     _inherits = {'stock.picking': 'openerp_id'}
+    _description = 'Magento Delivery Order'
 
     _columns = {
         'openerp_id': fields.many2one('stock.picking.out',

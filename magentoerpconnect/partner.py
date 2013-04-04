@@ -58,6 +58,7 @@ class magento_res_partner(orm.Model):
     _name = 'magento.res.partner'
     _inherit = 'magento.binding'
     _inherits = {'res.partner': 'openerp_id'}
+    _description = 'Magento Partner'
 
     _rec_name = 'website_id'
 
@@ -113,6 +114,7 @@ class magento_address(orm.Model):
     _name = 'magento.address'
     _inherit = 'magento.binding'
     _inherits = {'res.partner': 'openerp_id'}
+    _description = 'Magento Address'
 
     _rec_name = 'backend_id'
 

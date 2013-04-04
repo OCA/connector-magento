@@ -40,6 +40,7 @@ class magento_account_invoice(orm.Model):
     _name = 'magento.account.invoice'
     _inherit = 'magento.binding'
     _inherits = {'account.invoice': 'openerp_id'}
+    _description = 'Magento Account Invoice'
 
     _columns = {
         'openerp_id': fields.many2one('account.invoice',

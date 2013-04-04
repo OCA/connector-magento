@@ -39,6 +39,7 @@ class magento_product_category(orm.Model):
     _name = 'magento.product.category'
     _inherit = 'magento.binding'
     _inherits = {'product.category': 'openerp_id'}
+    _description = 'Magento Product Category'
 
     _columns = {
         'openerp_id': fields.many2one('product.category',
