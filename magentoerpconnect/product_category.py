@@ -20,7 +20,6 @@
 ##############################################################################
 
 import logging
-import magento as magentolib
 from openerp.osv import orm, fields
 from openerp.addons.connector.unit.mapper import (mapping,
                                                   ImportMapper
@@ -91,9 +90,7 @@ class ProductCategoryAdapter(GenericAdapter):
             # updated_at include the created records
             filters['updated_at'] = {'from': from_date.strftime('%Y/%m/%d %H:%M:%S')}
 
-        with magentolib.API(self.magento.location,
-                            self.magento.username,
-                            self.magento.password) as api:
+        with self._magento_api() as api:
             # the search method is on ol_customer instead of customer
             return api.call('oerp_catalog_category.search',
                             [filters] if filters else [{}])
@@ -104,9 +101,7 @@ class ProductCategoryAdapter(GenericAdapter):
 
         :rtype: dict
         """
-        with magentolib.API(self.magento.location,
-                            self.magento.username,
-                            self.magento.password) as api:
+        with self._magento_api() as api:
             return api.call('%s.info' % self._magento_model,
                              [id, storeview_id, attributes])
         return {}
@@ -124,9 +119,7 @@ class ProductCategoryAdapter(GenericAdapter):
             category_id = {tree['category_id']: children}
             return category_id
 
-        with magentolib.API(self.magento.location,
-                            self.magento.username,
-                            self.magento.password) as api:
+        with self._magento_api() as api:
             tree = api.call('%s.tree' % self._magento_model, [parent_id,
                                                               storeview_id])
             return filter_ids(tree)

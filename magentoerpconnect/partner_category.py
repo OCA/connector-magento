@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-import magento as magentolib
 from openerp.osv import fields, orm
 from openerp.addons.connector.unit.mapper import (mapping,
                                                   ImportMapper
@@ -72,9 +71,7 @@ class PartnerCategoryAdapter(GenericAdapter):
 
         :rtype: list
         """
-        with magentolib.API(self.magento.location,
-                            self.magento.username,
-                            self.magento.password) as api:
+        with self._magento_api() as api:
             return [int(row['customer_group_id']) for row
                        in api.call('%s.list' % self._magento_model,
                                    [filters] if filters else [{}])]

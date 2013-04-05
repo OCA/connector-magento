@@ -24,7 +24,6 @@ import logging
 import urllib2
 import base64
 from operator import itemgetter
-import magento as magentolib
 from openerp.osv import orm, fields
 from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.event import on_record_create, on_record_write
@@ -168,49 +167,34 @@ class ProductProductAdapter(GenericAdapter):
             filters = {}
         if from_date is not None:
             filters['updated_at'] = {'from': from_date.strftime('%Y/%m/%d %H:%M:%S')}
-        with magentolib.API(self.magento.location,
-                            self.magento.username,
-                            self.magento.password) as api:
+        with self._magento_api() as api:
             # TODO add a search entry point on the Magento API
             return [int(row['product_id']) for row
                     in api.call('%s.list' % self._magento_model,
                                 [filters] if filters else [{}])]
-        return []
 
     def read(self, id, storeview_id=None, attributes=None):
         """ Returns the information of a record
 
         :rtype: dict
         """
-        with magentolib.API(self.magento.location,
-                            self.magento.username,
-                            self.magento.password) as api:
+        with self._magento_api() as api:
             return api.call('%s.info' % self._magento_model,
                             [id, storeview_id, attributes, 'id'])
-        return {}
 
     def get_images(self, id, storeview_id=None):
-        with magentolib.API(self.magento.location,
-                            self.magento.username,
-                            self.magento.password) as api:
+        with self._magento_api() as api:
             return api.call('product_media.list', [id, storeview_id, 'id'])
-        return []
 
     def read_image(self, id, image_name, storeview_id=None):
-        with magentolib.API(self.magento.location,
-                            self.magento.username,
-                            self.magento.password) as api:
+        with self._magento_api() as api:
             return api.call('product_media.info', [id, image_name, storeview_id, 'id'])
-        return {}
 
     def update_inventory(self, id, data):
-        with magentolib.API(self.magento.location,
-                            self.magento.username,
-                            self.magento.password) as api:
+        with self._magento_api() as api:
             # product_stock.update is too slow
             return api.call('oerp_cataloginventory_stock_item.update',
                             [id, data])
-        return False
 
 
 

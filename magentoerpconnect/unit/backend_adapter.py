@@ -19,10 +19,13 @@
 #
 ##############################################################################
 
+import socket
 import logging
+from contextlib import contextmanager
 
 import magento as magentolib
 from openerp.addons.connector.unit.backend_adapter import CRUDAdapter
+from openerp.addons.connector.exception import NetworkRetryableError
 
 _logger = logging.getLogger(__name__)
 
@@ -48,6 +51,18 @@ class MagentoCRUDAdapter(CRUDAdapter):
         self.magento = MagentoLocation(self.backend_record.location,
                                        self.backend_record.username,
                                        self.backend_record.password)
+
+    @contextmanager
+    def _magento_api(self):
+        try:
+            with magentolib.API(self.magento.location,
+                                self.magento.username,
+                                self.magento.password) as api:
+                yield api
+        except socket.gaierror as err:
+            raise NetworkRetryableError(
+                'A network error caused the failure of the job: '
+                '%s' % err)
 
     def search(self, filters=None):
         """ Search records according to some criterias
@@ -87,55 +102,40 @@ class GenericAdapter(MagentoCRUDAdapter):
 
         :rtype: list
         """
-        with magentolib.API(self.magento.location,
-                            self.magento.username,
-                            self.magento.password) as api:
+        with self._magento_api() as api:
             return api.call('%s.search' % self._magento_model,
                             [filters] if filters else [{}])
-        return []
 
     def read(self, id, attributes=None):
         """ Returns the information of a record
 
         :rtype: dict
         """
-        with magentolib.API(self.magento.location,
-                            self.magento.username,
-                            self.magento.password) as api:
+        with self._magento_api() as api:
             return api.call('%s.info' % self._magento_model, [id, attributes])
-        return {}
 
     def search_read(self, filters=None):
         """ Search records according to some criterias
         and returns their information"""
-        with magentolib.API(self.magento.location,
-                            self.magento.username,
-                            self.magento.password) as api:
+        with self._magento_api() as api:
             return api.call('%s.list' % self._magento_model, [filters])
-        return []
 
     def create(self, data):
         """ Create a record on the external system """
-        with magentolib.API(self.magento.location,
-                            self.magento.username,
-                            self.magento.password) as api:
+        with self._magento_api() as api:
             _logger.debug("api.call(%s.create', [%s])", self._magento_model, data)
             return api.call('%s.create' % self._magento_model, [data])
 
     def write(self, id, data):
         """ Update records on the external system """
-        with magentolib.API(self.magento.location,
-                            self.magento.username,
-                            self.magento.password) as api:
+        with self._magento_api() as api:
             _logger.debug("api.call(%s.update', [%s, %s])",
                     self._magento_model, id, data)
             return api.call('%s.update' % self._magento_model, [id, data])
 
     def delete(self, id):
         """ Delete a record on the external system """
-        with magentolib.API(self.magento.location,
-                            self.magento.username,
-                            self.magento.password) as api:
+        with self._magento_api() as api:
             _logger.debug("api.call(%s.delete', [%s])",
                     self._magento_model, id)
             return api.call('%s.delete' % self._magento_model, [id])

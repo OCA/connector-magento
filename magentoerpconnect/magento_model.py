@@ -22,7 +22,6 @@
 
 import logging
 from datetime import datetime
-import magento as magentolib
 from openerp.osv import fields, orm
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 import openerp.addons.connector as connector

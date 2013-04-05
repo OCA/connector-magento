@@ -21,7 +21,6 @@
 
 import logging
 from datetime import datetime, timedelta
-import magento as magentolib
 from openerp.osv import fields, orm
 import openerp.addons.decimal_precision as dp
 from openerp.addons.connector.connector import ConnectorUnit

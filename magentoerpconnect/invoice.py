@@ -21,7 +21,6 @@
 
 import logging
 import xmlrpclib
-import magento as magentolib
 from openerp.osv import fields, orm
 from openerp.tools.translate import _
 from openerp.addons.connector.queue.job import job
@@ -75,9 +74,7 @@ class AccountInvoiceAdapter(GenericAdapter):
 
     def create(self, order_increment_id, items, comment, email, include_comment):
         """ Create a record on the external system """
-        with magentolib.API(self.magento.location,
-                            self.magento.username,
-                            self.magento.password) as api:
+        with self._magento_api() as api:
             _logger.debug("api.call('%s.create', %s)", self._magento_model,
                           [order_increment_id, items, comment, email, include_comment])
             return api.call('%s.create' % self._magento_model,
