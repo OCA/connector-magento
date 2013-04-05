@@ -33,6 +33,8 @@ from openerp.addons.connector.unit.mapper import (mapping,
 from .unit.backend_adapter import GenericAdapter
 from .unit.import_synchronizer import (import_batch,
                                        DirectBatchImport,
+                                       MagentoImportSynchronizer,
+                                       AddCheckpoint,
                                        )
 from .partner import partner_import_batch
 from .sale import sale_order_import_batch
@@ -506,3 +508,16 @@ class StoreviewImportMapper(ImportMapper):
         binder = self.get_binder_for_model('magento.store')
         openerp_id = binder.to_openerp(record['group_id'])
         return {'store_id': openerp_id}
+
+
+@magento
+class StoreImport(MagentoImportSynchronizer):
+    """ Import one Magento Store (create a sale.shop via _inherits) """
+    _model_name = ['magento.store',
+                   ]
+
+    def _create(self, data):
+        openerp_binding_id = super(StoreImport, self)._create(data)
+        checkpoint = self.get_connector_unit_for_model(AddCheckpoint)
+        checkpoint.run(openerp_binding_id)
+        return openerp_binding_id

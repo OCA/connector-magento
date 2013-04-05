@@ -179,7 +179,6 @@ class SimpleRecordImport(MagentoImportSynchronizer):
     """ Import one Magento Website """
     _model_name = [
             'magento.website',
-            'magento.store',
             'magento.storeview',
             'magento.res.partner.category',
         ]
@@ -241,6 +240,7 @@ class AddCheckpoint(ConnectorUnit):
 
     _model_name = ['magento.product.product',
                    'magento.product.category',
+                   'sale.shop',
                    ]
 
     def run(self, openerp_binding_id):
