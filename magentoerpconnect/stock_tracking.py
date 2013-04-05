@@ -20,7 +20,6 @@
 ##############################################################################
 
 import logging
-import magento as magentolib
 from openerp.tools.translate import _
 from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.exception import FailedJobError, NoExternalId

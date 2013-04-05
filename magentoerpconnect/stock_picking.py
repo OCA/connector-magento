@@ -21,7 +21,6 @@
 
 import logging
 import xmlrpclib
-import magento as magentolib
 from openerp.osv import orm, fields
 from openerp.tools.translate import _
 from openerp.addons.connector.queue.job import job
@@ -81,9 +80,7 @@ class StockPickingAdapter(GenericAdapter):
 
     def create(self, order_id, items, comment, email, include_comment):
         """ Create a record on the external system """
-        with magentolib.API(self.magento.location,
-                            self.magento.username,
-                            self.magento.password) as api:
+        with self._magento_api() as api:
             _logger.debug("api.call(%s.create', [%s])", self._magento_model,
                           [order_id, items, comment, email, include_comment])
             return api.call('%s.create' % self._magento_model,
@@ -98,9 +95,7 @@ class StockPickingAdapter(GenericAdapter):
         :param tracking_title: title displayed on Magento for the tracking
         :param tracking_number: tracking number
         """
-        with magentolib.API(self.magento.location,
-                            self.magento.username,
-                            self.magento.password) as api:
+        with self._magento_api() as api:
             return api.call('%s.addTrack' % self._magento_model,
                             [magento_id, carrier_code,
                              tracking_title, tracking_number])
@@ -111,9 +106,7 @@ class StockPickingAdapter(GenericAdapter):
         :param magento_id: shipment increment id
         :rtype: list
         """
-        with magentolib.API(self.magento.location,
-                            self.magento.username,
-                            self.magento.password) as api:
+        with self._magento_api() as api:
             return api.call('%s.getCarriers' % self._magento_model,
                             [magento_id])
 

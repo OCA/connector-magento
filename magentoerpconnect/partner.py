@@ -20,7 +20,6 @@
 ##############################################################################
 
 import logging
-import magento as magentolib
 from openerp.osv import fields, orm
 from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.exception import MappingError
@@ -198,9 +197,7 @@ class PartnerAdapter(GenericAdapter):
         if magento_website_ids is not None:
             filters['website_id'] = {'in': magento_website_ids}
 
-        with magentolib.API(self.magento.location,
-                            self.magento.username,
-                            self.magento.password) as api:
+        with self._magento_api() as api:
             # the search method is on ol_customer instead of customer
             return api.call('ol_customer.search',
                             [filters] if filters else [{}])
@@ -358,9 +355,7 @@ class AddressAdapter(GenericAdapter):
 
         :rtype: list
         """
-        with magentolib.API(self.magento.location,
-                            self.magento.username,
-                            self.magento.password) as api:
+        with self._magento_api() as api:
             return [int(row['customer_address_id']) for row
                        in api.call('%s.list' % self._magento_model,
                                    [filters] if filters else [{}])]
