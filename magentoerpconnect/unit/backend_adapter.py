@@ -59,7 +59,7 @@ class MagentoCRUDAdapter(CRUDAdapter):
                                 self.magento.username,
                                 self.magento.password) as api:
                 yield api
-        except socket.gaierror as err:
+        except (socket.gaierror, socket.error, socket.timeout) as err:
             raise NetworkRetryableError(
                 'A network error caused the failure of the job: '
                 '%s' % err)
