@@ -21,6 +21,7 @@
 
 from openerp.osv import orm, fields
 from openerp.addons.connector.connector import Environment
+from openerp.addons.connector.checkpoint import checkpoint
 
 
 class magentoerpconnect_installed(orm.AbstractModel):
@@ -61,3 +62,6 @@ class magento_binding(orm.AbstractModel):
     # https://bugs.launchpad.net/openobject-server/+bug/1151703
 
 
+def add_checkpoint(session, model_name, record_id, backend_id):
+    return checkpoint.add_checkpoint(session, model_name, record_id,
+                                     'magento.backend', backend_id)
