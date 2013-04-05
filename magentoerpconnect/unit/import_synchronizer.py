@@ -179,7 +179,6 @@ class SimpleRecordImport(MagentoImportSynchronizer):
     """ Import one Magento Website """
     _model_name = [
             'magento.website',
-            'magento.storeview',
             'magento.res.partner.category',
         ]
 
@@ -237,10 +236,12 @@ class TranslationImporter(ImportSynchronizer):
 
 @magento
 class AddCheckpoint(ConnectorUnit):
+    """ Add a connector.checkpoint on the underlying model
+    (not the magento.* but the _inherits'ed model) """
 
     _model_name = ['magento.product.product',
                    'magento.product.category',
-                   'sale.shop',
+                   'magento.store',
                    ]
 
     def run(self, openerp_binding_id):
