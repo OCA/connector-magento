@@ -28,6 +28,7 @@ from .unit.backend_adapter import GenericAdapter
 from .unit.import_synchronizer import (DelayedBatchImport,
                                        MagentoImportSynchronizer,
                                        TranslationImporter,
+                                       AddCheckpoint,
                                        )
 from .backend import magento
 
@@ -178,6 +179,12 @@ class ProductCategoryImport(MagentoImportSynchronizer):
             if binder.to_openerp(parent_id) is None:
                 importer = env.get_connector_unit(MagentoImportSynchronizer)
                 importer.run(parent_id)
+
+    def _create(self, data):
+        openerp_binding_id = super(ProductCategoryImport, self)._create(data)
+        checkpoint = self.get_connector_unit_for_model(AddCheckpoint)
+        checkpoint.run(openerp_binding_id)
+        return openerp_binding_id
 
     def _after_import(self, openerp_id):
         """ Hook called at the end of the import """

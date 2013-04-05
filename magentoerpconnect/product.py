@@ -39,6 +39,7 @@ from .unit.backend_adapter import GenericAdapter
 from .unit.import_synchronizer import (DelayedBatchImport,
                                        MagentoImportSynchronizer,
                                        TranslationImporter,
+                                       AddCheckpoint,
                                        )
 from .connector import get_environment
 from .consumer import magento_consumer
@@ -300,6 +301,12 @@ class ProductImport(MagentoImportSynchronizer):
         Raise `InvalidDataError`
         """
         self._validate_product_type(data)
+
+    def _create(self, data):
+        openerp_binding_id = super(ProductImport, self)._create(data)
+        checkpoint = self.get_connector_unit_for_model(AddCheckpoint)
+        checkpoint.run(openerp_binding_id)
+        return openerp_binding_id
 
     def _after_import(self, openerp_id):
         """ Hook called at the end of the import """

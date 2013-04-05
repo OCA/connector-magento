@@ -21,9 +21,10 @@
 
 import logging
 from openerp.addons.connector.queue.job import job
+from openerp.addons.connector.connector import ConnectorUnit
 from openerp.addons.connector.unit.synchronizer import ImportSynchronizer
 from ..backend import magento
-from ..connector import get_environment
+from ..connector import get_environment, add_checkpoint
 
 _logger = logging.getLogger(__name__)
 
@@ -178,8 +179,6 @@ class SimpleRecordImport(MagentoImportSynchronizer):
     """ Import one Magento Website """
     _model_name = [
             'magento.website',
-            'magento.store',
-            'magento.storeview',
             'magento.res.partner.category',
         ]
 
@@ -233,6 +232,26 @@ class TranslationImporter(ImportSynchronizer):
                              openerp_id,
                              data,
                              context=context)
+
+
+@magento
+class AddCheckpoint(ConnectorUnit):
+    """ Add a connector.checkpoint on the underlying model
+    (not the magento.* but the _inherits'ed model) """
+
+    _model_name = ['magento.product.product',
+                   'magento.product.category',
+                   'magento.store',
+                   ]
+
+    def run(self, openerp_binding_id):
+        binding = self.session.browse(self.model._name,
+                                      openerp_binding_id)
+        record = binding.openerp_id
+        add_checkpoint(self.session,
+                       record._model._name,
+                       record.id,
+                       self.backend_record.id)
 
 
 @job

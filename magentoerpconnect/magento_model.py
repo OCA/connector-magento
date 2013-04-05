@@ -26,16 +26,20 @@ from openerp.osv import fields, orm
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 import openerp.addons.connector as connector
 from openerp.addons.connector.session import ConnectorSession
+from openerp.addons.connector.connector import ConnectorUnit
 from openerp.addons.connector.unit.mapper import (mapping,
                                                   ImportMapper
                                                   )
 from .unit.backend_adapter import GenericAdapter
 from .unit.import_synchronizer import (import_batch,
                                        DirectBatchImport,
+                                       MagentoImportSynchronizer,
+                                       AddCheckpoint,
                                        )
 from .partner import partner_import_batch
 from .sale import sale_order_import_batch
 from .backend import magento
+from .connector import add_checkpoint
 
 _logger = logging.getLogger(__name__)
 
@@ -505,3 +509,43 @@ class StoreviewImportMapper(ImportMapper):
         binder = self.get_binder_for_model('magento.store')
         openerp_id = binder.to_openerp(record['group_id'])
         return {'store_id': openerp_id}
+
+
+@magento
+class StoreImport(MagentoImportSynchronizer):
+    """ Import one Magento Store (create a sale.shop via _inherits) """
+    _model_name = ['magento.store',
+                   ]
+
+    def _create(self, data):
+        openerp_binding_id = super(StoreImport, self)._create(data)
+        checkpoint = self.get_connector_unit_for_model(AddCheckpoint)
+        checkpoint.run(openerp_binding_id)
+        return openerp_binding_id
+
+
+@magento
+class StoreviewImport(MagentoImportSynchronizer):
+    """ Import one Magento Storeview """
+    _model_name = ['magento.storeview',
+                   ]
+
+    def _create(self, data):
+        openerp_binding_id = super(StoreviewImport, self)._create(data)
+        checkpoint = self.get_connector_unit_for_model(StoreViewAddCheckpoint)
+        checkpoint.run(openerp_binding_id)
+        return openerp_binding_id
+
+
+@magento
+class StoreViewAddCheckpoint(ConnectorUnit):
+    """ Add a connector.checkpoint on the magento.storeview
+    record """
+    _model_name = ['magento.storeview',
+                   ]
+
+    def run(self, openerp_binding_id):
+        add_checkpoint(self.session,
+                       self.model._name,
+                       openerp_binding_id,
+                       self.backend_record.id)
