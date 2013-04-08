@@ -57,8 +57,8 @@ class MagentoExportSynchronizer(ExportSynchronizer):
         return
 
     def _map_data(self, fields=None):
-        """ Return the external record converted to OpenERP """
-        return self.mapper.convert(self.openerp_record, fields=fields)
+        """ Convert the external record to OpenERP """
+        self.mapper.convert(self.openerp_record, fields=fields)
 
     def _validate_data(self, data):
         """ Check if the values to import are correct
@@ -94,26 +94,30 @@ class MagentoExportSynchronizer(ExportSynchronizer):
         if self._has_to_skip():
             return
 
-        # import the missing linked resources
+        # export the missing linked resources
         self._export_dependencies()
 
-        record = self._map_data(fields=fields)
-        if not record:
-            raise NothingToDoJob
-
-        # special check on data before import
-        self._validate_data(record)
+        self._map_data(fields=fields)
 
         if magento_id:
+            record = self.mapper.data
+            if not record:
+                raise NothingToDoJob
+            # special check on data before import
+            self._validate_data(record)
             # FIXME magento record could have been deleted,
             # we would need to create the record
             # (with all fields)
             self._update(magento_id, record)
         else:
+            record = self.mapper.data_for_create
+            if not record:
+                raise NothingToDoJob
+            # special check on data before import
+            self._validate_data(record)
             magento_id = self._create(record)
 
         self.binder.bind(magento_id, self.openerp_id)
-        # TODO: check if strings are translated, fear that they aren't
         return _('Record exported with ID %s on Magento.') % magento_id
 
 

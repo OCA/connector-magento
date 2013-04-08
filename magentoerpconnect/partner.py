@@ -373,18 +373,25 @@ class AddressImport(MagentoImportSynchronizer):
         self.link_with_partner = link_with_partner
         super(AddressImport, self).run(magento_id)
 
-    def _map_data(self):
-        """ Return the external record converted to OpenERP """
-        data = super(AddressImport, self)._map_data()
+    def _update_special_fields(self, data):
         if self.link_with_partner:
+            # it won't be imported as an address,
+            # but will be linked with the main res.partner
             data['openerp_id'] = self.partner_id
         else:
             data['parent_id'] = self.partner_id
             partner = self.session.browse('res.partner',
                                           self.partner_id)
-            data['lang'] = partner.lang
+            data['lang'] = partner.lang.id
         data['magento_partner_id'] = self.magento_partner_id
-        return data
+
+    def _create(self, data):
+        data = self._update_special_fields(data)
+        return super(AddressImport, self)._create(data)
+
+    def _update(self, openerp_id, data):
+        data = self._update_special_fields(data)
+        return super(AddressImport, self)._update(openerp_id, data)
 
 
 @magento
