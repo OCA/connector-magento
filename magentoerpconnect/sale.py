@@ -382,7 +382,8 @@ class SaleOrderImport(MagentoImportSynchronizer):
             }
             mapper = self.get_connector_unit_for_model(ImportMapper,
                                                       'magento.res.partner')
-            oe_record = mapper.convert(customer_record).data_for_create
+            mapper.convert(customer_record)
+            oe_record = mapper.data_for_create
             oe_record['guest_customer'] = True
             partner_bind_id = sess.create('magento.res.partner', oe_record)
         else:
@@ -423,7 +424,8 @@ class SaleOrderImport(MagentoImportSynchronizer):
                                                        'magento.address')
 
         def create_address(address_record):
-            oe_address = addr_mapper.convert(address_record).data_for_create
+            addr_mapper.convert(address_record)
+            oe_address = addr_mapper.data_for_create
             oe_address.update(addresses_defaults)
             address_bind_id = sess.create('magento.address', oe_address)
             return sess.read('magento.address',

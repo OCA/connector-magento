@@ -223,7 +223,8 @@ class TranslationImporter(ImportSynchronizer):
 
         for storeview in lang_storeviews:
             lang_record = self._get_magento_data(storeview.magento_id)
-            record = self.mapper.convert(lang_record).data
+            self.mapper.convert(lang_record)
+            record = self.mapper.data
 
             data = dict((field, value) for field, value in record.iteritems()
                         if field in translatable_fields)
