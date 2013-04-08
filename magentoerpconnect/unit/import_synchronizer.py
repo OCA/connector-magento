@@ -55,8 +55,9 @@ class MagentoImportSynchronizer(ImportSynchronizer):
         return
 
     def _map_data(self):
-        """ Return the external record converted to OpenERP """
-        return self.mapper.convert(self.magento_record)
+        """ Call the convert on the Mapper so the converted record can
+        be obtained using mapper.data or mapper.data_for_create"""
+        self.mapper.convert(self.magento_record)
 
     def _validate_data(self, data):
         """ Check if the values to import are correct
@@ -115,16 +116,18 @@ class MagentoImportSynchronizer(ImportSynchronizer):
         # import the missing linked resources
         self._import_dependencies()
 
-        record = self._map_data()
-
-        # special check on data before import
-        self._validate_data(record)
+        self._map_data()
 
         openerp_id = self._get_openerp_id()
-
         if openerp_id:
+            record = self.mapper.data
+            # special check on data before import
+            self._validate_data(record)
             self._update(openerp_id, record)
         else:
+            record = self.mapper.data_for_create
+            # special check on data before import
+            self._validate_data(record)
             openerp_id = self._create(record)
 
         self.binder.bind(self.magento_id, openerp_id)
@@ -220,7 +223,7 @@ class TranslationImporter(ImportSynchronizer):
 
         for storeview in lang_storeviews:
             lang_record = self._get_magento_data(storeview.magento_id)
-            record = self.mapper.convert(lang_record)
+            record = self.mapper.convert(lang_record).data
 
             data = dict((field, value) for field, value in record.iteritems()
                         if field in translatable_fields)

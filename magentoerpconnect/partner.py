@@ -25,6 +25,7 @@ from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.exception import MappingError
 from openerp.addons.connector.unit.backend_adapter import BackendAdapter
 from openerp.addons.connector.unit.mapper import (mapping,
+                                                  only_create,
                                                   ImportMapper
                                                   )
 from .unit.backend_adapter import GenericAdapter
@@ -340,8 +341,27 @@ class PartnerImportMapper(ImportMapper):
         if openerp_id:
             storeview = self.session.browse('magento.storeview',
                                             openerp_id)
-            lang = storeview.lang_id and storeview.lang_id.code
-        return {'lang': lang}
+            if storeview.lang_id:
+                return {'lang': storeview.lang_id.code}
+
+    @only_create
+    @mapping
+    def customer(self, record):
+        return {'customer': True}
+
+    @only_create
+    @mapping
+    def openerp_id(self, record):
+        """ Will bind the customer on a existing partner
+        with the same email """
+        sess = self.session
+        partner_ids = sess.search('res.partner',
+                                  [('email', '=', record['email']),
+                                   ('customer', '=', True),
+                                   # FIXME once it has been changed in openerp
+                                   ('is_company', '=', True)])
+        if partner_ids:
+            return {'openerp_id': partner_ids[0]}
 
 
 @magento
@@ -373,10 +393,10 @@ class AddressImport(MagentoImportSynchronizer):
         self.link_with_partner = link_with_partner
         super(AddressImport, self).run(magento_id)
 
-    def _map_data(self):
-        """ Return the external record converted to OpenERP """
-        data = super(AddressImport, self)._map_data()
+    def _update_special_fields(self, data):
         if self.link_with_partner:
+            # it won't be imported as an address,
+            # but will be linked with the main res.partner
             data['openerp_id'] = self.partner_id
         else:
             data['parent_id'] = self.partner_id
@@ -385,6 +405,14 @@ class AddressImport(MagentoImportSynchronizer):
             data['lang'] = partner.lang
         data['magento_partner_id'] = self.magento_partner_id
         return data
+
+    def _create(self, data):
+        data = self._update_special_fields(data)
+        return super(AddressImport, self)._create(data)
+
+    def _update(self, openerp_id, data):
+        data = self._update_special_fields(data)
+        return super(AddressImport, self)._update(openerp_id, data)
 
 
 @magento

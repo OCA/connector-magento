@@ -382,7 +382,7 @@ class SaleOrderImport(MagentoImportSynchronizer):
             }
             mapper = self.get_connector_unit_for_model(ImportMapper,
                                                       'magento.res.partner')
-            oe_record = mapper.convert(customer_record)
+            oe_record = mapper.convert(customer_record).data_for_create
             oe_record['guest_customer'] = True
             partner_bind_id = sess.create('magento.res.partner', oe_record)
         else:
@@ -423,7 +423,7 @@ class SaleOrderImport(MagentoImportSynchronizer):
                                                        'magento.address')
 
         def create_address(address_record):
-            oe_address = addr_mapper.convert(address_record)
+            oe_address = addr_mapper.convert(address_record).data_for_create
             oe_address.update(addresses_defaults)
             address_bind_id = sess.create('magento.address', oe_address)
             return sess.read('magento.address',
@@ -440,9 +440,7 @@ class SaleOrderImport(MagentoImportSynchronizer):
         self.partner_invoice_id = billing_id
         self.partner_shipping_id = shipping_id or billing_id
 
-    def _map_data(self):
-        """ Return the external record converted to OpenERP """
-        data = super(SaleOrderImport, self)._map_data()
+    def _update_special_fields(self, data):
         assert self.partner_id, "self.partner_id should have been defined in SaleOrderImport._import_addresses"
         assert self.partner_invoice_id, "self.partner_id should have been defined in SaleOrderImport._import_addresses"
         assert self.partner_shipping_id, "self.partner_id should have been defined in SaleOrderImport._import_addresses"
@@ -450,6 +448,14 @@ class SaleOrderImport(MagentoImportSynchronizer):
         data['partner_invoice_id'] = self.partner_invoice_id
         data['partner_shipping_id'] = self.partner_shipping_id
         return data
+
+    def _create(self, data):
+        data = self._update_special_fields(data)
+        return super(SaleOrderImport, self)._create(data)
+
+    def _update(self, openerp_id, data):
+        data = self._update_special_fields(data)
+        return super(SaleOrderImport, self)._update(openerp_id, data)
 
     def _import_dependencies(self):
         record = self.magento_record
