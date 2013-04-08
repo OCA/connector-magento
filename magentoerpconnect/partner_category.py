@@ -21,6 +21,7 @@
 
 from openerp.osv import fields, orm
 from openerp.addons.connector.unit.mapper import (mapping,
+                                                  only_create,
                                                   ImportMapper
                                                   )
 from .unit.backend_adapter import GenericAdapter
@@ -100,3 +101,13 @@ class PartnerCategoryImportMapper(ImportMapper):
     @mapping
     def backend_id(self, record):
         return {'backend_id': self.backend_record.id}
+
+    @only_create
+    @mapping
+    def openerp_id(self, record):
+        """ Will bind the category on a existing one with the same name."""
+        sess = self.session
+        tag_ids = sess.search('res.partner.category',
+                              [('name', '=', record['customer_group_code'])])
+        if tag_ids:
+            return {'openerp_id': tag_ids[0]}
