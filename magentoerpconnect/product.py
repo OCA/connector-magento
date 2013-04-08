@@ -249,7 +249,7 @@ class CatalogImageImporter(ImportSynchronizer):
         binary = urllib2.urlopen(url)
         return binary.read()
 
-    def run(self, magento_id, openerp_id):
+    def run(self, magento_id, binding_id):
         self.magento_id = magento_id
         images = self._get_images()
         main_image_data = self._get_main_image_data(images)
@@ -257,7 +257,7 @@ class CatalogImageImporter(ImportSynchronizer):
             return
         binary = self._get_binary_image(main_image_data)
         self.session.write(self.model._name,
-                           openerp_id,
+                           binding_id,
                            {'image': base64.b64encode(binary)})
 
 
@@ -308,14 +308,14 @@ class ProductImport(MagentoImportSynchronizer):
         checkpoint.run(openerp_binding_id)
         return openerp_binding_id
 
-    def _after_import(self, openerp_id):
+    def _after_import(self, binding_id):
         """ Hook called at the end of the import """
         translation_importer = self.get_connector_unit_for_model(
             TranslationImporter, self.model._name)
-        translation_importer.run(self.magento_id, openerp_id)
+        translation_importer.run(self.magento_id, binding_id)
         image_importer = self.get_connector_unit_for_model(
             CatalogImageImporter, self.model._name)
-        image_importer.run(self.magento_id, openerp_id)
+        image_importer.run(self.magento_id, binding_id)
 
 
 @magento
@@ -420,9 +420,9 @@ class ProductInventoryExport(ExportSynchronizer):
             })
         return result
 
-    def run(self, openerp_id, fields):
+    def run(self, binding_id, fields):
         """ Export the product inventory to Magento """
-        product = self.session.browse(self.model._name, openerp_id)
+        product = self.session.browse(self.model._name, binding_id)
         binder = self.get_binder_for_model()
         magento_id = binder.to_backend(product.id)
         data = self._get_data(product, fields)

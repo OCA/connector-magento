@@ -293,9 +293,9 @@ class SaleOrderImport(MagentoImportSynchronizer):
         rules = self.get_connector_unit_for_model(SaleImportRule)
         rules.check(self.magento_record)
 
-    def _create_payment(self, openerp_id):
+    def _create_payment(self, binding_id):
         sess = self.session
-        mag_sale = sess.browse(self.model._name, openerp_id)
+        mag_sale = sess.browse(self.model._name, binding_id)
         if not mag_sale.payment_method_id.journal_id:
             return
         sale_obj = sess.pool['sale.order']
@@ -306,8 +306,8 @@ class SaleOrderImport(MagentoImportSynchronizer):
             sale_obj.automatic_payment(cr, uid, mag_sale.openerp_id.id,
                                        amount, context=context)
 
-    def _after_import(self, openerp_id):
-        self._create_payment(openerp_id)
+    def _after_import(self, binding_id):
+        self._create_payment(binding_id)
 
     def _import_addresses(self):
         record = self.magento_record
@@ -453,9 +453,9 @@ class SaleOrderImport(MagentoImportSynchronizer):
         data = self._update_special_fields(data)
         return super(SaleOrderImport, self)._create(data)
 
-    def _update(self, openerp_id, data):
+    def _update(self, binding_id, data):
         data = self._update_special_fields(data)
-        return super(SaleOrderImport, self)._update(openerp_id, data)
+        return super(SaleOrderImport, self)._update(binding_id, data)
 
     def _import_dependencies(self):
         record = self.magento_record

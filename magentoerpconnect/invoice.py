@@ -142,12 +142,12 @@ class MagentoInvoiceSynchronizer(ExportSynchronizer):
             item_qty[item_id] += line.quantity
         return item_qty
 
-    def run(self, openerp_id):
+    def run(self, binding_id):
         """
         Run the job to export the paid invoice
         """
         sess = self.session
-        invoice = sess.browse(self.model._name, openerp_id)
+        invoice = sess.browse(self.model._name, binding_id)
 
         magento_order = invoice.magento_order_id
         magento_stores = magento_order.shop_id.magento_bind_ids
@@ -175,7 +175,7 @@ class MagentoInvoiceSynchronizer(ExportSynchronizer):
             else:
                 raise
 
-        self.binder.bind(magento_id, openerp_id)
+        self.binder.bind(magento_id, binding_id)
 
     def _get_existing_invoice(self, magento_order):
         invoices = self.backend_adapter.search_read(

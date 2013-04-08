@@ -241,7 +241,7 @@ class PartnerImport(MagentoImportSynchronizer):
                                                          'magento.res.partner.category')
             importer.run(record['group_id'])
 
-    def _after_import(self, magento_res_partner_openerp_id):
+    def _after_import(self, partner_binding_id):
         """ Import the addresses """
         addresses_adapter = self.get_connector_unit_for_model(BackendAdapter,
                                                               'magento.address')
@@ -253,10 +253,10 @@ class PartnerImport(MagentoImportSynchronizer):
                                                      'magento.address')
         partner_row = self.model.read(self.session.cr,
                                       self.session.uid,
-                                      magento_res_partner_openerp_id,
+                                      partner_binding_id,
                                       ['openerp_id'],
                                       context=self.session.context)
-        res_partner_openerp_id = partner_row['openerp_id'][0]
+        partner_openerp_id = partner_row['openerp_id'][0]
         mag_addresses = {} # mag_address_id -> True if address is linked to existing partner,
                            #                   False otherwise
         if len(mag_address_ids) == 1:
@@ -275,8 +275,8 @@ class PartnerImport(MagentoImportSynchronizer):
                 mag_addresses[min(mag_addresses)] = True
         for address_id, to_link in mag_addresses.iteritems():
             importer.run(address_id,
-                         magento_res_partner_openerp_id,
-                         res_partner_openerp_id,
+                         partner_binding_id,
+                         partner_openerp_id,
                          to_link)
 
 
@@ -336,11 +336,11 @@ class PartnerImportMapper(ImportMapper):
     @mapping
     def lang(self, record):
         binder = self.get_binder_for_model('magento.storeview')
-        openerp_id = binder.to_openerp(record['store_id'])
+        binding_id = binder.to_openerp(record['store_id'])
         lang = False
-        if openerp_id:
+        if binding_id:
             storeview = self.session.browse('magento.storeview',
-                                            openerp_id)
+                                            binding_id)
             if storeview.lang_id:
                 return {'lang': storeview.lang_id.code}
 
@@ -410,9 +410,9 @@ class AddressImport(MagentoImportSynchronizer):
         data = self._update_special_fields(data)
         return super(AddressImport, self)._create(data)
 
-    def _update(self, openerp_id, data):
+    def _update(self, binding_id, data):
         data = self._update_special_fields(data)
-        return super(AddressImport, self)._update(openerp_id, data)
+        return super(AddressImport, self)._update(binding_id, data)
 
 
 @magento

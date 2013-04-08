@@ -161,11 +161,11 @@ class MagentoPickingExport(ExportSynchronizer):
         magento_shop = picking.sale_id.shop_id.magento_bind_ids[0]
         return magento_shop.send_picking_done_mail
 
-    def run(self, openerp_id):
+    def run(self, binding_id):
         """
         Export the picking to Magento
         """
-        picking = self.session.browse(self.model._name, openerp_id)
+        picking = self.session.browse(self.model._name, binding_id)
         picking_method = picking.picking_method
         if picking_method == 'complete':
             args = self._get_args(picking)
@@ -191,7 +191,7 @@ class MagentoPickingExport(ExportSynchronizer):
             else:
                 raise
         else:
-            self.binder.bind(magento_id, openerp_id)
+            self.binder.bind(magento_id, binding_id)
 
 
 @on_picking_out_done

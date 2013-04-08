@@ -66,10 +66,10 @@ class MagentoTrackingExport(ExportSynchronizer):
                                   'allowed': allowed_carriers,
                                   'code': carrier.magento_carrier_code})
 
-    def run(self, openerp_id):
+    def run(self, binding_id):
         """ Export the tracking number of a picking to Magento """
         # verify the picking is done + magento id exists
-        picking = self.session.browse(self.model._name, openerp_id)
+        picking = self.session.browse(self.model._name, binding_id)
         carrier = picking.carrier_id
         if not carrier:
             return FailedJobError('The carrier is missing on the picking %s.' %

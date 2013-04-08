@@ -69,8 +69,8 @@ class MagentoImportSynchronizer(ImportSynchronizer):
         """
         return
 
-    def _get_openerp_id(self):
-        """Return the openerp id from the magento id"""
+    def _get_binding_id(self):
+        """Return the binding id from the magento id"""
         return self.binder.to_openerp(self.magento_id)
 
     def _context(self):
@@ -80,26 +80,26 @@ class MagentoImportSynchronizer(ImportSynchronizer):
 
     def _create(self, data):
         """ Create the OpenERP record """
-        openerp_id = self.model.create(self.session.cr,
+        binding_id = self.model.create(self.session.cr,
                                        self.session.uid,
                                        data,
                                        context=self._context())
         _logger.debug('%s %d created from magento %s',
-                      self.model._name, openerp_id, self.magento_id)
-        return openerp_id
+                      self.model._name, binding_id, self.magento_id)
+        return binding_id
 
-    def _update(self, openerp_id, data):
+    def _update(self, binding_id, data):
         """ Update an OpenERP record """
         self.model.write(self.session.cr,
                          self.session.uid,
-                         openerp_id,
+                         binding_id,
                          data,
                          context=self._context())
         _logger.debug('%s %d updated from magento %s',
-                      self.model._name, openerp_id, self.magento_id)
+                      self.model._name, binding_id, self.magento_id)
         return
 
-    def _after_import(self, openerp_id):
+    def _after_import(self, binding_id):
         """ Hook called at the end of the import """
         return
 
@@ -118,21 +118,21 @@ class MagentoImportSynchronizer(ImportSynchronizer):
 
         self._map_data()
 
-        openerp_id = self._get_openerp_id()
-        if openerp_id:
+        binding_id = self._get_binding_id()
+        if binding_id:
             record = self.mapper.data
             # special check on data before import
             self._validate_data(record)
-            self._update(openerp_id, record)
+            self._update(binding_id, record)
         else:
             record = self.mapper.data_for_create
             # special check on data before import
             self._validate_data(record)
-            openerp_id = self._create(record)
+            binding_id = self._create(record)
 
-        self.binder.bind(self.magento_id, openerp_id)
+        self.binder.bind(self.magento_id, binding_id)
 
-        self._after_import(openerp_id)
+        self._after_import(binding_id)
 
 
 class BatchImportSynchronizer(ImportSynchronizer):
@@ -202,7 +202,7 @@ class TranslationImporter(ImportSynchronizer):
         """ Return the raw Magento data for ``self.magento_id`` """
         return self.backend_adapter.read(self.magento_id, storeview_id)
 
-    def run(self, magento_id, openerp_id):
+    def run(self, magento_id, binding_id):
         self.magento_id = magento_id
         session = self.session
         storeview_ids = session.search(
@@ -232,7 +232,7 @@ class TranslationImporter(ImportSynchronizer):
             context['lang'] = storeview.lang_id.code
             self.model.write(session.cr,
                              session.uid,
-                             openerp_id,
+                             binding_id,
                              data,
                              context=context)
 

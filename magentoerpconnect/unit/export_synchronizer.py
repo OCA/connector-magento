@@ -38,15 +38,15 @@ class MagentoExportSynchronizer(ExportSynchronizer):
         :type environment: :py:class:`connector.connector.Environment`
         """
         super(MagentoExportSynchronizer, self).__init__(environment)
-        self.openerp_id = None
+        self.binding_id = None
         self.openerp_record = None
 
     def _get_openerp_data(self):
-        """ Return the raw OpenERP data for ``self.openerp_id`` """
+        """ Return the raw OpenERP data for ``self.binding_id`` """
         cr, uid, context = (self.session.cr,
                             self.session.uid,
                             self.session.context)
-        return self.model.browse(cr, uid, self.openerp_id, context=context)
+        return self.model.browse(cr, uid, self.binding_id, context=context)
 
     def _has_to_skip(self):
         """ Return True if the import can be skipped """
@@ -79,15 +79,15 @@ class MagentoExportSynchronizer(ExportSynchronizer):
         """ Update an Magento record """
         self.backend_adapter.write(magento_id, data)
 
-    def run(self, openerp_id, fields=None):
+    def run(self, binding_id, fields=None):
         """ Run the synchronization
 
-        :param openerp_id: identifier of the record
+        :param binding_id: identifier of the record
         """
-        self.openerp_id = openerp_id
+        self.binding_id = binding_id
         self.openerp_record = self._get_openerp_data()
 
-        magento_id = self.binder.to_backend(self.openerp_id)
+        magento_id = self.binder.to_backend(self.binding_id)
         if not magento_id:
             fields = None  # should be created with all the fields
 
@@ -117,14 +117,14 @@ class MagentoExportSynchronizer(ExportSynchronizer):
             self._validate_data(record)
             magento_id = self._create(record)
 
-        self.binder.bind(magento_id, self.openerp_id)
+        self.binder.bind(magento_id, self.binding_id)
         return _('Record exported with ID %s on Magento.') % magento_id
 
 
 @job
-def export_record(session, model_name, openerp_id, fields=None):
+def export_record(session, model_name, binding_id, fields=None):
     """ Export a record on Magento """
-    record = session.browse(model_name, openerp_id)
+    record = session.browse(model_name, binding_id)
     env = get_environment(session, model_name, record.backend_id.id)
     exporter = env.get_connector_unit(MagentoExportSynchronizer)
-    return exporter.run(openerp_id, fields=fields)
+    return exporter.run(binding_id, fields=fields)
