@@ -28,6 +28,7 @@ import openerp.addons.connector as connector
 from openerp.addons.connector.session import ConnectorSession
 from openerp.addons.connector.connector import ConnectorUnit
 from openerp.addons.connector.unit.mapper import (mapping,
+                                                  only_create,
                                                   ImportMapper
                                                   )
 from .unit.backend_adapter import GenericAdapter
@@ -344,19 +345,6 @@ class magento_store(orm.Model):
                  "an email notification on Magento side?"),
     }
 
-    def create(self, cr, uid, vals, context=None):
-        """ Assign the warehouse of the backend by default
-        if no warehouse is specified."""
-        if vals.get('warehouse_id') is None and vals.get('website_id'):
-            website_obj = self.pool.get('magento.website')
-            website = website_obj.browse(cr, uid,
-                                         vals['website_id'], context=context)
-            vals['warehouse_id'] = website.backend_id.warehouse_id.id
-
-        # if backend_id is missing, we call super anyhow so it
-        # will raise the required field error
-        return super(magento_store, self).create(cr, uid, vals, context=context)
-
     _sql_constraints = [
         ('magento_uniq', 'unique(backend_id, magento_id)',
          'A store with the same ID on Magento already exists.'),
@@ -491,6 +479,11 @@ class StoreImportMapper(ImportMapper):
         binder = self.get_binder_for_model('magento.website')
         openerp_id = binder.to_openerp(record['website_id'])
         return {'website_id': openerp_id}
+
+    @mapping
+    @only_create
+    def warehouse_id(self, record):
+        return {'warehouse_id': self.backend_record.warehouse_id.id}
 
 
 @magento
