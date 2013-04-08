@@ -382,8 +382,9 @@ class AddressImport(MagentoImportSynchronizer):
             data['parent_id'] = self.partner_id
             partner = self.session.browse('res.partner',
                                           self.partner_id)
-            data['lang'] = partner.lang.id
+            data['lang'] = partner.lang
         data['magento_partner_id'] = self.magento_partner_id
+        return data
 
     def _create(self, data):
         data = self._update_special_fields(data)
