@@ -40,7 +40,7 @@ ADMIN_USER_ID = common.ADMIN_USER_ID
 def get_magento_response(method, arguments):
     key = call_to_key(method, arguments)
     assert key in magento_base_responses, (
-        "%s not found in magento responses" % key)
+        "%s not found in magento responses" % str(key))
     return magento_base_responses[key]
 
 
@@ -102,7 +102,7 @@ class test_import_magento(common.SingleTransactionCase):
                                        [('backend_id', '=', self.backend_id)])
         self.assertEqual(len(store_ids), 2)
 
-        storeview_model = self.registry('magento.storeviewview')
+        storeview_model = self.registry('magento.storeview')
         storeview_ids = storeview_model.search(self.cr,
                                                self.uid,
                                                [('backend_id', '=', self.backend_id)])
@@ -114,49 +114,19 @@ class test_import_magento(common.SingleTransactionCase):
     def test_10_import_product_category(self):
         backend_id = self.backend_id
 
-        with mock.patch('magento.API') as API:
-            api_mock = mock.MagicMock(name='magento.api')
-            API.return_value = api_mock
-            api_mock.__enter__.return_value = api_mock
-            api_mock.call.side_effect = magento_responses
+        with mock_api():
             import_record(self.session, 'magento.product.category',
-                          backend_id, 1)
+                          backend_id, '1')
             import_record(self.session, 'magento.product.category',
-                          backend_id, 3)
+                          backend_id, '3')
             import_record(self.session, 'magento.product.category',
-                          backend_id, 10)
+                          backend_id, '10')
             import_record(self.session, 'magento.product.category',
-                          backend_id, 13)
+                          backend_id, '13')
+            import_record(self.session, 'magento.product.category',
+                          backend_id, '12')
 
         category_model = self.registry('magento.product.category')
         category_ids = category_model.search(
                 self.cr, self.uid, [('backend_id', '=', backend_id)])
-        self.assertEqual(len(category_ids), 4)
-        category_ids.sort()
-        first_category = category_model.browse(self.cr,
-                                               self.uid,
-                                               category_ids[0])
-        self.assertEqual(first_category.name, 'Category parent test')
-        self.assertEqual(first_category.description, 'Description 1 Test')
-
-        self.assertEqual(len(first_category.child_id), 1)
-
-        category_lvl1 = first_category.child_id[0]
-
-        self.assertEqual(category_lvl1.name, 'Category child level 1 test')
-        self.assertEqual(category_lvl1.description, 'Description 2 Test')
-        self.assertEqual(category_lvl1.parent_id, fisrt_category.openerp_id)
-        self.assertEqual(category_lvl1.magento_parent_id, first_category.id)
-        self.assertEqual(len(category_lvl1.child_id), 2)
-
-        child1, child2 = category_lvl1.child_id
-
-        self.assertEqual(child1.name, 'Category child 1 level 2 test')
-        self.assertEqual(child1.description, 'Description 3 Test')
-        self.assertEqual(child1.parent_id, category_lvl1.openerp_id)
-        self.assertEqual(child1.magento_parent_id, category_lvl1.id)
-
-        self.assertEqual(child2.name, 'Category child 2 level 2 test')
-        self.assertEqual(child2.description, 'Description 4 Test')
-        self.assertEqual(child2.parent_id, category_lvl1.openerp_id)
-        self.assertEqual(child2.magento_parent_id, category_lvl1.id)
+        self.assertEqual(len(category_ids), 5)
