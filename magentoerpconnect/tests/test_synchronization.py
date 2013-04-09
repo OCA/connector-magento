@@ -55,7 +55,11 @@ def mock_api():
 
 
 class test_import_magento(common.SingleTransactionCase):
-    """ Test the imports from a Magento Mock """
+    """ Test the imports from a Magento Mock.
+
+    The data returned by Magento are those created for the
+    demo version of Magento on a standard 1.7 version.
+    """
 
     def setUp(self):
         super(test_import_magento, self).setUp()
@@ -103,6 +107,8 @@ class test_import_magento(common.SingleTransactionCase):
                                                self.uid,
                                                [('backend_id', '=', self.backend_id)])
         self.assertEqual(len(storeview_ids), 4)
+
+        # TODO; install & configure languages on storeviews
 
 
     def test_10_import_product_category(self):
