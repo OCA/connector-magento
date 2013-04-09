@@ -198,11 +198,9 @@ class PartnerAdapter(GenericAdapter):
         if magento_website_ids is not None:
             filters['website_id'] = {'in': magento_website_ids}
 
-        with self._magento_api() as api:
-            # the search method is on ol_customer instead of customer
-            return api.call('ol_customer.search',
-                            [filters] if filters else [{}])
-        return []
+        # the search method is on ol_customer instead of customer
+        return self._call('ol_customer.search',
+                          [filters] if filters else [{}])
 
 
 @magento
@@ -375,11 +373,9 @@ class AddressAdapter(GenericAdapter):
 
         :rtype: list
         """
-        with self._magento_api() as api:
-            return [int(row['customer_address_id']) for row
-                       in api.call('%s.list' % self._magento_model,
-                                   [filters] if filters else [{}])]
-        return []
+        return [int(row['customer_address_id']) for row
+                in self._call('%s.list' % self._magento_model,
+                              [filters] if filters else [{}])]
 
 
 @magento

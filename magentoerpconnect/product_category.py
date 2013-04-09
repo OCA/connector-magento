@@ -91,21 +91,17 @@ class ProductCategoryAdapter(GenericAdapter):
             # updated_at include the created records
             filters['updated_at'] = {'from': from_date.strftime('%Y/%m/%d %H:%M:%S')}
 
-        with self._magento_api() as api:
-            # the search method is on ol_customer instead of customer
-            return api.call('oerp_catalog_category.search',
-                            [filters] if filters else [{}])
-        return []
+        # the search method is on ol_customer instead of customer
+        return self._call('oerp_catalog_category.search',
+                          [filters] if filters else [{}])
 
     def read(self, id, storeview_id=None, attributes=None):
         """ Returns the information of a record
 
         :rtype: dict
         """
-        with self._magento_api() as api:
-            return api.call('%s.info' % self._magento_model,
-                             [id, storeview_id, attributes])
-        return {}
+        return self._call('%s.info' % self._magento_model,
+                          [id, storeview_id, attributes])
 
     def tree(self, parent_id=None, storeview_id=None):
         """ Returns a tree of product categories
@@ -120,10 +116,9 @@ class ProductCategoryAdapter(GenericAdapter):
             category_id = {tree['category_id']: children}
             return category_id
 
-        with self._magento_api() as api:
-            tree = api.call('%s.tree' % self._magento_model, [parent_id,
-                                                              storeview_id])
-            return filter_ids(tree)
+        tree = self._call('%s.tree' % self._magento_model,
+                          [parent_id, storeview_id])
+        return filter_ids(tree)
 
 
 @magento
