@@ -20,12 +20,10 @@
 ##############################################################################
 
 import test_synchronization
-import test_import_product
 
 fast_suite = [
 ]
 
 checks = [
     test_synchronization,
-    test_import_product,
 ]
