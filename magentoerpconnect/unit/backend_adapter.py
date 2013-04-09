@@ -31,18 +31,22 @@ _logger = logging.getLogger(__name__)
 
 recorder = {}
 
+
 def call_to_key(method, arguments):
-    if isinstance(arguments, list):
-        new_args = []
-        for arg in arguments:
-            if isinstance(arg, dict):
-                new_args.append(frozenset(arg))
-            elif isinstance(arg, list):
-                new_args.append(tuple(arg))
-            else:
-                new_args.append(arg)
-        arguments = new_args
-    return (method, tuple(arguments))
+    def freeze(arg):
+        if isinstance(arg, dict):
+            items = dict((key, freeze(value)) for key, value
+                         in arg.iteritems())
+            return frozenset(items.iteritems())
+        elif isinstance(arg, list):
+            return tuple([freeze(item) for item in arg])
+        else:
+            return arg
+
+    new_args = []
+    for arg in arguments:
+        new_args.append(freeze(arg))
+    return (method, tuple(new_args))
 
 
 def record(method, arguments, result):
