@@ -21,14 +21,14 @@
 
 from functools import wraps
 
-from openerp.addons.connector.event import (
-    on_record_write,
-    on_record_create,
-    on_record_unlink
-    )
-from openerp.addons.connector.connector import Environment, Binder
+from openerp.addons.connector.event import (on_record_write,
+                                            on_record_create,
+                                            on_record_unlink
+                                            )
+from openerp.addons.connector.connector import Binder
 from .unit.export_synchronizer import export_record
 from .unit.delete_synchronizer import export_delete_record
+from .connector import get_environment
 
 _MODEL_NAMES = ()
 _BIND_MODEL_NAMES = ()
@@ -77,7 +77,7 @@ def delay_unlink(session, model_name, record_id):
     model = session.pool.get(model_name)
     record = model.browse(session.cr, session.uid,
                           record_id, context=session.context)
-    env = Environment(record.backend_id, session, model_name)
+    env = get_environment(session, model_name, record.backend_id.id)
     binder = env.get_connector_unit(Binder)
     magento_id = binder.to_backend(record_id)
     if magento_id:

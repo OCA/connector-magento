@@ -34,13 +34,11 @@ class magentoerpconnect_installed(orm.AbstractModel):
 
 
 def get_environment(session, model_name, backend_id):
-    model = session.pool.get('magento.backend')
-    backend_record = model.browse(session.cr,
-                                  session.uid,
-                                  backend_id,
-                                  session.context)
-    return Environment(backend_record, session, model_name)
-
+    """ Create an environment to work with. """
+    backend_record = session.browse('magento.backend', backend_id)
+    env = Environment(backend_record, session, model_name)
+    env.set_lang(code=backend_record.default_lang_id.code)
+    return env
 
 class magento_binding(orm.AbstractModel):
     _name = 'magento.binding'
