@@ -12,6 +12,10 @@
                         type="object"
                         class="oe_highlight"
                         string="Synchronize Metadata"/>
+                      <button name="output_recorder"
+                        type="object"
+                        class="oe_highlight"
+                        string="Output Recorder"/>
                     </header>
                     <sheet>
                         <h1>

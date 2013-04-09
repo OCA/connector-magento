@@ -21,6 +21,7 @@
 
 import unittest2
 import mock
+from contextlib import contextmanager
 import magento
 
 from openerp.addons.connector.connector import ConnectorUnit
@@ -29,84 +30,28 @@ from openerp.addons.magentoerpconnect.unit.import_synchronizer import (
         import_record)
 from openerp.addons.connector.session import ConnectorSession
 import openerp.tests.common as common
+from .test_data import magento_base_responses
+from ..unit.backend_adapter import call_to_key
 
 DB = common.DB
 ADMIN_USER_ID = common.ADMIN_USER_ID
 
 
-def magento_responses(method, args):
-    # TODO: a dict is better
-    if method == 'ol_websites.search':
-        return [1]
-    elif method == 'ol_websites.info' and args == [1, None]:
-        return {'code': 'base',
-                'name': 'Main Website Test',
-                'website_id': '1',
-                'is_default': '1',
-                'sort_order': '0',
-                'default_group_id': '1'}
-    elif method == 'ol_groups.search':
-        return [1, 2]
-    elif method == 'ol_groups.info' and args == [1, None]:
-        return {'default_store_id': '1',
-                'group_id': '1',
-                'website_id': '1',
-                'name': 'Main Website Store Test',
-                'root_category_id': '2'}
-    elif method == 'ol_groups.info' and args == [2, None]:
-        return {'default_store_id': '2',
-                'group_id': '2',
-                'website_id': '1',
-                'name': 'Shop 2 Test',
-                'root_category_id': '2'}
-    elif method == 'ol_storeviews.search':
-        return [1, 2]
-    elif method == 'ol_storeviews.info' and args == [1, None]:
-        return {'code': 'default',
-                'store_id': '1',
-                'website_id': '1',
-                'is_active': '1',
-                'sort_order': '0',
-                'group_id': '1',
-                'name': 'Default Store View Test'}
-    elif method == 'ol_storeviews.info' and args == [2, None]:
-        return {'code': 'sv2',
-                'store_id': '2',
-                'website_id': '1',
-                'is_active': '1',
-                'sort_order': '0',
-                'group_id': '2',
-                'name': 'Store View 2 Test'}
-    elif method == 'catalog_category.tree':
-        return {'name': 'Category parent test',
-                'category_id': '1',
-                'children': [
-                    {'name': 'Child level 1 Test',
-                     'category_id': '3',
-                     'children': [
-                        {'name': 'Child 1 level 2 Test',
-                         'category_id': '10',
-                         'children': []},
-                        {'name': 'Child 2 level 2 Test',
-                         'category_id': '13',
-                         'children': []}]
-                    }]}
-    elif method == 'catalog_category.info' and args == [1, None, None]:
-        return {'description': 'Description 1 Test',
-                'name': 'Category parent test',
-                'category_id': '1',}
-    elif method == 'catalog_category.info' and args == [3, None, None]:
-        return {'description': 'Description 2 Test',
-                'name': 'Category child level 1 test',
-                'category_id': '3',}
-    elif method == 'catalog_category.info' and args == [10, None, None]:
-        return {'description': 'Description 3 Test',
-                'name': 'Category 1 child level 2 test',
-                'category_id': '10',}
-    elif method == 'catalog_category.info' and args == [13, None, None]:
-        return {'description': 'Description 1 Test',
-                'name': 'Category 2 child level 2 test',
-                'category_id': '13',}
+def get_magento_response(method, arguments):
+    key = call_to_key(method, arguments)
+    assert key in magento_base_responses, (
+        "%s not found in magento responses" % key)
+    return magento_base_responses[key]
+
+
+@contextmanager
+def mock_api():
+    with mock.patch('magento.API') as API:
+        api_mock = mock.MagicMock(name='magento.api')
+        API.return_value = api_mock
+        api_mock.__enter__.return_value = api_mock
+        api_mock.call.side_effect = get_magento_response
+        yield
 
 
 class test_import_magento(common.SingleTransactionCase):
@@ -119,52 +64,46 @@ class test_import_magento(common.SingleTransactionCase):
         backend_ids = self.backend_model.search(
                 self.cr, self.uid,
                 [('name', '=', 'Test Magento')])
-        self.backend_id = backend_ids[0] if backend_ids else None
-
-    def test_00_import_backend(self):
-        backend_id = self.backend_model.create(
+        if backend_ids:
+            self.backend_id = backend_ids[0]
+        else:
+            data_obj = self.registry('ir.model.data')
+            warehouse_id = data_obj.get_object_reference(
+                self.cr, self.uid, 'stock', 'warehouse0')[1]
+            self.backend_id = self.backend_model.create(
                 self.cr,
                 self.uid,
                 {'name': 'Test Magento',
-                 'type': 'magento',
                  'version': '1.7',
-                 'location': 'nearby',
+                 'location': 'http://anyurl',
                  'username': 'guewen',
+                 'warehouse_id': warehouse_id,
                  'password': '42'})
 
-        with mock.patch('magento.API') as API:
-            api_mock = mock.MagicMock(name='magento.api')
-            API.return_value = api_mock
-            api_mock.__enter__.return_value = api_mock
-            api_mock.call.side_effect = magento_responses
-            import_batch(self.session, 'magento.website', backend_id)
-            import_batch(self.session, 'magento.store', backend_id)
-            import_batch(self.session, 'magento.storeview', backend_id)
+    def test_00_import_backend(self):
+        with mock_api():
+            import_batch(self.session, 'magento.website', self.backend_id)
+            import_batch(self.session, 'magento.store', self.backend_id)
+            import_batch(self.session, 'magento.storeview', self.backend_id)
 
         website_model = self.registry('magento.website')
         website_ids = website_model.search(self.cr,
                                            self.uid,
-                                           [('name', '=', 'Main Website Test')])
-        self.assertEqual(len(website_ids), 1)
-        website = website_model.browse(self.cr,
+                                           [('backend_id', '=', self.backend_id)])
+        self.assertEqual(len(website_ids), 2)
+
+        store_model = self.registry('magento.store')
+        store_ids = store_model.search(self.cr,
                                        self.uid,
-                                       website_ids[0])
+                                       [('backend_id', '=', self.backend_id)])
+        self.assertEqual(len(store_ids), 2)
 
-        self.assertEqual(len(website.store_ids), 2)
+        storeview_model = self.registry('magento.storeviewview')
+        storeview_ids = storeview_model.search(self.cr,
+                                               self.uid,
+                                               [('backend_id', '=', self.backend_id)])
+        self.assertEqual(len(storeview_ids), 4)
 
-        store1, store2 = website.store_ids
-
-        self.assertEqual(store1.name, 'Main Website Store Test')
-        self.assertEqual(store2.name, 'Shop 2 Test')
-
-        self.assertEqual(len(store1.storeview_ids), 1)
-        self.assertEqual(len(store2.storeview_ids), 1)
-
-        storeview1 = store1.storeview_ids[0]
-        storeview2 = store2.storeview_ids[0]
-
-        self.assertEqual(storeview1.name, 'Default Store View Test')
-        self.assertEqual(storeview2.name, 'Store View 2 Test')
 
     def test_10_import_product_category(self):
         backend_id = self.backend_id

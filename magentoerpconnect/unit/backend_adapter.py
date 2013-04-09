@@ -21,13 +21,45 @@
 
 import socket
 import logging
-from contextlib import contextmanager
 
 import magento as magentolib
 from openerp.addons.connector.unit.backend_adapter import CRUDAdapter
 from openerp.addons.connector.exception import NetworkRetryableError
 
 _logger = logging.getLogger(__name__)
+
+
+recorder = {}
+
+def call_to_key(method, arguments):
+    if isinstance(arguments, list):
+        new_args = []
+        for arg in arguments:
+            if isinstance(arg, dict):
+                new_args.append(frozenset(arg))
+            elif isinstance(arg, list):
+                new_args.append(tuple(arg))
+            else:
+                new_args.append(arg)
+        arguments = new_args
+    return (method, tuple(arguments))
+
+
+def record(method, arguments, result):
+    """ Utility function which can be used to record test data
+    during synchronisations. Call it from MagentoCRUDAdapter._call
+
+    Then ``output_recorder`` can be used to write the data recorded
+    to a file.
+    """
+    recorder[call_to_key(method, arguments)] = result
+
+
+def output_recorder(filename):
+    import pprint
+    with open(filename, 'w') as f:
+        pprint.pprint(recorder, f)
+    _logger.debug('recorder written to file %s', filename)
 
 
 class MagentoLocation(object):
@@ -84,6 +116,7 @@ class MagentoCRUDAdapter(CRUDAdapter):
                                 self.magento.username,
                                 self.magento.password) as api:
                 result = api.call(method, arguments)
+                record(method, arguments, result)
                 _logger.debug("api.call(%s, %s) returned %s",
                               method, arguments, result)
                 return result
