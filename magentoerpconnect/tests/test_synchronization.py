@@ -152,7 +152,7 @@ class test_import_magento(common.SingleTransactionCase):
                                             ('magento_id', '=', '16')])
         self.assertEqual(len(product_ids), 1)
 
-    def test_13_import_product(self):
+    def test_13_import_product_category_missing(self):
         """ Import of a simple product when the category is missing """
         backend_id = self.backend_id
         with mock_api():
@@ -167,7 +167,7 @@ class test_import_magento(common.SingleTransactionCase):
                                             ('magento_id', '=', '25')])
         self.assertEqual(len(product_ids), 1)
 
-    def test_13_import_product_configurable(self):
+    def test_14_import_product_configurable(self):
         """ Configurable should fail: not yet supported """
         backend_id = self.backend_id
         with mock_api():
@@ -176,7 +176,7 @@ class test_import_magento(common.SingleTransactionCase):
                             'magento.product.product',
                             backend_id, 126)
 
-    def test_14_import_product_bundle(self):
+    def test_15_import_product_bundle(self):
         """ Bundle should fail: not yet supported """
         backend_id = self.backend_id
         with mock_api():
@@ -185,7 +185,7 @@ class test_import_magento(common.SingleTransactionCase):
                             'magento.product.product',
                             backend_id, 165)
 
-    def test_15_import_product_grouped(self):
+    def test_16_import_product_grouped(self):
         """ Grouped should fail: not yet supported """
         backend_id = self.backend_id
         with mock_api():
