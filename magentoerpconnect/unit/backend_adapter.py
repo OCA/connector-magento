@@ -150,7 +150,8 @@ class GenericAdapter(MagentoCRUDAdapter):
 
         :rtype: dict
         """
-        return self._call('%s.info' % self._magento_model, [id, attributes])
+        return self._call('%s.info' % self._magento_model,
+                          [int(id), attributes])
 
     def search_read(self, filters=None):
         """ Search records according to some criterias
@@ -163,8 +164,9 @@ class GenericAdapter(MagentoCRUDAdapter):
 
     def write(self, id, data):
         """ Update records on the external system """
-        return self._call('%s.update' % self._magento_model, [id, data])
+        return self._call('%s.update' % self._magento_model,
+                          [int(id), data])
 
     def delete(self, id):
         """ Delete a record on the external system """
-        return self._call('%s.delete' % self._magento_model, [id])
+        return self._call('%s.delete' % self._magento_model, [int(id)])

@@ -179,19 +179,19 @@ class ProductProductAdapter(GenericAdapter):
         :rtype: dict
         """
         return self._call('%s.info' % self._magento_model,
-                          [id, storeview_id, attributes, 'id'])
+                          [int(id), storeview_id, attributes, 'id'])
 
     def get_images(self, id, storeview_id=None):
-        return self._call('product_media.list', [id, storeview_id, 'id'])
+        return self._call('product_media.list', [int(id), storeview_id, 'id'])
 
     def read_image(self, id, image_name, storeview_id=None):
         return self._call('product_media.info',
-                          [id, image_name, storeview_id, 'id'])
+                          [int(id), image_name, storeview_id, 'id'])
 
     def update_inventory(self, id, data):
         # product_stock.update is too slow
         return self._call('oerp_cataloginventory_stock_item.update',
-                          [id, data])
+                          [int(id), data])
 
 
 @magento

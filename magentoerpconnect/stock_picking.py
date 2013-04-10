@@ -103,7 +103,7 @@ class StockPickingAdapter(GenericAdapter):
         :rtype: list
         """
         return self._call('%s.getCarriers' % self._magento_model,
-                          [magento_id])
+                          [int(magento_id)])
 
 
 @magento

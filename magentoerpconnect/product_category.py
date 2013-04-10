@@ -101,7 +101,7 @@ class ProductCategoryAdapter(GenericAdapter):
         :rtype: dict
         """
         return self._call('%s.info' % self._magento_model,
-                          [id, storeview_id, attributes])
+                          [int(id), storeview_id, attributes])
 
     def tree(self, parent_id=None, storeview_id=None):
         """ Returns a tree of product categories
@@ -115,7 +115,8 @@ class ProductCategoryAdapter(GenericAdapter):
                     children.update(filter_ids(node))
             category_id = {tree['category_id']: children}
             return category_id
-
+        if parent_id:
+            parent_id = int(parent_id)
         tree = self._call('%s.tree' % self._magento_model,
                           [parent_id, storeview_id])
         return filter_ids(tree)
