@@ -80,11 +80,8 @@ class StockPickingAdapter(GenericAdapter):
 
     def create(self, order_id, items, comment, email, include_comment):
         """ Create a record on the external system """
-        with self._magento_api() as api:
-            _logger.debug("api.call(%s.create', [%s])", self._magento_model,
+        return self._call('%s.create' % self._magento_model,
                           [order_id, items, comment, email, include_comment])
-            return api.call('%s.create' % self._magento_model,
-                            [order_id, items, comment, email, include_comment])
 
     def add_tracking_number(self, magento_id, carrier_code,
                             tracking_title, tracking_number):
@@ -95,10 +92,9 @@ class StockPickingAdapter(GenericAdapter):
         :param tracking_title: title displayed on Magento for the tracking
         :param tracking_number: tracking number
         """
-        with self._magento_api() as api:
-            return api.call('%s.addTrack' % self._magento_model,
-                            [magento_id, carrier_code,
-                             tracking_title, tracking_number])
+        return self._call('%s.addTrack' % self._magento_model,
+                          [magento_id, carrier_code,
+                           tracking_title, tracking_number])
 
     def get_carriers(self, magento_id):
         """ Get the list of carrier codes allowed for the shipping.
@@ -106,9 +102,8 @@ class StockPickingAdapter(GenericAdapter):
         :param magento_id: shipment increment id
         :rtype: list
         """
-        with self._magento_api() as api:
-            return api.call('%s.getCarriers' % self._magento_model,
-                            [magento_id])
+        return self._call('%s.getCarriers' % self._magento_model,
+                          [int(magento_id)])
 
 
 @magento

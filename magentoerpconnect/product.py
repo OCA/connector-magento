@@ -168,35 +168,30 @@ class ProductProductAdapter(GenericAdapter):
             filters = {}
         if from_date is not None:
             filters['updated_at'] = {'from': from_date.strftime('%Y/%m/%d %H:%M:%S')}
-        with self._magento_api() as api:
-            # TODO add a search entry point on the Magento API
-            return [int(row['product_id']) for row
-                    in api.call('%s.list' % self._magento_model,
-                                [filters] if filters else [{}])]
+        # TODO add a search entry point on the Magento API
+        return [int(row['product_id']) for row
+                in self._call('%s.list' % self._magento_model,
+                              [filters] if filters else [{}])]
 
     def read(self, id, storeview_id=None, attributes=None):
         """ Returns the information of a record
 
         :rtype: dict
         """
-        with self._magento_api() as api:
-            return api.call('%s.info' % self._magento_model,
-                            [id, storeview_id, attributes, 'id'])
+        return self._call('%s.info' % self._magento_model,
+                          [int(id), storeview_id, attributes, 'id'])
 
     def get_images(self, id, storeview_id=None):
-        with self._magento_api() as api:
-            return api.call('product_media.list', [id, storeview_id, 'id'])
+        return self._call('product_media.list', [int(id), storeview_id, 'id'])
 
     def read_image(self, id, image_name, storeview_id=None):
-        with self._magento_api() as api:
-            return api.call('product_media.info', [id, image_name, storeview_id, 'id'])
+        return self._call('product_media.info',
+                          [int(id), image_name, storeview_id, 'id'])
 
     def update_inventory(self, id, data):
-        with self._magento_api() as api:
-            # product_stock.update is too slow
-            return api.call('oerp_cataloginventory_stock_item.update',
-                            [id, data])
-
+        # product_stock.update is too slow
+        return self._call('oerp_cataloginventory_stock_item.update',
+                          [int(id), data])
 
 
 @magento

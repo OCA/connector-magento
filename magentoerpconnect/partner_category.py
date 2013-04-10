@@ -72,11 +72,9 @@ class PartnerCategoryAdapter(GenericAdapter):
 
         :rtype: list
         """
-        with self._magento_api() as api:
-            return [int(row['customer_group_id']) for row
-                       in api.call('%s.list' % self._magento_model,
-                                   [filters] if filters else [{}])]
-        return []
+        return [int(row['customer_group_id']) for row
+                in self._call('%s.list' % self._magento_model,
+                              [filters] if filters else [{}])]
 
 
 @magento

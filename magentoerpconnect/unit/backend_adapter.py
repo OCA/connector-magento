@@ -21,13 +21,54 @@
 
 import socket
 import logging
-from contextlib import contextmanager
 
 import magento as magentolib
 from openerp.addons.connector.unit.backend_adapter import CRUDAdapter
 from openerp.addons.connector.exception import NetworkRetryableError
 
 _logger = logging.getLogger(__name__)
+
+
+recorder = {}
+
+
+def call_to_key(method, arguments):
+    """ Used to 'freeze' the method and arguments of a call to Magento
+    so they can be hashable; they will be stored in a dict.
+
+    Used in both the recorder and the tests.
+    """
+    def freeze(arg):
+        if isinstance(arg, dict):
+            items = dict((key, freeze(value)) for key, value
+                         in arg.iteritems())
+            return frozenset(items.iteritems())
+        elif isinstance(arg, list):
+            return tuple([freeze(item) for item in arg])
+        else:
+            return arg
+
+    new_args = []
+    for arg in arguments:
+        new_args.append(freeze(arg))
+    return (method, tuple(new_args))
+
+
+def record(method, arguments, result):
+    """ Utility function which can be used to record test data
+    during synchronisations. Call it from MagentoCRUDAdapter._call
+
+    Then ``output_recorder`` can be used to write the data recorded
+    to a file.
+    """
+    recorder[call_to_key(method, arguments)] = result
+
+
+def output_recorder(filename):
+    import pprint
+    with open(filename, 'w') as f:
+        pprint.pprint(recorder, f)
+    _logger.debug('recorder written to file %s', filename)
 
 
 class MagentoLocation(object):
@@ -51,18 +92,6 @@ class MagentoCRUDAdapter(CRUDAdapter):
         self.magento = MagentoLocation(self.backend_record.location,
                                        self.backend_record.username,
                                        self.backend_record.password)
-
-    @contextmanager
-    def _magento_api(self):
-        try:
-            with magentolib.API(self.magento.location,
-                                self.magento.username,
-                                self.magento.password) as api:
-                yield api
-        except (socket.gaierror, socket.error, socket.timeout) as err:
-            raise NetworkRetryableError(
-                'A network error caused the failure of the job: '
-                '%s' % err)
 
     def search(self, filters=None):
         """ Search records according to some criterias
@@ -90,6 +119,22 @@ class MagentoCRUDAdapter(CRUDAdapter):
         """ Delete a record on the external system """
         raise NotImplementedError
 
+    def _call(self, method, arguments):
+        try:
+            with magentolib.API(self.magento.location,
+                                self.magento.username,
+                                self.magento.password) as api:
+                result = api.call(method, arguments)
+                # Uncomment to record requests/responses in ``recorder``
+                # record(method, arguments, result)
+                _logger.debug("api.call(%s, %s) returned %s",
+                              method, arguments, result)
+                return result
+        except (socket.gaierror, socket.error, socket.timeout) as err:
+            raise NetworkRetryableError(
+                'A network error caused the failure of the job: '
+                '%s' % err)
+
 
 class GenericAdapter(MagentoCRUDAdapter):
 
@@ -102,40 +147,31 @@ class GenericAdapter(MagentoCRUDAdapter):
 
         :rtype: list
         """
-        with self._magento_api() as api:
-            return api.call('%s.search' % self._magento_model,
-                            [filters] if filters else [{}])
+        return self._call('%s.search' % self._magento_model,
+                          [filters] if filters else [{}])
 
     def read(self, id, attributes=None):
         """ Returns the information of a record
 
         :rtype: dict
         """
-        with self._magento_api() as api:
-            return api.call('%s.info' % self._magento_model, [id, attributes])
+        return self._call('%s.info' % self._magento_model,
+                          [int(id), attributes])
 
     def search_read(self, filters=None):
         """ Search records according to some criterias
         and returns their information"""
-        with self._magento_api() as api:
-            return api.call('%s.list' % self._magento_model, [filters])
+        return self._call('%s.list' % self._magento_model, [filters])
 
     def create(self, data):
         """ Create a record on the external system """
-        with self._magento_api() as api:
-            _logger.debug("api.call(%s.create', [%s])", self._magento_model, data)
-            return api.call('%s.create' % self._magento_model, [data])
+        return self._call('%s.create' % self._magento_model, [data])
 
     def write(self, id, data):
         """ Update records on the external system """
-        with self._magento_api() as api:
-            _logger.debug("api.call(%s.update', [%s, %s])",
-                    self._magento_model, id, data)
-            return api.call('%s.update' % self._magento_model, [id, data])
+        return self._call('%s.update' % self._magento_model,
+                          [int(id), data])
 
     def delete(self, id):
         """ Delete a record on the external system """
-        with self._magento_api() as api:
-            _logger.debug("api.call(%s.delete', [%s])",
-                    self._magento_model, id)
-            return api.call('%s.delete' % self._magento_model, [id])
+        return self._call('%s.delete' % self._magento_model, [int(id)])

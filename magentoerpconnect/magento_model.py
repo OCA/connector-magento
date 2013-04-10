@@ -241,6 +241,21 @@ class magento_backend(orm.Model):
         self._magento_backend(cr, uid, self.update_product_stock_qty,
                               domain=domain, context=context)
 
+    def output_recorder(self, cr, uid, ids, context=None):
+        """ Utility method to output a file containing all the recorded
+        requests / responses with Magento.  Used to generate test data.
+        Should be called with ``erppeek`` for instance.
+        """
+        from .unit.backend_adapter import output_recorder
+        import os
+        import tempfile
+        fmt = '%Y-%m-%d-%H-%M-%S'
+        timestamp = datetime.now().strftime(fmt)
+        filename = 'output_%s_%s' % (cr.dbname, timestamp)
+        path = os.path.join(tempfile.gettempdir(), filename)
+        output_recorder(path)
+        return path
+
 
 # TODO migrate from external.shop.group
 class magento_website(orm.Model):
