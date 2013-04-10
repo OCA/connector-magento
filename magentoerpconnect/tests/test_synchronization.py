@@ -114,30 +114,30 @@ class test_import_magento(common.SingleTransactionCase):
 
 
     def test_10_import_product_category(self):
-        """ Import of some product categories """
+        """ Import of a product category """
         backend_id = self.backend_id
         with mock_api():
             import_record(self.session, 'magento.product.category',
-                          backend_id, '1')
-            import_record(self.session, 'magento.product.category',
-                          backend_id, '3')
-            import_record(self.session, 'magento.product.category',
-                          backend_id, '10')
-            import_record(self.session, 'magento.product.category',
-                          backend_id, '13')
-            import_record(self.session, 'magento.product.category',
-                          backend_id, '12')
-            import_record(self.session, 'magento.product.category',
-                          backend_id, '18')
-            import_record(self.session, 'magento.product.category',
-                          backend_id, '15')
+                          backend_id, 1)
 
         category_model = self.registry('magento.product.category')
         category_ids = category_model.search(
                 self.cr, self.uid, [('backend_id', '=', backend_id)])
-        self.assertEqual(len(category_ids), 7)
+        self.assertEqual(len(category_ids), 1)
 
-    def test_11_import_product(self):
+    def test_11_import_product_category_with_gap(self):
+        """ Import of a product category when parent categories are missing """
+        backend_id = self.backend_id
+        with mock_api():
+            import_record(self.session, 'magento.product.category',
+                          backend_id, 8)
+
+        category_model = self.registry('magento.product.category')
+        category_ids = category_model.search(
+                self.cr, self.uid, [('backend_id', '=', backend_id)])
+        self.assertEqual(len(category_ids), 4)
+
+    def test_12_import_product(self):
         """ Import of a simple product """
         backend_id = self.backend_id
         with mock_api():
@@ -148,10 +148,26 @@ class test_import_magento(common.SingleTransactionCase):
         product_model = self.registry('magento.product.product')
         product_ids = product_model.search(self.cr,
                                            self.uid,
-                                           [('backend_id', '=', backend_id)])
+                                           [('backend_id', '=', backend_id),
+                                            ('magento_id', '=', '16')])
         self.assertEqual(len(product_ids), 1)
 
-    def test_12_import_product_configurable(self):
+    def test_13_import_product(self):
+        """ Import of a simple product when the category is missing """
+        backend_id = self.backend_id
+        with mock_api():
+            import_record(self.session,
+                          'magento.product.product',
+                          backend_id, 25)
+
+        product_model = self.registry('magento.product.product')
+        product_ids = product_model.search(self.cr,
+                                           self.uid,
+                                           [('backend_id', '=', backend_id),
+                                            ('magento_id', '=', '25')])
+        self.assertEqual(len(product_ids), 1)
+
+    def test_13_import_product_configurable(self):
         """ Configurable should fail: not yet supported """
         backend_id = self.backend_id
         with mock_api():
@@ -160,7 +176,7 @@ class test_import_magento(common.SingleTransactionCase):
                             'magento.product.product',
                             backend_id, 126)
 
-    def test_13_import_product_bundle(self):
+    def test_14_import_product_bundle(self):
         """ Bundle should fail: not yet supported """
         backend_id = self.backend_id
         with mock_api():
@@ -169,7 +185,7 @@ class test_import_magento(common.SingleTransactionCase):
                             'magento.product.product',
                             backend_id, 165)
 
-    def test_14_import_product_grouped(self):
+    def test_15_import_product_grouped(self):
         """ Grouped should fail: not yet supported """
         backend_id = self.backend_id
         with mock_api():
@@ -178,7 +194,7 @@ class test_import_magento(common.SingleTransactionCase):
                             'magento.product.product',
                             backend_id, 54)
 
-    def test_15_import_product_virtual(self):
+    def test_16_import_product_virtual(self):
         """ Virtual should fail: not yet supported """
         backend_id = self.backend_id
         with mock_api():
