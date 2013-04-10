@@ -242,6 +242,10 @@ class magento_backend(orm.Model):
                               domain=domain, context=context)
 
     def output_recorder(self, cr, uid, ids, context=None):
+        """ Utility method to output a file containing all the recorded
+        requests / responses with Magento.  Used to generate test data.
+        Should be called with ``erppeek`` for instance.
+        """
         from .unit.backend_adapter import output_recorder
         import os
         import tempfile

@@ -33,6 +33,11 @@ recorder = {}
 
 
 def call_to_key(method, arguments):
+    """ Used to 'freeze' the method and arguments of a call to Magento
+    so they can be hashable; they will be stored in a dict.
+
+    Used in both the recorder and the tests.
+    """
     def freeze(arg):
         if isinstance(arg, dict):
             items = dict((key, freeze(value)) for key, value
@@ -120,8 +125,8 @@ class MagentoCRUDAdapter(CRUDAdapter):
                                 self.magento.username,
                                 self.magento.password) as api:
                 result = api.call(method, arguments)
-                # XXX: remove!!!
-                record(method, arguments, result)
+                # Uncomment to record requests/responses in ``recorder``
+                # record(method, arguments, result)
                 _logger.debug("api.call(%s, %s) returned %s",
                               method, arguments, result)
                 return result
