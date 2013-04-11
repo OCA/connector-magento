@@ -81,6 +81,13 @@ class magento_backend(orm.Model):
                                         required=True,
                                         help='Warehouse used to compute the '
                                              'stock quantities.'),
+        'pricelist_id': fields.many2one('product.pricelist',
+                                        'Pricelist',
+                                        required=True,
+                                        help='The price list used to define '
+                                             'the prices of the products in '
+                                             'Magento.'),
+
         'website_ids': fields.one2many(
             'magento.website', 'backend_id',
             string='Website', readonly=True),
