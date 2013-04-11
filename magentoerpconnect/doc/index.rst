@@ -91,9 +91,12 @@ todo:
 
 * release notes
 
-* roadmap
-
 * contributors
+
+.. toctree::
+   :maxdepth: 2
+
+   project/roadmap
 
 
 Concepts

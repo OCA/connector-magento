@@ -148,6 +148,8 @@ In the next chapter, we'll cover the most common personalization:
 `Add mappings of fields`_.
 
 
+.. _add-custom-mappings:
+
 **********************
 Add mappings of fields
 **********************
