@@ -105,12 +105,11 @@ todo:
 
 * release notes
 
-* contributors
-
 .. toctree::
    :maxdepth: 2
 
    project/roadmap
+   project/contributors
 
 
 Concepts
