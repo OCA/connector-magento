@@ -166,12 +166,17 @@ Accounting
 Reconciliations
 ===============
 
-How are you going to reconcile the payments done on Magento
-and the OpenERP entries?
+The connector automatically reconcile the payments
+and the invoices entries for the 'automatic' workflows.
+
+However, you will still need to reconcile the bank entries.
+
 You may want to use the reconciliation modules of the
 branch `lp:banking-addons/bank-statement-reconcile/7.0`_.
 They are widely used in production and
 are specifically designed for the e-commerce.
+
+.. _`lp:banking-addons/bank-statement-reconcile/7.0`: https://code.launchpad.net/~banking-addons-team/banking-addons/bank-statement-reconcile-70
 
 
 Fiscal Positions
@@ -189,9 +194,8 @@ Note that this configuration will be done
 1 time in Magento and 1 time in OpenERP.
 But once the configuration is done, that works fine.
 
-
 .. _`lp:openerp-fiscal-rules`: https://code.launchpad.net/openerp-fiscal-rules
-.. _`lp:banking-addons/bank-statement-reconcile/7.0`: https://code.launchpad.net/~banking-addons-team/banking-addons/bank-statement-reconcile-70
+
 
 *******************************
 Stock, availability, deliveries
