@@ -40,11 +40,25 @@ First steps
    guides/key_questions
 
 
-*******************
-Using the connector
-*******************
+***********************************
+Using and configuring the connector
+***********************************
 
 Be efficient using and configuring the connector.
+
+.. toctree::
+   :maxdepth: 2
+
+   howto/configure_translations
+   howto/configure_warehouse
+   howto/configure_payment_methods
+   howto/configure_automatic_workflows
+   howto/configure_exception_rules
+   howto/configure_shipping_methods
+   howto/configure_emails
+   howto/configure_schedulers
+   guides/connector_checkpoint
+   guides/monitor_resolve_jobs
 
 
 ***************************
