@@ -27,6 +27,7 @@ from operator import itemgetter
 from openerp.osv import orm, fields
 from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.event import on_record_create, on_record_write
+from openerp.addons.connector_ecommerce.event import on_product_price_changed
 from openerp.addons.connector.unit.synchronizer import (ImportSynchronizer,
                                                         ExportSynchronizer
                                                         )
@@ -445,36 +446,41 @@ class ProductInventoryExport(ExportSynchronizer):
 
 
 @magento
-class ProductExport(MagentoExportSynchronizer):
+class ProductPriceExport(ExportSynchronizer):
+    """ Export the price of a product.
+
+    Use the pricelist configured on the backend for the
+    default price in Magento.
+    If different pricelists have been configured on the websites,
+    update the prices on the different websites.
+
+    This export does not use the standard Exporter for the
+    products because it is not triggered by the same event
+    and so it is simpler.
+    """
     _model_name = ['magento.product.product']
 
-    def _get_openerp_data(self):
+    def _get_price(self, binding_id, pricelist_id):
         """ Return the raw OpenERP data for ``self.binding_id`` """
-        pricelist = self.backend_record.pricelist_id.id
-        with self.session.change_context({'pricelist': pricelist}):
-            return super(ProductExport, self)._get_openerp_data()
+        with self.session.change_context({'pricelist': pricelist_id}):
+            return self.session.read(self.model._name,
+                                     binding_id,
+                                     ['price'])['price']
 
+    def _update(self, magento_id, data):
+        self.backend_adapter.write(magento_id, data)
 
-@magento
-class ProductExportMapper(ExportMapper):
-    _model_name = 'magento.product.product'
+    def run(self, binding_id):
+        """ Export the product inventory to Magento """
+        # export the default price
+        pricelist_id = self.backend_record.pricelist_id.id
+        price = self._get_price(binding_id, pricelist_id)
+        binder = self.get_binder_for_model()
+        magento_id = binder.to_backend(binding_id)
+        self._update(magento_id, {'price': price})
 
-    @changed_by('list_price')
-    # TODO: any field used for the price in a list price
-    # should trigger the export of price:
-    # create an event price_modified,
-    # the event is triggered when any of the field price
-    # used in a product.price.type linked with a sale pricelist
-    # is modified then forward it to the event on_record_write
-    # with the field list_price
-    @mapping
-    def price(self, record):
-        """ price is computed using the pricelist
-        in the context, so the context must be correctly
-        set when calling the mapper """
-        # todo check if pricelist is there
-        return {'price': record['price']}
-
+        # export the price for websites if they have a different
+        # pricelist
 
 
 # fields which should not trigger an export of the products
@@ -490,29 +496,26 @@ INVENTORY_FIELDS = ('manage_stock',
 def magento_product_modified(session, model_name, record_id, fields=None):
     if session.context.get('connector_no_export'):
         return
-    fields_set = set(fields)
-    inventory_fields = list(fields_set.intersection(INVENTORY_FIELDS))
-    rest_fields = list(fields_set.difference(INVENTORY_FIELDS))
+    inventory_fields = list(set(fields_set).intersection(INVENTORY_FIELDS))
     if inventory_fields:
         export_product_inventory.delay(session, model_name,
                                        record_id, fields=inventory_fields,
                                        priority=20)
-    if rest_fields:
-        export_record.delay(session, model_name,
-                            record_id, fields=rest_fields)
 
 
-@on_record_write(model_names=['product.product'])
+@on_product_price_changed
 @magento_consumer
-def product_modified(session, model_name, record_id, fields=None):
+def product_price_changed(session, model_name, record_id, fields=None):
     if session.context.get('connector_no_export'):
         return
     model = session.pool.get(model_name)
     record = model.browse(session.cr, session.uid,
                           record_id, context=session.context)
     for binding in record.magento_bind_ids:
-        magento_product_modified(session, binding._model._name,
-                                 binding.id, fields=fields)
+        export_product_price.delay(session,
+                                   binding._model._name,
+                                   binding.id,
+                                   priority=5)
 
 
 @job
@@ -523,3 +526,13 @@ def export_product_inventory(session, model_name, record_id, fields=None):
     env = get_environment(session, model_name, backend_id)
     inventory_exporter = env.get_connector_unit(ProductInventoryExport)
     return inventory_exporter.run(record_id, fields)
+
+
+@job
+def export_product_price(session, model_name, record_id):
+    """ Export the price of a product. """
+    product_bind = session.browse(model_name, record_id)
+    backend_id = product_bind.backend_id.id
+    env = get_environment(session, model_name, backend_id)
+    price_exporter = env.get_connector_unit(ProductPriceExport)
+    return price_exporter.run(record_id)
