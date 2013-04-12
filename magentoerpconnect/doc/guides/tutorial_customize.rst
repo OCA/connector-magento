@@ -124,7 +124,7 @@ And in ``customize_example/magento_model.py``::
 
         _columns = {
             'version': fields.selection(_select_versions, string='Version', required=True),
-            }
+        }
 
 Things to note:
 
@@ -191,15 +191,14 @@ it so you need to have a look on it.  For example, the mapping for
   class PartnerImportMapper(ImportMapper):
       _model_name = 'magento.res.partner'
 
-      direct = [
-              ('email', 'email'),
-              ('dob', 'birthday'),
-              ('created_at', 'created_at'),
-              ('updated_at', 'updated_at'),
-              ('email', 'emailid'),
-              ('taxvat', 'taxvat'),
-              ('group_id', 'group_id'),
-          ]
+      direct = [('email', 'email'),
+                ('dob', 'birthday'),
+                ('created_at', 'created_at'),
+                ('updated_at', 'updated_at'),
+                ('email', 'emailid'),
+                ('taxvat', 'taxvat'),
+                ('group_id', 'group_id'),
+                ]
 
       @mapping
       def is_company(self, record):
@@ -297,7 +296,7 @@ views')::
 
       _columns = {
           'created_in': fields.char('Created In', readonly=True),
-          }
+      }
 
 
 In the same file, I add the import of the Magento Backend to use and the
@@ -346,7 +345,7 @@ In ``customize_example/partner.py``, I write::
           'gender': fields.selection([('male', 'Male'),
                                       ('female', 'Female')],
                                      string='Gender'),
-          }
+      }
 
 The same imports than in the `Example 1.`_ are needed, but we need to
 import ``mapping`` too::
