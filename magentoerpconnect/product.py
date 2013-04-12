@@ -33,13 +33,19 @@ from openerp.addons.connector.unit.synchronizer import (ImportSynchronizer,
 from openerp.addons.connector.exception import (MappingError,
                                                 InvalidDataError)
 from openerp.addons.connector.unit.mapper import (mapping,
-                                                  ImportMapper
+                                                  changed_by,
+                                                  only_create,
+                                                  ImportMapper,
+                                                  ExportMapper
                                                   )
 from .unit.backend_adapter import GenericAdapter
 from .unit.import_synchronizer import (DelayedBatchImport,
                                        MagentoImportSynchronizer,
                                        TranslationImporter,
                                        AddCheckpoint,
+                                       )
+from .unit.export_synchronizer import (MagentoExportSynchronizer,
+                                       export_record,
                                        )
 from .connector import get_environment
 from .consumer import magento_consumer
@@ -181,6 +187,13 @@ class ProductProductAdapter(GenericAdapter):
         return self._call('%s.info' % self._magento_model,
                           [int(id), storeview_id, attributes, 'id'])
 
+    def write(self, id, data, storeview_id=None):
+        """ Update records on the external system """
+        # XXX actually only ol_catalog_product.update works
+        # the PHP connector maybe breaks the catalog_product.update
+        return self._call('ol_catalog_product.update',
+                          [int(id), data, storeview_id, 'id'])
+
     def get_images(self, id, storeview_id=None):
         return self._call('product_media.list', [int(id), storeview_id, 'id'])
 
@@ -320,7 +333,6 @@ class ProductImportMapper(ImportMapper):
     direct = [('name', 'name'),
               ('description', 'description'),
               ('weight', 'weight'),
-              ('price', 'list_price'),
               ('cost', 'standard_price'),
               ('short_description', 'description_sale'),
               ('sku', 'default_code'),
@@ -328,6 +340,14 @@ class ProductImportMapper(ImportMapper):
               ('created_at', 'created_at'),
               ('updated_at', 'updated_at'),
               ]
+
+    @only_create
+    @mapping
+    def price(self, record):
+        """ The price is imported at the creation of
+        the product, then it is only modified and exported
+        from OpenERP """
+        return {'list_price': record['price']}
 
     @mapping
     def type(self, record):
@@ -424,6 +444,39 @@ class ProductInventoryExport(ExportSynchronizer):
         self.backend_adapter.update_inventory(magento_id, data)
 
 
+@magento
+class ProductExport(MagentoExportSynchronizer):
+    _model_name = ['magento.product.product']
+
+    def _get_openerp_data(self):
+        """ Return the raw OpenERP data for ``self.binding_id`` """
+        pricelist = self.backend_record.pricelist_id.id
+        with self.session.change_context({'pricelist': pricelist}):
+            return super(ProductExport, self)._get_openerp_data()
+
+
+@magento
+class ProductExportMapper(ExportMapper):
+    _model_name = 'magento.product.product'
+
+    @changed_by('list_price')
+    # TODO: any field used for the price in a list price
+    # should trigger the export of price:
+    # create an event price_modified,
+    # the event is triggered when any of the field price
+    # used in a product.price.type linked with a sale pricelist
+    # is modified then forward it to the event on_record_write
+    # with the field list_price
+    @mapping
+    def price(self, record):
+        """ price is computed using the pricelist
+        in the context, so the context must be correctly
+        set when calling the mapper """
+        # todo check if pricelist is there
+        return {'price': record['price']}
+
+
+
 # fields which should not trigger an export of the products
 # but an export of their inventory
 INVENTORY_FIELDS = ('manage_stock',
@@ -437,11 +490,29 @@ INVENTORY_FIELDS = ('manage_stock',
 def magento_product_modified(session, model_name, record_id, fields=None):
     if session.context.get('connector_no_export'):
         return
-    inventory_fields = list(set(fields).intersection(INVENTORY_FIELDS))
+    fields_set = set(fields)
+    inventory_fields = list(fields_set.intersection(INVENTORY_FIELDS))
+    rest_fields = list(fields_set.difference(INVENTORY_FIELDS))
     if inventory_fields:
         export_product_inventory.delay(session, model_name,
                                        record_id, fields=inventory_fields,
                                        priority=20)
+    if rest_fields:
+        export_record.delay(session, model_name,
+                            record_id, fields=rest_fields)
+
+
+@on_record_write(model_names=['product.product'])
+@magento_consumer
+def product_modified(session, model_name, record_id, fields=None):
+    if session.context.get('connector_no_export'):
+        return
+    model = session.pool.get(model_name)
+    record = model.browse(session.cr, session.uid,
+                          record_id, context=session.context)
+    for binding in record.magento_bind_ids:
+        magento_product_modified(session, binding._model._name,
+                                 binding.id, fields=fields)
 
 
 @job

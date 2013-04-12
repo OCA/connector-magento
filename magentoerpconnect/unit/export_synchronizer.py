@@ -20,6 +20,7 @@
 ##############################################################################
 
 import logging
+from openerp.tools.translate import _
 from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.unit.synchronizer import ExportSynchronizer
 from openerp.addons.connector.exception import NothingToDoJob
