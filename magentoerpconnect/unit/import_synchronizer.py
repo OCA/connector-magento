@@ -80,21 +80,16 @@ class MagentoImportSynchronizer(ImportSynchronizer):
 
     def _create(self, data):
         """ Create the OpenERP record """
-        binding_id = self.model.create(self.session.cr,
-                                       self.session.uid,
-                                       data,
-                                       context=self._context())
+        with self.session.change_context({'connector_no_export': True}):
+            binding_id = self.session.create(self.model._name, data)
         _logger.debug('%s %d created from magento %s',
                       self.model._name, binding_id, self.magento_id)
         return binding_id
 
     def _update(self, binding_id, data):
         """ Update an OpenERP record """
-        self.model.write(self.session.cr,
-                         self.session.uid,
-                         binding_id,
-                         data,
-                         context=self._context())
+        with self.session.change_context({'connector_no_export': True}):
+            self.session.write(self.model._name, binding_id, data)
         _logger.debug('%s %d updated from magento %s',
                       self.model._name, binding_id, self.magento_id)
         return
@@ -231,11 +226,8 @@ class TranslationImporter(ImportSynchronizer):
 
             context = session.context.copy()
             context['lang'] = storeview.lang_id.code
-            self.model.write(session.cr,
-                             session.uid,
-                             binding_id,
-                             data,
-                             context=context)
+            with self.session.change_context({'connector_no_export': True}):
+                self.session.write(self.model._name, binding_id, data)
 
 
 @magento
