@@ -24,6 +24,9 @@ The pricelist used for the prices sent to Magento is configured on the
 Magento Backend (`Connectors > Magento > Backends`). Magento will use
 theses prices as default prices.
 
+In the `Advanced Configuration` tab of the backend, activate the option
+`Use different prices accross websites`.
+
 .. note:: In Magento, the default is to share the prices between websites.
           If you want to have different prices per websites, go to
           `System > Catalog > Catalog > Price` and set the `Catalog

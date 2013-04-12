@@ -25,6 +25,7 @@ import urllib2
 import base64
 from operator import itemgetter
 from openerp.osv import orm, fields
+from openerp.tools.translate import _
 from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.event import on_record_create, on_record_write
 from openerp.addons.connector_ecommerce.event import on_product_price_changed
@@ -34,19 +35,14 @@ from openerp.addons.connector.unit.synchronizer import (ImportSynchronizer,
 from openerp.addons.connector.exception import (MappingError,
                                                 InvalidDataError)
 from openerp.addons.connector.unit.mapper import (mapping,
-                                                  changed_by,
                                                   only_create,
                                                   ImportMapper,
-                                                  ExportMapper
                                                   )
 from .unit.backend_adapter import GenericAdapter
 from .unit.import_synchronizer import (DelayedBatchImport,
                                        MagentoImportSynchronizer,
                                        TranslationImporter,
                                        AddCheckpoint,
-                                       )
-from .unit.export_synchronizer import (MagentoExportSynchronizer,
-                                       export_record,
                                        )
 from .connector import get_environment
 from .consumer import magento_consumer
@@ -453,10 +449,6 @@ class ProductPriceExport(ExportSynchronizer):
     default price in Magento.
     If different pricelists have been configured on the websites,
     update the prices on the different websites.
-
-    This export does not use the standard Exporter for the
-    products because it is not triggered by the same event
-    and so it is simpler.
     """
     _model_name = ['magento.product.product']
 
@@ -467,20 +459,54 @@ class ProductPriceExport(ExportSynchronizer):
                                      binding_id,
                                      ['price'])['price']
 
-    def _update(self, magento_id, data):
-        self.backend_adapter.write(magento_id, data)
+    def _update(self, magento_id, data, storeview_id=None):
+        self.backend_adapter.write(magento_id, data,
+                                   storeview_id=storeview_id)
 
     def run(self, binding_id):
         """ Export the product inventory to Magento """
+        binder = self.get_binder_for_model()
+        magento_id = binder.to_backend(binding_id)
+
         # export the default price
         pricelist_id = self.backend_record.pricelist_id.id
         price = self._get_price(binding_id, pricelist_id)
-        binder = self.get_binder_for_model()
-        magento_id = binder.to_backend(binding_id)
         self._update(magento_id, {'price': price})
+
+        if not self.backend_record.different_pricelists:
+            return _('Default price updated.')
 
         # export the price for websites if they have a different
         # pricelist
+        storeview_binder = self.get_binder_for_model('magento.storeview')
+        for website in self.backend_record.website_ids:
+            # 0 is the admin website, the update on this website
+            # would have the same effect than the global update
+            if website.magento_id == '0':
+                continue
+            # The update of the prices in Magento is very weird:
+            # - The price is different per website (if the option
+            #   is active in the config), but is shared between
+            #   the store views of a website.
+            # - BUT the Magento API expects a storeview id to modify
+            #   a price on a website (and not a website id...)
+            # So we take the first storeview of the website to update.
+            storeview_ids = self.session.search(
+                'magento.storeview',
+                [('store_id.website_id', '=', website.id)])
+            if not storeview_ids:
+                continue
+            magento_storeview = storeview_binder.to_backend(storeview_ids[0])
+
+            price = False  # 'Use Default Value' option will be
+                           # activated when price is False
+            site_pricelist_id = website.pricelist_id
+            if site_pricelist_id and site_pricelist_id != pricelist_id:
+                price = self._get_price(binding_id,
+                                        website.pricelist_id.id)
+            self._update(magento_id, {'price': price},
+                         storeview_id=magento_storeview)
+        return _('Prices for all websites have been updated.')
 
 
 # fields which should not trigger an export of the products

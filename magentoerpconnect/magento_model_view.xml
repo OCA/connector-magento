@@ -113,6 +113,7 @@
                                     <field name="default_category_id"/>
                                     <field name="product_stock_field_id" widget="selection"
                                         domain="[('model', 'in', ['product.product', 'product.template']), ('ttype', '=', 'float')]"/>
+                                    <field name="different_pricelists"/>
                                 </group>
                             </page>
 
@@ -164,7 +165,11 @@
                             <field name="sort_order"/>
                         </group>
                         <group string="Options" name="options">
-                            <field name="pricelist_id" groups="product.group_sale_pricelist"/>
+                            <field name="different_pricelists" invisible="1"/>
+                            <field name="magento_id" invisible="1"/>
+                            <field name="pricelist_id"
+                                attrs="{'invisible': ['|', ('different_pricelists', '=', False), ('magento_id', '==', '0')]}"
+                                groups="product.group_sale_pricelist"/>
                         </group>
                         <notebook>
                             <page name="import" string="Imports">
