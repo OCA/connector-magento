@@ -163,6 +163,9 @@
                             <field name="code"/>
                             <field name="sort_order"/>
                         </group>
+                        <group string="Options" name="options">
+                            <field name="pricelist_id" groups="product.group_sale_pricelist"/>
+                        </group>
                         <notebook>
                             <page name="import" string="Imports">
                                 <group>

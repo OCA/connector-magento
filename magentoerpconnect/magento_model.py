@@ -84,10 +84,10 @@ class magento_backend(orm.Model):
         'pricelist_id': fields.many2one('product.pricelist',
                                         'Pricelist',
                                         required=True,
+                                        domain="[('type', '=', 'sale')]",
                                         help='The price list used to define '
                                              'the prices of the products in '
                                              'Magento.'),
-
         'website_ids': fields.one2many(
             'magento.website', 'backend_id',
             string='Website', readonly=True),
@@ -281,6 +281,16 @@ class magento_website(orm.Model):
             'website_id',
             string="Stores",
             readonly=True),
+        'pricelist_id': fields.many2one('product.pricelist',
+                                        'Pricelist',
+                                        required=True,
+                                        domain="[('type', '=', 'sale')]",
+                                        help='The pricelist used to define '
+                                             'the prices of the products in '
+                                             'Magento for this website.\n\n'
+                                             'Choose a pricelist only if the '
+                                             'prices are different for this '
+                                             'website.'),
         'import_partners_from_date': fields.datetime('Import partners from date'),
     }
 
