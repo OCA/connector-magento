@@ -38,6 +38,8 @@ Once the addon is installed, you may want to:
 
 #. Configure: :ref:`configure-warehouses`
 
+#. Configure: :ref:`configure-pricing`
+
 On the backend,
 
 #. Import the customer groups
