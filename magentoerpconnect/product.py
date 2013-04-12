@@ -261,9 +261,10 @@ class CatalogImageImporter(ImportSynchronizer):
         if not main_image_data:
             return
         binary = self._get_binary_image(main_image_data)
-        self.session.write(self.model._name,
-                           binding_id,
-                           {'image': base64.b64encode(binary)})
+        with self.session.change_context({'connector_no_export': True}):
+            self.session.write(self.model._name,
+                               binding_id,
+                               {'image': base64.b64encode(binary)})
 
 
 @magento
@@ -355,10 +356,10 @@ class ProductImportMapper(ImportMapper):
     @mapping
     def website_ids(self, record):
         website_ids = []
+        binder = self.get_binder_for_model('magento.website')
         for mag_website_id in record['websites']:
-            binder = self.get_binder_for_model('magento.website')
             website_id = binder.to_openerp(mag_website_id)
-            website_ids.append(website_id)
+            website_ids.append((4, website_id))
         return {'website_ids': website_ids}
 
     @mapping
@@ -522,7 +523,7 @@ INVENTORY_FIELDS = ('manage_stock',
 def magento_product_modified(session, model_name, record_id, fields=None):
     if session.context.get('connector_no_export'):
         return
-    inventory_fields = list(set(fields_set).intersection(INVENTORY_FIELDS))
+    inventory_fields = list(set(fields).intersection(INVENTORY_FIELDS))
     if inventory_fields:
         export_product_inventory.delay(session, model_name,
                                        record_id, fields=inventory_fields,
