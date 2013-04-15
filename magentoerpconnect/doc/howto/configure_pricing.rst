@@ -31,3 +31,7 @@ theses prices as default prices.
 
 When you need different prices for a website, set the pricelist for this
 website in `Connectors > Magento > Websites`.
+
+.. warning:: The prices are actually updated on Magento when the price
+             is changed on the products, not when a pricelist is
+             modified.

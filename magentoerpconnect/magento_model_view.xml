@@ -28,7 +28,7 @@
                         </group>
                         <group name="main_configuration" string="Main Configuration">
                             <field name="warehouse_id"/>
-                            <field name="pricelist_id"/>
+                            <field name="pricelist_id" on_change="onchange_pricelist_id(pricelist_id)"/>
                         </group>
                         <notebook>
                             <page name="import" string="Imports">
@@ -167,6 +167,7 @@
                             <field name="magento_id" invisible="1"/>
                             <field name="pricelist_id"
                                 attrs="{'invisible': [('magento_id', '==', '0')]}"
+                                on_change="onchange_pricelist_id(pricelist_id)"
                                 groups="product.group_sale_pricelist"/>
                         </group>
                         <notebook>

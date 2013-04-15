@@ -24,6 +24,7 @@ import logging
 from datetime import datetime
 from openerp.osv import fields, orm
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from openerp.tools.translate import _
 import openerp.addons.connector as connector
 from openerp.addons.connector.session import ConnectorSession
 from openerp.addons.connector.connector import ConnectorUnit
@@ -41,6 +42,7 @@ from .partner import partner_import_batch
 from .sale import sale_order_import_batch
 from .backend import magento
 from .connector import add_checkpoint
+from .product import export_product_price
 
 _logger = logging.getLogger(__name__)
 
@@ -115,6 +117,10 @@ class magento_backend(orm.Model):
             help="Choose the field of the product which will be used for "
                  "stock inventory updates.\nIf empty, Quantity Available "
                  "is used."),
+        'product_binding_ids': fields.one2many('magento.product.product',
+                                               'backend_id',
+                                               string='Magento Products',
+                                               readonly=True),
     }
 
     _defaults = {
@@ -221,6 +227,35 @@ class magento_backend(orm.Model):
                                               context=context)
         return True
 
+    def onchange_pricelist_id(self, cr, uid, ids, pricelist_id, context=None):
+        if not ids:  # new record
+            return {}
+        warning = {
+            'title': _('Warning'),
+            'message': _('If you change the pricelist of the backend, '
+                         'the price of all the products will be updated '
+                         'in Magento.')
+        }
+        return {'warning': warning}
+
+    def _update_default_prices(self, cr, uid, ids, context=None):
+        """ Update the default prices of the products linked with
+        this backend.
+
+        The default prices are linked with the 'Admin' website (id: 0).
+        """
+        website_obj = self.pool.get('magento.website')
+        website_ids = website_obj.search(cr, uid,
+                                         [('backend_id', 'in', ids),
+                                          ('magento_id', '=', '0')],
+                                         context=context)
+        website_obj.update_all_prices(cr, uid, website_ids, context=context)
+
+    def write(self, cr, uid, ids, vals, context=None):
+        if 'pricelist_id' in vals:
+            self._update_default_prices(cr, uid, ids, context=context)
+        return super(magento_backend, self).write(cr, uid, ids, vals, context=context)
+
     def _magento_backend(self, cr, uid, callback, domain=None, context=None):
         if domain is None:
             domain = []
@@ -270,7 +305,7 @@ class magento_website(orm.Model):
     _inherit = 'magento.binding'
     _description = 'Magento Website'
 
-    _order = 'sort_order ASC'
+    _order = 'sort_order ASC, id ASC'
 
     _columns = {
         'name': fields.char('Name', required=True, readonly=True),
@@ -293,6 +328,9 @@ class magento_website(orm.Model):
                                              'When empty, the default price '
                                              'will be used.'),
         'import_partners_from_date': fields.datetime('Import partners from date'),
+        'product_binding_ids': fields.many2many('magento.product.product',
+                                                string='Magento Products',
+                                                readonly=True),
     }
 
     _sql_constraints = [
@@ -309,17 +347,53 @@ class magento_website(orm.Model):
             backend_id = website.backend_id.id
             if website.import_partners_from_date:
                 from_date = datetime.strptime(
-                        website.import_partners_from_date,
-                        DEFAULT_SERVER_DATETIME_FORMAT)
+                    website.import_partners_from_date,
+                    DEFAULT_SERVER_DATETIME_FORMAT)
             else:
                 from_date = None
             partner_import_batch.delay(
-                    session, 'magento.res.partner', backend_id,
-                    {'magento_website_id': website.magento_id,
-                     'from_date': from_date})
+                session, 'magento.res.partner', backend_id,
+                {'magento_website_id': website.magento_id,
+                    'from_date': from_date})
         self.write(cr, uid, ids,
                    {'import_partners_from_date': import_start_time})
         return True
+
+    def update_all_prices(self, cr, uid, ids, context=None):
+        """ Update the prices of all the products linked to the
+        website. """
+        if not hasattr(ids, '__iter__'):
+            ids = [ids]
+        for website in self.browse(cr, uid, ids, context=context):
+            session = ConnectorSession(cr, uid, context=context)
+            if website.magento_id == '0':
+                # 'Admin' website -> default values
+                # Update the default prices on all the products.
+                binding_ids = website.backend_id.product_binding_ids
+            else:
+                binding_ids = website.product_binding_ids
+            for binding in binding_ids:
+                export_product_price.delay(session,
+                                           'magento.product.product',
+                                           binding.id,
+                                           website_id=website.id)
+        return True
+
+    def onchange_pricelist_id(self, cr, uid, ids, pricelist_id, context=None):
+        if not ids:  # new record
+            return {}
+        warning = {
+            'title': _('Warning'),
+            'message': _('If you change the pricelist of the website, '
+                         'the price of all the products linked with this '
+                         'website will be updated in Magento.')
+        }
+        return {'warning': warning}
+
+    def write(self, cr, uid, ids, vals, context=None):
+        if 'pricelist_id' in vals:
+            self.update_all_prices(cr, uid, ids, context=context)
+        return super(magento_website, self).write(cr, uid, ids, vals, context=context)
 
 
 # TODO migrate from sale.shop (create a magento.store + associated
@@ -401,7 +475,7 @@ class magento_storeview(orm.Model):
     _inherit = 'magento.binding'
     _description = "Magento Storeview"
 
-    _order = 'sort_order ASC'
+    _order = 'sort_order ASC, id ASC'
 
     _columns = {
         'name': fields.char('Name', required=True, readonly=True),
