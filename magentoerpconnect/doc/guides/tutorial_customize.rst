@@ -124,7 +124,7 @@ And in ``customize_example/magento_model.py``::
 
         _columns = {
             'version': fields.selection(_select_versions, string='Version', required=True),
-            }
+        }
 
 Things to note:
 
@@ -154,14 +154,16 @@ In the next chapter, we'll cover the most common personalization:
 Add mappings of fields
 **********************
 
-The mappings of the fields define how they are linked between OpenERP and Magento.
+The mappings of the fields define how the fields are related between OpenERP and Magento.
+
+They defines whether field `A` should be written in field `B`, whether
+it should be converted then written to `C` and `D`, etc.
 
 To be able to customize the mappings, you need to already have a
-customization module, if that's not already done, you can go through the
+customization module. If that's not already done, you can go through the
 previous chapter: `Bootstrap your own customization module`_.
 
-We'll see how to map new fields on the imports, because there is
-currently no mappings for exports in the connector.
+We'll see how to map new fields on the imports.
 
 A bit of theory
 ===============
@@ -181,7 +183,7 @@ for the imports and the exports.
           More details in `Magento Models`_.
 
 When you need to change the mappings, you'll need to dive in the
-``magentoerpconnect``'s code and locate the class which do this job for
+``magentoerpconnect``'s code and locate the class which does this job for
 your model. You won't change anything on this class, but you'll extend
 it so you need to have a look on it.  For example, the mapping for
 ``magento.res.partner`` in ``magentoerpconnect`` is the following
@@ -191,15 +193,14 @@ it so you need to have a look on it.  For example, the mapping for
   class PartnerImportMapper(ImportMapper):
       _model_name = 'magento.res.partner'
 
-      direct = [
-              ('email', 'email'),
-              ('dob', 'birthday'),
-              ('created_at', 'created_at'),
-              ('updated_at', 'updated_at'),
-              ('email', 'emailid'),
-              ('taxvat', 'taxvat'),
-              ('group_id', 'group_id'),
-          ]
+      direct = [('email', 'email'),
+                ('dob', 'birthday'),
+                ('created_at', 'created_at'),
+                ('updated_at', 'updated_at'),
+                ('email', 'emailid'),
+                ('taxvat', 'taxvat'),
+                ('group_id', 'group_id'),
+                ]
 
       @mapping
       def is_company(self, record):
@@ -214,7 +215,7 @@ it so you need to have a look on it.  For example, the mapping for
                                      record['lastname']) if part]
           return {'name': ' '.join(parts)}
 
-      [...]
+      [...snip...]
 
 Here we can see 2 types of mappings:
 
@@ -286,8 +287,8 @@ I add it on ``magento.res.partner`` because it doesn't make sense on
 ``res.partner``.
 
 For this field, the Magento API returns a string. I add it in
-``customize_example/partner.py`` (I skip the part 'add them in the
-views')::
+``customize_example/partner.py`` (I willingly skip the part 'add them in
+the views')::
 
   # -*- coding: utf-8 -*-
   from openerp.osv import orm, fields
@@ -297,7 +298,7 @@ views')::
 
       _columns = {
           'created_in': fields.char('Created In', readonly=True),
-          }
+      }
 
 
 In the same file, I add the import of the Magento Backend to use and the
@@ -346,7 +347,7 @@ In ``customize_example/partner.py``, I write::
           'gender': fields.selection([('male', 'Male'),
                                       ('female', 'Female')],
                                      string='Gender'),
-          }
+      }
 
 The same imports than in the `Example 1.`_ are needed, but we need to
 import ``mapping`` too::
@@ -372,8 +373,8 @@ This is not a `direct` mapping, I will use a method to define the
 
 The ``gender`` field will now be imported.
 
-Conclusion
-==========
+And now?
+========
 
 With theses principles, you should now be able to extend the original
 mappings and add your own ones. This is applicable for the customers but

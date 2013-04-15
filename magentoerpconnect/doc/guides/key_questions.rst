@@ -156,7 +156,7 @@ Pricing
 
 Do you plan to use multi-currency?
 
-Do you plan to have different prices per store view?
+Do you plan to have different prices per websites?
 You will need to create different price lists in OpenERP.
 
 **********

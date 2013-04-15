@@ -47,10 +47,11 @@ Using and configuring the connector
 Be efficient using and configuring the connector.
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
    howto/configure_translations
    howto/configure_warehouse
+   howto/configure_pricing
    howto/configure_payment_methods
    howto/configure_automatic_workflows
    howto/configure_exception_rules
@@ -128,6 +129,11 @@ Glossary:
 
         An external service on which we connect OpenERP. In the context
         of the Magento connector, Magento is a backend.
+
+    Mapping
+
+        A mapping defines how the data is converted from Magento to
+        OpenERP and reversely.
 
 Indices and tables
 ==================

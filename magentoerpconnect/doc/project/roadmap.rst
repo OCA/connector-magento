@@ -6,7 +6,7 @@ Roadmap
 #######
 
 This document lists the feature that we want to develop for the
-connector. They are not sorted by priority. Any contribution of theses
+connector. They are not sorted by priority. Any contribution on theses
 points will be welcome.
 
 *******
@@ -55,3 +55,7 @@ Export of the catalog
 
 * Export product images
 
+Pricing
+=======
+
+* Push the new prices to Magento when a pricelist is modified

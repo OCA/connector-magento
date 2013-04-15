@@ -20,6 +20,7 @@
 ##############################################################################
 
 import logging
+from openerp.tools.translate import _
 from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.unit.synchronizer import ExportSynchronizer
 from openerp.addons.connector.exception import NothingToDoJob
@@ -43,10 +44,8 @@ class MagentoExportSynchronizer(ExportSynchronizer):
 
     def _get_openerp_data(self):
         """ Return the raw OpenERP data for ``self.binding_id`` """
-        cr, uid, context = (self.session.cr,
-                            self.session.uid,
-                            self.session.context)
-        return self.model.browse(cr, uid, self.binding_id, context=context)
+        return self.session.browse(self.model._name,
+                                   self.binding_id)
 
     def _has_to_skip(self):
         """ Return True if the import can be skipped """

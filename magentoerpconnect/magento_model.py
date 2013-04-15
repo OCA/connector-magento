@@ -108,6 +108,10 @@ class magento_backend(orm.Model):
             help="Choose the field of the product which will be used for "
                  "stock inventory updates.\nIf empty, Quantity Available "
                  "is used."),
+        'product_binding_ids': fields.one2many('magento.product.product',
+                                               'backend_id',
+                                               string='Magento Products',
+                                               readonly=True),
     }
 
     _defaults = {
@@ -263,7 +267,7 @@ class magento_website(orm.Model):
     _inherit = 'magento.binding'
     _description = 'Magento Website'
 
-    _order = 'sort_order ASC'
+    _order = 'sort_order ASC, id ASC'
 
     _columns = {
         'name': fields.char('Name', required=True, readonly=True),
@@ -275,6 +279,9 @@ class magento_website(orm.Model):
             string="Stores",
             readonly=True),
         'import_partners_from_date': fields.datetime('Import partners from date'),
+        'product_binding_ids': fields.many2many('magento.product.product',
+                                                string='Magento Products',
+                                                readonly=True),
     }
 
     _sql_constraints = [
@@ -291,14 +298,14 @@ class magento_website(orm.Model):
             backend_id = website.backend_id.id
             if website.import_partners_from_date:
                 from_date = datetime.strptime(
-                        website.import_partners_from_date,
-                        DEFAULT_SERVER_DATETIME_FORMAT)
+                    website.import_partners_from_date,
+                    DEFAULT_SERVER_DATETIME_FORMAT)
             else:
                 from_date = None
             partner_import_batch.delay(
-                    session, 'magento.res.partner', backend_id,
-                    {'magento_website_id': website.magento_id,
-                     'from_date': from_date})
+                session, 'magento.res.partner', backend_id,
+                {'magento_website_id': website.magento_id,
+                    'from_date': from_date})
         self.write(cr, uid, ids,
                    {'import_partners_from_date': import_start_time})
         return True
@@ -383,7 +390,7 @@ class magento_storeview(orm.Model):
     _inherit = 'magento.binding'
     _description = "Magento Storeview"
 
-    _order = 'sort_order ASC'
+    _order = 'sort_order ASC, id ASC'
 
     _columns = {
         'name': fields.char('Name', required=True, readonly=True),

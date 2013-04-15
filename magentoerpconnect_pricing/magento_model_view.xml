@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+
+        <record id="view_magento_backend_form" model="ir.ui.view">
+            <field name="name">magento.backend.form</field>
+            <field name="model">magento.backend</field>
+            <field name="inherit_id" ref="magentoerpconnect.view_magento_backend_form"/>
+            <field name="arch" type="xml">
+                <field name="warehouse_id" position="after">
+                    <field name="pricelist_id" on_change="onchange_pricelist_id(pricelist_id)"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_magento_website_form" model="ir.ui.view">
+            <field name="name">magento.website.form</field>
+            <field name="model">magento.website</field>
+            <field name="inherit_id" ref="magentoerpconnect.view_magento_website_form"/>
+            <field name="arch" type="xml">
+                <group name="options" position="inside">
+                    <field name="pricelist_id"
+                        attrs="{'invisible': [('magento_id', '==', '0')]}"
+                        on_change="onchange_pricelist_id(pricelist_id)"
+                        groups="product.group_sale_pricelist"/>
+                </group>
+            </field>
+        </record>
+    </data>
+</openerp>

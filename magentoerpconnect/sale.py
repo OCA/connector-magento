@@ -309,6 +309,21 @@ class SaleOrderImport(MagentoImportSynchronizer):
     def _after_import(self, binding_id):
         self._create_payment(binding_id)
 
+    def _get_magento_data(self):
+        """ Return the raw Magento data for ``self.magento_id`` """
+        record = super(SaleOrderImport, self)._get_magento_data()
+        # sometimes we don't have website_id...
+        # we fix the record!
+        if not record.get('website_id'):
+            # deduce it from the store
+            store_binder = self.get_binder_for_model('magento.store')
+            oe_store_id = store_binder.to_openerp(record['store_id'])
+            store = self.session.browse('magento.store', oe_store_id)
+            oe_website_id = store.website_id.id
+            # "fix" the record
+            record['website_id'] = store.website_id.magento_id
+        return record
+
     def _import_addresses(self):
         record = self.magento_record
         sess = self.session
@@ -320,19 +335,8 @@ class SaleOrderImport(MagentoImportSynchronizer):
         # on a non-guest order (it happens, Magento inconsistencies are
         # common)
         if (is_guest_order or not record.get('customer_id')):
-
-            # sometimes we don't have website_id...
-            if record.get('website_id'):
-                website_binder = self.get_binder_for_model('magento.website')
-                oe_website_id = website_binder.to_openerp(record['website_id'])
-            else:
-                # deduce it from the store
-                store_binder = self.get_binder_for_model('magento.store')
-                oe_store_id = store_binder.to_openerp(record['store_id'])
-                store = sess.browse('magento.store', oe_store_id)
-                oe_website_id = store.website_id.id
-                # "fix" the record
-                record['website_id'] = store.website_id.magento_id
+            website_binder = self.get_binder_for_model('magento.website')
+            oe_website_id = website_binder.to_openerp(record['website_id'])
 
             # search an existing partner with the same email
             partner_ids = sess.search('magento.res.partner',

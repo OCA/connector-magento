@@ -158,9 +158,12 @@
                             <field name="name" class="oe_inline"/>
                         </h1>
                         <group string="Informations">
+                            <field name="magento_id" invisible="1"/>
                             <field name="backend_id" readonly="1"/>
                             <field name="code"/>
                             <field name="sort_order"/>
+                        </group>
+                        <group string="Options" name="options">
                         </group>
                         <notebook>
                             <page name="import" string="Imports">

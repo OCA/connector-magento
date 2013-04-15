@@ -25,6 +25,7 @@ import urllib2
 import base64
 from operator import itemgetter
 from openerp.osv import orm, fields
+from openerp.tools.translate import _
 from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.event import on_record_create, on_record_write
 from openerp.addons.connector.unit.synchronizer import (ImportSynchronizer,
@@ -33,7 +34,8 @@ from openerp.addons.connector.unit.synchronizer import (ImportSynchronizer,
 from openerp.addons.connector.exception import (MappingError,
                                                 InvalidDataError)
 from openerp.addons.connector.unit.mapper import (mapping,
-                                                  ImportMapper
+                                                  only_create,
+                                                  ImportMapper,
                                                   )
 from .unit.backend_adapter import GenericAdapter
 from .unit.import_synchronizer import (DelayedBatchImport,
@@ -181,6 +183,13 @@ class ProductProductAdapter(GenericAdapter):
         return self._call('%s.info' % self._magento_model,
                           [int(id), storeview_id, attributes, 'id'])
 
+    def write(self, id, data, storeview_id=None):
+        """ Update records on the external system """
+        # XXX actually only ol_catalog_product.update works
+        # the PHP connector maybe breaks the catalog_product.update
+        return self._call('ol_catalog_product.update',
+                          [int(id), data, storeview_id, 'id'])
+
     def get_images(self, id, storeview_id=None):
         return self._call('product_media.list', [int(id), storeview_id, 'id'])
 
@@ -251,9 +260,10 @@ class CatalogImageImporter(ImportSynchronizer):
         if not main_image_data:
             return
         binary = self._get_binary_image(main_image_data)
-        self.session.write(self.model._name,
-                           binding_id,
-                           {'image': base64.b64encode(binary)})
+        with self.session.change_context({'connector_no_export': True}):
+            self.session.write(self.model._name,
+                               binding_id,
+                               {'image': base64.b64encode(binary)})
 
 
 @magento
@@ -320,7 +330,6 @@ class ProductImportMapper(ImportMapper):
     direct = [('name', 'name'),
               ('description', 'description'),
               ('weight', 'weight'),
-              ('price', 'list_price'),
               ('cost', 'standard_price'),
               ('short_description', 'description_sale'),
               ('sku', 'default_code'),
@@ -328,6 +337,13 @@ class ProductImportMapper(ImportMapper):
               ('created_at', 'created_at'),
               ('updated_at', 'updated_at'),
               ]
+
+    @mapping
+    def price(self, record):
+        """ The price is imported at the creation of
+        the product, then it is only modified and exported
+        from OpenERP """
+        return {'list_price': record['price']}
 
     @mapping
     def type(self, record):
@@ -338,10 +354,10 @@ class ProductImportMapper(ImportMapper):
     @mapping
     def website_ids(self, record):
         website_ids = []
+        binder = self.get_binder_for_model('magento.website')
         for mag_website_id in record['websites']:
-            binder = self.get_binder_for_model('magento.website')
             website_id = binder.to_openerp(mag_website_id)
-            website_ids.append(website_id)
+            website_ids.append((4, website_id))
         return {'website_ids': website_ids}
 
     @mapping

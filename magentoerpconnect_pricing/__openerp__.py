@@ -19,21 +19,27 @@
 #
 ##############################################################################
 
-from openerp.osv import orm, fields
+{'name': 'Magento Connector - Pricing',
+ 'version': '2.0.0',
+ 'category': 'Connector',
+ 'depends': ['magentoerpconnect',
+             ],
+ 'author': 'MagentoERPconnect Core Editors',
+ 'license': 'AGPL-3',
+ 'website': 'https://launchpad.net/magentoerpconnect',
+ 'description': """
+Magento Connector - Pricing
+===================================
 
+Extension for **Magento Connector**.
 
-class magento_config_settings(orm.TransientModel):
-    _inherit = 'connector.config.settings'
-
-    _columns = {
-        'module_magentoerpconnect_pricing': fields.boolean(
-            "Prices are managed in OpenERP with pricelists",
-            help="Prices are set in OpenERP and exported to Magento.\n\n"
-                 "This installs the module magentoerpconnect_pricing."),
-        'module_magentoerpconnect_export_partner': fields.boolean(
-            "Export Partners to Magento (experimental)",
-            help="This installs the module magentoerpconnect_export_partner."),
-        'module_magentoerpconnect_catalog': fields.boolean(
-            "Handle the product's catalog (not implemented)",
-            help="This installs the module magentoerpconnect_catalog."),
-    }
+The prices of the products are managed in OpenERP using pricelists and
+are pushed to Magento.
+""",
+ 'images': [],
+ 'demo': [],
+ 'data': ['magento_model_view.xml',
+          ],
+ 'installable': True,
+ 'application': False,
+}
