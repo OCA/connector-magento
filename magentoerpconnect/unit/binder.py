@@ -19,6 +19,8 @@
 #
 ##############################################################################
 
+from datetime import datetime
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.addons.connector.connector import Binder
 from ..backend import magento
 
@@ -94,9 +96,11 @@ class MagentoModelBinder(MagentoBinder):
         # avoid to trigger the export when we modify the `magento_id`
         context = self.session.context.copy()
         context['connector_no_export'] = True
+        now_fmt = datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         self.environment.model.write(
             self.session.cr,
             self.session.uid,
             binding_id,
-            {'magento_id': str(external_id)},
+            {'magento_id': str(external_id),
+             'sync_date': now_fmt},
             context=context)
