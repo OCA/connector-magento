@@ -28,7 +28,6 @@ from openerp.osv import orm, fields
 from openerp.tools.translate import _
 from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.event import on_record_create, on_record_write
-from openerp.addons.connector_ecommerce.event import on_product_price_changed
 from openerp.addons.connector.unit.synchronizer import (ImportSynchronizer,
                                                         ExportSynchronizer
                                                         )
@@ -339,7 +338,6 @@ class ProductImportMapper(ImportMapper):
               ('updated_at', 'updated_at'),
               ]
 
-    @only_create
     @mapping
     def price(self, record):
         """ The price is imported at the creation of
@@ -442,77 +440,6 @@ class ProductInventoryExport(ExportSynchronizer):
         self.backend_adapter.update_inventory(magento_id, data)
 
 
-@magento
-class ProductPriceExport(ExportSynchronizer):
-    """ Export the price of a product.
-
-    Use the pricelist configured on the backend for the
-    default price in Magento.
-    If different pricelists have been configured on the websites,
-    update the prices on the different websites.
-    """
-    _model_name = ['magento.product.product']
-
-    def _get_price(self, binding_id, pricelist_id):
-        """ Return the raw OpenERP data for ``self.binding_id`` """
-        if pricelist_id is None:
-            return False  # a False value will set the 'Use default value'
-                          # in Magento
-        with self.session.change_context({'pricelist': pricelist_id}):
-            return self.session.read(self.model._name,
-                                     binding_id,
-                                     ['price'])['price']
-
-    def _update(self, magento_id, data, storeview_id=None):
-        self.backend_adapter.write(magento_id, data,
-                                   storeview_id=storeview_id)
-
-    def run(self, binding_id, website_id=None):
-        """ Export the product inventory to Magento
-
-        :param website_id: if None, export on all websites,
-                           or OpenERP ID for the website to update
-        """
-        binder = self.get_binder_for_model()
-        magento_id = binder.to_backend(binding_id)
-
-        pricelist_id = self.backend_record.pricelist_id.id
-
-        # export the price for websites if they have a different
-        # pricelist
-        storeview_binder = self.get_binder_for_model('magento.storeview')
-        for website in self.backend_record.website_ids:
-            if website_id is not None and website.id != website_id:
-                continue
-            # 0 is the admin website, the update on this website
-            # set the default values in Magento, we use the default
-            # pricelist
-            site_pricelist_id = None
-            if website.magento_id == '0':
-                site_pricelist_id = pricelist_id
-            elif website.pricelist_id:
-                site_pricelist_id = website.pricelist_id.id
-
-            # The update of the prices in Magento is very weird:
-            # - The price is different per website (if the option
-            #   is active in the config), but is shared between
-            #   the store views of a website.
-            # - BUT the Magento API expects a storeview id to modify
-            #   a price on a website (and not a website id...)
-            # So we take the first storeview of the website to update.
-            storeview_ids = self.session.search(
-                'magento.storeview',
-                [('store_id.website_id', '=', website.id)])
-            if not storeview_ids:
-                continue
-            magento_storeview = storeview_binder.to_backend(storeview_ids[0])
-            price = self._get_price(binding_id,
-                                    site_pricelist_id)
-            self._update(magento_id, {'price': price},
-                         storeview_id=magento_storeview)
-        return _('Prices have been updated.')
-
-
 # fields which should not trigger an export of the products
 # but an export of their inventory
 INVENTORY_FIELDS = ('manage_stock',
@@ -533,22 +460,6 @@ def magento_product_modified(session, model_name, record_id, fields=None):
                                        priority=20)
 
 
-@on_product_price_changed
-@magento_consumer
-def product_price_changed(session, model_name, record_id, fields=None):
-    """ When a product.product price has been changed """
-    if session.context.get('connector_no_export'):
-        return
-    model = session.pool.get(model_name)
-    record = model.browse(session.cr, session.uid,
-                          record_id, context=session.context)
-    for binding in record.magento_bind_ids:
-        export_product_price.delay(session,
-                                   binding._model._name,
-                                   binding.id,
-                                   priority=5)
-
-
 @job
 def export_product_inventory(session, model_name, record_id, fields=None):
     """ Export the inventory configuration and quantity of a product. """
@@ -557,13 +468,3 @@ def export_product_inventory(session, model_name, record_id, fields=None):
     env = get_environment(session, model_name, backend_id)
     inventory_exporter = env.get_connector_unit(ProductInventoryExport)
     return inventory_exporter.run(record_id, fields)
-
-
-@job
-def export_product_price(session, model_name, record_id, website_id=None):
-    """ Export the price of a product. """
-    product_bind = session.browse(model_name, record_id)
-    backend_id = product_bind.backend_id.id
-    env = get_environment(session, model_name, backend_id)
-    price_exporter = env.get_connector_unit(ProductPriceExport)
-    return price_exporter.run(record_id, website_id=website_id)

@@ -613,19 +613,6 @@ class SaleOrderImportMapper(ImportMapper):
     def backend_id(self, record):
         return {'backend_id': self.backend_record.id}
 
-    @mapping
-    def pricelist_id(self, record):
-        """ Assign the the sale order the price list used on
-        the Magento Website or Backend """
-        website_binder = self.get_binder_for_model('magento.website')
-        oe_website_id = website_binder.to_openerp(record['website_id'])
-        website = self.session.browse('magento.website', oe_website_id)
-        if website.pricelist_id:
-            pricelist_id = website.pricelist_id.id
-        else:
-            pricelist_id = self.backend_record.pricelist_id.id
-        return {'pricelist_id': pricelist_id}
-
 
 @magento
 class MagentoSaleOrderOnChange(SaleOrderOnChange):

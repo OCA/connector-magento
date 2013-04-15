@@ -24,7 +24,6 @@ import logging
 from datetime import datetime
 from openerp.osv import fields, orm
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
-from openerp.tools.translate import _
 import openerp.addons.connector as connector
 from openerp.addons.connector.session import ConnectorSession
 from openerp.addons.connector.connector import ConnectorUnit
@@ -42,7 +41,6 @@ from .partner import partner_import_batch
 from .sale import sale_order_import_batch
 from .backend import magento
 from .connector import add_checkpoint
-from .product import export_product_price
 
 _logger = logging.getLogger(__name__)
 
@@ -83,13 +81,6 @@ class magento_backend(orm.Model):
                                         required=True,
                                         help='Warehouse used to compute the '
                                              'stock quantities.'),
-        'pricelist_id': fields.many2one('product.pricelist',
-                                        'Pricelist',
-                                        required=True,
-                                        domain="[('type', '=', 'sale')]",
-                                        help='The price list used to define '
-                                             'the prices of the products in '
-                                             'Magento.'),
         'website_ids': fields.one2many(
             'magento.website', 'backend_id',
             string='Website', readonly=True),
@@ -227,35 +218,6 @@ class magento_backend(orm.Model):
                                               context=context)
         return True
 
-    def onchange_pricelist_id(self, cr, uid, ids, pricelist_id, context=None):
-        if not ids:  # new record
-            return {}
-        warning = {
-            'title': _('Warning'),
-            'message': _('If you change the pricelist of the backend, '
-                         'the price of all the products will be updated '
-                         'in Magento.')
-        }
-        return {'warning': warning}
-
-    def _update_default_prices(self, cr, uid, ids, context=None):
-        """ Update the default prices of the products linked with
-        this backend.
-
-        The default prices are linked with the 'Admin' website (id: 0).
-        """
-        website_obj = self.pool.get('magento.website')
-        website_ids = website_obj.search(cr, uid,
-                                         [('backend_id', 'in', ids),
-                                          ('magento_id', '=', '0')],
-                                         context=context)
-        website_obj.update_all_prices(cr, uid, website_ids, context=context)
-
-    def write(self, cr, uid, ids, vals, context=None):
-        if 'pricelist_id' in vals:
-            self._update_default_prices(cr, uid, ids, context=context)
-        return super(magento_backend, self).write(cr, uid, ids, vals, context=context)
-
     def _magento_backend(self, cr, uid, callback, domain=None, context=None):
         if domain is None:
             domain = []
@@ -316,17 +278,6 @@ class magento_website(orm.Model):
             'website_id',
             string="Stores",
             readonly=True),
-        'pricelist_id': fields.many2one('product.pricelist',
-                                        'Pricelist',
-                                        domain="[('type', '=', 'sale')]",
-                                        help='The pricelist used to define '
-                                             'the prices of the products in '
-                                             'Magento for this website.\n'
-                                             'Choose a pricelist only if the '
-                                             'prices are different for this '
-                                             'website.\n'
-                                             'When empty, the default price '
-                                             'will be used.'),
         'import_partners_from_date': fields.datetime('Import partners from date'),
         'product_binding_ids': fields.many2many('magento.product.product',
                                                 string='Magento Products',
@@ -358,42 +309,6 @@ class magento_website(orm.Model):
         self.write(cr, uid, ids,
                    {'import_partners_from_date': import_start_time})
         return True
-
-    def update_all_prices(self, cr, uid, ids, context=None):
-        """ Update the prices of all the products linked to the
-        website. """
-        if not hasattr(ids, '__iter__'):
-            ids = [ids]
-        for website in self.browse(cr, uid, ids, context=context):
-            session = ConnectorSession(cr, uid, context=context)
-            if website.magento_id == '0':
-                # 'Admin' website -> default values
-                # Update the default prices on all the products.
-                binding_ids = website.backend_id.product_binding_ids
-            else:
-                binding_ids = website.product_binding_ids
-            for binding in binding_ids:
-                export_product_price.delay(session,
-                                           'magento.product.product',
-                                           binding.id,
-                                           website_id=website.id)
-        return True
-
-    def onchange_pricelist_id(self, cr, uid, ids, pricelist_id, context=None):
-        if not ids:  # new record
-            return {}
-        warning = {
-            'title': _('Warning'),
-            'message': _('If you change the pricelist of the website, '
-                         'the price of all the products linked with this '
-                         'website will be updated in Magento.')
-        }
-        return {'warning': warning}
-
-    def write(self, cr, uid, ids, vals, context=None):
-        if 'pricelist_id' in vals:
-            self.update_all_prices(cr, uid, ids, context=context)
-        return super(magento_website, self).write(cr, uid, ids, vals, context=context)
 
 
 # TODO migrate from sale.shop (create a magento.store + associated

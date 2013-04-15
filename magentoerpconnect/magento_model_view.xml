@@ -28,7 +28,6 @@
                         </group>
                         <group name="main_configuration" string="Main Configuration">
                             <field name="warehouse_id"/>
-                            <field name="pricelist_id" on_change="onchange_pricelist_id(pricelist_id)"/>
                         </group>
                         <notebook>
                             <page name="import" string="Imports">
@@ -159,16 +158,12 @@
                             <field name="name" class="oe_inline"/>
                         </h1>
                         <group string="Informations">
+                            <field name="magento_id" invisible="1"/>
                             <field name="backend_id" readonly="1"/>
                             <field name="code"/>
                             <field name="sort_order"/>
                         </group>
                         <group string="Options" name="options">
-                            <field name="magento_id" invisible="1"/>
-                            <field name="pricelist_id"
-                                attrs="{'invisible': [('magento_id', '==', '0')]}"
-                                on_change="onchange_pricelist_id(pricelist_id)"
-                                groups="product.group_sale_pricelist"/>
                         </group>
                         <notebook>
                             <page name="import" string="Imports">

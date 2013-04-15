@@ -5,6 +5,10 @@
 How to configure pricing
 ########################
 
+Install the pricing extensions by going in: `Settings > Configuration >
+Connector` and by checking the `Price are managed in OpenERP with
+pricelists` option.
+
 **********************************
 Prices are shared accross websites
 **********************************

@@ -19,21 +19,27 @@
 #
 ##############################################################################
 
-from openerp.osv import orm, fields
+from openerp.addons.magentoerpconnect.backend import magento
+from openerp.addons.magentoerpconnect import sale
+from openerp.addons.connector.unit.mapper import mapping
 
 
-class magento_config_settings(orm.TransientModel):
-    _inherit = 'connector.config.settings'
+magento.unregister_class(sale.SaleOrderImportMapper)
 
-    _columns = {
-        'module_magentoerpconnect_pricing': fields.boolean(
-            "Prices are managed in OpenERP with pricelists",
-            help="Prices are set in OpenERP and exported to Magento.\n\n"
-                 "This installs the module magentoerpconnect_pricing."),
-        'module_magentoerpconnect_export_partner': fields.boolean(
-            "Export Partners to Magento (experimental)",
-            help="This installs the module magentoerpconnect_export_partner."),
-        'module_magentoerpconnect_catalog': fields.boolean(
-            "Handle the product's catalog (not implemented)",
-            help="This installs the module magentoerpconnect_catalog."),
-    }
+
+@magento
+class SaleOrderImportMapper(sale.SaleOrderImportMapper):
+    _model_name = 'magento.sale.order'
+
+    @mapping
+    def pricelist_id(self, record):
+        """ Assign to the sale order the price list used on
+        the Magento Website or Backend """
+        website_binder = self.get_binder_for_model('magento.website')
+        oe_website_id = website_binder.to_openerp(record['website_id'])
+        website = self.session.browse('magento.website', oe_website_id)
+        if website.pricelist_id:
+            pricelist_id = website.pricelist_id.id
+        else:
+            pricelist_id = self.backend_record.pricelist_id.id
+        return {'pricelist_id': pricelist_id}

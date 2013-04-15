@@ -19,6 +19,10 @@
                         <label for="id" string="Extensions"/>
                         <div>
                             <div>
+                                <field name="module_magentoerpconnect_pricing" class="oe_inline"/>
+                                <label for="module_magentoerpconnect_pricing"/>
+                            </div>
+                            <div>
                                 <field name="module_magentoerpconnect_export_partner" class="oe_inline"/>
                                 <label for="module_magentoerpconnect_export_partner"/>
                             </div>
