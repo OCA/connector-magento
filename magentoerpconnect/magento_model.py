@@ -88,8 +88,6 @@ class magento_backend(orm.Model):
                                         help='The price list used to define '
                                              'the prices of the products in '
                                              'Magento.'),
-        'different_pricelists': fields.boolean('Use different prices '
-                                               'accross websites'),
         'website_ids': fields.one2many(
             'magento.website', 'backend_id',
             string='Website', readonly=True),
@@ -294,11 +292,6 @@ class magento_website(orm.Model):
                                              'website.\n'
                                              'When empty, the default price '
                                              'will be used.'),
-        'different_pricelists': fields.related('backend_id', 'different_pricelists',
-                                               type='boolean',
-                                               readonly=True,
-                                               string='Use different prices '
-                                                      'accross websites'),
         'import_partners_from_date': fields.datetime('Import partners from date'),
     }
 

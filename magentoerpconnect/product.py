@@ -455,6 +455,9 @@ class ProductPriceExport(ExportSynchronizer):
 
     def _get_price(self, binding_id, pricelist_id):
         """ Return the raw OpenERP data for ``self.binding_id`` """
+        if pricelist_id is None:
+            return False  # a False value will set the 'Use default value'
+                          # in Magento
         with self.session.change_context({'pricelist': pricelist_id}):
             return self.session.read(self.model._name,
                                      binding_id,
@@ -464,27 +467,32 @@ class ProductPriceExport(ExportSynchronizer):
         self.backend_adapter.write(magento_id, data,
                                    storeview_id=storeview_id)
 
-    def run(self, binding_id):
-        """ Export the product inventory to Magento """
+    def run(self, binding_id, website_id=None):
+        """ Export the product inventory to Magento
+
+        :param website_id: if None, export on all websites,
+                           or OpenERP ID for the website to update
+        """
         binder = self.get_binder_for_model()
         magento_id = binder.to_backend(binding_id)
 
-        # export the default price
         pricelist_id = self.backend_record.pricelist_id.id
-        price = self._get_price(binding_id, pricelist_id)
-        self._update(magento_id, {'price': price})
-
-        if not self.backend_record.different_pricelists:
-            return _('Default price updated.')
 
         # export the price for websites if they have a different
         # pricelist
         storeview_binder = self.get_binder_for_model('magento.storeview')
         for website in self.backend_record.website_ids:
-            # 0 is the admin website, the update on this website
-            # would have the same effect than the global update
-            if website.magento_id == '0':
+            if website_id is not None and website.id != website_id:
                 continue
+            # 0 is the admin website, the update on this website
+            # set the default values in Magento, we use the default
+            # pricelist
+            site_pricelist_id = None
+            if website.magento_id == '0':
+                site_pricelist_id = pricelist_id
+            elif website.pricelist_id:
+                site_pricelist_id = website.pricelist_id.id
+
             # The update of the prices in Magento is very weird:
             # - The price is different per website (if the option
             #   is active in the config), but is shared between
@@ -498,16 +506,11 @@ class ProductPriceExport(ExportSynchronizer):
             if not storeview_ids:
                 continue
             magento_storeview = storeview_binder.to_backend(storeview_ids[0])
-
-            price = False  # 'Use Default Value' option will be
-                           # activated when price is False
-            site_pricelist_id = website.pricelist_id
-            if site_pricelist_id and site_pricelist_id != pricelist_id:
-                price = self._get_price(binding_id,
-                                        website.pricelist_id.id)
+            price = self._get_price(binding_id,
+                                    site_pricelist_id)
             self._update(magento_id, {'price': price},
                          storeview_id=magento_storeview)
-        return _('Prices for all websites have been updated.')
+        return _('Prices have been updated.')
 
 
 # fields which should not trigger an export of the products
@@ -533,6 +536,7 @@ def magento_product_modified(session, model_name, record_id, fields=None):
 @on_product_price_changed
 @magento_consumer
 def product_price_changed(session, model_name, record_id, fields=None):
+    """ When a product.product price has been changed """
     if session.context.get('connector_no_export'):
         return
     model = session.pool.get(model_name)
@@ -556,10 +560,10 @@ def export_product_inventory(session, model_name, record_id, fields=None):
 
 
 @job
-def export_product_price(session, model_name, record_id):
+def export_product_price(session, model_name, record_id, website_id=None):
     """ Export the price of a product. """
     product_bind = session.browse(model_name, record_id)
     backend_id = product_bind.backend_id.id
     env = get_environment(session, model_name, backend_id)
     price_exporter = env.get_connector_unit(ProductPriceExport)
-    return price_exporter.run(record_id)
+    return price_exporter.run(record_id, website_id=website_id)
