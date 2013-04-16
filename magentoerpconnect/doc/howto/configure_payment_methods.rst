@@ -11,4 +11,4 @@ Find the configuration in the menu
 The name of the payment method is the code of the payment in Magento,
 for instance: `checkmo`.
 
-TODO: document the configuration
+.. todo:: document the configuration

@@ -246,7 +246,7 @@ For the printing of your packets' labels,
 are you going to use external software
 or do you want to print them directly from OpenERP?
 
-TODO: add a pointer to the modules, I don't have the url actually.
+.. todo:: add a pointer to the modules, I don't have the url actually.
 
 Management of returned goods
 ============================

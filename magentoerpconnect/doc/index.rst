@@ -8,9 +8,11 @@ Magento OpenERP Connector
 #########################
 
 This is a connector linking OpenERP and Magento. It is build on top of
-the ``connector`` (TODO: link) framework. It is is structured so that it
+the ``connector`` framework. It is is structured so that it
 can be extended or modified easily as the implementations of
 Magento vary a lot.
+
+.. todo:: add a link to ``connector``'s doc / homepage
 
 Features:
 
@@ -19,6 +21,8 @@ Features:
 * b
 
 * c
+
+.. todo:: features, description
 
 Magento OpenERP Connector is mainly developed by the Magentoerpconnect Core
 Editors, these being Camptocamp_ and Akretion_. The `source is on
@@ -60,6 +64,7 @@ Be efficient using and configuring the connector.
    howto/configure_schedulers
    guides/connector_checkpoint
    guides/monitor_resolve_jobs
+   howto/modify_an_order
 
 
 ***************************
@@ -81,7 +86,7 @@ Develop
 API
 ===
 
-TODO: fixme, not generated due to the openerp.addons namespace
+.. todo:: fixme, not generated due to the openerp.addons namespace
 
 .. toctree::
    :maxdepth: 2
@@ -100,7 +105,7 @@ TODO: fixme, not generated due to the openerp.addons namespace
 Project
 =======
 
-todo:
+.. todo:: how to contribute, releases notes
 
 * how to contribute
 

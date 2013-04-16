@@ -10,7 +10,8 @@ Installation Guide
 Installation
 ************
 
-TODO: step-by-step installation guide from branches
+.. todo:: step-by-step installation guide from branches
+
 
 **********************
 After the installation
