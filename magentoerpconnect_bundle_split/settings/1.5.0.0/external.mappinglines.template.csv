@@ -1,3 +1,0 @@
-id,version_id:id,external_field,type,external_type,evaluation_type,in_function,out_function
-mag_1500_erp_prd_item_id,magentoerpconnect.magento1500,item_id,in,int,"direct","result=[('magento_item_id', ifield)]",
-mag_1500_erp_prd_parent_item_id,magentoerpconnect.magento1500,parent_item_id,in,int,"direct","result=[('magento_parent_item_id', ifield)]",
