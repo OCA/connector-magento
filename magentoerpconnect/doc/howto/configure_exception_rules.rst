@@ -9,4 +9,4 @@ Find the configuration in the menu
 `Sales > Configuration > Sales > Exception Rules`.
 
 
-TODO: document the configuration
+.. todo:: document the configuration
