@@ -42,3 +42,25 @@ then link the new order with the old one.
 
 Until the old sale order is not cancelled or done,
 a rule prevents the new sale order to be confirmed.
+
+
+.. todo:: Technical note for the implementation:
+          When an order is cancelled on Magento:
+            1. flag SO.cancelled_on_backend
+            2. try to cancel the SO (beware of picking, invoice, payments)
+              2a. if successed, flag SO.cancellation_resolved
+            3. the picking and invoice of the SO blocks confirmation when
+               cancelled_on_backend is True and
+               cancellation_resolved is False
+          When an order has a 'parent_id' (modification of order)
+            1. get the list of all the parent SO
+            2. add a link to the parent SO
+            3. sale_exception blocks when a parent SO is
+               cancelled_on_backend but not cancellation_resolved
+          Add search filters for cancelled_on_backend is True and
+          cancellation_resolved is False
+
+          Beware! The new order can be linked to many parent orders
+          and some of them maybe do not exist in OpenERP because they
+          have been cancelled before their importation.
+
