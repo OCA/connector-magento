@@ -50,6 +50,10 @@ launchpad`_.
 This connector is designed to have a strong and efficient core, with the
 ability to extend it with extension modules or local customizations.
 
+In other words, the core module contains the minimal scope to run your
+e-commerce with OpenERP and Magento. More advanced features are
+installable using extensions.
+
 It features:
 
 Synchronizations:
