@@ -112,12 +112,10 @@ Available extensions:
 .. _`source is on launchpad`: https://launchpad.net/magentoerpconnect
 
 """,
- # TODO change images
- 'images': ['images/main_menu.png',
-            'images/instance.png',
-            'images/sale_shop.png',
-            'images/product.png',
-            'images/magentocoreeditors.png',
+ 'images': ['images/magento_backend.png',
+            'images/jobs.png',
+            'images/product_binding.png',
+            'images/invoice_binding.png',
             'images/magentoerpconnect.png',
             ],
  'demo': [],
