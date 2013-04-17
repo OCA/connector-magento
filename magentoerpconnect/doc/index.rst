@@ -12,8 +12,6 @@ the ``connector`` framework. It is is structured so that it
 can be extended or modified easily as the implementations of
 Magento vary a lot.
 
-.. todo:: add a link to ``connector``'s doc / homepage
-
 Features:
 
 * a
@@ -28,6 +26,7 @@ Magento OpenERP Connector is mainly developed by the Magentoerpconnect Core
 Editors, these being Camptocamp_ and Akretion_. The `source is on
 launchpad`_.
 
+.. _connector: https://code.launchpad.net/openerp-connector
 .. _Camptocamp: http://www.camptocamp.com
 .. _Akretion: http://www.akretion.com
 .. _`source is on launchpad`: https://launchpad.net/magentoerpconnect
