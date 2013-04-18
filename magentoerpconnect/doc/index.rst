@@ -98,11 +98,13 @@ API
 Project
 =======
 
-.. todo:: how to contribute, releases notes
+.. todo:: how to contribute, releases notes, license
 
 * how to contribute
 
 * release notes
+
+* license
 
 .. toctree::
    :maxdepth: 2
