@@ -72,6 +72,10 @@ class magento_sale_order(orm.Model):
                                          digits_compute=dp.get_precision('Account')), # XXX common to all ecom sale orders
         'magento_order_id': fields.integer('Magento Order ID',
                                            help="'order_id' field in Magento"),
+        # when a sale order is modified, Magento creates a new one, cancels
+        # the parent order and link the new one to the canceled parent
+        'magento_parent_id': fields.many2one('magento.sale.order',
+                                             string='Parent Magento Order'),
         }
 
     _sql_constraints = [
@@ -83,11 +87,28 @@ class magento_sale_order(orm.Model):
 class sale_order(orm.Model):
     _inherit = 'sale.order'
 
+    def get_parent_id(self, cr, uid, ids, context=None):
+        """ Return the parent order.
+
+        For Magento sales orders, the magento parent order is stored
+        in the binding, get it from there.
+        """
+        res = super(sale_order, self).get_parent_id(cr, uid, ids,
+                                                    context=context)
+        for order in self.browse(cr, uid, ids, context=context):
+            if not order.magento_bind_ids:
+                continue
+            # assume we only have 1 SO in OpenERP for 1 SO in Magento
+            magento_order = order.magento_bind_ids[0]
+            if magento_order.magento_parent_id:
+                res[order.id] = magento_order.magento_parent_id.openerp_id.id
+        return res
+
     _columns = {
-            'magento_bind_ids': fields.one2many(
-                'magento.sale.order', 'openerp_id',
-                string="Magento Bindings"),
-        }
+        'magento_bind_ids': fields.one2many(
+            'magento.sale.order', 'openerp_id',
+            string="Magento Bindings"),
+    }
 
 
 class magento_sale_order_line(orm.Model):
@@ -108,7 +129,8 @@ class magento_sale_order_line(orm.Model):
         ##                            string='Sale Order',
         ##                            readonly=True,
         ##                            store=True),
-        'magento_order_id': fields.many2one('magento.sale.order', 'Magento Sale Order',
+        'magento_order_id': fields.many2one('magento.sale.order',
+                                            'Magento Sale Order',
                                             required=True,
                                             ondelete='cascade',
                                             select=True),
