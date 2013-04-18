@@ -7,24 +7,18 @@
 Magento OpenERP Connector
 #########################
 
-This is a connector linking OpenERP and Magento. It is build on top of
-the ``connector`` framework. It is is structured so that it
-can be extended or modified easily as the implementations of
-Magento vary a lot.
-
-Features:
-
-* a
-
-* b
-
-* c
-
-.. todo:: features, description
+This is the new release of the Open-Source connector linking OpenERP and
+Magento also known under the name of **Magentoerpconnect**.  It is
+build on top of the `connector`_ framework. It is is structured so that
+it can be extended or modified easily from separate addons, a factor of
+success when the implementations of Magento vary a lot.
 
 Magento OpenERP Connector is mainly developed by the Magentoerpconnect Core
 Editors, these being Camptocamp_ and Akretion_. The `source is on
 launchpad`_.
+
+This connector is designed to have a strong and efficient core, with the
+ability to extend it with extension modules or local customizations.
 
 .. _connector: https://code.launchpad.net/openerp-connector
 .. _Camptocamp: http://www.camptocamp.com

@@ -91,7 +91,6 @@ Technical points:
 * Support Magento 1.7, the support of earlier versions should be easy to
   add, the `connector`_ framework being designed to handle multiple
   versions with ease.
-* Documentation-included (help's welcome)
 * Licensed under AGPL version 3
 * Designed to be usable with multiple Magento or any other e-commerce backends
   in the same time.
