@@ -343,7 +343,7 @@ class ProductImportMapper(ImportMapper):
         """ The price is imported at the creation of
         the product, then it is only modified and exported
         from OpenERP """
-        return {'list_price': record['price']}
+        return {'list_price': record.get('price', 0.0)}
 
     @mapping
     def type(self, record):
