@@ -47,7 +47,7 @@ class ProductImportMapper(product.ProductImportMapper):
         """ The price is imported at the creation of
         the product, then it is only modified and exported
         from OpenERP """
-        return {'list_price': record['price']}
+        super(ProductImportMapper, self).price(record)
 
 
 @magento
