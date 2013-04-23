@@ -43,7 +43,7 @@ def magento_consumer(func):
     @wraps(func)
     def wrapped(*args, **kwargs):
         session = args[0]
-        if session.pool.get('magentoerpconnect.installed'):
+        if session.is_module_installed('magentoerpconnect'):
             return func(*args, **kwargs)
 
     return wrapped
