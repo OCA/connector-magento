@@ -135,9 +135,10 @@ class test_import_magento(common.SingleTransactionCase):
         """ Import of a simple product when the category is missing """
         backend_id = self.backend_id
         with mock_api():
-            import_record(self.session,
-                          'magento.product.product',
-                          backend_id, 25)
+            with mock_urlopen_image():
+                import_record(self.session,
+                              'magento.product.product',
+                              backend_id, 25)
 
         product_model = self.registry('magento.product.product')
         product_ids = product_model.search(self.cr,
