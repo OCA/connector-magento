@@ -40,6 +40,6 @@ are pushed to Magento.
  'demo': [],
  'data': ['magento_model_view.xml',
           ],
- 'installable': False,
+ 'installable': True,
  'application': False,
 }
