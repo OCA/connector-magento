@@ -26,7 +26,6 @@ from openerp.addons.connector.exception import FailedJobError, NoExternalId
 from openerp.addons.connector.unit.synchronizer import ExportSynchronizer
 from openerp.addons.connector_ecommerce.event import on_tracking_number_added
 from .connector import get_environment
-from .consumer import magento_consumer
 from .backend import magento
 
 _logger = logging.getLogger(__name__)
@@ -94,7 +93,6 @@ class MagentoTrackingExport(ExportSynchronizer):
 
 
 @on_tracking_number_added
-@magento_consumer
 def delay_export_tracking_number(session, model_name, record_id):
     """
     Call a job to export the tracking number to a existing picking that

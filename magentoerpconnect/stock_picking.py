@@ -30,7 +30,6 @@ from openerp.addons.connector.unit.synchronizer import ExportSynchronizer
 from openerp.addons.connector_ecommerce.event import on_picking_out_done
 from .unit.backend_adapter import GenericAdapter
 from .connector import get_environment
-from .consumer import magento_consumer
 from .backend import magento
 from .stock_tracking import export_tracking_number
 
@@ -190,7 +189,6 @@ class MagentoPickingExport(ExportSynchronizer):
 
 
 @on_picking_out_done
-@magento_consumer
 def picking_out_done(session, model_name, record_id, picking_method):
     """
     Create a ``magento.stock.picking.out`` record. This record will then
@@ -212,7 +210,6 @@ def picking_out_done(session, model_name, record_id, picking_method):
 
 
 @on_record_create(model_names='magento.stock.picking.out')
-@magento_consumer
 def delay_export_picking_out(session, model_name, record_id):
     export_picking_done.delay(session, model_name, record_id)
 

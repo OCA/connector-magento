@@ -44,7 +44,6 @@ from .unit.import_synchronizer import (DelayedBatchImport,
                                        AddCheckpoint,
                                        )
 from .connector import get_environment
-from .consumer import magento_consumer
 from .backend import magento
 
 _logger = logging.getLogger(__name__)
@@ -449,7 +448,6 @@ INVENTORY_FIELDS = ('manage_stock',
 
 
 @on_record_write(model_names='magento.product.product')
-@magento_consumer
 def magento_product_modified(session, model_name, record_id, fields=None):
     if session.context.get('connector_no_export'):
         return

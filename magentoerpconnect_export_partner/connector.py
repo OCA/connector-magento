@@ -19,34 +19,14 @@
 #
 ##############################################################################
 
-from functools import wraps
 from openerp.osv import orm
-from openerp.addons.connector.event import (on_record_write,
-                                            on_record_create,
-                                            on_record_unlink
-                                            )
-import openerp.addons.magentoerpconnect.consumer as magentoerpconnect
 
 
-class magentoerpconnect_installed(orm.AbstractModel):
+class magentoerpconnect_export_partner_installed(orm.AbstractModel):
     """Empty model used to know if the module is installed on the
     database.
 
     If the model is in the registry, the module is installed.
     """
-    _name = 'magentoerpconnect_pricing.installed'
+    _name = 'magentoerpconnect_export_partner.installed'
 
-
-def magento_pricing_consumer(func):
-    """ Use this decorator on all the consumers of
-    magentoerpconnect_pricing.
-
-    It will prevent the consumers from being fired when the addon is not
-    installed.
-    """
-    @wraps(func)
-    def wrapped(*args, **kwargs):
-        session = args[0]
-        if session.pool.get('magentoerpconnect_pricing.installed'):
-            return func(*args, **kwargs)
-    return wrapped
