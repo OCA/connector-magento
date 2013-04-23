@@ -20,39 +20,18 @@
 ##############################################################################
 
 import unittest2
-import mock
-from contextlib import contextmanager
-import magento
 
-from openerp.addons.connector.connector import ConnectorUnit
 from openerp.addons.connector.exception import InvalidDataError
 from openerp.addons.magentoerpconnect.unit.import_synchronizer import (
-        import_batch,
-        import_record)
+    import_batch,
+    import_record)
 from openerp.addons.connector.session import ConnectorSession
 import openerp.tests.common as common
-from .test_data import magento_base_responses
-from ..unit.backend_adapter import call_to_key
+from .common import (mock_api,
+                     mock_urlopen_image)
 
 DB = common.DB
 ADMIN_USER_ID = common.ADMIN_USER_ID
-
-
-def get_magento_response(method, arguments):
-    key = call_to_key(method, arguments)
-    assert key in magento_base_responses, (
-        "%s not found in magento responses" % str(key))
-    return magento_base_responses[key]
-
-
-@contextmanager
-def mock_api():
-    with mock.patch('magento.API') as API:
-        api_mock = mock.MagicMock(name='magento.api')
-        API.return_value = api_mock
-        api_mock.__enter__.return_value = api_mock
-        api_mock.call.side_effect = get_magento_response
-        yield
 
 
 class test_import_magento(common.SingleTransactionCase):
@@ -67,8 +46,8 @@ class test_import_magento(common.SingleTransactionCase):
         self.backend_model = self.registry('magento.backend')
         self.session = ConnectorSession(self.cr, self.uid)
         backend_ids = self.backend_model.search(
-                self.cr, self.uid,
-                [('name', '=', 'Test Magento')])
+            self.cr, self.uid,
+            [('name', '=', 'Test Magento')])
         if backend_ids:
             self.backend_id = backend_ids[0]
         else:
@@ -112,7 +91,6 @@ class test_import_magento(common.SingleTransactionCase):
 
         # TODO; install & configure languages on storeviews
 
-
     def test_10_import_product_category(self):
         """ Import of a product category """
         backend_id = self.backend_id
@@ -122,7 +100,7 @@ class test_import_magento(common.SingleTransactionCase):
 
         category_model = self.registry('magento.product.category')
         category_ids = category_model.search(
-                self.cr, self.uid, [('backend_id', '=', backend_id)])
+            self.cr, self.uid, [('backend_id', '=', backend_id)])
         self.assertEqual(len(category_ids), 1)
 
     def test_11_import_product_category_with_gap(self):
@@ -134,16 +112,17 @@ class test_import_magento(common.SingleTransactionCase):
 
         category_model = self.registry('magento.product.category')
         category_ids = category_model.search(
-                self.cr, self.uid, [('backend_id', '=', backend_id)])
+            self.cr, self.uid, [('backend_id', '=', backend_id)])
         self.assertEqual(len(category_ids), 4)
 
     def test_12_import_product(self):
         """ Import of a simple product """
         backend_id = self.backend_id
         with mock_api():
-            import_record(self.session,
-                          'magento.product.product',
-                          backend_id, 16)
+            with mock_urlopen_image():
+                import_record(self.session,
+                              'magento.product.product',
+                              backend_id, 16)
 
         product_model = self.registry('magento.product.product')
         product_ids = product_model.search(self.cr,
@@ -156,9 +135,10 @@ class test_import_magento(common.SingleTransactionCase):
         """ Import of a simple product when the category is missing """
         backend_id = self.backend_id
         with mock_api():
-            import_record(self.session,
-                          'magento.product.product',
-                          backend_id, 25)
+            with mock_urlopen_image():
+                import_record(self.session,
+                              'magento.product.product',
+                              backend_id, 25)
 
         product_model = self.registry('magento.product.product')
         product_ids = product_model.search(self.cr,
@@ -173,8 +153,8 @@ class test_import_magento(common.SingleTransactionCase):
         with mock_api():
             with self.assertRaises(InvalidDataError):
                 import_record(self.session,
-                            'magento.product.product',
-                            backend_id, 126)
+                              'magento.product.product',
+                              backend_id, 126)
 
     def test_15_import_product_bundle(self):
         """ Bundle should fail: not yet supported """
@@ -182,8 +162,8 @@ class test_import_magento(common.SingleTransactionCase):
         with mock_api():
             with self.assertRaises(InvalidDataError):
                 import_record(self.session,
-                            'magento.product.product',
-                            backend_id, 165)
+                              'magento.product.product',
+                              backend_id, 165)
 
     def test_16_import_product_grouped(self):
         """ Grouped should fail: not yet supported """
@@ -191,8 +171,8 @@ class test_import_magento(common.SingleTransactionCase):
         with mock_api():
             with self.assertRaises(InvalidDataError):
                 import_record(self.session,
-                            'magento.product.product',
-                            backend_id, 54)
+                              'magento.product.product',
+                              backend_id, 54)
 
     def test_16_import_product_virtual(self):
         """ Virtual should fail: not yet supported """
@@ -200,5 +180,33 @@ class test_import_magento(common.SingleTransactionCase):
         with mock_api():
             with self.assertRaises(InvalidDataError):
                 import_record(self.session,
-                            'magento.product.product',
-                            backend_id, 144)
+                              'magento.product.product',
+                              backend_id, 144)
+
+    def test_30_import_sale_order(self):
+        """ Import a sale order: check """
+        backend_id = self.backend_id
+        with mock_api():
+            import_record(self.session,
+                          'magento.sale.order',
+                          backend_id, 900000691)
+        order_model = self.registry('magento.sale.order')
+        order_ids = order_model.search(self.cr,
+                                       self.uid,
+                                       [('backend_id', '=', backend_id),
+                                        ('magento_id', '=', '900000691')])
+        self.assertEqual(len(order_ids), 1)
+
+    def test_30_import_sale_order_no_website_id(self):
+        """ Import a sale order: website_id is missing (happens with magento...) """
+        backend_id = self.backend_id
+        with mock_api():
+            import_record(self.session,
+                          'magento.sale.order',
+                          backend_id, 900000692)
+        order_model = self.registry('magento.sale.order')
+        order_ids = order_model.search(self.cr,
+                                       self.uid,
+                                       [('backend_id', '=', backend_id),
+                                        ('magento_id', '=', '900000692')])
+        self.assertEqual(len(order_ids), 1)
