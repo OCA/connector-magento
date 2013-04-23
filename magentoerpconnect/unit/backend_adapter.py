@@ -126,7 +126,7 @@ class MagentoCRUDAdapter(CRUDAdapter):
                                 self.magento.password) as api:
                 result = api.call(method, arguments)
                 # Uncomment to record requests/responses in ``recorder``
-                # record(method, arguments, result)
+                record(method, arguments, result)
                 _logger.debug("api.call(%s, %s) returned %s",
                               method, arguments, result)
                 return result
