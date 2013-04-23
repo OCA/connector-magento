@@ -19,19 +19,14 @@
 #
 ##############################################################################
 
-from functools import wraps
+from openerp.osv import orm
 
 
-def magento_pricing_consumer(func):
-    """ Use this decorator on all the consumers of
-    magentoerpconnect_pricing.
+class magentoerpconnect_export_partner_installed(orm.AbstractModel):
+    """Empty model used to know if the module is installed on the
+    database.
 
-    It will prevent the consumers from being fired when the addon is not
-    installed.
+    If the model is in the registry, the module is installed.
     """
-    @wraps(func)
-    def wrapped(*args, **kwargs):
-        session = args[0]
-        if session.is_module_installed('magentoerpconnect_pricing'):
-            return func(*args, **kwargs)
-    return wrapped
+    _name = 'magentoerpconnect_export_partner.installed'
+

@@ -29,7 +29,6 @@ from openerp.addons.connector.event import on_record_create
 from openerp.addons.connector_ecommerce.event import on_invoice_paid
 from .unit.backend_adapter import GenericAdapter
 from .connector import get_environment
-from .consumer import magento_consumer
 from .backend import magento
 
 _logger = logging.getLogger(__name__)
@@ -186,7 +185,6 @@ class MagentoInvoiceSynchronizer(ExportSynchronizer):
 
 
 @on_invoice_paid
-@magento_consumer
 def invoice_paid_create_bindings(session, model_name, record_id):
     """
     Create a ``magento.account.invoice`` record. This record will then
@@ -204,7 +202,6 @@ def invoice_paid_create_bindings(session, model_name, record_id):
 
 
 @on_record_create(model_names='magento.account.invoice')
-@magento_consumer
 def delay_export_account_invoice(session, model_name, record_id):
     """
     Delay the job to export the magento invoice.

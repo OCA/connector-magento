@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import consumer
+import connector
 import magento_model
 import product
 import sale
