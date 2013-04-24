@@ -23,12 +23,22 @@ Download the branches where you installed OpenERP::
 Add the branches in the addons path, either using the server command
 line or adding them in the OpenERP server configuration file.
 
+You also need to install the ``magento`` Python package.
+So install it with either pip or either easy_install::
+
+    $ pip install magento
+
+    $ easy_install magento
+
+Note that you may need to use the root rights using ``su`` or ``sudo``.
+
 In OpenERP, update the modules list using `Settings > Modules > Update
 Modules List`.
 
 Go to the menu `Settings > Modules > Installed Modules`, remove the
 `Installed` filter and search for `Magento Connector`, then click on
 `Install`.
+
 
 Magento
 =======
