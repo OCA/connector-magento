@@ -31,7 +31,6 @@ from openerp.addons.connector.unit.synchronizer import ExportSynchronizer
 from openerp.addons.magentoerpconnect.backend import magento
 from openerp.addons.magentoerpconnect import product
 from openerp.addons.magentoerpconnect.connector import get_environment
-from .consumer import magento_pricing_consumer
 
 
 magento.unregister_class(product.ProductImportMapper)
@@ -131,7 +130,6 @@ class ProductPriceExport(ExportSynchronizer):
 
 
 @on_product_price_changed
-@magento_pricing_consumer
 def product_price_changed(session, model_name, record_id, fields=None):
     """ When a product.product price has been changed """
     if session.context.get('connector_no_export'):

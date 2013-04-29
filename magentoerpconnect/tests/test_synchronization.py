@@ -135,9 +135,10 @@ class test_import_magento(common.SingleTransactionCase):
         """ Import of a simple product when the category is missing """
         backend_id = self.backend_id
         with mock_api():
-            import_record(self.session,
-                          'magento.product.product',
-                          backend_id, 25)
+            with mock_urlopen_image():
+                import_record(self.session,
+                              'magento.product.product',
+                              backend_id, 25)
 
         product_model = self.registry('magento.product.product')
         product_ids = product_model.search(self.cr,
@@ -181,3 +182,31 @@ class test_import_magento(common.SingleTransactionCase):
                 import_record(self.session,
                               'magento.product.product',
                               backend_id, 144)
+
+    def test_30_import_sale_order(self):
+        """ Import a sale order: check """
+        backend_id = self.backend_id
+        with mock_api():
+            import_record(self.session,
+                          'magento.sale.order',
+                          backend_id, 900000691)
+        order_model = self.registry('magento.sale.order')
+        order_ids = order_model.search(self.cr,
+                                       self.uid,
+                                       [('backend_id', '=', backend_id),
+                                        ('magento_id', '=', '900000691')])
+        self.assertEqual(len(order_ids), 1)
+
+    def test_30_import_sale_order_no_website_id(self):
+        """ Import a sale order: website_id is missing (happens with magento...) """
+        backend_id = self.backend_id
+        with mock_api():
+            import_record(self.session,
+                          'magento.sale.order',
+                          backend_id, 900000692)
+        order_model = self.registry('magento.sale.order')
+        order_ids = order_model.search(self.cr,
+                                       self.uid,
+                                       [('backend_id', '=', backend_id),
+                                        ('magento_id', '=', '900000692')])
+        self.assertEqual(len(order_ids), 1)

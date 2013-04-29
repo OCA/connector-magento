@@ -635,6 +635,12 @@ class SaleOrderImportMapper(ImportMapper):
     def backend_id(self, record):
         return {'backend_id': self.backend_record.id}
 
+    @mapping
+    def user_id(self, record):
+        """ Do not assign to a Salesperson otherwise sales orders are hidden
+        for the salespersons (access rules)"""
+        return {'user_id': False}
+
 
 @magento
 class MagentoSaleOrderOnChange(SaleOrderOnChange):
