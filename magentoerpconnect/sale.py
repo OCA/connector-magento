@@ -368,9 +368,14 @@ class SaleOrderImport(MagentoImportSynchronizer):
             self.session.write(self.model._name,
                                current_bind_id,
                                {'magento_parent_id': parent_bind_id})
-            self.session.write(self.model._name,
-                               parent_bind_id,
-                               {'canceled_in_backend': True})
+            parent_canceled = self.session.read(self.model._name,
+                                                parent_bind_id,
+                                                ['canceled_in_backend']
+                                                )['canceled_in_backend']
+            if not parent_canceled:
+                self.session.write(self.model._name,
+                                   parent_bind_id,
+                                   {'canceled_in_backend': True})
             current_bind_id = parent_bind_id
 
     def _after_import(self, binding_id):
