@@ -215,7 +215,7 @@ class SaleOrderAdapter(GenericAdapter):
                           [id, attributes])
 
     def get_parent(self, id):
-        return self._call('%s.get_parent' % self._magento_model, [int(id)])
+        return self._call('%s.get_parent' % self._magento_model, [id])
 
 
 @magento
