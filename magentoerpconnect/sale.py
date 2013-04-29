@@ -206,6 +206,17 @@ class SaleOrderAdapter(GenericAdapter):
                      }
         return super(SaleOrderAdapter, self).search(arguments)
 
+    def read(self, id, attributes=None):
+        """ Returns the information of a record
+
+        :rtype: dict
+        """
+        return self._call('%s.info' % self._magento_model,
+                          [id, attributes])
+
+    def get_parent(self, id):
+        return self._call('%s.get_parent' % self._magento_model, [int(id)])
+
 
 @magento
 class SaleOrderBatchImport(DelayedBatchImport):
@@ -328,7 +339,42 @@ class SaleOrderImport(MagentoImportSynchronizer):
             sale_obj.automatic_payment(cr, uid, mag_sale.openerp_id.id,
                                        amount, context=context)
 
+    def _link_parent_orders(self, binding_id):
+        """ Link the magento.sale.order to its parent orders.
+
+        When a Magento sales order is modified, it:
+         - cancel the sales order
+         - create a copy and link the canceled one as a parent
+
+        So we create the link to the parent sales orders.
+        Note that we have to walk through all the chain of parent sales orders
+        in the case of multiple editions / cancellations.
+        """
+        parent_id = self.magento_record.get('relation_parent_real_id')
+        if not parent_id:
+            return
+        all_parent_ids = []
+        while parent_id:
+            all_parent_ids.append(parent_id)
+            parent_id = self.backend_adapter.get_parent(parent_id)
+        current_bind_id = binding_id
+        for parent_id in all_parent_ids:
+            bind_order_id = self.binder.to_openerp(parent_id)
+            if not bind_order_id:
+                # may happen if several sales orders have been
+                # edited / canceled but not all have been imported
+                continue
+            # link to the nearest parent
+            self.session.write(self.model._name,
+                               current_bind_id,
+                               {'magento_parent_id': bind_order_id})
+            self.session.write(self.model._name,
+                               bind_order_id,
+                               {'canceled_in_backend': True})
+            current_bind_id = bind_order_id
+
     def _after_import(self, binding_id):
+        self._link_parent_orders(binding_id)
         self._create_payment(binding_id)
 
     def _get_magento_data(self):
