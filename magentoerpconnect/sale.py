@@ -359,19 +359,19 @@ class SaleOrderImport(MagentoImportSynchronizer):
             parent_id = self.backend_adapter.get_parent(parent_id)
         current_bind_id = binding_id
         for parent_id in all_parent_ids:
-            bind_order_id = self.binder.to_openerp(parent_id)
-            if not bind_order_id:
+            parent_bind_id = self.binder.to_openerp(parent_id)
+            if not parent_bind_id:
                 # may happen if several sales orders have been
                 # edited / canceled but not all have been imported
                 continue
             # link to the nearest parent
             self.session.write(self.model._name,
                                current_bind_id,
-                               {'magento_parent_id': bind_order_id})
+                               {'magento_parent_id': parent_bind_id})
             self.session.write(self.model._name,
-                               bind_order_id,
+                               parent_bind_id,
                                {'canceled_in_backend': True})
-            current_bind_id = bind_order_id
+            current_bind_id = parent_bind_id
 
     def _after_import(self, binding_id):
         self._link_parent_orders(binding_id)
