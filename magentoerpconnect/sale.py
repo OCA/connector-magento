@@ -72,6 +72,10 @@ class magento_sale_order(orm.Model):
                                          digits_compute=dp.get_precision('Account')), # XXX common to all ecom sale orders
         'magento_order_id': fields.integer('Magento Order ID',
                                            help="'order_id' field in Magento"),
+        # when a sale order is modified, Magento creates a new one, cancels
+        # the parent order and link the new one to the canceled parent
+        'magento_parent_id': fields.many2one('magento.sale.order',
+                                             string='Parent Magento Order'),
         }
 
     _sql_constraints = [
@@ -83,11 +87,28 @@ class magento_sale_order(orm.Model):
 class sale_order(orm.Model):
     _inherit = 'sale.order'
 
+    def get_parent_id(self, cr, uid, ids, context=None):
+        """ Return the parent order.
+
+        For Magento sales orders, the magento parent order is stored
+        in the binding, get it from there.
+        """
+        res = super(sale_order, self).get_parent_id(cr, uid, ids,
+                                                    context=context)
+        for order in self.browse(cr, uid, ids, context=context):
+            if not order.magento_bind_ids:
+                continue
+            # assume we only have 1 SO in OpenERP for 1 SO in Magento
+            magento_order = order.magento_bind_ids[0]
+            if magento_order.magento_parent_id:
+                res[order.id] = magento_order.magento_parent_id.openerp_id.id
+        return res
+
     _columns = {
-            'magento_bind_ids': fields.one2many(
-                'magento.sale.order', 'openerp_id',
-                string="Magento Bindings"),
-        }
+        'magento_bind_ids': fields.one2many(
+            'magento.sale.order', 'openerp_id',
+            string="Magento Bindings"),
+    }
 
 
 class magento_sale_order_line(orm.Model):
@@ -108,7 +129,8 @@ class magento_sale_order_line(orm.Model):
         ##                            string='Sale Order',
         ##                            readonly=True,
         ##                            store=True),
-        'magento_order_id': fields.many2one('magento.sale.order', 'Magento Sale Order',
+        'magento_order_id': fields.many2one('magento.sale.order',
+                                            'Magento Sale Order',
                                             required=True,
                                             ondelete='cascade',
                                             select=True),
@@ -183,6 +205,17 @@ class SaleOrderAdapter(GenericAdapter):
                      'filters': filters,
                      }
         return super(SaleOrderAdapter, self).search(arguments)
+
+    def read(self, id, attributes=None):
+        """ Returns the information of a record
+
+        :rtype: dict
+        """
+        return self._call('%s.info' % self._magento_model,
+                          [id, attributes])
+
+    def get_parent(self, id):
+        return self._call('%s.get_parent' % self._magento_model, [id])
 
 
 @magento
@@ -306,7 +339,47 @@ class SaleOrderImport(MagentoImportSynchronizer):
             sale_obj.automatic_payment(cr, uid, mag_sale.openerp_id.id,
                                        amount, context=context)
 
+    def _link_parent_orders(self, binding_id):
+        """ Link the magento.sale.order to its parent orders.
+
+        When a Magento sales order is modified, it:
+         - cancel the sales order
+         - create a copy and link the canceled one as a parent
+
+        So we create the link to the parent sales orders.
+        Note that we have to walk through all the chain of parent sales orders
+        in the case of multiple editions / cancellations.
+        """
+        parent_id = self.magento_record.get('relation_parent_real_id')
+        if not parent_id:
+            return
+        all_parent_ids = []
+        while parent_id:
+            all_parent_ids.append(parent_id)
+            parent_id = self.backend_adapter.get_parent(parent_id)
+        current_bind_id = binding_id
+        for parent_id in all_parent_ids:
+            parent_bind_id = self.binder.to_openerp(parent_id)
+            if not parent_bind_id:
+                # may happen if several sales orders have been
+                # edited / canceled but not all have been imported
+                continue
+            # link to the nearest parent
+            self.session.write(self.model._name,
+                               current_bind_id,
+                               {'magento_parent_id': parent_bind_id})
+            parent_canceled = self.session.read(self.model._name,
+                                                parent_bind_id,
+                                                ['canceled_in_backend']
+                                                )['canceled_in_backend']
+            if not parent_canceled:
+                self.session.write(self.model._name,
+                                   parent_bind_id,
+                                   {'canceled_in_backend': True})
+            current_bind_id = parent_bind_id
+
     def _after_import(self, binding_id):
+        self._link_parent_orders(binding_id)
         self._create_payment(binding_id)
 
     def _get_magento_data(self):
