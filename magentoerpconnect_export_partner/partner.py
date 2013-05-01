@@ -26,7 +26,7 @@ from openerp.addons.connector.unit.mapper import (mapping,
 from openerp.addons.magentoerpconnect.unit.delete_synchronizer import (
         MagentoDeleteSynchronizer)
 from openerp.addons.magentoerpconnect.unit.export_synchronizer import (
-        MagentoExportSynchronizer)
+        MagentoExporter)
 from openerp.addons.magentoerpconnect.backend import magento
 
 
@@ -37,7 +37,7 @@ class PartnerDeleteSynchronizer(MagentoDeleteSynchronizer):
 
 
 @magento
-class PartnerExport(MagentoExportSynchronizer):
+class PartnerExport(MagentoExporter):
     _model_name = ['magento.res.partner']
 
 

@@ -20,6 +20,9 @@
 ##############################################################################
 
 import logging
+from datetime import datetime
+from openerp.tools.translate import _
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.connector import ConnectorUnit
 from openerp.addons.connector.unit.synchronizer import ImportSynchronizer
@@ -28,6 +31,17 @@ from ..connector import get_environment, add_checkpoint
 
 _logger = logging.getLogger(__name__)
 
+"""
+
+Importers for Magento.
+
+An import can be skipped if the last sync date is more recent than
+the last update in Magento.
+
+They should call the ``bind`` method if the binder even if the records
+are already bound, to update the last sync date.
+
+"""
 
 class MagentoImportSynchronizer(ImportSynchronizer):
     """ Base importer for Magento """
@@ -49,6 +63,26 @@ class MagentoImportSynchronizer(ImportSynchronizer):
         """ Hook called before the import, when we have the Magento
         data"""
 
+    def _is_uptodate(self, binding_id):
+        """Return True if the import should be skipped because
+        it is already up-to-date in OpenERP"""
+        assert self.magento_record
+        if not binding_id:
+            return
+        binding = self.session.browse(self.model._name, binding_id)
+        sync = binding.sync_date
+        if not sync:
+            return
+        fmt = DEFAULT_SERVER_DATETIME_FORMAT
+        sync_date = datetime.strptime(sync, fmt)
+        magento_date = datetime.strptime(self.magento_record['updated_at'], fmt)
+        # if the last synchronization date is greater than the last
+        # update in magento, we skip the import.
+        # Important: at the beginning of the exporters flows, we have to
+        # check if the magento_date is more recent than the sync_date
+        # and if so, schedule a new import. If we don't do that, we'll
+        # miss changes done in Magento
+        return magento_date < sync_date
 
     def _import_dependencies(self):
         """ Import the dependencies for the record"""
@@ -98,14 +132,17 @@ class MagentoImportSynchronizer(ImportSynchronizer):
         """ Hook called at the end of the import """
         return
 
-    def run(self, magento_id):
+    def run(self, magento_id, force=False):
         """ Run the synchronization
 
         :param magento_id: identifier of the record on Magento
         """
         self.magento_id = magento_id
         self.magento_record = self._get_magento_data()
+        binding_id = self._get_binding_id()
 
+        if not force and self._is_uptodate(binding_id):
+            return _('Already up-to-date.')
         self._before_import()
 
         # import the missing linked resources
@@ -113,7 +150,6 @@ class MagentoImportSynchronizer(ImportSynchronizer):
 
         self._map_data()
 
-        binding_id = self._get_binding_id()
         if binding_id:
             record = self.mapper.data
             # special check on data before import
@@ -259,8 +295,8 @@ def import_batch(session, model_name, backend_id, filters=None):
 
 
 @job
-def import_record(session, model_name, backend_id, magento_id):
+def import_record(session, model_name, backend_id, magento_id, force=False):
     """ Import a record from Magento """
     env = get_environment(session, model_name, backend_id)
     importer = env.get_connector_unit(MagentoImportSynchronizer)
-    importer.run(magento_id)
+    importer.run(magento_id, force=force)
