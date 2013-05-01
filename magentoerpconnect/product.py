@@ -23,6 +23,7 @@
 import logging
 import urllib2
 import base64
+import xmlrpclib
 from operator import itemgetter
 from openerp.osv import orm, fields
 from openerp.tools.translate import _
@@ -32,7 +33,8 @@ from openerp.addons.connector.unit.synchronizer import (ImportSynchronizer,
                                                         ExportSynchronizer
                                                         )
 from openerp.addons.connector.exception import (MappingError,
-                                                InvalidDataError)
+                                                InvalidDataError,
+                                                IDMissingInBackend)
 from openerp.addons.connector.unit.mapper import (mapping,
                                                   only_create,
                                                   ImportMapper,
@@ -158,6 +160,17 @@ class product_product(orm.Model):
 class ProductProductAdapter(GenericAdapter):
     _model_name = 'magento.product.product'
     _magento_model = 'catalog_product'
+
+    def _call(self, method, arguments):
+        try:
+            return super(ProductProductAdapter, self)._call(method, arguments)
+        except xmlrpclib.Fault as err:
+            # this is the error in the Magento API
+            # when the product does not exist
+            if err.faultCode == 101:
+                raise IDMissingInBackend
+            else:
+                raise
 
     def search(self, filters=None, from_date=None):
         """ Search records according to some criterias

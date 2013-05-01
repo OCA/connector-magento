@@ -20,10 +20,12 @@
 ##############################################################################
 
 import logging
+import xmlrpclib
 from openerp.osv import orm, fields
 from openerp.addons.connector.unit.mapper import (mapping,
                                                   ImportMapper
                                                   )
+from openerp.addons.connector.exception import IDMissingInBackend
 from .unit.backend_adapter import GenericAdapter
 from .unit.import_synchronizer import (DelayedBatchImport,
                                        MagentoImportSynchronizer,
@@ -77,6 +79,17 @@ class product_category(orm.Model):
 class ProductCategoryAdapter(GenericAdapter):
     _model_name = 'magento.product.category'
     _magento_model = 'catalog_category'
+
+    def _call(self, method, arguments):
+        try:
+            return super(ProductCategoryAdapter, self)._call(method, arguments)
+        except xmlrpclib.Fault as err:
+            # 101 is the error in the Magento API
+            # when the category does not exist
+            if err.faultCode == 102:
+                raise IDMissingInBackend
+            else:
+                raise
 
     def search(self, filters=None, from_date=None):
         """ Search records according to some criterias and returns a

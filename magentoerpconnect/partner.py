@@ -20,6 +20,7 @@
 ##############################################################################
 
 import logging
+import xmlrpclib
 from openerp.osv import fields, orm
 from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.exception import MappingError
@@ -28,6 +29,7 @@ from openerp.addons.connector.unit.mapper import (mapping,
                                                   only_create,
                                                   ImportMapper
                                                   )
+from openerp.addons.connector.exception import IDMissingInBackend
 from .unit.backend_adapter import GenericAdapter
 from .unit.import_synchronizer import (DelayedBatchImport,
                                        MagentoImportSynchronizer
@@ -182,6 +184,17 @@ class magento_address(orm.Model):
 class PartnerAdapter(GenericAdapter):
     _model_name = 'magento.res.partner'
     _magento_model = 'customer'
+
+    def _call(self, method, arguments):
+        try:
+            return super(PartnerAdapter, self)._call(method, arguments)
+        except xmlrpclib.Fault as err:
+            # this is the error in the Magento API
+            # when the customer does not exist
+            if err.faultCode == 102:
+                raise IDMissingInBackend
+            else:
+                raise
 
     def search(self, filters=None, from_date=None, magento_website_ids=None):
         """ Search records according to some criterias and returns a

@@ -27,6 +27,7 @@ from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.event import on_record_create
 from openerp.addons.connector.exception import NothingToDoJob
 from openerp.addons.connector.unit.synchronizer import ExportSynchronizer
+from openerp.addons.connector.exception import IDMissingInBackend
 from openerp.addons.connector_ecommerce.event import on_picking_out_done
 from .unit.backend_adapter import GenericAdapter
 from .connector import get_environment
@@ -76,6 +77,17 @@ class stock_picking(orm.Model):
 class StockPickingAdapter(GenericAdapter):
     _model_name = 'magento.stock.picking.out'
     _magento_model = 'sales_order_shipment'
+
+    def _call(self, method, arguments):
+        try:
+            return super(StockPickingAdapter, self)._call(method, arguments)
+        except xmlrpclib.Fault as err:
+            # this is the error in the Magento API
+            # when the shipment does not exist
+            if err.faultCode == 100:
+                raise IDMissingInBackend
+            else:
+                raise
 
     def create(self, order_id, items, comment, email, include_comment):
         """ Create a record on the external system """
@@ -178,7 +190,6 @@ class MagentoPickingExport(ExportSynchronizer):
         except xmlrpclib.Fault as err:
             # When the shipping is already created on Magento, it returns:
             # <Fault 102: u"Impossible de faire l\'exp\xe9dition de la commande.">
-            # In
             if err.faultCode == 102:
                 raise NothingToDoJob('Canceled: the delivery order already '
                                      'exists on Magento (fault 102).')

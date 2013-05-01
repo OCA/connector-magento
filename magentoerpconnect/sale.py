@@ -20,11 +20,14 @@
 ##############################################################################
 
 import logging
+import xmlrpclib
 from datetime import datetime, timedelta
 from openerp.osv import fields, orm
 import openerp.addons.decimal_precision as dp
 from openerp.addons.connector.connector import ConnectorUnit
-from openerp.addons.connector.exception import NothingToDoJob, FailedJobError
+from openerp.addons.connector.exception import (NothingToDoJob,
+                                                FailedJobError,
+                                                IDMissingInBackend)
 from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.unit.mapper import (mapping,
                                                   ImportMapper
@@ -186,6 +189,17 @@ class sale_order_line(orm.Model):
 class SaleOrderAdapter(GenericAdapter):
     _model_name = 'magento.sale.order'
     _magento_model = 'sales_order'
+
+    def _call(self, method, arguments):
+        try:
+            return super(SaleOrderAdapter, self)._call(method, arguments)
+        except xmlrpclib.Fault as err:
+            # this is the error in the Magento API
+            # when the sales order does not exist
+            if err.faultCode == 100:
+                raise IDMissingInBackend
+            else:
+                raise
 
     def search(self, filters=None, from_date=None, magento_storeview_ids=None):
         """ Search records according to some criterias

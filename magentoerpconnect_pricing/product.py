@@ -81,6 +81,9 @@ class ProductPriceExporter(MagentoBaseExporter):
         :param website_id: if None, export on all websites,
                            or OpenERP ID for the website to update
         """
+        # export of products is not implemented so we just raise
+        # if the export was existing, we would export it
+        assert self.magento_id, "Record has been deleted in Magento"
         pricelist = self.backend_record.pricelist_id
         if not pricelist:
             name = self.backend_record.name

@@ -25,6 +25,7 @@ from openerp.tools.translate import _
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.unit.synchronizer import ExportSynchronizer
+from openerp.addons.connector.exception import IDMissingInBackend
 from .import_synchronizer import import_record
 from ..connector import get_environment
 
@@ -74,8 +75,6 @@ class MagentoBaseExporter(ExportSynchronizer):
         if the former is more recent, schedule an import
         to not miss changes done in Magento.
         """
-        # TODO: catch the error when the magento record
-        # does not exist
         assert self.binding_record
         if not self.magento_id:
             return False
@@ -84,6 +83,7 @@ class MagentoBaseExporter(ExportSynchronizer):
             return True
         record = self.backend_adapter.read(self.magento_id,
                                            attributes=['updated_at'])
+
         fmt = DEFAULT_SERVER_DATETIME_FORMAT
         sync_date = datetime.strptime(sync, fmt)
         magento_date = datetime.strptime(record['updated_at'], fmt)
@@ -102,7 +102,12 @@ class MagentoBaseExporter(ExportSynchronizer):
         self.binding_record = self._get_openerp_data()
 
         self.magento_id = self.binder.to_backend(self.binding_id)
-        if self._should_import():
+        try:
+            should_import = self._should_import()
+        except IDMissingInBackend:
+            self.magento_id = None
+            should_import = False
+        if should_import:
             self._delay_import()
 
         result = self._run(*args, **kwargs)

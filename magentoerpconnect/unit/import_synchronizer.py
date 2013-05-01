@@ -26,6 +26,7 @@ from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.connector import ConnectorUnit
 from openerp.addons.connector.unit.synchronizer import ImportSynchronizer
+from openerp.addons.connector.exception import IDMissingInBackend
 from ..backend import magento
 from ..connector import get_environment, add_checkpoint
 
@@ -138,7 +139,10 @@ class MagentoImportSynchronizer(ImportSynchronizer):
         :param magento_id: identifier of the record on Magento
         """
         self.magento_id = magento_id
-        self.magento_record = self._get_magento_data()
+        try:
+            self.magento_record = self._get_magento_data()
+        except IDMissingInBackend:
+            return _('Record does no longer exist in Magento')
         binding_id = self._get_binding_id()
 
         if not force and self._is_uptodate(binding_id):

@@ -27,6 +27,7 @@ from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.unit.synchronizer import ExportSynchronizer
 from openerp.addons.connector.event import on_record_create
 from openerp.addons.connector_ecommerce.event import on_invoice_paid
+from openerp.addons.connector.exception import IDMissingInBackend
 from .unit.backend_adapter import GenericAdapter
 from .connector import get_environment
 from .backend import magento
@@ -70,6 +71,17 @@ class account_invoice(orm.Model):
 class AccountInvoiceAdapter(GenericAdapter):
     _model_name = 'magento.account.invoice'
     _magento_model = 'sales_order_invoice'
+
+    def _call(self, method, arguments):
+        try:
+            return super(AccountInvoiceAdapter, self)._call(method, arguments)
+        except xmlrpclib.Fault as err:
+            # this is the error in the Magento API
+            # when the invoice does not exist
+            if err.faultCode == 100:
+                raise IDMissingInBackend
+            else:
+                raise
 
     def create(self, order_increment_id, items, comment, email, include_comment):
         """ Create a record on the external system """
