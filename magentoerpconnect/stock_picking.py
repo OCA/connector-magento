@@ -64,6 +64,20 @@ class magento_stock_picking(orm.Model):
 
 
 class stock_picking(orm.Model):
+    _inherit = 'stock.picking'
+
+    _columns = {
+        'magento_bind_ids': fields.one2many(
+            'magento.stock.picking.out', 'openerp_id',
+            string="Magento Bindings"),
+    }
+
+
+# Seems to be so buggy, if I put magento_bind_ids
+# only in stock.picking.out, I cannot read it from the browse
+# if I put it only in stock.picking, I cannot display it on the views
+# so I have to duplicate it in both models...
+class stock_picking_out(orm.Model):
     _inherit = 'stock.picking.out'
 
     _columns = {

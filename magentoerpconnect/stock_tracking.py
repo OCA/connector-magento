@@ -98,7 +98,9 @@ def delay_export_tracking_number(session, model_name, record_id):
     Call a job to export the tracking number to a existing picking that
     must be in done state.
     """
-    picking = session.browse(model_name, record_id)
+    # browse on stock.picking because we cant read on stock.picking.out
+    # buggy virtual models... Anyway the ID is the same
+    picking = session.browse('stock.picking', record_id)
     for binding in picking.magento_bind_ids:
         # Set the priority to 20 to have more chance that it would be
         # executed after the picking creation
