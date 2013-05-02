@@ -87,12 +87,10 @@ API
    api/api_connector.rst
    api/api_consumer.rst
    api/api_backend.rst
-   api/api_event.rst
    api/api_binder.rst
    api/api_mapper.rst
    api/api_synchronizer.rst
    api/api_backend_adapter.rst
-   api/api_queue.rst
    api/api_exception.rst
 
 Project

@@ -22,7 +22,11 @@ sys.path.append(os.path.abspath('../../../server'))
 sys.path.append(os.path.abspath('../../../addons'))
 sys.path.append(os.path.abspath('../../../openobject-extension'))
 sys.path.append(os.path.abspath('../..'))
-
+import openerp
+options = ['--addons-path', '/home/gbaconnier/code/dev_instances/openerp_magento7/parts/server/openerp/addons,/home/gbaconnier/code/dev_instances/openerp_magento7/parts/webclient/addons,/home/gbaconnier/code/dev_instances/openerp_magento7/parts/addons,/home/gbaconnier/code/dev_instances/openerp_magento7/parts/openobject-extension,/home/gbaconnier/code/dev_instances/openerp_magento7/parts/e-commerce-addons']
+openerp.tools.config.parse_config(options)
+os.environ['TZ'] = 'UTC'
+openerp.service.start_internal()
 
 # -- General configuration -----------------------------------------------------
 
