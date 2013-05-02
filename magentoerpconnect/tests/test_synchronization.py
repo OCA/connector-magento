@@ -187,9 +187,10 @@ class test_import_magento(common.SingleTransactionCase):
         """ Import a sale order: check """
         backend_id = self.backend_id
         with mock_api():
-            import_record(self.session,
-                          'magento.sale.order',
-                          backend_id, 900000691)
+            with mock_urlopen_image():
+                import_record(self.session,
+                              'magento.sale.order',
+                              backend_id, 900000691)
         order_model = self.registry('magento.sale.order')
         order_ids = order_model.search(self.cr,
                                        self.uid,
@@ -201,9 +202,10 @@ class test_import_magento(common.SingleTransactionCase):
         """ Import a sale order: website_id is missing (happens with magento...) """
         backend_id = self.backend_id
         with mock_api():
-            import_record(self.session,
-                          'magento.sale.order',
-                          backend_id, 900000692)
+            with mock_urlopen_image():
+                import_record(self.session,
+                              'magento.sale.order',
+                              backend_id, 900000692)
         order_model = self.registry('magento.sale.order')
         order_ids = order_model.search(self.cr,
                                        self.uid,
