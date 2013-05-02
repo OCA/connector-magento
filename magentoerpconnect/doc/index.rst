@@ -79,7 +79,8 @@ Develop
 API
 ===
 
-.. todo:: fixme, not generated due to the openerp.addons namespace
+General API
+-----------
 
 .. toctree::
    :maxdepth: 2
@@ -87,30 +88,39 @@ API
    api/api_connector.rst
    api/api_consumer.rst
    api/api_backend.rst
-   api/api_event.rst
    api/api_binder.rst
-   api/api_mapper.rst
    api/api_synchronizer.rst
    api/api_backend_adapter.rst
-   api/api_queue.rst
    api/api_exception.rst
 
-Project
-=======
-
-.. todo:: how to contribute, releases notes, license
-
-* how to contribute
-
-* release notes
-
-* license
+Models API
+----------
 
 .. toctree::
    :maxdepth: 2
 
+   api/api_delivery.rst
+   api/api_invoice.rst
+   api/api_magento_model.rst
+   api/api_partner.rst
+   api/api_partner_category.rst
+   api/api_product.rst
+   api/api_product_category.rst
+   api/api_sale.rst
+   api/api_stock_picking.rst
+   api/api_stock_tracking.rst
+
+
+Project
+=======
+
+.. toctree::
+   :maxdepth: 1
+
    project/roadmap
    project/contributors
+   project/contribute
+   project/changes
 
 
 Concepts

@@ -36,10 +36,11 @@ _logger = logging.getLogger(__name__)
 
 
 class magento_account_invoice(orm.Model):
+    """ Binding Model for the Magento Invoice """
     _name = 'magento.account.invoice'
     _inherit = 'magento.binding'
     _inherits = {'account.invoice': 'openerp_id'}
-    _description = 'Magento Account Invoice'
+    _description = 'Magento Invoice'
 
     _columns = {
         'openerp_id': fields.many2one('account.invoice',
@@ -58,6 +59,8 @@ class magento_account_invoice(orm.Model):
 
 
 class account_invoice(orm.Model):
+    """ Adds the ``one2many`` relation to the Magento bindings
+    (``magento_bind_ids``)"""
     _inherit = 'account.invoice'
 
     _columns = {
@@ -69,6 +72,7 @@ class account_invoice(orm.Model):
 
 @magento
 class AccountInvoiceAdapter(GenericAdapter):
+    """ Backend Adapter for the Magento Invoice """
     _model_name = 'magento.account.invoice'
     _magento_model = 'sales_order_invoice'
 
@@ -105,14 +109,10 @@ class AccountInvoiceAdapter(GenericAdapter):
 
 @magento
 class MagentoInvoiceSynchronizer(ExportSynchronizer):
+    """ Export invoices to Magento """
     _model_name = ['magento.account.invoice']
 
     def _export_invoice(self, magento_id, lines_info, mail_notification):
-        # TODO
-        # WARNING: Think of the case that invoice exits..  => Add try
-        # except on the right exception. This is to handle the case that
-        # the invoice is already created. So the task is considered as
-        # done !
         if not lines_info:  # invoice without any line for the sale order
             return
         return self.backend_adapter.create(magento_id,
@@ -152,9 +152,7 @@ class MagentoInvoiceSynchronizer(ExportSynchronizer):
         return item_qty
 
     def run(self, binding_id):
-        """
-        Run the job to export the paid invoice
-        """
+        """ Run the job to export the paid invoice """
         sess = self.session
         invoice = sess.browse(self.model._name, binding_id)
 

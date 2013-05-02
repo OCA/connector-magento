@@ -34,7 +34,7 @@ class magentoerpconnect_installed(orm.AbstractModel):
 
 
 def get_environment(session, model_name, backend_id):
-    """ Create an environment to work with. """
+    """ Create an environment to work with.  """
     backend_record = session.browse('magento.backend', backend_id)
     env = Environment(backend_record, session, model_name)
     lang = backend_record.default_lang_id
@@ -43,6 +43,12 @@ def get_environment(session, model_name, backend_id):
     return env
 
 class magento_binding(orm.AbstractModel):
+    """ Abstract Model for the Bindigs.
+
+    All the models used as bindings between Magento and OpenERP
+    (``magento.res.partner``, ``magento.product.product``, ...) should
+    ``_inherit`` it.
+    """
     _name = 'magento.binding'
     _inherit = 'external.binding'
     _description = 'Magento Binding (abstract)'
@@ -63,5 +69,17 @@ class magento_binding(orm.AbstractModel):
 
 
 def add_checkpoint(session, model_name, record_id, backend_id):
+    """ Add a row in the model ``connector.checkpoint`` for a record,
+    meaning it has to be reviewed by a user.
+
+    :param session: current session
+    :type session: :py:class:`openerp.addons.connector.session.ConnectorSession`
+    :param model_name: name of the model of the record to be reviewed
+    :type model_name: str
+    :param record_id: ID of the record to be reviewed
+    :type record_id: int
+    :param backend_id: ID of the Magento Backend
+    :type backend_id: int
+    """
     return checkpoint.add_checkpoint(session, model_name, record_id,
                                      'magento.backend', backend_id)

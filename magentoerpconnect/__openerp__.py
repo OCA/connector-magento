@@ -131,7 +131,6 @@ Available extensions:
           'magentoerpconnect_menu.xml',
           'delivery_view.xml',
           'stock_view.xml',
-          'payment_method_view.xml',
           'security/ir.model.access.csv',
           ],
  'installable': True,

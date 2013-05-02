@@ -4,7 +4,7 @@ Synchronizers
 Import
 ------
 
-.. automodule:: magentoerpconnect.unit.import_synchronizer
+.. automodule:: openerp.addons.magentoerpconnect.unit.import_synchronizer
    :members:
    :undoc-members:
    :show-inheritance:
@@ -12,7 +12,7 @@ Import
 Export
 ------
 
-.. automodule:: magentoerpconnect.unit.export_synchronizer
+.. automodule:: openerp.addons.magentoerpconnect.unit.export_synchronizer
    :members:
    :undoc-members:
    :show-inheritance:
@@ -20,7 +20,7 @@ Export
 Delete
 ------
 
-.. automodule:: magentoerpconnect.unit.delete_synchronizer
+.. automodule:: openerp.addons.magentoerpconnect.unit.delete_synchronizer
    :members:
    :undoc-members:
    :show-inheritance:

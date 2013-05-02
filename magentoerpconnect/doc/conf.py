@@ -19,10 +19,23 @@ import sys, os
 #sys.path.insert(0, os.path.abspath('.'))
 sys.path.append(os.path.abspath('_themes'))
 sys.path.append(os.path.abspath('../../../server'))
-sys.path.append(os.path.abspath('../../../addons'))
-sys.path.append(os.path.abspath('../../../openobject-extension'))
-sys.path.append(os.path.abspath('../..'))
 
+# Load OpenERP with correct addons-path so the doc can be built even if
+# the addon import modules from other branches
+import openerp
+BASE_PATH = os.path.abspath(os.path.join(os.getcwd(), '../../..'))
+# You may need to change with your own paths
+ADDONS_PATHS = ('server/openerp/addons',
+                'webclient/addons',
+                'addons',
+                'connector',
+                'e-commerce-addons',
+                'magentoerpconnect')
+pathes = [os.path.join(BASE_PATH, path) for path in ADDONS_PATHS]
+options = ['--addons-path', ','.join(pathes)]
+openerp.tools.config.parse_config(options)
+os.environ['TZ'] = 'UTC'
+openerp.service.start_internal()
 
 # -- General configuration -----------------------------------------------------
 
@@ -31,7 +44,10 @@ sys.path.append(os.path.abspath('../..'))
 
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
-extensions = ['sphinx.ext.autodoc', 'sphinx.ext.intersphinx', 'sphinx.ext.todo', 'sphinx.ext.viewcode']
+extensions = ['sphinx.ext.autodoc',
+              'sphinx.ext.intersphinx',
+              'sphinx.ext.todo',
+              'sphinx.ext.viewcode']
 
 todo_include_todos = True
 
@@ -252,8 +268,8 @@ texinfo_documents = [
 
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {
-    'http://docs.python.org/': None,
+    'python': ('http://docs.python.org/2.6', None),
     'openerpweb': ('http://doc.openerp.com/trunk/developers/web', None),
     'openerpdev': ('http://doc.openerp.com/trunk/developers', None),
-    'openerpconnector': ('', None),
+#    'openerpconnector': ('', None),
 }

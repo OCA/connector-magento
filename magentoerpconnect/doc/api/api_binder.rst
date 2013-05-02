@@ -1,7 +1,7 @@
 Binders
 =======
 
-.. automodule:: magentoerpconnect.unit.binder
+.. automodule:: openerp.addons.magentoerpconnect.unit.binder
    :members:
    :undoc-members:
    :show-inheritance:

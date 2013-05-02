@@ -183,7 +183,10 @@ class BatchImportSynchronizer(ImportSynchronizer):
             self._import_record(record_id)
 
     def _import_record(self, record_id):
-        """ Import a record directly or delay the import of the record """
+        """ Import a record directly or delay the import of the record.
+
+        Method to implement in sub-classes.
+        """
         raise NotImplementedError
 
 

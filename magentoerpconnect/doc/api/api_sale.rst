@@ -1,7 +1,7 @@
-Jobs
+Sale
 ====
 
-.. automodule:: magentoerpconnect.queue.job
+.. automodule:: openerp.addons.magentoerpconnect.sale
    :members:
    :undoc-members:
    :show-inheritance:
