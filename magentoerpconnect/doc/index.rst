@@ -114,19 +114,13 @@ Models API
 Project
 =======
 
-.. todo:: how to contribute, releases notes, license
-
-* how to contribute
-
-* release notes
-
-* license
-
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
    project/roadmap
    project/contributors
+   project/contribute
+   project/changes
 
 
 Concepts
