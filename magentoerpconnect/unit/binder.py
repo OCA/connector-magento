@@ -32,7 +32,13 @@ class MagentoBinder(Binder):
 @magento
 class MagentoModelBinder(MagentoBinder):
     """
-    Bindings are done directly on the model
+    Bindings are done directly on the binding model.
+
+    Binding models are models called ``magento.{normal_model}``,
+    like ``magento.res.partner`` or ``magento.product.product``.
+    They are ``_inherits`` of the normal models and contains
+    the Magento ID, the ID of the Magento Backend and the additional
+    fields belonging to the Magento instance.
     """
     _model_name = [
             'magento.website',
@@ -87,7 +93,8 @@ class MagentoModelBinder(MagentoBinder):
         return magento_record['magento_id']
 
     def bind(self, external_id, binding_id):
-        """ Create the link between an external ID and an OpenERP ID
+        """ Create the link between an external ID and an OpenERP ID and
+        update the last synchronization date.
 
         :param external_id: External ID to bind
         :param binding_id: OpenERP ID to bind

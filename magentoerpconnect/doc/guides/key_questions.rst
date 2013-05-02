@@ -202,7 +202,7 @@ Stock, availability, deliveries
 *******************************
 
 Shipping methods
-===============
+================
 
 Which shipping methods will be available?
 

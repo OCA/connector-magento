@@ -25,6 +25,27 @@ from openerp.osv import fields, orm
 
 # TODO magento.delivery.carrier & move specific stuff
 class delivery_carrier(orm.Model):
+    """ Adds Magento specific fields to ``delivery.carrier``
+
+    ``magento_code``
+
+        Code of the carrier delivery method in Magento.
+        Example: ``colissimo_express``
+
+    ``magento_tracking_title``
+
+        Display name of the carrier for the tracking in Magento.
+        Example: Colissimo Express
+
+    ``magento_carrier_code``
+
+        General code of the carrier, the first part of the ``magento_code``.
+        Example: ``colissimo`` for the method ``colissimo_express``.
+
+    ``magento_export_tracking``
+
+        Defines if the tracking numbers should be exported to Magento.
+    """
     _inherit = "delivery.carrier"
 
     def _carrier_code(self, cr, uid, ids, name, args, context=None):

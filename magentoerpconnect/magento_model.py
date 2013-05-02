@@ -462,7 +462,8 @@ class MetadataBatchImport(DirectBatchImport):
     Import the Magento Websites, Stores, Storeviews
 
     They are imported directly because this is a rare and fast operation,
-    performed from the UI.
+    and we don't really bother if it blocks the UI during this time.
+    (that's also a mean to rapidly check the connectivity with Magento).
     """
     _model_name = [
             'magento.website',
