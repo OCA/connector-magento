@@ -10,6 +10,9 @@ Installation Guide
 Installation
 ************
 
+The installation steps assume that you already have a working OpenERP
+setup with all the OpenERP pre-requisites.
+
 OpenERP
 =======
 
@@ -30,7 +33,7 @@ So install it with either pip or either easy_install::
 
     $ easy_install magento
 
-Note that you may need to use the root rights using ``su`` or ``sudo``.
+Note that you may need to use the root rights on your system.
 
 In OpenERP, update the modules list using `Settings > Modules > Update
 Modules List`.
