@@ -30,6 +30,9 @@
              'connector_ecommerce',
              'product_m2mcategories',
              ],
+ 'external_dependencies': {
+     'python': ['magento'],
+ },
  'author': 'MagentoERPconnect Core Editors',
  'license': 'AGPL-3',
  'website': 'https://launchpad.net/magentoerpconnect',
