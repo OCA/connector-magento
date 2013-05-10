@@ -565,19 +565,6 @@ class SaleOrderImport(MagentoImportSynchronizer):
 
 
 @magento
-class SaleOrderLineImport(MagentoImportSynchronizer):
-    _model_name = ['magento.sale.order.line']
-    def _import_dependencies(self):
-        record = self.magento_record
-        if 'item_id' in record:
-            binder = self.get_binder_for_model('magento.product.product')
-            if binder.to_openerp(record['item_id']) is None:
-                importer = self.get_connector_unit_for_model(MagentoImportSynchronizer,
-                                                             'magento.product.product')
-                importer.run(record['item_id'])
-
-
-@magento
 class SaleOrderImportMapper(ImportMapper):
     _model_name = 'magento.sale.order'
 
