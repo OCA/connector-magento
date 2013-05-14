@@ -429,10 +429,13 @@ class magento_storeview(orm.Model):
                         DEFAULT_SERVER_DATETIME_FORMAT)
             else:
                 from_date = None
-            sale_order_import_batch(session, 'magento.sale.order', backend_id,
-                                    {'magento_storeview_id': storeview.magento_id,
-                                     'from_date': from_date,
-                                     })
+            sale_order_import_batch.delay(
+                session,
+                'magento.sale.order',
+                backend_id,
+                {'magento_storeview_id': storeview.magento_id,
+                 'from_date': from_date},
+                priority=1)  # executed as soon as possible
         self.write(cr, uid, ids, {'import_orders_from_date': import_start_time})
         return True
 
