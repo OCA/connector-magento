@@ -581,11 +581,21 @@ class SaleOrderImportMapper(ImportMapper):
 
     def _after_mapping(self, result):
         sess = self.session
+        # TODO: refactor: do no longer store the transient fields in the
+        # result, use a ConnectorUnit to create the lines
         result = sess.pool['sale.order']._convert_special_fields(sess.cr,
                                                                  sess.uid,
                                                                  result,
                                                                  result['magento_order_line_ids'],
                                                                  sess.context)
+        # remove transient fields otherwise OpenERP will raise a warning
+        # or even fail to create the record because the fields do not
+        # exist
+        result.pop('shipping_amount_tax_excluded', None)
+        result.pop('shipping_amount_tax_included', None)
+        result.pop('shipping_tax_amount', None)
+        result.pop('gift_certificates_amount', None)
+        result.pop('gift_certificates_code', None)
         onchange = self.get_connector_unit_for_model(SaleOrderOnChange)
         return onchange.play(result, result['magento_order_line_ids'])
 
