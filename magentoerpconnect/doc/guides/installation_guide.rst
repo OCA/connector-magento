@@ -13,6 +13,12 @@ Installation
 The installation steps assume that you already have a working OpenERP
 setup with all the OpenERP pre-requisites.
 
+Requirements on both servers
+============================
+
+The ``ntp`` package should be install on the servers hosting Magento and
+OpenERP to ensure a correct synchronization between them
+
 OpenERP
 =======
 
