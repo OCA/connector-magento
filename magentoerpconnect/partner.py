@@ -454,10 +454,10 @@ class AddressImportMapper(ImportMapper):
 
     @mapping
     def state(self, record):
-        if not record.get('state'):
+        if not record.get('region'):
             return
         state_ids = self.session.search('res.country.state',
-                                        [('name', 'ilike', record['state'])])
+                                        [('name', 'ilike', record['region'])])
         if state_ids:
             return {'state_id': state_ids[0]}
 
