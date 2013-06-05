@@ -305,6 +305,7 @@ class PartnerImportMapper(ImportMapper):
             ('group_id', 'group_id'),
         ]
 
+    @only_create
     @mapping
     def is_company(self, record):
         # partners are companies so we can bind
@@ -402,7 +403,8 @@ class AddressImport(MagentoImportSynchronizer):
         self.link_with_partner = link_with_partner
         super(AddressImport, self).run(magento_id)
 
-    def _update_special_fields(self, data):
+    def _define_partner_relationship(self, data):
+        """ Link address with partner or parent company. """
         if self.link_with_partner:
             # it won't be imported as an address,
             # but will be linked with the main res.partner
@@ -416,12 +418,8 @@ class AddressImport(MagentoImportSynchronizer):
         return data
 
     def _create(self, data):
-        data = self._update_special_fields(data)
+        data = self._define_partner_relationship(data)
         return super(AddressImport, self)._create(data)
-
-    def _update(self, binding_id, data):
-        data = self._update_special_fields(data)
-        return super(AddressImport, self)._update(binding_id, data)
 
 
 @magento
