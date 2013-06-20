@@ -11,7 +11,7 @@
                     <field name="birthday"/>
                 </field>
                 <field name="street" position="before">
-                    <field name="company"/>
+                    <field name="company" placeholder="Company"/>
                 </field>
                 <page name="connector" position="attributes">
                     <attribute name="invisible">0</attribute>
