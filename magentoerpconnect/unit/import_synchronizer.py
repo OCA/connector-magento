@@ -68,8 +68,10 @@ class MagentoImportSynchronizer(ImportSynchronizer):
         """Return True if the import should be skipped because
         it is already up-to-date in OpenERP"""
         assert self.magento_record
+        if not self.magento_record.get('updated_at'):
+            return  # no update date on Magento, always import it.
         if not binding_id:
-            return
+            return  # it does not exist so it shoud not be skipped
         binding = self.session.browse(self.model._name, binding_id)
         sync = binding.sync_date
         if not sync:
