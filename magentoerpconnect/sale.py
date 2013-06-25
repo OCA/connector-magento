@@ -271,6 +271,12 @@ class SaleImportRule(ConnectorUnit):
                              'are never imported.' %
                              record['payment']['method'])
 
+    def _rule_authorized(self, record, method):
+        """ Import the order only if payment has been authorized. """
+        if not record.get('payment', {}).get('amount_authorized'):
+            raise OrderImportRuleRetry('The order has not been authorized.\n'
+                                       'The import will be retried later.')
+
     def _rule_paid(self, record, method):
         """ Import the order only if it has received a payment """
         if not record.get('payment', {}).get('amount_paid'):
@@ -279,6 +285,7 @@ class SaleImportRule(ConnectorUnit):
 
     _rules = {'always': _rule_always,
               'paid': _rule_paid,
+              'authorized': _rule_authorized,
               'never': _rule_never,
               }
 
