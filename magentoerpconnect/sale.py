@@ -33,7 +33,10 @@ from openerp.addons.connector.unit.mapper import (mapping,
                                                   ImportMapper
                                                   )
 from openerp.addons.connector_ecommerce.unit.sale_order_onchange import (
-        SaleOrderOnChange)
+    SaleOrderOnChange)
+from openerp.addons.connector_ecommerce.sale import (ShippingLineBuilder,
+                                                     CashOnDeliveryLineBuilder,
+                                                     GiftOrderLineBuilder)
 from .unit.backend_adapter import GenericAdapter
 from .unit.import_synchronizer import (DelayedBatchImport,
                                        MagentoImportSynchronizer
@@ -586,25 +589,33 @@ class SaleOrderImportMapper(ImportMapper):
     children = [('items', 'magento_order_line_ids', 'magento.sale.order.line'),
                 ]
 
+    def _add_shipping_line(self, result):
+        amount_tax_exc = float(result.get('shipping_amount', 0.0))
+        line_builder = self.get_connector_unit_for_model(MagentoShippingLineBuilder)
+        line_builder.price_unit = amount_tax_exc
+        result['magento_order_line_ids'].append((0, 0,
+                                                 line_builder.get_line()))
+
     def _after_mapping(self, result):
         sess = self.session
         # TODO: refactor: do no longer store the transient fields in the
         # result, use a ConnectorUnit to create the lines
-        result = sess.pool['sale.order']._convert_special_fields(sess.cr,
-                                                                 sess.uid,
-                                                                 result,
-                                                                 result['magento_order_line_ids'],
-                                                                 sess.context)
+        # result = sess.pool['sale.order']._convert_special_fields(sess.cr,
+        #                                                          sess.uid,
+        #                                                          result,
+        #                                                          result['magento_order_line_ids'],
+        #                                                          sess.context)
         # remove transient fields otherwise OpenERP will raise a warning
         # or even fail to create the record because the fields do not
         # exist
-        result.pop('shipping_amount_tax_excluded', None)
-        result.pop('shipping_amount_tax_included', None)
-        result.pop('shipping_tax_amount', None)
         result.pop('gift_certificates_amount', None)
         result.pop('gift_certificates_code', None)
         onchange = self.get_connector_unit_for_model(SaleOrderOnChange)
         return onchange.play(result, result['magento_order_line_ids'])
+
+    @mapping
+    def shipping_line(self, record):
+        self._add_shipping_line(result)
 
     @mapping
     def store_id(self, record):
@@ -677,24 +688,6 @@ class SaleOrderImportMapper(ImportMapper):
                                          'magento_code': ifield,
                                          })
             result = {'carrier_id': carrier_id}
-        return result
-
-    @mapping
-    def base_shipping_incl_tax(self, record):
-        amount_tax_inc = float(record.get('base_shipping_incl_tax', 0.0))
-        discount = float(record.get('shipping_discount_amount', 0.0))
-        amount_tax_inc -=  discount
-        amount_tax_exc = float(record.get('shipping_amount', 0.0))
-
-        if amount_tax_exc and amount_tax_inc:
-            tax_rate = amount_tax_inc / amount_tax_exc -1
-        else:
-            tax_rate = 0
-
-        result = {'shipping_amount_tax_included': amount_tax_inc,
-                  'shipping_amount_tax_excluded': amount_tax_exc,
-                  'shipping_tax_rate': tax_rate,
-                  }
         return result
 
     # partner_id, partner_invoice_id, partner_shipping_id
@@ -776,6 +769,21 @@ class SaleOrderLineImportMapper(ImportMapper):
         else:
             result['price_unit'] = base_row_total / qty_ordered
         return result
+
+
+@magento
+class MagentoShippingLineBuilder(ShippingLineBuilder):
+    _model_name = 'magento.sale.order'
+
+
+@magento
+class MagentoCashOnDeliveryLineBuilder(CashOnDeliveryLineBuilder):
+    _model_name = 'magento.sale.order'
+
+
+@magento
+class MagentoGiftOrderLineBuilder(GiftOrderLineBuilder):
+    _model_name = 'magento.sale.order'
 
 
 @job
