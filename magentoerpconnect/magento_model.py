@@ -73,7 +73,7 @@ class magento_backend(orm.Model):
             _select_versions,
             string='Version',
             required=True),
-        'location': fields.char('Location'),
+        'location': fields.char('Location', required=True),
         'username': fields.char('Username'),
         'password': fields.char('Password'),
         'warehouse_id': fields.many2one('stock.warehouse',
