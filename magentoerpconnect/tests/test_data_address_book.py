@@ -31,6 +31,7 @@ and ``magentoerpconnect.unit.backend_adapter.output_recorder``
 This set of data contains examples of customers and their address books
 """
 
+
 # customer without address
 no_address = {
     ('customer.info', (9999253, None)): {'confirmation': None,
