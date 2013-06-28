@@ -46,6 +46,8 @@ class test_import_address_book(common.SingleTransactionCase):
         super(test_import_address_book, self).setUp()
         self.backend_model = self.registry('magento.backend')
         self.session = ConnectorSession(self.cr, self.uid)
+        self.model = self.registry('magento.res.partner')
+        self.address_model = self.registry('magento.address')
         backend_ids = self.backend_model.search(
             self.cr, self.uid,
             [('name', '=', 'Test Magento Address book')])
@@ -79,27 +81,120 @@ class test_import_address_book(common.SingleTransactionCase):
         with mock_api(no_address):
             import_record(self.session, 'magento.res.partner',
                           self.backend_id, '9999253')
+        cr, uid = self.cr, self.uid
+        partner_ids = self.model.search(cr, uid,
+                                        [('magento_id', '=', '9999253'),
+                                         ('backend_id', '=', self.backend_id)])
+        self.assertEqual(len(partner_ids), 1)
+        partner = self.model.browse(cr, uid, partner_ids[0])
+        self.assertEqual(partner.name, 'Benjamin Le Goff')
+        self.assertEqual(partner.type, 'default')
+        self.assertEqual(len(partner.child_ids), 0)
 
     def test_11_individual_1_address(self):
         """ Import an individual (b2c) with 1 billing address """
         with mock_api(individual_1_address):
             import_record(self.session, 'magento.res.partner',
                           self.backend_id, '9999254')
+        cr, uid = self.cr, self.uid
+        partner_ids = self.model.search(cr, uid,
+                                        [('magento_id', '=', '9999254'),
+                                         ('backend_id', '=', self.backend_id)])
+        self.assertEqual(len(partner_ids), 1)
+        partner = self.model.browse(cr, uid, partner_ids[0])
+        # Name of the billing address
+        self.assertEqual(partner.name, 'Ferreira Margaux')
+        self.assertEqual(partner.type, 'default')
+        # billing address merged with the partner
+        self.assertEqual(len(partner.child_ids), 0)
+        self.assertEqual(len(partner.magento_bind_ids), 1)
+        self.assertEqual(len(partner.magento_address_bind_ids), 1)
+        address_bind = partner.magento_address_bind_ids[0]
+        self.assertEqual(address_bind.magento_id, '9999253',
+                         msg="The merged address should be the "
+                             "billing address")
 
     def test_12_individual_2_addresses(self):
         """ Import an individual (b2c) with 2 addresses """
         with mock_api(individual_2_addresses):
             import_record(self.session, 'magento.res.partner',
                           self.backend_id, '9999255')
+        cr, uid = self.cr, self.uid
+        partner_ids = self.model.search(cr, uid,
+                                        [('magento_id', '=', '9999255'),
+                                         ('backend_id', '=', self.backend_id)])
+        self.assertEqual(len(partner_ids), 1)
+        partner = self.model.browse(cr, uid, partner_ids[0])
+        # Name of the billing address
+        self.assertEqual(partner.name, u'Mace Sébastien')
+        self.assertEqual(partner.type, 'default')
+        # billing address merged with the partner,
+        # second address as a contact
+        self.assertEqual(len(partner.child_ids), 1)
+        self.assertEqual(len(partner.magento_bind_ids), 1)
+        self.assertEqual(len(partner.magento_address_bind_ids), 1)
+        address_bind = partner.magento_address_bind_ids[0]
+        self.assertEqual(address_bind.magento_id, '9999254',
+                         msg="The merged address should be the "
+                             "billing address")
+        self.assertEqual(partner.child_ids[0].type, 'delivery',
+                         msg="The shipping address should be of "
+                             "type 'delivery'")
 
     def test_13_company_1_address(self):
         """ Import an company (b2b) with 1 address """
         with mock_api(company_1_address):
             import_record(self.session, 'magento.res.partner',
                           self.backend_id, '9999256')
+        cr, uid = self.cr, self.uid
+        partner_ids = self.model.search(cr, uid,
+                                        [('magento_id', '=', '9999256'),
+                                         ('backend_id', '=', self.backend_id)])
+        self.assertEqual(len(partner_ids), 1)
+        partner = self.model.browse(cr, uid, partner_ids[0])
+        # Company of the billing address
+        self.assertEqual(partner.name, 'Marechal')
+        self.assertEqual(partner.type, 'default')
+        # all addresses as contacts
+        self.assertEqual(len(partner.child_ids), 1)
+        self.assertEqual(len(partner.magento_bind_ids), 1)
+        self.assertEqual(len(partner.magento_address_bind_ids), 0)
+        self.assertEqual(partner.child_ids[0].type, 'invoice',
+                         msg="The billing address should be of "
+                             "type 'invoice'")
 
     def test_14_company_2_addresses(self):
         """ Import an company (b2b) with 2 addresses """
         with mock_api(company_2_addresses):
             import_record(self.session, 'magento.res.partner',
                           self.backend_id, '9999257')
+        cr, uid = self.cr, self.uid
+        partner_ids = self.model.search(cr, uid,
+                                        [('magento_id', '=', '9999257'),
+                                         ('backend_id', '=', self.backend_id)])
+        self.assertEqual(len(partner_ids), 1)
+        partner = self.model.browse(cr, uid, partner_ids[0])
+        # Company of the billing address
+        self.assertEqual(partner.name, 'Bertin')
+        self.assertEqual(partner.type, 'default')
+        # all addresses as contacts
+        self.assertEqual(len(partner.child_ids), 2)
+        self.assertEqual(len(partner.magento_bind_ids), 1)
+        self.assertEqual(len(partner.magento_address_bind_ids), 0)
+        def get_address(magento_id):
+            address_ids = self.address_model.search(
+                cr, uid,
+                [('magento_id', '=', magento_id),
+                ('backend_id', '=', self.backend_id)])
+            self.assertEqual(len(address_ids), 1)
+            return self.address_model.browse(cr, uid, address_ids[0])
+        # billing address
+        address = get_address('9999257')
+        self.assertEqual(address.type, 'invoice',
+                            msg="The billing address should be of "
+                                "type 'invoice'")
+        # shipping address
+        address = get_address('9999258')
+        self.assertEqual(address.type, 'delivery',
+                            msg="The shipping address should be of "
+                                "type 'delivery'")

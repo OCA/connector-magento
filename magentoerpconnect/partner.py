@@ -637,10 +637,10 @@ class AddressImportMapper(BaseAddressImportMapper):
 
     @mapping
     def type(self, record):
-        if record.get('is_default_shipping'):
-            address_type = 'delivery'
         if record.get('is_default_billing'):
             address_type = 'invoice'
+        elif record.get('is_default_shipping'):
+            address_type = 'delivery'
         else:
             address_type = 'contact'
         return {'type': address_type}
