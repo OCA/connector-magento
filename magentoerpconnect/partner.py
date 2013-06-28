@@ -431,7 +431,9 @@ class PartnerAddressBook(ConnectorUnit):
             # or imported as a standalone contact
             merge = False
             if magento_record.get('is_default_billing'):
-                if not magento_record.get('company'):
+                if magento_record.get('company'):
+                    # when a company is there, we never merge the contact
+                    # with the partner.
                     # Copy the billing address on the company
                     # and use the name of the company for the name
                     company_mapper = get_unit(CompanyImportMapper,
@@ -441,8 +443,8 @@ class PartnerAddressBook(ConnectorUnit):
                                        partner_binding_id,
                                        company_mapper.data)
                 else:
-                    # when a company is there, we never merge the contact
-                    # with the partner.
+                    # for B2C individual customers, merge with the main
+                    # partner
                     merge = True
                     # in the case if the billing address no longer
                     # has a company, reset the flag
