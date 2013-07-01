@@ -41,6 +41,7 @@ from .unit.import_synchronizer import (DelayedBatchImport,
 from .exception import OrderImportRuleRetry
 from .backend import magento
 from .connector import get_environment
+from .partner import PartnerImportMapper
 
 _logger = logging.getLogger(__name__)
 
@@ -478,7 +479,7 @@ class SaleOrderImport(MagentoImportSynchronizer):
                 'dob': record.get('customer_dob'),
                 'website_id': record.get('website_id'),
             }
-            mapper = self.get_connector_unit_for_model(ImportMapper,
+            mapper = self.get_connector_unit_for_model(PartnerImportMapper,
                                                       'magento.res.partner')
             mapper.convert(customer_record)
             oe_record = mapper.data_for_create
