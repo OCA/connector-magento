@@ -278,10 +278,8 @@ class PartnerImport(MagentoImportSynchronizer):
 
     def _after_import(self, partner_binding_id):
         """ Import the addresses """
-        env = get_environment(self.session,
-                              'magento.address',
-                              self.backend_record.id)
-        book = env.get_connector_unit(PartnerAddressBook)
+        get_unit = self.get_connector_unit_for_model
+        book = get_unit(PartnerAddressBook, 'magento.address')
         book.import_addresses(self.magento_id, partner_binding_id)
 
 
