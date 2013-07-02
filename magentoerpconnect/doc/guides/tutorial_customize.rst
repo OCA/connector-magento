@@ -70,9 +70,10 @@ put the imports of your python modules.
 Install the module in the connector
 ===================================
 
-Each new module needs to be plugged in the connector.
-In order to install the module, you just need to call
-(by convention in ``connector.py``)::
+Each new module needs to be plugged in the connector's framework.
+That's just a matter of following a convention and creating
+``connector.py`` in which you will call the
+``install_connector_module`` function::
 
     from openerp.addons.connector.connector import install_connector_module
 
