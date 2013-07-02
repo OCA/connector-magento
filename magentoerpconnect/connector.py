@@ -20,17 +20,11 @@
 ##############################################################################
 
 from openerp.osv import orm, fields
-from openerp.addons.connector.connector import Environment
+from openerp.addons.connector.connector import (Environment,
+                                                install_connector_module)
 from openerp.addons.connector.checkpoint import checkpoint
 
-
-class magentoerpconnect_installed(orm.AbstractModel):
-    """Empty model used to know if the module is installed on the
-    database.
-
-    If the model is in the registry, the module is installed.
-    """
-    _name = 'magentoerpconnect.installed'
+install_connector_module()
 
 
 def get_environment(session, model_name, backend_id):

@@ -19,13 +19,7 @@
 #
 ##############################################################################
 
-from openerp.osv import orm
+from openerp.addons.connector.connector import install_connector_module
 
 
-class magentoerpconnect_pricing_installed(orm.AbstractModel):
-    """Empty model used to know if the module is installed on the
-    database.
-
-    If the model is in the registry, the module is installed.
-    """
-    _name = 'magentoerpconnect_pricing.installed'
+install_connector_module()
