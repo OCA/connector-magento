@@ -54,6 +54,13 @@ class res_partner(orm.Model):
         'company': fields.char('Company'),
     }
 
+    def _address_fields(self, cr, uid, context=None):
+        """ Returns the list of address fields that are synced from the parent
+        when the `use_parent_address` flag is set. """
+        fields = super(res_partner, self)._address_fields(cr, uid, context=context)
+        fields.append('company')
+        return fields
+
 
 # TODO migrate from res.partner (magento fields)
 class magento_res_partner(orm.Model):
