@@ -113,6 +113,14 @@ class sale_order(orm.Model):
             string="Magento Bindings"),
     }
 
+    def copy_data(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        default['magento_bind_ids'] = False
+        return super(sale_order, self).copy_data(cr, uid, id,
+                                                 default=default,
+                                                 context=context)
+
 
 class magento_sale_order_line(orm.Model):
     _name = 'magento.sale.order.line'
@@ -183,6 +191,14 @@ class sale_order_line(orm.Model):
                 'magento.sale.order.line', 'openerp_id',
                 string="Magento Bindings"),
         }
+
+    def copy_data(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        default['magento_bind_ids'] = False
+        return super(sale_order_line, self).copy_data(cr, uid, id,
+                                                      default=default,
+                                                      context=context)
 
 
 @magento

@@ -54,6 +54,14 @@ class res_partner(orm.Model):
         'company': fields.char('Company'),
     }
 
+    def copy_data(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        default['magento_bind_ids'] = False
+        return super(res_partner, self).copy_data(cr, uid, id,
+                                                  default=default,
+                                                  context=context)
+
 
 # TODO migrate from res.partner (magento fields)
 class magento_res_partner(orm.Model):
