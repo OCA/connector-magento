@@ -12,7 +12,7 @@ Changelog
 * 'Authorized' import rules to be able to import sales orders authorized by a payment institute but not paid yet. (Thanks to Brendan Clune)
 * Define the partners relationships only on the creation of new records, allowing manual specification of company / contact relationships within OpenERP (Thanks to Brendan Clune)
 * Fix: State information for partners not mapped correctly (Thanks to Brendan Clune) (https://launchpad.net/bugs/1183837)
-* Many others: see the changelog
+* Many others: see the bazaar logs
 
 2.0.0
 ~~~~~
