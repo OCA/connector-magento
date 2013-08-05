@@ -470,6 +470,10 @@ class SaleOrderImport(MagentoImportSynchronizer):
         if is_guest_order:
             # ensure that the flag is correct in the record
             record['customer_is_guest'] = True
+            guest_customer_id = 'guestorder:%s' % record['increment_id']
+            # "fix" the record with a on-purpose built ID so we can found it
+            # from the mapper
+            record['customer_id'] = guest_customer_id
 
             address = record['billing_address']
 
@@ -500,6 +504,8 @@ class SaleOrderImport(MagentoImportSynchronizer):
             oe_record = mapper.data_for_create
             oe_record['guest_customer'] = True
             partner_bind_id = sess.create('magento.res.partner', oe_record)
+            partner_binder.bind(guest_customer_id,
+                                partner_bind_id)
         else:
 
             # we always update the customer when importing an order
