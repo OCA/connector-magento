@@ -20,10 +20,12 @@
 ##############################################################################
 
 import test_synchronization
+import test_address_book
 
 fast_suite = [
 ]
 
 checks = [
     test_synchronization,
+    test_address_book,
 ]

@@ -29,6 +29,7 @@ from openerp.addons.connector.session import ConnectorSession
 import openerp.tests.common as common
 from .common import (mock_api,
                      mock_urlopen_image)
+from .test_data import magento_base_responses
 
 DB = common.DB
 ADMIN_USER_ID = common.ADMIN_USER_ID
@@ -66,7 +67,7 @@ class test_import_magento(common.SingleTransactionCase):
 
     def test_00_import_backend(self):
         """ Synchronize initial metadata """
-        with mock_api():
+        with mock_api(magento_base_responses):
             import_batch(self.session, 'magento.website', self.backend_id)
             import_batch(self.session, 'magento.store', self.backend_id)
             import_batch(self.session, 'magento.storeview', self.backend_id)
@@ -94,7 +95,7 @@ class test_import_magento(common.SingleTransactionCase):
     def test_10_import_product_category(self):
         """ Import of a product category """
         backend_id = self.backend_id
-        with mock_api():
+        with mock_api(magento_base_responses):
             import_record(self.session, 'magento.product.category',
                           backend_id, 1)
 
@@ -106,7 +107,7 @@ class test_import_magento(common.SingleTransactionCase):
     def test_11_import_product_category_with_gap(self):
         """ Import of a product category when parent categories are missing """
         backend_id = self.backend_id
-        with mock_api():
+        with mock_api(magento_base_responses):
             import_record(self.session, 'magento.product.category',
                           backend_id, 8)
 
@@ -118,7 +119,7 @@ class test_import_magento(common.SingleTransactionCase):
     def test_12_import_product(self):
         """ Import of a simple product """
         backend_id = self.backend_id
-        with mock_api():
+        with mock_api(magento_base_responses):
             with mock_urlopen_image():
                 import_record(self.session,
                               'magento.product.product',
@@ -134,7 +135,7 @@ class test_import_magento(common.SingleTransactionCase):
     def test_13_import_product_category_missing(self):
         """ Import of a simple product when the category is missing """
         backend_id = self.backend_id
-        with mock_api():
+        with mock_api(magento_base_responses):
             with mock_urlopen_image():
                 import_record(self.session,
                               'magento.product.product',
@@ -150,7 +151,7 @@ class test_import_magento(common.SingleTransactionCase):
     def test_14_import_product_configurable(self):
         """ Configurable should fail: not yet supported """
         backend_id = self.backend_id
-        with mock_api():
+        with mock_api(magento_base_responses):
             with self.assertRaises(InvalidDataError):
                 import_record(self.session,
                               'magento.product.product',
@@ -159,7 +160,7 @@ class test_import_magento(common.SingleTransactionCase):
     def test_15_import_product_bundle(self):
         """ Bundle should fail: not yet supported """
         backend_id = self.backend_id
-        with mock_api():
+        with mock_api(magento_base_responses):
             with self.assertRaises(InvalidDataError):
                 import_record(self.session,
                               'magento.product.product',
@@ -168,7 +169,7 @@ class test_import_magento(common.SingleTransactionCase):
     def test_16_import_product_grouped(self):
         """ Grouped should fail: not yet supported """
         backend_id = self.backend_id
-        with mock_api():
+        with mock_api(magento_base_responses):
             with self.assertRaises(InvalidDataError):
                 import_record(self.session,
                               'magento.product.product',
@@ -177,7 +178,7 @@ class test_import_magento(common.SingleTransactionCase):
     def test_16_import_product_virtual(self):
         """ Virtual should fail: not yet supported """
         backend_id = self.backend_id
-        with mock_api():
+        with mock_api(magento_base_responses):
             with self.assertRaises(InvalidDataError):
                 import_record(self.session,
                               'magento.product.product',
@@ -186,7 +187,7 @@ class test_import_magento(common.SingleTransactionCase):
     def test_30_import_sale_order(self):
         """ Import a sale order: check """
         backend_id = self.backend_id
-        with mock_api():
+        with mock_api(magento_base_responses):
             with mock_urlopen_image():
                 import_record(self.session,
                               'magento.sale.order',
@@ -201,7 +202,7 @@ class test_import_magento(common.SingleTransactionCase):
     def test_30_import_sale_order_no_website_id(self):
         """ Import a sale order: website_id is missing (happens with magento...) """
         backend_id = self.backend_id
-        with mock_api():
+        with mock_api(magento_base_responses):
             with mock_urlopen_image():
                 import_record(self.session,
                               'magento.sale.order',

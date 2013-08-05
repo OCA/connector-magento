@@ -28,6 +28,10 @@ with a Magento 1.7 version with demo data.
 It has been recorded using ``magentoerpconnect.unit.backend_adapter.record``
 and ``magentoerpconnect.unit.backend_adapter.output_recorder``
 """
+import time
+
+
+FMT = "%Y-%m-%d %H:%M:%S"
 
 
 magento_base_responses = \
@@ -23693,7 +23697,7 @@ magento_base_responses = \
                                            'can_ship_partially_item': None,
                                            'coupon_code': None,
                                            'coupon_rule_name': None,
-                                           'created_at': '2013-04-23 07:38:55',
+                                           'created_at': time.strftime(FMT),
                                            'currency_base_id': None,
                                            'currency_code': None,
                                            'currency_rate': None,
@@ -24138,7 +24142,7 @@ magento_base_responses = \
                                            'can_ship_partially_item': None,
                                            'coupon_code': None,
                                            'coupon_rule_name': None,
-                                           'created_at': '2013-04-23 07:38:55',
+                                           'created_at': time.strftime(FMT),
                                            'currency_base_id': None,
                                            'currency_code': None,
                                            'currency_rate': None,
