@@ -383,6 +383,14 @@ class sale_shop(orm.Model):
             readonly=True),
     }
 
+    def copy_data(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        default['magento_bind_ids'] = False
+        return super(sale_shop, self).copy_data(cr, uid, id,
+                                                default=default,
+                                                context=context)
+
 
 # TODO: migrate from magerp.storeviews
 class magento_storeview(orm.Model):
