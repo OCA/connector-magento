@@ -56,6 +56,21 @@ class res_partner(orm.Model):
         'company': fields.char('Company'),
     }
 
+    def copy_data(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        default['magento_bind_ids'] = False
+        return super(res_partner, self).copy_data(cr, uid, id,
+                                                  default=default,
+                                                  context=context)
+
+    def _address_fields(self, cr, uid, context=None):
+        """ Returns the list of address fields that are synced from the parent
+        when the `use_parent_address` flag is set. """
+        fields = super(res_partner, self)._address_fields(cr, uid, context=context)
+        fields.append('company')
+        return fields
+
 
 class magento_res_partner(orm.Model):
     _name = 'magento.res.partner'

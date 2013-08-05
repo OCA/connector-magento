@@ -114,6 +114,14 @@ class sale_order(orm.Model):
             string="Magento Bindings"),
     }
 
+    def copy_data(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        default['magento_bind_ids'] = False
+        return super(sale_order, self).copy_data(cr, uid, id,
+                                                 default=default,
+                                                 context=context)
+
 
 class magento_sale_order_line(orm.Model):
     _name = 'magento.sale.order.line'
@@ -184,6 +192,14 @@ class sale_order_line(orm.Model):
                 'magento.sale.order.line', 'openerp_id',
                 string="Magento Bindings"),
         }
+
+    def copy_data(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        default['magento_bind_ids'] = False
+        return super(sale_order_line, self).copy_data(cr, uid, id,
+                                                      default=default,
+                                                      context=context)
 
 
 @magento
@@ -455,6 +471,10 @@ class SaleOrderImport(MagentoImportSynchronizer):
         if is_guest_order:
             # ensure that the flag is correct in the record
             record['customer_is_guest'] = True
+            guest_customer_id = 'guestorder:%s' % record['increment_id']
+            # "fix" the record with a on-purpose built ID so we can found it
+            # from the mapper
+            record['customer_id'] = guest_customer_id
 
             address = record['billing_address']
 
@@ -485,6 +505,8 @@ class SaleOrderImport(MagentoImportSynchronizer):
             oe_record = mapper.data_for_create
             oe_record['guest_customer'] = True
             partner_bind_id = sess.create('magento.res.partner', oe_record)
+            partner_binder.bind(guest_customer_id,
+                                partner_bind_id)
         else:
 
             # we always update the customer when importing an order

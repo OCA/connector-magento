@@ -74,6 +74,14 @@ class product_category(orm.Model):
             string="Magento Bindings"),
     }
 
+    def copy_data(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        default['magento_bind_ids'] = False
+        return super(product_category, self).copy_data(cr, uid, id,
+                                                       default=default,
+                                                       context=context)
+
 
 @magento
 class ProductCategoryAdapter(GenericAdapter):
