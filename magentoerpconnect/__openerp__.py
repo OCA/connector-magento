@@ -21,7 +21,7 @@
 ##############################################################################
 
 {'name': 'Magento Connector',
- 'version': '2.1.0',
+ 'version': '2.1.0.dev0',
  'category': 'Connector',
  'depends': ['account',
              'product',
