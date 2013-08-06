@@ -240,6 +240,14 @@ def delay_export_account_invoice(session, model_name, record_id):
 
 
 @job
+def export_invoice_paid(session, model_name, record_id):
+    """ Deprecated in 2.1.0.dev0. """
+    _logger.warning('Deprecated: the export_invoice_paid() job is deprecated '
+                    'in favor of export_invoice()')
+    return export_invoice(session, model_name, record_id)
+
+
+@job
 def export_invoice(session, model_name, record_id):
     """ Export a validated or paid invoice. """
     invoice = session.browse(model_name, record_id)
