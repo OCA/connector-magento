@@ -236,11 +236,11 @@ def delay_export_account_invoice(session, model_name, record_id):
     """
     Delay the job to export the magento invoice.
     """
-    export_invoice_validated_paid.delay(session, model_name, record_id)
+    export_invoice.delay(session, model_name, record_id)
 
 
 @job
-def export_invoice_validated_paid(session, model_name, record_id):
+def export_invoice(session, model_name, record_id):
     """ Export a validated or paid invoice. """
     invoice = session.browse(model_name, record_id)
     backend_id = invoice.backend_id.id
