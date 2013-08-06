@@ -365,13 +365,13 @@ class magento_store(orm.Model):
             'Send email notification on invoice validated/paid',
             help="Does the invoice export/creation should send "
                  "an email notification on Magento side?"),
-        'create_invoice_on': fields.selection([
-                ('open','Validate'),
-                ('paid','Paid')],
+        'create_invoice_on': fields.selection(
+            [('open', 'Validate'),
+             ('paid', 'Paid')],
             'Create invoice on action',
             required=True,
             help="Should the invoice be created in Magento "
-                 "when it is validated or when it it paid in OpenERP?"),
+                 "when it is validated or when it is paid in OpenERP?"),
     }
 
     _defaults = {
