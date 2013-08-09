@@ -120,9 +120,6 @@ class test_export_invoice(common.TransactionCase):
             export_invoice.delay.assert_called_with(mock.ANY,
                                          'magento.account.invoice',
                                          self.invoice.magento_bind_ids[0].id)
-        # then call the method exporting the invoice as the job
-        # would have done it
-        # TODO delay_export_account_invoice
 
         # pay and verify it is NOT called
         with mock.patch(patched) as export_invoice:  # prevent to create the job
@@ -140,9 +137,42 @@ class test_export_invoice(common.TransactionCase):
             self.assertEqual(self.invoice.state, 'paid')
             assert not export_invoice.delay.called
 
-    @unittest2.skip("Needs to be implemented")
     def test_export_invoice_on_paid(self):
         """ Exporting an invoice: when it is paid """
+        cr, uid = self.cr, self.uid
+        store_ids = [store.id for website in self.backend.website_ids
+                     for store in website.store_ids]
+        # we setup the stores so they export the invoices as soon
+        # as they are validated (open)
+        self.registry('magento.store').write(
+            cr, uid, store_ids, {'create_invoice_on': 'paid'})
+        # this is the consumer called when a 'magento.account.invoice'
+        # is created, it delay a job to export the invoice
+        patched = 'openerp.addons.magentoerpconnect.invoice.export_invoice'
+        with mock.patch(patched) as export_invoice:  # prevent to create the job
+            wf_service = netsvc.LocalService("workflow")
+            wf_service.trg_validate(self.uid, 'account.invoice',
+                                    self.invoice.id, 'invoice_open', self.cr)
+            assert not export_invoice.delay.called
+
+        # pay and verify it is NOT called
+        with mock.patch(patched) as export_invoice:  # prevent to create the job
+            self.invoice_model.pay_and_reconcile(
+                cr, uid, [self.invoice.id],
+                pay_amount=self.invoice.amount_total,
+                pay_account_id=self.pay_account_id,
+                period_id=self.period_id,
+                pay_journal_id=self.journal_id,
+                writeoff_acc_id=self.pay_account_id,
+                writeoff_period_id=self.period_id,
+                writeoff_journal_id=self.journal_id,
+                name="Payment for tests of invoice's exports")
+            self.invoice.refresh()
+            self.assertEqual(self.invoice.state, 'paid')
+            assert len(self.invoice.magento_bind_ids) == 1
+            export_invoice.delay.assert_called_with(
+                mock.ANY, 'magento.account.invoice',
+                self.invoice.magento_bind_ids[0].id)
 
     @unittest2.skip("Needs to be implemented")
     def test_export_invoice_api(self):
