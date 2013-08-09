@@ -20,6 +20,7 @@
 ##############################################################################
 
 import unittest2
+from functools import partial
 
 from openerp.addons.connector.exception import InvalidDataError
 from openerp.addons.magentoerpconnect.unit.import_synchronizer import (
@@ -46,15 +47,16 @@ class test_import_magento(common.SingleTransactionCase):
         super(test_import_magento, self).setUp()
         self.backend_model = self.registry('magento.backend')
         self.session = ConnectorSession(self.cr, self.uid)
+        data_model = self.registry('ir.model.data')
+        self.get_ref = partial(data_model.get_object_reference,
+                               self.cr, self.uid)
         backend_ids = self.backend_model.search(
             self.cr, self.uid,
             [('name', '=', 'Test Magento')])
         if backend_ids:
             self.backend_id = backend_ids[0]
         else:
-            data_obj = self.registry('ir.model.data')
-            warehouse_id = data_obj.get_object_reference(
-                self.cr, self.uid, 'stock', 'warehouse0')[1]
+            __, warehouse_id = self.get_ref('stock', 'warehouse0')
             self.backend_id = self.backend_model.create(
                 self.cr,
                 self.uid,
@@ -64,6 +66,17 @@ class test_import_magento(common.SingleTransactionCase):
                  'username': 'guewen',
                  'warehouse_id': warehouse_id,
                  'password': '42'})
+            # payment method needed to import a sale order
+            __, workflow_id = self.get_ref('sale_automatic_workflow',
+                                           'manual_validation')
+            __, journal_id = self.get_ref('account',
+                                          'check_journal')
+            self.registry('payment.method').create(
+                self.cr, self.uid,
+                {'name': 'checkmo',
+                 'workflow_process_id': workflow_id,
+                 'import_rule': 'always',
+                 'journal_id': journal_id})
 
     def test_00_import_backend(self):
         """ Synchronize initial metadata """
