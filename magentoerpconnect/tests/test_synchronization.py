@@ -212,7 +212,7 @@ class test_import_magento(common.SingleTransactionCase):
                                         ('magento_id', '=', '900000691')])
         self.assertEqual(len(order_ids), 1)
 
-    def test_30_import_sale_order_no_website_id(self):
+    def test_31_import_sale_order_no_website_id(self):
         """ Import a sale order: website_id is missing (happens with magento...) """
         backend_id = self.backend_id
         with mock_api(magento_base_responses):
