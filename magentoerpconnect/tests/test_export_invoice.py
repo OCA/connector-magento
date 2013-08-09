@@ -112,10 +112,7 @@ class test_export_invoice(common.TransactionCase):
         # is created, it delay a job to export the invoice
         patched = 'openerp.addons.magentoerpconnect.invoice.export_invoice'
         with mock.patch(patched) as export_invoice:  # prevent to create the job
-            wf_service = netsvc.LocalService("workflow")
-            wf_service.trg_validate(self.uid, 'account.invoice',
-                                    self.invoice.id, 'invoice_open', self.cr)
-            self.invoice.refresh()
+            self._invoice_open()
             assert len(self.invoice.magento_bind_ids) == 1
             export_invoice.delay.assert_called_with(mock.ANY,
                                          'magento.account.invoice',
@@ -123,17 +120,7 @@ class test_export_invoice(common.TransactionCase):
 
         # pay and verify it is NOT called
         with mock.patch(patched) as export_invoice:  # prevent to create the job
-            self.invoice_model.pay_and_reconcile(
-                cr, uid, [self.invoice.id],
-                pay_amount=self.invoice.amount_total,
-                pay_account_id=self.pay_account_id,
-                period_id=self.period_id,
-                pay_journal_id=self.journal_id,
-                writeoff_acc_id=self.pay_account_id,
-                writeoff_period_id=self.period_id,
-                writeoff_journal_id=self.journal_id,
-                name="Payment for tests of invoice's exports")
-            self.invoice.refresh()
+            self._pay_and_reconcile()
             self.assertEqual(self.invoice.state, 'paid')
             assert not export_invoice.delay.called
 
@@ -150,29 +137,36 @@ class test_export_invoice(common.TransactionCase):
         # is created, it delay a job to export the invoice
         patched = 'openerp.addons.magentoerpconnect.invoice.export_invoice'
         with mock.patch(patched) as export_invoice:  # prevent to create the job
-            wf_service = netsvc.LocalService("workflow")
-            wf_service.trg_validate(self.uid, 'account.invoice',
-                                    self.invoice.id, 'invoice_open', self.cr)
+            self._invoice_open()
             assert not export_invoice.delay.called
 
         # pay and verify it is NOT called
         with mock.patch(patched) as export_invoice:  # prevent to create the job
-            self.invoice_model.pay_and_reconcile(
-                cr, uid, [self.invoice.id],
-                pay_amount=self.invoice.amount_total,
-                pay_account_id=self.pay_account_id,
-                period_id=self.period_id,
-                pay_journal_id=self.journal_id,
-                writeoff_acc_id=self.pay_account_id,
-                writeoff_period_id=self.period_id,
-                writeoff_journal_id=self.journal_id,
-                name="Payment for tests of invoice's exports")
-            self.invoice.refresh()
+            self._pay_and_reconcile()
             self.assertEqual(self.invoice.state, 'paid')
             assert len(self.invoice.magento_bind_ids) == 1
             export_invoice.delay.assert_called_with(
                 mock.ANY, 'magento.account.invoice',
                 self.invoice.magento_bind_ids[0].id)
+
+    def _invoice_open(self):
+        wf_service = netsvc.LocalService("workflow")
+        wf_service.trg_validate(self.uid, 'account.invoice',
+                                self.invoice.id, 'invoice_open', self.cr)
+        self.invoice.refresh()
+
+    def _pay_and_reconcile(self):
+        self.invoice_model.pay_and_reconcile(
+            self.cr, self.uid, [self.invoice.id],
+            pay_amount=self.invoice.amount_total,
+            pay_account_id=self.pay_account_id,
+            period_id=self.period_id,
+            pay_journal_id=self.journal_id,
+            writeoff_acc_id=self.pay_account_id,
+            writeoff_period_id=self.period_id,
+            writeoff_journal_id=self.journal_id,
+            name="Payment for tests of invoice's exports")
+        self.invoice.refresh()
 
     @unittest2.skip("Needs to be implemented")
     def test_export_invoice_api(self):
