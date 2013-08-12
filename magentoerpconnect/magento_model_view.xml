@@ -14,9 +14,14 @@
                         string="Synchronize Metadata"/>
                     </header>
                     <sheet>
+                        <label for="name" class="oe_edit_only"/>
                         <h1>
-                            <field name="name" class="oe_inline"/>
+                            <field name="name" />
                         </h1>
+                        <label for="code" class="oe_edit_only"/>
+                        <h2>
+                            <field name="code" />
+                        </h2>
                         <group name="magento" string="Magento Configuration">
                             <group colspan="4" col="4">
                                 <field name="version" colspan="4"/>

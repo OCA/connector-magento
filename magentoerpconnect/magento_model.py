@@ -69,6 +69,7 @@ class magento_backend(orm.Model):
         return field_ids[0]
 
     _columns = {
+        'code': fields.char('Code', required=True),
         'version': fields.selection(
             _select_versions,
             string='Version',
@@ -117,6 +118,11 @@ class magento_backend(orm.Model):
     _defaults = {
         'product_stock_field_id': _get_stock_field_id,
     }
+
+    _sql_constraints = [
+        ('code_uniq', 'unique(code)',
+         "A backend with the same code already exists")
+    ]
 
     def check_magento_structure(self, cr, uid, ids, context=None):
         """ Used in each data import.
