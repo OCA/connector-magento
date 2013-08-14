@@ -630,7 +630,10 @@ class SaleOrderImportMapper(ImportMapper):
 
     @mapping
     def name(self, record):
-        name = self.backend_record.code +'-'+ record['increment_id']
+        name = record['increment_id']
+        prefix = self.backend_record.sale_prefix
+        if prefix:
+          name = prefix + name
         return {'name': name}
 
     @mapping

@@ -18,10 +18,6 @@
                         <h1>
                             <field name="name" />
                         </h1>
-                        <label for="code" class="oe_edit_only"/>
-                        <h2>
-                            <field name="code" />
-                        </h2>
                         <group name="magento" string="Magento Configuration">
                             <group colspan="4" col="4">
                                 <field name="version" colspan="4"/>
@@ -115,6 +111,7 @@
                                 <group>
                                     <field name="default_lang_id" widget="selection"/>
                                     <field name="default_category_id"/>
+                                    <field name="sale_prefix" placeholder="Prefix added before the sales order name during sales orders import." />
                                     <field name="product_stock_field_id" widget="selection"
                                         domain="[('model', 'in', ['product.product', 'product.template']), ('ttype', '=', 'float')]"/>
                                 </group>

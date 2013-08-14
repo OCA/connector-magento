@@ -69,7 +69,6 @@ class magento_backend(orm.Model):
         return field_ids[0]
 
     _columns = {
-        'code': fields.char('Code', required=True),
         'version': fields.selection(
             _select_versions,
             string='Version',
@@ -77,6 +76,7 @@ class magento_backend(orm.Model):
         'location': fields.char('Location', required=True),
         'username': fields.char('Username'),
         'password': fields.char('Password'),
+        'sale_prefix': fields.char('Sale prefix'),
         'warehouse_id': fields.many2one('stock.warehouse',
                                         'Warehouse',
                                         required=True,
@@ -120,8 +120,8 @@ class magento_backend(orm.Model):
     }
 
     _sql_constraints = [
-        ('code_uniq', 'unique(code)',
-         "A backend with the same code already exists")
+        ('sale_prefix_uniq', 'unique(sale_prefix)',
+         "A backend with the same sale prefix already exists")
     ]
 
     def check_magento_structure(self, cr, uid, ids, context=None):
