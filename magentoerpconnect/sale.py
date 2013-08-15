@@ -598,8 +598,7 @@ class SaleOrderImport(MagentoImportSynchronizer):
 class SaleOrderImportMapper(ImportMapper):
     _model_name = 'magento.sale.order'
 
-    direct = [('increment_id', 'name'),
-              ('increment_id', 'magento_id'),
+    direct = [('increment_id', 'magento_id'),
               ('order_id', 'magento_order_id'),
               ('grand_total', 'total_amount'),
               ('tax_amount', 'total_amount_tax'),
@@ -628,6 +627,14 @@ class SaleOrderImportMapper(ImportMapper):
         result.pop('gift_certificates_code', None)
         onchange = self.get_connector_unit_for_model(SaleOrderOnChange)
         return onchange.play(result, result['magento_order_line_ids'])
+
+    @mapping
+    def name(self, record):
+        name = record['increment_id']
+        prefix = self.backend_record.sale_prefix
+        if prefix:
+          name = prefix + name
+        return {'name': name}
 
     @mapping
     def store_id(self, record):

@@ -76,6 +76,7 @@ class magento_backend(orm.Model):
         'location': fields.char('Location', required=True),
         'username': fields.char('Username'),
         'password': fields.char('Password'),
+        'sale_prefix': fields.char('Sale prefix'),
         'warehouse_id': fields.many2one('stock.warehouse',
                                         'Warehouse',
                                         required=True,
@@ -117,6 +118,11 @@ class magento_backend(orm.Model):
     _defaults = {
         'product_stock_field_id': _get_stock_field_id,
     }
+
+    _sql_constraints = [
+        ('sale_prefix_uniq', 'unique(sale_prefix)',
+         "A backend with the same sale prefix already exists")
+    ]
 
     def check_magento_structure(self, cr, uid, ids, context=None):
         """ Used in each data import.
