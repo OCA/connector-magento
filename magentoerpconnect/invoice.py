@@ -26,7 +26,8 @@ from openerp.tools.translate import _
 from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.unit.synchronizer import ExportSynchronizer
 from openerp.addons.connector.event import on_record_create
-from openerp.addons.connector_ecommerce.event import on_invoice_paid
+from openerp.addons.connector_ecommerce.event import (on_invoice_paid,
+                                                      on_invoice_validated)
 from openerp.addons.connector.exception import IDMissingInBackend
 from .unit.backend_adapter import GenericAdapter
 from .connector import get_environment
@@ -160,7 +161,7 @@ class MagentoInvoiceSynchronizer(ExportSynchronizer):
         return item_qty
 
     def run(self, binding_id):
-        """ Run the job to export the paid invoice """
+        """ Run the job to export the validated/paid invoice """
         sess = self.session
         invoice = sess.browse(self.model._name, binding_id)
 
@@ -202,8 +203,9 @@ class MagentoInvoiceSynchronizer(ExportSynchronizer):
         return invoices[0]['increment_id']
 
 
+@on_invoice_validated
 @on_invoice_paid
-def invoice_paid_create_bindings(session, model_name, record_id):
+def invoice_create_bindings(session, model_name, record_id):
     """
     Create a ``magento.account.invoice`` record. This record will then
     be exported to Magento.
@@ -213,10 +215,20 @@ def invoice_paid_create_bindings(session, model_name, record_id):
     # we use the shop as many sale orders can be related to an invoice
     for sale in invoice.sale_ids:
         for magento_sale in sale.magento_bind_ids:
-            session.create('magento.account.invoice',
-                           {'backend_id': magento_sale.backend_id.id,
-                            'openerp_id': invoice.id,
-                            'magento_order_id': magento_sale.id})
+            # Check if invoice state matches configuration setting
+            # for when to export an invoice
+            magento_stores = magento_sale.shop_id.magento_bind_ids
+            magento_store = next((store for store in magento_stores
+                                  if store.backend_id.id == magento_sale.backend_id.id),
+                                 None)
+            assert magento_store
+            create_invoice = magento_store.create_invoice_on
+
+            if create_invoice == invoice.state:
+                session.create('magento.account.invoice',
+                               {'backend_id': magento_sale.backend_id.id,
+                                'openerp_id': invoice.id,
+                                'magento_order_id': magento_sale.id})
 
 
 @on_record_create(model_names='magento.account.invoice')
@@ -224,12 +236,20 @@ def delay_export_account_invoice(session, model_name, record_id):
     """
     Delay the job to export the magento invoice.
     """
-    export_invoice_paid.delay(session, model_name, record_id)
+    export_invoice.delay(session, model_name, record_id)
 
 
 @job
 def export_invoice_paid(session, model_name, record_id):
-    """ Export a paid invoice. """
+    """ Deprecated in 2.1.0.dev0. """
+    _logger.warning('Deprecated: the export_invoice_paid() job is deprecated '
+                    'in favor of export_invoice()')
+    return export_invoice(session, model_name, record_id)
+
+
+@job
+def export_invoice(session, model_name, record_id):
+    """ Export a validated or paid invoice. """
     invoice = session.browse(model_name, record_id)
     backend_id = invoice.backend_id.id
     env = get_environment(session, model_name, backend_id)

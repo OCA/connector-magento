@@ -233,6 +233,7 @@
                         <group string="Options">
                             <field name="send_picking_done_mail"/>
                             <field name="send_invoice_paid_mail"/>
+                            <field name="create_invoice_on"/>
                         </group>
 
                         <notebook>

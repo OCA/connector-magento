@@ -21,6 +21,7 @@
 
 import test_synchronization
 import test_address_book
+import test_export_invoice
 
 fast_suite = [
 ]
@@ -28,4 +29,5 @@ fast_suite = [
 checks = [
     test_synchronization,
     test_address_book,
+    test_export_invoice,
 ]
