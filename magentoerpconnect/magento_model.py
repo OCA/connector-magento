@@ -76,7 +76,12 @@ class magento_backend(orm.Model):
         'location': fields.char('Location', required=True),
         'username': fields.char('Username'),
         'password': fields.char('Password'),
-        'sale_prefix': fields.char('Sale prefix'),
+        'sale_prefix': fields.char(
+            'Sale Prefix',
+            help="A prefix put before the name of imported sales orders.\n"
+                 "For instance, if the prefix is 'mag-', the sales "
+                 "order 100000692 in Magento, will be named 'mag-100000692' "
+                 "in OpenERP."),
         'warehouse_id': fields.many2one('stock.warehouse',
                                         'Warehouse',
                                         required=True,
