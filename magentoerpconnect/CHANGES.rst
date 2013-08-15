@@ -1,6 +1,12 @@
 Changelog
 ---------
 
+2.0.1.dev0
+~~~~~~~~~~
+
+* Option to choose if the invoices are exported to Magento on payment or validation
+
+
 2.1.0 (2013.08.05)
 ~~~~~~~~~~~~~~~~~~
 
