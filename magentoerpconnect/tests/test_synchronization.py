@@ -213,3 +213,26 @@ class test_import_magento(common.SingleTransactionCase):
                                        [('backend_id', '=', backend_id),
                                         ('magento_id', '=', '900000692')])
         self.assertEqual(len(order_ids), 1)
+
+    def test_32_import_sale_order_with_prefix(self):
+        """ Import a sale order with prefix """
+        backend_id = self.backend_id
+        self.backend_model.write(self.cr, self.uid, self.backend_id,
+                                 {'sale_prefix': 'EC'})
+        backend = self.backend_model.browse(self.cr, self.uid, backend_id)
+        with mock_api(magento_base_responses):
+            with mock_urlopen_image():
+                import_record(self.session,
+                              'magento.sale.order',
+                              backend_id, 900000693)
+        order_model = self.registry('magento.sale.order')
+        order_ids = order_model.search(self.cr,
+                                       self.uid,
+                                       [('backend_id', '=', backend_id),
+                                        ('magento_id', '=', '900000693')])
+        order = order_model.browse(self.cr,
+                                   self.uid,
+                                   order_ids[0])
+        self.assertEqual(order.name, 'EC900000693')
+        self.backend_model.write(self.cr, self.uid, self.backend_id,
+                                 {'sale_prefix': False})
