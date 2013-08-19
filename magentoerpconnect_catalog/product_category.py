@@ -35,12 +35,7 @@ class magento_product_category(orm.Model):
         for backend in self.browse(cr, uid, ids, context=context):
             for website in backend.website_ids:
                 website.import_partners()
-        return True    
-
-def create(self, data):
-    return self._call('%s.create'% self._magento_model,[data['parent_id'],data])
-
-ProductCategoryAdapter.create = create
+        return True 
 
 @magento
 class ProductCategoryDeleteSynchronizer(MagentoDeleteSynchronizer):
