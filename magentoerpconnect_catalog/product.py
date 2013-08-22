@@ -11,21 +11,6 @@ from openerp.addons.magentoerpconnect.unit.export_synchronizer import (
         MagentoExporter)
 from openerp.addons.magentoerpconnect.backend import magento
 from openerp.addons.magentoerpconnect.product import ProductProductAdapter
-from openerp.addons.connector.session import ConnectorSession
-import openerp.addons.magentoerpconnect.consumer as magentoerpconnect
-
-
-class product_product(orm.Model):
-    _inherit = 'product.product'
-
-    def export_record(self, cr, uid, ids, context=None):
-        """ Export product to all backends """
-        assert len(ids) == 1
-        session = ConnectorSession(cr, uid, context=context)
-        record = self.browse(cr, uid, ids[0], context=context)
-        for binding in record.magento_bind_ids:
-            magentoerpconnect.delay_export(session, binding._model._name, binding.id)
-
 
 
 @magento
