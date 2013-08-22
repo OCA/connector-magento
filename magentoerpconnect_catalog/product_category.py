@@ -10,32 +10,6 @@ from openerp.addons.magentoerpconnect.unit.export_synchronizer import (
         MagentoExporter)
 from openerp.addons.magentoerpconnect.backend import magento
 from openerp.addons.magentoerpconnect.product_category import ProductCategoryAdapter
-from openerp.addons.connector.session import ConnectorSession
-import openerp.addons.magentoerpconnect.consumer as magentoerpconnect
-
-class product_category(orm.Model):
-    _inherit = 'product.category'
-
-    def export_record(self, cr, uid, ids, context=None):
-        """ Exoport category to all backends """
-        assert len(ids) == 1
-        session = ConnectorSession(cr, uid, context=context)
-        record = self.browse(cr, uid, ids[0], context=context)
-        for binding in record.magento_bind_ids:
-            magentoerpconnect.delay_export(session, binding._model._name, binding.id)
-
-class magento_product_category(orm.Model):
-    _inherit = 'magento.product.category'
-
-    def import_record(self, cr, uid, ids, context=None):
-        """ Import partners from all websites """
-        if not hasattr(ids, '__iter__'):
-            ids = [ids]
-        self.check_magento_structure(cr, uid, ids, context=context)
-        for backend in self.browse(cr, uid, ids, context=context):
-            for website in backend.website_ids:
-                website.import_partners()
-        return True 
 
 @magento
 class ProductCategoryDeleteSynchronizer(MagentoDeleteSynchronizer):
