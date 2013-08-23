@@ -25,19 +25,42 @@ Helpers usable in the tests
 
 import mock
 from contextlib import contextmanager
-from .test_data import magento_base_responses
 from ..unit.backend_adapter import call_to_key
 
 
-def get_magento_response(method, arguments):
-    key = call_to_key(method, arguments)
-    assert key in magento_base_responses, (
-        "%s not found in magento responses" % str(key))
-    return magento_base_responses[key]
+class TestResponder(object):
+    """ Used to simulate the calls to Magento.
+
+    For a call (request) to Magento, returns a stored
+    response.
+    """
+
+    def __init__(self, responses):
+        """
+        The responses are stored in dict instances.
+        The keys are normalized using the ``call_to_key``
+        function which transform the request calls in a
+        hashable form.
+
+        :param responses: responses returned by Magento
+        :type responses: dict
+        """
+        self._responses = responses
+
+    def __call__(self, method, arguments):
+        key = call_to_key(method, arguments)
+        assert key in self._responses, (
+            "%s not found in magento responses" % str(key))
+        return self._responses[key]
 
 
 @contextmanager
-def mock_api():
+def mock_api(responses):
+    """
+    :param responses: responses returned by Magento
+    :type responses: dict
+    """
+    get_magento_response = TestResponder(responses)
     with mock.patch('magento.API') as API:
         api_mock = mock.MagicMock(name='magento.api')
         API.return_value = api_mock
@@ -65,6 +88,4 @@ def mock_urlopen_image():
     with mock.patch('urllib2.urlopen') as urlopen:
         api_mock = mock.MagicMock()
         urlopen.return_value = MockResponseImage('')
-        # api_mock.__enter__.return_value = api_mock
-        # api_mock.call.side_effect = get_magento_response
         yield
