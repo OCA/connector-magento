@@ -40,6 +40,14 @@ class res_partner_category(orm.Model):
             readonly=True),
     }
 
+    def copy_data(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        default['magento_bind_ids'] = False
+        return super(res_partner_category, self).copy_data(cr, uid, id,
+                                                           default=default,
+                                                           context=context)
+
 
 class magento_res_partner_category(orm.Model):
     _name = 'magento.res.partner.category'

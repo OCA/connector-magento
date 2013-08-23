@@ -1,5 +1,0 @@
-id,sequence,type,evaluation_type,external_field,field_id:id,external_type,alternative_key,mapping_id:id,function_name,in_function,out_function,child_mapping_id:id,datetime_format
-mag1500_product_link_link_product_id,,out,direct,link_product_id,product_links.field_product_link_linked_product_id,int,False,mag1500_product_link,,,,,
-mag1500_product_link_type,,out,direct,type,product_links.field_product_link_type,unicode,False,mag1500_product_link,,,,,
-mag1500_product_link_position,,out,direct,position,magentoerpconnect.field_product_link_sequence,unicode,False,mag1500_product_link,,,,,
-mag1500_product_link_is_active,,out,direct,is_active,product_links.field_product_link_is_active,unicode,False,mag1500_product_link,,,,,

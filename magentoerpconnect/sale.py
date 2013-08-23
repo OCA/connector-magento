@@ -41,6 +41,7 @@ from .unit.import_synchronizer import (DelayedBatchImport,
 from .exception import OrderImportRuleRetry
 from .backend import magento
 from .connector import get_environment
+from .partner import PartnerImportMapper
 
 _logger = logging.getLogger(__name__)
 
@@ -113,6 +114,14 @@ class sale_order(orm.Model):
             string="Magento Bindings"),
     }
 
+    def copy_data(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        default['magento_bind_ids'] = False
+        return super(sale_order, self).copy_data(cr, uid, id,
+                                                 default=default,
+                                                 context=context)
+
 
 class magento_sale_order_line(orm.Model):
     _name = 'magento.sale.order.line'
@@ -183,6 +192,14 @@ class sale_order_line(orm.Model):
                 'magento.sale.order.line', 'openerp_id',
                 string="Magento Bindings"),
         }
+
+    def copy_data(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        default['magento_bind_ids'] = False
+        return super(sale_order_line, self).copy_data(cr, uid, id,
+                                                      default=default,
+                                                      context=context)
 
 
 @magento
@@ -454,6 +471,10 @@ class SaleOrderImport(MagentoImportSynchronizer):
         if is_guest_order:
             # ensure that the flag is correct in the record
             record['customer_is_guest'] = True
+            guest_customer_id = 'guestorder:%s' % record['increment_id']
+            # "fix" the record with a on-purpose built ID so we can found it
+            # from the mapper
+            record['customer_id'] = guest_customer_id
 
             address = record['billing_address']
 
@@ -478,12 +499,14 @@ class SaleOrderImport(MagentoImportSynchronizer):
                 'dob': record.get('customer_dob'),
                 'website_id': record.get('website_id'),
             }
-            mapper = self.get_connector_unit_for_model(ImportMapper,
+            mapper = self.get_connector_unit_for_model(PartnerImportMapper,
                                                       'magento.res.partner')
             mapper.convert(customer_record)
             oe_record = mapper.data_for_create
             oe_record['guest_customer'] = True
             partner_bind_id = sess.create('magento.res.partner', oe_record)
+            partner_binder.bind(guest_customer_id,
+                                partner_bind_id)
         else:
 
             # we always update the customer when importing an order
@@ -575,8 +598,7 @@ class SaleOrderImport(MagentoImportSynchronizer):
 class SaleOrderImportMapper(ImportMapper):
     _model_name = 'magento.sale.order'
 
-    direct = [('increment_id', 'name'),
-              ('increment_id', 'magento_id'),
+    direct = [('increment_id', 'magento_id'),
               ('order_id', 'magento_order_id'),
               ('grand_total', 'total_amount'),
               ('tax_amount', 'total_amount_tax'),
@@ -605,6 +627,14 @@ class SaleOrderImportMapper(ImportMapper):
         result.pop('gift_certificates_code', None)
         onchange = self.get_connector_unit_for_model(SaleOrderOnChange)
         return onchange.play(result, result['magento_order_line_ids'])
+
+    @mapping
+    def name(self, record):
+        name = record['increment_id']
+        prefix = self.backend_record.sale_prefix
+        if prefix:
+          name = prefix + name
+        return {'name': name}
 
     @mapping
     def store_id(self, record):
