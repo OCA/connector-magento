@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from openerp.addons.connector.connector import install_connector_module
+from openerp.addons.connector.connector import install_in_connector
 
 
-install_connector_module()
+install_in_connector()

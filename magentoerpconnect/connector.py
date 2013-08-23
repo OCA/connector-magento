@@ -21,10 +21,10 @@
 
 from openerp.osv import orm, fields
 from openerp.addons.connector.connector import (Environment,
-                                                install_connector_module)
+                                                install_in_connector)
 from openerp.addons.connector.checkpoint import checkpoint
 
-install_connector_module()
+install_in_connector()
 
 
 def get_environment(session, model_name, backend_id):
