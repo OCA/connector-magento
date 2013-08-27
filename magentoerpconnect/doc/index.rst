@@ -58,6 +58,7 @@ Be efficient using and configuring the connector.
    guides/connector_checkpoint
    guides/monitor_resolve_jobs
    howto/modify_an_order
+   howto/faq
 
 
 ***************************
