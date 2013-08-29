@@ -21,10 +21,12 @@
 
 import socket
 import logging
+import xmlrpclib
 
 import magento as magentolib
 from openerp.addons.connector.unit.backend_adapter import CRUDAdapter
-from openerp.addons.connector.exception import NetworkRetryableError
+from openerp.addons.connector.exception import (NetworkRetryableError,
+                                                RetryableJobError)
 
 _logger = logging.getLogger(__name__)
 
@@ -134,6 +136,17 @@ class MagentoCRUDAdapter(CRUDAdapter):
             raise NetworkRetryableError(
                 'A network error caused the failure of the job: '
                 '%s' % err)
+        except xmlrpclib.ProtocolError as err:
+            if err.errcode == 503:  # Service unavailable
+                raise RetryableJobError(
+                    'A protocol error caused the failure of the job:\n'
+                    'URL: %s\n'
+                    'HTTP/HTTPS headers: %s\n'
+                    'Error code: %d\n'
+                    'Error message: %s\n' %
+                    (err.url, err.headers, err.errcode, err.errmsg))
+            else:
+                raise
 
 
 class GenericAdapter(MagentoCRUDAdapter):
