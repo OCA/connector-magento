@@ -1,8 +1,8 @@
 .. _contribute:
 
-##########
-Contribute
-##########
+#################
+Developer's guide
+#################
 
 We do accept merge proposals!
 

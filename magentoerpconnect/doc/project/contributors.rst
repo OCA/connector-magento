@@ -1,6 +1,12 @@
+.. _contributors:
+
 ############
 Contributors
 ############
+
+List of contributors:
+
+.. include:: ../../AUTHORS
 
 Special thanks to:
 
