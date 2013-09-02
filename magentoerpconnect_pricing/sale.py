@@ -24,10 +24,7 @@ from openerp.addons.magentoerpconnect import sale
 from openerp.addons.connector.unit.mapper import mapping
 
 
-magento.unregister_class(sale.SaleOrderImportMapper)
-
-
-@magento
+@magento(replacing=sale.SaleOrderImportMapper)
 class SaleOrderImportMapper(sale.SaleOrderImportMapper):
     _model_name = 'magento.sale.order'
 

@@ -34,10 +34,7 @@ from openerp.addons.magentoerpconnect import product
 from openerp.addons.magentoerpconnect.connector import get_environment
 
 
-magento.unregister_class(product.ProductImportMapper)
-
-
-@magento
+@magento(replacing=product.ProductImportMapper)
 class ProductImportMapper(product.ProductImportMapper):
     _model_name = 'magento.product.product'
 
