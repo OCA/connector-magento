@@ -68,13 +68,10 @@ class test_import_product(common.TransactionCase):
         with mock.patch('urllib2.urlopen') as urlopen:
             def image_url_response(url):
                 if url == 'http://localhost:9100/media/catalog/product/i/n/ink-eater-krylon-bombear-destroyed-tee-2.jpg':
-                    print 'gosh'
                     raise urllib2.HTTPError(url, 404, '404', None, None)
                 elif url == 'http://localhost:9100/media/catalog/product/i/n/ink-eater-krylon-bombear-destroyed-tee-1.jpg':
-                    print 'gosh2'
                     raise urllib2.HTTPError(url, 404, '404', None, None)
                 else:
-                    print 'haa'
                     return MockResponseImage(PNG_IMG_4PX_GREEN)
 
             urlopen.side_effect = image_url_response
