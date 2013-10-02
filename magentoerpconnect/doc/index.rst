@@ -127,8 +127,6 @@ Project
 Concepts
 ========
 
-Glossary:
-
 .. glossary::
 
     Job

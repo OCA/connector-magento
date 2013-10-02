@@ -22,6 +22,11 @@ OpenERP to ensure a correct synchronization between them
 OpenERP
 =======
 
+If you are a developer, you may want to install the connector using our
+buildout configuration, go over `Connector with batteries included (buildout)`_.
+
+For the manual installation, just stay there.
+
 Download the branches where you installed OpenERP::
 
     $ bzr branch lp:openerp-connector/7.0 connector
