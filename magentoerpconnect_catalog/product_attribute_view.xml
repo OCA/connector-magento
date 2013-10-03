@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+<!--Product attribute-->
+<record id="attribute_attribute_form_view" model="ir.ui.view">
+    <field name="model">attribute.attribute</field>
+    <field name="inherit_id"
+           ref="base_custom_attributes.attribute_attribute_form_view"/>
+    <field name="arch" type="xml">
+        <xpath expr="//group" position="after">
+            <group colspan="4">
+                <separator string="Magento attributes"/>
+                <field name="magento_bind_ids" nolabel="1" colspan="6"
+                       context="{
+                            'hide_openerp_id': True,
+                            'default_openerp_id': id,
+                            'default_frontend_label': field_description,
+                            'default_attribute_code': name}">
+                    <tree name="magento">
+                        <field name="attribute_code"/>
+                        <field name="backend_id"/>
+                        <field name="is_required"/>
+                        <field name="default_value" string="Default"/>
+                        <field name="scope"/>
+                    </tree>
+                </field>
+            </group>
+        </xpath>
+    </field>
+</record>
+
+<record id="attribute_set_form_view" model="ir.ui.view">
+    <field name="model">attribute.set</field>
+    <field name="inherit_id"
+           ref="base_custom_attributes.attribute_set_form_view"/>
+    <field name="arch" type="xml">
+        <form string="Attribute Set" position="inside">
+            <separator string="Magento attribute sets" colspan="6"/>
+            <field name="magento_bind_ids" nolabel="1" colspan="6"/>
+        </form>
+    </field>
+</record>
+
+
+<menuitem id="menu_magento_product_attribute_main"
+          name="Attributes"
+          parent="magentoerpconnect.menu_magento_root"
+          sequence="40" />
+
+
+
+<!--Magento attribute-->
+<record id="magento_product_attribute_tree_view" model="ir.ui.view">
+    <field name="model">magento.product.attribute</field>
+    <field name="arch" type="xml">
+        <tree string="Attribute">
+            <field name="openerp_id"/>
+            <field name="attribute_code"/>
+            <field name="backend_id"/>
+        </tree>
+    </field>
+</record>
+
+<record id="magento_product_attribute_action" model="ir.actions.act_window">
+    <field name="type">ir.actions.act_window</field>
+    <field name="res_model">magento.product.attribute</field>
+    <field name="view_type">form</field>
+    <field name="name">Magento attribute</field>
+    <field name="view_id" ref="magento_product_attribute_tree_view"/>
+    <field name="help" type="html">
+      <p class="oe_view_nocontent_create">
+        Click to add an attribute.
+      </p>
+    </field>
+</record>
+
+<menuitem id="menu_magento_product_attribute"
+          name="Attributes"
+          action="magento_product_attribute_action"
+          parent="menu_magento_product_attribute_main"
+          sequence="10"/>
+
+
+<record id="magento_product_attribute_form_view" model="ir.ui.view">
+    <field name="model">magento.product.attribute</field>
+    <field name="arch" type="xml">
+        <form string="main" version="7.0">
+            <group name="main" col="4">
+                <field name="frontend_label"/>
+                <field name="attribute_code"
+                       attributes="{'readonly': [('openerp_id', '!=', False)]}"/>
+                <field name="backend_id" string="Backend"/>
+                <field name="scope"/>
+                <field name="frontend_input"/>
+                <field name="openerp_id"
+                       invisible="context.get('hide_openerp_id')"/>
+
+            </group>
+<group name="other" col="4">
+                <field name="default_value"
+                       attrs="{'invisible':[('frontend_input', 'in',
+                       ['media_image', 'multiselect'])]}"/>
+                <field name="entity_type_id"/>
+                <field name="group_id"/>
+                <field name="apply_to"/>
+                <field name="position"/>
+                <field name="note"/>
+            </group>
+            <separator/>
+            <group name="boolean" col="6"
+                   attrs="{'invisible':[
+                        ('frontend_input', 'in', ['media_image'])]}">
+                <field name="is_required"/>
+                <field name="is_filterable"/>
+                <field name="is_visible"/>
+                <field name="is_global"/>
+                <field name="is_searchable"/>
+                <field name="is_visible_on_front"/>
+                <field name="is_unique"/>
+                <field name="is_configurable"/>
+                <field name="is_visible_in_advanced_search"/>
+                <field name="is_used_for_price_rules"/>
+                <field name="is_comparable"/>
+                <field name="is_user_defined"/>
+                <field name="is_used_for_promo_rules"/>
+                <field name="used_for_sort_by"/>
+                <field name="is_wysiwyg_enabled"/>
+                <field name="used_in_product_listing"/>
+                <span colspan="2"/>
+                <field name="is_html_allowed_on_front"/>
+            </group>
+            <group name="system" col="4">
+                <field name="sync_date" readonly="1"/>
+                <field name="magento_id" readonly="1"/>
+            </group>
+        </form>
+    </field>
+</record>
+
+
+<!--Magento attribute set-->
+<record id="magento_attribute_set_tree_view" model="ir.ui.view">
+    <field name="model">magento.attribute.set</field>
+    <field name="arch" type="xml">
+        <tree string="Attribute set">
+            <field name="openerp_id"/>
+            <field name="backend_id"/>
+        </tree>
+    </field>
+</record>
+
+<record id="magento_attribute_set_action" model="ir.actions.act_window">
+    <field name="type">ir.actions.act_window</field>
+    <field name="res_model">magento.attribute.set</field>
+    <field name="view_type">form</field>
+    <field name="name">Mag. attr. set</field>
+    <!--<field name="view_id" ref="magento_attribute_set_tree_view"/>-->
+    <field name="help" type="html">
+      <p class="oe_view_nocontent_create">
+        Click to add an attribute set.
+      </p>
+    </field>
+</record>
+
+<menuitem id="menu_magento_attribute_set"
+          name="Sets"
+          action="magento_attribute_set_action"
+          parent="menu_magento_product_attribute_main"
+          sequence="5"/>
+
+
+<!--Magento attribute option-->
+<record id="magento_attribute_option_tree_view" model="ir.ui.view">
+    <field name="model">magento.attribute.option</field>
+    <field name="arch" type="xml">
+        <tree string="Attribute option">
+            <field name="openerp_id"/>
+        </tree>
+    </field>
+</record>
+
+<record id="magento_attribute_option_action" model="ir.actions.act_window">
+    <field name="type">ir.actions.act_window</field>
+    <field name="res_model">magento.attribute.option</field>
+    <field name="view_type">form</field>
+    <field name="name">Mag. attr. option</field>
+    <field name="view_id" ref="magento_attribute_option_tree_view"/>
+    <field name="help" type="html">
+      <p class="oe_view_nocontent_create">
+        Click to add an attribute option.
+      </p>
+    </field>
+</record>
+
+<menuitem id="menu_magento_attribute_option"
+          name="Options"
+          action="magento_attribute_option_action"
+          parent="menu_magento_product_attribute_main"
+          sequence="15"/>
+
+    </data>
+</openerp>
