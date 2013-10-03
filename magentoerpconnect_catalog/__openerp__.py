@@ -25,7 +25,8 @@
  'version': '2.0.0',
  'category': 'Connector',
  'depends': ['magentoerpconnect',
-             'product_custom_attributes',
+             'product_links',
+             #'product_images',
              ],
  'author': 'MagentoERPconnect Core Editors',
  'license': 'AGPL-3',
@@ -43,9 +44,8 @@ Extension for **Magento Connector**, add management of the product's catalog:
 """,
  'images': [],
  'demo': [],
- 'data': [
-    'product_attribute_view.xml',
-    ],
+ 'data': ['product_view.xml'],
  'installable': True,
  'application': False,
 }
+
