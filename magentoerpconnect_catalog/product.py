@@ -1,4 +1,24 @@
 # -*- coding: utf-8 -*-
+##############################################################################
+#
+#    Copyright 2013
+#    Author: Guewen Baconnier - Camptocamp SA
+#            Augustin Cisterne-Kaasv - Elico-corp
+#            David Béal - Akretion
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+##############################################################################
 
 from openerp.osv import fields, orm, osv
 from openerp.addons.connector.queue.job import job
@@ -63,14 +83,9 @@ class ProductProductExportMapper(ExportMapper):
 
     @mapping
     def set(self, record):
-        binder = self.get_binder_for_model('magento.product.attribute.set')
-        set_id = binder.to_backend(record.attribute_set_id.id)
-        return {'attrset': set_id}
-
-    @mapping
-    def tax(self, record):
-        tax_class_id = record.tax_class if record.tax_class else 0
-        return {'tax_class_id': tax_class_id}
+        #binder = self.get_binder_for_model('magento.product.attribute.set')
+        #set_id = binder.to_backend(record.attribute_set_id.id)
+        return {'attrset': '4'}
 
     @mapping
     def website_ids(self, record):
