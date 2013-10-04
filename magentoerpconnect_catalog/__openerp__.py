@@ -25,7 +25,7 @@
  'version': '2.0.0',
  'category': 'Connector',
  'depends': ['magentoerpconnect',
-             'product_links',
+             #'product_links',
              #'product_images',
              ],
  'author': 'MagentoERPconnect Core Editors',
