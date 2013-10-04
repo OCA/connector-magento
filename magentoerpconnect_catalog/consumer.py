@@ -33,14 +33,20 @@ import openerp.addons.magentoerpconnect.consumer as magentoerpconnect
 @on_record_create(model_names=[
         'magento.product.category',
         'magento.product.product'
+        'magento.product.attribute',
+        'magento.attribute.set',
+        'magento.attribute.option',
     ])
 @on_record_write(model_names=[
         'magento.product.category',
         'magento.product.product'
+        'magento.product.attribute',
+        'magento.attribute.option',
     ])
 def delay_export(session, model_name, record_id, fields=None):
     magentoerpconnect.delay_export(session, model_name,
                                    record_id, fields=fields)
+
 
 @on_record_write(model_names=[
         'product.category',
@@ -54,6 +60,9 @@ def delay_export_all_bindings(session, model_name, record_id, fields=None):
 @on_record_unlink(model_names=[
         'magento.product.category',
         'magento.product.product'
+        'magento.product.attribute',
+        'magento.attribute.set',
+        'magento.attribute.option',
     ])
 def delay_unlink(session, model_name, record_id):
     magentoerpconnect.delay_unlink(session, model_name, record_id)
