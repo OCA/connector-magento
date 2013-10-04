@@ -232,7 +232,7 @@ def invoice_create_bindings(session, model_name, record_id):
 
 
 @on_record_create(model_names='magento.account.invoice')
-def delay_export_account_invoice(session, model_name, record_id):
+def delay_export_account_invoice(session, model_name, record_id, vals=None):
     """
     Delay the job to export the magento invoice.
     """
