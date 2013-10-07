@@ -6,6 +6,9 @@ Changelog
 
 * Option to choose if the invoices are exported to Magento on payment or validation (Thanks to Allison Miller)
 * Allow to define a prefix for the name of the imported sales orders (Thanks to Augustin Cisterne-Kaas)
+* Compatibility with the Connector Framework: listeners 'on_record_create' receives
+  an additional argument 'vals'; 'on_record_write's named argument 'fields' becomes 'vals'
+  and receives the full dictionary of values
 
 
 2.1.0 (2013.08.05)
