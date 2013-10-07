@@ -4,6 +4,7 @@
 #    Copyright 2013
 #    Author: Guewen Baconnier - Camptocamp
 #            David Béal - Akretion
+#            Sébastien Beau - Akretion
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
 #    published by the Free Software Foundation, either version 3 of the
@@ -62,7 +63,9 @@ class MagentoProductAttribute(orm.Model):
     _description = "Magento Product Attribute"
     _inherit = 'magento.binding'
     _rec_name = 'attribute_code'
-    MAGENTO_HELP = "Defined on magento"
+    MAGENTO_HELP = "This field is a technical / configuration field for "\
+                   "the attribute on Magento. \nPlease refer to the Magento " \
+                   "documentation for details. "
 
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
