@@ -14,5 +14,18 @@
     </field>
 </record>
 
+
+<record id="product_product_form_view_set_button" model="ir.ui.view">
+    <field name="model">product.product</field>
+    <field name="inherit_id"
+           ref="product_custom_attributes.product_product_form_view_set_button"/>
+    <field name="arch" type="xml">
+        <field name="attribute_set_id" position="attributes">
+            <attribute name="attrs">{'required': [('magento_bind_ids','!=',[])]}</attribute>
+        </field>
+    </field>
+</record>
+
+
     </data>
 </openerp>

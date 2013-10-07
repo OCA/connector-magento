@@ -46,6 +46,7 @@ Extension for **Magento Connector**, add management of the product's catalog:
  'images': [],
  'demo': [],
  'data': [
+    'product_view.xml',
     'product_attribute_view.xml',
     ],
  'installable': True,
