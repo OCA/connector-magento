@@ -119,7 +119,7 @@ They will be built in the ``docs`` directory at the root of the buildout.
 Magento on the go
 *****************
 
-If you want to develop on the Magento Connector a generic feature, we recommend
+If you want to develop a generic feature on the Magento Connector, we recommend
 to use the `ak-magento vagrant box`_.  It installs Magento 1.7 with the demo
 data and the Magento part of the Connector.
 
@@ -144,17 +144,34 @@ File an Issue
 When you encounter an issue or think there is a bug, you can file a bug on the
 project: http://bugs.launchpad.net/magentoerpconnect.
 
+The connector uses several community modules, located in different projects
+(``sale_automatic_workflow``, ``sale_exceptions``, ...). If you know which
+project is concerned, please report the bug directly on it, in case of doubt,
+report it on the Magento Connector project and the developers will eventually
+move it to the right project.
+
 Possibly, the bug is related to the connector framework, so you may want to report
 it on this project instead: http://bugs.launchpad.net/openerp-connector.
 
-When you report a bug, please
+When you report a bug, please give all the sensible information you can provide, such as:
+
+ * the reference of the branch of the connector that you are using, and if
+   possible the revision numbers of that branch and the dependencies (you can
+   use ``bzr revision-info`` for that purpose)
+
+It is very helpful if you can include:
+
+ * the detailed steps to reproduce the issue, including any relevant action
+ * in case of a crash, an extract from the server log files (possibly with a
+   few lines before the beginning of the crash report in the log)
+ * the additionnal modules you use with the connector if it can help
+
 
 
 .. todo:: Complete this page.
 
           Some topics to cover:
 
-          * bug reports
           * submit merge proposals for features or fixes
           * use and write tests
           * improve documentation
