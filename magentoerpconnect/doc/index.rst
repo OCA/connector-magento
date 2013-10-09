@@ -75,6 +75,7 @@ Develop
 
    guides/tutorial_development
    guides/tutorial_customize
+   project/contribute
 
 
 API
@@ -120,7 +121,6 @@ Project
 
    project/roadmap
    project/contributors
-   project/contribute
    project/changes
 
 
