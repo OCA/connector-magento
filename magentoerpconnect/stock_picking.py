@@ -243,7 +243,7 @@ def picking_out_done(session, model_name, record_id, picking_method):
 
 
 @on_record_create(model_names='magento.stock.picking.out')
-def delay_export_picking_out(session, model_name, record_id, vals=None):
+def delay_export_picking_out(session, model_name, record_id, vals):
     export_picking_done.delay(session, model_name, record_id)
 
 

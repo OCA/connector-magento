@@ -469,10 +469,8 @@ INVENTORY_FIELDS = ('manage_stock',
 
 
 @on_record_write(model_names='magento.product.product')
-def magento_product_modified(session, model_name, record_id, vals=None):
+def magento_product_modified(session, model_name, record_id, vals):
     if session.context.get('connector_no_export'):
-        return
-    if not vals:
         return
     inventory_fields = list(set(fields).intersection(INVENTORY_FIELDS))
     if inventory_fields:
