@@ -429,7 +429,7 @@ class SaleOrderImport(MagentoImportSynchronizer):
             # deduce it from the storeview
             storeview_binder = self.get_binder_for_model('magento.storeview')
             # we find storeview_id in store_id! (http://www.magentocommerce.com/bug-tracking/issue?issue=15886)
-            oe_storeview_id = store_binder.to_openerp(record['store_id'])
+            oe_storeview_id = storeview_binder.to_openerp(record['store_id'])
             storeview = self.session.browse('magento.storeview', oe_storeview_id)
             oe_website_id = storeview.store_id.website_id.id
             # "fix" the record
