@@ -73,9 +73,9 @@ Develop
 .. toctree::
    :maxdepth: 2
 
+   project/contribute
    guides/tutorial_development
    guides/tutorial_customize
-   project/contribute
 
 
 API

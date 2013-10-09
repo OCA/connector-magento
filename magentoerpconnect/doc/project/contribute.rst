@@ -28,7 +28,7 @@ The Buildout_ recipe is an all-in-one package which installs OpenERP, the
 connector and provides many facilities for the developers. It includes
 developer tools such as:
 
- * Run the unit tests on the connector / Magento connector
+ * Run the tests on the connector / Magento connector
  * Build the connector / Magento connector documentation
  * Launch the Jobs Workers (for multiprocessing)
 
@@ -89,8 +89,8 @@ The services can be managed on::
 
     $ bin/supervisorctl
 
-Run the unit tests
-==================
+Run the tests
+=============
 
 The Magento Connector and the Connector do not use YAML tests, but only
 ``unittest2`` tests. The following command lines will run them::
@@ -102,6 +102,10 @@ Use the helps for more information about the options::
 
     $ bin/rununittests --help
     $ bin/rununittests --help-oe
+
+.. note:: There is a known bug which make the tests fails under undetermined
+          circumstances (seems related to the initialization of the registry),
+          launching again the test suite should work.
 
 Build the documentation
 =======================
@@ -134,9 +138,9 @@ How to help
 Mailing list
 ============
 
-The main channel for the discussion is the mailing list, join the team on:
-https://launchpad.net/~openerp-connector-community and subscribe to the mailing
-list.
+The main channel for the discussion is the mailing list, you are invited to
+join the team on: https://launchpad.net/~openerp-connector-community and
+subscribe to the mailing list.
 
 File an Issue
 =============
@@ -155,24 +159,101 @@ it on this project instead: http://bugs.launchpad.net/openerp-connector.
 
 When you report a bug, please give all the sensible information you can provide, such as:
 
- * the reference of the branch of the connector that you are using, and if
-   possible the revision numbers of that branch and the dependencies (you can
-   use ``bzr revision-info`` for that purpose)
+* the reference of the branch of the connector that you are using, and if
+  possible the revision numbers of that branch and the dependencies (you can
+  use ``bzr revision-info`` for that purpose)
 
 It is very helpful if you can include:
 
- * the detailed steps to reproduce the issue, including any relevant action
- * in case of a crash, an extract from the server log files (possibly with a
-   few lines before the beginning of the crash report in the log)
- * the additionnal modules you use with the connector if it can help
+* the detailed steps to reproduce the issue, including any relevant action
+* in case of a crash, an extract from the server log files (possibly with a
+  few lines before the beginning of the crash report in the log)
+* the additionnal modules you use with the connector if it can help
 
+Submit merge proposals for features or fixes
+============================================
 
+Merge proposals are much appreciated and we'll take care to review them properly.
 
-.. todo:: Complete this page.
+The MP process is the following:
 
-          Some topics to cover:
+1. Get a branch: ``bzr branch lp:magentoerpconnect/7.0 7.0-working-branch``
+#. Work on that branch, develop your feature or fix a bug. Please include a test (`Writing tests`_).
+#. Ensure that the tests are green (`Run the tests`_)
+#. Push that branch on the project ``bzr push lp:~YOURUSER/magentoerpconnect/7.0-my-new-feature``
 
-          * submit merge proposals for features or fixes
-          * use and write tests
-          * improve documentation
-          * translations
+.. note:: When you push a branch, you can push it on the team
+          ``~openerp-connector-community`` instead of your user so anyone in the team is
+          able to commit changes / doing corrections.
+
+4. With a browser, go the branch you just pushed and click on the "Propose for merging" link:
+
+    * in the target branch, choose the master branch
+    * in the description, put a description which indicates why you made the
+      change, ideally with a use case
+    * in "extra options", set an appropriate commit message
+    * Confirm with the 'Propose Merge' button
+
+.. hint:: You can use the command tools ``bzr lp-propose-merge`` and ``bzr
+          lp-open`` instead of a browser for creating the MP.
+
+You can also consult the `Launchpad's documentation on code review`_.
+
+.. _`Launchpad's documentation on code review`: https://help.launchpad.net/Code/Review
+
+Improve the documentation
+=========================
+
+Helping on the documentation is extremely valuable and is an easy starting
+point to contribute. The documentation is located in the Magento connector's
+branch, so you will need to get a branch, working on the documentation and
+follow the instructions in the section `Submit merge proposals for features or
+fixes`_ to propose your changes.
+
+You are also probably interested in building the documentation, head over `Build the documentation`_.
+
+Translations
+============
+
+You may want to translate directly in the ``.po`` files, in such case, follow the
+`Submit merge proposals for features or fixes`_ instructions.
+
+The other way is to use the Launchpad's translation system on
+https://translations.launchpad.net/magentoerpconnect (maybe not activated as of today)
+
+Writing tests
+=============
+
+Every new feature in the connector should have tests. We use exclusively the
+``unittest2`` tests with the OpenERP extensions.
+
+See how to `Run the tests`_
+
+The tests are located in ``magentoerpconnect/tests``.
+
+The tests run without any connection to Magento. They mock the API.  In order
+to test the connector with representative data, we record real
+responses/requests, then use them in the tests. The reference data we use are
+those of the Magento demo, which are automatically installed when you install
+Magento using theses instructions: `Magento on the go`_.
+
+Thus, in the ``tests`` folder, you will find files with only data, and the
+others with the tests.
+
+In order to record, data, you can proceed as follows:
+
+In ``magentoerpconnect/unit/backend_adapter.py`` at line 130,130::
+
+    def _call(self, method, arguments):
+        try:
+            with magentolib.API(self.magento.location,
+                                self.magento.username,
+                                self.magento.password) as api:
+                result = api.call(method, arguments)
+                # Uncomment to record requests/responses in ``recorder``
+                # record(method, arguments, result)
+                _logger.debug("api.call(%s, %s) returned %s",
+                              method, arguments, result)
+                return result
+
+Uncomment the line doing a call to ``record()``.
