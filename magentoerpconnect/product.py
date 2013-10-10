@@ -472,7 +472,7 @@ INVENTORY_FIELDS = ('manage_stock',
 def magento_product_modified(session, model_name, record_id, vals):
     if session.context.get('connector_no_export'):
         return
-    inventory_fields = list(set(fields).intersection(INVENTORY_FIELDS))
+    inventory_fields = list(set(vals).intersection(INVENTORY_FIELDS))
     if inventory_fields:
         export_product_inventory.delay(session, model_name,
                                        record_id, fields=inventory_fields,
