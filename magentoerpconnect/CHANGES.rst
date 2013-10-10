@@ -9,6 +9,7 @@ Changelog
 * Compatibility with the Connector Framework: listeners 'on_record_create' receives
   an additional argument 'vals'; 'on_record_write's named argument 'fields' becomes 'vals'
   and receives the full dictionary of values
+* Fix: 'store_id' field in the Magento API contains the id of the storeview, and was mapped with the store. In some circumstances, sales orders may fail to import. (lp:1235269)
 
 
 2.1.0 (2013.08.05)
