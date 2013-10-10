@@ -269,9 +269,8 @@ class TranslationImporter(ImportSynchronizer):
             data = dict((field, value) for field, value in record.iteritems()
                         if field in translatable_fields)
 
-            context = session.context.copy()
-            context['lang'] = storeview.lang_id.code
-            with self.session.change_context({'connector_no_export': True}):
+            ctx = {'connector_no_export': True, 'lang': storeview.lang_id.code}
+            with self.session.change_context(ctx):
                 self.session.write(self.model._name, binding_id, data)
 
 
