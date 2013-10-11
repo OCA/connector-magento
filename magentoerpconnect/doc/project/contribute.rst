@@ -4,8 +4,6 @@
 Developer's guide
 #################
 
-We do accept merge proposals!
-
 .. contents:: Sections:
    :local:
    :backlinks: top
@@ -28,9 +26,9 @@ The Buildout_ recipe is an all-in-one package which installs OpenERP, the
 connector and provides many facilities for the developers. It includes
 developer tools such as:
 
- * Run the tests on the connector / Magento connector
- * Build the connector / Magento connector documentation
- * Launch the Jobs Workers (for multiprocessing)
+* Run the tests on the connector / Magento connector
+* Build the connector / Magento connector documentation
+* Launch the Jobs Workers (for multiprocessing)
 
 So we highly recommend to use this recipe for development.
 
@@ -129,6 +127,8 @@ data and the Magento part of the Connector.
 
 The project's page describe the installation process, just follow them.
 
+We also use this box as a reference for the data of the tests.
+
 .. _`ak-magento vagrant box`: https://github.com/akretion/ak-magento
 
 ***********
@@ -210,7 +210,7 @@ branch, so you will need to get a branch, working on the documentation and
 follow the instructions in the section `Submit merge proposals for features or
 fixes`_ to propose your changes.
 
-You are also probably interested in building the documentation, head over `Build the documentation`_.
+You will also need to read this section: `Build the documentation`_.
 
 Translations
 ============
@@ -227,8 +227,6 @@ Writing tests
 Every new feature in the connector should have tests. We use exclusively the
 ``unittest2`` tests with the OpenERP extensions.
 
-See how to `Run the tests`_
-
 The tests are located in ``magentoerpconnect/tests``.
 
 The tests run without any connection to Magento. They mock the API.  In order
@@ -242,7 +240,10 @@ others with the tests.
 
 In order to record, data, you can proceed as follows:
 
-In ``magentoerpconnect/unit/backend_adapter.py`` at line 130,130::
+In ``magentoerpconnect/unit/backend_adapter.py`` at lines 130,130:
+
+.. code-block:: python
+   :emphasize-lines: 7,8
 
     def _call(self, method, arguments):
         try:
@@ -256,4 +257,38 @@ In ``magentoerpconnect/unit/backend_adapter.py`` at line 130,130::
                               method, arguments, result)
                 return result
 
-Uncomment the line doing a call to ``record()``.
+Uncomment the line doing a call to :py:func:`~openerp.addons.magentoerpconnect.unit.backend_adapter.record()`.
+Then, as soon as you will start the server, all the requests and responses
+will be stored in global dict. Once you have recorded some exchanges, you can
+output them using a tool such as `ERPpeek`_ and by calling the method
+:py:class:`~openerp.addons.magentoerpconnect.magento_model.magento_backend.output_recorder`:
+
+.. code-block:: python
+
+    client.MagentoBackend.get(1).output_recorder([])
+
+A path is returned with the location of the file.
+
+When you want to use a set of test data in a test, just use
+:py:func:`~openerp.addons.magentoerpconnect.tests.common.mock_api()`:
+
+.. code-block:: python
+
+    from .common import mock_api,
+    from .a_data_module import new_set_of_data
+
+    <...>
+    def test_new(self):
+        <...>
+        with mock_api(new_set_of_data):
+            # do what the test needs, such as, for instance:
+            import_batch(self.session, 'magento.website', backend_id)
+
+See how to `Run the tests`_
+
+Useful links:
+
+* unittest documentation: http://docs.python.org/dev/library/unittest.html
+* OpenERP's documentation on tests: https://doc.openerp.com/trunk/server/05_test_framework/
+
+.. _`ERPpeek`: https://erppeek.readthedocs.org/en/latest/
