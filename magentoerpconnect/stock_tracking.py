@@ -80,13 +80,19 @@ class MagentoTrackingExport(ExportSynchronizer):
         if not picking.carrier_tracking_ref:
             return _('No tracking number to send.')
 
+        sale_binding_id = picking.magento_order_id
+        if not sale_binding_id:
+            return FailedJobError("No sales order is linked with the picking "
+                                  "%s, can't export the tracking number." %
+                                  picking.name)
+
         magento_picking_id = picking.magento_id
         if magento_picking_id is None:
             raise NoExternalId("No value found for the picking ID on "
                                "Magento side, the job will be retried later.")
 
         self._validate(picking)
-        self._check_allowed_carrier(picking, magento_picking_id)
+        self._check_allowed_carrier(picking, sale_binding_id.magento_id)
         tracking_args = self._get_tracking_args(picking)
         self.backend_adapter.add_tracking_number(magento_picking_id,
                                                  *tracking_args)
