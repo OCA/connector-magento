@@ -10,7 +10,11 @@
                 <xpath expr="//sheet/group[1]" position="inside">
                     <newline/>
                     <group name="magento" string="Magento Bindings">
-                        <field name="magento_bind_ids" nolabel="1"/>
+                        <field name="magento_bind_ids" nolabel="1">
+                            <tree>
+                                <field name="backend_id"/>
+                            </tree>
+                        </field>
                     </group>
                 </xpath>
             </field>
@@ -52,7 +56,12 @@
                 </page>
                 <page name="connector" position="inside">
                     <group string="Magento Bindings">
-                        <field name="magento_bind_ids" nolabel="1"/>
+                        <field name="magento_bind_ids" nolabel="1">
+                            <tree>
+                                <field name="backend_id"/>
+                                <field name="product_type"/>
+                            </tree>
+                        </field>
                     </group>
                 </page>
             </field>
