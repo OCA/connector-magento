@@ -163,7 +163,12 @@ class ProductCategoryExportMapper(ExportMapper):
     @mapping
     def parent(self, record):
         """ Magento root category's Id equals 1 """
-        parent_id = record.magento_parent_id.magento_id
+        if not record.magento_parent_id:
+            openerp_parent = record.parent_id
+            binder = self.get_binder_for_model('magento.product.category')
+            parent_id = binder.to_backend(openerp_parent.id, unwrap=True)
+        else:
+            parent_id = record.magento_parent_id.magento_id
         if not parent_id:
             parent_id = 1
         return {'parent_id':parent_id}
