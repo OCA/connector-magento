@@ -69,7 +69,7 @@ class ProductProductExportMapper(ExportMapper):
                 'short_description': record.description_sale,
                 'type': record.product_type,
                 'created_at': record.created_at,
-                'updated_at': record.updated_at,
+                #'updated_at': record.updated_at,
                 'status': record.status,
                 'visibility': record.visibility,
                 'product_type': record.product_type }
@@ -86,6 +86,13 @@ class ProductProductExportMapper(ExportMapper):
         #binder = self.get_binder_for_model('magento.product.attribute.set')
         #set_id = binder.to_backend(record.attribute_set_id.id)
         return {'attrset': '4'}
+
+    @mapping
+    def updated_at(self, record):
+        updated_at = record.updated_at
+        if not updated_at:
+            updated_at = '1970-01-01'
+        return {'updated_at': updated_at}
 
     @mapping
     def website_ids(self, record):
