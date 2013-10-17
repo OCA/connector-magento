@@ -279,7 +279,6 @@ class AttributeSetAdapter(GenericAdapter):
                     [data['attributeSetName'], data['skeletonSetId']])
 
     def delete(self, id):
-        import pdb;pdb.set_trace()
         return self._call('%s.remove'% self._magento_model,[str(id)])
 
 
@@ -301,7 +300,10 @@ class AttributeSetExportMapper(ExportMapper):
             ('attributeSetName', 'attributeSetName'),
             ('skeletonSetId', 'skeletonSetId'),
             ]
-
+    #
+    #@mapping
+    #def skeletonSetId(self, record):
+    #    return {'skeletonSetId': record.openerp }
 
 
 # Attribute option
