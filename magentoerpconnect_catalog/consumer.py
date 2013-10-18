@@ -32,6 +32,12 @@ from openerp.addons.magentoerpconnect.connector import get_environment
 from openerp.addons.magentoerpconnect.unit.delete_synchronizer import (                                                         export_delete_record)
 
 
+EXCLUDED_FIELDS_WRITING = {
+    'product.product': ['magento_bind_ids', 'image_ids'],
+    'product.product': ['magento_bind_ids',],
+}
+
+
 @on_record_create(model_names=[
         'magento.product.category',
         'magento.product.product',
@@ -52,26 +58,16 @@ def delay_export(session, model_name, record_id, fields=None):
     magentoerpconnect.delay_export(session, model_name,
                                    record_id, fields=fields)
 
+
 @on_record_write(model_names=[
+        'product.product',
         'product.category',
     ])
 def delay_export_all_bindings(session, model_name, record_id, fields=None):
+    if EXCLUDED_FIELDS_WRITING.get(model_name):
+        fields = list(set(fields).difference(EXCLUDED_FIELDS_WRITING))
     magentoerpconnect.delay_export_all_bindings(session, model_name,
                                                 record_id, fields=fields)
-
-NOT_PRODUCT_FIELDS = (
-    'image_ids', 'magento_bind_ids',
-)
-
-@on_record_write(model_names=[
-        'product.product'
-    ])
-def delay_export_prd_bindings(session, model_name, record_id, fields=None):
-    product_fields = list(set(fields).difference(NOT_PRODUCT_FIELDS))
-    if product_fields:
-        magentoerpconnect.delay_export_all_bindings(session, model_name,
-                                                record_id, fields=product_fields)
-
 
 @on_record_unlink(model_names=[
         'magento.product.category',
