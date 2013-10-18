@@ -34,7 +34,8 @@ from openerp.addons.connector.unit.synchronizer import (ImportSynchronizer,
                                                         )
 from openerp.addons.connector.exception import (MappingError,
                                                 InvalidDataError,
-                                                IDMissingInBackend)
+                                                IDMissingInBackend,
+                                                NothingToDoJob)
 from openerp.addons.connector.unit.mapper import (mapping,
                                                   only_create,
                                                   ImportMapper,
@@ -60,9 +61,9 @@ class magento_product_product(orm.Model):
     def product_type_get(self, cr, uid, context=None):
         return [
             ('simple', 'Simple Product'),
+            ('configurable', 'Configurable Product'),
             # XXX activate when supported
             # ('grouped', 'Grouped Product'),
-            # ('configurable', 'Configurable Product'),
             # ('virtual', 'Virtual Product'),
             # ('bundle', 'Bundle Product'),
             # ('downloadable', 'Downloadable Product'),
@@ -369,6 +370,8 @@ class ProductImportMapper(ImportMapper):
     def type(self, record):
         if record['type_id'] == 'simple':
             return {'type': 'product'}
+        if record['type_id'] == 'configurable':
+            raise NothingToDoJob(_('Skipped: configurable product are not imported.'))
         return
 
     @mapping
