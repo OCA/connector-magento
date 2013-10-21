@@ -39,30 +39,28 @@ class MagentoProductCategory(orm.Model):
                    "documentation for details. "
 
     def get_custom_design(self, cr, uid, context=None):
-        return [('base/default', 'base default'),]
-
-    def _get_custom_design(self, cr, uid, context=None):
-        default = [
+        return [
+            ('base/default', 'base default'),
             ('default/modern', 'default modern'),
             ('default/iphone', 'default iphone'),
             ('default/default', 'default default'),
             ('default/blank', 'default blank'),
             ]
-        return default.extend(self.get_custom_design(cr, uid, context=context))
+
+    def _get_custom_design(self, cr, uid, context=None):
+        return self.get_custom_design(cr, uid, context=context)
 
     def get_page_layout(self, cr, uid, context=None):
-        return []
-
-    def _get_page_layout(self, cr, uid, context=None):
-        default = [
-            ('', 'No layout updates'),
+        return [
             ('empty', 'Empty'),
             ('one_column', '1 colmun'),
             ('two_columns_left', '2 columns with left bar'),
             ('two_columns_right', '2 columns with right bar'),
             ('three_columns', '3 columns'),
             ]
-        return default.extend(self.get_page_layout(cr, uid, context=context))
+
+    def _get_page_layout(self, cr, uid, context=None):
+        return self.get_page_layout(cr, uid, context=context)
 
     _columns = {
         #==== General Information ====
@@ -123,12 +121,13 @@ class MagentoProductCategory(orm.Model):
         'display_mode': 'PRODUCTS',
         'use_default_available_sort_by': True,
         #'default_sort_by': lambda self,cr,uid,c: self.pool.get('magerp.product_category_attribute_options')._get_default_option(cr, uid, 'sort_by', 'None', context=c),
-        'page_layout': '',
+        'is_anchor': True,
+        'include_in_menu': True,
         }
 
 @magento
 class ProductCategoryDeleteSynchronizer(MagentoDeleteSynchronizer):
-    """ Partner deleter for Magento """
+    """ Product category deleter for Magento """
     _model_name = ['magento.product.category']
 
 
@@ -154,8 +153,8 @@ class ProductCategoryExportMapper(ExportMapper):
               ('custom_design_to', 'custom_design_to'),
               ('custom_layout_update', 'custom_layout_update'),
               ('page_layout', 'page_layout'),
-
              ]
+
     @mapping
     def sort(self, record):
         return {'default_sort_by':'price', 'available_sort_by': 'price'}
@@ -166,7 +165,7 @@ class ProductCategoryExportMapper(ExportMapper):
         if not record.magento_parent_id:
             openerp_parent = record.parent_id
             binder = self.get_binder_for_model('magento.product.category')
-            parent_id = binder.to_backend(openerp_parent.id, unwrap=True)
+            parent_id = binder.to_backend(openerp_parent.id, wrap=True)
         else:
             parent_id = record.magento_parent_id.magento_id
         if not parent_id:
