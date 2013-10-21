@@ -32,6 +32,10 @@ from openerp.addons.magentoerpconnect.unit.export_synchronizer import (
 from openerp.addons.magentoerpconnect.backend import magento
 from openerp.addons.magentoerpconnect.product import ProductProductAdapter
 from openerp.addons.connector.exception import MappingError
+from openerp.addons.magentoerpconnect.unit.export_synchronizer import (
+    export_record
+)
+
 
 @magento
 class ProductProductDeleteSynchronizer(MagentoDeleteSynchronizer):
@@ -42,6 +46,33 @@ class ProductProductDeleteSynchronizer(MagentoDeleteSynchronizer):
 @magento
 class ProductProductExport(MagentoExporter):
     _model_name = ['magento.product.product']
+
+    def _export_dependencies(self):
+        """ Export the dependencies for the product"""
+        #TODO add export of category
+        attribute_binder = self.get_binder_for_model('magento.product.attribute')
+        option_binder = self.get_binder_for_model('magento.attribute.option')
+        record = self.binding_record
+        for group in record.attribute_group_ids:
+            for attribute in group.attribute_ids:
+                attribute_ext_id = attribute_binder.to_backend(attribute.attribute_id.id, unwrap=True)
+                if attribute_ext_id:
+                    options = []
+                    if attribute.ttype == 'many2one' and record[attribute.name]:
+                        options = [record[attribute.name]]
+                    elif attribute.ttype == 'many2many':
+                        options = record[attribute.name]
+                    for option in options:
+                        if not option_binder.to_backend(option.id, unwrap=True):
+                            ctx = self.session.context.copy()
+                            ctx['connector_no_export'] = True
+                            binding_id = self.session.pool['magento.attribute.option'].create(
+                                                    self.session.cr, self.session.uid,{
+                                                    'backend_id': self.backend_record.id,
+                                                    'openerp_id': option.id,
+                                                    'name': option.name,
+                                                    }, context=ctx)
+                            export_record(self.session, 'magento.attribute.option', binding_id)
 
 @magento
 class ProductProductExportMapper(ExportMapper):
@@ -94,8 +125,6 @@ class ProductProductExportMapper(ExportMapper):
             updated_at = '1970-01-01'
         return {'updated_at': updated_at}
 
-#5566
-
     @mapping
     def website_ids(self, record):
         website_ids = []
@@ -117,3 +146,41 @@ class ProductProductExportMapper(ExportMapper):
                 if m_categ.backend_id.id == self.backend_record.id:
                     categ_ids.append(m_categ.magento_id)            
         return {'categories': categ_ids}
+
+    @mapping
+    def get_product_attribute_option(self, record):
+        result = {}
+        attribute_binder = self.get_binder_for_model('magento.product.attribute')
+        option_binder = self.get_binder_for_model('magento.attribute.option')
+        for group in record.attribute_group_ids:
+            for attribute in group.attribute_ids:
+                magento_attribute = None
+                #TODO maybe adding a get_bind function can be better
+                for bind in attribute.magento_bind_ids:
+                    if bind.backend_id.id == self.backend_record.id:
+                        magento_attribute = bind
+                
+                if not magento_attribute:
+                    continue
+
+                if attribute.ttype == 'many2one':
+                    option = record[attribute.name]
+                    if option:
+                        result[magento_attribute.attribute_code] = \
+                            option_binder.to_backend(option.id, unwrap=True)
+                    else:
+                        continue
+                elif attribute.ttype == 'many2many':
+                    options = record[attribute.name]
+                    if options:
+                        result[magento_attribute.attribute_code] = \
+                            [option_binder.to_backend(option.id, unwrap=True) for option in options]
+                    else:
+                        continue
+                else:
+                    #TODO add support of lang
+                    result[magento_attribute.attribute_code] = record[attribute.name]
+        return result
+
+
+
