@@ -34,7 +34,7 @@ from openerp.addons.magentoerpconnect.unit.delete_synchronizer import (         
 
 EXCLUDED_FIELDS_WRITING = {
     'product.product': ['magento_bind_ids', 'image_ids'],
-    'product.product': ['magento_bind_ids',],
+    'product.category': ['magento_bind_ids',],
 }
 
 
@@ -68,6 +68,14 @@ def delay_export_all_bindings(session, model_name, record_id, fields=None):
         fields = list(set(fields).difference(EXCLUDED_FIELDS_WRITING))
     magentoerpconnect.delay_export_all_bindings(session, model_name,
                                                 record_id, fields=fields)
+
+
+@on_record_unlink(model_names=[
+        'product.category',
+    ])
+def delay_unlink_all_bindingss(session, model_name, record_id):
+    magentoerpconnect.delay_unlink_all_bindings(session, model_name, record_id)
+
 
 @on_record_unlink(model_names=[
         'magento.product.category',
