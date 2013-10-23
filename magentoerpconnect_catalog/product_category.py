@@ -64,9 +64,15 @@ class MagentoProductCategory(orm.Model):
 
     _columns = {
         #==== General Information ====
-        #'level': fields.integer('Level', readonly=True),
-        'image': fields.binary('Image'),
-        'image_name':fields.char('File Name', size=100, help=MAGENTO_HELP),
+        'thumbnail_like_image': fields.boolean('Thumbnail like main image'),
+        'thumbnail_binary': fields.binary('Thumbnail'),
+        'thumbnail':fields.char(
+            'Thumbnail Name',
+            size=100, help=MAGENTO_HELP),
+        'image_binary': fields.binary('Image'),
+        'image':fields.char(
+            'Image name',
+            size=100, help=MAGENTO_HELP),
         'meta_title': fields.char('Title (Meta)', size=75, help=MAGENTO_HELP),
         'meta_keywords': fields.text('Meta Keywords', help=MAGENTO_HELP),
         'meta_description': fields.text('Meta Description', help=MAGENTO_HELP),
@@ -107,23 +113,27 @@ class MagentoProductCategory(orm.Model):
             'Active to', help=MAGENTO_HELP),
         'custom_layout_update': fields.text(
             'Layout update', help=MAGENTO_HELP),
-        #'page_layout': fields.many2one(
-        #    'magerp.product_category_attribute_options',
-        #    'Page Layout',
-        #    domain="[('attribute_name', '=', 'page_layout')]",
-        #    help=MAGENTO_HELP),
         'page_layout': fields.selection(
             _get_page_layout,
             'Page layout', help=MAGENTO_HELP),
     }
 
     _defaults = {
+        'thumbnail_like_image': True,
         'display_mode': 'PRODUCTS',
         'use_default_available_sort_by': True,
         #'default_sort_by': lambda self,cr,uid,c: self.pool.get('magerp.product_category_attribute_options')._get_default_option(cr, uid, 'sort_by', 'None', context=c),
         'is_anchor': True,
         'include_in_menu': True,
         }
+
+    _sql_constraints = [
+        ('magento_img_uniq', 'unique(backend_id, image_name)',
+         "'Image file name' already exists : must be unique"),
+        ('magento_thumb_uniq', 'unique(backend_id, thumbnail_name)',
+         "'thumbnail name' already exists : must be unique"),
+    ]
+
 
 @magento
 class ProductCategoryDeleteSynchronizer(MagentoDeleteSynchronizer):
@@ -134,6 +144,7 @@ class ProductCategoryDeleteSynchronizer(MagentoDeleteSynchronizer):
 @magento
 class ProductCategoryExport(MagentoExporter):
     _model_name = ['magento.product.category']
+
 
 @magento
 class ProductCategoryExportMapper(ExportMapper):
@@ -185,3 +196,16 @@ class ProductCategoryExportMapper(ExportMapper):
         if not include_in_menu:
             include_in_menu = 0
         return {'include_in_menu':include_in_menu}
+
+    @mapping
+    def image(self, record):
+        res = {}
+        if record.image_binary:
+            res.update({'image': record.image,
+                        'image_binary': record.image_binary})
+        if record.thumbnail_like_image == True :
+            res.update({'thumbnail': record.image,})
+        elif record.thumbnail:
+            res.update({'thumbnail': record.thumbnail,
+                        'thumbnail_binary': record.thumbnail_binary})
+        return res
