@@ -35,8 +35,13 @@ from openerp.addons.magentoerpconnect.unit.delete_synchronizer import (         
 EXCLUDED_FIELDS_WRITING = {
     'product.product': ['magento_bind_ids', 'image_ids'],
     'product.category': ['magento_bind_ids',],
+    'magento.product.category': ['magento_bind_ids',],
 }
 
+def exclude_fields_from_synchro(model_name, fields):
+    if fields and EXCLUDED_FIELDS_WRITING.get(model_name):
+        fields = list(set(fields).difference(EXCLUDED_FIELDS_WRITING))
+    return fields
 
 @on_record_create(model_names=[
         'magento.product.category',
@@ -55,6 +60,7 @@ EXCLUDED_FIELDS_WRITING = {
         #'magento.product.storeview',
     ])
 def delay_export(session, model_name, record_id, fields=None):
+    fields = exclude_fields_from_synchro(model_name, fields)
     magentoerpconnect.delay_export(session, model_name,
                                    record_id, fields=fields)
 
@@ -64,8 +70,7 @@ def delay_export(session, model_name, record_id, fields=None):
         'product.category',
     ])
 def delay_export_all_bindings(session, model_name, record_id, fields=None):
-    if EXCLUDED_FIELDS_WRITING.get(model_name):
-        fields = list(set(fields).difference(EXCLUDED_FIELDS_WRITING))
+    fields = exclude_fields_from_synchro(model_name, fields)
     magentoerpconnect.delay_export_all_bindings(session, model_name,
                                                 record_id, fields=fields)
 
@@ -73,7 +78,7 @@ def delay_export_all_bindings(session, model_name, record_id, fields=None):
 @on_record_unlink(model_names=[
         'product.category',
     ])
-def delay_unlink_all_bindingss(session, model_name, record_id):
+def delay_unlink_all_bindings(session, model_name, record_id):
     magentoerpconnect.delay_unlink_all_bindings(session, model_name, record_id)
 
 
@@ -104,9 +109,7 @@ def delay_image_unlink(session, model_name, record_id):
     env = get_environment(session, 'magento.product.product',
                           record.backend_id.id)
     binder = env.get_connector_unit(Binder)
-    #TODO FIX need to implement unwrap parameter in magentoerpconnect like in prestashoperpconnect
     magento_keys.append(binder.to_backend(record.openerp_id.product_id.id, wrap=True))
-    #magento_keys.append(binder.to_backend(record.product_id.magento_bind_ids[0].id))
     if magento_keys:
         export_delete_record.delay(session, 'magento.product.image',
                                    record.backend_id.id, magento_keys)
