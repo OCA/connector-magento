@@ -8,28 +8,31 @@ OpenERP Magento Connector
 #########################
 
 *OpenERP Magento Connector* (also known as *MagentoERPconnect*) is a
-bi-directional connector, 100% compatible with the last OpenERP 7.0 and
-latest Magento versions.
+bi-directional connector, 100% compatible with the last `OpenERP`_ 7.0 and
+latest `Magento`_ versions.
 
 Based on the `OpenERP Connector`_ framework, this new release of
-MagentoERPconnect is mainly developed by `Camptocamp`_ and `Akretion`_ and is
-maintained by them and several other :ref:`contributors`.
+MagentoERPconnect has been initiated by `Camptocamp`_ and is mainly
+developed and maintained by `Camptocamp`_, `Akretion`_ and several other
+:ref:`contributors`.
 
-Subscribe now to the `project's mailing list`_!
+*Subscribe to the* `project's mailing list`_
 
+*Learn how to contribute with the* :ref:`contribute`
+
+*************
 Core Features
-=============
+*************
 
 * **100% Open Source** (`AGPL version 3`_): the full `source code is available
   on Launchpad`_
 * **Multis**: multi-instances, multi-e-shop, multi-currency,
   multi-warehouse, multi-language
-* **Synchronization** of products, customers, sales orders, stock levels,
+* **Synchronization** of products catalog, customers, sales orders, stock levels,
   shipments, packages' tracking numbers, invoices…
 * **Built on top of the** `OpenERP Connector`_ **framework with a strong and
   efficient core**: it can then be extended or modified easily from
-  separate addons, a factor of success when the implementations of
-  Magento vary a lot
+  separate addons
 * **Payment workflow automation**: depending on the mean of payment (credit
   card, wire transfer), possibility to automate workflows in
   OpenERP (automatic order validation, automatic invoice validation…).
@@ -40,14 +43,23 @@ Core Features
 
 .. _`OpenERP Connector`: http://www.openerp-connector.com
 .. _Camptocamp: http://www.camptocamp.com
+.. _OpenERP: http://www.openerp.com
+.. _Magento: http://www.magento.com
 .. _Akretion: http://www.akretion.com
 .. _`source code is available on Launchpad`: https://code.launchpad.net/openerp-connector
 .. _`AGPL version 3`: http://www.gnu.org/licenses/agpl-3.0.html
 .. _`project's mailing list`: https://launchpad.net/~openerp-connector-community
 
+********
+Workflow
+********
 
+.. image:: _static/img/sync-workflow.png
+   :alt: Workflow of synchronizations
+
+**************************
 Top financial contributors
-==========================
+**************************
 
 .. image:: _static/img/LogicSupply_Orange_260x80_transparent.png
    :alt: Logic Supply
@@ -59,17 +71,6 @@ Top financial contributors
 
 |
 *See all the project's* :ref:`financial-contributors`.
-
-Companies offering services
-===========================
-
-.. image:: _static/img/c2c_square_baseline_192.jpg
-   :alt: Camptocamp
-   :target: Camptocamp_
-
-.. image:: _static/img/akretion_logo.png
-   :alt: Akretion
-   :target: Akretion_
 
 ***********
 First steps
@@ -165,8 +166,9 @@ Models API
    api/api_stock_tracking.rst
 
 
+*******
 Project
-=======
+*******
 
 .. toctree::
    :maxdepth: 1
@@ -175,31 +177,10 @@ Project
    project/contributors
    project/changes
 
-
-Concepts
-========
-
-.. glossary::
-
-    Job
-
-        A unit of work consisting of a single complete and atomic task.
-        Example: import of a product.
-
-    Backend
-
-        An external service on which we connect OpenERP. In the context
-        of the Magento connector, Magento is a backend.
-
-    Mapping
-
-        A mapping defines how the data is converted from Magento to
-        OpenERP and reversely.
-
+******************
 Indices and tables
-==================
+******************
 
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
-
