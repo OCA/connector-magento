@@ -221,6 +221,8 @@ You may want to translate directly in the ``.po`` files, in such case, follow th
 The other way is to use the Launchpad's translation system on
 https://translations.launchpad.net/magentoerpconnect (maybe not activated as of today)
 
+OpenERP's guide on translations: https://doc.openerp.com/7.0/contribute/07_improving_translations/
+
 Writing tests
 =============
 
