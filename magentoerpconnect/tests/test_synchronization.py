@@ -22,7 +22,7 @@
 import unittest2
 from functools import partial
 
-from openerp.addons.connector.exception import InvalidDataError
+from openerp.addons.connector.exception import InvalidDataError, NothingToDoJob
 from openerp.addons.magentoerpconnect.unit.import_synchronizer import (
     import_batch,
     import_record)
@@ -165,7 +165,7 @@ class test_import_magento(common.SingleTransactionCase):
         """ Configurable should fail: not yet supported """
         backend_id = self.backend_id
         with mock_api(magento_base_responses):
-            with self.assertRaises(InvalidDataError):
+            with self.assertRaises(NothingToDoJob):
                 import_record(self.session,
                               'magento.product.product',
                               backend_id, 126)
@@ -249,3 +249,24 @@ class test_import_magento(common.SingleTransactionCase):
         self.assertEqual(order.name, 'EC900000693')
         self.backend_model.write(self.cr, self.uid, self.backend_id,
                                  {'sale_prefix': False})
+                                 
+    def test_33_import_sale_order_with_configurable(self):
+        """ Import a sale order: with configurable product """
+        backend_id = self.backend_id
+        with mock_api(magento_base_responses):
+            with mock_urlopen_image():
+                import_record(self.session,
+                              'magento.sale.order',
+                              backend_id, 900000694)
+        order_model = self.registry('magento.sale.order')
+        order_ids = order_model.search(self.cr,
+                                       self.uid,
+                                       [('backend_id', '=', backend_id),
+                                        ('magento_id', '=', '900000694')])
+        order_line_model = self.registry('magento.sale.order.line')
+        order_line_ids = order_line_model.search(self.cr,
+                                                 self.uid,
+                                                 [('backend_id', '=', backend_id),
+                                                  ('order_id', '=', order_ids[0])])
+        self.assertEqual(len(order_ids), 1)
+        self.assertEqual(len(order_line_ids), 1)
