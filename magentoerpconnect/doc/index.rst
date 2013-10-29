@@ -13,7 +13,7 @@ latest `Magento`_ versions.
 
 Based on the `OpenERP Connector`_ framework, this new release of
 MagentoERPconnect has been initiated by `Camptocamp`_ and is mainly
-developed and maintained by `Camptocamp`_, `Akretion`_ and several other
+developed and maintained by `Camptocamp`_ and `Akretion`_ with several other
 :ref:`contributors`.
 
 *Subscribe to the* `project's mailing list`_
@@ -54,8 +54,11 @@ Core Features
 Workflow
 ********
 
-.. image:: _static/img/sync-workflow.png
-   :alt: Workflow of synchronizations
+.. raw:: html
+
+    <div style="margin-top:10px;">
+        <iframe src="http://www.slideshare.net/slideshow/embed_code/27685907" width="427" height="356" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC;border-width:1px 1px 0;margin-bottom:5px" allowfullscreen> </iframe> <div style="margin-bottom:5px"> <strong> <a href="https://fr.slideshare.net/camptocamp/openerp-magento-connector-new-generation-workflow" title="OpenERP Magento Connector &quot;New Generation&quot; Workflow" target="_blank">OpenERP Magento Connector &quot;New Generation&quot; Workflow</a> </strong> from <strong><a href="http://www.slideshare.net/camptocamp" target="_blank">Camptocamp</a></strong> </div>
+    </div>
 
 **************************
 Top financial contributors
@@ -70,6 +73,7 @@ Top financial contributors
    :target: http://www.debonix.fr
 
 |
+
 *See all the project's* :ref:`financial-contributors`.
 
 ***********

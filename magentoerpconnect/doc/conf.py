@@ -65,7 +65,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'Magentoerpconnect'
+project = u'OpenERP Magento Connector'
 copyright = u'2013, Camptocamp SA'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -151,7 +151,7 @@ html_theme_options = {
 
     # Location of link to source.
     # Options are "nav" (default), "footer" or anything else to exclude.
-    'source_link_position': "nav",
+    'source_link_position': "footer",
 
     # Bootswatch (http://bootswatch.com/) theme.
     #
@@ -228,7 +228,7 @@ html_static_path = ['_static']
 #html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'magentoerpconnect-doc'
+htmlhelp_basename = 'openerp-magento-connector-doc'
 
 
 # -- Options for LaTeX output --------------------------------------------------
@@ -247,7 +247,7 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'Magentoerpconnect.tex', u'Magentoerpconnect Documentation',
+  ('index', 'openerp-magento-connector.tex', u'OpenERP Magento Connector Documentation',
    u'Camptocamp SA', 'manual'),
 ]
 
@@ -277,7 +277,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'magentoerpconnect', u'Magentoerpconnect Documentation',
+    ('index', 'openerp-magento-connector', u'OpenERP Magento Connector Documentation',
      [u'Camptocamp SA'], 1)
 ]
 
@@ -291,8 +291,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'Magentoerpconnect', u'Magentoerpconnect Documentation',
-   u'Camptocamp SA', 'Magentoerpconnect', 'Connector between OpenERP and Magento',
+  ('index', 'OpenERP Magento Connector', u'OpenERP Magento Connector Documentation',
+   u'Camptocamp SA', 'OpenERP Magento Connector', 'Connector between OpenERP and Magento',
    'Miscellaneous'),
 ]
 
@@ -311,5 +311,5 @@ intersphinx_mapping = {
     'python': ('http://docs.python.org/2.6', None),
     'openerpweb': ('http://doc.openerp.com/trunk/developers/web', None),
     'openerpdev': ('http://doc.openerp.com/trunk/developers', None),
-#    'openerpconnector': ('', None),
+    'openerpconnector': ('http://localhost:8000', None),
 }
