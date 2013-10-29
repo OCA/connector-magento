@@ -207,6 +207,66 @@ class SaleOrderAdapter(GenericAdapter):
     _model_name = 'magento.sale.order'
     _magento_model = 'sales_order'
 
+
+    def _clean_magento_items(self, resource):
+        """
+        Method that clean the sale order line given by magento before importing it
+
+        This method has to stay here because it allow to customize the behavior of the sale
+        order.
+
+        """
+        child_items = {}  # key is the parent item id
+        top_items = []
+
+        # Group the childs with their parent
+        for item in resource['items']:
+            if item.get('parent_item_id'):
+                child_items.setdefault(item['parent_item_id'], []).append(item)
+            else:
+                top_items.append(item)
+
+        all_items = []
+        for top_item in top_items:
+            if top_item['item_id'] in child_items:
+                item_modified = self._merge_sub_items(
+                                                      top_item['product_type'],
+                                                      top_item,
+                                                      child_items[top_item['item_id']]
+                                                      )
+                if not isinstance(item_modified, list):
+                    item_modified = [item_modified]
+                all_items.extend(item_modified)
+            else:
+                all_items.append(top_item)
+        resource['items'] = all_items
+        return resource
+
+    def _merge_sub_items(self, product_type, top_item, child_items):
+        """
+        Manage the sub items of the magento sale order lines. A top item contains one
+        or many child_items. For some product types, we want to merge them in the main
+        item, or keep them as order line.
+
+        This method has to stay because it allow to customize the behavior of the sale
+        order according to the product type.
+
+        A list may be returned to add many items (ie to keep all child_items as items.
+
+        :param top_item: main item (bundle, configurable)
+        :param child_items: list of childs of the top item
+        :return: item or list of items
+        """
+        if product_type == 'configurable':
+            item = top_item.copy()
+            # For configurable product all information regarding the price is in the configurable item
+            # In the child a lot of information is empty, but contains the right sku and product_id
+            # So the real product_id and the sku and the name have to be extracted from the child
+            for field in ['sku', 'product_id', 'name']:
+                item[field] = child_items[0][field]
+            return item
+        return top_item
+
     def _call(self, method, arguments):
         try:
             return super(SaleOrderAdapter, self)._call(method, arguments)
@@ -242,8 +302,9 @@ class SaleOrderAdapter(GenericAdapter):
 
         :rtype: dict
         """
-        return self._call('%s.info' % self._magento_model,
-                          [id, attributes])
+        record = self._call('%s.info' % self._magento_model,
+                            [id, attributes])
+        return self._clean_magento_items(record)
 
     def get_parent(self, id):
         return self._call('%s.get_parent' % self._magento_model, [id])
