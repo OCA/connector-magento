@@ -13,6 +13,11 @@ Installation
 The installation steps assume that you already have a working OpenERP
 setup with all the OpenERP pre-requisites.
 
+If you are a developer, you may want to install the Connector using our
+buildout configuration, head over :ref:`installation-with-buildout`.
+
+For the manual installation, just stay there.
+
 Requirements on both servers
 ============================
 

@@ -9,6 +9,9 @@ This document lists the feature that we want to develop for the
 connector. They are not sorted by priority. Any contribution on theses
 points will be welcome.
 
+Please also refer back to the list of blueprints on the project:
+https://blueprints.launchpad.net/openerp-connector
+
 *******
 Catalog
 *******

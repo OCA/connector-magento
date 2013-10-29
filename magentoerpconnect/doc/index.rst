@@ -4,27 +4,72 @@
    contain the root `toctree` directive.
 
 #########################
-Magento OpenERP Connector
+OpenERP Magento Connector
 #########################
 
-This is the new release of the Open-Source connector linking OpenERP and
-Magento also known under the name of **Magentoerpconnect**.  It is
-build on top of the `connector`_ framework. It is is structured so that
-it can be extended or modified easily from separate addons, a factor of
-success when the implementations of Magento vary a lot.
+*OpenERP Magento Connector* (also known as *MagentoERPconnect*) is a
+bi-directional connector, 100% compatible with the last OpenERP 7.0 and
+latest Magento versions.
 
-Magento OpenERP Connector is mainly developed by the Magentoerpconnect Core
-Editors, these being Camptocamp_ and Akretion_. The `source is on
-launchpad`_.
+Based on the `OpenERP Connector`_ framework, this new release of
+MagentoERPconnect is mainly developed by `Camptocamp`_ and `Akretion`_ and is
+maintained by them and several other :ref:`contributors`.
 
-This connector is designed to have a strong and efficient core, with the
-ability to extend it with extension modules or local customizations.
+Subscribe now to the `project's mailing list`_!
 
-.. _connector: https://code.launchpad.net/openerp-connector
+Core Features
+=============
+
+* **100% Open Source** (`AGPL version 3`_): the full `source code is available
+  on Launchpad`_
+* **Multis**: multi-instances, multi-e-shop, multi-currency,
+  multi-warehouse, multi-language
+* **Synchronization** of products, customers, sales orders, stock levels,
+  shipments, packages' tracking numbers, invoices…
+* **Built on top of the** `OpenERP Connector`_ **framework with a strong and
+  efficient core**: it can then be extended or modified easily from
+  separate addons, a factor of success when the implementations of
+  Magento vary a lot
+* **Payment workflow automation**: depending on the mean of payment (credit
+  card, wire transfer), possibility to automate workflows in
+  OpenERP (automatic order validation, automatic invoice validation…).
+  For instance, a sales order paid by credit card will automatically
+  create an invoice with the "paid" status
+* Load testing results: **in a single day, successful import of more
+  than 10'000 sales orders** from Magento to OpenERP!
+
+.. _`OpenERP Connector`: http://www.openerp-connector.com
 .. _Camptocamp: http://www.camptocamp.com
 .. _Akretion: http://www.akretion.com
-.. _`source is on launchpad`: https://launchpad.net/magentoerpconnect
+.. _`source code is available on Launchpad`: https://code.launchpad.net/openerp-connector
+.. _`AGPL version 3`: http://www.gnu.org/licenses/agpl-3.0.html
+.. _`project's mailing list`: https://launchpad.net/~openerp-connector-community
 
+
+Top financial contributors
+==========================
+
+.. image:: _static/img/LogicSupply_Orange_260x80_transparent.png
+   :alt: Logic Supply
+   :target: http://www.logicsupply.com
+
+.. image:: _static/img/logo-debonix.jpg
+   :alt: Debonix
+   :target: http://www.debonix.fr
+
+|
+*See all the project's* :ref:`financial-contributors`.
+
+Companies offering services
+===========================
+
+.. image:: _static/img/c2c_square_baseline_192.jpg
+   :alt: Camptocamp
+   :target: Camptocamp_
+
+.. image:: _static/img/akretion_logo.png
+   :alt: Akretion
+   :target: Akretion_
 
 ***********
 First steps
@@ -69,6 +114,14 @@ Learn about how you can contribute or use the connector as a developer.
 
 Develop
 =======
+
+.. toctree::
+   :maxdepth: 3
+
+   project/contribute
+
+Tutorials
+=========
 
 .. toctree::
    :maxdepth: 2
@@ -120,14 +173,11 @@ Project
 
    project/roadmap
    project/contributors
-   project/contribute
    project/changes
 
 
 Concepts
 ========
-
-Glossary:
 
 .. glossary::
 
