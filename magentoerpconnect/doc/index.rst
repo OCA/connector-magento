@@ -26,7 +26,7 @@ Core Features
   multi-warehouse, multi-language
 * **Synchronization** of products, customers, sales orders, stock levels,
   shipments, packages' tracking numbers, invoices…
-* **Built on top of the `OpenERP Connector`_ framework with a strong and
+* **Built on top of the** `OpenERP Connector`_ **framework with a strong and
   efficient core**: it can then be extended or modified easily from
   separate addons, a factor of success when the implementations of
   Magento vary a lot
