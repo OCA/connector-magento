@@ -106,6 +106,10 @@ class MagentoImportSynchronizer(ImportSynchronizer):
         """
         return
 
+    def _must_skip(self, data):
+        """ Check if the record must be skipped """
+        return
+
     def _get_binding_id(self):
         """Return the binding id from the magento id"""
         return self.binder.to_openerp(self.magento_id)
@@ -165,6 +169,8 @@ class MagentoImportSynchronizer(ImportSynchronizer):
             record = self.mapper.data_for_create
             # special check on data before import
             self._validate_data(record)
+            if self._must_skip(record):
+                return _('Skipped.')
             binding_id = self._create(record)
 
         self.binder.bind(self.magento_id, binding_id)

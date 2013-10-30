@@ -318,6 +318,11 @@ class ProductImport(MagentoImportSynchronizer):
                                    "yet supported in the connector." %
                                    product_type)
 
+    def _must_skip(self, data):
+        product_type = data['product_type']
+        if data['product_type'] == 'configurable':
+            return _('No need to import configurable product.')
+
     def _validate_data(self, data):
         """ Check if the values to import are correct
 
@@ -370,8 +375,6 @@ class ProductImportMapper(ImportMapper):
     def type(self, record):
         if record['type_id'] == 'simple':
             return {'type': 'product'}
-        if record['type_id'] == 'configurable':
-            raise NothingToDoJob(_('Skipped: configurable product are not imported.'))
         return
 
     @mapping
