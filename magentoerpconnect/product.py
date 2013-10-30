@@ -34,8 +34,8 @@ from openerp.addons.connector.unit.synchronizer import (ImportSynchronizer,
                                                         )
 from openerp.addons.connector.exception import (MappingError,
                                                 InvalidDataError,
-                                                IDMissingInBackend,
-                                                NothingToDoJob)
+                                                IDMissingInBackend
+                                                )
 from openerp.addons.connector.unit.mapper import (mapping,
                                                   only_create,
                                                   ImportMapper,

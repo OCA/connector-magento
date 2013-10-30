@@ -22,7 +22,7 @@
 import unittest2
 from functools import partial
 
-from openerp.addons.connector.exception import InvalidDataError, NothingToDoJob
+from openerp.addons.connector.exception import InvalidDataError
 from openerp.addons.magentoerpconnect.unit.import_synchronizer import (
     import_batch,
     import_record)
