@@ -162,13 +162,20 @@ class test_import_magento(common.SingleTransactionCase):
         self.assertEqual(len(product_ids), 1)
 
     def test_14_import_product_configurable(self):
-        """ Configurable should fail: not yet supported """
+        """ Import of a configurable product : no need to import it """
         backend_id = self.backend_id
         with mock_api(magento_base_responses):
-            with self.assertRaises(InvalidDataError):
+            with mock_urlopen_image():
                 import_record(self.session,
                               'magento.product.product',
                               backend_id, 126)
+
+        product_model = self.registry('magento.product.product')
+        product_ids = product_model.search(self.cr,
+                                           self.uid,
+                                           [('backend_id', '=', backend_id),
+                                            ('magento_id', '=', '126')])
+        self.assertEqual(len(product_ids), 0)
 
     def test_15_import_product_bundle(self):
         """ Bundle should fail: not yet supported """
@@ -249,3 +256,34 @@ class test_import_magento(common.SingleTransactionCase):
         self.assertEqual(order.name, 'EC900000693')
         self.backend_model.write(self.cr, self.uid, self.backend_id,
                                  {'sale_prefix': False})
+
+    def test_33_import_sale_order_with_configurable(self):
+        """ Import a sale order with configurable product """
+        backend_id = self.backend_id
+        with mock_api(magento_base_responses):
+            with mock_urlopen_image():
+                import_record(self.session,
+                              'magento.sale.order',
+                              backend_id, 900000694)
+        mag_order_model = self.registry('magento.sale.order')
+        mag_order_ids = mag_order_model.search(self.cr,
+                                               self.uid,
+                                               [('backend_id', '=', backend_id),
+                                                ('magento_id', '=', '900000694')])
+        mag_order_line_model = self.registry('magento.sale.order.line')
+        mag_order_line_ids = mag_order_line_model.search(self.cr,
+                                                         self.uid,
+                                                         [('backend_id', '=', backend_id),
+                                                          ('magento_order_id', '=', mag_order_ids[0])])
+        self.assertEqual(len(mag_order_ids), 1)
+        self.assertEqual(len(mag_order_line_ids), 1)
+        order_line_id = mag_order_line_model.read(self.cr,
+                                                    self.uid,
+                                                    mag_order_line_ids[0],
+                                                    ['openerp_id'])['openerp_id']
+        order_line_model = self.registry('sale.order.line')
+        price_unit = order_line_model.read(self.cr,
+                                           self.uid,
+                                           order_line_id[0],
+                                           ['price_unit'])['price_unit']
+        self.assertEqual(price_unit, 41.0500)

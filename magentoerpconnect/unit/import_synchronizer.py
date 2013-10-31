@@ -106,6 +106,20 @@ class MagentoImportSynchronizer(ImportSynchronizer):
         """
         return
 
+    def _must_skip(self):
+        """ Hook called right after we read the data from the backend.
+
+        If the method returns a message giving a reason for the
+        skipping, the import will be interrupted and the message
+        recorded in the job (if the import is called directly by the
+        job, not by dependencies).
+
+        If it returns None, the import will continue normally.
+
+        :returns: None | str | unicode
+        """
+        return
+
     def _get_binding_id(self):
         """Return the binding id from the magento id"""
         return self.binder.to_openerp(self.magento_id)
@@ -145,6 +159,11 @@ class MagentoImportSynchronizer(ImportSynchronizer):
             self.magento_record = self._get_magento_data()
         except IDMissingInBackend:
             return _('Record does no longer exist in Magento')
+
+        skip = self._must_skip()
+        if skip:
+            return skip
+
         binding_id = self._get_binding_id()
 
         if not force and self._is_uptodate(binding_id):

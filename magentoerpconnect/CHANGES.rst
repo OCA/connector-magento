@@ -1,12 +1,13 @@
 Changelog
 ---------
 
-2.0.1.dev0
+2.1.0.dev0
 ~~~~~~~~~~
 
 * Option to choose if the invoices are exported to Magento on payment or validation (Thanks to Allison Miller)
 * Allow to define a prefix for the name of the imported sales orders (Thanks to Augustin Cisterne-Kaas)
 * Fix: 'store_id' field in the Magento API contains the id of the storeview, and was mapped with the store. In some circumstances, sales orders may fail to import. (lp:1235269)
+* Support of configurable products in import of sales orders
 
 
 2.1.0 (2013.08.05)

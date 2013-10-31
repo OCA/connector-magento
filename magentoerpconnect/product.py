@@ -34,7 +34,8 @@ from openerp.addons.connector.unit.synchronizer import (ImportSynchronizer,
                                                         )
 from openerp.addons.connector.exception import (MappingError,
                                                 InvalidDataError,
-                                                IDMissingInBackend)
+                                                IDMissingInBackend
+                                                )
 from openerp.addons.connector.unit.mapper import (mapping,
                                                   only_create,
                                                   ImportMapper,
@@ -60,9 +61,9 @@ class magento_product_product(orm.Model):
     def product_type_get(self, cr, uid, context=None):
         return [
             ('simple', 'Simple Product'),
+            ('configurable', 'Configurable Product'),
             # XXX activate when supported
             # ('grouped', 'Grouped Product'),
-            # ('configurable', 'Configurable Product'),
             # ('virtual', 'Virtual Product'),
             # ('bundle', 'Bundle Product'),
             # ('downloadable', 'Downloadable Product'),
@@ -316,6 +317,23 @@ class ProductImport(MagentoImportSynchronizer):
             raise InvalidDataError("The product type '%s' is not "
                                    "yet supported in the connector." %
                                    product_type)
+
+    def _must_skip(self):
+        """ Hook called right after we read the data from the backend.
+
+        If the method returns a message giving a reason for the
+        skipping, the import will be interrupted and the message
+        recorded in the job (if the import is called directly by the
+        job, not by dependencies).
+
+        If it returns None, the import will continue normally.
+
+        :returns: None | str | unicode
+        """
+        if self.magento_record['type_id'] == 'configurable':
+            return _('The configurable product is not imported in OpenERP, '
+                     'because only the simple products are used in the sales '
+                     'orders.')
 
     def _validate_data(self, data):
         """ Check if the values to import are correct
