@@ -319,6 +319,7 @@ class ProductImport(MagentoImportSynchronizer):
                                    product_type)
 
     def _must_skip(self, data):
+        """ Returns a message in job report if we need to skip a record """
         product_type = data['product_type']
         if data['product_type'] == 'configurable':
             return _('No need to import configurable product.')

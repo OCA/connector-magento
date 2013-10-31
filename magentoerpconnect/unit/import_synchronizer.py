@@ -169,8 +169,9 @@ class MagentoImportSynchronizer(ImportSynchronizer):
             record = self.mapper.data_for_create
             # special check on data before import
             self._validate_data(record)
-            if self._must_skip(record):
-                return _('Skipped.')
+            skip = self._must_skip(record)
+            if skip:
+                return skip
             binding_id = self._create(record)
 
         self.binder.bind(self.magento_id, binding_id)
