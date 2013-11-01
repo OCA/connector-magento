@@ -146,7 +146,7 @@ File an Issue
 =============
 
 When you encounter an issue or think there is a bug, you can file a bug on the
-project: http://bugs.launchpad.net/magentoerpconnect.
+project: http://bugs.launchpad.net/openerp-connector-magento.
 
 The connector uses several community modules, located in different projects
 (``sale_automatic_workflow``, ``sale_exceptions``, ...). If you know which
@@ -177,10 +177,10 @@ Merge proposals are much appreciated and we'll take care to review them properly
 
 The MP process is the following:
 
-1. Get a branch: ``bzr branch lp:magentoerpconnect/7.0 7.0-working-branch``
+1. Get a branch: ``bzr branch lp:openerp-connector-magento/7.0 7.0-working-branch``
 #. Work on that branch, develop your feature or fix a bug. Please include a test (`Writing tests`_).
 #. Ensure that the tests are green (`Run the tests`_)
-#. Push that branch on the project ``bzr push lp:~YOURUSER/magentoerpconnect/7.0-my-new-feature``
+#. Push that branch on the project ``bzr push lp:~YOURUSER/openerp-connector-magento/7.0-my-new-feature``
 
 .. note:: When you push a branch, you can push it on the team
           ``~openerp-connector-community`` instead of your user so anyone in the team is
@@ -219,7 +219,7 @@ You may want to translate directly in the ``.po`` files, in such case, follow th
 `Submit merge proposals for features or fixes`_ instructions.
 
 The other way is to use the Launchpad's translation system on
-https://translations.launchpad.net/magentoerpconnect (maybe not activated as of today)
+https://translations.launchpad.net/openerp-connector-magento (maybe not activated as of today)
 
 OpenERP's guide on translations: https://doc.openerp.com/7.0/contribute/07_improving_translations/
 
