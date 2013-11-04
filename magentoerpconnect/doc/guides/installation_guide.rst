@@ -33,6 +33,7 @@ Download the branches where you installed OpenERP::
     $ bzr branch lp:openerp-connector/7.0-e-commerce-addons e-commerce-addons
     $ bzr branch lp:openerp-connector-magento/7.0 openerp-connector-magento
     $ bzr branch lp:openerp-product-attributes/7.0 openerp-product-attributes
+    $ bzr branch lp:sale-wkfl/7.0 sale-wkfl
 
 Add the branches in the addons path, either using the server command
 line or adding them in the OpenERP server configuration file.
