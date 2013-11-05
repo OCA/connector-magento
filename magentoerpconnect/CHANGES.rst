@@ -1,8 +1,12 @@
 Changelog
 ---------
 
-2.1.0.dev0
+2.2.0.dev0
 ~~~~~~~~~~
+
+
+2.2.0 (public release - 2013.08.05)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 * Option to choose if the invoices are exported to Magento on payment or validation (Thanks to Allison Miller)
 * Allow to define a prefix for the name of the imported sales orders (Thanks to Augustin Cisterne-Kaas)
