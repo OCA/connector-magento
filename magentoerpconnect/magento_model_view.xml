@@ -114,6 +114,10 @@
                                     <field name="sale_prefix" placeholder="mag-" />
                                     <field name="product_stock_field_id" widget="selection"
                                         domain="[('model', 'in', ['product.product', 'product.template']), ('ttype', '=', 'float')]"/>
+                                    <field name="catalog_price_tax_included"/>
+                                    <p attrs="{'invisible': [('catalog_price_tax_included', '=', 'False')]}">
+                                     If you active this setting, you need to check 'Tax Included in Price' on each taxes used by your Magento OpenERP flow. 
+                                    </p>
                                 </group>
                             </page>
 
