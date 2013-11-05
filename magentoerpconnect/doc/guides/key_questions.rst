@@ -82,7 +82,6 @@ Master of data
 Where should the data of the products be maintained and edited?
 
 Magento is the master of data:
-
   Managing the catalog in Magento has the lowest impact on OpenERP.
   Much information stay only on Magento
   (product attributes, images, links).
@@ -91,11 +90,10 @@ Magento is the master of data:
   However 2 related informations will be updated in OpenERP and
   exported to Magento:
 
-  * Price of the products, based on the OpenERP pricelists
   * Available quantity in the stock
+  * Price of the products, based on the OpenERP pricelists (optionally)
 
 OpenERP is the master of data:
-
   As of today, the handling of the catalog
   in the connector has not been implemented
   (it was in the version for OpenERP 6.1).
@@ -107,21 +105,16 @@ Types of products
 Magento is able to handle many types of products:
 simple, configurable, bundle, grouped, virtual, downloadable
 
-Special options can also be added on the products.
+Custom options can also be added on the products.
 
 None all of theses types are supported by the connector.
 All the product types are planned to be supported
 (:doc:`/project/roadmap`).
-But, as of today, only simple products are supported.
-Using advanced types of products like bundle or configurable,
-will need development,
+But, as of today, only simple and configurable products are supported.
+Using advanced types of products like bundle will need development,
 wether it is generic or specific to your implementation
 
-However, the fact is using a bundle or configurable products
-complexifies a lot the synchronizations of the products.
-If you need them, try to use only bundle, or only configurable.
-
-The special options would probably be part of a specific development.
+The custom options would probably be part of a specific development.
 
 
 *******
@@ -133,14 +126,6 @@ Taxes included
 
 When you input the prices of your products,
 are the taxes included?
-
-Note that, although it is possible to work with taxes included,
-that's never recommended because you will lose a lot in OpenERP,
-mainly in analysis.
-
-Only the base price is relevant,
-Magento itself can display tax included or tax excluded
-without issues.
 
 Discounts
 =========
@@ -231,11 +216,14 @@ Replacement of products
 =======================
 
 Do you sometimes replace products in the sales orders?
-Are you going to modify the sale order on Magento,
+Are you going to modify the sales order on Magento,
 or do you want to modify the delivery orders in OpenERP?
 
 The latter choice could be complicated because Magento
 does not allow to change products in delivery orders.
+
+We recommend to edit the sales orders in Magento, the connector
+know how to handle theses changes.
 
 Tracking and delivery labels
 ============================
@@ -251,7 +239,7 @@ or do you want to print them directly from OpenERP?
 Management of returned goods
 ============================
 
-How will you manage the returned goods (RMA)?
+How will you manage the returned goods (RMA)? There is nothing out of the box.
 
 
 *********
