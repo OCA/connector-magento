@@ -287,3 +287,33 @@ class test_import_magento(common.SingleTransactionCase):
                                            order_line_id[0],
                                            ['price_unit'])['price_unit']
         self.assertEqual(price_unit, 41.0500)
+
+    def test_34_import_sale_order_with_taxes_included(self):
+        """ Import a sale order with taxes included """
+        backend_id = self.backend_id
+        self.backend_model.write(self.cr, self.uid, self.backend_id,
+                                 {'catalog_price_tax_included': True})
+        with mock_api(magento_base_responses):
+            with mock_urlopen_image():
+                import_record(self.session,
+                              'magento.sale.order',
+                              backend_id, 900000695)
+        mag_order_model = self.registry('magento.sale.order')
+        mag_order_ids = mag_order_model.search(self.cr,
+                                               self.uid,
+                                               [('backend_id', '=', backend_id),
+                                                ('magento_id', '=', '900000695')])
+        self.assertEqual(len(mag_order_ids), 1)
+        order_id = mag_order_model.read(self.cr,
+                                        self.uid,
+                                        mag_order_ids[0],
+                                        ['openerp_id'])['openerp_id']
+        order_model = self.registry('sale.order')
+        amount_total = order_model.read(self.cr,
+                                       self.uid,
+                                       order_id[0],
+                                       ['amount_total'])['amount_total']
+        #97.5 is the amount_total if connector takes correctly included tax prices.
+        self.assertEqual(amount_total, 97.5000)
+        self.backend_model.write(self.cr, self.uid, self.backend_id,
+                                 {'catalog_price_tax_included': False})
