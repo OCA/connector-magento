@@ -5,7 +5,7 @@ Changelog
 ~~~~~~~~~~
 
 
-2.2.0 (public release - 2013.08.05)
+2.2.0 (public release - 2013.11.06)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 * Option to choose if the invoices are exported to Magento on payment or validation (Thanks to Allison Miller)

@@ -111,7 +111,7 @@ Build the documentation
 The documentation uses Sphinx_, use the following lines to build them in HTML::
 
     $ bin/sphinxbuilder_connector
-    $ bin/sphinxbuilder_magentoerpconnect
+    $ bin/sphinxbuilder_connector_magento
 
 They will be built in the ``docs`` directory at the root of the buildout.
 
@@ -188,11 +188,11 @@ The MP process is the following:
 
 4. With a browser, go the branch you just pushed and click on the "Propose for merging" link:
 
-    * in the target branch, choose the master branch
-    * in the description, put a description which indicates why you made the
-      change, ideally with a use case
-    * in "extra options", set an appropriate commit message
-    * Confirm with the 'Propose Merge' button
+   * in the target branch, choose the master branch
+   * in the description, put a description which indicates why you made the
+     change, ideally with a use case
+   * in "extra options", set an appropriate commit message
+   * Confirm with the 'Propose Merge' button
 
 .. hint:: You can use the command tools ``bzr lp-propose-merge`` and ``bzr
           lp-open`` instead of a browser for creating the MP.
