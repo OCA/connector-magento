@@ -46,7 +46,7 @@ Core Features
 .. _OpenERP: http://www.openerp.com
 .. _Magento: http://www.magento.com
 .. _Akretion: http://www.akretion.com
-.. _`source code is available on Launchpad`: https://code.launchpad.net/openerp-connector
+.. _`source code is available on Launchpad`: https://code.launchpad.net/openerp-connector-magento
 .. _`AGPL version 3`: http://www.gnu.org/licenses/agpl-3.0.html
 .. _`project's mailing list`: https://launchpad.net/~openerp-connector-community
 
