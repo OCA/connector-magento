@@ -34,7 +34,7 @@ So we highly recommend to use this recipe for development.
 
 In order to use it, first get the branch::
 
-    $ bzr branch lp:openerp-connector/7.0-magento-connector-buildout
+    $ bzr branch lp:openerp-connector-magento/7.0-buildout
 
 Then bootstrap it::
 
