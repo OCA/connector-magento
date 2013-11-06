@@ -29,9 +29,9 @@ BASE_PATH = os.path.abspath(os.path.join(os.getcwd(), '../../..'))
 ADDONS_PATHS = ('server/openerp/addons',
                 'webclient/addons',
                 'addons',
-                'connector',
+                'openerp-connector',
                 'e-commerce-addons',
-                'magentoerpconnect')
+                'openerp-connector-magento')
 pathes = [os.path.join(BASE_PATH, path) for path in ADDONS_PATHS]
 options = ['--addons-path', ','.join(pathes)]
 openerp.tools.config.parse_config(options)
