@@ -752,25 +752,27 @@ class SaleOrderImportMapper(ImportMapper):
     def shipping_method(self, record):
         session = self.session
         ifield = record.get('shipping_method')
-        if ifield:
-            carrier_ids = session.search('delivery.carrier',
-                                         [('magento_code', '=', ifield)])
-            if carrier_ids:
-                result = {'carrier_id': carrier_ids[0]}
-            else:
-                fake_partner_id = session.search('res.partner', [])[0]
-                model_data_obj = session.pool['ir.model.data']
-                model, product_id = model_data_obj.get_object_reference(session.cr, session.uid,
-                                                                        'connector_ecommerce',
-                                                                        'product_product_shipping')
-                carrier_id = session.create('delivery.carrier',
-                                            {'partner_id': fake_partner_id,
-                                             'product_id': product_id,
-                                             'name': ifield,
-                                             'magento_code': ifield,
-                                             })
-                result = {'carrier_id': carrier_id}
-            return result
+        if not ifield:
+            return
+        
+        carrier_ids = session.search('delivery.carrier',
+                                     [('magento_code', '=', ifield)])
+        if carrier_ids:
+            result = {'carrier_id': carrier_ids[0]}
+        else:
+            fake_partner_id = session.search('res.partner', [])[0]
+            model_data_obj = session.pool['ir.model.data']
+            model, product_id = model_data_obj.get_object_reference(session.cr, session.uid,
+                                                                    'connector_ecommerce',
+                                                                    'product_product_shipping')
+            carrier_id = session.create('delivery.carrier',
+                                        {'partner_id': fake_partner_id,
+                                         'product_id': product_id,
+                                         'name': ifield,
+                                         'magento_code': ifield,
+                                         })
+            result = {'carrier_id': carrier_id}
+        return result
 
     @mapping
     def base_shipping_incl_tax(self, record):
