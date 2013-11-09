@@ -4,27 +4,77 @@
    contain the root `toctree` directive.
 
 #########################
-Magento OpenERP Connector
+OpenERP Magento Connector
 #########################
 
-This is the new release of the Open-Source connector linking OpenERP and
-Magento also known under the name of **Magentoerpconnect**.  It is
-build on top of the `connector`_ framework. It is is structured so that
-it can be extended or modified easily from separate addons, a factor of
-success when the implementations of Magento vary a lot.
+*OpenERP Magento Connector* (also known as *MagentoERPconnect*) is a
+bi-directional connector, 100% compatible with the last `OpenERP`_ 7.0 and
+latest `Magento`_ versions.
 
-Magento OpenERP Connector is mainly developed by the Magentoerpconnect Core
-Editors, these being Camptocamp_ and Akretion_. The `source is on
-launchpad`_.
+Based on the `OpenERP Connector`_ framework, this new release of
+MagentoERPconnect has been initiated by `Camptocamp`_ and is mainly
+developed and maintained by `Camptocamp`_ and `Akretion`_ with several other
+:ref:`contributors`.
 
-This connector is designed to have a strong and efficient core, with the
-ability to extend it with extension modules or local customizations.
+*Subscribe to the* `project's mailing list`_
 
-.. _connector: https://code.launchpad.net/openerp-connector
+*Learn how to contribute with the* :ref:`contribute`
+
+*************
+Core Features
+*************
+
+* **100% Open Source** (`AGPL version 3`_): the full `source code is available
+  on Launchpad`_
+* **Multis**: multi-instances, multi-e-shop, multi-currency,
+  multi-warehouse, multi-language
+* **Synchronization** of products catalog, customers, sales orders, stock levels,
+  shipments, packages' tracking numbers, invoices…
+* **Built on top of the** `OpenERP Connector`_ **framework with a strong and
+  efficient core**: it can then be extended or modified easily from
+  separate addons
+* **Payment workflow automation**: depending on the mean of payment (credit
+  card, wire transfer), possibility to automate workflows in
+  OpenERP (automatic order validation, automatic invoice validation…).
+  For instance, a sales order paid by credit card will automatically
+  create an invoice with the "paid" status
+* Load testing results: **in a single day, successful import of more
+  than 10'000 sales orders** from Magento to OpenERP!
+
+.. _`OpenERP Connector`: http://www.openerp-connector.com
 .. _Camptocamp: http://www.camptocamp.com
+.. _OpenERP: http://www.openerp.com
+.. _Magento: http://www.magento.com
 .. _Akretion: http://www.akretion.com
-.. _`source is on launchpad`: https://launchpad.net/magentoerpconnect
+.. _`source code is available on Launchpad`: https://code.launchpad.net/openerp-connector-magento
+.. _`AGPL version 3`: http://www.gnu.org/licenses/agpl-3.0.html
+.. _`project's mailing list`: https://launchpad.net/~openerp-connector-community
 
+********
+Workflow
+********
+
+.. raw:: html
+
+    <div style="margin-top:10px;">
+        <iframe src="http://www.slideshare.net/slideshow/embed_code/27685907" width="427" height="356" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC;border-width:1px 1px 0;margin-bottom:5px" allowfullscreen> </iframe> <div style="margin-bottom:5px"> <strong> <a href="https://fr.slideshare.net/camptocamp/openerp-magento-connector-new-generation-workflow" title="OpenERP Magento Connector &quot;New Generation&quot; Workflow" target="_blank">OpenERP Magento Connector &quot;New Generation&quot; Workflow</a> </strong> from <strong><a href="http://www.slideshare.net/camptocamp" target="_blank">Camptocamp</a></strong> </div>
+    </div>
+
+**************************
+Top financial contributors
+**************************
+
+.. image:: _static/img/LogicSupply_Orange_260x80_transparent.png
+   :alt: Logic Supply
+   :target: http://www.logicsupply.com
+
+.. image:: _static/img/logo-debonix.jpg
+   :alt: Debonix
+   :target: http://www.debonix.fr
+
+|
+
+*See all the project's* :ref:`financial-contributors`.
 
 ***********
 First steps
@@ -58,6 +108,7 @@ Be efficient using and configuring the connector.
    guides/connector_checkpoint
    guides/monitor_resolve_jobs
    howto/modify_an_order
+   howto/faq
 
 
 ***************************
@@ -68,6 +119,14 @@ Learn about how you can contribute or use the connector as a developer.
 
 Develop
 =======
+
+.. toctree::
+   :maxdepth: 3
+
+   project/contribute
+
+Tutorials
+=========
 
 .. toctree::
    :maxdepth: 2
@@ -111,44 +170,21 @@ Models API
    api/api_stock_tracking.rst
 
 
+*******
 Project
-=======
+*******
 
 .. toctree::
    :maxdepth: 1
 
    project/roadmap
    project/contributors
-   project/contribute
    project/changes
 
-
-Concepts
-========
-
-Glossary:
-
-.. glossary::
-
-    Job
-
-        A unit of work consisting of a single complete and atomic task.
-        Example: import of a product.
-
-    Backend
-
-        An external service on which we connect OpenERP. In the context
-        of the Magento connector, Magento is a backend.
-
-    Mapping
-
-        A mapping defines how the data is converted from Magento to
-        OpenERP and reversely.
-
+******************
 Indices and tables
-==================
+******************
 
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
-

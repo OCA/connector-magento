@@ -67,30 +67,21 @@ Nothing special but 2 things to note:
 Of course, you also need to create the ``__init__.py`` file where you will
 put the imports of your python modules.
 
-Declare the module to the connector
+Install the module in the connector
 ===================================
 
-Each module using the ``connector`` needs to create a special empty
-model, which will be used by the framework to know if the module is
-installed or not on each database.
+Each new module needs to be plugged in the connector's framework.
+That's just a matter of following a convention and creating
+``connector.py`` in which you will call the
+``install_in_connector`` function::
 
-That's just a matter of following a convention and creating in ``customize_example/connector.py``::
-
-    from openerp.osv import orm
+    from openerp.addons.connector.connector import install_in_connector
 
 
-    class customize_example_installed(orm.AbstractModel):
-        """Empty model used to know if the module is installed on the
-        database.
+    install_in_connector()
 
-        If the model is in the registry, the module is installed.
-        """
-        _name = 'customize_example.installed'
-
-Note:
-
-* the ``_name`` is in the form: ``module_name.installed``, where
-  ``.installed`` is the part which does never change.
+.. warning:: If you miss this line of code, your custom ConnectorUnit
+             classes won't be used.
 
 
 Create your custom Backend

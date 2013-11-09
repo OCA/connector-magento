@@ -44,6 +44,7 @@ from .unit.import_synchronizer import (DelayedBatchImport,
 from .exception import OrderImportRuleRetry
 from .backend import magento
 from .connector import get_environment
+from .partner import PartnerImportMapper
 
 _logger = logging.getLogger(__name__)
 
@@ -116,6 +117,14 @@ class sale_order(orm.Model):
             string="Magento Bindings"),
     }
 
+    def copy_data(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        default['magento_bind_ids'] = False
+        return super(sale_order, self).copy_data(cr, uid, id,
+                                                 default=default,
+                                                 context=context)
+
 
 class magento_sale_order_line(orm.Model):
     _name = 'magento.sale.order.line'
@@ -187,6 +196,14 @@ class sale_order_line(orm.Model):
                 string="Magento Bindings"),
         }
 
+    def copy_data(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        default['magento_bind_ids'] = False
+        return super(sale_order_line, self).copy_data(cr, uid, id,
+                                                      default=default,
+                                                      context=context)
+
 
 @magento
 class SaleOrderAdapter(GenericAdapter):
@@ -228,8 +245,9 @@ class SaleOrderAdapter(GenericAdapter):
 
         :rtype: dict
         """
-        return self._call('%s.info' % self._magento_model,
-                          [id, attributes])
+        record = self._call('%s.info' % self._magento_model,
+                            [id, attributes])
+        return record
 
     def get_parent(self, id):
         return self._call('%s.get_parent' % self._magento_model, [id])
@@ -339,6 +357,65 @@ class SaleImportRule(ConnectorUnit):
 class SaleOrderImport(MagentoImportSynchronizer):
     _model_name = ['magento.sale.order']
 
+    def _clean_magento_items(self, resource):
+        """
+        Method that clean the sale order line given by magento before importing it
+
+        This method has to stay here because it allow to customize the behavior of the sale
+        order.
+
+        """
+        child_items = {}  # key is the parent item id
+        top_items = []
+
+        # Group the childs with their parent
+        for item in resource['items']:
+            if item.get('parent_item_id'):
+                child_items.setdefault(item['parent_item_id'], []).append(item)
+            else:
+                top_items.append(item)
+
+        all_items = []
+        for top_item in top_items:
+            if top_item['item_id'] in child_items:
+                item_modified = self._merge_sub_items(
+                                                      top_item['product_type'],
+                                                      top_item,
+                                                      child_items[top_item['item_id']]
+                                                      )
+                if not isinstance(item_modified, list):
+                    item_modified = [item_modified]
+                all_items.extend(item_modified)
+            else:
+                all_items.append(top_item)
+        resource['items'] = all_items
+        return resource
+
+    def _merge_sub_items(self, product_type, top_item, child_items):
+        """
+        Manage the sub items of the magento sale order lines. A top item contains one
+        or many child_items. For some product types, we want to merge them in the main
+        item, or keep them as order line.
+
+        This method has to stay because it allow to customize the behavior of the sale
+        order according to the product type.
+
+        A list may be returned to add many items (ie to keep all child_items as items.
+
+        :param top_item: main item (bundle, configurable)
+        :param child_items: list of childs of the top item
+        :return: item or list of items
+        """
+        if product_type == 'configurable':
+            item = top_item.copy()
+            # For configurable product all information regarding the price is in the configurable item
+            # In the child a lot of information is empty, but contains the right sku and product_id
+            # So the real product_id and the sku and the name have to be extracted from the child
+            for field in ['sku', 'product_id', 'name']:
+                item[field] = child_items[0][field]
+            return item
+        return top_item
+
     def _import_customer_group(self, group_id):
         binder = self.get_binder_for_model('magento.res.partner.category')
         if binder.to_openerp(group_id) is None:
@@ -412,13 +489,16 @@ class SaleOrderImport(MagentoImportSynchronizer):
         # sometimes we don't have website_id...
         # we fix the record!
         if not record.get('website_id'):
-            # deduce it from the store
-            store_binder = self.get_binder_for_model('magento.store')
-            oe_store_id = store_binder.to_openerp(record['store_id'])
-            store = self.session.browse('magento.store', oe_store_id)
-            oe_website_id = store.website_id.id
+            # deduce it from the storeview
+            storeview_binder = self.get_binder_for_model('magento.storeview')
+            # we find storeview_id in store_id! (http://www.magentocommerce.com/bug-tracking/issue?issue=15886)
+            oe_storeview_id = storeview_binder.to_openerp(record['store_id'])
+            storeview = self.session.browse('magento.storeview', oe_storeview_id)
+            oe_website_id = storeview.store_id.website_id.id
             # "fix" the record
-            record['website_id'] = store.website_id.magento_id
+            record['website_id'] = storeview.store_id.website_id.magento_id
+        # sometimes we need to clean magento items (ex : configurable product in a sale)
+        record = self._clean_magento_items(record)
         return record
 
     def _import_addresses(self):
@@ -457,6 +537,10 @@ class SaleOrderImport(MagentoImportSynchronizer):
         if is_guest_order:
             # ensure that the flag is correct in the record
             record['customer_is_guest'] = True
+            guest_customer_id = 'guestorder:%s' % record['increment_id']
+            # "fix" the record with a on-purpose built ID so we can found it
+            # from the mapper
+            record['customer_id'] = guest_customer_id
 
             address = record['billing_address']
 
@@ -481,12 +565,14 @@ class SaleOrderImport(MagentoImportSynchronizer):
                 'dob': record.get('customer_dob'),
                 'website_id': record.get('website_id'),
             }
-            mapper = self.get_connector_unit_for_model(ImportMapper,
+            mapper = self.get_connector_unit_for_model(PartnerImportMapper,
                                                       'magento.res.partner')
             mapper.convert(customer_record)
             oe_record = mapper.data_for_create
             oe_record['guest_customer'] = True
             partner_bind_id = sess.create('magento.res.partner', oe_record)
+            partner_binder.bind(guest_customer_id,
+                                partner_bind_id)
         else:
 
             # we always update the customer when importing an order
@@ -578,8 +664,7 @@ class SaleOrderImport(MagentoImportSynchronizer):
 class SaleOrderImportMapper(ImportMapper):
     _model_name = 'magento.sale.order'
 
-    direct = [('increment_id', 'name'),
-              ('increment_id', 'magento_id'),
+    direct = [('increment_id', 'magento_id'),
               ('order_id', 'magento_order_id'),
               ('grand_total', 'total_amount'),
               ('tax_amount', 'total_amount_tax'),
@@ -613,9 +698,16 @@ class SaleOrderImportMapper(ImportMapper):
         onchange = self.get_connector_unit_for_model(SaleOrderOnChange)
         return onchange.play(result, result['magento_order_line_ids'])
 
+    # def shipping_line(self, record):
+    #     self._add_shipping_line(record)
+
     @mapping
-    def shipping_line(self, record):
-        self._add_shipping_line(result)
+    def name(self, record):
+        name = record['increment_id']
+        prefix = self.backend_record.sale_prefix
+        if prefix:
+          name = prefix + name
+        return {'name': name}
 
     @mapping
     def store_id(self, record):
@@ -670,9 +762,11 @@ class SaleOrderImportMapper(ImportMapper):
     def shipping_method(self, record):
         session = self.session
         ifield = record.get('shipping_method')
-        if ifield:
-            carrier_ids = session.search('delivery.carrier',
-                                         [('magento_code', '=', ifield)])
+        if not ifield:
+            return
+        
+        carrier_ids = session.search('delivery.carrier',
+                                     [('magento_code', '=', ifield)])
         if carrier_ids:
             result = {'carrier_id': carrier_ids[0]}
         else:

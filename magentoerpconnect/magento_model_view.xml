@@ -14,8 +14,9 @@
                         string="Synchronize Metadata"/>
                     </header>
                     <sheet>
+                        <label for="name" class="oe_edit_only"/>
                         <h1>
-                            <field name="name" class="oe_inline"/>
+                            <field name="name" class="oe_inline" />
                         </h1>
                         <group name="magento" string="Magento Configuration">
                             <group colspan="4" col="4">
@@ -110,6 +111,7 @@
                                 <group>
                                     <field name="default_lang_id" widget="selection"/>
                                     <field name="default_category_id"/>
+                                    <field name="sale_prefix" placeholder="mag-" />
                                     <field name="product_stock_field_id" widget="selection"
                                         domain="[('model', 'in', ['product.product', 'product.template']), ('ttype', '=', 'float')]"/>
                                 </group>
@@ -233,6 +235,7 @@
                         <group string="Options">
                             <field name="send_picking_done_mail"/>
                             <field name="send_invoice_paid_mail"/>
+                            <field name="create_invoice_on"/>
                         </group>
 
                         <notebook>

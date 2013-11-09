@@ -73,9 +73,15 @@ class magento_backend(orm.Model):
             _select_versions,
             string='Version',
             required=True),
-        'location': fields.char('Location'),
+        'location': fields.char('Location', required=True),
         'username': fields.char('Username'),
         'password': fields.char('Password'),
+        'sale_prefix': fields.char(
+            'Sale Prefix',
+            help="A prefix put before the name of imported sales orders.\n"
+                 "For instance, if the prefix is 'mag-', the sales "
+                 "order 100000692 in Magento, will be named 'mag-100000692' "
+                 "in OpenERP."),
         'warehouse_id': fields.many2one('stock.warehouse',
                                         'Warehouse',
                                         required=True,
@@ -117,6 +123,11 @@ class magento_backend(orm.Model):
     _defaults = {
         'product_stock_field_id': _get_stock_field_id,
     }
+
+    _sql_constraints = [
+        ('sale_prefix_uniq', 'unique(sale_prefix)',
+         "A backend with the same sale prefix already exists")
+    ]
 
     def check_magento_structure(self, cr, uid, ids, context=None):
         """ Used in each data import.
@@ -362,9 +373,20 @@ class magento_store(orm.Model):
             help="Does the picking export/creation should send "
                  "an email notification on Magento side?"),
         'send_invoice_paid_mail': fields.boolean(
-            'Send email notification on invoice paid',
+            'Send email notification on invoice validated/paid',
             help="Does the invoice export/creation should send "
                  "an email notification on Magento side?"),
+        'create_invoice_on': fields.selection(
+            [('open', 'Validate'),
+             ('paid', 'Paid')],
+            'Create invoice on action',
+            required=True,
+            help="Should the invoice be created in Magento "
+                 "when it is validated or when it is paid in OpenERP?"),
+    }
+
+    _defaults = {
+        'create_invoice_on': 'paid',
     }
 
     _sql_constraints = [
@@ -382,6 +404,14 @@ class sale_shop(orm.Model):
             string='Magento Bindings',
             readonly=True),
     }
+
+    def copy_data(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        default['magento_bind_ids'] = False
+        return super(sale_shop, self).copy_data(cr, uid, id,
+                                                default=default,
+                                                context=context)
 
 
 # TODO: migrate from magerp.storeviews

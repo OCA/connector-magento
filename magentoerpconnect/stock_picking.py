@@ -72,6 +72,14 @@ class stock_picking(orm.Model):
             string="Magento Bindings"),
     }
 
+    def copy_data(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        default['magento_bind_ids'] = False
+        return super(stock_picking, self).copy_data(cr, uid, id,
+                                                    default=default,
+                                                    context=context)
+
 
 # Seems to be so buggy, if I put magento_bind_ids
 # only in stock.picking.out, I cannot read it from the browse

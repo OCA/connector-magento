@@ -34,10 +34,7 @@ from openerp.addons.magentoerpconnect import product
 from openerp.addons.magentoerpconnect.connector import get_environment
 
 
-magento.unregister_class(product.ProductImportMapper)
-
-
-@magento
+@magento(replacing=product.ProductImportMapper)
 class ProductImportMapper(product.ProductImportMapper):
     _model_name = 'magento.product.product'
 
@@ -47,7 +44,7 @@ class ProductImportMapper(product.ProductImportMapper):
         """ The price is imported at the creation of
         the product, then it is only modified and exported
         from OpenERP """
-        super(ProductImportMapper, self).price(record)
+        return super(ProductImportMapper, self).price(record)
 
 
 @magento
