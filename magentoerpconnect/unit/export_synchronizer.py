@@ -153,8 +153,8 @@ class MagentoExporter(MagentoBaseExporter):
         """
         return
 
-    def _create_data(self, map_record, fields=None):
-        return map_record.values(for_create=True, fields=fields)
+    def _create_data(self, map_record, fields=None, **kwargs):
+        return map_record.values(for_create=True, fields=fields, **kwargs)
 
     def _create(self, data):
         """ Create the Magento record """
@@ -162,8 +162,8 @@ class MagentoExporter(MagentoBaseExporter):
         self._validate_data(data)
         return self.backend_adapter.create(data)
 
-    def _update_data(self, map_record, fields=None):
-        return map_record.values(fields=fields)
+    def _update_data(self, map_record, fields=None, **kwargs):
+        return map_record.values(fields=fields, **kwargs)
 
     def _update(self, data):
         """ Update an Magento record """

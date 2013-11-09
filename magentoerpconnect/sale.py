@@ -638,9 +638,19 @@ class SaleOrderImport(MagentoImportSynchronizer):
         data['partner_shipping_id'] = self.partner_shipping_id
         return data
 
+    def _create_data(self, map_record, **kwargs):
+        tax_include = self.backend_record.catalog_price_tax_included
+        return super(SaleOrderImport, self)._create_data(
+            map_record, tax_include=tax_include, **kwargs)
+
     def _create(self, data):
         data = self._update_special_fields(data)
         return super(SaleOrderImport, self)._create(data)
+
+    def _update_data(self, map_record, **kwargs):
+        tax_include = self.backend_record.catalog_price_tax_included
+        return super(SaleOrderImport, self)._update_data(
+            map_record, tax_include=tax_include, **kwargs)
 
     def _update(self, binding_id, data):
         data = self._update_special_fields(data)
@@ -681,9 +691,7 @@ class SaleOrderImportMapper(ImportMapper):
         if not (amount_incl or amount_excl):
             return values
         line_builder = self.get_connector_unit_for_model(MagentoShippingLineBuilder)
-        backend = self.backend_record
-        tax_included = backend.catalog_price_tax_included
-        if tax_included:
+        if self.options.tax_include:
             discount = float(record.get('shipping_discount_amount', 0.0))
             line_builder.price_unit = (amount_incl - discount)
         else:
@@ -700,8 +708,8 @@ class SaleOrderImportMapper(ImportMapper):
             return values
         line_builder = self.get_connector_unit_for_model(MagentoCashOnDeliveryLineBuilder)
         backend = self.backend_record
-        tax_included = backend.catalog_price_tax_included
-        line_builder.price_unit = amount_incl if tax_included else amount_excl
+        tax_include = self.options.tax_include
+        line_builder.price_unit = amount_incl if tax_include else amount_excl
         line = (0, 0, line_builder.get_line())
         values['order_line'].append(line)
         return values
@@ -884,7 +892,7 @@ class SaleOrderLineImportMapper(ImportMapper):
         base_row_total = float(record['base_row_total'] or 0.)
         base_row_total_incl_tax = float(record['base_row_total_incl_tax'] or 0.)
         qty_ordered = float(record['qty_ordered'])
-        if backend.catalog_price_tax_included:
+        if self.options.tax_include:
             result['price_unit'] = base_row_total_incl_tax / qty_ordered
         else:
             result['price_unit'] = base_row_total / qty_ordered

@@ -126,8 +126,8 @@ class MagentoImportSynchronizer(ImportSynchronizer):
         """Return the binding id from the magento id"""
         return self.binder.to_openerp(self.magento_id)
 
-    def _create_data(self, map_record):
-        return map_record.values(for_create=True)
+    def _create_data(self, map_record, **kwargs):
+        return map_record.values(for_create=True, **kwargs)
 
     def _create(self, data):
         """ Create the OpenERP record """
@@ -139,8 +139,8 @@ class MagentoImportSynchronizer(ImportSynchronizer):
                       self.model._name, binding_id, self.magento_id)
         return binding_id
 
-    def _update_data(self, map_record):
-        return map_record.values()
+    def _update_data(self, map_record, **kwargs):
+        return map_record.values(**kwargs)
 
     def _update(self, binding_id, data):
         """ Update an OpenERP record """
