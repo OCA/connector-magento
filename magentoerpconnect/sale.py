@@ -675,23 +675,55 @@ class SaleOrderImportMapper(ImportMapper):
                 ]
 
     def _add_shipping_line(self, map_record, values):
+        record = map_record.source
+        amount_incl = record.get('base_shipping_incl_tax', 0.0)
+        amount_excl = record.get('shipping_amount', 0.0)
+        if not (amount_incl or amount_excl):
+            return values
+        line_builder = self.get_connector_unit_for_model(MagentoShippingLineBuilder)
         backend = self.backend_record
         tax_included = backend.catalog_price_tax_included
-        record = map_record.source
-        line_builder = self.get_connector_unit_for_model(MagentoShippingLineBuilder)
         if tax_included:
-            discount = float(record.get('shipping_discount_amount', 0.0))
-            line_builder.price_unit = (
-                float(record.get('base_shipping_incl_tax', 0.0)) - discount)
+            discount = float('shipping_discount_amount', 0.0)
+            line_builder.price_unit = (amount_incl - discount)
         else:
-            line_builder.price_unit = float(record.get('shipping_amount', 0.0))
+            line_builder.price_unit = amount_excl
         line = (0, 0, line_builder.get_line())
-        values.setdefault('order_line', [])
+        values['order_line'].append(line)
+        return values
+
+    def _add_cash_on_delivery_line(self, map_record, values):
+        record = map_record.source
+        amount_excl = float(record.get('cod_fee', 0.0))
+        amount_incl = float(record.get('cod_tax_amount', 0.0))
+        if not (amount_excl or amount_incl):
+            return values
+        line_builder = self.get_connector_unit_for_model(MagentoCashOnDeliveryLineBuilder)
+        backend = self.backend_record
+        tax_included = backend.catalog_price_tax_included
+        line_builder.price_unit = amount_incl if tax_included else amount_excl
+        line = (0, 0, line_builder.get_line())
+        values['order_line'].append(line)
+        return values
+
+    def _add_gift_certificate_line(self, map_record, values):
+        record = map_record.source
+        if 'gift_cert_amount' not in record:
+            return values
+        amount = float(record['gift_cert_amount'])
+        line_builder = self.get_connector_unit_for_model(MagentoGiftOrderLineBuilder)
+        line_builder.price_unit = amount
+        if 'gift_cert_code' in record:
+            line_builder.code = record['gift_cert_code']
+        line = (0, 0, line_builder.get_line())
         values['order_line'].append(line)
         return values
 
     def finalize(self, map_record, values):
+        values.setdefault('order_line', [])
         values = self._add_shipping_line(map_record, values)
+        values = self._add_cash_on_delivery_line(map_record, values)
+        values = self._add_gift_certificate_line(map_record, values)
         onchange = self.get_connector_unit_for_model(SaleOrderOnChange)
         return onchange.play(values, values['magento_order_line_ids'])
 
@@ -700,7 +732,7 @@ class SaleOrderImportMapper(ImportMapper):
         name = record['increment_id']
         prefix = self.backend_record.sale_prefix
         if prefix:
-          name = prefix + name
+            name = prefix + name
         return {'name': name}
 
     @mapping
