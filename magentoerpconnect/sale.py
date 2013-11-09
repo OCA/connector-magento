@@ -685,11 +685,15 @@ class SaleOrderImportMapper(ImportMapper):
         sess = self.session
         # TODO: refactor: do no longer store the transient fields in the
         # result, use a ConnectorUnit to create the lines
-        result = sess.pool['sale.order']._convert_special_fields(sess.cr,
-                                                                 sess.uid,
-                                                                 values,
-                                                                 values['magento_order_line_ids'],
-                                                                 sess.context)
+        backend = self.backend_record
+        # in tax_included context, need to pass it in context
+        tax_included = backend.catalog_price_tax_included
+        with self.session.change_context({'is_tax_included': tax_included}):
+            values = sess.pool['sale.order']._convert_special_fields(sess.cr,
+                                                                     sess.uid,
+                                                                     values,
+                                                                     values['magento_order_line_ids'],
+                                                                     sess.context)
         # remove transient fields otherwise OpenERP will raise a warning
         # or even fail to create the record because the fields do not
         # exist
