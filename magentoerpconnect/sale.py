@@ -676,15 +676,15 @@ class SaleOrderImportMapper(ImportMapper):
 
     def _add_shipping_line(self, map_record, values):
         record = map_record.source
-        amount_incl = record.get('base_shipping_incl_tax', 0.0)
-        amount_excl = record.get('shipping_amount', 0.0)
+        amount_incl = float(record.get('base_shipping_incl_tax', 0.0))
+        amount_excl = float(record.get('shipping_amount', 0.0))
         if not (amount_incl or amount_excl):
             return values
         line_builder = self.get_connector_unit_for_model(MagentoShippingLineBuilder)
         backend = self.backend_record
         tax_included = backend.catalog_price_tax_included
         if tax_included:
-            discount = float(record.get('shipping_discount_amount'), 0.0)
+            discount = float(record.get('shipping_discount_amount', 0.0))
             line_builder.price_unit = (amount_incl - discount)
         else:
             line_builder.price_unit = amount_excl
