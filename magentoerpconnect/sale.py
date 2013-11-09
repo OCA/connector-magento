@@ -684,7 +684,7 @@ class SaleOrderImportMapper(ImportMapper):
         backend = self.backend_record
         tax_included = backend.catalog_price_tax_included
         if tax_included:
-            discount = float('shipping_discount_amount', 0.0)
+            discount = float(record.get('shipping_discount_amount'), 0.0)
             line_builder.price_unit = (amount_incl - discount)
         else:
             line_builder.price_unit = amount_excl
