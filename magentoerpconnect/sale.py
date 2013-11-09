@@ -686,7 +686,8 @@ class SaleOrderImportMapper(ImportMapper):
         else:
             line_builder.price_unit = float(record.get('shipping_amount', 0.0))
         line = (0, 0, line_builder.get_line())
-        values['magento_order_line_ids'].append(line)
+        values.setdefault('order_line', [])
+        values['order_line'].append(line)
         return values
 
     def finalize(self, map_record, values):
