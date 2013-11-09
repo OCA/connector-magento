@@ -696,6 +696,12 @@ class SaleOrderImportMapper(ImportMapper):
             line_builder.price_unit = (amount_incl - discount)
         else:
             line_builder.price_unit = amount_excl
+
+        if values.get('carrier_id'):
+            carrier = self.session.browse('delivery.carrier',
+                                          values['carrier_id'])
+            line_builder.product_id = carrier.product_id
+
         line = (0, 0, line_builder.get_line())
         values['order_line'].append(line)
         return values
