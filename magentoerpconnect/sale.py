@@ -674,36 +674,25 @@ class SaleOrderImportMapper(ImportMapper):
     children = [('items', 'magento_order_line_ids', 'magento.sale.order.line'),
                 ]
 
-    def _add_shipping_line(self, result):
-        amount_tax_exc = float(result.get('shipping_amount', 0.0))
+    def _add_shipping_line(self, map_record, values):
+        backend = self.backend_record
+        tax_included = backend.catalog_price_tax_included
+        record = map_record.source
         line_builder = self.get_connector_unit_for_model(MagentoShippingLineBuilder)
-        line_builder.price_unit = amount_tax_exc
-        result['magento_order_line_ids'].append((0, 0,
-                                                 line_builder.get_line()))
+        if tax_included:
+            discount = float(record.get('shipping_discount_amount', 0.0))
+            line_builder.price_unit = (
+                float(record.get('base_shipping_incl_tax', 0.0)) - discount)
+        else:
+            line_builder.price_unit = float(record.get('shipping_amount', 0.0))
+        line = (0, 0, line_builder.get_line())
+        values['magento_order_line_ids'].append(line)
+        return values
 
     def finalize(self, map_record, values):
-        sess = self.session
-        # TODO: refactor: do no longer store the transient fields in the
-        # result, use a ConnectorUnit to create the lines
-        backend = self.backend_record
-        # in tax_included context, need to pass it in context
-        tax_included = backend.catalog_price_tax_included
-        with self.session.change_context({'is_tax_included': tax_included}):
-            values = sess.pool['sale.order']._convert_special_fields(sess.cr,
-                                                                     sess.uid,
-                                                                     values,
-                                                                     values['magento_order_line_ids'],
-                                                                     sess.context)
-        # remove transient fields otherwise OpenERP will raise a warning
-        # or even fail to create the record because the fields do not
-        # exist
-        values.pop('gift_certificates_amount', None)
-        values.pop('gift_certificates_code', None)
+        values = self._add_shipping_line(map_record, values)
         onchange = self.get_connector_unit_for_model(SaleOrderOnChange)
         return onchange.play(values, values['magento_order_line_ids'])
-
-    # def shipping_line(self, record):
-    #     self._add_shipping_line(record)
 
     @mapping
     def name(self, record):
