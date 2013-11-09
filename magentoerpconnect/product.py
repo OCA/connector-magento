@@ -24,7 +24,7 @@ import logging
 import urllib2
 import base64
 import xmlrpclib
-from operator import itemgetter
+import sys
 from openerp.osv import orm, fields
 from openerp.tools.translate import _
 from openerp.addons.connector.queue.job import job
@@ -257,30 +257,53 @@ class CatalogImageImporter(ImportSynchronizer):
     def _get_images(self, storeview_id=None):
         return self.backend_adapter.get_images(self.magento_id, storeview_id)
 
-    def _get_main_image_data(self, images):
+    def _sort_images(self, images):
+        """ Returns a list of images sorted by their priority.
+        An image with the 'base' type is the the primary one.
+        The other images are sorted by their position.
+
+        The returned list is reversed, the items at the end
+        of the list have the higher priority.
+        """
         if not images:
             return {}
-        # search if we have a base image defined
-        image = next((img for img in images if 'base' in img['types']),
-                     None)
-        if image is None:
-            # take the first image by priority
-            images = sorted(images, key=itemgetter('position'))
-            image = images[0]
-        return image
+        # place the images where the type is 'base' first then
+        # sort them by the reverse priority (last item of the list has
+        # the the higher priority)
+        def priority(image):
+            primary = 'base' in image['types']
+            try:
+                position = int(image['position'])
+            except ValueError:
+                position = sys.maxint
+            return (primary, -position)
+        return sorted(images, key=priority)
 
     def _get_binary_image(self, image_data):
         url = image_data['url']
-        binary = urllib2.urlopen(url)
-        return binary.read()
+        try:
+            binary = urllib2.urlopen(url)
+        except urllib2.HTTPError as err:
+            if err.code == 404:
+                # the image is just missing, we skip it
+                return
+            else:
+                # we don't know why we couldn't download the image
+                # so we propagate the error, the import will fail
+                # and we have to check why it couldn't be accessed
+                raise
+        else:
+            return binary.read()
 
     def run(self, magento_id, binding_id):
         self.magento_id = magento_id
         images = self._get_images()
-        main_image_data = self._get_main_image_data(images)
-        if not main_image_data:
+        images = self._sort_images(images)
+        binary = None
+        while not binary and images:
+            binary = self._get_binary_image(images.pop())
+        if not binary:
             return
-        binary = self._get_binary_image(main_image_data)
         with self.session.change_context({'connector_no_export': True}):
             self.session.write(self.model._name,
                                binding_id,
