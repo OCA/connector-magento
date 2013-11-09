@@ -4,6 +4,8 @@ Changelog
 2.2.0.dev0
 ~~~~~~~~~~
 
+* Fix: Error when a sales order had no shipping method
+
 
 2.2.0 (public release - 2013.11.06)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

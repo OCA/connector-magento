@@ -752,9 +752,11 @@ class SaleOrderImportMapper(ImportMapper):
     def shipping_method(self, record):
         session = self.session
         ifield = record.get('shipping_method')
-        if ifield:
-            carrier_ids = session.search('delivery.carrier',
-                                         [('magento_code', '=', ifield)])
+        if not ifield:
+            return
+        
+        carrier_ids = session.search('delivery.carrier',
+                                     [('magento_code', '=', ifield)])
         if carrier_ids:
             result = {'carrier_id': carrier_ids[0]}
         else:
