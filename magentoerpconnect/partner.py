@@ -486,7 +486,7 @@ class BaseAddressImportMapper(ImportMapper):
         if not record.get('region'):
             return
         state_ids = self.session.search('res.country.state',
-                                        [('name', 'ilike', record['region'])])
+                                        [('name', '=ilike', record['region'])])
         if state_ids:
             return {'state_id': state_ids[0]}
 
