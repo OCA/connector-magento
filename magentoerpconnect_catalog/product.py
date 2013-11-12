@@ -55,7 +55,7 @@ class ProductProductExport(MagentoExporter):
         record = self.binding_record
         for group in record.attribute_group_ids:
             for attribute in group.attribute_ids:
-                attribute_ext_id = attribute_binder.to_backend(attribute.attribute_id.id, unwrap=True)
+                attribute_ext_id = attribute_binder.to_backend(attribute.attribute_id.id, wrap=True)
                 if attribute_ext_id:
                     options = []
                     if attribute.ttype == 'many2one' and record[attribute.name]:
@@ -115,7 +115,7 @@ class ProductProductExportMapper(ExportMapper):
     @mapping
     def set(self, record):
         binder = self.get_binder_for_model('magento.attribute.set')
-        set_id = binder.to_backend(record.attribute_set_id.id, unwrap=True)
+        set_id = binder.to_backend(record.attribute_set_id.id, wrap=True)
         return {'attrset': set_id}
 
     @mapping
