@@ -52,7 +52,7 @@
                     <field name="thumbnail"
                            domain="[('backend_id', '=', parent.backend_id), ('product_id', '=', parent.openerp_id)]"/>
                     <field name="storeview_id"
-                           domain="[('backend_id', '=', parent.backend_id), ('product_id', '=', openerp_id )]"/>
+                           domain="[('backend_id', '=', parent.backend_id)]"/>
                     <field name="exclude_ids"
                            widget="many2many_tags"
                            domain="[('backend_id', '=', parent.backend_id), ('product_id', '=', parent.openerp_id)]"/>
