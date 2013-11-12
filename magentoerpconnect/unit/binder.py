@@ -80,14 +80,31 @@ class MagentoModelBinder(MagentoBinder):
         else:
             return binding_id
 
-    def to_backend(self, binding_id):
+    def to_backend(self, binding_id, wrap=False):
         """ Give the external ID for an OpenERP ID
 
         :param binding_id: OpenERP ID for which we want the external id
+        :param wrap: if True and OpenERP ID is the id of a normal model,
+                       allow to get 'external id'
+                       (e.g. with id of 'product.product' you get 'magento_id'
+                       from 'magento.product.product')
+                       if False, with OpenERP ID of magento.product.product
+                       you get magento_id of the same model
         :return: backend identifier of the record
         """
+        if wrap:
+            erp_id = self.session.search(self.model._name, [
+                ['openerp_id', '=', binding_id],
+                ['backend_id', '=', self.backend_record.id]
+            ])
+            if erp_id:
+                erp_id = erp_id[0]
+            else:
+                return None
+        else:
+            erp_id = binding_id
         magento_record = self.session.read(self.model._name,
-                                           binding_id,
+                                           erp_id,
                                            ['magento_id'])
         assert magento_record
         return magento_record['magento_id']
