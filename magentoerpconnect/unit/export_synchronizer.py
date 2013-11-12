@@ -140,7 +140,10 @@ class MagentoExporter(MagentoBaseExporter):
         return
 
     def _map_data(self):
-        """ Convert the external record to OpenERP """
+        """ Returns an instance of
+        :py:class:`~openerp.addons.connector.unit.mapper.MapRecord`
+
+        """
         return self.mapper.map_record(self.binding_record)
 
     def _validate_data(self, data):
@@ -154,6 +157,7 @@ class MagentoExporter(MagentoBaseExporter):
         return
 
     def _create_data(self, map_record, fields=None, **kwargs):
+        """ Get the data to pass to :py:meth:`_create` """
         return map_record.values(for_create=True, fields=fields, **kwargs)
 
     def _create(self, data):
@@ -163,6 +167,7 @@ class MagentoExporter(MagentoBaseExporter):
         return self.backend_adapter.create(data)
 
     def _update_data(self, map_record, fields=None, **kwargs):
+        """ Get the data to pass to :py:meth:`_update` """
         return map_record.values(fields=fields, **kwargs)
 
     def _update(self, data):
