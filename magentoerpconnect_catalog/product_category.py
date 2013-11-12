@@ -86,6 +86,9 @@ class MagentoProductCategory(orm.Model):
         'is_anchor': fields.boolean('Anchor?', help=MAGENTO_HELP),
         'use_default_available_sort_by': fields.boolean(
             'Default Config For Available Sort By', help=MAGENTO_HELP),
+
+   #TODO use custom attribut for category
+
         #'available_sort_by': fields.sparse(
         #    type='many2many',
         #    relation='magerp.product_category_attribute_options',
@@ -100,6 +103,7 @@ class MagentoProductCategory(orm.Model):
                     ('name', 'Name'),
                     ('price', 'Price')],
             'Default sort by', required=True, help=MAGENTO_HELP),
+
         #==== Custom Design ====
         'custom_apply_to_products': fields.boolean(
             'Apply to products', help=MAGENTO_HELP),
@@ -122,7 +126,7 @@ class MagentoProductCategory(orm.Model):
         'thumbnail_like_image': True,
         'display_mode': 'PRODUCTS',
         'use_default_available_sort_by': True,
-        #'default_sort_by': lambda self,cr,uid,c: self.pool.get('magerp.product_category_attribute_options')._get_default_option(cr, uid, 'sort_by', 'None', context=c),
+        'default_sort_by': '_',
         'is_anchor': True,
         'include_in_menu': True,
         }
