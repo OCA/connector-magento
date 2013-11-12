@@ -7,6 +7,7 @@ Changelog
 * Fix: Error when a sales order had no shipping method
 * Fix: Searching for allowed carriers incorrectly uses magento_picking_id instead of magento_order_id (https://launchpad.net/bugs/1238951)
 * Fix: Import of products fails when an image is missing (404 HTTP Error)  (https://launchpad.net/bugs/1210543)
+* Fix: Mapping of the states is not strict enough  (https://launchpad.net/bugs/1250136)
 
 
 2.2.0 (public release - 2013.11.06)
