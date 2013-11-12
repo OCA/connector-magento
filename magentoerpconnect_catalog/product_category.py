@@ -29,7 +29,7 @@ from openerp.addons.magentoerpconnect.unit.delete_synchronizer import (
 from openerp.addons.magentoerpconnect.unit.export_synchronizer import (
         MagentoExporter)
 from openerp.addons.magentoerpconnect.backend import magento
-#from openerp.addons.magentoerpconnect.product_category import ProductCategoryAdapter
+from openerp.addons.magentoerpconnect import product_category
 
 
 class MagentoProductCategory(orm.Model):
@@ -224,3 +224,10 @@ class ProductCategoryExportMapper(ExportMapper):
             res.update({'thumbnail': record.thumbnail,
                         'thumbnail_binary': record.thumbnail_binary})
         return res
+
+@magento(replacing=product_category.ProductCategoryImportMapper)
+class ProductCategoryImportMapper(product_category.ProductCategoryImportMapper):
+    _model_name = 'magento.product.category'
+    direct = product_category.ProductCategoryImportMapper.direct + []
+
+    #TODO add mapping for default_sort_by and available_sort_by
