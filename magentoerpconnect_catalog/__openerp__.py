@@ -57,6 +57,7 @@ TODO:
  'images': [],
  'demo': [],
  'data': [
+    'magento_model_view.xml',
     'product_view.xml',
     'product_attribute_view.xml',
     'product_image_view.xml',
