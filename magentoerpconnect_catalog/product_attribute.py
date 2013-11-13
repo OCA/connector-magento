@@ -83,6 +83,12 @@ class MagentoAttributeSet(orm.Model):
             readonly=True),
     }
 
+    _sql_constraints = [
+        ('magento_uniq', 'unique(backend_id, openerp_id)',
+         "An 'Attribute set' with the same ID on this Magento backend "
+         "already exists")
+    ]
+
 
 @magento
 class AttributeSetAdapter(GenericAdapter):
