@@ -66,11 +66,11 @@ class MagentoProductCategory(orm.Model):
         #==== General Information ====
         'thumbnail_like_image': fields.boolean('Thumbnail like main image'),
         'thumbnail_binary': fields.binary('Thumbnail'),
-        'thumbnail':fields.char(
-            'Thumbnail Name',
+        'thumbnail': fields.char(
+            'Thumbnail name',
             size=100, help=MAGENTO_HELP),
         'image_binary': fields.binary('Image'),
-        'image':fields.char(
+        'image': fields.char(
             'Image name',
             size=100, help=MAGENTO_HELP),
         'meta_title': fields.char('Title (Meta)', size=75, help=MAGENTO_HELP),
@@ -132,9 +132,9 @@ class MagentoProductCategory(orm.Model):
         }
 
     _sql_constraints = [
-        ('magento_img_uniq', 'unique(backend_id, image_name)',
+        ('magento_img_uniq', 'unique(backend_id, image)',
          "'Image file name' already exists : must be unique"),
-        ('magento_thumb_uniq', 'unique(backend_id, thumbnail_name)',
+        ('magento_thumb_uniq', 'unique(backend_id, thumbnail)',
          "'thumbnail name' already exists : must be unique"),
     ]
 
