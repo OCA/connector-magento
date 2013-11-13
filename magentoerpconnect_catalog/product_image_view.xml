@@ -70,7 +70,7 @@
         <xpath expr="//field[@name='magento_bind_ids']/tree/field[@name='backend_id']"
                position="before">
             <button string="Images management" type="object"
-                    name="open_images" ico="stock_gantt"/>
+                    name="open_images" icon="stock_gantt"/>
         </xpath>
     </field>
 </record>
