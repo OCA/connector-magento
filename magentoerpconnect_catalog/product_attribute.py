@@ -40,7 +40,6 @@ from openerp.addons.magentoerpconnect.unit.export_synchronizer import (
     MagentoExporter)
 from openerp.addons.magentoerpconnect.unit.import_synchronizer import (
     DelayedBatchImport,
-    #BatchImportSynchronizer,
     MagentoImportSynchronizer,)
 
 
@@ -94,7 +93,7 @@ class AttributeSetAdapter(GenericAdapter):
     def create(self, data):
         """ Create a record on the external system """
         return self._call('%s.create' % self._magento_model,
-                          [data['attribute_set_name'], data['attribute_set_id']])
+                          [data['attribute_set_name'], data['magento_id']])
 
     def delete(self, id):
         return self._call('%s.remove' % self._magento_model, [str(id)])
@@ -151,7 +150,7 @@ class AttributeSetExportMapper(ExportMapper):
     _model_name = 'magento.attribute.set'
 
     direct = [
-        #('attribute_set_id', 'attribute_set_id'),
+        ('magento_id', 'magento_id'),
         ('attribute_set_name', 'attribute_set_name'),
         ('sort_order', 'sort_order'),
     ]
