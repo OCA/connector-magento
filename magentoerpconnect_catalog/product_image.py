@@ -27,10 +27,11 @@ from openerp.osv import fields, orm
 #from openerp.osv.osv import except_osv
 from openerp.addons.connector.unit.mapper import (mapping,
                                                   ExportMapper)
+from openerp.addons.magentoerpconnect.unit.binder import MagentoModelBinder
 from openerp.addons.magentoerpconnect.unit.delete_synchronizer import (
-        MagentoDeleteSynchronizer)
+    MagentoDeleteSynchronizer)
 from openerp.addons.magentoerpconnect.unit.export_synchronizer import (
-        MagentoExporter)
+    MagentoExporter)
 from openerp.addons.magentoerpconnect.backend import magento
 from openerp.addons.magentoerpconnect.unit.backend_adapter import GenericAdapter
 
@@ -38,6 +39,13 @@ from openerp.addons.magentoerpconnect.unit.backend_adapter import GenericAdapter
 MAGENTO_HELP = "This field is a technical / configuration field for " \
                "the attribute on Magento. \nPlease refer to the Magento " \
                "documentation for details. "
+
+
+@magento(replacing=MagentoModelBinder)
+class MagentoImageBinder(MagentoModelBinder):
+    _model_name = [
+        'magento.product.image',
+    ]
 
 
 class MagentoProductProduct(orm.Model):
@@ -161,11 +169,6 @@ class ProductImageExportMapper(ExportMapper):
         binder = self.get_binder_for_model('magento.product.product')
         external_product_id = binder.to_backend(record.openerp_id.product_id.id, True)
         return {'product': str(external_product_id)}
-    #@mapping
-    #def other(self, record):
-    #    return {
-    #        'exclude': int(record.exclude),
-    #        }
 
     @mapping
     def identifierType(self, record):
@@ -185,10 +188,10 @@ class ProductImageExportMapper(ExportMapper):
                 'mime': mimetypes.guess_type(record.name + record.extension)[0],
                 'mime': 'image/jpeg',
                 'name': record.label,
-                'content': self.session.pool['image.image']
-                    .get_image(self.session.cr, self.session.uid,
-                        record.openerp_id.image_id.id,
-                        context=self.session.context),
+                'content': self.session.pool['image.image'].get_image(
+                    self.session.cr, self.session.uid,
+                    record.openerp_id.image_id.id,
+                    context=self.session.context),
                 }
             }
 

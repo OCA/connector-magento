@@ -29,7 +29,8 @@ import openerp.addons.magentoerpconnect.consumer as magentoerpconnect
 
 from openerp.addons.connector.connector import Binder
 from openerp.addons.magentoerpconnect.connector import get_environment
-from openerp.addons.magentoerpconnect.unit.delete_synchronizer import (                                                         export_delete_record)
+from openerp.addons.magentoerpconnect.unit.delete_synchronizer import (
+    export_delete_record)
 
 
 EXCLUDED_FIELDS_WRITING = {
@@ -74,12 +75,14 @@ def delay_export_all_bindings(session, model_name, record_id, fields=None):
     magentoerpconnect.delay_export_all_bindings(session, model_name,
                                                 record_id, fields=fields)
 
-
-@on_record_unlink(model_names=[
-        'product.category',
-    ])
-def delay_unlink_all_bindings(session, model_name, record_id):
-    magentoerpconnect.delay_unlink_all_bindings(session, model_name, record_id)
+#
+#@on_record_unlink(model_names=[
+#        'product.category',
+#    ])
+#def delay_unlink_all_bindings(session, model_name, record_id):
+#    #magentoerpconnect.delay_unlink_all_bindings(session, model_name, record_id)
+#    import pdb;pdb.set_trace()
+#    magentoerpconnect.delay_unlink(session, model_name, record_id)
 
 
 @on_record_unlink(model_names=[

@@ -35,7 +35,7 @@ from openerp.addons.magentoerpconnect import product_category
 class MagentoProductCategory(orm.Model):
     _inherit = 'magento.product.category'
     MAGENTO_HELP = "This field is a technical / configuration field for " \
-                   "the attribute on Magento. \nPlease refer to the Magento " \
+                   "the category on Magento. \nPlease refer to the Magento " \
                    "documentation for details. "
 
     def get_custom_design(self, cr, uid, context=None):
