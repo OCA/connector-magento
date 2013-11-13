@@ -2,7 +2,7 @@
 <openerp>
     <data>
 
-<!--Product attribute-->
+<!-- Attribute-->
 <record id="attribute_attribute_form_view" model="ir.ui.view">
     <field name="model">attribute.attribute</field>
     <field name="inherit_id"
@@ -143,12 +143,34 @@
 <record id="magento_attribute_set_tree_view" model="ir.ui.view">
     <field name="model">magento.attribute.set</field>
     <field name="arch" type="xml">
-        <tree string="Attribute set">
-            <field name="openerp_id"/>
+        <tree string="Attribute set" editable="bottom">
             <field name="backend_id"/>
+            <field name="attribute_set_name"/>
+            <field name="openerp_id"/>
+            <field name="sync_date" readonly="1"/>
+            <field name="sort_order"/>
+            <field name="magento_id" readonly="1"/>
         </tree>
     </field>
 </record>
+
+
+<record id="magento_attribute_set_form_view" model="ir.ui.view">
+    <field name="model">magento.attribute.set</field>
+    <field name="arch" type="xml">
+        <form string="main" version="7.0">
+            <group col="4">
+                <field name="backend_id"/>
+                <field name="attribute_set_name"/>
+                <field name="sync_date"/>
+                <field name="openerp_id"/>
+                <field name="sort_order"/>
+                <field name="magento_id"/>
+            </group>
+        </form>
+    </field>
+</record>
+
 
 <record id="magento_attribute_set_action" model="ir.actions.act_window">
     <field name="type">ir.actions.act_window</field>
