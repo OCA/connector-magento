@@ -46,6 +46,5 @@ class magento_backend(orm.Model):
             'magento.attribute.set',
             'Attribute set template',
             help="Attribute set ID basing on which the new attribute set "
-            "will be created. \nIf no value, 'Default' attribute set name "
-            "will be used."),
+            "will be created."),
     }
