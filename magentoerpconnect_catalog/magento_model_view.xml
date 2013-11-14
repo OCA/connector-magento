@@ -16,6 +16,9 @@
                         string="Import in background"/>
             </group>
         </xpath>
+        <xpath expr="//notebook/page[@name='advanced_configuration']/group[1]" position="inside">
+            <field name="attribute_set_tpl_id"/>
+        </xpath>
     </field>
 </record>
 

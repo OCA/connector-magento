@@ -3,7 +3,7 @@
 #
 #    Copyright 2013
 #    Author: Guewen Baconnier - Camptocamp
-#            Augustin Cisterne-Kaasv - Elico-corp
+#            Augustin Cisterne-Kaas - Elico-corp
 #            David Béal - Akretion
 #            Sébastien Beau - Akretion
 #    This program is free software: you can redistribute it and/or modify
@@ -78,11 +78,6 @@ class MagentoAttributeSet(orm.Model):
             'Name',
             size=64,
             required=True),
-        #'skeletonSetId': fields.many2one(
-        #    'magento.attribute.set',
-        #    'Attribute set template',
-        #    help="Attribute set ID basing on which the new attribute set"
-        #    " will be created "),
         'sort_order': fields.integer(
             'Sort order',
             readonly=True),
@@ -90,9 +85,22 @@ class MagentoAttributeSet(orm.Model):
 
     def name_get(self, cr, uid, ids, context=None):
         res = []
-        for elm in self.read(cr, uid, ids, ['attribute_set_name'], context=context):
+        for elm in self.read(cr, uid, ids, ['attribute_set_name'],
+                             context=context):
             res.append((elm['id'], elm['attribute_set_name']))
         return res
+
+    def get_magento_template(self, cr, uid, ids, context=None):
+        for attr_set in self.browse(cr, uid, [ids], context=context):
+            if attr_set.backend_id.attribute_set_tpl_id:
+                magento_attr_set_ids = [attr_set.backend_id.attribute_set_tpl_id.id]
+            else:
+                magento_attr_set_ids = self.search(
+                    cr, uid, [('attribute_set_name', '=', 'Default')],
+                    context=context)
+        magento_attr_set = self.read(
+            cr, uid, magento_attr_set_ids, ['magento_id'], context=context)[0]
+        return magento_attr_set['magento_id']
 
     _sql_constraints = [
         ('magento_uniq', 'unique(backend_id, openerp_id)',
@@ -104,16 +112,17 @@ class MagentoAttributeSet(orm.Model):
 @magento
 class AttributeSetAdapter(GenericAdapter):
     _model_name = 'magento.attribute.set'
+    _magento_default_model = 'product_attribute_set'
     _magento_model = 'ol_catalog_product_attributeset'
 
     def create(self, data):
         """ Create a record on the external system """
         #import pdb;pdb.set_trace()
-        return self._call('%s.create' % 'product_attribute_set',
+        return self._call('%s.create' % self._magento_default_model,
                           [data['attribute_set_name'], data['skeletonSetId']])
 
     def delete(self, id):
-        return self._call('%s.remove' % self._magento_model, [str(id)])
+        return self._call('%s.remove' % self._magento_default_model, [str(id)])
 
     def search(self, filters=None):
         """ Search records according and returns a list of ids
@@ -167,14 +176,16 @@ class AttributeSetExportMapper(ExportMapper):
     _model_name = 'magento.attribute.set'
 
     direct = [
-        #('skeletonSetId', 'skeletonSetId'),
         ('attribute_set_name', 'attribute_set_name'),
         ('sort_order', 'sort_order'),
     ]
 
     @mapping
-    def attribute_set_tpl(self, record):
-        return {'skeletonSetId': '9'}
+    def skeletonSetId(self, record):
+        sess = self.session
+        magento_id = sess.pool['magento.attribute.set'].get_magento_template(
+            sess.cr, sess.uid, record.id, context=sess.context)
+        return {'skeletonSetId': magento_id}
 
 
 # Attribute
