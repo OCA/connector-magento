@@ -78,10 +78,21 @@ class MagentoAttributeSet(orm.Model):
             'Name',
             size=64,
             required=True),
+        #'skeletonSetId': fields.many2one(
+        #    'magento.attribute.set',
+        #    'Attribute set template',
+        #    help="Attribute set ID basing on which the new attribute set"
+        #    " will be created "),
         'sort_order': fields.integer(
             'Sort order',
             readonly=True),
     }
+
+    def name_get(self, cr, uid, ids, context=None):
+        res = []
+        for elm in self.read(cr, uid, ids, ['attribute_set_name'], context=context):
+            res.append((elm['id'], elm['attribute_set_name']))
+        return res
 
     _sql_constraints = [
         ('magento_uniq', 'unique(backend_id, openerp_id)',
@@ -93,13 +104,13 @@ class MagentoAttributeSet(orm.Model):
 @magento
 class AttributeSetAdapter(GenericAdapter):
     _model_name = 'magento.attribute.set'
-    _magento_model = 'product_attribute_set'
     _magento_model = 'ol_catalog_product_attributeset'
 
     def create(self, data):
         """ Create a record on the external system """
-        return self._call('%s.create' % self._magento_model,
-                          [data['attribute_set_name'], data['magento_id']])
+        #import pdb;pdb.set_trace()
+        return self._call('%s.create' % 'product_attribute_set',
+                          [data['attribute_set_name'], data['skeletonSetId']])
 
     def delete(self, id):
         return self._call('%s.remove' % self._magento_model, [str(id)])
@@ -108,7 +119,6 @@ class AttributeSetAdapter(GenericAdapter):
         """ Search records according and returns a list of ids
         :rtype: list
         """
-        #import pdb;pdb.set_trace()
         return self._call('%s.search' % self._magento_model, [])
 
     def read(self, id, storeview_id=None, attributes=None):
@@ -134,6 +144,7 @@ class AttributeSetImportMapper(ImportMapper):
 
     direct = [
         ('attribute_set_name', 'attribute_set_name'),
+        ('attribute_set_id', 'magento_id'),
         ('sort_order', 'sort_order'), ]
 
     @mapping
@@ -156,10 +167,14 @@ class AttributeSetExportMapper(ExportMapper):
     _model_name = 'magento.attribute.set'
 
     direct = [
-        ('magento_id', 'magento_id'),
+        #('skeletonSetId', 'skeletonSetId'),
         ('attribute_set_name', 'attribute_set_name'),
         ('sort_order', 'sort_order'),
     ]
+
+    @mapping
+    def attribute_set_tpl(self, record):
+        return {'skeletonSetId': '9'}
 
 
 # Attribute
@@ -196,8 +211,8 @@ class MagentoProductAttribute(orm.Model):
         if default is None:
             default = {}
         default['attribute_code'] = default.get('attribute_code', '') + 'Copy '
-        return super(MagentoProductAttribute, self).copy(cr, uid, id,
-                                                    default, context=context)
+        return super(MagentoProductAttribute, self).copy(
+            cr, uid, id, default, context=context)
 
     def _frontend_input(self, cr, uid, ids, field_names, arg, context=None):
         res={}
