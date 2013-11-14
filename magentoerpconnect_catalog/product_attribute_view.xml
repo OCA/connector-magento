@@ -143,7 +143,7 @@
 <record id="magento_attribute_set_tree_view" model="ir.ui.view">
     <field name="model">magento.attribute.set</field>
     <field name="arch" type="xml">
-        <tree string="Attribute set" editable="bottom">
+        <tree string="Attribute set" editable="top">
             <field name="backend_id"/>
             <field name="attribute_set_name"/>
             <field name="openerp_id"/>

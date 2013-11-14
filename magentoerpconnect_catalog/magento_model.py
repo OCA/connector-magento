@@ -21,7 +21,7 @@
 ##############################################################################
 
 import logging
-from openerp.osv import orm
+from openerp.osv import orm, fields
 from openerp.addons.connector.session import ConnectorSession
 from openerp.addons.magentoerpconnect.unit.import_synchronizer import import_batch
 
@@ -41,3 +41,11 @@ class magento_backend(orm.Model):
             import_batch.delay(session, 'magento.attribute.set', backend_id)
         return True
 
+    _columns = {
+        'attribute_set_tpl_id': fields.many2one(
+            'magento.attribute.set',
+            'Attribute set template',
+            help="Attribute set ID basing on which the new attribute set "
+            "will be created. \nIf no value, 'Default' attribute set name "
+            "will be used."),
+    }
