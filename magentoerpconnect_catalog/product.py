@@ -63,7 +63,7 @@ class ProductProductExport(MagentoExporter):
                     elif attribute.ttype == 'many2many':
                         options = record[attribute.name]
                     for option in options:
-                        if not option_binder.to_backend(option.id, unwrap=True):
+                        if not option_binder.to_backend(option.id, wrap=True):
                             ctx = self.session.context.copy()
                             ctx['connector_no_export'] = True
                             binding_id = self.session.pool['magento.attribute.option'].create(
@@ -167,14 +167,14 @@ class ProductProductExportMapper(ExportMapper):
                     option = record[attribute.name]
                     if option:
                         result[magento_attribute.attribute_code] = \
-                            option_binder.to_backend(option.id, unwrap=True)
+                            option_binder.to_backend(option.id, wrap=True)
                     else:
                         continue
                 elif attribute.ttype == 'many2many':
                     options = record[attribute.name]
                     if options:
                         result[magento_attribute.attribute_code] = \
-                            [option_binder.to_backend(option.id, unwrap=True) for option in options]
+                            [option_binder.to_backend(option.id, wrap=True) for option in options]
                     else:
                         continue
                 else:

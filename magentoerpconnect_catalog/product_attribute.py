@@ -141,11 +141,11 @@ class AttributeSetAdapter(GenericAdapter):
 
     def create(self, data):
         """ Create a record on the external system """
-        #import pdb;pdb.set_trace()
         return self._call('%s.create' % self._magento_default_model,
                           [data['attribute_set_name'], data['skeletonSetId']])
 
     def delete(self, id):
+        """ Delete a record on the external system """
         return self._call('%s.remove' % self._magento_default_model, [str(id)])
 
     def search(self, filters=None):
