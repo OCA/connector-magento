@@ -132,11 +132,11 @@ class StockPickingAdapter(GenericAdapter):
     def get_carriers(self, magento_id):
         """ Get the list of carrier codes allowed for the shipping.
 
-        :param magento_id: shipment increment id
+        :param magento_id: order increment id
         :rtype: list
         """
         return self._call('%s.getCarriers' % self._magento_model,
-                          [int(magento_id)])
+                          [magento_id])
 
 
 @magento
