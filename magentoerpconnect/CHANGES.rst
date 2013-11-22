@@ -1,8 +1,12 @@
 Changelog
 ---------
 
-2.2.0.dev0
+2.2.1.dev0
 ~~~~~~~~~~
+
+
+2.2.1 (2013.11.22)
+~~~~~~~~~~~~~~~~~~
 
 * Fix: Error when a sales order had no shipping method
 * Fix: Searching for allowed carriers incorrectly uses magento_picking_id instead of magento_order_id (https://launchpad.net/bugs/1238951)
