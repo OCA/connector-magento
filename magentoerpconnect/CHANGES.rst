@@ -8,6 +8,7 @@ Changelog
 * Fix: Searching for allowed carriers incorrectly uses magento_picking_id instead of magento_order_id (https://launchpad.net/bugs/1238951)
 * Fix: Import of products fails when an image is missing (404 HTTP Error)  (https://launchpad.net/bugs/1210543)
 * Fix: Mapping of the states is not strict enough  (https://launchpad.net/bugs/1250136)
+* Fix: get_carriers() converting Magento order ID to int, fails with edited orders (https://launchpad.net/bugs/1253743)
 
 
 2.2.0 (public release - 2013.11.06)
