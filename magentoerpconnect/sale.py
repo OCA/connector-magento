@@ -291,7 +291,7 @@ class SaleImportRule(ConnectorUnit):
 
     def _rule_authorized(self, record, method):
         """ Import the order only if payment has been authorized. """
-        if not record.get('payment', {}).get('amount_authorized'):
+        if not record.get('payment', {}).get('base_amount_authorized'):
             raise OrderImportRuleRetry('The order has not been authorized.\n'
                                        'The import will be retried later.')
 

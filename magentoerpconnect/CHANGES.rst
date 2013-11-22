@@ -9,6 +9,7 @@ Changelog
 * Fix: Import of products fails when an image is missing (404 HTTP Error)  (https://launchpad.net/bugs/1210543)
 * Fix: Mapping of the states is not strict enough  (https://launchpad.net/bugs/1250136)
 * Fix: get_carriers() converting Magento order ID to int, fails with edited orders (https://launchpad.net/bugs/1253743)
+* Fix: Importing authorized orders ignores PayPal orders (https://launchpad.net/bugs/1252308)
 
 
 2.2.0 (public release - 2013.11.06)
