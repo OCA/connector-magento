@@ -24,6 +24,8 @@ from openerp.osv import orm
 from openerp.addons.magentoerpconnect.backend import magento
 from openerp.addons.magentoerpconnect_catalog.product import ProductProductExport
 from openerp.addons.magentoerpconnect.product import ProductProductAdapter
+from openerp.addons.magentoerpconnect.unit.export_synchronizer import export_record
+
 
 
 class magento_product(orm.Model):
@@ -76,10 +78,24 @@ class ProductProductExport(ProductProductExport):
         
         
     
-    #def _export_dependencies(self):
-    #    """ Export the dependencies for the product"""
-    #    super(ProductProductExport,self)._export_dependencies()
-    #    return  
+    def _export_dependencies(self):
+        """ Export the dependencies for the product"""
+        super(ProductProductExport,self)._export_dependencies()
+        record = self.binding_record
+        if record.display_for_product_ids:
+            product_obj = self.session.pool['magento.product.product']
+            product_binder = self.get_binder_for_model('magento.product.product')
+            for product in record.display_for_product_ids:
+                if not product_binder.to_backend(product.id, wrap=True):
+                    ctx = self.session.context.copy()
+                    ctx['connector_no_export'] = True
+                    binding_id = product_obj.create(self.session.cr, self.session.uid,{
+                                                    'backend_id': self.backend_record.id,
+                                                    'openerp_id': product.id,
+                                                    'name': product.name,
+                                                    }, context=ctx)
+                    export_record(self.session, 'magento.product.product', binding_id)
+
     
    
 @magento(replacing=ProductProductAdapter)
