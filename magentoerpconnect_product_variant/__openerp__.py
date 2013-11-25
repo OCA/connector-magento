@@ -24,9 +24,10 @@
 {'name': 'Magento Connector - Product Variant',
  'version': '2.0.0',
  'category': 'Connector',
- 'depends': ['magentoerpconnect',
-             'product_variant_generator',
-             ],
+ 'depends': [
+     'magentoerpconnect_catalog',
+     'product_variant_generator',
+ ],
  'author': 'MagentoERPconnect Core Editors',
  'license': 'AGPL-3',
  'website': 'https://launchpad.net/magentoerpconnect',
@@ -42,7 +43,8 @@ Extension for **Magento Connector**, add management of the product's variant:
  'images': [],
  'demo': [],
  'data': [
-    #'product_view.xml',
+     'product_view.xml',
+     'magento_model_view.xml',
     ],
  'installable': True,
  'application': False,

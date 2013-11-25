@@ -3,13 +3,12 @@
     <data>
 
         <record id="product_normal_form_view" model="ir.ui.view">
-            <field name="name">product.product.form</field>
             <field name="model">product.product</field>
-            <field name="inherit_id" ref="magentoerpconnect.product_normal_form_view" />
+            <field name="inherit_id" ref="magentoerpconnect.product_normal_form_view"/>
             <field name="arch" type="xml">
-                <field name="magento_bind_ids" position="replace">
-                    <field name="magento_bind_ids" context="{'default_product_type': 'configurable', 'force_model': 'magento.product.product'}"/>       
-                </field>       
+                <field name="magento_bind_ids" position="attributes">
+                    <attribute name="context">{'is_display': is_display}</attribute>       
+                </field>
             </field>
         </record>
 
