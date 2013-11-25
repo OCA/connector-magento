@@ -41,7 +41,8 @@ from openerp.addons.magentoerpconnect.unit.export_synchronizer import (
 from openerp.addons.magentoerpconnect.unit.import_synchronizer import (
     DelayedBatchImport,
     MagentoImportSynchronizer,)
-
+from openerp.addons.connector.exception import FailedJobError
+ 
 
 @magento(replacing=MagentoModelBinder)
 class MagentoAttributeBinder(MagentoModelBinder):
@@ -68,12 +69,7 @@ class MagentoAttributeSet(orm.Model):
     _name = 'magento.attribute.set'
     _description = "Magento attribute set"
     _inherit = 'magento.binding'
-
-    MISSING_ATTRIB_SET_TPL = """'Attribute set template' field
-        must be define on the backend :
-        Connectors > Magento >
-        Backends > '%s'
-    """
+    _rec_name = 'attribute_set_name'
 
     _columns = {
         'openerp_id': fields.many2one(
@@ -95,36 +91,6 @@ class MagentoAttributeSet(orm.Model):
                              context=context):
             res.append((elm['id'], elm['attribute_set_name']))
         return res
-
-    def create(self, cr, uid, vals, context=None):
-        super(MagentoAttributeSet, self).create(
-            cr, uid, vals, context=context)
-        if 'backend_id' in vals:
-            backend = self.pool['magento.backend'].read(
-                cr, uid, [vals['backend_id']],
-                ['attribute_set_tpl_id', 'name'], context=context)
-            if backend[0]['attribute_set_tpl_id']:
-                return vals
-            else:
-                raise except_osv(
-                    "Error: setting missing on backend",
-                    self.MISSING_ATTRIB_SET_TPL
-                    % backend[0]['name'])
-        return False
-
-    def get_magento_template(self, cr, uid, ids, context=None):
-        for attr_set in self.browse(cr, uid, ids, context=context):
-            if attr_set.backend_id.attribute_set_tpl_id:
-                magento_attr_set_id = [attr_set.backend_id.attribute_set_tpl_id.id]
-                magento_attr_set = self.read(cr, uid, [magento_attr_set_id],
-                                             ['magento_id'], context=context)[0]
-            else:
-                raise except_osv(
-                    "Error: setting missing on backend",
-                    self.MISSING_ATTRIB_SET_TPL
-                    % attr_set.backend_id.name)
-
-        return magento_attr_set['magento_id']
 
     _sql_constraints = [
         ('magento_uniq', 'unique(backend_id, openerp_id)',
@@ -206,10 +172,19 @@ class AttributeSetExportMapper(ExportMapper):
 
     @mapping
     def skeletonSetId(self, record):
-        sess = self.session
-        magento_id = sess.pool['magento.attribute.set'].get_magento_template(
-            sess.cr, sess.uid, [record.id], context=sess.context)
-        return {'skeletonSetId': magento_id}
+        tmpl_set_id = self.backend_record.attribute_set_tpl_id.id
+        if tmpl_set_id:
+            binder = self.get_binder_for_model('magento.attribute.set')
+            magento_tpl_set_id = binder.to_backend(tmpl_set_id)
+        else:
+            raise FailedJobError((
+                "'Attribute set template' field must be define on "
+                "the backend.\n\n"
+                "Resolution: \n"
+                "- Go to Connectors > Magento > Backends > '%s'\n"
+                "- Fill the field Attribte set Tempalte\n"
+                )% self.backend_record.name)
+        return {'skeletonSetId': magento_tpl_set_id}
 
 
 # Attribute
