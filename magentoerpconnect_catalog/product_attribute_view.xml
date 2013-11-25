@@ -14,7 +14,6 @@
                 <field name="magento_bind_ids" nolabel="1" colspan="6"
                        context="{
                             'hide_openerp_id': True,
-                            'default_openerp_id': id,
                             'default_frontend_label': field_description,
                             'default_attribute_code': name}">
                     <tree name="magento">
@@ -89,15 +88,14 @@
             <group name="main" col="4">
                 <field name="frontend_label"/>
                 <field name="attribute_code"
-                       attributes="{'readonly': [('openerp_id', '!=', False)]}"/>
+                       attributes="{'readonly': [('magento_id', '!=', False)]}"/>
                 <field name="backend_id" string="Backend"/>
                 <field name="scope"/>
                 <field name="frontend_input"/>
-                <field name="openerp_id"
-                       invisible="context.get('hide_openerp_id')"/>
-
+                <!-- TODO FIXME <field name="openerp_id"
+                       invisible="context.get('hide_openerp_id')"/>-->
             </group>
-<group name="other" col="4">
+            <group name="other" col="4">
                 <field name="default_value"
                        attrs="{'invisible':[('frontend_input', 'in',
                        ['media_image', 'multiselect'])]}"/>
