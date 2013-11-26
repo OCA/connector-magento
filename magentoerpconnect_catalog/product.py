@@ -74,6 +74,7 @@ class ProductProductExport(MagentoExporter):
                                                     }, context=ctx)
                             export_record(self.session, 'magento.attribute.option', binding_id)
 
+
 @magento
 class ProductProductExportMapper(ExportMapper):
     _model_name = 'magento.product.product'
