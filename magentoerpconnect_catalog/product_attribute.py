@@ -430,7 +430,7 @@ class MagentoAttributeOption(orm.Model):
 @magento
 class AttributeOptionAdapter(GenericAdapter):
     _model_name = 'magento.attribute.option'
-    _magento_model = 'product_attribute'
+    _magento_model = 'oerp_product_attribute'
 
     def create(self, data):
         return self._call('%s.addOption'% self._magento_model,
