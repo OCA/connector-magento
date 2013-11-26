@@ -321,7 +321,7 @@ class MagentoProductAttribute(orm.Model):
         ('magento_uniq', 'unique(attribute_code)',
          "Attribute with the same code already exists : must be unique"),
         ('openerp_uniq', 'unique(backend_id, openerp_id)',
-         'An attribute option can not be synchronised twice on the same backend.'),
+         'An attribute can not be bound to several records on the same backend.'),
     ]
 
 
@@ -422,7 +422,7 @@ class MagentoAttributeOption(orm.Model):
         ('magento_uniq', 'unique(backend_id, magento_id)',
          'An attribute option with the same ID on Magento already exists.'),
         ('openerp_uniq', 'unique(backend_id, openerp_id)',
-         'An attribute option can not be synchronised twice on the same backend.'),
+         'An attribute option can not be bound to several records on the same backend.'),
     ]
 
 
