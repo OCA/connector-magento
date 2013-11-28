@@ -103,13 +103,17 @@ class ProductConfigurableExport(MagentoBaseExporter):
                 if not self.binder.to_backend(binding_id[0]):
                     export_record(self.session, 'magento.product.product', binding_id[0])
             elif self.backend_record.export_simple_product_on_fly:
-                binding_id = self.session.create('magento.product.product', {
-                                                'backend_id': self.backend_record.id,
-                                                'openerp_id': product.id,
-                                                'name': product.name,
-                                                })
+                vals = self._prepare_magento_binding()
+                binding_id = self.session.create('magento.product.product', vals)
                 export_record(self.session, 'magento.product.product', binding_id)
 
+    def _prepare_magento_binding(self, product):
+        return {
+            'backend_id': self.backend_record.id,
+            'openerp_id': product.id,
+            'name': product.name,
+            'visibility': 1,
+        }
 
     def _run(self, fields):
         self._export_dependencies()
