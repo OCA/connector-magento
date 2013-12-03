@@ -54,10 +54,10 @@ class MagentoProductProduct(orm.Model):
     def _get_images(self, cr, uid, ids, field_names, arg, context=None):
         res={}
         for prd in self.browse(cr, uid, ids, context=context):
-            img_ids = self.pool['magento.product.image'].search(cr, uid, [
-                        ('product_id', '=', prd.openerp_id.id),
-                        ('backend_id', '=', prd.backend_id.id),
-                                                        ], context=context)
+            img_ids = self.pool['magento.product.image'].search(
+                cr, uid, [
+                    ('product_id', '=', prd.openerp_id.id),
+                    ('backend_id', '=', prd.backend_id.id), ], context=context)
             res[prd.id] = img_ids
         return res
 
@@ -116,7 +116,7 @@ class MagentoProductImage(orm.Model):
     _inherits = {'product.image': 'openerp_id'}
 
     _columns = {
-        'openerp_id' : fields.many2one(
+        'openerp_id': fields.many2one(
             'product.image',
             required=True,
             ondelete="cascade",
@@ -128,8 +128,8 @@ class MagentoProductImage(orm.Model):
         backend_m = self.pool['magento.backend']
         back_ids = backend_m.search(cr, uid, [], context=context)
         if back_ids:
-            backend_id = backend_m.browse(cr, uid, back_ids,
-                                          context=context)[0].id
+            backend_id = backend_m.browse(
+                cr, uid, back_ids, context=context)[0].id
         return backend_id
 
     _defaults = {
@@ -167,7 +167,8 @@ class ProductImageExportMapper(ExportMapper):
     @mapping
     def product(self, record):
         binder = self.get_binder_for_model('magento.product.product')
-        external_product_id = binder.to_backend(record.openerp_id.product_id.id, True)
+        external_product_id = binder.to_backend(
+            record.openerp_id.product_id.id, True)
         return {'product': str(external_product_id)}
 
     @mapping
@@ -177,7 +178,6 @@ class ProductImageExportMapper(ExportMapper):
     @mapping
     def types(self, record):
         return {'types': ['image', 'small_image', 'thumbnail']}
-        import pdb;pdb.set_trace()
     #    return {'types':
     #            [x for x in ['image', 'small_image', 'thumbnail'] if record[x]]
     #           }
@@ -186,7 +186,6 @@ class ProductImageExportMapper(ExportMapper):
     def file(self, record):
         return {'file': {
                 'mime': mimetypes.guess_type(record.name + record.extension)[0],
-                'mime': 'image/jpeg',
                 'name': record.label,
                 'content': self.session.pool['image.image'].get_image(
                     self.session.cr, self.session.uid,
@@ -204,8 +203,8 @@ class ProductImageAdapter(GenericAdapter):
     def create(self, data, storeview_id=None):
         #import pdb;pdb.set_trace()
         print data
-        return self._call('%s.create'% self._magento_model,
-            [data.pop('product'), data, storeview_id])
+        return self._call('%s.create' % self._magento_model,
+                          [data.pop('product'), data, storeview_id])
 
     def write(self, id, data):
         """ Update records on the external system
@@ -215,7 +214,7 @@ class ProductImageAdapter(GenericAdapter):
 
     def delete(self, id):
         """ Delete a record on the external system """
-        image_id, external_product_id  = id
+        image_id, external_product_id = id
         return self._call('%s.remove' % self._magento_model,
                           [external_product_id, image_id])
 
@@ -231,7 +230,7 @@ class MagentoProductStoreview(orm.Model):
             required=True,
             ondelete="cascade",
             string='Image'),
-        'storeview_id' : fields.many2one(
+        'storeview_id': fields.many2one(
             'magento.storeview',
             required=True,
             string='Storeview'),
@@ -253,7 +252,7 @@ class MagentoProductStoreview(orm.Model):
             string='Exclude',
             help=MAGENTO_HELP),
     }
-#
+
 
 @magento
 class ProductStoreviewExport(MagentoExporter):
@@ -261,7 +260,6 @@ class ProductStoreviewExport(MagentoExporter):
 
 #    TODO
 #    def _export_dependencies(self):
-
 
     def _should_import(self):
         "Images in magento doesn't retrieve infos on dates"
@@ -306,9 +304,8 @@ class ProductStoreviewExportMapper(ExportMapper):
     _model_name = 'magento.product.storeview'
 
     direct = [
-            ('label', 'label'),
-            ('sequence', 'position'),
-        ]
+        ('label', 'label'),
+        ('sequence', 'position'), ]
 
     @mapping
     def product(self, record):
