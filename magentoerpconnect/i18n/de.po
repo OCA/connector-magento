@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openerp-connector-magento\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-05-01 12:45+0000\n"
-"PO-Revision-Date: 2014-01-08 15:33+0000\n"
+"PO-Revision-Date: 2014-01-09 09:13+0000\n"
 "Last-Translator: Jan-Philipp Fischer <jan-philipp.fischer@greencoding.de>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-01-09 05:42+0000\n"
+"X-Launchpad-Export-Date: 2014-01-10 05:38+0000\n"
 "X-Generator: Launchpad (build 16884)\n"
 
 #. module: magentoerpconnect
@@ -66,7 +66,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: help:magento.backend,warehouse_id:0
 msgid "Warehouse used to compute the stock quantities."
-msgstr ""
+msgstr "Lager benutzt zum errechnen von Lagermengen."
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,sync_date:0
@@ -480,7 +480,7 @@ msgstr "Importiere VK-Aufträge"
 #. module: magentoerpconnect
 #: field:magento.stock.picking.out,picking_method:0
 msgid "Picking Method"
-msgstr ""
+msgstr "Packmethode"
 
 #. module: magentoerpconnect
 #: view:res.partner:0
@@ -790,14 +790,14 @@ msgstr ""
 #. module: magentoerpconnect
 #: sql_constraint:magento.store:0
 msgid "A store with the same ID on Magento already exists."
-msgstr ""
+msgstr "Ein Store mit der ID existiert bereits in Magento."
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_magento_res_partner
 #: field:magento.address,magento_partner_id:0
 #: view:magento.res.partner:0
 msgid "Magento Partner"
-msgstr ""
+msgstr "Magento Partner"
 
 #. module: magentoerpconnect
 #: sql_constraint:magento.storeview:0
@@ -913,7 +913,7 @@ msgstr "Aktiviert"
 #. module: magentoerpconnect
 #: field:magento.product.product,backorders:0
 msgid "Manage Inventory Backorders"
-msgstr ""
+msgstr "Verwalte Inventarrücksendungen"
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_product_product
@@ -984,7 +984,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:delivery.carrier,magento_tracking_title:0
 msgid "Magento Tracking Title"
-msgstr ""
+msgstr "Magento Sendungsverfolgungstitel"
 
 #. module: magentoerpconnect
 #: selection:magento.product.product,manage_stock:0
@@ -1001,19 +1001,19 @@ msgstr ""
 #. module: magentoerpconnect
 #: selection:magento.stock.picking.out,picking_method:0
 msgid "Complete"
-msgstr ""
+msgstr "Vollständig"
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_magento_store
 #: view:magento.store:0
 msgid "Magento Store"
-msgstr ""
+msgstr "Magento Store"
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_magento_product_product
 #: view:magento.product.product:0
 msgid "Magento Product"
-msgstr ""
+msgstr "Magento Produkt"
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_magento_sale_order
@@ -1021,28 +1021,28 @@ msgstr ""
 #: field:magento.sale.order.line,magento_order_id:0
 #: field:magento.stock.picking.out,magento_order_id:0
 msgid "Magento Sale Order"
-msgstr ""
+msgstr "Magento VK-Auftrag"
 
 #. module: magentoerpconnect
 #: field:magento.website,import_partners_from_date:0
 msgid "Import partners from date"
-msgstr ""
+msgstr "Importiere Partner seit Datum"
 
 #. module: magentoerpconnect
 #: sql_constraint:magento.sale.order:0
 #: sql_constraint:magento.sale.order.line:0
 msgid "A sale order line with the same ID on Magento already exists."
-msgstr ""
+msgstr "Eine VK-Auftragszeile mit der ID existiert bereits in Magento."
 
 #. module: magentoerpconnect
 #: field:magento.sale.order,magento_order_line_ids:0
 msgid "Magento Order Lines"
-msgstr ""
+msgstr "Magento Auftragszeilen"
 
 #. module: magentoerpconnect
 #: field:magento.res.partner,newsletter:0
 msgid "Newsletter"
-msgstr ""
+msgstr "Newsletter"
 
 #. module: magentoerpconnect
 #: help:magento.backend,default_lang_id:0
