@@ -23,7 +23,7 @@
 from openerp.osv import orm
 from openerp.addons.magentoerpconnect.backend import magento
 from openerp.addons.magentoerpconnect.connector import get_environment
-from openerp.addons.magentoerpconnect_catalog.product import ProductProductExport
+from openerp.addons.magentoerpconnect_catalog import product
 from openerp.addons.magentoerpconnect.unit.backend_adapter import GenericAdapter
 from openerp.addons.magentoerpconnect.unit.export_synchronizer import (
     export_record, 
@@ -103,16 +103,19 @@ class ProductConfigurableExport(MagentoBaseExporter):
                 if not self.binder.to_backend(binding_id[0]):
                     export_record(self.session, 'magento.product.product', binding_id[0])
             elif self.backend_record.export_simple_product_on_fly:
-                vals = self._prepare_magento_binding()
-                binding_id = self.session.create('magento.product.product', vals)
+                vals = self._prepare_magento_binding(product)
+                sess = self.session
+                context = sess.context.copy()
+                context['connector_no_export'] = True
+                binding_id = sess.pool['magento.product.product'].\
+                        create(sess.cr, sess.uid, vals, context=context) 
                 export_record(self.session, 'magento.product.product', binding_id)
 
     def _prepare_magento_binding(self, product):
         return {
             'backend_id': self.backend_record.id,
             'openerp_id': product.id,
-            'name': product.name,
-            'visibility': 1,
+            'visibility': '1',
         }
 
     def _run(self, fields):
@@ -126,6 +129,8 @@ class ProductConfigurableExport(MagentoBaseExporter):
         product_ids_to_link = []
         for product in record.display_for_product_ids:
             magento_id = self.binder.to_backend(product.id, wrap=True)
+            if not magento_id:
+                continue
             if magento_id in linked_product_ids:
                 linked_product_ids.remove(magento_id)
             else:
@@ -146,8 +151,8 @@ def export_product_configurable(session, model_name, record_id, fields=None):
     return configurable_exporter.run(record_id, fields)
 
 
-@magento(replacing=ProductProductExport)
-class ProductProductExport(ProductProductExport):
+@magento(replacing=product.ProductProductExport)
+class ProductProductExport(product.ProductProductExport):
     _model_name = ['magento.product.product']
 
     def _should_import(self):
