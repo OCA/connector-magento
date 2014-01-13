@@ -13,5 +13,6 @@ import sale
 import delivery
 import stock_picking
 import stock_tracking
+import payment_invoice
 
 import consumer
