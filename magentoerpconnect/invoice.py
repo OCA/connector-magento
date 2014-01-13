@@ -214,6 +214,7 @@ def invoice_create_bindings(session, model_name, record_id):
     # find the magento store to retrieve the backend
     # we use the shop as many sale orders can be related to an invoice
     for sale in invoice.sale_ids:
+		payment_method = sale.payment_method_id
         for magento_sale in sale.magento_bind_ids:
             # Check if invoice state matches configuration setting
             # for when to export an invoice
