@@ -3,13 +3,13 @@
 <openerp>
 	<data>
 		
-		<record id="sale_quick_payment_payment_method_view_form" model="ir.ui.view">
+		<record id="sale_payment_method_payment_method_view_form" model="ir.ui.view">
 			<field name="model">payment.method</field>
-			<field name="inherit_id" ref="sale_quick_payment.payment_method.view_form"/>
+			<field name="inherit_id" ref="sale_payment_method.payment_method_view_form"/>
 			<field name="arch" type="xml">
 			
 				<field name="company_id" position="after">
-					<field name="create_invoice_on"/>
+					<field name="create_invoice_on" string="Create invoice on"/>
 				</field>
 				
 			</field>
