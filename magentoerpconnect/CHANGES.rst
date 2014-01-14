@@ -8,6 +8,8 @@ Changelog
   an additional argument 'vals'; 'on_record_write's named argument 'fields' becomes 'vals'
   and receives the full dictionary of values
 * Fix: wrong main image imported on products (https://launchpad.net/bugs/1258418)
+* Changes calls to Mapper according to the new API of the Mappers.
+  See branch: https://code.launchpad.net/~openerp-connector-core-editors/openerp-connector/7.0-connector-mapper-refactor
 
 
 2.2.1 (2013.11.22)

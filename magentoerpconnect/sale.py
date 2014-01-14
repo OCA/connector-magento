@@ -563,11 +563,11 @@ class SaleOrderImport(MagentoImportSynchronizer):
                 'website_id': record.get('website_id'),
             }
             mapper = self.get_connector_unit_for_model(PartnerImportMapper,
-                                                      'magento.res.partner')
-            mapper.convert(customer_record)
-            oe_record = mapper.data_for_create
-            oe_record['guest_customer'] = True
-            partner_bind_id = sess.create('magento.res.partner', oe_record)
+                                                       'magento.res.partner')
+            map_record = mapper.map_record(customer_record)
+            map_record.update(guest_customer=True)
+            partner_bind_id = sess.create('magento.res.partner',
+                                          map_record.values(for_create=True))
             partner_binder.bind(guest_customer_id,
                                 partner_bind_id)
         else:
@@ -608,10 +608,10 @@ class SaleOrderImport(MagentoImportSynchronizer):
                                                        'magento.address')
 
         def create_address(address_record):
-            addr_mapper.convert(address_record)
-            oe_address = addr_mapper.data_for_create
-            oe_address.update(addresses_defaults)
-            address_bind_id = sess.create('magento.address', oe_address)
+            map_record = addr_mapper.map_record(address_record)
+            map_record.update(addresses_defaults)
+            address_bind_id = sess.create('magento.address',
+                                          map_record.values(for_create=True))
             return sess.read('magento.address',
                              address_bind_id,
                              ['openerp_id'])['openerp_id'][0]
@@ -671,14 +671,14 @@ class SaleOrderImportMapper(ImportMapper):
     children = [('items', 'magento_order_line_ids', 'magento.sale.order.line'),
                 ]
 
-    def _after_mapping(self, result):
+    def finalize(self, map_record, values):
         sess = self.session
         # TODO: refactor: do no longer store the transient fields in the
         # result, use a ConnectorUnit to create the lines
         result = sess.pool['sale.order']._convert_special_fields(sess.cr,
                                                                  sess.uid,
-                                                                 result,
-                                                                 result['magento_order_line_ids'],
+                                                                 values,
+                                                                 values['magento_order_line_ids'],
                                                                  sess.context)
         # remove transient fields otherwise OpenERP will raise a warning
         # or even fail to create the record because the fields do not
@@ -689,7 +689,7 @@ class SaleOrderImportMapper(ImportMapper):
         result.pop('gift_certificates_amount', None)
         result.pop('gift_certificates_code', None)
         onchange = self.get_connector_unit_for_model(SaleOrderOnChange)
-        return onchange.play(result, result['magento_order_line_ids'])
+        return onchange.play(values, values['magento_order_line_ids'])
 
     @mapping
     def name(self, record):
@@ -754,7 +754,7 @@ class SaleOrderImportMapper(ImportMapper):
         ifield = record.get('shipping_method')
         if not ifield:
             return
-        
+
         carrier_ids = session.search('delivery.carrier',
                                      [('magento_code', '=', ifield)])
         if carrier_ids:

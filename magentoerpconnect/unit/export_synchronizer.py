@@ -139,9 +139,9 @@ class MagentoExporter(MagentoBaseExporter):
         """ Export the dependencies for the record"""
         return
 
-    def _map_data(self, fields=None):
+    def _map_data(self):
         """ Convert the external record to OpenERP """
-        self.mapper.convert(self.binding_record, fields=fields)
+        return self.mapper.map_record(self.binding_record)
 
     def _validate_data(self, data):
         """ Check if the values to import are correct
@@ -153,13 +153,23 @@ class MagentoExporter(MagentoBaseExporter):
         """
         return
 
+    def _create_data(self, map_record, fields=None):
+        return map_record.values(for_create=True, fields=fields)
+
     def _create(self, data):
         """ Create the Magento record """
+        # special check on data before export
+        self._validate_data(data)
         return self.backend_adapter.create(data)
+
+    def _update_data(self, map_record, fields=None):
+        return map_record.values(fields=fields)
 
     def _update(self, data):
         """ Update an Magento record """
         assert self.magento_id
+        # special check on data before export
+        self._validate_data(data)
         self.backend_adapter.write(self.magento_id, data)
 
     def _run(self, fields=None):
@@ -176,21 +186,17 @@ class MagentoExporter(MagentoBaseExporter):
         # export the missing linked resources
         self._export_dependencies()
 
-        self._map_data(fields=fields)
+        map_record = self._map_data()
 
         if self.magento_id:
-            record = self.mapper.data
+            record = self._update_data(map_record, fields=fields)
             if not record:
                 return _('Nothing to export.')
-            # special check on data before export
-            self._validate_data(record)
             self._update(record)
         else:
-            record = self.mapper.data_for_create
+            record = self._create_data(map_record, fields=fields)
             if not record:
                 return _('Nothing to export.')
-            # special check on data before export
-            self._validate_data(record)
             self.magento_id = self._create(record)
         return _('Record exported with ID %s on Magento.') % self.magento_id
 
