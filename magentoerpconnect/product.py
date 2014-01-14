@@ -259,7 +259,7 @@ class CatalogImageImporter(ImportSynchronizer):
 
     def _sort_images(self, images):
         """ Returns a list of images sorted by their priority.
-        An image with the 'base' type is the the primary one.
+        An image with the 'image' type is the the primary one.
         The other images are sorted by their position.
 
         The returned list is reversed, the items at the end
@@ -267,11 +267,11 @@ class CatalogImageImporter(ImportSynchronizer):
         """
         if not images:
             return {}
-        # place the images where the type is 'base' first then
+        # place the images where the type is 'image' first then
         # sort them by the reverse priority (last item of the list has
         # the the higher priority)
         def priority(image):
-            primary = 'base' in image['types']
+            primary = 'image' in image['types']
             try:
                 position = int(image['position'])
             except ValueError:

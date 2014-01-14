@@ -7,6 +7,7 @@ Changelog
 * Compatibility with the Connector Framework: listeners 'on_record_create' receives
   an additional argument 'vals'; 'on_record_write's named argument 'fields' becomes 'vals'
   and receives the full dictionary of values
+* Fix: wrong main image imported on products (https://launchpad.net/bugs/1258418)
 
 
 2.2.1 (2013.11.22)
