@@ -30,7 +30,7 @@ registered on this event. Those functions are called ``Consumers``.
 
 In ``magentoerpconnect/consumer.py``, some consumers are already
 defined. You can add your one, it should be decorated by
-:py:func:`magentoerpconnect.consumer.magento_consumer` and by the event
+:py:func:`openerp.addons.magentoerpconnect.consumer.magento_consumer` and by the event
 which has to fire it::
 
     @on_record_write(model_names=['my.model'])
@@ -76,11 +76,27 @@ And so on...
           attribute. It means that you can access to the environment
           from a synchronizer with ``self.environment``.
 
+When you are inside a ``ConnectorUnit`` you can use the shortcuts::
+
+    # for the current model
+    importer = self.get_connector_unit_for_model(MagentoImportSynchronizer)
+    # for another model
+    importer = self.get_connector_unit_for_model(MagentoImportSynchronizer,
+                                                 'another.model')
+
+As the binders are the most used ``ConnectorUnit`` classes, they have a
+dedicated shortcut::
+
+    # for the current model
+    binder = self.get_binder_for_model()
+    # for another model
+    binder = self.get_binder_for_model('another.model')
+
 
 Create an import
 ----------------
 
-You'll need to work on at least 4 connector units:
+You'll probably need to work with 4 connector units:
 
 * a Synchronizer (presumably 2, we'll see why soon)
 * a Mapper
@@ -101,7 +117,8 @@ Why do we need 2 synchronizers? Because an import is generally done in 2
 phases:
 
 1. The first synchronizer searches the list of all the ids to import.
-2. The second synchronizer imports all the ids atomically.
+2. The second synchronizer imports all the ids atomically (in separate
+   jobs).
 
 We'll see in details a simple import: customer groups.
 Customer groups are importer as categories of partners
@@ -156,6 +173,13 @@ We need to add the field ``magento_bind_ids`` in
                 string='Magento Bindings',
                 readonly=True),
         }
+
+        def copy_data(self, cr, uid, id, default=None, context=None):
+            if default is None:
+                default = {}
+            default['magento_bind_ids'] = False
+            return super(res_partner_category, self).copy_data(
+                cr, uid, id, default=default, context=context)
 
 That's the only thing we need to change (besides the view) on the
 OpenERP category!
@@ -300,7 +324,7 @@ on them to understand what they do::
 
 Observations:
 
-* Decorated by :py:class:`connector.connector.queue.job.job`, allow to
+* Decorated by :py:class:`connector.queue.job.job`, allow to
   ``delay`` the function.
 * We create a new environment and ask for the good importer, respectively
   for batch imports and record imports. The environment returns an
@@ -317,7 +341,7 @@ Record Importer
 
 The import of customer groups is so simple that it can use a generic
 class
-:py:class:`magentoerpconnect.unit.import_synchronizer.SimpleRecordImport`.
+:py:class:`openerp.addons.magentoerpconnect.unit.import_synchronizer.SimpleRecordImport`.
 We just need to add the model in the ``_model_name`` attribute::
 
     @magento
@@ -336,15 +360,15 @@ to use some of the hooks to change the behavior
 (``_import_dependencies``, ``_after_import`` for example).
 Refers to the importers already created in the module and to the base
 class
-:py:class:`magentoerpconnect.unit.import_synchronizer.MagentoImportSynchronizer`.
+:py:class:`openerp.addons.magentoerpconnect.unit.import_synchronizer.MagentoImportSynchronizer`.
 
-The synchronizer asks to the appropriate **Mapper** to transform the data
-(in ``_map_data``). Here is how we'll create the **Mapper**.
+The synchronizer asks to the appropriate :py:class:`~connector.unit.mapper.Mapper`  to transform the data
+(in ``_map_data``). Here is how we'll create the :py:class:`~connector.unit.mapper.Mapper`.
 
 Mapper
 ''''''
 
-The mapper takes the record from Magento, and generates the OpenERP
+The :py:class:`connector.unit.mapper.Mapper` takes the record from Magento, and generates the OpenERP
 record. (or the reverse for the export Mappers)
 
 The mapper for the customer groups is as follows::
@@ -353,10 +377,9 @@ The mapper for the customer groups is as follows::
     class PartnerCategoryImportMapper(connector.ImportMapper):
         _model_name = 'magento.res.partner.category'
 
-        direct = [
-                ('customer_group_code', 'name'),
-                ('tax_class_id', 'tax_class_id'),
-                ]
+        direct = [('customer_group_code', 'name'),
+                  ('tax_class_id', 'tax_class_id'),
+                  ]
 
         @mapping
         def magento_id(self, record):
@@ -371,14 +394,16 @@ Observations:
 
 * Some mappings are in ``direct`` and some use a method with a
   ``@mapping`` decorator.
-* Methods allow to have more complex mappings.
+* Methods allow to have more complex mappings. (see documentation on
+  :py:class:`~connector.unit.mapper.Mapper`)
+
 
 Binder
 ''''''
 
 For the last piece of the construct, it will be an easy one, because
 normally all the Magento Models will use the same Binder, the so called
-:py:class:`magentoerpconnect.unit.binder.MagentoModelBinder`.
+:py:class:`~openerp.addons.magentoerpconnect.unit.binder.MagentoModelBinder`.
 
 We just need to add our model in the ``_model_name`` attribute::
 

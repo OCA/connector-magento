@@ -38,7 +38,7 @@ In order to use it, first get the branch::
 
 Then bootstrap it::
 
-    $ python2.6 -S bootstrap.py  # or python, it depends on the distrib
+    $ python -S bootstrap.py
 
 Then run the buildout on the configuration file (eventually change options)::
 
@@ -62,7 +62,7 @@ Head over the next sections to discover the included tools
 Start OpenERP
 =============
 
-All the commands are run from the root of the buildout.
+All the commands are launched from the root directory of the buildout.
 
 In standalone mode::
 
@@ -80,7 +80,7 @@ To start the supervisord daemon, run::
 
     $ bin/supervisord
 
-The default configuration is to start OpenERP with 4 workers and 2 Connector
+The default configuration starts OpenERP with 4 workers and 2 Connector
 workers. This can be changed in the buildout.cfg file in the ``supervisor`` section.
 
 The services can be managed on::
@@ -90,20 +90,16 @@ The services can be managed on::
 Run the tests
 =============
 
-The Magento Connector and the Connector do not use YAML tests, but only
+The Magento Connector and the Connector framework do not use YAML tests, but only
 ``unittest2`` tests. The following command lines will run them::
 
     $ bin/rununittests -m connector
     $ bin/rununittests -m magentoerpconnect
 
-Use the helps for more information about the options::
+Use the help arguments for more information about the options::
 
     $ bin/rununittests --help
     $ bin/rununittests --help-oe
-
-.. note:: There is a known bug which make the tests fails under undetermined
-          circumstances (seems related to the initialization of the registry),
-          launching again the test suite should work.
 
 Build the documentation
 =======================
@@ -123,9 +119,9 @@ Magento on the go
 
 If you want to develop a generic feature on the Magento Connector, we recommend
 to use the `ak-magento vagrant box`_.  It installs Magento 1.7 with the demo
-data and the Magento part of the Connector.
+data and the Magento (PHP) part of the Connector.
 
-The project's page describe the installation process, just follow them.
+The project's page on Github describe the installation process, just follow them.
 
 We also use this box as a reference for the data of the tests.
 
@@ -219,7 +215,15 @@ You may want to translate directly in the ``.po`` files, in such case, follow th
 `Submit merge proposals for features or fixes`_ instructions.
 
 The other way is to use the Launchpad's translation system on
-https://translations.launchpad.net/openerp-connector-magento (maybe not activated as of today)
+
+Magento Connector
+  https://translations.launchpad.net/openerp-connector-magento
+
+Connector E-Commerce
+  https://translations.launchpad.net/openerp-connector-ecommerce
+
+Connector
+  https://translations.launchpad.net/openerp-connector
 
 OpenERP's guide on translations: https://doc.openerp.com/7.0/contribute/07_improving_translations/
 
@@ -240,7 +244,7 @@ Magento using theses instructions: `Magento on the go`_.
 Thus, in the ``tests`` folder, you will find files with only data, and the
 others with the tests.
 
-In order to record, data, you can proceed as follows:
+In order to record data, you can proceed as follows:
 
 In ``magentoerpconnect/unit/backend_adapter.py`` at lines 130,130:
 
