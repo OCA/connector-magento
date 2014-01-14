@@ -1,8 +1,8 @@
 Changelog
 ---------
 
-2.2.1.dev0
-~~~~~~~~~~
+2.3.0 (2014-01-15 warning: API changes)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 * Compatibility with the Connector Framework: listeners 'on_record_create' receives
   an additional argument 'vals'; 'on_record_write's named argument 'fields' becomes 'vals'
