@@ -76,6 +76,7 @@ class test_import_magento(common.SingleTransactionCase):
                 {'name': 'checkmo',
                  'workflow_process_id': workflow_id,
                  'import_rule': 'always',
+                 'days_before_cancel': 0,
                  'journal_id': journal_id})
 
     def test_00_import_backend(self):
