@@ -30,15 +30,15 @@ import openerp.addons.magentoerpconnect.consumer as magentoerpconnect
 
 @on_record_create(model_names='magento.res.partner')
 @on_record_write(model_names='magento.res.partner')
-def delay_export(session, model_name, record_id, fields=None):
+def delay_export(session, model_name, record_id, vals):
     magentoerpconnect.delay_export(session, model_name,
-                                   record_id, fields=fields)
+                                   record_id, vals)
 
 
 @on_record_write(model_names='res.partner')
-def delay_export_all_bindings(session, model_name, record_id, fields=None):
+def delay_export_all_bindings(session, model_name, record_id, vals):
     magentoerpconnect.delay_export_all_bindings(session, model_name,
-                                                record_id, fields=fields)
+                                                record_id, vals)
 
 
 @on_record_unlink(model_names='magento.res.partner')

@@ -28,7 +28,7 @@ import sys
 from openerp.osv import orm, fields
 from openerp.tools.translate import _
 from openerp.addons.connector.queue.job import job
-from openerp.addons.connector.event import on_record_create, on_record_write
+from openerp.addons.connector.event import on_record_write
 from openerp.addons.connector.unit.synchronizer import (ImportSynchronizer,
                                                         ExportSynchronizer
                                                         )
@@ -510,10 +510,10 @@ INVENTORY_FIELDS = ('manage_stock',
 
 
 @on_record_write(model_names='magento.product.product')
-def magento_product_modified(session, model_name, record_id, fields=None):
+def magento_product_modified(session, model_name, record_id, vals):
     if session.context.get('connector_no_export'):
         return
-    inventory_fields = list(set(fields).intersection(INVENTORY_FIELDS))
+    inventory_fields = list(set(vals).intersection(INVENTORY_FIELDS))
     if inventory_fields:
         export_product_inventory.delay(session, model_name,
                                        record_id, fields=inventory_fields,

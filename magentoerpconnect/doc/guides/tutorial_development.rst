@@ -35,7 +35,7 @@ which has to fire it::
 
     @on_record_write(model_names=['my.model'])
     @magento_consumer
-    def my_consumer(session, model_name, record_id, fields=None):
+    def my_consumer(session, model_name, record_id, vals=None):
         print 'Yeah'
 
 .. note:: The consumers always start with the arguments ``session`` and
