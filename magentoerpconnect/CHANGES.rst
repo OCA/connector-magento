@@ -10,6 +10,10 @@ Changelog
 * Fix: wrong main image imported on products (https://launchpad.net/bugs/1258418)
 * Changes calls to Mapper according to the new API of the Mappers.
   See branch: https://code.launchpad.net/~openerp-connector-core-editors/openerp-connector/7.0-connector-mapper-refactor
+* Fix: mismatch between tax excluding and tax including amount, new configuration option (https://launchpad.net/bugs/1234117)
+* Fix: mismatch between tax excluding and tax including amount, new configuration option (https://launchpad.net/bugs/1234117)
+* Implements the new API (connector_ecommerce) for the special order lines:
+  https://code.launchpad.net/~openerp-connector-core-editors/openerp-connector/7.0-e-commerce-addons-refactor-so-extra-lines/+merge/194629
 
 
 2.2.1 (2013.11.22)
