@@ -32,6 +32,10 @@ developer tools such as:
 
 So we highly recommend to use this recipe for development.
 
+.. note:: The buildout recipe uses ``bzr`` to get the branches.
+          Ensure that ``bzr`` is configured with the launchpad login
+          and the SSH key, or it may fail to get the branches.
+
 In order to use it, first get the branch::
 
     $ bzr branch lp:openerp-connector-magento/7.0-buildout
