@@ -8,7 +8,6 @@ class payment_invoice(osv.Model):
             [('open', 'Validate'),
              ('paid', 'Paid')],
             'Create invoice on action',
-            required=True,
             help="Should the invoice be created in Magento "
-                 "when it is validated or when it is paid in OpenERP?"),
+                 "when it is validated or when it is paid in OpenERP? If nothing is set, Create invoice on action falls back to Store Options."),
 		}
