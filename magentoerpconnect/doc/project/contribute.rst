@@ -40,6 +40,8 @@ In order to use it, first get the branch::
 
     $ bzr branch lp:openerp-connector-magento/7.0-buildout
 
+.. warning:: System dependencies to build the eggs: libxml2-dev libxslt1-dev
+
 Then bootstrap it::
 
     $ python -S bootstrap.py

@@ -10,8 +10,7 @@ Installation Guide
 Installation
 ************
 
-The installation steps assume that you already have a working OpenERP
-setup with all the OpenERP pre-requisites.
+The installation steps assume that you already have a functioning OpenERP server.
 
 If you are a developer, you may want to install the Connector using our
 buildout configuration, head over :ref:`installation-with-buildout`.
@@ -27,7 +26,7 @@ OpenERP to ensure a correct synchronization between them
 OpenERP
 =======
 
-Download the branches where you installed OpenERP::
+Download the branches below in a path where you chosed to store the addons::
 
     $ bzr branch lp:openerp-connector/7.0 openerp-connector
     $ bzr branch lp:openerp-connector-ecommerce/7.0 openerp-connector-ecommerce
@@ -36,8 +35,15 @@ Download the branches where you installed OpenERP::
     $ bzr branch lp:openerp-product-attributes/7.0 openerp-product-attributes
     $ bzr branch lp:sale-wkfl/7.0 sale-wkfl
 
+.. important:: Keep the Bazaar branches entire. Do not copy-paste the modules
+               in another directory.
+
 Add the branches in the addons path, either using the server command
 line or adding them in the OpenERP server configuration file.
+
+Example using the command line argument::
+
+    $ /path/to/openerp-server --addons-path /path/to/openerp-connector,/path/to/openerp-connector-ecommerce,/path/to/openerp-connector-magento,/path/to/e-commerce-addons,/path/to/openerp-product-attributes,/path/to/sale-wkfl
 
 You also need to install the ``magento`` Python package.
 So install it with either pip or either easy_install::
