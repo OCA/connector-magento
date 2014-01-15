@@ -105,6 +105,7 @@ Be efficient using and configuring the connector.
    howto/configure_shipping_methods
    howto/configure_emails
    howto/configure_schedulers
+   howto/configure_taxes
    guides/connector_checkpoint
    guides/monitor_resolve_jobs
    howto/modify_an_order
