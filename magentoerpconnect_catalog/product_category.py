@@ -27,7 +27,7 @@ from openerp.addons.connector.unit.mapper import (mapping,
 from openerp.addons.magentoerpconnect.unit.delete_synchronizer import (
         MagentoDeleteSynchronizer)
 from openerp.addons.magentoerpconnect.unit.export_synchronizer import (
-        MagentoExporter)
+        MagentoTranslationExporter)
 from openerp.addons.magentoerpconnect.backend import magento
 from openerp.addons.magentoerpconnect import product_category
 
@@ -146,23 +146,25 @@ class ProductCategoryDeleteSynchronizer(MagentoDeleteSynchronizer):
 
 
 @magento
-class ProductCategoryExport(MagentoExporter):
+class ProductCategoryExport(MagentoTranslationExporter):
     _model_name = ['magento.product.category']
 
     def _export_dependencies(self):
         """Export parent of the category"""
+        #TODO FIXME
+        return True
         env = self.environment
         record = self.binding_record
         binder = self.get_binder_for_model()
         if record.magento_parent_id:
             mag_parent_id = record.magento_parent_id.id
             if binder.to_backend(mag_parent_id) is None:
-                exporter = env.get_connector_unit(MagentoExportSynchronizer)
+                exporter = env.get_connector_unit(ProductCategoryExporter)
                 exporter.run(mag_parent_id)
         elif record.openerp_id.parent_id:
             parent = record.openerp_id.parent_id
             if binder.to_backend(parent.id, wrap=True) is None:
-                exporter = env.get_connector_unit(MagentoExportSynchronizer)
+                exporter = env.get_connector_unit(ProductCategoryExporter)
                 exporter.run(parent.magento_parent_id.id)
 
 @magento
