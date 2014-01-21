@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+<record id="view_magento_backend_form" model="ir.ui.view">
+    <field name="model">magento.backend</field>
+    <field name="inherit_id" ref="magentoerpconnect.view_magento_backend_form"/>
+    <field name="arch" type="xml">
+        <xpath expr="//notebook/page[@name='import']/group[5]" position="after">
+            <group>
+                <div>
+                    <label string="Import claims since"
+                           class="oe_inline"/>
+                    <field name="import_claims_from_date"
+                           class="oe_inline" nolabel="1"/>
+                </div>
+                <button name="import_claim"
+                        type="object"
+                        class="oe_highlight"
+                        string="Import in background"/>
+            </group>
+        </xpath>
+    </field>
+</record>
+
+    </data>
+</openerp>

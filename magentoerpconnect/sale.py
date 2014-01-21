@@ -719,7 +719,6 @@ class SaleOrderImport(MagentoImportSynchronizer):
             customer_group = record.get('customer_group_id')
             if customer_group:
                 self._import_customer_group(customer_group)
-
             customer_record = {
                 'firstname': address['firstname'],
                 'middlename': address['middlename'],
@@ -839,7 +838,7 @@ class SaleOrderImport(MagentoImportSynchronizer):
 
     def _import_dependencies(self):
         record = self.magento_record
-
+        
         self._import_addresses()
 
         for line in record.get('items', []):
