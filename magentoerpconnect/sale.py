@@ -778,27 +778,6 @@ class SaleOrderImportMapper(ImportMapper):
         return {'payment_method_id': method_id}
 
     @mapping
-    def cod_fee(self, record): # cash on delivery
-        # TODO Map Me (sic)
-        pass
-
-    @mapping
-    def gift_cert_amount(self, record):
-        if 'gift_cert_amount' in record:
-            result = {'gift_certificates_amount': record['gift_cert_amount']}
-        else:
-            result = {}
-        return result
-
-    @mapping
-    def gift_cert_code(self, record):
-        if 'gift_cert_code' in record:
-            result = {'gift_certificates_code': record['gift_cert_code']}
-        else:
-            result = {}
-        return result
-
-    @mapping
     def shipping_method(self, record):
         session = self.session
         ifield = record.get('shipping_method')
