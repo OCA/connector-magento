@@ -1,6 +1,13 @@
 Changelog
 ---------
 
+
+2.3.1 (2014-01-23)
+~~~~~~~~~~~~~~~~~~
+
+*  Do not fail when a None value is given instead of a float when importing special lines of sales orders. (https://launchpad.net/bugs/1271537)
+
+
 2.3.0 (2014-01-15 warning: API changes)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
