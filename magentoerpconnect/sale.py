@@ -686,13 +686,13 @@ class SaleOrderImportMapper(ImportMapper):
 
     def _add_shipping_line(self, map_record, values):
         record = map_record.source
-        amount_incl = float(record.get('base_shipping_incl_tax', 0.0))
-        amount_excl = float(record.get('shipping_amount', 0.0))
+        amount_incl = float(record.get('base_shipping_incl_tax') or 0.0)
+        amount_excl = float(record.get('shipping_amount') or 0.0)
         if not (amount_incl or amount_excl):
             return values
         line_builder = self.get_connector_unit_for_model(MagentoShippingLineBuilder)
         if self.options.tax_include:
-            discount = float(record.get('shipping_discount_amount', 0.0))
+            discount = float(record.get('shipping_discount_amount') or 0.0)
             line_builder.price_unit = (amount_incl - discount)
         else:
             line_builder.price_unit = amount_excl
@@ -708,8 +708,8 @@ class SaleOrderImportMapper(ImportMapper):
 
     def _add_cash_on_delivery_line(self, map_record, values):
         record = map_record.source
-        amount_excl = float(record.get('cod_fee', 0.0))
-        amount_incl = float(record.get('cod_tax_amount', 0.0))
+        amount_excl = float(record.get('cod_fee') or 0.0)
+        amount_incl = float(record.get('cod_tax_amount') or 0.0)
         if not (amount_excl or amount_incl):
             return values
         line_builder = self.get_connector_unit_for_model(MagentoCashOnDeliveryLineBuilder)
@@ -776,27 +776,6 @@ class SaleOrderImportMapper(ImportMapper):
                             " missing" % record['payment']['method'])
         method_id = method_ids[0]
         return {'payment_method_id': method_id}
-
-    @mapping
-    def cod_fee(self, record): # cash on delivery
-        # TODO Map Me (sic)
-        pass
-
-    @mapping
-    def gift_cert_amount(self, record):
-        if 'gift_cert_amount' in record:
-            result = {'gift_certificates_amount': record['gift_cert_amount']}
-        else:
-            result = {}
-        return result
-
-    @mapping
-    def gift_cert_code(self, record):
-        if 'gift_cert_code' in record:
-            result = {'gift_certificates_code': record['gift_cert_code']}
-        else:
-            result = {}
-        return result
 
     @mapping
     def shipping_method(self, record):
