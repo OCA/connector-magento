@@ -36,8 +36,16 @@
     <field name="arch" type="xml">
         <form string="Attribute Set" position="inside">
             <separator string="Magento attribute sets" colspan="6"/>
-            <field name="magento_bind_ids" nolabel="1" colspan="6"/>
-        </form>
+            <field name="magento_bind_ids" nolabel="1" colspan="6"
+                   context="{'default_attribute_set_name': name}">
+                <tree string="Attribute set" editable="top">
+                    <field name="backend_id"/>
+                    <field name="attribute_set_name"/>
+                    <field name="sort_order"/>
+                    <field name="magento_id" readonly="1"/>
+                </tree>
+            </field>
+           </form>
     </field>
 </record>
 
