@@ -28,7 +28,7 @@ from openerp.addons.connector.unit.mapper import (mapping,
 from openerp.addons.magentoerpconnect.unit.delete_synchronizer import (
         MagentoDeleteSynchronizer)
 from openerp.addons.magentoerpconnect.unit.export_synchronizer import (
-        MagentoExporter)
+        MagentoTranslationExporter)
 from openerp.addons.magentoerpconnect.backend import magento
 from openerp.addons.magentoerpconnect.product import ProductProductAdapter
 from openerp.addons.connector.exception import MappingError
@@ -44,7 +44,7 @@ class ProductProductDeleteSynchronizer(MagentoDeleteSynchronizer):
 
 
 @magento
-class ProductProductExport(MagentoExporter):
+class ProductProductExport(MagentoTranslationExporter):
     _model_name = ['magento.product.product']
 
     def _export_dependencies(self):
@@ -79,6 +79,7 @@ class ProductProductExport(MagentoExporter):
 class ProductProductExportMapper(ExportMapper):
     _model_name = 'magento.product.product'
 
+    #TODO FIXME
     # direct = [('name', 'name'),
     #           ('description', 'description'),
     #           ('weight', 'weight'),
