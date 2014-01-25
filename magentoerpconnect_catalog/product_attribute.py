@@ -455,20 +455,30 @@ class AttributeOptionExportMapper(ExportMapper):
 
     @mapping
     def label(self, record):
-        return {'label': [{
-                'store_id': ['0'],
-                'value': record.openerp_id.name,
-                }]
-            }
+        storeview_ids = self.session.search(
+                'magento.storeview',
+                [('backend_id', '=', self.backend_record.id)])
+        storeviews = self.session.browse('magento.storeview', storeview_ids)
+        label = []
+        for storeview in storeviews:
+            name = record.openerp_id.read(['name'], context={
+                'lang': storeview.lang_id.code,
+                })[0]['name']
+            label.append({
+                'store_id': [storeview.magento_id],
+                'value': name
+                })
+        return {'label': label}
 
     @mapping
     def attribute(self, record):
-        #TODO [0] seems not to be valid
-        magento_attribute = record.openerp_id.attribute_id.magento_bind_ids[0]
-        return {'attribute': magento_attribute.magento_id}
+        binder = self.get_binder_for_model('magento.product.attribute')
+        magento_attribute_id = binder.to_backend(record.openerp_id.attribute_id.id, wrap=True)
+        return {'attribute': magento_attribute_id}
 
     @mapping
     def order(self, record):
+        #TODO FIXME
         return {'order': record.openerp_id.sequence + 1 }
 
     @mapping
