@@ -24,22 +24,20 @@ import logging
 import xmlrpclib
 import base64
 
-from openerp.tools.translate import _
 from openerp.osv import orm, fields
 from openerp.addons.connector.exception import IDMissingInBackend
 from openerp.addons.connector.unit.mapper import (mapping,
-                                                  ImportMapper,
-                                                  ExportMapper)
+                                                  ImportMapper)
 from openerp.addons.magentoerpconnect.unit.binder import MagentoModelBinder
 from openerp.addons.magentoerpconnect.unit.backend_adapter import GenericAdapter
 from openerp.addons.magentoerpconnect.unit.import_synchronizer import (DelayedBatchImport,
-                                       MagentoImportSynchronizer,
-                                       AddCheckpoint)
-from openerp.addons.magentoerpconnect.unit.export_synchronizer import (MagentoExporter,
-                                                                       export_record)
+                                                                       MagentoImportSynchronizer,
+                                                                       AddCheckpoint)
+from openerp.addons.connector.unit.synchronizer import ExportSynchronizer
 from openerp.addons.magentoerpconnect.backend import magento
 from openerp.addons.connector.queue.job import job
 from openerp.addons.magentoerpconnect.connector import get_environment
+from openerp.addons.connector.event import on_record_create
 
 _logger = logging.getLogger(__name__)
 
@@ -224,11 +222,10 @@ class magento_claim_comment(orm.Model):
 
     def create(self, cr, uid, vals, context=None):
         magento_claim_id = vals['magento_claim_id']
-        claim_obj = self.pool['magento.crm.claim']
-        info = claim_obj.read(cr, uid,
-                              [magento_claim_id],
-                              ['openerp_id'],
-                              context=context)
+        info = self.pool['magento.crm.claim'].read(cr, uid,
+                                                    [magento_claim_id],
+                                                    ['openerp_id'],
+                                                    context=context)
         claim_id = info[0]['openerp_id']
         vals['claim_id'] = claim_id[0]
         vals['res_id'] = claim_id[0]
@@ -334,7 +331,7 @@ class CrmClaimAdapter(GenericAdapter):
         if filters is None:
             filters = {}
         if from_date is not None:
-            filters['updated_at'] = {'from': from_date.strftime('%Y/%m/%d %H:%M:%S')}
+            filters = from_date.strftime('%Y-%m-%d %H:%M:%S')
         return [int(row['rma_id']) for row
                 in self._call('%s.list' % self._magento_model,
                               [filters] if filters else [{}])]
@@ -346,6 +343,100 @@ class CrmClaimAdapter(GenericAdapter):
         """
         return self._call('%s.get' % self._magento_model,
                           [int(id), storeview_id, attributes, 'id'])
+
+
+@magento
+class ClaimCommentAdapter(GenericAdapter):
+    _model_name = ['magento.claim.comment']
+    _magento_model = 'rma_comment'
+
+    def _call(self, method, arguments):
+        try:
+            return super(ClaimCommentAdapter, self)._call(method, arguments)
+        except xmlrpclib.Fault as err:
+            # this is the error in the Magento API
+            # when the claim does not exist
+            if err.faultCode == 100:
+                raise IDMissingInBackend
+            else:
+                raise
+
+    def search_read(self, filters=None, from_date=None):
+        """ Search records according to some criterias
+        and returns their information
+        """
+        backend = self.session.browse('magento.backend', self.backend_record.id)
+        if filters is None:
+            filters = {}
+        if from_date is not None:
+            filters = from_date.strftime('%Y-%m-%d %H:%M:%S')
+        elif backend:
+            filters = backend.import_claims_from_date
+        return self._call('%s.list' % self._magento_model,
+                          [filters,1] if filters else [{},1])
+
+    def read(self, magento_record, attributes=None):
+        """ Returns the information of a record
+
+        :rtype: dict
+        """
+        return magento_record
+
+
+    def create(self, is_customer, message, created_at, rma_id):
+        """ Create a claim comment on the external system """
+        return self._call('%s.create' % self._magento_model,
+                          [{'is_customer': is_customer,
+                           'message': message,
+                           'created_at': str(created_at),
+                           'rma_id': str(rma_id)}])
+
+
+@magento
+class ClaimAttachmentAdapter(GenericAdapter):
+    _model_name = ['magento.claim.attachment']
+    _magento_model = 'rma_attachment'
+
+    def _call(self, method, arguments):
+        try:
+            return super(ClaimAttachmentAdapter, self)._call(method, arguments)
+        except xmlrpclib.Fault as err:
+            # this is the error in the Magento API
+            # when the claim does not exist
+            if err.faultCode == 100:
+                raise IDMissingInBackend
+            else:
+                raise
+
+    def search_read(self, filters=None, from_date=None):
+        """ Search records according to some criterias
+        and returns their information
+        """
+        backend = self.session.browse('magento.backend', self.backend_record.id)
+        if filters is None:
+            filters = {}
+        if from_date is not None:
+            filters = from_date.strftime('%Y-%m-%d %H:%M:%S')
+        elif backend:
+            filters = backend.import_claims_from_date
+        return self._call('%s.list' % self._magento_model,
+                          [filters,1] if filters else [{},1])
+
+    def read(self, magento_record, attributes=None):
+        """ Returns the information of a record
+
+        :rtype: dict
+        """
+        return magento_record
+
+    def create(self, name, is_customer, created_at, rma_id, message):
+        """ Create a claim attachment on the external system """
+        return self._call('%s.create' % self._magento_model,
+                          [{'name': str(name),
+                            'is_customer': is_customer,
+                            'created_at': str(created_at),
+                            'rma_id': str(rma_id),
+                            'content': str(message)}])
 
 
 @magento
@@ -367,7 +458,7 @@ class CrmClaimBatchImport(DelayedBatchImport):
         from_date = filters.pop('from_date', None)
         record_ids = self.backend_adapter.search(filters, from_date)
         _logger.info('search for magento claims %s returned %s',
-                     filters, record_ids)
+                     from_date.strftime('%Y-%m-%d %H:%M:%S'), record_ids)
         for record_id in record_ids:
             self._import_record(record_id)
 
@@ -378,6 +469,78 @@ class CrmClaimImport(MagentoImportSynchronizer):
 
     def _create(self, data):
         openerp_binding_id = super(CrmClaimImport, self)._create(data)
+        checkpoint = self.get_connector_unit_for_model(AddCheckpoint)
+        checkpoint.run(openerp_binding_id)
+        return openerp_binding_id
+
+
+@magento
+class ClaimCommentBatchImport(DelayedBatchImport):
+    """ Import the Magento Claim Comments from a date.
+    """
+    _model_name = ['magento.claim.comment']
+
+    def _import_record(self, record, **kwargs):
+        """ Import the record directly """
+        return super(ClaimCommentBatchImport, self)._import_record(
+            record, max_retries=0, priority=5)
+
+    def run(self, filters=None):
+        """ Run the synchronization """
+        record_ids = []
+        index = 0
+        from_date = filters.pop('from_date', None)
+        records = self.backend_adapter.search_read(filters, from_date)
+        for record in records:
+            record_ids += int(records[index]['rma_comment_id']),
+            index += 1
+            self._import_record(record)
+        _logger.info('search for magento claim comments from %s returned %s',
+                     from_date.strftime('%Y-%m-%d %H:%M:%S'), record_ids)
+
+
+@magento
+class ClaimCommentImport(MagentoImportSynchronizer):
+    _model_name = ['magento.claim.comment']
+
+    def _create(self, data):
+        openerp_binding_id = super(ClaimCommentImport, self)._create(data)
+        checkpoint = self.get_connector_unit_for_model(AddCheckpoint)
+        checkpoint.run(openerp_binding_id)
+        return openerp_binding_id
+
+
+@magento
+class ClaimAttachmentBatchImport(DelayedBatchImport):
+    """ Import the Magento Claim Attachments from a date.
+    """
+    _model_name = ['magento.claim.attachment']
+
+    def _import_record(self, record, **kwargs):
+        """ Import the record directly """
+        return super(ClaimAttachmentBatchImport, self)._import_record(
+            record, max_retries=0, priority=5)
+
+    def run(self, filters=None):
+        """ Run the synchronization """
+        record_ids = []
+        index = 0
+        from_date = filters.pop('from_date', None)
+        records = self.backend_adapter.search_read(filters, from_date)
+        for record in records:
+            record_ids += int(records[index]['rma_attachment_id']),
+            index += 1
+            self._import_record(record)
+        _logger.info('search for magento claim attachments from %s returned %s',
+                     from_date.strftime('%Y-%m-%d %H:%M:%S'), record_ids)
+
+
+@magento
+class ClaimAttachmentImport(MagentoImportSynchronizer):
+    _model_name = ['magento.claim.attachment']
+
+    def _create(self, data):
+        openerp_binding_id = super(ClaimAttachmentImport, self)._create(data)
         checkpoint = self.get_connector_unit_for_model(AddCheckpoint)
         checkpoint.run(openerp_binding_id)
         return openerp_binding_id
@@ -399,9 +562,12 @@ class CrmClaimImportMapper(ImportMapper):
                 ]
 
 
-    def _map_child(self, record, from_attr, to_attr, model_name):
-        if from_attr in record:
-            return super(CrmClaimImportMapper, self)._map_child(record, from_attr, to_attr, model_name)
+    def _map_child(self, map_record, from_attr, to_attr, model_name):
+        if from_attr in map_record.source:
+            return super(CrmClaimImportMapper, self)._map_child(map_record,
+                                                                from_attr,
+                                                                to_attr,
+                                                                model_name)
 
     @mapping
     def partner_id(self, record):
@@ -454,16 +620,20 @@ class ClaimLineImportMapper(ImportMapper):
 
     @mapping
     def product_id(self, record):
-        product_ids = self.session.search('magento.product.product',
-                                        [['magento_id', '=', record['product_id']]])
-        product = self.session.browse('magento.product.product', product_ids[0])
-        product_id  = product.openerp_id.id
+        order_line_ids = self.session.search('magento.sale.order.line',
+                                        [['magento_id', '=', record['order_item_id']]])
+        order_line = self.session.browse('magento.sale.order.line', order_line_ids[0])
+        product_id  = order_line.openerp_id.product_id.id
         return {'product_id': product_id}
 
     @mapping
     def claim_origine(self, record):
         claim_origine = 'other'
         return {'claim_origine': claim_origine}
+
+    @mapping
+    def magento_id(self, record):
+        return {'magento_id': record['rma_item_id']}
 
 
 @magento
@@ -479,12 +649,23 @@ class ClaimCommentImportMapper(ImportMapper):
     def subtype_id(self, record):
         if record['is_customer']=='1':
             subtype_id = False
-        return {'subtype_id': subtype_id}
+            return {'subtype_id': subtype_id}
 
     @mapping
     def type(self, record):
         type = 'comment'
         return {'type': type}
+
+    @mapping
+    def magento_id(self, record):
+        return {'magento_id': record['rma_comment_id']}
+
+    @mapping
+    def magento_claim_id(self, record):
+        magento_claim_ids = self.session.search('magento.crm.claim',
+                                                [('magento_id', '=',int(record['rma_id']))])
+        claim_id = magento_claim_ids[0]
+        return {'magento_claim_id': claim_id}
 
 
 @magento
@@ -511,12 +692,23 @@ class ClaimAttachmentImportMapper(ImportMapper):
     def attachment_type(self, record):
         if record['is_customer']=='1':
             attachment_type = 'customer'
-        return {'attachment_type': attachment_type}
+            return {'attachment_type': attachment_type}
+
+    @mapping
+    def magento_id(self, record):
+        return {'magento_id': record['rma_attachment_id']}
+
+    @mapping
+    def magento_claim_id(self, record):
+        magento_claim_ids = self.session.search('magento.crm.claim',
+                                                [('magento_id', '=',int(record['rma_id']))])
+        claim_id = magento_claim_ids[0]
+        return {'magento_claim_id': claim_id}
 
 
 @job
 def crm_claim_import_batch(session, model_name, backend_id, filters=None):
-    """ Prepare a batch import of records from Magento """
+    """ Prepare a batch import of claims from Magento """
     if filters is None:
         filters = {}
     assert 'magento_storeview_id' in filters, 'Missing information about Magento Storeview'
@@ -525,34 +717,186 @@ def crm_claim_import_batch(session, model_name, backend_id, filters=None):
     importer.run(filters)
 
 
-#@magento
-#class CrmClaimExport(MagentoExporter):
-#    _model_name = ['magento.crm.claim']
-#
-#
-#@magento
-#class ClaimCommentExportMapper(ExportMapper):
-#    _model_name = 'magento.claim.comment'
-#
-#    @mapping
-#    def all(self, record):
-#        return {'is_customer': '0',
-#                'message': record.body,
-#                'created_at': record.create_date,
-#                }
-#
-#    @mapping
-#    def rma_id(self, record):
-#        claim_ids = self.session.search('magento.crm.claim',
-#                                        [['openerp_id', '=', record['res_id']]])
-#        claim = self.session.browse('magento.crm.claim', claim_ids[0])
-#        rma_id = claim.magento_id
-#        return {'rma_id': rma_id}
-#
-#
-#@magento
-#class ClaimAttachmentExportMapper(ExportMapper):
-#    _model_name = 'magento.claim.attachment'
+@job
+def claim_comment_import_batch(session, model_name, backend_id, filters=None):
+    """ Prepare a batch import of claim comments from Magento """
+    if filters is None:
+        filters = {}
+    assert 'magento_storeview_id' in filters, 'Missing information about Magento Storeview'
+    env = get_environment(session, model_name, backend_id)
+    importer = env.get_connector_unit(ClaimCommentBatchImport)
+    importer.run(filters)
+
+
+@job
+def claim_attachment_import_batch(session, model_name, backend_id, filters=None):
+    """ Prepare a batch import of claim attachments from Magento """
+    if filters is None:
+        filters = {}
+    assert 'magento_storeview_id' in filters, 'Missing information about Magento Storeview'
+    env = get_environment(session, model_name, backend_id)
+    importer = env.get_connector_unit(ClaimAttachmentBatchImport)
+    importer.run(filters)
+
+
+@magento
+class MagentoClaimCommentSynchronizer(ExportSynchronizer):
+    """ Export claim comments seller to Magento """
+    _model_name = ['magento.claim.comment']
+
+
+    def run(self, binding_id):
+        """ Run the job to export the claim comment seller """
+        sess = self.session
+        comment = sess.browse(self.model._name, binding_id)
+        magento_claim = comment.magento_claim_id
+        try:
+            magento_id = self.backend_adapter.create('0',
+                                                     comment.openerp_id.body,
+                                                     comment.openerp_id.date,
+                                                     magento_claim.magento_id)
+        except xmlrpclib.Fault as err:
+            # When the claim comment is already created on Magento, it returns:
+            # <Fault 102: 'Cannot do comment for rma.'>
+            # We'll search the Magento claim comment ID to store it in OpenERP
+            if err.faultCode == 102:
+                _logger.debug('Claim Comment already exists on Magento for '
+                              'claim with magento id %s, trying to find '
+                              'the comment id.',
+                              magento_claim.magento_id)
+                magento_id = self._get_existing_claim_comment(magento_claim)
+            else:
+                raise
+
+        self.binder.bind(magento_id, binding_id)
+
+    def _get_existing_claim_comment(self, magento_claim):
+        comments = self.backend_adapter.search_read(
+                claim_id=magento_claim.magento_claim_id)
+        if not comments:
+            raise
+        if len(comments) > 1:
+            raise
+        return comments[0]['increment_id']
+
+
+
+@on_record_create(model_names='mail.message')
+def comment_create_bindings(session, model_name, record_id, vals):
+    """
+    Create a ``magento.claim.comment`` record. This record will then
+    be exported to Magento.
+    """
+    comment = session.browse(model_name, record_id)
+    subtype_ids = session.search('mail.message.subtype',
+                             [['name', '=', 'Discussions']])
+    magento_claim = session.search('magento.crm.claim',
+                                   [['openerp_id', '=', comment.res_id]])
+    if comment.type == 'comment' and comment.subtype_id.id == subtype_ids[0] and vals['model'] == 'crm.claim' and magento_claim:
+        claim = session.browse('crm.claim', comment.res_id)
+        for magento_claim in claim.magento_bind_ids:
+            session.create('magento.claim.comment',
+                           {'backend_id': magento_claim.backend_id.id,
+                            'openerp_id': comment.id,
+                            'magento_claim_id': magento_claim.id})
+
+@on_record_create(model_names='magento.claim.comment')
+def delay_export_claim_comment(session, model_name, record_id, vals):
+    """
+    Delay the job to export the magento claim comment.
+    """
+    magento_comment = session.browse(model_name, record_id)
+    subtype_ids = session.search('mail.message.subtype',
+                             [['name', '=', 'Discussions']])
+    if magento_comment.openerp_id.type == 'comment' and magento_comment.openerp_id.subtype_id.id == subtype_ids[0]:
+        export_claim_comment.delay(session, model_name, record_id)
+
+@job
+def export_claim_comment(session, model_name, record_id):
+    """ Export a claim comment. """
+    comment = session.browse(model_name, record_id)
+    backend_id = comment.backend_id.id
+    env = get_environment(session, model_name, backend_id)
+    comment_exporter = env.get_connector_unit(MagentoClaimCommentSynchronizer)
+    return comment_exporter.run(record_id)
+
+
+@magento
+class MagentoClaimAttachmentSynchronizer(ExportSynchronizer):
+    """ Export claim attachments seller to Magento """
+    _model_name = ['magento.claim.attachment']
+
+    def run(self, binding_id):
+        """ Run the job to export the claim attachment seller """
+        sess = self.session
+        attachment = sess.browse(self.model._name, binding_id)
+        magento_claim = attachment.magento_claim_id
+        try:
+            magento_id = self.backend_adapter.create(attachment.openerp_id.name,
+                                                     '0',
+                                                     attachment.openerp_id.create_date,
+                                                     magento_claim.magento_id,
+                                                     attachment.openerp_id.db_datas)
+        except xmlrpclib.Fault as err:
+            # When the claim attachment is already created on Magento, it returns:
+            # <Fault 102: 'Cannot do attachment for rma.'>
+            # We'll search the Magento claim attachment ID to store it in OpenERP
+            if err.faultCode == 102:
+                _logger.debug('Claim Attachment already exists on Magento for '
+                              'claim with magento id %s, trying to find '
+                              'the attachment id.',
+                              magento_claim.magento_id)
+                magento_id = self._get_existing_claim_attachment(magento_claim)
+            else:
+                raise
+
+        self.binder.bind(magento_id, binding_id)
+
+    def _get_existing_claim_attachment(self, magento_claim):
+        attachments = self.backend_adapter.search_read(
+                claim_id=magento_claim.magento_claim_id)
+        if not attachments:
+            raise
+        if len(attachments) > 1:
+            raise
+        return attachments[0]['increment_id']
+
+
+@on_record_create(model_names='ir.attachment')
+def attachment_create_bindings(session, model_name, record_id, vals):
+    """
+    Create a ``magento.claim.attachment`` record. This record will then
+    be exported to Magento.
+    """
+    attachment = session.browse(model_name, record_id)
+    magento_claim = session.search('magento.crm.claim',
+                                   [['openerp_id', '=', attachment.res_id]])
+    if attachment.attachment_type == False  and vals['res_model'] == 'crm.claim' and magento_claim:
+        claim = session.browse('crm.claim', attachment.res_id)
+        for magento_claim in claim.magento_bind_ids:
+            session.create('magento.claim.attachment',
+                           {'backend_id': magento_claim.backend_id.id,
+                            'openerp_id': attachment.id,
+                            'magento_claim_id': magento_claim.id})
+
+
+@on_record_create(model_names='magento.claim.attachment')
+def delay_export_claim_attachment(session, model_name, record_id, vals):
+    """
+    Delay the job to export the magento claim attachment.
+    """
+    magento_attachment = session.browse(model_name, record_id)
+    if magento_attachment.openerp_id.attachment_type == False :
+        export_claim_attachment.delay(session, model_name, record_id)
+
+@job
+def export_claim_attachment(session, model_name, record_id):
+    """ Export a claim attachment. """
+    attachment = session.browse(model_name, record_id)
+    backend_id = attachment.backend_id.id
+    env = get_environment(session, model_name, backend_id)
+    attachment_exporter = env.get_connector_unit(MagentoClaimAttachmentSynchronizer)
+    return attachment_exporter.run(record_id)
 
 
 @magento
@@ -561,6 +905,8 @@ class MagentoClaimBinder(MagentoModelBinder):
     _model_name = [
         'magento.crm.claim',
         'magento.claim.line',
+        'magento.claim.comment',
+        'magento.claim.attachment'
         ]
 
 
@@ -570,4 +916,6 @@ class CrmClaimAddCheckpoint(AddCheckpoint):
     _model_name = [
         'magento.crm.claim',
         'magento.claim.line',
+        'magento.claim.comment',
+        'magento.claim.attachment'
         ]
