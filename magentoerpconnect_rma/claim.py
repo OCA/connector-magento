@@ -627,13 +627,11 @@ class CrmClaimImportMapper(ImportMapper):
 
     @mapping
     def ref(self, record):
-        binder = self.get_binder_for_model('magento.sale.order')
-        order_id = binder.to_openerp(record['order_increment_id'], unwrap=True)
-        assert order_id is not None, \
-               ("order %s should have been imported in "
-                "CrmClaimImport._import_dependencies" % record['order_increment_id'])
-        ref = 'sale.order,' + str(order_id)
-        return {'ref': ref}
+        order_ids = self.session.search('sale.order',
+                                        [['name', '=', record['order_increment_id']]])
+        if order_ids:
+            ref = 'sale.order,' + str(order_ids[0])
+            return {'ref': ref}
 
     @mapping
     def state(self, record):
