@@ -52,12 +52,16 @@ class magento_backend(orm.Model):
 
     _backend_type = 'magento'
 
-    def _select_versions(self, cr, uid, context=None):
-        """ Available versions
+    def select_versions(self, cr, uid, context=None):
+        """ Available versions in the backend.
 
         Can be inherited to add custom versions.
         """
         return [('1.7', '1.7')]
+
+    def _select_versions(self, cr, uid, context=None):
+        """ Available versions in the backend. """
+        return self.select_versions(cr, uid, context=context)
 
     def _get_stock_field_id(self, cr, uid, context=None):
         stock_field = 'virtual_available'

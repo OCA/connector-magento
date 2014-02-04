@@ -1,6 +1,11 @@
 Changelog
 ---------
 
+2.3.1.dev (not released)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* allow to customize the available versions without overriding the 'version' field
+
 
 2.3.1 (2014-01-23)
 ~~~~~~~~~~~~~~~~~~
