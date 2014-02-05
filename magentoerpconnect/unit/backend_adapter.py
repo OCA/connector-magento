@@ -168,8 +168,11 @@ class GenericAdapter(MagentoCRUDAdapter):
 
         :rtype: dict
         """
+        arguments = [int(id)]
+        if attributes:
+            arguments.append(attributes)
         return self._call('%s.info' % self._magento_model,
-                          [int(id), attributes])
+                          arguments)
 
     def search_read(self, filters=None):
         """ Search records according to some criterias
