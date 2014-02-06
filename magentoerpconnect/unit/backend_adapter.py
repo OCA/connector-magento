@@ -169,7 +169,8 @@ class GenericAdapter(MagentoCRUDAdapter):
         :rtype: dict
         """
         arguments = [int(id)]
-        if attributes:
+        if attributes: # don't pass a None in the attributes, otherwise you
+                       # only get a default almost empty list of attributes.
             arguments.append(attributes)
         return self._call('%s.info' % self._magento_model,
                           arguments)
