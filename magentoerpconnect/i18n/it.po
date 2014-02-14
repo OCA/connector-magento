@@ -8,19 +8,19 @@ msgstr ""
 "Project-Id-Version: openerp-connector-magento\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-05-01 12:45+0000\n"
-"PO-Revision-Date: 2014-01-29 13:12+0000\n"
-"Last-Translator: Davide Corio @ LS <enlightx@gmail.com>\n"
+"PO-Revision-Date: 2014-02-13 13:32+0000\n"
+"Last-Translator: Davide Corio @ LS <davide.corio@lsweb.it>\n"
 "Language-Team: Italian <it@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-01-30 06:08+0000\n"
+"X-Launchpad-Export-Date: 2014-02-14 07:54+0000\n"
 "X-Generator: Launchpad (build 16916)\n"
 
 #. module: magentoerpconnect
 #: help:magento.backend,pricelist_id:0
 msgid "The price list used to define the prices of the products in Magento."
-msgstr ""
+msgstr "Listino prezzo usato per definire i prezzi dei prodotti in Magento."
 
 #. module: magentoerpconnect
 #: help:magento.store,send_invoice_paid_mail:0
@@ -28,11 +28,13 @@ msgid ""
 "Does the invoice export/creation should send an email notification on "
 "Magento side?"
 msgstr ""
+"Si vuole che l'esportazione/creazione di fatture invii un email di notifica "
+"da Magento?"
 
 #. module: magentoerpconnect
 #: view:magento.backend:0
 msgid "Import sales orders from all store views"
-msgstr ""
+msgstr "Importa ordini di vendita da tutte le viste negozio."
 
 #. module: magentoerpconnect
 #: model:sale.exception,description:magentoerpconnect.excep_wrong_total_amount_tax

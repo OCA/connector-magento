@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openerp-connector-magento\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-05-01 12:45+0000\n"
-"PO-Revision-Date: 2014-02-12 08:10+0000\n"
+"PO-Revision-Date: 2014-02-13 14:11+0000\n"
 "Last-Translator: Erwin van der Ploeg (BAS Solutions) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-02-13 06:52+0000\n"
+"X-Launchpad-Export-Date: 2014-02-14 07:54+0000\n"
 "X-Generator: Launchpad (build 16916)\n"
 
 #. module: magentoerpconnect
@@ -492,7 +492,7 @@ msgstr "Magento adres koppelingen"
 #. module: magentoerpconnect
 #: field:magento.store,send_invoice_paid_mail:0
 msgid "Send email notification on invoice paid"
-msgstr "Stuur e-mail bevestiging als de factuur is betaald"
+msgstr "Stuur e-mail bevestiging als de factuur betaald is"
 
 #. module: magentoerpconnect
 #: model:ir.actions.act_window,name:magentoerpconnect.action_magento_storeview
@@ -774,7 +774,7 @@ msgstr "Totalbedrag wijkt af van Magento"
 #. module: magentoerpconnect
 #: field:magento.store,send_picking_done_mail:0
 msgid "Send email notification on picking done"
-msgstr "Stuur een e-mail als uitgaande levering gereed is"
+msgstr "Stuur e-mail bevestiging als de uitgaande levering gereed is"
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_magento_binding
