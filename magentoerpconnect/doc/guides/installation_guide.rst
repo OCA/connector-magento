@@ -82,6 +82,12 @@ In order to install it:
 #. Flush the Magento cache from the admin panel or by removing everything in
    `magento_root/var/cache`
 
+
+.. important:: Please check if you have installed Magento on PHP with a *5.4.x** version.
+               Magento is **not compatible** with this version and would prevent the API to
+               behave normally. In that case, you must retrograde to PHP 5.3.x or apply the
+               patch provided by Magento (see http://magento.com/resources/system-requirements)
+
 Configuring the Magento web-services
 ====================================
 
