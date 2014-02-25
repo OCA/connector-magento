@@ -22,20 +22,20 @@
 
 from openerp.osv import orm
 from openerp.addons.magentoerpconnect.backend import magento
+#from openerp.addons.connector.unit.mapper import ExportMapper
 from openerp.addons.magentoerpconnect.connector import get_environment
 from openerp.addons.magentoerpconnect_catalog import product
 from openerp.addons.magentoerpconnect.unit.backend_adapter import GenericAdapter
 from openerp.addons.magentoerpconnect.unit.export_synchronizer import (
-    export_record, 
-    MagentoExporter,
+    export_record,
     MagentoBaseExporter,
 )
 from openerp.addons.connector.queue.job import job
- 
+
 
 class magento_product(orm.Model):
     _inherit = 'magento.product.product'
-    
+
     def product_type_get(self, cr, uid, context=None):
         selection=super(magento_product, self).product_type_get(cr, uid, context=context)
         if ('configurable', 'Configurable Product') not in selection:
@@ -58,7 +58,7 @@ class magento_product(orm.Model):
         if product.is_display:
             product.write({'product_type': 'configurable'})
         return product_id
-        
+
 
 @magento
 class ProductConfigurableExport(MagentoBaseExporter):
@@ -70,12 +70,12 @@ class ProductConfigurableExport(MagentoBaseExporter):
     def _export_dependencies(self):
         """ Export the dependencies for the product"""
         if not self.binding_record.magento_id:
-            export_record(self.session, 'magento.product.product', binding_id)
+            export_record(self.session, 'magento.product.product', self.binding_record.id)
         record = self.binding_record
-        
+
         #Check and update configurable params
         super_attribute_adapter = self.get_connector_unit_for_model(GenericAdapter, 'magento.super.attribute')
-        
+
         magento_attr_ids = []
         data = super_attribute_adapter.list(record.magento_id)
         res = {x['attribute_id']: x['product_super_attribute_id'] for x in data}
@@ -89,7 +89,7 @@ class ProductConfigurableExport(MagentoBaseExporter):
                 else:
                     magento_attr_ids.append(magento_attr_id)
         for magento_attr_id in magento_attr_ids:
-            super_attribute_adapter.set(self.binding_record.magento_id, magento_attr_id)
+            super_attribute_adapter.create(self.binding_record.magento_id, magento_attr_id)
         for magento_attr_id, super_attribute_id in res.items():
             super_attribute_adapter.remove(super_attribute_id)
 
@@ -108,7 +108,7 @@ class ProductConfigurableExport(MagentoBaseExporter):
                 context = sess.context.copy()
                 context['connector_no_export'] = True
                 binding_id = sess.pool['magento.product.product'].\
-                        create(sess.cr, sess.uid, vals, context=context) 
+                        create(sess.cr, sess.uid, vals, context=context)
                 export_record(self.session, 'magento.product.product', binding_id)
 
     def _prepare_magento_binding(self, product):
@@ -123,7 +123,7 @@ class ProductConfigurableExport(MagentoBaseExporter):
         display_link_adapter = self.get_connector_unit_for_model(GenericAdapter, 'magento.configurable.link')
 
         record = self.binding_record
-        
+
         res = display_link_adapter.list(self.magento_id)
         linked_product_ids = [x['product_id'] for x in res]
         product_ids_to_link = []
@@ -167,24 +167,23 @@ class ProductProductExport(product.ProductProductExport):
                                        fields=['display_for_product_ids'],
                                        priority=20)
 
-
 @magento
 class ProductSuperAttributAdapter(GenericAdapter):
     _model_name = ['magento.super.attribute']
     _magento_model = 'ol_catalog_product_link'
-       
-    def set(self, magento_conf_id, magento_attribute_id):
-        """ Set Configurables Attributes """
-        return self._call('%s.setSuperAttributeValues'% self._magento_model,
+
+    def create(self, magento_conf_id, magento_attribute_id):
+        """ Create Configurables Attributes """
+        return self._call('%s.createSuperAttribute'% self._magento_model,
                          [magento_conf_id, magento_attribute_id])
-    
+
     def unlink(self, magento_id):
-        """ Set Configurables Attributes """
+        """ Remove Configurables Attributes """
         return self._call('%s.removeSuperAttribute'% self._magento_model,
                           [magento_id])
- 
+
     def list(self, magento_conf_id):
-        """ Set Configurables Attributes """
+        """ List Configurables Attributes """
         return self._call('%s.listSuperAttributes'% self._magento_model,
                           [magento_conf_id])
 
@@ -193,7 +192,7 @@ class ProductSuperAttributAdapter(GenericAdapter):
 class ProductConfigurableLinkAdapter(GenericAdapter):
     _model_name = ['magento.configurable.link']
     _magento_model = 'ol_catalog_product_link'
- 
+
     def add(self, magento_conf_id, magento_product_ids):
         """ Add the product linked to the configurable """
         return self._call('%s.assign'% self._magento_model,
