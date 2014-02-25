@@ -6,6 +6,7 @@
 #            Augustin Cisterne-Kaas - Elico-corp
 #            David Béal - Akretion
 #            Sébastien Beau - Akretion
+#            Chafique Delli - Akretion
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
 #    published by the Free Software Foundation, either version 3 of the
@@ -42,7 +43,7 @@ from openerp.addons.magentoerpconnect.unit.import_synchronizer import (
     DelayedBatchImport,
     MagentoImportSynchronizer,)
 from openerp.addons.connector.exception import FailedJobError
- 
+
 
 @magento(replacing=MagentoModelBinder)
 class MagentoAttributeBinder(MagentoModelBinder):
@@ -125,6 +126,13 @@ class AttributeSetAdapter(GenericAdapter):
         :rtype: dict
         """
         return self._call('%s.info' % self._magento_model, [int(id)])
+
+    def update(self, id, attribute_id):
+        """ Add an existing attribute to an attribute set on the external system
+        :rtype: boolean
+        """
+        return self._call('%s.attributeAdd' % self._magento_default_model,
+                          [str(attribute_id),str(id)])
 
 
 @magento
@@ -346,6 +354,37 @@ class ProductAttributeExport(MagentoExporter):
     def _should_import(self):
         "Attributes in magento doesn't retrieve infos on dates"
         return False
+
+    def _after_export(self):
+        """ Run the after export"""
+        sess = self.session
+        attribute_location_obj = sess.pool.get('attribute.location')
+        magento_attribute_obj = sess.pool.get('magento.product.attribute')
+        magento_attribute_set_obj = sess.pool.get('magento.attribute.set')
+        attribute_set_adapter = self.get_connector_unit_for_model(
+            GenericAdapter, 'magento.attribute.set')
+        attribute_id = self.binding_record.openerp_id.id
+        magento_attribute_id = magento_attribute_obj.browse(
+                    sess.cr, sess.uid,
+                    self.binding_record.id,context=sess.context).magento_id
+        attribute_location_ids = attribute_location_obj.search(
+            sess.cr, sess.uid,
+            [['attribute_id','=',attribute_id]], context=sess.context)
+        for attribute_location in attribute_location_ids:
+            attribute_set_id = attribute_location_obj.browse(
+                sess.cr, sess.uid,
+                attribute_location, context=sess.context).attribute_set_id.id
+            magento_attribute_set_ids = magento_attribute_set_obj.search(
+                sess.cr, sess.uid,
+                [['openerp_id','=',attribute_set_id]],
+                context=sess.context)
+            for magento_attribute_set in magento_attribute_set_ids:
+                magento_attribute_set_id = magento_attribute_set_obj.browse(
+                    sess.cr, sess.uid,
+                    magento_attribute_set,context=sess.context).magento_id
+                attribute_set_adapter.update(
+                    magento_attribute_set_id, magento_attribute_id)
+
 
 
 @magento

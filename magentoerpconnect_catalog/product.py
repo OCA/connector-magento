@@ -136,17 +136,17 @@ class ProductProductExportMapper(ExportMapper):
         return {'website_ids': website_ids}
 
     @mapping
-    def category(self, record): 
+    def category(self, record):
         categ_ids = []
         if record.categ_id:
             for m_categ in record.categ_id.magento_bind_ids:
                 if m_categ.backend_id.id == self.backend_record.id:
-                    categ_ids.append(m_categ.magento_id) 
+                    categ_ids.append(m_categ.magento_id)
 
         for categ in record.categ_ids:
             for m_categ in categ.magento_bind_ids:
                 if m_categ.backend_id.id == self.backend_record.id:
-                    categ_ids.append(m_categ.magento_id)            
+                    categ_ids.append(m_categ.magento_id)
         return {'categories': categ_ids}
 
     @mapping
@@ -161,7 +161,7 @@ class ProductProductExportMapper(ExportMapper):
                 for bind in attribute.magento_bind_ids:
                     if bind.backend_id.id == self.backend_record.id:
                         magento_attribute = bind
-                
+
                 if not magento_attribute:
                     continue
 
@@ -183,6 +183,3 @@ class ProductProductExportMapper(ExportMapper):
                     #TODO add support of lang
                     result[magento_attribute.attribute_code] = record[attribute.name]
         return result
-
-
-
