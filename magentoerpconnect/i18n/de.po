@@ -8,14 +8,15 @@ msgstr ""
 "Project-Id-Version: openerp-connector-magento\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-05-01 12:45+0000\n"
-"PO-Revision-Date: 2014-01-16 11:09+0000\n"
-"Last-Translator: Jan-Philipp Fischer <jan-philipp.fischer@greencoding.de>\n"
+"PO-Revision-Date: 2014-02-26 21:07+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-01-17 07:10+0000\n"
-"X-Generator: Launchpad (build 16901)\n"
+"X-Launchpad-Export-Date: 2014-02-27 06:35+0000\n"
+"X-Generator: Launchpad (build 16935)\n"
 
 #. module: magentoerpconnect
 #: help:magento.backend,pricelist_id:0
@@ -30,13 +31,13 @@ msgid ""
 "Does the invoice export/creation should send an email notification on "
 "Magento side?"
 msgstr ""
-"Soll der Rechnungsexport, die Rechnungserstelltung eine E-Mail auf "
-"Magentoseite verschicken?"
+"Soll bei Erstellung/Export der Rechnung eine E-Mail aus Magento versendet "
+"werden  ?"
 
 #. module: magentoerpconnect
 #: view:magento.backend:0
 msgid "Import sales orders from all store views"
-msgstr "Importiere VK-Aufträge von allen Store Views"
+msgstr "Importiere Aufträge von allen Store Views"
 
 #. module: magentoerpconnect
 #: model:sale.exception,description:magentoerpconnect.excep_wrong_total_amount_tax
@@ -52,21 +53,22 @@ msgid ""
 "Check your taxes and fiscal positions configuration and correct them if "
 "necessary."
 msgstr ""
-"Die Steuersumme in OpenERP stimmt nicht mit der Steuersumme von Magento "
+"Die in OpenERP errechnete Steuer stimmt nicht mit der Magento Steuer "
 "überein.\n"
 "\n"
 "Grund:\n"
-"Die Steuern sind eventuell verschieden zwischen OpenERP und Magento. Eine "
-"Finanzposition hat evtl. die Endsumme geändert.\n"
+"Vermutlich sind die Steuersätze in OpenERP und Magento nicht identisch.  "
+"Durch eine entsprechende Steuerzuordnung wurde möglicherweise der Endpreis "
+"verändert.\n"
 "\n"
-"Lösung:\n"
-"Überprüfen Sie die Steuer und Finanzpositionen Konfigurationen und "
-"korrigieren Sie diese falls erforderlich."
+"Lösung: \n"
+"Überprüfen Sie die Steuern und auch Zuordnungen und korrigieren Sie diese "
+"dann bei Bedarf."
 
 #. module: magentoerpconnect
 #: help:magento.backend,warehouse_id:0
 msgid "Warehouse used to compute the stock quantities."
-msgstr "Lager benutzt zum errechnen von Lagermengen."
+msgstr "Zentrallager zur Bestände Berechnung"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,sync_date:0
@@ -83,7 +85,7 @@ msgstr "Lager benutzt zum errechnen von Lagermengen."
 #: field:magento.storeview,sync_date:0
 #: field:magento.website,sync_date:0
 msgid "Last synchronization date"
-msgstr "Letztes Synchronisationsdatum"
+msgstr "Letzte Synchronisierung"
 
 #. module: magentoerpconnect
 #: help:magento.backend,default_category_id:0
@@ -91,8 +93,8 @@ msgid ""
 "If a default category is selected, products imported without a category will "
 "be linked to it."
 msgstr ""
-"Wenn eine voreingestellte Kategorie ausgewählt ist, werde Produkte ohne eine "
-"Kategoerie mit dieser verlinkt."
+"Durch eine vor-eingestellte Standard Kategorie, werden alle Produkte, ohne "
+"irgendeine Kategorie dann mit dieser verlinkt."
 
 #. module: magentoerpconnect
 #: help:magento.storeview,import_orders_from_date:0
@@ -100,8 +102,8 @@ msgid ""
 "do not consider non-imported sale orders before this date. Leave empty to "
 "import all sale orders"
 msgstr ""
-"Beachte keine nicht importiereten VK-Aufträge bevor diesem Datum. Lasse leer "
-"um alle VK-Aufträge zu importieren."
+"Vernachlässigen Sie die nicht-importierten Aufträge vor diesem Datum. Bitte "
+"tragen Sie nichts ein, um sämtliche  Aufträge zu importieren."
 
 #. module: magentoerpconnect
 #: help:magento.store,send_picking_done_mail:0
@@ -109,13 +111,13 @@ msgid ""
 "Does the picking export/creation should send an email notification on "
 "Magento side?"
 msgstr ""
-"Soll der Versandexport, die Versandanlage eine E-Mail auf Magento Seite "
-"schicken?"
+"Soll bei Erstellung / Export eines Lieferscheins eine E-Mail aus Magento "
+"versendet werden ?"
 
 #. module: magentoerpconnect
 #: selection:magento.product.product,manage_stock:0
 msgid "Do Not Manage Stock"
-msgstr "Verwalte nicht das Lager"
+msgstr "Kein Lager verwalten"
 
 #. module: magentoerpconnect
 #: field:connector.config.settings,module_magentoerpconnect_catalog:0
