@@ -325,7 +325,6 @@ class SaleImportRule(ConnectorUnit):
                                      'because it has not been paid since %d '
                                      'days' % (order_id, max_days))
 
-
     def check(self, record):
         """ Check whether the current sale order should be imported
         or not. It will actually use the payment method configuration
@@ -671,6 +670,12 @@ class SaleOrderImport(MagentoImportSynchronizer):
 
 
 @magento
+class SaleOrderCommentImportMapper(ImportMapper):
+    " Mapper for importing comments of sales orders. Does nothing in the base addons. "
+    _model_name = 'magento.sale.order'
+
+
+@magento
 class SaleOrderImportMapper(ImportMapper):
     _model_name = 'magento.sale.order'
 
@@ -815,6 +820,11 @@ class SaleOrderImportMapper(ImportMapper):
         """ Do not assign to a Salesperson otherwise sales orders are hidden
         for the salespersons (access rules)"""
         return {'user_id': False}
+
+    @mapping
+    def sale_order_comment(self, record):
+        comment_mapper = self.environment.get_connector_unit(SaleOrderCommentImportMapper)
+        return comment_mapper.map_record(record)
 
 
 @magento
