@@ -63,43 +63,42 @@ class MailMessage(orm.Model):
         else:
             return False
 
-    def write(self, cr, uid, ids, vals, context=None):
-        """Trigger a write on magento.sale.comment when mail.message
-        are written to start synchro with magento comments"""
-        if 'model' in vals and vals['model'] == 'sale.order':
-            for id in ids:
-                mag_sale_cmt_m = self.pool['magento.sale.comment']
-                mag_cmt_ids = mag_sale_cmt_m.search(
-                    cr, uid, [('openerp_id', '=', id)], context=context)
-                if mag_cmt_ids:
-                    values = {'sync_date': datetime.now().strftime(
-                        DEFAULT_SERVER_DATETIME_FORMAT)}
-                    mag_sale_cmt_m.write(
-                        cr, uid, mag_cmt_ids, values, context=context)
-        return super(MailMessage, self).write(cr, uid, ids, vals, context=None)
+    #def write(self, cr, uid, ids, vals, context=None):
+    #    """Trigger a write on magento.sale.comment when mail.message
+    #    are written to start synchro with magento comments"""
+    #    if 'model' in vals and vals['model'] == 'sale.order':
+    #        mag_sale_cmt_m = self.pool['magento.sale.comment']
+    #        mag_cmt_ids = mag_sale_cmt_m.search(
+    #            cr, uid, [('openerp_id', 'in', ids)], context=context)
+    #        if mag_cmt_ids:
+    #            values = {'sync_date': datetime.now().strftime(
+    #                DEFAULT_SERVER_DATETIME_FORMAT)}
+    #            mag_sale_cmt_m.write(
+    #                cr, uid, mag_cmt_ids, values, context=context)
+    #    return super(MailMessage, self).write(cr, uid, ids, vals, context=None)
 
     def create(self, cr, uid, vals, context=None):
         "Only message (not note) linked to sale.order must be send to Magento"
         message_id = super(MailMessage, self).create(
             cr, uid, vals, context=context)
-        if 'model' in vals and vals['model'] == 'sale.order' \
-                and 'subtype_id' in vals and vals['subtype_id']:
+        if vals.get('model') == 'sale.order' and vals.get('subtype_id'):
             mag_sale_m = self.pool['magento.sale.order']
             mag_sale_ids = mag_sale_m.search(
                 cr, uid, [('openerp_id', '=', vals['res_id'])], context=context)
             if mag_sale_ids:
-                mag_sale = mag_sale_m.browse(cr, uid, mag_sale_ids,
-                                             context=context)[0]
-                values = {
-                    'openerp_id': message_id,
-                    'subject': _('Sent to Magento'),
-                    'is_visible_on_front': True,
-                    'is_customer_notified': self.is_customer_notified(
-                        cr, uid, vals['res_id'], context=context),
-                    'magento_sale_order_id': mag_sale.id,
-                }
-                self.pool['magento.sale.comment'].create(cr, uid, values,
-                                                         context=context)
+                mag_sales = mag_sale_m.browse(cr, uid, mag_sale_ids,
+                                              context=context)
+                for mag_sale in mag_sales:
+                    values = {
+                        'openerp_id': message_id,
+                        'subject': _('Sent to Magento'),
+                        'is_visible_on_front': True,
+                        'is_customer_notified': self.is_customer_notified(
+                            cr, uid, vals['res_id'], context=context),
+                        'magento_sale_order_id': mag_sale.id,
+                    }
+                    self.pool['magento.sale.comment'].create(cr, uid, values,
+                                                             context=context)
         return message_id
 
 
@@ -182,11 +181,10 @@ class MagentoSaleComment(orm.Model):
             if 'status' in vals:
                 # subject customization
                 options = []
-                if 'is_customer_notified' in vals \
-                        and vals['is_customer_notified']:
-                    options.append('customer notified')
-                if 'is_visible_on_front' in vals and vals['is_visible_on_front']:
-                    options.append('visible on front')
+                if vals.get('is_customer_notified'):
+                    options.append(_('customer notified'))
+                if vals.get('is_visible_on_front'):
+                    options.append(_('visible on front'))
                 option_string = ''
                 if options:
                     option_string = '(' + ', ' . join(options) + ')'
@@ -196,12 +194,12 @@ class MagentoSaleComment(orm.Model):
                                                       context=context)
 
 
-@magento(replacing=sale.SaleOrderImportMapper)
-class SaleOrderImportMapper(sale.SaleOrderImportMapper):
+@magento(replacing=sale.SaleOrderCommentImportMapper)
+class SaleOrderImportMapper(sale.SaleOrderCommentImportMapper):
     "Sales order has got an 'status_history' list which all magento comments"
     _model_name = 'magento.sale.order'
 
-    children = sale.SaleOrderImportMapper.children + [
+    children = sale.SaleOrderCommentImportMapper.children + [
         ('status_history',
          'magento_order_comment_ids',
          'magento.sale.comment')]
