@@ -833,6 +833,19 @@ class SaleOrderLineImportMapper(ImportMapper):
             ]
 
     @mapping
+    def discount_amount(self, record):
+        discount_value = float(record.get('discount_amount', 0))
+        if self.backend_record.catalog_price_tax_included:
+            row_total = float(record.get('row_total_incl_tax', 0))
+        else:
+            row_total = float(record.get('row_total', 0))
+        discount = 0
+        if discount_value > 0 and row_total > 0:
+            discount = 100 * discount_value / row_total
+        result = {'discount': discount}
+        return result
+
+    @mapping
     def product_id(self, record):
         binder = self.get_binder_for_model('magento.product.product')
         product_id = binder.to_openerp(record['product_id'], unwrap=True)
@@ -840,19 +853,7 @@ class SaleOrderLineImportMapper(ImportMapper):
                ("product_id %s should have been imported in "
                 "SaleOrderImport._import_dependencies" % record['product_id'])
         return {'product_id': product_id}
-
-    @mapping
-    def discount_amount(self, record):
-        ifield = record.get('discount_amount')
-        discount = 0
-        if ifield:
-            price = float(record['price'])
-            qty_ordered = float(record['qty_ordered'])
-            if price and qty_ordered:
-                discount = 100 * float(ifield) / price * qty_ordered
-        result = {'discount': discount}
-        return result
-
+    
     @mapping
     def product_options(self, record):
         result = {}
