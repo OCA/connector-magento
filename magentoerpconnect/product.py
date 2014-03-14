@@ -400,6 +400,16 @@ class ProductImportMapper(ImportMapper):
               ]
 
     @mapping
+    def is_active(self, record):
+        """Check if the Product is activ in Magento
+        if not, import it, BUT set sale_ok and 
+        purchase_ok to False"""
+        if record.get('status') != 1:
+            return {'sale_ok': False,
+                    'purchase_ok': False}
+        return
+
+    @mapping
     def price(self, record):
         """ The price is imported at the creation of
         the product, then it is only modified and exported
