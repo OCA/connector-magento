@@ -401,13 +401,15 @@ class ProductImportMapper(ImportMapper):
 
     @mapping
     def is_active(self, record):
-        """Check if the Product is activ in Magento
+        """Check if the product is active in Magento
         if not, import it, BUT set sale_ok and 
-        purchase_ok to False"""
+        purchase_ok to False
+        "1" is a constant value in Magento, which means
+        that the product is active"""
+
         if record.get('status') != 1:
             return {'sale_ok': False,
                     'purchase_ok': False}
-        return
 
     @mapping
     def price(self, record):
