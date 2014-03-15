@@ -36,15 +36,15 @@ DB = common.DB
 ADMIN_USER_ID = common.ADMIN_USER_ID
 
 
-class test_import_magento(common.SingleTransactionCase):
-    """ Test the imports from a Magento Mock.
+class test_base_magento(common.SingleTransactionCase):
+    """ Base class - Test the imports from a Magento Mock.
 
     The data returned by Magento are those created for the
     demo version of Magento on a standard 1.7 version.
     """
 
     def setUp(self):
-        super(test_import_magento, self).setUp()
+        super(test_base_magento, self).setUp()
         self.backend_model = self.registry('magento.backend')
         self.session = ConnectorSession(self.cr, self.uid)
         data_model = self.registry('ir.model.data')
@@ -105,6 +105,11 @@ class test_import_magento(common.SingleTransactionCase):
         self.assertEqual(len(storeview_ids), 4)
 
         # TODO; install & configure languages on storeviews
+
+
+class test_import_magento(test_base_magento):
+    """ Test the imports from a Magento Mock.
+    """
 
     def test_10_import_product_category(self):
         """ Import of a product category """
