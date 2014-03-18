@@ -407,7 +407,7 @@ class ProductImportMapper(ImportMapper):
         "1" is a constant value in Magento, which means
         that the product is active"""
 
-        if record.get('status') != 1:
+        if record.get('status') != '1':
             return {'sale_ok': False,
                     'purchase_ok': False}
 
