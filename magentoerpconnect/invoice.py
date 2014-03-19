@@ -222,13 +222,12 @@ def invoice_create_bindings(session, model_name, record_id):
                                   if store.backend_id.id == magento_sale.backend_id.id),
                                  None)
             assert magento_store
-			
-	    payment_method = sale.payment_method_id
-	    if payment_method and payment_method.create_invoice_on:
-            	create_invoice = payment_method.create_invoice_on
-	    else:
-		create_invoice = magento_store.create_invoice_on	    
 
+            payment_method = sale.payment_method_id
+            if payment_method and payment_method.create_invoice_on:
+                create_invoice = payment_method.create_invoice_on
+            else:
+                create_invoice = magento_store.create_invoice_on
 
             if create_invoice == invoice.state:
                 session.create('magento.account.invoice',
