@@ -451,10 +451,10 @@ class PartnerAddressBook(ConnectorUnit):
                     # and use the name of the company for the name
                     company_mapper = get_unit(CompanyImportMapper,
                                               'magento.res.partner')
-                    company_mapper.convert(magento_record)
+                    map_record = company_mapper.map_record(magento_record)
                     self.session.write('magento.res.partner',
                                        partner_binding_id,
-                                       company_mapper.data)
+                                       map_record.values())
                 else:
                     # for B2C individual customers, merge with the main
                     # partner

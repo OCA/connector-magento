@@ -114,6 +114,14 @@
                                     <field name="sale_prefix" placeholder="mag-" />
                                     <field name="product_stock_field_id" widget="selection"
                                         domain="[('model', 'in', ['product.product', 'product.template']), ('ttype', '=', 'float')]"/>
+                                    <field name="catalog_price_tax_included"/>
+                                    <p attrs="{'invisible': [('catalog_price_tax_included', '=', False)]}">
+                                      This option should respect the same
+                                      configuration than Magento.  Pay
+                                      attention to the taxes on the products,
+                                      which should surely include prices when
+                                      this option is activated.
+                                    </p>
                                 </group>
                             </page>
 

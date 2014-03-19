@@ -21,7 +21,7 @@
 ##############################################################################
 
 {'name': 'Magento Connector',
- 'version': '2.2.1',
+ 'version': '2.3.1',
  'category': 'Connector',
  'depends': ['account',
              'product',
@@ -33,7 +33,7 @@
  'external_dependencies': {
      'python': ['magento'],
  },
- 'author': 'MagentoERPconnect Core Editors',
+ 'author': 'Connector Core Editors',
  'license': 'AGPL-3',
  'website': 'https://launchpad.net/magentoerpconnect',
  'description': """
@@ -46,7 +46,7 @@ build on top of the `connector`_ framework. It is is structured so that
 it can be extended or modified easily from separate addons, a factor of
 success when the implementations of Magento vary a lot.
 
-Magento OpenERP Connector is mainly developed by the Magentoerpconnect Core
+Magento OpenERP Connector is mainly developed by the Connector Core
 Editors, these being Camptocamp_ and Akretion_. The `source is on
 launchpad`_.
 
@@ -108,7 +108,7 @@ Available extensions:
 
 
 .. _connector: https://code.launchpad.net/openerp-connector
-.. _connector_ecommerce: https://code.launchpad.net/openerp-connector
+.. _connector_ecommerce: https://code.launchpad.net/openerp-connector-ecommerce
 .. _Camptocamp: http://www.camptocamp.com
 .. _Akretion: http://www.akretion.com
 .. _`source is on launchpad`: https://launchpad.net/magentoerpconnect

@@ -186,9 +186,11 @@ A bit of theory
 ===============
 
 The mappings of the fields are defined in subclasses of
-:py:class:`connector.connector.unit.mapper.ImportMapper` or
-:py:class:`connector.connector.unit.mapper.ExportMapper`, respectively
+:py:class:`connector.unit.mapper.ImportMapper` or
+:py:class:`connector.unit.mapper.ExportMapper`, respectively
 for the imports and the exports.
+
+See the documentation about :py:class:`~connector.unit.mapper.Mapper`.
 
 .. note:: The connector almost never works with the OpenERP Models
           directly. Instead, it works with its own models, which
@@ -201,7 +203,7 @@ for the imports and the exports.
 
 When you need to change the mappings, you'll need to dive in the
 ``magentoerpconnect``'s code and locate the class which does this job for
-your model. You won't change anything on this class, but you'll extend
+your model. You won't change anything in this class, but you'll extend
 it so you need to have a look on it.  For example, the mapping for
 ``magento.res.partner`` in ``magentoerpconnect`` is the following
 (excerpt)::

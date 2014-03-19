@@ -1,8 +1,26 @@
 Changelog
 ---------
 
-2.2.1.dev0
-~~~~~~~~~~
+
+2.3.1 (2014-01-23)
+~~~~~~~~~~~~~~~~~~
+
+*  Do not fail when a None value is given instead of a float when importing special lines of sales orders. (https://launchpad.net/bugs/1271537)
+
+
+2.3.0 (2014-01-15 warning: API changes)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* Compatibility with the Connector Framework: listeners 'on_record_create' receives
+  an additional argument 'vals'; 'on_record_write's named argument 'fields' becomes 'vals'
+  and receives the full dictionary of values
+* Fix: wrong main image imported on products (https://launchpad.net/bugs/1258418)
+* Changes calls to Mapper according to the new API of the Mappers.
+  See branch: https://code.launchpad.net/~openerp-connector-core-editors/openerp-connector/7.0-connector-mapper-refactor
+* Fix: mismatch between tax excluding and tax including amount, new configuration option (https://launchpad.net/bugs/1234117)
+* Fix: mismatch between tax excluding and tax including amount, new configuration option (https://launchpad.net/bugs/1234117)
+* Implements the new API (connector_ecommerce) for the special order lines:
+  https://code.launchpad.net/~openerp-connector-core-editors/openerp-connector/7.0-e-commerce-addons-refactor-so-extra-lines/+merge/194629
 
 
 2.2.1 (2013.11.22)

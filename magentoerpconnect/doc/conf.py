@@ -30,6 +30,7 @@ ADDONS_PATHS = ('server/openerp/addons',
                 'webclient/addons',
                 'addons',
                 'openerp-connector',
+                'openerp-connector-ecommerce',
                 'e-commerce-addons',
                 'openerp-connector-magento')
 pathes = [os.path.join(BASE_PATH, path) for path in ADDONS_PATHS]
