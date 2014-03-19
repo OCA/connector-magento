@@ -661,13 +661,11 @@ class SaleOrderImport(MagentoImportSynchronizer):
 
         self._import_addresses()
 
-        prod_binder = self.get_binder_for_model('magento.product.product')
-        prod_importer = self.get_connector_unit_for_model(MagentoImportSynchronizer,
-                                                          'magento.product.product')
         for line in record.get('items', []):
-            _logger.info('line: %s', line)
-            if 'product_id' in line and prod_binder.to_openerp(line['product_id']) is None:
-                prod_importer.run(line['product_id'])
+            _logger.debug('line: %s', line)
+            if 'product_id' in line:
+                self._import_dependency(line['product_id'],
+                                        'magento.product.product')
 
 
 @magento

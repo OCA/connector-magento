@@ -1,6 +1,11 @@
 Changelog
 ---------
 
+2.3.1.dev0 (unreleased)
+~~~~~~~~~~~~~~~~~~~~~~~
+
+* New helper in importer to import dependencies
+
 
 2.3.1 (2014-01-23)
 ~~~~~~~~~~~~~~~~~~

@@ -266,13 +266,8 @@ class PartnerImport(MagentoImportSynchronizer):
     def _import_dependencies(self):
         """ Import the dependencies for the record"""
         record = self.magento_record
-
-        # import customer groups
-        binder = self.get_binder_for_model('magento.res.partner.category')
-        if binder.to_openerp(record['group_id']) is None:
-            importer = self.get_connector_unit_for_model(MagentoImportSynchronizer,
-                                                         'magento.res.partner.category')
-            importer.run(record['group_id'])
+        self._import_dependency(record['group_id'],
+                                'magento.res.partner.category')
 
     @property
     def mapper(self):

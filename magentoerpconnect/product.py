@@ -318,13 +318,9 @@ class ProductImport(MagentoImportSynchronizer):
         """ Import the dependencies for the record"""
         record = self.magento_record
         # import related categories
-        binder = self.get_binder_for_model('magento.product.category')
         for mag_category_id in record['categories']:
-            if binder.to_openerp(mag_category_id) is None:
-                importer = self.get_connector_unit_for_model(
-                    MagentoImportSynchronizer,
-                    model='magento.product.category')
-                importer.run(mag_category_id)
+            self._import_dependency(mag_category_id,
+                                    'magento.product.category')
 
     def _validate_product_type(self, data):
         """ Check if the product type is in the selection (so we can
