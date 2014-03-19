@@ -396,6 +396,18 @@ class ProductImportMapper(ImportMapper):
               ]
 
     @mapping
+    def is_active(self, record):
+        """ If the product is not active in Magento, it sets
+        sale_ok and purchase_ok to False.
+
+        '1' is a constant value in Magento, which means that the product
+        is active
+        """
+        if record.get('status') != '1':
+            return {'sale_ok': False,
+                    'purchase_ok': False}
+
+    @mapping
     def price(self, record):
         """ The price is imported at the creation of
         the product, then it is only modified and exported

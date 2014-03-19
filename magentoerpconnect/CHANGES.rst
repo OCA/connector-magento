@@ -3,8 +3,10 @@ Changelog
 
 2.3.1.dev0 (unreleased)
 ~~~~~~~~~~~~~~~~~~~~~~~
+
 * New helper in importer to import dependencies
 * allow to customize the available versions without overriding the 'version' field
+* Products deactivated on Magento are imported as not sellable / purchasable
 
 
 2.3.1 (2014-01-23)
