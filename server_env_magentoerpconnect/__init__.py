@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    Author: Guewen Baconnier
-#    Copyright 2012 Camptocamp SA
+#    Copyright 2014 Camptocamp SA
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,16 +19,4 @@
 #
 ##############################################################################
 
-import test_synchronization
-import test_address_book
-import test_export_invoice
-import test_import_product_image
-fast_suite = [
-]
-
-checks = [
-    test_synchronization,
-    test_address_book,
-    test_export_invoice,
-    test_import_product_image,
-]
+from . import magento_model

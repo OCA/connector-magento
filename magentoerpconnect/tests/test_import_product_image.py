@@ -70,7 +70,7 @@ class test_import_product_image(common.TransactionCase):
         """ Check if the images are sorted in the correct priority """
         env = mock.Mock()
         importer = CatalogImageImporter(env)
-        file1 = {'file': 'file1', 'types': ['base'], 'position': '10'}
+        file1 = {'file': 'file1', 'types': ['image'], 'position': '10'}
         file2 = {'file': 'file2', 'types': ['thumbnail'], 'position': '3'}
         file3 = {'file': 'file3', 'types': ['thumbnail'], 'position': '4'}
         file4 = {'file': 'file4', 'types': [], 'position': '10'}

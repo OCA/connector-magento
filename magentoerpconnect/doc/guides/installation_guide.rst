@@ -10,8 +10,7 @@ Installation Guide
 Installation
 ************
 
-The installation steps assume that you already have a working OpenERP
-setup with all the OpenERP pre-requisites.
+The installation steps assume that you already have a functioning OpenERP server.
 
 If you are a developer, you may want to install the Connector using our
 buildout configuration, head over :ref:`installation-with-buildout`.
@@ -27,16 +26,24 @@ OpenERP to ensure a correct synchronization between them
 OpenERP
 =======
 
-Download the branches where you installed OpenERP::
+Download the branches below in a path where you chosed to store the addons::
 
     $ bzr branch lp:openerp-connector/7.0 openerp-connector
-    $ bzr branch lp:openerp-connector/7.0-e-commerce-addons e-commerce-addons
+    $ bzr branch lp:openerp-connector-ecommerce/7.0 openerp-connector-ecommerce
     $ bzr branch lp:openerp-connector-magento/7.0 openerp-connector-magento
+    $ bzr branch lp:e-commerce-addons/7.0 e-commerce-addons
     $ bzr branch lp:openerp-product-attributes/7.0 openerp-product-attributes
     $ bzr branch lp:sale-wkfl/7.0 sale-wkfl
 
+.. important:: Keep the Bazaar branches entire. Do not copy-paste the modules
+               in another directory.
+
 Add the branches in the addons path, either using the server command
 line or adding them in the OpenERP server configuration file.
+
+Example using the command line argument::
+
+    $ /path/to/openerp-server --addons-path /path/to/openerp-connector,/path/to/openerp-connector-ecommerce,/path/to/openerp-connector-magento,/path/to/e-commerce-addons,/path/to/openerp-product-attributes,/path/to/sale-wkfl
 
 You also need to install the ``magento`` Python package.
 So install it with either pip or either easy_install::
@@ -74,6 +81,12 @@ In order to install it:
    `magento_root/app/etc/modules`.
 #. Flush the Magento cache from the admin panel or by removing everything in
    `magento_root/var/cache`
+
+
+.. important:: Please check if you have installed Magento on PHP with a *5.4.x** version.
+               Magento is **not compatible** with this version and would prevent the API to
+               behave normally. In that case, you must retrograde to PHP 5.3.x or apply the
+               patch provided by Magento (see http://magento.com/resources/system-requirements)
 
 Configuring the Magento web-services
 ====================================

@@ -33,7 +33,10 @@ from openerp.addons.connector.unit.mapper import (mapping,
                                                   ImportMapper
                                                   )
 from openerp.addons.connector_ecommerce.unit.sale_order_onchange import (
-        SaleOrderOnChange)
+    SaleOrderOnChange)
+from openerp.addons.connector_ecommerce.sale import (ShippingLineBuilder,
+                                                     CashOnDeliveryLineBuilder,
+                                                     GiftOrderLineBuilder)
 from .unit.backend_adapter import GenericAdapter
 from .unit.import_synchronizer import (DelayedBatchImport,
                                        MagentoImportSynchronizer
@@ -563,11 +566,11 @@ class SaleOrderImport(MagentoImportSynchronizer):
                 'website_id': record.get('website_id'),
             }
             mapper = self.get_connector_unit_for_model(PartnerImportMapper,
-                                                      'magento.res.partner')
-            mapper.convert(customer_record)
-            oe_record = mapper.data_for_create
-            oe_record['guest_customer'] = True
-            partner_bind_id = sess.create('magento.res.partner', oe_record)
+                                                       'magento.res.partner')
+            map_record = mapper.map_record(customer_record)
+            map_record.update(guest_customer=True)
+            partner_bind_id = sess.create('magento.res.partner',
+                                          map_record.values(for_create=True))
             partner_binder.bind(guest_customer_id,
                                 partner_bind_id)
         else:
@@ -608,10 +611,10 @@ class SaleOrderImport(MagentoImportSynchronizer):
                                                        'magento.address')
 
         def create_address(address_record):
-            addr_mapper.convert(address_record)
-            oe_address = addr_mapper.data_for_create
-            oe_address.update(addresses_defaults)
-            address_bind_id = sess.create('magento.address', oe_address)
+            map_record = addr_mapper.map_record(address_record)
+            map_record.update(addresses_defaults)
+            address_bind_id = sess.create('magento.address',
+                                          map_record.values(for_create=True))
             return sess.read('magento.address',
                              address_bind_id,
                              ['openerp_id'])['openerp_id'][0]
@@ -635,9 +638,19 @@ class SaleOrderImport(MagentoImportSynchronizer):
         data['partner_shipping_id'] = self.partner_shipping_id
         return data
 
+    def _create_data(self, map_record, **kwargs):
+        tax_include = self.backend_record.catalog_price_tax_included
+        return super(SaleOrderImport, self)._create_data(
+            map_record, tax_include=tax_include, **kwargs)
+
     def _create(self, data):
         data = self._update_special_fields(data)
         return super(SaleOrderImport, self)._create(data)
+
+    def _update_data(self, map_record, **kwargs):
+        tax_include = self.backend_record.catalog_price_tax_included
+        return super(SaleOrderImport, self)._update_data(
+            map_record, tax_include=tax_include, **kwargs)
 
     def _update(self, binding_id, data):
         data = self._update_special_fields(data)
@@ -671,32 +684,69 @@ class SaleOrderImportMapper(ImportMapper):
     children = [('items', 'magento_order_line_ids', 'magento.sale.order.line'),
                 ]
 
-    def _after_mapping(self, result):
-        sess = self.session
-        # TODO: refactor: do no longer store the transient fields in the
-        # result, use a ConnectorUnit to create the lines
-        result = sess.pool['sale.order']._convert_special_fields(sess.cr,
-                                                                 sess.uid,
-                                                                 result,
-                                                                 result['magento_order_line_ids'],
-                                                                 sess.context)
-        # remove transient fields otherwise OpenERP will raise a warning
-        # or even fail to create the record because the fields do not
-        # exist
-        result.pop('shipping_amount_tax_excluded', None)
-        result.pop('shipping_amount_tax_included', None)
-        result.pop('shipping_tax_amount', None)
-        result.pop('gift_certificates_amount', None)
-        result.pop('gift_certificates_code', None)
+    def _add_shipping_line(self, map_record, values):
+        record = map_record.source
+        amount_incl = float(record.get('base_shipping_incl_tax') or 0.0)
+        amount_excl = float(record.get('shipping_amount') or 0.0)
+        if not (amount_incl or amount_excl):
+            return values
+        line_builder = self.get_connector_unit_for_model(MagentoShippingLineBuilder)
+        if self.options.tax_include:
+            discount = float(record.get('shipping_discount_amount') or 0.0)
+            line_builder.price_unit = (amount_incl - discount)
+        else:
+            line_builder.price_unit = amount_excl
+
+        if values.get('carrier_id'):
+            carrier = self.session.browse('delivery.carrier',
+                                          values['carrier_id'])
+            line_builder.product_id = carrier.product_id
+
+        line = (0, 0, line_builder.get_line())
+        values['order_line'].append(line)
+        return values
+
+    def _add_cash_on_delivery_line(self, map_record, values):
+        record = map_record.source
+        amount_excl = float(record.get('cod_fee') or 0.0)
+        amount_incl = float(record.get('cod_tax_amount') or 0.0)
+        if not (amount_excl or amount_incl):
+            return values
+        line_builder = self.get_connector_unit_for_model(MagentoCashOnDeliveryLineBuilder)
+        backend = self.backend_record
+        tax_include = self.options.tax_include
+        line_builder.price_unit = amount_incl if tax_include else amount_excl
+        line = (0, 0, line_builder.get_line())
+        values['order_line'].append(line)
+        return values
+
+    def _add_gift_certificate_line(self, map_record, values):
+        record = map_record.source
+        if 'gift_cert_amount' not in record:
+            return values
+        amount = float(record['gift_cert_amount'])
+        line_builder = self.get_connector_unit_for_model(MagentoGiftOrderLineBuilder)
+        line_builder.price_unit = amount
+        if 'gift_cert_code' in record:
+            line_builder.code = record['gift_cert_code']
+        line = (0, 0, line_builder.get_line())
+        values['order_line'].append(line)
+        return values
+
+    def finalize(self, map_record, values):
+        values.setdefault('order_line', [])
+        values = self._add_shipping_line(map_record, values)
+        values = self._add_cash_on_delivery_line(map_record, values)
+        values = self._add_gift_certificate_line(map_record, values)
         onchange = self.get_connector_unit_for_model(SaleOrderOnChange)
-        return onchange.play(result, result['magento_order_line_ids'])
+        return onchange.play(values, values['magento_order_line_ids'])
 
     @mapping
     def name(self, record):
         name = record['increment_id']
         prefix = self.backend_record.sale_prefix
         if prefix:
-          name = prefix + name
+            name = prefix + name
         return {'name': name}
 
     @mapping
@@ -728,33 +778,12 @@ class SaleOrderImportMapper(ImportMapper):
         return {'payment_method_id': method_id}
 
     @mapping
-    def cod_fee(self, record): # cash on delivery
-        # TODO Map Me (sic)
-        pass
-
-    @mapping
-    def gift_cert_amount(self, record):
-        if 'gift_cert_amount' in record:
-            result = {'gift_certificates_amount': record['gift_cert_amount']}
-        else:
-            result = {}
-        return result
-
-    @mapping
-    def gift_cert_code(self, record):
-        if 'gift_cert_code' in record:
-            result = {'gift_certificates_code': record['gift_cert_code']}
-        else:
-            result = {}
-        return result
-
-    @mapping
     def shipping_method(self, record):
         session = self.session
         ifield = record.get('shipping_method')
         if not ifield:
             return
-        
+
         carrier_ids = session.search('delivery.carrier',
                                      [('magento_code', '=', ifield)])
         if carrier_ids:
@@ -772,24 +801,6 @@ class SaleOrderImportMapper(ImportMapper):
                                          'magento_code': ifield,
                                          })
             result = {'carrier_id': carrier_id}
-        return result
-
-    @mapping
-    def base_shipping_incl_tax(self, record):
-        amount_tax_inc = float(record.get('base_shipping_incl_tax', 0.0))
-        discount = float(record.get('shipping_discount_amount', 0.0))
-        amount_tax_inc -=  discount
-        amount_tax_exc = float(record.get('shipping_amount', 0.0))
-
-        if amount_tax_exc and amount_tax_inc:
-            tax_rate = amount_tax_inc / amount_tax_exc -1
-        else:
-            tax_rate = 0
-
-        result = {'shipping_amount_tax_included': amount_tax_inc,
-                  'shipping_amount_tax_excluded': amount_tax_exc,
-                  'shipping_tax_rate': tax_rate,
-                  }
         return result
 
     # partner_id, partner_invoice_id, partner_shipping_id
@@ -866,11 +877,26 @@ class SaleOrderLineImportMapper(ImportMapper):
         base_row_total = float(record['base_row_total'] or 0.)
         base_row_total_incl_tax = float(record['base_row_total_incl_tax'] or 0.)
         qty_ordered = float(record['qty_ordered'])
-        if backend.catalog_price_tax_included:
+        if self.options.tax_include:
             result['price_unit'] = base_row_total_incl_tax / qty_ordered
         else:
             result['price_unit'] = base_row_total / qty_ordered
         return result
+
+
+@magento
+class MagentoShippingLineBuilder(ShippingLineBuilder):
+    _model_name = 'magento.sale.order'
+
+
+@magento
+class MagentoCashOnDeliveryLineBuilder(CashOnDeliveryLineBuilder):
+    _model_name = 'magento.sale.order'
+
+
+@magento
+class MagentoGiftOrderLineBuilder(GiftOrderLineBuilder):
+    _model_name = 'magento.sale.order'
 
 
 @job

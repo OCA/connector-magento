@@ -92,9 +92,11 @@ class MagentoImportSynchronizer(ImportSynchronizer):
         return
 
     def _map_data(self):
-        """ Call the convert on the Mapper so the converted record can
-        be obtained using mapper.data or mapper.data_for_create"""
-        self.mapper.convert(self.magento_record)
+        """ Returns an instance of
+        :py:class:`~openerp.addons.connector.unit.mapper.MapRecord`
+
+        """
+        return self.mapper.map_record(self.magento_record)
 
     def _validate_data(self, data):
         """ Check if the values to import are correct
@@ -124,21 +126,26 @@ class MagentoImportSynchronizer(ImportSynchronizer):
         """Return the binding id from the magento id"""
         return self.binder.to_openerp(self.magento_id)
 
-    def _context(self):
-        context = self.session.context.copy()
-        context['connector_no_export'] = True
-        return context
+    def _create_data(self, map_record, **kwargs):
+        return map_record.values(for_create=True, **kwargs)
 
     def _create(self, data):
         """ Create the OpenERP record """
+        # special check on data before import
+        self._validate_data(data)
         with self.session.change_context({'connector_no_export': True}):
             binding_id = self.session.create(self.model._name, data)
         _logger.debug('%s %d created from magento %s',
                       self.model._name, binding_id, self.magento_id)
         return binding_id
 
+    def _update_data(self, map_record, **kwargs):
+        return map_record.values(**kwargs)
+
     def _update(self, binding_id, data):
         """ Update an OpenERP record """
+        # special check on data before import
+        self._validate_data(data)
         with self.session.change_context({'connector_no_export': True}):
             self.session.write(self.model._name, binding_id, data)
         _logger.debug('%s %d updated from magento %s',
@@ -173,17 +180,13 @@ class MagentoImportSynchronizer(ImportSynchronizer):
         # import the missing linked resources
         self._import_dependencies()
 
-        self._map_data()
+        map_record = self._map_data()
 
         if binding_id:
-            record = self.mapper.data
-            # special check on data before import
-            self._validate_data(record)
+            record = self._update_data(map_record)
             self._update(binding_id, record)
         else:
-            record = self.mapper.data_for_create
-            # special check on data before import
-            self._validate_data(record)
+            record = self._create_data(map_record)
             binding_id = self._create(record)
 
         self.binder.bind(self.magento_id, binding_id)
@@ -282,8 +285,8 @@ class TranslationImporter(ImportSynchronizer):
 
         for storeview in lang_storeviews:
             lang_record = self._get_magento_data(storeview.magento_id)
-            self.mapper.convert(lang_record)
-            record = self.mapper.data
+            map_record = self.mapper.map_record(lang_record)
+            record = map_record.values()
 
             data = dict((field, value) for field, value in record.iteritems()
                         if field in translatable_fields)

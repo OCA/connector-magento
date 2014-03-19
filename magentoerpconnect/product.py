@@ -28,7 +28,7 @@ import sys
 from openerp.osv import orm, fields
 from openerp.tools.translate import _
 from openerp.addons.connector.queue.job import job
-from openerp.addons.connector.event import on_record_create, on_record_write
+from openerp.addons.connector.event import on_record_write
 from openerp.addons.connector.unit.synchronizer import (ImportSynchronizer,
                                                         ExportSynchronizer
                                                         )
@@ -259,7 +259,7 @@ class CatalogImageImporter(ImportSynchronizer):
 
     def _sort_images(self, images):
         """ Returns a list of images sorted by their priority.
-        An image with the 'base' type is the the primary one.
+        An image with the 'image' type is the the primary one.
         The other images are sorted by their position.
 
         The returned list is reversed, the items at the end
@@ -267,11 +267,11 @@ class CatalogImageImporter(ImportSynchronizer):
         """
         if not images:
             return {}
-        # place the images where the type is 'base' first then
+        # place the images where the type is 'image' first then
         # sort them by the reverse priority (last item of the list has
         # the the higher priority)
         def priority(image):
-            primary = 'base' in image['types']
+            primary = 'image' in image['types']
             try:
                 position = int(image['position'])
             except ValueError:
@@ -510,10 +510,10 @@ INVENTORY_FIELDS = ('manage_stock',
 
 
 @on_record_write(model_names='magento.product.product')
-def magento_product_modified(session, model_name, record_id, fields=None):
+def magento_product_modified(session, model_name, record_id, vals):
     if session.context.get('connector_no_export'):
         return
-    inventory_fields = list(set(fields).intersection(INVENTORY_FIELDS))
+    inventory_fields = list(set(vals).intersection(INVENTORY_FIELDS))
     if inventory_fields:
         export_product_inventory.delay(session, model_name,
                                        record_id, fields=inventory_fields,
