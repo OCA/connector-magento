@@ -356,6 +356,12 @@ class SaleImportRule(ConnectorUnit):
 class SaleOrderImport(MagentoImportSynchronizer):
     _model_name = ['magento.sale.order']
 
+    @property
+    def mapper(self):
+       if self._mapper is None:
+           self._mapper = self.environment.get_connector_unit(SaleOrderImportMapper)
+       return self._mapper
+
     def _clean_magento_items(self, resource):
         """
         Method that clean the sale order line given by magento before importing it
@@ -824,7 +830,8 @@ class SaleOrderImportMapper(ImportMapper):
     @mapping
     def sale_order_comment(self, record):
         comment_mapper = self.environment.get_connector_unit(SaleOrderCommentImportMapper)
-        return comment_mapper.map_record(record)
+        map_record = comment_mapper.map_record(record)
+        return map_record.values()
 
 
 @magento
