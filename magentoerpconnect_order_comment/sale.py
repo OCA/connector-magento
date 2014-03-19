@@ -82,9 +82,12 @@ class MailMessage(orm.Model):
         message_id = super(MailMessage, self).create(
             cr, uid, vals, context=context)
         if vals.get('model') == 'sale.order' and vals.get('subtype_id'):
+            print 'create mag comment'
             mag_sale_m = self.pool['magento.sale.order']
             mag_sale_ids = mag_sale_m.search(
                 cr, uid, [('openerp_id', '=', vals['res_id'])], context=context)
+
+            print 'mag sale ids', mag_sale_ids
             if mag_sale_ids:
                 mag_sales = mag_sale_m.browse(cr, uid, mag_sale_ids,
                                               context=context)
