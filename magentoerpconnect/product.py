@@ -41,7 +41,7 @@ from openerp.addons.connector.unit.mapper import (mapping,
                                                   ImportMapper,
                                                   )
 from .unit.backend_adapter import GenericAdapter
-from .unit.mapper import normalize_date
+from .unit.mapper import normalize_datetime
 from .unit.import_synchronizer import (DelayedBatchImport,
                                        MagentoImportSynchronizer,
                                        TranslationImporter,
@@ -396,8 +396,8 @@ class ProductImportMapper(ImportMapper):
               ('short_description', 'description_sale'),
               ('sku', 'default_code'),
               ('type_id', 'product_type'),
-              (normalize_date('created_at'), 'created_at'),
-              (normalize_date('updated_at'), 'updated_at'),
+              (normalize_datetime('created_at'), 'created_at'),
+              (normalize_datetime('updated_at'), 'updated_at'),
               ]
 
     @mapping

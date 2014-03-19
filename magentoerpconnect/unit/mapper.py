@@ -20,7 +20,7 @@
 ##############################################################################
 
    
-def normalize_date(field):
+def normalize_datetime(field):
     """Change a invalid date which comes from Magento, if 
     no real date is set to null for correct import to
     OpenERP"""
