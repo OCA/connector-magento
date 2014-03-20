@@ -251,6 +251,10 @@ class magento_backend(orm.Model):
     def _scheduler_import_product_categories(self, cr, uid, domain=None, context=None):
         self._magento_backend(cr, uid, self.import_product_categories,
                               domain=domain, context=context)
+        
+    def _scheduler_import_product_product(self, cr, uid, domain=None, context=None):
+        self._magento_backend(cr, uid, self.import_product_product,
+                              domain=domain, context=context)
 
     def _scheduler_update_product_stock_qty(self, cr, uid, domain=None, context=None):
         self._magento_backend(cr, uid, self.update_product_stock_qty,
