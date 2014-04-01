@@ -60,7 +60,6 @@ class magento_backend(orm.Model):
         return [('1.7', '1.7')]
 
     def _get_stock_field_id(self, cr, uid, context=None):
-        stock_field = 'virtual_available'
         field_ids = self.pool.get('ir.model.fields').search(
             cr, uid,
             [('model', '=', 'product.product'),
@@ -76,12 +75,16 @@ class magento_backend(orm.Model):
         'location': fields.char('Location', required=True),
         'username': fields.char('Username'),
         'password': fields.char('Password'),
+        'display_restricted_access': fields.boolean(
+            'Display Restricted Access Fields',
+            help="Display authentication fields required by some web servers "
+            "installation (i.e. '.htaccess' file for apache server)"),
         'restricted_access_username': fields.char(
-            'Restricted access user',
+            'Restricted Access User',
             help="Web server side username : \n"
             "some web servers may requires one authentication"),
         'restricted_access_password': fields.char(
-            'Restricted access Password',
+            'Restricted Access Password',
             help="Web server side password"),
         'sale_prefix': fields.char(
             'Sale Prefix',
@@ -129,6 +132,7 @@ class magento_backend(orm.Model):
 
     _defaults = {
         'product_stock_field_id': _get_stock_field_id,
+        'display_restricted_access': False,
     }
 
     _sql_constraints = [

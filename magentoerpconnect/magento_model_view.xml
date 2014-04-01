@@ -25,8 +25,6 @@
                                     colspan="4"/>
                                 <field name="username" colspan="2"/>
                                 <field name="password" colspan="2"/>
-                                <field name="restricted_access_username" colspan="2" attrs="{'invisible': [('username', '=', False)]}"/>
-                                <field name="restricted_access_password" colspan="2" attrs="{'invisible': [('username', '=', False)]}"/>
                             </group>
                         </group>
                         <group name="main_configuration" string="Main Configuration">
@@ -117,6 +115,11 @@
                                     <field name="product_stock_field_id" widget="selection"
                                         domain="[('model', 'in', ['product.product', 'product.template']), ('ttype', '=', 'float')]"/>
                                     <field name="catalog_price_tax_included"/>
+                                    <field name="display_restricted_access"/>
+                                    <field name="restricted_access_username" colspan="2"
+                                           attrs="{'invisible': [('display_restricted_access', '=', False)]}"/>
+                                    <field name="restricted_access_password" colspan="2"
+                                           attrs="{'invisible': [('display_restricted_access', '=', False)]}"/>
                                     <p attrs="{'invisible': [('catalog_price_tax_included', '=', False)]}">
                                       This option should respect the same
                                       configuration than Magento.  Pay

@@ -121,9 +121,19 @@ class MagentoCRUDAdapter(CRUDAdapter):
         """ Delete a record on the external system """
         raise NotImplementedError
 
+    def _complete_url(self):
+        location = self.magento.location
+        if self.backend_record.restricted_access_username \
+                and self.backend_record.restricted_access_password:
+            replacement = self.backend_record.restricted_access_username + ':'
+            replacement += self.backend_record.restricted_access_password + '@'
+            location = location.replace('://', '://' + replacement)
+        return location
+
     def _call(self, method, arguments):
         try:
-            with magentolib.API(self.magento.location,
+            location = self._complete_url()
+            with magentolib.API(location,
                                 self.magento.username,
                                 self.magento.password) as api:
                 result = api.call(method, arguments)
