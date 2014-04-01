@@ -71,7 +71,7 @@ class test_import_magento_sale_comment(test_base_magento):
         response = {
             'sales_order.addComment': True,
         }
-        with mock_api(response, method_as_key=True) as calls_done:
+        with mock_api(response, key_func=lambda m, a: m) as calls_done:
             mag_order_model = self.registry('magento.sale.order')
             mag_comment_model = self.registry('magento.sale.comment')
             mail_message_model = self.registry('mail.message')
