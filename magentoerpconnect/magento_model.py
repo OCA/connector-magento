@@ -76,6 +76,13 @@ class magento_backend(orm.Model):
         'location': fields.char('Location', required=True),
         'username': fields.char('Username'),
         'password': fields.char('Password'),
+        'restricted_access_username': fields.char(
+            'Restricted access user',
+            help="Web server side username : \n"
+            "some web servers may requires one authentication"),
+        'restricted_access_password': fields.char(
+            'Restricted access Password',
+            help="Web server side password"),
         'sale_prefix': fields.char(
             'Sale Prefix',
             help="A prefix put before the name of imported sales orders.\n"

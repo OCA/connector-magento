@@ -254,22 +254,6 @@ class CatalogImageImporter(ImportSynchronizer):
     _model_name = ['magento.product.product',
                    ]
 
-    def _get_auth_parameters(self):
-        """These parameters are used to acess through .htacess file
-           Example : https://myuser:mypass@mydomain.com
-        """
-        res = {}
-        location = self.backend_record.location
-        arobase = location.find('@')
-        slash = location.find('://') + 3
-        if arobase and slash:
-            auth = location[slash:arobase]
-            res = {
-                'user': auth[:auth.find(':'):],
-                'password': auth[auth.find(':')+1:],
-            }
-        return res
-
     def _get_images(self, storeview_id=None):
         return self.backend_adapter.get_images(self.magento_id, storeview_id)
 
@@ -295,13 +279,15 @@ class CatalogImageImporter(ImportSynchronizer):
             return (primary, -position)
         return sorted(images, key=priority)
 
-    def _get_binary_image(self, image_data, auth):
+    def _get_binary_image(self, image_data):
         url = image_data['url']
         try:
             request = urllib2.Request(url)
-            if 'user' in auth:
+            if self.backend_record.restricted_access_username \
+                    and self.backend_record.restricted_access_password:
                 base64string = base64.encodestring(
-                    '%s:%s' % (auth['user'], auth['password']))
+                    '%s:%s' % (self.backend_record.restricted_access_username,
+                               self.backend_record.restricted_access_password))
                 request.add_header("Authorization", "Basic %s" % base64string)
             binary = urllib2.urlopen(request)
         except urllib2.HTTPError as err:
@@ -320,10 +306,9 @@ class CatalogImageImporter(ImportSynchronizer):
         self.magento_id = magento_id
         images = self._get_images()
         images = self._sort_images(images)
-        auth = self._get_auth_parameters()
         binary = None
         while not binary and images:
-            binary = self._get_binary_image(images.pop(), auth)
+            binary = self._get_binary_image(images.pop())
         if not binary:
             return
         with self.session.change_context({'connector_no_export': True}):

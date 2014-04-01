@@ -25,6 +25,8 @@
                                     colspan="4"/>
                                 <field name="username" colspan="2"/>
                                 <field name="password" colspan="2"/>
+                                <field name="restricted_access_username" colspan="2" attrs="{'invisible': [('username', '=', False)]}"/>
+                                <field name="restricted_access_password" colspan="2" attrs="{'invisible': [('username', '=', False)]}"/>
                             </group>
                         </group>
                         <group name="main_configuration" string="Main Configuration">
