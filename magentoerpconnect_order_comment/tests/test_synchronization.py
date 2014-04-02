@@ -31,7 +31,6 @@ from openerp.addons.magentoerpconnect.unit.import_synchronizer import (
 from openerp.addons.magentoerpconnect.tests.common import (
     mock_api,
     mock_urlopen_image)
-from .test_data_comment import magento_comment_responses
 from openerp.addons.magentoerpconnect.unit.export_synchronizer import export_record
 
 
@@ -45,17 +44,17 @@ class TestMagentoSaleCommentImport(SetpUpMagentoSynchronized):
     def test_10_import_sale_comment(self):
         """ Test import of sale order comment"""
         backend_id = self.backend_id
-        with mock_api(magento_comment_responses):
+        with mock_api(magento_base_responses):
             with mock_urlopen_image():
                 import_record(self.session,
                               'magento.sale.order',
-                              backend_id, '100000006')
+                              backend_id, 900000695)
         
                 order_model = self.registry('magento.sale.order')
         mag_order_ids = order_model.search(
             self.cr, self.uid,
             [('backend_id', '=', backend_id),
-             ('magento_id', '=', '100000006')])
+             ('magento_id', '=', '900000695')])
         self.assertEqual(len(mag_order_ids), 1)
 
         order_id = order_model.read(
@@ -64,7 +63,7 @@ class TestMagentoSaleCommentImport(SetpUpMagentoSynchronized):
             self.cr, self.uid,
             [('backend_id', '=', backend_id),
              ('res_id', '=', order_id)])
-        self.assertEqual(len(comment_ids), 1)
+        self.assertEqual(len(comment_ids), 2)
 
 
 class SetpUpMagentoWithSaleOrder(SetpUpMagentoSynchronized):
