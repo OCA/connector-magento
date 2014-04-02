@@ -58,7 +58,7 @@ class TestMagentoSaleCommentImport(SetpUpMagentoSynchronized):
         self.assertEqual(len(mag_order_ids), 1)
 
         order_id = order_model.read(
-            self.cr, self.uid, mag_order_ids[0], ['openerp_id'])['openerp_id']
+            self.cr, self.uid, mag_order_ids[0], ['openerp_id'])['openerp_id'][0]
         comment_ids = self.registry('magento.sale.comment').search(
             self.cr, self.uid,
             [('backend_id', '=', backend_id),
@@ -85,6 +85,40 @@ class SetpUpMagentoWithSaleOrder(SetpUpMagentoSynchronized):
         self.mag_order = mag_order_model.browse(
             self.cr, self.uid, mag_order_ids[0])
  
+
+class TestMagentoMoveComment(SetpUpMagentoWithSaleOrder):
+
+    def test_10_import_sale_comment_for_edited_sale_order(self):
+        """ Test import of sale order comment for edited sale order
+        Note: the parent have been note cancel in the magento_base_response
+        because we want to import the both sale order.
+        """
+        backend_id = self.backend_id
+        with mock_api(magento_base_responses):
+            with mock_urlopen_image():
+                import_record(self.session,
+                              'magento.sale.order',
+                              backend_id, '900000691-1')
+        
+                order_model = self.registry('magento.sale.order')
+        mag_order_ids = order_model.search(
+            self.cr, self.uid,
+            [('backend_id', '=', backend_id),
+             ('magento_id', '=', '900000691-1')])
+        self.assertEqual(len(mag_order_ids), 1)
+
+        order_id = order_model.read(
+            self.cr, self.uid, mag_order_ids[0], ['openerp_id'])['openerp_id'][0]
+
+        comment_ids = self.registry('magento.sale.comment').search(
+            self.cr, self.uid,
+            [('backend_id', '=', backend_id),
+             ('res_id', '=', order_id)])
+        #The sale order 900000691 have 1 comment
+        #and the 900000691-1 have 2 comment
+        #Total is 3 comment
+        self.assertEqual(len(comment_ids), 3)
+
 
 class TestMagentoSaleCommentExport(SetpUpMagentoWithSaleOrder):
     """ Test the imports from a Magento Mock.
