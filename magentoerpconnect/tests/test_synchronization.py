@@ -36,7 +36,7 @@ DB = common.DB
 ADMIN_USER_ID = common.ADMIN_USER_ID
 
 
-class test_base_magento(common.SingleTransactionCase):
+class SepUpMagentoBase(common.TransactionCase):
     """ Base class - Test the imports from a Magento Mock.
 
     The data returned by Magento are those created for the
@@ -44,7 +44,7 @@ class test_base_magento(common.SingleTransactionCase):
     """
 
     def setUp(self):
-        super(test_base_magento, self).setUp()
+        super(SepUpMagentoBase, self).setUp()
         self.backend_model = self.registry('magento.backend')
         self.session = ConnectorSession(self.cr, self.uid)
         data_model = self.registry('ir.model.data')
@@ -79,6 +79,9 @@ class test_base_magento(common.SingleTransactionCase):
                  'days_before_cancel': 0,
                  'journal_id': journal_id})
 
+
+class TestBaseMagento(SepUpMagentoBase):
+
     def test_00_import_backend(self):
         """ Synchronize initial metadata """
         with mock_api(magento_base_responses):
@@ -107,7 +110,17 @@ class test_base_magento(common.SingleTransactionCase):
         # TODO; install & configure languages on storeviews
 
 
-class test_import_magento(test_base_magento):
+class SetpUpMagentoSynchronized(SepUpMagentoBase):
+
+    def setUp(self):
+        super(SetpUpMagentoSynchronized, self).setUp()
+        with mock_api(magento_base_responses):
+            import_batch(self.session, 'magento.website', self.backend_id)
+            import_batch(self.session, 'magento.store', self.backend_id)
+            import_batch(self.session, 'magento.storeview', self.backend_id)
+
+
+class TestImportMagento(SetpUpMagentoSynchronized):
     """ Test the imports from a Magento Mock.
     """
 
