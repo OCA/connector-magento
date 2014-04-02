@@ -51,44 +51,22 @@ class MailMessage(orm.Model):
             string="Magento Bindings"),
     }
 
-    def is_customer_notified(self, cr, uid, sale_id, context=None):
-        "'Magento store' define if customer must be notified"
-        sale = self.pool['sale.order'].browse(cr, uid, sale_id, context=context)
-        magento_store_id = self.pool['magento.store'].search(
-            cr, uid, [('openerp_id', '=', sale.shop_id.id)], context=context)
-        store = self.pool['magento.store'].browse(
-            cr, uid, magento_store_id, context=context)[0]
-        if store.send_sale_comment_mail is True:
-            return True
-        else:
-            return False
 
-    def create(self, cr, uid, vals, context=None):
-        "Only message (not note) linked to sale.order must be send to Magento"
-        message_id = super(MailMessage, self).create(
-            cr, uid, vals, context=context)
-        if vals.get('model') == 'sale.order' and vals.get('subtype_id'):
-            print 'create mag comment'
-            mag_sale_m = self.pool['magento.sale.order']
-            mag_sale_ids = mag_sale_m.search(
-                cr, uid, [('openerp_id', '=', vals['res_id'])], context=context)
-
-            print 'mag sale ids', mag_sale_ids
-            if mag_sale_ids:
-                mag_sales = mag_sale_m.browse(cr, uid, mag_sale_ids,
-                                              context=context)
-                for mag_sale in mag_sales:
-                    values = {
-                        'openerp_id': message_id,
-                        'subject': _('Sent to Magento'),
-                        'is_visible_on_front': True,
-                        'is_customer_notified': self.is_customer_notified(
-                            cr, uid, vals['res_id'], context=context),
-                        'magento_sale_order_id': mag_sale.id,
-                    }
-                    self.pool['magento.sale.comment'].create(cr, uid, values,
-                                                             context=context)
-        return message_id
+@on_record_create(model_names='mail.message')
+def create_mail_message(session, model_name, record_id, vals):
+    if session.context.get('connector_no_export'):
+        return
+    if vals.get('model') == 'sale.order' and vals.get('subtype_id'):
+        order = session.browse('sale.order', vals['res_id'])
+        for mag_sale in order.magento_bind_ids:
+            store = mag_sale.storeview_id.store_id
+            session.create('magento.sale.comment', {
+                'openerp_id': record_id,
+                'subject': _('Sent to Magento'),
+                'is_visible_on_front': True,
+                'is_customer_notified': store.send_sale_comment_mail,
+                'magento_sale_order_id': mag_sale.id,
+            })
 
 
 class MagentoSaleOrder(orm.Model):
