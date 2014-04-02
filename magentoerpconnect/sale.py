@@ -353,6 +353,14 @@ class SaleImportRule(ConnectorUnit):
 
 
 @magento
+class SaleOrderMoveComment(ConnectorUnit):
+    _model_name = ['magento.sale.order']
+
+    def move(self, binding):
+        pass
+
+
+@magento
 class SaleOrderImport(MagentoImportSynchronizer):
     _model_name = ['magento.sale.order']
 
@@ -487,6 +495,10 @@ class SaleOrderImport(MagentoImportSynchronizer):
     def _after_import(self, binding_id):
         self._link_parent_orders(binding_id)
         self._create_payment(binding_id)
+        binding = self.session.browse(self.model._name, binding_id)
+        if binding.magento_parent_id:
+            move_comment = self.environment.get_connector_unit(SaleOrderMoveComment)
+            move_comment.move(binding)
 
     def _get_magento_data(self):
         """ Return the raw Magento data for ``self.magento_id`` """

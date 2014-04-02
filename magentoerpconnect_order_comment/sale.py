@@ -237,11 +237,11 @@ class SaleCommentImportMapChild(ImportMapChild):
             return True
 
 
-@magento(replacing=sale.SaleOrderImport)
-class SaleOrderImport(sale.SaleOrderImport):
+@magento(replacing=sale.SaleOrderMoveComment)
+class SaleOrderMoveComment(sale.SaleOrderMoveComment):
     _model_name = ['magento.sale.order']
 
-    def _move_messages(self, binding):
+    def move(self, binding):
         """magento messages from canceled (edit) order
         are moved to the new order"""
         mag_message_ids = self.session.search('magento.sale.comment', [
@@ -255,13 +255,6 @@ class SaleOrderImport(sale.SaleOrderImport):
             'magento_id': False,
             'magento_sale_order_id': mag_sale_order_ids[0]}
         self.session.write('magento.sale.comment', mag_message_ids, vals)
-
-    def _after_import(self, binding_id):
-        super(SaleOrderImport, self)._after_import(binding_id)
-        binding = self.session.browse(self.model._name, binding_id)
-        if binding.magento_parent_id:
-            'order has got a parent (the previous edit order)'
-            self._move_messages(binding)
 
 
 @magento
