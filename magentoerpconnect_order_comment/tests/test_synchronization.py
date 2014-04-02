@@ -19,19 +19,17 @@
 #
 ##############################################################################
 
-#import unittest2
-#from functools import partial
-
-#from openerp.addons.connector.exception import InvalidDataError
-from openerp.addons.magentoerpconnect.tests.test_synchronization import SetpUpMagentoSynchronized
-from openerp.addons.magentoerpconnect.tests.test_data import magento_base_responses
+from openerp.addons.magentoerpconnect.tests.test_synchronization import (
+    SetpUpMagentoSynchronized)
+from openerp.addons.magentoerpconnect.tests.test_data import (
+    magento_base_responses)
 from openerp.addons.magentoerpconnect.unit.import_synchronizer import (
-    import_batch,
     import_record)
 from openerp.addons.magentoerpconnect.tests.common import (
     mock_api,
     mock_urlopen_image)
-from openerp.addons.magentoerpconnect.unit.export_synchronizer import export_record
+from openerp.addons.magentoerpconnect.unit.export_synchronizer import (
+    export_record)
 
 
 class TestMagentoSaleCommentImport(SetpUpMagentoSynchronized):
@@ -43,26 +41,27 @@ class TestMagentoSaleCommentImport(SetpUpMagentoSynchronized):
 
     def test_10_import_sale_comment(self):
         """ Test import of sale order comment"""
+        cr = self.cr
+        uid = self.uid
         backend_id = self.backend_id
         with mock_api(magento_base_responses):
             with mock_urlopen_image():
                 import_record(self.session,
                               'magento.sale.order',
                               backend_id, 900000695)
-        
                 order_model = self.registry('magento.sale.order')
-        mag_order_ids = order_model.search(
-            self.cr, self.uid,
-            [('backend_id', '=', backend_id),
-             ('magento_id', '=', '900000695')])
+        mag_order_ids = order_model.search(cr, uid, [
+            ('backend_id', '=', backend_id),
+            ('magento_id', '=', '900000695'),
+            ])
         self.assertEqual(len(mag_order_ids), 1)
 
-        order_id = order_model.read(
-            self.cr, self.uid, mag_order_ids[0], ['openerp_id'])['openerp_id'][0]
-        comment_ids = self.registry('magento.sale.comment').search(
-            self.cr, self.uid,
-            [('backend_id', '=', backend_id),
-             ('res_id', '=', order_id)])
+        order = order_model.read(cr, uid, mag_order_ids[0], ['openerp_id'])
+        order_id = order['openerp_id'][0]
+        comment_ids = self.registry('magento.sale.comment').search(cr, uid, [
+            ('backend_id', '=', backend_id),
+            ('res_id', '=', order_id)
+            ])
         self.assertEqual(len(comment_ids), 2)
 
 
@@ -70,21 +69,22 @@ class SetpUpMagentoWithSaleOrder(SetpUpMagentoSynchronized):
 
     def setUp(self):
         super(SetpUpMagentoWithSaleOrder, self).setUp()
-        mag_order_model = self.registry('magento.sale.order') 
+        cr = self.cr
+        uid = self.uid
+        mag_order_model = self.registry('magento.sale.order')
         with mock_api(magento_base_responses):
             with mock_urlopen_image():
                 import_record(self.session,
                               'magento.sale.order',
                               self.backend_id, 900000691)
 
-        mag_order_ids = mag_order_model.search(
-            self.cr, self.uid,
-            [('backend_id', '=', self.backend_id),
-             ('magento_id', '=', '900000691')])
- 
-        self.mag_order = mag_order_model.browse(
-            self.cr, self.uid, mag_order_ids[0])
- 
+        mag_order_ids = mag_order_model.search(cr, uid, [
+            ('backend_id', '=', self.backend_id),
+            ('magento_id', '=', '900000691'),
+            ])
+
+        self.mag_order = mag_order_model.browse(cr, uid, mag_order_ids[0])
+
 
 class TestMagentoMoveComment(SetpUpMagentoWithSaleOrder):
 
@@ -93,27 +93,28 @@ class TestMagentoMoveComment(SetpUpMagentoWithSaleOrder):
         Note: the parent have been note cancel in the magento_base_response
         because we want to import the both sale order.
         """
+        cr = self.cr
+        uid = self.uid
         backend_id = self.backend_id
         with mock_api(magento_base_responses):
             with mock_urlopen_image():
                 import_record(self.session,
                               'magento.sale.order',
                               backend_id, '900000691-1')
-        
                 order_model = self.registry('magento.sale.order')
-        mag_order_ids = order_model.search(
-            self.cr, self.uid,
-            [('backend_id', '=', backend_id),
-             ('magento_id', '=', '900000691-1')])
+        mag_order_ids = order_model.search(cr, uid, [
+            ('backend_id', '=', backend_id),
+            ('magento_id', '=', '900000691-1'),
+            ])
         self.assertEqual(len(mag_order_ids), 1)
 
-        order_id = order_model.read(
-            self.cr, self.uid, mag_order_ids[0], ['openerp_id'])['openerp_id'][0]
+        order = order_model.read(cr, uid, mag_order_ids[0], ['openerp_id'])
+        order_id = order['openerp_id'][0]
 
-        comment_ids = self.registry('magento.sale.comment').search(
-            self.cr, self.uid,
-            [('backend_id', '=', backend_id),
-             ('res_id', '=', order_id)])
+        comment_ids = self.registry('magento.sale.comment').search(cr, uid, [
+            ('backend_id', '=', backend_id),
+            ('res_id', '=', order_id),
+            ])
         #The sale order 900000691 have 1 comment
         #and the 900000691-1 have 2 comment
         #Total is 3 comment
@@ -132,30 +133,29 @@ class TestMagentoSaleCommentExport(SetpUpMagentoWithSaleOrder):
         response = {
             'sales_order.addComment': True,
         }
-
+        cr = self.cr
+        uid = self.uid
         with mock_api(response, key_func=lambda m, a: m) as calls_done:
             mag_comment_model = self.registry('magento.sale.comment')
             mail_message_model = self.registry('mail.message')
-            
-            comment_id = mail_message_model.create(
-                self.cr, self.uid, {
-                    'res_id': self.mag_order.openerp_id.id,
-                    'body': 'Test me I famous',
-                    'model': 'sale.order',
-                    'subtype_id': 1,
+
+            comment_id = mail_message_model.create(cr, uid, {
+                'res_id': self.mag_order.openerp_id.id,
+                'body': 'Test me I famous',
+                'model': 'sale.order',
+                'subtype_id': 1,
                 })
 
-            mag_comment_id = mag_comment_model.search(
-                self.cr, self.uid,
-                [('backend_id', '=', self.backend_id),
-                 ('openerp_id', '=', comment_id)])
-            
-            export_record(self.session, 'magento.sale.comment', mag_comment_id[0])
+            mag_comment_id = mag_comment_model.search(cr, uid, [
+                ('backend_id', '=', self.backend_id),
+                ('openerp_id', '=', comment_id),
+                ])[0]
+
+            export_record(self.session, 'magento.sale.comment', mag_comment_id)
 
             self.assertEqual(len(calls_done), 1)
-            
-            method, (mag_order_id, state, comment, notification) = calls_done[0]
+
+            method, (mag_order_id, state, comment, notif) = calls_done[0]
             self.assertEqual(method, 'sales_order.addComment')
             self.assertEqual(mag_order_id, '900000691')
             self.assertEqual(comment, 'Test me I famous')
-

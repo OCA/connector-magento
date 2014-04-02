@@ -20,9 +20,6 @@
 
 from openerp.osv import orm, fields
 from openerp.tools.translate import _
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
-from datetime import datetime
-
 from openerp.addons.connector.event import (
     on_record_write,
     on_record_create)
@@ -33,15 +30,15 @@ from openerp.addons.connector.unit.mapper import (
     ExportMapper)
 from openerp.addons.magentoerpconnect.unit.binder import MagentoModelBinder
 import openerp.addons.magentoerpconnect.consumer as magentoerpconnect
-from openerp.addons.magentoerpconnect.unit.backend_adapter import GenericAdapter
 from openerp.addons.magentoerpconnect.backend import magento
-from openerp.addons.magentoerpconnect.unit.export_synchronizer import MagentoExporter
+from openerp.addons.magentoerpconnect.unit.export_synchronizer import (
+    MagentoExporter)
 from openerp.addons.magentoerpconnect import sale
 
 import nltk
 
 
-class MailMessage(orm.Model):
+class mail_message(orm.Model):
     _inherit = "mail.message"
 
     _columns = {
@@ -69,7 +66,7 @@ def create_mail_message(session, model_name, record_id, vals):
             })
 
 
-class MagentoSaleOrder(orm.Model):
+class magento_sale_order(orm.Model):
     """Allow to have a relation between
     magento.sale.order and magento.sale.comment
     like you have a relation between
@@ -86,7 +83,7 @@ class MagentoSaleOrder(orm.Model):
     }
 
 
-class MagentoSaleComment(orm.Model):
+class magento_sale_comment(orm.Model):
     _name = 'magento.sale.comment'
     _inherit = 'magento.binding'
     _description = 'Magento Sale Comment'
@@ -127,11 +124,17 @@ class MagentoSaleComment(orm.Model):
             type='many2one',
             relation='magento.backend',
             string='Magento Backend',
-            store={'magento.sale.comment': (lambda self, cr, uid, ids, c=None:
-                                            ids, ['magento_sale_order_id'], 10),
-                 'magento.sale.order':
-                     (_get_comments_from_order, ['backend_id'], 20),
-                   },
+            store={
+                'magento.sale.comment': (
+                    lambda self, cr, uid, ids, c=None:
+                    ids,
+                    ['magento_sale_order_id'],
+                    10),
+                'magento.sale.order': (
+                    _get_comments_from_order,
+                    ['backend_id'],
+                    20),
+                },
             readonly=True),
         'storeid': fields.char(
             'Store id',
@@ -148,8 +151,8 @@ class MagentoSaleComment(orm.Model):
                 'res_id': info['openerp_id'][0],
                 'model': 'sale.order',
                 })
-        return super(MagentoSaleComment, self).create(cr, uid, vals,
-                                                      context=context)
+        return super(magento_sale_comment, self).create(
+            cr, uid, vals, context=context)
 
 
 @magento(replacing=sale.SaleOrderCommentImportMapper)

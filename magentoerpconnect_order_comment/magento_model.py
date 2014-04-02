@@ -22,7 +22,7 @@ from openerp.osv import orm, fields
 from openerp.tools.translate import _
 
 
-class MagentoStore(orm.Model):
+class magento_store(orm.Model):
     _inherit = 'magento.store'
 
     _columns = {
