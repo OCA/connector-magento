@@ -72,7 +72,17 @@ class magento_backend(orm.Model):
             _select_versions,
             string='Version',
             required=True),
-        'location': fields.char('Location', required=True),
+        'location': fields.char(
+            'Location',
+            required=True,
+            help="Url to magento application "
+            "(see 'Full Url' field in advanced configuration tab)"),
+        'full_url': fields.boolean(
+            'Full Url',
+            help="If false, '/index.php/api/xmlrpc' (web service path) "
+            "complete the location field before to be sent to magento library.\n"
+            "Otherwise the location url is sent unchanged "
+            "(useful in case of url rewriting)"),
         'username': fields.char('Username'),
         'password': fields.char('Password'),
         'display_restricted_access': fields.boolean(
@@ -133,6 +143,7 @@ class magento_backend(orm.Model):
     _defaults = {
         'product_stock_field_id': _get_stock_field_id,
         'display_restricted_access': False,
+        'full_url': False,
     }
 
     _sql_constraints = [

@@ -115,6 +115,7 @@
                                     <field name="product_stock_field_id" widget="selection"
                                         domain="[('model', 'in', ['product.product', 'product.template']), ('ttype', '=', 'float')]"/>
                                     <field name="catalog_price_tax_included"/>
+                                    <field name="full_url"/>
                                     <field name="display_restricted_access"/>
                                     <field name="restricted_access_username" colspan="2"
                                            attrs="{'invisible': [('display_restricted_access', '=', False)]}"/>

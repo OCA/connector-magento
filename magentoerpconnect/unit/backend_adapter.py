@@ -133,9 +133,11 @@ class MagentoCRUDAdapter(CRUDAdapter):
     def _call(self, method, arguments):
         try:
             location = self._complete_url()
+            full_url = self.backend_record.full_url
             with magentolib.API(location,
                                 self.magento.username,
-                                self.magento.password) as api:
+                                self.magento.password,
+                                full_url=full_url) as api:
                 result = api.call(method, arguments)
                 # Uncomment to record requests/responses in ``recorder``
                 # record(method, arguments, result)
