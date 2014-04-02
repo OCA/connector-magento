@@ -139,24 +139,15 @@ class MagentoSaleComment(orm.Model):
     }
 
     def create(self, cr, uid, vals, context=None):
-        info = self.pool['magento.sale.order'].read(
-            cr, uid, vals['magento_sale_order_id'], ['openerp_id'], context=context)
-        if info:
-            sale_id = info['openerp_id'][0]
-            vals['res_id'] = sale_id
-            vals['model'] = 'sale.order'
-            if 'status' in vals:
-                # subject customization
-                options = []
-                if vals.get('is_customer_notified'):
-                    options.append(_('customer notified'))
-                if vals.get('is_visible_on_front'):
-                    options.append(_('visible on front'))
-                option_string = ''
-                if options:
-                    option_string = '(' + ', ' . join(options) + ')'
-                vals['subject'] = _('Magento comment in %s status %s') \
-                    % (vals['status'], option_string)
+        if not 'res_id' in vals:
+            info = self.pool['magento.sale.order'].read(
+                cr, uid, vals['magento_sale_order_id'],
+                ['openerp_id'],
+                context=context)
+            vals.update({
+                'res_id': info['openerp_id'][0],
+                'model': 'sale.order',
+                })
         return super(MagentoSaleComment, self).create(cr, uid, vals,
                                                       context=context)
 
@@ -204,6 +195,18 @@ class SaleCommentImportMapper(ImportMapper):
         if record['is_visible_on_front'] == '1':
             res = True
         return {'is_visible_on_front': res}
+
+    @mapping
+    def subject(self, record):
+        subject = _('Magento comment in %s status') % record['status']
+        options = []
+        if record.get('is_customer_notified'):
+            options.append(_('customer notified'))
+        if record.get('is_visible_on_front'):
+            options.append(_('visible on front'))
+        if options:
+            subject += ' (' + ', ' . join(options) + ')'
+        return {'subject': subject}
 
 
 @magento
