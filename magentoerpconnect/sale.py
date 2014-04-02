@@ -925,3 +925,12 @@ def sale_order_import_batch(session, model_name, backend_id, filters=None):
     env = get_environment(session, model_name, backend_id)
     importer = env.get_connector_unit(SaleOrderBatchImport)
     importer.run(filters)
+
+
+@magento
+class SaleCommentAdapter(GenericAdapter):
+    _model_name = 'magento.sale.comment'
+
+    def create(self, order_increment, status, comment=None, notify=False):
+        return self._call('sales_order.addComment',
+                          [order_increment, status, comment, notify])

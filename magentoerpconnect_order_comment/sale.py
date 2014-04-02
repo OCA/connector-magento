@@ -279,15 +279,6 @@ class SaleOrderImport(sale.SaleOrderImport):
 
 
 @magento
-class SaleCommentAdapter(GenericAdapter):
-    _model_name = 'magento.sale.comment'
-
-    def create(self, order_increment, status, comment=None, notify=False):
-        return self._call('sales_order.addComment',
-                          [order_increment, status, comment, notify])
-
-
-@magento
 class MagentoSaleCommentBinder(MagentoModelBinder):
     _model_name = [
         'magento.sale.comment',
