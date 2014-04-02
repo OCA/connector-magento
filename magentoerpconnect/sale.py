@@ -83,6 +83,8 @@ class magento_sale_order(orm.Model):
         # the parent order and link the new one to the canceled parent
         'magento_parent_id': fields.many2one('magento.sale.order',
                                              string='Parent Magento Order'),
+        'storeview_id': fields.many2one('magento.storeview',
+                                        string='Magento Storeview'),
         }
 
     _sql_constraints = [
@@ -702,6 +704,7 @@ class SaleOrderImportMapper(ImportMapper):
               ('grand_total', 'total_amount'),
               ('tax_amount', 'total_amount_tax'),
               ('created_at', 'date_order'),
+              ('store_id', 'storeview_id'),
               ]
 
     children = [('items', 'magento_order_line_ids', 'magento.sale.order.line'),
