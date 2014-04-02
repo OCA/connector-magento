@@ -63,20 +63,6 @@ class MailMessage(orm.Model):
         else:
             return False
 
-    #def write(self, cr, uid, ids, vals, context=None):
-    #    """Trigger a write on magento.sale.comment when mail.message
-    #    are written to start synchro with magento comments"""
-    #    if 'model' in vals and vals['model'] == 'sale.order':
-    #        mag_sale_cmt_m = self.pool['magento.sale.comment']
-    #        mag_cmt_ids = mag_sale_cmt_m.search(
-    #            cr, uid, [('openerp_id', 'in', ids)], context=context)
-    #        if mag_cmt_ids:
-    #            values = {'sync_date': datetime.now().strftime(
-    #                DEFAULT_SERVER_DATETIME_FORMAT)}
-    #            mag_sale_cmt_m.write(
-    #                cr, uid, mag_cmt_ids, values, context=context)
-    #    return super(MailMessage, self).write(cr, uid, ids, vals, context=None)
-
     def create(self, cr, uid, vals, context=None):
         "Only message (not note) linked to sale.order must be send to Magento"
         message_id = super(MailMessage, self).create(
