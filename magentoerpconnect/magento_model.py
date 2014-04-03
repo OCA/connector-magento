@@ -77,25 +77,29 @@ class magento_backend(orm.Model):
             required=True,
             help="Url to magento application "
             "(see 'Full Url' field in advanced configuration tab)"),
-        'full_url': fields.boolean(
-            'Full Url',
-            help="If false, '/index.php/api/xmlrpc' (web service path) "
-            "complete the location field before to be sent to magento library.\n"
-            "Otherwise the location url is sent unchanged "
-            "(useful in case of url rewriting)"),
-        'username': fields.char('Username'),
-        'password': fields.char('Password'),
-        'display_restricted_access': fields.boolean(
-            'Display Restricted Access Fields',
-            help="Display authentication fields required by some web servers "
-            "installation (i.e. '.htaccess' file for apache server)"),
-        'restricted_access_username': fields.char(
-            'Restricted Access User',
+        'use_custom_api_path': fields.boolean(
+            'Use Custom Api Path',
+            help="The default API path is '/index.php/api/xmlrpc'. "
+            "Check this box if you use a custom API path, in that case, "
+            "the location has to be completed with the custom API path "),
+        'username': fields.char(
+            'Username',
+            help="Webservice user"),
+        'password': fields.char(
+            'Password',
+            help="Webservice password"),
+        'display_auth_basic': fields.boolean(
+            'Display HTTP Auth Basic',
+            help="Display Basic Access Authentication is "
+            "required by some web servers installation \n(see "
+            "http://en.wikipedia.org/wiki/Basic_access_authentication)"),
+        'auth_basic_username': fields.char(
+            'Basic Access Auth. Username',
             help="Web server side username : \n"
-            "some web servers may requires one authentication"),
-        'restricted_access_password': fields.char(
-            'Restricted Access Password',
-            help="Web server side password"),
+            "some web servers may requires basic access authentication"),
+        'auth_basic_password': fields.char(
+            'Basic Access Auth. Password',
+            help="Basic access authentication password web server side "),
         'sale_prefix': fields.char(
             'Sale Prefix',
             help="A prefix put before the name of imported sales orders.\n"
@@ -142,8 +146,8 @@ class magento_backend(orm.Model):
 
     _defaults = {
         'product_stock_field_id': _get_stock_field_id,
-        'display_restricted_access': False,
-        'full_url': False,
+        'use_custom_api_path': False,
+        'display_auth_basic': False,
     }
 
     _sql_constraints = [

@@ -283,11 +283,11 @@ class CatalogImageImporter(ImportSynchronizer):
         url = image_data['url']
         try:
             request = urllib2.Request(url)
-            if self.backend_record.restricted_access_username \
-                    and self.backend_record.restricted_access_password:
+            if self.backend_record.auth_basic_username \
+                    and self.backend_record.auth_basic_password:
                 base64string = base64.encodestring(
-                    '%s:%s' % (self.backend_record.restricted_access_username,
-                               self.backend_record.restricted_access_password))
+                    '%s:%s' % (self.backend_record.auth_basic_username,
+                               self.backend_record.auth_basic_password))
                 request.add_header("Authorization", "Basic %s" % base64string)
             binary = urllib2.urlopen(request)
         except urllib2.HTTPError as err:

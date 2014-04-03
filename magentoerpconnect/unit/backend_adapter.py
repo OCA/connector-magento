@@ -123,17 +123,17 @@ class MagentoCRUDAdapter(CRUDAdapter):
 
     def _complete_url(self):
         location = self.magento.location
-        if self.backend_record.restricted_access_username \
-                and self.backend_record.restricted_access_password:
-            replacement = self.backend_record.restricted_access_username + ':'
-            replacement += self.backend_record.restricted_access_password + '@'
+        if self.backend_record.auth_basic_username \
+                and self.backend_record.auth_basic_password:
+            replacement = self.backend_record.auth_basic_username + ':'
+            replacement += self.backend_record.auth_basic_password + '@'
             location = location.replace('://', '://' + replacement)
         return location
 
     def _call(self, method, arguments):
         try:
             location = self._complete_url()
-            full_url = self.backend_record.full_url
+            full_url = self.backend_record.use_custom_api_path
             with magentolib.API(location,
                                 self.magento.username,
                                 self.magento.password,
