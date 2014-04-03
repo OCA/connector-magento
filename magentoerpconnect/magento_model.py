@@ -75,8 +75,7 @@ class magento_backend(orm.Model):
         'location': fields.char(
             'Location',
             required=True,
-            help="Url to magento application "
-            "(see 'Full Url' field in advanced configuration tab)"),
+            help="Url to magento application"),
         'use_custom_api_path': fields.boolean(
             'Use Custom Api Path',
             help="The default API path is '/index.php/api/xmlrpc'. "
