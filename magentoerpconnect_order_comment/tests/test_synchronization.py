@@ -20,7 +20,7 @@
 ##############################################################################
 
 from openerp.addons.magentoerpconnect.tests.test_synchronization import (
-    SetpUpMagentoSynchronized)
+    SetUpMagentoSynchronized)
 from openerp.addons.magentoerpconnect.tests.test_data import (
     magento_base_responses)
 from openerp.addons.magentoerpconnect.unit.import_synchronizer import (
@@ -32,7 +32,7 @@ from openerp.addons.magentoerpconnect.unit.export_synchronizer import (
     export_record)
 
 
-class TestMagentoSaleCommentImport(SetpUpMagentoSynchronized):
+class TestMagentoSaleCommentImport(SetUpMagentoSynchronized):
     """ Test the imports from a Magento Mock.
 
     The data returned by Magento are those created for the
@@ -65,10 +65,10 @@ class TestMagentoSaleCommentImport(SetpUpMagentoSynchronized):
         self.assertEqual(len(comment_ids), 2)
 
 
-class SetpUpMagentoWithSaleOrder(SetpUpMagentoSynchronized):
+class SetUpMagentoWithSaleOrder(SetUpMagentoSynchronized):
 
     def setUp(self):
-        super(SetpUpMagentoWithSaleOrder, self).setUp()
+        super(SetUpMagentoWithSaleOrder, self).setUp()
         cr = self.cr
         uid = self.uid
         mag_order_model = self.registry('magento.sale.order')
@@ -86,7 +86,7 @@ class SetpUpMagentoWithSaleOrder(SetpUpMagentoSynchronized):
         self.mag_order = mag_order_model.browse(cr, uid, mag_order_ids[0])
 
 
-class TestMagentoMoveComment(SetpUpMagentoWithSaleOrder):
+class TestMagentoMoveComment(SetUpMagentoWithSaleOrder):
 
     def test_10_import_sale_comment_for_edited_sale_order(self):
         """ Test import of sale order comment for edited sale order
@@ -121,7 +121,7 @@ class TestMagentoMoveComment(SetpUpMagentoWithSaleOrder):
         self.assertEqual(len(comment_ids), 3)
 
 
-class TestMagentoSaleCommentExport(SetpUpMagentoWithSaleOrder):
+class TestMagentoSaleCommentExport(SetUpMagentoWithSaleOrder):
     """ Test the imports from a Magento Mock.
 
     The data returned by Magento are those created for the
