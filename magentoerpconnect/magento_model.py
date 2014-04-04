@@ -98,17 +98,17 @@ class magento_backend(orm.Model):
             'Password',
             help="Webservice password"),
         'display_auth_basic': fields.boolean(
-            'Display HTTP Auth Basic',
-            help="Display Basic Access Authentication is "
-            "required by some web servers installation \n(see "
-            "http://en.wikipedia.org/wiki/Basic_access_authentication)"),
+            'Use HTTP Auth Basic',
+            help="Use a Basic Access Authentication for the API. "
+                 "The Magento server could be configured to restrict access "
+                 "using a HTTP authentication based on a username and "
+                 "a password."),
         'auth_basic_username': fields.char(
-            'Basic Access Auth. Username',
-            help="Web server side username : \n"
-            "some web servers may requires basic access authentication"),
+            'Basic Auth. Username',
+            help="Basic access authentication web server side username"),
         'auth_basic_password': fields.char(
-            'Basic Access Auth. Password',
-            help="Basic access authentication password web server side "),
+            'Basic Auth. Password',
+            help="Basic access authentication web server side password"),
         'sale_prefix': fields.char(
             'Sale Prefix',
             help="A prefix put before the name of imported sales orders.\n"
