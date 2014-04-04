@@ -49,7 +49,7 @@
         <record id="product_normal_form_view" model="ir.ui.view">
             <field name="name">product.product.form</field>
             <field name="model">product.product</field>
-            <field name="inherit_id" ref="connector_ecommerce.product_normal_form_view"/>
+            <field name="inherit_id" ref="connector_base_product.product_normal_form_view"/>
             <field name="arch" type="xml">
                 <page name="connector" position="attributes">
                     <attribute name="invisible">0</attribute>

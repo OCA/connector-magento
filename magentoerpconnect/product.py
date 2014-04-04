@@ -41,6 +41,7 @@ from openerp.addons.connector.unit.mapper import (mapping,
                                                   ImportMapper,
                                                   )
 from .unit.backend_adapter import GenericAdapter
+from .unit.mapper import normalize_datetime
 from .unit.import_synchronizer import (DelayedBatchImport,
                                        MagentoImportSynchronizer,
                                        TranslationImporter,
@@ -280,7 +281,7 @@ class CatalogImageImporter(ImportSynchronizer):
         return sorted(images, key=priority)
 
     def _get_binary_image(self, image_data):
-        url = image_data['url']
+        url = image_data['url'].encode('utf8')
         try:
             request = urllib2.Request(url)
             if self.backend_record.auth_basic_username \
@@ -325,13 +326,9 @@ class ProductImport(MagentoImportSynchronizer):
         """ Import the dependencies for the record"""
         record = self.magento_record
         # import related categories
-        binder = self.get_binder_for_model('magento.product.category')
         for mag_category_id in record['categories']:
-            if binder.to_openerp(mag_category_id) is None:
-                importer = self.get_connector_unit_for_model(
-                    MagentoImportSynchronizer,
-                    model='magento.product.category')
-                importer.run(mag_category_id)
+            self._import_dependency(mag_category_id,
+                                    'magento.product.category')
 
     def _validate_product_type(self, data):
         """ Check if the product type is in the selection (so we can
@@ -402,9 +399,21 @@ class ProductImportMapper(ImportMapper):
               ('short_description', 'description_sale'),
               ('sku', 'default_code'),
               ('type_id', 'product_type'),
-              ('created_at', 'created_at'),
-              ('updated_at', 'updated_at'),
+              (normalize_datetime('created_at'), 'created_at'),
+              (normalize_datetime('updated_at'), 'updated_at'),
               ]
+
+    @mapping
+    def is_active(self, record):
+        """ If the product is not active in Magento, it sets
+        sale_ok and purchase_ok to False.
+
+        '1' is a constant value in Magento, which means that the product
+        is active
+        """
+        if record.get('status') != '1':
+            return {'sale_ok': False,
+                    'purchase_ok': False}
 
     @mapping
     def price(self, record):

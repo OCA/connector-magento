@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    Author: Guewen Baconnier
-#    Copyright 2012 Camptocamp SA
+#    Copyright 2013 Camptocamp SA
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,16 +19,13 @@
 #
 ##############################################################################
 
-import test_synchronization
-import test_address_book
-import test_export_invoice
-import test_import_product_image
-fast_suite = [
-]
-
-checks = [
-    test_synchronization,
-    test_address_book,
-    test_export_invoice,
-    test_import_product_image,
-]
+   
+def normalize_datetime(field):
+    """Change a invalid date which comes from Magento, if 
+    no real date is set to null for correct import to
+    OpenERP"""
+    def modifier(self, record, to_attr):
+        if record[field] == '0000-00-00 00:00:00':
+            return None
+        return record[field]
+    return modifier
