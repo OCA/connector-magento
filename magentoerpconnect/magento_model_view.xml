@@ -22,7 +22,8 @@
                             <group colspan="4" col="4">
                                 <field name="version" colspan="4"/>
                                 <field name="location" placeholder="e.g. http://my.magento.com"
-                                    colspan="4"/>
+                                    colspan="2"/>
+                                <field name="use_custom_api_path" colspan="2"/>
                                 <field name="username" colspan="2"/>
                                 <field name="password" colspan="2"/>
                             </group>
@@ -115,7 +116,6 @@
                                     <field name="product_stock_field_id" widget="selection"
                                         domain="[('model', 'in', ['product.product', 'product.template']), ('ttype', '=', 'float')]"/>
                                     <field name="catalog_price_tax_included"/>
-                                    <field name="use_custom_api_path"/>
                                     <field name="display_auth_basic"/>
                                     <field name="auth_basic_username" colspan="2"
                                            attrs="{'invisible': [('display_auth_basic', '=', False)], 'required': [('display_auth_basic', '=', True)]}"/>
