@@ -18,11 +18,11 @@ Installing the buildout
 =======================
 
 When you want to install the Magento connector, you can either install it manually
-using the :ref:`installation-guide` or either using our automated Buildout_ recipe.
+using the :ref:`installation-guide` or either using our automated Buildout_ config.
 The manual installation is recommended if you need to add it on an existing
 installation or if you want to control your environment in your own manner.
 
-The Buildout_ recipe is an all-in-one package which installs OpenERP, the
+The Buildout_ config is an all-in-one package which installs OpenERP, the
 connector and provides many facilities for the developers. It includes
 developer tools such as:
 
@@ -30,9 +30,9 @@ developer tools such as:
 * Build the connector / Magento connector documentation
 * Launch the Jobs Workers (for multiprocessing)
 
-So we highly recommend to use this recipe for development.
+So we highly recommend to use this config for development.
 
-.. note:: The buildout recipe uses ``bzr`` to get the branches.
+.. note:: The buildout config uses ``bzr`` to get the branches.
           Ensure that ``bzr`` is configured with the launchpad login
           and the SSH key, or it may fail to get the branches.
 
