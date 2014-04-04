@@ -97,7 +97,7 @@ class magento_backend(orm.Model):
         'password': fields.char(
             'Password',
             help="Webservice password"),
-        'display_auth_basic': fields.boolean(
+        'use_auth_basic': fields.boolean(
             'Use HTTP Auth Basic',
             help="Use a Basic Access Authentication for the API. "
                  "The Magento server could be configured to restrict access "
@@ -156,7 +156,7 @@ class magento_backend(orm.Model):
     _defaults = {
         'product_stock_field_id': _get_stock_field_id,
         'use_custom_api_path': False,
-        'display_auth_basic': False,
+        'use_auth_basic': False,
     }
 
     _sql_constraints = [

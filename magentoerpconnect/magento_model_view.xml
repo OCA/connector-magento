@@ -32,11 +32,11 @@
                                 </page>
                                 <page string="HTTP Authentication" name="auth" colspan="4" col="4">
                                     <group colspan="4" col="4">
-                                        <field name="display_auth_basic" colspan="4"/>
+                                        <field name="use_auth_basic" colspan="4"/>
                                         <field name="auth_basic_username" colspan="2"
-                                              attrs="{'invisible': [('display_auth_basic', '=', False)], 'required': [('display_auth_basic', '=', True)]}"/>
+                                              attrs="{'invisible': [('use_auth_basic', '=', False)], 'required': [('use_auth_basic', '=', True)]}"/>
                                         <field name="auth_basic_password" colspan="2"
-                                              attrs="{'invisible': [('display_auth_basic', '=', False)], 'required': [('display_auth_basic', '=', True)]}"/>
+                                              attrs="{'invisible': [('use_auth_basic', '=', False)], 'required': [('use_auth_basic', '=', True)]}"/>
                                     </group>
                                 </page>
                             </notebook>
