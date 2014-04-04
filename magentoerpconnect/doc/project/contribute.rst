@@ -23,8 +23,9 @@ The manual installation is recommended if you need to add it on an existing
 installation or if you want to control your environment in your own manner.
 
 The Buildout_ config is an all-in-one package which installs OpenERP, the
-connector and provides many facilities for the developers. It includes
-developer tools such as:
+connector and provides many facilities for the developers,
+it is based on the `Anybox Buildout Recipe`_.
+It includes developer tools such as:
 
 * Run the tests on the connector / Magento connector
 * Build the connector / Magento connector documentation
@@ -64,6 +65,7 @@ You will also need to create the database.
 Head over the next sections to discover the included tools
 
 .. _Buildout: http://www.buildout.org
+.. _`Anybox Buildout Recipe`: https://pypi.python.org/pypi/anybox.recipe.openerp
 
 Start OpenERP
 =============
