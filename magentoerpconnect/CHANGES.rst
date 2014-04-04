@@ -11,6 +11,7 @@ Changelog
 * Using Magento on PHP 5.4 without using the compatibility patch would
   break syncs'. Correct solution is to install the patch on Magento
   though! http://magento.com/blog/magento-news/magento-now-supports-php-54
+* Allow to use HTTP Auth Basic to connect to the Magento API
 
 
 2.3.1 (2014-01-23)
