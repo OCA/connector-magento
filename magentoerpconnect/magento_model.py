@@ -89,8 +89,8 @@ class magento_backend(orm.Model):
         'use_custom_api_path': fields.boolean(
             'Custom Api Path',
             help="The default API path is '/index.php/api/xmlrpc'. "
-            "Check this box if you use a custom API path, in that case, "
-            "the location has to be completed with the custom API path "),
+                 "Check this box if you use a custom API path, in that case, "
+                 "the location has to be completed with the custom API path "),
         'username': fields.char(
             'Username',
             help="Webservice user"),
