@@ -123,8 +123,8 @@ class MagentoCRUDAdapter(CRUDAdapter):
 
     def _complete_url(self):
         location = self.magento.location
-        if self.backend_record.auth_basic_username \
-                and self.backend_record.auth_basic_password:
+        if (self.backend_record.auth_basic_username
+                and self.backend_record.auth_basic_password):
             replacement = self.backend_record.auth_basic_username + ':'
             replacement += self.backend_record.auth_basic_password + '@'
             location = location.replace('://', '://' + replacement)
