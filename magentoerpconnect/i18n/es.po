@@ -8,15 +8,15 @@ msgstr ""
 "Project-Id-Version: openerp-connector-magento\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-05-01 12:45+0000\n"
-"PO-Revision-Date: 2014-02-28 14:21+0000\n"
+"PO-Revision-Date: 2014-03-25 16:58+0000\n"
 "Last-Translator: Alberto Garcia (Factor Libre) "
 "<alberto.garcia@factorlibre.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-03-01 05:56+0000\n"
-"X-Generator: Launchpad (build 16948)\n"
+"X-Launchpad-Export-Date: 2014-04-12 10:07+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: magentoerpconnect
 #: help:magento.backend,pricelist_id:0
@@ -241,7 +241,7 @@ msgstr "Magento"
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_connector_config_settings
 msgid "connector.config.settings"
-msgstr ""
+msgstr "connector.config.settings"
 
 #. module: magentoerpconnect
 #: field:magento.backend,import_products_from_date:0
@@ -783,7 +783,7 @@ msgstr "Magento Binding (abstract)"
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_magento_account_invoice
 msgid "Magento Account Invoice"
-msgstr ""
+msgstr "Factura Magento"
 
 #. module: magentoerpconnect
 #: sql_constraint:magento.store:0
@@ -931,6 +931,10 @@ msgid ""
 "Choose a pricelist only if the prices are different for this website.\n"
 "When empty, the default price will be used."
 msgstr ""
+"Lista de precios usada para definir los precios de los productos en Magento "
+"para esta web.\n"
+"Elige una lista solo si los precios son diferentes para esta web.\n"
+"Si no seleccionas ninguna, los precios serán por defecto."
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_delivery_carrier
