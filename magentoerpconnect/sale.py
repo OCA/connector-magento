@@ -807,10 +807,6 @@ class SaleOrderImportMapper(ImportMapper):
     # are done in the importer
 
     @mapping
-    def backend_id(self, record):
-        return {'backend_id': self.backend_record.id}
-
-    @mapping
     def user_id(self, record):
         """ Do not assign to a Salesperson otherwise sales orders are hidden
         for the salespersons (access rules)"""
