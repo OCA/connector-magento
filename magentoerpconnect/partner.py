@@ -344,10 +344,6 @@ class PartnerImportMapper(ImportMapper):
         return {'website_id': website_id}
 
     @mapping
-    def backend_id(self, record):
-        return {'backend_id': self.backend_record.id}
-
-    @mapping
     def lang(self, record):
         binder = self.get_binder_for_model('magento.storeview')
         binding_id = binder.to_openerp(record['store_id'])
@@ -634,10 +630,6 @@ class AddressImportMapper(BaseAddressImportMapper):
                                    record.get('middlename'),
                                    record['lastname']) if part]
         return {'name': ' '.join(parts)}
-
-    @mapping
-    def backend_id(self, record):
-        return {'backend_id': self.backend_record.id}
 
     @mapping
     def use_parent_address(self, record):
