@@ -83,7 +83,9 @@ class MagentoBaseExporter(ExportSynchronizer):
             return True
         record = self.backend_adapter.read(self.magento_id,
                                            attributes=['updated_at'])
-
+        if not record['updated_at']:
+            # in rare case it can be empty, in doubt, import it
+            return False
         fmt = DEFAULT_SERVER_DATETIME_FORMAT
         sync_date = datetime.strptime(sync, fmt)
         magento_date = datetime.strptime(record['updated_at'], fmt)
