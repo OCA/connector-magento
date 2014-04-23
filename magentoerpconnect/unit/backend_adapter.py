@@ -137,7 +137,10 @@ class MagentoCRUDAdapter(CRUDAdapter):
                 'A network error caused the failure of the job: '
                 '%s' % err)
         except xmlrpclib.ProtocolError as err:
-            if err.errcode == 503:  # Service unavailable
+            if err.errcode in [500,  # Internal server error
+                               502,  # Bad gateway
+                               503,  # Service unavailable
+                               504]: # Gateway timeout
                 raise RetryableJobError(
                     'A protocol error caused the failure of the job:\n'
                     'URL: %s\n'
