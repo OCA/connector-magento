@@ -318,3 +318,40 @@ class test_import_magento(common.SingleTransactionCase):
         self.assertEqual(amount_total, 97.5000)
         self.backend_model.write(self.cr, self.uid, self.backend_id,
                                  {'catalog_price_tax_included': False})
+   
+    def test_35_import_sale_order_with_discount(self):
+        """ Import a sale order with discounts"""
+        backend_id = self.backend_id
+        self.backend_model.write(self.cr, self.uid, self.backend_id,
+                                 {'catalog_price_tax_included': True})
+        with mock_api(magento_base_responses):
+            with mock_urlopen_image():
+                import_record(self.session,
+                              'magento.sale.order',
+                              backend_id, 900000696)
+        mag_order_model = self.registry('magento.sale.order')
+        mag_order_ids = mag_order_model.search(self.cr,
+                                               self.uid,
+                                               [('backend_id', '=', backend_id),
+                                                ('magento_id', '=', '900000696')])
+        self.assertEqual(len(mag_order_ids), 1)
+        order_id = mag_order_model.read(self.cr,
+                                        self.uid,
+                                        mag_order_ids[0],
+                                        ['openerp_id'])['openerp_id']
+        order_model = self.registry('sale.order')
+        order = order_model.browse(self.cr,
+                                   self.uid,
+                                   order_id[0])
+        self.assertEqual(order.amount_total, 36.9500)
+
+        for line in order.order_line:
+            if line.name == 'Item 1':
+                self.assertAlmostEqual(line.discount, 11.904)
+            elif line.name == 'Item 2':
+                self.assertAlmostEqual(line.discount, 11.957)
+            else:
+                self.fail('encountered unexpected sale order line %s' % line.name)
+
+        self.backend_model.write(self.cr, self.uid, self.backend_id,
+                                 {'catalog_price_tax_included': False})
