@@ -15,6 +15,7 @@ Changelog
 * Added missing scheduler for import of products
 * Fix: calculate correctly the discount ratio on sales order lines (lp:1201590)
 * Possibility to exclude products from stock synchronizations
+* Products disabled on Magento are imported disabled on OpenERP. An additional module allows more options.
 
 
 2.3.1 (2014-01-23)

@@ -395,6 +395,18 @@ class ProductImport(MagentoImportSynchronizer):
 
 
 @magento
+class IsActiveProductImportMapper(ImportMapper):
+    _model_name = 'magento.product.product'
+
+    @mapping
+    def is_active(self, record):
+        """Check if the product is active in Magento
+        and set active flag in OpenERP
+        status == 1 in Magento means active"""
+        return {'active': (record.get('status') == '1')}
+
+
+@magento
 class ProductImportMapper(ImportMapper):
     _model_name = 'magento.product.product'
     # TODO :     categ, special_price => minimal_price
@@ -411,15 +423,8 @@ class ProductImportMapper(ImportMapper):
 
     @mapping
     def is_active(self, record):
-        """ If the product is not active in Magento, it sets
-        sale_ok and purchase_ok to False.
-
-        '1' is a constant value in Magento, which means that the product
-        is active
-        """
-        if record.get('status') != '1':
-            return {'sale_ok': False,
-                    'purchase_ok': False}
+        mapper = self.get_connector_unit_for_model(IsActiveProductImportMapper)
+        return mapper.map_record(record).values()
 
     @mapping
     def price(self, record):
