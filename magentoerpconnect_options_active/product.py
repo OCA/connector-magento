@@ -24,8 +24,8 @@ from openerp.addons.magentoerpconnect.backend import magento
 from openerp.addons.magentoerpconnect import product
 
 
-@magento(replacing=product.ProductImportMapper)
-class ProductImportMapper(product.ProductImportMapper):
+@magento(replacing=product.IsActiveProductImportMapper)
+class ProductImportMapper(product.IsActiveProductImportMapper):
     _model_name = 'magento.product.product'
 
     @mapping
