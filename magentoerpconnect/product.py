@@ -102,7 +102,11 @@ class magento_product_product(orm.Model):
         'magento_qty': fields.float('Computed Quantity',
                                     help="Last computed quantity to send "
                                          "on Magento."),
-        'no_stock_sync': fields.boolean('No Stock Synchronization', help="Check this to exclude the product from stock synchronizations.", required=False)
+        'no_stock_sync': fields.boolean(
+            'No Stock Synchronization',
+            required=False,
+            help="Check this to exclude the product "
+                 "from stock synchronizations."),
         }
 
     _defaults = {
