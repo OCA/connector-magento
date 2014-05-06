@@ -39,3 +39,7 @@ class magento_backend(orm.Model):
             string='Handle disable products',
             required=True),
     }
+
+    _defaults = {
+        'product_active': 'disable',
+    }
