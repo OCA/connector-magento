@@ -36,15 +36,15 @@ DB = common.DB
 ADMIN_USER_ID = common.ADMIN_USER_ID
 
 
-class test_import_magento(common.SingleTransactionCase):
-    """ Test the imports from a Magento Mock.
+class SetUpMagentoBase(common.TransactionCase):
+    """ Base class - Test the imports from a Magento Mock.
 
     The data returned by Magento are those created for the
     demo version of Magento on a standard 1.7 version.
     """
 
     def setUp(self):
-        super(test_import_magento, self).setUp()
+        super(SetUpMagentoBase, self).setUp()
         self.backend_model = self.registry('magento.backend')
         self.session = ConnectorSession(self.cr, self.uid)
         data_model = self.registry('ir.model.data')
@@ -79,6 +79,9 @@ class test_import_magento(common.SingleTransactionCase):
                  'days_before_cancel': 0,
                  'journal_id': journal_id})
 
+
+class TestBaseMagento(SetUpMagentoBase):
+
     def test_00_import_backend(self):
         """ Synchronize initial metadata """
         with mock_api(magento_base_responses):
@@ -105,6 +108,21 @@ class test_import_magento(common.SingleTransactionCase):
         self.assertEqual(len(storeview_ids), 4)
 
         # TODO; install & configure languages on storeviews
+
+
+class SetUpMagentoSynchronized(SetUpMagentoBase):
+
+    def setUp(self):
+        super(SetUpMagentoSynchronized, self).setUp()
+        with mock_api(magento_base_responses):
+            import_batch(self.session, 'magento.website', self.backend_id)
+            import_batch(self.session, 'magento.store', self.backend_id)
+            import_batch(self.session, 'magento.storeview', self.backend_id)
+
+
+class TestImportMagento(SetUpMagentoSynchronized):
+    """ Test the imports from a Magento Mock.
+    """
 
     def test_10_import_product_category(self):
         """ Import of a product category """
