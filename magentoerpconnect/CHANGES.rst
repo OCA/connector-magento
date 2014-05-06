@@ -12,6 +12,7 @@ Changelog
 * Retry jobs when they hit a 502, 503 or 504 error
 * Added missing scheduler for import of products
 * Fix: calculate correctly the discount ratio on sales order lines (lp:1201590)
+* Possibility to exclude products from stock synchronizations
 
 
 2.3.1 (2014-01-23)
