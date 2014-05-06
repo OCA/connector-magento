@@ -328,6 +328,13 @@ class CatalogImageImporter(ImportSynchronizer):
 class ProductImport(MagentoImportSynchronizer):
     _model_name = ['magento.product.product']
 
+    @property
+    def mapper(self):
+       if self._mapper is None:
+           self._mapper = self.get_connector_unit_for_model(
+                ProductImportMapper)
+       return self._mapper
+
     def _import_dependencies(self):
         """ Import the dependencies for the record"""
         record = self.magento_record
