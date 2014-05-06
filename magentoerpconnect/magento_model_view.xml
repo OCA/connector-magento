@@ -19,13 +19,27 @@
                             <field name="name" class="oe_inline" />
                         </h1>
                         <group name="magento" string="Magento Configuration">
-                            <group colspan="4" col="4">
-                                <field name="version" colspan="4"/>
-                                <field name="location" placeholder="e.g. http://my.magento.com"
-                                    colspan="4"/>
-                                <field name="username" colspan="2"/>
-                                <field name="password" colspan="2"/>
-                            </group>
+                            <notebook>
+                                <page string="API" name="api">
+                                    <group colspan="4" col="4">
+                                        <field name="version" colspan="4"/>
+                                        <field name="location" placeholder="e.g. http://my.magento.com"
+                                            colspan="2"/>
+                                        <field name="use_custom_api_path" colspan="2"/>
+                                        <field name="username" colspan="2"/>
+                                        <field name="password" colspan="2"/>
+                                    </group>
+                                </page>
+                                <page string="HTTP Authentication" name="auth" colspan="4" col="4">
+                                    <group colspan="4" col="4">
+                                        <field name="use_auth_basic" colspan="4"/>
+                                        <field name="auth_basic_username" colspan="2"
+                                              attrs="{'invisible': [('use_auth_basic', '=', False)], 'required': [('use_auth_basic', '=', True)]}"/>
+                                        <field name="auth_basic_password" colspan="2"
+                                              attrs="{'invisible': [('use_auth_basic', '=', False)], 'required': [('use_auth_basic', '=', True)]}"/>
+                                    </group>
+                                </page>
+                            </notebook>
                         </group>
                         <group name="main_configuration" string="Main Configuration">
                             <field name="warehouse_id"/>

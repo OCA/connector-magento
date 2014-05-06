@@ -75,10 +75,27 @@ def output_recorder(filename):
 
 class MagentoLocation(object):
 
-    def __init__(self, location, username, password):
-        self.location = location
+    def __init__(self, location, username, password,
+                 use_custom_api_path=False):
+        self._location = location
         self.username = username
         self.password = password
+        self.use_custom_api_path = use_custom_api_path
+
+        self.use_auth_basic = False
+        self.auth_basic_username = None
+        self.auth_basic_password = None
+
+    @property
+    def location(self):
+        location = self._location
+        if not self.use_auth_basic:
+            return location
+        assert self.auth_basic_username and self.auth_basic_password
+        replacement = "%s:%s@" % (self.auth_basic_username,
+                                  self.auth_basic_password)
+        location = location.replace('://', '://' + replacement)
+        return location
 
 
 class MagentoCRUDAdapter(CRUDAdapter):
@@ -91,9 +108,17 @@ class MagentoCRUDAdapter(CRUDAdapter):
         :type environment: :py:class:`connector.connector.Environment`
         """
         super(MagentoCRUDAdapter, self).__init__(environment)
-        self.magento = MagentoLocation(self.backend_record.location,
-                                       self.backend_record.username,
-                                       self.backend_record.password)
+        backend = self.backend_record
+        magento = MagentoLocation(
+            backend.location,
+            backend.username,
+            backend.password,
+            use_custom_api_path=backend.use_custom_api_path)
+        if backend.use_auth_basic:
+            magento.use_auth_basic = True
+            magento.auth_basic_username = backend.auth_basic_username
+            magento.auth_basic_password = backend.auth_basic_password
+        self.magento = magento
 
     def search(self, filters=None):
         """ Search records according to some criterias
@@ -123,9 +148,11 @@ class MagentoCRUDAdapter(CRUDAdapter):
 
     def _call(self, method, arguments):
         try:
+            custom_url = self.magento.use_custom_api_path
             with magentolib.API(self.magento.location,
                                 self.magento.username,
-                                self.magento.password) as api:
+                                self.magento.password,
+                                full_url=custom_url) as api:
                 result = api.call(method, arguments)
                 # Uncomment to record requests/responses in ``recorder``
                 # record(method, arguments, result)

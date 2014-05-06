@@ -289,7 +289,14 @@ class CatalogImageImporter(ImportSynchronizer):
     def _get_binary_image(self, image_data):
         url = image_data['url'].encode('utf8')
         try:
-            binary = urllib2.urlopen(url)
+            request = urllib2.Request(url)
+            if self.backend_record.auth_basic_username \
+                    and self.backend_record.auth_basic_password:
+                base64string = base64.encodestring(
+                    '%s:%s' % (self.backend_record.auth_basic_username,
+                               self.backend_record.auth_basic_password))
+                request.add_header("Authorization", "Basic %s" % base64string)
+            binary = urllib2.urlopen(request)
         except urllib2.HTTPError as err:
             if err.code == 404:
                 # the image is just missing, we skip it
@@ -401,6 +408,18 @@ class ProductImportMapper(ImportMapper):
               (normalize_datetime('created_at'), 'created_at'),
               (normalize_datetime('updated_at'), 'updated_at'),
               ]
+
+    @mapping
+    def is_active(self, record):
+        """ If the product is not active in Magento, it sets
+        sale_ok and purchase_ok to False.
+
+        '1' is a constant value in Magento, which means that the product
+        is active
+        """
+        if record.get('status') != '1':
+            return {'sale_ok': False,
+                    'purchase_ok': False}
 
     @mapping
     def price(self, record):
