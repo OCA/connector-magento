@@ -258,7 +258,8 @@ class magento_backend(orm.Model):
             ids = [ids]
         mag_product_obj = self.pool.get('magento.product.product')
         product_ids = mag_product_obj.search(cr, uid,
-                                             [('backend_id', 'in', ids)],
+                                             [('backend_id', 'in', ids),
+                                              ('no_stock_sync', '=', False)],
                                              context=context)
         mag_product_obj.recompute_magento_qty(cr, uid, product_ids,
                                               context=context)
@@ -285,6 +286,10 @@ class magento_backend(orm.Model):
 
     def _scheduler_import_product_categories(self, cr, uid, domain=None, context=None):
         self._magento_backend(cr, uid, self.import_product_categories,
+                              domain=domain, context=context)
+        
+    def _scheduler_import_product_product(self, cr, uid, domain=None, context=None):
+        self._magento_backend(cr, uid, self.import_product_product,
                               domain=domain, context=context)
 
     def _scheduler_update_product_stock_qty(self, cr, uid, domain=None, context=None):

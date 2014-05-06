@@ -80,6 +80,7 @@
                         <field name="product_type" readonly="1"/>
                     </group>
                     <group string="Inventory Options">
+                        <field name="no_stock_sync"/>
                         <field name="manage_stock"/>
                         <field name="backorders"/>
                         <div class="oe_inline">

@@ -6,12 +6,15 @@ Changelog
 
 * New helper in importer to import dependencies
 * allow to customize the available versions without overriding the 'version' field
-* Products deactivated on Magento are imported as not sellable / purchasable
 * New option 'Create Invoice On' on payment methods with options 'on paid', 'on validate'
 * Using Magento on PHP 5.4 without using the compatibility patch would
   break syncs'. Correct solution is to install the patch on Magento
   though! http://magento.com/blog/magento-news/magento-now-supports-php-54
 * Allow to use HTTP Auth Basic to connect to the Magento API
+* Retry jobs when they hit a 502, 503 or 504 error
+* Added missing scheduler for import of products
+* Fix: calculate correctly the discount ratio on sales order lines (lp:1201590)
+* Possibility to exclude products from stock synchronizations
 
 
 2.3.1 (2014-01-23)

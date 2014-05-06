@@ -18,6 +18,8 @@ Activate the wanted schedulers:
 
 * Magento - Import Product Categories
 
+* Magento - Import Products
+
 * Magento - Import Sales Orders
 
 * Magento - Update Stock Quantities

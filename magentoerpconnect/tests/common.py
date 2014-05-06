@@ -35,7 +35,7 @@ class TestResponder(object):
     response.
     """
 
-    def __init__(self, responses):
+    def __init__(self, responses, key_func=None):
         """
         The responses are stored in dict instances.
         The keys are normalized using the ``call_to_key``
@@ -43,30 +43,35 @@ class TestResponder(object):
         hashable form.
 
         :param responses: responses returned by Magento
+        :param call_to_key: function to build the key
+            from the method and arguments
         :type responses: dict
         """
         self._responses = responses
+        self._calls = []
+        self.call_to_key = key_func or call_to_key
 
     def __call__(self, method, arguments):
-        key = call_to_key(method, arguments)
+        self._calls.append((method, arguments))
+        key = self.call_to_key(method, arguments)
         assert key in self._responses, (
             "%s not found in magento responses" % str(key))
         return self._responses[key]
 
 
 @contextmanager
-def mock_api(responses):
+def mock_api(responses, key_func=None):
     """
     :param responses: responses returned by Magento
     :type responses: dict
     """
-    get_magento_response = TestResponder(responses)
+    get_magento_response = TestResponder(responses, key_func=key_func)
     with mock.patch('magento.API') as API:
         api_mock = mock.MagicMock(name='magento.api')
         API.return_value = api_mock
         api_mock.__enter__.return_value = api_mock
         api_mock.call.side_effect = get_magento_response
-        yield
+        yield get_magento_response._calls
 
 
 class MockResponseImage(object):

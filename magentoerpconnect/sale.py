@@ -83,6 +83,8 @@ class magento_sale_order(orm.Model):
         # the parent order and link the new one to the canceled parent
         'magento_parent_id': fields.many2one('magento.sale.order',
                                              string='Parent Magento Order'),
+        'storeview_id': fields.many2one('magento.storeview',
+                                        string='Magento Storeview'),
         }
 
     _sql_constraints = [
@@ -325,7 +327,6 @@ class SaleImportRule(ConnectorUnit):
                                      'because it has not been paid since %d '
                                      'days' % (order_id, max_days))
 
-
     def check(self, record):
         """ Check whether the current sale order should be imported
         or not. It will actually use the payment method configuration
@@ -354,8 +355,22 @@ class SaleImportRule(ConnectorUnit):
 
 
 @magento
+class SaleOrderMoveComment(ConnectorUnit):
+    _model_name = ['magento.sale.order']
+
+    def move(self, binding):
+        pass
+
+
+@magento
 class SaleOrderImport(MagentoImportSynchronizer):
     _model_name = ['magento.sale.order']
+
+    @property
+    def mapper(self):
+       if self._mapper is None:
+           self._mapper = self.environment.get_connector_unit(SaleOrderImportMapper)
+       return self._mapper
 
     def _clean_magento_items(self, resource):
         """
@@ -482,6 +497,10 @@ class SaleOrderImport(MagentoImportSynchronizer):
     def _after_import(self, binding_id):
         self._link_parent_orders(binding_id)
         self._create_payment(binding_id)
+        binding = self.session.browse(self.model._name, binding_id)
+        if binding.magento_parent_id:
+            move_comment = self.environment.get_connector_unit(SaleOrderMoveComment)
+            move_comment.move(binding)
 
     def _get_magento_data(self):
         """ Return the raw Magento data for ``self.magento_id`` """
@@ -669,6 +688,12 @@ class SaleOrderImport(MagentoImportSynchronizer):
 
 
 @magento
+class SaleOrderCommentImportMapper(ImportMapper):
+    " Mapper for importing comments of sales orders. Does nothing in the base addons. "
+    _model_name = 'magento.sale.order'
+
+
+@magento
 class SaleOrderImportMapper(ImportMapper):
     _model_name = 'magento.sale.order'
 
@@ -677,6 +702,7 @@ class SaleOrderImportMapper(ImportMapper):
               ('grand_total', 'total_amount'),
               ('tax_amount', 'total_amount_tax'),
               ('created_at', 'date_order'),
+              ('store_id', 'storeview_id'),
               ]
 
     children = [('items', 'magento_order_line_ids', 'magento.sale.order.line'),
@@ -814,6 +840,12 @@ class SaleOrderImportMapper(ImportMapper):
         for the salespersons (access rules)"""
         return {'user_id': False}
 
+    @mapping
+    def sale_order_comment(self, record):
+        comment_mapper = self.environment.get_connector_unit(SaleOrderCommentImportMapper)
+        map_record = comment_mapper.map_record(record)
+        return map_record.values()
+
 
 @magento
 class MagentoSaleOrderOnChange(SaleOrderOnChange):
@@ -831,6 +863,19 @@ class SaleOrderLineImportMapper(ImportMapper):
             ]
 
     @mapping
+    def discount_amount(self, record):
+        discount_value = float(record.get('discount_amount', 0))
+        if self.backend_record.catalog_price_tax_included:
+            row_total = float(record.get('row_total_incl_tax', 0))
+        else:
+            row_total = float(record.get('row_total', 0))
+        discount = 0
+        if discount_value > 0 and row_total > 0:
+            discount = 100 * discount_value / row_total
+        result = {'discount': discount}
+        return result
+
+    @mapping
     def product_id(self, record):
         binder = self.get_binder_for_model('magento.product.product')
         product_id = binder.to_openerp(record['product_id'], unwrap=True)
@@ -838,19 +883,7 @@ class SaleOrderLineImportMapper(ImportMapper):
                ("product_id %s should have been imported in "
                 "SaleOrderImport._import_dependencies" % record['product_id'])
         return {'product_id': product_id}
-
-    @mapping
-    def discount_amount(self, record):
-        ifield = record.get('discount_amount')
-        discount = 0
-        if ifield:
-            price = float(record['price'])
-            qty_ordered = float(record['qty_ordered'])
-            if price and qty_ordered:
-                discount = 100 * float(ifield) / price * qty_ordered
-        result = {'discount': discount}
-        return result
-
+    
     @mapping
     def product_options(self, record):
         result = {}
@@ -906,3 +939,12 @@ def sale_order_import_batch(session, model_name, backend_id, filters=None):
     env = get_environment(session, model_name, backend_id)
     importer = env.get_connector_unit(SaleOrderBatchImport)
     importer.run(filters)
+
+
+@magento
+class SaleCommentAdapter(GenericAdapter):
+    _model_name = 'magento.sale.comment'
+
+    def create(self, order_increment, status, comment=None, notify=False):
+        return self._call('sales_order.addComment',
+                          [order_increment, status, comment, notify])

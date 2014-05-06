@@ -36,15 +36,15 @@ DB = common.DB
 ADMIN_USER_ID = common.ADMIN_USER_ID
 
 
-class test_import_magento(common.SingleTransactionCase):
-    """ Test the imports from a Magento Mock.
+class SetUpMagentoBase(common.TransactionCase):
+    """ Base class - Test the imports from a Magento Mock.
 
     The data returned by Magento are those created for the
     demo version of Magento on a standard 1.7 version.
     """
 
     def setUp(self):
-        super(test_import_magento, self).setUp()
+        super(SetUpMagentoBase, self).setUp()
         self.backend_model = self.registry('magento.backend')
         self.session = ConnectorSession(self.cr, self.uid)
         data_model = self.registry('ir.model.data')
@@ -79,6 +79,9 @@ class test_import_magento(common.SingleTransactionCase):
                  'days_before_cancel': 0,
                  'journal_id': journal_id})
 
+
+class TestBaseMagento(SetUpMagentoBase):
+
     def test_00_import_backend(self):
         """ Synchronize initial metadata """
         with mock_api(magento_base_responses):
@@ -105,6 +108,21 @@ class test_import_magento(common.SingleTransactionCase):
         self.assertEqual(len(storeview_ids), 4)
 
         # TODO; install & configure languages on storeviews
+
+
+class SetUpMagentoSynchronized(SetUpMagentoBase):
+
+    def setUp(self):
+        super(SetUpMagentoSynchronized, self).setUp()
+        with mock_api(magento_base_responses):
+            import_batch(self.session, 'magento.website', self.backend_id)
+            import_batch(self.session, 'magento.store', self.backend_id)
+            import_batch(self.session, 'magento.storeview', self.backend_id)
+
+
+class TestImportMagento(SetUpMagentoSynchronized):
+    """ Test the imports from a Magento Mock.
+    """
 
     def test_10_import_product_category(self):
         """ Import of a product category """
@@ -316,5 +334,42 @@ class test_import_magento(common.SingleTransactionCase):
                                        ['amount_total'])['amount_total']
         #97.5 is the amount_total if connector takes correctly included tax prices.
         self.assertEqual(amount_total, 97.5000)
+        self.backend_model.write(self.cr, self.uid, self.backend_id,
+                                 {'catalog_price_tax_included': False})
+   
+    def test_35_import_sale_order_with_discount(self):
+        """ Import a sale order with discounts"""
+        backend_id = self.backend_id
+        self.backend_model.write(self.cr, self.uid, self.backend_id,
+                                 {'catalog_price_tax_included': True})
+        with mock_api(magento_base_responses):
+            with mock_urlopen_image():
+                import_record(self.session,
+                              'magento.sale.order',
+                              backend_id, 900000696)
+        mag_order_model = self.registry('magento.sale.order')
+        mag_order_ids = mag_order_model.search(self.cr,
+                                               self.uid,
+                                               [('backend_id', '=', backend_id),
+                                                ('magento_id', '=', '900000696')])
+        self.assertEqual(len(mag_order_ids), 1)
+        order_id = mag_order_model.read(self.cr,
+                                        self.uid,
+                                        mag_order_ids[0],
+                                        ['openerp_id'])['openerp_id']
+        order_model = self.registry('sale.order')
+        order = order_model.browse(self.cr,
+                                   self.uid,
+                                   order_id[0])
+        self.assertEqual(order.amount_total, 36.9500)
+
+        for line in order.order_line:
+            if line.name == 'Item 1':
+                self.assertAlmostEqual(line.discount, 11.904)
+            elif line.name == 'Item 2':
+                self.assertAlmostEqual(line.discount, 11.957)
+            else:
+                self.fail('encountered unexpected sale order line %s' % line.name)
+
         self.backend_model.write(self.cr, self.uid, self.backend_id,
                                  {'catalog_price_tax_included': False})

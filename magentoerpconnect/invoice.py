@@ -215,6 +215,9 @@ def invoice_create_bindings(session, model_name, record_id):
     # we use the shop as many sale orders can be related to an invoice
     for sale in invoice.sale_ids:
         for magento_sale in sale.magento_bind_ids:
+            for mag_inv in invoice.magento_bind_ids:
+                if mag_inv.backend_id.id == magento_sale.backend_id.id:
+                    continue
             # Check if invoice state matches configuration setting
             # for when to export an invoice
             magento_stores = magento_sale.shop_id.magento_bind_ids
