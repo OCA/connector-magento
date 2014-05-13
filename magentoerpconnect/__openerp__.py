@@ -35,7 +35,7 @@
  },
  'author': 'Connector Core Editors',
  'license': 'AGPL-3',
- 'website': 'https://launchpad.net/magentoerpconnect',
+ 'website': 'https://launchpad.net/openerp-connector-magento',
  'description': """
 Magento Connector
 =================
