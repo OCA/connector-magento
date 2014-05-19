@@ -29,6 +29,7 @@ from openerp.osv import orm, fields
 from openerp.tools.translate import _
 from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.event import on_record_write
+from openerp.addons.connector.connector import ConnectorUnit
 from openerp.addons.connector.unit.synchronizer import (ImportSynchronizer,
                                                         ExportSynchronizer
                                                         )
@@ -208,7 +209,7 @@ class ProductProductAdapter(GenericAdapter):
 
         :rtype: dict
         """
-        return self._call('%s.info' % self._magento_model,
+        return self._call('ol_catalog_product.info',
                           [int(id), storeview_id, attributes, 'id'])
 
     def write(self, id, data, storeview_id=None):
@@ -325,6 +326,51 @@ class CatalogImageImporter(ImportSynchronizer):
 
 
 @magento
+class BundleImporter(ConnectorUnit):
+    """ Can be inherited to change the way the bundle products are
+    imported.
+
+    Called at the end of the import of a product.
+
+    Example of action when importing a bundle product:
+        - Create a bill of material
+        - Import the structure of the bundle in new objects
+
+    By default, the bundle products are not imported: the jobs
+    are set as failed, because there is no know way to import them.
+    An additional module that implements the import should be installed.
+
+    If you want to create a module that import bundles, you have to replace
+    the current ConnectorUnit::
+
+        @magento(replacing=BundleImporter)
+        class XBundleImporter(BundleImporter):
+            _model_name = 'magento.product.product'
+
+            # implement import_bundle
+
+    And to add the bundle type in the supported product types::
+
+        class magento_product_product(orm.Model):
+            _inherit = 'magento.product.product'
+
+            def product_type_get(self, cr, uid, context=None):
+                types = super(magento_product_product, self).product_type_get(
+                    cr, uid, context=context)
+                types.append(('bundle', 'Bundle Product'))
+                return types
+
+    """
+    _model_name = 'magento.product.product'
+
+    def import_bundle(self, magento_record):
+        """ Import the bundle information about a product.
+
+        :param magento_record: product information from Magento
+        """
+
+
+@magento
 class ProductImport(MagentoImportSynchronizer):
     _model_name = ['magento.product.product']
 
@@ -335,6 +381,14 @@ class ProductImport(MagentoImportSynchronizer):
                 ProductImportMapper)
        return self._mapper
 
+    def _import_bundle_dependencies(self):
+        """ Import the dependencies for a Bundle """
+        bundle = self.magento_record['_bundle_data']
+        for option in bundle['options']:
+            for selection in option['selections']:
+                self._import_dependency(selection['product_id'],
+                                        'magento.product.product')
+
     def _import_dependencies(self):
         """ Import the dependencies for the record"""
         record = self.magento_record
@@ -342,6 +396,8 @@ class ProductImport(MagentoImportSynchronizer):
         for mag_category_id in record['categories']:
             self._import_dependency(mag_category_id,
                                     'magento.product.category')
+        if record['type_id'] == 'bundle':
+            self._import_bundle_dependencies()
 
     def _validate_product_type(self, data):
         """ Check if the product type is in the selection (so we can
@@ -399,6 +455,10 @@ class ProductImport(MagentoImportSynchronizer):
         image_importer = self.get_connector_unit_for_model(
             CatalogImageImporter, self.model._name)
         image_importer.run(self.magento_id, binding_id)
+
+        if self.magento_record['type_id'] == 'bundle':
+            bundle_importer = self.get_connector_unit_for_model(
+                BundleImporter, self.model._name)
 
 
 @magento
