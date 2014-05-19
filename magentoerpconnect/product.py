@@ -337,11 +337,20 @@ class BundleImporter(ConnectorUnit):
         - Import the structure of the bundle in new objects
 
     By default, the bundle products are not imported: the jobs
-    are set as failed, because there is no know way to import them.
+    are set as failed, because there is no known way to import them.
     An additional module that implements the import should be installed.
 
-    If you want to create a module that import bundles, you have to replace
-    the current ConnectorUnit::
+    If you want to create a custom importer for the bundles, you have to
+    declare the ConnectorUnit on your backend::
+
+        @magento_custom
+        class XBundleImporter(BundleImporter):
+            _model_name = 'magento.product.product'
+
+            # implement import_bundle
+
+    If you want to create a generic module that import bundles, you have
+    to replace the current ConnectorUnit::
 
         @magento(replacing=BundleImporter)
         class XBundleImporter(BundleImporter):
