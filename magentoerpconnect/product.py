@@ -281,7 +281,7 @@ class CatalogImageImporter(ImportSynchronizer):
         return sorted(images, key=priority)
 
     def _get_binary_image(self, image_data):
-        url = image_data['url']
+        url = image_data['url'].encode('utf8')
         try:
             binary = urllib2.urlopen(url)
         except urllib2.HTTPError as err:
