@@ -6,6 +6,9 @@ Changelog
 * New helper in importer to import dependencies
 * allow to customize the available versions without overriding the 'version' field
 * New option 'Create Invoice On' on payment methods with options 'on paid', 'on validate'
+* Using Magento on PHP 5.4 without using the compatibility patch would
+  break syncs'. Correct solution is to install the patch on Magento
+  though! http://magento.com/blog/magento-news/magento-now-supports-php-54
 
 
 2.3.1 (2014-01-23)
