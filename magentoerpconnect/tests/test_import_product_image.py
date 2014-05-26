@@ -107,6 +107,7 @@ class test_import_product_image(common.TransactionCase):
         importer = CatalogImageImporter(env)
         with mock.patch('urllib2.urlopen') as urlopen:
             def image_url_response(url):
+                url = url.get_full_url()
                 if url == 'http://localhost:9100/media/catalog/product/i/n/ink-eater-krylon-bombear-destroyed-tee-2.jpg':
                     raise urllib2.HTTPError(url, 404, '404', None, None)
                 elif url == 'http://localhost:9100/media/catalog/product/i/n/ink-eater-krylon-bombear-destroyed-tee-1.jpg':
