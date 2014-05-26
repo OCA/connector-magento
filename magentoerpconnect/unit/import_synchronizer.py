@@ -87,8 +87,42 @@ class MagentoImportSynchronizer(ImportSynchronizer):
         # miss changes done in Magento
         return magento_date < sync_date
 
+    def _import_dependency(self, magento_id, binding_model,
+                           importer_class=None, always=False):
+        """ Import a dependency.
+
+        The importer class is a class or subclass of
+        :class:`MagentoImportSynchronizer`. A specific class can be defined.
+
+        :param magento_id: id of the related binding to import
+        :param binding_model: name of the binding model for the relation
+        :type binding_model: str | unicode
+        :param importer_cls: :class:`openerp.addons.connector.connector.ConnectorUnit`
+                             class or parent class to use for the export.
+                             By default: MagentoImportSynchronizer
+        :type importer_cls: :class:`openerp.addons.connector.connector.MetaConnectorUnit`
+        :param always: if True, the record is updated even if it already exists,
+                       note that it is still skipped if it has not been
+                       modified on Magento since the last update. When False,
+                       it will import it only when it does not yet exist.
+        :type always: boolean
+        """
+        if not magento_id:
+            return
+        if importer_class is None:
+            importer_class = MagentoImportSynchronizer
+        binder = self.get_binder_for_model(binding_model)
+        if always or binder.to_openerp(magento_id) is None:
+            importer = self.get_connector_unit_for_model(
+                importer_class, model=binding_model)
+            importer.run(magento_id)
+
     def _import_dependencies(self):
-        """ Import the dependencies for the record"""
+        """ Import the dependencies for the record
+
+        Import of dependencies can be done manually or by calling
+        :meth:`_import_dependency` for each dependency.
+        """
         return
 
     def _map_data(self):
