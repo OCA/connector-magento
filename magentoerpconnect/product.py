@@ -27,7 +27,7 @@ import xmlrpclib
 import sys
 from openerp.osv import orm, fields
 from openerp.tools.translate import _
-from openerp.addons.connector.queue.job import job
+from openerp.addons.connector.queue.job import job, related_action
 from openerp.addons.connector.event import on_record_write
 from openerp.addons.connector.unit.synchronizer import (ImportSynchronizer,
                                                         ExportSynchronizer
@@ -49,6 +49,7 @@ from .unit.import_synchronizer import (DelayedBatchImport,
                                        )
 from .connector import get_environment
 from .backend import magento
+from .related_action import unwrap_binding
 
 _logger = logging.getLogger(__name__)
 
@@ -176,6 +177,7 @@ class product_product(orm.Model):
 class ProductProductAdapter(GenericAdapter):
     _model_name = 'magento.product.product'
     _magento_model = 'catalog_product'
+    _admin_path = '/{model}/edit/id/{id}'
 
     def _call(self, method, arguments):
         try:
@@ -557,6 +559,7 @@ def magento_product_modified(session, model_name, record_id, vals):
 
 
 @job
+@related_action(action=unwrap_binding)
 def export_product_inventory(session, model_name, record_id, fields=None):
     """ Export the inventory configuration and quantity of a product. """
     product = session.browse(model_name, record_id)

@@ -211,6 +211,7 @@ class sale_order_line(orm.Model):
 class SaleOrderAdapter(GenericAdapter):
     _model_name = 'magento.sale.order'
     _magento_model = 'sales_order'
+    _admin_path = '{model}/view/order_id/{id}'
 
     def _call(self, method, arguments):
         try:

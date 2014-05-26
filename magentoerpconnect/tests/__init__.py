@@ -23,6 +23,9 @@ import test_synchronization
 import test_address_book
 import test_export_invoice
 import test_import_product_image
+import test_related_action
+
+
 fast_suite = [
 ]
 
@@ -31,4 +34,5 @@ checks = [
     test_address_book,
     test_export_invoice,
     test_import_product_image,
+    test_related_action,
 ]

@@ -21,12 +21,13 @@
 
 import logging
 from openerp.tools.translate import _
-from openerp.addons.connector.queue.job import job
+from openerp.addons.connector.queue.job import job, related_action
 from openerp.addons.connector.exception import FailedJobError, NoExternalId
 from openerp.addons.connector.unit.synchronizer import ExportSynchronizer
 from openerp.addons.connector_ecommerce.event import on_tracking_number_added
 from .connector import get_environment
 from .backend import magento
+from .related_action import unwrap_binding
 
 _logger = logging.getLogger(__name__)
 
@@ -117,6 +118,7 @@ def delay_export_tracking_number(session, model_name, record_id):
 
 
 @job
+@related_action(action=unwrap_binding)
 def export_tracking_number(session, model_name, record_id):
     """ Export the tracking number of a delivery order. """
     picking = session.browse(model_name, record_id)

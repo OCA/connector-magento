@@ -123,6 +123,7 @@
 
                             <page name="advanced_configuration" string="Advanced Configuration">
                                 <group>
+                                    <field name="admin_location" placeholder="e.g. http://my.magento.com/admin"/>
                                     <field name="default_lang_id" widget="selection"/>
                                     <field name="default_category_id"/>
                                     <field name="sale_prefix" placeholder="mag-" />

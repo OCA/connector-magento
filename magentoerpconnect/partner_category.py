@@ -73,6 +73,7 @@ class magento_res_partner_category(orm.Model):
 class PartnerCategoryAdapter(GenericAdapter):
     _model_name = 'magento.res.partner.category'
     _magento_model = 'ol_customer_groups'
+    _admin_path = '/customer_group/edit/id/{id}'
 
     def search(self, filters=None):
         """ Search records according to some criterias

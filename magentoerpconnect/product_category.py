@@ -87,6 +87,7 @@ class product_category(orm.Model):
 class ProductCategoryAdapter(GenericAdapter):
     _model_name = 'magento.product.category'
     _magento_model = 'catalog_category'
+    _admin_path = '/{model}/index/'
 
     def _call(self, method, arguments):
         try:

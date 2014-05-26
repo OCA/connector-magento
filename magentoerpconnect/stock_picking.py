@@ -23,7 +23,7 @@ import logging
 import xmlrpclib
 from openerp.osv import orm, fields
 from openerp.tools.translate import _
-from openerp.addons.connector.queue.job import job
+from openerp.addons.connector.queue.job import job, related_action
 from openerp.addons.connector.event import on_record_create
 from openerp.addons.connector.exception import NothingToDoJob
 from openerp.addons.connector.unit.synchronizer import ExportSynchronizer
@@ -33,6 +33,7 @@ from .unit.backend_adapter import GenericAdapter
 from .connector import get_environment
 from .backend import magento
 from .stock_tracking import export_tracking_number
+from .related_action import unwrap_binding
 
 _logger = logging.getLogger(__name__)
 
@@ -99,6 +100,7 @@ class stock_picking_out(orm.Model):
 class StockPickingAdapter(GenericAdapter):
     _model_name = 'magento.stock.picking.out'
     _magento_model = 'sales_order_shipment'
+    _admin_path = 'sales_shipment/view/shipment_id/{id}'
 
     def _call(self, method, arguments):
         try:
@@ -248,6 +250,7 @@ def delay_export_picking_out(session, model_name, record_id, vals):
 
 
 @job
+@related_action(action=unwrap_binding)
 def export_picking_done(session, model_name, record_id):
     """ Export a complete or partial delivery order. """
     picking = session.browse(model_name, record_id)

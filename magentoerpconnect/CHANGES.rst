@@ -17,6 +17,8 @@ Changelog
 * Possibility to exclude products from stock synchronizations
 * Products disabled on Magento are imported disabled on OpenERP. An additional module allows more options.
 * Possibility to disable import of sales orders per storeview
+* Related Actions: open the form view on the record concerned by an export job, or open the Magento's admin page
+  on importing jobs
 
 
 2.3.1 (2014-01-23)

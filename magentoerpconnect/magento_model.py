@@ -86,6 +86,7 @@ class magento_backend(orm.Model):
             'Location',
             required=True,
             help="Url to magento application"),
+        'admin_location': fields.char('Admin Location'),
         'use_custom_api_path': fields.boolean(
             'Custom Api Path',
             help="The default API path is '/index.php/api/xmlrpc'. "
@@ -530,18 +531,21 @@ class magento_storeview(orm.Model):
 class WebsiteAdapter(GenericAdapter):
     _model_name = 'magento.website'
     _magento_model = 'ol_websites'
+    _admin_path = 'system_store/editWebsite/website_id/{id}'
 
 
 @magento
 class StoreAdapter(GenericAdapter):
     _model_name = 'magento.store'
     _magento_model = 'ol_groups'
+    _admin_path = 'system_store/editGroup/group_id/{id}'
 
 
 @magento
 class StoreviewAdapter(GenericAdapter):
     _model_name = 'magento.storeview'
     _magento_model = 'ol_storeviews'
+    _admin_path = 'system_store/editStore/store_id/{id}'
 
 
 @magento

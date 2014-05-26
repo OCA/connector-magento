@@ -23,12 +23,13 @@ import logging
 from datetime import datetime
 from openerp.tools.translate import _
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
-from openerp.addons.connector.queue.job import job
+from openerp.addons.connector.queue.job import job, related_action
 from openerp.addons.connector.connector import ConnectorUnit
 from openerp.addons.connector.unit.synchronizer import ImportSynchronizer
 from openerp.addons.connector.exception import IDMissingInBackend
 from ..backend import magento
 from ..connector import get_environment, add_checkpoint
+from ..related_action import link
 
 _logger = logging.getLogger(__name__)
 
@@ -359,6 +360,7 @@ def import_batch(session, model_name, backend_id, filters=None):
 
 
 @job
+@related_action(action=link)
 def import_record(session, model_name, backend_id, magento_id, force=False):
     """ Import a record from Magento """
     env = get_environment(session, model_name, backend_id)

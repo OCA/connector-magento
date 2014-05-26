@@ -23,7 +23,7 @@ import logging
 import xmlrpclib
 from openerp.osv import fields, orm
 from openerp.tools.translate import _
-from openerp.addons.connector.queue.job import job
+from openerp.addons.connector.queue.job import job, related_action
 from openerp.addons.connector.unit.synchronizer import ExportSynchronizer
 from openerp.addons.connector.event import on_record_create
 from openerp.addons.connector_ecommerce.event import (on_invoice_paid,
@@ -32,6 +32,7 @@ from openerp.addons.connector.exception import IDMissingInBackend
 from .unit.backend_adapter import GenericAdapter
 from .connector import get_environment
 from .backend import magento
+from .related_action import unwrap_binding
 
 _logger = logging.getLogger(__name__)
 
@@ -84,6 +85,7 @@ class AccountInvoiceAdapter(GenericAdapter):
     """ Backend Adapter for the Magento Invoice """
     _model_name = 'magento.account.invoice'
     _magento_model = 'sales_order_invoice'
+    _admin_path = 'sales_invoice/view/invoice_id/{id}'
 
     def _call(self, method, arguments):
         try:
@@ -248,6 +250,7 @@ def delay_export_account_invoice(session, model_name, record_id, vals):
 
 
 @job
+@related_action(action=unwrap_binding)
 def export_invoice_paid(session, model_name, record_id):
     """ Deprecated in 2.1.0.dev0. """
     _logger.warning('Deprecated: the export_invoice_paid() job is deprecated '
@@ -256,6 +259,7 @@ def export_invoice_paid(session, model_name, record_id):
 
 
 @job
+@related_action(action=unwrap_binding)
 def export_invoice(session, model_name, record_id):
     """ Export a validated or paid invoice. """
     invoice = session.browse(model_name, record_id)

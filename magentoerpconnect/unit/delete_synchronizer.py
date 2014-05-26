@@ -20,9 +20,10 @@
 ##############################################################################
 
 from openerp.tools.translate import _
-from openerp.addons.connector.queue.job import job
+from openerp.addons.connector.queue.job import job, related_action
 from openerp.addons.connector.unit.synchronizer import DeleteSynchronizer
 from ..connector import get_environment
+from ..related_action import link
 
 
 class MagentoDeleteSynchronizer(DeleteSynchronizer):
@@ -38,6 +39,7 @@ class MagentoDeleteSynchronizer(DeleteSynchronizer):
 
 
 @job
+@related_action(action=link)
 def export_delete_record(session, model_name, backend_id, magento_id):
     """ Delete a record on Magento """
     env = get_environment(session, model_name, backend_id)
