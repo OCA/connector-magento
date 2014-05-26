@@ -64,12 +64,13 @@ class test_export_invoice(common.TransactionCase):
                                        'manual_validation')
         __, journal_id = self.get_ref('account',
                                       'check_journal')
-        self.registry('payment.method').create(
+        self.payment_method_id = self.registry('payment.method').create(
             cr, uid,
             {'name': 'checkmo',
-                'workflow_process_id': workflow_id,
-                'import_rule': 'always',
-                'journal_id': journal_id})
+             'create_invoice_on': False,
+             'workflow_process_id': workflow_id,
+             'import_rule': 'always',
+             'journal_id': journal_id})
         __, self.journal_id = self.get_ref('account', 'bank_journal')
         __, self.pay_account_id = self.get_ref('account', 'cash')
         __, self.period_id = self.get_ref('account', 'period_10')
@@ -133,6 +134,63 @@ class test_export_invoice(common.TransactionCase):
         # as they are validated (open)
         self.registry('magento.store').write(
             cr, uid, store_ids, {'create_invoice_on': 'paid'})
+        # this is the consumer called when a 'magento.account.invoice'
+        # is created, it delay a job to export the invoice
+        patched = 'openerp.addons.magentoerpconnect.invoice.export_invoice'
+        with mock.patch(patched) as export_invoice:  # prevent to create the job
+            self._invoice_open()
+            assert not export_invoice.delay.called
+
+        # pay and verify it is NOT called
+        with mock.patch(patched) as export_invoice:  # prevent to create the job
+            self._pay_and_reconcile()
+            self.assertEqual(self.invoice.state, 'paid')
+            assert len(self.invoice.magento_bind_ids) == 1
+            export_invoice.delay.assert_called_with(
+                mock.ANY, 'magento.account.invoice',
+                self.invoice.magento_bind_ids[0].id)
+
+    def test_export_invoice_on_payment_method_validate(self):
+        """ Exporting an invoice: when it is validated with payment method """
+        cr, uid = self.cr, self.uid
+        store_ids = [store.id for website in self.backend.website_ids
+                     for store in website.store_ids]
+        # we setup the stores so they export the invoices as soon
+        # as they are validated (open)
+        self.registry('payment.method').write(
+            cr, uid, self.payment_method_id, {'create_invoice_on': 'open'})
+        # ensure we use the option of the payment method, not store
+        self.registry('magento.store').write(
+           cr, uid, store_ids, {'create_invoice_on': 'paid'})
+        # this is the consumer called when a 'magento.account.invoice'
+        # is created, it delay a job to export the invoice
+        patched = 'openerp.addons.magentoerpconnect.invoice.export_invoice'
+        with mock.patch(patched) as export_invoice:  # prevent to create the job
+            self._invoice_open()
+
+            assert len(self.invoice.magento_bind_ids) == 1
+            export_invoice.delay.assert_called_with(mock.ANY,
+                                                    'magento.account.invoice',
+                                                    self.invoice.magento_bind_ids[0].id)
+
+        # pay and verify it is NOT called
+        with mock.patch(patched) as export_invoice:  # prevent to create the job
+            self._pay_and_reconcile()
+            self.assertEqual(self.invoice.state, 'paid')
+            assert not export_invoice.delay.called
+
+    def test_export_invoice_on_payment_method_paid(self):
+        """ Exporting an invoice: when it is paid on payment method """
+        cr, uid = self.cr, self.uid
+        store_ids = [store.id for website in self.backend.website_ids
+                     for store in website.store_ids]
+        # we setup the stores so they export the invoices as soon
+        # as they are validated (open)
+        self.registry('payment.method').write(
+            cr, uid, self.payment_method_id, {'create_invoice_on': 'paid'})
+        # ensure we use the option of the payment method, not store
+        self.registry('magento.store').write(
+            cr, uid, store_ids, {'create_invoice_on': 'open'})
         # this is the consumer called when a 'magento.account.invoice'
         # is created, it delay a job to export the invoice
         patched = 'openerp.addons.magentoerpconnect.invoice.export_invoice'

@@ -392,7 +392,10 @@ class magento_store(orm.Model):
             'Create invoice on action',
             required=True,
             help="Should the invoice be created in Magento "
-                 "when it is validated or when it is paid in OpenERP?"),
+                 "when it is validated or when it is paid in OpenERP?\n"
+                  "This only takes effect if the sales order's related "
+                  "payment method is not giving an option for this by "
+                  "itself. (See Payment Methods)"),
     }
 
     _defaults = {

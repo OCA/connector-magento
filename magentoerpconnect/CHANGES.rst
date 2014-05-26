@@ -5,6 +5,7 @@ Changelog
 ~~~~~~~~~~~~~~~~~~~~~~~
 * New helper in importer to import dependencies
 * allow to customize the available versions without overriding the 'version' field
+* New option 'Create Invoice On' on payment methods with options 'on paid', 'on validate'
 
 
 2.3.1 (2014-01-23)

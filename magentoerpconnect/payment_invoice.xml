@@ -1,0 +1,21 @@
+<?xml version ="1.0" encoding="utf-8"?>
+
+<openerp>
+  <data>
+
+    <record id="payment_method_view_form" model="ir.ui.view">
+      <field name="model">payment.method</field>
+      <field name="inherit_id" ref="connector_ecommerce.payment_method_view_form"/>
+      <field name="arch" type="xml">
+
+        <group name="import_rule" position="after">
+          <group name="magento" string="Magento">
+            <field name="create_invoice_on" string="Create invoice on"/>
+          </group>
+        </group>
+
+      </field>
+    </record>
+
+  </data>
+</openerp>
