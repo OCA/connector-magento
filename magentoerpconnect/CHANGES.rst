@@ -10,6 +10,7 @@ Changelog
   break syncs'. Correct solution is to install the patch on Magento
   though! http://magento.com/blog/magento-news/magento-now-supports-php-54
 * Retry jobs when they hit a 502, 503 or 504 error
+* Added missing scheduler for import of products
 
 
 2.3.1 (2014-01-23)
