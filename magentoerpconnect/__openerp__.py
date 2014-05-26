@@ -21,7 +21,7 @@
 ##############################################################################
 
 {'name': 'Magento Connector',
- 'version': '2.3.2',
+ 'version': '2.4.0',
  'category': 'Connector',
  'depends': ['account',
              'product',
@@ -132,7 +132,7 @@ Available extensions:
           'delivery_view.xml',
           'stock_view.xml',
           'security/ir.model.access.csv',
-	  'payment_invoice.xml',
+          'payment_invoice.xml',
           ],
  'installable': True,
  'application': True,

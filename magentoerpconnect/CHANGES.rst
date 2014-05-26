@@ -1,8 +1,8 @@
 Changelog
 ---------
 
-2.3.1.dev0 (unreleased)
-~~~~~~~~~~~~~~~~~~~~~~~
+2.4.0 (2014-05-26)
+~~~~~~~~~~~~~~~~~~
 
 * New helper in importer to import dependencies
 * allow to customize the available versions without overriding the 'version' field
@@ -19,6 +19,7 @@ Changelog
 * Possibility to disable import of sales orders per storeview
 * Related Actions: open the form view on the record concerned by an export job, or open the Magento's admin page
   on importing jobs
+* Special order lines (shipping, ...) are now the last lines of an order, not the first
 
 
 2.3.1 (2014-01-23)
