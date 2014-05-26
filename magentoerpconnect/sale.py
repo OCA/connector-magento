@@ -562,7 +562,14 @@ class SaleOrderImport(MagentoImportSynchronizer):
                 partner = sess.read('magento.res.partner',
                                     partner_ids[0],
                                     ['magento_id'])
-                record['customer_id'] = partner['magento_id']
+                # If there are multiple orders with (customer_id is null) and (customer_is_guest = 0)
+                #  which share the same customer_email, then we may get a magento_id
+                #  that is a marker 'guestorder:...' for a guest order (which is set below).
+                #  This causes a problem with "importer.run..." below where the id is cast to int.
+                if str(partner['magento_id']).startswith('guestorder:'):
+                    is_guest_order = True
+                else:
+                    record['customer_id'] = partner['magento_id']
 
             # no partner matching, it means that we have to consider it
             # as a guest order
