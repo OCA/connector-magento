@@ -34,7 +34,7 @@ This set of data contains examples of customers and their address books
 
 # customer without address
 no_address = {
-    ('customer.info', (9999253, None)): {'confirmation': None,
+    ('customer.info', (9999253,)): {'confirmation': None,
                                      'created_at': '2013-06-28 12:35:33',
                                      'created_in': 'English',
                                      'customer_id': '9999253',
@@ -64,7 +64,7 @@ no_address = {
 
 # individual customer with 1 address
 individual_1_address = \
-{ ('customer.info', (9999254, None)): {'confirmation': None,
+{ ('customer.info', (9999254,)): {'confirmation': None,
                                   'created_at': '2013-06-28 12:43:49',
                                   'created_in': 'English',
                                   'customer_id': '9999254',
@@ -88,7 +88,7 @@ individual_1_address = \
                                   'taxvat': None,
                                   'updated_at': '2013-06-28 12:43:49',
                                   'website_id': '1'},
- ('customer_address.info', (9999253, None)): {'city': u'Boutin-la-Forêt',
+ ('customer_address.info', (9999253,)): {'city': u'Boutin-la-Forêt',
                                           'company': None,
                                           'country_id': 'FR',
                                           'created_at': '2013-06-28 12:43:49',
@@ -134,7 +134,7 @@ individual_1_address = \
 
 # individual customer with 2 addresses
 individual_2_addresses = \
-{('customer.info', (9999255, None)): {'confirmation': None,
+{('customer.info', (9999255,)): {'confirmation': None,
                                   'created_at': '2013-06-28 12:56:40',
                                   'created_in': 'English',
                                   'customer_id': '9999255',
@@ -158,7 +158,7 @@ individual_2_addresses = \
                                   'taxvat': None,
                                   'updated_at': '2013-06-28 13:00:23',
                                   'website_id': '1'},
- ('customer_address.info', (9999254, None)): {'city': 'Perez',
+ ('customer_address.info', (9999254,)): {'city': 'Perez',
                                           'company': None,
                                           'country_id': 'FR',
                                           'created_at': '2013-06-28 12:56:43',
@@ -183,7 +183,7 @@ individual_2_addresses = \
                                           'vat_request_date': None,
                                           'vat_request_id': None,
                                           'vat_request_success': None},
- ('customer_address.info', (9999255, None)): {'city': 'Bugarach',
+ ('customer_address.info', (9999255,)): {'city': 'Bugarach',
                                           'company': None,
                                           'country_id': 'FR',
                                           'created_at': '2013-06-28 13:00:23',
@@ -243,7 +243,7 @@ individual_2_addresses = \
 
 # company with 1 address
 company_1_address = \
-{('customer.info', (9999256, None)): {'confirmation': None,
+{('customer.info', (9999256,)): {'confirmation': None,
                                   'created_at': '2013-06-28 13:10:21',
                                   'created_in': 'English',
                                   'customer_id': '9999256',
@@ -267,7 +267,7 @@ company_1_address = \
                                   'taxvat': None,
                                   'updated_at': '2013-06-28 13:10:22',
                                   'website_id': '1'},
- ('customer_address.info', (9999256, None)): {'city': 'Launaynec',
+ ('customer_address.info', (9999256,)): {'city': 'Launaynec',
                                           'company': 'Marechal',
                                           'country_id': 'FR',
                                           'created_at': '2013-06-28 13:10:22',
@@ -313,7 +313,7 @@ company_1_address = \
 
 # company with 2 addresses
 company_2_addresses = \
-{('customer.info', (9999257, None)): {'confirmation': None,
+{('customer.info', (9999257,)): {'confirmation': None,
                                   'created_at': '2013-06-28 13:23:01',
                                   'created_in': 'English',
                                   'customer_id': '9999257',
@@ -337,7 +337,7 @@ company_2_addresses = \
                                   'taxvat': None,
                                   'updated_at': '2013-06-28 13:25:28',
                                   'website_id': '1'},
- ('customer_address.info', (9999257, None)): {'city': 'Raynauddan',
+ ('customer_address.info', (9999257,)): {'city': 'Raynauddan',
                                           'company': 'Bertin',
                                           'country_id': 'FR',
                                           'created_at': '2013-06-28 13:23:01',
@@ -362,7 +362,7 @@ company_2_addresses = \
                                           'vat_request_date': None,
                                           'vat_request_id': None,
                                           'vat_request_success': None},
- ('customer_address.info', (9999258, None)): {'city': 'Cailla',
+ ('customer_address.info', (9999258,)): {'city': 'Cailla',
                                           'company': None,
                                           'country_id': 'FR',
                                           'created_at': '2013-06-28 13:25:28',
