@@ -3,12 +3,14 @@ Changelog
 
 2.3.1.dev0 (unreleased)
 ~~~~~~~~~~~~~~~~~~~~~~~
+
 * New helper in importer to import dependencies
 * allow to customize the available versions without overriding the 'version' field
 * New option 'Create Invoice On' on payment methods with options 'on paid', 'on validate'
 * Using Magento on PHP 5.4 without using the compatibility patch would
   break syncs'. Correct solution is to install the patch on Magento
   though! http://magento.com/blog/magento-news/magento-now-supports-php-54
+* Allow to use HTTP Auth Basic to connect to the Magento API
 * Retry jobs when they hit a 502, 503 or 504 error
 * Added missing scheduler for import of products
 * Fix: calculate correctly the discount ratio on sales order lines (lp:1201590)

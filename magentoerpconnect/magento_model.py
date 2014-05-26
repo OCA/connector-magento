@@ -70,7 +70,6 @@ class magento_backend(orm.Model):
         return self.select_versions(cr, uid, context=context)
 
     def _get_stock_field_id(self, cr, uid, context=None):
-        stock_field = 'virtual_available'
         field_ids = self.pool.get('ir.model.fields').search(
             cr, uid,
             [('model', '=', 'product.product'),
@@ -83,9 +82,33 @@ class magento_backend(orm.Model):
             _select_versions,
             string='Version',
             required=True),
-        'location': fields.char('Location', required=True),
-        'username': fields.char('Username'),
-        'password': fields.char('Password'),
+        'location': fields.char(
+            'Location',
+            required=True,
+            help="Url to magento application"),
+        'use_custom_api_path': fields.boolean(
+            'Custom Api Path',
+            help="The default API path is '/index.php/api/xmlrpc'. "
+                 "Check this box if you use a custom API path, in that case, "
+                 "the location has to be completed with the custom API path "),
+        'username': fields.char(
+            'Username',
+            help="Webservice user"),
+        'password': fields.char(
+            'Password',
+            help="Webservice password"),
+        'use_auth_basic': fields.boolean(
+            'Use HTTP Auth Basic',
+            help="Use a Basic Access Authentication for the API. "
+                 "The Magento server could be configured to restrict access "
+                 "using a HTTP authentication based on a username and "
+                 "a password."),
+        'auth_basic_username': fields.char(
+            'Basic Auth. Username',
+            help="Basic access authentication web server side username"),
+        'auth_basic_password': fields.char(
+            'Basic Auth. Password',
+            help="Basic access authentication web server side password"),
         'sale_prefix': fields.char(
             'Sale Prefix',
             help="A prefix put before the name of imported sales orders.\n"
@@ -132,6 +155,8 @@ class magento_backend(orm.Model):
 
     _defaults = {
         'product_stock_field_id': _get_stock_field_id,
+        'use_custom_api_path': False,
+        'use_auth_basic': False,
     }
 
     _sql_constraints = [
