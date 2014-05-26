@@ -22,8 +22,9 @@
 import logging
 import xmlrpclib
 from datetime import datetime, timedelta
-from openerp.osv import fields, orm
 import openerp.addons.decimal_precision as dp
+from openerp.osv import fields, orm
+from openerp.tools.translate import _
 from openerp.addons.connector.connector import ConnectorUnit
 from openerp.addons.connector.exception import (NothingToDoJob,
                                                 FailedJobError,
@@ -372,6 +373,21 @@ class SaleOrderImport(MagentoImportSynchronizer):
        if self._mapper is None:
            self._mapper = self.environment.get_connector_unit(SaleOrderImportMapper)
        return self._mapper
+
+    def _must_skip(self):
+        """ Hook called right after we read the data from the backend.
+
+        If the method returns a message giving a reason for the
+        skipping, the import will be interrupted and the message
+        recorded in the job (if the import is called directly by the
+        job, not by dependencies).
+
+        If it returns None, the import will continue normally.
+
+        :returns: None | str | unicode
+        """
+        if self.binder.to_openerp(self.magento_id):
+            return _('Already imported')
 
     def _clean_magento_items(self, resource):
         """
