@@ -103,12 +103,18 @@ class magento_product_product(orm.Model):
         'magento_qty': fields.float('Computed Quantity',
                                     help="Last computed quantity to send "
                                          "on Magento."),
+        'no_stock_sync': fields.boolean(
+            'No Stock Synchronization',
+            required=False,
+            help="Check this to exclude the product "
+                 "from stock synchronizations."),
         }
 
     _defaults = {
         'product_type': 'simple',
         'manage_stock': 'use_default',
         'backorders': 'use_default',
+        'no_stock_sync': False,
         }
 
     _sql_constraints = [
@@ -384,7 +390,7 @@ class ProductImport(MagentoImportSynchronizer):
 @magento
 class ProductImportMapper(ImportMapper):
     _model_name = 'magento.product.product'
-    #TODO :     categ, special_price => minimal_price
+    # TODO :     categ, special_price => minimal_price
     direct = [('name', 'name'),
               ('description', 'description'),
               ('weight', 'weight'),
@@ -509,6 +515,8 @@ INVENTORY_FIELDS = ('manage_stock',
 @on_record_write(model_names='magento.product.product')
 def magento_product_modified(session, model_name, record_id, vals):
     if session.context.get('connector_no_export'):
+        return
+    if session.browse(model_name, record_id).no_stock_sync:
         return
     inventory_fields = list(set(vals).intersection(INVENTORY_FIELDS))
     if inventory_fields:
