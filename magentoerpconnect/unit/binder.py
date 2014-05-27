@@ -65,7 +65,8 @@ class MagentoModelBinder(MagentoBinder):
                  or None if the external_id is not mapped
         :rtype: int
         """
-        binding_ids = self.session.search(
+        with self.session.change_context({'active_test': False}):
+            binding_ids = self.session.search(
                 self.model._name,
                 [('magento_id', '=', str(external_id)),
                  ('backend_id', '=', self.backend_record.id)])
@@ -91,10 +92,12 @@ class MagentoModelBinder(MagentoBinder):
         :return: backend identifier of the record
         """
         if wrap:
-            erp_id = self.session.search(self.model._name, [
-                ['openerp_id', '=', record_id],
-                ['backend_id', '=', self.backend_record.id]
-            ])
+            with self.session.change_context({'active_test': False}):
+                erp_id = self.session.search(
+                    self.model._name,
+                    [('openerp_id', '=', record_id),
+                     ('backend_id', '=', self.backend_record.id)
+                     ])
             if erp_id:
                 record_id = erp_id[0]
             else:
