@@ -1,6 +1,11 @@
 Changelog
 ---------
 
+2.4.1 (2014-06-10)
+~~~~~~~~~~~~~~~~~~
+
+* Fix: Binders should find records even if they are inactive (lp:1323719)
+
 2.4.0 (2014-05-26)
 ~~~~~~~~~~~~~~~~~~
 
