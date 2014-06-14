@@ -299,7 +299,7 @@ class TranslationImporter(ImportSynchronizer):
         """ Return the raw Magento data for ``self.magento_id`` """
         return self.backend_adapter.read(self.magento_id, storeview_id)
 
-    def run(self, magento_id, binding_id):
+    def run(self, magento_id, binding_id, mapper_class=None):
         self.magento_id = magento_id
         session = self.session
         storeview_ids = session.search(
@@ -318,9 +318,14 @@ class TranslationImporter(ImportSynchronizer):
         translatable_fields = [field for field, attrs in fields.iteritems()
                                if attrs.get('translate')]
 
+        if mapper_class is None:
+            mapper = self.mapper
+        else:
+            mapper = self.get_connector_unit_for_model(mapper_class)
+
         for storeview in lang_storeviews:
             lang_record = self._get_magento_data(storeview.magento_id)
-            map_record = self.mapper.map_record(lang_record)
+            map_record = mapper.map_record(lang_record)
             record = map_record.values()
 
             data = dict((field, value) for field, value in record.iteritems()

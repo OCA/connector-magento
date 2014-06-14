@@ -397,7 +397,8 @@ class ProductImport(MagentoImportSynchronizer):
         """ Hook called at the end of the import """
         translation_importer = self.get_connector_unit_for_model(
             TranslationImporter, self.model._name)
-        translation_importer.run(self.magento_id, binding_id)
+        translation_importer.run(self.magento_id, binding_id,
+                                 mapper_class=ProductImportMapper)
         image_importer = self.get_connector_unit_for_model(
             CatalogImageImporter, self.model._name)
         image_importer.run(self.magento_id, binding_id)
