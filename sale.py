@@ -21,9 +21,7 @@
 
 from openerp.addons.magentoerpconnect import sale
 from openerp.addons.magentoerpconnect.backend import magento
-from openerp.osv import orm, osv
-#from openerp.tools.translate import _
-
+from openerp.osv import orm
 
 
 @magento(replacing=sale.SaleOrderLineBundleImportMapper)
@@ -67,33 +65,33 @@ class SaleOrderBundleImport(sale.SaleOrderImport):
                 })
 
 
-#class sale_order(orm.Model):
-#    _inherit = 'sale.order'
-#
-#    def copy(self, cr, uid, id, default=None, context=None):
-#        if default is None:
-#            default = {}
-#        default = {'order_line': False}
-#        res = super(sale_order, self).copy(cr, uid, id,
-#                                                 default=default,
-#                                                 context=context)
-#        #for origin_order_line in self.browse(cr, uid, id, context=context).order_line:
-#            # copier ligne par ligne de origin_order vers copy_order
-#
-#        #copy_lines = self.browse(cr, uid, res, context=context).order_line
-#        #origin_line_ids = sorted(r.id for r in self.browse(
-#        #    cr, uid, id, context=context).order_line)
-#        #copy_line_ids = sorted(r.id for r in copy_lines)
-#        ## build mapping
-#        #line_map = dict(zip(origin_line_ids, copy_line_ids))
-#        #sale_line_obj = self.pool.get('sale.order.line')
-#        #for copy_line in copy_lines:
-#        #    if copy_line.line_parent_id:
-#        #        if copy_line.line_parent_id.id not in line_map:
-#        #            raise osv.except_osv(_('Error!'),
-#        #                                 _('No bundle parent line was found.'))
-#        #        copy_parent_id = line_map[copy_line.line_parent_id.id]
-#        #        sale_line_obj.write(
-#        #            cr, uid, copy_line.id, {'line_parent_id': copy_parent_id})
-#
-#        return res
+class sale_order(orm.Model):
+    _inherit = 'sale.order'
+
+    def copy(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        default = {'order_line': False}
+        new_order_id = super(sale_order, self).copy(cr, uid, id,
+                                                 default=default,
+                                                 context=context)
+        order_line_model = self.pool.get('sale.order.line')
+        order = self.browse(cr, uid, id, context=context)
+        for origin_order_line in order.order_line:
+            if not origin_order_line.line_parent_id:
+                default = {
+                    'order_id': new_order_id,
+                    'line_child_ids': False,
+                }
+                new_order_line_id = order_line_model.copy(
+                    cr, uid, origin_order_line.id,
+                    default=default, context=context)
+            for child_line in origin_order_line.line_child_ids:
+                default = {
+                    'line_parent_id': new_order_line_id,
+                    'order_id': new_order_id,
+                    }
+                order_line_model.copy(
+                    cr, uid, child_line.id,
+                    default=default, context=context)
+        return new_order_id
