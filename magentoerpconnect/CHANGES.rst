@@ -1,6 +1,11 @@
 Changelog
 ---------
 
+2.4.2 (2014-06-16)
+~~~~~~~~~~~~~~~~~~
+
+* Fix: AssertionError: Several classes found for <class 'openerp.addons.connector.unit.mapper.ImportMapper'> with session <Session db_name: pruebas, uid: 1>, model name: magento.product.product. Found: set([<class 'openerp.addons.magentoerpconnect.product.IsActiveProductImportMapper'>, <class 'openerp.addons.magentoerpconnect.product.ProductImportMapper'>])
+
 2.4.1 (2014-06-10)
 ~~~~~~~~~~~~~~~~~~
 
