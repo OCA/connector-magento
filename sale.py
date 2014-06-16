@@ -21,99 +21,79 @@
 
 from openerp.addons.magentoerpconnect import sale
 from openerp.addons.magentoerpconnect.backend import magento
-from openerp.osv import fields, orm
-from openerp.addons.connector.unit.mapper import mapping
+from openerp.osv import orm, osv
+#from openerp.tools.translate import _
 
 
 
-@magento(replacing=sale.SaleOrderLineImportMapper)
-class SaleOrderLineBundleImportMapper(sale.SaleOrderLineImportMapper):
+@magento(replacing=sale.SaleOrderLineBundleImportMapper)
+class SaleOrderLineBundleImportMapper(sale.SaleOrderLineBundleImportMapper):
     _model_name = 'magento.sale.order.line'
 
-    direct = sale.SaleOrderLineImportMapper.direct + [
-        ('parent_item_id', 'magento_parent_item_id'),
-        ]
-
-    @mapping
-    def price(self, record):
+    def price_is_zero(self, record):
         sess = self.session
         mag_product_model = sess.pool['magento.product.product']
         mag_product_ids = mag_product_model.search(
             sess.cr, sess.uid,
             [('magento_id', '=', record['product_id'])])
-        mag_product = mag_product_model.browse(sess.cr,
-                                               sess.uid,
-                                               mag_product_ids[0])
-        result = {}
-        if record['product_type'] == 'bundle' and mag_product.price_type == 'dynamic':
-            result['price_unit'] = 0.0
-        else:
-            #order_line_mapper = self.environment.get_connector_unit(sale.SaleOrderLineImportMapper)
-            result = super(SaleOrderLineBundleImportMapper, self).price(record)
-            #result = order_line_mapper.price(record)
-
-            #base_row_total = float(record['base_row_total'] or 0.)
-            #base_row_total_incl_tax = float(record['base_row_total_incl_tax'] or 0.)
-            #qty_ordered = float(record['qty_ordered'])
-            #if self.backend_record.catalog_price_tax_included:
-            #    result['price_unit'] = base_row_total_incl_tax / qty_ordered
-            #else:
-            #    result['price_unit'] = base_row_total / qty_ordered
-        return result
+        for mag_product_id in mag_product_ids:
+            mag_product = mag_product_model.browse(
+                sess.cr, sess.uid, mag_product_id)
+            if record['product_type'] == 'bundle' \
+                    and mag_product.price_type == 'dynamic':
+                return True
 
 
 @magento(replacing=sale.SaleOrderImport)
 class SaleOrderBundleImport(sale.SaleOrderImport):
     _model_name = ['magento.sale.order']
 
-
-    def _merge_sub_items(self, product_type, top_item, child_items):
-        """
-        In the module magentoerpconnect_bundle_split, instead of merging
-        the child items, we create a sale order line for each of them.
-        As the bundle item price is the same
-        as the sum of all the items, we set its price at 0.0
-
-        :param top_item: main item (bundle, configurable)
-        :param child_items: list of childs of the top item
-        :return: list of items
-        """
-        if product_type == 'bundle':
-            items = []
-            bundle_item = top_item.copy()
-            items = [child for child in child_items]
-            items.insert(0, bundle_item)
-            return items
-        #order_import = self.environment.get_connector_unit(sale.SaleOrderImport)
-        return super(SaleOrderBundleImport, self)._merge_sub_items(
-            product_type, top_item, child_items)
-        #return order_import._merge_sub_items(product_type, top_item, child_items)
-
-    def _create(self, data):
+    def _link_hierarchical_lines(self, binding_id):
         session = self.session
-        #order_import = self.environment.get_connector_unit(sale.SaleOrderImport)
-        order_id = super(SaleOrderBundleImport, self)._create(data)
-        #order_id = order_import._create(data)
         order_line_ids = session.search(
             'magento.sale.order.line',
-            [('magento_order_id', '=', order_id)])
+            [('magento_order_id', '=', binding_id)])
         bundle_ids = {}
         mag_id_2_openerp_id = {}
         for line in session.browse('magento.sale.order.line', order_line_ids):
             if line.magento_parent_item_id:
-                bundle_ids.setdefault(line.magento_parent_item_id, []).append(line.id)
+                bundle_ids.setdefault(
+                    line.magento_parent_item_id, []).append(line.id)
             mag_id_2_openerp_id[line.magento_id] = line.openerp_id.id
         for mag_parent_item_id, mag_child_line_ids in bundle_ids.iteritems():
             parent_line_id = mag_id_2_openerp_id[str(mag_parent_item_id)]
             session.write('magento.sale.order.line', mag_child_line_ids, {
                 'line_parent_id': parent_line_id,
                 })
-        return order_id
 
 
-class magento_sale_order_line(orm.Model):
-    _inherit = 'magento.sale.order.line'
-
-    _columns = {
-        'magento_parent_item_id': fields.integer('Magento Parent Item ID'),
-        }
+#class sale_order(orm.Model):
+#    _inherit = 'sale.order'
+#
+#    def copy(self, cr, uid, id, default=None, context=None):
+#        if default is None:
+#            default = {}
+#        default = {'order_line': False}
+#        res = super(sale_order, self).copy(cr, uid, id,
+#                                                 default=default,
+#                                                 context=context)
+#        #for origin_order_line in self.browse(cr, uid, id, context=context).order_line:
+#            # copier ligne par ligne de origin_order vers copy_order
+#
+#        #copy_lines = self.browse(cr, uid, res, context=context).order_line
+#        #origin_line_ids = sorted(r.id for r in self.browse(
+#        #    cr, uid, id, context=context).order_line)
+#        #copy_line_ids = sorted(r.id for r in copy_lines)
+#        ## build mapping
+#        #line_map = dict(zip(origin_line_ids, copy_line_ids))
+#        #sale_line_obj = self.pool.get('sale.order.line')
+#        #for copy_line in copy_lines:
+#        #    if copy_line.line_parent_id:
+#        #        if copy_line.line_parent_id.id not in line_map:
+#        #            raise osv.except_osv(_('Error!'),
+#        #                                 _('No bundle parent line was found.'))
+#        #        copy_parent_id = line_map[copy_line.line_parent_id.id]
+#        #        sale_line_obj.write(
+#        #            cr, uid, copy_line.id, {'line_parent_id': copy_parent_id})
+#
+#        return res

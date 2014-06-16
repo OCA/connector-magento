@@ -31,7 +31,7 @@ class magento_product_product(orm.Model):
 
     _columns = {
         'price_type': fields.selection([('dynamic', 'Dynamic'),('fixed', 'Fixed')],
-            'Price Type'),
+            'Magento Price Type'),
     }
 
     def product_type_get(self, cr, uid, context=None):
