@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import connector
-import sale
-import product
+from . import connector
+from . import sale
+from . import product

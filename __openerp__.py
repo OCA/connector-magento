@@ -42,6 +42,12 @@ The bundle product is imported with a price of 0.0 or with the total price and i
 
 For the shipment, the first item which was part of the bundle create the full shipment on Magento (limitation because Magento wait for the bundle product).
 The side effect is that the order will be marked as fully shipped on Magento even if the packing is sent in 2 times in OpenERP.
+
+Below link for :
+
+- the module 'sale_stock_relation_line' ===> https://code.launchpad.net/~akretion-team/+junk/sale-stock-relation-line.
+
+- the module 'sale_invoice_relation_line' ===> https://code.launchpad.net/~akretion-team/+junk/sale-invoice-relation-line.
  """,
  'data': ['product_view.xml'],
  'installable': True,
