@@ -20,12 +20,17 @@
 ##############################################################################
 
 import logging
+
 from datetime import datetime
+
+import psycopg2
+
 from openerp.tools.translate import _
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.addons.connector.queue.job import job, related_action
 from openerp.addons.connector.unit.synchronizer import ExportSynchronizer
-from openerp.addons.connector.exception import IDMissingInBackend
+from openerp.addons.connector.exception import (IDMissingInBackend,
+                                                RetryableJobError)
 from .import_synchronizer import import_record
 from ..connector import get_environment
 from ..related_action import unwrap_binding
@@ -117,6 +122,11 @@ class MagentoBaseExporter(ExportSynchronizer):
         result = self._run(*args, **kwargs)
 
         self.binder.bind(self.magento_id, self.binding_id)
+        # Commit so we keep the external ID when there are several
+        # exports (due to dependencies) and one of them fails.
+        # The commit will also release the lock acquired on the binding
+        # record
+        self.session.commit()
         return result
 
     def _run(self):
@@ -134,6 +144,36 @@ class MagentoExporter(MagentoBaseExporter):
         """
         super(MagentoExporter, self).__init__(environment)
         self.binding_record = None
+
+    def _lock(self):
+        """ Lock the binding record.
+
+        Lock the binding record so we are sure that only one export
+        job is running for this record if concurrent jobs have to export the
+        same record.
+
+        When concurrent jobs try to export the same record, the first one
+        will lock and proceed, the others will fail to lock and will be
+        retried later.
+
+        This behavior works also when the export becomes multilevel
+        with :meth:`_export_dependencies`. Each level will set its own lock
+        on the binding record it has to export.
+
+        """
+        sql = ("SELECT id FROM %s WHERE ID = %%s FOR UPDATE NOWAIT" %
+               self.model._table)
+        try:
+            self.session.cr.execute(sql, (self.binding_id, ),
+                                    log_exceptions=False)
+        except psycopg2.OperationalError:
+            _logger.info('A concurrent job is already exporting the same '
+                         'record (%s with id %s). Job delayed later.',
+                         self.model._name, self.binding_id)
+            raise RetryableJobError(
+                'A concurrent job is already exporting the same record '
+                '(%s with id %s). The job will be retried later.' %
+                (self.model._name, self.binding_id))
 
     def _has_to_skip(self):
         """ Return True if the export can be skipped """
@@ -194,6 +234,10 @@ class MagentoExporter(MagentoBaseExporter):
 
         # export the missing linked resources
         self._export_dependencies()
+
+        # prevent other jobs to export the same record
+        # will be released on commit (or rollback)
+        self._lock()
 
         map_record = self._map_data()
 
