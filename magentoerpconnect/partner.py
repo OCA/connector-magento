@@ -206,6 +206,7 @@ class magento_address(orm.Model):
 class PartnerAdapter(GenericAdapter):
     _model_name = 'magento.res.partner'
     _magento_model = 'customer'
+    _admin_path = '/{model}/edit/id/{id}'
 
     def _call(self, method, arguments):
         try:

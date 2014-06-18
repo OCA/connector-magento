@@ -182,6 +182,7 @@ class GenericAdapter(MagentoCRUDAdapter):
 
     _model_name = None
     _magento_model = None
+    _admin_path = None
 
     def search(self, filters=None):
         """ Search records according to some criterias
@@ -228,3 +229,18 @@ class GenericAdapter(MagentoCRUDAdapter):
     def delete(self, id):
         """ Delete a record on the external system """
         return self._call('%s.delete' % self._magento_model, [int(id)])
+
+    def admin_url(self, id):
+        """ Return the URL in the Magento admin for a record """
+        if self._admin_path is None:
+            raise ValueError('No admin path is defined for this record')
+        backend = self.backend_record
+        url = backend.admin_location
+        if not url:
+            raise ValueError('No admin URL configured on the backend.')
+        path = self._admin_path.format(model=self._magento_model,
+                                       id=id)
+        url = url.rstrip('/')
+        path = path.lstrip('/')
+        url = '/'.join((url, path))
+        return url

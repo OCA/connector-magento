@@ -21,7 +21,7 @@
 ##############################################################################
 
 import logging
-from datetime import datetime
+from datetime import datetime, timedelta
 from openerp.osv import fields, orm
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 import openerp.addons.connector as connector
@@ -43,6 +43,8 @@ from .backend import magento
 from .connector import add_checkpoint
 
 _logger = logging.getLogger(__name__)
+
+IMPORT_DELTA_BUFFER = 30  # seconds
 
 
 class magento_backend(orm.Model):
@@ -86,6 +88,7 @@ class magento_backend(orm.Model):
             'Location',
             required=True,
             help="Url to magento application"),
+        'admin_location': fields.char('Admin Location'),
         'use_custom_api_path': fields.boolean(
             'Custom Api Path',
             help="The default API path is '/index.php/api/xmlrpc'. "
@@ -230,7 +233,7 @@ class magento_backend(orm.Model):
             ids = [ids]
         self.check_magento_structure(cr, uid, ids, context=context)
         session = ConnectorSession(cr, uid, context=context)
-        import_start_time = datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        import_start_time = datetime.now()
         for backend in self.browse(cr, uid, ids, context=context):
             from_date = getattr(backend, from_date_field)
             if from_date:
@@ -240,8 +243,18 @@ class magento_backend(orm.Model):
                 from_date = None
             import_batch.delay(session, model,
                                backend.id, filters={'from_date': from_date})
-        self.write(cr, uid, ids,
-                   {from_date_field: import_start_time})
+        # Records from Magento are imported based on their `created_at`
+        # date.  This date is set on Magento at the beginning of a
+        # transaction, so if the import is run between the beginning and
+        # the end of a transaction, the import of a record may be
+        # missed.  That's why we add a small buffer back in time where
+        # the eventually missed records will be retrieved.  This also
+        # means that we'll have jobs that import twice the same records,
+        # but this is not a big deal because they will be skipped when
+        # the last `sync_date` is the same.
+        next_time = import_start_time - timedelta(seconds=IMPORT_DELTA_BUFFER)
+        next_time = next_time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        self.write(cr, uid, ids, {from_date_field: next_time}, context=context)
 
     def import_product_categories(self, cr, uid, ids, context=None):
         self._import_from_date(cr, uid, ids, 'magento.product.category',
@@ -288,6 +301,10 @@ class magento_backend(orm.Model):
         self._magento_backend(cr, uid, self.import_product_categories,
                               domain=domain, context=context)
         
+    def _scheduler_import_product_product(self, cr, uid, domain=None, context=None):
+        self._magento_backend(cr, uid, self.import_product_product,
+                              domain=domain, context=context)
+
     def _scheduler_import_product_product(self, cr, uid, domain=None, context=None):
         self._magento_backend(cr, uid, self.import_product_product,
                               domain=domain, context=context)
@@ -344,7 +361,7 @@ class magento_website(orm.Model):
         if not hasattr(ids, '__iter__'):
             ids = [ids]
         session = ConnectorSession(cr, uid, context=context)
-        import_start_time = datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        import_start_time = datetime.now()
         for website in self.browse(cr, uid, ids, context=context):
             backend_id = website.backend_id.id
             if website.import_partners_from_date:
@@ -357,8 +374,19 @@ class magento_website(orm.Model):
                 session, 'magento.res.partner', backend_id,
                 {'magento_website_id': website.magento_id,
                     'from_date': from_date})
-        self.write(cr, uid, ids,
-                   {'import_partners_from_date': import_start_time})
+        # Records from Magento are imported based on their `created_at`
+        # date.  This date is set on Magento at the beginning of a
+        # transaction, so if the import is run between the beginning and
+        # the end of a transaction, the import of a record may be
+        # missed.  That's why we add a small buffer back in time where
+        # the eventually missed records will be retrieved.  This also
+        # means that we'll have jobs that import twice the same records,
+        # but this is not a big deal because they will be skipped when
+        # the last `sync_date` is the same.
+        next_time = import_start_time - timedelta(seconds=IMPORT_DELTA_BUFFER)
+        next_time = next_time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        self.write(cr, uid, ids, {'import_partners_from_date': next_time},
+                   context=context)
         return True
 
 
@@ -484,6 +512,14 @@ class magento_storeview(orm.Model):
             'Import sale orders from date',
             help='do not consider non-imported sale orders before this date. '
                  'Leave empty to import all sale orders'),
+        'no_sales_order_sync': fields.boolean(
+            'No Sales Order Synchronization',
+            help='Check if the storeview is active in Magento '
+                 'but its sales orders should not be imported.'),
+    }
+
+    _defaults = {
+        'no_sales_order_sync': False,
     }
 
     _sql_constraints = [
@@ -493,8 +529,13 @@ class magento_storeview(orm.Model):
 
     def import_sale_orders(self, cr, uid, ids, context=None):
         session = ConnectorSession(cr, uid, context=context)
-        import_start_time = datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        import_start_time = datetime.now()
         for storeview in self.browse(cr, uid, ids, context=context):
+            if storeview.no_sales_order_sync:
+                _logger.debug("The storeview '%s' is active in Magento "
+                              "but its sales orders should not be imported." %
+                              storeview.name)
+                continue
             backend_id = storeview.backend_id.id
             if storeview.import_orders_from_date:
                 from_date = datetime.strptime(
@@ -509,7 +550,20 @@ class magento_storeview(orm.Model):
                 {'magento_storeview_id': storeview.magento_id,
                  'from_date': from_date},
                 priority=1)  # executed as soon as possible
-        self.write(cr, uid, ids, {'import_orders_from_date': import_start_time})
+        # Records from Magento are imported based on their `created_at`
+        # date.  This date is set on Magento at the beginning of a
+        # transaction, so if the import is run between the beginning and
+        # the end of a transaction, the import of a record may be
+        # missed.  That's why we add a small buffer back in time where
+        # the eventually missed records will be retrieved.  This also
+        # means that we'll have jobs that import twice the same records,
+        # but this is not a big deal because the sales orders will be
+        # imported the first time and the jobs will be skipped on the
+        # subsequent imports
+        next_time = import_start_time - timedelta(seconds=IMPORT_DELTA_BUFFER)
+        next_time = next_time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        self.write(cr, uid, ids, {'import_orders_from_date': next_time},
+                   context=context)
         return True
 
 
@@ -517,18 +571,21 @@ class magento_storeview(orm.Model):
 class WebsiteAdapter(GenericAdapter):
     _model_name = 'magento.website'
     _magento_model = 'ol_websites'
+    _admin_path = 'system_store/editWebsite/website_id/{id}'
 
 
 @magento
 class StoreAdapter(GenericAdapter):
     _model_name = 'magento.store'
     _magento_model = 'ol_groups'
+    _admin_path = 'system_store/editGroup/group_id/{id}'
 
 
 @magento
 class StoreviewAdapter(GenericAdapter):
     _model_name = 'magento.storeview'
     _magento_model = 'ol_storeviews'
+    _admin_path = 'system_store/editStore/store_id/{id}'
 
 
 @magento

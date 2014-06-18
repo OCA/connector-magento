@@ -1,8 +1,18 @@
 Changelog
 ---------
 
-2.3.1.dev0 (unreleased)
-~~~~~~~~~~~~~~~~~~~~~~~
+2.4.2 (2014-06-16)
+~~~~~~~~~~~~~~~~~~
+
+* Fix: AssertionError: Several classes found for <class 'openerp.addons.connector.unit.mapper.ImportMapper'> with session <Session db_name: pruebas, uid: 1>, model name: magento.product.product. Found: set([<class 'openerp.addons.magentoerpconnect.product.IsActiveProductImportMapper'>, <class 'openerp.addons.magentoerpconnect.product.ProductImportMapper'>])
+
+2.4.1 (2014-06-10)
+~~~~~~~~~~~~~~~~~~
+
+* Fix: Binders should find records even if they are inactive (lp:1323719)
+
+2.4.0 (2014-05-26)
+~~~~~~~~~~~~~~~~~~
 
 * New helper in importer to import dependencies
 * allow to customize the available versions without overriding the 'version' field
@@ -16,6 +26,10 @@ Changelog
 * Fix: calculate correctly the discount ratio on sales order lines (lp:1201590)
 * Possibility to exclude products from stock synchronizations
 * Products disabled on Magento are imported disabled on OpenERP. An additional module allows more options.
+* Possibility to disable import of sales orders per storeview
+* Related Actions: open the form view on the record concerned by an export job, or open the Magento's admin page
+  on importing jobs
+* Special order lines (shipping, ...) are now the last lines of an order, not the first
 
 
 2.3.1 (2014-01-23)

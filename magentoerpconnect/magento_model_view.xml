@@ -123,6 +123,7 @@
 
                             <page name="advanced_configuration" string="Advanced Configuration">
                                 <group>
+                                    <field name="admin_location" placeholder="e.g. http://my.magento.com/admin"/>
                                     <field name="default_lang_id" widget="selection"/>
                                     <field name="default_category_id"/>
                                     <field name="sale_prefix" placeholder="mag-" />
@@ -309,6 +310,7 @@
                             <field name="store_id"/>
                             <field name="sort_order"/>
                             <field name="enabled"/>
+                            <field name="no_sales_order_sync"/>
                         </group>
                         <group string="Options">
                             <field name="lang_id" widget="selection"/>
@@ -326,7 +328,8 @@
                                   <button name="import_sale_orders"
                                           type="object"
                                           class="oe_highlight"
-                                          string="Import Sale Orders"/>
+                                          string="Import Sale Orders"
+                                          attrs="{'invisible': [('no_sales_order_sync', '=', True)]}"/>
 
                                 </group>
                             </page>
@@ -346,6 +349,7 @@
                     <field name="name"/>
                     <field name="code"/>
                     <field name="enabled"/>
+                    <field name="no_sales_order_sync"/>
                     <field name="sort_order"/>
                     <field name="store_id"/>
                 </tree>

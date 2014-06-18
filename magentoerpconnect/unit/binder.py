@@ -65,7 +65,8 @@ class MagentoModelBinder(MagentoBinder):
                  or None if the external_id is not mapped
         :rtype: int
         """
-        binding_ids = self.session.search(
+        with self.session.change_context({'active_test': False}):
+            binding_ids = self.session.search(
                 self.model._name,
                 [('magento_id', '=', str(external_id)),
                  ('backend_id', '=', self.backend_record.id)])
@@ -91,10 +92,12 @@ class MagentoModelBinder(MagentoBinder):
         :return: backend identifier of the record
         """
         if wrap:
-            erp_id = self.session.search(self.model._name, [
-                ['openerp_id', '=', record_id],
-                ['backend_id', '=', self.backend_record.id]
-            ])
+            with self.session.change_context({'active_test': False}):
+                erp_id = self.session.search(
+                    self.model._name,
+                    [('openerp_id', '=', record_id),
+                     ('backend_id', '=', self.backend_record.id)
+                     ])
             if erp_id:
                 record_id = erp_id[0]
             else:
@@ -124,3 +127,36 @@ class MagentoModelBinder(MagentoBinder):
             {'magento_id': str(external_id),
              'sync_date': now_fmt},
             context=context)
+
+    def unwrap_binding(self, binding_id, browse=False):
+        """ For a binding record, gives the normal record.
+
+        Example: when called with a ``magento.product.product`` id,
+        it will return the corresponding ``product.product`` id.
+
+        :param browse: when True, returns a browse_record instance
+                       rather than an ID
+        """
+        binding = self.session.read(self.model._name, binding_id,
+                                    ['openerp_id'])
+        openerp_id = binding['openerp_id'][0]
+        if browse:
+            return self.session.browse(self.unwrap_model(),
+                                       openerp_id)
+        return openerp_id
+
+    def unwrap_model(self):
+        """ For a binding model, gives the name of the normal model.
+
+        Example: when called on a binder for ``magento.product.product``,
+        it will return ``product.product``.
+
+        This binder assumes that the normal model lays in ``openerp_id`` since
+        this is the field we use in the ``_inherits`` bindings.
+        """
+        try:
+            column = self.model._columns['openerp_id']
+        except KeyError:
+            raise ValueError('Cannot unwrap model %s, because it has '
+                             'no openerp_id field' % self.model._name)
+        return column._obj

@@ -21,7 +21,7 @@
 ##############################################################################
 
 {'name': 'Magento Connector',
- 'version': '2.3.1',
+ 'version': '2.4.2',
  'category': 'Connector',
  'depends': ['account',
              'product',
@@ -35,7 +35,7 @@
  },
  'author': 'Connector Core Editors',
  'license': 'AGPL-3',
- 'website': 'https://launchpad.net/magentoerpconnect',
+ 'website': 'https://launchpad.net/openerp-connector-magento',
  'description': """
 Magento Connector
 =================
@@ -132,7 +132,8 @@ Available extensions:
           'delivery_view.xml',
           'stock_view.xml',
           'security/ir.model.access.csv',
-	  'payment_invoice.xml',
+          'payment_invoice.xml',
+          'payment_invoice.xml',
           ],
  'installable': True,
  'application': True,

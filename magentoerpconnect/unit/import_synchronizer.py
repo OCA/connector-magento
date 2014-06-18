@@ -23,12 +23,13 @@ import logging
 from datetime import datetime
 from openerp.tools.translate import _
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
-from openerp.addons.connector.queue.job import job
+from openerp.addons.connector.queue.job import job, related_action
 from openerp.addons.connector.connector import ConnectorUnit
 from openerp.addons.connector.unit.synchronizer import ImportSynchronizer
 from openerp.addons.connector.exception import IDMissingInBackend
 from ..backend import magento
 from ..connector import get_environment, add_checkpoint
+from ..related_action import link
 
 _logger = logging.getLogger(__name__)
 
@@ -298,7 +299,7 @@ class TranslationImporter(ImportSynchronizer):
         """ Return the raw Magento data for ``self.magento_id`` """
         return self.backend_adapter.read(self.magento_id, storeview_id)
 
-    def run(self, magento_id, binding_id):
+    def run(self, magento_id, binding_id, mapper_class=None):
         self.magento_id = magento_id
         session = self.session
         storeview_ids = session.search(
@@ -317,9 +318,14 @@ class TranslationImporter(ImportSynchronizer):
         translatable_fields = [field for field, attrs in fields.iteritems()
                                if attrs.get('translate')]
 
+        if mapper_class is None:
+            mapper = self.mapper
+        else:
+            mapper = self.get_connector_unit_for_model(mapper_class)
+
         for storeview in lang_storeviews:
             lang_record = self._get_magento_data(storeview.magento_id)
-            map_record = self.mapper.map_record(lang_record)
+            map_record = mapper.map_record(lang_record)
             record = map_record.values()
 
             data = dict((field, value) for field, value in record.iteritems()
@@ -359,6 +365,7 @@ def import_batch(session, model_name, backend_id, filters=None):
 
 
 @job
+@related_action(action=link)
 def import_record(session, model_name, backend_id, magento_id, force=False):
     """ Import a record from Magento """
     env = get_environment(session, model_name, backend_id)

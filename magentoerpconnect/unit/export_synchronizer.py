@@ -23,11 +23,12 @@ import logging
 from datetime import datetime
 from openerp.tools.translate import _
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
-from openerp.addons.connector.queue.job import job
+from openerp.addons.connector.queue.job import job, related_action
 from openerp.addons.connector.unit.synchronizer import ExportSynchronizer
 from openerp.addons.connector.exception import IDMissingInBackend
 from .import_synchronizer import import_record
 from ..connector import get_environment
+from ..related_action import unwrap_binding
 
 _logger = logging.getLogger(__name__)
 
@@ -209,6 +210,7 @@ class MagentoExporter(MagentoBaseExporter):
 
 
 @job
+@related_action(action=unwrap_binding)
 def export_record(session, model_name, binding_id, fields=None):
     """ Export a record on Magento """
     record = session.browse(model_name, binding_id)
