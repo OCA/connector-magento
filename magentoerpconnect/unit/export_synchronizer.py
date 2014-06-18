@@ -104,6 +104,10 @@ class MagentoBaseExporter(ExportSynchronizer):
         """ Return the raw OpenERP data for ``self.binding_id`` """
         return self.session.browse(self.model._name, self.binding_id)
 
+    def _after_export(self):
+        """ Run the after export"""
+        return
+
     def run(self, binding_id, *args, **kwargs):
         """ Run the synchronization
 
@@ -411,13 +415,63 @@ class MagentoExporter(MagentoBaseExporter):
             record = self._update_data(map_record, fields=fields)
             if not record:
                 return _('Nothing to export.')
+            # special check on data before export
+            self._validate_data(record)
             self._update(record)
         else:
             record = self._create_data(map_record, fields=fields)
             if not record:
                 return _('Nothing to export.')
             self.magento_id = self._create(record)
+        self.session.cr.commit()
         return _('Record exported with ID %s on Magento.') % self.magento_id
+
+class MagentoTranslationExporter(MagentoExporter):
+    """ A common flow for the exports record with translation to Magento """
+
+    def _get_translatable_field(self, fields):
+        # find the translatable fields of the model
+        # Note we consider that a translatable field in Magento
+        # must be a translatable field in OpenERP and vice-versa
+        # you can change this behaviour in your own module
+        all_fields = self.model.fields_get(self.session.cr, self.session.uid,
+                                   context=self.session.context)
+
+        translatable_fields = [field for field, attrs in all_fields.iteritems()
+                           if attrs.get('translate') and (not fields or field in fields)]
+        return translatable_fields
+
+
+    def _run(self, fields=None):
+        default_lang = self.backend_record.default_lang_id
+        session = self.session
+        if session.context is None:
+            session.context = {}
+        session.context['lang'] = default_lang.code
+        res = super(MagentoTranslationExporter, self)._run(fields)
+        
+        storeview_ids = session.search(
+                'magento.storeview',
+                [('backend_id', '=', self.backend_record.id)])
+        storeviews = session.browse('magento.storeview', storeview_ids)
+        lang_storeviews = [sv for sv in storeviews
+                           if sv.lang_id and sv.lang_id != default_lang]
+        if lang_storeviews:
+            translatable_fields = self._get_translatable_field(fields)   
+            if translatable_fields:
+                for storeview in lang_storeviews:
+                    session.context['lang'] = storeview.lang_id.code
+                    self.binding_record = self._get_openerp_data()
+                    self._map_data(fields=translatable_fields)
+                    record = self.mapper.data
+                    if not record:
+                        return _('nothing to export.')
+                    # special check on data before export
+                    self._validate_data(record)
+                    binder = self.get_binder_for_model('magento.storeview')
+                    magento_storeview_id = binder.to_backend(storeview.id)
+                    self.backend_adapter.write(self.magento_id, record, magento_storeview_id)
+        return res
 
 
 @job

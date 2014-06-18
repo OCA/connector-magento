@@ -53,6 +53,8 @@ class magento_product_category(orm.Model):
                                       required=True,
                                       ondelete='cascade'),
         'description': fields.text('Description', translate=True),
+        'is_active': fields.boolean('Active in magento'),
+        'include_in_menu': fields.boolean('Include in magento menu'),
         'magento_parent_id': fields.many2one(
             'magento.product.category',
             string='Magento Parent Category',
@@ -61,6 +63,11 @@ class magento_product_category(orm.Model):
             'magento.product.category',
             'magento_parent_id',
             string='Magento Child Categories'),
+    }
+
+    _defaults = {
+        'is_active': True,
+        'include_in_menu': False,
     }
 
     _sql_constraints = [
@@ -104,8 +111,36 @@ class ProductCategoryAdapter(GenericAdapter):
             else:
                 raise
 
+<<<<<<< HEAD
     def search(self, filters=None, from_date=None, to_date=None):
         """ Search records according to some criteria and return a
+=======
+    def update_image(self, data):
+        for name in ['image', 'thumbnail']:
+            if data.get(name + '_binary'):
+                img = self._call('%s.create'% 'ol_catalog_category_media',
+                                 [data[name], data.pop(name + '_binary')])
+                if img == 'Error in file creation':
+                    #TODO FIX error management
+                    raise Exception("Image creation: ",
+                           "Magento tried to insert image (%s) but there is "
+                           "no sufficient grants in the folder "
+                           "'media/catalog/category' if it exists" %data[name])
+        return True
+
+    def create(self, data):
+        self.update_image(data)
+        return self._call('%s.create'% self._magento_model,
+                          [data['parent_id'],data])
+
+    def write(self, id, data, storeview=None):
+        """ Update records on the external system """
+        self.update_image(data)
+        return self._call('%s.update' % self._magento_model,
+                          [int(id), data, storeview])
+
+    def search(self, filters=None, from_date=None):
+        """ Search records according to some criterias and returns a
         list of ids
 
         :rtype: list
@@ -249,7 +284,10 @@ class ProductCategoryImportMapper(ImportMapper):
 
     direct = [
         ('description', 'description'),
+        ('is_active','is_active'),
+        ('include_in_menu','include_in_menu')
     ]
+
 
     @mapping
     def name(self, record):
