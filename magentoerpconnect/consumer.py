@@ -52,6 +52,19 @@ def delay_export_all_bindings(session, model_name, record_id, vals):
                             fields=fields)
 
 
+def delay_unlink_all_bindings(session, model_name, record_id):
+    """ Delay jobs which delete all the bindings of a record.
+
+    In this case, it is called on records of normal models and will delay
+    the deletion for all the bindings.
+    """
+    if session.context.get('connector_no_export'):
+        return
+    record = session.env[model_name].browse(record_id)
+    for binding in record.magento_bind_ids:
+        delay_unlink(session, binding._model._name, binding.id)
+
+
 def delay_unlink(session, model_name, record_id):
     """ Delay a job which delete a record on Magento.
 
