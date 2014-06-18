@@ -414,6 +414,58 @@ class MagentoExporter(MagentoBaseExporter):
         return _('Record exported with ID %s on Magento.') % self.magento_id
 
 
+class MagentoTranslationExporter(MagentoBaseExporter):
+    """ A translation exporter
+
+    Must be called in the ``_after_export`` method of an exporter.
+    """
+
+    def _get_translatable_field(self, fields):
+        """ Find the translatable fields of the model
+
+        Note we consider that a translatable field in Magento must be a
+        translatable field in OpenERP and vice-versa.  You can change
+        this behaviour in your own module.
+        """
+        all_fields = self.model.fields_get()
+
+        translatable_fields = [field for field, attrs in all_fields.iteritems()
+                               if attrs.get('translate') and
+                               (not fields or field in fields)]
+        return translatable_fields
+
+    def _run(self, fields=None):
+        assert self.magento_id
+        default_lang = self.backend_record.default_lang_id
+        session = self.session
+
+        storeviews = session.env['magento.storeview'].search([
+            ('backend_id', '=', self.backend_record.id)
+        ])
+        lang_storeviews = [sv for sv in storeviews
+                           if sv.lang_id and sv.lang_id != default_lang]
+        if not lang_storeviews:
+            return
+        translatable_fields = self._get_translatable_field(fields)
+        if not translatable_fields:
+            return
+        for storeview in lang_storeviews:
+            lang_code = storeview.lang_id.code
+            model = self.model.with_context(lang=lang_code)
+            self.binding_record = model.browse(self.binding_id)
+            map_record = self._map_data()
+            record = self._update_data(map_record,
+                                       fields=translatable_fields)
+            if not record:
+                continue
+            # special check on data before export
+            self._validate_data(record)
+            binder = self.binder_for('magento.storeview')
+            magento_storeview_id = binder.to_backend(storeview)
+            self.backend_adapter.write(
+                self.magento_id, record, magento_storeview_id)
+
+
 @job(default_channel='root.magento')
 @related_action(action=unwrap_binding)
 def export_record(session, model_name, binding_id, fields=None):

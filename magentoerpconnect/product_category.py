@@ -62,6 +62,10 @@ class MagentoProductCategory(models.Model):
         inverse_name='magento_parent_id',
         string='Magento Child Categories',
     )
+    is_active = fields.Boolean(string='Active in Magento',
+                               default=True)
+    include_in_menu = fields.Boolean(string='Include in Magento menu',
+                                     default=False)
 
 
 class ProductCategory(models.Model):
@@ -90,6 +94,15 @@ class ProductCategoryAdapter(GenericAdapter):
                 raise IDMissingInBackend
             else:
                 raise
+
+    def create(self, parent_id, data):
+        return self._call('%s.create' % self._magento_model,
+                          [parent_id, data])
+
+    def write(self, id, data, storeview=False):
+        """ Update records on the external system """
+        return self._call('%s.update' % self._magento_model,
+                          [int(id), data, storeview])
 
     def search(self, filters=None, from_date=None, to_date=None):
         """ Search records according to some criteria and return a
@@ -239,6 +252,8 @@ class ProductCategoryImportMapper(ImportMapper):
 
     direct = [
         ('description', 'description'),
+        ('is_active', 'is_active'),
+        ('include_in_menu', 'include_in_menu')
     ]
 
     @mapping
