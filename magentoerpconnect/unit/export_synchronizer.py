@@ -21,10 +21,12 @@
 
 import logging
 
+from contextlib import contextmanager
 from datetime import datetime
 
 import psycopg2
 
+from openerp import SUPERUSER_ID
 from openerp.tools.translate import _
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.addons.connector.queue.job import job, related_action
@@ -177,6 +179,126 @@ class MagentoExporter(MagentoBaseExporter):
     def _has_to_skip(self):
         """ Return True if the export can be skipped """
         return False
+
+    @contextmanager
+    def _retry_unique_violation(self):
+        """ Context manager: catch Unique constraint error and retry the
+        job later.
+
+        When we execute several jobs workers concurrently, it happens
+        that 2 jobs are creating the same record at the same time (binding
+        record created by :meth:`_export_dependency`), resulting in:
+
+            IntegrityError: duplicate key value violates unique
+            constraint "magento_product_product_openerp_uniq"
+            DETAIL:  Key (backend_id, openerp_id)=(1, 4851) already exists.
+
+        In that case, we'll retry the import just later.
+
+        .. warning:: The unique constraint must be created on the
+                     binding record to prevent 2 bindings to be created
+                     for the same Magento record.
+
+        """
+        try:
+            yield
+        except psycopg2.IntegrityError as err:
+            if err.pgcode == psycopg2.errorcodes.UNIQUE_VIOLATION:
+                raise RetryableJobError(
+                    'A database error caused the failure of the job:\n'
+                    '%s\n\n'
+                    'Likely due to 2 concurrent jobs wanting to create '
+                    'the same record. The job will be retried later.' % err)
+            else:
+                raise
+
+    def _export_dependency(self, relation, binding_model, exporter_class=None,
+                           binding_field='magento_bind_ids'):
+        """
+        Export a dependency. The exporter class is a subclass of
+        ``MagentoExporter``. If a more precise class need to be defined,
+        it can be passed to the ``exporter_class`` keyword argument.
+
+        .. warning:: a commit is done at the end of the export of each
+                     dependency. The reason for that is that we pushed a record
+                     on the backend and we absolutely have to keep its ID.
+
+                     So you *must* take care not to modify the OpenERP
+                     database during an export, excepted when writing
+                     back the external ID or eventually to store
+                     external data that we have to keep on this side.
+
+                     You should call this method only at the beginning
+                     of the exporter synchronization,
+                     in :meth:`~._export_dependencies`.
+
+        :param relation: record to export if not already exported
+        :type relation: :py:class:`openerp.osv.orm.browse_record`
+        :param binding_model: name of the binding model for the relation
+        :type binding_model: str | unicode
+        :param exporter_cls: :py:class:`openerp.addons.connector.connector.ConnectorUnit`
+                             class or parent class to use for the export.
+                             By default: MagentoExporter
+        :type exporter_cls: :py:class:`openerp.addons.connector.connector.MetaConnectorUnit`
+        :param binding_field: name of the one2many field on a normal
+                              record that points to the binding record
+                              (default: magento_bind_ids).
+                              It is used only when the relation is not
+                              a binding but is a normal record.
+        :type binding_field: str | unicode
+        """
+        if not relation:
+            return
+        if exporter_class is None:
+            exporter_class = MagentoExporter
+        rel_binder = self.get_binder_for_model(binding_model)
+        # wrap is typically True if the relation is for instance a
+        # 'product.product' record but the binding model is
+        # 'magento.product.product'
+        wrap = relation._model._name != binding_model
+
+        if wrap and hasattr(relation, binding_field):
+            domain = [('openerp_id', '=', relation.id),
+                      ('backend_id', '=', self.backend_record.id)]
+            binding_ids = self.session.search(binding_model, domain)
+            if binding_ids:
+                assert len(binding_ids) == 1, (
+                    'only 1 binding for a backend is '
+                    'supported in _export_dependency')
+                binding_id = binding_ids[0]
+            # we are working with a unwrapped record (e.g.
+            # product.category) and the binding does not exist yet.
+            # Example: I created a product.product and its binding
+            # magento.product.product and we are exporting it, but we need to
+            # create the binding for the product.category on which it
+            # depends.
+            else:
+                with self.session.change_context({'connector_no_export': True}):
+                    with self.session.change_user(SUPERUSER_ID):
+                        bind_values = {'backend_id': self.backend_record.id,
+                                       'openerp_id': relation.id}
+                        # If 2 jobs create it at the same time, retry
+                        # one later. A unique constraint (backend_id,
+                        # openerp_id) should exist on the binding model
+                        with self._retry_unique_violation():
+                            binding_id = self.session.create(binding_model,
+                                                             bind_values)
+                            # Eager commit to avoid having 2 jobs
+                            # exporting at the same time. The constraint
+                            # will pop if an other job already created
+                            # the same binding. It will be caught and
+                            # raise a RetryableJobError.
+                            self.session.commit()
+        else:
+            # If magento_bind_ids does not exist we are typically in a
+            # "direct" binding (the binding record is the same record).
+            # If wrap is True, relation is already a binding record.
+            binding_id = relation.id
+
+        if rel_binder.to_backend(binding_id) is None:
+            exporter = self.get_connector_unit_for_model(exporter_class,
+                                                         binding_model)
+            exporter.run(binding_id)
 
     def _export_dependencies(self):
         """ Export the dependencies for the record"""
