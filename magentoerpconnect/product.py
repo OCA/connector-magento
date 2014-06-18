@@ -287,7 +287,7 @@ class ProductProductAdapter(GenericAdapter):
         # Only ol_catalog_product.create works for export configurable product
         return self._call('ol_catalog_product.create',
             [product_type, attr_set_id, sku, data])
-
+    
     def read(self, id, storeview_id=None, attributes=None):
         """ Returns the information of a record
 

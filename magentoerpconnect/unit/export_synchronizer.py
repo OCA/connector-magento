@@ -132,8 +132,8 @@ class MagentoBaseExporter(ExportSynchronizer):
         # exports (due to dependencies) and one of them fails.
         # The commit will also release the lock acquired on the binding
         # record
-        self.session.commit()
-        self._after_export()
+        self.session.cr.commit()
+        self._after_export() 
         return result
 
     def _run(self):
@@ -381,12 +381,15 @@ class MagentoExporter(MagentoBaseExporter):
             record = self._update_data(map_record, fields=fields)
             if not record:
                 return _('Nothing to export.')
+            # special check on data before export
+            self._validate_data(record)
             self._update(record)
         else:
             record = self._create_data(map_record, fields=fields)
             if not record:
                 return _('Nothing to export.')
             self.magento_id = self._create(record)
+        self.session.cr.commit()
         return _('Record exported with ID %s on Magento.') % self.magento_id
 
 class MagentoTranslationExporter(MagentoExporter):
