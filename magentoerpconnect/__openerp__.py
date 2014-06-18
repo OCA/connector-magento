@@ -133,7 +133,6 @@ Available extensions:
           'stock_view.xml',
           'security/ir.model.access.csv',
           'payment_invoice.xml',
-          'payment_invoice.xml',
           ],
  'installable': True,
  'application': True,

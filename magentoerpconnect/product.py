@@ -29,7 +29,6 @@ from openerp.osv import orm, fields
 from openerp.tools.translate import _
 from openerp.addons.connector.queue.job import job, related_action
 from openerp.addons.connector.event import on_record_write
-from openerp.addons.connector.connector import ConnectorUnit
 from openerp.addons.connector.unit.synchronizer import (ImportSynchronizer,
                                                         ExportSynchronizer
                                                         )
@@ -328,7 +327,7 @@ class CatalogImageImporter(ImportSynchronizer):
 
 
 @magento
-class BundleImporter(ConnectorUnit):
+class BundleImporter(ImportSynchronizer):
     """ Can be inherited to change the way the bundle products are
     imported.
 
@@ -486,15 +485,8 @@ class IsActiveProductImportMapper(ImportMapper):
 
 
 @magento
-class IsActiveProductImportMapper(ImportMapper):
+class BundleProductImportMapper(ImportMapper):
     _model_name = 'magento.product.product'
-
-    @mapping
-    def is_active(self, record):
-        """Check if the product is active in Magento
-        and set active flag in OpenERP
-        status == 1 in Magento means active"""
-        return {'active': (record.get('status') == '1')}
 
 
 @magento
@@ -577,6 +569,12 @@ class ProductImportMapper(ImportMapper):
     def backend_id(self, record):
         return {'backend_id': self.backend_record.id}
 
+    @mapping
+    def bundle_mapping(self, record):
+        if record['type_id'] == 'bundle':
+            bundle_mapper = self.get_connector_unit_for_model(
+                BundleProductImportMapper)
+            return bundle_mapper.map_record(record).values()
 
 @magento
 class ProductInventoryExport(ExportSynchronizer):
