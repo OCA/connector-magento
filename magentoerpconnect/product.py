@@ -119,6 +119,16 @@ class MagentoProductProduct(models.Model):
         help="Check this to exclude the product "
              "from stock synchronizations.",
     )
+    visibility = fields.Selection(
+        selection=[('1', 'Not Visible Individually'),
+                   ('2', 'Catalog'),
+                   ('3', 'Search'),
+                   ('4', 'Catalog, Search'),
+                   ],
+        string='Visibility',
+        default='4',
+        required=True,
+    )
 
     RECOMPUTE_QTY_STEP = 1000  # products at a time
 
@@ -235,6 +245,11 @@ class ProductProductAdapter(GenericAdapter):
         return [int(row['product_id']) for row
                 in self._call('%s.list' % self._magento_model,
                               [filters] if filters else [{}])]
+
+    def create(self, product_type, attr_set_id, sku, data):
+        # Only ol_catalog_product.create works for export configurable product
+        return self._call('ol_catalog_product.create',
+                          [product_type, attr_set_id, sku, data])
 
     def read(self, id, storeview_id=None, attributes=None):
         """ Returns the information of a record
@@ -431,6 +446,7 @@ class ProductImportMapper(ImportMapper):
               ('type_id', 'product_type'),
               (normalize_datetime('created_at'), 'created_at'),
               (normalize_datetime('updated_at'), 'updated_at'),
+              ('visibility', 'visibility'),
               ]
 
     @mapping
