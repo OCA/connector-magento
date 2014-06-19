@@ -367,13 +367,14 @@ class BundleImporter(ImportSynchronizer):
             def product_type_get(self, cr, uid, context=None):
                 types = super(magento_product_product, self).product_type_get(
                     cr, uid, context=context)
-                types.append(('bundle', 'Bundle Product'))
+                if 'bundle' not in [item[0] for item in types]:
+                    types.append(('bundle', 'Bundle'))
                 return types
 
     """
     _model_name = 'magento.product.product'
 
-    def import_bundle(self, magento_record):
+    def run(self, binding_id, magento_record):
         """ Import the bundle information about a product.
 
         :param magento_record: product information from Magento
@@ -470,6 +471,7 @@ class ProductImport(MagentoImportSynchronizer):
         if self.magento_record['type_id'] == 'bundle':
             bundle_importer = self.get_connector_unit_for_model(
                 BundleImporter, self.model._name)
+            bundle_importer.run(binding_id, self.magento_record)
 
 
 @magento
