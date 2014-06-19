@@ -32,10 +32,9 @@ class SaleOrderLineBundleImportMapper(sale.SaleOrderLineBundleImportMapper):
         magento_product_id = product_binder.to_openerp(record['product_id'])
         magento_product = self.session.browse(
             'magento.product.product', magento_product_id)
-        if record['product_type'] == 'bundle' \
-                and magento_product.price_type == 'dynamic':
+        if magento_product.price_type == 'dynamic':
             return True
-
+        
 
 @magento(replacing=sale.SaleOrderBundleImport)
 class SaleOrderBundleImport(sale.SaleOrderBundleImport):

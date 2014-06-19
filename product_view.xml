@@ -7,7 +7,7 @@
             <field name="inherit_id" ref="magentoerpconnect.view_magento_product_form"/>
             <field name="arch" type="xml">
                 <field name='product_type' position='after'>
-                    <field name="price_type"
+                    <field name="price_type" 
                            attrs="{'invisible': [('product_type', '!=', 'bundle')], 'readonly': True}"/>
                 </field>
             </field>
