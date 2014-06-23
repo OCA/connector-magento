@@ -29,6 +29,7 @@ from openerp.osv.osv import except_osv
 from openerp.addons.connector.unit.mapper import (
     mapping,
     #changed_by,
+    only_create,
     ImportMapper,
     ExportMapper,)
 #from openerp.addons.connector.exception import MappingError
@@ -178,6 +179,7 @@ class AttributeSetExportMapper(ExportMapper):
         ('sort_order', 'sort_order'),
     ]
 
+    @only_create
     @mapping
     def skeletonSetId(self, record):
         tmpl_set_id = self.backend_record.attribute_set_tpl_id.id
