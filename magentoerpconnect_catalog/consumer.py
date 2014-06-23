@@ -60,20 +60,20 @@ def exclude_fields_from_synchro(model_name, fields):
         'magento.product.image',
         #'magento.product.storeview',
     ])
-def delay_export(session, model_name, record_id, fields=None):
-    fields = exclude_fields_from_synchro(model_name, fields)
+def delay_export(session, model_name, record_id, vals=None):
+    #fields = exclude_fields_from_synchro(model_name, fields)
     magentoerpconnect.delay_export(session, model_name,
-                                   record_id, fields=fields)
+                                   record_id, vals=vals)
 
 
 @on_record_write(model_names=[
         'product.product',
         'product.category',
     ])
-def delay_export_all_bindings(session, model_name, record_id, fields=None):
-    fields = exclude_fields_from_synchro(model_name, fields)
+def delay_export_all_bindings(session, model_name, record_id, vals=None):
+    #fields = exclude_fields_from_synchro(model_name, fields)
     magentoerpconnect.delay_export_all_bindings(session, model_name,
-                                                record_id, fields=fields)
+                                                record_id, vals=vals)
 
 #
 #@on_record_unlink(model_names=[
