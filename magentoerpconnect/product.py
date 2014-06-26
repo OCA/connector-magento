@@ -25,6 +25,7 @@ import urllib2
 import base64
 import xmlrpclib
 import sys
+from collections import defaultdict
 from openerp.osv import orm, fields
 from openerp.tools.translate import _
 from openerp.addons.connector.queue.job import job, related_action
@@ -52,6 +53,11 @@ from .backend import magento
 from .related_action import unwrap_binding
 
 _logger = logging.getLogger(__name__)
+
+
+def chunks(items, length):
+    for index in xrange(0, len(items), length):
+        yield items[index:index + length]
 
 
 class magento_product_product(orm.Model):
@@ -123,35 +129,86 @@ class magento_product_product(orm.Model):
          "A product with the same ID on Magento already exists")
     ]
 
+    RECOMPUTE_QTY_STEP = 1000 # products at a time
+
     def recompute_magento_qty(self, cr, uid, ids, context=None):
+        """ Check if the quantity in the stock location configured
+        on the backend has changed since the last export.
+
+        If it has changed, write the updated quantity on `magento_qty`.
+        The write on `magento_qty` will trigger an `on_record_write`
+        event that will create an export job.
+
+        It groups the products by backend to avoid to read the backend
+        informations for each product.
+        """
         if not hasattr(ids, '__iter__'):
             ids = [ids]
 
-        for product in self.browse(cr, uid, ids, context=context):
-            new_qty = self._magento_qty(cr, uid, product, context=context)
-            if new_qty != product.magento_qty:
-                self.write(cr, uid, product.id,
-                           {'magento_qty': new_qty},
-                           context=context)
+        # group products by backend
+        backends = defaultdict(list)
+        for product in self.read(cr, uid, ids, ['backend_id', 'magento_qty'],
+                                 context=context):
+            backends[product['backend_id'][0]].append(product)
+
+        for backend_id, products in backends.iteritems():
+            backend_obj = self.pool['magento.backend']
+            backend = backend_obj.browse(cr, uid, backend_id, context=context)
+            self._recompute_magento_qty_backend(cr, uid, backend, products,
+                                                context=context)
         return True
 
-    def _magento_qty(self, cr, uid, product, context=None):
+    def _recompute_magento_qty_backend(self, cr, uid, backend, products,
+                                       read_fields=None, context=None):
+        """ Recompute the products quantity for one backend.
+
+        If field names are passed in ``read_fields`` (as a list), they
+        will be read in the product that is used in
+        :meth:`~._magento_qty`.
+
+        """
         if context is None:
             context = {}
-        backend = product.backend_id
-        stock = backend.warehouse_id.lot_stock_id
 
         if backend.product_stock_field_id:
             stock_field = backend.product_stock_field_id.name
         else:
             stock_field = 'virtual_available'
 
+        location = backend.warehouse_id.lot_stock_id
         location_ctx = context.copy()
-        location_ctx['location'] = stock.id
-        product_stk = self.read(cr, uid, product.id,
-                                [stock_field],
-                                context=location_ctx)
-        return product_stk[stock_field]
+        location_ctx['location'] = location.id
+
+        product_fields = ['magento_qty', stock_field]
+        if read_fields:
+            product_fields += read_fields
+
+        product_ids = [product['id'] for product in products]
+        for chunk_ids in chunks(product_ids, self.RECOMPUTE_QTY_STEP):
+            for product in self.read(cr, uid, chunk_ids, product_fields,
+                                     context=location_ctx):
+                new_qty = self._magento_qty(cr, uid, product,
+                                            backend,
+                                            location,
+                                            stock_field,
+                                            context=location_ctx)
+                if new_qty != product['magento_qty']:
+                    self.write(cr, uid, product['id'],
+                               {'magento_qty': new_qty},
+                               context=context)
+
+    def _magento_qty(self, cr, uid, product, backend, location,
+                     stock_field, context=None):
+        """ Return the current quantity for one product.
+
+        Can be inherited to change the way the quantity is computed,
+        according to a backend / location.
+
+        If you need to read additional fields on the product, see the
+        ``read_fields`` argument of :meth:`~._recompute_magento_qty_backend`
+
+        """
+        return product[stock_field]
 
 
 class product_product(orm.Model):
