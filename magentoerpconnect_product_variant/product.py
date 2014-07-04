@@ -83,7 +83,7 @@ class ProductConfigurableExport(MagentoBaseExporter):
         for dimension in record.dimension_ids:
             if not record.openerp_id[dimension.name]:
                 magento_attr_id = attr_binder.to_backend(
-                        dimension.product_attribute_id.id, wrap=True)
+                        dimension.id, wrap=True)
                 if magento_attr_id in res:
                     del res[magento_attr_id]
                 else:
@@ -174,7 +174,7 @@ class ProductSuperAttributAdapter(GenericAdapter):
 
     def create(self, magento_conf_id, magento_attribute_id):
         """ Create Configurables Attributes """
-        return self._call('%s.createSuperAttribute'% self._magento_model,
+        return self._call('%s.setSuperAttributeValues'% self._magento_model,
                          [magento_conf_id, magento_attribute_id])
 
     def unlink(self, magento_id):

@@ -27,6 +27,7 @@
  'depends': [
      'magentoerpconnect_catalog',
      'product_variant_generator',
+     'product_variant_display_generator',
  ],
  'author': 'MagentoERPconnect Core Editors',
  'license': 'AGPL-3',
