@@ -35,7 +35,7 @@ import urllib2
 
 # a simple product with images
 simple_product_and_images = {
- ('catalog_product.info', (122, None, None, 'id')): {'categories': ['1'],
+ ('ol_catalog_product.info', (122, None, None, 'id')): {'categories': ['1'],
                                                      'color': '60',
                                                      'cost': '2.0000',
                                                      'country_of_manufacture': None,
