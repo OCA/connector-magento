@@ -56,27 +56,42 @@ class TestImportAttribute(SetUpMagentoSynchronized):
         self.assertEqual(mag_attr_set.attribute_set_name, 'Default')
 
 
-class TestExportAttribute(SetUpMagentoSynchronized):
+class SetUpMagentoSynchronizedWithAttribute(SetUpMagentoSynchronized):
+    
+    def setUp(self):
+        super(SetUpMagentoSynchronizedWithAttribute, self).setUp()
+        with mock_api(magento_attribute_responses):
+            import_record(self.session, 'magento.attribute.set',
+                          self.backend_id, '9')
+
+        mag_attr_set_model = self.registry('magento.attribute.set')
+        attr_set_model = self.registry('attribute.set')
+        cr, uid = self.cr, self.uid
+        mag_attr_set_ids = mag_attr_set_model.search(cr, uid, [
+            ('magento_id', '=', '9'),
+            ('backend_id', '=', self.backend_id),
+            ])
+        mag_attr_set_id = mag_attr_set_ids[0]
+        self.registry('magento.backend').write(cr, uid, self.backend_id, {
+            'attribute_set_tpl_id': mag_attr_set_id
+            })
+        attr_set_id = attr_set_model.create(cr, uid, {
+            'name': 'Default Attribute Set',
+            }, {'force_model': 'product.template'})
+
+        mag_attr_set_model.write(cr, uid, mag_attr_set_id, {
+            'openerp_id': attr_set_id,
+            })
+        self.default_attr_set_id = attr_set_id
+
+
+
+class TestExportAttribute(SetUpMagentoSynchronizedWithAttribute):
     """ Test the export from a Magento Mock.
 
     The data returned by Magento are those created for the
     demo version of Magento on a standard 1.7 version.
     """
-    def setUp(self):
-        super(TestExportAttribute, self).setUp()
-        with mock_api(magento_attribute_responses):
-            import_record(self.session, 'magento.attribute.set',
-                          self.backend_id, '9')
-
-        mag_attr_model = self.registry('magento.attribute.set')
-        cr, uid = self.cr, self.uid
-        mag_attr_set_ids = mag_attr_model.search(cr, uid, [
-            ('magento_id', '=', '9'),
-            ('backend_id', '=', self.backend_id),
-            ])
-        self.registry('magento.backend').write(cr, uid, self.backend_id, {
-            'attribute_set_tpl_id': mag_attr_set_ids[0]
-            })
 
     def test_20_export_attribute_set(self):
         """ Test export of attribute set"""
