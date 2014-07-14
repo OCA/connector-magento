@@ -17,10 +17,11 @@ install:
  - git clone https://github.com/OCA/sale-workflow $HOME/sale-workflow -b 7.0
  - git clone https://github.com/OCA/e-commerce $HOME/e-commerce -b 7.0
  - git clone https://github.com/OCA/product-attribute $HOME/product-attribute -b 7.0
+ - git clone https://github.com/OCA/server-tools $HOME/server-tools -b 7.0
 
 script:
     - travis_run_flake8
-    - travis_run_tests 7.0 $HOME/connector $HOME/connector-ecommerce $HOME/sale-workflow $HOME/e-commerce $HOME/product-attribute
+    - travis_run_tests 7.0 $HOME/connector $HOME/connector-ecommerce $HOME/sale-workflow $HOME/e-commerce $HOME/product-attribute $HOME/server-tools
 
 after_success:
   coveralls
