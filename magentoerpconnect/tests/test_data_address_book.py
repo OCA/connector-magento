@@ -19,6 +19,8 @@
 #
 ##############################################################################
 
+# flake8: noqa
+
 """
 Magento responses for calls done by the connector.
 
