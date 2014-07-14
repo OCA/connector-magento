@@ -10,6 +10,8 @@ install:
  - export PATH=$HOME/maintainer-quality-tools/travis:$PATH
  - travis_install_nightly 7.0
  - pip install coveralls flake8
+ - pip install magento
+ - pip install nltk
  - git clone https://github.com/OCA/connector $HOME/connector -b 7.0
  - git clone https://github.com/OCA/connector-ecommerce $HOME/connector-ecommerce -b 7.0
  - git clone https://github.com/OCA/sale-workflow $HOME/sale-workflow -b 7.0
