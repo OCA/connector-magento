@@ -30,6 +30,8 @@ install:
     - pip install coveralls flake8
     - pip install http://download.gna.org/pychart/PyChart-1.39.tar.gz
     - pip install ${ODOO}
+    - pip install magento
+    - pip install nltk
 
 # Create databae
 # Pre-install modules and dependencies
