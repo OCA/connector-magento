@@ -1,21 +1,18 @@
 # -*- coding: utf-8 -*-
 import mock
-import unittest2
 
 import openerp
 import openerp.tests.common as common
 from openerp.addons.connector.queue.job import (
     Job,
     OpenERPJobStorage,
-    related_action)
+)
 from openerp.addons.connector.session import (
     ConnectorSession)
-from .common import (mock_api,
-                     mock_urlopen_image)
+from .common import mock_api
 from .test_data import magento_base_responses
 from ..unit.import_synchronizer import import_batch, import_record
 from ..unit.export_synchronizer import export_record
-from ..related_action import unwrap_binding, link
 
 
 class test_related_action_storage(common.TransactionCase):

@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-import unittest2
 from functools import partial
 
 from openerp.addons.connector.exception import InvalidDataError
@@ -258,7 +257,6 @@ class TestImportMagento(SetUpMagentoSynchronized):
         backend_id = self.backend_id
         self.backend_model.write(self.cr, self.uid, self.backend_id,
                                  {'sale_prefix': 'EC'})
-        backend = self.backend_model.browse(self.cr, self.uid, backend_id)
         with mock_api(magento_base_responses):
             with mock_urlopen_image():
                 import_record(self.session,
@@ -285,21 +283,21 @@ class TestImportMagento(SetUpMagentoSynchronized):
                               'magento.sale.order',
                               backend_id, 900000694)
         mag_order_model = self.registry('magento.sale.order')
-        mag_order_ids = mag_order_model.search(self.cr,
-                                               self.uid,
-                                               [('backend_id', '=', backend_id),
-                                                ('magento_id', '=', '900000694')])
+        mag_order_ids = mag_order_model.search(
+            self.cr, self.uid,
+            [('backend_id', '=', backend_id),
+             ('magento_id', '=', '900000694')])
         mag_order_line_model = self.registry('magento.sale.order.line')
-        mag_order_line_ids = mag_order_line_model.search(self.cr,
-                                                         self.uid,
-                                                         [('backend_id', '=', backend_id),
-                                                          ('magento_order_id', '=', mag_order_ids[0])])
+        mag_order_line_ids = mag_order_line_model.search(
+            self.cr, self.uid,
+            [('backend_id', '=', backend_id),
+             ('magento_order_id', '=', mag_order_ids[0])])
         self.assertEqual(len(mag_order_ids), 1)
         self.assertEqual(len(mag_order_line_ids), 1)
         order_line_id = mag_order_line_model.read(self.cr,
-                                                    self.uid,
-                                                    mag_order_line_ids[0],
-                                                    ['openerp_id'])['openerp_id']
+                                                  self.uid,
+                                                  mag_order_line_ids[0],
+                                                  ['openerp_id'])['openerp_id']
         order_line_model = self.registry('sale.order.line')
         price_unit = order_line_model.read(self.cr,
                                            self.uid,
@@ -318,10 +316,10 @@ class TestImportMagento(SetUpMagentoSynchronized):
                               'magento.sale.order',
                               backend_id, 900000695)
         mag_order_model = self.registry('magento.sale.order')
-        mag_order_ids = mag_order_model.search(self.cr,
-                                               self.uid,
-                                               [('backend_id', '=', backend_id),
-                                                ('magento_id', '=', '900000695')])
+        mag_order_ids = mag_order_model.search(
+            self.cr, self.uid,
+            [('backend_id', '=', backend_id),
+             ('magento_id', '=', '900000695')])
         self.assertEqual(len(mag_order_ids), 1)
         order_id = mag_order_model.read(self.cr,
                                         self.uid,
@@ -329,14 +327,15 @@ class TestImportMagento(SetUpMagentoSynchronized):
                                         ['openerp_id'])['openerp_id']
         order_model = self.registry('sale.order')
         amount_total = order_model.read(self.cr,
-                                       self.uid,
-                                       order_id[0],
-                                       ['amount_total'])['amount_total']
-        #97.5 is the amount_total if connector takes correctly included tax prices.
+                                        self.uid,
+                                        order_id[0],
+                                        ['amount_total'])['amount_total']
+        # 97.5 is the amount_total if connector takes correctly included
+        # tax prices.
         self.assertEqual(amount_total, 97.5000)
         self.backend_model.write(self.cr, self.uid, self.backend_id,
                                  {'catalog_price_tax_included': False})
-   
+
     def test_35_import_sale_order_with_discount(self):
         """ Import a sale order with discounts"""
         backend_id = self.backend_id
@@ -348,10 +347,10 @@ class TestImportMagento(SetUpMagentoSynchronized):
                               'magento.sale.order',
                               backend_id, 900000696)
         mag_order_model = self.registry('magento.sale.order')
-        mag_order_ids = mag_order_model.search(self.cr,
-                                               self.uid,
-                                               [('backend_id', '=', backend_id),
-                                                ('magento_id', '=', '900000696')])
+        mag_order_ids = mag_order_model.search(
+            self.cr, self.uid,
+            [('backend_id', '=', backend_id),
+             ('magento_id', '=', '900000696')])
         self.assertEqual(len(mag_order_ids), 1)
         order_id = mag_order_model.read(self.cr,
                                         self.uid,
@@ -369,7 +368,8 @@ class TestImportMagento(SetUpMagentoSynchronized):
             elif line.name == 'Item 2':
                 self.assertAlmostEqual(line.discount, 11.957)
             else:
-                self.fail('encountered unexpected sale order line %s' % line.name)
+                self.fail('encountered unexpected sale '
+                          'order line %s' % line.name)
 
         self.backend_model.write(self.cr, self.uid, self.backend_id,
                                  {'catalog_price_tax_included': False})

@@ -56,10 +56,10 @@ class magento_res_partner_category(orm.Model):
 
     _columns = {
         'openerp_id': fields.many2one('res.partner.category',
-                                       string='Partner Category',
-                                       required=True,
-                                       ondelete='cascade'),
-        #TODO : replace by a m2o when tax class will be implemented
+                                      string='Partner Category',
+                                      required=True,
+                                      ondelete='cascade'),
+        # TODO : replace by a m2o when tax class will be implemented
         'tax_class_id': fields.integer('Tax Class ID'),
     }
 
@@ -97,9 +97,9 @@ class PartnerCategoryImportMapper(ImportMapper):
     _model_name = 'magento.res.partner.category'
 
     direct = [
-            ('customer_group_code', 'name'),
-            ('tax_class_id', 'tax_class_id'),
-            ]
+        ('customer_group_code', 'name'),
+        ('tax_class_id', 'tax_class_id'),
+    ]
 
     @mapping
     def magento_id(self, record):

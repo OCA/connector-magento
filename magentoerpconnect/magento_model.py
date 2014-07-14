@@ -24,7 +24,7 @@ import logging
 from datetime import datetime, timedelta
 from openerp.osv import fields, orm
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
-import openerp.addons.connector as connector
+from openerp.tools.translate import _
 from openerp.addons.connector.session import ConnectorSession
 from openerp.addons.connector.connector import ConnectorUnit
 from openerp.addons.connector.unit.mapper import (mapping,
@@ -420,12 +420,11 @@ class magento_store(orm.Model):
             relation='magento.backend',
             string='Magento Backend',
             store={
-                'magento.store':
-                    (lambda self, cr, uid, ids, c=None:
-                        ids, ['website_id'], 10),
-                'magento.website':
-                    (_get_store_from_website, ['backend_id'], 20),
-                  },
+                'magento.store': (lambda self, cr, uid, ids, c=None: ids,
+                                  ['website_id'], 10),
+                'magento.website': (_get_store_from_website,
+                                    ['backend_id'], 20),
+            },
             readonly=True),
         'storeview_ids': fields.one2many(
             'magento.storeview',
@@ -447,9 +446,9 @@ class magento_store(orm.Model):
             required=True,
             help="Should the invoice be created in Magento "
                  "when it is validated or when it is paid in OpenERP?\n"
-                  "This only takes effect if the sales order's related "
-                  "payment method is not giving an option for this by "
-                  "itself. (See Payment Methods)"),
+                 "This only takes effect if the sales order's related "
+                 "payment method is not giving an option for this by "
+                 "itself. (See Payment Methods)"),
     }
 
     _defaults = {
@@ -535,8 +534,8 @@ class magento_storeview(orm.Model):
             backend_id = storeview.backend_id.id
             if storeview.import_orders_from_date:
                 from_date = datetime.strptime(
-                        storeview.import_orders_from_date,
-                        DEFAULT_SERVER_DATETIME_FORMAT)
+                    storeview.import_orders_from_date,
+                    DEFAULT_SERVER_DATETIME_FORMAT)
             else:
                 from_date = None
             sale_order_import_batch.delay(
@@ -595,10 +594,10 @@ class MetadataBatchImport(DirectBatchImport):
     (that's also a mean to rapidly check the connectivity with Magento).
     """
     _model_name = [
-            'magento.website',
-            'magento.store',
-            'magento.storeview',
-            ]
+        'magento.website',
+        'magento.store',
+        'magento.storeview',
+    ]
 
 
 @magento

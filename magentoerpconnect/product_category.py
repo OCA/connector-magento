@@ -25,7 +25,9 @@ from openerp.osv import orm, fields
 from openerp.addons.connector.unit.mapper import (mapping,
                                                   ImportMapper
                                                   )
-from openerp.addons.connector.exception import IDMissingInBackend
+from openerp.addons.connector.exception import (IDMissingInBackend,
+                                                MappingError,
+                                                )
 from .unit.backend_adapter import GenericAdapter
 from .unit.import_synchronizer import (DelayedBatchImport,
                                        MagentoImportSynchronizer,
@@ -51,12 +53,12 @@ class magento_product_category(orm.Model):
         'description': fields.text('Description', translate=True),
         'magento_parent_id': fields.many2one(
             'magento.product.category',
-             string='Magento Parent Category',
-             ondelete='cascade'),
+            string='Magento Parent Category',
+            ondelete='cascade'),
         'magento_child_ids': fields.one2many(
             'magento.product.category',
-             'magento_parent_id',
-             string='Magento Child Categories'),
+            'magento_parent_id',
+            string='Magento Child Categories'),
     }
 
     _sql_constraints = [
@@ -157,7 +159,7 @@ class ProductCategoryBatchImport(DelayedBatchImport):
     def _import_record(self, magento_id, priority=None):
         """ Delay a job for the import """
         super(ProductCategoryBatchImport, self)._import_record(
-                magento_id, priority=priority)
+            magento_id, priority=priority)
 
     def run(self, filters=None):
         """ Run the synchronization """
@@ -168,6 +170,7 @@ class ProductCategoryBatchImport(DelayedBatchImport):
             updated_ids = None
 
         base_priority = 10
+
         def import_nodes(tree, level=0):
             for node_id, children in tree.iteritems():
                 # By changing the priority, the top level category has
@@ -207,7 +210,7 @@ class ProductCategoryImport(MagentoImportSynchronizer):
     def _after_import(self, binding_id):
         """ Hook called at the end of the import """
         translation_importer = self.get_connector_unit_for_model(
-                TranslationImporter, self.model._name)
+            TranslationImporter, self.model._name)
         translation_importer.run(self.magento_id, binding_id)
 
 
@@ -216,8 +219,8 @@ class ProductCategoryImportMapper(ImportMapper):
     _model_name = 'magento.product.category'
 
     direct = [
-            ('description', 'description'),
-            ]
+        ('description', 'description'),
+    ]
 
     @mapping
     def name(self, record):

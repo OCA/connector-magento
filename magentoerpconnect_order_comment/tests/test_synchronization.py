@@ -115,9 +115,9 @@ class TestMagentoMoveComment(SetUpMagentoWithSaleOrder):
             ('backend_id', '=', backend_id),
             ('res_id', '=', order_id),
             ])
-        #The sale order 900000691 have 1 comment
-        #and the 900000691-1 have 2 comment
-        #Total is 3 comment
+        # The sale order 900000691 have 1 comment
+        # and the 900000691-1 have 2 comment
+        # Total is 3 comment
         self.assertEqual(len(comment_ids), 3)
 
 

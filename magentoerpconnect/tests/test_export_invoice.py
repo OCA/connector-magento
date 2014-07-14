@@ -29,8 +29,6 @@ from openerp.addons.connector.session import ConnectorSession
 from openerp.addons.magentoerpconnect.unit.import_synchronizer import (
     import_batch,
     import_record)
-from openerp.addons.magentoerpconnect.invoice import (
-    delay_export_account_invoice)
 from .common import (mock_api,
                      mock_urlopen_image)
 from .test_data import magento_base_responses
@@ -115,9 +113,10 @@ class test_export_invoice(common.TransactionCase):
         with mock.patch(patched) as export_invoice:  # prevent to create the job
             self._invoice_open()
             assert len(self.invoice.magento_bind_ids) == 1
-            export_invoice.delay.assert_called_with(mock.ANY,
-                                         'magento.account.invoice',
-                                         self.invoice.magento_bind_ids[0].id)
+            export_invoice.delay.assert_called_with(
+                mock.ANY,
+                'magento.account.invoice',
+                self.invoice.magento_bind_ids[0].id)
 
         # pay and verify it is NOT called
         with mock.patch(patched) as export_invoice:  # prevent to create the job
@@ -161,7 +160,7 @@ class test_export_invoice(common.TransactionCase):
             cr, uid, self.payment_method_id, {'create_invoice_on': 'open'})
         # ensure we use the option of the payment method, not store
         self.registry('magento.store').write(
-           cr, uid, store_ids, {'create_invoice_on': 'paid'})
+            cr, uid, store_ids, {'create_invoice_on': 'paid'})
         # this is the consumer called when a 'magento.account.invoice'
         # is created, it delay a job to export the invoice
         patched = 'openerp.addons.magentoerpconnect.invoice.export_invoice'
@@ -169,9 +168,9 @@ class test_export_invoice(common.TransactionCase):
             self._invoice_open()
 
             assert len(self.invoice.magento_bind_ids) == 1
-            export_invoice.delay.assert_called_with(mock.ANY,
-                                                    'magento.account.invoice',
-                                                    self.invoice.magento_bind_ids[0].id)
+            export_invoice.delay.assert_called_with(
+                mock.ANY, 'magento.account.invoice',
+                self.invoice.magento_bind_ids[0].id)
 
         # pay and verify it is NOT called
         with mock.patch(patched) as export_invoice:  # prevent to create the job

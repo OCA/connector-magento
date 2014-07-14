@@ -37,7 +37,6 @@ from openerp.addons.connector.exception import (MappingError,
                                                 IDMissingInBackend
                                                 )
 from openerp.addons.connector.unit.mapper import (mapping,
-                                                  only_create,
                                                   ImportMapper,
                                                   )
 from .unit.backend_adapter import GenericAdapter
@@ -279,6 +278,7 @@ class CatalogImageImporter(ImportSynchronizer):
         # place the images where the type is 'image' first then
         # sort them by the reverse priority (last item of the list has
         # the the higher priority)
+
         def priority(image):
             primary = 'image' in image['types']
             try:
@@ -332,10 +332,10 @@ class ProductImport(MagentoImportSynchronizer):
 
     @property
     def mapper(self):
-       if self._mapper is None:
-           self._mapper = self.get_connector_unit_for_model(
+        if self._mapper is None:
+            self._mapper = self.get_connector_unit_for_model(
                 ProductImportMapper)
-       return self._mapper
+        return self._mapper
 
     def _import_dependencies(self):
         """ Import the dependencies for the record"""

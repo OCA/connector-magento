@@ -197,7 +197,7 @@ class MagentoInvoiceSynchronizer(ExportSynchronizer):
 
     def _get_existing_invoice(self, magento_order):
         invoices = self.backend_adapter.search_read(
-                order_id=magento_order.magento_order_id)
+            order_id=magento_order.magento_order_id)
         if not invoices:
             raise
         if len(invoices) > 1:

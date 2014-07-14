@@ -36,6 +36,7 @@ def get_environment(session, model_name, backend_id):
     env.set_lang(code=lang_code)
     return env
 
+
 class magento_binding(orm.AbstractModel):
     """ Abstract Model for the Bindigs.
 

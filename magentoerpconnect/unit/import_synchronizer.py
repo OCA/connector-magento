@@ -45,6 +45,7 @@ are already bound, to update the last sync date.
 
 """
 
+
 class MagentoImportSynchronizer(ImportSynchronizer):
     """ Base importer for Magento """
 
@@ -278,9 +279,9 @@ class DelayedBatchImport(BatchImportSynchronizer):
 class SimpleRecordImport(MagentoImportSynchronizer):
     """ Import one Magento Website """
     _model_name = [
-            'magento.website',
-            'magento.res.partner.category',
-        ]
+        'magento.website',
+        'magento.res.partner.category',
+    ]
 
 
 @magento
@@ -303,8 +304,8 @@ class TranslationImporter(ImportSynchronizer):
         self.magento_id = magento_id
         session = self.session
         storeview_ids = session.search(
-                'magento.storeview',
-                [('backend_id', '=', self.backend_record.id)])
+            'magento.storeview',
+            [('backend_id', '=', self.backend_record.id)])
         storeviews = session.browse('magento.storeview', storeview_ids)
         default_lang = self.backend_record.default_lang_id
         lang_storeviews = [sv for sv in storeviews

@@ -136,4 +136,4 @@ Available extensions:
           ],
  'installable': True,
  'application': True,
-}
+ }

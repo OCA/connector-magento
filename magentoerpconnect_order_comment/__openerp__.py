@@ -44,7 +44,8 @@ Features
 Settings / options
 ------------------
 
-* Ability to require Magento to send email to customer for each comment received. Unactive by default (Connectors/Magento/Store menu).
+* Ability to require Magento to send email to customer for each comment
+  received. Unactive by default (Connectors/Magento/Store menu).
 
 
     """,

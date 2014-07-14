@@ -19,14 +19,15 @@
 #
 ##############################################################################
 
-from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.unit.mapper import (mapping,
                                                   changed_by,
                                                   ExportMapper)
 from openerp.addons.magentoerpconnect.unit.delete_synchronizer import (
-        MagentoDeleteSynchronizer)
+    MagentoDeleteSynchronizer
+)
 from openerp.addons.magentoerpconnect.unit.export_synchronizer import (
-        MagentoExporter)
+    MagentoExporter
+)
 from openerp.addons.magentoerpconnect.backend import magento
 
 
@@ -45,16 +46,15 @@ class PartnerExport(MagentoExporter):
 class PartnerExportMapper(ExportMapper):
     _model_name = 'magento.res.partner'
 
-    direct = [
-            ('emailid', 'email'),
-            ('birthday', 'dob'),
-            ('created_at', 'created_at'),
-            ('updated_at', 'updated_at'),
-            ('emailid', 'email'),
-            ('taxvat', 'taxvat'),
-            ('group_id', 'group_id'),
-            ('website_id', 'website_id'),
-        ]
+    direct = [('emailid', 'email'),
+              ('birthday', 'dob'),
+              ('created_at', 'created_at'),
+              ('updated_at', 'updated_at'),
+              ('emailid', 'email'),
+              ('taxvat', 'taxvat'),
+              ('group_id', 'group_id'),
+              ('website_id', 'website_id'),
+              ]
 
     @changed_by('name')
     @mapping

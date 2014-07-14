@@ -91,6 +91,5 @@ class MockResponseImage(object):
 @contextmanager
 def mock_urlopen_image():
     with mock.patch('urllib2.urlopen') as urlopen:
-        api_mock = mock.MagicMock()
         urlopen.return_value = MockResponseImage('')
         yield

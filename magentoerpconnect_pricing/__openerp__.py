@@ -29,7 +29,7 @@
  'website': 'https://launchpad.net/magentoerpconnect',
  'description': """
 Magento Connector - Pricing
-===================================
+===========================
 
 Extension for **Magento Connector**.
 
@@ -42,4 +42,4 @@ are pushed to Magento.
           ],
  'installable': True,
  'application': False,
-}
+ }

@@ -142,7 +142,7 @@ class magento_sale_comment(orm.Model):
     }
 
     def create(self, cr, uid, vals, context=None):
-        if not 'res_id' in vals:
+        if 'res_id' not in vals:
             info = self.pool['magento.sale.order'].read(
                 cr, uid, vals['magento_sale_order_id'],
                 ['openerp_id'],
