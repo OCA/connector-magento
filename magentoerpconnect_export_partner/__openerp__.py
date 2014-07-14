@@ -41,6 +41,6 @@ customer accounts.
  'demo': [],
  'data': ['partner_view.xml',
           ],
- 'installable': True,
+ 'installable': False,
  'application': False,
 }

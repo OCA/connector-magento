@@ -134,6 +134,6 @@ Available extensions:
           'security/ir.model.access.csv',
           'payment_invoice.xml',
           ],
- 'installable': True,
+ 'installable': False,
  'application': True,
 }
