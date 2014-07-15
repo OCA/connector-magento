@@ -198,6 +198,8 @@ class MagentoPickingExport(ExportSynchronizer):
         Export the picking to Magento
         """
         picking = self.session.browse(self.model._name, binding_id)
+        if picking.magento_id:
+            return _('Already exported')
         picking_method = picking.picking_method
         if picking_method == 'complete':
             args = self._get_args(picking)

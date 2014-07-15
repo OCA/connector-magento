@@ -89,9 +89,12 @@ class MagentoTrackingExport(ExportSynchronizer):
                                   picking.name)
 
         magento_picking_id = picking.magento_id
-        if magento_picking_id is None:
-            raise NoExternalId("No value found for the picking ID on "
-                               "Magento side, the job will be retried later.")
+        if not magento_picking_id:
+            # avoid circular reference
+            from .stock_picking import MagentoPickingExport
+            picking_exporter = self.get_connector_unit_for_model(
+                MagentoPickingExport)
+            picking_exporter.run(binding_id)
 
         self._validate(picking)
         self._check_allowed_carrier(picking, sale_binding_id.magento_id)
