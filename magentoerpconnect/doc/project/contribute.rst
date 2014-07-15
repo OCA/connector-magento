@@ -31,23 +31,19 @@ It includes developer tools such as:
 * Build the connector / Magento connector documentation
 * Launch the Jobs Workers (for multiprocessing)
 
-So we highly recommend to use this config for development.
+So we highly recommend to use this configuration for development.
 
-In order to use it, first get the branch::
+Here are the configuration files https://github.com/guewen/odoo-connector-magento-buildout.
+
+Clone the repo::
 
     $ git clone https://github.com/guewen/odoo-connector-magento-buildout.git odoo-connector-magento
 
+and follow the installation steps.
+
 .. warning:: System dependencies to build the eggs: libxml2-dev libxslt1-dev
              that you need to install with apt-get, yum, ...
-
-Then bootstrap it::
-
-    $ cd odoo-connector-magento
-    $ python -S bootstrap.py
-
-Then run the buildout on the configuration file (eventually change options)::
-
-    $ bin/buildout
+             You can also use http://pythonhosted.org/anybox.recipe.openerp/first_steps.html#installing-build-dependencies
 
 Head over the next sections to discover the included tools
 
@@ -59,11 +55,11 @@ Start OpenERP
 
 All the commands are launched from the root directory of the buildout.
 
-In standalone mode::
+In standalone mode (jobs will be threaded)::
 
     $ bin/start_openerp
 
-With workers (multiprocessing), you also need to start Connector Workers for the jobs::
+With workers (multiprocessing), you need to start dedicated Connector Workers for the jobs::
 
     $ bin/start_openerp --workers=4
     $ bin/start_connector_worker --workers=2
@@ -88,8 +84,8 @@ Run the tests
 The Magento Connector and the Connector framework do not use YAML tests, but only
 ``unittest2`` tests. The following command lines will run them::
 
-    $ bin/rununittests -m connector
-    $ bin/rununittests -m magentoerpconnect
+    $ bin/rununittests --database db-name -m connector
+    $ bin/rununittests --database db-name -m magentoerpconnect
 
 Use the help arguments for more information about the options::
 
