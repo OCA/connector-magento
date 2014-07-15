@@ -161,7 +161,7 @@ You may want to use the reconciliation modules of the
 They are widely used in production and
 are specifically designed for the e-commerce.
 
-.. _`bank-statement-reconcile`: https://github.com/OCA/bank-statement-reconcile
+.. _`bank-statement-reconcile`: https://github.com/OCA/bank-statement-reconcile/tree/7.0
 
 
 Fiscal Positions
@@ -179,7 +179,7 @@ Note that this configuration will be done
 1 time in Magento and 1 time in OpenERP.
 But once the configuration is done, that works fine.
 
-.. _`account-fiscal-rule`: https://github.com/OCA/account-fiscal-rule
+.. _`account-fiscal-rule`: https://github.com/OCA/account-fiscal-rule/tree/7.0
 
 
 *******************************
