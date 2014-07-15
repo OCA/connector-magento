@@ -1132,3 +1132,15 @@ msgstr ""
 msgid "magentoerpconnect.installed"
 msgstr ""
 
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/stock_picking.py:200
+#, python-format
+msgid "Already exported"
+msgstr ""
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/stock_tracking.py:100
+#, python-format
+msgid "The delivery order %s has no Magento ID, "
+"can't export the tracking number."
+msgstr ""

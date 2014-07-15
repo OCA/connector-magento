@@ -1228,3 +1228,16 @@ msgstr ""
 #: model:ir.model,name:magentoerpconnect.model_magentoerpconnect_installed
 msgid "magentoerpconnect.installed"
 msgstr "magentoerpconnect.installed"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/stock_picking.py:200
+#, python-format
+msgid "Already exported"
+msgstr "Déjà exporté"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/stock_tracking.py:100
+#, python-format
+msgid "Le bon de livraison %s n'a pas d'ID Magento, "
+"impossible d'exporter le numéro de suivi."
+msgstr ""
