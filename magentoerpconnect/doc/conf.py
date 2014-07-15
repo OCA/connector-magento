@@ -19,20 +19,21 @@ import sphinx_bootstrap_theme
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #sys.path.insert(0, os.path.abspath('.'))
 sys.path.append(os.path.abspath('_themes'))
-sys.path.append(os.path.abspath('../../../server'))
+sys.path.append(os.path.abspath('../../../odoo'))
 
 # Load OpenERP with correct addons-path so the doc can be built even if
 # the addon import modules from other branches
 import openerp
 BASE_PATH = os.path.abspath(os.path.join(os.getcwd(), '../../..'))
 # You may need to change with your own paths
-ADDONS_PATHS = ('server/openerp/addons',
-                'webclient/addons',
-                'addons',
-                'openerp-connector',
-                'openerp-connector-ecommerce',
-                'e-commerce-addons',
-                'openerp-connector-magento')
+ADDONS_PATHS = ('odoo/openerp/addons',
+                'odoo/addons',
+                'connector',
+                'connector-ecommerce',
+                'e-commerce',
+                'sale-workflow',
+                'product-attribute',
+                'connector-magento')
 pathes = [os.path.join(BASE_PATH, path) for path in ADDONS_PATHS]
 options = ['--addons-path', ','.join(pathes)]
 openerp.tools.config.parse_config(options)
