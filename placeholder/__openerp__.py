@@ -35,7 +35,7 @@ Please remove as soon as you commit your first port!
     "css": [],
     "qweb": [],
     "auto_install": False,
-    "installable": False,
+    "installable": True,
     "application": False,
     "external_dependencies": {
         'python': [],
