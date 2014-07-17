@@ -31,36 +31,19 @@ It includes developer tools such as:
 * Build the connector / Magento connector documentation
 * Launch the Jobs Workers (for multiprocessing)
 
-So we highly recommend to use this config for development.
+So we highly recommend to use this configuration for development.
 
-.. note:: The buildout config uses ``bzr`` to get the branches.
-          Ensure that ``bzr`` is configured with the launchpad login
-          and the SSH key, or it may fail to get the branches.
+Here are the configuration files https://github.com/guewen/odoo-connector-magento-buildout.
 
-In order to use it, first get the branch::
+Clone the repo::
 
-    $ bzr branch lp:openerp-connector-magento/7.0-buildout
+    $ git clone https://github.com/guewen/odoo-connector-magento-buildout.git odoo-connector-magento
+
+and follow the installation steps.
 
 .. warning:: System dependencies to build the eggs: libxml2-dev libxslt1-dev
-
-Then bootstrap it::
-
-    $ python -S bootstrap.py
-
-Then run the buildout on the configuration file (eventually change options)::
-
-    $ bin/buildout
-
-If this is is the first time you use it, you'll need to
-create a PostgreSQL user whose name is `openerp_magento7` and password is
-`openerp_magento7` (according to what you put in the configuration file).
-You will also need to create the database.
-
-::
-
-    $ createuser -W openerp_magento7  # then respond to the questions
-    $ createdb openerp_magento7 -O openerp_magento7
-
+             that you need to install with apt-get, yum, ...
+             You can also use http://pythonhosted.org/anybox.recipe.openerp/first_steps.html#installing-build-dependencies
 
 Head over the next sections to discover the included tools
 
@@ -72,11 +55,11 @@ Start OpenERP
 
 All the commands are launched from the root directory of the buildout.
 
-In standalone mode::
+In standalone mode (jobs will be threaded)::
 
     $ bin/start_openerp
 
-With workers (multiprocessing), you also need to start Connector Workers for the jobs::
+With workers (multiprocessing), you need to start dedicated Connector Workers for the jobs::
 
     $ bin/start_openerp --workers=4
     $ bin/start_connector_worker --workers=2
@@ -101,8 +84,8 @@ Run the tests
 The Magento Connector and the Connector framework do not use YAML tests, but only
 ``unittest2`` tests. The following command lines will run them::
 
-    $ bin/rununittests -m connector
-    $ bin/rununittests -m magentoerpconnect
+    $ bin/rununittests --database db-name -m connector
+    $ bin/rununittests --database db-name -m magentoerpconnect
 
 Use the help arguments for more information about the options::
 
@@ -121,9 +104,9 @@ They will be built in the ``docs`` directory at the root of the buildout.
 
 .. _Sphinx: http://www.sphinx-doc.org
 
-*****************
-Magento on the go
-*****************
+***************
+Magento Vagrant
+***************
 
 If you want to develop a generic feature on the Magento Connector, we recommend
 to use the `ak-magento vagrant box`_.  It installs Magento 1.7 with the demo
@@ -150,7 +133,7 @@ File an Issue
 =============
 
 When you encounter an issue or think there is a bug, you can file a bug on the
-project: http://bugs.launchpad.net/openerp-connector-magento.
+project: https://github.com/OCA/connector-magento/issues
 
 The connector uses several community modules, located in different projects
 (``sale_automatic_workflow``, ``sale_exceptions``, ...). If you know which
@@ -159,59 +142,47 @@ report it on the Magento Connector project and the developers will eventually
 move it to the right project.
 
 Possibly, the bug is related to the connector framework, so you may want to report
-it on this project instead: http://bugs.launchpad.net/openerp-connector.
+it on this project instead: https://github.com/OCA/connector/issues.
 
 When you report a bug, please give all the sensible information you can provide, such as:
 
 * the reference of the branch of the connector that you are using, and if
   possible the revision numbers of that branch and the dependencies (you can
-  use ``bzr revision-info`` for that purpose)
+  use ``git rev-parse HEAD`` for that purpose)
 
 It is very helpful if you can include:
 
 * the detailed steps to reproduce the issue, including any relevant action
 * in case of a crash, an extract from the server log files (possibly with a
   few lines before the beginning of the crash report in the log)
-* the additionnal modules you use with the connector if it can help
+* the additional modules you use with the connector if it can help
 
-Submit merge proposals for features or fixes
-============================================
+Submit Pull Requests for features or fixes
+==========================================
 
 Merge proposals are much appreciated and we'll take care to review them properly.
 
-The MP process is the following:
+The PR process is the following:
 
-1. Get a branch: ``bzr branch lp:openerp-connector-magento/7.0 7.0-working-branch``
-#. Work on that branch, develop your feature or fix a bug. Please include a test (`Writing tests`_).
+1. Fork the project on https://github.com/OCA/connector-magento
+#. Work on your branch, develop a feature or fix a bug. Please include a test (`Writing tests`_).
 #. Ensure that the tests are green (`Run the tests`_)
-#. Push that branch on the project ``bzr push lp:~YOURUSER/openerp-connector-magento/7.0-my-new-feature``
+#. Ensure that pep8 is repected
+#. Open a Pull Request on GitHub
+#. Travis will automatically test pep8 and launch the tests. If Travis fails,
+   you will need to correct your branch before it can be merged.
 
-.. note:: When you push a branch, you can push it on the team
-          ``~openerp-connector-community`` instead of your user so anyone in the team is
-          able to commit changes / doing corrections.
+.. note:: Check the `GitHub's help <https://help.github.com/articles/fork-a-repo>`_
+          if necessary.
 
-4. With a browser, go the branch you just pushed and click on the "Propose for merging" link:
-
-   * in the target branch, choose the master branch
-   * in the description, put a description which indicates why you made the
-     change, ideally with a use case
-   * in "extra options", set an appropriate commit message
-   * Confirm with the 'Propose Merge' button
-
-.. hint:: You can use the command tools ``bzr lp-propose-merge`` and ``bzr
-          lp-open`` instead of a browser for creating the MP.
-
-You can also consult the `Launchpad's documentation on code review`_.
-
-.. _`Launchpad's documentation on code review`: https://help.launchpad.net/Code/Review
 
 Improve the documentation
 =========================
 
 Helping on the documentation is extremely valuable and is an easy starting
 point to contribute. The documentation is located in the Magento connector's
-branch, so you will need to get a branch, working on the documentation and
-follow the instructions in the section `Submit merge proposals for features or
+project, so you will need to clone the repository, working on the documentation and
+follow the instructions in the section `Submit Pull Requests for features or
 fixes`_ to propose your changes.
 
 You will also need to read this section: `Build the documentation`_.
@@ -219,21 +190,8 @@ You will also need to read this section: `Build the documentation`_.
 Translations
 ============
 
-You may want to translate directly in the ``.po`` files, in such case, follow the
-`Submit merge proposals for features or fixes`_ instructions.
-
-The other way is to use the Launchpad's translation system on
-
-Magento Connector
-  https://translations.launchpad.net/openerp-connector-magento
-
-Connector E-Commerce
-  https://translations.launchpad.net/openerp-connector-ecommerce
-
-Connector
-  https://translations.launchpad.net/openerp-connector
-
-OpenERP's guide on translations: https://doc.openerp.com/7.0/contribute/07_improving_translations/
+Currently the translations should be done directly in the ``.po`` files, follow
+the `Submit Pull Requests for features or fixes`_ instructions.
 
 Writing tests
 =============
@@ -247,7 +205,7 @@ The tests run without any connection to Magento. They mock the API.  In order
 to test the connector with representative data, we record real
 responses/requests, then use them in the tests. The reference data we use are
 those of the Magento demo, which are automatically installed when you install
-Magento using theses instructions: `Magento on the go`_.
+Magento using theses instructions: `Magento Vagrant`_.
 
 Thus, in the ``tests`` folder, you will find files with only data, and the
 others with the tests.

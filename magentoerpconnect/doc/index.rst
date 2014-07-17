@@ -25,7 +25,7 @@ Core Features
 *************
 
 * **100% Open Source** (`AGPL version 3`_): the full `source code is available
-  on Launchpad`_
+  on GitHub`_
 * **Multis**: multi-instances, multi-e-shop, multi-currency,
   multi-warehouse, multi-language
 * **Synchronization** of products catalog, customers, sales orders, stock levels,
@@ -46,7 +46,7 @@ Core Features
 .. _OpenERP: http://www.openerp.com
 .. _Magento: http://www.magento.com
 .. _Akretion: http://www.akretion.com
-.. _`source code is available on Launchpad`: https://code.launchpad.net/openerp-connector-magento
+.. _`source code is available on GitHub`: https://github.com/OCA/connector-magento/tree/7.0
 .. _`AGPL version 3`: http://www.gnu.org/licenses/agpl-3.0.html
 .. _`project's mailing list`: https://launchpad.net/~openerp-connector-community
 
