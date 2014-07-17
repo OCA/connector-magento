@@ -190,17 +190,21 @@ class ProductProductAdapter(GenericAdapter):
             else:
                 raise
 
-    def search(self, filters=None, from_date=None):
-        """ Search records according to some criterias
+    def search(self, filters=None, from_date=None, to_date=None):
+        """ Search records according to some criteria
         and returns a list of ids
 
         :rtype: list
         """
         if filters is None:
             filters = {}
+        dt_fmt = '%Y/%m/%d %H:%M:%S'
         if from_date is not None:
-            str_from_date = from_date.strftime('%Y/%m/%d %H:%M:%S')
-            filters['updated_at'] = {'from': str_from_date}
+            filters.setdefault('updated_at', {})
+            filters['updated_at']['from'] = from_date.strftime(dt_fmt)
+        if to_date is not None:
+            filters.setdefault('updated_at', {})
+            filters['updated_at']['to'] = to_date.strftime(dt_fmt)
         # TODO add a search entry point on the Magento API
         return [int(row['product_id']) for row
                 in self._call('%s.list' % self._magento_model,
@@ -246,7 +250,10 @@ class ProductBatchImport(DelayedBatchImport):
     def run(self, filters=None):
         """ Run the synchronization """
         from_date = filters.pop('from_date', None)
-        record_ids = self.backend_adapter.search(filters, from_date)
+        to_date = filters.pop('to_date', None)
+        record_ids = self.backend_adapter.search(filters,
+                                                 from_date=from_date,
+                                                 to_date=to_date)
         _logger.info('search for magento products %s returned %s',
                      filters, record_ids)
         for record_id in record_ids:

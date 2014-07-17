@@ -247,7 +247,9 @@ class magento_backend(orm.Model):
             else:
                 from_date = None
             import_batch.delay(session, model,
-                               backend.id, filters={'from_date': from_date})
+                               backend.id,
+                               filters={'from_date': from_date,
+                                        'to_date': import_start_time})
         # Records from Magento are imported based on their `created_at`
         # date.  This date is set on Magento at the beginning of a
         # transaction, so if the import is run between the beginning and
@@ -380,7 +382,8 @@ class magento_website(orm.Model):
             partner_import_batch.delay(
                 session, 'magento.res.partner', backend_id,
                 {'magento_website_id': website.magento_id,
-                    'from_date': from_date})
+                 'from_date': from_date,
+                 'to_date': import_start_time})
         # Records from Magento are imported based on their `created_at`
         # date.  This date is set on Magento at the beginning of a
         # transaction, so if the import is run between the beginning and
@@ -554,7 +557,8 @@ class magento_storeview(orm.Model):
                 'magento.sale.order',
                 backend_id,
                 {'magento_storeview_id': storeview.magento_id,
-                 'from_date': from_date},
+                 'from_date': from_date,
+                 'to_date': import_start_time},
                 priority=1)  # executed as soon as possible
         # Records from Magento are imported based on their `created_at`
         # date.  This date is set on Magento at the beginning of a
