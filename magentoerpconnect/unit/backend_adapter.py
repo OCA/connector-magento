@@ -153,6 +153,12 @@ class MagentoCRUDAdapter(CRUDAdapter):
                                 self.magento.username,
                                 self.magento.password,
                                 full_url=custom_url) as api:
+                # When Magento is installed on PHP 5.4+, the API
+                # may return garble data if the arguments contain
+                # trailing None.
+                if isinstance(arguments, list):
+                    while arguments and arguments[-1] is None:
+                        arguments.pop()
                 result = api.call(method, arguments)
                 # Uncomment to record requests/responses in ``recorder``
                 # record(method, arguments, result)
