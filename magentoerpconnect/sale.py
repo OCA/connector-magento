@@ -465,7 +465,12 @@ class SaleOrderImport(MagentoImportSynchronizer):
         if not mag_sale.payment_method_id.journal_id:
             return
         sale_obj = sess.pool['sale.order']
-        amount = self.magento_record.get('payment', {}).get('amount_paid')
+        store_currency_code = self.magento_record.get('store_currency_code', '-1')
+        order_currency_code = self.magento_record.get('order_currency_code', '-1')        
+        if store_currency_code != order_currency_code:
+            amount = self.magento_record.get('payment', {}).get('base_amount_paid')            
+        else:
+            amount = self.magento_record.get('payment', {}).get('amount_paid')                  
         if amount:
             amount = float(amount)  # magento gives a str
             cr, uid, context = sess.cr, sess.uid, sess.context
@@ -722,8 +727,7 @@ class SaleOrderImportMapper(ImportMapper):
     _model_name = 'magento.sale.order'
 
     direct = [('increment_id', 'magento_id'),
-              ('order_id', 'magento_order_id'),
-              ('grand_total', 'total_amount'),
+              ('order_id', 'magento_order_id'),              
               ('tax_amount', 'total_amount_tax'),
               ('created_at', 'date_order'),
               ('store_id', 'storeview_id'),
@@ -788,6 +792,17 @@ class SaleOrderImportMapper(ImportMapper):
         values = self._add_gift_certificate_line(map_record, values)
         onchange = self.get_connector_unit_for_model(SaleOrderOnChange)
         return onchange.play(values, values['magento_order_line_ids'])
+
+    @mapping
+    def total_amount(self, record):
+        store_currency_code = record.get('store_currency_code', '-1')
+        order_currency_code = record.get('order_currency_code', '-1')        
+        if store_currency_code != order_currency_code:
+            total_amount = record.get('base_grand_total', '-1')            
+        else:
+            total_amount = record.get('grand_total', '-1')            
+
+        return {'total_amount':total_amount}
 
     @mapping
     def name(self, record):
