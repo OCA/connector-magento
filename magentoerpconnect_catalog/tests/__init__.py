@@ -19,13 +19,13 @@
 #
 ##############################################################################
 
-import test_attribute_synchronisation
+import test_attribute_synchronization
 import test_category_export
 
 fast_suite = [
 ]
 
 checks = [
-    test_attribute_synchronisation,
+    test_attribute_synchronization,
     test_category_export,
 ]
