@@ -57,7 +57,7 @@ class TestExportCategory(SetUpMagentoSynchronized):
     def test_10_export_category(self):
         """ Test export of category"""
         response = {
-            'catalog_category.create': self.get_magento_id(),
+            'catalog_category.create': self.get_magento_id,
         }
         cr = self.cr
         uid = self.uid
@@ -79,7 +79,7 @@ class TestExportCategory(SetUpMagentoSynchronized):
     def test_20_export_category_with_image(self):
         """ Test export of category"""
         response = {
-            'catalog_category.create': self.get_magento_id(),
+            'catalog_category.create': self.get_magento_id,
             'ol_catalog_category_media.create': 'true',
         }
         cr = self.cr
@@ -114,3 +114,45 @@ class TestExportCategory(SetUpMagentoSynchronized):
             self.assertEqual(parent_id, 1)
             self.assertEqual(image_name, 'myimage.png')
             self.assertEqual(image_data, IMAGE)
+
+    def test_30_export_category_with_openerp_parent_dependency(self):
+        """ Test export of category"""
+        response = {
+            'catalog_category.create': self.get_magento_id,
+        }
+        cr = self.cr
+        uid = self.uid
+        with mock_api(response, key_func=lambda m, a: m) as calls_done:
+            mag_categ_model = self.registry('magento.product.category')
+
+            parent_mag_categ_id = mag_categ_model.create(cr, uid, {
+                'name': 'My Parent Category',
+                'backend_id': self.backend_id,
+                })
+
+            parent_mag_categ = mag_categ_model.browse(
+                cr, uid, parent_mag_categ_id)
+ 
+            mag_categ_id = mag_categ_model.create(cr, uid, {
+                'name': 'My Category',
+                'backend_id': self.backend_id,
+                'parent_id': parent_mag_categ.openerp_id.id,
+                })
+            
+
+            export_record(self.session, 'magento.product.category',
+                          mag_categ_id)
+
+            parent_mag_categ = parent_mag_categ.browse()[0]
+
+            self.assertEqual(len(calls_done), 2)
+
+            method, (parent_id, data) = calls_done[0]
+            self.assertEqual(method, 'catalog_category.create')
+            self.assertEqual(parent_id, 1)
+            self.assertEqual(data['name'], 'My Parent Category')
+
+            method, (parent_id, data) = calls_done[1]
+            self.assertEqual(method, 'catalog_category.create')
+            self.assertEqual(parent_id, parent_mag_categ.magento_id)
+            self.assertEqual(data['name'], 'My Category')
