@@ -56,7 +56,11 @@ class TestResponder(object):
         key = self.call_to_key(method, arguments)
         assert key in self._responses, (
             "%s not found in magento responses" % str(key))
-        return self._responses[key]
+        if hasattr(self._responses[key], '__call__'):
+            return self._responses[key]()
+        else:
+            return self._responses[key]
+
 
 
 @contextmanager
