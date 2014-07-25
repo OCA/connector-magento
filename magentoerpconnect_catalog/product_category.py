@@ -243,20 +243,20 @@ class ProductCategoryImageExporter(ExportSynchronizer):
         self._backend_adapter = get_unit(ProductCategoryImageAdapter)
         return self._backend_adapter
 
-    def _prepare_create(self, categ):
-        if categ.image and categ.image_name:
+    def _prepare_create(self, categ, image_field):
+        if image_field == 'image' and categ.image and categ.image_name:
             return [categ.image_name, categ.image]
         else:
             return None
 
-    def run(self, binding_id):
+    def run(self, binding_id, image_field):
         cr = self.session.cr
         uid = self.session.uid
         ctx = self.session.context.copy()
         ctx['bin_base64_image'] = True
         categ = self.session.pool[self.model._name].\
             browse(cr, uid, binding_id, context=ctx)
-        args = self._prepare_create(categ)
+        args = self._prepare_create(categ, image_field)
         if args:
             self.backend_adapter.create(*args)
 
@@ -270,11 +270,9 @@ def product_category_modified(session, model_name, record_id, vals):
         categ_obj = session.pool['product.category']
         record = categ_obj.browse(session.cr, session.uid,
                               record_id, context=session.context)
-        fields = vals.keys()
         for binding in record.magento_bind_ids:
             export_product_category_image.delay(
-                session, binding._model._name, binding.id,
-                fields=fields,
+                session, binding._model._name, binding.id, 'image',
                 priority=50)
 
 
@@ -282,19 +280,17 @@ def product_category_modified(session, model_name, record_id, vals):
 def magento_product_category_created(session, model_name, record_id, vals):
     if session.context.get('connector_no_export'):
         return
-    fields = vals.keys() 
     export_product_category_image.delay(
-        session, 'magento.product.category', record_id,
-        fields=fields,
+        session, 'magento.product.category', record_id, 'image',
         priority=50)
 
 
 @job
 @related_action(action=unwrap_binding)
-def export_product_category_image(session, model_name, record_id, fields=None):
+def export_product_category_image(session, model_name, record_id, image_field):
     """ Export the image of a product category. """
     categ = session.browse(model_name, record_id)
     backend_id = categ.backend_id.id
     env = get_environment(session, model_name, backend_id)
     categ_image_exporter = env.get_connector_unit(ProductCategoryImageExporter)
-    return categ_image_exporter.run(record_id)
+    return categ_image_exporter.run(record_id, image_field)
