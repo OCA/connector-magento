@@ -313,8 +313,7 @@ class MagentoExporter(MagentoBaseExporter):
             # "direct" binding (the binding record is the same record).
             # If wrap is True, relation is already a binding record.
             binding_id = relation.id
-
-        if rel_binder.to_backend(binding_id) is None:
+        if not rel_binder.to_backend(binding_id):
             exporter = self.get_connector_unit_for_model(exporter_class,
                                                          binding_model)
             exporter.run(binding_id)
