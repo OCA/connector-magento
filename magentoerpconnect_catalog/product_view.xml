@@ -26,22 +26,9 @@
                 </group>
                 <field name="description" colspan="4"/>
                 <group colspan="2">
-                    <field name="image"/>
                     <field name="meta_title"/>
                     <field name="meta_description"/>
                     <field name="meta_keywords"/>
-                    <field name="thumbnail_like_image"/>
-                    <group name="thumbnail_grp" colspan="2"
-                           attrs="{'invisible': [('thumbnail_like_image', '=', True)]}">
-
-                        <field name="thumbnail"/>
-                        <field name="thumbnail_binary" widget="image"
-                               filename="thumbnail" nolabel="1"/>
-                    </group>
-                </group>
-                <group colspan="2">
-                    <field name="image_binary" widget="image"
-                           filename="image" nolabel="1"/>
                 </group>
             </group>
             <group string="Display settings" col="4">
