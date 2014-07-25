@@ -129,7 +129,6 @@ class ProductCategoryAdapter(GenericAdapter):
                 raise
 
     def create(self, data):
-        self.update_image(data)
         return self._call('%s.create'% self._magento_model,
                           [data['parent_id'],data])
 
