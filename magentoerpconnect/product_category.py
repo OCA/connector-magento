@@ -93,6 +93,19 @@ class product_category(orm.Model):
                                                        default=default,
                                                        context=context)
 
+@magento
+class ProductCategoryImageAdapter(GenericAdapter):
+    _model_name = 'magento.product.category'
+    _magento_model = 'ol_catalog_category_media'
+
+    def create(self, name, binary):
+        img = self._call('%s.create' % self._magento_model, [name, binary])
+        if img == 'Error in file creation':
+            #TODO improve error management
+            raise Exception("Image creation: ",
+                "Magento tried to insert image (%s) but there is "
+                "no sufficient grants in the folder "
+                "'media/catalog/category' if it exists" % name)
 
 @magento
 class ProductCategoryAdapter(GenericAdapter):
@@ -111,10 +124,6 @@ class ProductCategoryAdapter(GenericAdapter):
             else:
                 raise
 
-<<<<<<< HEAD
-    def search(self, filters=None, from_date=None, to_date=None):
-        """ Search records according to some criteria and return a
-=======
     def update_image(self, data):
         for name in ['image', 'thumbnail']:
             if data.get(name + '_binary'):
@@ -129,17 +138,15 @@ class ProductCategoryAdapter(GenericAdapter):
         return True
 
     def create(self, data):
-        self.update_image(data)
         return self._call('%s.create'% self._magento_model,
                           [data['parent_id'],data])
 
     def write(self, id, data, storeview=None):
         """ Update records on the external system """
-        self.update_image(data)
         return self._call('%s.update' % self._magento_model,
                           [int(id), data, storeview])
 
-    def search(self, filters=None, from_date=None):
+    def search(self, filters=None, from_date=None, to_date=None):
         """ Search records according to some criterias and returns a
         list of ids
 
