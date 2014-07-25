@@ -94,11 +94,12 @@ class TestExportCategory(SetUpMagentoSynchronized):
                 })
             
             export_record(self.session, 'magento.product.category',
-                          mag_categ_id)
+                          mag_categ_id, 'image')
             export_product_category_image(
                 self.session,
                 'magento.product.category',
-                mag_categ_id)
+                mag_categ_id,
+                'image')
 
             self.assertEqual(len(calls_done), 2)
             method, (parent_id, data) = calls_done[0]
