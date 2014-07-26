@@ -29,7 +29,15 @@ from openerp.addons.magentoerpconnect.unit.delete_synchronizer import (
 from openerp.addons.magentoerpconnect.unit.export_synchronizer import (
         MagentoTranslationExporter)
 from openerp.addons.magentoerpconnect.backend import magento
-from openerp.addons.magentoerpconnect import product_category
+from openerp.addons.magentoerpconnect.product_category import (
+    ProductCategoryImageAdapter,
+    ProductCategoryAdapter,
+    )
+from openerp.addons.connector.unit.synchronizer import ExportSynchronizer
+from openerp.addons.connector.event import on_record_write, on_record_create
+from openerp.addons.connector.queue.job import job, related_action
+from openerp.addons.magentoerpconnect.related_action import unwrap_binding
+from openerp.addons.magentoerpconnect.connector import get_environment
 
 
 class MagentoProductCategory(orm.Model):
@@ -64,15 +72,6 @@ class MagentoProductCategory(orm.Model):
 
     _columns = {
         #==== General Information ====
-        'thumbnail_like_image': fields.boolean('Thumbnail like main image'),
-        'thumbnail_binary': fields.binary('Thumbnail'),
-        'thumbnail': fields.char(
-            'Thumbnail name',
-            size=100, help=MAGENTO_HELP),
-        'image_binary': fields.binary('Image'),
-        'image': fields.char(
-            'Image name',
-            size=100, help=MAGENTO_HELP),
         'meta_title': fields.char('Title (Meta)', size=75, help=MAGENTO_HELP),
         'meta_keywords': fields.text('Meta Keywords', help=MAGENTO_HELP),
         'meta_description': fields.text('Meta Description', help=MAGENTO_HELP),
@@ -87,7 +86,7 @@ class MagentoProductCategory(orm.Model):
         'use_default_available_sort_by': fields.boolean(
             'Default Config For Available Sort By', help=MAGENTO_HELP),
 
-   #TODO use custom attribut for category
+        #TODO use custom attribut for category
 
         #'available_sort_by': fields.sparse(
         #    type='many2many',
@@ -123,7 +122,6 @@ class MagentoProductCategory(orm.Model):
     }
 
     _defaults = {
-        'thumbnail_like_image': True,
         'display_mode': 'PRODUCTS',
         'use_default_available_sort_by': True,
         'default_sort_by': '_',
@@ -146,26 +144,27 @@ class ProductCategoryDeleteSynchronizer(MagentoDeleteSynchronizer):
 
 
 @magento
-class ProductCategoryExport(MagentoTranslationExporter):
+class ProductCategoryExporter(MagentoTranslationExporter):
     _model_name = ['magento.product.category']
+
+    @property
+    def backend_adapter(self):
+        get_unit = self.environment.get_connector_unit
+        self._backend_adapter = get_unit(ProductCategoryAdapter)
+        return self._backend_adapter
 
     def _export_dependencies(self):
         """Export parent of the category"""
-        #TODO FIXME
-        return True
-        env = self.environment
         record = self.binding_record
-        binder = self.get_binder_for_model()
         if record.magento_parent_id:
-            mag_parent_id = record.magento_parent_id.id
-            if binder.to_backend(mag_parent_id) is None:
-                exporter = env.get_connector_unit(ProductCategoryExporter)
-                exporter.run(mag_parent_id)
-        elif record.openerp_id.parent_id:
-            parent = record.openerp_id.parent_id
-            if binder.to_backend(parent.id, wrap=True) is None:
-                exporter = env.get_connector_unit(ProductCategoryExporter)
-                exporter.run(parent.magento_parent_id.id)
+            self._export_dependency(record.magento_parent_id,
+                                    'magento.product.category',
+                                    exporter_class=ProductCategoryExporter)
+        elif record.parent_id:
+            self._export_dependency(record.parent_id,
+                                    'magento.product.category',
+                                    exporter_class=ProductCategoryExporter)
+
 
 @magento
 class ProductCategoryExportMapper(ExportMapper):
@@ -185,6 +184,8 @@ class ProductCategoryExportMapper(ExportMapper):
               ('custom_design_to', 'custom_design_to'),
               ('custom_layout_update', 'custom_layout_update'),
               ('page_layout', 'page_layout'),
+              ('image_name', 'image'),
+              ('image_name', 'thumbnail'),
              ]
 
     @mapping
@@ -218,22 +219,72 @@ class ProductCategoryExportMapper(ExportMapper):
             include_in_menu = 0
         return {'include_in_menu':include_in_menu}
 
-    @mapping
-    def image(self, record):
-        res = {}
-        if record.image_binary:
-            res.update({'image': record.image,
-                        'image_binary': record.image_binary})
-        if record.thumbnail_like_image == True :
-            res.update({'thumbnail': record.image,})
-        elif record.thumbnail:
-            res.update({'thumbnail': record.thumbnail,
-                        'thumbnail_binary': record.thumbnail_binary})
-        return res
 
-@magento(replacing=product_category.ProductCategoryImportMapper)
-class ProductCategoryImportMapper(product_category.ProductCategoryImportMapper):
-    _model_name = 'magento.product.category'
-    direct = product_category.ProductCategoryImportMapper.direct + []
+# TODO add mapping for default_sort_by and available_sort_by
+#@magento(replacing=product_category.ProductCategoryImportMapper)
+#class ProductCategoryImportMapper(product_category.ProductCategoryImportMapper):
+#    _model_name = 'magento.product.category'
+#    direct = product_category.ProductCategoryImportMapper.direct + []
 
-    #TODO add mapping for default_sort_by and available_sort_by
+
+@magento
+class ProductCategoryImageExporter(ExportSynchronizer):
+    _model_name = ['magento.product.category']
+
+    @property
+    def backend_adapter(self):
+        get_unit = self.environment.get_connector_unit
+        self._backend_adapter = get_unit(ProductCategoryImageAdapter)
+        return self._backend_adapter
+
+    def _prepare_create(self, categ, image_field):
+        if image_field == 'image' and categ.image and categ.image_name:
+            return [categ.image_name, categ.image]
+        else:
+            return None
+
+    def run(self, binding_id, image_field):
+        cr = self.session.cr
+        uid = self.session.uid
+        ctx = self.session.context.copy()
+        ctx['bin_base64_image'] = True
+        categ = self.session.pool[self.model._name].\
+            browse(cr, uid, binding_id, context=ctx)
+        args = self._prepare_create(categ, image_field)
+        if args:
+            self.backend_adapter.create(*args)
+
+
+@on_record_write(model_names='product.category')
+def product_category_modified(session, model_name, record_id, vals):
+    if session.context.get('connector_no_export'):
+        return
+    image_fields = list(set(vals).intersection(['image', 'image_medium']))
+    if image_fields:
+        categ_obj = session.pool['product.category']
+        record = categ_obj.browse(session.cr, session.uid,
+                              record_id, context=session.context)
+        for binding in record.magento_bind_ids:
+            export_product_category_image.delay(
+                session, binding._model._name, binding.id, 'image',
+                priority=50)
+
+
+@on_record_create(model_names='magento.product.category')
+def magento_product_category_created(session, model_name, record_id, vals):
+    if session.context.get('connector_no_export'):
+        return
+    export_product_category_image.delay(
+        session, 'magento.product.category', record_id, 'image',
+        priority=50)
+
+
+@job
+@related_action(action=unwrap_binding)
+def export_product_category_image(session, model_name, record_id, image_field):
+    """ Export the image of a product category. """
+    categ = session.browse(model_name, record_id)
+    backend_id = categ.backend_id.id
+    env = get_environment(session, model_name, backend_id)
+    categ_image_exporter = env.get_connector_unit(ProductCategoryImageExporter)
+    return categ_image_exporter.run(record_id, image_field)

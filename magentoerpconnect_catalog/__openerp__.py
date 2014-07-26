@@ -28,6 +28,7 @@
              'product_custom_attributes',
              #'product_links',
              'product_image',
+             'product_category_image',
              ],
  'author': 'MagentoERPconnect Core Editors',
  'license': 'AGPL-3',
