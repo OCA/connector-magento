@@ -37,6 +37,24 @@ from openerp.addons.magentoerpconnect.unit.export_synchronizer import (
 )
 
 
+class MagentoProductProduct(orm.Model):
+    _inherit='magento.product.product'
+
+    #Automatically create the magento binding for each image
+    def create(self, cr, uid, vals, context=None):
+        mag_image_obj = self.pool['magento.product.image']
+        mag_product_id = super(MagentoProductProduct, self).\
+            create(cr, uid, vals, context=None)
+        mag_product = self.browse(cr, uid, mag_product_id, context=context)
+        if mag_product.backend_id.auto_bind_image:
+            for image in mag_product.image_ids:
+                mag_image_obj.create(cr, uid, {
+                    'openerp_id': image.id,
+                    'backend_id': mag_product.backend_id.id,
+                    }, context=context)
+        return mag_product_id
+
+
 @magento
 class ProductProductDeleteSynchronizer(MagentoDeleteSynchronizer):
     """ Partner deleter for Magento """
