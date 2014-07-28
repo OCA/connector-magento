@@ -119,6 +119,8 @@ class TestExportAttribute(SetUpMagentoSynchronizedWithAttribute):
             self.assertEqual(len(calls_done), 1)
 
             method, (data, skeleton_id) = calls_done[0]
-            print data
             self.assertEqual(method, 'product_attribute_set.create')
             self.assertEqual(skeleton_id, '9')
+
+
+

@@ -227,6 +227,19 @@ class MagentoProductAttribute(orm.Model):
                    "the attribute on Magento. \nPlease refer to the Magento " \
                    "documentation for details. "
 
+    #Automatically create the magento binding for each option
+    def create(self, cr, uid, vals, context=None):
+        mag_option_obj = self.pool['magento.attribute.option']
+        mag_attr_id = super(MagentoProductAttribute, self).\
+            create(cr, uid, vals, context=None)
+        mag_attr = self.browse(cr, uid, mag_attr_id, context=context)
+        for option in mag_attr.openerp_id.option_ids:
+            mag_option_obj.create(cr, uid, {
+                'openerp_id': option.id,
+                'backend_id': mag_attr.backend_id.id,
+                }, context=context)
+        return mag_attr_id
+
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
@@ -388,7 +401,6 @@ class ProductAttributeExport(MagentoExporter):
                     magento_attribute_set_id, magento_attribute_id)
 
 
-
 @magento
 class ProductAttributeExportMapper(ExportMapper):
     _model_name = 'magento.product.attribute'
@@ -436,6 +448,19 @@ class AttributeOption(orm.Model):
             string='Magento Bindings',),
     }
 
+    #Automatically create the magento binding for the option created
+    def create(self, cr, uid, vals, context=None):
+        option_id = super(AttributeOption, self).\
+            create(cr, uid, vals, context=None)
+        attr_obj = self.pool['attribute.attribute']
+        mag_option_obj = self.pool['magento.attribute.option']
+        attr = attr_obj.browse(cr, uid, vals['attribute_id'], context=context)
+        for binding in attr.magento_bind_ids:
+            mag_option_obj.create(cr, uid, {
+                'openerp_id': option_id,
+                'backend_id': binding.backend_id.id,
+                }, context=context)
+        return option_id
 
 class MagentoAttributeOption(orm.Model):
     _name = 'magento.attribute.option'
@@ -486,6 +511,10 @@ class AttributeOptionDeleteSynchronizer(MagentoDeleteSynchronizer):
 @magento
 class AttributeOptionExport(MagentoExporter):
     _model_name = ['magento.attribute.option']
+
+    def _should_import(self):
+        "Attributes in magento doesn't retrieve infos on dates"
+        return False
 
 
 @magento
