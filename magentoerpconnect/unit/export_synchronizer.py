@@ -462,14 +462,17 @@ class MagentoTranslationExporter(MagentoExporter):
                     session.context['lang'] = storeview.lang_id.code
                     self.binding_record = self._get_openerp_data()
                     self._map_data(fields=translatable_fields)
-                    record = self.mapper.data
-                    if not record:
+                    map_record = self._map_data()
+                    record = self._update_data(
+                         map_record, fields=translatable_fields)
+                    if not map_record:
                         return _('nothing to export.')
                     # special check on data before export
                     self._validate_data(record)
                     binder = self.get_binder_for_model('magento.storeview')
                     magento_storeview_id = binder.to_backend(storeview.id)
-                    self.backend_adapter.write(self.magento_id, record, magento_storeview_id)
+                    self.backend_adapter.write(
+                        self.magento_id, record, magento_storeview_id)
         return res
 
 
