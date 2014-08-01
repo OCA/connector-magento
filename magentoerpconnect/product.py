@@ -52,6 +52,7 @@ from .unit.import_synchronizer import (DelayedBatchImport,
 from .connector import get_environment
 from .backend import magento
 from .related_action import unwrap_binding
+from .exception import SkuAlreadyExistInBackend
 
 _logger = logging.getLogger(__name__)
 
@@ -260,6 +261,8 @@ class ProductProductAdapter(GenericAdapter):
             # when the product does not exist
             if err.faultCode == 101:
                 raise IDMissingInBackend
+            elif err.faultCode == 1:
+                raise SkuAlreadyExistInBackend
             else:
                 raise
 
@@ -283,10 +286,10 @@ class ProductProductAdapter(GenericAdapter):
                 in self._call('%s.list' % self._magento_model,
                               [filters] if filters else [{}])]
 
-    def create(self, data):
+    def create(self, product_type, attr_set_id, sku, data):
         # Only ol_catalog_product.create works for export configurable product
         return self._call('ol_catalog_product.create',
-            [data.pop('product_type'),data.pop('attrset'),data.pop('sku'),data])
+            [product_type, attr_set_id, sku, data])
 
     def read(self, id, storeview_id=None, attributes=None):
         """ Returns the information of a record
