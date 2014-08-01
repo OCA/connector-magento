@@ -373,32 +373,22 @@ class ProductAttributeExporter(MagentoExporter):
     def _after_export(self):
         """ Run the after export"""
         sess = self.session
-        attribute_location_obj = sess.pool.get('attribute.location')
-        magento_attribute_obj = sess.pool.get('magento.product.attribute')
-        magento_attribute_set_obj = sess.pool.get('magento.attribute.set')
-        attribute_set_adapter = self.get_connector_unit_for_model(
+        attr_binder = self.get_binder_for_model('magento.product.attribute')
+        attr_set_binder = self.get_binder_for_model('magento.attribute.set')
+        attr_set_adapter = self.get_connector_unit_for_model(
             GenericAdapter, 'magento.attribute.set')
-        attribute_id = self.binding_record.openerp_id.id
-        magento_attribute_id = magento_attribute_obj.browse(
-                    sess.cr, sess.uid,
-                    self.binding_record.id,context=sess.context).magento_id
-        attribute_location_ids = attribute_location_obj.search(
-            sess.cr, sess.uid,
-            [['attribute_id','=',attribute_id]], context=sess.context)
-        for attribute_location in attribute_location_ids:
-            attribute_set_id = attribute_location_obj.browse(
-                sess.cr, sess.uid,
-                attribute_location, context=sess.context).attribute_set_id.id
-            magento_attribute_set_ids = magento_attribute_set_obj.search(
-                sess.cr, sess.uid,
-                [['openerp_id','=',attribute_set_id]],
-                context=sess.context)
-            for magento_attribute_set in magento_attribute_set_ids:
-                magento_attribute_set_id = magento_attribute_set_obj.browse(
-                    sess.cr, sess.uid,
-                    magento_attribute_set,context=sess.context).magento_id
-                attribute_set_adapter.add_attribute(
-                    magento_attribute_set_id, magento_attribute_id)
+        
+        mag_attr_id = attr_binder.to_backend(self.binding_record.id)
+
+        attr_loc_ids = sess.search('attribute.location', [
+            ['attribute_id', '=', self.binding_record.openerp_id.id],
+            ])
+        
+        for attr_location in sess.browse('attribute.location', attr_loc_ids):
+            attr_set_id = attr_location.attribute_set_id.id
+            mag_attr_set_id = attr_set_binder.to_backend(attr_set_id, wrap=True)
+            if mag_attr_set_id:
+                attr_set_adapter.add_attribute(mag_attr_set_id, mag_attr_id)
 
 
 @magento
