@@ -27,7 +27,7 @@ import magento as magentolib
 from openerp.addons.connector.unit.backend_adapter import CRUDAdapter
 from openerp.addons.connector.exception import (NetworkRetryableError,
                                                 RetryableJobError)
-
+from datetime import datetime
 _logger = logging.getLogger(__name__)
 
 
@@ -151,7 +151,9 @@ class MagentoCRUDAdapter(CRUDAdapter):
 
     def _call(self, method, arguments):
         try:
+            start = datetime.now()
             custom_url = self.magento.use_custom_api_path
+            _logger.debug("Start calling Magento api %s", method)
             with magentolib.API(self.magento.location,
                                 self.magento.username,
                                 self.magento.password,
@@ -165,8 +167,9 @@ class MagentoCRUDAdapter(CRUDAdapter):
                 result = api.call(method, arguments)
                 # Uncomment to record requests/responses in ``recorder``
                 # record(method, arguments, result)
-                _logger.debug("api.call(%s, %s) returned %s",
-                              method, arguments, result)
+                _logger.debug("api.call(%s, %s) returned %s in %s seconds",
+                              method, arguments, result,
+                              (datetime.now() - start).seconds)
                 return result
         except (socket.gaierror, socket.error, socket.timeout) as err:
             raise NetworkRetryableError(
