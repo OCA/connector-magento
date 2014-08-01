@@ -98,3 +98,17 @@ def mock_urlopen_image():
         api_mock = mock.MagicMock()
         urlopen.return_value = MockResponseImage('')
         yield
+
+class MagentoHelper(object):
+
+    def __init__(self, cr, registry, model_name):
+        self.cr = cr
+        self.model = registry(model_name)
+
+    def get_next_id(self):
+        self.cr.execute("SELECT max(magento_id::int) FROM " + self.model._table)
+        result = self.cr.fetchone()
+        if result:
+            return int(result[0] or 0) + 1
+        else:
+            return 1
