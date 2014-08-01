@@ -217,14 +217,14 @@ class ProductProductExportMapper(ExportMapper):
                         result[magento_attribute.attribute_code] = \
                             option_binder.to_backend(option.id, wrap=True)
                     else:
-                        continue
+                        result[magento_attribute.attribute_code] = False
                 elif attribute.ttype == 'many2many':
                     options = record[attribute.name]
                     if options:
                         result[magento_attribute.attribute_code] = \
                             [option_binder.to_backend(option.id, wrap=True) for option in options]
                     else:
-                        continue
+                        result[magento_attribute.attribute_code] = False
                 else:
                     #TODO add support of lang
                     result[magento_attribute.attribute_code] = record[attribute.name]
