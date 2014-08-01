@@ -29,8 +29,10 @@ from openerp.addons.magentoerpconnect.unit.import_synchronizer import (
 from openerp.addons.connector.session import ConnectorSession
 import openerp.tests.common as common
 from .common import (mock_api,
-                     mock_urlopen_image)
+                     mock_urlopen_image,
+                     MagentoHelper)
 from .test_data import magento_base_responses
+
 
 DB = common.DB
 ADMIN_USER_ID = common.ADMIN_USER_ID
@@ -79,6 +81,8 @@ class SetUpMagentoBase(common.TransactionCase):
                  'days_before_cancel': 0,
                  'journal_id': journal_id})
 
+    def get_magento_helper(self, model_name):
+        return MagentoHelper(self.cr, self.registry, model_name)
 
 class TestBaseMagento(SetUpMagentoBase):
 
