@@ -128,7 +128,7 @@ class AttributeSetAdapter(GenericAdapter):
         """
         return self._call('%s.info' % self._magento_model, [int(id)])
 
-    def update(self, id, attribute_id):
+    def add_attribute(self, id, attribute_id):
         """ Add an existing attribute to an attribute set on the external system
         :rtype: boolean
         """
@@ -226,6 +226,19 @@ class MagentoProductAttribute(orm.Model):
     MAGENTO_HELP = "This field is a technical / configuration field for " \
                    "the attribute on Magento. \nPlease refer to the Magento " \
                    "documentation for details. "
+
+    #Automatically create the magento binding for each option
+    def create(self, cr, uid, vals, context=None):
+        mag_option_obj = self.pool['magento.attribute.option']
+        mag_attr_id = super(MagentoProductAttribute, self).\
+            create(cr, uid, vals, context=None)
+        mag_attr = self.browse(cr, uid, mag_attr_id, context=context)
+        for option in mag_attr.openerp_id.option_ids:
+            mag_option_obj.create(cr, uid, {
+                'openerp_id': option.id,
+                'backend_id': mag_attr.backend_id.id,
+                }, context=context)
+        return mag_attr_id
 
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
@@ -350,7 +363,7 @@ class ProductAttributeDeleteSynchronizer(MagentoDeleteSynchronizer):
 
 
 @magento
-class ProductAttributeExport(MagentoExporter):
+class ProductAttributeExporter(MagentoExporter):
     _model_name = ['magento.product.attribute']
 
     def _should_import(self):
@@ -360,33 +373,22 @@ class ProductAttributeExport(MagentoExporter):
     def _after_export(self):
         """ Run the after export"""
         sess = self.session
-        attribute_location_obj = sess.pool.get('attribute.location')
-        magento_attribute_obj = sess.pool.get('magento.product.attribute')
-        magento_attribute_set_obj = sess.pool.get('magento.attribute.set')
-        attribute_set_adapter = self.get_connector_unit_for_model(
+        attr_binder = self.get_binder_for_model('magento.product.attribute')
+        attr_set_binder = self.get_binder_for_model('magento.attribute.set')
+        attr_set_adapter = self.get_connector_unit_for_model(
             GenericAdapter, 'magento.attribute.set')
-        attribute_id = self.binding_record.openerp_id.id
-        magento_attribute_id = magento_attribute_obj.browse(
-                    sess.cr, sess.uid,
-                    self.binding_record.id,context=sess.context).magento_id
-        attribute_location_ids = attribute_location_obj.search(
-            sess.cr, sess.uid,
-            [['attribute_id','=',attribute_id]], context=sess.context)
-        for attribute_location in attribute_location_ids:
-            attribute_set_id = attribute_location_obj.browse(
-                sess.cr, sess.uid,
-                attribute_location, context=sess.context).attribute_set_id.id
-            magento_attribute_set_ids = magento_attribute_set_obj.search(
-                sess.cr, sess.uid,
-                [['openerp_id','=',attribute_set_id]],
-                context=sess.context)
-            for magento_attribute_set in magento_attribute_set_ids:
-                magento_attribute_set_id = magento_attribute_set_obj.browse(
-                    sess.cr, sess.uid,
-                    magento_attribute_set,context=sess.context).magento_id
-                attribute_set_adapter.update(
-                    magento_attribute_set_id, magento_attribute_id)
+        
+        mag_attr_id = attr_binder.to_backend(self.binding_record.id)
 
+        attr_loc_ids = sess.search('attribute.location', [
+            ['attribute_id', '=', self.binding_record.openerp_id.id],
+            ])
+        
+        for attr_location in sess.browse('attribute.location', attr_loc_ids):
+            attr_set_id = attr_location.attribute_set_id.id
+            mag_attr_set_id = attr_set_binder.to_backend(attr_set_id, wrap=True)
+            if mag_attr_set_id:
+                attr_set_adapter.add_attribute(mag_attr_set_id, mag_attr_id)
 
 
 @magento
@@ -436,6 +438,19 @@ class AttributeOption(orm.Model):
             string='Magento Bindings',),
     }
 
+    #Automatically create the magento binding for the option created
+    def create(self, cr, uid, vals, context=None):
+        option_id = super(AttributeOption, self).\
+            create(cr, uid, vals, context=None)
+        attr_obj = self.pool['attribute.attribute']
+        mag_option_obj = self.pool['magento.attribute.option']
+        attr = attr_obj.browse(cr, uid, vals['attribute_id'], context=context)
+        for binding in attr.magento_bind_ids:
+            mag_option_obj.create(cr, uid, {
+                'openerp_id': option_id,
+                'backend_id': binding.backend_id.id,
+                }, context=context)
+        return option_id
 
 class MagentoAttributeOption(orm.Model):
     _name = 'magento.attribute.option'
@@ -448,10 +463,14 @@ class MagentoAttributeOption(orm.Model):
             string='Attribute option',
             required=True,
             ondelete='cascade'),
-        'name': fields.char(
+        'magento_name': fields.char(
             'Name',
             size=64,
-            required=True),
+            translate=True,
+            help=("Fill thi field if you want to force the name of the option "
+                 "in Magento, if it's empty then the name of the option will "
+                 "be used")
+            ),
         'is_default': fields.boolean('Is default'),
     }
 
@@ -484,9 +503,18 @@ class AttributeOptionDeleteSynchronizer(MagentoDeleteSynchronizer):
 
 
 @magento
-class AttributeOptionExport(MagentoExporter):
+class AttributeOptionExporter(MagentoExporter):
     _model_name = ['magento.attribute.option']
 
+    def _should_import(self):
+        "Attributes in magento doesn't retrieve infos on dates"
+        return False
+
+    def _export_dependencies(self):
+        """Export attribute if necessary"""
+        self._export_dependency(self.binding_record.openerp_id.attribute_id,
+                                    'magento.product.attribute',
+                                    exporter_class=ProductAttributeExporter)
 
 @magento
 class AttributeOptionExportMapper(ExportMapper):
@@ -496,18 +524,22 @@ class AttributeOptionExportMapper(ExportMapper):
 
     @mapping
     def label(self, record):
+        if record._context:
+            ctx = record._context.copy()
+        else:
+            ctx = {}
         storeview_ids = self.session.search(
                 'magento.storeview',
                 [('backend_id', '=', self.backend_record.id)])
         storeviews = self.session.browse('magento.storeview', storeview_ids)
         label = []
         for storeview in storeviews:
-            name = record.openerp_id.read(['name'], context={
-                'lang': storeview.lang_id.code,
-                })[0]['name']
+            ctx['lang'] = storeview.lang_id.code
+            record_translated = record.browse(context=ctx)[0]
             label.append({
                 'store_id': [storeview.magento_id],
-                'value': name
+                'value': record_translated.magento_name\
+                         or record_translated.openerp_id.name,
                 })
         return {'label': label}
 

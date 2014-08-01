@@ -66,9 +66,11 @@ class SetUpMagentoSynchronizedWithAttribute(SetUpMagentoSynchronized):
 
         mag_attr_set_model = self.registry('magento.attribute.set')
         attr_set_model = self.registry('attribute.set')
+        attr_group_model = self.registry('attribute.group')
         cr, uid = self.cr, self.uid
+        self.default_mag_attr_set_id = '9'
         mag_attr_set_ids = mag_attr_set_model.search(cr, uid, [
-            ('magento_id', '=', '9'),
+            ('magento_id', '=', self.default_mag_attr_set_id),
             ('backend_id', '=', self.backend_id),
             ])
         mag_attr_set_id = mag_attr_set_ids[0]
@@ -84,6 +86,11 @@ class SetUpMagentoSynchronizedWithAttribute(SetUpMagentoSynchronized):
             })
         self.default_attr_set_id = attr_set_id
 
+        self.attr_group_id = attr_group_model.create(
+            cr, uid, {
+                'attribute_set_id': attr_set_id,
+                'name': 'openerp',
+                }, {'force_model': 'product.template'})
 
 
 class TestExportAttribute(SetUpMagentoSynchronizedWithAttribute):
@@ -92,6 +99,42 @@ class TestExportAttribute(SetUpMagentoSynchronizedWithAttribute):
     The data returned by Magento are those created for the
     demo version of Magento on a standard 1.7 version.
     """
+
+    def add_attribute(self, attribute_type, name, code):
+        cr = self.cr
+        uid = self.uid
+        mag_attr_model = self.registry('magento.product.attribute')
+        field_model = self.registry('ir.model.fields')
+        attr_model = self.registry('attribute.attribute')
+
+        existing_field_ids = field_model.search(cr, uid, [
+            ('name', 'ilike', code),
+            ])
+        # Each time we run the test on the same database
+        # OpenERP will commit the attribute, as the code have to be uniq
+        # we need to change the code depending of the existing data
+        max_offset = 0
+        for existing_field in field_model.browse(cr, uid, existing_field_ids):
+            offset = int(existing_field.name.replace(code, '').strip('_') or 0)
+            if offset > max_offset:
+                max_offset = offset
+        max_offset += 1
+        code = "%s_%s" % (code, max_offset)
+
+        attr_id = attr_model.create(cr, uid, {
+            'field_description': name,
+            'name': code,
+            'attribute_type': attribute_type,
+            }, {'force_model': 'product.template'})
+
+        mag_attr_id = mag_attr_model.create(cr, uid, {
+            'frontend_label': name,
+            'attribute_code': code,
+            'openerp_id': attr_id,
+            'backend_id': self.backend_id,
+            })
+
+        return attr_id, mag_attr_id, code
 
     def test_20_export_attribute_set(self):
         """ Test export of attribute set"""
@@ -119,6 +162,136 @@ class TestExportAttribute(SetUpMagentoSynchronizedWithAttribute):
             self.assertEqual(len(calls_done), 1)
 
             method, (data, skeleton_id) = calls_done[0]
-            print data
             self.assertEqual(method, 'product_attribute_set.create')
             self.assertEqual(skeleton_id, '9')
+
+
+    def test_30_export_attribute_char(self):
+        response = {
+            'product_attribute.create':
+                self.get_magento_helper('magento.product.attribute').get_next_id,
+        }
+        with mock_api(response, key_func=lambda m, a: m) as calls_done:
+            attr_id, bind_attr_id, code = self.add_attribute(
+                'char', 'My Test Char', 'x_test_char')
+   
+            export_record(self.session, 'magento.product.attribute',
+                          bind_attr_id)
+
+            self.assertEqual(len(calls_done), 1)
+            method, (data,) = calls_done[0]
+            self.assertEqual(method, 'product_attribute.create')
+            self.assertEqual(data['attribute_code'], code)
+            self.assertEqual(data['frontend_input'], 'text')
+
+    def test_40_export_attribute_char_linked_to_an_attribute_set(self):
+        response = {
+            'product_attribute.create':
+                self.get_magento_helper('magento.product.attribute').get_next_id,
+            'product_attribute_set.attributeAdd': True,
+        }
+        attr_binder = self.get_binder('magento.product.attribute')
+        with mock_api(response, key_func=lambda m, a: m) as calls_done:
+            attr_id, bind_attr_id, code = self.add_attribute(
+                'char', 'My Test Char', 'x_test_char')
+            self.registry('attribute.location').create(self.cr, self.uid, {
+                'attribute_id': attr_id,
+                'attribute_group_id': self.attr_group_id,
+                })
+
+            export_record(self.session, 'magento.product.attribute',
+                          bind_attr_id)
+            self.assertEqual(len(calls_done), 2)
+            method, (data,) = calls_done[0]
+            self.assertEqual(method, 'product_attribute.create')
+
+            method, (mag_attr_id, mag_attr_set_id) = calls_done[1]
+            self.assertEqual(method, 'product_attribute_set.attributeAdd')
+            self.assertEqual(mag_attr_set_id, self.default_mag_attr_set_id)
+            expected_mag_attr_id = attr_binder.to_backend(bind_attr_id)
+            self.assertEqual(mag_attr_id, expected_mag_attr_id)
+
+
+    def test_50_autobind_attribute_option(self):
+        option_model = self.registry('attribute.option')
+        binding_option_model = self.registry('magento.attribute.option')
+        response = {
+            'product_attribute.create':
+                self.get_magento_helper('magento.product.attribute').get_next_id,
+        }
+        with mock_api(response, key_func=lambda m, a: m) as calls_done:
+            attr_id, bind_attr_id, code = self.add_attribute(
+                'select', 'My Test Select', 'x_test_select')
+            option_id = option_model.create(self.cr, self.uid, {
+                'attribute_id': attr_id,
+                'name': 'My Option',
+                })
+            option = option_model.browse(self.cr, self.uid, option_id)
+            self.assertEqual(len(option.magento_bind_ids), 1)
+
+    def test_60_export_attribute_option(self):
+        option_model = self.registry('attribute.option')
+        binding_option_model = self.registry('magento.attribute.option')
+        response = {
+            'product_attribute.create':
+                self.get_magento_helper('magento.product.attribute').get_next_id,
+            'oerp_product_attribute.addOption':
+                self.get_magento_helper('magento.attribute.option').get_next_id
+        }
+        attr_binder = self.get_binder('magento.product.attribute')
+        with mock_api(response, key_func=lambda m, a: m) as calls_done:
+            attr_id, bind_attr_id, code = self.add_attribute(
+                'select', 'My Test Select', 'x_test_select')
+            option_id = option_model.create(self.cr, self.uid, {
+                'attribute_id': attr_id,
+                'name': 'My Option',
+                })
+
+            option = option_model.browse(self.cr, self.uid, option_id)
+
+            export_record(self.session, 'magento.product.attribute',
+                          bind_attr_id)
+ 
+            export_record(self.session, 'magento.attribute.option',
+                          option.magento_bind_ids[0].id)
+
+            self.assertEqual(len(calls_done), 2)
+            method, (data,) = calls_done[0]
+            self.assertEqual(method, 'product_attribute.create')
+
+            method, (mag_attr_id, data) = calls_done[1]
+            self.assertEqual(method, 'oerp_product_attribute.addOption')
+            expected_mag_attr_id = attr_binder.to_backend(bind_attr_id)
+            self.assertEqual(mag_attr_id, expected_mag_attr_id)
+            self.assertEqual(data['label'][0]['value'], 'My Option')
+
+    def test_70_export_attribute_option_with_dependency(self):
+        option_model = self.registry('attribute.option')
+        binding_option_model = self.registry('magento.attribute.option')
+        response = {
+            'product_attribute.create':
+                self.get_magento_helper('magento.product.attribute').get_next_id,
+            'oerp_product_attribute.addOption':
+                self.get_magento_helper('magento.attribute.option').get_next_id
+        }
+        with mock_api(response, key_func=lambda m, a: m) as calls_done:
+            attr_id, bind_attr_id, code = self.add_attribute(
+                'select', 'My Test Select', 'x_test_select')
+            option_id = option_model.create(self.cr, self.uid, {
+                'attribute_id': attr_id,
+                'name': 'My Option',
+                })
+
+            option = option_model.browse(self.cr, self.uid, option_id)
+            export_record(self.session, 'magento.attribute.option',
+                          option.magento_bind_ids[0].id)
+            
+            self.assertEqual(len(calls_done), 2)
+            method, (data,) = calls_done[0]
+            self.assertEqual(method, 'product_attribute.create')
+            method, (mag_attr_id, data) = calls_done[1]
+            self.assertEqual(method, 'oerp_product_attribute.addOption')
+
+
+
+    #TODO add test with translation

@@ -21,6 +21,7 @@
 
 import test_attribute_synchronization
 import test_category_export
+import test_export_image
 
 fast_suite = [
 ]
@@ -28,4 +29,5 @@ fast_suite = [
 checks = [
     test_attribute_synchronization,
     test_category_export,
+    test_export_image,
 ]

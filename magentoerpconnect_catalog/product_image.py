@@ -2,8 +2,7 @@
 ##############################################################################
 #
 #    Copyright 2013
-#    Author: Guewen Baconnier - Camptocamp
-#            David Béal - Akretion
+#    Author: David Béal - Akretion
 #            Sébastien Beau - Akretion
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -23,8 +22,6 @@
 import mimetypes
 
 from openerp.osv import fields, orm
-#from openerp.tools.translate import _
-#from openerp.osv.osv import except_osv
 from openerp.addons.connector.unit.mapper import (mapping,
                                                   ExportMapper)
 from openerp.addons.magentoerpconnect.unit.binder import MagentoModelBinder
@@ -48,56 +45,6 @@ class MagentoImageBinder(MagentoModelBinder):
     ]
 
 
-class MagentoProductProduct(orm.Model):
-    _inherit = 'magento.product.product'
-
-    def _get_images(self, cr, uid, ids, field_names, arg, context=None):
-        res={}
-        for prd in self.browse(cr, uid, ids, context=context):
-            img_ids = self.pool['magento.product.image'].search(
-                cr, uid, [
-                    ('product_id', '=', prd.openerp_id.id),
-                    ('backend_id', '=', prd.backend_id.id), ], context=context)
-            res[prd.id] = img_ids
-        return res
-
-    def copy(self, cr, uid, id, default=None, context=None):
-        #take care about duplicate on one2many and function fields
-        #https://bugs.launchpad.net/openobject-server/+bug/705364
-        if default is None:
-            default = {}
-        default['magento_product_image_ids'] = None
-        return super(MagentoProductProduct, self).copy(cr, uid, id,
-                                                       default=default,
-                                                       context=context)
-    _columns = {
-        'magento_product_image_ids': fields.function(
-            _get_images,
-            type='one2many',
-            relation='magento.product.image',
-            string='Magento product images'),
-        'magento_product_storeview_ids': fields.one2many(
-            'magento.product.storeview',
-            'magento_product_id',
-            string='Magento storeview',),
-    }
-
-    def open_images(self, cr, uid, ids, context=None):
-        view_id = self.pool['ir.model.data'].get_object_reference(
-            cr, uid, 'magentoerpconnect_catalog',
-            'magento_product_img_form_view')[1]
-        return {
-            'name': 'Product images',
-            'view_type': 'form',
-            'view_mode': 'form',
-            'view_id': view_id,
-            'res_model': self._name,
-            'context': context,
-            'type': 'ir.actions.act_window',
-            'res_id': ids and ids[0] or False,
-        }
-
-
 class ProductImage(orm.Model):
     _inherit = 'product.image'
 
@@ -107,6 +54,20 @@ class ProductImage(orm.Model):
             'openerp_id',
             string='Magento bindings',),
     }
+
+    #Automatically create the magento binding for the image created
+    def create(self, cr, uid, vals, context=None):
+        image_id = super(ProductImage, self).\
+            create(cr, uid, vals, context=None)
+        mag_image_obj = self.pool['magento.product.image']
+        image = self.browse(cr, uid, image_id, context=context)
+        for binding in image.product_id.magento_bind_ids:
+            if binding.backend_id.auto_bind_image:
+                mag_image_obj.create(cr, uid, {
+                    'openerp_id': image_id,
+                    'backend_id': binding.backend_id.id,
+                    }, context=context)
+        return image_id
 
 
 class MagentoProductImage(orm.Model):
@@ -123,19 +84,6 @@ class MagentoProductImage(orm.Model):
             string='Image'),
     }
 
-    def _get_backend(self, cr, uid, context=None):
-        backend_id = False
-        backend_m = self.pool['magento.backend']
-        back_ids = backend_m.search(cr, uid, [], context=context)
-        if back_ids:
-            backend_id = backend_m.browse(
-                cr, uid, back_ids, context=context)[0].id
-        return backend_id
-
-    _defaults = {
-        'backend_id': _get_backend,
-    }
-
     _sql_constraints = [
         ('magento_uniq', 'unique(backend_id, magento_id)',
          "An image with the same ID on Magento already exists")
@@ -145,22 +93,20 @@ class MagentoProductImage(orm.Model):
 class ProductImageDeleteSynchronizer(MagentoDeleteSynchronizer):
     _model_name = ['magento.product.image']
 
-
 @magento
-class ProductImageExport(MagentoExporter):
+class ProductImageExporter(MagentoExporter):
     _model_name = ['magento.product.image']
 
     def _should_import(self):
         "Images in magento doesn't retrieve infos on dates"
         return False
 
-
 @magento
 class ProductImageExportMapper(ExportMapper):
     _model_name = 'magento.product.image'
 
     direct = [
-            ('label', 'label'),
+            ('name', 'label'),
             ('sequence', 'position'),
         ]
 
@@ -177,22 +123,25 @@ class ProductImageExportMapper(ExportMapper):
 
     @mapping
     def types(self, record):
-        return {'types': ['image', 'small_image', 'thumbnail']}
-    #    return {'types':
-    #            [x for x in ['image', 'small_image', 'thumbnail'] if record[x]]
-    #           }
+        product_obj = self.session.pool['product.product']
+        cr = self.session.cr
+        uid = self.session.uid
+        main_image_id = product_obj._get_main_image_id(
+            cr, uid, record.product_id.id)
+        if record.openerp_id.id == main_image_id:
+            return {'types': ['image', 'small_image', 'thumbnail']}
+        else:
+            return {'types': []}
 
     @mapping
     def file(self, record):
-        return {'file': {
-                'mime': mimetypes.guess_type(record.name + record.extension)[0],
-                'name': record.label,
-                'content': self.session.pool['image.image'].get_image(
-                    self.session.cr, self.session.uid,
-                    record.openerp_id.image_id.id,
-                    context=self.session.context),
-                }
+        return {
+            'file': {
+            'mime': mimetypes.guess_type(record.file_name)[0],
+            'name': record.name,
+            'content': record.image,
             }
+        }
 
 
 @magento
@@ -201,8 +150,6 @@ class ProductImageAdapter(GenericAdapter):
     _magento_model = 'catalog_product_attribute_media'
 
     def create(self, data, storeview_id=None):
-        #import pdb;pdb.set_trace()
-        print data
         return self._call('%s.create' % self._magento_model,
                           [data.pop('product'), data, storeview_id])
 
@@ -217,120 +164,3 @@ class ProductImageAdapter(GenericAdapter):
         image_id, external_product_id = id
         return self._call('%s.remove' % self._magento_model,
                           [external_product_id, image_id])
-
-
-class MagentoProductStoreview(orm.Model):
-    _name = 'magento.product.storeview'
-    _description = "Magento product storeview"
-    _inherits = {'magento.product.product': 'magento_product_id'}
-
-    _columns = {
-        'magento_product_id' : fields.many2one(
-            'magento.product.product',
-            required=True,
-            ondelete="cascade",
-            string='Image'),
-        'storeview_id': fields.many2one(
-            'magento.storeview',
-            required=True,
-            string='Storeview'),
-        'image': fields.many2one(
-            'magento.product.image',
-            'Base image',
-            help=MAGENTO_HELP),
-        'small_image': fields.many2one(
-            'magento.product.image',
-            'Small image',
-            help=MAGENTO_HELP),
-        'thumbnail': fields.many2one(
-            'magento.product.image',
-            'Thumbnail',
-            domain="[('backend_id', '=', 'backend_id')]",
-            help=MAGENTO_HELP),
-        'exclude_ids': fields.many2many(
-            'magento.product.image', 'product_id',
-            string='Exclude',
-            help=MAGENTO_HELP),
-    }
-
-
-@magento
-class ProductStoreviewExport(MagentoExporter):
-    _model_name = ['magento.product.storeview']
-
-#    TODO
-#    def _export_dependencies(self):
-
-    def _should_import(self):
-        "Images in magento doesn't retrieve infos on dates"
-        return False
-    #
-    #def _run(self, fields=None):
-    #    """ Flow of the synchronization, implemented in inherited classes"""
-    #    assert self.binding_id
-    #    assert self.binding_record
-    #
-    #
-    #    if not self.magento_id:
-    #        fields = None  # should be created with all the fields
-    #
-    #    if self._has_to_skip():
-    #        return
-    #
-    #     export the missing linked resources
-    #    self._export_dependencies()
-    #
-    #    self._map_data(fields=fields)
-    #
-    #    if self.magento_id:
-    #        record = self.mapper.data
-    #        if not record:
-    #            return _('Nothing to export.')
-    #         special check on data before export
-    #        self._validate_data(record)
-    #        self._update(record)
-    #    else:
-    #        record = self.mapper.data_for_create
-    #        if not record:
-    #            return _('Nothing to export.')
-    #         special check on data before export
-    #        self._validate_data(record)
-    #        self.magento_id = self._create(record)
-    #    return _('Record exported with ID %s on Magento.') % self.magento_id
-
-
-@magento
-class ProductStoreviewExportMapper(ExportMapper):
-    _model_name = 'magento.product.storeview'
-
-    direct = [
-        ('label', 'label'),
-        ('sequence', 'position'), ]
-
-    @mapping
-    def product(self, record):
-        return {'product': ''}
-
-
-#
-#@magento
-#class ProductStoreviewAdapter(GenericAdapter):
-#    _model_name = 'magento.product.storeview'
-#
-#    def update_image(self, product_id, data, storeview_id=None):
-#        #data = {'small', image_id, 'medium':image_id,...}
-#
-#        return self._call('catalog_product_attribute_media.update',
-#            [product_id, image_id, data, storeview_id])
-#
-
-
-
-#
-#@job
-#def export_record(session, model_name, binding_id, fields=None):
-#    """ Export a record on Magento """
-#    record = session.browse(model_name, binding_id)
-#    env = get_environment(session, model_name, record.backend_id.id)
-#    exporter = env.get_connector_unit(MagentoExporter)
-#    return exporter.run(binding_id, fields=fields)

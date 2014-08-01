@@ -47,4 +47,9 @@ class magento_backend(orm.Model):
             'Attribute set template',
             help="Attribute set ID basing on which the new attribute set "
             "will be created."),
+        'auto_bind_image': fields.boolean(
+            'Auto Bind Image',
+            help=("Tic that box if you want to automatically export all the"
+                  "image of a product without creating the binding manually")
+            ),
     }
