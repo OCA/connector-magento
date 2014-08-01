@@ -193,6 +193,10 @@ class ProductCategoryAdapter(GenericAdapter):
                           [parent_id, storeview_id])
         return filter_ids(tree)
 
+    def move(self, categ_id, parent_id, after_categ_id=None):
+        return self._call('%s.move' % self._magento_model,
+            [categ_id, parent_id, after_categ_id])
+
 
 @magento
 class ProductCategoryBatchImport(DelayedBatchImport):
