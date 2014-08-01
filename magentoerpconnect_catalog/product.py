@@ -35,6 +35,9 @@ from openerp.addons.connector.exception import MappingError
 from openerp.addons.magentoerpconnect.unit.export_synchronizer import (
     export_record
 )
+from openerp.addons.magentoerpconnect.exception import SkuAlreadyExistInBackend
+import logging
+_logger = logging.getLogger(__name__)
 
 
 class MagentoProductProduct(orm.Model):
@@ -65,6 +68,32 @@ class ProductProductDeleteSynchronizer(MagentoDeleteSynchronizer):
 class ProductProductExport(MagentoTranslationExporter):
     _model_name = ['magento.product.product']
 
+    # Force only one way
+    # Catalog is by default only
+    # edited on OpenERP/Odoo side
+    def _should_import(self):
+        return False
+
+    def _create(self, data):
+        """ Create the Magento record """
+        # special check on data before export
+        sku = data.pop('sku')
+        attr_set_id = data.pop('attrset')
+        product_type = data.pop('product_type')
+        self._validate_data(data)
+        try:
+            return self.backend_adapter.create(
+                product_type, attr_set_id, sku, data)
+        except SkuAlreadyExistInBackend, e:
+            _logger.warning(('Product %s already exist in Magento. '
+                            'Try to bind it') % sku)
+            record = self.backend_adapter.read_with_sku(sku)
+            mag_id = record['product_id']
+            self.backend_adapter.write(mag_id, data)
+            _logger.info(('Product %s have been binded with '
+                          'an existing product') % sku)
+            return mag_id
+
     def _export_dependencies(self):
         """ Export the dependencies for the product"""
         #TODO add export of category
@@ -91,7 +120,6 @@ class ProductProductExport(MagentoTranslationExporter):
                                                     'name': option.name,
                                                     }, context=ctx)
                             export_record(self.session, 'magento.attribute.option', binding_id)
-
 
 @magento
 class ProductProductExportMapper(ExportMapper):
