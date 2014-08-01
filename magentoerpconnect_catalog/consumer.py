@@ -86,7 +86,7 @@ def delay_export_all_bindings(session, model_name, record_id, vals=None):
 
 @on_record_unlink(model_names=[
         'magento.product.category',
-        'magento.product.product'
+        'magento.product.product',
         'magento.product.attribute',
         'magento.attribute.set',
         'magento.attribute.option',
