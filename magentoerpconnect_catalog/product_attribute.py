@@ -128,7 +128,7 @@ class AttributeSetAdapter(GenericAdapter):
         """
         return self._call('%s.info' % self._magento_model, [int(id)])
 
-    def update(self, id, attribute_id):
+    def add_attribute(self, id, attribute_id):
         """ Add an existing attribute to an attribute set on the external system
         :rtype: boolean
         """
@@ -363,7 +363,7 @@ class ProductAttributeDeleteSynchronizer(MagentoDeleteSynchronizer):
 
 
 @magento
-class ProductAttributeExport(MagentoExporter):
+class ProductAttributeExporter(MagentoExporter):
     _model_name = ['magento.product.attribute']
 
     def _should_import(self):
@@ -397,7 +397,7 @@ class ProductAttributeExport(MagentoExporter):
                 magento_attribute_set_id = magento_attribute_set_obj.browse(
                     sess.cr, sess.uid,
                     magento_attribute_set,context=sess.context).magento_id
-                attribute_set_adapter.update(
+                attribute_set_adapter.add_attribute(
                     magento_attribute_set_id, magento_attribute_id)
 
 
@@ -473,10 +473,14 @@ class MagentoAttributeOption(orm.Model):
             string='Attribute option',
             required=True,
             ondelete='cascade'),
-        'name': fields.char(
+        'magento_name': fields.char(
             'Name',
             size=64,
-            required=True),
+            translate=True,
+            help=("Fill thi field if you want to force the name of the option "
+                 "in Magento, if it's empty then the name of the option will "
+                 "be used")
+            ),
         'is_default': fields.boolean('Is default'),
     }
 
@@ -509,13 +513,18 @@ class AttributeOptionDeleteSynchronizer(MagentoDeleteSynchronizer):
 
 
 @magento
-class AttributeOptionExport(MagentoExporter):
+class AttributeOptionExporter(MagentoExporter):
     _model_name = ['magento.attribute.option']
 
     def _should_import(self):
         "Attributes in magento doesn't retrieve infos on dates"
         return False
 
+    def _export_dependencies(self):
+        """Export attribute if necessary"""
+        self._export_dependency(self.binding_record.openerp_id.attribute_id,
+                                    'magento.product.attribute',
+                                    exporter_class=ProductAttributeExporter)
 
 @magento
 class AttributeOptionExportMapper(ExportMapper):
@@ -525,18 +534,22 @@ class AttributeOptionExportMapper(ExportMapper):
 
     @mapping
     def label(self, record):
+        if record._context:
+            ctx = record._context.copy()
+        else:
+            ctx = {}
         storeview_ids = self.session.search(
                 'magento.storeview',
                 [('backend_id', '=', self.backend_record.id)])
         storeviews = self.session.browse('magento.storeview', storeview_ids)
         label = []
         for storeview in storeviews:
-            name = record.openerp_id.read(['name'], context={
-                'lang': storeview.lang_id.code,
-                })[0]['name']
+            ctx['lang'] = storeview.lang_id.code
+            record_translated = record.browse(context=ctx)[0]
             label.append({
                 'store_id': [storeview.magento_id],
-                'value': name
+                'value': record_translated.magento_name\
+                         or record_translated.openerp_id.name,
                 })
         return {'label': label}
 
