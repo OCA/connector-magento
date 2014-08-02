@@ -496,6 +496,10 @@ class AttributeOptionAdapter(GenericAdapter):
         return self._call('%s.addOption'% self._magento_model,
                           [data.pop('attribute'), data])
 
+    def write(self, attribute_id, option_id, data):
+        return self._call('%s.updateOption'% self._magento_model,
+                          [attribute_id, option_id, data])
+
 
 @magento
 class AttributeOptionDeleteSynchronizer(MagentoDeleteSynchronizer):
@@ -505,6 +509,12 @@ class AttributeOptionDeleteSynchronizer(MagentoDeleteSynchronizer):
 @magento
 class AttributeOptionExporter(MagentoExporter):
     _model_name = ['magento.attribute.option']
+
+     def _update(self, data):
+        """ Update an Magento record """
+        assert self.magento_id
+        attribute_id = data.pop('attribute')
+        self.backend_adapter.write(attribute_id, self.magento_id, data)
 
     def _should_import(self):
         "Attributes in magento doesn't retrieve infos on dates"
