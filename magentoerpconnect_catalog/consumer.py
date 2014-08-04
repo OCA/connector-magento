@@ -68,6 +68,8 @@ def delay_export(session, model_name, record_id, vals=None):
 @on_record_write(model_names=[
         'product.product',
         'product.category',
+        'attribute.attribute',
+        'attribute.option',
     ])
 def delay_export_all_bindings(session, model_name, record_id, vals=None):
     #fields = exclude_fields_from_synchro(model_name, fields)
