@@ -510,7 +510,7 @@ class AttributeOptionDeleteSynchronizer(MagentoDeleteSynchronizer):
 class AttributeOptionExporter(MagentoExporter):
     _model_name = ['magento.attribute.option']
 
-     def _update(self, data):
+    def _update(self, data):
         """ Update an Magento record """
         assert self.magento_id
         attribute_id = data.pop('attribute')
