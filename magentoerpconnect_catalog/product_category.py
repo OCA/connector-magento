@@ -153,6 +153,10 @@ class ProductCategoryDeleteSynchronizer(MagentoDeleteSynchronizer):
 class ProductCategoryExporter(MagentoTranslationExporter):
     _model_name = ['magento.product.category']
 
+    def _should_import(self):
+        """Product Category are only edited on OpenERP Side"""
+        return False
+
     @property
     def backend_adapter(self):
         get_unit = self.environment.get_connector_unit

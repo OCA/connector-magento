@@ -65,13 +65,11 @@ class ProductProductDeleteSynchronizer(MagentoDeleteSynchronizer):
 
 
 @magento
-class ProductProductExport(MagentoTranslationExporter):
+class ProductProductExporter(MagentoTranslationExporter):
     _model_name = ['magento.product.product']
 
-    # Force only one way
-    # Catalog is by default only
-    # edited on OpenERP/Odoo side
     def _should_import(self):
+        """Product are only edited on OpenERP Side"""
         return False
 
     def _create(self, data):
