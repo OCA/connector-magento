@@ -142,6 +142,12 @@ class ProductCategoryDeleteSynchronizer(MagentoDeleteSynchronizer):
     """ Product category deleter for Magento """
     _model_name = ['magento.product.category']
 
+    @property
+    def backend_adapter(self):
+        get_unit = self.environment.get_connector_unit
+        self._backend_adapter = get_unit(ProductCategoryAdapter)
+        return self._backend_adapter
+
 
 @magento
 class ProductCategoryExporter(MagentoTranslationExporter):
