@@ -106,15 +106,6 @@ class TestExportImage(SetUpImage):
     demo version of Magento on a standard 1.7 version.
     """
     
-    def get_magento_id(self):
-        cr = self.cr
-        cr.execute("SELECT max(magento_id::int) FROM magento_product_image")
-        result = cr.fetchone()
-        if result:
-            return int(result[0] or 0) + 1
-        else:
-            return 1
-
     def setUp(self):
         super(TestExportImage, self).setUp()
         self.active_autobind()
