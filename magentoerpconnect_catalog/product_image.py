@@ -135,6 +135,9 @@ class ProductImageExportMapper(ExportMapper):
 
     @mapping
     def file(self, record):
+        ctx = record._context.copy()
+        ctx['bin_base64'] = True
+        record = record.browse(context=ctx)[0]
         return {
             'file': {
             'mime': mimetypes.guess_type(record.file_name)[0],
