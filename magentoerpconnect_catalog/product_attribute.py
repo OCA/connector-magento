@@ -169,6 +169,10 @@ class AttributeSetDeleteSynchronizer(MagentoDeleteSynchronizer):
 class AttributeSetExport(MagentoExporter):
     _model_name = ['magento.attribute.set']
 
+    def _should_import(self):
+        """Attribute Set are only edited on OpenERP Side"""
+        return False
+
 
 @magento
 class AttributeSetExportMapper(ExportMapper):
