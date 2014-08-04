@@ -36,12 +36,22 @@ from openerp.addons.magentoerpconnect.unit.export_synchronizer import (
     export_record
 )
 from openerp.addons.magentoerpconnect.exception import SkuAlreadyExistInBackend
+import openerp.addons.magentoerpconnect.consumer as magentoerpconnect
+from openerp.addons.connector.event import on_record_write
+from openerp.tools.translate import _
 import logging
 _logger = logging.getLogger(__name__)
 
-
 class MagentoProductProduct(orm.Model):
     _inherit='magento.product.product'
+
+    _columns = {
+        'active': fields.boolean(
+            'Active',
+            help=("When a binding is unactivated, the product is delete from "
+            "Magento. This allow to remove product from Magento and so "
+            "to increase the perf on Magento side")),
+        }
 
     #Automatically create the magento binding for each image
     def create(self, cr, uid, vals, context=None):
@@ -56,6 +66,136 @@ class MagentoProductProduct(orm.Model):
                     'backend_id': mag_product.backend_id.id,
                     }, context=context)
         return mag_product_id
+
+    def write(self, cr, uid, ids, vals, context=None):
+        if vals.get('active') == True:
+            binding_ids = self.search(cr, uid, [
+                ('active', '=', False),
+                ], context=context)
+            if len(binding_ids) > 0:
+                raise orm.except_orm(
+                    _('User Error'),
+                    _('You can not reactivate the following binding ids: %s '
+                      'please add a new one instead') % binding_ids)
+        return super(MagentoProductProduct, self).\
+            write(cr, uid, ids, vals, context=context)
+
+    def unlink(self, cr, uid, ids, context=None):
+        synchronized_binding_ids = self.search(cr, uid, [
+            ('id', 'in', ids),
+            ('magento_id', '!=', False),
+            ], context=context)
+        if synchronized_binding_ids:
+            raise orm.except_orm(
+                _('User Error'),
+                _('This binding ids %s can not be remove as '
+                  'the field magento_id is not empty.\n'
+                  'Please unactivate it instead'))
+        return super(MagentoProductProduct, self).unlink(
+            cr, uid, ids, context=context)
+
+    _defaults = {
+        'active': True,
+        }
+
+
+class ProductProduct(orm.Model):
+    _inherit = 'product.product'
+
+    _columns = {
+        'magento_inactive_bind_ids': fields.one2many(
+            'magento.product.product',
+            'openerp_id',
+            domain=[('active', '=', False)],
+            readonly=True,
+            string='Magento Bindings',),
+    }
+
+    def _prepare_create_magento_auto_binding(self, cr, uid, product,
+                                             backend_id, context=None):
+        return {
+            'backend_id': backend_id,
+            'openerp_id': product.id,
+            'visibility': '4',
+            'status': '1',
+        }
+
+    def _get_magento_binding(self, cr, uid, product_id, backend_id, context=None):
+        binding_ids = self.pool['magento.product.product'].search(cr, uid, [
+            ('openerp_id', '=', product_id),
+            ('backend_id', '=', backend_id),
+            ], context=context)
+        if binding_ids:
+            return binding_ids[0]
+        else:
+            return None
+
+    def automatic_binding(self, cr, uid, ids, sale_ok, context=None):
+        backend_obj = self.pool['magento.backend']
+        mag_product_obj = self.pool['magento.product.product']
+        back_ids = backend_obj.search(cr, uid, [], context=context)
+        products = self.browse(cr, uid, ids, context=context)
+        for backend in backend_obj.browse(cr, uid, back_ids, context=context):
+            if backend.auto_bind_product:
+                for product in products:
+                    binding_id = self._get_magento_binding(
+                        cr, uid, product.id, backend.id, context=context)
+                    if not binding_id and sale_ok:
+                        vals = self._prepare_create_magento_auto_binding(
+                            cr, uid, product, backend.id, context=context)
+                        mag_product_obj.create(cr, uid, vals, context=context)
+                    else:
+                        mag_product_obj.write(cr, uid, binding_id, {
+                            'status': '1' if sale_ok else '2',
+                            }, context=context)
+                        
+    def write(self, cr, uid, ids, vals, context=None):
+        super(ProductProduct, self).write(cr, uid, ids, vals, context=context)
+        if vals.get('active', True) == False:
+            for product in self.browse(cr, uid, ids, context=context):
+                for bind in product.magento_bind_ids:
+                    bind.write({'active': False})
+        if 'sale_ok' in vals:
+            self.automatic_binding(cr, uid, ids, vals['sale_ok'], context=context)
+        return True
+
+    def create(self, cr, uid, vals, context=None):
+        product_id = super(ProductProduct, self).create(
+            cr, uid, vals, context=context)
+        product = self.browse(cr, uid, product_id, context=context)
+        if product.sale_ok:
+            self.automatic_binding(cr, uid, [product.id], True, context=context)
+        return product_id
+
+    def _check_uniq_magento_product(self, cr, uid, ids):
+        cr.execute("""SELECT openerp_id
+        FROM magento_product_product
+        WHERE active=True
+        GROUP BY backend_id, openerp_id
+        HAVING count(id) > 1""")
+        result = cr.fetchall()
+        if result:
+            raise orm.except_orm(
+                _('User Error'),
+                _('You can not have more than one active binding for '
+                  'a product. Here is the list of product ids with a '
+                  'duplicated binding : %s')
+                  % ", ".join([str(x[0]) for x in result]))
+        return True
+
+    _constraints = [(
+        _check_uniq_magento_product,
+        'Only one binding can be active',
+        ['backend_id', 'openerp_id', 'active'],
+        )]
+
+
+@on_record_write(model_names=[
+        'magento.product.product',
+    ])
+def delay_export(session, model_name, record_id, vals=None):
+    if vals.get('active', True) == False:
+        magentoerpconnect.delay_unlink(session, model_name, record_id)
 
 
 @magento
