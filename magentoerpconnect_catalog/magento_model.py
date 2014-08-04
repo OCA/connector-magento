@@ -52,4 +52,9 @@ class magento_backend(orm.Model):
             help=("Tic that box if you want to automatically export all the"
                   "image of a product without creating the binding manually")
             ),
+        'auto_bind_product': fields.boolean(
+            'Auto Bind Product',
+            help=("Tic that box if you want to automatically export the"
+                  "product when it's available for sell (sale_ok is tic)")
+            ),
     }
