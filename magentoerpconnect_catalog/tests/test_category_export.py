@@ -44,20 +44,12 @@ class TestExportCategory(SetUpMagentoSynchronized):
     The data returned by Magento are those created for the
     demo version of Magento on a standard 1.7 version.
     """
-    
-    def get_magento_id(self):
-        cr = self.cr
-        cr.execute("SELECT max(magento_id::int) FROM magento_product_category")
-        result = cr.fetchone()
-        if result:
-            return int(result[0]) + 1
-        else:
-            return 1
 
     def test_10_export_category(self):
         """ Test export of category"""
         response = {
-            'catalog_category.create': self.get_magento_id,
+            'catalog_category.create':
+                self.get_magento_helper('magento.product.category').get_next_id,
         }
         cr = self.cr
         uid = self.uid
@@ -79,7 +71,8 @@ class TestExportCategory(SetUpMagentoSynchronized):
     def test_20_export_category_with_image(self):
         """ Test export of category"""
         response = {
-            'catalog_category.create': self.get_magento_id,
+            'catalog_category.create':
+                self.get_magento_helper('magento.product.category').get_next_id,
             'ol_catalog_category_media.create': 'true',
         }
         cr = self.cr
@@ -118,7 +111,8 @@ class TestExportCategory(SetUpMagentoSynchronized):
     def test_30_export_category_with_openerp_parent_dependency(self):
         """ Test export of category"""
         response = {
-            'catalog_category.create': self.get_magento_id,
+            'catalog_category.create':
+                self.get_magento_helper('magento.product.category').get_next_id,
         }
         cr = self.cr
         uid = self.uid
