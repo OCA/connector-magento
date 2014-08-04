@@ -253,7 +253,7 @@ class ProductCategoryImageExporter(ExportSynchronizer):
         cr = self.session.cr
         uid = self.session.uid
         ctx = self.session.context.copy()
-        ctx['bin_base64_image'] = True
+        ctx['bin_base64'] = True
         categ = self.session.pool[self.model._name].\
             browse(cr, uid, binding_id, context=ctx)
         args = self._prepare_create(categ, image_field)
