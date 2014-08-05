@@ -33,6 +33,19 @@ from .connector import get_environment
 _MODEL_NAMES = ()
 _BIND_MODEL_NAMES = ()
 
+def _job_to_key(job):
+    return '%s-%s-%s-%s' % (
+        job.func_name,
+        ', '.join([repr(arg) for arg in job.args]),
+        job.company_id,
+        job.user_id,
+        )
+
+def _merge_job(existing_job, job):
+    for field in job.kwargs['fields']:
+        if not field in existing_job.kwargs['fields']:
+            existing_job.kwargs['fields'].append(field)
+    return existing_job
 
 @on_record_create(model_names=_BIND_MODEL_NAMES)
 @on_record_write(model_names=_BIND_MODEL_NAMES)
@@ -45,7 +58,9 @@ def delay_export(session, model_name, record_id, vals):
     if session.context.get('connector_no_export'):
         return
     fields = vals.keys()
-    export_record.delay(session, model_name, record_id, fields=fields)
+    export_record.delay(
+        session, model_name, record_id, fields=fields,
+        _job_to_key=_job_to_key, _merge_job=_merge_job)
 
 
 @on_record_write(model_names=_MODEL_NAMES)
@@ -62,8 +77,9 @@ def delay_export_all_bindings(session, model_name, record_id, vals):
                           record_id, context=session.context)
     fields = vals.keys()
     for binding in record.magento_bind_ids:
-        export_record.delay(session, binding._model._name, binding.id,
-                            fields=fields)
+        export_record.delay(
+            session, binding._model._name, binding.id, fields=fields,
+            _job_to_key=_job_to_key, _merge_job=_merge_job)
 
 
 @on_record_unlink(model_names=_BIND_MODEL_NAMES)
