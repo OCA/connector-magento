@@ -88,7 +88,7 @@ class MagentoSuperAttribute(orm.Model):
 
 
 @magento
-class ProductConfigurableExport(MagentoBaseExporter):
+class ProductConfigurableExporter(MagentoBaseExporter):
     _model_name = ['magento.product.product']
 
     def _should_import(self):
@@ -204,8 +204,8 @@ def export_product_configurable(session, model_name, record_id, fields=None):
     return configurable_exporter.run(record_id, fields)
 
 
-@magento(replacing=product.ProductProductExport)
-class ProductProductExport(product.ProductProductExport):
+@magento(replacing=product.ProductProductExporter)
+class ProductProductExporter(product.ProductProductExporter):
     _model_name = ['magento.product.product']
 
     def _should_import(self):
