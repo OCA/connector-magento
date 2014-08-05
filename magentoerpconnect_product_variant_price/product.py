@@ -48,8 +48,8 @@ class ProductPriceExportMapper(ProductProductExportMapper):
         return {'price': price}
 
 
-@magento(replacing=product.ProductConfigurableExport)
-class ProductConfigurablePriceExport(product.ProductConfigurableExport):
+@magento(replacing=product.ProductConfigurableExporter)
+class ProductConfigurablePriceExporter(product.ProductConfigurableExporter):
     _model_name = ['magento.product.product']
 
     def _after_export(self):
