@@ -68,7 +68,7 @@ class MagentoSuperAttributeExporter(MagentoExporter):
     def _should_import(self):
         return False
 
-    def _prepare_data(self, dim_value):
+    def _prepare_data(self, record, dim_value):
         binder = self.get_connector_unit_for_model(
                 MagentoAttributeBinder, 'magento.attribute.option')
         magento_id = binder.to_backend(dim_value.option_id.id, wrap=True)
@@ -98,7 +98,7 @@ class MagentoSuperAttributeExporter(MagentoExporter):
 
             data = []
             for dim_value in self.session.browse('dimension.value',dim_value_ids):
-                data.append(self._prepare_data(dim_value))
+                data.append(self._prepare_data(record, dim_value))
 
             super_attribute_adapter = self.get_connector_unit_for_model(
                 GenericAdapter, 'magento.super.attribute')
