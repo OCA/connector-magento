@@ -57,7 +57,7 @@ class MagentoProductProduct(orm.Model):
     def create(self, cr, uid, vals, context=None):
         mag_image_obj = self.pool['magento.product.image']
         mag_product_id = super(MagentoProductProduct, self).\
-            create(cr, uid, vals, context=None)
+            create(cr, uid, vals, context=context)
         mag_product = self.browse(cr, uid, mag_product_id, context=context)
         if mag_product.backend_id.auto_bind_image:
             for image in mag_product.image_ids:
@@ -229,7 +229,7 @@ class ProductProductExporter(MagentoTranslationExporter):
             mag_id = record['product_id']
             self.backend_adapter.write(mag_id, data)
             _logger.info(('Product %s have been binded with '
-                          'an existing product') % sku)
+                          'the existing product id: %s') % (sku, mag_id))
             return mag_id
 
     def _export_dependencies(self):
@@ -240,7 +240,8 @@ class ProductProductExporter(MagentoTranslationExporter):
         record = self.binding_record
         for group in record.attribute_group_ids:
             for attribute in group.attribute_ids:
-                attribute_ext_id = attribute_binder.to_backend(attribute.attribute_id.id, wrap=True)
+                attribute_ext_id = attribute_binder.to_backend(
+                    attribute.attribute_id.id, wrap=True)
                 if attribute_ext_id:
                     options = []
                     if attribute.ttype == 'many2one' and record[attribute.name]:
