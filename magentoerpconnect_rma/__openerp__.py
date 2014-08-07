@@ -43,7 +43,8 @@ Requirements:
  """,
  'data': [
     'magento_model_view.xml',
-    'claim_data.xml'
+    'ir_attachment_view.xml',
+    'claim_data.xml',
     ],
  'installable': True,
  'application': False,
