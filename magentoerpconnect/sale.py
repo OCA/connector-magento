@@ -26,10 +26,12 @@ import openerp.addons.decimal_precision as dp
 from openerp.osv import fields, orm
 from openerp.tools.translate import _
 from openerp.addons.connector.connector import ConnectorUnit
+from openerp.addons.connector.session import ConnectorSession
 from openerp.addons.connector.exception import (NothingToDoJob,
                                                 FailedJobError,
                                                 IDMissingInBackend)
 from openerp.addons.connector.queue.job import job
+from openerp.addons.connector.unit.synchronizer import ExportSynchronizer
 from openerp.addons.connector.unit.mapper import (mapping,
                                                   ImportMapper
                                                   )
@@ -50,17 +52,6 @@ from .connector import get_environment
 from .partner import PartnerImportMapper
 
 _logger = logging.getLogger(__name__)
-
-
-ORDER_STATUS_MAPPING = {  # XXX check if still needed
-    'manual': 'processing',
-    'progress': 'processing',
-    'shipping_except': 'complete',
-    'invoice_except': 'complete',
-    'done': 'complete',
-    'cancel': 'canceled',
-    'waiting_date': 'holded'
-}
 
 
 class magento_sale_order(orm.Model):
@@ -126,6 +117,23 @@ class sale_order(orm.Model):
             'magento.sale.order', 'openerp_id',
             string="Magento Bindings"),
     }
+
+    def write(self, cr, uid, ids, vals, context=None):
+        if not hasattr(ids, '__iter__'):
+            ids = [ids]
+
+        if vals.get('state') == 'cancel':
+            session = ConnectorSession(cr, uid, context=context)
+            for order in session.browse('sale.order', ids):
+                old_state = order.state
+                if old_state == 'cancel':
+                    continue  # skip if already canceled
+                for binding in order.magento_bind_ids:
+                    cancel_order_on_magento.delay(session,
+                                                  'magento.sale.order',
+                                                  binding.id)
+        return super(sale_order, self).write(cr, uid, ids, vals,
+                                             context=context)
 
     def copy_data(self, cr, uid, id, default=None, context=None):
         if default is None:
@@ -1080,3 +1088,36 @@ class SaleCommentAdapter(GenericAdapter):
     def create(self, order_increment, status, comment=None, notify=False):
         return self._call('sales_order.addComment',
                           [order_increment, status, comment, notify])
+
+
+@magento
+class CancelExporter(ExportSynchronizer):
+    _model_name = 'magento.sale.order'
+
+    def run(self, binding_id):
+        """ Cancel the sales order on Magento """
+        binding = self.session.browse(self.model._name, binding_id)
+        state = binding.state
+        if not state == 'cancel':
+            return _('Sales order has not been canceled')
+        magento_id = self.binder.to_backend(binding.id)
+        if not magento_id:
+            return _('Is not linked with a Magento sales order')
+        record = self.backend_adapter.read(magento_id)
+        if record['state'] == 'canceled':
+            return _('Sales order already canceled')
+        canceled = self.backend_adapter.cancel(magento_id)
+        if not canceled:
+            raise FailedJobError('Magento could not cancel sales order %s. '
+                                 'Please check manually.' % magento_id)
+        self.binder.bind(magento_id, binding_id)
+
+
+@job
+def cancel_order_on_magento(session, model_name, binding_id):
+    """ Cancel the sales order on Magento """
+    binding = session.browse(model_name, binding_id)
+    backend_id = binding.backend_id.id
+    env = get_environment(session, model_name, backend_id)
+    exporter = env.get_connector_unit(CancelExporter)
+    return exporter.run(binding_id)
