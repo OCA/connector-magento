@@ -81,7 +81,7 @@ class test_import_product_image(common.TransactionCase):
                           [file4, file3, file2, file1])
 
     def test_import_images_404(self):
-        """ When an image respond a 404 error, should skip and take the first valid """
+        """ An image responds a 404 error, skip and take the first valid """
         env = mock.MagicMock()
         env.get_connector_unit.return_value = ProductProductAdapter(env)
         importer = CatalogImageImporter(env)

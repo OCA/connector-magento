@@ -67,7 +67,8 @@ class res_partner(orm.Model):
     def _address_fields(self, cr, uid, context=None):
         """ Returns the list of address fields that are synced from the parent
         when the `use_parent_address` flag is set. """
-        fields = super(res_partner, self)._address_fields(cr, uid, context=context)
+        fields = super(res_partner, self)._address_fields(cr, uid,
+                                                          context=context)
         fields.append('company')
         return fields
 
@@ -220,7 +221,8 @@ class PartnerAdapter(GenericAdapter):
 
         if from_date is not None:
             # updated_at include the created records
-            filters['updated_at'] = {'from': from_date.strftime('%Y/%m/%d %H:%M:%S')}
+            str_from_date = from_date.strftime('%Y/%m/%d %H:%M:%S')
+            filters['updated_at'] = {'from': str_from_date}
         if magento_website_ids is not None:
             filters['website_id'] = {'in': magento_website_ids}
 
@@ -475,8 +477,9 @@ class BaseAddressImportMapper(ImportMapper):
     def country(self, record):
         if not record.get('country_id'):
             return
-        country_ids = self.session.search('res.country',
-                                          [('code', '=', record['country_id'])])
+        country_ids = self.session.search(
+            'res.country',
+            [('code', '=', record['country_id'])])
         if country_ids:
             return {'country_id': country_ids[0]}
 

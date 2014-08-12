@@ -89,9 +89,9 @@ class TestBaseMagento(SetUpMagentoBase):
             import_batch(self.session, 'magento.storeview', self.backend_id)
 
         website_model = self.registry('magento.website')
-        website_ids = website_model.search(self.cr,
-                                           self.uid,
-                                           [('backend_id', '=', self.backend_id)])
+        website_ids = website_model.search(
+            self.cr, self.uid,
+            [('backend_id', '=', self.backend_id)])
         self.assertEqual(len(website_ids), 2)
 
         store_model = self.registry('magento.store')
@@ -101,9 +101,9 @@ class TestBaseMagento(SetUpMagentoBase):
         self.assertEqual(len(store_ids), 2)
 
         storeview_model = self.registry('magento.storeview')
-        storeview_ids = storeview_model.search(self.cr,
-                                               self.uid,
-                                               [('backend_id', '=', self.backend_id)])
+        storeview_ids = storeview_model.search(
+            self.cr, self.uid,
+            [('backend_id', '=', self.backend_id)])
         self.assertEqual(len(storeview_ids), 4)
 
         # TODO; install & configure languages on storeviews
@@ -223,7 +223,7 @@ class TestImportMagento(SetUpMagentoSynchronized):
                               backend_id, 144)
 
     def test_30_import_sale_order(self):
-        """ Import a sale order: check """
+        """ Import sale order: check """
         backend_id = self.backend_id
         with mock_api(magento_base_responses):
             with mock_urlopen_image():
@@ -238,7 +238,7 @@ class TestImportMagento(SetUpMagentoSynchronized):
         self.assertEqual(len(order_ids), 1)
 
     def test_31_import_sale_order_no_website_id(self):
-        """ Import a sale order: website_id is missing (happens with magento...) """
+        """ Import sale order: website_id is missing, happens with magento """
         backend_id = self.backend_id
         with mock_api(magento_base_responses):
             with mock_urlopen_image():
@@ -253,7 +253,7 @@ class TestImportMagento(SetUpMagentoSynchronized):
         self.assertEqual(len(order_ids), 1)
 
     def test_32_import_sale_order_with_prefix(self):
-        """ Import a sale order with prefix """
+        """ Import sale order with prefix """
         backend_id = self.backend_id
         self.backend_model.write(self.cr, self.uid, self.backend_id,
                                  {'sale_prefix': 'EC'})
@@ -275,7 +275,7 @@ class TestImportMagento(SetUpMagentoSynchronized):
                                  {'sale_prefix': False})
 
     def test_33_import_sale_order_with_configurable(self):
-        """ Import a sale order with configurable product """
+        """ Import sale order with configurable product """
         backend_id = self.backend_id
         with mock_api(magento_base_responses):
             with mock_urlopen_image():
@@ -306,7 +306,7 @@ class TestImportMagento(SetUpMagentoSynchronized):
         self.assertEqual(price_unit, 41.0500)
 
     def test_34_import_sale_order_with_taxes_included(self):
-        """ Import a sale order with taxes included """
+        """ Import sale order with taxes included """
         backend_id = self.backend_id
         self.backend_model.write(self.cr, self.uid, self.backend_id,
                                  {'catalog_price_tax_included': True})
@@ -337,7 +337,7 @@ class TestImportMagento(SetUpMagentoSynchronized):
                                  {'catalog_price_tax_included': False})
 
     def test_35_import_sale_order_with_discount(self):
-        """ Import a sale order with discounts"""
+        """ Import sale order with discounts"""
         backend_id = self.backend_id
         self.backend_model.write(self.cr, self.uid, self.backend_id,
                                  {'catalog_price_tax_included': True})

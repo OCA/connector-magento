@@ -68,7 +68,7 @@ def add_checkpoint(session, model_name, record_id, backend_id):
     meaning it has to be reviewed by a user.
 
     :param session: current session
-    :type session: :py:class:`openerp.addons.connector.session.ConnectorSession`
+    :type session: :class:`openerp.addons.connector.session.ConnectorSession`
     :param model_name: name of the model of the record to be reviewed
     :type model_name: str
     :param record_id: ID of the record to be reviewed

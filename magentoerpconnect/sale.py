@@ -235,7 +235,8 @@ class SaleOrderAdapter(GenericAdapter):
         if filters is None:
             filters = {}
         if from_date is not None:
-            filters['created_at'] = {'gt': from_date.strftime('%Y/%m/%d %H:%M:%S')}
+            str_from_date = from_date.strftime('%Y/%m/%d %H:%M:%S')
+            filters['created_at'] = {'gt': str_from_date}
         if magento_storeview_ids is not None:
             filters['store_id'] = {'in': magento_storeview_ids}
 
@@ -346,7 +347,8 @@ class SaleImportRule(ConnectorUnit):
             raise FailedJobError(
                 "The configuration is missing for the Payment Method '%s'.\n\n"
                 "Resolution:\n"
-                "- Go to 'Sales > Configuration > Sales > Customer Payment Method\n"
+                "- Go to "
+                "'Sales > Configuration > Sales > Customer Payment Method\n"
                 "- Create a new Payment Method with name '%s'\n"
                 "-Eventually  link the Payment Method to an existing Workflow "
                 "Process or create a new one." % (payment_method,
@@ -520,7 +522,8 @@ class SaleOrderImport(MagentoImportSynchronizer):
         self._create_payment(binding_id)
         binding = self.session.browse(self.model._name, binding_id)
         if binding.magento_parent_id:
-            move_comment = self.environment.get_connector_unit(SaleOrderMoveComment)
+            move_comment = self.environment.get_connector_unit(
+                SaleOrderMoveComment)
             move_comment.move(binding)
 
     def _get_magento_data(self):
@@ -558,9 +561,10 @@ class SaleOrderImport(MagentoImportSynchronizer):
             oe_website_id = website_binder.to_openerp(record['website_id'])
 
             # search an existing partner with the same email
-            partner_ids = sess.search('magento.res.partner',
-                                      [('emailid', '=', record['customer_email']),
-                                       ('website_id', '=', oe_website_id)])
+            partner_ids = sess.search(
+                'magento.res.partner',
+                [('emailid', '=', record['customer_email']),
+                 ('website_id', '=', oe_website_id)])
 
             # if we have found one, we "fix" the record with the magento
             # customer id
@@ -627,13 +631,14 @@ class SaleOrderImport(MagentoImportSynchronizer):
         else:
 
             # we always update the customer when importing an order
-            importer = self.get_connector_unit_for_model(MagentoImportSynchronizer,
-                                                         'magento.res.partner')
+            importer = self.get_connector_unit_for_model(
+                MagentoImportSynchronizer, 'magento.res.partner')
             importer.run(record['customer_id'])
             partner_bind_id = partner_binder.to_openerp(record['customer_id'])
 
-        partner_id = sess.read('magento.res.partner',
-                               partner_bind_id, ['openerp_id'])['openerp_id'][0]
+        partner_id = sess.read(
+            'magento.res.partner',
+            partner_bind_id, ['openerp_id'])['openerp_id'][0]
 
         # Import of addresses. We just can't rely on the
         # ``customer_address_id`` field given by Magento, because it is
@@ -727,7 +732,10 @@ class SaleOrderImport(MagentoImportSynchronizer):
 
 @magento
 class SaleOrderCommentImportMapper(ImportMapper):
-    " Mapper for importing comments of sales orders. Does nothing in the base addons. "
+    """ Mapper for importing comments of sales orders.
+
+    Does nothing in the base addons.
+    """
     _model_name = 'magento.sale.order'
 
 
@@ -752,7 +760,8 @@ class SaleOrderImportMapper(ImportMapper):
         amount_excl = float(record.get('shipping_amount') or 0.0)
         if not (amount_incl or amount_excl):
             return values
-        line_builder = self.get_connector_unit_for_model(MagentoShippingLineBuilder)
+        line_builder = self.get_connector_unit_for_model(
+            MagentoShippingLineBuilder)
         if self.options.tax_include:
             discount = float(record.get('shipping_discount_amount') or 0.0)
             line_builder.price_unit = (amount_incl - discount)
@@ -774,7 +783,8 @@ class SaleOrderImportMapper(ImportMapper):
         amount_incl = float(record.get('cod_tax_amount') or 0.0)
         if not (amount_excl or amount_incl):
             return values
-        line_builder = self.get_connector_unit_for_model(MagentoCashOnDeliveryLineBuilder)
+        line_builder = self.get_connector_unit_for_model(
+            MagentoCashOnDeliveryLineBuilder)
         tax_include = self.options.tax_include
         line_builder.price_unit = amount_incl if tax_include else amount_excl
         line = (0, 0, line_builder.get_line())
@@ -786,7 +796,8 @@ class SaleOrderImportMapper(ImportMapper):
         if 'gift_cert_amount' not in record:
             return values
         amount = float(record['gift_cert_amount'])
-        line_builder = self.get_connector_unit_for_model(MagentoGiftOrderLineBuilder)
+        line_builder = self.get_connector_unit_for_model(
+            MagentoGiftOrderLineBuilder)
         line_builder.price_unit = amount
         if 'gift_cert_code' in record:
             line_builder.code = record['gift_cert_code']
@@ -814,7 +825,8 @@ class SaleOrderImportMapper(ImportMapper):
     def store_id(self, record):
         binder = self.get_binder_for_model('magento.storeview')
         storeview_id = binder.to_openerp(record['store_id'])
-        assert storeview_id is not None, 'cannot import sale orders from non existinge storeview'
+        assert storeview_id is not None, ('cannot import sale orders from '
+                                          'non existing storeview')
         storeview = self.session.browse('magento.storeview', storeview_id)
         shop_id = storeview.store_id.openerp_id.id
         return {'shop_id': shop_id}
@@ -830,8 +842,9 @@ class SaleOrderImportMapper(ImportMapper):
 
     @mapping
     def payment(self, record):
+        record_method = record['payment']['method']
         method_ids = self.session.search('payment.method',
-                                         [['name', '=', record['payment']['method']]])
+                                         [['name', '=', record_method]])
         assert method_ids, ("method %s should exist because the import fails "
                             "in SaleOrderImport._before_import when it is "
                             " missing" % record['payment']['method'])
@@ -852,9 +865,10 @@ class SaleOrderImportMapper(ImportMapper):
         else:
             fake_partner_id = session.search('res.partner', [])[0]
             model_data_obj = session.pool['ir.model.data']
-            model, product_id = model_data_obj.get_object_reference(session.cr, session.uid,
-                                                                    'connector_ecommerce',
-                                                                    'product_product_shipping')
+            model, product_id = model_data_obj.get_object_reference(
+                session.cr, session.uid,
+                'connector_ecommerce',
+                'product_product_shipping')
             carrier_id = session.create('delivery.carrier',
                                         {'partner_id': fake_partner_id,
                                          'product_id': product_id,
@@ -879,7 +893,8 @@ class SaleOrderImportMapper(ImportMapper):
 
     @mapping
     def sale_order_comment(self, record):
-        comment_mapper = self.environment.get_connector_unit(SaleOrderCommentImportMapper)
+        comment_mapper = self.environment.get_connector_unit(
+            SaleOrderCommentImportMapper)
         map_record = comment_mapper.map_record(record)
         return map_record.values()
 
@@ -935,14 +950,16 @@ class SaleOrderLineImportMapper(ImportMapper):
                     options_label.append('%s: %s [%s]' % (split_info[1],
                                                           split_info[3],
                                                           record['sku']))
-            result = {'notes':  "".join(options_label).replace('""', '\n').replace('"', '')}
+            notes = "".join(options_label).replace('""', '\n').replace('"', '')
+            result = {'notes': notes}
         return result
 
     @mapping
     def price(self, record):
         result = {}
         base_row_total = float(record['base_row_total'] or 0.)
-        base_row_total_incl_tax = float(record['base_row_total_incl_tax'] or 0.)
+        base_row_total_incl_tax = float(record['base_row_total_incl_tax'] or
+                                        0.)
         qty_ordered = float(record['qty_ordered'])
         if self.options.tax_include:
             result['price_unit'] = base_row_total_incl_tax / qty_ordered
@@ -971,7 +988,8 @@ def sale_order_import_batch(session, model_name, backend_id, filters=None):
     """ Prepare a batch import of records from Magento """
     if filters is None:
         filters = {}
-    assert 'magento_storeview_id' in filters, 'Missing information about Magento Storeview'
+    assert 'magento_storeview_id' in filters, ('Missing information about '
+                                               'Magento Storeview')
     env = get_environment(session, model_name, backend_id)
     importer = env.get_connector_unit(SaleOrderBatchImport)
     importer.run(filters)

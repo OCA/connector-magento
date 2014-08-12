@@ -80,7 +80,8 @@ class MagentoImportSynchronizer(ImportSynchronizer):
             return
         fmt = DEFAULT_SERVER_DATETIME_FORMAT
         sync_date = datetime.strptime(sync, fmt)
-        magento_date = datetime.strptime(self.magento_record['updated_at'], fmt)
+        magento_date = datetime.strptime(self.magento_record['updated_at'],
+                                         fmt)
         # if the last synchronization date is greater than the last
         # update in magento, we skip the import.
         # Important: at the beginning of the exporters flows, we have to
@@ -99,14 +100,17 @@ class MagentoImportSynchronizer(ImportSynchronizer):
         :param magento_id: id of the related binding to import
         :param binding_model: name of the binding model for the relation
         :type binding_model: str | unicode
-        :param importer_cls: :class:`openerp.addons.connector.connector.ConnectorUnit`
+        :param importer_cls: :class:`openerp.addons.connector.\
+                                     connector.ConnectorUnit`
                              class or parent class to use for the export.
                              By default: MagentoImportSynchronizer
-        :type importer_cls: :class:`openerp.addons.connector.connector.MetaConnectorUnit`
-        :param always: if True, the record is updated even if it already exists,
-                       note that it is still skipped if it has not been
-                       modified on Magento since the last update. When False,
-                       it will import it only when it does not yet exist.
+        :type importer_cls: :class:`openerp.addons.connector.\
+                                    connector.MetaConnectorUnit`
+        :param always: if True, the record is updated even if it already
+                       exists, note that it is still skipped if it has
+                       not been modified on Magento since the last
+                       update. When False, it will import it only when
+                       it does not yet exist.
         :type always: boolean
         """
         if not magento_id:

@@ -97,7 +97,8 @@ class magento_product_product(orm.Model):
             [('use_default', 'Use Default Config'),
              ('no', 'No Sell'),
              ('yes', 'Sell Quantity < 0'),
-             ('yes-and-notification', 'Sell Quantity < 0 and Use Customer Notification')],
+             ('yes-and-notification', 'Sell Quantity < 0 and '
+                                      'Use Customer Notification')],
             string='Manage Inventory Backorders',
             required=True),
         'magento_qty': fields.float('Computed Quantity',
@@ -198,7 +199,8 @@ class ProductProductAdapter(GenericAdapter):
         if filters is None:
             filters = {}
         if from_date is not None:
-            filters['updated_at'] = {'from': from_date.strftime('%Y/%m/%d %H:%M:%S')}
+            str_from_date = from_date.strftime('%Y/%m/%d %H:%M:%S')
+            filters['updated_at'] = {'from': str_from_date}
         # TODO add a search entry point on the Magento API
         return [int(row['product_id']) for row
                 in self._call('%s.list' % self._magento_model,

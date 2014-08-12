@@ -113,7 +113,8 @@ class ProductCategoryAdapter(GenericAdapter):
 
         if from_date is not None:
             # updated_at include the created records
-            filters['updated_at'] = {'from': from_date.strftime('%Y/%m/%d %H:%M:%S')}
+            str_from_date = from_date.strftime('%Y/%m/%d %H:%M:%S')
+            filters['updated_at'] = {'from': str_from_date}
 
         # the search method is on ol_customer instead of customer
         return self._call('oerp_catalog_category.search',

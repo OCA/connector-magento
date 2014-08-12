@@ -59,8 +59,8 @@ class MagentoModelBinder(MagentoBinder):
         """ Give the OpenERP ID for an external ID
 
         :param external_id: external ID for which we want the OpenERP ID
-        :param unwrap: if True, returns the openerp_id of the magento_xxxx record,
-                       else return the id (binding id) of that record
+        :param unwrap: if True, returns the openerp_id of the magento_xxxx
+                       record, else return the id (binding id) of that record
         :return: a record ID, depending on the value of unwrap,
                  or None if the external_id is not mapped
         :rtype: int

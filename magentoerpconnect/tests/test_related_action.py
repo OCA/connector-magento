@@ -78,15 +78,16 @@ class test_related_action_storage(common.TransactionCase):
         self.backend.refresh()
         stored = self._create_job(import_record, 'magento.product.product',
                                   self.backend.id, 123456)
+        url = 'http://www.example.com/admin/catalog_product/edit/id/123456'
         expected = {
             'type': 'ir.actions.act_url',
             'target': 'new',
-            'url': 'http://www.example.com/admin/catalog_product/edit/id/123456',
+            'url': url,
         }
         self.assertEquals(stored.open_related_action(), expected)
 
     def test_link_no_location(self):
-        """ Open a related action opening an url but admin location is not configured """
+        """ Related action opening an url, admin location is not configured """
         self.backend.write({'admin_location': False})
         self.backend.refresh()
         stored = self._create_job(import_record, 'magento.product.product',

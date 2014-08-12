@@ -131,7 +131,8 @@ class magento_backend(orm.Model):
             'Default Language',
             help="If a default language is selected, the records "
                  "will be imported in the translation of this language.\n"
-                 "Note that a similar configuration exists for each storeview."),
+                 "Note that a similar configuration exists "
+                 "for each storeview."),
         'default_category_id': fields.many2one(
             'product.category',
             string='Default Product Category',
@@ -139,8 +140,10 @@ class magento_backend(orm.Model):
                  'without a category will be linked to it.'),
 
         # add a field `auto_activate` -> activate a cron
-        'import_products_from_date': fields.datetime('Import products from date'),
-        'import_categories_from_date': fields.datetime('Import categories from date'),
+        'import_products_from_date': fields.datetime(
+            'Import products from date'),
+        'import_categories_from_date': fields.datetime(
+            'Import categories from date'),
         'catalog_price_tax_included': fields.boolean('Prices include tax'),
         'product_stock_field_id': fields.many2one(
             'ir.model.fields',
@@ -212,7 +215,8 @@ class magento_backend(orm.Model):
         storeview_ids = storeview_obj.search(cr, uid,
                                              [('backend_id', 'in', ids)],
                                              context=context)
-        storeviews = storeview_obj.browse(cr, uid, storeview_ids, context=context)
+        storeviews = storeview_obj.browse(cr, uid, storeview_ids,
+                                          context=context)
         for storeview in storeviews:
             storeview.import_sale_orders()
         return True
@@ -228,7 +232,8 @@ class magento_backend(orm.Model):
 
         return True
 
-    def _import_from_date(self, cr, uid, ids, model, from_date_field, context=None):
+    def _import_from_date(self, cr, uid, ids, model, from_date_field,
+                          context=None):
         if not hasattr(ids, '__iter__'):
             ids = [ids]
         self.check_magento_structure(cr, uid, ids, context=context)
@@ -285,11 +290,13 @@ class magento_backend(orm.Model):
         if ids:
             callback(cr, uid, ids, context=context)
 
-    def _scheduler_import_sale_orders(self, cr, uid, domain=None, context=None):
+    def _scheduler_import_sale_orders(self, cr, uid, domain=None,
+                                      context=None):
         self._magento_backend(cr, uid, self.import_sale_orders,
                               domain=domain, context=context)
 
-    def _scheduler_import_customer_groups(self, cr, uid, domain=None, context=None):
+    def _scheduler_import_customer_groups(self, cr, uid, domain=None,
+                                          context=None):
         self._magento_backend(cr, uid, self.import_customer_groups,
                               domain=domain, context=context)
 
@@ -297,15 +304,18 @@ class magento_backend(orm.Model):
         self._magento_backend(cr, uid, self.import_partners,
                               domain=domain, context=context)
 
-    def _scheduler_import_product_categories(self, cr, uid, domain=None, context=None):
+    def _scheduler_import_product_categories(self, cr, uid, domain=None,
+                                             context=None):
         self._magento_backend(cr, uid, self.import_product_categories,
                               domain=domain, context=context)
 
-    def _scheduler_import_product_product(self, cr, uid, domain=None, context=None):
+    def _scheduler_import_product_product(self, cr, uid, domain=None,
+                                          context=None):
         self._magento_backend(cr, uid, self.import_product_product,
                               domain=domain, context=context)
 
-    def _scheduler_update_product_stock_qty(self, cr, uid, domain=None, context=None):
+    def _scheduler_update_product_stock_qty(self, cr, uid,
+                                            domain=None, context=None):
         self._magento_backend(cr, uid, self.update_product_stock_qty,
                               domain=domain, context=context)
 
@@ -342,7 +352,8 @@ class magento_website(orm.Model):
             'website_id',
             string="Stores",
             readonly=True),
-        'import_partners_from_date': fields.datetime('Import partners from date'),
+        'import_partners_from_date': fields.datetime(
+            'Import partners from date'),
         'product_binding_ids': fields.many2many('magento.product.product',
                                                 string='Magento Products',
                                                 readonly=True),

@@ -110,7 +110,8 @@ class test_export_invoice(common.TransactionCase):
         # this is the consumer called when a 'magento.account.invoice'
         # is created, it delay a job to export the invoice
         patched = 'openerp.addons.magentoerpconnect.invoice.export_invoice'
-        with mock.patch(patched) as export_invoice:  # prevent to create the job
+        # mock.patch prevents to create the job
+        with mock.patch(patched) as export_invoice:
             self._invoice_open()
             assert len(self.invoice.magento_bind_ids) == 1
             export_invoice.delay.assert_called_with(
@@ -119,7 +120,8 @@ class test_export_invoice(common.TransactionCase):
                 self.invoice.magento_bind_ids[0].id)
 
         # pay and verify it is NOT called
-        with mock.patch(patched) as export_invoice:  # prevent to create the job
+        # mock.patch prevents to create the job
+        with mock.patch(patched) as export_invoice:
             self._pay_and_reconcile()
             self.assertEqual(self.invoice.state, 'paid')
             assert not export_invoice.delay.called
@@ -136,12 +138,14 @@ class test_export_invoice(common.TransactionCase):
         # this is the consumer called when a 'magento.account.invoice'
         # is created, it delay a job to export the invoice
         patched = 'openerp.addons.magentoerpconnect.invoice.export_invoice'
-        with mock.patch(patched) as export_invoice:  # prevent to create the job
+        # mock.patch prevents to create the job
+        with mock.patch(patched) as export_invoice:
             self._invoice_open()
             assert not export_invoice.delay.called
 
         # pay and verify it is NOT called
-        with mock.patch(patched) as export_invoice:  # prevent to create the job
+        # mock.patch prevents to create the job
+        with mock.patch(patched) as export_invoice:
             self._pay_and_reconcile()
             self.assertEqual(self.invoice.state, 'paid')
             assert len(self.invoice.magento_bind_ids) == 1
@@ -164,7 +168,8 @@ class test_export_invoice(common.TransactionCase):
         # this is the consumer called when a 'magento.account.invoice'
         # is created, it delay a job to export the invoice
         patched = 'openerp.addons.magentoerpconnect.invoice.export_invoice'
-        with mock.patch(patched) as export_invoice:  # prevent to create the job
+        # mock.patch prevents to create the job
+        with mock.patch(patched) as export_invoice:
             self._invoice_open()
 
             assert len(self.invoice.magento_bind_ids) == 1
@@ -173,7 +178,8 @@ class test_export_invoice(common.TransactionCase):
                 self.invoice.magento_bind_ids[0].id)
 
         # pay and verify it is NOT called
-        with mock.patch(patched) as export_invoice:  # prevent to create the job
+        # mock.patch prevents to create the job
+        with mock.patch(patched) as export_invoice:
             self._pay_and_reconcile()
             self.assertEqual(self.invoice.state, 'paid')
             assert not export_invoice.delay.called
@@ -193,12 +199,14 @@ class test_export_invoice(common.TransactionCase):
         # this is the consumer called when a 'magento.account.invoice'
         # is created, it delay a job to export the invoice
         patched = 'openerp.addons.magentoerpconnect.invoice.export_invoice'
-        with mock.patch(patched) as export_invoice:  # prevent to create the job
+        # mock.patch prevents to create the job
+        with mock.patch(patched) as export_invoice:
             self._invoice_open()
             assert not export_invoice.delay.called
 
         # pay and verify it is NOT called
-        with mock.patch(patched) as export_invoice:  # prevent to create the job
+        # mock.patch prevents to create the job
+        with mock.patch(patched) as export_invoice:
             self._pay_and_reconcile()
             self.assertEqual(self.invoice.state, 'paid')
             assert len(self.invoice.magento_bind_ids) == 1
