@@ -42,7 +42,6 @@ class TestSaleOrder(SetUpMagentoSynchronized):
                               'magento.sale.order',
                               backend_id, 900000691)
         MagentoOrder = self.registry('magento.sale.order')
-        MagentoLine = self.registry('magento.sale.order.line')
         SaleOrder = self.registry('sale.order')
         mag_order_ids = MagentoOrder.search(self.cr,
                                             self.uid,

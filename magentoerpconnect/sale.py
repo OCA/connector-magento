@@ -137,7 +137,8 @@ class sale_order(orm.Model):
 
     def copy_quotation(self, cr, uid, ids, context=None):
         if isinstance(ids, (tuple, list)):
-            assert len(ids) == 1, "1 ID expected, got %s" % ids
+            assert len(ids) == 1, ("1 ID expected, "
+                                   "got the following list %s" % (ids,))
         if context is None:
             context = {}
         else:
@@ -226,7 +227,7 @@ class sale_order_line(orm.Model):
 
     def create(self, cr, uid, vals, context=None):
         if context is None:
-            context= {}
+            context = {}
 
         old_line_id = None
         if context.get('__copy_from_quotation'):
@@ -255,7 +256,7 @@ class sale_order_line(orm.Model):
         if default is None:
             default = {}
         if context is None:
-            context= {}
+            context = {}
 
         default['magento_bind_ids'] = False
         data = super(sale_order_line, self).copy_data(cr, uid, id,
