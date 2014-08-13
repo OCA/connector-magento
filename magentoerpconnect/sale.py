@@ -53,6 +53,16 @@ from .partner import PartnerImportMapper
 
 _logger = logging.getLogger(__name__)
 
+ORDER_STATUS_MAPPING = {  # used in magentoerpconnect_order_comment
+    'manual': 'processing',
+    'progress': 'processing',
+    'shipping_except': 'processing',
+    'invoice_except': 'processing',
+    'done': 'complete',
+    'cancel': 'canceled',
+    'waiting_date': 'holded'
+}
+
 
 class magento_sale_order(orm.Model):
     _name = 'magento.sale.order'
@@ -122,6 +132,8 @@ class sale_order(orm.Model):
         if not hasattr(ids, '__iter__'):
             ids = [ids]
 
+        # cancel sales order on Magento (do not export the other
+        # state changes, Magento handles them itself)
         if vals.get('state') == 'cancel':
             session = ConnectorSession(cr, uid, context=context)
             for order in session.browse('sale.order', ids):
@@ -129,9 +141,14 @@ class sale_order(orm.Model):
                 if old_state == 'cancel':
                     continue  # skip if already canceled
                 for binding in order.magento_bind_ids:
-                    cancel_order_on_magento.delay(session,
-                                                  'magento.sale.order',
-                                                  binding.id)
+                    export_state_change.delay(
+                        session,
+                        'magento.sale.order',
+                        binding.id,
+                        # so if the state changes afterwards,
+                        # it won't be exported
+                        allowed_states=['cancel']
+                    )
         return super(sale_order, self).write(cr, uid, ids, vals,
                                              context=context)
 
@@ -335,6 +352,10 @@ class SaleOrderAdapter(GenericAdapter):
 
     def get_parent(self, id):
         return self._call('%s.get_parent' % self._magento_model, [id])
+
+    def add_comment(self, id, status, comment=None, notify=False):
+        return self._call('%s.addComment' % self._magento_model,
+                          [id, status, comment, notify])
 
 
 @magento
@@ -1085,39 +1106,64 @@ def sale_order_import_batch(session, model_name, backend_id, filters=None):
 class SaleCommentAdapter(GenericAdapter):
     _model_name = 'magento.sale.comment'
 
+    # TODO should be in the magento.sale.order adapter
     def create(self, order_increment, status, comment=None, notify=False):
         return self._call('sales_order.addComment',
                           [order_increment, status, comment, notify])
 
 
 @magento
-class CancelExporter(ExportSynchronizer):
+class StateExporter(ExportSynchronizer):
     _model_name = 'magento.sale.order'
 
-    def run(self, binding_id):
-        """ Cancel the sales order on Magento """
+    def run(self, binding_id, allowed_states=None, comment=None, notify=False):
+        """ Change the status of the sales order on Magento.
+
+        It adds a comment on Magento with a status.
+        Sales orders on Magento have a state and a status.
+        The state is related to the sale workflow, and the status can be
+        modified liberaly.  We change only the status because Magento
+        handle the state itself.
+
+        When a sales order is modified, if we used the ``sales_order.cancel``
+        API method, we would not be able to revert the cancellation.  When
+        we send ``cancel`` as a status change with a new comment, we are still
+        able to change the status again and to create shipments and invoices
+        because the state is still ``new`` or ``processing``.
+
+        :param binding_id: ID of the binding record of the sales order
+        :param allowed_states: list of OpenERP states that are allowed
+                               for export. If empty, it will export any
+                               state.
+        :param comment: Comment to display on Magento for the state change
+        :param notify: When True, Magento will send an email with the
+                       comment
+        """
         binding = self.session.browse(self.model._name, binding_id)
         state = binding.state
-        if not state == 'cancel':
-            return _('Sales order has not been canceled')
+        if allowed_state and state not in allowed_states:
+            return _('State %s is not exported.') % state
         magento_id = self.binder.to_backend(binding.id)
         if not magento_id:
-            return _('Is not linked with a Magento sales order')
+            return _('Sale is not linked with a Magento sales order')
+        magento_state = ORDER_STATUS_MAPPING[state]
         record = self.backend_adapter.read(magento_id)
-        if record['state'] == 'canceled':
-            return _('Sales order already canceled')
-        canceled = self.backend_adapter.cancel(magento_id)
-        if not canceled:
-            raise FailedJobError('Magento could not cancel sales order %s. '
-                                 'Please check manually.' % magento_id)
+        if record['state'] == magento_state:
+            return _('Magento sales order is already '
+                     'in state %s') % magento_state
+        self.backend_adapter.add_comment(magento_id, magento_state,
+                                         comment=comment,
+                                         notify=notify)
         self.binder.bind(magento_id, binding_id)
 
 
 @job
-def cancel_order_on_magento(session, model_name, binding_id):
-    """ Cancel the sales order on Magento """
+def export_state_change(session, model_name, binding_id, allowed_states=None,
+                        comment=None, notify=None):
+    """ Change state of a sales order on Magento """
     binding = session.browse(model_name, binding_id)
     backend_id = binding.backend_id.id
     env = get_environment(session, model_name, backend_id)
-    exporter = env.get_connector_unit(CancelExporter)
-    return exporter.run(binding_id)
+    exporter = env.get_connector_unit(StateExporter)
+    return exporter.run(binding_id, allowed_states=allowed_states,
+                        comment=comment, notify=notify)
