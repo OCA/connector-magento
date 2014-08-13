@@ -78,7 +78,8 @@ class TestSaleOrder(SetUpMagentoSynchronized):
             called.assert_called_with(mock.ANY,
                                       'magento.sale.order',
                                       binding.id,
-                                      allowed_states=['cancel'])
+                                      allowed_states=['cancel'],
+                                      description=mock.ANY)
 
     def test_cancel_export(self):
         """ Export the cancel state """
@@ -134,7 +135,8 @@ class TestSaleOrder(SetUpMagentoSynchronized):
             called = mock_export_state_change.delay
             called.assert_called_with(mock.ANY,
                                       'magento.sale.order',
-                                      binding.id)
+                                      binding.id,
+                                      description=mock.ANY)
 
     def test_copy_quotation_export_state(self):
         """ Export a new state on new copy from canceled order """

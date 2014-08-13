@@ -148,8 +148,9 @@ class sale_order(orm.Model):
                         binding.id,
                         # so if the state changes afterwards,
                         # it won't be exported
-                        allowed_states=['cancel']
-                    )
+                        allowed_states=['cancel'],
+                        description="Cancel sales order %s" %
+                                    binding.magento_id)
         return super(sale_order, self).write(cr, uid, ids, vals,
                                              context=context)
 
@@ -183,14 +184,15 @@ class sale_order(orm.Model):
                           {'openerp_id': new_id},
                           context=context)
         session = ConnectorSession(cr, uid, context=context)
-        for binding_id in binding_ids:
+        for binding in binding_obj.browse(cr, uid, binding_ids,
+                                          context=context):
             # the sales' status on Magento is likely 'canceled'
             # so we will export the new status (pending, processing, ...)
             export_state_change.delay(
                 session,
                 'magento.sale.order',
-                binding_id
-            )
+                binding.id,
+                description="Reopen sales order %s" % binding.magento_id)
         return result
 
 
