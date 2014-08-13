@@ -152,7 +152,12 @@ class MagentoCRUDAdapter(CRUDAdapter):
             with magentolib.API(self.magento.location,
                                 self.magento.username,
                                 self.magento.password,
-                                full_url=custom_url) as api:
+                                full_url=custom_url) as api:                
+                # If magento is used with PHP version >= 5.4, then we have to remove all
+                # trailing None values
+                if isinstance(arguments, list):
+                    while arguments and arguments[-1] is None:
+                        arguments.pop()
                 result = api.call(method, arguments)
                 # Uncomment to record requests/responses in ``recorder``
                 # record(method, arguments, result)
