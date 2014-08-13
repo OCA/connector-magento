@@ -54,6 +54,7 @@ from .partner import PartnerImportMapper
 _logger = logging.getLogger(__name__)
 
 ORDER_STATUS_MAPPING = {  # used in magentoerpconnect_order_comment
+    'draft': 'pending',
     'manual': 'processing',
     'progress': 'processing',
     'shipping_except': 'processing',
@@ -181,6 +182,15 @@ class sale_order(orm.Model):
         binding_obj.write(cr, uid, binding_ids,
                           {'openerp_id': new_id},
                           context=context)
+        session = ConnectorSession(cr, uid, context=context)
+        for binding_id in binding_ids:
+            # the sales' status on Magento is likely 'canceled'
+            # so we will export the new status (pending, processing, ...)
+            export_state_change.delay(
+                session,
+                'magento.sale.order',
+                binding_id
+            )
         return result
 
 
