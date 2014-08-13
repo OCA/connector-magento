@@ -1141,14 +1141,14 @@ class StateExporter(ExportSynchronizer):
         """
         binding = self.session.browse(self.model._name, binding_id)
         state = binding.state
-        if allowed_state and state not in allowed_states:
+        if allowed_states and state not in allowed_states:
             return _('State %s is not exported.') % state
         magento_id = self.binder.to_backend(binding.id)
         if not magento_id:
             return _('Sale is not linked with a Magento sales order')
         magento_state = ORDER_STATUS_MAPPING[state]
         record = self.backend_adapter.read(magento_id)
-        if record['state'] == magento_state:
+        if record['status'] == magento_state:
             return _('Magento sales order is already '
                      'in state %s') % magento_state
         self.backend_adapter.add_comment(magento_id, magento_state,
