@@ -1103,16 +1103,6 @@ def sale_order_import_batch(session, model_name, backend_id, filters=None):
 
 
 @magento
-class SaleCommentAdapter(GenericAdapter):
-    _model_name = 'magento.sale.comment'
-
-    # TODO should be in the magento.sale.order adapter
-    def create(self, order_increment, status, comment=None, notify=False):
-        return self._call('sales_order.addComment',
-                          [order_increment, status, comment, notify])
-
-
-@magento
 class StateExporter(ExportSynchronizer):
     _model_name = 'magento.sale.order'
 
