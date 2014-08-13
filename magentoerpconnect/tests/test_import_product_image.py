@@ -37,7 +37,15 @@ from openerp.addons.magentoerpconnect.product import (
 
 # simple square of 4 px filled with green in png, used for the product
 # images
-PNG_IMG_4PX_GREEN = "\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x04\x00\x00\x00\x04\x08\x02\x00\x00\x00&\x93\t)\x00\x00\x00\x01sRGB\x00\xae\xce\x1c\xe9\x00\x00\x00\tpHYs\x00\x00\x0b\x13\x00\x00\x0b\x13\x01\x00\x9a\x9c\x18\x00\x00\x00\x07tIME\x07\xdd\t\x02\t\x1d0\x13\th\x94\x00\x00\x00\x19tEXtComment\x00Created with GIMPW\x81\x0e\x17\x00\x00\x00\x12IDAT\x08\xd7cd\xf8\xcf\x00\x07L\x0c\x0c\xc4p\x002\xd2\x01\x07\xce\xee\xd0\xcf\x00\x00\x00\x00IEND\xaeB`\x82"  # noqa
+PNG_IMG_4PX_GREEN = ("\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x04"
+                     "\x00\x00\x00\x04\x08\x02\x00\x00\x00&\x93\t)\x00\x00"
+                     "\x00\x01sRGB\x00\xae\xce\x1c\xe9\x00\x00\x00\tpHYs"
+                     "\x00\x00\x0b\x13\x00\x00\x0b\x13\x01\x00\x9a\x9c\x18"
+                     "\x00\x00\x00\x07tIME\x07\xdd\t\x02\t\x1d0\x13\th\x94"
+                     "\x00\x00\x00\x19tEXtComment\x00Created with GIMPW\x81"
+                     "\x0e\x17\x00\x00\x00\x12IDAT\x08\xd7cd\xf8\xcf\x00\x07L"
+                     "\x0c\x0c\xc4p\x002\xd2\x01\x07\xce\xee\xd0\xcf\x00\x00"
+                     "\x00\x00IEND\xaeB`\x82")
 B64_PNG_IMG_4PX_GREEN = b64encode(PNG_IMG_4PX_GREEN)
 
 
@@ -85,11 +93,13 @@ class test_import_product_image(common.TransactionCase):
         env = mock.MagicMock()
         env.get_connector_unit.return_value = ProductProductAdapter(env)
         importer = CatalogImageImporter(env)
+        url_tee1 = ('http://localhost:9100/media/catalog/product'
+                    '/i/n/ink-eater-krylon-bombear-destroyed-tee-1.jpg')
+        url_tee2 = ('http://localhost:9100/media/catalog/product/'
+                    'i/n/ink-eater-krylon-bombear-destroyed-tee-2.jpg')
         with mock.patch('urllib2.urlopen') as urlopen:
             def image_url_response(url):
-                if url == 'http://localhost:9100/media/catalog/product/i/n/ink-eater-krylon-bombear-destroyed-tee-2.jpg':  # noqa
-                    raise urllib2.HTTPError(url, 404, '404', None, None)
-                elif url == 'http://localhost:9100/media/catalog/product/i/n/ink-eater-krylon-bombear-destroyed-tee-1.jpg':  # noqa
+                if url in (url_tee1, url_tee2):
                     raise urllib2.HTTPError(url, 404, '404', None, None)
                 else:
                     return MockResponseImage(PNG_IMG_4PX_GREEN)
@@ -107,12 +117,16 @@ class test_import_product_image(common.TransactionCase):
         env = mock.MagicMock()
         env.get_connector_unit.return_value = ProductProductAdapter(env)
         importer = CatalogImageImporter(env)
+        url_tee1 = ('http://localhost:9100/media/catalog/product'
+                    '/i/n/ink-eater-krylon-bombear-destroyed-tee-1.jpg')
+        url_tee2 = ('http://localhost:9100/media/catalog/product/'
+                    'i/n/ink-eater-krylon-bombear-destroyed-tee-2.jpg')
         with mock.patch('urllib2.urlopen') as urlopen:
             def image_url_response(url):
                 url = url.get_full_url()
-                if url == 'http://localhost:9100/media/catalog/product/i/n/ink-eater-krylon-bombear-destroyed-tee-2.jpg':  # noqa
+                if url == url_tee2:
                     raise urllib2.HTTPError(url, 404, '404', None, None)
-                elif url == 'http://localhost:9100/media/catalog/product/i/n/ink-eater-krylon-bombear-destroyed-tee-1.jpg':  # noqa
+                elif url == url_tee1:
                     raise urllib2.HTTPError(url, 403, '403', None, None)
                 else:
                     return MockResponseImage(PNG_IMG_4PX_GREEN)
