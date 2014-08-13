@@ -72,9 +72,9 @@ class TestSaleOrder(SetUpMagentoSynchronized):
         patched = 'openerp.addons.magentoerpconnect.sale.export_state_change'
         # patch the job so it won't be created and we will be able
         # to check if it is called
-        with mock.patch(patched) as export_state_change:
+        with mock.patch(patched) as mock_export_state_change:
             order.action_cancel()
-            called = export_state_change.delay
+            called = mock_export_state_change.delay
             called.assert_called_with(mock.ANY,
                                       'magento.sale.order',
                                       binding.id,
@@ -94,7 +94,7 @@ class TestSaleOrder(SetUpMagentoSynchronized):
         }
         with mock_api(response,
                       key_func=lambda method, args: method) as calls_done:
-            # call the job synchronously
+            # call the job synchronously, so we check the calls
             export_state_change(self.session, 'magento.sale.order',
                                 binding.id, allowed_states=['cancel'])
 
@@ -105,5 +105,75 @@ class TestSaleOrder(SetUpMagentoSynchronized):
             self.assertEqual(method, 'sales_order.addComment')
             self.assertEqual(magento_id, binding.magento_id)
             self.assertEqual(state, 'canceled')
+            self.assertFalse(comment)
+            self.assertFalse(notify)
+
+    def test_copy_quotation_delay_export_state(self):
+        """ Delay a state export on new copy from canceled order """
+        binding = self._import_sale_order(900000691)
+        order = binding.openerp_id
+
+        # cancel the order
+        patched = 'openerp.addons.magentoerpconnect.sale.export_state_change'
+        with mock.patch(patched):
+            # cancel the sales order, a job exporting the cancel status
+            # to Magento is normally created (muted here)
+            order.action_cancel()
+
+        SaleOrder = self.registry('sale.order')
+        patched = 'openerp.addons.magentoerpconnect.sale.export_state_change'
+        with mock.patch(patched) as mock_export_state_change:
+            # create a copy of quotation, the new order should be linked to
+            # the Magento sales order
+            action = SaleOrder.copy_quotation(self.cr, self.uid, [order.id])
+            new_id = action['res_id']
+            binding.refresh()
+            order = binding.openerp_id
+            self.assertEqual(order.id, new_id)
+
+            called = mock_export_state_change.delay
+            called.assert_called_with(mock.ANY,
+                                      'magento.sale.order',
+                                      binding.id)
+
+    def test_copy_quotation_export_state(self):
+        """ Export a new state on new copy from canceled order """
+        binding = self._import_sale_order(900000691)
+        order = binding.openerp_id
+        SaleOrder = self.registry('sale.order')
+
+        # cancel the order
+        patched = 'openerp.addons.magentoerpconnect.sale.export_state_change'
+        with mock.patch(patched):
+            # cancel the sales order, a job exporting the cancel status
+            # to Magento is normally created (muted here)
+            order.action_cancel()
+
+            # create a copy of quotation, the new order should be linked to
+            # the Magento sales order
+            action = SaleOrder.copy_quotation(self.cr, self.uid, [order.id])
+            new_id = action['res_id']
+            binding.refresh()
+            order = binding.openerp_id
+            self.assertEqual(order.id, new_id)
+
+        # we will check if the correct messages are sent to Magento
+        response = {
+            'sales_order.info': {'status': 'canceled'},
+            'sales_order.addComment': True,
+        }
+        with mock_api(response,
+                      key_func=lambda method, args: method) as calls_done:
+            # call the job synchronously, so we check the calls
+            export_state_change(self.session, 'magento.sale.order',
+                                binding.id)
+
+            # call 1: sales_order.info to read the status
+            # call 2: sales_order.addComment to add a status comment
+            self.assertEqual(len(calls_done), 2)
+            method, (magento_id, state, comment, notify) = calls_done[1]
+            self.assertEqual(method, 'sales_order.addComment')
+            self.assertEqual(magento_id, binding.magento_id)
+            self.assertEqual(state, 'pending')
             self.assertFalse(comment)
             self.assertFalse(notify)
