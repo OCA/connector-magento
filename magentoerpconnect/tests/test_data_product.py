@@ -33,8 +33,6 @@ and ``magentoerpconnect.unit.backend_adapter.output_recorder``
 
 This set of data contains examples of imported products.
 """
-import urllib2
-
 
 # a simple product with images
 simple_product_and_images = {
