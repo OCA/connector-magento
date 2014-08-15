@@ -19,7 +19,8 @@
 #
 ##############################################################################
 
-# flake8: noqa
+# flake8: noqa : ignore style in this file because it is a data file
+# only
 
 """
 Magento responses for calls done by the connector.
