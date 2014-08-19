@@ -10,7 +10,8 @@ class magento_backend(orm.Model):
 
         Can be inherited to add custom versions.
         """
-        versions = super(magento_backend, self)._select_versions(cr, uid, context=context)
+        versions = super(magento_backend, self)._select_versions(
+            cr, uid, context=context)
         versions.append(('1.7-myversion', '1.7 My Version'))
         return versions
 

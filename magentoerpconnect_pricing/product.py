@@ -65,8 +65,8 @@ class ProductPriceExporter(MagentoBaseExporter):
     def _get_price(self, pricelist_id):
         """ Return the raw OpenERP data for ``self.binding_id`` """
         if pricelist_id is None:
-            return False  # a False value will set the 'Use default value'
-                          # in Magento
+            # a False value will set the 'Use default value' in Magento
+            return False
         with self.session.change_context({'pricelist': pricelist_id}):
             return self.session.read(self.model._name,
                                      self.binding_id,

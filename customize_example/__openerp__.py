@@ -38,5 +38,4 @@ Example of customizations:
  'data': [],
  'installable': True,
  'application': False,
-}
-
+ }

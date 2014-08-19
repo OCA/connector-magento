@@ -47,5 +47,4 @@ Extension for **Magento Connector**, add management of the product's catalog:
  'data': [],
  'installable': True,
  'application': False,
-}
-
+ }

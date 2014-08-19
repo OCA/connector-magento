@@ -67,7 +67,8 @@ class res_partner(orm.Model):
     def _address_fields(self, cr, uid, context=None):
         """ Returns the list of address fields that are synced from the parent
         when the `use_parent_address` flag is set. """
-        fields = super(res_partner, self)._address_fields(cr, uid, context=context)
+        fields = super(res_partner, self)._address_fields(cr, uid,
+                                                          context=context)
         fields.append('company')
         return fields
 
@@ -82,30 +83,26 @@ class magento_res_partner(orm.Model):
 
     def _get_mag_partner_from_website(self, cr, uid, ids, context=None):
         mag_partner_obj = self.pool['magento.res.partner']
-        return mag_partner_obj.search(cr, uid,
-                                [('website_id', 'in', ids)],
-                                context=context)
+        return mag_partner_obj.search(
+            cr, uid, [('website_id', 'in', ids)], context=context)
 
     _columns = {
         'openerp_id': fields.many2one('res.partner',
                                       string='Partner',
                                       required=True,
                                       ondelete='cascade'),
-        'backend_id': fields.related('website_id', 'backend_id',
-                                     type='many2one',
-                                     relation='magento.backend',
-                                     string='Magento Backend',
-                                     store={
-                                        'magento.res.partner':
-                                        (lambda self, cr, uid, ids, c=None: ids,
-                                         ['website_id'],
-                                         10),
-                                        'magento.website':
-                                        (_get_mag_partner_from_website,
-                                         ['backend_id'],
-                                         20),
-                                        },
-                                     readonly=True),
+        'backend_id': fields.related(
+            'website_id', 'backend_id',
+            type='many2one',
+            relation='magento.backend',
+            string='Magento Backend',
+            store={
+                'magento.res.partner': (lambda self, cr, uid, ids, c=None: ids,
+                                        ['website_id'], 10),
+                'magento.website': (_get_mag_partner_from_website,
+                                    ['backend_id'], 20),
+            },
+            readonly=True),
         'website_id': fields.many2one('magento.website',
                                       string='Magento Website',
                                       required=True,
@@ -144,9 +141,8 @@ class magento_address(orm.Model):
 
     def _get_mag_address_from_partner(self, cr, uid, ids, context=None):
         mag_address_obj = self.pool['magento.address']
-        return mag_address_obj.search(cr, uid,
-                                [('magento_partner_id', 'in', ids)],
-                                context=context)
+        return mag_address_obj.search(
+            cr, uid, [('magento_partner_id', 'in', ids)], context=context)
 
     _columns = {
         'openerp_id': fields.many2one('res.partner',
@@ -163,37 +159,32 @@ class magento_address(orm.Model):
                                               string='Magento Partner',
                                               required=True,
                                               ondelete='cascade'),
-        'backend_id': fields.related('magento_partner_id', 'backend_id',
-                                     type='many2one',
-                                     relation='magento.backend',
-                                     string='Magento Backend',
-                                     store={
-                                        'magento.address':
-                                        (lambda self, cr, uid, ids, c=None: ids,
-                                         ['magento_partner_id'],
-                                         10),
-                                        'magento.res.partner':
-                                        (_get_mag_address_from_partner,
-                                         ['backend_id', 'website_id'],
-                                         20),
-                                        },
-                                     readonly=True),
-        'website_id': fields.related('magento_partner_id', 'website_id',
-                                     type='many2one',
-                                     relation='magento.website',
-                                     string='Magento Website',
-                                     store={
-                                        'magento.address':
-                                        (lambda self, cr, uid, ids, c=None: ids,
-                                         ['magento_partner_id'],
-                                         10),
-                                        'magento.res.partner':
-                                        (_get_mag_address_from_partner,
-                                         ['website_id'],
-                                         20),
-                                        },
-                                     readonly=True),
-        'is_magento_order_address': fields.boolean('Address from a Magento Order'),
+        'backend_id': fields.related(
+            'magento_partner_id', 'backend_id',
+            type='many2one',
+            relation='magento.backend',
+            string='Magento Backend',
+            store={
+                'magento.address': (lambda self, cr, uid, ids, c=None: ids,
+                                    ['magento_partner_id'], 10),
+                'magento.res.partner': (_get_mag_address_from_partner,
+                                        ['backend_id', 'website_id'], 20),
+            },
+            readonly=True),
+        'website_id': fields.related(
+            'magento_partner_id', 'website_id',
+            type='many2one',
+            relation='magento.website',
+            string='Magento Website',
+            store={
+                'magento.address': (lambda self, cr, uid, ids, c=None: ids,
+                                    ['magento_partner_id'], 10),
+                'magento.res.partner': (_get_mag_address_from_partner,
+                                        ['website_id'], 20),
+            },
+            readonly=True),
+        'is_magento_order_address': fields.boolean(
+            'Address from a Magento Order'),
     }
 
     _sql_constraints = [
@@ -230,7 +221,8 @@ class PartnerAdapter(GenericAdapter):
 
         if from_date is not None:
             # updated_at include the created records
-            filters['updated_at'] = {'from': from_date.strftime('%Y/%m/%d %H:%M:%S')}
+            str_from_date = from_date.strftime('%Y/%m/%d %H:%M:%S')
+            filters['updated_at'] = {'from': str_from_date}
         if magento_website_ids is not None:
             filters['website_id'] = {'in': magento_website_ids}
 
@@ -299,14 +291,14 @@ class PartnerImportMapper(ImportMapper):
     _model_name = 'magento.res.partner'
 
     direct = [
-            ('email', 'email'),
-            ('dob', 'birthday'),
-            ('created_at', 'created_at'),
-            ('updated_at', 'updated_at'),
-            ('email', 'emailid'),
-            ('taxvat', 'taxvat'),
-            ('group_id', 'group_id'),
-        ]
+        ('email', 'email'),
+        ('dob', 'birthday'),
+        ('created_at', 'created_at'),
+        ('updated_at', 'updated_at'),
+        ('email', 'emailid'),
+        ('taxvat', 'taxvat'),
+        ('group_id', 'group_id'),
+    ]
 
     @only_create
     @mapping
@@ -348,7 +340,6 @@ class PartnerImportMapper(ImportMapper):
     def lang(self, record):
         binder = self.get_binder_for_model('magento.storeview')
         binding_id = binder.to_openerp(record['store_id'])
-        lang = False
         if binding_id:
             storeview = self.session.browse('magento.storeview',
                                             binding_id)
@@ -486,8 +477,9 @@ class BaseAddressImportMapper(ImportMapper):
     def country(self, record):
         if not record.get('country_id'):
             return
-        country_ids = self.session.search('res.country',
-                                          [('code', '=', record['country_id'])])
+        country_ids = self.session.search(
+            'res.country',
+            [('code', '=', record['country_id'])])
         if country_ids:
             return {'country_id': country_ids[0]}
 
@@ -510,14 +502,14 @@ class BaseAddressImportMapper(ImportMapper):
         if prefix:
             title_ids = self.session.search('res.partner.title',
                                             [('domain', '=', 'contact'),
-                                            ('shortcut', 'ilike', prefix)])
+                                             ('shortcut', 'ilike', prefix)])
             if title_ids:
                 title_id = title_ids[0]
             else:
                 title_id = self.session.create('res.partner.title',
                                                {'domain': 'contact',
-                                               'shortcut': prefix,
-                                               'name': prefix})
+                                                'shortcut': prefix,
+                                                'name': prefix})
         return {'title': title_id}
 
 
@@ -653,7 +645,7 @@ def partner_import_batch(session, model_name, backend_id, filters=None):
     if filters is None:
         filters = {}
     assert 'magento_website_id' in filters, (
-            'Missing information about Magento Website')
+        'Missing information about Magento Website')
     env = get_environment(session, model_name, backend_id)
     importer = env.get_connector_unit(PartnerBatchImport)
     importer.run(filters=filters)

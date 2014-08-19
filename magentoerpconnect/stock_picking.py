@@ -170,9 +170,11 @@ class MagentoPickingExport(ExportSynchronizer):
             sale_line = line.sale_line_id
             if not sale_line.magento_bind_ids:
                 continue
-            magento_sale_line = next((line for line in sale_line.magento_bind_ids
-                                      if line.backend_id.id == picking.backend_id.id),
-                                     None)
+            magento_sale_line = next(
+                (line for line in sale_line.magento_bind_ids
+                 if line.backend_id.id == picking.backend_id.id),
+                None
+            )
             if not magento_sale_line:
                 continue
             item_id = magento_sale_line.magento_id
@@ -203,7 +205,8 @@ class MagentoPickingExport(ExportSynchronizer):
             lines_info = self._get_lines_info(picking)
             if not lines_info:
                 raise NothingToDoJob(_('Canceled: the delivery order does not '
-                                       'contain lines from the original sale order.'))
+                                       'contain lines from the original '
+                                       'sale order.'))
             args = self._get_args(picking, lines_info)
         else:
             raise ValueError("Wrong value for picking_method, authorized "
@@ -213,7 +216,8 @@ class MagentoPickingExport(ExportSynchronizer):
             magento_id = self.backend_adapter.create(*args)
         except xmlrpclib.Fault as err:
             # When the shipping is already created on Magento, it returns:
-            # <Fault 102: u"Impossible de faire l\'exp\xe9dition de la commande.">
+            # <Fault 102: u"Impossible de faire
+            # l\'exp\xe9dition de la commande.">
             if err.faultCode == 102:
                 raise NothingToDoJob('Canceled: the delivery order already '
                                      'exists on Magento (fault 102).')

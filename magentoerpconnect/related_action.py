@@ -27,7 +27,7 @@ When called on a job, they will return an action to the client.
 
 """
 
-import  functools
+import functools
 from openerp.osv import orm
 from openerp.tools.translate import _
 from openerp.addons.connector import related_action

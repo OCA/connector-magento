@@ -24,7 +24,7 @@ import logging
 from datetime import datetime, timedelta
 from openerp.osv import fields, orm
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
-import openerp.addons.connector as connector
+from openerp.tools.translate import _
 from openerp.addons.connector.session import ConnectorSession
 from openerp.addons.connector.connector import ConnectorUnit
 from openerp.addons.connector.unit.mapper import (mapping,
@@ -131,7 +131,8 @@ class magento_backend(orm.Model):
             'Default Language',
             help="If a default language is selected, the records "
                  "will be imported in the translation of this language.\n"
-                 "Note that a similar configuration exists for each storeview."),
+                 "Note that a similar configuration exists "
+                 "for each storeview."),
         'default_category_id': fields.many2one(
             'product.category',
             string='Default Product Category',
@@ -139,8 +140,10 @@ class magento_backend(orm.Model):
                  'without a category will be linked to it.'),
 
         # add a field `auto_activate` -> activate a cron
-        'import_products_from_date': fields.datetime('Import products from date'),
-        'import_categories_from_date': fields.datetime('Import categories from date'),
+        'import_products_from_date': fields.datetime(
+            'Import products from date'),
+        'import_categories_from_date': fields.datetime(
+            'Import categories from date'),
         'catalog_price_tax_included': fields.boolean('Prices include tax'),
         'product_stock_field_id': fields.many2one(
             'ir.model.fields',
@@ -212,7 +215,8 @@ class magento_backend(orm.Model):
         storeview_ids = storeview_obj.search(cr, uid,
                                              [('backend_id', 'in', ids)],
                                              context=context)
-        storeviews = storeview_obj.browse(cr, uid, storeview_ids, context=context)
+        storeviews = storeview_obj.browse(cr, uid, storeview_ids,
+                                          context=context)
         for storeview in storeviews:
             storeview.import_sale_orders()
         return True
@@ -228,7 +232,8 @@ class magento_backend(orm.Model):
 
         return True
 
-    def _import_from_date(self, cr, uid, ids, model, from_date_field, context=None):
+    def _import_from_date(self, cr, uid, ids, model, from_date_field,
+                          context=None):
         if not hasattr(ids, '__iter__'):
             ids = [ids]
         self.check_magento_structure(cr, uid, ids, context=context)
@@ -285,11 +290,13 @@ class magento_backend(orm.Model):
         if ids:
             callback(cr, uid, ids, context=context)
 
-    def _scheduler_import_sale_orders(self, cr, uid, domain=None, context=None):
+    def _scheduler_import_sale_orders(self, cr, uid, domain=None,
+                                      context=None):
         self._magento_backend(cr, uid, self.import_sale_orders,
                               domain=domain, context=context)
 
-    def _scheduler_import_customer_groups(self, cr, uid, domain=None, context=None):
+    def _scheduler_import_customer_groups(self, cr, uid, domain=None,
+                                          context=None):
         self._magento_backend(cr, uid, self.import_customer_groups,
                               domain=domain, context=context)
 
@@ -297,15 +304,18 @@ class magento_backend(orm.Model):
         self._magento_backend(cr, uid, self.import_partners,
                               domain=domain, context=context)
 
-    def _scheduler_import_product_categories(self, cr, uid, domain=None, context=None):
+    def _scheduler_import_product_categories(self, cr, uid, domain=None,
+                                             context=None):
         self._magento_backend(cr, uid, self.import_product_categories,
                               domain=domain, context=context)
 
-    def _scheduler_import_product_product(self, cr, uid, domain=None, context=None):
+    def _scheduler_import_product_product(self, cr, uid, domain=None,
+                                          context=None):
         self._magento_backend(cr, uid, self.import_product_product,
                               domain=domain, context=context)
 
-    def _scheduler_update_product_stock_qty(self, cr, uid, domain=None, context=None):
+    def _scheduler_update_product_stock_qty(self, cr, uid,
+                                            domain=None, context=None):
         self._magento_backend(cr, uid, self.update_product_stock_qty,
                               domain=domain, context=context)
 
@@ -342,7 +352,8 @@ class magento_website(orm.Model):
             'website_id',
             string="Stores",
             readonly=True),
-        'import_partners_from_date': fields.datetime('Import partners from date'),
+        'import_partners_from_date': fields.datetime(
+            'Import partners from date'),
         'product_binding_ids': fields.many2many('magento.product.product',
                                                 string='Magento Products',
                                                 readonly=True),
@@ -420,12 +431,11 @@ class magento_store(orm.Model):
             relation='magento.backend',
             string='Magento Backend',
             store={
-                'magento.store':
-                    (lambda self, cr, uid, ids, c=None:
-                        ids, ['website_id'], 10),
-                'magento.website':
-                    (_get_store_from_website, ['backend_id'], 20),
-                  },
+                'magento.store': (lambda self, cr, uid, ids, c=None: ids,
+                                  ['website_id'], 10),
+                'magento.website': (_get_store_from_website,
+                                    ['backend_id'], 20),
+            },
             readonly=True),
         'storeview_ids': fields.one2many(
             'magento.storeview',
@@ -447,9 +457,9 @@ class magento_store(orm.Model):
             required=True,
             help="Should the invoice be created in Magento "
                  "when it is validated or when it is paid in OpenERP?\n"
-                  "This only takes effect if the sales order's related "
-                  "payment method is not giving an option for this by "
-                  "itself. (See Payment Methods)"),
+                 "This only takes effect if the sales order's related "
+                 "payment method is not giving an option for this by "
+                 "itself. (See Payment Methods)"),
     }
 
     _defaults = {
@@ -535,8 +545,8 @@ class magento_storeview(orm.Model):
             backend_id = storeview.backend_id.id
             if storeview.import_orders_from_date:
                 from_date = datetime.strptime(
-                        storeview.import_orders_from_date,
-                        DEFAULT_SERVER_DATETIME_FORMAT)
+                    storeview.import_orders_from_date,
+                    DEFAULT_SERVER_DATETIME_FORMAT)
             else:
                 from_date = None
             sale_order_import_batch.delay(
@@ -595,10 +605,10 @@ class MetadataBatchImport(DirectBatchImport):
     (that's also a mean to rapidly check the connectivity with Magento).
     """
     _model_name = [
-            'magento.website',
-            'magento.store',
-            'magento.storeview',
-            ]
+        'magento.website',
+        'magento.store',
+        'magento.storeview',
+    ]
 
 
 @magento

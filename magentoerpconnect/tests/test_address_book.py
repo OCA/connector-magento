@@ -19,8 +19,6 @@
 #
 ##############################################################################
 
-import unittest2
-
 from openerp.addons.magentoerpconnect.unit.import_synchronizer import (
     import_batch,
     import_record)
@@ -181,20 +179,21 @@ class test_import_address_book(common.SingleTransactionCase):
         self.assertEqual(len(partner.child_ids), 2)
         self.assertEqual(len(partner.magento_bind_ids), 1)
         self.assertEqual(len(partner.magento_address_bind_ids), 0)
+
         def get_address(magento_id):
             address_ids = self.address_model.search(
                 cr, uid,
                 [('magento_id', '=', magento_id),
-                ('backend_id', '=', self.backend_id)])
+                 ('backend_id', '=', self.backend_id)])
             self.assertEqual(len(address_ids), 1)
             return self.address_model.browse(cr, uid, address_ids[0])
         # billing address
         address = get_address('9999257')
         self.assertEqual(address.type, 'invoice',
-                            msg="The billing address should be of "
-                                "type 'invoice'")
+                         msg="The billing address should be of "
+                             "type 'invoice'")
         # shipping address
         address = get_address('9999258')
         self.assertEqual(address.type, 'delivery',
-                            msg="The shipping address should be of "
-                                "type 'delivery'")
+                         msg="The shipping address should be of "
+                             "type 'delivery'")

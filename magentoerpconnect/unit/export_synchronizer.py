@@ -45,6 +45,7 @@ In addition to its export job, an exporter has to:
 
 """
 
+
 class MagentoBaseExporter(ExportSynchronizer):
     """ Base exporter for Magento """
 

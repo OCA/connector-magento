@@ -41,26 +41,26 @@ class MagentoModelBinder(MagentoBinder):
     fields belonging to the Magento instance.
     """
     _model_name = [
-            'magento.website',
-            'magento.store',
-            'magento.storeview',
-            'magento.res.partner',
-            'magento.address',
-            'magento.res.partner.category',
-            'magento.product.category',
-            'magento.product.product',
-            'magento.stock.picking.out',
-            'magento.sale.order',
-            'magento.sale.order.line',
-            'magento.account.invoice',
-        ]
+        'magento.website',
+        'magento.store',
+        'magento.storeview',
+        'magento.res.partner',
+        'magento.address',
+        'magento.res.partner.category',
+        'magento.product.category',
+        'magento.product.product',
+        'magento.stock.picking.out',
+        'magento.sale.order',
+        'magento.sale.order.line',
+        'magento.account.invoice',
+    ]
 
     def to_openerp(self, external_id, unwrap=False):
         """ Give the OpenERP ID for an external ID
 
         :param external_id: external ID for which we want the OpenERP ID
-        :param unwrap: if True, returns the openerp_id of the magento_xxxx record,
-                       else return the id (binding id) of that record
+        :param unwrap: if True, returns the openerp_id of the magento_xxxx
+                       record, else return the id (binding id) of that record
         :return: a record ID, depending on the value of unwrap,
                  or None if the external_id is not mapped
         :rtype: int

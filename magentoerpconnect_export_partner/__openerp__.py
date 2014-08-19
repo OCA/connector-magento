@@ -43,4 +43,4 @@ customer accounts.
           ],
  'installable': True,
  'application': False,
-}
+ }

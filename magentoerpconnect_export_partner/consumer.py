@@ -19,12 +19,10 @@
 #
 ##############################################################################
 
-from functools import wraps
 from openerp.addons.connector.event import (on_record_write,
                                             on_record_create,
                                             on_record_unlink
                                             )
-from openerp.addons.magentoerpconnect.unit.export_synchronizer import export_record
 import openerp.addons.magentoerpconnect.consumer as magentoerpconnect
 
 
