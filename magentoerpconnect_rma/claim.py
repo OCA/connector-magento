@@ -47,7 +47,7 @@ from openerp.addons.connector.event import on_record_create
 _logger = logging.getLogger(__name__)
 
 
-class crm_claim(orm.Model):
+class CrmClaim(orm.Model):
     _inherit = "crm.claim"
 
     _columns = {
@@ -68,7 +68,7 @@ class crm_claim(orm.Model):
     }
 
 
-class magento_crm_claim(orm.Model):
+class MagentoCrmClaim(orm.Model):
     _name = 'magento.crm.claim'
     _inherit = 'magento.binding'
     _description = 'Magento Claim'
@@ -99,7 +99,7 @@ class magento_crm_claim(orm.Model):
     ]
 
 
-class claim_line(orm.Model):
+class ClaimLine(orm.Model):
     _inherit = "claim.line"
 
     _columns = {
@@ -121,7 +121,7 @@ class claim_line(orm.Model):
     }
 
 
-class magento_claim_line(orm.Model):
+class MagentoClaimLine(orm.Model):
     _name = 'magento.claim.line'
     _inherit = 'magento.binding'
     _description = 'Magento Claim Line'
@@ -170,12 +170,12 @@ class magento_claim_line(orm.Model):
         descr = info[0]['description']
         vals['claim_id'] = claim_id[0]
         vals['claim_descr'] = descr
-        return super(magento_claim_line, self).create(cr, uid,
-                                                      vals,
-                                                      context=context)
+        return super(MagentoClaimLine, self).create(cr, uid,
+                                                    vals,
+                                                    context=context)
 
 
-class mail_message(orm.Model):
+class MailMessage(orm.Model):
     _inherit = "mail.message"
 
     _columns = {
@@ -190,7 +190,7 @@ class mail_message(orm.Model):
     }
 
 
-class magento_claim_comment(orm.Model):
+class MagentoClaimComment(orm.Model):
     _name = 'magento.claim.comment'
     _inherit = 'magento.binding'
     _description = 'Magento Claim Comment'
@@ -244,12 +244,12 @@ class magento_claim_comment(orm.Model):
         vals['res_id'] = claim_id
         vals['model'] = 'crm.claim'
         vals['subject'] = 'Sale Order ' + claim.ref.name
-        return super(magento_claim_comment, self).create(cr, uid,
-                                                         vals,
-                                                         context=context)
+        return super(MagentoClaimComment, self).create(cr, uid,
+                                                       vals,
+                                                       context=context)
 
 
-class ir_attachment(orm.Model):
+class IrAttachment(orm.Model):
     _inherit = "ir.attachment"
 
     _columns = {
@@ -269,7 +269,7 @@ class ir_attachment(orm.Model):
     }
 
 
-class magento_claim_attachment(orm.Model):
+class MagentoClaimAttachment(orm.Model):
     _name = 'magento.claim.attachment'
     _inherit = 'magento.binding'
     _description = 'Magento Claim Attachment'
@@ -319,9 +319,9 @@ class magento_claim_attachment(orm.Model):
         vals['claim_id'] = claim_id
         vals['res_id'] = claim_id
         vals['res_model'] = 'crm.claim'
-        return super(magento_claim_attachment, self).create(cr, uid,
-                                                            vals,
-                                                            context=context)
+        return super(MagentoClaimAttachment, self).create(cr, uid,
+                                                          vals,
+                                                          context=context)
 
 
 @magento
@@ -625,10 +625,11 @@ class CrmClaimImportMapper(ImportMapper):
               ('created_at', 'date'),
               ]
 
-    children = [('items', 'magento_claim_line_ids', 'magento.claim.line'),
-                ('comments', 'magento_claim_comment_ids', 'magento.claim.comment'),
-                ('attachments', 'magento_claim_attachment_ids', 'magento.claim.attachment'),
-                ]
+    children = [
+        ('items', 'magento_claim_line_ids', 'magento.claim.line'),
+        ('comments', 'magento_claim_comment_ids', 'magento.claim.comment'),
+        ('attachments', 'magento_claim_attachment_ids', 'magento.claim.attachment'),
+    ]
 
     def _map_child(self, map_record, from_attr, to_attr, model_name):
         if from_attr in map_record.source:
@@ -672,7 +673,7 @@ class CrmClaimImportMapper(ImportMapper):
 class ClaimLineImportMapper(ImportMapper):
     _model_name = 'magento.claim.line'
 
-    direct = [('qty', 'product_returned_quantity'),]
+    direct = [('qty', 'product_returned_quantity'), ]
 
     @mapping
     def name(self, record):
