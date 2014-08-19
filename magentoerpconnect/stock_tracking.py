@@ -22,7 +22,7 @@
 import logging
 from openerp.tools.translate import _
 from openerp.addons.connector.queue.job import job, related_action
-from openerp.addons.connector.exception import FailedJobError, NoExternalId
+from openerp.addons.connector.exception import FailedJobError
 from openerp.addons.connector.unit.synchronizer import ExportSynchronizer
 from openerp.addons.connector_ecommerce.event import on_tracking_number_added
 from .connector import get_environment
