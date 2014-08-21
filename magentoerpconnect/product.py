@@ -39,7 +39,9 @@ from openerp.addons.connector.exception import (MappingError,
 from openerp.addons.connector.unit.mapper import (mapping,
                                                   ImportMapper,
                                                   )
-from .unit.backend_adapter import GenericAdapter
+from .unit.backend_adapter import (GenericAdapter,
+                                   MAGENTO_DATETIME_FORMAT,
+                                   )
 from .unit.mapper import normalize_datetime
 from .unit.import_synchronizer import (DelayedBatchImport,
                                        MagentoImportSynchronizer,
@@ -198,7 +200,7 @@ class ProductProductAdapter(GenericAdapter):
         """
         if filters is None:
             filters = {}
-        dt_fmt = '%Y/%m/%d %H:%M:%S'
+        dt_fmt = MAGENTO_DATETIME_FORMAT
         if from_date is not None:
             filters.setdefault('updated_at', {})
             filters['updated_at']['from'] = from_date.strftime(dt_fmt)

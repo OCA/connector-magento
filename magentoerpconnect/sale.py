@@ -38,7 +38,9 @@ from openerp.addons.connector_ecommerce.unit.sale_order_onchange import (
 from openerp.addons.connector_ecommerce.sale import (ShippingLineBuilder,
                                                      CashOnDeliveryLineBuilder,
                                                      GiftOrderLineBuilder)
-from .unit.backend_adapter import GenericAdapter
+from .unit.backend_adapter import (GenericAdapter,
+                                   MAGENTO_DATETIME_FORMAT,
+                                   )
 from .unit.import_synchronizer import (DelayedBatchImport,
                                        MagentoImportSynchronizer
                                        )
@@ -235,7 +237,7 @@ class SaleOrderAdapter(GenericAdapter):
         """
         if filters is None:
             filters = {}
-        dt_fmt = '%Y/%m/%d %H:%M:%S'
+        dt_fmt = MAGENTO_DATETIME_FORMAT
         if from_date is not None:
             filters.setdefault('created_at', {})
             filters['created_at']['from'] = from_date.strftime(dt_fmt)

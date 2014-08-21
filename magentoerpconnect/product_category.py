@@ -28,7 +28,9 @@ from openerp.addons.connector.unit.mapper import (mapping,
 from openerp.addons.connector.exception import (IDMissingInBackend,
                                                 MappingError,
                                                 )
-from .unit.backend_adapter import GenericAdapter
+from .unit.backend_adapter import (GenericAdapter,
+                                   MAGENTO_DATETIME_FORMAT,
+                                   )
 from .unit.import_synchronizer import (DelayedBatchImport,
                                        MagentoImportSynchronizer,
                                        TranslationImporter,
@@ -111,7 +113,7 @@ class ProductCategoryAdapter(GenericAdapter):
         if filters is None:
             filters = {}
 
-        dt_fmt = '%Y/%m/%d %H:%M:%S'
+        dt_fmt = MAGENTO_DATETIME_FORMAT
         if from_date is not None:
             filters.setdefault('updated_at', {})
             # updated_at include the created records
