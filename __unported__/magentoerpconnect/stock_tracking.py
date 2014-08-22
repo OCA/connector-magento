@@ -61,7 +61,8 @@ class MagentoTrackingExport(ExportSynchronizer):
                                  "Resolution:\n"
                                  "* Add support of %(code)s in Magento\n"
                                  "* Or deactivate the export of tracking "
-                                 "numbers in the setup of the carrier %(name)s." %
+                                 "numbers in the setup of the carrier "
+                                 "%(name)s." %
                                  {'name': carrier.name,
                                   'allowed': allowed_carriers,
                                   'code': carrier.magento_carrier_code})

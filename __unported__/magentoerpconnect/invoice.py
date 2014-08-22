@@ -98,7 +98,8 @@ class AccountInvoiceAdapter(GenericAdapter):
             else:
                 raise
 
-    def create(self, order_increment_id, items, comment, email, include_comment):
+    def create(self, order_increment_id, items, comment, email,
+               include_comment):
         """ Create a record on the external system """
         return self._call('%s.create' % self._magento_model,
                           [order_increment_id, items, comment,
@@ -197,7 +198,7 @@ class MagentoInvoiceSynchronizer(ExportSynchronizer):
 
     def _get_existing_invoice(self, magento_order):
         invoices = self.backend_adapter.search_read(
-                order_id=magento_order.magento_order_id)
+            order_id=magento_order.magento_order_id)
         if not invoices:
             raise
         if len(invoices) > 1:
@@ -223,9 +224,11 @@ def invoice_create_bindings(session, model_name, record_id):
             # Check if invoice state matches configuration setting
             # for when to export an invoice
             magento_stores = magento_sale.shop_id.magento_bind_ids
-            magento_store = next((store for store in magento_stores
-                                  if store.backend_id.id == magento_sale.backend_id.id),
-                                 None)
+            magento_store = next(
+                (store for store in magento_stores
+                 if store.backend_id.id == magento_sale.backend_id.id),
+                None
+            )
             assert magento_store
 
             payment_method = sale.payment_method_id

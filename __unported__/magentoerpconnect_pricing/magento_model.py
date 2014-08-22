@@ -76,7 +76,8 @@ class magento_backend(orm.Model):
     def write(self, cr, uid, ids, vals, context=None):
         if 'pricelist_id' in vals:
             self._update_default_prices(cr, uid, ids, context=context)
-        return super(magento_backend, self).write(cr, uid, ids, vals, context=context)
+        return super(magento_backend, self).write(cr, uid, ids,
+                                                  vals, context=context)
 
 
 class magento_website(orm.Model):
@@ -130,4 +131,5 @@ class magento_website(orm.Model):
     def write(self, cr, uid, ids, vals, context=None):
         if 'pricelist_id' in vals:
             self.update_all_prices(cr, uid, ids, context=context)
-        return super(magento_website, self).write(cr, uid, ids, vals, context=context)
+        return super(magento_website, self).write(cr, uid, ids,
+                                                  vals, context=context)

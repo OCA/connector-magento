@@ -27,7 +27,7 @@
  'external_dependencies': {},
  'author': 'Connector Core Editors',
  'license': 'AGPL-3',
- 'website': 'https://launchpad.net/magentoerpconnect',
+ 'website': 'http://www.openerp-magento-connector.com',
  'description': """
 
 """,

@@ -26,10 +26,10 @@
  'license': 'AGPL-3',
  'category': 'Tools',
  'complexity': 'expert',
- 'depends' : ['base',
-              'server_environment',
-              'magentoerpconnect',
-              ],
+ 'depends': ['base',
+             'server_environment',
+             'magentoerpconnect',
+             ],
  'description': """
 Server environment for Magento Connector
 ========================================
@@ -55,4 +55,4 @@ Exemple of the section to put in the configuration file::
  'test': [],
  'installable': False,
  'auto_install': False,
-}
+ }

@@ -19,8 +19,6 @@
 #
 ##############################################################################
 
-from functools import wraps
-
 from openerp.addons.connector.event import (on_record_write,
                                             on_record_create,
                                             on_record_unlink

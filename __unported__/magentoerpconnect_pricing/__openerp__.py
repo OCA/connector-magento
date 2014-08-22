@@ -26,10 +26,10 @@
              ],
  'author': 'MagentoERPconnect Core Editors',
  'license': 'AGPL-3',
- 'website': 'https://launchpad.net/magentoerpconnect',
+ 'website': 'http://www.openerp-magento-connector.com',
  'description': """
 Magento Connector - Pricing
-===================================
+===========================
 
 Extension for **Magento Connector**.
 
@@ -42,4 +42,4 @@ are pushed to Magento.
           ],
  'installable': False,
  'application': False,
-}
+ }
