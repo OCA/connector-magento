@@ -237,10 +237,12 @@ class MagentoExporter(MagentoBaseExporter):
         :type relation: :py:class:`openerp.osv.orm.browse_record`
         :param binding_model: name of the binding model for the relation
         :type binding_model: str | unicode
-        :param exporter_cls: :py:class:`openerp.addons.connector.connector.ConnectorUnit`
+        :param exporter_cls: :py:class:`openerp.addons.connector\
+                                        .connector.ConnectorUnit`
                              class or parent class to use for the export.
                              By default: MagentoExporter
-        :type exporter_cls: :py:class:`openerp.addons.connector.connector.MetaConnectorUnit`
+        :type exporter_cls: :py:class:`openerp.addons.connector\
+                                       .connector.MetaConnectorUnit`
         :param binding_field: name of the one2many field on a normal
                               record that points to the binding record
                               (default: magento_bind_ids).
@@ -274,7 +276,8 @@ class MagentoExporter(MagentoBaseExporter):
             # create the binding for the product.category on which it
             # depends.
             else:
-                with self.session.change_context({'connector_no_export': True}):
+                ctx = {'connector_no_export': True}
+                with self.session.change_context(ctx):
                     with self.session.change_user(SUPERUSER_ID):
                         bind_values = {'backend_id': self.backend_record.id,
                                        'openerp_id': relation.id}
