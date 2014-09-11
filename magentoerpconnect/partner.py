@@ -79,7 +79,7 @@ class magento_res_partner(orm.Model):
     _inherits = {'res.partner': 'openerp_id'}
     _description = 'Magento Partner'
 
-    _rec_name = 'website_id'
+    _rec_name = 'name'
 
     def _get_mag_partner_from_website(self, cr, uid, ids, context=None):
         mag_partner_obj = self.pool['magento.res.partner']
@@ -190,6 +190,8 @@ class magento_address(orm.Model):
     _sql_constraints = [
         ('magento_uniq', 'unique(backend_id, magento_id)',
          'A partner address with same ID on Magento already exists.'),
+        ('openerp_uniq', 'unique(backend_id, openerp_id)',
+         'A partner address can only have one binding by backend.'),
     ]
 
 
@@ -558,6 +560,12 @@ class AddressAdapter(GenericAdapter):
         return [int(row['customer_address_id']) for row
                 in self._call('%s.list' % self._magento_model,
                               [filters] if filters else [{}])]
+
+    def create(self, data):
+        """ Create a record on the external system """
+        partner_id = data.pop('partner_id')
+        return self._call('%s.create' % self._magento_model,
+                          [partner_id, data])
 
 
 @magento
