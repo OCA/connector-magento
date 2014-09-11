@@ -53,7 +53,7 @@ Settings / options
     'images': [],
     'demo': [],
     'external_dependencies': {
-        'python': ['nltk'],
+        'python': ['bs4'],
     },
     'data': [
         'magento_model_view.xml',
