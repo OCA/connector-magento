@@ -48,11 +48,11 @@ class PartnerExport(MagentoExporter):
             'magento_partner_id': self.binding_id,
         }
         if not self.binding_record.magento_address_bind_ids \
-        and not self.binding_record.consider_as_company:
+        and not self.binding_record.consider_as_company \
+        and self.binding_record.street:
             data['openerp_id'] = self.binding_record.openerp_id.id
-
+            data['is_default_billing'] = True
             if not self.binding_record.child_ids:
-                data['is_default_billing'] = True
                 data['is_default_shipping'] = True
 
             with self._retry_unique_violation():
@@ -203,6 +203,7 @@ class PartnerAddressExportMapper(ExportMapper):
     @changed_by('street', 'street2')
     @mapping
     def street(self, record):
+        street = False
         if record.street:
             street = record.street
         if record.street2:
