@@ -214,7 +214,8 @@ class MagentoExporter(MagentoBaseExporter):
                 raise
 
     def _export_dependency(self, relation, binding_model, exporter_class=None,
-                           binding_field='magento_bind_ids'):
+                           binding_field='magento_bind_ids',
+                           binding_extra_vals=None):
         """
         Export a dependency. The exporter class is a subclass of
         ``MagentoExporter``. If a more precise class need to be defined,
@@ -249,6 +250,9 @@ class MagentoExporter(MagentoBaseExporter):
                               It is used only when the relation is not
                               a binding but is a normal record.
         :type binding_field: str | unicode
+        :binding_extra_vals:  In case we want to create a new binding
+                              pass extra values for this binding
+        :type binding_extra_vals: dict
         """
         if not relation:
             return
@@ -281,6 +285,8 @@ class MagentoExporter(MagentoBaseExporter):
                     with self.session.change_user(SUPERUSER_ID):
                         bind_values = {'backend_id': self.backend_record.id,
                                        'openerp_id': relation.id}
+                        if binding_extra_vals:
+                            bind_values.update(binding_extra_vals)
                         # If 2 jobs create it at the same time, retry
                         # one later. A unique constraint (backend_id,
                         # openerp_id) should exist on the binding model
