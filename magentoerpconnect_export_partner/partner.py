@@ -44,9 +44,6 @@ class PartnerExport(MagentoExporter):
     _model_name = ['magento.res.partner']
 
     def _after_export(self):
-        data = {
-            'magento_partner_id': self.binding_id,
-        }
         # Condition on street field because we consider that if street
         # is false, there is no address to export on this partner.
         if (not self.binding_record.magento_address_bind_ids and
@@ -54,25 +51,27 @@ class PartnerExport(MagentoExporter):
                 self.binding_record.street):
             extra_vals = {
                 'is_default_billing': True,
+                'magento_partner_id': self.binding_id,
             }
             if not self.binding_record.child_ids:
                 extra_vals['is_default_shipping'] = True
             self._export_dependency(self.binding_record.openerp_id,
                                     'magento.address',
-                                    exporter_class=AddressExport
+                                    exporter_class=AddressExport,
                                     binding_field='magento_address_bind_ids',
                                     binding_extra_vals=extra_vals)
 
         for child in self.binding_record.child_ids:
-            child_extra_vals = {}
+            child_extra_vals = {
+                'magento_partner_id': self.binding_id,
+            }
             if not child.magento_address_bind_ids:
                 if child.type == 'invoice':
                     child_extra_vals['is_default_billing'] = True
                 if child.type == 'delivery':
                     child_extra_vals['is_default_shipping'] = True
-                data['openerp_id'] = child.id
                 self._export_dependency(child, 'magento.address',
-                                        exporter_class=AddressExport
+                                        exporter_class=AddressExport,
                                         binding_field='magento_address_bind_ids',
                                         binding_extra_vals=child_extra_vals)
 
