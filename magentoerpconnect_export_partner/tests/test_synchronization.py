@@ -67,7 +67,7 @@ class TestMagentoPartnerExport(SetUpMagentoWithPartner):
     def test_1_export_partner(self):
         """ Test export of partner"""
         response = {
-            'customer.create': True,
+            'customer.create': 1,
         }
         cr = self.cr
         uid = self.uid
@@ -93,7 +93,7 @@ class TestMagentoPartnerExport(SetUpMagentoWithPartner):
     def test_2_export_partner_address(self):
         """ Test export of address"""
         response = {
-            'customer_address.create': True,
+            'customer_address.create': 2,
         }
         cr = self.cr
         uid = self.uid

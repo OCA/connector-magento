@@ -47,30 +47,34 @@ class PartnerExport(MagentoExporter):
         data = {
             'magento_partner_id': self.binding_id,
         }
-        if not self.binding_record.magento_address_bind_ids \
-        and not self.binding_record.consider_as_company \
-        and self.binding_record.street:
-            data['openerp_id'] = self.binding_record.openerp_id.id
-            data['is_default_billing'] = True
+        # Condition on street field because we consider that if street
+        # is false, there is no address to export on this partner.
+        if (not self.binding_record.magento_address_bind_ids and
+                not self.binding_record.consider_as_company and
+                self.binding_record.street):
+            extra_vals = {
+                'is_default_billing': True,
+            }
             if not self.binding_record.child_ids:
-                data['is_default_shipping'] = True
-
-            with self._retry_unique_violation():
-                self.session.create('magento.address', data)
+                extra_vals['is_default_shipping'] = True
+            self._export_dependency(self.binding_record.openerp_id,
+                                    'magento.address',
+                                    exporter_class=AddressExport
+                                    binding_field='magento_address_bind_ids',
+                                    binding_extra_vals=extra_vals)
 
         for child in self.binding_record.child_ids:
+            child_extra_vals = {}
             if not child.magento_address_bind_ids:
                 if child.type == 'invoice':
-                    data['is_default_billing'] = True
-                else:
-                    data['is_default_billing'] = False
+                    child_extra_vals['is_default_billing'] = True
                 if child.type == 'delivery':
-                    data['is_default_shipping'] = True
-                else:
-                    data['is_default_shipping'] = False
+                    child_extra_vals['is_default_shipping'] = True
                 data['openerp_id'] = child.id
-                with self._retry_unique_violation():
-                    self.session.create('magento.address', data)
+                self._export_dependency(child, 'magento.address',
+                                        exporter_class=AddressExport
+                                        binding_field='magento_address_bind_ids',
+                                        binding_extra_vals=child_extra_vals)
 
     def _validate_create_data(self, data):
         """ Check if the values to import are correct
@@ -92,8 +96,8 @@ class AddressExport(MagentoExporter):
 
     def _export_dependencies(self):
         """ Export the dependencies for the record"""
-        relation = self.binding_record.parent_id or \
-            self.binding_record.openerp_id
+        relation = (self.binding_record.parent_id or
+                    self.binding_record.openerp_id)
         self._export_dependency(relation, 'magento.res.partner',
                                 exporter_class=PartnerExport)
 
@@ -165,9 +169,10 @@ class PartnerAddressExportMapper(ExportMapper):
     @mapping
     def partner(self, record):
         binder = self.get_binder_for_model('magento.res.partner')
-        erp_partner_id = record.parent_id.id \
-            if record.parent_id \
-            else record.openerp_id.id
+        if record.parent_id:
+            erp_partner_id = record.parent_id.id
+        else:
+            erp_partner_id = record.openerp_id.id
         mag_partner_id = binder.to_backend(erp_partner_id, wrap=True)
         return {'partner_id': mag_partner_id}
 
