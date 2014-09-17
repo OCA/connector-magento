@@ -198,8 +198,13 @@ class ProductProductAdapter(GenericAdapter):
         """
         if filters is None:
             filters = {}
+        str_from_date = ''
         if from_date is not None:
             str_from_date = from_date.strftime('%Y/%m/%d %H:%M:%S')
+        if 'from_date' in filters:
+            str_from_date = filters['from_date'].strftime('%Y/%m/%d %H:%M:%S')
+            filters.pop('from_date')
+        if str_from_date:
             filters['updated_at'] = {'from': str_from_date}
         # TODO add a search entry point on the Magento API
         return [int(row['product_id']) for row
