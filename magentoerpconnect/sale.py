@@ -38,7 +38,9 @@ from openerp.addons.connector_ecommerce.unit.sale_order_onchange import (
 from openerp.addons.connector_ecommerce.sale import (ShippingLineBuilder,
                                                      CashOnDeliveryLineBuilder,
                                                      GiftOrderLineBuilder)
-from .unit.backend_adapter import GenericAdapter
+from .unit.backend_adapter import (GenericAdapter,
+                                   MAGENTO_DATETIME_FORMAT,
+                                   )
 from .unit.import_synchronizer import (DelayedBatchImport,
                                        MagentoImportSynchronizer
                                        )
@@ -226,17 +228,22 @@ class SaleOrderAdapter(GenericAdapter):
             else:
                 raise
 
-    def search(self, filters=None, from_date=None, magento_storeview_ids=None):
-        """ Search records according to some criterias
+    def search(self, filters=None, from_date=None, to_date=None,
+               magento_storeview_ids=None):
+        """ Search records according to some criteria
         and returns a list of ids
 
         :rtype: list
         """
         if filters is None:
             filters = {}
+        dt_fmt = MAGENTO_DATETIME_FORMAT
         if from_date is not None:
-            str_from_date = from_date.strftime('%Y/%m/%d %H:%M:%S')
-            filters['created_at'] = {'gt': str_from_date}
+            filters.setdefault('created_at', {})
+            filters['created_at']['from'] = from_date.strftime(dt_fmt)
+        if to_date is not None:
+            filters.setdefault('created_at', {})
+            filters['created_at']['to'] = to_date.strftime(dt_fmt)
         if magento_storeview_ids is not None:
             filters['store_id'] = {'in': magento_storeview_ids}
 
@@ -274,11 +281,14 @@ class SaleOrderBatchImport(DelayedBatchImport):
             filters = {}
         filters['state'] = {'neq': 'canceled'}
         from_date = filters.pop('from_date', None)
+        to_date = filters.pop('to_date', None)
         magento_storeview_ids = [filters.pop('magento_storeview_id')]
-        record_ids = self.backend_adapter.search(filters,
-                                                 from_date,
-                                                 magento_storeview_ids)
-        _logger.info('search for magento saleorders %s  returned %s',
+        record_ids = self.backend_adapter.search(
+            filters,
+            from_date=from_date,
+            to_date=to_date,
+            magento_storeview_ids=magento_storeview_ids)
+        _logger.info('search for magento saleorders %s returned %s',
                      filters, record_ids)
         for record_id in record_ids:
             self._import_record(record_id)

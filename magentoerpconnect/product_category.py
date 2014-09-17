@@ -28,7 +28,9 @@ from openerp.addons.connector.unit.mapper import (mapping,
 from openerp.addons.connector.exception import (IDMissingInBackend,
                                                 MappingError,
                                                 )
-from .unit.backend_adapter import GenericAdapter
+from .unit.backend_adapter import (GenericAdapter,
+                                   MAGENTO_DATETIME_FORMAT,
+                                   )
 from .unit.import_synchronizer import (DelayedBatchImport,
                                        MagentoImportSynchronizer,
                                        TranslationImporter,
@@ -102,8 +104,8 @@ class ProductCategoryAdapter(GenericAdapter):
             else:
                 raise
 
-    def search(self, filters=None, from_date=None):
-        """ Search records according to some criterias and returns a
+    def search(self, filters=None, from_date=None, to_date=None):
+        """ Search records according to some criteria and return a
         list of ids
 
         :rtype: list
@@ -111,12 +113,15 @@ class ProductCategoryAdapter(GenericAdapter):
         if filters is None:
             filters = {}
 
+        dt_fmt = MAGENTO_DATETIME_FORMAT
         if from_date is not None:
+            filters.setdefault('updated_at', {})
             # updated_at include the created records
-            str_from_date = from_date.strftime('%Y/%m/%d %H:%M:%S')
-            filters['updated_at'] = {'from': str_from_date}
+            filters['updated_at']['from'] = from_date.strftime(dt_fmt)
+        if to_date is not None:
+            filters.setdefault('updated_at', {})
+            filters['updated_at']['to'] = to_date.strftime(dt_fmt)
 
-        # the search method is on ol_customer instead of customer
         return self._call('oerp_catalog_category.search',
                           [filters] if filters else [{}])
 
@@ -165,8 +170,11 @@ class ProductCategoryBatchImport(DelayedBatchImport):
     def run(self, filters=None):
         """ Run the synchronization """
         from_date = filters.pop('from_date', None)
-        if from_date is not None:
-            updated_ids = self.backend_adapter.search(filters, from_date)
+        to_date = filters.pop('to_date', None)
+        if from_date or to_date:
+            updated_ids = self.backend_adapter.search(filters,
+                                                      from_date=from_date,
+                                                      to_date=to_date)
         else:
             updated_ids = None
 
