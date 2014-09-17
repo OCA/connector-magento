@@ -119,6 +119,13 @@ class AddressExport(MagentoExporter):
                                    "Magento : %s" %
                                    missing_fields)
 
+    def _create(self, data):
+        """ Create the Magento record """
+        # special check on data before export
+        self._validate_create_data(data)
+        customer_id = data.pop('partner_id')
+        return self.backend_adapter.create(customer_id, data)
+
 
 @magento
 class PartnerExportMapper(ExportMapper):

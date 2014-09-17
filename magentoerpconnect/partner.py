@@ -596,11 +596,10 @@ class AddressAdapter(GenericAdapter):
                 in self._call('%s.list' % self._magento_model,
                               [filters] if filters else [{}])]
 
-    def create(self, data):
+    def create(self, customer_id, data):
         """ Create a record on the external system """
-        partner_id = data.pop('partner_id')
         return self._call('%s.create' % self._magento_model,
-                          [partner_id, data])
+                          [customer_id, data])
 
 
 @magento
