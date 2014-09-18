@@ -15,7 +15,7 @@ install:
   - travis_install_nightly ${VERSION}
   - pip install coveralls flake8
   - sudo pip install magento
-  - sudo pip install nltk
+  - sudo pip install bs4
   - git clone https://github.com/OCA/connector ${HOME}/connector -b 7.0
   - git clone https://github.com/OCA/connector-ecommerce ${HOME}/connector-ecommerce -b 7.0
   - git clone https://github.com/OCA/sale-workflow ${HOME}/sale-workflow -b 7.0
