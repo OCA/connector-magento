@@ -53,7 +53,7 @@ Settings / options
     'images': [],
     'demo': [],
     'external_dependencies': {
-        'python': ['beautifulsoup4'],
+        'python': ['bs4'],
     },
     'data': [
         'magento_model_view.xml',
