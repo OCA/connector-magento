@@ -35,7 +35,7 @@ from openerp.addons.magentoerpconnect.unit.export_synchronizer import (
     MagentoExporter)
 from openerp.addons.magentoerpconnect import sale
 
-import nltk
+from bs4 import BeautifulSoup
 
 
 class mail_message(orm.Model):
@@ -279,7 +279,7 @@ class SaleCommentExportMapper(ExportMapper):
         comment = record.body
         for elm in ['</p>', '<br/>', '<br />', '<br>']:
             comment = comment.replace(elm, elm + '\n')
-        return {'comment': nltk.clean_html(comment)}
+        return {'comment': BeautifulSoup(comment).get_text()}
 
     @mapping
     def status(self, record):
