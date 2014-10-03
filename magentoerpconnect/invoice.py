@@ -57,6 +57,8 @@ class magento_account_invoice(orm.Model):
     _sql_constraints = [
         ('magento_uniq', 'unique(backend_id, magento_id)',
          'An invoice with the same ID on Magento already exists.'),
+        ('openerp_uniq', 'unique(backend_id, openerp_id)',
+         'A Magento binding for this invoice already exists.'),
     ]
 
 
@@ -218,9 +220,13 @@ def invoice_create_bindings(session, model_name, record_id):
     # we use the shop as many sale orders can be related to an invoice
     for sale in invoice.sale_ids:
         for magento_sale in sale.magento_bind_ids:
+            binding_exists = False
             for mag_inv in invoice.magento_bind_ids:
                 if mag_inv.backend_id.id == magento_sale.backend_id.id:
-                    continue
+                    binding_exists = True
+                    break
+            if binding_exists:
+                continue
             # Check if invoice state matches configuration setting
             # for when to export an invoice
             magento_stores = magento_sale.shop_id.magento_bind_ids
