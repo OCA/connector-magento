@@ -179,6 +179,7 @@ class MagentoInvoiceSynchronizer(ExportSynchronizer):
         mail_notification = magento_store.send_invoice_paid_mail
 
         lines_info = self._get_lines_info(invoice)
+        magento_id = None
         try:
             magento_id = self._export_invoice(magento_order.magento_id,
                                               lines_info,
@@ -193,18 +194,32 @@ class MagentoInvoiceSynchronizer(ExportSynchronizer):
                               'the invoice id.',
                               magento_order.magento_id)
                 magento_id = self._get_existing_invoice(magento_order)
+                if magento_id is None:
+                    # In that case, we let the exception bubble up so
+                    # the user is informed of the 102 error.
+                    # We couldn't find the invoice supposedly existing
+                    # so an investigation may be necessary.
+                    raise
             else:
                 raise
+        # When the invoice already exists on Magento, it may return
+        # a 102 error (handled above) or return silently without ID
+        if not magento_id:
+            # If Magento returned no ID, try to find the Magento
+            # invoice, but if we don't find it, let consider the job
+            # as done, because Magento did not raised an error
+            magento_id = self._get_existing_invoice(magento_order)
 
-        self.binder.bind(magento_id, binding_id)
+        if magento_id:
+            self.binder.bind(magento_id, binding_id)
 
     def _get_existing_invoice(self, magento_order):
         invoices = self.backend_adapter.search_read(
             order_id=magento_order.magento_order_id)
         if not invoices:
-            raise
+            return
         if len(invoices) > 1:
-            raise
+            return
         return invoices[0]['increment_id']
 
 
