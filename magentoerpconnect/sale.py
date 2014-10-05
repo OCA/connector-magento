@@ -695,7 +695,7 @@ class SaleOrderImport(MagentoImportSynchronizer):
         self.partner_invoice_id = billing_id
         self.partner_shipping_id = shipping_id or billing_id
 
-    def _update_special_fields(self, data):
+    def _check_special_fields(self):
         assert self.partner_id, (
             "self.partner_id should have been defined "
             "in SaleOrderImport._import_addresses")
@@ -705,28 +705,26 @@ class SaleOrderImport(MagentoImportSynchronizer):
         assert self.partner_shipping_id, (
             "self.partner_id should have been defined "
             "in SaleOrderImport._import_addresses")
-        data['partner_id'] = self.partner_id
-        data['partner_invoice_id'] = self.partner_invoice_id
-        data['partner_shipping_id'] = self.partner_shipping_id
-        return data
 
     def _create_data(self, map_record, **kwargs):
         tax_include = self.backend_record.catalog_price_tax_included
+        self._check_special_fields()
         return super(SaleOrderImport, self)._create_data(
-            map_record, tax_include=tax_include, **kwargs)
-
-    def _create(self, data):
-        data = self._update_special_fields(data)
-        return super(SaleOrderImport, self)._create(data)
+            map_record, tax_include=tax_include,
+            partner_id=self.partner_id,
+            partner_invoice_id=self.partner_invoice_id,
+            partner_shipping_id=self.partner_shipping_id,
+            **kwargs)
 
     def _update_data(self, map_record, **kwargs):
         tax_include = self.backend_record.catalog_price_tax_included
+        self._check_special_fields()
         return super(SaleOrderImport, self)._update_data(
-            map_record, tax_include=tax_include, **kwargs)
-
-    def _update(self, binding_id, data):
-        data = self._update_special_fields(data)
-        return super(SaleOrderImport, self)._update(binding_id, data)
+            map_record, tax_include=tax_include,
+            partner_id=self.partner_id,
+            partner_invoice_id=self.partner_invoice_id,
+            partner_shipping_id=self.partner_shipping_id,
+            **kwargs)
 
     def _import_dependencies(self):
         record = self.magento_record
@@ -820,6 +818,11 @@ class SaleOrderImportMapper(ImportMapper):
         values = self._add_shipping_line(map_record, values)
         values = self._add_cash_on_delivery_line(map_record, values)
         values = self._add_gift_certificate_line(map_record, values)
+        values.update({
+            'partner_id': self.options.partner_id,
+            'partner_invoice_id': self.options.partner_invoice_id,
+            'partner_shipping_id': self.options.partner_shipping_id,
+        })
         onchange = self.get_connector_unit_for_model(SaleOrderOnChange)
         return onchange.play(values, values['magento_order_line_ids'])
 
