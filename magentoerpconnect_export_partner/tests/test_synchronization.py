@@ -23,7 +23,6 @@ from openerp.addons.magentoerpconnect.tests.test_synchronization import (
     SetUpMagentoSynchronized)
 from openerp.addons.magentoerpconnect.tests.common import (
     mock_api,
-    MagentoHelper
 )
 from openerp.addons.magentoerpconnect.unit.export_synchronizer import (
     export_record)
@@ -64,7 +63,7 @@ class SetUpMagentoWithPartner(SetUpMagentoSynchronized):
             cr, uid,
             {'name': 'Partner2 Partner2bis',
              'is_company': True,
-             'email': 'partner2@odoo.com',})
+             'email': 'partner2@odoo.com'})
         self.address = oe_partner_model.create(
             cr, uid,
             {'name': 'Contact address2',
@@ -74,7 +73,6 @@ class SetUpMagentoWithPartner(SetUpMagentoSynchronized):
              'zip': '11112',
              'country_id': country_id,
              'city': 'City contact test2'})
-
 
 
 class TestMagentoPartnerExport(SetUpMagentoWithPartner):
@@ -92,7 +90,6 @@ class TestMagentoPartnerExport(SetUpMagentoWithPartner):
         cr = self.cr
         uid = self.uid
         with mock_api(response, key_func=lambda m, a: m) as calls_done:
-            mag_address_model = self.registry('magento.address')
             mag_partner_model = self.registry('magento.res.partner')
             mag_partner_id = mag_partner_model.create(cr, uid, {
                 'website_id': self.website_id,
@@ -105,7 +102,6 @@ class TestMagentoPartnerExport(SetUpMagentoWithPartner):
             self.assertEqual(values['email'], 'partner@odoo.com')
             self.assertEqual(values['firstname'], 'Partner')
             self.assertEqual(values['lastname'], 'Partnerbis')
-
 
     def test_2_export_partner_address(self):
         """ Test export of address"""
@@ -129,7 +125,7 @@ class TestMagentoPartnerExport(SetUpMagentoWithPartner):
                 'openerp_id': self.address,
                 })
             export_record(self.session, 'magento.address', mag_address_id)
-            
+
             self.assertEqual(len(calls_done), 1)
 
             method, [partner, values] = calls_done[0]
