@@ -133,6 +133,7 @@ class MagentoBaseExporter(ExportSynchronizer):
         # The commit will also release the lock acquired on the binding
         # record
         self.session.commit()
+        self._after_export()
         return result
 
     def _run(self):
