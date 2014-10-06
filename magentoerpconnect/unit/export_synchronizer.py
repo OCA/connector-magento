@@ -459,7 +459,6 @@ class MagentoTranslationExporter(MagentoExporter):
                 for storeview in lang_storeviews:
                     session.context['lang'] = storeview.lang_id.code
                     self.binding_record = self._get_openerp_data()
-                    self._map_data(fields=translatable_fields)
                     map_record = self._map_data()
                     record = self._update_data(
                          map_record, fields=translatable_fields)
