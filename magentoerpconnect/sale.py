@@ -135,6 +135,29 @@ class sale_order(orm.Model):
                                                  default=default,
                                                  context=context)
 
+    def copy_quotation(self, cr, uid, ids, context=None):
+        if isinstance(ids, (tuple, list)):
+            assert len(ids) == 1, ("1 ID expected, "
+                                   "got the following list %s" % (ids,))
+        if context is None:
+            context = {}
+        else:
+            context = context.copy()
+        context['__copy_from_quotation'] = True
+        result = super(sale_order, self).copy_quotation(cr, uid, ids,
+                                                        context=context)
+        # link binding of the canceled order to the new order, so the
+        # operations done on the new order will be sync'ed with Magento
+        new_id = result['res_id']
+        binding_obj = self.pool['magento.sale.order']
+        binding_ids = binding_obj.search(cr, uid,
+                                         [('openerp_id', '=', ids[0])],
+                                         context=context)
+        binding_obj.write(cr, uid, binding_ids,
+                          {'openerp_id': new_id},
+                          context=context)
+        return result
+
 
 class magento_sale_order_line(orm.Model):
     _name = 'magento.sale.order.line'
@@ -202,13 +225,53 @@ class sale_order_line(orm.Model):
             string="Magento Bindings"),
     }
 
+    def create(self, cr, uid, vals, context=None):
+        if context is None:
+            context = {}
+
+        old_line_id = None
+        if context.get('__copy_from_quotation'):
+            # when we are copying a sale.order from a canceled one,
+            # the id of the copied line is inserted in the vals
+            # in `copy_data`.
+            old_line_id = vals.pop('__copy_from_line_id', None)
+        new_id = super(sale_order_line, self).create(cr, uid, vals,
+                                                     context=context)
+        if old_line_id:
+            # link binding of the canceled order lines to the new order
+            # lines, happens when we are using the 'New Copy of
+            # Quotation' button on a canceled sales order
+            binding_obj = self.pool['magento.sale.order.line']
+            binding_ids = binding_obj.search(
+                cr, uid,
+                [('openerp_id', '=', old_line_id)],
+                context=context)
+            if binding_ids:
+                binding_obj.write(cr, uid, binding_ids,
+                                  {'openerp_id': new_id},
+                                  context=context)
+        return new_id
+
     def copy_data(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
+        if context is None:
+            context = {}
+
         default['magento_bind_ids'] = False
-        return super(sale_order_line, self).copy_data(cr, uid, id,
+        data = super(sale_order_line, self).copy_data(cr, uid, id,
                                                       default=default,
                                                       context=context)
+        if context.get('__copy_from_quotation'):
+            # copy_data is called by `copy` of the sale.order which
+            # builds a dict for the full new sale order, so we lose the
+            # association between the old and the new line.
+            # Keep a trace of the old id in the vals that will be passed
+            # to `create`, from there, we'll be able to update the
+            # Magento bindings, modifying the relation from the old to
+            # the new line.
+            data['__copy_from_line_id'] = id
+        return data
 
 
 @magento
