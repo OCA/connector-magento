@@ -23,6 +23,7 @@ from openerp.addons.magentoerpconnect.tests.test_synchronization import (
     SetUpMagentoSynchronized)
 from openerp.addons.magentoerpconnect.tests.common import (
     mock_api,
+    MagentoHelper
 )
 from openerp.addons.magentoerpconnect.unit.export_synchronizer import (
     export_record)
@@ -41,7 +42,7 @@ class SetUpMagentoWithPartner(SetUpMagentoSynchronized):
             ('code', '=', 'BE')])[0]
         self.partner_id = oe_partner_model.create(
             cr, uid,
-            {'name': 'Partner Partner2',
+            {'name': 'Partner Partnerbis',
              'is_company': True,
              'email': 'partner@odoo.com',
              'street': '15, test street',
@@ -59,6 +60,22 @@ class SetUpMagentoWithPartner(SetUpMagentoSynchronized):
              'country_id': country_id,
              'city': 'City contact test'})
 
+        self.partner_id2 = oe_partner_model.create(
+            cr, uid,
+            {'name': 'Partner2 Partner2bis',
+             'is_company': True,
+             'email': 'partner2@odoo.com',})
+        self.address = oe_partner_model.create(
+            cr, uid,
+            {'name': 'Contact address2',
+             'parent_id': self.partner_id2,
+             'street': '15, contact test street2',
+             'phone': '111111112',
+             'zip': '11112',
+             'country_id': country_id,
+             'city': 'City contact test2'})
+
+
 
 class TestMagentoPartnerExport(SetUpMagentoWithPartner):
     """ Test the export from a Magento Mock.
@@ -66,8 +83,11 @@ class TestMagentoPartnerExport(SetUpMagentoWithPartner):
 
     def test_1_export_partner(self):
         """ Test export of partner"""
+        partner_helper = self.get_magento_helper('magento.res.partner')
+        address_helper = self.get_magento_helper('magento.address')
         response = {
-            'customer.create': 1,
+            'customer.create': partner_helper.get_next_id,
+            'customer_address.create': address_helper.get_next_id,
         }
         cr = self.cr
         uid = self.uid
@@ -79,21 +99,20 @@ class TestMagentoPartnerExport(SetUpMagentoWithPartner):
                 'openerp_id': self.partner_id,
                 })
             export_record(self.session, 'magento.res.partner', mag_partner_id)
-            self.assertEqual(len(calls_done), 1)
+            self.assertEqual(len(calls_done), 3)
             method, [values] = calls_done[0]
             self.assertEqual(method, 'customer.create')
             self.assertEqual(values['email'], 'partner@odoo.com')
             self.assertEqual(values['firstname'], 'Partner')
-            self.assertEqual(values['lastname'], 'Partner2')
+            self.assertEqual(values['lastname'], 'Partnerbis')
 
-            mag_address_ids = mag_address_model.search(cr, uid, [
-                ('magento_partner_id', '=', mag_partner_id)])
-            self.assertEqual(len(mag_address_ids), 2)
 
     def test_2_export_partner_address(self):
         """ Test export of address"""
+        partner_helper = self.get_magento_helper('magento.res.partner')
+        address_helper = self.get_magento_helper('magento.address')
         response = {
-            'customer_address.create': 2,
+            'customer_address.create': address_helper.get_next_id,
         }
         cr = self.cr
         uid = self.uid
@@ -102,22 +121,21 @@ class TestMagentoPartnerExport(SetUpMagentoWithPartner):
             mag_partner_model = self.registry('magento.res.partner')
             mag_partner_id = mag_partner_model.create(cr, uid, {
                 'website_id': self.website_id,
-                'openerp_id': self.partner_id,
-                'magento_id': 1,
+                'openerp_id': self.partner_id2,
+                'magento_id': partner_helper.get_next_id(),
                 })
             mag_address_id = mag_address_model.create(cr, uid, {
                 'magento_partner_id': mag_partner_id,
-                'openerp_id': self.partner_id,
+                'openerp_id': self.address,
                 })
             export_record(self.session, 'magento.address', mag_address_id)
-
+            
             self.assertEqual(len(calls_done), 1)
 
             method, [partner, values] = calls_done[0]
             self.assertEqual(method, 'customer_address.create')
-            self.assertEqual(partner, 1)
-            self.assertEqual(values['postcode'], '00000')
-            self.assertEqual(values['city'], 'City test')
-            self.assertEqual(values['street'], '15, test street')
+            self.assertEqual(values['postcode'], '11112')
+            self.assertEqual(values['city'], 'City contact test2')
+            self.assertEqual(values['street'], '15, contact test street2')
             self.assertEqual(values['country_id'], 'BE')
-            self.assertEqual(values['telephone'], '0000000000')
+            self.assertEqual(values['telephone'], '111111112')
