@@ -151,7 +151,6 @@ class MagentoCRUDAdapter(CRUDAdapter):
 
     def _call(self, method, arguments):
         try:
-            start = datetime.now()
             custom_url = self.magento.use_custom_api_path
             _logger.debug("Start calling Magento api %s", method)
             with magentolib.API(self.magento.location,
@@ -164,6 +163,7 @@ class MagentoCRUDAdapter(CRUDAdapter):
                 if isinstance(arguments, list):
                     while arguments and arguments[-1] is None:
                         arguments.pop()
+                start = datetime.now()
                 try:
                     result = api.call(method, arguments)
                 except:
