@@ -171,8 +171,8 @@ class MagentoCRUDAdapter(CRUDAdapter):
                     raise
                 else:
                     _logger.debug("api.call(%s, %s) returned %s in %s seconds",
-                        method, arguments, result,
-                        (datetime.now() - start).seconds)
+                                  method, arguments, result,
+                                  (datetime.now() - start).seconds)
                 # Uncomment to record requests/responses in ``recorder``
                 # record(method, arguments, result)
                 return result
@@ -220,7 +220,7 @@ class GenericAdapter(MagentoCRUDAdapter):
             # Avoid to pass Null values in attributes. Workaround for
             # https://bugs.launchpad.net/openerp-connector-magento/+bug/1210775
             # When Magento is installed on PHP 5.4 and the compatibility patch
-            # (http://magento.com/blog/magento-news/magento-now-supports-php-54)
+            # http://magento.com/blog/magento-news/magento-now-supports-php-54
             # is not installed, calling info() with None in attributes
             # would return a wrong result (almost empty list of
             # attributes). The right correction is to install the
