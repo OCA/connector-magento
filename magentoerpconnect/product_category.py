@@ -147,7 +147,7 @@ class ProductCategoryAdapter(GenericAdapter):
                           [int(id), data, storeview])
 
     def search(self, filters=None, from_date=None, to_date=None):
-        """ Search records according to some criterias and returns a
+        """ Search records according to some criteria and return a
         list of ids
 
         :rtype: list
