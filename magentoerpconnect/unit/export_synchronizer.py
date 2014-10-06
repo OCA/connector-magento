@@ -132,8 +132,8 @@ class MagentoBaseExporter(ExportSynchronizer):
         # exports (due to dependencies) and one of them fails.
         # The commit will also release the lock acquired on the binding
         # record
-        self.session.cr.commit()
-        self._after_export() 
+        self.session.commit()
+        self._after_export()
         return result
 
     def _run(self):
@@ -309,6 +309,7 @@ class MagentoExporter(MagentoBaseExporter):
             # "direct" binding (the binding record is the same record).
             # If wrap is True, relation is already a binding record.
             binding_id = relation.id
+
         if not rel_binder.to_backend(binding_id):
             exporter = self.get_connector_unit_for_model(exporter_class,
                                                          binding_model)
@@ -380,15 +381,12 @@ class MagentoExporter(MagentoBaseExporter):
             record = self._update_data(map_record, fields=fields)
             if not record:
                 return _('Nothing to export.')
-            # special check on data before export
-            self._validate_data(record)
             self._update(record)
         else:
             record = self._create_data(map_record, fields=fields)
             if not record:
                 return _('Nothing to export.')
             self.magento_id = self._create(record)
-        self.session.cr.commit()
         return _('Record exported with ID %s on Magento.') % self.magento_id
 
 class MagentoTranslationExporter(MagentoExporter):

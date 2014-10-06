@@ -25,11 +25,12 @@ from openerp.osv import orm, fields
 from openerp.addons.connector.unit.mapper import (mapping,
                                                   ImportMapper
                                                   )
+from openerp.addons.connector.exception import (IDMissingInBackend,
+                                                MappingError,
+                                                )
 from .unit.backend_adapter import (GenericAdapter,
                                    MAGENTO_DATETIME_FORMAT,
                                    )
-from openerp.addons.connector.exception import (MappingError,
-                                                IDMissingInBackend)
 from .unit.import_synchronizer import (DelayedBatchImport,
                                        MagentoImportSynchronizer,
                                        TranslationImporter,
@@ -62,11 +63,6 @@ class magento_product_category(orm.Model):
             'magento.product.category',
             'magento_parent_id',
             string='Magento Child Categories'),
-    }
-
-    _defaults = {
-        'is_active': True,
-        'include_in_menu': False,
     }
 
     _defaults = {
@@ -265,18 +261,11 @@ class ProductCategoryImportMapper(ImportMapper):
     _model_name = 'magento.product.category'
 
     direct = [
-<<<<<<< HEAD
         ('description', 'description'),
         ('is_active','is_active'),
         ('include_in_menu','include_in_menu')
     ]
 
-=======
-            ('description', 'description'),
-            ('is_active','is_active'),
-            ('include_in_menu','include_in_menu')
-            ]
->>>>>>> [IMP] commit work done by Augustin Cisterne-Kaas <augustin.cisternekaas@elicocorp.com>, David Beal <david.beal@akretion.com> Chafique Delli <chafique.delli@akretion.com> and myself. This have been extracted from working branch on catalog export. Add the delay_unlink_all_binding, add fields visibility/status at the import. Add backendAdapter method, no refactor have been done yet
 
     @mapping
     def name(self, record):
