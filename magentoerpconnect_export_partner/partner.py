@@ -70,10 +70,11 @@ class PartnerExport(MagentoExporter):
                     child_extra_vals['is_default_billing'] = True
                 if child.type == 'delivery':
                     child_extra_vals['is_default_shipping'] = True
-                self._export_dependency(child, 'magento.address',
-                                        exporter_class=AddressExport,
-                                        binding_field='magento_address_bind_ids',
-                                        binding_extra_vals=child_extra_vals)
+                self._export_dependency(
+                    child, 'magento.address',
+                    exporter_class=AddressExport,
+                    binding_field='magento_address_bind_ids',
+                    binding_extra_vals=child_extra_vals)
 
     def _validate_create_data(self, data):
         """ Check if the values to import are correct
