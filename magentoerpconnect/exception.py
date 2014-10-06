@@ -19,13 +19,8 @@
 #
 ##############################################################################
 
-from openerp.addons.connector.exception import (
-    RetryableJobError,
-    ConnectorException,
-    )
+from openerp.addons.connector.exception import RetryableJobError
+
 
 class OrderImportRuleRetry(RetryableJobError):
     """ The sale order import will be retried later. """
-
-class SkuAlreadyExistInBackend(ConnectorException):
-    """ The product sku already exist in the Magento Backend """
