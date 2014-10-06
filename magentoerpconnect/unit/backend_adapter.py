@@ -164,12 +164,17 @@ class MagentoCRUDAdapter(CRUDAdapter):
                 if isinstance(arguments, list):
                     while arguments and arguments[-1] is None:
                         arguments.pop()
-                result = api.call(method, arguments)
+                try:
+                    result = api.call(method, arguments)
+                except:
+                    _logger.debug("api.call(%s, %s) failed", method, arguments)
+                    raise
+                else:
+                    _logger.debug("api.call(%s, %s) returned %s in %s seconds",
+                        method, arguments, result,
+                        (datetime.now() - start).seconds)
                 # Uncomment to record requests/responses in ``recorder``
                 # record(method, arguments, result)
-                _logger.debug("api.call(%s, %s) returned %s in %s seconds",
-                              method, arguments, result,
-                              (datetime.now() - start).seconds)
                 return result
         except (socket.gaierror, socket.error, socket.timeout) as err:
             raise NetworkRetryableError(
