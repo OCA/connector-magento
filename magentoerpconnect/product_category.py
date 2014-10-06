@@ -124,19 +124,6 @@ class ProductCategoryAdapter(GenericAdapter):
             else:
                 raise
 
-    def update_image(self, data):
-        for name in ['image', 'thumbnail']:
-            if data.get(name + '_binary'):
-                img = self._call('%s.create'% 'ol_catalog_category_media',
-                                 [data[name], data.pop(name + '_binary')])
-                if img == 'Error in file creation':
-                    #TODO FIX error management
-                    raise Exception("Image creation: ",
-                           "Magento tried to insert image (%s) but there is "
-                           "no sufficient grants in the folder "
-                           "'media/catalog/category' if it exists" %data[name])
-        return True
-
     def create(self, data):
         return self._call('%s.create'% self._magento_model,
                           [data['parent_id'],data])
