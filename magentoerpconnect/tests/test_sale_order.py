@@ -47,7 +47,7 @@ class TestSaleOrder(SetUpMagentoSynchronized):
             self.cr,
             self.uid,
             [('backend_id', '=', backend_id),
-            ('magento_id', '=', str(increment_id))])
+             ('magento_id', '=', str(increment_id))])
         self.assertEqual(len(binding_ids), 1)
         return MagentoOrder.browse(self.cr, self.uid, binding_ids[0])
 
