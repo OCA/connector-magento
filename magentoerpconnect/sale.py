@@ -905,6 +905,7 @@ class SaleOrderImportMapper(ImportMapper):
                                           'non existing storeview')
         storeview = self.session.browse('magento.storeview', storeview_id)
         shop_id = storeview.store_id.openerp_id.id
+        self.session.context['shop'] = shop_id
         return {'shop_id': shop_id}
 
     @mapping
