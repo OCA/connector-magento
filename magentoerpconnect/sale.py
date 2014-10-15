@@ -926,10 +926,10 @@ class SaleOrderImportMapper(ImportMapper):
             assert storeview_id is not None, 'cannot import sale orders Payment from non existing storeview'
             storeview = self.session.browse('magento.storeview', storeview_id)
             company_id = storeview.store_id.openerp_id.company_id or False
-            self.session.context['company_id'] = company_id
-            self.session.context['force_company'] = company_id
             if company_id:
                 company_id = company_id.id
+                self.session.context['company_id'] = company_id
+                self.session.context['force_company'] = company_id
         method_ids = self.session.search('payment.method',
                                 [['name', '=', record['payment']['method']],
                                 ['company_id', '=', company_id]])
