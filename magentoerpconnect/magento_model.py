@@ -277,7 +277,7 @@ class magento_backend(orm.Model):
         return [
             ('backend_id', 'in', ids),
             ('type', '!=', 'service'),
-            ('no_stock_sync', '=', False),]
+            ('no_stock_sync', '=', False), ]
 
     def update_product_stock_qty(self, cr, uid, ids, context=None):
         if not hasattr(ids, '__iter__'):
