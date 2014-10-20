@@ -273,7 +273,7 @@ class magento_backend(orm.Model):
                                'import_products_from_date', context=context)
         return True
 
-    def update_stock_product_domain(self, cr, uid, ids, context=None):
+    def  _domain_for_update_product_stock_qty(self, cr, uid, ids, context=None):
         return [
             ('backend_id', 'in', ids),
             ('type', '!=', 'service'),
@@ -283,8 +283,8 @@ class magento_backend(orm.Model):
         if not hasattr(ids, '__iter__'):
             ids = [ids]
         mag_product_obj = self.pool.get('magento.product.product')
-        domain = self.update_stock_product_domain(self, cr, uid, ids,
-                                                  context=context)
+        domain = self._domain_for_update_product_stock_qty(self, cr, uid, ids,
+                                                           context=context)
         product_ids = mag_product_obj.search(cr, uid, domain, context=context)
         mag_product_obj.recompute_magento_qty(cr, uid, product_ids,
                                               context=context)
