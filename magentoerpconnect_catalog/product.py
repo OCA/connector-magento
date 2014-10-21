@@ -38,6 +38,7 @@ from openerp.addons.magentoerpconnect.unit.export_synchronizer import (
 from openerp.addons.magentoerpconnect.exception import SkuAlreadyExistInBackend
 import openerp.addons.magentoerpconnect.consumer as magentoerpconnect
 from openerp.addons.connector.event import on_record_write
+from openerp.addons.connector.connector import ConnectorUnit
 from openerp.tools.translate import _
 import logging
 _logger = logging.getLogger(__name__)
@@ -148,7 +149,7 @@ class ProductProduct(orm.Model):
                         mag_product_obj.write(cr, uid, binding_id, {
                             'status': '1' if sale_ok else '2',
                             }, context=context)
-                        
+
     def write(self, cr, uid, ids, vals, context=None):
         super(ProductProduct, self).write(cr, uid, ids, vals, context=context)
         if vals.get('active', True) == False:
@@ -205,8 +206,24 @@ class ProductProductDeleteSynchronizer(MagentoDeleteSynchronizer):
 
 
 @magento
+class ProductProductConfigurableExport(ConnectorUnit):
+    _model_name = ['magento.product.product']
+
+    def _export_configurable_link(self, binding):
+        """ Export the link for the configurable product"""
+        return
+
+
+@magento
 class ProductProductExporter(MagentoTranslationExporter):
     _model_name = ['magento.product.product']
+
+    @property
+    def mapper(self):
+        if self._mapper is None:
+            self._mapper = self.get_connector_unit_for_model(
+                ProductProductExportMapper)
+        return self._mapper
 
     def _should_import(self):
         """Product are only edited on OpenERP Side"""
@@ -259,6 +276,14 @@ class ProductProductExporter(MagentoTranslationExporter):
                                                     'name': option.name,
                                                     }, context=ctx)
                             export_record(self.session, 'magento.attribute.option', binding_id)
+
+    def _after_export(self):
+        """ Export the link for the configurable product"""
+        binding = self.binding_record
+        if binding.is_display:
+            configurable_exporter = self.environment.get_connector_unit(ProductProductConfigurableExport)
+            configurable_exporter._export_configurable_link(binding)
+
 
 @magento
 class ProductProductExportMapper(ExportMapper):
@@ -337,7 +362,6 @@ class ProductProductExportMapper(ExportMapper):
     @mapping
     def get_product_attribute_option(self, record):
         result = {}
-        attribute_binder = self.get_binder_for_model('magento.product.attribute')
         option_binder = self.get_binder_for_model('magento.attribute.option')
         for group in record.attribute_group_ids:
             for attribute in group.attribute_ids:
