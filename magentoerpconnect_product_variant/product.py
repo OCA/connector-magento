@@ -21,7 +21,6 @@
 ##############################################################################
 
 from openerp.osv import orm, fields
-from openerp.addons.connector.connector import ConnectorUnit
 from openerp.addons.magentoerpconnect.backend import magento
 from openerp.addons.magentoerpconnect.connector import get_environment
 from openerp.addons.magentoerpconnect_catalog import product
@@ -31,6 +30,7 @@ from openerp.addons.magentoerpconnect.unit.export_synchronizer import (
     MagentoBaseExporter,
 )
 from openerp.addons.connector.queue.job import job
+from openerp.addons.connector.connector import ConnectorUnit
 
 
 class MagentoProduct(orm.Model):
@@ -92,13 +92,14 @@ class MagentoSuperAttribute(orm.Model):
 class ProductConfigurablePriceExporter(ConnectorUnit):
     _model_name = ['magento.product.product']
 
+    def _export_super_attribute_price(self, binding):
+        """ Export the price of super attribute for the configurable product"""
+        return
+
 
 @magento
 class ProductConfigurableExporter(MagentoBaseExporter):
     _model_name = ['magento.product.product']
-
-    def _should_import(self):
-        return False
 
     def create_super_attribute(self, record, magento_id, bind_attribute):
         result = self.session.create(
@@ -112,10 +113,9 @@ class ProductConfigurableExporter(MagentoBaseExporter):
 
     def _export_dependencies(self):
         """ Export the dependencies for the product"""
-        if not self.binding_record.magento_id:
-            export_record(
-                self.session, 'magento.product.product', self.binding_record.id)
         record = self.binding_record
+        if not record.magento_id:
+            export_record(self.session, 'magento.product.product', record.id)
 
         #Check and update configurable params
         super_attribute_adapter = self.get_connector_unit_for_model(
@@ -130,13 +130,23 @@ class ProductConfigurableExporter(MagentoBaseExporter):
                 magento_attr_id = attr_binder.to_backend(
                     dimension.id, wrap=True)
                 if magento_attr_id in res:
+                    magento_id = res[magento_attr_id]
+                    super_attr_binder = self.get_binder_for_model(
+                        'magento.super.attribute')
+                    bind_super_attribute_id = super_attr_binder.to_openerp(
+                        res[magento_attr_id])
+                    if not bind_super_attribute_id:
+                        bind_attribute_id = attr_binder.to_openerp(
+                            magento_attr_id)
+                        bind_attribute = self.session.browse(
+                            'magento.product.attribute', bind_attribute_id)
+                        self.create_super_attribute(
+                            record, magento_id, bind_attribute)
+                    # we remove the attribute from the list of the existing
+                    # super attribute in magento
+                    # At the end of the process we will delete in magento
+                    # the non existing one in Odoo
                     del res[magento_attr_id]
-                    magento_id = record.magento_id
-                    bind_attribute_id = attr_binder.to_openerp(magento_attr_id)
-                    bind_attribute = self.session.browse(
-                        'magento.product.attribute', bind_attribute_id)
-                    self.create_super_attribute(
-                        record, magento_id, bind_attribute)
                 else:
                     magento_attr_ids.append(magento_attr_id)
         for magento_attr_id in magento_attr_ids:
@@ -160,8 +170,11 @@ class ProductConfigurableExporter(MagentoBaseExporter):
             magento_id = super_attribute_adapter.create(
                 self.binding_record.magento_id, magento_attr_id, '0', labels)
             self.create_super_attribute(record, magento_id, bind_attribute)
+
+        # some dimension can be remove on Odoo if there still exist
+        # in magento we remove the super attribute
         for magento_attr_id, super_attribute_id in res.items():
-            super_attribute_adapter.remove(super_attribute_id)
+            super_attribute_adapter.unlink(super_attribute_id)
 
         #Export simple product if necessary
         for product_display in record.display_for_product_ids:
@@ -213,6 +226,12 @@ class ProductConfigurableExporter(MagentoBaseExporter):
         if linked_product_ids:
             display_link_adapter.remove(self.magento_id, linked_product_ids)
 
+    def _after_export(self):
+        """ Export the price of super attribute for the configurable product"""
+        binding = self.binding_record
+        price_exporter = self.environment.get_connector_unit(ProductConfigurablePriceExporter)
+        price_exporter._export_super_attribute_price(binding)
+
 
 @job
 def export_product_configurable(session, model_name, record_id, fields=None):
@@ -224,23 +243,18 @@ def export_product_configurable(session, model_name, record_id, fields=None):
     return configurable_exporter.run(record_id, fields)
 
 
-@magento(replacing=product.ProductProductExport)
-class ProductProductExporter(product.ProductProductExport):
+@magento(replacing=product.ProductProductConfigurableExport)
+class ProductProductConfigurableExport(product.ProductProductConfigurableExport):
     _model_name = ['magento.product.product']
 
-    def _should_import(self):
-        if self.binding_record.is_display:
-            return False
-
-    def _after_export(self):
+    def _export_configurable_link(self, binding):
         """ Export the link for the configurable product"""
-        if self.binding_record.is_display:
-            export_product_configurable.delay(
-                self.session,
-                'magento.product.product',
-                self.binding_record.id,
-                fields=['display_for_product_ids'],
-                priority=20)
+        export_product_configurable.delay(
+            self.session,
+            'magento.product.product',
+            binding.id,
+            fields=['display_for_product_ids'],
+            priority=20)
 
 
 @magento
@@ -266,6 +280,11 @@ class ProductSuperAttributAdapter(GenericAdapter):
         """ List Configurables Attributes """
         return self._call('%s.listSuperAttributes' % self._magento_model,
                           [magento_conf_id])
+
+    def update(self, magento_super_attribute_id, data):
+        """ Update Configurables Attributes """
+        return self._call('%s.updateSuperAttributeValues' % self._magento_model,
+                          (magento_super_attribute_id, data))
 
 
 @magento

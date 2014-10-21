@@ -20,13 +20,9 @@
 ##############################################################################
 
 from openerp.addons.magentoerpconnect.backend import magento
-from openerp.addons.connector.unit.mapper import mapping
-from openerp.addons.magentoerpconnect_product_variant import product
-from openerp.addons.magentoerpconnect_catalog.product import (
-    ProductProductExportMapper)
 from openerp.addons.magentoerpconnect_catalog.product_attribute import (
     MagentoAttributeBinder)
-from openerp.addons.magentoerpconnect.unit.backend_adapter import GenericAdapter
+#from openerp.addons.magentoerpconnect.unit.backend_adapter import GenericAdapter
 from openerp.addons.magentoerpconnect.unit.export_synchronizer import (
     MagentoExporter
 )
@@ -36,50 +32,36 @@ from openerp.addons.magentoerpconnect.unit.binder import (
 from openerp.addons.magentoerpconnect.connector import get_environment
 from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.event import on_record_write
+from openerp.addons.magentoerpconnect_product_variant import product
 
 
-@magento(replacing=ProductProductExportMapper)
-class ProductPriceExportMapper(ProductProductExportMapper):
-    _model_name = 'magento.product.product'
-
-    @mapping
-    def price(self, record):
-        price = record.lst_price
-        return {'price': price}
-
-
-@magento(replacing=product.ProductConfigurableExporter)
-class ProductConfigurablePriceExporter(product.ProductConfigurableExporter):
+@magento(replacing=product.ProductConfigurablePriceExporter)
+class ProductConfigurablePriceExporter(product.ProductConfigurablePriceExporter):
     _model_name = ['magento.product.product']
 
-    def _after_export(self):
-        """ Run the after export"""
-
-        for mag_super_attr in self.binding_record.mag_super_attr_ids:
+    def _export_super_attribute_price(self, binding):
+        """ Export the price of super attribute for the configurable product"""
+        for mag_super_attr in binding.mag_super_attr_ids:
             super_attribute_exporter = self.get_connector_unit_for_model(
-                MagentoExporter, 'magento.super.attribute')
+                MagentoSuperAttributeExporter, 'magento.super.attribute')
             super_attribute_exporter._run(mag_super_attr.id)
 
 
 @magento
 class MagentoSuperAttributeExporter(MagentoExporter):
-    _model_name='magento.super.attribute'
-
-    def _should_import(self):
-        return False
+    _model_name = 'magento.super.attribute'
 
     def _prepare_data(self, record, dim_value):
-        binder = self.get_connector_unit_for_model(
-                MagentoAttributeBinder, 'magento.attribute.option')
+        binder = self.get_connector_unit_for_model(MagentoAttributeBinder,
+                                                   'magento.attribute.option')
         magento_id = binder.to_backend(dim_value.option_id.id, wrap=True)
         return {
             'value_index': magento_id,
-            'is_percent':'0',
+            'is_percent': '0',
             'pricing_value': dim_value.price_extra,
         }
 
     def _run(self, fields=None):
-
         if self.binding_record:
             record = self.binding_record
         else:
@@ -97,11 +79,11 @@ class MagentoSuperAttributeExporter(MagentoExporter):
             dim_value_ids = self.session.search('dimension.value', domain)
 
             data = []
-            for dim_value in self.session.browse('dimension.value',dim_value_ids):
+            for dim_value in self.session.browse('dimension.value', dim_value_ids):
                 data.append(self._prepare_data(record, dim_value))
 
             super_attribute_adapter = self.get_connector_unit_for_model(
-                GenericAdapter, 'magento.super.attribute')
+                product.ProductSuperAttributAdapter, 'magento.super.attribute')
             super_attribute_adapter.update(record.magento_id, data)
 
 
@@ -120,22 +102,12 @@ def export_dimension_value(session, model_name, magento_super_attr_id, fields=No
     return super_attribute_exporter._run(mag_super_attr.id)
 
 
-@magento(replacing=product.ProductSuperAttributAdapter)
-class ProductSuperAttributPriceAdapter(product.ProductSuperAttributAdapter):
-    _model_name = ['magento.super.attribute']
-    _magento_model = 'ol_catalog_product_link'
-
-    def update(self, magento_super_attribute_id, data):
-        """ Update Configurables Attributes """
-        return self._call('%s.updateSuperAttributeValues'% self._magento_model,
-                         [int(magento_super_attribute_id), data])
-
 @on_record_write(model_names='dimension.value')
 def delay_export_dimension_value_price(session, model_name, record_id, vals=None):
     if 'price_extra' in vals:
         dim_value = session.browse(model_name, record_id)
         binding_magento_super_attr_ids = session.search(
-            'magento.super.attribute',[
+            'magento.super.attribute', [
             ['attribute_id', '=', dim_value.dimension_id.id],
             ['mag_product_display_id.product_tmpl_id', '=', dim_value.product_tmpl_id.id]
             ]
