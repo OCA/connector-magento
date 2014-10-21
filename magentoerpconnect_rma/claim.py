@@ -31,7 +31,9 @@ from openerp.addons.connector.unit.mapper import (mapping,
                                                   ImportMapper,
                                                   ExportMapper)
 from openerp.addons.magentoerpconnect.unit.binder import MagentoModelBinder
-from openerp.addons.magentoerpconnect.unit.backend_adapter import GenericAdapter
+from openerp.addons.magentoerpconnect.unit.backend_adapter import (
+    GenericAdapter,
+    MAGENTO_DATETIME_FORMAT,)
 from openerp.addons.magentoerpconnect.unit.import_synchronizer import (
     DelayedBatchImport,
     MagentoImportSynchronizer,
@@ -349,7 +351,9 @@ class CrmClaimAdapter(GenericAdapter):
         if filters is None:
             filters = {}
         if from_date is not None:
-            filters = from_date.strftime('%Y-%m-%d %H:%M:%S')
+            filters.setdefault('created_at', {})
+            filters['created_at']['from'] = from_date.strftime(
+                MAGENTO_DATETIME_FORMAT)
         return [int(row['rma_id']) for row
                 in self._call('%s.list' % self._magento_model,
                               [filters] if filters else [{}])]
@@ -387,18 +391,13 @@ class ClaimCommentAdapter(GenericAdapter):
         if filters is None:
             filters = {}
         if from_date is not None:
-            filters = from_date.strftime('%Y-%m-%d %H:%M:%S')
+            filters.setdefault('created_at', {})
+            filters['created_at']['from'] = from_date.strftime(
+                MAGENTO_DATETIME_FORMAT)
         elif backend:
             filters = backend.import_claims_from_date
         return self._call('%s.list' % self._magento_model,
                           [filters, 1] if filters else [{}, 1])
-
-    def read(self, magento_record, attributes=None):
-        """ Returns the information of a record
-
-        :rtype: dict
-        """
-        return magento_record
 
     def create(self, is_customer, message, created_at, rma_id):
         """ Create a claim comment on the external system """
@@ -433,18 +432,13 @@ class ClaimAttachmentAdapter(GenericAdapter):
         if filters is None:
             filters = {}
         if from_date is not None:
-            filters = from_date.strftime('%Y-%m-%d %H:%M:%S')
+            filters.setdefault('created_at', {})
+            filters['created_at']['from'] = from_date.strftime(
+                MAGENTO_DATETIME_FORMAT)
         elif backend:
             filters = backend.import_claims_from_date
         return self._call('%s.list' % self._magento_model,
                           [filters, 1] if filters else [{}, 1])
-
-    def read(self, magento_record, attributes=None):
-        """ Returns the information of a record
-
-        :rtype: dict
-        """
-        return magento_record
 
     def create(self, name, is_customer, created_at, rma_id, attachment):
         """ Create a claim attachment on the external system """
@@ -474,11 +468,8 @@ class CrmClaimBatchImport(DelayedBatchImport):
         """ Run the synchronization """
         from_date = filters.pop('from_date', None)
         record_ids = self.backend_adapter.search(filters, from_date)
-        formated_date = ''
-        if from_date:
-            formated_date = from_date.strftime('%Y-%m-%d %H:%M:%S')
         _logger.info('search for magento claims %s returned %s',
-                     formated_date, record_ids)
+                     filters, record_ids)
         for record_id in record_ids:
             self._import_record(record_id)
 
@@ -525,7 +516,7 @@ class ClaimCommentBatchImport(DelayedBatchImport):
             record['message'] = record['message'].encode('utf-8')
             self._import_record(record)
         _logger.info('search for magento claim comments from %s returned %s',
-                     from_date.strftime('%Y-%m-%d %H:%M:%S'), record_ids)
+                     filters, record_ids)
 
 
 @magento
@@ -581,7 +572,7 @@ class ClaimAttachmentBatchImport(DelayedBatchImport):
             index += 1
             self._import_record(record)
         _logger.info('search for magento claim attachments from %s returned %s',
-                     from_date.strftime('%Y-%m-%d %H:%M:%S'), record_ids)
+                     filters, record_ids)
 
 
 @magento
