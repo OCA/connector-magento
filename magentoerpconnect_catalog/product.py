@@ -35,7 +35,7 @@ from openerp.addons.connector.exception import MappingError
 from openerp.addons.magentoerpconnect.unit.export_synchronizer import (
     export_record
 )
-from openerp.addons.magentoerpconnect.exception import SkuAlreadyExistInBackend
+#from openerp.addons.magentoerpconnect.exception import SkuAlreadyExistInBackend
 import openerp.addons.magentoerpconnect.consumer as magentoerpconnect
 from openerp.addons.connector.event import on_record_write
 from openerp.addons.connector.connector import ConnectorUnit
@@ -236,18 +236,19 @@ class ProductProductExporter(MagentoTranslationExporter):
         attr_set_id = data.pop('attrset')
         product_type = data.pop('product_type')
         self._validate_data(data)
-        try:
-            return self.backend_adapter.create(
-                product_type, attr_set_id, sku, data)
-        except SkuAlreadyExistInBackend, e:
-            _logger.warning(('Product %s already exist in Magento. '
-                            'Try to bind it') % sku)
-            record = self.backend_adapter.read_with_sku(sku)
-            mag_id = record['product_id']
-            self.backend_adapter.write(mag_id, data)
-            _logger.info(('Product %s have been binded with '
-                          'the existing product id: %s') % (sku, mag_id))
-            return mag_id
+        return self.backend_adapter.create(product_type, attr_set_id, sku, data)
+        #try:
+        #    return self.backend_adapter.create(
+        #        product_type, attr_set_id, sku, data)
+        #except SkuAlreadyExistInBackend, e:
+        #    _logger.warning(('Product %s already exist in Magento. '
+        #                    'Try to bind it') % sku)
+        #    record = self.backend_adapter.read_with_sku(sku)
+        #    mag_id = record['product_id']
+        #    self.backend_adapter.write(mag_id, data)
+        #    _logger.info(('Product %s have been binded with '
+        #                  'the existing product id: %s') % (sku, mag_id))
+        #    return mag_id
 
     def _export_dependencies(self):
         """ Export the dependencies for the product"""
