@@ -389,6 +389,8 @@ class MagentoExporter(MagentoBaseExporter):
 @related_action(action=unwrap_binding)
 def export_record(session, model_name, binding_id, fields=None):
     """ Export a record on Magento """
+    if not session.search(model_name, [['id', '=', binding_id]]):
+        return "The binding do not exist anymore, skip it"
     record = session.browse(model_name, binding_id)
     env = get_environment(session, model_name, record.backend_id.id)
     exporter = env.get_connector_unit(MagentoExporter)
