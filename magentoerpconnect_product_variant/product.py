@@ -28,9 +28,21 @@ from openerp.addons.magentoerpconnect.unit.backend_adapter import GenericAdapter
 from openerp.addons.magentoerpconnect.unit.export_synchronizer import (
     export_record,
     MagentoBaseExporter,
-)
+    MagentoExporter)
 from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.connector import ConnectorUnit
+
+
+class ProductProduct(orm.Model):
+    _inherit = 'product.product'
+
+    def _prepare_create_magento_auto_binding(self, cr, uid, product,
+                                             backend_id, context=None):
+        res = super(ProductProduct, self)._prepare_create_magento_auto_binding(
+            cr, uid, product, backend_id, context=context)
+        if product.is_multi_variants and not product.is_display:
+            res['visibility'] = '1'
+        return res
 
 
 class MagentoProduct(orm.Model):
@@ -177,24 +189,19 @@ class ProductConfigurableExporter(MagentoBaseExporter):
             super_attribute_adapter.unlink(super_attribute_id)
 
         #Export simple product if necessary
-        for product_display in record.display_for_product_ids:
-            binding_id = self.session.search(self.model._name, [
-                ['openerp_id', '=', product_display.id],
-                ['backend_id', '=', self.backend_record.id]
-            ])
-            if binding_id:
-                if not self.binder.to_backend(binding_id[0]):
-                    export_record(
-                        self.session, 'magento.product.product', binding_id[0])
-            elif self.backend_record.export_simple_product_on_fly:
-                vals = self._prepare_magento_binding(product_display)
-                sess = self.session
-                context = sess.context.copy()
-                context['connector_no_export'] = True
-                binding_id = sess.pool['magento.product.product'].create(
-                    sess.cr, sess.uid, vals, context=context)
-                export_record(
-                    self.session, 'magento.product.product', binding_id)
+        for variant in record.display_for_product_ids:
+            for binding in variant.magento_bind_ids:
+                if binding.backend_id.id == record.backend_id.id:
+                    product_exporter = self.get_connector_unit_for_model(
+                        MagentoExporter, 'magento.product.product')
+                    binding_extra_vals = {}
+                    product_exporter._export_dependency(
+                        binding,
+                        'magento.product.product',
+                        'openerp.addons.magentoerpconnect.unit'
+                        '.export_synchronizer.MagentoExporter',
+                        'magento_bind_ids',
+                        binding_extra_vals)
 
     def _prepare_magento_binding(self, product):
         return {

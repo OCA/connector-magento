@@ -22,7 +22,6 @@
 from openerp.addons.magentoerpconnect.backend import magento
 from openerp.addons.magentoerpconnect_catalog.product_attribute import (
     MagentoAttributeBinder)
-#from openerp.addons.magentoerpconnect.unit.backend_adapter import GenericAdapter
 from openerp.addons.magentoerpconnect.unit.export_synchronizer import (
     MagentoExporter
 )
