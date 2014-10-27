@@ -5,6 +5,7 @@
 #    Author: Guewen Baconnier - Camptocamp SA
 #            Augustin Cisterne-Kaasv - Elico-corp
 #            David Béal - Akretion
+#            Chafique Delli - Akretion
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
 #    published by the Free Software Foundation, either version 3 of the
@@ -20,22 +21,18 @@
 #
 ##############################################################################
 
-from openerp.osv import fields, orm, osv
-from openerp.addons.connector.queue.job import job
+from openerp.osv import fields, orm
 from openerp.addons.connector.unit.mapper import (mapping,
-                                                  changed_by,
                                                   ExportMapper)
 from openerp.addons.magentoerpconnect.unit.delete_synchronizer import (
-        MagentoDeleteSynchronizer)
+    MagentoDeleteSynchronizer)
 from openerp.addons.magentoerpconnect.unit.export_synchronizer import (
-        MagentoTranslationExporter)
+    MagentoTranslationExporter)
 from openerp.addons.magentoerpconnect.backend import magento
-from openerp.addons.magentoerpconnect.product import ProductProductAdapter
 from openerp.addons.connector.exception import MappingError
 from openerp.addons.magentoerpconnect.unit.export_synchronizer import (
     export_record
 )
-#from openerp.addons.magentoerpconnect.exception import SkuAlreadyExistInBackend
 import openerp.addons.magentoerpconnect.consumer as magentoerpconnect
 from openerp.addons.connector.event import on_record_write
 from openerp.addons.connector.connector import ConnectorUnit
@@ -43,8 +40,9 @@ from openerp.tools.translate import _
 import logging
 _logger = logging.getLogger(__name__)
 
+
 class MagentoProductProduct(orm.Model):
-    _inherit='magento.product.product'
+    _inherit = 'magento.product.product'
 
     _columns = {
         'active': fields.boolean(
@@ -65,14 +63,14 @@ class MagentoProductProduct(orm.Model):
                 mag_image_obj.create(cr, uid, {
                     'openerp_id': image.id,
                     'backend_id': mag_product.backend_id.id,
-                    }, context=context)
+                }, context=context)
         return mag_product_id
 
     def write(self, cr, uid, ids, vals, context=None):
-        if vals.get('active') == True:
+        if vals.get('active') is True:
             binding_ids = self.search(cr, uid, [
                 ('active', '=', False),
-                ], context=context)
+            ], context=context)
             if len(binding_ids) > 0:
                 raise orm.except_orm(
                     _('User Error'),
@@ -85,7 +83,7 @@ class MagentoProductProduct(orm.Model):
         synchronized_binding_ids = self.search(cr, uid, [
             ('id', 'in', ids),
             ('magento_id', '!=', False),
-            ], context=context)
+        ], context=context)
         if synchronized_binding_ids:
             raise orm.except_orm(
                 _('User Error'),
@@ -125,7 +123,7 @@ class ProductProduct(orm.Model):
         binding_ids = self.pool['magento.product.product'].search(cr, uid, [
             ('openerp_id', '=', product_id),
             ('backend_id', '=', backend_id),
-            ], context=context)
+        ], context=context)
         if binding_ids:
             return binding_ids[0]
         else:
@@ -148,11 +146,11 @@ class ProductProduct(orm.Model):
                     else:
                         mag_product_obj.write(cr, uid, binding_id, {
                             'status': '1' if sale_ok else '2',
-                            }, context=context)
+                        }, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
         super(ProductProduct, self).write(cr, uid, ids, vals, context=context)
-        if vals.get('active', True) == False:
+        if vals.get('active', True) is False:
             for product in self.browse(cr, uid, ids, context=context):
                 for bind in product.magento_bind_ids:
                     bind.write({'active': False})
@@ -181,7 +179,7 @@ class ProductProduct(orm.Model):
                 _('You can not have more than one active binding for '
                   'a product. Here is the list of product ids with a '
                   'duplicated binding : %s')
-                  % ", ".join([str(x[0]) for x in result]))
+                % ", ".join([str(x[0]) for x in result]))
         return True
 
     _constraints = [(
@@ -192,8 +190,8 @@ class ProductProduct(orm.Model):
 
 
 @on_record_write(model_names=[
-        'magento.product.product',
-    ])
+    'magento.product.product',
+])
 def delay_export(session, model_name, record_id, vals=None):
     if vals.get('active', True) == False:
         magentoerpconnect.delay_unlink(session, model_name, record_id)
@@ -237,18 +235,6 @@ class ProductProductExporter(MagentoTranslationExporter):
         product_type = data.pop('product_type')
         self._validate_data(data)
         return self.backend_adapter.create(product_type, attr_set_id, sku, data)
-        #try:
-        #    return self.backend_adapter.create(
-        #        product_type, attr_set_id, sku, data)
-        #except SkuAlreadyExistInBackend, e:
-        #    _logger.warning(('Product %s already exist in Magento. '
-        #                    'Try to bind it') % sku)
-        #    record = self.backend_adapter.read_with_sku(sku)
-        #    mag_id = record['product_id']
-        #    self.backend_adapter.write(mag_id, data)
-        #    _logger.info(('Product %s have been binded with '
-        #                  'the existing product id: %s') % (sku, mag_id))
-        #    return mag_id
 
     def _export_dependencies(self):
         """ Export the dependencies for the product"""
@@ -271,11 +257,11 @@ class ProductProductExporter(MagentoTranslationExporter):
                             ctx = self.session.context.copy()
                             ctx['connector_no_export'] = True
                             binding_id = self.session.pool['magento.attribute.option'].create(
-                                                    self.session.cr, self.session.uid,{
-                                                    'backend_id': self.backend_record.id,
-                                                    'openerp_id': option.id,
-                                                    'name': option.name,
-                                                    }, context=ctx)
+                                self.session.cr, self.session.uid, {
+                                    'backend_id': self.backend_record.id,
+                                    'openerp_id': option.id,
+                                    'name': option.name,
+                                }, context=ctx)
                             export_record(self.session, 'magento.attribute.option', binding_id)
 
     def _after_export(self):
@@ -309,7 +295,7 @@ class ProductProductExportMapper(ExportMapper):
         return {'name': record.name,
                 'description': record.description,
                 'weight': record.weight,
-                'price': record.list_price,
+                'price': record.lst_price,
                 'short_description': record.description_sale,
                 'type': record.product_type,
                 'created_at': record.created_at,
