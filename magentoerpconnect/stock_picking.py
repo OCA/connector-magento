@@ -95,6 +95,15 @@ class stock_picking_out(orm.Model):
             string="Magento Bindings"),
     }
 
+    # Copy also has an issue on stock.picking.out.
+    def copy_data(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        default['magento_bind_ids'] = False
+        return super(stock_picking_out, self).copy_data(cr, uid, id,
+                                                        default=default,
+                                                        context=context)
+
 
 @magento
 class StockPickingAdapter(GenericAdapter):
