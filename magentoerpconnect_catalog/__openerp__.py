@@ -25,26 +25,44 @@
  'version': '2.0.0',
  'category': 'Connector',
  'depends': ['magentoerpconnect',
-             'product_links',
-             'product_images',
+             'product_custom_attributes',
+             #'product_links',
+             'product_image',
+             'product_category_image',
              ],
  'author': 'MagentoERPconnect Core Editors',
  'license': 'AGPL-3',
- 'website': 'http://www.openerp-magento-connector.com',
+ 'website': 'https://launchpad.net/magentoerpconnect',
  'description': """
 Magento Connector - Catalog
 ===========================
 
 Extension for **Magento Connector**, add management of the product's catalog:
 
-* product links
-* product images
-* export of products, categories, links and images
+Export
+* products
+* categories
+* attributes (only export up to now): attribute set, attributes and attribute options :
 
+   - to be used, you need to manually create an attribute set which match with magento 'Default' attribute set (generally magento_id '4')
+   
+* product image: dependency
+
+   - dev branch: lp:~akretion-team/openerp-product-attributes/openerp-product-attributes-image
+   - future production branch: lp:openerp-product-attributes/openerp-product-attributes
+
+TODO:
+* import/export product links
+* import attributes
 """,
  'images': [],
  'demo': [],
- 'data': [],
+ 'data': [
+    'magento_model_view.xml',
+    'product_view.xml',
+    'product_attribute_view.xml',
+    'product_image_view.xml',
+    ],
  'installable': True,
  'application': False,
- }
+}

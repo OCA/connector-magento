@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    Copyright 2013
-#    Author: Guewen Baconnier - Camptocamp SA
-#            Augustin Cisterne-Kaasv - Elico-corp
-#            David Béal - Akretion
+#    Author: Guewen Baconnier
+#    Copyright 2012 Camptocamp SA
+#
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
 #    published by the Free Software Foundation, either version 3 of the
@@ -20,10 +19,17 @@
 #
 ##############################################################################
 
-import connector
-import consumer
-import magento_model
-import product
-import product_category
-import product_attribute
-import product_image
+import test_attribute_synchronization
+import test_category_export
+import test_export_image
+import test_export_product
+
+fast_suite = [
+]
+
+checks = [
+    test_attribute_synchronization,
+    test_category_export,
+    test_export_image,
+    test_export_product,
+]

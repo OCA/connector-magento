@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    Copyright 2013
-#    Author: Guewen Baconnier - Camptocamp SA
-#            Augustin Cisterne-Kaasv - Elico-corp
-#            David Béal - Akretion
+#    Author: Guewen Baconnier
+#    Copyright 2013 Camptocamp SA
+#    Copyright 2013 Akretion
+#
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
 #    published by the Free Software Foundation, either version 3 of the
@@ -20,10 +20,33 @@
 #
 ##############################################################################
 
-import connector
-import consumer
-import magento_model
-import product
-import product_category
-import product_attribute
-import product_image
+
+{'name': 'Magento Connector - Product Variant',
+ 'version': '2.0.0',
+ 'category': 'Connector',
+ 'depends': [
+     'magentoerpconnect_catalog',
+     'product_variant_generator',
+     'product_variant_display_generator',
+ ],
+ 'author': 'MagentoERPconnect Core Editors',
+ 'license': 'AGPL-3',
+ 'website': 'https://launchpad.net/magentoerpconnect',
+ 'description': """
+Magento Connector - Product Variant
+===================================
+
+Extension for **Magento Connector**, add management of the product's variant:
+
+* export of product's variants
+
+""",
+ 'images': [],
+ 'demo': [],
+ 'data': [
+     'product_view.xml',
+     'magento_model_view.xml',
+    ],
+ 'installable': True,
+ 'application': False,
+}

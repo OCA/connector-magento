@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    Copyright 2013
-#    Author: Guewen Baconnier - Camptocamp SA
-#            Augustin Cisterne-Kaasv - Elico-corp
-#            David Béal - Akretion
+#    Author: Chafique DELLI
+#    Copyright 2014 Akretion SA
+#
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
 #    published by the Free Software Foundation, either version 3 of the
@@ -20,10 +19,17 @@
 #
 ##############################################################################
 
-import connector
-import consumer
-import magento_model
-import product
-import product_category
-import product_attribute
-import product_image
+"""
+Magento responses for calls done by the connector.
+
+This set of responses has been recorded for the synchronizations
+with a Magento 1.7 version with demo data.
+
+It has been recorded using ``magentoerpconnect.unit.backend_adapter.record``
+and ``magentoerpconnect.unit.backend_adapter.output_recorder``
+"""
+
+FMT = "%Y-%m-%d %H:%M:%S"
+
+
+magento_product_variant_price_responses = \

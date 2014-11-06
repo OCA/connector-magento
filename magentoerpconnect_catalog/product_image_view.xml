@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+<record id="view_product_image_form" model="ir.ui.view">
+    <field name="model">product.image</field>
+    <field name="inherit_id"
+           ref="product_image.view_product_image_form" />
+    <field name="arch" type="xml" >
+        <xpath expr="//sheet" position="inside">
+            <group name="magento">
+                <field name="magento_bind_ids" nolabel="1">
+                    <tree name="magento_binding" editable="bottom">
+                        <field name="id" readonly="1"/>
+                        <field name="backend_id" string="Backend"/>
+                        <field name="magento_id"/>
+                    </tree>
+                    <form>
+                        <field name="backend_id" string="Backend"/>
+                        <field name="magento_id"/>
+                    </form>
+                </field>
+            </group>
+        </xpath>
+    </field>
+</record>
+
+    </data>
+</openerp>

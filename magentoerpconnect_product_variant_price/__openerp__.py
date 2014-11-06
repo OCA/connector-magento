@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    Copyright 2013
-#    Author: Guewen Baconnier - Camptocamp SA
-#            Augustin Cisterne-Kaasv - Elico-corp
-#            David Béal - Akretion
+#    Author: Chafique Delli
+#    Copyright 2014 Akretion
+#
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
 #    published by the Free Software Foundation, either version 3 of the
@@ -20,10 +19,29 @@
 #
 ##############################################################################
 
-import connector
-import consumer
-import magento_model
-import product
-import product_category
-import product_attribute
-import product_image
+
+{'name': 'Magento Connector - Product Variant Price',
+ 'version': '2.0.0',
+ 'category': 'Connector',
+ 'depends': [
+     'magentoerpconnect_product_variant',
+     'product_variant_generator_price',
+ ],
+ 'author': 'MagentoERPconnect Core Editors',
+ 'license': 'AGPL-3',
+ 'website': 'https://launchpad.net/magentoerpconnect',
+ 'description': """
+Magento Connector - Product Variant Price
+=========================================
+
+Extension for **Magento Connector**, add management of the product variant's price:
+
+* export of product variant's prices
+
+""",
+ 'images': [],
+ 'demo': [],
+ 'data': [],
+ 'installable': True,
+ 'application': False,
+}

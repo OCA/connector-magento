@@ -3,8 +3,8 @@
 #
 #    Copyright 2013
 #    Author: Guewen Baconnier - Camptocamp SA
-#            Augustin Cisterne-Kaasv - Elico-corp
-#            David Béal - Akretion
+#            Chafique Delli - Akretion
+#
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
 #    published by the Free Software Foundation, either version 3 of the
@@ -20,10 +20,7 @@
 #
 ##############################################################################
 
-import connector
-import consumer
-import magento_model
-import product
-import product_category
-import product_attribute
-import product_image
+from openerp.addons.connector.connector import install_in_connector
+
+
+install_in_connector()

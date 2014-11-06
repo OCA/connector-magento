@@ -20,10 +20,7 @@
 #
 ##############################################################################
 
-import connector
-import consumer
-import magento_model
-import product
-import product_category
-import product_attribute
-import product_image
+from openerp.addons.connector.connector import install_in_connector
+
+
+install_in_connector()
