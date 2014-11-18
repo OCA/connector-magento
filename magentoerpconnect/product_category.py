@@ -151,6 +151,26 @@ class ProductCategoryAdapter(GenericAdapter):
                           [parent_id, storeview_id])
         return filter_ids(tree)
 
+    def move(self, categ_id, parent_id, after_categ_id=None):
+        return self._call('%s.move' % self._magento_model,
+                          [categ_id, parent_id, after_categ_id])
+
+    def get_assigned_product(self, categ_id):
+        return self._call('%s.assignedProducts' % self._magento_model,
+                          [categ_id])
+
+    def assign_product(self, categ_id, product_id, position=0):
+        return self._call('%s.assignProduct' % self._magento_model,
+                          [categ_id, product_id, position, 'id'])
+
+    def update_product(self, categ_id, product_id, position=0):
+        return self._call('%s.updateProduct' % self._magento_model,
+                          [categ_id, product_id, position, 'id'])
+
+    def remove_product(self, categ_id, product_id):
+        return self._call('%s.removeProduct' % self._magento_model,
+                          [categ_id, product_id, 'id'])
+
 
 @magento
 class ProductCategoryBatchImport(DelayedBatchImport):
