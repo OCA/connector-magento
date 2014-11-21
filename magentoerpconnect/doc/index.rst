@@ -41,9 +41,9 @@ Core Features
 * Load testing results: **in a single day, successful import of more
   than 10'000 sales orders** from Magento to OpenERP!
 
-.. _`OpenERP Connector`: http://www.openerp-connector.com
+.. _`OpenERP Connector`: http://www.odoo-connector.com
 .. _Camptocamp: http://www.camptocamp.com
-.. _OpenERP: http://www.openerp.com
+.. _OpenERP: http://www.odoo.com
 .. _Magento: http://www.magento.com
 .. _Akretion: http://www.akretion.com
 .. _`source code is available on GitHub`: https://github.com/OCA/connector-magento/tree/7.0
