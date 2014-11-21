@@ -35,7 +35,7 @@
  },
  'author': 'Connector Core Editors',
  'license': 'AGPL-3',
- 'website': 'http://www.openerp-magento-connector.com',
+ 'website': 'http://www.odoo-magento-connector.com',
  'description': """
 Magento Connector
 =================

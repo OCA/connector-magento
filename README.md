@@ -11,5 +11,5 @@ This new release of MagentoERPconnect is based on the [OpenERP Connector framewo
 The mailing list for this project is on https://launchpad.net/~openerp-connector-community
 
 Documentation:
-http://www.openerp-magento-connector.com
-http://www.openerp-connector.com
+http://www.odoo-magento-connector.com
+http://www.odoo-connector.com
