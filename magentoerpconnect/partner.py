@@ -512,7 +512,7 @@ class BaseAddressImportMapper(ImportMapper):
         if prefix:
             title_ids = self.session.search('res.partner.title',
                                             [('domain', '=', 'contact'),
-                                             ('shortcut', 'ilike', prefix)])
+                                             ('shortcut', '=ilike', prefix)])
             if title_ids:
                 title_id = title_ids[0]
             else:
