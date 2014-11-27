@@ -1019,7 +1019,7 @@ class SaleOrderLineImportMapper(ImportMapper):
         if ifield:
             import re
             options_label = []
-            clean = re.sub('\w:\w:|\w:\w+;', '', ifield)
+            clean = re.sub(r'\w:\w:|\w:\w+;', '', ifield)
             for each in clean.split('{'):
                 if each.startswith('"label"'):
                     split_info = each.split(';')

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
 # ConnectorUnit needs to be registered
-import binder
-import import_synchronizer
-import export_synchronizer
-import delete_synchronizer
-import backend_adapter
+from . import binder
+from . import import_synchronizer
+from . import export_synchronizer
+from . import delete_synchronizer
+from . import backend_adapter

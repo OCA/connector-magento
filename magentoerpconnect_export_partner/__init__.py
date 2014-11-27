@@ -1,4 +1,4 @@
 # -*- coding: utf-8 -*-
 
-import consumer
-import partner
+from . import consumer
+from . import partner
