@@ -1,18 +1,18 @@
 # -*- coding: utf-8 -*-
-import setting
-import connector
-import backend
+from . import setting
+from . import connector
+from . import backend
 
-import magento_model
-import product
-import product_category
-import partner
-import partner_category
-import invoice
-import sale
-import delivery
-import stock_picking
-import stock_tracking
-import payment_invoice
+from . import magento_model
+from . import product
+from . import product_category
+from . import partner
+from . import partner_category
+from . import invoice
+from . import sale
+from . import delivery
+from . import stock_picking
+from . import stock_tracking
+from . import payment_invoice
 
-import consumer
+from . import consumer

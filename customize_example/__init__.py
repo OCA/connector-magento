@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import connector
-import backend
-import magento_model
-import partner
+from . import connector
+from . import backend
+from . import magento_model
+from . import partner
