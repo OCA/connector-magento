@@ -273,7 +273,7 @@ class magento_backend(orm.Model):
                                'import_products_from_date', context=context)
         return True
 
-    def  _domain_for_update_product_stock_qty(self, cr, uid, ids, context=None):
+    def _domain_for_update_product_stock_qty(self, cr, uid, ids, context=None):
         return [
             ('backend_id', 'in', ids),
             ('type', '!=', 'service'),
