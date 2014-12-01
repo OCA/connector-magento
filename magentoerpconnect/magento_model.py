@@ -283,7 +283,7 @@ class magento_backend(orm.Model):
         if not hasattr(ids, '__iter__'):
             ids = [ids]
         mag_product_obj = self.pool.get('magento.product.product')
-        domain = self._domain_for_update_product_stock_qty(self, cr, uid, ids,
+        domain = self._domain_for_update_product_stock_qty(cr, uid, ids,
                                                            context=context)
         product_ids = mag_product_obj.search(cr, uid, domain, context=context)
         mag_product_obj.recompute_magento_qty(cr, uid, product_ids,
