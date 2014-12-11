@@ -534,6 +534,19 @@ class BaseAddressImportMapper(ImportMapper):
                                                 'name': prefix})
         return {'title': title_id}
 
+    @only_create
+    @mapping
+    def company_id(self, record):
+        parent_id = record.get('parent_id')
+        if parent_id:
+            parent = self.session.browse('res.partner', parent_id)
+            if parent.company_id:
+                return {'company_id': parent.company_id.id}
+            else:
+                return {'company_id': False}
+        # Don't return anything, we are merging into an existing partner
+        return
+
 
 @magento
 class CompanyImportMapper(BaseAddressImportMapper):
