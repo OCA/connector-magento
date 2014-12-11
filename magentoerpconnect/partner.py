@@ -354,8 +354,9 @@ class PartnerImportMapper(ImportMapper):
         if binding_id:
             storeview = self.session.browse('magento.storeview',
                                             binding_id)
-            if storeview.store_id:
+            if storeview.store_id and storeview.store_id.company_id:
                 return {'company_id': storeview.store_id.company_id.id}
+        return {'company_id': False}
 
     @mapping
     def lang(self, record):
