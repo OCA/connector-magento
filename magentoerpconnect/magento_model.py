@@ -144,7 +144,6 @@ class magento_backend(orm.Model):
             'Import products from date'),
         'import_categories_from_date': fields.datetime(
             'Import categories from date'),
-        'catalog_price_tax_included': fields.boolean('Prices include tax'),
         'product_stock_field_id': fields.many2one(
             'ir.model.fields',
             string='Stock Field',
@@ -530,6 +529,7 @@ class magento_storeview(orm.Model):
             'No Sales Order Synchronization',
             help='Check if the storeview is active in Magento '
                  'but its sales orders should not be imported.'),
+        'catalog_price_tax_included': fields.boolean('Prices include tax'),
     }
 
     _defaults = {

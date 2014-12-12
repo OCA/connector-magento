@@ -308,8 +308,13 @@ class TestImportMagento(SetUpMagentoSynchronized):
     def test_34_import_sale_order_with_taxes_included(self):
         """ Import sale order with taxes included """
         backend_id = self.backend_id
-        self.backend_model.write(self.cr, self.uid, self.backend_id,
-                                 {'catalog_price_tax_included': True})
+        storeview_model = self.registry('magento.storeview')
+        storeview_id = storeview_model.search(
+            self.cr, self.uid,
+            [('backend_id', '=', backend_id),
+             ('magento_id', '=', '1')])
+        storeview_model.write(self.cr, self.uid, storeview_id,
+                              {'catalog_price_tax_included': True})
         with mock_api(magento_base_responses):
             with mock_urlopen_image():
                 import_record(self.session,
@@ -333,14 +338,19 @@ class TestImportMagento(SetUpMagentoSynchronized):
         # 97.5 is the amount_total if connector takes correctly included
         # tax prices.
         self.assertEqual(amount_total, 97.5000)
-        self.backend_model.write(self.cr, self.uid, self.backend_id,
-                                 {'catalog_price_tax_included': False})
+        storeview_model.write(self.cr, self.uid, storeview_id,
+                              {'catalog_price_tax_included': False})
 
     def test_35_import_sale_order_with_discount(self):
         """ Import sale order with discounts"""
         backend_id = self.backend_id
-        self.backend_model.write(self.cr, self.uid, self.backend_id,
-                                 {'catalog_price_tax_included': True})
+        storeview_model = self.registry('magento.storeview')
+        storeview_id = storeview_model.search(
+            self.cr, self.uid,
+            [('backend_id', '=', backend_id),
+             ('magento_id', '=', '2')])
+        storeview_model.write(self.cr, self.uid, storeview_id,
+                              {'catalog_price_tax_included': True})
         with mock_api(magento_base_responses):
             with mock_urlopen_image():
                 import_record(self.session,
@@ -371,5 +381,5 @@ class TestImportMagento(SetUpMagentoSynchronized):
                 self.fail('encountered unexpected sale '
                           'order line %s' % line.name)
 
-        self.backend_model.write(self.cr, self.uid, self.backend_id,
-                                 {'catalog_price_tax_included': False})
+        storeview_model.write(self.cr, self.uid, storeview_id,
+                              {'catalog_price_tax_included': False})
