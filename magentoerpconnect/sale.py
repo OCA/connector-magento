@@ -905,6 +905,7 @@ class SaleOrderImportMapper(ImportMapper):
                                           'non existing storeview')
         storeview = self.session.browse('magento.storeview', storeview_id)
         shop_id = storeview.store_id.openerp_id.id
+        self.session.context['shop'] = shop_id
         return {'shop_id': shop_id}
 
     @mapping
@@ -918,9 +919,20 @@ class SaleOrderImportMapper(ImportMapper):
 
     @mapping
     def payment(self, record):
-        record_method = record['payment']['method']
+        company_id = False
+        if not self.session.context.get('company_id', False):
+            binder = self.get_binder_for_model('magento.storeview')
+            storeview_id = binder.to_openerp(record['store_id'])
+            assert storeview_id is not None, 'cannot import sale orders Payment from non existing storeview'
+            storeview = self.session.browse('magento.storeview', storeview_id)
+            company_id = storeview.store_id.openerp_id.company_id or False
+            if company_id:
+                company_id = company_id.id
+                self.session.context['company_id'] = company_id
+                self.session.context['force_company'] = company_id
         method_ids = self.session.search('payment.method',
-                                         [['name', '=', record_method]])
+                                [['name', '=', record['payment']['method']],
+                                ['company_id', '=', company_id]])
         assert method_ids, ("method %s should exist because the import fails "
                             "in SaleOrderImport._before_import when it is "
                             " missing" % record['payment']['method'])
