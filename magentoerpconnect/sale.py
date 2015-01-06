@@ -599,20 +599,23 @@ class SaleOrderImport(MagentoImportSynchronizer):
                 SaleOrderMoveComment)
             move_comment.move(binding)
 
+    def _get_storeview(self, record):
+        """ Return the tax inclusion setting for the appropriate storeview """
+        storeview_binder = self.get_binder_for_model('magento.storeview')
+        # we find storeview_id in store_id!
+        # (http://www.magentocommerce.com/bug-tracking/issue?issue=15886)
+        storeview_id = storeview_binder.to_openerp(record['store_id'])
+        storeview = self.session.browse('magento.storeview', storeview_id)
+        return storeview
+
     def _get_magento_data(self):
         """ Return the raw Magento data for ``self.magento_id`` """
         record = super(SaleOrderImport, self)._get_magento_data()
         # sometimes we don't have website_id...
         # we fix the record!
         if not record.get('website_id'):
+            storeview = self._get_storeview(record)
             # deduce it from the storeview
-            storeview_binder = self.get_binder_for_model('magento.storeview')
-            # we find storeview_id in store_id!
-            # (http://www.magentocommerce.com/bug-tracking/issue?issue=15886)
-            oe_storeview_id = storeview_binder.to_openerp(record['store_id'])
-            storeview = self.session.browse('magento.storeview',
-                                            oe_storeview_id)
-            # "fix" the record
             record['website_id'] = storeview.store_id.website_id.magento_id
         # sometimes we need to clean magento items (ex : configurable
         # product in a sale)
@@ -770,23 +773,27 @@ class SaleOrderImport(MagentoImportSynchronizer):
             "in SaleOrderImport._import_addresses")
 
     def _create_data(self, map_record, **kwargs):
-        tax_include = self.backend_record.catalog_price_tax_included
+        storeview = self._get_storeview(map_record.source)
         self._check_special_fields()
         return super(SaleOrderImport, self)._create_data(
-            map_record, tax_include=tax_include,
+            map_record,
+            tax_include=storeview.catalog_price_tax_included,
             partner_id=self.partner_id,
             partner_invoice_id=self.partner_invoice_id,
             partner_shipping_id=self.partner_shipping_id,
+            storeview=storeview,
             **kwargs)
 
     def _update_data(self, map_record, **kwargs):
-        tax_include = self.backend_record.catalog_price_tax_included
+        storeview = self._get_storeview(map_record.source)
         self._check_special_fields()
         return super(SaleOrderImport, self)._update_data(
-            map_record, tax_include=tax_include,
+            map_record,
+            tax_include=storeview.catalog_price_tax_included,
             partner_id=self.partner_id,
             partner_invoice_id=self.partner_invoice_id,
             partner_shipping_id=self.partner_shipping_id,
+            storeview=storeview,
             **kwargs)
 
     def _import_dependencies(self):
@@ -899,12 +906,7 @@ class SaleOrderImportMapper(ImportMapper):
 
     @mapping
     def store_id(self, record):
-        binder = self.get_binder_for_model('magento.storeview')
-        storeview_id = binder.to_openerp(record['store_id'])
-        assert storeview_id is not None, ('cannot import sale orders from '
-                                          'non existing storeview')
-        storeview = self.session.browse('magento.storeview', storeview_id)
-        shop_id = storeview.store_id.openerp_id.id
+        shop_id = self.options.storeview.store_id.openerp_id.id
         return {'shop_id': shop_id}
 
     @mapping
@@ -993,7 +995,7 @@ class SaleOrderLineImportMapper(ImportMapper):
     @mapping
     def discount_amount(self, record):
         discount_value = float(record.get('discount_amount') or 0)
-        if self.backend_record.catalog_price_tax_included:
+        if self.options.tax_include:
             row_total = float(record.get('row_total_incl_tax') or 0)
         else:
             row_total = float(record.get('row_total') or 0)
