@@ -123,7 +123,7 @@ msgid ""
 "billing address."
 msgstr ""
 "Ein Konto, welches ein Unternehmen als Rechnungsanschrift führt, wird als Unternehmen betrachtet.\n"
-"Der Partner bekommt den Namen des Unternehmens und wird nicht mit der Rechnungsanschrift zusammengeführt.
+"Der Partner bekommt den Namen des Unternehmens und wird nicht mit der Rechnungsanschrift zusammengeführt."
 
 #. module: magentoerpconnect
 #: sql_constraint:magento.account.invoice:0
@@ -955,7 +955,7 @@ msgid ""
 msgstr ""
 "Soll die Rechnung angelegt werden, wenn sie geprüft wurde oder wenn Sie in OpenERP "
 "als bezahlt gekennzeichnet wurde?\n"
-"Ist nicht angegeben, wird auf die Einstellung aus dem zugehörigen Magento-Shop verwendet.
+"Ist nicht angegeben, wird auf die Einstellung aus dem zugehörigen Magento-Shop verwendet."
 
 #. module: magentoerpconnect
 #: help:magento.store,create_invoice_on:0
