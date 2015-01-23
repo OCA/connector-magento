@@ -346,6 +346,18 @@ class PartnerImportMapper(ImportMapper):
         website_id = binder.to_openerp(record['website_id'])
         return {'website_id': website_id}
 
+    @only_create
+    @mapping
+    def company_id(self, record):
+        binder = self.get_binder_for_model('magento.storeview')
+        binding_id = binder.to_openerp(record['store_id'])
+        if binding_id:
+            storeview = self.session.browse('magento.storeview',
+                                            binding_id)
+            if storeview.store_id and storeview.store_id.company_id:
+                return {'company_id': storeview.store_id.company_id.id}
+        return {'company_id': False}
+
     @mapping
     def lang(self, record):
         binder = self.get_binder_for_model('magento.storeview')
@@ -521,6 +533,19 @@ class BaseAddressImportMapper(ImportMapper):
                                                 'shortcut': prefix,
                                                 'name': prefix})
         return {'title': title_id}
+
+    @only_create
+    @mapping
+    def company_id(self, record):
+        parent_id = record.get('parent_id')
+        if parent_id:
+            parent = self.session.browse('res.partner', parent_id)
+            if parent.company_id:
+                return {'company_id': parent.company_id.id}
+            else:
+                return {'company_id': False}
+        # Don't return anything, we are merging into an existing partner
+        return
 
 
 @magento
