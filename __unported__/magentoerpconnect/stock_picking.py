@@ -38,14 +38,14 @@ from .related_action import unwrap_binding
 _logger = logging.getLogger(__name__)
 
 
-class magento_stock_picking(orm.Model):
+class MagentoStockPicking(orm.Model):
     _name = 'magento.stock.picking.out'
     _inherit = 'magento.binding'
     _inherits = {'stock.picking': 'openerp_id'}
     _description = 'Magento Delivery Order'
 
     _columns = {
-        'openerp_id': fields.many2one('stock.picking.out',
+        'openerp_id': fields.many2one('stock.picking',
                                       string='Stock Picking',
                                       required=True,
                                       ondelete='cascade'),
@@ -64,7 +64,7 @@ class magento_stock_picking(orm.Model):
     ]
 
 
-class stock_picking(orm.Model):
+class StockPicking(orm.Model):
     _inherit = 'stock.picking'
 
     _columns = {
@@ -77,23 +77,10 @@ class stock_picking(orm.Model):
         if default is None:
             default = {}
         default['magento_bind_ids'] = False
-        return super(stock_picking, self).copy_data(cr, uid, id,
-                                                    default=default,
-                                                    context=context)
-
-
-# Seems to be so buggy, if I put magento_bind_ids
-# only in stock.picking.out, I cannot read it from the browse
-# if I put it only in stock.picking, I cannot display it on the views
-# so I have to duplicate it in both models...
-class stock_picking_out(orm.Model):
-    _inherit = 'stock.picking.out'
-
-    _columns = {
-        'magento_bind_ids': fields.one2many(
-            'magento.stock.picking.out', 'openerp_id',
-            string="Magento Bindings"),
-    }
+        return super(StockPicking, self).copy_data(
+            cr, uid, id,
+            default=default,
+            context=context)
 
 
 @magento
@@ -198,6 +185,8 @@ class MagentoPickingExport(ExportSynchronizer):
         Export the picking to Magento
         """
         picking = self.session.browse(self.model._name, binding_id)
+        if picking.magento_id:
+            return _('Already exported')
         picking_method = picking.picking_method
         if picking_method == 'complete':
             args = self._get_args(picking)
@@ -225,6 +214,8 @@ class MagentoPickingExport(ExportSynchronizer):
                 raise
         else:
             self.binder.bind(magento_id, binding_id)
+            # ensure that we store the external ID
+            self.session.commit()
 
 
 @on_picking_out_done
@@ -236,6 +227,8 @@ def picking_out_done(session, model_name, record_id, picking_method):
     :param picking_method: picking_method, can be 'complete' or 'partial'
     :type picking_method: str
     """
+    import pdb
+    pdb.set_trace()
     picking = session.browse(model_name, record_id)
     sale = picking.sale_id
     if not sale:
@@ -250,19 +243,34 @@ def picking_out_done(session, model_name, record_id, picking_method):
 
 @on_record_create(model_names='magento.stock.picking.out')
 def delay_export_picking_out(session, model_name, record_id, vals):
-    export_picking_done.delay(session, model_name, record_id)
+    binding = session.browse(model_name, record_id)
+    # tracking number is sent when:
+    # * the picking is exported and the tracking number was already
+    #   there before the picking was done OR
+    # * the tracking number is added after the picking is done
+    # We have to keep the initial state of whether we had an
+    # tracking number in the job kwargs, because if we read the
+    # picking at the time of execution of the job, a tracking could
+    # have been added and it would be exported twice.
+    with_tracking = bool(binding.carrier_tracking_ref)
+    export_picking_done.delay(session, model_name, record_id,
+                              with_tracking=with_tracking)
 
 
 @job
 @related_action(action=unwrap_binding)
-def export_picking_done(session, model_name, record_id):
+def export_picking_done(session, model_name, record_id, with_tracking=True):
     """ Export a complete or partial delivery order. """
+    # with_tracking is True to keep a backward compatibility (jobs that
+    # are pending and miss this argument will behave the same, but
+    # it should be called with True only if the carrier_tracking_ref
+    # is True when the job is created.
     picking = session.browse(model_name, record_id)
     backend_id = picking.backend_id.id
     env = get_environment(session, model_name, backend_id)
     picking_exporter = env.get_connector_unit(MagentoPickingExport)
     res = picking_exporter.run(record_id)
 
-    if picking.carrier_tracking_ref:
+    if with_tracking and picking.carrier_tracking_ref:
         export_tracking_number.delay(session, model_name, record_id)
     return res

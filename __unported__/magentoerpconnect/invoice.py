@@ -57,6 +57,8 @@ class magento_account_invoice(orm.Model):
     _sql_constraints = [
         ('magento_uniq', 'unique(backend_id, magento_id)',
          'An invoice with the same ID on Magento already exists.'),
+        ('openerp_uniq', 'unique(backend_id, openerp_id)',
+         'A Magento binding for this invoice already exists.'),
     ]
 
 
@@ -177,6 +179,7 @@ class MagentoInvoiceSynchronizer(ExportSynchronizer):
         mail_notification = magento_store.send_invoice_paid_mail
 
         lines_info = self._get_lines_info(invoice)
+        magento_id = None
         try:
             magento_id = self._export_invoice(magento_order.magento_id,
                                               lines_info,
@@ -191,57 +194,75 @@ class MagentoInvoiceSynchronizer(ExportSynchronizer):
                               'the invoice id.',
                               magento_order.magento_id)
                 magento_id = self._get_existing_invoice(magento_order)
+                if magento_id is None:
+                    # In that case, we let the exception bubble up so
+                    # the user is informed of the 102 error.
+                    # We couldn't find the invoice supposedly existing
+                    # so an investigation may be necessary.
+                    raise
             else:
                 raise
+        # When the invoice already exists on Magento, it may return
+        # a 102 error (handled above) or return silently without ID
+        if not magento_id:
+            # If Magento returned no ID, try to find the Magento
+            # invoice, but if we don't find it, let consider the job
+            # as done, because Magento did not raised an error
+            magento_id = self._get_existing_invoice(magento_order)
 
-        self.binder.bind(magento_id, binding_id)
+        if magento_id:
+            self.binder.bind(magento_id, binding_id)
 
     def _get_existing_invoice(self, magento_order):
         invoices = self.backend_adapter.search_read(
             order_id=magento_order.magento_order_id)
         if not invoices:
-            raise
+            return
         if len(invoices) > 1:
-            raise
+            return
         return invoices[0]['increment_id']
 
 
-@on_invoice_validated
-@on_invoice_paid
-def invoice_create_bindings(session, model_name, record_id):
-    """
-    Create a ``magento.account.invoice`` record. This record will then
-    be exported to Magento.
-    """
-    invoice = session.browse(model_name, record_id)
-    # find the magento store to retrieve the backend
-    # we use the shop as many sale orders can be related to an invoice
-    for sale in invoice.sale_ids:
-        for magento_sale in sale.magento_bind_ids:
-            for mag_inv in invoice.magento_bind_ids:
-                if mag_inv.backend_id.id == magento_sale.backend_id.id:
-                    continue
-            # Check if invoice state matches configuration setting
-            # for when to export an invoice
-            magento_stores = magento_sale.shop_id.magento_bind_ids
-            magento_store = next(
-                (store for store in magento_stores
-                 if store.backend_id.id == magento_sale.backend_id.id),
-                None
-            )
-            assert magento_store
+# @on_invoice_validated
+# @on_invoice_paid
+# def invoice_create_bindings(session, model_name, record_id):
+#     """
+#     Create a ``magento.account.invoice`` record. This record will then
+#     be exported to Magento.
+#     """
+#     invoice = session.browse(model_name, record_id)
+#     # find the magento store to retrieve the backend
+#     # we use the shop as many sale orders can be related to an invoice
+#     for sale in invoice.sale_ids:
+#         for magento_sale in sale.magento_bind_ids:
+#             binding_exists = False
+#             for mag_inv in invoice.magento_bind_ids:
+#                 if mag_inv.backend_id.id == magento_sale.backend_id.id:
+#                     binding_exists = True
+#                     break
+#             if binding_exists:
+#                 continue
+#             # Check if invoice state matches configuration setting
+#             # for when to export an invoice
+#             magento_stores = magento_sale.shop_id.magento_bind_ids
+#             magento_store = next(
+#                 (store for store in magento_stores
+#                  if store.backend_id.id == magento_sale.backend_id.id),
+#                 None
+#             )
+#             assert magento_store
 
-            payment_method = sale.payment_method_id
-            if payment_method and payment_method.create_invoice_on:
-                create_invoice = payment_method.create_invoice_on
-            else:
-                create_invoice = magento_store.create_invoice_on
+#             payment_method = sale.payment_method_id
+#             if payment_method and payment_method.create_invoice_on:
+#                 create_invoice = payment_method.create_invoice_on
+#             else:
+#                 create_invoice = magento_store.create_invoice_on
 
-            if create_invoice == invoice.state:
-                session.create('magento.account.invoice',
-                               {'backend_id': magento_sale.backend_id.id,
-                                'openerp_id': invoice.id,
-                                'magento_order_id': magento_sale.id})
+#             if create_invoice == invoice.state:
+#                 session.create('magento.account.invoice',
+#                                {'backend_id': magento_sale.backend_id.id,
+#                                 'openerp_id': invoice.id,
+#                                 'magento_order_id': magento_sale.id})
 
 
 @on_record_create(model_names='magento.account.invoice')

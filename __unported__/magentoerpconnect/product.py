@@ -25,6 +25,7 @@ import urllib2
 import base64
 import xmlrpclib
 import sys
+from collections import defaultdict
 from openerp.osv import orm, fields
 from openerp.tools.translate import _
 from openerp.addons.connector.queue.job import job, related_action
@@ -39,7 +40,9 @@ from openerp.addons.connector.exception import (MappingError,
 from openerp.addons.connector.unit.mapper import (mapping,
                                                   ImportMapper,
                                                   )
-from .unit.backend_adapter import GenericAdapter
+from .unit.backend_adapter import (GenericAdapter,
+                                   MAGENTO_DATETIME_FORMAT,
+                                   )
 from .unit.mapper import normalize_datetime
 from .unit.import_synchronizer import (DelayedBatchImport,
                                        MagentoImportSynchronizer,
@@ -49,14 +52,20 @@ from .unit.import_synchronizer import (DelayedBatchImport,
 from .connector import get_environment
 from .backend import magento
 from .related_action import unwrap_binding
+# from openerp import models, fields, api
 
 _logger = logging.getLogger(__name__)
+
+
+def chunks(items, length):
+    for index in xrange(0, len(items), length):
+        yield items[index:index + length]
 
 
 class magento_product_product(orm.Model):
     _name = 'magento.product.product'
     _inherit = 'magento.binding'
-    _inherits = {'product.product': 'openerp_id'}
+    _inherits = {'product.template': 'openerp_id'}
     _description = 'Magento Product'
 
     def product_type_get(self, cr, uid, context=None):
@@ -74,7 +83,7 @@ class magento_product_product(orm.Model):
         return self.product_type_get(cr, uid, context=context)
 
     _columns = {
-        'openerp_id': fields.many2one('product.product',
+        'openerp_id': fields.many2one('product.template',
                                       string='Product',
                                       required=True,
                                       ondelete='restrict'),
@@ -109,68 +118,120 @@ class magento_product_product(orm.Model):
             required=False,
             help="Check this to exclude the product "
                  "from stock synchronizations."),
-        }
+    }
 
     _defaults = {
         'product_type': 'simple',
         'manage_stock': 'use_default',
         'backorders': 'use_default',
         'no_stock_sync': False,
-        }
+    }
 
     _sql_constraints = [
         ('magento_uniq', 'unique(backend_id, magento_id)',
          "A product with the same ID on Magento already exists")
     ]
 
+    RECOMPUTE_QTY_STEP = 1000  # products at a time
+
     def recompute_magento_qty(self, cr, uid, ids, context=None):
+        """ Check if the quantity in the stock location configured
+        on the backend has changed since the last export.
+
+        If it has changed, write the updated quantity on `magento_qty`.
+        The write on `magento_qty` will trigger an `on_record_write`
+        event that will create an export job.
+
+        It groups the products by backend to avoid to read the backend
+        informations for each product.
+        """
         if not hasattr(ids, '__iter__'):
             ids = [ids]
 
-        for product in self.browse(cr, uid, ids, context=context):
-            new_qty = self._magento_qty(cr, uid, product, context=context)
-            if new_qty != product.magento_qty:
-                self.write(cr, uid, product.id,
-                           {'magento_qty': new_qty},
-                           context=context)
+        # group products by backend
+        backends = defaultdict(list)
+        for product in self.read(cr, uid, ids, ['backend_id', 'magento_qty'],
+                                 context=context):
+            backends[product['backend_id'][0]].append(product)
+
+        for backend_id, products in backends.iteritems():
+            backend_obj = self.pool['magento.backend']
+            backend = backend_obj.browse(cr, uid, backend_id, context=context)
+            self._recompute_magento_qty_backend(cr, uid, backend, products,
+                                                context=context)
         return True
 
-    def _magento_qty(self, cr, uid, product, context=None):
+    def _recompute_magento_qty_backend(self, cr, uid, backend, products,
+                                       read_fields=None, context=None):
+        """ Recompute the products quantity for one backend.
+
+        If field names are passed in ``read_fields`` (as a list), they
+        will be read in the product that is used in
+        :meth:`~._magento_qty`.
+
+        """
         if context is None:
             context = {}
-        backend = product.backend_id
-        stock = backend.warehouse_id.lot_stock_id
 
         if backend.product_stock_field_id:
             stock_field = backend.product_stock_field_id.name
         else:
             stock_field = 'virtual_available'
 
+        location = backend.warehouse_id.lot_stock_id
         location_ctx = context.copy()
-        location_ctx['location'] = stock.id
-        product_stk = self.read(cr, uid, product.id,
-                                [stock_field],
-                                context=location_ctx)
-        return product_stk[stock_field]
+        location_ctx['location'] = location.id
+
+        product_fields = ['magento_qty', stock_field]
+        if read_fields:
+            product_fields += read_fields
+
+        product_ids = [product['id'] for product in products]
+        for chunk_ids in chunks(product_ids, self.RECOMPUTE_QTY_STEP):
+            for product in self.read(cr, uid, chunk_ids, product_fields,
+                                     context=location_ctx):
+                new_qty = self._magento_qty(cr, uid, product,
+                                            backend,
+                                            location,
+                                            stock_field,
+                                            context=location_ctx)
+                if new_qty != product['magento_qty']:
+                    self.write(cr, uid, product['id'],
+                               {'magento_qty': new_qty},
+                               context=context)
+
+    def _magento_qty(self, cr, uid, product, backend, location,
+                     stock_field, context=None):
+        """ Return the current quantity for one product.
+
+        Can be inherited to change the way the quantity is computed,
+        according to a backend / location.
+
+        If you need to read additional fields on the product, see the
+        ``read_fields`` argument of :meth:`~._recompute_magento_qty_backend`
+
+        """
+        return product[stock_field]
 
 
-class product_product(orm.Model):
-    _inherit = 'product.product'
+class ProductProduct(orm.Model):
+    _inherit = 'product.template'
 
     _columns = {
         'magento_bind_ids': fields.one2many(
             'magento.product.product',
             'openerp_id',
-            string='Magento Bindings',),
+            string='Magento Bindings'),
     }
 
     def copy_data(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
         default['magento_bind_ids'] = False
-        return super(product_product, self).copy_data(cr, uid, id,
-                                                      default=default,
-                                                      context=context)
+        return super(ProductProduct, self).copy_data(
+            cr, uid, id,
+            default=default,
+            context=context)
 
 
 @magento
@@ -190,17 +251,21 @@ class ProductProductAdapter(GenericAdapter):
             else:
                 raise
 
-    def search(self, filters=None, from_date=None):
-        """ Search records according to some criterias
+    def search(self, filters=None, from_date=None, to_date=None):
+        """ Search records according to some criteria
         and returns a list of ids
 
         :rtype: list
         """
         if filters is None:
             filters = {}
+        dt_fmt = MAGENTO_DATETIME_FORMAT
         if from_date is not None:
-            str_from_date = from_date.strftime('%Y/%m/%d %H:%M:%S')
-            filters['updated_at'] = {'from': str_from_date}
+            filters.setdefault('updated_at', {})
+            filters['updated_at']['from'] = from_date.strftime(dt_fmt)
+        if to_date is not None:
+            filters.setdefault('updated_at', {})
+            filters['updated_at']['to'] = to_date.strftime(dt_fmt)
         # TODO add a search entry point on the Magento API
         return [int(row['product_id']) for row
                 in self._call('%s.list' % self._magento_model,
@@ -211,7 +276,7 @@ class ProductProductAdapter(GenericAdapter):
 
         :rtype: dict
         """
-        return self._call('%s.info' % self._magento_model,
+        return self._call('catalog_product.info',
                           [int(id), storeview_id, attributes, 'id'])
 
     def write(self, id, data, storeview_id=None):
@@ -246,7 +311,10 @@ class ProductBatchImport(DelayedBatchImport):
     def run(self, filters=None):
         """ Run the synchronization """
         from_date = filters.pop('from_date', None)
-        record_ids = self.backend_adapter.search(filters, from_date)
+        to_date = filters.pop('to_date', None)
+        record_ids = self.backend_adapter.search(filters,
+                                                 from_date=from_date,
+                                                 to_date=to_date)
         _logger.info('search for magento products %s returned %s',
                      filters, record_ids)
         for record_id in record_ids:
@@ -329,6 +397,61 @@ class CatalogImageImporter(ImportSynchronizer):
 
 
 @magento
+class BundleImporter(ImportSynchronizer):
+    """ Can be inherited to change the way the bundle products are
+    imported.
+
+    Called at the end of the import of a product.
+
+    Example of action when importing a bundle product:
+        - Create a bill of material
+        - Import the structure of the bundle in new objects
+
+    By default, the bundle products are not imported: the jobs
+    are set as failed, because there is no known way to import them.
+    An additional module that implements the import should be installed.
+
+    If you want to create a custom importer for the bundles, you have to
+    declare the ConnectorUnit on your backend::
+
+        @magento_custom
+        class XBundleImporter(BundleImporter):
+            _model_name = 'magento.product.product'
+
+            # implement import_bundle
+
+    If you want to create a generic module that import bundles, you have
+    to replace the current ConnectorUnit::
+
+        @magento(replacing=BundleImporter)
+        class XBundleImporter(BundleImporter):
+            _model_name = 'magento.product.product'
+
+            # implement import_bundle
+
+    And to add the bundle type in the supported product types::
+
+        class magento_product_product(orm.Model):
+            _inherit = 'magento.product.product'
+
+            def product_type_get(self, cr, uid, context=None):
+                types = super(magento_product_product, self).product_type_get(
+                    cr, uid, context=context)
+                if 'bundle' not in [item[0] for item in types]:
+                    types.append(('bundle', 'Bundle'))
+                return types
+
+    """
+    _model_name = 'magento.product.product'
+
+    def run(self, binding_id, magento_record):
+        """ Import the bundle information about a product.
+
+        :param magento_record: product information from Magento
+        """
+
+
+@magento
 class ProductImport(MagentoImportSynchronizer):
     _model_name = ['magento.product.product']
 
@@ -339,6 +462,14 @@ class ProductImport(MagentoImportSynchronizer):
                 ProductImportMapper)
         return self._mapper
 
+    def _import_bundle_dependencies(self):
+        """ Import the dependencies for a Bundle """
+        bundle = self.magento_record['_bundle_data']
+        for option in bundle['options']:
+            for selection in option['selections']:
+                self._import_dependency(selection['product_id'],
+                                        'magento.product.product')
+
     def _import_dependencies(self):
         """ Import the dependencies for the record"""
         record = self.magento_record
@@ -346,6 +477,8 @@ class ProductImport(MagentoImportSynchronizer):
         for mag_category_id in record['categories']:
             self._import_dependency(mag_category_id,
                                     'magento.product.category')
+        if record['type_id'] == 'bundle':
+            self._import_bundle_dependencies()
 
     def _validate_product_type(self, data):
         """ Check if the product type is in the selection (so we can
@@ -405,6 +538,11 @@ class ProductImport(MagentoImportSynchronizer):
             CatalogImageImporter, self.model._name)
         image_importer.run(self.magento_id, binding_id)
 
+        if self.magento_record['type_id'] == 'bundle':
+            bundle_importer = self.get_connector_unit_for_model(
+                BundleImporter, self.model._name)
+            bundle_importer.run(binding_id, self.magento_record)
+
 
 @magento
 class IsActiveProductImportMapper(ImportMapper):
@@ -416,6 +554,11 @@ class IsActiveProductImportMapper(ImportMapper):
         and set active flag in OpenERP
         status == 1 in Magento means active"""
         return {'active': (record.get('status') == '1')}
+
+
+@magento
+class BundleProductImportMapper(ImportMapper):
+    _model_name = 'magento.product.product'
 
 
 @magento
@@ -497,6 +640,13 @@ class ProductImportMapper(ImportMapper):
     @mapping
     def backend_id(self, record):
         return {'backend_id': self.backend_record.id}
+
+    @mapping
+    def bundle_mapping(self, record):
+        if record['type_id'] == 'bundle':
+            bundle_mapper = self.get_connector_unit_for_model(
+                BundleProductImportMapper)
+            return bundle_mapper.map_record(record).values()
 
 
 @magento

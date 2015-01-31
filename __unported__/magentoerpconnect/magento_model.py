@@ -247,7 +247,9 @@ class magento_backend(orm.Model):
             else:
                 from_date = None
             import_batch.delay(session, model,
-                               backend.id, filters={'from_date': from_date})
+                               backend.id,
+                               filters={'from_date': from_date,
+                                        'to_date': import_start_time})
         # Records from Magento are imported based on their `created_at`
         # date.  This date is set on Magento at the beginning of a
         # transaction, so if the import is run between the beginning and
@@ -380,7 +382,8 @@ class magento_website(orm.Model):
             partner_import_batch.delay(
                 session, 'magento.res.partner', backend_id,
                 {'magento_website_id': website.magento_id,
-                    'from_date': from_date})
+                 'from_date': from_date,
+                 'to_date': import_start_time})
         # Records from Magento are imported based on their `created_at`
         # date.  This date is set on Magento at the beginning of a
         # transaction, so if the import is run between the beginning and
@@ -404,8 +407,6 @@ class magento_store(orm.Model):
     _inherit = 'magento.binding'
     _description = 'Magento Store'
 
-    _inherits = {'sale.shop': 'openerp_id'}
-
     def _get_store_from_website(self, cr, uid, ids, context=None):
         store_obj = self.pool.get('magento.store')
         return store_obj.search(cr, uid,
@@ -413,15 +414,10 @@ class magento_store(orm.Model):
                                 context=context)
 
     _columns = {
+        'store_name': fields.char('Store Name'),
         'website_id': fields.many2one(
             'magento.website',
             'Magento Website',
-            required=True,
-            readonly=True,
-            ondelete='cascade'),
-        'openerp_id': fields.many2one(
-            'sale.shop',
-            string='Sale Shop',
             required=True,
             readonly=True,
             ondelete='cascade'),
@@ -470,25 +466,6 @@ class magento_store(orm.Model):
         ('magento_uniq', 'unique(backend_id, magento_id)',
          'A store with the same ID on Magento already exists.'),
     ]
-
-
-class sale_shop(orm.Model):
-    _inherit = 'sale.shop'
-
-    _columns = {
-        'magento_bind_ids': fields.one2many(
-            'magento.store', 'openerp_id',
-            string='Magento Bindings',
-            readonly=True),
-    }
-
-    def copy_data(self, cr, uid, id, default=None, context=None):
-        if default is None:
-            default = {}
-        default['magento_bind_ids'] = False
-        return super(sale_shop, self).copy_data(cr, uid, id,
-                                                default=default,
-                                                context=context)
 
 
 # TODO: migrate from magerp.storeviews
@@ -554,7 +531,8 @@ class magento_storeview(orm.Model):
                 'magento.sale.order',
                 backend_id,
                 {'magento_storeview_id': storeview.magento_id,
-                 'from_date': from_date},
+                 'from_date': from_date,
+                 'to_date': import_start_time},
                 priority=1)  # executed as soon as possible
         # Records from Magento are imported based on their `created_at`
         # date.  This date is set on Magento at the beginning of a
@@ -634,7 +612,7 @@ class WebsiteImportMapper(ImportMapper):
 class StoreImportMapper(ImportMapper):
     _model_name = 'magento.store'
 
-    direct = [('name', 'name')]
+    direct = [('name', 'store_name')]
 
     @mapping
     def website_id(self, record):
@@ -674,8 +652,8 @@ class StoreImport(MagentoImportSynchronizer):
 
     def _create(self, data):
         openerp_binding_id = super(StoreImport, self)._create(data)
-        checkpoint = self.get_connector_unit_for_model(AddCheckpoint)
-        checkpoint.run(openerp_binding_id)
+        # checkpoint = self.get_connector_unit_for_model(AddCheckpoint)
+        # checkpoint.run(openerp_binding_id)
         return openerp_binding_id
 
 
