@@ -28,7 +28,7 @@ to create your own module and apply your personalizations from there.
 As an example, throughout this tutorial, we'll create our own
 customization module, we'll name it, in a very original manner,
 ``customize_example``. The final example module can be found in the root
-of the ``magentoerpconnect`` bazaar branch.
+of the ``connector-magento`` repository.
 
 Common OpenERP files
 ====================

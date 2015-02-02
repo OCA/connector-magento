@@ -26,16 +26,16 @@ OpenERP to ensure a correct synchronization between them
 OpenERP
 =======
 
-Download the branches below in a path where you chosed to store the addons::
+Clone the repositories below in the path where you chosed to store the addons::
 
-    $ bzr branch lp:openerp-connector/7.0 openerp-connector
-    $ bzr branch lp:openerp-connector-ecommerce/7.0 openerp-connector-ecommerce
-    $ bzr branch lp:openerp-connector-magento/7.0 openerp-connector-magento
-    $ bzr branch lp:e-commerce-addons/7.0 e-commerce-addons
-    $ bzr branch lp:openerp-product-attributes/7.0 openerp-product-attributes
-    $ bzr branch lp:sale-wkfl/7.0 sale-wkfl
+    $ git clone git@github.com:OCA/connector.git -b 7.0
+    $ git clone git@github.com:OCA/connector-ecommerce.git -b 7.0
+    $ git clone git@github.com:OCA/connector-magento.git -b 7.0
+    $ git clone git@github.com:OCA/e-commerce.git -b 7.0
+    $ git clone git@github.com:OCA/product-attribute.git -b 7.0
+    $ git clone git@github.com:OCA/sale-workflow.git -b 7.0
 
-.. important:: Keep the Bazaar branches entire. Do not copy-paste the modules
+.. important:: Keep the git branches entire. Do not copy-paste the modules
                in another directory.
 
 Add the branches in the addons path, either using the server command
@@ -43,7 +43,7 @@ line or adding them in the OpenERP server configuration file.
 
 Example using the command line argument::
 
-    $ /path/to/openerp-server --addons-path /path/to/openerp-connector,/path/to/openerp-connector-ecommerce,/path/to/openerp-connector-magento,/path/to/e-commerce-addons,/path/to/openerp-product-attributes,/path/to/sale-wkfl
+    $ /path/to/openerp-server --addons-path /path/to/connector,/path/to/connector-ecommerce,/path/to/connector-magento,/path/to/e-commerce,/path/to/product-attribute,/path/to/sale-workflow
 
 You also need to install the ``magento`` Python package.
 So install it with either pip or either easy_install::
@@ -69,7 +69,7 @@ For the time being, the Magento extension originally built by OpenLabs
 is still used  by the connector. But the version published on `Magento
 Connect` is outdated.
 
-Download the following branch and install it in Magento::
+Download the following ``Bazaar`` branch and install it in Magento::
 
     $ bzr branch lp:magentoerpconnect/magento-module-oerp6.x-stable magento-module
 

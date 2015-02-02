@@ -38,7 +38,9 @@ from openerp.addons.connector_ecommerce.unit.sale_order_onchange import (
 from openerp.addons.connector_ecommerce.sale import (ShippingLineBuilder,
                                                      CashOnDeliveryLineBuilder,
                                                      GiftOrderLineBuilder)
-from .unit.backend_adapter import GenericAdapter
+from .unit.backend_adapter import (GenericAdapter,
+                                   MAGENTO_DATETIME_FORMAT,
+                                   )
 from .unit.import_synchronizer import (DelayedBatchImport,
                                        MagentoImportSynchronizer
                                        )
@@ -133,6 +135,29 @@ class sale_order(orm.Model):
                                                  default=default,
                                                  context=context)
 
+    def copy_quotation(self, cr, uid, ids, context=None):
+        if isinstance(ids, (tuple, list)):
+            assert len(ids) == 1, ("1 ID expected, "
+                                   "got the following list %s" % (ids,))
+        if context is None:
+            context = {}
+        else:
+            context = context.copy()
+        context['__copy_from_quotation'] = True
+        result = super(sale_order, self).copy_quotation(cr, uid, ids,
+                                                        context=context)
+        # link binding of the canceled order to the new order, so the
+        # operations done on the new order will be sync'ed with Magento
+        new_id = result['res_id']
+        binding_obj = self.pool['magento.sale.order']
+        binding_ids = binding_obj.search(cr, uid,
+                                         [('openerp_id', '=', ids[0])],
+                                         context=context)
+        binding_obj.write(cr, uid, binding_ids,
+                          {'openerp_id': new_id},
+                          context=context)
+        return result
+
 
 class magento_sale_order_line(orm.Model):
     _name = 'magento.sale.order.line'
@@ -200,13 +225,53 @@ class sale_order_line(orm.Model):
             string="Magento Bindings"),
     }
 
+    def create(self, cr, uid, vals, context=None):
+        if context is None:
+            context = {}
+
+        old_line_id = None
+        if context.get('__copy_from_quotation'):
+            # when we are copying a sale.order from a canceled one,
+            # the id of the copied line is inserted in the vals
+            # in `copy_data`.
+            old_line_id = vals.pop('__copy_from_line_id', None)
+        new_id = super(sale_order_line, self).create(cr, uid, vals,
+                                                     context=context)
+        if old_line_id:
+            # link binding of the canceled order lines to the new order
+            # lines, happens when we are using the 'New Copy of
+            # Quotation' button on a canceled sales order
+            binding_obj = self.pool['magento.sale.order.line']
+            binding_ids = binding_obj.search(
+                cr, uid,
+                [('openerp_id', '=', old_line_id)],
+                context=context)
+            if binding_ids:
+                binding_obj.write(cr, uid, binding_ids,
+                                  {'openerp_id': new_id},
+                                  context=context)
+        return new_id
+
     def copy_data(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
+        if context is None:
+            context = {}
+
         default['magento_bind_ids'] = False
-        return super(sale_order_line, self).copy_data(cr, uid, id,
+        data = super(sale_order_line, self).copy_data(cr, uid, id,
                                                       default=default,
                                                       context=context)
+        if context.get('__copy_from_quotation'):
+            # copy_data is called by `copy` of the sale.order which
+            # builds a dict for the full new sale order, so we lose the
+            # association between the old and the new line.
+            # Keep a trace of the old id in the vals that will be passed
+            # to `create`, from there, we'll be able to update the
+            # Magento bindings, modifying the relation from the old to
+            # the new line.
+            data['__copy_from_line_id'] = id
+        return data
 
 
 @magento
@@ -226,17 +291,22 @@ class SaleOrderAdapter(GenericAdapter):
             else:
                 raise
 
-    def search(self, filters=None, from_date=None, magento_storeview_ids=None):
-        """ Search records according to some criterias
+    def search(self, filters=None, from_date=None, to_date=None,
+               magento_storeview_ids=None):
+        """ Search records according to some criteria
         and returns a list of ids
 
         :rtype: list
         """
         if filters is None:
             filters = {}
+        dt_fmt = MAGENTO_DATETIME_FORMAT
         if from_date is not None:
-            str_from_date = from_date.strftime('%Y/%m/%d %H:%M:%S')
-            filters['created_at'] = {'gt': str_from_date}
+            filters.setdefault('created_at', {})
+            filters['created_at']['from'] = from_date.strftime(dt_fmt)
+        if to_date is not None:
+            filters.setdefault('created_at', {})
+            filters['created_at']['to'] = to_date.strftime(dt_fmt)
         if magento_storeview_ids is not None:
             filters['store_id'] = {'in': magento_storeview_ids}
 
@@ -274,11 +344,14 @@ class SaleOrderBatchImport(DelayedBatchImport):
             filters = {}
         filters['state'] = {'neq': 'canceled'}
         from_date = filters.pop('from_date', None)
+        to_date = filters.pop('to_date', None)
         magento_storeview_ids = [filters.pop('magento_storeview_id')]
-        record_ids = self.backend_adapter.search(filters,
-                                                 from_date,
-                                                 magento_storeview_ids)
-        _logger.info('search for magento saleorders %s  returned %s',
+        record_ids = self.backend_adapter.search(
+            filters,
+            from_date=from_date,
+            to_date=to_date,
+            magento_storeview_ids=magento_storeview_ids)
+        _logger.info('search for magento saleorders %s returned %s',
                      filters, record_ids)
         for record_id in record_ids:
             self._import_record(record_id)
@@ -526,20 +599,23 @@ class SaleOrderImport(MagentoImportSynchronizer):
                 SaleOrderMoveComment)
             move_comment.move(binding)
 
+    def _get_storeview(self, record):
+        """ Return the tax inclusion setting for the appropriate storeview """
+        storeview_binder = self.get_binder_for_model('magento.storeview')
+        # we find storeview_id in store_id!
+        # (http://www.magentocommerce.com/bug-tracking/issue?issue=15886)
+        storeview_id = storeview_binder.to_openerp(record['store_id'])
+        storeview = self.session.browse('magento.storeview', storeview_id)
+        return storeview
+
     def _get_magento_data(self):
         """ Return the raw Magento data for ``self.magento_id`` """
         record = super(SaleOrderImport, self)._get_magento_data()
         # sometimes we don't have website_id...
         # we fix the record!
         if not record.get('website_id'):
+            storeview = self._get_storeview(record)
             # deduce it from the storeview
-            storeview_binder = self.get_binder_for_model('magento.storeview')
-            # we find storeview_id in store_id!
-            # (http://www.magentocommerce.com/bug-tracking/issue?issue=15886)
-            oe_storeview_id = storeview_binder.to_openerp(record['store_id'])
-            storeview = self.session.browse('magento.storeview',
-                                            oe_storeview_id)
-            # "fix" the record
             record['website_id'] = storeview.store_id.website_id.magento_id
         # sometimes we need to clean magento items (ex : configurable
         # product in a sale)
@@ -685,7 +761,7 @@ class SaleOrderImport(MagentoImportSynchronizer):
         self.partner_invoice_id = billing_id
         self.partner_shipping_id = shipping_id or billing_id
 
-    def _update_special_fields(self, data):
+    def _check_special_fields(self):
         assert self.partner_id, (
             "self.partner_id should have been defined "
             "in SaleOrderImport._import_addresses")
@@ -695,28 +771,30 @@ class SaleOrderImport(MagentoImportSynchronizer):
         assert self.partner_shipping_id, (
             "self.partner_id should have been defined "
             "in SaleOrderImport._import_addresses")
-        data['partner_id'] = self.partner_id
-        data['partner_invoice_id'] = self.partner_invoice_id
-        data['partner_shipping_id'] = self.partner_shipping_id
-        return data
 
     def _create_data(self, map_record, **kwargs):
-        tax_include = self.backend_record.catalog_price_tax_included
+        storeview = self._get_storeview(map_record.source)
+        self._check_special_fields()
         return super(SaleOrderImport, self)._create_data(
-            map_record, tax_include=tax_include, **kwargs)
-
-    def _create(self, data):
-        data = self._update_special_fields(data)
-        return super(SaleOrderImport, self)._create(data)
+            map_record,
+            tax_include=storeview.catalog_price_tax_included,
+            partner_id=self.partner_id,
+            partner_invoice_id=self.partner_invoice_id,
+            partner_shipping_id=self.partner_shipping_id,
+            storeview=storeview,
+            **kwargs)
 
     def _update_data(self, map_record, **kwargs):
-        tax_include = self.backend_record.catalog_price_tax_included
+        storeview = self._get_storeview(map_record.source)
+        self._check_special_fields()
         return super(SaleOrderImport, self)._update_data(
-            map_record, tax_include=tax_include, **kwargs)
-
-    def _update(self, binding_id, data):
-        data = self._update_special_fields(data)
-        return super(SaleOrderImport, self)._update(binding_id, data)
+            map_record,
+            tax_include=storeview.catalog_price_tax_included,
+            partner_id=self.partner_id,
+            partner_invoice_id=self.partner_invoice_id,
+            partner_shipping_id=self.partner_shipping_id,
+            storeview=storeview,
+            **kwargs)
 
     def _import_dependencies(self):
         record = self.magento_record
@@ -810,6 +888,11 @@ class SaleOrderImportMapper(ImportMapper):
         values = self._add_shipping_line(map_record, values)
         values = self._add_cash_on_delivery_line(map_record, values)
         values = self._add_gift_certificate_line(map_record, values)
+        values.update({
+            'partner_id': self.options.partner_id,
+            'partner_invoice_id': self.options.partner_invoice_id,
+            'partner_shipping_id': self.options.partner_shipping_id,
+        })
         onchange = self.get_connector_unit_for_model(SaleOrderOnChange)
         return onchange.play(values, values['magento_order_line_ids'])
 
@@ -823,12 +906,7 @@ class SaleOrderImportMapper(ImportMapper):
 
     @mapping
     def store_id(self, record):
-        binder = self.get_binder_for_model('magento.storeview')
-        storeview_id = binder.to_openerp(record['store_id'])
-        assert storeview_id is not None, ('cannot import sale orders from '
-                                          'non existing storeview')
-        storeview = self.session.browse('magento.storeview', storeview_id)
-        shop_id = storeview.store_id.openerp_id.id
+        shop_id = self.options.storeview.store_id.openerp_id.id
         return {'shop_id': shop_id}
 
     @mapping
@@ -916,11 +994,11 @@ class SaleOrderLineImportMapper(ImportMapper):
 
     @mapping
     def discount_amount(self, record):
-        discount_value = float(record.get('discount_amount', 0))
-        if self.backend_record.catalog_price_tax_included:
-            row_total = float(record.get('row_total_incl_tax', 0))
+        discount_value = float(record.get('discount_amount') or 0)
+        if self.options.tax_include:
+            row_total = float(record.get('row_total_incl_tax') or 0)
         else:
-            row_total = float(record.get('row_total', 0))
+            row_total = float(record.get('row_total') or 0)
         discount = 0
         if discount_value > 0 and row_total > 0:
             discount = 100 * discount_value / row_total
@@ -943,7 +1021,7 @@ class SaleOrderLineImportMapper(ImportMapper):
         if ifield:
             import re
             options_label = []
-            clean = re.sub('\w:\w:|\w:\w+;', '', ifield)
+            clean = re.sub(r'\w:\w:|\w:\w+;', '', ifield)
             for each in clean.split('{'):
                 if each.startswith('"label"'):
                     split_info = each.split(';')

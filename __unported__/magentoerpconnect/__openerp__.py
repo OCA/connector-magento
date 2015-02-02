@@ -21,7 +21,7 @@
 ##############################################################################
 
 {'name': 'Magento Connector',
- 'version': '2.4.2',
+ 'version': '2.5.0',
  'category': 'Connector',
  'depends': ['account',
              'product',
@@ -35,7 +35,7 @@
  },
  'author': 'Connector Core Editors',
  'license': 'AGPL-3',
- 'website': 'http://www.openerp-magento-connector.com',
+ 'website': 'http://www.odoo-magento-connector.com',
  'description': """
 Magento Connector
 =================

@@ -120,6 +120,12 @@ class MagentoModelBinder(MagentoBinder):
         context = self.session.context.copy()
         context['connector_no_export'] = True
         now_fmt = datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        # the external ID can be 0 on Magento! Prevent False values
+        # like False, None, or "", but not 0.
+        assert (external_id or external_id == 0) and binding_id, (
+            "external_id or binding_id missing, "
+            "got: %s, %s" % (external_id, binding_id)
+        )
         self.environment.model.write(
             self.session.cr,
             self.session.uid,

@@ -328,5 +328,5 @@ intersphinx_mapping = {
     'python': ('http://docs.python.org/2.6', None),
     'openerpweb': ('http://doc.openerp.com/trunk/developers/web', None),
     'openerpdev': ('http://doc.openerp.com/trunk/developers', None),
-    'openerpconnector': ('http://www.openerp-connector.com', None),
+    'openerpconnector': ('http://www.odoo-connector.com', None),
 }
