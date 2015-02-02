@@ -541,8 +541,6 @@ class SaleOrderImport(MagentoImportSynchronizer):
         rules.check(self.magento_record)
 
     def _create_payment(self, binding_id):
-        import pdb
-        pdb.set_trace()
         sess = self.session
         mag_sale = sess.browse(self.model._name, binding_id)
         if not mag_sale.payment_method_id.journal_id:
