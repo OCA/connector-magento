@@ -32,7 +32,8 @@ from openerp.addons.connector.unit.mapper import (mapping,
                                                   ImportMapper
                                                   )
 from openerp.addons.connector.exception import IDMissingInBackend
-from .unit.backend_adapter import GenericAdapter
+from .unit.backend_adapter import (
+    GenericAdapter, MAGENTO_DATETIME_FORMAT)
 from .unit.import_synchronizer import (DelayedBatchImport,
                                        MagentoImportSynchronizer
                                        )
@@ -210,19 +211,23 @@ class PartnerAdapter(GenericAdapter):
             else:
                 raise
 
-    def search(self, filters=None, from_date=None, magento_website_ids=None):
-        """ Search records according to some criterias and returns a
+    def search(self, filters=None, from_date=None, to_date=None,
+               magento_website_ids=None):
+        """ Search records according to some criteria and return a
         list of ids
-
         :rtype: list
         """
         if filters is None:
             filters = {}
 
+        dt_fmt = MAGENTO_DATETIME_FORMAT
         if from_date is not None:
             # updated_at include the created records
-            str_from_date = from_date.strftime('%Y/%m/%d %H:%M:%S')
-            filters['updated_at'] = {'from': str_from_date}
+            filters.setdefault('updated_at', {})
+            filters['updated_at']['from'] = from_date.strftime(dt_fmt)
+        if to_date is not None:
+            filters.setdefault('updated_at', {})
+            filters['updated_at']['to'] = to_date.strftime(dt_fmt)
         if magento_website_ids is not None:
             filters['website_id'] = {'in': magento_website_ids}
 
@@ -242,9 +247,11 @@ class PartnerBatchImport(DelayedBatchImport):
     def run(self, filters=None):
         """ Run the synchronization """
         from_date = filters.pop('from_date', None)
+        to_date = filters.pop('to_date', None)
         magento_website_ids = [filters.pop('magento_website_id')]
         record_ids = self.backend_adapter.search(filters,
                                                  from_date,
+                                                 to_date,
                                                  magento_website_ids)
         _logger.info('search for magento partners %s returned %s',
                      filters, record_ids)
