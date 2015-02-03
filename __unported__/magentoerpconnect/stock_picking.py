@@ -227,8 +227,6 @@ def picking_out_done(session, model_name, record_id, picking_method):
     :param picking_method: picking_method, can be 'complete' or 'partial'
     :type picking_method: str
     """
-    import pdb
-    pdb.set_trace()
     picking = session.browse(model_name, record_id)
     sale = picking.sale_id
     if not sale:
