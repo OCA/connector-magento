@@ -27,8 +27,11 @@ import magento as magentolib
 from openerp.addons.connector.unit.backend_adapter import CRUDAdapter
 from openerp.addons.connector.exception import (NetworkRetryableError,
                                                 RetryableJobError)
-
+from datetime import datetime
 _logger = logging.getLogger(__name__)
+
+
+MAGENTO_DATETIME_FORMAT = '%Y/%m/%d %H:%M:%S'
 
 
 recorder = {}
@@ -149,15 +152,29 @@ class MagentoCRUDAdapter(CRUDAdapter):
     def _call(self, method, arguments):
         try:
             custom_url = self.magento.use_custom_api_path
+            _logger.debug("Start calling Magento api %s", method)
             with magentolib.API(self.magento.location,
                                 self.magento.username,
                                 self.magento.password,
                                 full_url=custom_url) as api:
-                result = api.call(method, arguments)
+                # When Magento is installed on PHP 5.4+, the API
+                # may return garble data if the arguments contain
+                # trailing None.
+                if isinstance(arguments, list):
+                    while arguments and arguments[-1] is None:
+                        arguments.pop()
+                start = datetime.now()
+                try:
+                    result = api.call(method, arguments)
+                except:
+                    _logger.debug("api.call(%s, %s) failed", method, arguments)
+                    raise
+                else:
+                    _logger.debug("api.call(%s, %s) returned %s in %s seconds",
+                                  method, arguments, result,
+                                  (datetime.now() - start).seconds)
                 # Uncomment to record requests/responses in ``recorder``
                 # record(method, arguments, result)
-                _logger.debug("api.call(%s, %s) returned %s",
-                              method, arguments, result)
                 return result
         except (socket.gaierror, socket.error, socket.timeout) as err:
             raise NetworkRetryableError(
@@ -203,7 +220,7 @@ class GenericAdapter(MagentoCRUDAdapter):
             # Avoid to pass Null values in attributes. Workaround for
             # https://bugs.launchpad.net/openerp-connector-magento/+bug/1210775
             # When Magento is installed on PHP 5.4 and the compatibility patch
-            # (http://magento.com/blog/magento-news/magento-now-supports-php-54)
+            # http://magento.com/blog/magento-news/magento-now-supports-php-54
             # is not installed, calling info() with None in attributes
             # would return a wrong result (almost empty list of
             # attributes). The right correction is to install the

@@ -32,7 +32,9 @@ from openerp.addons.connector.unit.mapper import (mapping,
                                                   ImportMapper
                                                   )
 from openerp.addons.connector.exception import IDMissingInBackend
-from .unit.backend_adapter import GenericAdapter
+from .unit.backend_adapter import (GenericAdapter,
+                                   MAGENTO_DATETIME_FORMAT,
+                                   )
 from .unit.import_synchronizer import (DelayedBatchImport,
                                        MagentoImportSynchronizer
                                        )
@@ -210,8 +212,9 @@ class PartnerAdapter(GenericAdapter):
             else:
                 raise
 
-    def search(self, filters=None, from_date=None, magento_website_ids=None):
-        """ Search records according to some criterias and returns a
+    def search(self, filters=None, from_date=None, to_date=None,
+               magento_website_ids=None):
+        """ Search records according to some criteria and return a
         list of ids
 
         :rtype: list
@@ -219,10 +222,14 @@ class PartnerAdapter(GenericAdapter):
         if filters is None:
             filters = {}
 
+        dt_fmt = MAGENTO_DATETIME_FORMAT
         if from_date is not None:
             # updated_at include the created records
-            str_from_date = from_date.strftime('%Y/%m/%d %H:%M:%S')
-            filters['updated_at'] = {'from': str_from_date}
+            filters.setdefault('updated_at', {})
+            filters['updated_at']['from'] = from_date.strftime(dt_fmt)
+        if to_date is not None:
+            filters.setdefault('updated_at', {})
+            filters['updated_at']['to'] = to_date.strftime(dt_fmt)
         if magento_website_ids is not None:
             filters['website_id'] = {'in': magento_website_ids}
 
@@ -242,10 +249,13 @@ class PartnerBatchImport(DelayedBatchImport):
     def run(self, filters=None):
         """ Run the synchronization """
         from_date = filters.pop('from_date', None)
+        to_date = filters.pop('to_date', None)
         magento_website_ids = [filters.pop('magento_website_id')]
-        record_ids = self.backend_adapter.search(filters,
-                                                 from_date,
-                                                 magento_website_ids)
+        record_ids = self.backend_adapter.search(
+            filters,
+            from_date=from_date,
+            to_date=to_date,
+            magento_website_ids=magento_website_ids)
         _logger.info('search for magento partners %s returned %s',
                      filters, record_ids)
         for record_id in record_ids:
@@ -335,6 +345,18 @@ class PartnerImportMapper(ImportMapper):
         binder = self.get_binder_for_model('magento.website')
         website_id = binder.to_openerp(record['website_id'])
         return {'website_id': website_id}
+
+    @only_create
+    @mapping
+    def company_id(self, record):
+        binder = self.get_binder_for_model('magento.storeview')
+        binding_id = binder.to_openerp(record['store_id'])
+        if binding_id:
+            storeview = self.session.browse('magento.storeview',
+                                            binding_id)
+            if storeview.store_id and storeview.store_id.company_id:
+                return {'company_id': storeview.store_id.company_id.id}
+        return {'company_id': False}
 
     @mapping
     def lang(self, record):
@@ -502,7 +524,7 @@ class BaseAddressImportMapper(ImportMapper):
         if prefix:
             title_ids = self.session.search('res.partner.title',
                                             [('domain', '=', 'contact'),
-                                             ('shortcut', 'ilike', prefix)])
+                                             ('shortcut', '=ilike', prefix)])
             if title_ids:
                 title_id = title_ids[0]
             else:
@@ -511,6 +533,19 @@ class BaseAddressImportMapper(ImportMapper):
                                                 'shortcut': prefix,
                                                 'name': prefix})
         return {'title': title_id}
+
+    @only_create
+    @mapping
+    def company_id(self, record):
+        parent_id = record.get('parent_id')
+        if parent_id:
+            parent = self.session.browse('res.partner', parent_id)
+            if parent.company_id:
+                return {'company_id': parent.company_id.id}
+            else:
+                return {'company_id': False}
+        # Don't return anything, we are merging into an existing partner
+        return
 
 
 @magento

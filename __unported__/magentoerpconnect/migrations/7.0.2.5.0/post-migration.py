@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    Author: Guewen Baconnier
-#    Copyright 2012 Camptocamp SA
+#    Author: Ondřej Kuzník
+#    Copyright 2014 credativ, ltd.
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,11 +19,21 @@
 #
 ##############################################################################
 
-from . import test_synchronization
+import logging
 
-fast_suite = [
-]
+logger = logging.getLogger('upgrade')
 
-checks = [
-    test_synchronization,
-]
+
+def migrate(cr, version):
+    """
+    The tax inclusion setting has moved from the backend to the storeview.
+    """
+    if version:  # do not run on a fresh DB, see lp:1259975
+        logger.info("Migrating magentoerpconnect from version %s", version)
+        cr.execute("UPDATE magento_storeview msw "
+                   "SET catalog_price_tax_included = "
+                   "    (SELECT mb.catalog_price_tax_included "
+                   "            FROM magento_backend mb WHERE "
+                   "                mb.id = msw.backend_id)")
+        cr.execute("ALTER TABLE magento_backend DROP "
+                   "      COLUMN catalog_price_tax_included")
