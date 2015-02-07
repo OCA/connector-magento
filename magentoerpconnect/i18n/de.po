@@ -8,20 +8,20 @@ msgstr ""
 "Project-Id-Version: openerp-connector-magento\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-06-10 14:00+0000\n"
-"PO-Revision-Date: 2014-02-26 21:07+0000\n"
-"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
-"consulting.net>\n"
+"PO-Revision-Date: 2015-02-07 11:10+0100\n"
+"Last-Translator: Rudolf Schnapka <rs@techno-flex.de>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2014-06-24 06:34+0000\n"
-"X-Generator: Launchpad (build 17065)\n"
+"X-Generator: Poedit 1.5.4\n"
+"Language: de\n"
 
 #. module: magentoerpconnect
 #: help:magento.sale.order,magento_order_id:0
 msgid "'order_id' field in Magento"
-msgstr "'order_id' Feld in Magento"
+msgstr "'order_id'-Feld in Magento"
 
 #. module: magentoerpconnect
 #: view:magento.product.product:0
@@ -56,6 +56,9 @@ msgid ""
 "For instance, if the prefix is 'mag-', the sales order 100000692 in Magento, "
 "will be named 'mag-100000692' in OpenERP."
 msgstr ""
+"Ein Präfix wird vor den importierten Verkausauftrag gesetzt. Zum Beispiel, "
+"wenn das Präfix 'mag-' verwendet wird, wird in OpenERP der neue "
+"Verkaufsauftrag '100000692' zu 'mag-100000692' umbenannt."
 
 #. module: magentoerpconnect
 #: sql_constraint:magento.product.category:0
@@ -122,8 +125,8 @@ msgid ""
 " The partner takes the name of the company and is not merged with the "
 "billing address."
 msgstr ""
-"Ein Konto, welches ein Unternehmen als Rechnungsanschrift führt, wird als Unternehmen betrachtet.\n"
-"Der Partner bekommt den Namen des Unternehmens und wird nicht mit der Rechnungsanschrift zusammengeführt.
+"Ein Konto, welches ein Unternehmen als Rechnungsanschrift führt, wird als "
+"Unternehmen betrachtet."
 
 #. module: magentoerpconnect
 #: sql_constraint:magento.account.invoice:0
@@ -171,13 +174,9 @@ msgid ""
 "                                    they will create 'Jobs'\n"
 "                                    executed as soon as possible."
 msgstr ""
-"Beim Klicken des Buttons,\n"
-"                                      weden Sie die Synchronisation mit "
-"Magento initialisieren.\n"
-"                                      Beachten Sie dass Im- und Exporte "
-"nicht direkt erldedigt werden. \n"
-"                                      Es werden 'Arbeitsschritte' erstellt, "
-"die dies so früh wie möglich erledigen."
+"Beim Klicken des Buttons, leiten Sie die Synchronisation mit Magento ein. "
+"Beachten Sie dass Im- und Exporte nicht direkt erledigt werden. Es werden "
+"'Aufgaben' erstellt, die so schnell wie möglich ausgeführt werden."
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_delivery_carrier
@@ -186,13 +185,19 @@ msgstr "Frachtführer"
 
 #. module: magentoerpconnect
 #: help:magento.storeview,no_sales_order_sync:0
-msgid "Check if the storeview is active in Magento but its sales orders should not be imported."
-msgstr "Anwählen, wenn die Storeview in Magento aktiv ist, Verkaufsaufträge jedoch nicht importiert werden sollen."
+msgid ""
+"Check if the storeview is active in Magento but its sales orders should not "
+"be imported."
+msgstr ""
+"Anwählen, wenn die Storeview in Magento aktiv ist, Verkaufsaufträge jedoch "
+"nicht importiert werden sollen."
 
 #. module: magentoerpconnect
 #: help:magento.product.product,no_stock_sync:0
 msgid "Check this to exclude the product from stock synchronizations."
-msgstr "Auswählen, wenn das Produkt von der Bestandssynchronisierung ausgeschlossen sein sollen."
+msgstr ""
+"Auswählen, wenn das Produkt von der Bestandssynchronisierung ausgeschlossen "
+"sein sollen."
 
 #. module: magentoerpconnect
 #: help:magento.backend,product_stock_field_id:0
@@ -206,14 +211,12 @@ msgstr ""
 "Wenn leer, wird die verfügbare Menge benutzt."
 
 #. module: magentoerpconnect
-#: field:magento.storeview,code:0
-#: field:magento.website,code:0
+#: field:magento.storeview,code:0 field:magento.website,code:0
 msgid "Code"
-msgstr "Code"
+msgstr "Schlüssel"
 
 #. module: magentoerpconnect
-#: view:res.partner:0
-#: field:res.partner,company:0
+#: view:res.partner:0 field:res.partner,company:0
 msgid "Company"
 msgstr "Unternehmen"
 
@@ -230,7 +233,7 @@ msgstr "Errechnete Menge"
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_connector_config_settings
 msgid "Connector Configuration"
-msgstr "Connector-Einstellungen"
+msgstr "Konnektor-Einstellungen"
 
 #. module: magentoerpconnect
 #: field:magento.res.partner,consider_as_company:0
@@ -355,8 +358,7 @@ msgstr "Verwalre den Produktkatalog (nicht implementiert)"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,magento_id:0
-#: field:magento.address,magento_id:0
-#: field:magento.binding,magento_id:0
+#: field:magento.address,magento_id:0 field:magento.binding,magento_id:0
 #: field:magento.product.category,magento_id:0
 #: field:magento.product.product,magento_id:0
 #: field:magento.res.partner,magento_id:0
@@ -364,8 +366,7 @@ msgstr "Verwalre den Produktkatalog (nicht implementiert)"
 #: field:magento.sale.order,magento_id:0
 #: field:magento.sale.order.line,magento_id:0
 #: field:magento.stock.picking.out,magento_id:0
-#: field:magento.store,magento_id:0
-#: field:magento.storeview,magento_id:0
+#: field:magento.store,magento_id:0 field:magento.storeview,magento_id:0
 #: field:magento.website,magento_id:0
 msgid "ID on Magento"
 msgstr "ID in Magento"
@@ -386,18 +387,19 @@ msgid ""
 "translation of this language.\n"
 "Note that a similar configuration exists for each storeview."
 msgstr ""
-"Wenn Vorgabesprache ausgewählt, werden die Datensätze in der Übersetzung dieser Sprache importiert.\n"
+"Wenn Vorgabesprache ausgewählt, werden die Datensätze in der Übersetzung "
+"dieser Sprache importiert.\n"
 "Eine entsprechende Einstellung gibt es auch je Storeview."
 
 #. module: magentoerpconnect
 #: view:magento.storeview:0
 msgid "Import Sale Orders"
-msgstr "Importiere VK-Aufträge"
+msgstr "Importiere Verkaufsaufträge"
 
 #. module: magentoerpconnect
 #: view:magento.storeview:0
 msgid "Import Sale Orders since"
-msgstr "Importiere VK-Aufträge seit"
+msgstr "Importiere Verkaufsaufträge seit"
 
 #. module: magentoerpconnect
 #: view:magento.backend:0
@@ -410,8 +412,7 @@ msgid "Import categories from date"
 msgstr "Importiere Kategorien ab Datum"
 
 #. module: magentoerpconnect
-#: view:magento.backend:0
-#: view:magento.website:0
+#: view:magento.backend:0 view:magento.website:0
 msgid "Import in background"
 msgstr "Importiere im Hintergrund"
 
@@ -456,16 +457,12 @@ msgid "Import sales orders from all store views"
 msgstr "Importiere Aufträge von allen Store Views"
 
 #. module: magentoerpconnect
-#: view:magento.backend:0
-#: view:magento.storeview:0
-#: view:magento.website:0
+#: view:magento.backend:0 view:magento.storeview:0 view:magento.website:0
 msgid "Imports"
 msgstr "Importe"
 
 #. module: magentoerpconnect
-#: view:magento.store:0
-#: view:magento.storeview:0
-#: view:magento.website:0
+#: view:magento.store:0 view:magento.storeview:0 view:magento.website:0
 msgid "Informations"
 msgstr "Informationen"
 
@@ -491,8 +488,7 @@ msgid "Last computed quantity to send on Magento."
 msgstr "Zuletzt errechnete Anzahl die zu Magento geschickt wird."
 
 #. module: magentoerpconnect
-#: field:magento.account.invoice,sync_date:0
-#: field:magento.address,sync_date:0
+#: field:magento.account.invoice,sync_date:0 field:magento.address,sync_date:0
 #: field:magento.binding,sync_date:0
 #: field:magento.product.category,sync_date:0
 #: field:magento.product.product,sync_date:0
@@ -500,10 +496,8 @@ msgstr "Zuletzt errechnete Anzahl die zu Magento geschickt wird."
 #: field:magento.res.partner.category,sync_date:0
 #: field:magento.sale.order,sync_date:0
 #: field:magento.sale.order.line,sync_date:0
-#: field:magento.stock.picking.out,sync_date:0
-#: field:magento.store,sync_date:0
-#: field:magento.storeview,sync_date:0
-#: field:magento.website,sync_date:0
+#: field:magento.stock.picking.out,sync_date:0 field:magento.store,sync_date:0
+#: field:magento.storeview,sync_date:0 field:magento.website,sync_date:0
 msgid "Last synchronization date"
 msgstr "Letzte Synchronisierung"
 
@@ -514,8 +508,7 @@ msgstr "Standort"
 
 #. module: magentoerpconnect
 #: model:ir.ui.menu,name:magentoerpconnect.menu_magento_root
-#: view:payment.method:0
-#: view:res.partner.category:0
+#: view:payment.method:0 view:res.partner.category:0
 msgid "Magento"
 msgstr "Magento"
 
@@ -526,16 +519,14 @@ msgid "Magento Address"
 msgstr "Magento-Adresse"
 
 #. module: magentoerpconnect
-#: view:res.partner:0
-#: field:res.partner,magento_address_bind_ids:0
+#: view:res.partner:0 field:res.partner,magento_address_bind_ids:0
 msgid "Magento Address Bindings"
 msgstr "Magento-Addresszuordnung"
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_magento_backend
 #: field:magento.account.invoice,backend_id:0
-#: field:magento.address,backend_id:0
-#: view:magento.backend:0
+#: field:magento.address,backend_id:0 view:magento.backend:0
 #: field:magento.binding,backend_id:0
 #: field:magento.product.category,backend_id:0
 #: field:magento.product.product,backend_id:0
@@ -544,8 +535,7 @@ msgstr "Magento-Addresszuordnung"
 #: field:magento.sale.order,backend_id:0
 #: field:magento.sale.order.line,backend_id:0
 #: field:magento.stock.picking.out,backend_id:0
-#: field:magento.store,backend_id:0
-#: field:magento.storeview,backend_id:0
+#: field:magento.store,backend_id:0 field:magento.storeview,backend_id:0
 #: field:magento.website,backend_id:0
 msgid "Magento Backend"
 msgstr "Magento-Backend"
@@ -567,20 +557,14 @@ msgid "Magento Binding (abstract)"
 msgstr "Magento Zuordnung (abstrakt)"
 
 #. module: magentoerpconnect
-#: view:account.invoice:0
-#: field:account.invoice,magento_bind_ids:0
-#: view:product.category:0
-#: field:product.category,magento_bind_ids:0
-#: view:product.product:0
-#: field:product.product,magento_bind_ids:0
-#: view:res.partner:0
-#: field:res.partner,magento_bind_ids:0
+#: view:account.invoice:0 field:account.invoice,magento_bind_ids:0
+#: view:product.category:0 field:product.category,magento_bind_ids:0
+#: view:product.product:0 field:product.product,magento_bind_ids:0
+#: view:res.partner:0 field:res.partner,magento_bind_ids:0
 #: field:res.partner.category,magento_bind_ids:0
 #: field:sale.order,magento_bind_ids:0
-#: field:sale.order.line,magento_bind_ids:0
-#: field:sale.shop,magento_bind_ids:0
-#: field:stock.picking,magento_bind_ids:0
-#: view:stock.picking.out:0
+#: field:sale.order.line,magento_bind_ids:0 field:sale.shop,magento_bind_ids:0
+#: field:stock.picking,magento_bind_ids:0 view:stock.picking.out:0
 #: field:stock.picking.out,magento_bind_ids:0
 msgid "Magento Bindings"
 msgstr "Magento-Zuordnungen"
@@ -634,8 +618,7 @@ msgstr "Magento-Überkategorie"
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_magento_res_partner
-#: field:magento.address,magento_partner_id:0
-#: view:magento.res.partner:0
+#: field:magento.address,magento_partner_id:0 view:magento.res.partner:0
 msgid "Magento Partner"
 msgstr "Magento-Partner"
 
@@ -688,8 +671,7 @@ msgstr "Magento-Stores"
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_magento_storeview
-#: field:magento.sale.order,storeview_id:0
-#: view:magento.storeview:0
+#: field:magento.sale.order,storeview_id:0 view:magento.storeview:0
 msgid "Magento Storeview"
 msgstr "Magento-Storeview"
 
@@ -710,10 +692,8 @@ msgstr "Magento-USt"
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_magento_website
-#: field:magento.address,website_id:0
-#: field:magento.res.partner,website_id:0
-#: field:magento.store,website_id:0
-#: view:magento.website:0
+#: field:magento.address,website_id:0 field:magento.res.partner,website_id:0
+#: field:magento.store,website_id:0 view:magento.website:0
 msgid "Magento Website"
 msgstr "Magento-Webseite"
 
@@ -748,8 +728,7 @@ msgid "Manage Stock Level"
 msgstr "Bestandsmengen"
 
 #. module: magentoerpconnect
-#: field:magento.backend,name:0
-#: field:magento.storeview,name:0
+#: field:magento.backend,name:0 field:magento.storeview,name:0
 #: field:magento.website,name:0
 msgid "Name"
 msgstr "Name"
@@ -794,13 +773,12 @@ msgstr ""
 "                                 einige Typen von Daten, \n"
 "                                 wie Produkte oder Kategorien, \n"
 "                                 brauchen eine manuelle Überprüfung.\n"
-"                                 Sie finden die Liste der zu prüfenden Daten in dem \n"
+"                                 Sie finden die Liste der zu prüfenden Daten "
+"in dem \n"
 "                                 Menü 'Connectors > Prüfungen'."
 
 #. module: magentoerpconnect
-#: view:magento.store:0
-#: view:magento.storeview:0
-#: view:magento.website:0
+#: view:magento.store:0 view:magento.storeview:0 view:magento.website:0
 msgid "Options"
 msgstr "Optionen"
 
@@ -822,8 +800,7 @@ msgstr "Teilweise"
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_res_partner
-#: field:magento.address,openerp_id:0
-#: field:magento.res.partner,openerp_id:0
+#: field:magento.address,openerp_id:0 field:magento.res.partner,openerp_id:0
 msgid "Partner"
 msgstr "Partner"
 
@@ -953,9 +930,8 @@ msgid ""
 "If nothing is set, the option falls back to the same option on the Magento "
 "store related to the sales order."
 msgstr ""
-"Soll die Rechnung angelegt werden, wenn sie geprüft wurde oder wenn Sie in OpenERP "
-"als bezahlt gekennzeichnet wurde?\n"
-"Ist nicht angegeben, wird auf die Einstellung aus dem zugehörigen Magento-Shop verwendet.
+"Soll die Rechnung angelegt werden, wenn sie geprüft wurde oder wenn Sie in "
+"OpenERP als bezahlt gekennzeichnet wurde?"
 
 #. module: magentoerpconnect
 #: help:magento.store,create_invoice_on:0
@@ -965,13 +941,13 @@ msgid ""
 "This only takes effect if the sales order's related payment method is not "
 "giving an option for this by itself. (See Payment Methods)"
 msgstr ""
-"Soll die Rechnung angelegt werden, wenn der Auftrag geprüft wurde oder wenn"
-"er in OpenERP bezahlt wurde?\n"
-"Diese Einstellung greift nur, wenn die Zahlweise die Wahl nicht vorwegnimmt. (siehe Zahlweisen)"
+"Soll die Rechnung angelegt werden, wenn der Auftrag geprüft wurde oder "
+"wenner in OpenERP bezahlt wurde?\n"
+"Diese Einstellung greift nur, wenn die Zahlweise die Wahl nicht vorwegnimmt. "
+"(siehe Zahlweisen)"
 
 #. module: magentoerpconnect
-#: field:magento.storeview,sort_order:0
-#: field:magento.website,sort_order:0
+#: field:magento.storeview,sort_order:0 field:magento.website,sort_order:0
 msgid "Sort Order"
 msgstr "Sortierung"
 
@@ -992,15 +968,13 @@ msgstr "Store"
 
 #. module: magentoerpconnect
 #: model:ir.ui.menu,name:magentoerpconnect.menu_magento_store
-#: view:magento.website:0
-#: field:magento.website,store_ids:0
+#: view:magento.website:0 field:magento.website,store_ids:0
 msgid "Stores"
 msgstr "Stores"
 
 #. module: magentoerpconnect
 #: model:ir.ui.menu,name:magentoerpconnect.menu_magento_storeview
-#: view:magento.store:0
-#: field:magento.store,storeview_ids:0
+#: view:magento.store:0 field:magento.store,storeview_ids:0
 msgid "Storeviews"
 msgstr "Storeviews"
 
@@ -1049,9 +1023,9 @@ msgid ""
 "custom API path, in that case, the location has to be completed with the "
 "custom API path "
 msgstr ""
-"Der Vorgabe API-Pfad ist '/index.php/api/xmlrpc'. Wählen Sie diese Einstellung, "
-"falls Sie einen individuellen API-Pfad verwenden. In diesem Fall muß der Pfad mit "
-"diesem individuellen API-Pfad ergänzt werden."
+"Der Vorgabe API-Pfad ist '/index.php/api/xmlrpc'. Wählen Sie diese "
+"Einstellung, falls Sie einen individuellen API-Pfad verwenden. In diesem "
+"Fall muß der Pfad mit diesem individuellen API-Pfad ergänzt werden."
 
 #. module: magentoerpconnect
 #: model:sale.exception,description:magentoerpconnect.excep_wrong_total_amount_tax
@@ -1164,9 +1138,9 @@ msgid ""
 "configured to restrict access using a HTTP authentication based on a "
 "username and a password."
 msgstr ""
-"Eine einfache Zugriff-Authentifizierung zur API verwenden. Der Magento-Server "
-"kann auf den einfachen HTTP-basierten Zugang mittels Benutzername und Passwort "
-"beschränkt sein."
+"Eine einfache Zugriff-Authentifizierung zur API verwenden. Der Magento-"
+"Server kann auf den einfachen HTTP-basierten Zugang mittels Benutzername und "
+"Passwort beschränkt sein."
 
 #. module: magentoerpconnect
 #: field:magento.backend,username:0
@@ -1211,8 +1185,7 @@ msgstr "Webseite"
 
 #. module: magentoerpconnect
 #: model:ir.ui.menu,name:magentoerpconnect.menu_magento_website
-#: view:magento.backend:0
-#: field:magento.product.product,website_ids:0
+#: view:magento.backend:0 field:magento.product.product,website_ids:0
 msgid "Websites"
 msgstr "Webseiten"
 
@@ -1228,12 +1201,12 @@ msgstr ""
 #. module: magentoerpconnect
 #: view:magento.backend:0
 msgid "e.g. http://my.magento.com"
-msgstr "z.B. http://my.magento.com"
+msgstr "z. B. http://mein.magento.com"
 
 #. module: magentoerpconnect
 #: view:magento.backend:0
 msgid "e.g. http://my.magento.com/admin"
-msgstr "z.B. http://my.magento.com/admin"
+msgstr "z. B. http://mein.magento.com/admin"
 
 #. module: magentoerpconnect
 #: view:magento.backend:0
