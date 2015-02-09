@@ -24,6 +24,7 @@ import logging
 import xmlrpclib
 import base64
 
+from openerp.tools.translate import _
 from openerp.osv import orm, fields
 from openerp.addons.connector.exception import IDMissingInBackend
 from openerp.addons.connector.unit.mapper import (mapping,
@@ -32,8 +33,7 @@ from openerp.addons.connector.unit.mapper import (mapping,
                                                   ExportMapper)
 from openerp.addons.magentoerpconnect.unit.binder import MagentoModelBinder
 from openerp.addons.magentoerpconnect.unit.backend_adapter import (
-    GenericAdapter,
-    MAGENTO_DATETIME_FORMAT,)
+    GenericAdapter)
 from openerp.addons.magentoerpconnect.unit.import_synchronizer import (
     DelayedBatchImport,
     MagentoImportSynchronizer,
@@ -239,13 +239,11 @@ class MagentoClaimComment(orm.Model):
                                                    ['openerp_id'],
                                                    context=context)
         claim_id = info[0]['openerp_id'][0]
-        claim = self.pool['crm.claim'].browse(cr, uid,
-                                              claim_id,
-                                              context=context)
         vals['claim_id'] = claim_id
         vals['res_id'] = claim_id
         vals['model'] = 'crm.claim'
-        vals['subject'] = 'Sale Order ' + claim.ref.name
+        if 'subtype_id' in vals.keys() and not vals['subtype_id']:
+            vals['subject'] = 'Customer Message'
         return super(MagentoClaimComment, self).create(cr, uid,
                                                        vals,
                                                        context=context)
@@ -368,7 +366,7 @@ class CrmClaimAdapter(GenericAdapter):
         """
         Update claim state un Magento.
         """
-        return self._call('%s.update'% self._magento_model, [id, vals['state']])
+        return self._call('%s.update' % self._magento_model, [id, vals['state']])
 
 
 @magento
@@ -395,9 +393,7 @@ class ClaimCommentAdapter(GenericAdapter):
         if filters is None:
             filters = {}
         if from_date is not None:
-            filters.setdefault('created_at', {})
-            filters['created_at']['from'] = from_date.strftime(
-                MAGENTO_DATETIME_FORMAT)
+            filters = from_date.strftime('%Y/%d/%m %H:%M:%S')
         elif backend:
             filters = backend.import_claims_from_date
         return self._call('%s.list' % self._magento_model,
@@ -436,9 +432,7 @@ class ClaimAttachmentAdapter(GenericAdapter):
         if filters is None:
             filters = {}
         if from_date is not None:
-            filters.setdefault('created_at', {})
-            filters['created_at']['from'] = from_date.strftime(
-                MAGENTO_DATETIME_FORMAT)
+            filters = from_date.strftime('%Y/%d/%m %H:%M:%S')
         elif backend:
             filters = backend.import_claims_from_date
         return self._call('%s.list' % self._magento_model,
@@ -515,7 +509,7 @@ class ClaimCommentBatchImport(DelayedBatchImport):
         from_date = filters.pop('from_date', None)
         records = self.backend_adapter.search_read(filters, from_date)
         for record in records:
-            record_ids += int(records[index]['rma_comment_id'])
+            record_ids.append(int(records[index]['rma_comment_id']))
             index += 1
             record['message'] = record['message'].encode('utf-8')
             self._import_record(record)
@@ -527,12 +521,47 @@ class ClaimCommentBatchImport(DelayedBatchImport):
 class ClaimCommentImport(MagentoImportSynchronizer):
     _model_name = ['magento.claim.comment']
 
+    def run(self, magento_record, force=False):
+        """ Run the synchronization
+
+        :param magento_record: the record on Magento
+        """
+
+        self.magento_id = int(magento_record['rma_comment_id'])
+        self.magento_record = magento_record
+
+        skip = self._must_skip()
+        if skip:
+            return skip
+
+        binding_id = self.binder.to_openerp(self.magento_id)
+
+        if not force and self._is_uptodate(binding_id):
+            return _('Already up-to-date.')
+        self._before_import()
+
+        # import the missing linked resources
+        self._import_dependencies()
+
+        map_record = self._map_data()
+
+        if binding_id:
+            record = self._update_data(map_record)
+            self._update(binding_id, record)
+        else:
+            record = self._create_data(map_record)
+            binding_id = self._create(record)
+
+        self.binder.bind(self.magento_id, binding_id)
+
+        self._after_import(binding_id)
+
     def _import_dependencies(self):
         record = self.magento_record
         claim_binder = self.get_binder_for_model('magento.crm.claim')
         claim_importer = self.get_connector_unit_for_model(
             MagentoImportSynchronizer, 'magento.crm.claim')
-        if claim_binder.to_openerp(record['rma_id']) is None:
+        if not claim_binder.to_openerp(record['rma_id']):
             claim_importer.run(record['rma_id'])
 
     def _create(self, data):
@@ -572,7 +601,7 @@ class ClaimAttachmentBatchImport(DelayedBatchImport):
         from_date = filters.pop('from_date', None)
         records = self.backend_adapter.search_read(filters, from_date)
         for record in records:
-            record_ids += int(records[index]['rma_attachment_id']),
+            record_ids.append(int(records[index]['rma_attachment_id']))
             index += 1
             self._import_record(record)
         _logger.info('search for magento claim attachments from %s returned %s',
@@ -583,12 +612,47 @@ class ClaimAttachmentBatchImport(DelayedBatchImport):
 class ClaimAttachmentImport(MagentoImportSynchronizer):
     _model_name = ['magento.claim.attachment']
 
+    def run(self, magento_record, force=False):
+        """ Run the synchronization
+
+        :param magento_record: the record on Magento
+        """
+
+        self.magento_id = int(magento_record['rma_attachment_id'])
+        self.magento_record = magento_record
+
+        skip = self._must_skip()
+        if skip:
+            return skip
+
+        binding_id = self.binder.to_openerp(self.magento_id)
+
+        if not force and self._is_uptodate(binding_id):
+            return _('Already up-to-date.')
+        self._before_import()
+
+        # import the missing linked resources
+        self._import_dependencies()
+
+        map_record = self._map_data()
+
+        if binding_id:
+            record = self._update_data(map_record)
+            self._update(binding_id, record)
+        else:
+            record = self._create_data(map_record)
+            binding_id = self._create(record)
+
+        self.binder.bind(self.magento_id, binding_id)
+
+        self._after_import(binding_id)
+
     def _import_dependencies(self):
         record = self.magento_record
         claim_binder = self.get_binder_for_model('magento.crm.claim')
         claim_importer = self.get_connector_unit_for_model(
             MagentoImportSynchronizer, 'magento.crm.claim')
-        if claim_binder.to_openerp(record['rma_id']) is None:
+        if not claim_binder.to_openerp(record['rma_id']):
             claim_importer.run(record['rma_id'])
 
     def _create(self, data):
