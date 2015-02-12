@@ -124,7 +124,7 @@ class AddressExport(MagentoExporter):
         """ Create the Magento record """
         # special check on data before export
         self._validate_create_data(data)
-        customer_id = data.pop('partner_id')
+        customer_id = data.pop('customer_id')
         return self.backend_adapter.create(customer_id, data)
 
 
@@ -181,7 +181,7 @@ class PartnerAddressExportMapper(ExportMapper):
         else:
             erp_partner_id = record.openerp_id.id
         mag_partner_id = binder.to_backend(erp_partner_id, wrap=True)
-        return {'partner_id': mag_partner_id}
+        return {'customer_id': mag_partner_id}
 
     @changed_by('name')
     @mapping
