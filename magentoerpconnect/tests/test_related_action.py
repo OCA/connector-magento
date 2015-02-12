@@ -23,6 +23,7 @@ class test_related_action_storage(common.TransactionCase):
         cr, uid = self.cr, self.uid
         backend_model = self.registry('magento.backend')
         self.session = ConnectorSession(cr, uid)
+        self.session.context['__test_no_commit'] = True
         warehouse_id = self.ref('stock.warehouse0')
         backend_id = backend_model.create(
             cr,

@@ -43,6 +43,7 @@ class test_export_invoice(common.TransactionCase):
         backend_model = self.registry('magento.backend')
         self.mag_sale_model = self.registry('magento.sale.order')
         self.session = ConnectorSession(cr, uid)
+        self.session.context['__test_no_commit'] = True
         data_model = self.registry('ir.model.data')
         self.get_ref = partial(data_model.get_object_reference,
                                cr, uid)

@@ -128,7 +128,8 @@ class MagentoBaseExporter(ExportSynchronizer):
         # exports (due to dependencies) and one of them fails.
         # The commit will also release the lock acquired on the binding
         # record
-        self.session.commit()
+        if not self.session.context.get('__test_no_commit'):
+            self.session.commit()
 
         self._after_export()
         return result
@@ -300,7 +301,9 @@ class MagentoExporter(MagentoBaseExporter):
                             # will pop if an other job already created
                             # the same binding. It will be caught and
                             # raise a RetryableJobError.
-                            self.session.commit()
+                            context = self.session.context
+                            if not context.get('__test_no_commit'):
+                                self.session.commit()
         else:
             # If magento_bind_ids does not exist we are typically in a
             # "direct" binding (the binding record is the same record).
