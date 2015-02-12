@@ -259,7 +259,7 @@ class MagentoSaleCommentExporter(MagentoExporter):
     def _create(self, data):
         """ Create the Magento record """
         # special check on data before export
-        self._validate_data(data)   # you may inherit in your own module
+        self._validate_create_data(data)   # you may inherit in your own module
         return self.backend_adapter.create(data['order_increment'],
                                            data['status'],
                                            data['comment'],
