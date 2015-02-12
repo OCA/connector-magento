@@ -102,12 +102,10 @@ class TestSaleOrder(SetUpMagentoSynchronized):
             # call 1: sales_order.info to read the status
             # call 2: sales_order.addComment to add a status comment
             self.assertEqual(len(calls_done), 2)
-            method, (magento_id, state, comment, notify) = calls_done[1]
+            method, (magento_id, state) = calls_done[1]
             self.assertEqual(method, 'sales_order.addComment')
             self.assertEqual(magento_id, binding.magento_id)
             self.assertEqual(state, 'canceled')
-            self.assertFalse(comment)
-            self.assertFalse(notify)
 
     def test_copy_quotation_delay_export_state(self):
         """ Delay a state export on new copy from canceled order """
@@ -173,9 +171,7 @@ class TestSaleOrder(SetUpMagentoSynchronized):
             # call 1: sales_order.info to read the status
             # call 2: sales_order.addComment to add a status comment
             self.assertEqual(len(calls_done), 2)
-            method, (magento_id, state, comment, notify) = calls_done[1]
+            method, (magento_id, state) = calls_done[1]
             self.assertEqual(method, 'sales_order.addComment')
             self.assertEqual(magento_id, binding.magento_id)
             self.assertEqual(state, 'pending')
-            self.assertFalse(comment)
-            self.assertFalse(notify)
