@@ -43,6 +43,7 @@
                         <field name="emailid"/>
                         <field name="taxvat"/>
                         <field name="newsletter"/>
+                        <field name="consider_as_company"/>
                     </group>
                 </form>
             </field>

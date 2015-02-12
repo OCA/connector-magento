@@ -44,6 +44,7 @@ class test_import_address_book(common.SingleTransactionCase):
         super(test_import_address_book, self).setUp()
         self.backend_model = self.registry('magento.backend')
         self.session = ConnectorSession(self.cr, self.uid)
+        self.session.context['__test_no_commit'] = True
         self.model = self.registry('magento.res.partner')
         self.address_model = self.registry('magento.address')
         backend_ids = self.backend_model.search(

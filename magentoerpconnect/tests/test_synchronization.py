@@ -28,8 +28,10 @@ from openerp.addons.magentoerpconnect.unit.import_synchronizer import (
 from openerp.addons.connector.session import ConnectorSession
 import openerp.tests.common as common
 from .common import (mock_api,
-                     mock_urlopen_image)
+                     mock_urlopen_image,
+                     MagentoHelper)
 from .test_data import magento_base_responses
+
 
 DB = common.DB
 ADMIN_USER_ID = common.ADMIN_USER_ID
@@ -46,6 +48,7 @@ class SetUpMagentoBase(common.TransactionCase):
         super(SetUpMagentoBase, self).setUp()
         self.backend_model = self.registry('magento.backend')
         self.session = ConnectorSession(self.cr, self.uid)
+        self.session.context['__test_no_commit'] = True
         data_model = self.registry('ir.model.data')
         self.get_ref = partial(data_model.get_object_reference,
                                self.cr, self.uid)
@@ -77,6 +80,9 @@ class SetUpMagentoBase(common.TransactionCase):
                  'import_rule': 'always',
                  'days_before_cancel': 0,
                  'journal_id': journal_id})
+
+    def get_magento_helper(self, model_name):
+        return MagentoHelper(self.cr, self.registry, model_name)
 
 
 class TestBaseMagento(SetUpMagentoBase):
