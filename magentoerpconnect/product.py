@@ -484,7 +484,7 @@ class ProductImportMapper(ImportMapper):
     @mapping
     def website_ids(self, record):
         website_ids = []
-        binder = self.get_binder_for_model('magento.website')
+        binder = self.binder_for('magento.website')
         for mag_website_id in record['websites']:
             website_id = binder.to_openerp(mag_website_id)
             website_ids.append((4, website_id))
@@ -493,7 +493,7 @@ class ProductImportMapper(ImportMapper):
     @mapping
     def categories(self, record):
         mag_categories = record['categories']
-        binder = self.get_binder_for_model('magento.product.category')
+        binder = self.binder_for('magento.product.category')
 
         category_ids = []
         main_categ_id = None
@@ -567,7 +567,7 @@ class ProductImport(MagentoImportSynchronizer):
         sess = self.session
         product_type = data['product_type']
         cr, uid, context = sess.cr, sess.uid, sess.context
-        product_obj = sess.pool['magento.product.product']
+        product_obj = sess.registry['magento.product.product']
         types = product_obj.product_type_get(cr, uid, context=context)
         available_types = [typ[0] for typ in types]
         if product_type not in available_types:
@@ -603,25 +603,25 @@ class ProductImport(MagentoImportSynchronizer):
         self._validate_product_type(data)
 
     def _create(self, data):
-        openerp_binding_id = super(ProductImport, self)._create(data)
+        openerp_binding = super(ProductImport, self)._create(data)
         checkpoint = self.get_connector_unit_for_model(AddCheckpoint)
-        checkpoint.run(openerp_binding_id)
-        return openerp_binding_id
+        checkpoint.run(openerp_binding.id)
+        return openerp_binding
 
-    def _after_import(self, binding_id):
+    def _after_import(self, binding):
         """ Hook called at the end of the import """
         translation_importer = self.get_connector_unit_for_model(
             TranslationImporter, self.model._name)
-        translation_importer.run(self.magento_id, binding_id,
+        translation_importer.run(self.magento_id, binding.id,
                                  mapper_class=ProductImportMapper)
         image_importer = self.get_connector_unit_for_model(
             CatalogImageImporter, self.model._name)
-        image_importer.run(self.magento_id, binding_id)
+        image_importer.run(self.magento_id, binding.id)
 
         if self.magento_record['type_id'] == 'bundle':
             bundle_importer = self.get_connector_unit_for_model(
                 BundleImporter, self.model._name)
-            bundle_importer.run(binding_id, self.magento_record)
+            bundle_importer.run(binding.id, self.magento_record)
 
 
 @magento
@@ -675,9 +675,8 @@ class ProductInventoryExport(ExportSynchronizer):
 
     def run(self, binding_id, fields):
         """ Export the product inventory to Magento """
-        product = self.session.browse(self.model._name, binding_id)
-        binder = self.get_binder_for_model()
-        magento_id = binder.to_backend(product.id)
+        product = self.recordset().browse(binding_id)
+        magento_id = self.binder.to_backend(product.id)
         data = self._get_data(product, fields)
         self.backend_adapter.update_inventory(magento_id, data)
 
@@ -694,7 +693,7 @@ INVENTORY_FIELDS = ('manage_stock',
 def magento_product_modified(session, model_name, record_id, vals):
     if session.context.get('connector_no_export'):
         return
-    if session.browse(model_name, record_id).no_stock_sync:
+    if session.env[model_name].browse(record_id).no_stock_sync:
         return
     inventory_fields = list(set(vals).intersection(INVENTORY_FIELDS))
     if inventory_fields:
@@ -707,7 +706,7 @@ def magento_product_modified(session, model_name, record_id, vals):
 @related_action(action=unwrap_binding)
 def export_product_inventory(session, model_name, record_id, fields=None):
     """ Export the inventory configuration and quantity of a product. """
-    product = session.browse(model_name, record_id)
+    product = session.env[model_name].browse(record_id)
     backend_id = product.backend_id.id
     env = get_environment(session, model_name, backend_id)
     inventory_exporter = env.get_connector_unit(ProductInventoryExport)
