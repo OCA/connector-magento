@@ -224,23 +224,22 @@ class ProductCategoryImport(MagentoImportSynchronizer):
         # import parent category
         # the root category has a 0 parent_id
         if record.get('parent_id'):
-            binder = self.get_binder_for_model()
             parent_id = record['parent_id']
-            if binder.to_openerp(parent_id) is None:
+            if self.binder.to_openerp(parent_id) is None:
                 importer = env.get_connector_unit(MagentoImportSynchronizer)
                 importer.run(parent_id)
 
     def _create(self, data):
-        openerp_binding_id = super(ProductCategoryImport, self)._create(data)
+        openerp_binding = super(ProductCategoryImport, self)._create(data)
         checkpoint = self.get_connector_unit_for_model(AddCheckpoint)
-        checkpoint.run(openerp_binding_id)
-        return openerp_binding_id
+        checkpoint.run(openerp_binding.id)
+        return openerp_binding
 
-    def _after_import(self, binding_id):
+    def _after_import(self, binding):
         """ Hook called at the end of the import """
         translation_importer = self.get_connector_unit_for_model(
             TranslationImporter, self.model._name)
-        translation_importer.run(self.magento_id, binding_id)
+        translation_importer.run(self.magento_id, binding.id)
 
 
 @magento
@@ -270,7 +269,7 @@ class ProductCategoryImportMapper(ImportMapper):
     def parent_id(self, record):
         if not record.get('parent_id'):
             return
-        binder = self.get_binder_for_model()
+        binder = self.binder_for()
         category_id = binder.to_openerp(record['parent_id'], unwrap=True)
         mag_cat_id = binder.to_openerp(record['parent_id'])
 
