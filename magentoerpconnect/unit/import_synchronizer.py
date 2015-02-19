@@ -348,7 +348,6 @@ class AddCheckpoint(ConnectorUnit):
 
     _model_name = ['magento.product.product',
                    'magento.product.category',
-                   'magento.store',
                    ]
 
     def run(self, openerp_binding_id):

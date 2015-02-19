@@ -35,7 +35,6 @@ from .unit.backend_adapter import GenericAdapter
 from .unit.import_synchronizer import (import_batch,
                                        DirectBatchImport,
                                        MagentoImportSynchronizer,
-                                       AddCheckpoint,
                                        )
 from .partner import partner_import_batch
 from .sale import sale_order_import_batch
@@ -649,7 +648,7 @@ class StoreImport(MagentoImportSynchronizer):
 
     def _create(self, data):
         openerp_binding_id = super(StoreImport, self)._create(data)
-        checkpoint = self.get_connector_unit_for_model(AddCheckpoint)
+        checkpoint = self.get_connector_unit_for_model(StoreAddCheckpoint)
         checkpoint.run(openerp_binding_id)
         return openerp_binding_id
 
@@ -662,16 +661,18 @@ class StoreviewImport(MagentoImportSynchronizer):
 
     def _create(self, data):
         openerp_binding_id = super(StoreviewImport, self)._create(data)
-        checkpoint = self.get_connector_unit_for_model(StoreViewAddCheckpoint)
+        checkpoint = self.get_connector_unit_for_model(StoreAddCheckpoint)
         checkpoint.run(openerp_binding_id)
         return openerp_binding_id
 
 
 @magento
-class StoreViewAddCheckpoint(ConnectorUnit):
+class StoreAddCheckpoint(ConnectorUnit):
     """ Add a connector.checkpoint on the magento.storeview
-    record """
+    or magento.store record
+    """
     _model_name = ['magento.storeview',
+                   'magento.store',
                    ]
 
     def run(self, openerp_binding_id):
@@ -679,3 +680,6 @@ class StoreViewAddCheckpoint(ConnectorUnit):
                        self.model._name,
                        openerp_binding_id,
                        self.backend_record.id)
+
+# backward compatibility
+StoreViewAddCheckpoint = magento(StoreAddCheckpoint)
