@@ -45,7 +45,7 @@ class magento_stock_picking(orm.Model):
     _description = 'Magento Delivery Order'
 
     _columns = {
-        'openerp_id': fields.many2one('stock.picking.out',
+        'openerp_id': fields.many2one('stock.picking',
                                       string='Stock Picking',
                                       required=True,
                                       ondelete='cascade'),
@@ -80,29 +80,6 @@ class stock_picking(orm.Model):
         return super(stock_picking, self).copy_data(cr, uid, id,
                                                     default=default,
                                                     context=context)
-
-
-# Seems to be so buggy, if I put magento_bind_ids
-# only in stock.picking.out, I cannot read it from the browse
-# if I put it only in stock.picking, I cannot display it on the views
-# so I have to duplicate it in both models...
-class stock_picking_out(orm.Model):
-    _inherit = 'stock.picking.out'
-
-    _columns = {
-        'magento_bind_ids': fields.one2many(
-            'magento.stock.picking.out', 'openerp_id',
-            string="Magento Bindings"),
-    }
-
-    # Copy also has an issue on stock.picking.out.
-    def copy_data(self, cr, uid, id, default=None, context=None):
-        if default is None:
-            default = {}
-        default['magento_bind_ids'] = False
-        return super(stock_picking_out, self).copy_data(cr, uid, id,
-                                                        default=default,
-                                                        context=context)
 
 
 @magento
