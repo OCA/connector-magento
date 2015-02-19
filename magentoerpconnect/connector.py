@@ -33,8 +33,11 @@ def get_environment(session, model_name, backend_id):
     env = Environment(backend_record, session, model_name)
     lang = backend_record.default_lang_id
     lang_code = lang.code if lang else 'en_US'
-    env.set_lang(code=lang_code)
-    return env
+    if lang_code == session.context.get('lang'):
+        return env
+    else:
+        with env.set_lang(code=lang_code):
+            return env
 
 
 class magento_binding(orm.AbstractModel):
