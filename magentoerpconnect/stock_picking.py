@@ -176,7 +176,7 @@ class MagentoPickingExport(ExportSynchronizer):
         :returns: value of send_picking_done_mail chosen on magento shop
         :rtype: boolean
         """
-        magento_shop = picking.sale_id.shop_id.magento_bind_ids[0]
+        magento_shop = picking.sale_id.magento_bind_ids[0].store_id
         return magento_shop.send_picking_done_mail
 
     def run(self, binding_id):

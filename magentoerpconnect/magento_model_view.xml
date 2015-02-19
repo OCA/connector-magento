@@ -245,7 +245,6 @@
                         </h1>
                         <group string="Informations">
                             <field name="website_id"/>
-                            <field name="openerp_id"/>
                         </group>
                         <group string="Options">
                             <field name="send_picking_done_mail"/>
@@ -273,7 +272,6 @@
                         delete="false" version="7.0">
                     <field name="name"/>
                     <field name="website_id"/>
-                    <field name="openerp_id"/>
                 </tree>
             </field>
         </record>

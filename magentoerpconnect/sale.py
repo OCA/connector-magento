@@ -95,6 +95,11 @@ class magento_sale_order(orm.Model):
                                              string='Parent Magento Order'),
         'storeview_id': fields.many2one('magento.storeview',
                                         string='Magento Storeview'),
+        'store_id': fields.related('storeview_id', 'store_id',
+                                   type='many2one',
+                                   relation='magento.storeview',
+                                   string='Storeview',
+                                   readonly=True)
     }
 
     _sql_constraints = [
@@ -944,11 +949,6 @@ class SaleOrderImportMapper(ImportMapper):
         if prefix:
             name = prefix + name
         return {'name': name}
-
-    @mapping
-    def store_id(self, record):
-        shop_id = self.options.storeview.store_id.openerp_id.id
-        return {'shop_id': shop_id}
 
     @mapping
     def customer_id(self, record):

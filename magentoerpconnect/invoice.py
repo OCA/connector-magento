@@ -171,11 +171,7 @@ class MagentoInvoiceSynchronizer(ExportSynchronizer):
         invoice = sess.browse(self.model._name, binding_id)
 
         magento_order = invoice.magento_order_id
-        magento_stores = magento_order.shop_id.magento_bind_ids
-        magento_store = next((store for store in magento_stores
-                              if store.backend_id.id == invoice.backend_id.id),
-                             None)
-        assert magento_store
+        magento_store = magento_order.store_id
         mail_notification = magento_store.send_invoice_paid_mail
 
         lines_info = self._get_lines_info(invoice)
@@ -244,14 +240,7 @@ def invoice_create_bindings(session, model_name, record_id):
                 continue
             # Check if invoice state matches configuration setting
             # for when to export an invoice
-            magento_stores = magento_sale.shop_id.magento_bind_ids
-            magento_store = next(
-                (store for store in magento_stores
-                 if store.backend_id.id == magento_sale.backend_id.id),
-                None
-            )
-            assert magento_store
-
+            magento_store = magento_sale.store_id
             payment_method = sale.payment_method_id
             if payment_method and payment_method.create_invoice_on:
                 create_invoice = payment_method.create_invoice_on

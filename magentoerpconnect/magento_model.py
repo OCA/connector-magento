@@ -404,14 +404,10 @@ class magento_website(orm.Model):
         return True
 
 
-# TODO migrate from sale.shop (create a magento.store + associated
-# sale.shop)
 class magento_store(orm.Model):
     _name = 'magento.store'
     _inherit = 'magento.binding'
     _description = 'Magento Store'
-
-    _inherits = {'sale.shop': 'openerp_id'}
 
     def _get_store_from_website(self, cr, uid, ids, context=None):
         store_obj = self.pool.get('magento.store')
@@ -420,15 +416,10 @@ class magento_store(orm.Model):
                                 context=context)
 
     _columns = {
+        'name': fields.char('Name'),
         'website_id': fields.many2one(
             'magento.website',
             'Magento Website',
-            required=True,
-            readonly=True,
-            ondelete='cascade'),
-        'openerp_id': fields.many2one(
-            'sale.shop',
-            string='Sale Shop',
             required=True,
             readonly=True,
             ondelete='cascade'),
@@ -479,26 +470,6 @@ class magento_store(orm.Model):
     ]
 
 
-class sale_shop(orm.Model):
-    _inherit = 'sale.shop'
-
-    _columns = {
-        'magento_bind_ids': fields.one2many(
-            'magento.store', 'openerp_id',
-            string='Magento Bindings',
-            readonly=True),
-    }
-
-    def copy_data(self, cr, uid, id, default=None, context=None):
-        if default is None:
-            default = {}
-        default['magento_bind_ids'] = False
-        return super(sale_shop, self).copy_data(cr, uid, id,
-                                                default=default,
-                                                context=context)
-
-
-# TODO: migrate from magerp.storeviews
 class magento_storeview(orm.Model):
     _name = 'magento.storeview'
     _inherit = 'magento.binding'
@@ -650,11 +621,6 @@ class StoreImportMapper(ImportMapper):
         binder = self.get_binder_for_model('magento.website')
         binding_id = binder.to_openerp(record['website_id'])
         return {'website_id': binding_id}
-
-    @mapping
-    @only_create
-    def warehouse_id(self, record):
-        return {'warehouse_id': self.backend_record.warehouse_id.id}
 
 
 @magento
