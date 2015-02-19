@@ -56,12 +56,13 @@ class MagentoModelBinder(MagentoBinder):
         'magento.account.invoice',
     ]
 
-    def to_openerp(self, external_id, unwrap=False):
+    def to_openerp(self, external_id, unwrap=False, browse=False):
         """ Give the OpenERP ID for an external ID
 
         :param external_id: external ID for which we want the OpenERP ID
         :param unwrap: if True, returns the normal record (the one
                        inherits'ed), else return the binding record
+        :param browse: if True, returns a recordset
         :return: a recordset of one record, depending on the value of unwrap,
                  or an empty recordset if no binding is found
         :rtype: recordset
@@ -72,12 +73,12 @@ class MagentoModelBinder(MagentoBinder):
                  ('backend_id', '=', self.backend_record.id)]
             )
         if not bindings:
-            return self.recordset()
+            return self.recordset() if browse else None
         assert len(bindings) == 1, "Several records found: %s" % (bindings,)
         if unwrap:
-            return bindings.openerp_id
+            return bindings.openerp_id if browse else bindings.openerp_id.id
         else:
-            return bindings
+            return bindings if browse else bindings.id
 
     def to_backend(self, record_id, wrap=False):
         """ Give the external ID for an OpenERP ID

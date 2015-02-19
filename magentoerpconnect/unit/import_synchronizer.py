@@ -159,7 +159,7 @@ class MagentoImportSynchronizer(ImportSynchronizer):
         return
 
     def _get_binding(self):
-        return self.binder.to_openerp(self.magento_id)
+        return self.binder.to_openerp(self.magento_id, browse=True)
 
     def _create_data(self, map_record, **kwargs):
         return map_record.values(for_create=True, **kwargs)

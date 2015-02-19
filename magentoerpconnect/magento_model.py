@@ -618,7 +618,7 @@ class StoreImportMapper(ImportMapper):
     @mapping
     def website_id(self, record):
         binder = self.get_binder_for_model('magento.website')
-        binding_id = binder.to_openerp(record['website_id']).id
+        binding_id = binder.to_openerp(record['website_id'])
         return {'website_id': binding_id}
 
 
@@ -636,7 +636,7 @@ class StoreviewImportMapper(ImportMapper):
     @mapping
     def store_id(self, record):
         binder = self.get_binder_for_model('magento.store')
-        binding_id = binder.to_openerp(record['group_id']).id
+        binding_id = binder.to_openerp(record['group_id'])
         return {'store_id': binding_id}
 
 
