@@ -618,7 +618,7 @@ class StoreImportMapper(ImportMapper):
     @mapping
     def website_id(self, record):
         binder = self.get_binder_for_model('magento.website')
-        binding_id = binder.to_openerp(record['website_id'])
+        binding_id = binder.to_openerp(record['website_id']).id
         return {'website_id': binding_id}
 
 
@@ -636,7 +636,7 @@ class StoreviewImportMapper(ImportMapper):
     @mapping
     def store_id(self, record):
         binder = self.get_binder_for_model('magento.store')
-        binding_id = binder.to_openerp(record['group_id'])
+        binding_id = binder.to_openerp(record['group_id']).id
         return {'store_id': binding_id}
 
 
@@ -647,10 +647,10 @@ class StoreImport(MagentoImportSynchronizer):
                    ]
 
     def _create(self, data):
-        openerp_binding_id = super(StoreImport, self)._create(data)
+        binding = super(StoreImport, self)._create(data)
         checkpoint = self.get_connector_unit_for_model(StoreAddCheckpoint)
-        checkpoint.run(openerp_binding_id)
-        return openerp_binding_id
+        checkpoint.run(binding.id)
+        return binding
 
 
 @magento
@@ -660,10 +660,10 @@ class StoreviewImport(MagentoImportSynchronizer):
                    ]
 
     def _create(self, data):
-        openerp_binding_id = super(StoreviewImport, self)._create(data)
+        binding = super(StoreviewImport, self)._create(data)
         checkpoint = self.get_connector_unit_for_model(StoreAddCheckpoint)
-        checkpoint.run(openerp_binding_id)
-        return openerp_binding_id
+        checkpoint.run(binding.id)
+        return binding
 
 
 @magento
@@ -675,10 +675,10 @@ class StoreAddCheckpoint(ConnectorUnit):
                    'magento.store',
                    ]
 
-    def run(self, openerp_binding_id):
+    def run(self, binding_id):
         add_checkpoint(self.session,
                        self.model._name,
-                       openerp_binding_id,
+                       binding_id,
                        self.backend_record.id)
 
 # backward compatibility

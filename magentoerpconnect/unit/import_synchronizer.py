@@ -19,20 +19,6 @@
 #
 ##############################################################################
 
-import logging
-from datetime import datetime
-from openerp.tools.translate import _
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
-from openerp.addons.connector.queue.job import job, related_action
-from openerp.addons.connector.connector import ConnectorUnit
-from openerp.addons.connector.unit.synchronizer import ImportSynchronizer
-from openerp.addons.connector.exception import IDMissingInBackend
-from ..backend import magento
-from ..connector import get_environment, add_checkpoint
-from ..related_action import link
-
-_logger = logging.getLogger(__name__)
-
 """
 
 Importers for Magento.
@@ -44,6 +30,18 @@ They should call the ``bind`` method if the binder even if the records
 are already bound, to update the last sync date.
 
 """
+
+import logging
+from openerp import fields, _
+from openerp.addons.connector.queue.job import job, related_action
+from openerp.addons.connector.connector import ConnectorUnit
+from openerp.addons.connector.unit.synchronizer import ImportSynchronizer
+from openerp.addons.connector.exception import IDMissingInBackend
+from ..backend import magento
+from ..connector import get_environment, add_checkpoint
+from ..related_action import link
+
+_logger = logging.getLogger(__name__)
 
 
 class MagentoImportSynchronizer(ImportSynchronizer):
@@ -66,22 +64,20 @@ class MagentoImportSynchronizer(ImportSynchronizer):
         """ Hook called before the import, when we have the Magento
         data"""
 
-    def _is_uptodate(self, binding_id):
+    def _is_uptodate(self, binding):
         """Return True if the import should be skipped because
         it is already up-to-date in OpenERP"""
         assert self.magento_record
         if not self.magento_record.get('updated_at'):
             return  # no update date on Magento, always import it.
-        if not binding_id:
-            return  # it does not exist so it shoud not be skipped
-        binding = self.session.browse(self.model._name, binding_id)
+        if not binding:
+            return  # it does not exist so it should not be skipped
         sync = binding.sync_date
         if not sync:
             return
-        fmt = DEFAULT_SERVER_DATETIME_FORMAT
-        sync_date = datetime.strptime(sync, fmt)
-        magento_date = datetime.strptime(self.magento_record['updated_at'],
-                                         fmt)
+        from_string = fields.Datetime.from_string
+        sync_date = from_string(sync)
+        magento_date = from_string(self.magento_record['updated_at'])
         # if the last synchronization date is greater than the last
         # update in magento, we skip the import.
         # Important: at the beginning of the exporters flows, we have to
@@ -162,8 +158,7 @@ class MagentoImportSynchronizer(ImportSynchronizer):
         """
         return
 
-    def _get_binding_id(self):
-        """Return the binding id from the magento id"""
+    def _get_binding(self):
         return self.binder.to_openerp(self.magento_id)
 
     def _create_data(self, map_record, **kwargs):
@@ -173,26 +168,24 @@ class MagentoImportSynchronizer(ImportSynchronizer):
         """ Create the OpenERP record """
         # special check on data before import
         self._validate_data(data)
-        with self.session.change_context({'connector_no_export': True}):
-            binding_id = self.session.create(self.model._name, data)
-        _logger.debug('%s %d created from magento %s',
-                      self.model._name, binding_id, self.magento_id)
-        return binding_id
+        with self.session.change_context(connector_no_export=True):
+            binding = self.recordset().create(data)
+        _logger.debug('%d created from magento %s', binding, self.magento_id)
+        return binding
 
     def _update_data(self, map_record, **kwargs):
         return map_record.values(**kwargs)
 
-    def _update(self, binding_id, data):
+    def _update(self, binding, data):
         """ Update an OpenERP record """
         # special check on data before import
         self._validate_data(data)
-        with self.session.change_context({'connector_no_export': True}):
-            self.session.write(self.model._name, binding_id, data)
-        _logger.debug('%s %d updated from magento %s',
-                      self.model._name, binding_id, self.magento_id)
+        with self.session.change_context(connector_no_export=True):
+            binding.write(data)
+        _logger.debug('%d updated from magento %s', binding, self.magento_id)
         return
 
-    def _after_import(self, binding_id):
+    def _after_import(self, binding):
         """ Hook called at the end of the import """
         return
 
@@ -211,9 +204,9 @@ class MagentoImportSynchronizer(ImportSynchronizer):
         if skip:
             return skip
 
-        binding_id = self._get_binding_id()
+        binding = self._get_binding()
 
-        if not force and self._is_uptodate(binding_id):
+        if not force and self._is_uptodate(binding):
             return _('Already up-to-date.')
         self._before_import()
 
@@ -222,16 +215,16 @@ class MagentoImportSynchronizer(ImportSynchronizer):
 
         map_record = self._map_data()
 
-        if binding_id:
+        if binding:
             record = self._update_data(map_record)
-            self._update(binding_id, record)
+            self._update(binding, record)
         else:
             record = self._create_data(map_record)
-            binding_id = self._create(record)
+            binding = self._create(record)
 
-        self.binder.bind(self.magento_id, binding_id)
+        self.binder.bind(self.magento_id, binding)
 
-        self._after_import(binding_id)
+        self._after_import(binding)
 
 
 class BatchImportSynchronizer(ImportSynchronizer):
@@ -351,8 +344,7 @@ class AddCheckpoint(ConnectorUnit):
                    ]
 
     def run(self, openerp_binding_id):
-        binding = self.session.browse(self.model._name,
-                                      openerp_binding_id)
+        binding = self.recordset().browse(openerp_binding_id)
         record = binding.openerp_id
         add_checkpoint(self.session,
                        record._model._name,
