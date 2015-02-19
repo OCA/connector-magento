@@ -265,40 +265,6 @@ class PartnerBatchImport(DelayedBatchImport):
 
 
 @magento
-class PartnerImport(MagentoImportSynchronizer):
-    _model_name = ['magento.res.partner']
-
-    def _import_dependencies(self):
-        """ Import the dependencies for the record"""
-        record = self.magento_record
-        self._import_dependency(record['group_id'],
-                                'magento.res.partner.category')
-
-    @property
-    def mapper(self):
-        """ Return an instance of ``Mapper`` for the synchronization.
-
-        The instanciation is delayed because some synchronisations do
-        not need such an unit and the unit may not exist.
-
-        For ``magento.res.partner``, we have a company mapper and
-        a mapper, ensure we find the correct one here.
-
-        :rtype: :py:class:`~.PartnerImportMapper`
-        """
-        if self._mapper is None:
-            get_unit = self.environment.get_connector_unit
-            self._mapper = get_unit(PartnerImportMapper)
-        return self._mapper
-
-    def _after_import(self, partner_binding_id):
-        """ Import the addresses """
-        get_unit = self.get_connector_unit_for_model
-        book = get_unit(PartnerAddressBook, 'magento.address')
-        book.import_addresses(self.magento_id, partner_binding_id)
-
-
-@magento
 class PartnerImportMapper(ImportMapper):
     _model_name = 'magento.res.partner'
 
@@ -352,21 +318,18 @@ class PartnerImportMapper(ImportMapper):
     @mapping
     def company_id(self, record):
         binder = self.get_binder_for_model('magento.storeview')
-        binding_id = binder.to_openerp(record['store_id'])
-        if binding_id:
-            storeview = self.session.browse('magento.storeview',
-                                            binding_id)
-            if storeview.store_id and storeview.store_id.company_id:
-                return {'company_id': storeview.store_id.company_id.id}
+        storeview = binder.to_openerp(record['store_id'], browse=True)
+        if storeview:
+            company = storeview.backend_id.company_id
+            if company:
+                return {'company_id': company.id}
         return {'company_id': False}
 
     @mapping
     def lang(self, record):
         binder = self.get_binder_for_model('magento.storeview')
-        binding_id = binder.to_openerp(record['store_id'])
-        if binding_id:
-            storeview = self.session.browse('magento.storeview',
-                                            binding_id)
+        storeview = binder.to_openerp(record['store_id'], browse=True)
+        if storeview:
             if storeview.lang_id:
                 return {'lang': storeview.lang_id.code}
 
@@ -384,14 +347,35 @@ class PartnerImportMapper(ImportMapper):
     def openerp_id(self, record):
         """ Will bind the customer on a existing partner
         with the same email """
-        sess = self.session
-        partner_ids = sess.search('res.partner',
-                                  [('email', '=', record['email']),
-                                   ('customer', '=', True),
-                                   # FIXME once it has been changed in openerp
-                                   ('is_company', '=', True)])
-        if partner_ids:
-            return {'openerp_id': partner_ids[0]}
+        partner = self.recordset('res.partner').search(
+            [('email', '=', record['email']),
+             ('customer', '=', True),
+             '|',
+             ('is_company', '=', True),
+             ('parent_id', '=', False)],
+            limit=1,
+        )
+        if partner:
+            return {'openerp_id': partner.id}
+
+
+@magento
+class PartnerImport(MagentoImportSynchronizer):
+    _model_name = ['magento.res.partner']
+
+    _base_mapper = PartnerImportMapper
+
+    def _import_dependencies(self):
+        """ Import the dependencies for the record"""
+        record = self.magento_record
+        self._import_dependency(record['group_id'],
+                                'magento.res.partner.category')
+
+    def _after_import(self, partner_binding):
+        """ Import the addresses """
+        get_unit = self.get_connector_unit_for_model
+        book = get_unit(PartnerAddressBook, 'magento.address')
+        book.import_addresses(self.magento_id, partner_binding.id)
 
 
 AddressInfos = namedtuple('AddressInfos', ['magento_record',
@@ -451,6 +435,8 @@ class PartnerAddressBook(ConnectorUnit):
             # or imported as a standalone contact
             merge = False
             if magento_record.get('is_default_billing'):
+                binding_model = self.recordset('magento.res.partner')
+                partner_binding = binding_model.browse(partner_binding_id)
                 if magento_record.get('company'):
                     # when a company is there, we never merge the contact
                     # with the partner.
@@ -459,18 +445,14 @@ class PartnerAddressBook(ConnectorUnit):
                     company_mapper = get_unit(CompanyImportMapper,
                                               'magento.res.partner')
                     map_record = company_mapper.map_record(magento_record)
-                    self.session.write('magento.res.partner',
-                                       partner_binding_id,
-                                       map_record.values())
+                    partner_binding.write(map_record.values())
                 else:
                     # for B2C individual customers, merge with the main
                     # partner
                     merge = True
                     # in the case if the billing address no longer
                     # has a company, reset the flag
-                    self.session.write('magento.res.partner',
-                                       partner_binding_id,
-                                       {'consider_as_company': False})
+                    partner_binding.write({'consider_as_company': False})
             address_infos = AddressInfos(magento_record=magento_record,
                                          partner_binding_id=partner_binding_id,
                                          merge=merge)
@@ -492,20 +474,23 @@ class BaseAddressImportMapper(ImportMapper):
     def state(self, record):
         if not record.get('region'):
             return
-        state_ids = self.session.search('res.country.state',
-                                        [('name', '=ilike', record['region'])])
-        if state_ids:
-            return {'state_id': state_ids[0]}
+        state = self.recordset('res.country.state').search(
+            [('name', '=ilike', record['region'])],
+            limit=1,
+        )
+        if state:
+            return {'state_id': state.id}
 
     @mapping
     def country(self, record):
         if not record.get('country_id'):
             return
-        country_ids = self.session.search(
-            'res.country',
-            [('code', '=', record['country_id'])])
-        if country_ids:
-            return {'country_id': country_ids[0]}
+        country = self.recordset('res.country').search(
+            [('code', '=', record['country_id'])],
+            limit=1
+        )
+        if country:
+            return {'country_id': country.id}
 
     @mapping
     def street(self, record):
@@ -522,26 +507,28 @@ class BaseAddressImportMapper(ImportMapper):
     @mapping
     def title(self, record):
         prefix = record['prefix']
-        title_id = False
-        if prefix:
-            title_ids = self.session.search('res.partner.title',
-                                            [('domain', '=', 'contact'),
-                                             ('shortcut', '=ilike', prefix)])
-            if title_ids:
-                title_id = title_ids[0]
-            else:
-                title_id = self.session.create('res.partner.title',
-                                               {'domain': 'contact',
-                                                'shortcut': prefix,
-                                                'name': prefix})
-        return {'title': title_id}
+        if not prefix:
+            return
+        title = self.recordset('res.partner.title').search(
+            [('domain', '=', 'contact'),
+             ('shortcut', '=ilike', prefix)],
+            limit=1
+        )
+        if not title:
+            title = self.recordset('res.partner.title').create(
+                {'domain': 'contact',
+                 'shortcut': prefix,
+                 'name': prefix,
+                 }
+            )
+        return {'title': title.id}
 
     @only_create
     @mapping
     def company_id(self, record):
         parent_id = record.get('parent_id')
         if parent_id:
-            parent = self.session.browse('res.partner', parent_id)
+            parent = self.recordset('res.partner').browse(parent_id)
             if parent.company_id:
                 return {'company_id': parent.company_id.id}
             else:
@@ -622,17 +609,15 @@ class AddressImport(MagentoImportSynchronizer):
     def _define_partner_relationship(self, data):
         """ Link address with partner or parent company. """
         partner_binding_id = self.address_infos.partner_binding_id
-        partner_id = self.session.read('magento.res.partner',
-                                       partner_binding_id,
-                                       ['openerp_id'])['openerp_id'][0]
+        binder = self.binder_for('magento.res.partner')
+        partner = binder.unwrap_binding(partner_binding_id, browse=True)
         if self.address_infos.merge:
-            # it won't be imported as an independant address,
+            # it won't be imported as an independent address,
             # but will be linked with the main res.partner
-            data['openerp_id'] = partner_id
+            data['openerp_id'] = partner.id
             data['type'] = 'default'
         else:
-            data['parent_id'] = partner_id
-            partner = self.session.browse('res.partner', partner_id)
+            data['parent_id'] = partner.id
             data['lang'] = partner.lang
         data['magento_partner_id'] = self.address_infos.partner_binding_id
         return data

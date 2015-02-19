@@ -122,6 +122,11 @@ class magento_backend(orm.Model):
                                         required=True,
                                         help='Warehouse used to compute the '
                                              'stock quantities.'),
+        'company_id': fields.related('warehouse_id', 'company_id',
+                                     string='Company',
+                                     type='many2one',
+                                     relation='res.company',
+                                     readonly=True),
         'website_ids': fields.one2many(
             'magento.website', 'backend_id',
             string='Website', readonly=True),
