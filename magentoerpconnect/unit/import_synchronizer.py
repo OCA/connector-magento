@@ -299,11 +299,9 @@ class TranslationImporter(ImportSynchronizer):
 
     def run(self, magento_id, binding_id, mapper_class=None):
         self.magento_id = magento_id
-        session = self.session
-        storeview_ids = session.search(
-            'magento.storeview',
-            [('backend_id', '=', self.backend_record.id)])
-        storeviews = session.browse('magento.storeview', storeview_ids)
+        storeviews = self.recordset(model='magento.storeview').search(
+            [('backend_id', '=', self.backend_record.id)]
+        )
         default_lang = self.backend_record.default_lang_id
         lang_storeviews = [sv for sv in storeviews
                            if sv.lang_id and sv.lang_id != default_lang]
@@ -311,8 +309,7 @@ class TranslationImporter(ImportSynchronizer):
             return
 
         # find the translatable fields of the model
-        fields = self.model.fields_get(session.cr, session.uid,
-                                       context=session.context)
+        fields = self.recordset().fields_get()
         translatable_fields = [field for field, attrs in fields.iteritems()
                                if attrs.get('translate')]
 
@@ -321,6 +318,7 @@ class TranslationImporter(ImportSynchronizer):
         else:
             mapper = self.get_connector_unit_for_model(mapper_class)
 
+        binding = self.recordset().browse(binding_id)
         for storeview in lang_storeviews:
             lang_record = self._get_magento_data(storeview.magento_id)
             map_record = mapper.map_record(lang_record)
@@ -329,9 +327,9 @@ class TranslationImporter(ImportSynchronizer):
             data = dict((field, value) for field, value in record.iteritems()
                         if field in translatable_fields)
 
-            ctx = {'connector_no_export': True, 'lang': storeview.lang_id.code}
-            with self.session.change_context(ctx):
-                self.session.write(self.model._name, binding_id, data)
+            with self.session.change_context(connector_no_export=True,
+                                             lang=storeview.lang_id.code):
+                binding.write(data)
 
 
 @magento
