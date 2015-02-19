@@ -388,10 +388,9 @@ class CatalogImageImporter(ImportSynchronizer):
             binary = self._get_binary_image(images.pop())
         if not binary:
             return
-        with self.session.change_context({'connector_no_export': True}):
-            self.session.write(self.model._name,
-                               binding_id,
-                               {'image': base64.b64encode(binary)})
+        model = self.recordset().with_context(connector_no_export=True)
+        binding = model.browse(binding_id)
+        binding.write({'image': base64.b64encode(binary)})
 
 
 @magento

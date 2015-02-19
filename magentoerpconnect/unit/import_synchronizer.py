@@ -168,8 +168,8 @@ class MagentoImportSynchronizer(ImportSynchronizer):
         """ Create the OpenERP record """
         # special check on data before import
         self._validate_data(data)
-        with self.session.change_context(connector_no_export=True):
-            binding = self.recordset().create(data)
+        model = self.recordset().with_context(connector_no_export=True)
+        binding = model.create(data)
         _logger.debug('%d created from magento %s', binding, self.magento_id)
         return binding
 
@@ -180,8 +180,7 @@ class MagentoImportSynchronizer(ImportSynchronizer):
         """ Update an OpenERP record """
         # special check on data before import
         self._validate_data(data)
-        with self.session.change_context(connector_no_export=True):
-            binding.write(data)
+        binding.with_context(connector_no_export=True).write(data)
         _logger.debug('%d updated from magento %s', binding, self.magento_id)
         return
 
@@ -327,9 +326,8 @@ class TranslationImporter(ImportSynchronizer):
             data = dict((field, value) for field, value in record.iteritems()
                         if field in translatable_fields)
 
-            with self.session.change_context(connector_no_export=True,
-                                             lang=storeview.lang_id.code):
-                binding.write(data)
+            binding.with_context(connector_no_export=True,
+                                 lang=storeview.lang_id.code).write(data)
 
 
 @magento
