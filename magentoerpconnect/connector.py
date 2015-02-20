@@ -36,7 +36,7 @@ def get_environment(session, model_name, backend_id):
     if lang_code == session.context.get('lang'):
         return env
     else:
-        with env.set_lang(code=lang_code):
+        with env.session.change_context(lang=lang_code):
             return env
 
 
