@@ -567,7 +567,7 @@ class ProductImport(MagentoImportSynchronizer):
         sess = self.session
         product_type = data['product_type']
         cr, uid, context = sess.cr, sess.uid, sess.context
-        product_obj = sess.registry['magento.product.product']
+        product_obj = sess.pool['magento.product.product']
         types = product_obj.product_type_get(cr, uid, context=context)
         available_types = [typ[0] for typ in types]
         if product_type not in available_types:
