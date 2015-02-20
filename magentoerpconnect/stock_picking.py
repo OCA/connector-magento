@@ -134,7 +134,7 @@ class MagentoPickingExport(ExportSynchronizer):
     def _get_args(self, picking, lines_info=None):
         if lines_info is None:
             lines_info = {}
-        sale_binder = self.get_binder_for_model('magento.sale.order')
+        sale_binder = self.binder_for('magento.sale.order')
         magento_sale_id = sale_binder.to_backend(picking.magento_order_id.id)
         mail_notification = self._get_picking_mail_option(picking)
         return (magento_sale_id, lines_info,

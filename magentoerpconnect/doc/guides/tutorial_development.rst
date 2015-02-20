@@ -88,9 +88,9 @@ As the binders are the most used ``ConnectorUnit`` classes, they have a
 dedicated shortcut::
 
     # for the current model
-    binder = self.get_binder_for_model()
+    binder = self.binder_for()
     # for another model
-    binder = self.get_binder_for_model('another.model')
+    binder = self.binder_for('another.model')
 
 
 Create an import

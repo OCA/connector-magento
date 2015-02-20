@@ -32,7 +32,7 @@ class SaleOrderImportMapper(sale.SaleOrderImportMapper):
     def pricelist_id(self, record):
         """ Assign to the sale order the price list used on
         the Magento Website or Backend """
-        website_binder = self.get_binder_for_model('magento.website')
+        website_binder = self.binder_for('magento.website')
         oe_website_id = website_binder.to_openerp(record['website_id'])
         website = self.session.browse('magento.website', oe_website_id)
         if website.pricelist_id:

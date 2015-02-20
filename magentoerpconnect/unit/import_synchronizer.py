@@ -113,7 +113,7 @@ class MagentoImportSynchronizer(ImportSynchronizer):
             return
         if importer_class is None:
             importer_class = MagentoImportSynchronizer
-        binder = self.get_binder_for_model(binding_model)
+        binder = self.binder_for(binding_model)
         if always or binder.to_openerp(magento_id) is None:
             importer = self.unit_for(importer_class, model=binding_model)
             importer.run(magento_id)

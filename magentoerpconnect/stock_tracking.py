@@ -88,7 +88,7 @@ class MagentoTrackingExport(ExportSynchronizer):
                                   "%s, can't export the tracking number." %
                                   picking.name)
 
-        binder = self.get_binder_for_model()
+        binder = self.binder_for()
         magento_id = binder.to_backend(binding_id)
         if not magento_id:
             # avoid circular reference

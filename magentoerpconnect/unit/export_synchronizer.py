@@ -261,7 +261,7 @@ class MagentoExporter(MagentoBaseExporter):
             return
         if exporter_class is None:
             exporter_class = MagentoExporter
-        rel_binder = self.get_binder_for_model(binding_model)
+        rel_binder = self.binder_for(binding_model)
         # wrap is typically True if the relation is for instance a
         # 'product.product' record but the binding model is
         # 'magento.product.product'

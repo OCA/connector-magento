@@ -296,7 +296,7 @@ class PartnerImportMapper(ImportMapper):
     @mapping
     def customer_group_id(self, record):
         # import customer groups
-        binder = self.get_binder_for_model('magento.res.partner.category')
+        binder = self.binder_for('magento.res.partner.category')
         category_id = binder.to_openerp(record['group_id'], unwrap=True)
 
         if category_id is None:
@@ -310,14 +310,14 @@ class PartnerImportMapper(ImportMapper):
 
     @mapping
     def website_id(self, record):
-        binder = self.get_binder_for_model('magento.website')
+        binder = self.binder_for('magento.website')
         website_id = binder.to_openerp(record['website_id'])
         return {'website_id': website_id}
 
     @only_create
     @mapping
     def company_id(self, record):
-        binder = self.get_binder_for_model('magento.storeview')
+        binder = self.binder_for('magento.storeview')
         storeview = binder.to_openerp(record['store_id'], browse=True)
         if storeview:
             company = storeview.backend_id.company_id
@@ -327,7 +327,7 @@ class PartnerImportMapper(ImportMapper):
 
     @mapping
     def lang(self, record):
-        binder = self.get_binder_for_model('magento.storeview')
+        binder = self.binder_for('magento.storeview')
         storeview = binder.to_openerp(record['store_id'], browse=True)
         if storeview:
             if storeview.lang_id:

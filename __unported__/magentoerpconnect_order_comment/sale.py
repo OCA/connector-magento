@@ -294,7 +294,7 @@ class SaleCommentExportMapper(ExportMapper):
 
     @mapping
     def order_increment(self, record):
-        binder = self.get_binder_for_model('magento.sale.order')
+        binder = self.binder_for('magento.sale.order')
         order_increment = binder.to_backend(
             record.magento_sale_order_id.id)
         return {'order_increment': order_increment}

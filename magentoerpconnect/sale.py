@@ -573,7 +573,7 @@ class SaleOrderImport(MagentoImportSynchronizer):
         return top_item
 
     def _import_customer_group(self, group_id):
-        binder = self.get_binder_for_model('magento.res.partner.category')
+        binder = self.binder_for('magento.res.partner.category')
         if binder.to_openerp(group_id) is None:
             importer = self.unit_for(MagentoImportSynchronizer,
                                      model='magento.res.partner.category')
@@ -645,7 +645,7 @@ class SaleOrderImport(MagentoImportSynchronizer):
 
     def _get_storeview(self, record):
         """ Return the tax inclusion setting for the appropriate storeview """
-        storeview_binder = self.get_binder_for_model('magento.storeview')
+        storeview_binder = self.binder_for('magento.storeview')
         # we find storeview_id in store_id!
         # (http://www.magentocommerce.com/bug-tracking/issue?issue=15886)
         storeview_id = storeview_binder.to_openerp(record['store_id'])
@@ -677,7 +677,7 @@ class SaleOrderImport(MagentoImportSynchronizer):
         # on a non-guest order (it happens, Magento inconsistencies are
         # common)
         if (is_guest_order or not record.get('customer_id')):
-            website_binder = self.get_binder_for_model('magento.website')
+            website_binder = self.binder_for('magento.website')
             oe_website_id = website_binder.to_openerp(record['website_id'])
 
             # search an existing partner with the same email
@@ -708,7 +708,7 @@ class SaleOrderImport(MagentoImportSynchronizer):
             else:
                 is_guest_order = True
 
-        partner_binder = self.get_binder_for_model('magento.res.partner')
+        partner_binder = self.binder_for('magento.res.partner')
         if is_guest_order:
             # ensure that the flag is correct in the record
             record['customer_is_guest'] = True
@@ -946,7 +946,7 @@ class SaleOrderImportMapper(ImportMapper):
 
     @mapping
     def customer_id(self, record):
-        binder = self.get_binder_for_model('magento.res.partner')
+        binder = self.binder_for('magento.res.partner')
         partner_id = binder.to_openerp(record['customer_id'], unwrap=True)
         assert partner_id is not None, (
             "customer_id %s should have been imported in "
@@ -1041,7 +1041,7 @@ class SaleOrderLineImportMapper(ImportMapper):
 
     @mapping
     def product_id(self, record):
-        binder = self.get_binder_for_model('magento.product.product')
+        binder = self.binder_for('magento.product.product')
         product_id = binder.to_openerp(record['product_id'], unwrap=True)
         assert product_id is not None, (
             "product_id %s should have been imported in "
