@@ -465,7 +465,7 @@ class ProductImportMapper(ImportMapper):
 
     @mapping
     def is_active(self, record):
-        mapper = self.get_connector_unit_for_model(IsActiveProductImportMapper)
+        mapper = self.unit_for(IsActiveProductImportMapper)
         return mapper.map_record(record).values()
 
     @mapping
@@ -531,8 +531,7 @@ class ProductImportMapper(ImportMapper):
     @mapping
     def bundle_mapping(self, record):
         if record['type_id'] == 'bundle':
-            bundle_mapper = self.get_connector_unit_for_model(
-                BundleProductImportMapper)
+            bundle_mapper = self.unit_for(BundleProductImportMapper)
             return bundle_mapper.map_record(record).values()
 
 
@@ -604,23 +603,23 @@ class ProductImport(MagentoImportSynchronizer):
 
     def _create(self, data):
         openerp_binding = super(ProductImport, self)._create(data)
-        checkpoint = self.get_connector_unit_for_model(AddCheckpoint)
+        checkpoint = self.unit_for(AddCheckpoint)
         checkpoint.run(openerp_binding.id)
         return openerp_binding
 
     def _after_import(self, binding):
         """ Hook called at the end of the import """
-        translation_importer = self.get_connector_unit_for_model(
-            TranslationImporter, self.model._name)
+        translation_importer = self.unit_for(TranslationImporter,
+                                             model=self.records())
         translation_importer.run(self.magento_id, binding.id,
                                  mapper_class=ProductImportMapper)
-        image_importer = self.get_connector_unit_for_model(
-            CatalogImageImporter, self.model._name)
+        image_importer = self.unit_for(CatalogImageImporter,
+                                       model=self.records())
         image_importer.run(self.magento_id, binding.id)
 
         if self.magento_record['type_id'] == 'bundle':
-            bundle_importer = self.get_connector_unit_for_model(
-                BundleImporter, self.model._name)
+            bundle_importer = self.unit_for(BundleImporter,
+                                            model=self.records())
             bundle_importer.run(binding.id, self.magento_record)
 
 

@@ -373,8 +373,7 @@ class PartnerImport(MagentoImportSynchronizer):
 
     def _after_import(self, partner_binding):
         """ Import the addresses """
-        get_unit = self.get_connector_unit_for_model
-        book = get_unit(PartnerAddressBook, 'magento.address')
+        book = self.unit_for(PartnerAddressBook, model='magento.address')
         book.import_addresses(self.magento_id, partner_binding.id)
 
 
@@ -414,16 +413,14 @@ class PartnerAddressBook(ConnectorUnit):
     _model_name = 'magento.address'
 
     def import_addresses(self, magento_partner_id, partner_binding_id):
-        get_unit = self.get_connector_unit_for_model
         addresses = self._get_address_infos(magento_partner_id,
                                             partner_binding_id)
         for address_id, infos in addresses:
-            importer = get_unit(MagentoImportSynchronizer)
+            importer = self.unit_for(MagentoImportSynchronizer)
             importer.run(address_id, infos)
 
     def _get_address_infos(self, magento_partner_id, partner_binding_id):
-        get_unit = self.get_connector_unit_for_model
-        adapter = get_unit(BackendAdapter)
+        adapter = self.unit_for(BackendAdapter)
         mag_address_ids = adapter.search({'customer_id':
                                           {'eq': magento_partner_id}})
         if not mag_address_ids:
@@ -442,8 +439,8 @@ class PartnerAddressBook(ConnectorUnit):
                     # with the partner.
                     # Copy the billing address on the company
                     # and use the name of the company for the name
-                    company_mapper = get_unit(CompanyImportMapper,
-                                              'magento.res.partner')
+                    company_mapper = self.unit_for(CompanyImportMapper,
+                                                   model='magento.res.partner')
                     map_record = company_mapper.map_record(magento_record)
                     partner_binding.write(map_record.values())
                 else:

@@ -79,9 +79,9 @@ And so on...
 When you are inside a ``ConnectorUnit`` you can use the shortcuts::
 
     # for the current model
-    importer = self.get_connector_unit_for_model(MagentoImportSynchronizer)
+    importer = self.unit_for(MagentoImportSynchronizer)
     # for another model
-    importer = self.get_connector_unit_for_model(MagentoImportSynchronizer,
+    importer = self.unit_for(MagentoImportSynchronizer,
                                                  'another.model')
 
 As the binders are the most used ``ConnectorUnit`` classes, they have a

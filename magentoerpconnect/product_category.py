@@ -220,25 +220,24 @@ class ProductCategoryImport(MagentoImportSynchronizer):
     def _import_dependencies(self):
         """ Import the dependencies for the record"""
         record = self.magento_record
-        env = self.environment
         # import parent category
         # the root category has a 0 parent_id
         if record.get('parent_id'):
             parent_id = record['parent_id']
             if self.binder.to_openerp(parent_id) is None:
-                importer = env.get_connector_unit(MagentoImportSynchronizer)
+                importer = self.unit_for(MagentoImportSynchronizer)
                 importer.run(parent_id)
 
     def _create(self, data):
         openerp_binding = super(ProductCategoryImport, self)._create(data)
-        checkpoint = self.get_connector_unit_for_model(AddCheckpoint)
+        checkpoint = self.unit_for(AddCheckpoint)
         checkpoint.run(openerp_binding.id)
         return openerp_binding
 
     def _after_import(self, binding):
         """ Hook called at the end of the import """
-        translation_importer = self.get_connector_unit_for_model(
-            TranslationImporter, self.model._name)
+        translation_importer = self.unit_for(TranslationImporter,
+                                             model=self.recordset())
         translation_importer.run(self.magento_id, binding.id)
 
 

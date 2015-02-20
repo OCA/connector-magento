@@ -493,8 +493,7 @@ class SaleOrderImport(MagentoImportSynchronizer):
     @property
     def mapper(self):
         if self._mapper is None:
-            self._mapper = self.environment.get_connector_unit(
-                SaleOrderImportMapper)
+            self._mapper = self.environment.unit_for(SaleOrderImportMapper)
         return self._mapper
 
     def _must_skip(self):
@@ -576,12 +575,12 @@ class SaleOrderImport(MagentoImportSynchronizer):
     def _import_customer_group(self, group_id):
         binder = self.get_binder_for_model('magento.res.partner.category')
         if binder.to_openerp(group_id) is None:
-            importer = self.get_connector_unit_for_model(
-                MagentoImportSynchronizer, 'magento.res.partner.category')
+            importer = self.unit_for(MagentoImportSynchronizer,
+                                     model='magento.res.partner.category')
             importer.run(group_id)
 
     def _before_import(self):
-        rules = self.get_connector_unit_for_model(SaleImportRule)
+        rules = self.unit_for(SaleImportRule)
         rules.check(self.magento_record)
 
     def _create_payment(self, binding_id):
@@ -641,8 +640,7 @@ class SaleOrderImport(MagentoImportSynchronizer):
         self._create_payment(binding_id)
         binding = self.session.browse(self.model._name, binding_id)
         if binding.magento_parent_id:
-            move_comment = self.environment.get_connector_unit(
-                SaleOrderMoveComment)
+            move_comment = self.unit_for(SaleOrderMoveComment)
             move_comment.move(binding)
 
     def _get_storeview(self, record):
@@ -742,8 +740,8 @@ class SaleOrderImport(MagentoImportSynchronizer):
                 'dob': record.get('customer_dob'),
                 'website_id': record.get('website_id'),
             }
-            mapper = self.get_connector_unit_for_model(PartnerImportMapper,
-                                                       'magento.res.partner')
+            mapper = self.unit_for(PartnerImportMapper,
+                                   model='magento.res.partner')
             map_record = mapper.map_record(customer_record)
             map_record.update(guest_customer=True)
             partner_bind_id = sess.create('magento.res.partner',
@@ -753,8 +751,8 @@ class SaleOrderImport(MagentoImportSynchronizer):
         else:
 
             # we always update the customer when importing an order
-            importer = self.get_connector_unit_for_model(
-                MagentoImportSynchronizer, 'magento.res.partner')
+            importer = self.unit_for(MagentoImportSynchronizer,
+                                     model='magento.res.partner')
             importer.run(record['customer_id'])
             partner_bind_id = partner_binder.to_openerp(record['customer_id'])
 
@@ -785,8 +783,7 @@ class SaleOrderImport(MagentoImportSynchronizer):
                               'active': is_guest_order,
                               'is_magento_order_address': True}
 
-        addr_mapper = self.get_connector_unit_for_model(ImportMapper,
-                                                        'magento.address')
+        addr_mapper = self.unit_for(ImportMapper, model='magento.address')
 
         def create_address(address_record):
             map_record = addr_mapper.map_record(address_record)
@@ -884,8 +881,7 @@ class SaleOrderImportMapper(ImportMapper):
         amount_excl = float(record.get('shipping_amount') or 0.0)
         if not (amount_incl or amount_excl):
             return values
-        line_builder = self.get_connector_unit_for_model(
-            MagentoShippingLineBuilder)
+        line_builder = self.unit_for(MagentoShippingLineBuilder)
         if self.options.tax_include:
             discount = float(record.get('shipping_discount_amount') or 0.0)
             line_builder.price_unit = (amount_incl - discount)
@@ -907,8 +903,7 @@ class SaleOrderImportMapper(ImportMapper):
         amount_incl = float(record.get('cod_tax_amount') or 0.0)
         if not (amount_excl or amount_incl):
             return values
-        line_builder = self.get_connector_unit_for_model(
-            MagentoCashOnDeliveryLineBuilder)
+        line_builder = self.unit_for(MagentoCashOnDeliveryLineBuilder)
         tax_include = self.options.tax_include
         line_builder.price_unit = amount_incl if tax_include else amount_excl
         line = (0, 0, line_builder.get_line())
@@ -920,8 +915,7 @@ class SaleOrderImportMapper(ImportMapper):
         if 'gift_cert_amount' not in record:
             return values
         amount = float(record['gift_cert_amount'])
-        line_builder = self.get_connector_unit_for_model(
-            MagentoGiftOrderLineBuilder)
+        line_builder = self.unit_for(MagentoGiftOrderLineBuilder)
         line_builder.price_unit = amount
         if 'gift_cert_code' in record:
             line_builder.code = record['gift_cert_code']
@@ -939,7 +933,7 @@ class SaleOrderImportMapper(ImportMapper):
             'partner_invoice_id': self.options.partner_invoice_id,
             'partner_shipping_id': self.options.partner_shipping_id,
         })
-        onchange = self.get_connector_unit_for_model(SaleOrderOnChange)
+        onchange = self.unit_for(SaleOrderOnChange)
         return onchange.play(values, values['magento_order_line_ids'])
 
     @mapping
@@ -1012,8 +1006,7 @@ class SaleOrderImportMapper(ImportMapper):
 
     @mapping
     def sale_order_comment(self, record):
-        comment_mapper = self.environment.get_connector_unit(
-            SaleOrderCommentImportMapper)
+        comment_mapper = self.unit_for(SaleOrderCommentImportMapper)
         map_record = comment_mapper.map_record(record)
         return map_record.values()
 

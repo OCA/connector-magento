@@ -93,8 +93,7 @@ class MagentoTrackingExport(ExportSynchronizer):
         if not magento_id:
             # avoid circular reference
             from .stock_picking import MagentoPickingExport
-            picking_exporter = self.get_connector_unit_for_model(
-                MagentoPickingExport)
+            picking_exporter = self.unit_for(MagentoPickingExport)
             picking_exporter.run(binding_id)
             magento_id = binder.to_backend(binding_id)
         if not magento_id:

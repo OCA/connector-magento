@@ -115,8 +115,7 @@ class MagentoImportSynchronizer(ImportSynchronizer):
             importer_class = MagentoImportSynchronizer
         binder = self.get_binder_for_model(binding_model)
         if always or binder.to_openerp(magento_id) is None:
-            importer = self.get_connector_unit_for_model(
-                importer_class, model=binding_model)
+            importer = self.unit_for(importer_class, model=binding_model)
             importer.run(magento_id)
 
     def _import_dependencies(self):
@@ -315,7 +314,7 @@ class TranslationImporter(ImportSynchronizer):
         if mapper_class is None:
             mapper = self.mapper
         else:
-            mapper = self.get_connector_unit_for_model(mapper_class)
+            mapper = self.unit_for(mapper_class)
 
         binding = self.records().browse(binding_id)
         for storeview in lang_storeviews:

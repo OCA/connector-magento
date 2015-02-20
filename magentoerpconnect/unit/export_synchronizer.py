@@ -311,8 +311,7 @@ class MagentoExporter(MagentoBaseExporter):
             binding_id = relation.id
 
         if not rel_binder.to_backend(binding_id):
-            exporter = self.get_connector_unit_for_model(exporter_class,
-                                                         binding_model)
+            exporter = self.unit_for(exporter_class, model=binding_model)
             exporter.run(binding_id)
 
     def _export_dependencies(self):

@@ -653,7 +653,7 @@ class StoreImport(MagentoImportSynchronizer):
 
     def _create(self, data):
         binding = super(StoreImport, self)._create(data)
-        checkpoint = self.get_connector_unit_for_model(StoreAddCheckpoint)
+        checkpoint = self.unit_for(StoreAddCheckpoint)
         checkpoint.run(binding.id)
         return binding
 
@@ -666,7 +666,7 @@ class StoreviewImport(MagentoImportSynchronizer):
 
     def _create(self, data):
         binding = super(StoreviewImport, self)._create(data)
-        checkpoint = self.get_connector_unit_for_model(StoreAddCheckpoint)
+        checkpoint = self.unit_for(StoreAddCheckpoint)
         checkpoint.run(binding.id)
         return binding
 
