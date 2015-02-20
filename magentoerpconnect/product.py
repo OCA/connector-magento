@@ -388,7 +388,7 @@ class CatalogImageImporter(ImportSynchronizer):
             binary = self._get_binary_image(images.pop())
         if not binary:
             return
-        model = self.recordset().with_context(connector_no_export=True)
+        model = self.records().with_context(connector_no_export=True)
         binding = model.browse(binding_id)
         binding.write({'image': base64.b64encode(binary)})
 
@@ -675,7 +675,7 @@ class ProductInventoryExport(ExportSynchronizer):
 
     def run(self, binding_id, fields):
         """ Export the product inventory to Magento """
-        product = self.recordset().browse(binding_id)
+        product = self.records().browse(binding_id)
         magento_id = self.binder.to_backend(product.id)
         data = self._get_data(product, fields)
         self.backend_adapter.update_inventory(magento_id, data)

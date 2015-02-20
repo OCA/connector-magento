@@ -168,7 +168,7 @@ class MagentoImportSynchronizer(ImportSynchronizer):
         """ Create the OpenERP record """
         # special check on data before import
         self._validate_data(data)
-        model = self.recordset().with_context(connector_no_export=True)
+        model = self.records().with_context(connector_no_export=True)
         binding = model.create(data)
         _logger.debug('%d created from magento %s', binding, self.magento_id)
         return binding
@@ -298,7 +298,7 @@ class TranslationImporter(ImportSynchronizer):
 
     def run(self, magento_id, binding_id, mapper_class=None):
         self.magento_id = magento_id
-        storeviews = self.recordset(model='magento.storeview').search(
+        storeviews = self.records(model='magento.storeview').search(
             [('backend_id', '=', self.backend_record.id)]
         )
         default_lang = self.backend_record.default_lang_id
@@ -308,7 +308,7 @@ class TranslationImporter(ImportSynchronizer):
             return
 
         # find the translatable fields of the model
-        fields = self.recordset().fields_get()
+        fields = self.records().fields_get()
         translatable_fields = [field for field, attrs in fields.iteritems()
                                if attrs.get('translate')]
 
@@ -317,7 +317,7 @@ class TranslationImporter(ImportSynchronizer):
         else:
             mapper = self.get_connector_unit_for_model(mapper_class)
 
-        binding = self.recordset().browse(binding_id)
+        binding = self.records().browse(binding_id)
         for storeview in lang_storeviews:
             lang_record = self._get_magento_data(storeview.magento_id)
             map_record = mapper.map_record(lang_record)
@@ -340,7 +340,7 @@ class AddCheckpoint(ConnectorUnit):
                    ]
 
     def run(self, openerp_binding_id):
-        binding = self.recordset().browse(openerp_binding_id)
+        binding = self.records().browse(openerp_binding_id)
         record = binding.openerp_id
         add_checkpoint(self.session,
                        record._model._name,

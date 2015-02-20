@@ -347,7 +347,7 @@ class PartnerImportMapper(ImportMapper):
     def openerp_id(self, record):
         """ Will bind the customer on a existing partner
         with the same email """
-        partner = self.recordset('res.partner').search(
+        partner = self.records('res.partner').search(
             [('email', '=', record['email']),
              ('customer', '=', True),
              '|',
@@ -435,7 +435,7 @@ class PartnerAddressBook(ConnectorUnit):
             # or imported as a standalone contact
             merge = False
             if magento_record.get('is_default_billing'):
-                binding_model = self.recordset('magento.res.partner')
+                binding_model = self.records('magento.res.partner')
                 partner_binding = binding_model.browse(partner_binding_id)
                 if magento_record.get('company'):
                     # when a company is there, we never merge the contact
@@ -474,7 +474,7 @@ class BaseAddressImportMapper(ImportMapper):
     def state(self, record):
         if not record.get('region'):
             return
-        state = self.recordset('res.country.state').search(
+        state = self.records('res.country.state').search(
             [('name', '=ilike', record['region'])],
             limit=1,
         )
@@ -485,7 +485,7 @@ class BaseAddressImportMapper(ImportMapper):
     def country(self, record):
         if not record.get('country_id'):
             return
-        country = self.recordset('res.country').search(
+        country = self.records('res.country').search(
             [('code', '=', record['country_id'])],
             limit=1
         )
@@ -509,13 +509,13 @@ class BaseAddressImportMapper(ImportMapper):
         prefix = record['prefix']
         if not prefix:
             return
-        title = self.recordset('res.partner.title').search(
+        title = self.records('res.partner.title').search(
             [('domain', '=', 'contact'),
              ('shortcut', '=ilike', prefix)],
             limit=1
         )
         if not title:
-            title = self.recordset('res.partner.title').create(
+            title = self.records('res.partner.title').create(
                 {'domain': 'contact',
                  'shortcut': prefix,
                  'name': prefix,
@@ -528,7 +528,7 @@ class BaseAddressImportMapper(ImportMapper):
     def company_id(self, record):
         parent_id = record.get('parent_id')
         if parent_id:
-            parent = self.recordset('res.partner').browse(parent_id)
+            parent = self.records('res.partner').browse(parent_id)
             if parent.company_id:
                 return {'company_id': parent.company_id.id}
             else:

@@ -67,12 +67,12 @@ class MagentoModelBinder(MagentoBinder):
                  or an empty recordset if no binding is found
         :rtype: recordset
         """
-        bindings = self.recordset().with_context(active_test=False).search(
+        bindings = self.records().with_context(active_test=False).search(
             [('magento_id', '=', str(external_id)),
              ('backend_id', '=', self.backend_record.id)]
         )
         if not bindings:
-            return self.recordset() if browse else None
+            return self.records() if browse else None
         assert len(bindings) == 1, "Several records found: %s" % (bindings,)
         if unwrap:
             return bindings.openerp_id if browse else bindings.openerp_id.id
@@ -90,13 +90,13 @@ class MagentoModelBinder(MagentoBinder):
             the backend id of the binding
         :return: backend identifier of the record
         """
-        record = self.recordset()
+        record = self.records()
         if isinstance(record_id, openerp.models.BaseModel):
             record_id.ensure_one()
             record = record_id
             record_id = record_id.id
         if wrap:
-            binding = self.recordset().with_context(active_test=False).search(
+            binding = self.records().with_context(active_test=False).search(
                 [('openerp_id', '=', record_id),
                  ('backend_id', '=', self.backend_record.id),
                  ]
@@ -107,7 +107,7 @@ class MagentoModelBinder(MagentoBinder):
             else:
                 return None
         if not record:
-            record = self.recordset().browse(record_id)
+            record = self.records().browse(record_id)
         assert record
         return record.magento_id
 
@@ -128,7 +128,7 @@ class MagentoModelBinder(MagentoBinder):
         # avoid to trigger the export when we modify the `magento_id`
         now_fmt = datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         if not isinstance(binding_id, openerp.models.BaseModel):
-            binding_id = self.recordset().browse(binding_id)
+            binding_id = self.records().browse(binding_id)
         binding_id.with_context(connector_no_export=True).write(
             {'magento_id': str(external_id),
              'sync_date': now_fmt,
@@ -146,7 +146,7 @@ class MagentoModelBinder(MagentoBinder):
         if isinstance(binding_id, openerp.models.BaseModel):
             binding = binding_id
         else:
-            binding = self.recordset().browse(binding_id)
+            binding = self.records().browse(binding_id)
 
         openerp_record = binding.openerp_id
         if browse:
