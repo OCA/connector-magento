@@ -52,34 +52,28 @@ class SetUpMagentoBase(common.TransactionCase):
         data_model = self.registry('ir.model.data')
         self.get_ref = partial(data_model.get_object_reference,
                                self.cr, self.uid)
-        backend_ids = self.backend_model.search(
+        __, warehouse_id = self.get_ref('stock', 'warehouse0')
+        self.backend_id = self.backend_model.create(
+            self.cr,
+            self.uid,
+            {'name': 'Test Magento',
+             'version': '1.7',
+             'location': 'http://anyurl',
+             'username': 'guewen',
+             'warehouse_id': warehouse_id,
+             'password': '42'})
+        # payment method needed to import a sale order
+        __, workflow_id = self.get_ref('sale_automatic_workflow',
+                                       'manual_validation')
+        __, journal_id = self.get_ref('account',
+                                      'check_journal')
+        self.registry('payment.method').create(
             self.cr, self.uid,
-            [('name', '=', 'Test Magento')])
-        if backend_ids:
-            self.backend_id = backend_ids[0]
-        else:
-            __, warehouse_id = self.get_ref('stock', 'warehouse0')
-            self.backend_id = self.backend_model.create(
-                self.cr,
-                self.uid,
-                {'name': 'Test Magento',
-                 'version': '1.7',
-                 'location': 'http://anyurl',
-                 'username': 'guewen',
-                 'warehouse_id': warehouse_id,
-                 'password': '42'})
-            # payment method needed to import a sale order
-            __, workflow_id = self.get_ref('sale_automatic_workflow',
-                                           'manual_validation')
-            __, journal_id = self.get_ref('account',
-                                          'check_journal')
-            self.registry('payment.method').create(
-                self.cr, self.uid,
-                {'name': 'checkmo',
-                 'workflow_process_id': workflow_id,
-                 'import_rule': 'always',
-                 'days_before_cancel': 0,
-                 'journal_id': journal_id})
+            {'name': 'checkmo',
+             'workflow_process_id': workflow_id,
+             'import_rule': 'always',
+             'days_before_cancel': 0,
+             'journal_id': journal_id})
 
     def get_magento_helper(self, model_name):
         return MagentoHelper(self.cr, self.registry, model_name)
