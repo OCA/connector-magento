@@ -70,7 +70,7 @@ class MagentoTrackingExport(ExportSynchronizer):
     def run(self, binding_id):
         """ Export the tracking number of a picking to Magento """
         # verify the picking is done + magento id exists
-        picking = self.session.browse(self.model._name, binding_id)
+        picking = self.session.env[self.model._name].browse(binding_id)
         carrier = picking.carrier_id
         if not carrier:
             return FailedJobError('The carrier is missing on the picking %s.' %
@@ -113,7 +113,7 @@ def delay_export_tracking_number(session, model_name, record_id):
     Call a job to export the tracking number to a existing picking that
     must be in done state.
     """
-    picking = session.browse('stock.picking', record_id)
+    picking = session.env['stock.picking'].browse(record_id)
     for binding in picking.magento_bind_ids:
         # Set the priority to 20 to have more chance that it would be
         # executed after the picking creation
@@ -127,7 +127,7 @@ def delay_export_tracking_number(session, model_name, record_id):
 @related_action(action=unwrap_binding)
 def export_tracking_number(session, model_name, record_id):
     """ Export the tracking number of a delivery order. """
-    picking = session.browse(model_name, record_id)
+    picking = session.env[model_name].browse(record_id)
     backend_id = picking.backend_id.id
     env = get_environment(session, model_name, backend_id)
     tracking_exporter = env.get_connector_unit(MagentoTrackingExport)
