@@ -167,8 +167,7 @@ class MagentoInvoiceSynchronizer(ExportSynchronizer):
 
     def run(self, binding_id):
         """ Run the job to export the validated/paid invoice """
-        sess = self.session
-        invoice = sess.browse(self.model._name, binding_id)
+        invoice = self.session.env[self.records()._name].browse(binding_id)
 
         magento_order = invoice.magento_order_id
         magento_store = magento_order.store_id
@@ -226,7 +225,7 @@ def invoice_create_bindings(session, model_name, record_id):
     Create a ``magento.account.invoice`` record. This record will then
     be exported to Magento.
     """
-    invoice = session.browse(model_name, record_id)
+    invoice = session.env[model_name].browse(record_id)
     # find the magento store to retrieve the backend
     # we use the shop as many sale orders can be related to an invoice
     for sale in invoice.sale_ids:
@@ -248,10 +247,10 @@ def invoice_create_bindings(session, model_name, record_id):
                 create_invoice = magento_store.create_invoice_on
 
             if create_invoice == invoice.state:
-                session.create('magento.account.invoice',
-                               {'backend_id': magento_sale.backend_id.id,
-                                'openerp_id': invoice.id,
-                                'magento_order_id': magento_sale.id})
+                session.env['magento.account.invoice'].create({
+                    'backend_id': magento_sale.backend_id.id,
+                    'openerp_id': invoice.id,
+                    'magento_order_id': magento_sale.id})
 
 
 @on_record_create(model_names='magento.account.invoice')
@@ -275,7 +274,7 @@ def export_invoice_paid(session, model_name, record_id):
 @related_action(action=unwrap_binding)
 def export_invoice(session, model_name, record_id):
     """ Export a validated or paid invoice. """
-    invoice = session.browse(model_name, record_id)
+    invoice = session.env[model_name].browse(record_id)
     backend_id = invoice.backend_id.id
     env = get_environment(session, model_name, backend_id)
     invoice_exporter = env.get_connector_unit(MagentoInvoiceSynchronizer)
