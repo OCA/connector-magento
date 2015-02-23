@@ -27,10 +27,7 @@ from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tools.translate import _
 from openerp.addons.connector.session import ConnectorSession
 from openerp.addons.connector.connector import ConnectorUnit
-from openerp.addons.connector.unit.mapper import (mapping,
-                                                  only_create,
-                                                  ImportMapper
-                                                  )
+from openerp.addons.connector.unit.mapper import mapping, ImportMapper
 from .unit.backend_adapter import GenericAdapter
 from .unit.import_synchronizer import (import_batch,
                                        DirectBatchImport,
@@ -179,7 +176,7 @@ class magento_backend(orm.Model):
         Verify if a website exists for each backend before starting the import.
         """
         for backend_id in ids:
-            website_ids = self.pool['magento.website'].search(
+            website_ids = self.env['magento.website'].search(
                 cr, uid, [('backend_id', '=', backend_id)], context=context)
             if not website_ids:
                 self.synchronize_metadata(cr, uid, backend_id, context=context)
@@ -280,12 +277,13 @@ class magento_backend(orm.Model):
         return [
             ('backend_id', 'in', ids),
             ('type', '!=', 'service'),
-            ('no_stock_sync', '=', False), ]
+            ('no_stock_sync', '=', False),
+        ]
 
     def update_product_stock_qty(self, cr, uid, ids, context=None):
         if not hasattr(ids, '__iter__'):
             ids = [ids]
-        mag_product_obj = self.pool.get('magento.product.product')
+        mag_product_obj = self.env['magento.product.product']
         domain = self._domain_for_update_product_stock_qty(cr, uid, ids,
                                                            context=context)
         product_ids = mag_product_obj.search(cr, uid, domain, context=context)
@@ -622,7 +620,7 @@ class StoreImportMapper(ImportMapper):
 
     @mapping
     def website_id(self, record):
-        binder = self.binder_for('magento.website')
+        binder = self.binder_for(model='magento.website')
         binding_id = binder.to_openerp(record['website_id'])
         return {'website_id': binding_id}
 
@@ -640,7 +638,7 @@ class StoreviewImportMapper(ImportMapper):
 
     @mapping
     def store_id(self, record):
-        binder = self.binder_for('magento.store')
+        binder = self.binder_for(model='magento.store')
         binding_id = binder.to_openerp(record['group_id'])
         return {'store_id': binding_id}
 
