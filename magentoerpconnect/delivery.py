@@ -49,12 +49,10 @@ class delivery_carrier(orm.Model):
     _inherit = "delivery.carrier"
 
     def _carrier_code(self, cr, uid, ids, name, args, context=None):
-        res = {}
+        res = dict.fromkeys(ids, False)
         for carrier in self.browse(cr, uid, ids, context=context):
-            if not carrier.magento_code:
-                res[carrier.id] = False
-                continue
-            res[carrier.id] = carrier.magento_code.split('_')[0]
+            if carrier.magento_code:
+                res[carrier.id] = carrier.magento_code.split('_')[0]
         return res
 
     _columns = {
@@ -70,11 +68,11 @@ class delivery_carrier(orm.Model):
         # tntmodule2_tnt_basic
         # where the first part before the _ is always the carrier code
         # in this example, the carrier code is tntmodule2
-        'magento_carrier_code':
-            fields.function(_carrier_code,
-                            string='Magento Base Carrier Code',
-                            size=32,
-                            type='char'),
+        'magento_carrier_code': fields.function(
+            _carrier_code,
+            string='Magento Base Carrier Code',
+            size=32,
+            type='char'),
         'magento_export_tracking': fields.boolean('Export tracking numbers')
     }
 
