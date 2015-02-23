@@ -734,8 +734,8 @@ class SaleOrderImport(MagentoImportSynchronizer):
                                    model='magento.res.partner')
             map_record = mapper.map_record(customer_record)
             map_record.update(guest_customer=True)
-            partner_bind_id = sess.create('magento.res.partner',
-                                          map_record.values(for_create=True))
+            partner_bind_id = sess.env['magento.res.partner'].create(
+                map_record.values(for_create=True)).id
             partner_binder.bind(guest_customer_id,
                                 partner_bind_id)
         else:
