@@ -236,8 +236,7 @@ class ProductCategoryImport(MagentoImportSynchronizer):
 
     def _after_import(self, binding):
         """ Hook called at the end of the import """
-        translation_importer = self.unit_for(TranslationImporter,
-                                             model=self.recordset())
+        translation_importer = self.unit_for(TranslationImporter)
         translation_importer.run(self.magento_id, binding.id)
 
 

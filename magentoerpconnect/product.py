@@ -388,7 +388,7 @@ class CatalogImageImporter(ImportSynchronizer):
             binary = self._get_binary_image(images.pop())
         if not binary:
             return
-        model = self.records().with_context(connector_no_export=True)
+        model = self.model.with_context(connector_no_export=True)
         binding = model.browse(binding_id)
         binding.write({'image': base64.b64encode(binary)})
 
@@ -607,17 +607,14 @@ class ProductImport(MagentoImportSynchronizer):
 
     def _after_import(self, binding):
         """ Hook called at the end of the import """
-        translation_importer = self.unit_for(TranslationImporter,
-                                             model=self.records())
+        translation_importer = self.unit_for(TranslationImporter)
         translation_importer.run(self.magento_id, binding.id,
                                  mapper_class=ProductImportMapper)
-        image_importer = self.unit_for(CatalogImageImporter,
-                                       model=self.records())
+        image_importer = self.unit_for(CatalogImageImporter)
         image_importer.run(self.magento_id, binding.id)
 
         if self.magento_record['type_id'] == 'bundle':
-            bundle_importer = self.unit_for(BundleImporter,
-                                            model=self.records())
+            bundle_importer = self.unit_for(BundleImporter)
             bundle_importer.run(binding.id, self.magento_record)
 
 
@@ -672,7 +669,7 @@ class ProductInventoryExport(ExportSynchronizer):
 
     def run(self, binding_id, fields):
         """ Export the product inventory to Magento """
-        product = self.records().browse(binding_id)
+        product = self.model.browse(binding_id)
         magento_id = self.binder.to_backend(product.id)
         data = self._get_data(product, fields)
         self.backend_adapter.update_inventory(magento_id, data)

@@ -347,7 +347,7 @@ class PartnerImportMapper(ImportMapper):
     def openerp_id(self, record):
         """ Will bind the customer on a existing partner
         with the same email """
-        partner = self.records('res.partner').search(
+        partner = self.env['res.partner'].search(
             [('email', '=', record['email']),
              ('customer', '=', True),
              '|',
@@ -432,7 +432,7 @@ class PartnerAddressBook(ConnectorUnit):
             # or imported as a standalone contact
             merge = False
             if magento_record.get('is_default_billing'):
-                binding_model = self.records('magento.res.partner')
+                binding_model = self.env['magento.res.partner']
                 partner_binding = binding_model.browse(partner_binding_id)
                 if magento_record.get('company'):
                     # when a company is there, we never merge the contact
@@ -471,7 +471,7 @@ class BaseAddressImportMapper(ImportMapper):
     def state(self, record):
         if not record.get('region'):
             return
-        state = self.records('res.country.state').search(
+        state = self.env['res.country.state'].search(
             [('name', '=ilike', record['region'])],
             limit=1,
         )
@@ -482,7 +482,7 @@ class BaseAddressImportMapper(ImportMapper):
     def country(self, record):
         if not record.get('country_id'):
             return
-        country = self.records('res.country').search(
+        country = self.env['res.country'].search(
             [('code', '=', record['country_id'])],
             limit=1
         )
@@ -506,13 +506,13 @@ class BaseAddressImportMapper(ImportMapper):
         prefix = record['prefix']
         if not prefix:
             return
-        title = self.records('res.partner.title').search(
+        title = self.env['res.partner.title'].search(
             [('domain', '=', 'contact'),
              ('shortcut', '=ilike', prefix)],
             limit=1
         )
         if not title:
-            title = self.records('res.partner.title').create(
+            title = self.env['res.partner.title'].create(
                 {'domain': 'contact',
                  'shortcut': prefix,
                  'name': prefix,
