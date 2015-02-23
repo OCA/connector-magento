@@ -167,7 +167,7 @@ class MagentoInvoiceSynchronizer(ExportSynchronizer):
 
     def run(self, binding_id):
         """ Run the job to export the validated/paid invoice """
-        invoice = self.session.env[self.records()._name].browse(binding_id)
+        invoice = self.session.env[self.model._name].browse(binding_id)
 
         magento_order = invoice.magento_order_id
         magento_store = magento_order.store_id
