@@ -296,7 +296,7 @@ class PartnerImportMapper(ImportMapper):
     @mapping
     def customer_group_id(self, record):
         # import customer groups
-        binder = self.binder_for('magento.res.partner.category')
+        binder = self.binder_for(model='magento.res.partner.category')
         category_id = binder.to_openerp(record['group_id'], unwrap=True)
 
         if category_id is None:
@@ -310,14 +310,14 @@ class PartnerImportMapper(ImportMapper):
 
     @mapping
     def website_id(self, record):
-        binder = self.binder_for('magento.website')
+        binder = self.binder_for(model='magento.website')
         website_id = binder.to_openerp(record['website_id'])
         return {'website_id': website_id}
 
     @only_create
     @mapping
     def company_id(self, record):
-        binder = self.binder_for('magento.storeview')
+        binder = self.binder_for(model='magento.storeview')
         storeview = binder.to_openerp(record['store_id'], browse=True)
         if storeview:
             company = storeview.backend_id.company_id
@@ -327,7 +327,7 @@ class PartnerImportMapper(ImportMapper):
 
     @mapping
     def lang(self, record):
-        binder = self.binder_for('magento.storeview')
+        binder = self.binder_for(model='magento.storeview')
         storeview = binder.to_openerp(record['store_id'], browse=True)
         if storeview:
             if storeview.lang_id:
@@ -525,7 +525,7 @@ class BaseAddressImportMapper(ImportMapper):
     def company_id(self, record):
         parent_id = record.get('parent_id')
         if parent_id:
-            parent = self.records('res.partner').browse(parent_id)
+            parent = self.env['res.partner'].browse(parent_id)
             if parent.company_id:
                 return {'company_id': parent.company_id.id}
             else:

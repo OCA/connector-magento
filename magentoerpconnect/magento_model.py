@@ -176,7 +176,7 @@ class magento_backend(orm.Model):
         Verify if a website exists for each backend before starting the import.
         """
         for backend_id in ids:
-            website_ids = self.env['magento.website'].search(
+            website_ids = self.pool['magento.website'].search(
                 cr, uid, [('backend_id', '=', backend_id)], context=context)
             if not website_ids:
                 self.synchronize_metadata(cr, uid, backend_id, context=context)
@@ -283,7 +283,7 @@ class magento_backend(orm.Model):
     def update_product_stock_qty(self, cr, uid, ids, context=None):
         if not hasattr(ids, '__iter__'):
             ids = [ids]
-        mag_product_obj = self.env['magento.product.product']
+        mag_product_obj = self.pool['magento.product.product']
         domain = self._domain_for_update_product_stock_qty(cr, uid, ids,
                                                            context=context)
         product_ids = mag_product_obj.search(cr, uid, domain, context=context)
