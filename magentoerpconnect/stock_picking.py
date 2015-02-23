@@ -183,7 +183,7 @@ class MagentoPickingExport(ExportSynchronizer):
         """
         Export the picking to Magento
         """
-        picking = self.session.browse(self.model._name, binding_id)
+        picking = self.session.env[self.model._name].browse(binding_id)
         if picking.magento_id:
             return _('Already exported')
         picking_method = picking.picking_method
@@ -227,21 +227,21 @@ def picking_out_done(session, model_name, record_id, picking_method):
     :param picking_method: picking_method, can be 'complete' or 'partial'
     :type picking_method: str
     """
-    picking = session.browse(model_name, record_id)
+    picking = session.env[model_name].browse(record_id)
     sale = picking.sale_id
     if not sale:
         return
     for magento_sale in sale.magento_bind_ids:
-        session.create('magento.stock.picking.out',
-                       {'backend_id': magento_sale.backend_id.id,
-                        'openerp_id': picking.id,
-                        'magento_order_id': magento_sale.id,
-                        'picking_method': picking_method})
+        session.env['magento.stock.picking.out'].create({
+            'backend_id': magento_sale.backend_id.id,
+            'openerp_id': picking.id,
+            'magento_order_id': magento_sale.id,
+            'picking_method': picking_method})
 
 
 @on_record_create(model_names='magento.stock.picking.out')
 def delay_export_picking_out(session, model_name, record_id, vals):
-    binding = session.browse(model_name, record_id)
+    binding = session.env[model_name].browse(record_id)
     # tracking number is sent when:
     # * the picking is exported and the tracking number was already
     #   there before the picking was done OR
@@ -263,7 +263,7 @@ def export_picking_done(session, model_name, record_id, with_tracking=True):
     # are pending and miss this argument will behave the same, but
     # it should be called with True only if the carrier_tracking_ref
     # is True when the job is created.
-    picking = session.browse(model_name, record_id)
+    picking = session.env[model_name].browse(record_id)
     backend_id = picking.backend_id.id
     env = get_environment(session, model_name, backend_id)
     picking_exporter = env.get_connector_unit(MagentoPickingExport)
