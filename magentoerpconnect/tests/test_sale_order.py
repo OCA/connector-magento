@@ -42,25 +42,21 @@ class TestSaleOrder(SetUpMagentoSynchronized):
                 import_record(self.session,
                               'magento.sale.order',
                               backend_id, increment_id)
-        MagentoOrder = self.registry('magento.sale.order')
-        binding_ids = MagentoOrder.search(
-            self.cr,
-            self.uid,
+        MagentoOrder = self.env['magento.sale.order']
+        binding = MagentoOrder.search(
             [('backend_id', '=', backend_id),
-             ('magento_id', '=', str(increment_id))])
-        self.assertEqual(len(binding_ids), 1)
-        return MagentoOrder.browse(self.cr, self.uid, binding_ids[0])
+             ('magento_id', '=', str(increment_id))]
+        )
+        self.assertEqual(len(binding), 1)
+        return binding
 
     def test_copy_quotation(self):
         """ Copy a sales order with copy_quotation move bindings """
         binding = self._import_sale_order(900000691)
         order = binding.openerp_id
-        SaleOrder = self.registry('sale.order')
-        action = SaleOrder.copy_quotation(self.cr, self.uid, [order.id])
+        action = order.copy_quotation()
         new_id = action['res_id']
-        order.refresh()
         self.assertFalse(order.magento_bind_ids)
-        binding.refresh()
         self.assertEqual(binding.openerp_id.id, new_id)
         for mag_line in binding.magento_order_line_ids:
             self.assertEqual(mag_line.order_id.id, new_id)
