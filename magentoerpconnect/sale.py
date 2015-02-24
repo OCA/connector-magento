@@ -97,7 +97,7 @@ class magento_sale_order(orm.Model):
                                         string='Magento Storeview'),
         'store_id': fields.related('storeview_id', 'store_id',
                                    type='many2one',
-                                   relation='magento.storeview',
+                                   relation='magento.store',
                                    string='Storeview',
                                    readonly=True)
     }
