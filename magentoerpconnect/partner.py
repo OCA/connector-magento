@@ -442,7 +442,9 @@ class PartnerAddressBook(ConnectorUnit):
                     company_mapper = self.unit_for(CompanyImportMapper,
                                                    model='magento.res.partner')
                     map_record = company_mapper.map_record(magento_record)
-                    partner_binding.write(map_record.values())
+                    parent = partner_binding.openerp_id.parent_id
+                    values = map_record.values(parent_partner=parent)
+                    partner_binding.write(values)
                 else:
                     # for B2C individual customers, merge with the main
                     # partner
@@ -523,9 +525,8 @@ class BaseAddressImportMapper(ImportMapper):
     @only_create
     @mapping
     def company_id(self, record):
-        parent_id = record.get('parent_id')
-        if parent_id:
-            parent = self.env['res.partner'].browse(parent_id)
+        parent = self.options.parent_partner
+        if parent:
             if parent.company_id:
                 return {'company_id': parent.company_id.id}
             else:

@@ -602,7 +602,7 @@ class SaleOrderImportMapper(ImportMapper):
         if carriers:
             result = {'carrier_id': carriers[0].id}
         else:
-            fake_partner = session.env('res.partner').search([])[0]
+            fake_partner = self.env['res.partner'].search([], limit=1)
             product = session.env.ref(
                 'connector_ecommerce.product_product_shipping')
             carrier = session.env['delivery.carrier'].create({
@@ -889,8 +889,8 @@ class SaleOrderImport(MagentoImportSynchronizer):
             importer.run(record['customer_id'])
             partner_bind_id = partner_binder.to_openerp(record['customer_id'])
 
-        partner_id = sess.env['magento.res.partner'].browse(
-            partner_bind_id).openerp_id.id
+        binding_partner_model = self.env['magento.res.partner']
+        partner = binding_partner_model.browse(partner_bind_id).openerp_id
 
         # Import of addresses. We just can't rely on the
         # ``customer_address_id`` field given by Magento, because it is
@@ -909,7 +909,7 @@ class SaleOrderImport(MagentoImportSynchronizer):
 
         # For the orders which are from guests, we let the addresses
         # as active because they don't have an address book.
-        addresses_defaults = {'parent_id': partner_id,
+        addresses_defaults = {'parent_id': partner.id,
                               'magento_partner_id': partner_bind_id,
                               'email': record.get('customer_email', False),
                               'active': is_guest_order,
@@ -921,7 +921,8 @@ class SaleOrderImport(MagentoImportSynchronizer):
             map_record = addr_mapper.map_record(address_record)
             map_record.update(addresses_defaults)
             address_bind = sess.env['magento.address'].create(
-                map_record.values(for_create=True))
+                map_record.values(for_create=True,
+                                  parent_partner=partner))
             return address_bind.openerp_id.id
 
         billing_id = create_address(record['billing_address'])
@@ -930,7 +931,7 @@ class SaleOrderImport(MagentoImportSynchronizer):
         if record['shipping_address']:
             shipping_id = create_address(record['shipping_address'])
 
-        self.partner_id = partner_id
+        self.partner_id = partner.id
         self.partner_invoice_id = billing_id
         self.partner_shipping_id = shipping_id or billing_id
 
