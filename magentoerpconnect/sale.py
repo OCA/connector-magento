@@ -458,11 +458,12 @@ class SaleImportRule(ConnectorUnit):
         :returns: True if the sale order should be imported
         :rtype: boolean
         """
-        session = self.session
         payment_method = record['payment']['method']
-        methods = session.env['payment.method'].search(
-            [('name', '=', payment_method)])
-        if not methods:
+        method = self.env['payment.method'].search(
+            [('name', '=', payment_method)],
+            limit=1,
+        )
+        if not method:
             raise FailedJobError(
                 "The configuration is missing for the Payment Method '%s'.\n\n"
                 "Resolution:\n"
@@ -472,8 +473,6 @@ class SaleImportRule(ConnectorUnit):
                 "-Eventually  link the Payment Method to an existing Workflow "
                 "Process or create a new one." % (payment_method,
                                                   payment_method))
-        method = methods[0]
-
         self._rule_global(record, method)
         self._rules[method.import_rule](self, record, method)
 
@@ -582,30 +581,32 @@ class SaleOrderImportMapper(ImportMapper):
     @mapping
     def payment(self, record):
         record_method = record['payment']['method']
-        methods = self.session.env['payment.method'].search(
-            [['name', '=', record_method]])
-        assert methods, ("method %s should exist because the import fails "
-                         "in SaleOrderImport._before_import when it is "
-                         " missing" % record['payment']['method'])
-        method_id = methods[0].id
-        return {'payment_method_id': method_id}
+        method = self.session.env['payment.method'].search(
+            [['name', '=', record_method]],
+            limit=1,
+        )
+        assert method, ("method %s should exist because the import fails "
+                        "in SaleOrderImport._before_import when it is "
+                        " missing" % record['payment']['method'])
+        return {'payment_method_id': method.id}
 
     @mapping
     def shipping_method(self, record):
-        session = self.session
         ifield = record.get('shipping_method')
         if not ifield:
             return
 
-        carriers = session.env['delivery.carrier'].search(
-            [('magento_code', '=', ifield)])
-        if carriers:
-            result = {'carrier_id': carriers[0].id}
+        carrier = self.env['delivery.carrier'].search(
+            [('magento_code', '=', ifield)],
+            limit=1,
+        )
+        if carrier:
+            result = {'carrier_id': carrier.id}
         else:
             fake_partner = self.env['res.partner'].search([], limit=1)
-            product = session.env.ref(
+            product = self.env.ref(
                 'connector_ecommerce.product_product_shipping')
-            carrier = session.env['delivery.carrier'].create({
+            carrier = self.env['delivery.carrier'].create({
                 'partner_id': fake_partner.id,
                 'product_id': product.id,
                 'name': ifield,
@@ -726,17 +727,15 @@ class SaleOrderImport(MagentoImportSynchronizer):
         rules = self.unit_for(SaleImportRule)
         rules.check(self.magento_record)
 
-    def _create_payment(self, binding_id):
-        sess = self.session
-        mag_sale = sess.env[self.model._name].browse(binding_id)
-        if not mag_sale.payment_method_id.journal_id:
+    def _create_payment(self, binding):
+        if not binding.payment_method_id.journal_id:
             return
         amount = self.magento_record.get('payment', {}).get('amount_paid')
         if amount:
             amount = float(amount)  # magento gives a str
-            mag_sale.openerp_id.automatic_payment(amount)
+            binding.openerp_id.automatic_payment(amount)
 
-    def _link_parent_orders(self, binding_id):
+    def _link_parent_orders(self, binding):
         """ Link the magento.sale.order to its parent orders.
 
         When a Magento sales order is modified, it:
@@ -754,27 +753,23 @@ class SaleOrderImport(MagentoImportSynchronizer):
         while parent_id:
             all_parent_ids.append(parent_id)
             parent_id = self.backend_adapter.get_parent(parent_id)
-        current_bind_id = binding_id
+        current_binding = binding
         for parent_id in all_parent_ids:
-            parent_bind_id = self.binder.to_openerp(parent_id)
-            if not parent_bind_id:
+            parent_binding = self.binder.to_openerp(parent_id)
+            if not parent_binding:
                 # may happen if several sales orders have been
                 # edited / canceled but not all have been imported
                 continue
             # link to the nearest parent
-            self.session.env[self.model._name].browse(current_bind_id).write(
-                {'magento_parent_id': parent_bind_id})
-            parent_bind = self.session.env[self.model._name].browse(
-                parent_bind_id)
-            parent_canceled = parent_bind.canceled_in_backend
+            current_binding.write({'magento_parent_id': parent_binding.id})
+            parent_canceled = parent_binding.canceled_in_backend
             if not parent_canceled:
-                parent_bind.write({'canceled_in_backend': True})
-            current_bind_id = parent_bind_id
+                parent_binding.write({'canceled_in_backend': True})
+            current_binding = parent_binding
 
-    def _after_import(self, binding_id):
-        self._link_parent_orders(binding_id)
-        self._create_payment(binding_id)
-        binding = self.session.env[self.model._name].browse(binding_id)
+    def _after_import(self, binding):
+        self._link_parent_orders(binding)
+        self._create_payment(binding)
         if binding.magento_parent_id:
             move_comment = self.unit_for(SaleOrderMoveComment)
             move_comment.move(binding)
@@ -784,9 +779,7 @@ class SaleOrderImport(MagentoImportSynchronizer):
         storeview_binder = self.binder_for('magento.storeview')
         # we find storeview_id in store_id!
         # (http://www.magentocommerce.com/bug-tracking/issue?issue=15886)
-        storeview_id = storeview_binder.to_openerp(record['store_id'])
-        storeview = self.session.env['magento.storeview'].browse(storeview_id)
-        return storeview
+        return storeview_binder.to_openerp(record['store_id'], browse=True)
 
     def _get_magento_data(self):
         """ Return the raw Magento data for ``self.magento_id`` """
@@ -817,14 +810,15 @@ class SaleOrderImport(MagentoImportSynchronizer):
             oe_website_id = website_binder.to_openerp(record['website_id'])
 
             # search an existing partner with the same email
-            partner_ids = sess.env['magento.res.partner'].search(
+            partner = self.env['magento.res.partner'].search(
                 [('emailid', '=', record['customer_email']),
-                 ('website_id', '=', oe_website_id)])
+                 ('website_id', '=', oe_website_id)],
+                limit=1)
 
             # if we have found one, we "fix" the record with the magento
             # customer id
-            if partner_ids:
-                magento = partner_ids[0].magento_id.name_get()[0]
+            if partner:
+                magento = partner.magento_id
                 # If there are multiple orders with "customer_id is
                 # null" and "customer_is_guest = 0" which share the same
                 # customer_email, then we may get a magento_id that is a
@@ -877,20 +871,20 @@ class SaleOrderImport(MagentoImportSynchronizer):
                                    model='magento.res.partner')
             map_record = mapper.map_record(customer_record)
             map_record.update(guest_customer=True)
-            partner_bind_id = sess.env['magento.res.partner'].create(
-                map_record.values(for_create=True)).id
+            partner_binding = self.env['magento.res.partner'].create(
+                map_record.values(for_create=True))
             partner_binder.bind(guest_customer_id,
-                                partner_bind_id)
+                                partner_binding)
         else:
 
             # we always update the customer when importing an order
             importer = self.unit_for(MagentoImportSynchronizer,
                                      model='magento.res.partner')
             importer.run(record['customer_id'])
-            partner_bind_id = partner_binder.to_openerp(record['customer_id'])
+            partner_binding = partner_binder.to_openerp(record['customer_id'],
+                                                        browse=True)
 
-        binding_partner_model = self.env['magento.res.partner']
-        partner = binding_partner_model.browse(partner_bind_id).openerp_id
+        partner = partner_binding.openerp_id
 
         # Import of addresses. We just can't rely on the
         # ``customer_address_id`` field given by Magento, because it is
@@ -910,7 +904,7 @@ class SaleOrderImport(MagentoImportSynchronizer):
         # For the orders which are from guests, we let the addresses
         # as active because they don't have an address book.
         addresses_defaults = {'parent_id': partner.id,
-                              'magento_partner_id': partner_bind_id,
+                              'magento_partner_id': partner_binding.id,
                               'email': record.get('customer_email', False),
                               'active': is_guest_order,
                               'is_magento_order_address': True}
