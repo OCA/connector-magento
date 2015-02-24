@@ -167,4 +167,4 @@ class MagentoModelBinder(MagentoBinder):
         except KeyError:
             raise ValueError('Cannot unwrap model %s, because it has '
                              'no openerp_id field' % self.model._name)
-        return column._obj
+        return column.comodel_name
