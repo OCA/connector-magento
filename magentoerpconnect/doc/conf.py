@@ -14,6 +14,7 @@
 
 import sys
 import os
+import openerp
 import sphinx_bootstrap_theme
 import openerp
 
