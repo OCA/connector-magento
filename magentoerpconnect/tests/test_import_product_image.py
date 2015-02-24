@@ -54,27 +54,27 @@ class test_import_product_image(common.TransactionCase):
 
     def setUp(self):
         super(test_import_product_image, self).setUp()
-        backend_model = self.registry('magento.backend')
-        warehouse_id = self.ref('stock.warehouse0')
+        backend_model = self.env['magento.backend']
+        warehouse = self.env.ref('stock.warehouse0')
         self.backend_id = backend_model.create(
-            self.cr,
-            self.uid,
             {'name': 'Test Magento',
              'version': '1.7',
              'location': 'http://anyurl',
              'username': 'guewen',
-             'warehouse_id': warehouse_id,
-             'password': '42'})
+             'warehouse_id': warehouse.id,
+             'password': '42'}).id
 
-        self.session = ConnectorSession(self.cr, self.uid)
-        self.session.context['__test_no_commit'] = True
+        context = dict(self.env.context, __test_no_commit=True)
+        self.session = ConnectorSession(self.env.cr, self.env.uid,
+                                        context=context)
         with mock_api(magento_base_responses):
             import_batch(self.session, 'magento.website', self.backend_id)
             import_batch(self.session, 'magento.store', self.backend_id)
             import_batch(self.session, 'magento.storeview', self.backend_id)
             import_record(self.session, 'magento.product.category',
                           self.backend_id, 1)
-        self.product_model = self.registry('magento.product.product')
+
+        self.product_model = self.env['magento.product.product']
 
     def test_image_priority(self):
         """ Check if the images are sorted in the correct priority """
@@ -99,7 +99,8 @@ class test_import_product_image(common.TransactionCase):
                     'i/n/ink-eater-krylon-bombear-destroyed-tee-2.jpg')
         with mock.patch('urllib2.urlopen') as urlopen:
             def image_url_response(url):
-                if url in (url_tee1, url_tee2):
+                print(url._Request__original)
+                if url._Request__original in (url_tee1, url_tee2):
                     raise urllib2.HTTPError(url, 404, '404', None, None)
                 else:
                     return MockResponseImage(PNG_IMG_4PX_GREEN)
