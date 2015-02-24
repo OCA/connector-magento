@@ -262,7 +262,7 @@ class TestImportMagento(SetUpMagentoSynchronized):
         self.assertEqual(len(mag_order_lines), 1)
         order_line = mag_order_lines[0].openerp_id
         price_unit = order_line.price_unit
-        self.assertEqual(price_unit, 41.0500)
+        self.assertAlmostEqual(price_unit, 41.0500)
 
     def test_34_import_sale_order_with_taxes_included(self):
         """ Import sale order with taxes included """
@@ -284,7 +284,7 @@ class TestImportMagento(SetUpMagentoSynchronized):
         amount_total = order.amount_total
         # 97.5 is the amount_total if connector takes correctly included
         # tax prices.
-        self.assertEqual(amount_total, 97.5000)
+        self.assertAlmostEqual(amount_total, 97.5000)
         storeviews.write({'catalog_price_tax_included': False})
 
     def test_35_import_sale_order_with_discount(self):
@@ -304,7 +304,7 @@ class TestImportMagento(SetUpMagentoSynchronized):
                                              ('magento_id', '=', '900000696')])
         self.assertEqual(len(mag_orders), 1)
         order = mag_orders[0].openerp_id
-        self.assertEqual(order.amount_total, 36.9500)
+        self.assertAlmostEqual(order.amount_total, 36.9500)
 
         for line in order.order_line:
             if line.name == 'Item 1':
