@@ -57,7 +57,7 @@ class magento_backend(orm.Model):
         to add a version from an ``_inherit`` does not constrain
         to redefine the ``version`` field in the ``_inherit`` model.
         """
-        return [('1.7', '1.7')]
+        return [('1.7', '1.7+')]
 
     def _select_versions(self, cr, uid, context=None):
         """ Available versions in the backend.
