@@ -753,9 +753,8 @@ class SaleOrderImport(MagentoImportSynchronizer):
             importer.run(record['customer_id'])
             partner_bind_id = partner_binder.to_openerp(record['customer_id'])
 
-        partner_id = sess.read(
-            'magento.res.partner',
-            partner_bind_id, ['openerp_id'])['openerp_id'][0]
+        partner = sess.browse('magento.res.partner',
+                              partner_bind_id).openerp_id
 
         # Import of addresses. We just can't rely on the
         # ``customer_address_id`` field given by Magento, because it is
@@ -774,7 +773,7 @@ class SaleOrderImport(MagentoImportSynchronizer):
 
         # For the orders which are from guests, we let the addresses
         # as active because they don't have an address book.
-        addresses_defaults = {'parent_id': partner_id,
+        addresses_defaults = {'parent_id': partner.id,
                               'magento_partner_id': partner_bind_id,
                               'email': record.get('customer_email', False),
                               'active': is_guest_order,
@@ -786,8 +785,9 @@ class SaleOrderImport(MagentoImportSynchronizer):
         def create_address(address_record):
             map_record = addr_mapper.map_record(address_record)
             map_record.update(addresses_defaults)
-            address_bind_id = sess.create('magento.address',
-                                          map_record.values(for_create=True))
+            values = map_record.values(for_create=True,
+                                       parent_partner=partner)
+            address_bind_id = sess.create('magento.address', values)
             return sess.read('magento.address',
                              address_bind_id,
                              ['openerp_id'])['openerp_id'][0]
@@ -798,7 +798,7 @@ class SaleOrderImport(MagentoImportSynchronizer):
         if record['shipping_address']:
             shipping_id = create_address(record['shipping_address'])
 
-        self.partner_id = partner_id
+        self.partner_id = partner.id
         self.partner_invoice_id = billing_id
         self.partner_shipping_id = shipping_id or billing_id
 
