@@ -47,12 +47,12 @@ _logger = logging.getLogger(__name__)
 class MagentoImportSynchronizer(ImportSynchronizer):
     """ Base importer for Magento """
 
-    def __init__(self, environment):
+    def __init__(self, connector_env):
         """
-        :param environment: current environment (backend, session, ...)
-        :type environment: :py:class:`connector.connector.Environment`
+        :param connector_env: current environment (backend, session, ...)
+        :type connector_env: :class:`connector.connector.ConnectorEnvironment`
         """
-        super(MagentoImportSynchronizer, self).__init__(environment)
+        super(MagentoImportSynchronizer, self).__init__(connector_env)
         self.magento_id = None
         self.magento_record = None
 

@@ -487,14 +487,157 @@ class SaleOrderMoveComment(ConnectorUnit):
 
 
 @magento
+class SaleOrderImportMapper(ImportMapper):
+    _model_name = 'magento.sale.order'
+
+    direct = [('increment_id', 'magento_id'),
+              ('order_id', 'magento_order_id'),
+              ('grand_total', 'total_amount'),
+              ('tax_amount', 'total_amount_tax'),
+              ('created_at', 'date_order'),
+              ('store_id', 'storeview_id'),
+              ]
+
+    children = [('items', 'magento_order_line_ids', 'magento.sale.order.line'),
+                ]
+
+    def _add_shipping_line(self, map_record, values):
+        record = map_record.source
+        amount_incl = float(record.get('base_shipping_incl_tax') or 0.0)
+        amount_excl = float(record.get('shipping_amount') or 0.0)
+        if not (amount_incl or amount_excl):
+            return values
+        line_builder = self.unit_for(MagentoShippingLineBuilder)
+        if self.options.tax_include:
+            discount = float(record.get('shipping_discount_amount') or 0.0)
+            line_builder.price_unit = (amount_incl - discount)
+        else:
+            line_builder.price_unit = amount_excl
+
+        if values.get('carrier_id'):
+            carrier = self.session.env['delivery.carrier'].browse(
+                values['carrier_id'])
+            line_builder.product_id = carrier.product_id
+
+        line = (0, 0, line_builder.get_line())
+        values['order_line'].append(line)
+        return values
+
+    def _add_cash_on_delivery_line(self, map_record, values):
+        record = map_record.source
+        amount_excl = float(record.get('cod_fee') or 0.0)
+        amount_incl = float(record.get('cod_tax_amount') or 0.0)
+        if not (amount_excl or amount_incl):
+            return values
+        line_builder = self.unit_for(MagentoCashOnDeliveryLineBuilder)
+        tax_include = self.options.tax_include
+        line_builder.price_unit = amount_incl if tax_include else amount_excl
+        line = (0, 0, line_builder.get_line())
+        values['order_line'].append(line)
+        return values
+
+    def _add_gift_certificate_line(self, map_record, values):
+        record = map_record.source
+        if 'gift_cert_amount' not in record:
+            return values
+        amount = float(record['gift_cert_amount'])
+        line_builder = self.unit_for(MagentoGiftOrderLineBuilder)
+        line_builder.price_unit = amount
+        if 'gift_cert_code' in record:
+            line_builder.code = record['gift_cert_code']
+        line = (0, 0, line_builder.get_line())
+        values['order_line'].append(line)
+        return values
+
+    def finalize(self, map_record, values):
+        values.setdefault('order_line', [])
+        values = self._add_shipping_line(map_record, values)
+        values = self._add_cash_on_delivery_line(map_record, values)
+        values = self._add_gift_certificate_line(map_record, values)
+        values.update({
+            'partner_id': self.options.partner_id,
+            'partner_invoice_id': self.options.partner_invoice_id,
+            'partner_shipping_id': self.options.partner_shipping_id,
+        })
+        onchange = self.unit_for(SaleOrderOnChange)
+        return onchange.play(values, values['magento_order_line_ids'])
+
+    @mapping
+    def name(self, record):
+        name = record['increment_id']
+        prefix = self.backend_record.sale_prefix
+        if prefix:
+            name = prefix + name
+        return {'name': name}
+
+    @mapping
+    def customer_id(self, record):
+        binder = self.binder_for('magento.res.partner')
+        partner_id = binder.to_openerp(record['customer_id'], unwrap=True)
+        assert partner_id is not None, (
+            "customer_id %s should have been imported in "
+            "SaleOrderImport._import_dependencies" % record['customer_id'])
+        return {'partner_id': partner_id}
+
+    @mapping
+    def payment(self, record):
+        record_method = record['payment']['method']
+        methods = self.session.env['payment.method'].search(
+            [['name', '=', record_method]])
+        assert methods, ("method %s should exist because the import fails "
+                         "in SaleOrderImport._before_import when it is "
+                         " missing" % record['payment']['method'])
+        method_id = methods[0].id
+        return {'payment_method_id': method_id}
+
+    @mapping
+    def shipping_method(self, record):
+        session = self.session
+        ifield = record.get('shipping_method')
+        if not ifield:
+            return
+
+        carriers = session.env['delivery.carrier'].search(
+            [('magento_code', '=', ifield)])
+        if carriers:
+            result = {'carrier_id': carriers[0].id}
+        else:
+            fake_partner = session.env('res.partner').search([])[0]
+            product = session.env.ref(
+                'connector_ecommerce.product_product_shipping')
+            carrier = session.env['delivery.carrier'].create({
+                'partner_id': fake_partner.id,
+                'product_id': product.id,
+                'name': ifield,
+                'magento_code': ifield})
+            result = {'carrier_id': carrier.id}
+        return result
+
+    # partner_id, partner_invoice_id, partner_shipping_id
+    # are done in the importer
+
+    @mapping
+    def backend_id(self, record):
+        return {'backend_id': self.backend_record.id}
+
+    @mapping
+    def user_id(self, record):
+        """ Do not assign to a Salesperson otherwise sales orders are hidden
+        for the salespersons (access rules)"""
+        return {'user_id': False}
+
+    @mapping
+    def sale_order_comment(self, record):
+        comment_mapper = self.unit_for(SaleOrderCommentImportMapper)
+        map_record = comment_mapper.map_record(record)
+        return map_record.values()
+
+
+@magento
 class SaleOrderImport(MagentoImportSynchronizer):
     _model_name = ['magento.sale.order']
 
-    @property
-    def mapper(self):
-        if self._mapper is None:
-            self._mapper = self.environment.unit_for(SaleOrderImportMapper)
-        return self._mapper
+    _base_mapper = SaleOrderImportMapper
 
     def _must_skip(self):
         """ Hook called right after we read the data from the backend.
@@ -845,153 +988,6 @@ class SaleOrderCommentImportMapper(ImportMapper):
     Does nothing in the base addons.
     """
     _model_name = 'magento.sale.order'
-
-
-@magento
-class SaleOrderImportMapper(ImportMapper):
-    _model_name = 'magento.sale.order'
-
-    direct = [('increment_id', 'magento_id'),
-              ('order_id', 'magento_order_id'),
-              ('grand_total', 'total_amount'),
-              ('tax_amount', 'total_amount_tax'),
-              ('created_at', 'date_order'),
-              ('store_id', 'storeview_id'),
-              ]
-
-    children = [('items', 'magento_order_line_ids', 'magento.sale.order.line'),
-                ]
-
-    def _add_shipping_line(self, map_record, values):
-        record = map_record.source
-        amount_incl = float(record.get('base_shipping_incl_tax') or 0.0)
-        amount_excl = float(record.get('shipping_amount') or 0.0)
-        if not (amount_incl or amount_excl):
-            return values
-        line_builder = self.unit_for(MagentoShippingLineBuilder)
-        if self.options.tax_include:
-            discount = float(record.get('shipping_discount_amount') or 0.0)
-            line_builder.price_unit = (amount_incl - discount)
-        else:
-            line_builder.price_unit = amount_excl
-
-        if values.get('carrier_id'):
-            carrier = self.session.env['delivery.carrier'].browse(
-                values['carrier_id'])
-            line_builder.product_id = carrier.product_id
-
-        line = (0, 0, line_builder.get_line())
-        values['order_line'].append(line)
-        return values
-
-    def _add_cash_on_delivery_line(self, map_record, values):
-        record = map_record.source
-        amount_excl = float(record.get('cod_fee') or 0.0)
-        amount_incl = float(record.get('cod_tax_amount') or 0.0)
-        if not (amount_excl or amount_incl):
-            return values
-        line_builder = self.unit_for(MagentoCashOnDeliveryLineBuilder)
-        tax_include = self.options.tax_include
-        line_builder.price_unit = amount_incl if tax_include else amount_excl
-        line = (0, 0, line_builder.get_line())
-        values['order_line'].append(line)
-        return values
-
-    def _add_gift_certificate_line(self, map_record, values):
-        record = map_record.source
-        if 'gift_cert_amount' not in record:
-            return values
-        amount = float(record['gift_cert_amount'])
-        line_builder = self.unit_for(MagentoGiftOrderLineBuilder)
-        line_builder.price_unit = amount
-        if 'gift_cert_code' in record:
-            line_builder.code = record['gift_cert_code']
-        line = (0, 0, line_builder.get_line())
-        values['order_line'].append(line)
-        return values
-
-    def finalize(self, map_record, values):
-        values.setdefault('order_line', [])
-        values = self._add_shipping_line(map_record, values)
-        values = self._add_cash_on_delivery_line(map_record, values)
-        values = self._add_gift_certificate_line(map_record, values)
-        values.update({
-            'partner_id': self.options.partner_id,
-            'partner_invoice_id': self.options.partner_invoice_id,
-            'partner_shipping_id': self.options.partner_shipping_id,
-        })
-        onchange = self.unit_for(SaleOrderOnChange)
-        return onchange.play(values, values['magento_order_line_ids'])
-
-    @mapping
-    def name(self, record):
-        name = record['increment_id']
-        prefix = self.backend_record.sale_prefix
-        if prefix:
-            name = prefix + name
-        return {'name': name}
-
-    @mapping
-    def customer_id(self, record):
-        binder = self.binder_for('magento.res.partner')
-        partner_id = binder.to_openerp(record['customer_id'], unwrap=True)
-        assert partner_id is not None, (
-            "customer_id %s should have been imported in "
-            "SaleOrderImport._import_dependencies" % record['customer_id'])
-        return {'partner_id': partner_id}
-
-    @mapping
-    def payment(self, record):
-        record_method = record['payment']['method']
-        methods = self.session.env['payment.method'].search(
-            [['name', '=', record_method]])
-        assert methods, ("method %s should exist because the import fails "
-                         "in SaleOrderImport._before_import when it is "
-                         " missing" % record['payment']['method'])
-        method_id = methods[0].id
-        return {'payment_method_id': method_id}
-
-    @mapping
-    def shipping_method(self, record):
-        session = self.session
-        ifield = record.get('shipping_method')
-        if not ifield:
-            return
-
-        carriers = session.env['delivery.carrier'].search(
-            [('magento_code', '=', ifield)])
-        if carriers:
-            result = {'carrier_id': carriers[0].id}
-        else:
-            fake_partner = session.env('res.partner').search([])[0]
-            product = session.env.ref(
-                'connector_ecommerce.product_product_shipping')
-            carrier = session.env['delivery.carrier'].create({
-                'partner_id': fake_partner.id,
-                'product_id': product.id,
-                'name': ifield,
-                'magento_code': ifield})
-            result = {'carrier_id': carrier.id}
-        return result
-
-    # partner_id, partner_invoice_id, partner_shipping_id
-    # are done in the importer
-
-    @mapping
-    def backend_id(self, record):
-        return {'backend_id': self.backend_record.id}
-
-    @mapping
-    def user_id(self, record):
-        """ Do not assign to a Salesperson otherwise sales orders are hidden
-        for the salespersons (access rules)"""
-        return {'user_id': False}
-
-    @mapping
-    def sale_order_comment(self, record):
-        comment_mapper = self.unit_for(SaleOrderCommentImportMapper)
-        map_record = comment_mapper.map_record(record)
-        return map_record.values()
 
 
 @magento

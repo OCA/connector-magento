@@ -56,12 +56,12 @@ In addition to its export job, an exporter has to:
 class MagentoBaseExporter(ExportSynchronizer):
     """ Base exporter for Magento """
 
-    def __init__(self, environment):
+    def __init__(self, connector_env):
         """
-        :param environment: current environment (backend, session, ...)
-        :type environment: :py:class:`connector.connector.Environment`
+        :param connector_env: current environment (backend, session, ...)
+        :type connector_env: :class:`connector.connector.ConnectorEnvironment`
         """
-        super(MagentoBaseExporter, self).__init__(environment)
+        super(MagentoBaseExporter, self).__init__(connector_env)
         self.binding_id = None
         self.magento_id = None
 
@@ -142,12 +142,12 @@ class MagentoBaseExporter(ExportSynchronizer):
 class MagentoExporter(MagentoBaseExporter):
     """ A common flow for the exports to Magento """
 
-    def __init__(self, environment):
+    def __init__(self, connector_env):
         """
-        :param environment: current environment (backend, session, ...)
-        :type environment: :py:class:`connector.connector.Environment`
+        :param connector_env: current environment (backend, session, ...)
+        :type connector_env: :class:`connector.connector.ConnectorEnvironment`
         """
-        super(MagentoExporter, self).__init__(environment)
+        super(MagentoExporter, self).__init__(connector_env)
         self.binding_record = None
 
     def _lock(self):
