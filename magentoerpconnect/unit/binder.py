@@ -152,3 +152,19 @@ class MagentoModelBinder(MagentoBinder):
         if browse:
             return openerp_record
         return openerp_record.id
+
+    def unwrap_model(self):
+        """ For a binding model, gives the name of the normal model.
+
+        Example: when called on a binder for ``magento.product.product``,
+        it will return ``product.product``.
+
+        This binder assumes that the normal model lays in ``openerp_id`` since
+        this is the field we use in the ``_inherits`` bindings.
+        """
+        try:
+            column = self.model._fields['openerp_id']
+        except KeyError:
+            raise ValueError('Cannot unwrap model %s, because it has '
+                             'no openerp_id field' % self.model._name)
+        return column._obj
