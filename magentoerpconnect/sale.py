@@ -255,8 +255,17 @@ class magento_sale_order_line(orm.Model):
                                                     context=context)
         order_id = info[0]['openerp_id']
         vals['order_id'] = order_id[0]
-        return super(magento_sale_order_line, self).create(cr, uid, vals,
-                                                           context=context)
+        _super = super(magento_sale_order_line, self)
+        binding_id = _super.create(cr, uid, vals, context=context)
+        line = self.browse(cr, uid, binding_id, context=context).openerp_id
+        # FIXME triggers function field
+        # The amounts (amount_total, ...) computed fields on 'sale.order' are
+        # not triggered when magento.sale.order.line are created.
+        # It might be a v8 regression, because they were triggered in
+        # v7. Before getting a better correction, force the computation
+        # by writing again on the line.
+        line.write({'price_unit': line.price_unit})
+        return binding_id
 
 
 class sale_order_line(orm.Model):
