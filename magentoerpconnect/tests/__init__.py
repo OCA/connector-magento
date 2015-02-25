@@ -25,16 +25,3 @@ from . import test_export_invoice
 from . import test_import_product_image
 from . import test_related_action
 from . import test_sale_order
-
-
-fast_suite = [
-]
-
-checks = [
-    test_synchronization,
-    test_address_book,
-    test_export_invoice,
-    test_import_product_image,
-    test_related_action,
-    test_sale_order,
-]
