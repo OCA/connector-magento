@@ -60,11 +60,14 @@ class SetUpMagentoBase(common.TransactionCase):
         workflow = self.env.ref(
             'sale_automatic_workflow.manual_validation')
         journal = self.env.ref('account.check_journal')
+        self.payment_term = self.env.ref('account.'
+                                         'account_payment_term_advance')
         self.env['payment.method'].create(
             {'name': 'checkmo',
              'workflow_process_id': workflow.id,
              'import_rule': 'always',
              'days_before_cancel': 0,
+             'payment_term_id': self.payment_term.id,
              'journal_id': journal.id})
 
     def get_magento_helper(self, model_name):
@@ -210,9 +213,12 @@ class TestImportMagento(SetUpMagentoSynchronized):
                               'magento.sale.order',
                               backend_id, 900000691)
         order_model = self.env['magento.sale.order']
-        orders = order_model.search([('backend_id', '=', backend_id),
-                                     ('magento_id', '=', '900000691')])
-        self.assertEqual(len(orders), 1)
+        order = order_model.search([('backend_id', '=', backend_id),
+                                    ('magento_id', '=', '900000691')])
+        self.assertEqual(len(order), 1)
+        self.assertEqual(order.payment_term, self.payment_term,
+                         "If the payment term is empty, the onchanges have not"
+                         "been applied.")
 
     def test_31_import_sale_order_no_website_id(self):
         """ Import sale order: website_id is missing, happens with magento """
