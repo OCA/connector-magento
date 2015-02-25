@@ -113,7 +113,9 @@ class PartnerCategoryImportMapper(ImportMapper):
     @mapping
     def openerp_id(self, record):
         """ Will bind the category on a existing one with the same name."""
-        tag_ids = self.session.env['res.partner.category'].search(
-            [('name', '=', record['customer_group_code'])])
-        if tag_ids:
-            return {'openerp_id': tag_ids[0]}
+        existing = self.env['res.partner.category'].search(
+            [('name', '=', record['customer_group_code'])],
+            limit=1
+        )
+        if existing:
+            return {'openerp_id': existing.id}
