@@ -92,6 +92,10 @@ class test_import_product_image(common.TransactionCase):
         """ An image responds a 404 error, skip and take the first valid """
         env = mock.MagicMock()
         env.get_connector_unit.return_value = ProductProductAdapter(env)
+        model = mock.MagicMock(name='model')
+        model.browse.return_value = model
+        env.model.with_context.return_value = model
+
         importer = CatalogImageImporter(env)
         url_tee1 = ('http://localhost:9100/media/catalog/product'
                     '/i/n/ink-eater-krylon-bombear-destroyed-tee-1.jpg')
@@ -99,7 +103,6 @@ class test_import_product_image(common.TransactionCase):
                     'i/n/ink-eater-krylon-bombear-destroyed-tee-2.jpg')
         with mock.patch('urllib2.urlopen') as urlopen:
             def image_url_response(url):
-                print(url._Request__original)
                 if url._Request__original in (url_tee1, url_tee2):
                     raise urllib2.HTTPError(url, 404, '404', None, None)
                 else:
@@ -109,9 +112,8 @@ class test_import_product_image(common.TransactionCase):
             with mock_api(simple_product_and_images):
                 importer.run(122, 999)
 
-        env.session.write.assert_called_with(mock.ANY,
-                                             999,
-                                             {'image': B64_PNG_IMG_4PX_GREEN})
+        model.browse.assert_called_with(999)
+        model.write.assert_called_with({'image': B64_PNG_IMG_4PX_GREEN})
 
     def test_import_images_403(self):
         """ Import a product when an image respond a 403 error, should fail """
