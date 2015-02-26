@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    Author: Guewen Baconnier
-#    Copyright 2013 Camptocamp SA
+#    Copyright 2013-2015 Camptocamp SA
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from openerp.osv import orm, fields
+from openerp import models, fields
 from openerp.addons.connector.connector import (ConnectorEnvironment,
                                                 install_in_connector)
 from openerp.addons.connector.checkpoint import checkpoint
@@ -40,7 +40,7 @@ def get_environment(session, model_name, backend_id):
             return env
 
 
-class magento_binding(orm.AbstractModel):
+class MagentoBinding(models.AbstractModel):
     """ Abstract Model for the Bindigs.
 
     All the models used as bindings between Magento and OpenERP
@@ -51,16 +51,15 @@ class magento_binding(orm.AbstractModel):
     _inherit = 'external.binding'
     _description = 'Magento Binding (abstract)'
 
-    _columns = {
-        # 'openerp_id': openerp-side id must be declared in concrete model
-        'backend_id': fields.many2one(
-            'magento.backend',
-            'Magento Backend',
-            required=True,
-            ondelete='restrict'),
-        # fields.char because 0 is a valid Magento ID
-        'magento_id': fields.char('ID on Magento'),
-    }
+    # openerp_id = openerp-side id must be declared in concrete model
+    backend_id = fields.Many2one(
+        comodel_name='magento.backend',
+        string='Magento Backend',
+        required=True,
+        ondelete='restrict',
+    )
+    # fields.Char because 0 is a valid Magento ID
+    magento_id = fields.Char(string='ID on Magento')
 
     # the _sql_contraints cannot be there due to this bug:
     # https://bugs.launchpad.net/openobject-server/+bug/1151703
