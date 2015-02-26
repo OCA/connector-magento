@@ -20,11 +20,11 @@
 #
 ##############################################################################
 
-from openerp.osv import fields, orm
+from openerp import models, fields, api
 
 
 # TODO magento.delivery.carrier & move specific stuff
-class delivery_carrier(orm.Model):
+class delivery_carrier(models.Model):
     """ Adds Magento specific fields to ``delivery.carrier``
 
     ``magento_code``
@@ -48,34 +48,27 @@ class delivery_carrier(orm.Model):
     """
     _inherit = "delivery.carrier"
 
-    def _carrier_code(self, cr, uid, ids, name, args, context=None):
-        res = dict.fromkeys(ids, False)
-        for carrier in self.browse(cr, uid, ids, context=context):
+    magento_code = fields.Char(
+        string='Magento Carrier Code',
+        required=False,
+    )
+    magento_tracking_title = fields.Char(
+        string='Magento Tracking Title',
+        required=False,
+    )
+    # in Magento, the delivery method is something like that:
+    # tntmodule2_tnt_basic
+    # where the first part before the first _ is always the carrier code
+    # in this example, the carrier code is tntmodule2
+    magento_carrier_code = fields.Char(
+        compute='_compute_carrier_code',
+        string='Magento Base Carrier Code',
+    )
+    magento_export_tracking = fields.Boolean(string='Export tracking numbers',
+                                             default=True)
+
+    @api.depends('magento_code')
+    def _compute_carrier_code(self):
+        for carrier in self:
             if carrier.magento_code:
-                res[carrier.id] = carrier.magento_code.split('_')[0]
-        return res
-
-    _columns = {
-        'magento_code': fields.char(
-            'Magento Carrier Code',
-            size=64,
-            required=False),
-        'magento_tracking_title': fields.char(
-            'Magento Tracking Title',
-            size=64,
-            required=False),
-        # in Magento, the delivery method is something like that:
-        # tntmodule2_tnt_basic
-        # where the first part before the _ is always the carrier code
-        # in this example, the carrier code is tntmodule2
-        'magento_carrier_code': fields.function(
-            _carrier_code,
-            string='Magento Base Carrier Code',
-            size=32,
-            type='char'),
-        'magento_export_tracking': fields.boolean('Export tracking numbers')
-    }
-
-    _defaults = {
-        'magento_export_tracking': True,
-    }
+                self.magento_carrier_code = carrier.magento_code.split('_')[0]
