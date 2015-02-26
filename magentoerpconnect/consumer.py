@@ -45,9 +45,7 @@ def delay_export_all_bindings(session, model_name, record_id, vals):
     """
     if session.context.get('connector_no_export'):
         return
-    model = session.pool.get(model_name)
-    record = model.browse(session.cr, session.uid,
-                          record_id, context=session.context)
+    record = session.env[model_name].browse(record_id)
     fields = vals.keys()
     for binding in record.magento_bind_ids:
         export_record.delay(session, binding._model._name, binding.id,
@@ -58,9 +56,7 @@ def delay_unlink(session, model_name, record_id):
     """ Delay a job which delete a record on Magento.
 
     Called on binding records."""
-    model = session.pool.get(model_name)
-    record = model.browse(session.cr, session.uid,
-                          record_id, context=session.context)
+    record = session.env[model_name].browse(record_id)
     env = get_environment(session, model_name, record.backend_id.id)
     binder = env.get_connector_unit(Binder)
     magento_id = binder.to_backend(record_id)
