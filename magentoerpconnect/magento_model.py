@@ -41,7 +41,7 @@ _logger = logging.getLogger(__name__)
 IMPORT_DELTA_BUFFER = 30  # seconds
 
 
-class magento_backend(models.Model):
+class MagentoBackend(models.Model):
     _name = 'magento.backend'
     _description = 'Magento Backend'
     _inherit = 'connector.backend'
@@ -331,7 +331,7 @@ class magento_backend(models.Model):
         return path
 
 
-class magento_website(models.Model):
+class MagentoWebsite(models.Model):
     _name = 'magento.website'
     _inherit = 'magento.binding'
     _description = 'Magento Website'
@@ -388,7 +388,7 @@ class magento_website(models.Model):
         return True
 
 
-class magento_store(models.Model):
+class MagentoStore(models.Model):
     _name = 'magento.store'
     _inherit = 'magento.binding'
     _description = 'Magento Store'
@@ -440,7 +440,7 @@ class magento_store(models.Model):
     )
 
 
-class magento_storeview(models.Model):
+class MagentoStoreview(models.Model):
     _name = 'magento.storeview'
     _inherit = 'magento.binding'
     _description = "Magento Storeview"
