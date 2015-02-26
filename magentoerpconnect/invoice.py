@@ -21,8 +21,7 @@
 
 import logging
 import xmlrpclib
-from openerp.osv import fields, orm
-from openerp.tools.translate import _
+from openerp import models, fields, api, _
 from openerp.addons.connector.queue.job import job, related_action
 from openerp.addons.connector.unit.synchronizer import ExportSynchronizer
 from openerp.addons.connector.event import on_record_create
@@ -37,22 +36,20 @@ from .related_action import unwrap_binding
 _logger = logging.getLogger(__name__)
 
 
-class magento_account_invoice(orm.Model):
+class magento_account_invoice(models.Model):
     """ Binding Model for the Magento Invoice """
     _name = 'magento.account.invoice'
     _inherit = 'magento.binding'
     _inherits = {'account.invoice': 'openerp_id'}
     _description = 'Magento Invoice'
 
-    _columns = {
-        'openerp_id': fields.many2one('account.invoice',
-                                      string='Invoice',
-                                      required=True,
-                                      ondelete='cascade'),
-        'magento_order_id': fields.many2one('magento.sale.order',
-                                            string='Magento Sale Order',
-                                            ondelete='set null'),
-    }
+    openerp_id = fields.Many2one(comodel_name='account.invoice',
+                                 string='Invoice',
+                                 required=True,
+                                 ondelete='cascade')
+    magento_order_id = fields.Many2one(comodel_name='magento.sale.order',
+                                       string='Magento Sale Order',
+                                       ondelete='set null')
 
     _sql_constraints = [
         ('openerp_uniq', 'unique(backend_id, openerp_id)',
@@ -60,17 +57,19 @@ class magento_account_invoice(orm.Model):
     ]
 
 
-class account_invoice(orm.Model):
+class account_invoice(models.Model):
     """ Adds the ``one2many`` relation to the Magento bindings
-    (``magento_bind_ids``)"""
+    (``magento_bind_ids``)
+    """
     _inherit = 'account.invoice'
 
-    _columns = {
-        'magento_bind_ids': fields.one2many(
-            'magento.account.invoice', 'openerp_id',
-            string="Magento Bindings"),
-    }
+    magento_bind_ids = fields.One2many(
+        comodel_name='magento.account.invoice',
+        inverse_name='openerp_id',
+        string='Magento Bindings',
+    )
 
+    # TODO Which api decorator?
     def copy_data(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
@@ -165,7 +164,7 @@ class MagentoInvoiceSynchronizer(ExportSynchronizer):
 
     def run(self, binding_id):
         """ Run the job to export the validated/paid invoice """
-        invoice = self.session.env[self.model._name].browse(binding_id)
+        invoice = self.model.browse(binding_id)
 
         magento_order = invoice.magento_order_id
         magento_store = magento_order.store_id
