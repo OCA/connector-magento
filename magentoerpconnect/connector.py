@@ -61,8 +61,10 @@ class MagentoBinding(models.AbstractModel):
     # fields.Char because 0 is a valid Magento ID
     magento_id = fields.Char(string='ID on Magento')
 
-    # the _sql_contraints cannot be there due to this bug:
-    # https://bugs.launchpad.net/openobject-server/+bug/1151703
+    _sql_constraints = [
+        ('magento_uniq', 'unique(backend_id, magento_id)',
+         'A binding already exists with the same Magento ID.'),
+    ]
 
 
 def add_checkpoint(session, model_name, record_id, backend_id):

@@ -63,11 +63,6 @@ class magento_res_partner_category(orm.Model):
         'tax_class_id': fields.integer('Tax Class ID'),
     }
 
-    _sql_constraints = [
-        ('magento_uniq', 'unique(backend_id, magento_id)',
-         'A partner tag with same ID on Magento already exists.'),
-    ]
-
 
 @magento
 class PartnerCategoryAdapter(GenericAdapter):

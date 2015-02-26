@@ -102,11 +102,6 @@ class magento_sale_order(orm.Model):
                                    readonly=True)
     }
 
-    _sql_constraints = [
-        ('magento_uniq', 'unique(backend_id, magento_id)',
-         'A sale order line with the same ID on Magento already exists.'),
-    ]
-
 
 class sale_order(orm.Model):
     _inherit = 'sale.order'
@@ -241,11 +236,6 @@ class magento_sale_order_line(orm.Model):
         # XXX common to all ecom sale orders
         'notes': fields.char('Notes'),
         }
-
-    _sql_constraints = [
-        ('magento_uniq', 'unique(backend_id, magento_id)',
-         'A sale order line with the same ID on Magento already exists.'),
-    ]
 
     def create(self, cr, uid, vals, context=None):
         magento_order_id = vals['magento_order_id']

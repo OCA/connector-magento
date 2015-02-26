@@ -367,11 +367,6 @@ class magento_website(orm.Model):
                                                 readonly=True),
     }
 
-    _sql_constraints = [
-        ('magento_uniq', 'unique(backend_id, magento_id)',
-         'A website with the same ID on Magento already exists.'),
-    ]
-
     def import_partners(self, cr, uid, ids, context=None):
         if not hasattr(ids, '__iter__'):
             ids = [ids]
@@ -466,11 +461,6 @@ class magento_store(orm.Model):
         'create_invoice_on': 'paid',
     }
 
-    _sql_constraints = [
-        ('magento_uniq', 'unique(backend_id, magento_id)',
-         'A store with the same ID on Magento already exists.'),
-    ]
-
 
 class magento_storeview(orm.Model):
     _name = 'magento.storeview'
@@ -508,11 +498,6 @@ class magento_storeview(orm.Model):
     _defaults = {
         'no_sales_order_sync': False,
     }
-
-    _sql_constraints = [
-        ('magento_uniq', 'unique(backend_id, magento_id)',
-         'A storeview with same ID on Magento already exists.'),
-    ]
 
     def import_sale_orders(self, cr, uid, ids, context=None):
         session = ConnectorSession(cr, uid, context=context)

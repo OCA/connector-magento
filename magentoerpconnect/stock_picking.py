@@ -58,11 +58,6 @@ class magento_stock_picking(orm.Model):
                                            required=True),
     }
 
-    _sql_constraints = [
-        ('magento_uniq', 'unique(backend_id, magento_id)',
-         'A stock picking with same ID on Magento already exists.'),
-    ]
-
 
 class stock_picking(orm.Model):
     _inherit = 'stock.picking'

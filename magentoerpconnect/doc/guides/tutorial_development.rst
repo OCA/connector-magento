@@ -142,11 +142,6 @@ First, we create the model::
             'tax_class_id': fields.integer('Tax Class ID'),
         }
 
-        _sql_constraints = [
-            ('magento_uniq', 'unique(backend_id, magento_id)',
-             'A partner tag with same ID on Magento already exists.'),
-        ]
-
 Observations:
 
 * We do not change ``res.partner.category`` but create a

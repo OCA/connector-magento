@@ -126,11 +126,6 @@ class magento_product_product(orm.Model):
         'no_stock_sync': False,
         }
 
-    _sql_constraints = [
-        ('magento_uniq', 'unique(backend_id, magento_id)',
-         "A product with the same ID on Magento already exists")
-    ]
-
     RECOMPUTE_QTY_STEP = 1000  # products at a time
 
     def recompute_magento_qty(self, cr, uid, ids, context=None):

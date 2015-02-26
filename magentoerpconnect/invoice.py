@@ -55,8 +55,6 @@ class magento_account_invoice(orm.Model):
     }
 
     _sql_constraints = [
-        ('magento_uniq', 'unique(backend_id, magento_id)',
-         'An invoice with the same ID on Magento already exists.'),
         ('openerp_uniq', 'unique(backend_id, openerp_id)',
          'A Magento binding for this invoice already exists.'),
     ]

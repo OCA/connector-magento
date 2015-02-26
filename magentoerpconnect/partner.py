@@ -127,11 +127,6 @@ class magento_res_partner(orm.Model):
                  "is not merged with the billing address."),
     }
 
-    _sql_constraints = [
-        ('magento_uniq', 'unique(website_id, magento_id)',
-         'A partner with same ID on Magento already exists for this website.'),
-    ]
-
 
 class magento_address(orm.Model):
     _name = 'magento.address'
@@ -190,8 +185,6 @@ class magento_address(orm.Model):
     }
 
     _sql_constraints = [
-        ('magento_uniq', 'unique(backend_id, magento_id)',
-         'A partner address with same ID on Magento already exists.'),
         ('openerp_uniq', 'unique(backend_id, openerp_id)',
          'A partner address can only have one binding by backend.'),
     ]
