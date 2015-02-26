@@ -24,7 +24,7 @@ from openerp import models, fields, api
 
 
 # TODO magento.delivery.carrier & move specific stuff
-class delivery_carrier(models.Model):
+class DeliveryCarrier(models.Model):
     """ Adds Magento specific fields to ``delivery.carrier``
 
     ``magento_code``
