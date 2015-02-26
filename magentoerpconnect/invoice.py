@@ -21,7 +21,7 @@
 
 import logging
 import xmlrpclib
-from openerp import models, fields, api, _
+from openerp import models, fields, _
 from openerp.addons.connector.queue.job import job, related_action
 from openerp.addons.connector.unit.synchronizer import ExportSynchronizer
 from openerp.addons.connector.event import on_record_create
@@ -36,7 +36,7 @@ from .related_action import unwrap_binding
 _logger = logging.getLogger(__name__)
 
 
-class magento_account_invoice(models.Model):
+class MagentoAccountInvoice(models.Model):
     """ Binding Model for the Magento Invoice """
     _name = 'magento.account.invoice'
     _inherit = 'magento.binding'
@@ -57,7 +57,7 @@ class magento_account_invoice(models.Model):
     ]
 
 
-class account_invoice(models.Model):
+class AccountInvoice(models.Model):
     """ Adds the ``one2many`` relation to the Magento bindings
     (``magento_bind_ids``)
     """
@@ -68,15 +68,6 @@ class account_invoice(models.Model):
         inverse_name='openerp_id',
         string='Magento Bindings',
     )
-
-    # TODO Which api decorator?
-    def copy_data(self, cr, uid, id, default=None, context=None):
-        if default is None:
-            default = {}
-        default['magento_bind_ids'] = False
-        return super(account_invoice, self).copy_data(cr, uid, id,
-                                                      default=default,
-                                                      context=context)
 
 
 @magento
