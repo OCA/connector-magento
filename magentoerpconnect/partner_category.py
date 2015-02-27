@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from openerp.osv import fields, orm
+from openerp import models, fields
 from openerp.addons.connector.unit.mapper import (mapping,
                                                   only_create,
                                                   ImportMapper
@@ -29,39 +29,28 @@ from .unit.import_synchronizer import DelayedBatchImport
 from .backend import magento
 
 
-class res_partner_category(orm.Model):
+class ResPartnerCategory(models.Model):
     _inherit = 'res.partner.category'
 
-    _columns = {
-        'magento_bind_ids': fields.one2many(
-            'magento.res.partner.category',
-            'openerp_id',
-            string='Magento Bindings',
-            readonly=True),
-    }
-
-    def copy_data(self, cr, uid, id, default=None, context=None):
-        if default is None:
-            default = {}
-        default['magento_bind_ids'] = False
-        return super(res_partner_category, self).copy_data(cr, uid, id,
-                                                           default=default,
-                                                           context=context)
+    magento_bind_ids = fields.One2many(
+        comodel_name='magento.res.partner.category',
+        inverse_name='openerp_id',
+        string='Magento Bindings',
+        readonly=True,
+    )
 
 
-class magento_res_partner_category(orm.Model):
+class MagentoResPartnerCategory(models.Model):
     _name = 'magento.res.partner.category'
     _inherit = 'magento.binding'
     _inherits = {'res.partner.category': 'openerp_id'}
 
-    _columns = {
-        'openerp_id': fields.many2one('res.partner.category',
-                                      string='Partner Category',
-                                      required=True,
-                                      ondelete='cascade'),
-        # TODO : replace by a m2o when tax class will be implemented
-        'tax_class_id': fields.integer('Tax Class ID'),
-    }
+    openerp_id = fields.Many2one(comodel_name='res.partner.category',
+                                 string='Partner Category',
+                                 required=True,
+                                 ondelete='cascade')
+    # TODO : replace by a m2o when tax class will be implemented
+    tax_class_id = fields.Integer(string='Tax Class ID')
 
 
 @magento
@@ -110,7 +99,7 @@ class PartnerCategoryImportMapper(ImportMapper):
         """ Will bind the category on a existing one with the same name."""
         existing = self.env['res.partner.category'].search(
             [('name', '=', record['customer_group_code'])],
-            limit=1
+            limit=1,
         )
         if existing:
             return {'openerp_id': existing.id}
