@@ -26,8 +26,7 @@ import base64
 import xmlrpclib
 import sys
 from collections import defaultdict
-from openerp.osv import orm, fields
-from openerp.tools.translate import _
+from openerp import models, fields, api, _
 from openerp.addons.connector.queue.job import job, related_action
 from openerp.addons.connector.event import on_record_write
 from openerp.addons.connector.unit.synchronizer import (ImportSynchronizer,
@@ -61,13 +60,14 @@ def chunks(items, length):
         yield items[index:index + length]
 
 
-class magento_product_product(orm.Model):
+class MagentoProductProduct(models.Model):
     _name = 'magento.product.product'
     _inherit = 'magento.binding'
     _inherits = {'product.product': 'openerp_id'}
     _description = 'Magento Product'
 
-    def product_type_get(self, cr, uid, context=None):
+    @api.model
+    def product_type_get(self):
         return [
             ('simple', 'Simple Product'),
             ('configurable', 'Configurable Product'),
@@ -78,57 +78,52 @@ class magento_product_product(orm.Model):
             # ('downloadable', 'Downloadable Product'),
         ]
 
-    def _product_type_get(self, cr, uid, context=None):
-        return self.product_type_get(cr, uid, context=context)
-
-    _columns = {
-        'openerp_id': fields.many2one('product.product',
-                                      string='Product',
-                                      required=True,
-                                      ondelete='restrict'),
-        # XXX website_ids can be computed from categories
-        'website_ids': fields.many2many('magento.website',
-                                        string='Websites',
-                                        readonly=True),
-        'created_at': fields.date('Created At (on Magento)'),
-        'updated_at': fields.date('Updated At (on Magento)'),
-        'product_type': fields.selection(_product_type_get,
-                                         'Magento Product Type',
-                                         required=True),
-        'manage_stock': fields.selection(
-            [('use_default', 'Use Default Config'),
-             ('no', 'Do Not Manage Stock'),
-             ('yes', 'Manage Stock')],
-            string='Manage Stock Level',
-            required=True),
-        'backorders': fields.selection(
-            [('use_default', 'Use Default Config'),
-             ('no', 'No Sell'),
-             ('yes', 'Sell Quantity < 0'),
-             ('yes-and-notification', 'Sell Quantity < 0 and '
-                                      'Use Customer Notification')],
-            string='Manage Inventory Backorders',
-            required=True),
-        'magento_qty': fields.float('Computed Quantity',
-                                    help="Last computed quantity to send "
-                                         "on Magento."),
-        'no_stock_sync': fields.boolean(
-            'No Stock Synchronization',
-            required=False,
-            help="Check this to exclude the product "
-                 "from stock synchronizations."),
-        }
-
-    _defaults = {
-        'product_type': 'simple',
-        'manage_stock': 'use_default',
-        'backorders': 'use_default',
-        'no_stock_sync': False,
-        }
+    openerp_id = fields.Many2one(comodel_name='product.product',
+                                 string='Product',
+                                 required=True,
+                                 ondelete='restrict')
+    # XXX website_ids can be computed from categories
+    website_ids = fields.Many2many(comodel_name='magento.website',
+                                   string='Websites',
+                                   readonly=True)
+    created_at = fields.Date('Created At (on Magento)')
+    updated_at = fields.Date('Updated At (on Magento)')
+    product_type = fields.Selection(selection='product_type_get',
+                                    string='Magento Product Type',
+                                    default='simple',
+                                    required=True)
+    manage_stock = fields.Selection(
+        selection=[('use_default', 'Use Default Config'),
+                   ('no', 'Do Not Manage Stock'),
+                   ('yes', 'Manage Stock')],
+        string='Manage Stock Level',
+        default='use_default',
+        required=True,
+    )
+    backorders = fields.Selection(
+        selection=[('use_default', 'Use Default Config'),
+                   ('no', 'No Sell'),
+                   ('yes', 'Sell Quantity < 0'),
+                   ('yes-and-notification', 'Sell Quantity < 0 and '
+                                            'Use Customer Notification')],
+        string='Manage Inventory Backorders',
+        default='use_default',
+        required=True,
+    )
+    magento_qty = fields.Float(string='Computed Quantity',
+                               help="Last computed quantity to send "
+                                    "on Magento.")
+    no_stock_sync = fields.Boolean(
+        string='No Stock Synchronization',
+        required=False,
+        help="Check this to exclude the product "
+             "from stock synchronizations.",
+    )
 
     RECOMPUTE_QTY_STEP = 1000  # products at a time
 
-    def recompute_magento_qty(self, cr, uid, ids, context=None):
+    @api.multi
+    def recompute_magento_qty(self):
         """ Check if the quantity in the stock location configured
         on the backend has changed since the last export.
 
@@ -139,24 +134,18 @@ class magento_product_product(orm.Model):
         It groups the products by backend to avoid to read the backend
         informations for each product.
         """
-        if not hasattr(ids, '__iter__'):
-            ids = [ids]
-
         # group products by backend
-        backends = defaultdict(list)
-        for product in self.read(cr, uid, ids, ['backend_id', 'magento_qty'],
-                                 context=context):
-            backends[product['backend_id'][0]].append(product)
+        backends = defaultdict(self.browse())
+        for product in self:
+            backends[product.backend_id] |= product
 
-        for backend_id, products in backends.iteritems():
-            backend_obj = self.pool['magento.backend']
-            backend = backend_obj.browse(cr, uid, backend_id, context=context)
-            self._recompute_magento_qty_backend(cr, uid, backend, products,
-                                                context=context)
+        for backend, products in backends.iteritems():
+            self._recompute_magento_qty_backend(backend, products)
         return True
 
-    def _recompute_magento_qty_backend(self, cr, uid, backend, products,
-                                       read_fields=None, context=None):
+    @api.multi
+    def _recompute_magento_qty_backend(self, backend, products,
+                                       read_fields=None):
         """ Recompute the products quantity for one backend.
 
         If field names are passed in ``read_fields`` (as a list), they
@@ -164,38 +153,29 @@ class magento_product_product(orm.Model):
         :meth:`~._magento_qty`.
 
         """
-        if context is None:
-            context = {}
-
         if backend.product_stock_field_id:
             stock_field = backend.product_stock_field_id.name
         else:
             stock_field = 'virtual_available'
 
         location = backend.warehouse_id.lot_stock_id
-        location_ctx = context.copy()
-        location_ctx['location'] = location.id
 
         product_fields = ['magento_qty', stock_field]
         if read_fields:
             product_fields += read_fields
 
-        product_ids = [product['id'] for product in products]
-        for chunk_ids in chunks(product_ids, self.RECOMPUTE_QTY_STEP):
-            for product in self.read(cr, uid, chunk_ids, product_fields,
-                                     context=location_ctx):
-                new_qty = self._magento_qty(cr, uid, product,
+        self_with_location = self.with_context(location=location.id)
+        for chunk_ids in chunks(products.ids, self.RECOMPUTE_QTY_STEP):
+            for product in self_with_location.read(chunk_ids, product_fields):
+                new_qty = self._magento_qty(product,
                                             backend,
                                             location,
-                                            stock_field,
-                                            context=location_ctx)
+                                            stock_field)
                 if new_qty != product['magento_qty']:
-                    self.write(cr, uid, product['id'],
-                               {'magento_qty': new_qty},
-                               context=context)
+                    self.browse(product['id']).magento_qty = new_qty
 
-    def _magento_qty(self, cr, uid, product, backend, location,
-                     stock_field, context=None):
+    @api.multi
+    def _magento_qty(self, product, backend, location, stock_field):
         """ Return the current quantity for one product.
 
         Can be inherited to change the way the quantity is computed,
@@ -208,23 +188,14 @@ class magento_product_product(orm.Model):
         return product[stock_field]
 
 
-class product_product(orm.Model):
+class ProductProduct(models.Model):
     _inherit = 'product.product'
 
-    _columns = {
-        'magento_bind_ids': fields.one2many(
-            'magento.product.product',
-            'openerp_id',
-            string='Magento Bindings',),
-    }
-
-    def copy_data(self, cr, uid, id, default=None, context=None):
-        if default is None:
-            default = {}
-        default['magento_bind_ids'] = False
-        return super(product_product, self).copy_data(cr, uid, id,
-                                                      default=default,
-                                                      context=context)
+    magento_bind_ids = fields.One2many(
+        comodel_name='magento.product.product',
+        inverse_name='openerp_id',
+        string='Magento Bindings',
+    )
 
 
 @magento
@@ -559,8 +530,8 @@ class ProductImport(MagentoImportSynchronizer):
         prevent the `except_orm` and display a better error message).
         """
         product_type = data['product_type']
-        product_obj = self.session.env['magento.product.product']
-        types = product_obj.product_type_get()
+        product_model = self.env['magento.product.product']
+        types = product_model.product_type_get()
         available_types = [typ[0] for typ in types]
         if product_type not in available_types:
             raise InvalidDataError("The product type '%s' is not "
