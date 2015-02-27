@@ -22,7 +22,7 @@
 import logging
 import xmlrpclib
 from collections import namedtuple
-from openerp.osv import fields, orm
+from openerp import models, fields, api
 from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.connector import ConnectorUnit
 from openerp.addons.connector.exception import MappingError
@@ -44,38 +44,33 @@ from .connector import get_environment
 _logger = logging.getLogger(__name__)
 
 
-class res_partner(orm.Model):
+class ResPartner(models.Model):
     _inherit = 'res.partner'
 
-    _columns = {
-        'magento_bind_ids': fields.one2many(
-            'magento.res.partner', 'openerp_id',
-            string="Magento Bindings"),
-        'magento_address_bind_ids': fields.one2many(
-            'magento.address', 'openerp_id',
-            string="Magento Address Bindings"),
-        'birthday': fields.date('Birthday'),
-        'company': fields.char('Company'),
-    }
+    magento_bind_ids = fields.One2many(
+        comodel_name='magento.res.partner',
+        inverse_name='openerp_id',
+        string="Magento Bindings",
+    )
+    magento_address_bind_ids = fields.One2many(
+        comodel_name='magento.address',
+        inverse_name='openerp_id',
+        string="Magento Address Bindings",
+    )
+    birthday = fields.Date(string='Birthday')
+    company = fields.Char(string='Company')
 
-    def copy_data(self, cr, uid, id, default=None, context=None):
-        if default is None:
-            default = {}
-        default['magento_bind_ids'] = False
-        return super(res_partner, self).copy_data(cr, uid, id,
-                                                  default=default,
-                                                  context=context)
-
-    def _address_fields(self, cr, uid, context=None):
+    @api.model
+    def _address_fields(self):
         """ Returns the list of address fields that are synced from the parent
-        when the `use_parent_address` flag is set. """
-        fields = super(res_partner, self)._address_fields(cr, uid,
-                                                          context=context)
+        when the `use_parent_address` flag is set.
+        """
+        fields = super(ResPartner, self)._address_fields()
         fields.append('company')
         return fields
 
 
-class magento_res_partner(orm.Model):
+class MagentoResPartner(models.Model):
     _name = 'magento.res.partner'
     _inherit = 'magento.binding'
     _inherits = {'res.partner': 'openerp_id'}
@@ -83,52 +78,43 @@ class magento_res_partner(orm.Model):
 
     _rec_name = 'name'
 
-    def _get_mag_partner_from_website(self, cr, uid, ids, context=None):
-        mag_partner_obj = self.pool['magento.res.partner']
-        return mag_partner_obj.search(
-            cr, uid, [('website_id', 'in', ids)], context=context)
-
-    _columns = {
-        'openerp_id': fields.many2one('res.partner',
-                                      string='Partner',
-                                      required=True,
-                                      ondelete='cascade'),
-        'backend_id': fields.related(
-            'website_id', 'backend_id',
-            type='many2one',
-            relation='magento.backend',
-            string='Magento Backend',
-            store={
-                'magento.res.partner': (lambda self, cr, uid, ids, c=None: ids,
-                                        ['website_id'], 10),
-                'magento.website': (_get_mag_partner_from_website,
-                                    ['backend_id'], 20),
-            },
-            readonly=True),
-        'website_id': fields.many2one('magento.website',
-                                      string='Magento Website',
-                                      required=True,
-                                      ondelete='restrict'),
-        'group_id': fields.many2one('magento.res.partner.category',
-                                    string='Magento Group (Category)'),
-        'created_at': fields.datetime('Created At (on Magento)',
-                                      readonly=True),
-        'updated_at': fields.datetime('Updated At (on Magento)',
-                                      readonly=True),
-        'emailid': fields.char('E-mail address'),
-        'taxvat': fields.char('Magento VAT'),
-        'newsletter': fields.boolean('Newsletter'),
-        'guest_customer': fields.boolean('Guest Customer'),
-        'consider_as_company': fields.boolean(
-            'Considered as company',
-            help="An account imported with a 'company' in "
-                 "the billing address is considered as a company.\n "
-                 "The partner takes the name of the company and "
-                 "is not merged with the billing address."),
-    }
+    openerp_id = fields.Many2one(comodel_name='res.partner',
+                                 string='Partner',
+                                 required=True,
+                                 ondelete='cascade')
+    backend_id = fields.Many2one(
+        related='website_id.backend_id',
+        comodel_name='magento.backend',
+        string='Magento Backend',
+        store=True,
+        readonly=True,
+        # override 'magento.binding', can't be INSERTed if True:
+        required=False,
+    )
+    website_id = fields.Many2one(comodel_name='magento.website',
+                                 string='Magento Website',
+                                 required=True,
+                                 ondelete='restrict')
+    group_id = fields.Many2one(comodel_name='magento.res.partner.category',
+                               string='Magento Group (Category)')
+    created_at = fields.Datetime(string='Created At (on Magento)',
+                                 readonly=True)
+    updated_at = fields.Datetime(string='Updated At (on Magento)',
+                                 readonly=True)
+    emailid = fields.Char(string='E-mail address')
+    taxvat = fields.Char(string='Magento VAT')
+    newsletter = fields.Boolean(string='Newsletter')
+    guest_customer = fields.Boolean(string='Guest Customer')
+    consider_as_company = fields.Boolean(
+        string='Considered as company',
+        help="An account imported with a 'company' in "
+             "the billing address is considered as a company.\n "
+             "The partner takes the name of the company and "
+             "is not merged with the billing address.",
+    )
 
 
-class magento_address(orm.Model):
+class MagentoAddress(models.Model):
     _name = 'magento.address'
     _inherit = 'magento.binding'
     _inherits = {'res.partner': 'openerp_id'}
@@ -136,53 +122,39 @@ class magento_address(orm.Model):
 
     _rec_name = 'backend_id'
 
-    def _get_mag_address_from_partner(self, cr, uid, ids, context=None):
-        mag_address_obj = self.pool['magento.address']
-        return mag_address_obj.search(
-            cr, uid, [('magento_partner_id', 'in', ids)], context=context)
-
-    _columns = {
-        'openerp_id': fields.many2one('res.partner',
-                                      string='Partner',
-                                      required=True,
-                                      ondelete='cascade'),
-        'created_at': fields.datetime('Created At (on Magento)',
-                                      readonly=True),
-        'updated_at': fields.datetime('Updated At (on Magento)',
-                                      readonly=True),
-        'is_default_billing': fields.boolean('Default Invoice'),
-        'is_default_shipping': fields.boolean('Default Shipping'),
-        'magento_partner_id': fields.many2one('magento.res.partner',
-                                              string='Magento Partner',
-                                              required=True,
-                                              ondelete='cascade'),
-        'backend_id': fields.related(
-            'magento_partner_id', 'backend_id',
-            type='many2one',
-            relation='magento.backend',
-            string='Magento Backend',
-            store={
-                'magento.address': (lambda self, cr, uid, ids, c=None: ids,
-                                    ['magento_partner_id'], 10),
-                'magento.res.partner': (_get_mag_address_from_partner,
-                                        ['backend_id', 'website_id'], 20),
-            },
-            readonly=True),
-        'website_id': fields.related(
-            'magento_partner_id', 'website_id',
-            type='many2one',
-            relation='magento.website',
-            string='Magento Website',
-            store={
-                'magento.address': (lambda self, cr, uid, ids, c=None: ids,
-                                    ['magento_partner_id'], 10),
-                'magento.res.partner': (_get_mag_address_from_partner,
-                                        ['website_id'], 20),
-            },
-            readonly=True),
-        'is_magento_order_address': fields.boolean(
-            'Address from a Magento Order'),
-    }
+    openerp_id = fields.Many2one(comodel_name='res.partner',
+                                 string='Partner',
+                                 required=True,
+                                 ondelete='cascade')
+    created_at = fields.Datetime(string='Created At (on Magento)',
+                                 readonly=True)
+    updated_at = fields.Datetime(string='Updated At (on Magento)',
+                                 readonly=True)
+    is_default_billing = fields.Boolean(string='Default Invoice')
+    is_default_shipping = fields.Boolean(string='Default Shipping')
+    magento_partner_id = fields.Many2one(comodel_name='magento.res.partner',
+                                         string='Magento Partner',
+                                         required=True,
+                                         ondelete='cascade')
+    backend_id = fields.Many2one(
+        related='magento_partner_id.backend_id',
+        comodel_name='magento.backend',
+        string='Magento Backend',
+        store=True,
+        readonly=True,
+        # override 'magento.binding', can't be INSERTed if True:
+        required=False,
+    )
+    website_id = fields.Many2one(
+        related='magento_partner_id.website_id',
+        comodel_name='magento.website',
+        string='Magento Website',
+        store=True,
+        readonly=True,
+    )
+    is_magento_order_address = fields.Boolean(
+        string='Address from a Magento Order',
+    )
 
     _sql_constraints = [
         ('openerp_uniq', 'unique(backend_id, openerp_id)',
@@ -479,7 +451,7 @@ class BaseAddressImportMapper(ImportMapper):
             return
         country = self.env['res.country'].search(
             [('code', '=', record['country_id'])],
-            limit=1
+            limit=1,
         )
         if country:
             return {'country_id': country.id}
