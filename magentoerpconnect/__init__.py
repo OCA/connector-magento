@@ -13,6 +13,6 @@ from . import sale
 from . import delivery
 from . import stock_picking
 from . import stock_tracking
-from . import payment_invoice
+from . import payment_method
 
 from . import consumer
