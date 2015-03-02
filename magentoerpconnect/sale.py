@@ -23,8 +23,7 @@ import logging
 import xmlrpclib
 from datetime import datetime, timedelta
 import openerp.addons.decimal_precision as dp
-from openerp.osv import fields, orm
-from openerp.tools.translate import _
+from openerp import models, fields, api, _
 from openerp.addons.connector.connector import ConnectorUnit
 from openerp.addons.connector.session import ConnectorSession
 from openerp.addons.connector.exception import (NothingToDoJob,
@@ -65,79 +64,76 @@ ORDER_STATUS_MAPPING = {  # used in magentoerpconnect_order_comment
 }
 
 
-class magento_sale_order(orm.Model):
+class MagentoSaleOrder(models.Model):
     _name = 'magento.sale.order'
     _inherit = 'magento.binding'
     _description = 'Magento Sale Order'
     _inherits = {'sale.order': 'openerp_id'}
 
-    _columns = {
-        'openerp_id': fields.many2one('sale.order',
-                                      string='Sale Order',
-                                      required=True,
-                                      ondelete='cascade'),
-        'magento_order_line_ids': fields.one2many('magento.sale.order.line',
-                                                  'magento_order_id',
-                                                  'Magento Order Lines'),
-        # XXX common to all ecom sale orders
-        'total_amount': fields.float(
-            'Total amount',
-            digits_compute=dp.get_precision('Account')),
-        # XXX common to all ecom sale orders
-        'total_amount_tax': fields.float(
-            'Total amount w. tax',
-            digits_compute=dp.get_precision('Account')),
-        'magento_order_id': fields.integer('Magento Order ID',
-                                           help="'order_id' field in Magento"),
-        # when a sale order is modified, Magento creates a new one, cancels
-        # the parent order and link the new one to the canceled parent
-        'magento_parent_id': fields.many2one('magento.sale.order',
-                                             string='Parent Magento Order'),
-        'storeview_id': fields.many2one('magento.storeview',
-                                        string='Magento Storeview'),
-        'store_id': fields.related('storeview_id', 'store_id',
-                                   type='many2one',
-                                   relation='magento.store',
-                                   string='Storeview',
-                                   readonly=True)
-    }
+    openerp_id = fields.Many2one(comodel_name='sale.order',
+                                 string='Sale Order',
+                                 required=True,
+                                 ondelete='cascade')
+    magento_order_line_ids = fields.One2many(
+        comodel_name='magento.sale.order.line',
+        inverse_name='magento_order_id',
+        string='Magento Order Lines'
+    )
+    total_amount = fields.Float(
+        string='Total amount',
+        digits_compute=dp.get_precision('Account')
+    )
+    total_amount_tax = fields.Float(
+        string='Total amount w. tax',
+        digits_compute=dp.get_precision('Account')
+    )
+    magento_order_id = fields.Integer(string='Magento Order ID',
+                                      help="'order_id' field in Magento")
+    # when a sale order is modified, Magento creates a new one, cancels
+    # the parent order and link the new one to the canceled parent
+    magento_parent_id = fields.Many2one(comodel_name='magento.sale.order',
+                                        string='Parent Magento Order')
+    storeview_id = fields.Many2one(comodel_name='magento.storeview',
+                                   string='Magento Storeview')
+    store_id = fields.Many2one(related='storeview_id.store_id',
+                               string='Storeview',
+                               readonly=True)
 
 
-class sale_order(orm.Model):
+class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
-    def get_parent_id(self, cr, uid, ids, context=None):
+    magento_bind_ids = fields.One2many(
+        comodel_name='magento.sale.order',
+        inverse_name='openerp_id',
+        string="Magento Bindings",
+    )
+
+    @api.one
+    @api.depends('magento_bind_ids', 'magento_bind_ids.magento_parent_id')
+    def get_parent_id(self):
         """ Return the parent order.
 
         For Magento sales orders, the magento parent order is stored
         in the binding, get it from there.
         """
-        res = super(sale_order, self).get_parent_id(cr, uid, ids,
-                                                    context=context)
-        for order in self.browse(cr, uid, ids, context=context):
+        super(SaleOrder, self).get_parent_id()
+        for order in self:
             if not order.magento_bind_ids:
                 continue
             # assume we only have 1 SO in OpenERP for 1 SO in Magento
             magento_order = order.magento_bind_ids[0]
             if magento_order.magento_parent_id:
-                res[order.id] = magento_order.magento_parent_id.openerp_id.id
-        return res
+                self.parent_id = magento_order.magento_parent_id.openerp_id
 
-    _columns = {
-        'magento_bind_ids': fields.one2many(
-            'magento.sale.order', 'openerp_id',
-            string="Magento Bindings"),
-    }
-
-    def write(self, cr, uid, ids, vals, context=None):
-        if not hasattr(ids, '__iter__'):
-            ids = [ids]
-
+    @api.multi
+    def write(self, vals):
         # cancel sales order on Magento (do not export the other
         # state changes, Magento handles them itself)
         if vals.get('state') == 'cancel':
-            session = ConnectorSession(cr, uid, context=context)
-            for order in session.browse('sale.order', ids):
+            session = ConnectorSession(self.env.cr, self.env.uid,
+                                       context=self.env.context)
+            for order in self:
                 old_state = order.state
                 if old_state == 'cancel':
                     continue  # skip if already canceled
@@ -151,41 +147,21 @@ class sale_order(orm.Model):
                         allowed_states=['cancel'],
                         description="Cancel sales order %s" %
                                     binding.magento_id)
-        return super(sale_order, self).write(cr, uid, ids, vals,
-                                             context=context)
+        return super(SaleOrder, self).write(vals)
 
-    def copy_data(self, cr, uid, id, default=None, context=None):
-        if default is None:
-            default = {}
-        default['magento_bind_ids'] = False
-        return super(sale_order, self).copy_data(cr, uid, id,
-                                                 default=default,
-                                                 context=context)
-
-    def copy_quotation(self, cr, uid, ids, context=None):
-        if isinstance(ids, (tuple, list)):
-            assert len(ids) == 1, ("1 ID expected, "
-                                   "got the following list %s" % (ids,))
-        if context is None:
-            context = {}
-        else:
-            context = context.copy()
-        context['__copy_from_quotation'] = True
-        result = super(sale_order, self).copy_quotation(cr, uid, ids,
-                                                        context=context)
+    @api.multi
+    def copy_quotation(self):
+        self_copy = self.with_context(__copy_from_quotation=True)
+        result = super(SaleOrder, self_copy).copy_quotation()
         # link binding of the canceled order to the new order, so the
         # operations done on the new order will be sync'ed with Magento
         new_id = result['res_id']
-        binding_obj = self.pool['magento.sale.order']
-        binding_ids = binding_obj.search(cr, uid,
-                                         [('openerp_id', '=', ids[0])],
-                                         context=context)
-        binding_obj.write(cr, uid, binding_ids,
-                          {'openerp_id': new_id},
-                          context=context)
-        session = ConnectorSession(cr, uid, context=context)
-        for binding in binding_obj.browse(cr, uid, binding_ids,
-                                          context=context):
+        binding_model = self.env['magento.sale.order']
+        bindings = binding_model.search([('openerp_id', '=', self.id)])
+        bindings.write({'openerp_id': new_id})
+        session = ConnectorSession(self.env.cr, self.env.uid,
+                                   context=self.env.context)
+        for binding in bindings:
             # the sales' status on Magento is likely 'canceled'
             # so we will export the new status (pending, processing, ...)
             export_state_change.delay(
@@ -196,114 +172,84 @@ class sale_order(orm.Model):
         return result
 
 
-class magento_sale_order_line(orm.Model):
+class MagentoSaleOrderLine(models.Model):
     _name = 'magento.sale.order.line'
     _inherit = 'magento.binding'
     _description = 'Magento Sale Order Line'
     _inherits = {'sale.order.line': 'openerp_id'}
 
-    def _get_lines_from_order(self, cr, uid, ids, context=None):
-        line_obj = self.pool.get('magento.sale.order.line')
-        return line_obj.search(cr, uid,
-                               [('magento_order_id', 'in', ids)],
-                               context=context)
-    _columns = {
-        'magento_order_id': fields.many2one('magento.sale.order',
-                                            'Magento Sale Order',
-                                            required=True,
-                                            ondelete='cascade',
-                                            select=True),
-        'openerp_id': fields.many2one('sale.order.line',
-                                      string='Sale Order Line',
-                                      required=True,
-                                      ondelete='cascade'),
-        'backend_id': fields.related(
-            'magento_order_id', 'backend_id',
-            type='many2one',
-            relation='magento.backend',
-            string='Magento Backend',
-            store={
-                'magento.sale.order.line':
-                (lambda self, cr, uid, ids, c=None: ids,
-                 ['magento_order_id'],
-                 10),
-                'magento.sale.order':
-                (_get_lines_from_order, ['backend_id'], 20),
-            },
-            readonly=True),
-        'tax_rate': fields.float('Tax Rate',
-                                 digits_compute=dp.get_precision('Account')),
-        # XXX common to all ecom sale orders
-        'notes': fields.char('Notes'),
-        }
+    magento_order_id = fields.Many2one(comodel_name='magento.sale.order',
+                                       string='Magento Sale Order',
+                                       required=True,
+                                       ondelete='cascade',
+                                       select=True)
+    openerp_id = fields.Many2one(comodel_name='sale.order.line',
+                                 string='Sale Order Line',
+                                 required=True,
+                                 ondelete='cascade')
+    backend_id = fields.Many2one(
+        related='magento_order_id.backend_id',
+        string='Magento Backend',
+        readonly=True,
+        # override 'magento.binding', can't be INSERTed if True:
+        required=False,
+    )
+    tax_rate = fields.Float(string='Tax Rate',
+                            digits_compute=dp.get_precision('Account'))
+    notes = fields.Char()
 
-    def create(self, cr, uid, vals, context=None):
+    @api.model
+    def create(self, vals):
         magento_order_id = vals['magento_order_id']
-        info = self.pool['magento.sale.order'].read(cr, uid,
-                                                    [magento_order_id],
-                                                    ['openerp_id'],
-                                                    context=context)
-        order_id = info[0]['openerp_id']
-        vals['order_id'] = order_id[0]
-        _super = super(magento_sale_order_line, self)
-        binding_id = _super.create(cr, uid, vals, context=context)
-        line = self.browse(cr, uid, binding_id, context=context).openerp_id
+        binding = self.env['magento.sale.order'].browse(magento_order_id)
+        vals['order_id'] = binding.openerp_id.id
+        binding = super(MagentoSaleOrderLine, self).create(vals)
         # FIXME triggers function field
         # The amounts (amount_total, ...) computed fields on 'sale.order' are
         # not triggered when magento.sale.order.line are created.
         # It might be a v8 regression, because they were triggered in
         # v7. Before getting a better correction, force the computation
         # by writing again on the line.
+        line = binding.openerp_id
         line.write({'price_unit': line.price_unit})
-        return binding_id
+        return binding
 
 
-class sale_order_line(orm.Model):
+class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
-    _columns = {
-        'magento_bind_ids': fields.one2many(
-            'magento.sale.order.line', 'openerp_id',
-            string="Magento Bindings"),
-    }
 
-    def create(self, cr, uid, vals, context=None):
-        if context is None:
-            context = {}
+    magento_bind_ids = fields.One2many(
+        comodel_name='magento.sale.order.line',
+        inverse_name='openerp_id',
+        string="Magento Bindings",
+    )
 
+    @api.model
+    def create(self, vals):
         old_line_id = None
-        if context.get('__copy_from_quotation'):
+        if self.env.context.get('__copy_from_quotation'):
             # when we are copying a sale.order from a canceled one,
             # the id of the copied line is inserted in the vals
             # in `copy_data`.
             old_line_id = vals.pop('__copy_from_line_id', None)
-        new_id = super(sale_order_line, self).create(cr, uid, vals,
-                                                     context=context)
+        new_line = super(SaleOrderLine, self).create(vals)
         if old_line_id:
             # link binding of the canceled order lines to the new order
             # lines, happens when we are using the 'New Copy of
             # Quotation' button on a canceled sales order
-            binding_obj = self.pool['magento.sale.order.line']
-            binding_ids = binding_obj.search(
-                cr, uid,
-                [('openerp_id', '=', old_line_id)],
-                context=context)
-            if binding_ids:
-                binding_obj.write(cr, uid, binding_ids,
-                                  {'openerp_id': new_id},
-                                  context=context)
-        return new_id
+            binding_model = self.env['magento.sale.order.line']
+            bindings = binding_model.search([('openerp_id', '=', old_line_id)])
+            if bindings:
+                bindings.write({'openerp_id': new_line.id})
+        return new_line
 
-    def copy_data(self, cr, uid, id, default=None, context=None):
+    @api.multi
+    def copy_data(self, default=None):
         if default is None:
             default = {}
-        if context is None:
-            context = {}
 
-        default['magento_bind_ids'] = False
-        data = super(sale_order_line, self).copy_data(cr, uid, id,
-                                                      default=default,
-                                                      context=context)
-        if context.get('__copy_from_quotation'):
+        data = super(SaleOrderLine, self).copy_data(default=default)
+        if self.env.context.get('__copy_from_quotation'):
             # copy_data is called by `copy` of the sale.order which
             # builds a dict for the full new sale order, so we lose the
             # association between the old and the new line.
@@ -311,7 +257,7 @@ class sale_order_line(orm.Model):
             # to `create`, from there, we'll be able to update the
             # Magento bindings, modifying the relation from the old to
             # the new line.
-            data['__copy_from_line_id'] = id
+            data['__copy_from_line_id'] = self.id
         return data
 
 
@@ -513,8 +459,7 @@ class SaleOrderImportMapper(ImportMapper):
             line_builder.price_unit = amount_excl
 
         if values.get('carrier_id'):
-            carrier = self.session.env['delivery.carrier'].browse(
-                values['carrier_id'])
+            carrier = self.env['delivery.carrier'].browse(values['carrier_id'])
             line_builder.product_id = carrier.product_id
 
         line = (0, 0, line_builder.get_line())
@@ -580,7 +525,7 @@ class SaleOrderImportMapper(ImportMapper):
     @mapping
     def payment(self, record):
         record_method = record['payment']['method']
-        method = self.session.env['payment.method'].search(
+        method = self.env['payment.method'].search(
             [['name', '=', record_method]],
             limit=1,
         )
@@ -796,7 +741,6 @@ class SaleOrderImport(MagentoImportSynchronizer):
 
     def _import_addresses(self):
         record = self.magento_record
-        sess = self.session
 
         # Magento allows to create a sale order not registered as a user
         is_guest_order = bool(int(record.get('customer_is_guest', 0) or 0))
@@ -913,7 +857,7 @@ class SaleOrderImport(MagentoImportSynchronizer):
         def create_address(address_record):
             map_record = addr_mapper.map_record(address_record)
             map_record.update(addresses_defaults)
-            address_bind = sess.env['magento.address'].create(
+            address_bind = self.env['magento.address'].create(
                 map_record.values(for_create=True,
                                   parent_partner=partner))
             return address_bind.openerp_id.id
