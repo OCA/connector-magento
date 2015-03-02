@@ -21,7 +21,7 @@
 
 import logging
 import xmlrpclib
-from openerp.osv import orm, fields
+from openerp import models, fields
 from openerp.addons.connector.unit.mapper import (mapping,
                                                   ImportMapper
                                                   )
@@ -41,45 +41,37 @@ from .backend import magento
 _logger = logging.getLogger(__name__)
 
 
-class magento_product_category(orm.Model):
+class MagentoProductCategory(models.Model):
     _name = 'magento.product.category'
     _inherit = 'magento.binding'
     _inherits = {'product.category': 'openerp_id'}
     _description = 'Magento Product Category'
 
-    _columns = {
-        'openerp_id': fields.many2one('product.category',
-                                      string='Product Category',
-                                      required=True,
-                                      ondelete='cascade'),
-        'description': fields.text('Description', translate=True),
-        'magento_parent_id': fields.many2one(
-            'magento.product.category',
-            string='Magento Parent Category',
-            ondelete='cascade'),
-        'magento_child_ids': fields.one2many(
-            'magento.product.category',
-            'magento_parent_id',
-            string='Magento Child Categories'),
-    }
+    openerp_id = fields.Many2one(comodel_name='product.category',
+                                 string='Product Category',
+                                 required=True,
+                                 ondelete='cascade')
+    description = fields.Text(translate=True)
+    magento_parent_id = fields.Many2one(
+        comodel_name='magento.product.category',
+        string='Magento Parent Category',
+        ondelete='cascade',
+    )
+    magento_child_ids = fields.One2many(
+        comodel_name='magento.product.category',
+        inverse_name='magento_parent_id',
+        string='Magento Child Categories',
+    )
 
 
-class product_category(orm.Model):
+class ProductCategory(models.Model):
     _inherit = 'product.category'
 
-    _columns = {
-        'magento_bind_ids': fields.one2many(
-            'magento.product.category', 'openerp_id',
-            string="Magento Bindings"),
-    }
-
-    def copy_data(self, cr, uid, id, default=None, context=None):
-        if default is None:
-            default = {}
-        default['magento_bind_ids'] = False
-        return super(product_category, self).copy_data(cr, uid, id,
-                                                       default=default,
-                                                       context=context)
+    magento_bind_ids = fields.One2many(
+        comodel_name='magento.product.category',
+        inverse_name='openerp_id',
+        string="Magento Bindings",
+    )
 
 
 @magento
