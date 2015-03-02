@@ -28,8 +28,7 @@ When called on a job, they will return an action to the client.
 """
 
 import functools
-from openerp.osv import orm
-from openerp.tools.translate import _
+from openerp import exceptions, _
 from openerp.addons.connector import related_action
 from .connector import get_environment
 from .unit.backend_adapter import GenericAdapter
@@ -52,10 +51,10 @@ def link(session, job, backend_id_pos=2, magento_id_pos=3):
     try:
         url = adapter.admin_url(magento_id)
     except ValueError:
-        raise orm.except_orm(
-            _('Error'),
+        raise exceptions.Warning(
             _('No admin URL configured on the backend or '
-              'no admin path is defined for this record.'))
+              'no admin path is defined for this record.')
+        )
 
     action = {
         'type': 'ir.actions.act_url',

@@ -86,5 +86,5 @@ class test_related_action_storage(common.TransactionCase):
         self.backend.refresh()
         stored = self._create_job(import_record, 'magento.product.product',
                                   self.backend.id, 123456)
-        with self.assertRaises(openerp.osv.orm.except_orm):
+        with self.assertRaises(openerp.exceptions.Warning):
             stored.open_related_action()
