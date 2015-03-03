@@ -67,13 +67,13 @@ class test_import_product_image(common.TransactionCase):
              'password': '42'})
 
         self.session = ConnectorSession(self.cr, self.uid)
+        self.session.context['__test_no_commit'] = True
         with mock_api(magento_base_responses):
             import_batch(self.session, 'magento.website', self.backend_id)
             import_batch(self.session, 'magento.store', self.backend_id)
             import_batch(self.session, 'magento.storeview', self.backend_id)
             import_record(self.session, 'magento.product.category',
                           self.backend_id, 1)
-        self.session = ConnectorSession(self.cr, self.uid)
         self.product_model = self.registry('magento.product.product')
 
     def test_image_priority(self):

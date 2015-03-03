@@ -29,6 +29,9 @@ from openerp.addons.connector.unit.mapper import (
     ImportMapper,
     ExportMapper)
 from openerp.addons.magentoerpconnect.unit.binder import MagentoModelBinder
+from openerp.addons.magentoerpconnect.unit.backend_adapter import (
+    GenericAdapter,
+)
 import openerp.addons.magentoerpconnect.consumer as magentoerpconnect
 from openerp.addons.magentoerpconnect.backend import magento
 from openerp.addons.magentoerpconnect.unit.export_synchronizer import (
@@ -259,11 +262,14 @@ class MagentoSaleCommentExporter(MagentoExporter):
     def _create(self, data):
         """ Create the Magento record """
         # special check on data before export
-        self._validate_data(data)   # you may inherit in your own module
-        return self.backend_adapter.create(data['order_increment'],
-                                           data['status'],
-                                           data['comment'],
-                                           data['notify'])
+        self._validate_create_data(data)   # you may inherit in your own module
+        adapter = self.get_connector_unit_for_model(
+            GenericAdapter,
+            'magento.sale.order')
+        return adapter.add_comment(data['order_increment'],
+                                   data['status'],
+                                   comment=data['comment'],
+                                   notify=data['notify'])
 
 
 @magento

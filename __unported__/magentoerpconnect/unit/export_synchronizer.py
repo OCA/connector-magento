@@ -128,7 +128,10 @@ class MagentoBaseExporter(ExportSynchronizer):
         # exports (due to dependencies) and one of them fails.
         # The commit will also release the lock acquired on the binding
         # record
-        self.session.commit()
+        if not self.session.context.get('__test_no_commit'):
+            self.session.commit()
+
+        self._after_export()
         return result
 
     def _run(self):
@@ -298,7 +301,9 @@ class MagentoExporter(MagentoBaseExporter):
                             # will pop if an other job already created
                             # the same binding. It will be caught and
                             # raise a RetryableJobError.
-                            self.session.commit()
+                            context = self.session.context
+                            if not context.get('__test_no_commit'):
+                                self.session.commit()
         else:
             # If magento_bind_ids does not exist we are typically in a
             # "direct" binding (the binding record is the same record).
@@ -321,11 +326,41 @@ class MagentoExporter(MagentoBaseExporter):
         """
         return self.mapper.map_record(self.binding_record)
 
+    def _after_export(self):
+        """ Can do several actions after exporting a record on magento """
+        pass
+
     def _validate_data(self, data):
         """ Check if the values to import are correct
 
-        Pro-actively check before the ``Model.create`` or
-        ``Model.update`` if some fields are missing
+        Kept for retro-compatibility. To remove in 8.0
+
+        Pro-actively check before the ``Model.create`` or ``Model.update``
+        if some fields are missing or invalid
+
+        Raise `InvalidDataError`
+        """
+        _logger.warning('Deprecated: _validate_data is deprecated '
+                        'in favor of validate_create_data() '
+                        'and validate_update_data()')
+        self._validate_create_data(data)
+        self._validate_update_data(data)
+
+    def _validate_create_data(self, data):
+        """ Check if the values to import are correct
+
+        Pro-actively check before the ``Model.create`` if some fields
+        are missing or invalid
+
+        Raise `InvalidDataError`
+        """
+        return
+
+    def _validate_update_data(self, data):
+        """ Check if the values to import are correct
+
+        Pro-actively check before the ``Model.update`` if some fields
+        are missing or invalid
 
         Raise `InvalidDataError`
         """
@@ -338,7 +373,7 @@ class MagentoExporter(MagentoBaseExporter):
     def _create(self, data):
         """ Create the Magento record """
         # special check on data before export
-        self._validate_data(data)
+        self._validate_create_data(data)
         return self.backend_adapter.create(data)
 
     def _update_data(self, map_record, fields=None, **kwargs):
@@ -349,7 +384,7 @@ class MagentoExporter(MagentoBaseExporter):
         """ Update an Magento record """
         assert self.magento_id
         # special check on data before export
-        self._validate_data(data)
+        self._validate_update_data(data)
         self.backend_adapter.write(self.magento_id, data)
 
     def _run(self, fields=None):
