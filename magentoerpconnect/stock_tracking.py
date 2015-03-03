@@ -20,7 +20,7 @@
 ##############################################################################
 
 import logging
-from openerp.tools.translate import _
+from openerp import _
 from openerp.addons.connector.queue.job import job, related_action
 from openerp.addons.connector.exception import FailedJobError
 from openerp.addons.connector.unit.synchronizer import ExportSynchronizer
@@ -70,7 +70,7 @@ class MagentoTrackingExport(ExportSynchronizer):
     def run(self, binding_id):
         """ Export the tracking number of a picking to Magento """
         # verify the picking is done + magento id exists
-        picking = self.session.env[self.model._name].browse(binding_id)
+        picking = self.model.browse(binding_id)
         carrier = picking.carrier_id
         if not carrier:
             return FailedJobError('The carrier is missing on the picking %s.' %
