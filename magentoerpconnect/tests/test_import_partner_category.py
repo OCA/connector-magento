@@ -36,27 +36,27 @@ class TestPartnerCategory(SetUpMagentoSynchronized):
                           backend_id, 2)
 
         binding_model = self.env['magento.res.partner.category']
-        categories = binding_model.search([('backend_id', '=', backend_id),
-                                           ('magento_id', '=', '2')])
-        self.assertEqual(len(categories), 1)
-        self.assertEqual(categories.name, 'Wholesale')
-        self.assertEqual(categories.tax_class_id, 3)
+        category = binding_model.search([('backend_id', '=', backend_id),
+                                         ('magento_id', '=', '2')])
+        self.assertEqual(len(category), 1)
+        self.assertEqual(category.name, 'Wholesale')
+        self.assertEqual(category.tax_class_id, 3)
 
     def test_import_existing_partner_category(self):
         """ Bind of an existing category with same name"""
         binding_model = self.env['magento.res.partner.category']
         category_model = self.env['res.partner.category']
 
-        category = category_model.create({'name': 'Wholesale'})
+        existing_category = category_model.create({'name': 'Wholesale'})
 
         backend_id = self.backend_id
         with mock_api(magento_base_responses):
             import_record(self.session, 'magento.res.partner.category',
                           backend_id, 2)
 
-        categories = binding_model.search([('backend_id', '=', backend_id),
-                                           ('magento_id', '=', '2')])
-        self.assertEqual(len(categories), 1)
-        self.assertEqual(categories.openerp_id, category)
-        self.assertEqual(categories.name, 'Wholesale')
-        self.assertEqual(categories.tax_class_id, 3)
+        category = binding_model.search([('backend_id', '=', backend_id),
+                                         ('magento_id', '=', '2')])
+        self.assertEqual(len(category), 1)
+        self.assertEqual(category.openerp_id, existing_category)
+        self.assertEqual(category.name, 'Wholesale')
+        self.assertEqual(category.tax_class_id, 3)
