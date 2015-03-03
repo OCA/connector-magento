@@ -49,11 +49,11 @@ PNG_IMG_4PX_GREEN = ("\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x04"
 B64_PNG_IMG_4PX_GREEN = b64encode(PNG_IMG_4PX_GREEN)
 
 
-class test_import_product_image(common.TransactionCase):
+class TestImportProductImage(common.TransactionCase):
     """ Test the imports of the image of the products. """
 
     def setUp(self):
-        super(test_import_product_image, self).setUp()
+        super(TestImportProductImage, self).setUp()
         backend_model = self.env['magento.backend']
         warehouse = self.env.ref('stock.warehouse0')
         self.backend_id = backend_model.create(
