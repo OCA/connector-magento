@@ -19,21 +19,22 @@
 #
 ##############################################################################
 
-from openerp.osv import orm, fields
+from openerp import models, fields
 
 
-class magento_config_settings(orm.TransientModel):
+class MagentoConfigSettings(models.TransientModel):
     _inherit = 'connector.config.settings'
 
-    _columns = {
-        'module_magentoerpconnect_pricing': fields.boolean(
-            "Prices are managed in OpenERP with pricelists",
-            help="Prices are set in OpenERP and exported to Magento.\n\n"
-                 "This installs the module magentoerpconnect_pricing."),
-        'module_magentoerpconnect_export_partner': fields.boolean(
-            "Export Partners to Magento (experimental)",
-            help="This installs the module magentoerpconnect_export_partner."),
-        'module_magentoerpconnect_catalog': fields.boolean(
-            "Handle the product's catalog (not implemented)",
-            help="This installs the module magentoerpconnect_catalog."),
-    }
+    module_magentoerpconnect_pricing = fields.Boolean(
+        string="Prices are managed in OpenERP with pricelists",
+        help="Prices are set in OpenERP and exported to Magento.\n\n"
+             "This installs the module magentoerpconnect_pricing.",
+    )
+    module_magentoerpconnect_export_partner = fields.Boolean(
+        string="Export Partners to Magento (experimental)",
+        help="This installs the module magentoerpconnect_export_partner.",
+    )
+    module_magentoerpconnect_catalog = fields.Boolean(
+        string="Handle the product's catalog (not implemented)",
+        help="This installs the module magentoerpconnect_catalog.",
+    )
