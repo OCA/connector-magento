@@ -243,13 +243,16 @@ class SaleOrderLine(models.Model):
                 bindings.write({'openerp_id': new_line.id})
         return new_line
 
-    @api.multi
-    def copy_data(self, default=None):
-        if default is None:
-            default = {}
+    # XXX we can't use the new API on copy_data or we get an error:
+    # 'setdefault' not supported on frozendict
+    def copy_data(self, cr, uid, id, default=None, context=None):
+        if context is None:
+            context = {}
 
-        data = super(SaleOrderLine, self).copy_data(default=default)
-        if self.env.context.get('__copy_from_quotation'):
+        data = super(SaleOrderLine, self).copy_data(cr, uid, id,
+                                                    default=default,
+                                                    context=context)
+        if context.get('__copy_from_quotation'):
             # copy_data is called by `copy` of the sale.order which
             # builds a dict for the full new sale order, so we lose the
             # association between the old and the new line.
@@ -257,7 +260,7 @@ class SaleOrderLine(models.Model):
             # to `create`, from there, we'll be able to update the
             # Magento bindings, modifying the relation from the old to
             # the new line.
-            data['__copy_from_line_id'] = self.id
+            data['__copy_from_line_id'] = id
         return data
 
 
