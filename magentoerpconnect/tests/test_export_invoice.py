@@ -21,10 +21,8 @@
 
 import unittest2
 import mock
-from functools import partial
 
 import openerp.tests.common as common
-from openerp import netsvc
 from openerp.addons.connector.session import ConnectorSession
 from openerp.addons.magentoerpconnect.unit.import_synchronizer import (
     import_batch,
@@ -34,87 +32,72 @@ from .common import (mock_api,
 from .test_data import magento_base_responses
 
 
-class test_export_invoice(common.TransactionCase):
+class TestExportInvoice(common.TransactionCase):
     """ Test the export of an invoice to Magento """
 
     def setUp(self):
-        super(test_export_invoice, self).setUp()
-        cr, uid = self.cr, self.uid
-        backend_model = self.registry('magento.backend')
-        self.mag_sale_model = self.registry('magento.sale.order')
-        self.session = ConnectorSession(cr, uid)
-        self.session.context['__test_no_commit'] = True
-        data_model = self.registry('ir.model.data')
-        self.get_ref = partial(data_model.get_object_reference,
-                               cr, uid)
-        __, warehouse_id = self.get_ref('stock', 'warehouse0')
-        backend_id = backend_model.create(
-            cr,
-            uid,
+        super(TestExportInvoice, self).setUp()
+        backend_model = self.env['magento.backend']
+        self.mag_sale_model = self.env['magento.sale.order']
+        context = dict(self.env.context, __test_no_commit=True)
+        self.session = ConnectorSession(self.env.cr, self.env.uid,
+                                        context=context)
+        warehouse = self.env.ref('stock.warehouse0')
+        self.backend = backend = backend_model.create(
             {'name': 'Test Magento',
-                'version': '1.7',
-                'location': 'http://anyurl',
-                'username': 'guewen',
-                'warehouse_id': warehouse_id,
-                'password': '42'})
-        self.backend = backend_model.browse(cr, uid, backend_id)
+             'version': '1.7',
+             'location': 'http://anyurl',
+             'username': 'guewen',
+             'warehouse_id': warehouse.id,
+             'password': '42'})
         # payment method needed to import a sale order
-        __, workflow_id = self.get_ref('sale_automatic_workflow',
-                                       'manual_validation')
-        __, journal_id = self.get_ref('account',
-                                      'check_journal')
-        self.payment_method_id = self.registry('payment.method').create(
-            cr, uid,
+        workflow = self.env.ref('sale_automatic_workflow.manual_validation')
+        journal = self.env.ref('account.check_journal')
+        self.payment_method = self.env['payment.method'].create(
             {'name': 'checkmo',
              'create_invoice_on': False,
-             'workflow_process_id': workflow_id,
+             'workflow_process_id': workflow.id,
              'import_rule': 'always',
-             'journal_id': journal_id})
-        __, self.journal_id = self.get_ref('account', 'bank_journal')
-        __, self.pay_account_id = self.get_ref('account', 'cash')
-        __, self.period_id = self.get_ref('account', 'period_10')
+             'journal_id': journal.id})
+        self.journal = self.env.ref('account.bank_journal')
+        self.pay_account = self.env.ref('account.cash')
+        self.period = self.env.ref('account.period_10')
         # import the base informations
         with mock_api(magento_base_responses):
-            import_batch(self.session, 'magento.website', backend_id)
-            import_batch(self.session, 'magento.store', backend_id)
-            import_batch(self.session, 'magento.storeview', backend_id)
+            import_batch(self.session, 'magento.website', backend.id)
+            import_batch(self.session, 'magento.store', backend.id)
+            import_batch(self.session, 'magento.storeview', backend.id)
             with mock_urlopen_image():
                 import_record(self.session,
                               'magento.sale.order',
-                              backend_id, 900000691)
-        sale_ids = self.mag_sale_model.search(
-            cr, uid,
-            [('backend_id', '=', backend_id),
+                              backend.id, 900000691)
+        self.stores = self.backend.mapped('website_ids.store_ids')
+        sales = self.mag_sale_model.search(
+            [('backend_id', '=', backend.id),
              ('magento_id', '=', '900000691')])
-        self.assertEqual(len(sale_ids), 1)
-        self.mag_sale = self.mag_sale_model.browse(cr, uid, sale_ids[0])
+        self.assertEqual(len(sales), 1)
+        self.mag_sale = sales
         # ignore exceptions on the sale order
-        self.mag_sale.write({'ignore_exceptions': True})
+        self.mag_sale.ignore_exceptions = True
         self.mag_sale.openerp_id.action_button_confirm()
-        self.mag_sale.refresh()  # update to manual state
-        self.sale_id = self.mag_sale.openerp_id.id
-        sale_obj = self.registry('sale.order')
-        invoice_id = sale_obj.action_invoice_create(cr, uid, [self.sale_id])
+        sale = self.mag_sale.openerp_id
+        invoice_id = sale.action_invoice_create()
         assert invoice_id
-        self.invoice_model = self.registry('account.invoice')
-        self.invoice = self.invoice_model.browse(cr, uid, invoice_id)
+        self.invoice_model = self.env['account.invoice']
+        self.invoice = self.invoice_model.browse(invoice_id)
 
     def test_export_invoice_on_validate(self):
         """ Exporting an invoice: when it is validated """
-        cr, uid = self.cr, self.uid
-        store_ids = [store.id for website in self.backend.website_ids
-                     for store in website.store_ids]
         # we setup the stores so they export the invoices as soon
         # as they are validated (open)
-        self.registry('magento.store').write(
-            cr, uid, store_ids, {'create_invoice_on': 'open'})
+        self.stores.write({'create_invoice_on': 'open'})
         # this is the consumer called when a 'magento.account.invoice'
         # is created, it delay a job to export the invoice
         patched = 'openerp.addons.magentoerpconnect.invoice.export_invoice'
         # mock.patch prevents to create the job
         with mock.patch(patched) as export_invoice:
             self._invoice_open()
-            assert len(self.invoice.magento_bind_ids) == 1
+            self.assertEquals(len(self.invoice.magento_bind_ids), 1)
             export_invoice.delay.assert_called_with(
                 mock.ANY,
                 'magento.account.invoice',
@@ -125,47 +108,38 @@ class test_export_invoice(common.TransactionCase):
         with mock.patch(patched) as export_invoice:
             self._pay_and_reconcile()
             self.assertEqual(self.invoice.state, 'paid')
-            assert not export_invoice.delay.called
+            self.assertFalse(export_invoice.delay.called)
 
     def test_export_invoice_on_paid(self):
         """ Exporting an invoice: when it is paid """
-        cr, uid = self.cr, self.uid
-        store_ids = [store.id for website in self.backend.website_ids
-                     for store in website.store_ids]
         # we setup the stores so they export the invoices as soon
         # as they are validated (open)
-        self.registry('magento.store').write(
-            cr, uid, store_ids, {'create_invoice_on': 'paid'})
+        self.stores.write({'create_invoice_on': 'paid'})
         # this is the consumer called when a 'magento.account.invoice'
         # is created, it delay a job to export the invoice
         patched = 'openerp.addons.magentoerpconnect.invoice.export_invoice'
         # mock.patch prevents to create the job
         with mock.patch(patched) as export_invoice:
             self._invoice_open()
-            assert not export_invoice.delay.called
+            self.assertFalse(export_invoice.delay.called)
 
         # pay and verify it is NOT called
         # mock.patch prevents to create the job
         with mock.patch(patched) as export_invoice:
             self._pay_and_reconcile()
             self.assertEqual(self.invoice.state, 'paid')
-            assert len(self.invoice.magento_bind_ids) == 1
+            self.assertEquals(len(self.invoice.magento_bind_ids), 1)
             export_invoice.delay.assert_called_with(
                 mock.ANY, 'magento.account.invoice',
                 self.invoice.magento_bind_ids[0].id)
 
     def test_export_invoice_on_payment_method_validate(self):
         """ Exporting an invoice: when it is validated with payment method """
-        cr, uid = self.cr, self.uid
-        store_ids = [store.id for website in self.backend.website_ids
-                     for store in website.store_ids]
         # we setup the stores so they export the invoices as soon
         # as they are validated (open)
-        self.registry('payment.method').write(
-            cr, uid, self.payment_method_id, {'create_invoice_on': 'open'})
+        self.payment_method.write({'create_invoice_on': 'open'})
         # ensure we use the option of the payment method, not store
-        self.registry('magento.store').write(
-            cr, uid, store_ids, {'create_invoice_on': 'paid'})
+        self.stores.write({'create_invoice_on': 'paid'})
         # this is the consumer called when a 'magento.account.invoice'
         # is created, it delay a job to export the invoice
         patched = 'openerp.addons.magentoerpconnect.invoice.export_invoice'
@@ -173,7 +147,7 @@ class test_export_invoice(common.TransactionCase):
         with mock.patch(patched) as export_invoice:
             self._invoice_open()
 
-            assert len(self.invoice.magento_bind_ids) == 1
+            self.assertEquals(len(self.invoice.magento_bind_ids), 1)
             export_invoice.delay.assert_called_with(
                 mock.ANY, 'magento.account.invoice',
                 self.invoice.magento_bind_ids[0].id)
@@ -183,56 +157,46 @@ class test_export_invoice(common.TransactionCase):
         with mock.patch(patched) as export_invoice:
             self._pay_and_reconcile()
             self.assertEqual(self.invoice.state, 'paid')
-            assert not export_invoice.delay.called
+            self.assertFalse(export_invoice.delay.called)
 
     def test_export_invoice_on_payment_method_paid(self):
         """ Exporting an invoice: when it is paid on payment method """
-        cr, uid = self.cr, self.uid
-        store_ids = [store.id for website in self.backend.website_ids
-                     for store in website.store_ids]
         # we setup the stores so they export the invoices as soon
         # as they are validated (open)
-        self.registry('payment.method').write(
-            cr, uid, self.payment_method_id, {'create_invoice_on': 'paid'})
+        self.payment_method.write({'create_invoice_on': 'paid'})
         # ensure we use the option of the payment method, not store
-        self.registry('magento.store').write(
-            cr, uid, store_ids, {'create_invoice_on': 'open'})
+        self.stores.write({'create_invoice_on': 'open'})
         # this is the consumer called when a 'magento.account.invoice'
         # is created, it delay a job to export the invoice
         patched = 'openerp.addons.magentoerpconnect.invoice.export_invoice'
         # mock.patch prevents to create the job
         with mock.patch(patched) as export_invoice:
             self._invoice_open()
-            assert not export_invoice.delay.called
+            self.assertFalse(export_invoice.delay.called)
 
         # pay and verify it is NOT called
         # mock.patch prevents to create the job
         with mock.patch(patched) as export_invoice:
             self._pay_and_reconcile()
             self.assertEqual(self.invoice.state, 'paid')
-            assert len(self.invoice.magento_bind_ids) == 1
+            self.assertEquals(len(self.invoice.magento_bind_ids), 1)
             export_invoice.delay.assert_called_with(
                 mock.ANY, 'magento.account.invoice',
                 self.invoice.magento_bind_ids[0].id)
 
     def _invoice_open(self):
-        wf_service = netsvc.LocalService("workflow")
-        wf_service.trg_validate(self.uid, 'account.invoice',
-                                self.invoice.id, 'invoice_open', self.cr)
-        self.invoice.refresh()
+        self.invoice.signal_workflow('invoice_open')
 
     def _pay_and_reconcile(self):
-        self.invoice_model.pay_and_reconcile(
-            self.cr, self.uid, [self.invoice.id],
+        self.invoice.pay_and_reconcile(
             pay_amount=self.invoice.amount_total,
-            pay_account_id=self.pay_account_id,
-            period_id=self.period_id,
-            pay_journal_id=self.journal_id,
-            writeoff_acc_id=self.pay_account_id,
-            writeoff_period_id=self.period_id,
-            writeoff_journal_id=self.journal_id,
+            pay_account_id=self.pay_account.id,
+            period_id=self.period.id,
+            pay_journal_id=self.journal.id,
+            writeoff_acc_id=self.pay_account.id,
+            writeoff_period_id=self.period.id,
+            writeoff_journal_id=self.journal.id,
             name="Payment for tests of invoice's exports")
-        self.invoice.refresh()
 
     @unittest2.skip("Needs to be implemented")
     def test_export_invoice_api(self):
