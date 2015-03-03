@@ -21,7 +21,7 @@
 
 import logging
 import xmlrpclib
-from openerp.osv import orm, fields
+from openerp import models, fields
 from openerp.tools.translate import _
 from openerp.addons.connector.queue.job import job, related_action
 from openerp.addons.connector.event import on_record_create
@@ -38,43 +38,33 @@ from .related_action import unwrap_binding
 _logger = logging.getLogger(__name__)
 
 
-class magento_stock_picking(orm.Model):
+class MagentoStockPicking(models.Model):
     _name = 'magento.stock.picking.out'
     _inherit = 'magento.binding'
     _inherits = {'stock.picking': 'openerp_id'}
     _description = 'Magento Delivery Order'
 
-    _columns = {
-        'openerp_id': fields.many2one('stock.picking',
-                                      string='Stock Picking',
-                                      required=True,
-                                      ondelete='cascade'),
-        'magento_order_id': fields.many2one('magento.sale.order',
-                                            string='Magento Sale Order',
-                                            ondelete='set null'),
-        'picking_method': fields.selection([('complete', 'Complete'),
-                                            ('partial', 'Partial')],
-                                           string='Picking Method',
-                                           required=True),
-    }
+    openerp_id = fields.Many2one(comodel_name='stock.picking',
+                                 string='Stock Picking',
+                                 required=True,
+                                 ondelete='cascade')
+    magento_order_id = fields.Many2one(comodel_name='magento.sale.order',
+                                       string='Magento Sale Order',
+                                       ondelete='set null')
+    picking_method = fields.Selection(selection=[('complete', 'Complete'),
+                                                 ('partial', 'Partial')],
+                                      string='Picking Method',
+                                      required=True)
 
 
-class stock_picking(orm.Model):
+class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
-    _columns = {
-        'magento_bind_ids': fields.one2many(
-            'magento.stock.picking.out', 'openerp_id',
-            string="Magento Bindings"),
-    }
-
-    def copy_data(self, cr, uid, id, default=None, context=None):
-        if default is None:
-            default = {}
-        default['magento_bind_ids'] = False
-        return super(stock_picking, self).copy_data(cr, uid, id,
-                                                    default=default,
-                                                    context=context)
+    magento_bind_ids = fields.One2many(
+        comodel_name='magento.stock.picking.out',
+        inverse_name='openerp_id',
+        string="Magento Bindings",
+    )
 
 
 @magento
@@ -178,7 +168,7 @@ class MagentoPickingExport(ExportSynchronizer):
         """
         Export the picking to Magento
         """
-        picking = self.session.env[self.model._name].browse(binding_id)
+        picking = self.model.browse(binding_id)
         if picking.magento_id:
             return _('Already exported')
         picking_method = picking.picking_method
