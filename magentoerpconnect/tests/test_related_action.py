@@ -15,11 +15,11 @@ from ..unit.import_synchronizer import import_batch, import_record
 from ..unit.export_synchronizer import export_record
 
 
-class test_related_action_storage(common.TransactionCase):
+class TestRelatedActionStorage(common.TransactionCase):
     """ Test related actions on stored jobs """
 
     def setUp(self):
-        super(test_related_action_storage, self).setUp()
+        super(TestRelatedActionStorage, self).setUp()
         context = dict(self.env.context, __test_no_commit=True)
         backend_model = self.env['magento.backend']
         self.session = ConnectorSession(self.env.cr, self.env.uid,
@@ -27,11 +27,11 @@ class test_related_action_storage(common.TransactionCase):
         warehouse = self.env.ref('stock.warehouse0')
         self.backend = backend_model.create(
             {'name': 'Test Magento',
-                'version': '1.7',
-                'location': 'http://anyurl',
-                'username': 'username',
-                'warehouse_id': warehouse.id,
-                'password': '42'})
+             'version': '1.7',
+             'location': 'http://anyurl',
+             'username': 'username',
+             'warehouse_id': warehouse.id,
+             'password': '42'})
         # import the base informations
         with mock_api(magento_base_responses):
             import_batch(self.session, 'magento.website', self.backend.id)
@@ -62,14 +62,13 @@ class test_related_action_storage(common.TransactionCase):
         job = Job(func=func, args=args)
         storage = OpenERPJobStorage(self.session)
         storage.store(job)
-        storeds = self.QueueJob.search([('uuid', '=', job.uuid)])
-        self.assertEqual(len(storeds), 1)
-        return storeds[0]
+        stored = self.QueueJob.search([('uuid', '=', job.uuid)])
+        self.assertEqual(len(stored), 1)
+        return stored
 
     def test_link(self):
         """ Open a related action opening an url on Magento """
         self.backend.write({'admin_location': 'http://www.example.com/admin'})
-        self.backend.refresh()
         stored = self._create_job(import_record, 'magento.product.product',
                                   self.backend.id, 123456)
         url = 'http://www.example.com/admin/catalog_product/edit/id/123456'
