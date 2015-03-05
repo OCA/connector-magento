@@ -77,9 +77,19 @@ def mock_job_delay_to_direct(job_path):
     job_func = getattr(module, job_name, None)
     assert job_func, "The function %s must exist in %s" % (job_name,
                                                            job_module)
+
+    def clean_args_for_func(*args, **kwargs):
+        # remove the special args reseved to .delay()
+        kwargs.pop('priority', None)
+        kwargs.pop('eta', None)
+        kwargs.pop('model_name', None)
+        kwargs.pop('max_retries', None)
+        kwargs.pop('description', None)
+        job_func(*args, **kwargs)
+
     with mock.patch(job_path) as patched_job:
         # call the direct export instead of 'delay()'
-        patched_job.delay.side_effect = job_func
+        patched_job.delay.side_effect = clean_args_for_func
         yield patched_job
 
 
