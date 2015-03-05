@@ -217,7 +217,7 @@ class TestImportMagento(SetUpMagentoSynchronized):
         self.assertEqual(len(order), 1)
         self.assertEqual(order.payment_term, self.payment_term,
                          "If the payment term is empty, the onchanges have not"
-                         "been applied.")
+                         " been applied.")
 
     def test_import_sale_order_no_website_id(self):
         """ Import sale order: website_id is missing, happens with magento """
