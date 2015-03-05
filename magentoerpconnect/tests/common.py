@@ -23,6 +23,7 @@
 Helpers usable in the tests
 """
 
+import importlib
 import mock
 from contextlib import contextmanager
 from ..unit.backend_adapter import call_to_key
@@ -60,6 +61,26 @@ class TestResponder(object):
             return self._responses[key]()
         else:
             return self._responses[key]
+
+
+@contextmanager
+def mock_job_delay_to_direct(job_path):
+    """ Replace the .delay() of a job by a direct call
+
+    job_path is the python path, such as::
+
+      openerp.addons.magentoerpconnect.stock_picking.export_picking_done
+
+    """
+    job_module, job_name = job_path.rsplit('.', 1)
+    module = importlib.import_module(job_module)
+    job_func = getattr(module, job_name, None)
+    assert job_func, "The function %s must exist in %s" % (job_name,
+                                                           job_module)
+    with mock.patch(job_path) as patched_job:
+        # call the direct export instead of 'delay()'
+        patched_job.delay.side_effect = job_func
+        yield patched_job
 
 
 @contextmanager
