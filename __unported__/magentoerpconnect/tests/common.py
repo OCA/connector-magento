@@ -56,7 +56,10 @@ class TestResponder(object):
         key = self.call_to_key(method, arguments)
         assert key in self._responses, (
             "%s not found in magento responses" % str(key))
-        return self._responses[key]
+        if hasattr(self._responses[key], '__call__'):
+            return self._responses[key]()
+        else:
+            return self._responses[key]
 
 
 @contextmanager
@@ -93,3 +96,19 @@ def mock_urlopen_image():
     with mock.patch('urllib2.urlopen') as urlopen:
         urlopen.return_value = MockResponseImage('')
         yield
+
+
+class MagentoHelper(object):
+
+    def __init__(self, cr, registry, model_name):
+        self.cr = cr
+        self.model = registry(model_name)
+
+    def get_next_id(self):
+        self.cr.execute("SELECT max(magento_id::int) FROM %s " %
+                        self.model._table)
+        result = self.cr.fetchone()
+        if result:
+            return int(result[0] or 0) + 1
+        else:
+            return 1

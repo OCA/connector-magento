@@ -237,7 +237,8 @@ class MagentoPickingExport(ExportSynchronizer):
         else:
             self.binder.bind(magento_id, binding_id)
             # ensure that we store the external ID
-            self.session.commit()
+            if not self.session.context.get('__test_no_commit'):
+                self.session.commit()
 
 
 @on_picking_out_done
