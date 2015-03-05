@@ -30,7 +30,7 @@ from openerp.addons.connector.exception import (NothingToDoJob,
                                                 FailedJobError,
                                                 IDMissingInBackend)
 from openerp.addons.connector.queue.job import job
-from openerp.addons.connector.unit.synchronizer import ExportSynchronizer
+from openerp.addons.connector.unit.synchronizer import Exporter
 from openerp.addons.connector.unit.mapper import (mapping,
                                                   ImportMapper
                                                   )
@@ -42,8 +42,8 @@ from openerp.addons.connector_ecommerce.sale import (ShippingLineBuilder,
 from .unit.backend_adapter import (GenericAdapter,
                                    MAGENTO_DATETIME_FORMAT,
                                    )
-from .unit.import_synchronizer import (DelayedBatchImport,
-                                       MagentoImportSynchronizer
+from .unit.import_synchronizer import (DelayedBatchImporter,
+                                       MagentoImporter,
                                        )
 from .exception import OrderImportRuleRetry
 from .backend import magento
@@ -324,7 +324,7 @@ class SaleOrderAdapter(GenericAdapter):
 
 
 @magento
-class SaleOrderBatchImport(DelayedBatchImport):
+class SaleOrderBatchImport(DelayedBatchImporter):
     _model_name = ['magento.sale.order']
 
     def _import_record(self, record_id, **kwargs):
@@ -522,7 +522,7 @@ class SaleOrderImportMapper(ImportMapper):
         partner_id = binder.to_openerp(record['customer_id'], unwrap=True)
         assert partner_id is not None, (
             "customer_id %s should have been imported in "
-            "SaleOrderImport._import_dependencies" % record['customer_id'])
+            "SaleOrderImporter._import_dependencies" % record['customer_id'])
         return {'partner_id': partner_id}
 
     @mapping
@@ -533,7 +533,7 @@ class SaleOrderImportMapper(ImportMapper):
             limit=1,
         )
         assert method, ("method %s should exist because the import fails "
-                        "in SaleOrderImport._before_import when it is "
+                        "in SaleOrderImporter._before_import when it is "
                         " missing" % record['payment']['method'])
         return {'payment_method_id': method.id}
 
@@ -582,7 +582,7 @@ class SaleOrderImportMapper(ImportMapper):
 
 
 @magento
-class SaleOrderImport(MagentoImportSynchronizer):
+class SaleOrderImporter(MagentoImporter):
     _model_name = ['magento.sale.order']
 
     _base_mapper = SaleOrderImportMapper
@@ -666,7 +666,7 @@ class SaleOrderImport(MagentoImportSynchronizer):
     def _import_customer_group(self, group_id):
         binder = self.binder_for('magento.res.partner.category')
         if binder.to_openerp(group_id) is None:
-            importer = self.unit_for(MagentoImportSynchronizer,
+            importer = self.unit_for(MagentoImporter,
                                      model='magento.res.partner.category')
             importer.run(group_id)
 
@@ -730,7 +730,7 @@ class SaleOrderImport(MagentoImportSynchronizer):
 
     def _get_magento_data(self):
         """ Return the raw Magento data for ``self.magento_id`` """
-        record = super(SaleOrderImport, self)._get_magento_data()
+        record = super(SaleOrderImporter, self)._get_magento_data()
         # sometimes we don't have website_id...
         # we fix the record!
         if not record.get('website_id'):
@@ -824,7 +824,7 @@ class SaleOrderImport(MagentoImportSynchronizer):
         else:
 
             # we always update the customer when importing an order
-            importer = self.unit_for(MagentoImportSynchronizer,
+            importer = self.unit_for(MagentoImporter,
                                      model='magento.res.partner')
             importer.run(record['customer_id'])
             partner_binding = partner_binder.to_openerp(record['customer_id'],
@@ -878,18 +878,18 @@ class SaleOrderImport(MagentoImportSynchronizer):
     def _check_special_fields(self):
         assert self.partner_id, (
             "self.partner_id should have been defined "
-            "in SaleOrderImport._import_addresses")
+            "in SaleOrderImporter._import_addresses")
         assert self.partner_invoice_id, (
             "self.partner_id should have been "
-            "defined in SaleOrderImport._import_addresses")
+            "defined in SaleOrderImporter._import_addresses")
         assert self.partner_shipping_id, (
             "self.partner_id should have been defined "
-            "in SaleOrderImport._import_addresses")
+            "in SaleOrderImporter._import_addresses")
 
     def _create_data(self, map_record, **kwargs):
         storeview = self._get_storeview(map_record.source)
         self._check_special_fields()
-        return super(SaleOrderImport, self)._create_data(
+        return super(SaleOrderImporter, self)._create_data(
             map_record,
             tax_include=storeview.catalog_price_tax_included,
             partner_id=self.partner_id,
@@ -901,7 +901,7 @@ class SaleOrderImport(MagentoImportSynchronizer):
     def _update_data(self, map_record, **kwargs):
         storeview = self._get_storeview(map_record.source)
         self._check_special_fields()
-        return super(SaleOrderImport, self)._update_data(
+        return super(SaleOrderImporter, self)._update_data(
             map_record,
             tax_include=storeview.catalog_price_tax_included,
             partner_id=self.partner_id,
@@ -920,6 +920,9 @@ class SaleOrderImport(MagentoImportSynchronizer):
             if 'product_id' in line:
                 self._import_dependency(line['product_id'],
                                         'magento.product.product')
+
+
+SaleOrderImport = SaleOrderImporter  # deprecated
 
 
 @magento
@@ -965,7 +968,7 @@ class SaleOrderLineImportMapper(ImportMapper):
         product_id = binder.to_openerp(record['product_id'], unwrap=True)
         assert product_id is not None, (
             "product_id %s should have been imported in "
-            "SaleOrderImport._import_dependencies" % record['product_id'])
+            "SaleOrderImporter._import_dependencies" % record['product_id'])
         return {'product_id': product_id}
 
     @mapping
@@ -1028,7 +1031,7 @@ def sale_order_import_batch(session, model_name, backend_id, filters=None):
 
 
 @magento
-class StateExporter(ExportSynchronizer):
+class StateExporter(Exporter):
     _model_name = 'magento.sale.order'
 
     def run(self, binding_id, allowed_states=None, comment=None, notify=False):

@@ -23,7 +23,7 @@ import logging
 from openerp import _
 from openerp.addons.connector.queue.job import job, related_action
 from openerp.addons.connector.exception import FailedJobError
-from openerp.addons.connector.unit.synchronizer import ExportSynchronizer
+from openerp.addons.connector.unit.synchronizer import Exporter
 from openerp.addons.connector_ecommerce.event import on_tracking_number_added
 from .connector import get_environment
 from .backend import magento
@@ -33,7 +33,7 @@ _logger = logging.getLogger(__name__)
 
 
 @magento
-class MagentoTrackingExport(ExportSynchronizer):
+class MagentoTrackingExporter(Exporter):
     _model_name = ['magento.stock.picking.out']
 
     def _get_tracking_args(self, picking):
@@ -107,6 +107,9 @@ class MagentoTrackingExport(ExportSynchronizer):
         self.backend_adapter.add_tracking_number(magento_id, *tracking_args)
 
 
+MagentoTrackingExport = MagentoTrackingExporter  # deprecated
+
+
 @on_tracking_number_added
 def delay_export_tracking_number(session, model_name, record_id):
     """
@@ -130,5 +133,5 @@ def export_tracking_number(session, model_name, record_id):
     picking = session.env[model_name].browse(record_id)
     backend_id = picking.backend_id.id
     env = get_environment(session, model_name, backend_id)
-    tracking_exporter = env.get_connector_unit(MagentoTrackingExport)
+    tracking_exporter = env.get_connector_unit(MagentoTrackingExporter)
     return tracking_exporter.run(record_id)

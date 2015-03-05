@@ -28,8 +28,8 @@ from openerp.addons.connector.connector import ConnectorUnit
 from openerp.addons.connector.unit.mapper import mapping, ImportMapper
 from .unit.backend_adapter import GenericAdapter
 from .unit.import_synchronizer import (import_batch,
-                                       DirectBatchImport,
-                                       MagentoImportSynchronizer,
+                                       DirectBatchImporter,
+                                       MagentoImporter,
                                        )
 from .partner import partner_import_batch
 from .sale import sale_order_import_batch
@@ -540,7 +540,7 @@ class StoreviewAdapter(GenericAdapter):
 
 
 @magento
-class MetadataBatchImport(DirectBatchImport):
+class MetadataBatchImporter(DirectBatchImporter):
     """ Import the records directly, without delaying the jobs.
 
     Import the Magento Websites, Stores, Storeviews
@@ -554,6 +554,9 @@ class MetadataBatchImport(DirectBatchImport):
         'magento.store',
         'magento.storeview',
     ]
+
+
+MetadataBatchImport = MetadataBatchImporter  # deprecated
 
 
 @magento
@@ -607,29 +610,35 @@ class StoreviewImportMapper(ImportMapper):
 
 
 @magento
-class StoreImport(MagentoImportSynchronizer):
+class StoreImporter(MagentoImporter):
     """ Import one Magento Store (create a sale.shop via _inherits) """
     _model_name = ['magento.store',
                    ]
 
     def _create(self, data):
-        binding = super(StoreImport, self)._create(data)
+        binding = super(StoreImporter, self)._create(data)
         checkpoint = self.unit_for(StoreAddCheckpoint)
         checkpoint.run(binding.id)
         return binding
 
 
+StoreImport = StoreImporter  # deprecated
+
+
 @magento
-class StoreviewImport(MagentoImportSynchronizer):
+class StoreviewImporter(MagentoImporter):
     """ Import one Magento Storeview """
     _model_name = ['magento.storeview',
                    ]
 
     def _create(self, data):
-        binding = super(StoreviewImport, self)._create(data)
+        binding = super(StoreviewImporter, self)._create(data)
         checkpoint = self.unit_for(StoreAddCheckpoint)
         checkpoint.run(binding.id)
         return binding
+
+
+StoreviewImport = StoreviewImporter  # deprecated
 
 
 @magento

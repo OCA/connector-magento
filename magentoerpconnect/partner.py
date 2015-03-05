@@ -35,8 +35,8 @@ from openerp.addons.connector.exception import IDMissingInBackend
 from .unit.backend_adapter import (GenericAdapter,
                                    MAGENTO_DATETIME_FORMAT,
                                    )
-from .unit.import_synchronizer import (DelayedBatchImport,
-                                       MagentoImportSynchronizer
+from .unit.import_synchronizer import (DelayedBatchImporter,
+                                       MagentoImporter,
                                        )
 from .backend import magento
 from .connector import get_environment
@@ -206,7 +206,7 @@ class PartnerAdapter(GenericAdapter):
 
 
 @magento
-class PartnerBatchImport(DelayedBatchImport):
+class PartnerBatchImporter(DelayedBatchImporter):
     """ Import the Magento Partners.
 
     For every partner in the list, a delayed job is created.
@@ -227,6 +227,9 @@ class PartnerBatchImport(DelayedBatchImport):
                      filters, record_ids)
         for record_id in record_ids:
             self._import_record(record_id)
+
+
+PartnerBatchImport = PartnerBatchImporter  # deprecated
 
 
 @magento
@@ -325,7 +328,7 @@ class PartnerImportMapper(ImportMapper):
 
 
 @magento
-class PartnerImport(MagentoImportSynchronizer):
+class PartnerImporter(MagentoImporter):
     _model_name = ['magento.res.partner']
 
     _base_mapper = PartnerImportMapper
@@ -340,6 +343,9 @@ class PartnerImport(MagentoImportSynchronizer):
         """ Import the addresses """
         book = self.unit_for(PartnerAddressBook, model='magento.address')
         book.import_addresses(self.magento_id, partner_binding.id)
+
+
+PartnerImport = PartnerImporter  # deprecated
 
 
 AddressInfos = namedtuple('AddressInfos', ['magento_record',
@@ -381,7 +387,7 @@ class PartnerAddressBook(ConnectorUnit):
         addresses = self._get_address_infos(magento_partner_id,
                                             partner_binding_id)
         for address_id, infos in addresses:
-            importer = self.unit_for(MagentoImportSynchronizer)
+            importer = self.unit_for(MagentoImporter)
             importer.run(address_id, infos)
 
     def _get_address_infos(self, magento_partner_id, partner_binding_id):
@@ -553,13 +559,13 @@ class AddressAdapter(GenericAdapter):
 
 
 @magento
-class AddressImport(MagentoImportSynchronizer):
+class AddressImporter(MagentoImporter):
     _model_name = ['magento.address']
 
     def run(self, magento_id, address_infos):
         """ Run the synchronization """
         self.address_infos = address_infos
-        return super(AddressImport, self).run(magento_id)
+        return super(AddressImporter, self).run(magento_id)
 
     def _get_magento_data(self):
         """ Return the raw Magento data for ``self.magento_id`` """
@@ -567,7 +573,7 @@ class AddressImport(MagentoImportSynchronizer):
         if self.address_infos.magento_record:
             return self.address_infos.magento_record
         else:
-            return super(AddressImport, self)._get_magento_data()
+            return super(AddressImporter, self)._get_magento_data()
 
     def _define_partner_relationship(self, data):
         """ Link address with partner or parent company. """
@@ -587,7 +593,10 @@ class AddressImport(MagentoImportSynchronizer):
 
     def _create(self, data):
         data = self._define_partner_relationship(data)
-        return super(AddressImport, self)._create(data)
+        return super(AddressImporter, self)._create(data)
+
+
+AddressImport = AddressImporter  # deprecated
 
 
 @magento
@@ -637,5 +646,5 @@ def partner_import_batch(session, model_name, backend_id, filters=None):
     assert 'magento_website_id' in filters, (
         'Missing information about Magento Website')
     env = get_environment(session, model_name, backend_id)
-    importer = env.get_connector_unit(PartnerBatchImport)
+    importer = env.get_connector_unit(PartnerBatchImporter)
     importer.run(filters=filters)

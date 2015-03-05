@@ -26,7 +26,7 @@ from openerp.tools.translate import _
 from openerp.addons.connector.queue.job import job, related_action
 from openerp.addons.connector.event import on_record_create
 from openerp.addons.connector.exception import NothingToDoJob
-from openerp.addons.connector.unit.synchronizer import ExportSynchronizer
+from openerp.addons.connector.unit.synchronizer import Exporter
 from openerp.addons.connector.exception import IDMissingInBackend
 from openerp.addons.connector_ecommerce.event import on_picking_out_done
 from .unit.backend_adapter import GenericAdapter
@@ -113,7 +113,7 @@ class StockPickingAdapter(GenericAdapter):
 
 
 @magento
-class MagentoPickingExport(ExportSynchronizer):
+class MagentoPickingExporter(Exporter):
     _model_name = ['magento.stock.picking.out']
 
     def _get_args(self, picking, lines_info=None):
@@ -203,6 +203,9 @@ class MagentoPickingExport(ExportSynchronizer):
                 self.session.commit()
 
 
+MagentoPickingExport = MagentoPickingExporter  # deprecated
+
+
 @on_picking_out_done
 def picking_out_done(session, model_name, record_id, picking_method):
     """
@@ -251,7 +254,7 @@ def export_picking_done(session, model_name, record_id, with_tracking=True):
     picking = session.env[model_name].browse(record_id)
     backend_id = picking.backend_id.id
     env = get_environment(session, model_name, backend_id)
-    picking_exporter = env.get_connector_unit(MagentoPickingExport)
+    picking_exporter = env.get_connector_unit(MagentoPickingExporter)
     res = picking_exporter.run(record_id)
 
     if with_tracking and picking.carrier_tracking_ref:

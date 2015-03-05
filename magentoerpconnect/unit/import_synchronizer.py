@@ -35,7 +35,7 @@ import logging
 from openerp import fields, _
 from openerp.addons.connector.queue.job import job, related_action
 from openerp.addons.connector.connector import ConnectorUnit
-from openerp.addons.connector.unit.synchronizer import ImportSynchronizer
+from openerp.addons.connector.unit.synchronizer import Importer
 from openerp.addons.connector.exception import IDMissingInBackend
 from ..backend import magento
 from ..connector import get_environment, add_checkpoint
@@ -44,7 +44,7 @@ from ..related_action import link
 _logger = logging.getLogger(__name__)
 
 
-class MagentoImportSynchronizer(ImportSynchronizer):
+class MagentoImporter(Importer):
     """ Base importer for Magento """
 
     def __init__(self, connector_env):
@@ -52,7 +52,7 @@ class MagentoImportSynchronizer(ImportSynchronizer):
         :param connector_env: current environment (backend, session, ...)
         :type connector_env: :class:`connector.connector.ConnectorEnvironment`
         """
-        super(MagentoImportSynchronizer, self).__init__(connector_env)
+        super(MagentoImporter, self).__init__(connector_env)
         self.magento_id = None
         self.magento_record = None
 
@@ -91,7 +91,7 @@ class MagentoImportSynchronizer(ImportSynchronizer):
         """ Import a dependency.
 
         The importer class is a class or subclass of
-        :class:`MagentoImportSynchronizer`. A specific class can be defined.
+        :class:`MagentoImporter`. A specific class can be defined.
 
         :param magento_id: id of the related binding to import
         :param binding_model: name of the binding model for the relation
@@ -99,7 +99,7 @@ class MagentoImportSynchronizer(ImportSynchronizer):
         :param importer_cls: :class:`openerp.addons.connector.\
                                      connector.ConnectorUnit`
                              class or parent class to use for the export.
-                             By default: MagentoImportSynchronizer
+                             By default: MagentoImporter
         :type importer_cls: :class:`openerp.addons.connector.\
                                     connector.MetaConnectorUnit`
         :param always: if True, the record is updated even if it already
@@ -112,7 +112,7 @@ class MagentoImportSynchronizer(ImportSynchronizer):
         if not magento_id:
             return
         if importer_class is None:
-            importer_class = MagentoImportSynchronizer
+            importer_class = MagentoImporter
         binder = self.binder_for(binding_model)
         if always or binder.to_openerp(magento_id) is None:
             importer = self.unit_for(importer_class, model=binding_model)
@@ -225,8 +225,11 @@ class MagentoImportSynchronizer(ImportSynchronizer):
         self._after_import(binding)
 
 
-class BatchImportSynchronizer(ImportSynchronizer):
-    """ The role of a BatchImportSynchronizer is to search for a list of
+MagentoImportSynchronizer = MagentoImporter  # deprecated
+
+
+class BatchImporter(Importer):
+    """ The role of a BatchImporter is to search for a list of
     items to import, then it can either import them directly or delay
     the import of each item separately.
     """
@@ -245,7 +248,10 @@ class BatchImportSynchronizer(ImportSynchronizer):
         raise NotImplementedError
 
 
-class DirectBatchImport(BatchImportSynchronizer):
+BatchImportSynchronizer = BatchImporter  # deprecated
+
+
+class DirectBatchImporter(BatchImporter):
     """ Import the records directly, without delaying the jobs. """
     _model_name = None
 
@@ -257,7 +263,10 @@ class DirectBatchImport(BatchImportSynchronizer):
                       record_id)
 
 
-class DelayedBatchImport(BatchImportSynchronizer):
+DirectBatchImport = DirectBatchImporter  # deprecated
+
+
+class DelayedBatchImporter(BatchImporter):
     """ Delay import of the records """
     _model_name = None
 
@@ -270,8 +279,11 @@ class DelayedBatchImport(BatchImportSynchronizer):
                             **kwargs)
 
 
+DelayedBatchImport = DelayedBatchImporter  # deprecated
+
+
 @magento
-class SimpleRecordImport(MagentoImportSynchronizer):
+class SimpleRecordImporter(MagentoImporter):
     """ Import one Magento Website """
     _model_name = [
         'magento.website',
@@ -279,8 +291,11 @@ class SimpleRecordImport(MagentoImportSynchronizer):
     ]
 
 
+SimpleRecordImport = SimpleRecordImporter  # deprecated
+
+
 @magento
-class TranslationImporter(ImportSynchronizer):
+class TranslationImporter(Importer):
     """ Import translations for a record.
 
     Usually called from importers, in ``_after_import``.
@@ -351,7 +366,7 @@ class AddCheckpoint(ConnectorUnit):
 def import_batch(session, model_name, backend_id, filters=None):
     """ Prepare a batch import of records from Magento """
     env = get_environment(session, model_name, backend_id)
-    importer = env.get_connector_unit(BatchImportSynchronizer)
+    importer = env.get_connector_unit(BatchImporter)
     importer.run(filters=filters)
 
 
@@ -360,5 +375,5 @@ def import_batch(session, model_name, backend_id, filters=None):
 def import_record(session, model_name, backend_id, magento_id, force=False):
     """ Import a record from Magento """
     env = get_environment(session, model_name, backend_id)
-    importer = env.get_connector_unit(MagentoImportSynchronizer)
+    importer = env.get_connector_unit(MagentoImporter)
     importer.run(magento_id, force=force)

@@ -29,8 +29,8 @@ from collections import defaultdict
 from openerp import models, fields, api, _
 from openerp.addons.connector.queue.job import job, related_action
 from openerp.addons.connector.event import on_record_write
-from openerp.addons.connector.unit.synchronizer import (ImportSynchronizer,
-                                                        ExportSynchronizer
+from openerp.addons.connector.unit.synchronizer import (Importer,
+                                                        Exporter,
                                                         )
 from openerp.addons.connector.exception import (MappingError,
                                                 InvalidDataError,
@@ -43,8 +43,8 @@ from .unit.backend_adapter import (GenericAdapter,
                                    MAGENTO_DATETIME_FORMAT,
                                    )
 from .unit.mapper import normalize_datetime
-from .unit.import_synchronizer import (DelayedBatchImport,
-                                       MagentoImportSynchronizer,
+from .unit.import_synchronizer import (DelayedBatchImporter,
+                                       MagentoImporter,
                                        TranslationImporter,
                                        AddCheckpoint,
                                        )
@@ -264,7 +264,7 @@ class ProductProductAdapter(GenericAdapter):
 
 
 @magento
-class ProductBatchImport(DelayedBatchImport):
+class ProductBatchImporter(DelayedBatchImporter):
     """ Import the Magento Products.
 
     For every product category in the list, a delayed job is created.
@@ -285,8 +285,11 @@ class ProductBatchImport(DelayedBatchImport):
             self._import_record(record_id)
 
 
+ProductBatchImport = ProductBatchImporter  # deprecated
+
+
 @magento
-class CatalogImageImporter(ImportSynchronizer):
+class CatalogImageImporter(Importer):
     """ Import images for a record.
 
     Usually called from importers, in ``_after_import``.
@@ -360,7 +363,7 @@ class CatalogImageImporter(ImportSynchronizer):
 
 
 @magento
-class BundleImporter(ImportSynchronizer):
+class BundleImporter(Importer):
     """ Can be inherited to change the way the bundle products are
     imported.
 
@@ -502,7 +505,7 @@ class ProductImportMapper(ImportMapper):
 
 
 @magento
-class ProductImport(MagentoImportSynchronizer):
+class ProductImporter(MagentoImporter):
     _model_name = ['magento.product.product']
 
     _base_mapper = ProductImportMapper
@@ -566,7 +569,7 @@ class ProductImport(MagentoImportSynchronizer):
         self._validate_product_type(data)
 
     def _create(self, data):
-        openerp_binding = super(ProductImport, self)._create(data)
+        openerp_binding = super(ProductImporter, self)._create(data)
         checkpoint = self.unit_for(AddCheckpoint)
         checkpoint.run(openerp_binding.id)
         return openerp_binding
@@ -582,6 +585,9 @@ class ProductImport(MagentoImportSynchronizer):
         if self.magento_record['type_id'] == 'bundle':
             bundle_importer = self.unit_for(BundleImporter)
             bundle_importer.run(binding.id, self.magento_record)
+
+
+ProductImport = ProductImporter  # deprecated
 
 
 @magento
@@ -602,7 +608,7 @@ class BundleProductImportMapper(ImportMapper):
 
 
 @magento
-class ProductInventoryExport(ExportSynchronizer):
+class ProductInventoryExporter(Exporter):
     _model_name = ['magento.product.product']
 
     _map_backorders = {'use_default': 0,
@@ -641,6 +647,9 @@ class ProductInventoryExport(ExportSynchronizer):
         self.backend_adapter.update_inventory(magento_id, data)
 
 
+ProductInventoryExport = ProductInventoryExporter  # deprecated
+
+
 # fields which should not trigger an export of the products
 # but an export of their inventory
 INVENTORY_FIELDS = ('manage_stock',
@@ -669,5 +678,5 @@ def export_product_inventory(session, model_name, record_id, fields=None):
     product = session.env[model_name].browse(record_id)
     backend_id = product.backend_id.id
     env = get_environment(session, model_name, backend_id)
-    inventory_exporter = env.get_connector_unit(ProductInventoryExport)
+    inventory_exporter = env.get_connector_unit(ProductInventoryExporter)
     return inventory_exporter.run(record_id, fields)

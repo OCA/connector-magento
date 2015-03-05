@@ -23,7 +23,7 @@ import logging
 import xmlrpclib
 from openerp import models, fields, _
 from openerp.addons.connector.queue.job import job, related_action
-from openerp.addons.connector.unit.synchronizer import ExportSynchronizer
+from openerp.addons.connector.unit.synchronizer import Exporter
 from openerp.addons.connector.event import on_record_create
 from openerp.addons.connector_ecommerce.event import (on_invoice_paid,
                                                       on_invoice_validated)
@@ -110,7 +110,7 @@ class AccountInvoiceAdapter(GenericAdapter):
 
 
 @magento
-class MagentoInvoiceSynchronizer(ExportSynchronizer):
+class MagentoInvoiceExporter(Exporter):
     """ Export invoices to Magento """
     _model_name = ['magento.account.invoice']
 
@@ -206,6 +206,9 @@ class MagentoInvoiceSynchronizer(ExportSynchronizer):
         return invoices[0]['increment_id']
 
 
+MagentoInvoiceSynchronizer = MagentoInvoiceExporter  # deprecated
+
+
 @on_invoice_validated
 @on_invoice_paid
 def invoice_create_bindings(session, model_name, record_id):
@@ -265,5 +268,5 @@ def export_invoice(session, model_name, record_id):
     invoice = session.env[model_name].browse(record_id)
     backend_id = invoice.backend_id.id
     env = get_environment(session, model_name, backend_id)
-    invoice_exporter = env.get_connector_unit(MagentoInvoiceSynchronizer)
+    invoice_exporter = env.get_connector_unit(MagentoInvoiceExporter)
     return invoice_exporter.run(record_id)

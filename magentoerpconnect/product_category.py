@@ -31,8 +31,8 @@ from openerp.addons.connector.exception import (IDMissingInBackend,
 from .unit.backend_adapter import (GenericAdapter,
                                    MAGENTO_DATETIME_FORMAT,
                                    )
-from .unit.import_synchronizer import (DelayedBatchImport,
-                                       MagentoImportSynchronizer,
+from .unit.import_synchronizer import (DelayedBatchImporter,
+                                       MagentoImporter,
                                        TranslationImporter,
                                        AddCheckpoint,
                                        )
@@ -160,7 +160,7 @@ class ProductCategoryAdapter(GenericAdapter):
 
 
 @magento
-class ProductCategoryBatchImport(DelayedBatchImport):
+class ProductCategoryBatchImporter(DelayedBatchImporter):
     """ Import the Magento Product Categories.
 
     For every product category in the list, a delayed job is created.
@@ -171,7 +171,7 @@ class ProductCategoryBatchImport(DelayedBatchImport):
 
     def _import_record(self, magento_id, priority=None):
         """ Delay a job for the import """
-        super(ProductCategoryBatchImport, self)._import_record(
+        super(ProductCategoryBatchImporter, self)._import_record(
             magento_id, priority=priority)
 
     def run(self, filters=None):
@@ -200,8 +200,11 @@ class ProductCategoryBatchImport(DelayedBatchImport):
         import_nodes(tree)
 
 
+ProductCategoryBatchImport = ProductCategoryBatchImporter  # deprecated
+
+
 @magento
-class ProductCategoryImport(MagentoImportSynchronizer):
+class ProductCategoryImporter(MagentoImporter):
     _model_name = ['magento.product.category']
 
     def _import_dependencies(self):
@@ -212,11 +215,11 @@ class ProductCategoryImport(MagentoImportSynchronizer):
         if record.get('parent_id'):
             parent_id = record['parent_id']
             if self.binder.to_openerp(parent_id) is None:
-                importer = self.unit_for(MagentoImportSynchronizer)
+                importer = self.unit_for(MagentoImporter)
                 importer.run(parent_id)
 
     def _create(self, data):
-        openerp_binding = super(ProductCategoryImport, self)._create(data)
+        openerp_binding = super(ProductCategoryImporter, self)._create(data)
         checkpoint = self.unit_for(AddCheckpoint)
         checkpoint.run(openerp_binding.id)
         return openerp_binding
@@ -225,6 +228,9 @@ class ProductCategoryImport(MagentoImportSynchronizer):
         """ Hook called at the end of the import """
         translation_importer = self.unit_for(TranslationImporter)
         translation_importer.run(self.magento_id, binding.id)
+
+
+ProductCategoryImport = ProductCategoryImporter  # deprecated
 
 
 @magento

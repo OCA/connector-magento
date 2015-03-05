@@ -25,7 +25,7 @@ from openerp.addons.connector.unit.mapper import (mapping,
                                                   ImportMapper
                                                   )
 from .unit.backend_adapter import GenericAdapter
-from .unit.import_synchronizer import DelayedBatchImport
+from .unit.import_synchronizer import DelayedBatchImporter
 from .backend import magento
 
 
@@ -71,9 +71,12 @@ class PartnerCategoryAdapter(GenericAdapter):
 
 
 @magento
-class PartnerCategoryBatchImport(DelayedBatchImport):
+class PartnerCategoryBatchImporter(DelayedBatchImporter):
     """ Delay import of the records """
     _model_name = ['magento.res.partner.category']
+
+
+PartnerCategoryBatchImport = PartnerCategoryBatchImporter  # deprecated
 
 
 @magento

@@ -26,11 +26,10 @@ from datetime import datetime
 
 import psycopg2
 
-from openerp import SUPERUSER_ID
 from openerp.tools.translate import _
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.addons.connector.queue.job import job, related_action
-from openerp.addons.connector.unit.synchronizer import ExportSynchronizer
+from openerp.addons.connector.unit.synchronizer import Exporter
 from openerp.addons.connector.exception import (IDMissingInBackend,
                                                 RetryableJobError)
 from .import_synchronizer import import_record
@@ -53,7 +52,7 @@ In addition to its export job, an exporter has to:
 """
 
 
-class MagentoBaseExporter(ExportSynchronizer):
+class MagentoBaseExporter(Exporter):
     """ Base exporter for Magento """
 
     def __init__(self, connector_env):
