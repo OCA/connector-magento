@@ -19,15 +19,16 @@
 #
 ##############################################################################
 
-import unittest2
 import mock
 
 import openerp.tests.common as common
+from openerp import _
 from openerp.addons.connector.session import ConnectorSession
 from openerp.addons.magentoerpconnect.unit.import_synchronizer import (
     import_batch,
     import_record)
 from .common import (mock_api,
+                     mock_job_delay_to_direct,
                      mock_urlopen_image)
 from .test_data import magento_base_responses
 
@@ -197,6 +198,34 @@ class TestExportInvoice(common.TransactionCase):
             writeoff_journal_id=self.journal.id,
             name="Payment for tests of invoice's exports")
 
-    @unittest2.skip("Needs to be implemented")
     def test_export_invoice_api(self):
         """ Exporting an invoice: call towards the Magento API """
+        job_path = ('openerp.addons.magentoerpconnect.'
+                    'invoice.export_invoice')
+        response = {
+            'sales_order_invoice.create': 987654321,
+        }
+        # we setup the payment method so it exports the invoices as soon
+        # as they are validated (open)
+        self.payment_method.write({'create_invoice_on': 'open'})
+        self.stores.write({'send_invoice_paid_mail': True})
+
+        with mock_job_delay_to_direct(job_path), \
+                mock_api(response, key_func=lambda m, a: m) as calls_done:
+            self._invoice_open()
+
+            # Here we check what call with which args has been done by the
+            # BackendAdapter towards Magento to create the invoice
+            self.assertEqual(len(calls_done), 1)
+            method, (mag_order_id, items,
+                     comment, email, include_comment) = calls_done[0]
+            self.assertEqual(method, 'sales_order_invoice.create')
+            self.assertEqual(mag_order_id, '900000691')
+            self.assertEqual(items, {'1713': 1.0, '1714': 1.0})
+            self.assertEqual(comment, _("Invoice Created"))
+            self.assertEqual(email, True)
+            self.assertFalse(include_comment)
+
+        self.assertEquals(len(self.invoice.magento_bind_ids), 1)
+        binding = self.invoice.magento_bind_ids
+        self.assertEquals(binding.magento_id, '987654321')
