@@ -192,6 +192,7 @@ class MagentoSaleOrderLine(models.Model):
         related='magento_order_id.backend_id',
         string='Magento Backend',
         readonly=True,
+        store=True,
         # override 'magento.binding', can't be INSERTed if True:
         required=False,
     )
