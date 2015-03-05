@@ -1054,7 +1054,7 @@ class StateExporter(ExportSynchronizer):
         :param notify: When True, Magento will send an email with the
                        comment
         """
-        binding = self.session.browse(self.model._name, binding_id)
+        binding = self.model.browse(binding_id)
         state = binding.state
         if allowed_states and state not in allowed_states:
             return _('State %s is not exported.') % state
@@ -1076,7 +1076,7 @@ class StateExporter(ExportSynchronizer):
 def export_state_change(session, model_name, binding_id, allowed_states=None,
                         comment=None, notify=None):
     """ Change state of a sales order on Magento """
-    binding = session.browse(model_name, binding_id)
+    binding = session.env[model_name].browse(binding_id)
     backend_id = binding.backend_id.id
     env = get_environment(session, model_name, backend_id)
     exporter = env.get_connector_unit(StateExporter)

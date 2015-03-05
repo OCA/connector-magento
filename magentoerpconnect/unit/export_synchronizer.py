@@ -102,7 +102,7 @@ class MagentoBaseExporter(ExportSynchronizer):
 
     def _get_openerp_data(self):
         """ Return the raw OpenERP data for ``self.binding_id`` """
-        return self.session.browse(self.model._name, self.binding_id)
+        return self.model.browse(self.binding_id)
 
     def run(self, binding_id, *args, **kwargs):
         """ Run the synchronization
@@ -270,12 +270,11 @@ class MagentoExporter(MagentoBaseExporter):
         if wrap and hasattr(relation, binding_field):
             domain = [('openerp_id', '=', relation.id),
                       ('backend_id', '=', self.backend_record.id)]
-            binding_ids = self.session.search(binding_model, domain)
-            if binding_ids:
-                assert len(binding_ids) == 1, (
+            binding = self.env[binding_model].search(domain)
+            if binding:
+                assert len(binding) == 1, (
                     'only 1 binding for a backend is '
                     'supported in _export_dependency')
-                binding_id = binding_ids[0]
             # we are working with a unwrapped record (e.g.
             # product.category) and the binding does not exist yet.
             # Example: I created a product.product and its binding
@@ -283,36 +282,34 @@ class MagentoExporter(MagentoBaseExporter):
             # create the binding for the product.category on which it
             # depends.
             else:
-                ctx = {'connector_no_export': True}
-                with self.session.change_context(ctx):
-                    with self.session.change_user(SUPERUSER_ID):
-                        bind_values = {'backend_id': self.backend_record.id,
-                                       'openerp_id': relation.id}
-                        if binding_extra_vals:
-                            bind_values.update(binding_extra_vals)
-                        # If 2 jobs create it at the same time, retry
-                        # one later. A unique constraint (backend_id,
-                        # openerp_id) should exist on the binding model
-                        with self._retry_unique_violation():
-                            binding_id = self.session.create(binding_model,
-                                                             bind_values)
-                            # Eager commit to avoid having 2 jobs
-                            # exporting at the same time. The constraint
-                            # will pop if an other job already created
-                            # the same binding. It will be caught and
-                            # raise a RetryableJobError.
-                            context = self.session.context
-                            if not context.get('__test_no_commit'):
-                                self.session.commit()
+                bind_values = {'backend_id': self.backend_record.id,
+                               'openerp_id': relation.id}
+                if binding_extra_vals:
+                    bind_values.update(binding_extra_vals)
+                # If 2 jobs create it at the same time, retry
+                # one later. A unique constraint (backend_id,
+                # openerp_id) should exist on the binding model
+                with self._retry_unique_violation():
+                    binding = (self.env[binding_model]
+                               .with_context(connector_no_export=True)
+                               .sudo()
+                               .create(bind_values))
+                    # Eager commit to avoid having 2 jobs
+                    # exporting at the same time. The constraint
+                    # will pop if an other job already created
+                    # the same binding. It will be caught and
+                    # raise a RetryableJobError.
+                    if not self.env.context.get('__test_no_commit'):
+                        self.session.commit()
         else:
             # If magento_bind_ids does not exist we are typically in a
             # "direct" binding (the binding record is the same record).
             # If wrap is True, relation is already a binding record.
-            binding_id = relation.id
+            binding = relation
 
-        if not rel_binder.to_backend(binding_id):
+        if not rel_binder.to_backend(binding):
             exporter = self.unit_for(exporter_class, model=binding_model)
-            exporter.run(binding_id)
+            exporter.run(binding.id)
 
     def _export_dependencies(self):
         """ Export the dependencies for the record"""
@@ -423,7 +420,7 @@ class MagentoExporter(MagentoBaseExporter):
 @related_action(action=unwrap_binding)
 def export_record(session, model_name, binding_id, fields=None):
     """ Export a record on Magento """
-    record = session.browse(model_name, binding_id)
+    record = session.env[model_name].browse(binding_id)
     env = get_environment(session, model_name, record.backend_id.id)
     exporter = env.get_connector_unit(MagentoExporter)
     return exporter.run(binding_id, fields=fields)
