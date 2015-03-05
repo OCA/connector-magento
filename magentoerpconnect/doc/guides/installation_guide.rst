@@ -28,12 +28,12 @@ OpenERP
 
 Clone the repositories below in the path where you chosed to store the addons::
 
-    $ git clone git@github.com:OCA/connector.git -b 7.0
-    $ git clone git@github.com:OCA/connector-ecommerce.git -b 7.0
-    $ git clone git@github.com:OCA/connector-magento.git -b 7.0
-    $ git clone git@github.com:OCA/e-commerce.git -b 7.0
-    $ git clone git@github.com:OCA/product-attribute.git -b 7.0
-    $ git clone git@github.com:OCA/sale-workflow.git -b 7.0
+    $ git clone git@github.com:OCA/connector.git -b 8.0
+    $ git clone git@github.com:OCA/connector-ecommerce.git -b 8.0
+    $ git clone git@github.com:OCA/connector-magento.git -b 8.0
+    $ git clone git@github.com:OCA/e-commerce.git -b 8.0
+    $ git clone git@github.com:OCA/product-attribute.git -b 8.0
+    $ git clone git@github.com:OCA/sale-workflow.git -b 8.0
 
 .. important:: Keep the git branches entire. Do not copy-paste the modules
                in another directory.

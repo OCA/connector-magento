@@ -124,18 +124,19 @@ Let's create our own backend, in ``customize_example/backend.py``::
 And in ``customize_example/magento_model.py``::
 
     # -*- coding: utf-8 -*-
-    from openerp.osv import orm
+    from openerp import models, api
 
 
-    class magento_backend(orm.Model):
+    class MagentoBackend(models.Model):
         _inherit = 'magento.backend'
 
-        def select_versions(self, cr, uid, context=None):
+        @api.model
+        def select_versions(self):
             """ Available versions in the backend.
 
             Can be inherited to add custom versions.
             """
-            versions = super(magento_backend, self).select_versions(cr, uid, context=context)
+            versions = super(MagentoBackend, self).select_versions()
             versions.append(('1.7-myversion', '1.7 - My Version'))
             return versions
 
@@ -263,13 +264,13 @@ which are peculiar to Magento.
 
 Example with an excerpt of the fields for ``magento.res.partner``:
 
-* ``openerp_id``: ``many2one`` to the ``res.partner`` (``_inherits``)
-* ``backend_id``: ``many2one`` to the ``magento.backend`` model (Magento
+* ``openerp_id``: ``Many2one`` to the ``res.partner`` (``_inherits``)
+* ``backend_id``: ``Many2one`` to the ``magento.backend`` model (Magento
   Instance), for the partner this is a ``related`` because we already
   have a link to the website, itself associated to a ``magento.backend``.
-* ``website_id``: ``many2one`` to the ``magento.website`` model
+* ``website_id``: ``Many2one`` to the ``magento.website`` model
 * ``magento_id``: the ID of the customer on Magento
-* ``group_id``: ``many2one`` to the ``magento.res.partner.category``,
+* ``group_id``: ``Many2one`` to the ``magento.res.partner.category``,
   itself a Magento model for ``res.partner.category`` (Customer Groups)
 * ``created_at``: created_at field from Magento
 * ``taxvat``: taxvat field from Magento
@@ -306,14 +307,12 @@ For this field, the Magento API returns a string. I add it in
 the views')::
 
   # -*- coding: utf-8 -*-
-  from openerp.osv import orm, fields
+  from openerp import models, fields
 
-  class magento_res_partner(orm.Model):
+  class MagentoResPartner(models.Model):
       _inherit = 'magento.res.partner'
 
-      _columns = {
-          'created_in': fields.char('Created In', readonly=True),
-      }
+      created_in = fields.Char(string='Created In', readonly=True)
 
 
 In the same file, I add the import of the Magento Backend to use and the
@@ -353,16 +352,14 @@ this information can be useful at this level.
 In ``customize_example/partner.py``, I write::
 
   # -*- coding: utf-8 -*-
-  from openerp.osv import orm, fields
+  from openerp import models, fields
 
-  class res_partner(orm.Model):
+  class ResPartner(models.Model):
       _inherit = 'res.partner'
 
-      _columns = {
-          'gender': fields.selection([('male', 'Male'),
-                                      ('female', 'Female')],
-                                     string='Gender'),
-      }
+      gender = fields.Selection(selection=[('male', 'Male'),
+                                           ('female', 'Female')],
+                                string='Gender')
 
 The same imports than in the `Example 1.`_ are needed, but we need to
 import ``mapping`` too::

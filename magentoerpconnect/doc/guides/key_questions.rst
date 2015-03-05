@@ -223,7 +223,7 @@ The latter choice could be complicated because Magento
 does not allow to change products in delivery orders.
 
 We recommend to edit the sales orders in Magento, the connector
-know how to handle theses changes.
+knows how to handle theses changes.
 
 Tracking and delivery labels
 ============================

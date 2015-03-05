@@ -37,7 +37,7 @@ Here are the configuration files https://github.com/guewen/odoo-connector-magent
 
 Clone the repo::
 
-    $ git clone https://github.com/guewen/odoo-connector-magento-buildout.git odoo-connector-magento
+    $ git clone https://github.com/guewen/odoo-connector-magento-buildout.git -b 8.0 odoo-connector-magento
 
 and follow the installation steps.
 
@@ -84,13 +84,13 @@ Run the tests
 The Magento Connector and the Connector framework do not use YAML tests, but only
 ``unittest2`` tests. The following command lines will run them::
 
-    $ bin/rununittests --database db-name -m connector
-    $ bin/rununittests --database db-name -m magentoerpconnect
+    $ bin/runtests --database db-name -u connector
+    $ bin/runtests --database db-name -u magentoerpconnect
 
 Use the help arguments for more information about the options::
 
-    $ bin/rununittests --help
-    $ bin/rununittests --help-oe
+    $ bin/runtests --help
+    $ bin/runtests --help-oe
 
 Build the documentation
 =======================
