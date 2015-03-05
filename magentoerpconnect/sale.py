@@ -45,6 +45,7 @@ from .unit.backend_adapter import (GenericAdapter,
 from .unit.import_synchronizer import (DelayedBatchImporter,
                                        MagentoImporter,
                                        )
+from .unit.mapper import normalize_datetime
 from .exception import OrderImportRuleRetry
 from .backend import magento
 from .connector import get_environment
@@ -441,7 +442,7 @@ class SaleOrderImportMapper(ImportMapper):
               ('order_id', 'magento_order_id'),
               ('grand_total', 'total_amount'),
               ('tax_amount', 'total_amount_tax'),
-              ('created_at', 'date_order'),
+              (normalize_datetime('created_at'), 'date_order'),
               ('store_id', 'storeview_id'),
               ]
 
@@ -807,7 +808,8 @@ class SaleOrderImporter(MagentoImporter):
                 'group_id': customer_group,
                 'gender': record.get('customer_gender'),
                 'store_id': record['store_id'],
-                'created_at': record['created_at'],
+                'created_at': normalize_datetime('created_at')(self,
+                                                               record, ''),
                 'updated_at': False,
                 'created_in': False,
                 'dob': record.get('customer_dob'),

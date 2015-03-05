@@ -38,6 +38,7 @@ from .unit.backend_adapter import (GenericAdapter,
 from .unit.import_synchronizer import (DelayedBatchImporter,
                                        MagentoImporter,
                                        )
+from .unit.mapper import normalize_datetime
 from .backend import magento
 from .connector import get_environment
 
@@ -239,8 +240,8 @@ class PartnerImportMapper(ImportMapper):
     direct = [
         ('email', 'email'),
         ('dob', 'birthday'),
-        ('created_at', 'created_at'),
-        ('updated_at', 'updated_at'),
+        (normalize_datetime('created_at'), 'created_at'),
+        (normalize_datetime('updated_at'), 'updated_at'),
         ('email', 'emailid'),
         ('taxvat', 'taxvat'),
         ('group_id', 'group_id'),
