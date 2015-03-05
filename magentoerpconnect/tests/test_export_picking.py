@@ -172,3 +172,55 @@ class TestExportPicking(SetUpMagentoSynchronized):
 
         self.assertEquals(len(backorder.magento_bind_ids), 1)
         self.assertEquals(backorder.magento_bind_ids.magento_id, '987654322')
+
+    def test_export_tracking_after_done(self):
+        """ A tracking number is exported after the picking is done """
+        self.picking.force_assign()
+        job_picking_path = ('openerp.addons.magentoerpconnect.'
+                            'stock_picking.export_picking_done')
+        job_tracking_path = ('openerp.addons.magentoerpconnect.'
+                             'stock_tracking.export_tracking_number')
+        response = {
+            'sales_order_shipment.create': 987654321,
+        }
+        # mock 1. When '.delay()' is called on the job, call the function
+        # directly instead.
+        # mock 2. Replace the xmlrpc calls by a mock and return
+        # 'response' values
+        with mock_job_delay_to_direct(job_picking_path), \
+                mock_api(response, key_func=lambda m, a: m) as calls_done:
+            # Deliver the entire picking, a 'magento.stock.picking'
+            # should be created, then a job is generated that will export
+            # the picking. Here it is forced to a direct call to Magento
+            # (which is in fact the mock)
+            self.picking.action_done()
+            self.assertEquals(self.picking.state, 'done')
+
+        response = {
+            'sales_order_shipment.addTrack': True,
+            'sales_order_shipment.getCarriers': ['flatrate'],
+        }
+        with mock_job_delay_to_direct(job_tracking_path), \
+                mock_api(response, key_func=lambda m, a: m) as calls_done:
+            # set a tracking number
+            self.picking.carrier_tracking_ref = 'XYZ'
+
+            # Here we check what call with which args has been done by the
+            # BackendAdapter towards Magento for the remaining picking
+            self.assertEqual(len(calls_done), 2)
+
+            # first call asks magento which carriers accept the tracking
+            # numbers, normally magento does not support them on
+            # flatrate, we lie for the sake of the test
+            method, (mag_order_id,) = calls_done[0]
+            self.assertEqual(method, 'sales_order_shipment.getCarriers')
+            self.assertEqual(mag_order_id, '900000691')
+
+            # the second call add the tracking number on magento
+            method, (mag_shipment_id, carrier_code,
+                     tracking_title, tracking_number) = calls_done[1]
+            self.assertEqual(method, 'sales_order_shipment.addTrack')
+            self.assertEqual(mag_shipment_id, '987654321')
+            self.assertEqual(carrier_code, 'flatrate')
+            self.assertEqual(tracking_title, '')
+            self.assertEqual(tracking_number, 'XYZ')
