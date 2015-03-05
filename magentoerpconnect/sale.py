@@ -702,7 +702,7 @@ class SaleOrderImport(MagentoImportSynchronizer):
             parent_id = self.backend_adapter.get_parent(parent_id)
         current_binding = binding
         for parent_id in all_parent_ids:
-            parent_binding = self.binder.to_openerp(parent_id)
+            parent_binding = self.binder.to_openerp(parent_id, browse=True)
             if not parent_binding:
                 # may happen if several sales orders have been
                 # edited / canceled but not all have been imported

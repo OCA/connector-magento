@@ -171,3 +171,10 @@ class TestSaleOrder(SetUpMagentoSynchronized):
             self.assertEqual(method, 'sales_order.addComment')
             self.assertEqual(magento_id, binding.magento_id)
             self.assertEqual(state, 'pending')
+
+    def test_import_edited(self):
+        """ Import of an edited sale order links to its parent """
+        binding = self._import_sale_order(900000691)
+        new_binding = self._import_sale_order('900000691-1')
+        self.assertEqual(new_binding.magento_parent_id, binding)
+        self.assertTrue(binding.canceled_in_backend)
