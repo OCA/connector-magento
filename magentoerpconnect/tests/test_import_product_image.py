@@ -64,9 +64,8 @@ class TestImportProductImage(common.TransactionCase):
              'warehouse_id': warehouse.id,
              'password': '42'}).id
 
-        context = dict(self.env.context, __test_no_commit=True)
         self.session = ConnectorSession(self.env.cr, self.env.uid,
-                                        context=context)
+                                        context=self.env.context)
         with mock_api(magento_base_responses):
             import_batch(self.session, 'magento.website', self.backend_id)
             import_batch(self.session, 'magento.store', self.backend_id)

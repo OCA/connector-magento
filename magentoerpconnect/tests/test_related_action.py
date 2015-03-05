@@ -20,10 +20,9 @@ class TestRelatedActionStorage(common.TransactionCase):
 
     def setUp(self):
         super(TestRelatedActionStorage, self).setUp()
-        context = dict(self.env.context, __test_no_commit=True)
         backend_model = self.env['magento.backend']
         self.session = ConnectorSession(self.env.cr, self.env.uid,
-                                        context=context)
+                                        context=self.env.context)
         warehouse = self.env.ref('stock.warehouse0')
         self.backend = backend_model.create(
             {'name': 'Test Magento',

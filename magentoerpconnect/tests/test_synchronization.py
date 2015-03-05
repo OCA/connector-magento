@@ -44,10 +44,9 @@ class SetUpMagentoBase(common.TransactionCase):
 
     def setUp(self):
         super(SetUpMagentoBase, self).setUp()
-        context = dict(self.env.context, __test_no_commit=True)
         self.backend_model = self.env['magento.backend']
         self.session = ConnectorSession(self.env.cr, self.env.uid,
-                                        context=context)
+                                        context=self.env.context)
         warehouse = self.env.ref('stock.warehouse0')
         self.backend_id = self.backend_model.create(
             {'name': 'Test Magento',

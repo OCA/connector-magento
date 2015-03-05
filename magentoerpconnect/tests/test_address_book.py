@@ -43,9 +43,8 @@ class TestImportAddressBook(common.TransactionCase):
     def setUp(self):
         super(TestImportAddressBook, self).setUp()
         self.backend_model = self.env['magento.backend']
-        context = dict(self.env.context, __test_no_commit=True)
         self.session = ConnectorSession(self.env.cr, self.env.uid,
-                                        context=context)
+                                        context=self.env.context)
         self.model = self.env['magento.res.partner']
         self.address_model = self.env['magento.address']
         warehouse_id = self.env.ref('stock.warehouse0').id

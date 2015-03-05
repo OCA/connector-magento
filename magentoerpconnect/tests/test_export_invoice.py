@@ -39,9 +39,8 @@ class TestExportInvoice(common.TransactionCase):
         super(TestExportInvoice, self).setUp()
         backend_model = self.env['magento.backend']
         self.mag_sale_model = self.env['magento.sale.order']
-        context = dict(self.env.context, __test_no_commit=True)
         self.session = ConnectorSession(self.env.cr, self.env.uid,
-                                        context=context)
+                                        context=self.env.context)
         warehouse = self.env.ref('stock.warehouse0')
         self.backend = backend = backend_model.create(
             {'name': 'Test Magento',

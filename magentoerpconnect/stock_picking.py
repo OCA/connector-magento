@@ -199,8 +199,7 @@ class MagentoPickingExporter(Exporter):
         else:
             self.binder.bind(magento_id, binding_id)
             # ensure that we store the external ID
-            if not self.session.context.get('__test_no_commit'):
-                self.session.commit()
+            self.session.commit()
 
 
 MagentoPickingExport = MagentoPickingExporter  # deprecated
