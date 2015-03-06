@@ -33,7 +33,8 @@
  'external_dependencies': {
      'python': ['magento'],
  },
- 'author': "Connector Core Editors,Odoo Community Association (OCA)",
+ 'author': "Camptocamp,Akretion,"
+           "Connector Core Editors,Odoo Community Association (OCA)",
  'license': 'AGPL-3',
  'website': 'http://www.odoo-magento-connector.com',
  'description': """
