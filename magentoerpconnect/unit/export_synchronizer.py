@@ -236,7 +236,7 @@ class MagentoExporter(MagentoBaseExporter):
                      in :meth:`~._export_dependencies`.
 
         :param relation: record to export if not already exported
-        :type relation: :py:class:`openerp.osv.orm.browse_record`
+        :type relation: :py:class:`openerp.models.BaseModel`
         :param binding_model: name of the binding model for the relation
         :type binding_model: str | unicode
         :param exporter_cls: :py:class:`openerp.addons.connector\
