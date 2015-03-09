@@ -303,6 +303,7 @@
                             <field name="no_sales_order_sync"/>
                         </group>
                         <group string="Options">
+                            <field name="section_id" options="{'no_create': True}" groups="base.group_multi_salesteams"/>
                             <field name="lang_id" widget="selection"/>
                             <field name="catalog_price_tax_included"/>
                             <p attrs="{'invisible': [('catalog_price_tax_included', '=', False)]}">

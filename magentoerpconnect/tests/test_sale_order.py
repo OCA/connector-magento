@@ -178,3 +178,14 @@ class TestSaleOrder(SetUpMagentoSynchronized):
         new_binding = self._import_sale_order('900000691-1')
         self.assertEqual(new_binding.magento_parent_id, binding)
         self.assertTrue(binding.canceled_in_backend)
+
+    def test_import_storeview_options(self):
+        """ Check if storeview options are propagated """
+        storeview = self.env['magento.storeview'].search([
+            ('backend_id', '=', self.backend_id),
+            ('magento_id', '=', '1')
+        ])
+        team = self.env['crm.case.section'].create({'name': 'Magento Team'})
+        storeview.section_id = team
+        binding = self._import_sale_order(900000691)
+        self.assertEqual(binding.section_id, team)

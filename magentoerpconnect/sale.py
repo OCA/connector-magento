@@ -563,6 +563,12 @@ class SaleOrderImportMapper(ImportMapper):
             result = {'carrier_id': carrier.id}
         return result
 
+    @mapping
+    def sales_team(self, record):
+        team = self.options.storeview.section_id
+        if team:
+            return {'section_id': team.id}
+
     # partner_id, partner_invoice_id, partner_shipping_id
     # are done in the importer
 
