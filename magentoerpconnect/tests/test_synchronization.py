@@ -48,13 +48,15 @@ class SetUpMagentoBase(common.TransactionCase):
         self.session = ConnectorSession(self.env.cr, self.env.uid,
                                         context=self.env.context)
         warehouse = self.env.ref('stock.warehouse0')
-        self.backend_id = self.backend_model.create(
+        self.backend = self.backend_model.create(
             {'name': 'Test Magento',
              'version': '1.7',
              'location': 'http://anyurl',
              'username': 'guewen',
              'warehouse_id': warehouse.id,
-             'password': '42'}).id
+             'password': '42'}
+        )
+        self.backend_id = self.backend.id
         # payment method needed to import a sale order
         workflow = self.env.ref(
             'sale_automatic_workflow.manual_validation')

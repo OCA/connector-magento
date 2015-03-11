@@ -135,7 +135,7 @@ class MagentoProductProduct(models.Model):
         informations for each product.
         """
         # group products by backend
-        backends = defaultdict(self.browse())
+        backends = defaultdict(self.browse)
         for product in self:
             backends[product.backend_id] |= product
 
@@ -166,7 +166,8 @@ class MagentoProductProduct(models.Model):
 
         self_with_location = self.with_context(location=location.id)
         for chunk_ids in chunks(products.ids, self.RECOMPUTE_QTY_STEP):
-            for product in self_with_location.read(chunk_ids, product_fields):
+            records = self_with_location.browse(chunk_ids)
+            for product in records.read(fields=product_fields):
                 new_qty = self._magento_qty(product,
                                             backend,
                                             location,

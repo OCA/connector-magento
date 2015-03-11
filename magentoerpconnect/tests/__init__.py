@@ -27,3 +27,4 @@ from . import test_import_product_image
 from . import test_related_action
 from . import test_sale_order
 from . import test_export_picking
+from . import test_update_product_stock
