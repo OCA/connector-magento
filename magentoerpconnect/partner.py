@@ -563,7 +563,7 @@ class AddressAdapter(GenericAdapter):
 class AddressImporter(MagentoImporter):
     _model_name = ['magento.address']
 
-    def run(self, magento_id, address_infos):
+    def run(self, magento_id, address_infos, force=False):
         """ Run the synchronization """
         self.address_infos = address_infos
         return super(AddressImporter, self).run(magento_id)
