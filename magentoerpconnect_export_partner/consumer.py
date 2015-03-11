@@ -44,7 +44,7 @@ def delay_export_all_bindings_for_address(session, model_name,
                                           record_id, vals):
     if session.context.get('connector_no_export'):
         return
-    record = session.browse(model_name, record_id)
+    record = session.env[model_name].browse(record_id)
     for binding in record.magento_address_bind_ids:
         magentoerpconnect.delay_export(session, binding._model._name,
                                        binding.id, vals)
