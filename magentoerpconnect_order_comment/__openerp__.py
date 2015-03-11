@@ -24,8 +24,7 @@
     'category': 'Connector',
     'depends': ['magentoerpconnect',
                 ],
-    'author': "Akretion,MagentoERPconnect Core Editors,"
-              "Odoo Community Association (OCA)",
+    'author': "Akretion,Odoo Community Association (OCA)",
     'license': 'AGPL-3',
     'website': 'http://www.odoo-magento-connector.com',
     'description': """
