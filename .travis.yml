@@ -47,7 +47,6 @@ install:
   - git config --global user.email "travis@example.com"
   - git config --global user.name "travis"
   - pushd ${HOME}/connector
-  - git pull --no-edit origin pull/46/head
   - git pull --no-edit origin pull/47/head
   - popd
   - pushd ${HOME}/e-commerce
