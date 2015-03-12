@@ -167,7 +167,7 @@ class MagentoCRUDAdapter(CRUDAdapter):
                 try:
                     result = api.call(method, arguments)
                 except:
-                    _logger.debug("api.call(%s, %s) failed", method, arguments)
+                    _logger.error("api.call(%s, %s) failed", method, arguments)
                     raise
                 else:
                     _logger.debug("api.call(%s, %s) returned %s in %s seconds",
