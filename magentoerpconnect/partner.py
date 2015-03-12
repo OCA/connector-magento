@@ -389,7 +389,7 @@ class PartnerAddressBook(ConnectorUnit):
                                             partner_binding_id)
         for address_id, infos in addresses:
             importer = self.unit_for(MagentoImporter)
-            importer.run(address_id, infos)
+            importer.run(address_id, address_infos=infos)
 
     def _get_address_infos(self, magento_partner_id, partner_binding_id):
         adapter = self.unit_for(BackendAdapter)
@@ -563,10 +563,14 @@ class AddressAdapter(GenericAdapter):
 class AddressImporter(MagentoImporter):
     _model_name = ['magento.address']
 
-    def run(self, magento_id, address_infos, force=False):
+    def run(self, magento_id, address_infos=None, force=False):
         """ Run the synchronization """
-        self.address_infos = address_infos
-        return super(AddressImporter, self).run(magento_id)
+        if address_infos is None:
+            # only possible for updates
+            self.address_infos = AddressInfos(None, None, None)
+        else:
+            self.address_infos = address_infos
+        return super(AddressImporter, self).run(magento_id, force=force)
 
     def _get_magento_data(self):
         """ Return the raw Magento data for ``self.magento_id`` """
@@ -579,6 +583,8 @@ class AddressImporter(MagentoImporter):
     def _define_partner_relationship(self, data):
         """ Link address with partner or parent company. """
         partner_binding_id = self.address_infos.partner_binding_id
+        assert partner_binding_id, ("AdressInfos are required for creation of "
+                                    "a new address.")
         binder = self.binder_for('magento.res.partner')
         partner = binder.unwrap_binding(partner_binding_id, browse=True)
         if self.address_infos.merge:
