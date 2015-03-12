@@ -104,19 +104,21 @@ They will be built in the ``docs`` directory at the root of the buildout.
 
 .. _Sphinx: http://www.sphinx-doc.org
 
-***************
-Magento Vagrant
-***************
+*****************
+Magento on Docker
+*****************
 
-If you want to develop a generic feature on the Magento Connector, we recommend
-to use the `ak-magento vagrant box`_.  It installs Magento 1.7 with the demo
-data and the Magento (PHP) part of the Connector.
+If you want to develop a generic feature on the Magento Connector, we
+recommend to use the `Magento - Odoo Connector docker image`_.  It
+installs Magento 1.7 with the sample database and the Magento (PHP) part
+of the Connector.
 
-The project's page on Github describe the installation process, just follow them.
+The project's page on Github describe the installation process, just
+follow them.
 
-We also use this box as a reference for the data of the tests.
+We also use this image as a reference for the data of the tests.
 
-.. _`ak-magento vagrant box`: https://github.com/akretion/ak-magento
+.. _`Magento - Odoo Connector docker image`: https://github.com/guewen/docker-magento
 
 ***********
 How to help
