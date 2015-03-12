@@ -26,13 +26,14 @@ from datetime import datetime
 
 import psycopg2
 
+import openerp
 from openerp.tools.translate import _
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.addons.connector.queue.job import job, related_action
 from openerp.addons.connector.unit.synchronizer import Exporter
 from openerp.addons.connector.exception import (IDMissingInBackend,
                                                 RetryableJobError)
 from .import_synchronizer import import_record
+from .backend_adapter import MAGENTO_DATETIME_FORMAT
 from ..connector import get_environment
 from ..related_action import unwrap_binding
 
@@ -94,9 +95,9 @@ class MagentoBaseExporter(Exporter):
         if not record['updated_at']:
             # in rare case it can be empty, in doubt, import it
             return False
-        fmt = DEFAULT_SERVER_DATETIME_FORMAT
-        sync_date = datetime.strptime(sync, fmt)
-        magento_date = datetime.strptime(record['updated_at'], fmt)
+        sync_date = openerp.fields.Datetime.from_string(sync)
+        magento_date = datetime.strptime(record['updated_at'],
+                                         MAGENTO_DATETIME_FORMAT)
         return sync_date < magento_date
 
     def _get_openerp_data(self):
