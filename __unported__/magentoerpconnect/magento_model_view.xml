@@ -6,7 +6,7 @@
             <field name="name">magento.backend.form</field>
             <field name="model">magento.backend</field>
             <field name="arch" type="xml">
-                <form string="Magento Backend" version="7.0">
+                <form string="Magento Backend">
                     <header>
                       <button name="synchronize_metadata"
                         type="object"
@@ -148,7 +148,7 @@
             <field name="name">magento.backend.tree</field>
             <field name="model">magento.backend</field>
             <field name="arch" type="xml">
-                <tree string="Magento Backend" version="7.0">
+                <tree string="Magento Backend">
                     <field name="name"/>
                     <field name="location"/>
                 </tree>
@@ -169,7 +169,7 @@
             <field name="model">magento.website</field>
             <field name="arch" type="xml">
                 <form string="Magento Website" create="false"
-                        delete="false" version="7.0">
+                        delete="false">
                     <sheet>
                         <h1>
                             <field name="name" class="oe_inline"/>
@@ -215,7 +215,7 @@
             <field name="model">magento.website</field>
             <field name="arch" type="xml">
                 <tree string="Magento Website" create="false"
-                        delete="false" version="7.0">
+                        delete="false">
                     <field name="name"/>
                     <field name="backend_id"/>
                     <field name="code"/>
@@ -238,14 +238,13 @@
             <field name="model">magento.store</field>
             <field name="arch" type="xml">
                 <form string="Magento Store" create="false"
-                        delete="false" version="7.0">
+                        delete="false">
                     <sheet>
                         <h1>
-                            <field name="name" class="oe_inline"/>
+                            <field name="store_name" class="oe_inline"/>
                         </h1>
                         <group string="Informations">
                             <field name="website_id"/>
-                            <field name="openerp_id"/>
                         </group>
                         <group string="Options">
                             <field name="send_picking_done_mail"/>
@@ -270,10 +269,9 @@
             <field name="model">magento.store</field>
             <field name="arch" type="xml">
                 <tree string="Magento Store" create="false"
-                        delete="false" version="7.0">
-                    <field name="name"/>
+                        delete="false">
+                    <field name="store_name"/>
                     <field name="website_id"/>
-                    <field name="openerp_id"/>
                 </tree>
             </field>
         </record>
@@ -292,7 +290,7 @@
             <field name="model">magento.storeview</field>
             <field name="arch" type="xml">
                 <form string="Magento Storeview" create="false"
-                        delete="false" version="7.0">
+                        delete="false">
                     <sheet>
                         <h1>
                             <field name="name" class="oe_inline"/>
@@ -345,7 +343,7 @@
             <field name="model">magento.storeview</field>
             <field name="arch" type="xml">
                 <tree string="Magento Storeview" create="false"
-                        delete="false" version="7.0">
+                        delete="false">
                     <field name="name"/>
                     <field name="code"/>
                     <field name="enabled"/>

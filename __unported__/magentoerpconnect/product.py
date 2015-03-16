@@ -52,6 +52,7 @@ from .unit.import_synchronizer import (DelayedBatchImport,
 from .connector import get_environment
 from .backend import magento
 from .related_action import unwrap_binding
+# from openerp import models, fields, api
 
 _logger = logging.getLogger(__name__)
 
@@ -64,7 +65,7 @@ def chunks(items, length):
 class magento_product_product(orm.Model):
     _name = 'magento.product.product'
     _inherit = 'magento.binding'
-    _inherits = {'product.product': 'openerp_id'}
+    _inherits = {'product.template': 'openerp_id'}
     _description = 'Magento Product'
 
     def product_type_get(self, cr, uid, context=None):
@@ -82,7 +83,7 @@ class magento_product_product(orm.Model):
         return self.product_type_get(cr, uid, context=context)
 
     _columns = {
-        'openerp_id': fields.many2one('product.product',
+        'openerp_id': fields.many2one('product.template',
                                       string='Product',
                                       required=True,
                                       ondelete='restrict'),
@@ -117,14 +118,14 @@ class magento_product_product(orm.Model):
             required=False,
             help="Check this to exclude the product "
                  "from stock synchronizations."),
-        }
+    }
 
     _defaults = {
         'product_type': 'simple',
         'manage_stock': 'use_default',
         'backorders': 'use_default',
         'no_stock_sync': False,
-        }
+    }
 
     _sql_constraints = [
         ('magento_uniq', 'unique(backend_id, magento_id)',
@@ -213,23 +214,24 @@ class magento_product_product(orm.Model):
         return product[stock_field]
 
 
-class product_product(orm.Model):
-    _inherit = 'product.product'
+class ProductProduct(orm.Model):
+    _inherit = 'product.template'
 
     _columns = {
         'magento_bind_ids': fields.one2many(
             'magento.product.product',
             'openerp_id',
-            string='Magento Bindings',),
+            string='Magento Bindings'),
     }
 
     def copy_data(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
         default['magento_bind_ids'] = False
-        return super(product_product, self).copy_data(cr, uid, id,
-                                                      default=default,
-                                                      context=context)
+        return super(ProductProduct, self).copy_data(
+            cr, uid, id,
+            default=default,
+            context=context)
 
 
 @magento

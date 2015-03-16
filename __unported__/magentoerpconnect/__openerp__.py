@@ -28,7 +28,7 @@
              'delivery',
              'sale_stock',
              'connector_ecommerce',
-             'product_m2mcategories',
+             # 'product_m2mcategories',
              ],
  'external_dependencies': {
      'python': ['magento'],
@@ -134,6 +134,6 @@ Available extensions:
           'security/ir.model.access.csv',
           'payment_invoice.xml',
           ],
- 'installable': False,
+ 'installable': True,
  'application': True,
  }

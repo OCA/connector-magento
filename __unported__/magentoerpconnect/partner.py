@@ -218,7 +218,6 @@ class PartnerAdapter(GenericAdapter):
                magento_website_ids=None):
         """ Search records according to some criteria and return a
         list of ids
-
         :rtype: list
         """
         if filters is None:

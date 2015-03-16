@@ -235,7 +235,7 @@ class magento_sale_order_line(orm.Model):
                                  digits_compute=dp.get_precision('Account')),
         # XXX common to all ecom sale orders
         'notes': fields.char('Notes'),
-        }
+    }
 
     _sql_constraints = [
         ('magento_uniq', 'unique(backend_id, magento_id)',
@@ -250,11 +250,12 @@ class magento_sale_order_line(orm.Model):
                                                     context=context)
         order_id = info[0]['openerp_id']
         vals['order_id'] = order_id[0]
-        return super(magento_sale_order_line, self).create(cr, uid, vals,
-                                                           context=context)
+        return super(magento_sale_order_line, self).create(
+            cr, uid, vals,
+            context=context)
 
 
-class sale_order_line(orm.Model):
+class SaleOrderLine(orm.Model):
     _inherit = 'sale.order.line'
     _columns = {
         'magento_bind_ids': fields.one2many(
@@ -265,7 +266,6 @@ class sale_order_line(orm.Model):
     def create(self, cr, uid, vals, context=None):
         if context is None:
             context = {}
-
         old_line_id = None
         if context.get('__copy_from_quotation'):
             # when we are copying a sale.order from a canceled one,
@@ -348,7 +348,6 @@ class SaleOrderAdapter(GenericAdapter):
             filters['store_id'] = {'in': magento_storeview_ids}
 
         arguments = {'imported': False,
-                     # 'limit': 200,
                      'filters': filters,
                      }
         return super(SaleOrderAdapter, self).search(arguments)
