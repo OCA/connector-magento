@@ -276,7 +276,7 @@ class ProductProductAdapter(GenericAdapter):
 
         :rtype: dict
         """
-        return self._call('catalog_product.info',
+        return self._call('ol_catalog_product.info',
                           [int(id), storeview_id, attributes, 'id'])
 
     def write(self, id, data, storeview_id=None):

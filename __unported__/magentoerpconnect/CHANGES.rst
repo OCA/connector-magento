@@ -1,6 +1,28 @@
 Changelog
 ---------
 
+2.5.0 (2015-01-06)
+~~~~~~~~~~~~~~~~~~
+
+* The option for tax inclusion is now configurable by storeview #74
+* Add a backend adapter for the product categories #58
+* Add basic units to allow handling bundle products in submodules #13
+* Add mechanisms for the export of records (lock of bindings, helper for dependencies export) #33
+* 'New copy from quotation' rebinds the Magento order with the new copy #9
+* Better memory footprint and performance on update of stock quantity #11
+* Fix: Magento sometimes returns no invoice id #29
+* Fix: discount_amount with a None value #70
+* Fix: mapping for res.partner.title too broad (mix up "Herr and Herr Dr." #68
+* Fix: error when a binding have a ID "0" which happens with Magento #61
+* Fix: allow to copy a stock picking #60
+* Fix: compatibility with the fiscal position rules module #42
+* Fix: Prevent to create duplicate bindings on invoices #39
+* Fix: Remove trailing None on calls made to the Magento's API (PHP 5.4 compatibility) #28
+* Fix: avoid to send twice a tracking number #16
+* Fix: when a tracking's job is executed before the export of the picking, the tracking's job export the picking #16
+* Fix: replace nltk by Beautifulsoup #40
+* Fix:  Add a 'to date' boundary to batch jobs #17
+
 2.4.2 (2014-06-16)
 ~~~~~~~~~~~~~~~~~~
 

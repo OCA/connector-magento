@@ -32,8 +32,9 @@ from openerp.addons.connector.unit.mapper import (mapping,
                                                   ImportMapper
                                                   )
 from openerp.addons.connector.exception import IDMissingInBackend
-from .unit.backend_adapter import (
-    GenericAdapter, MAGENTO_DATETIME_FORMAT)
+from .unit.backend_adapter import (GenericAdapter,
+                                   MAGENTO_DATETIME_FORMAT,
+                                   )
 from .unit.import_synchronizer import (DelayedBatchImport,
                                        MagentoImportSynchronizer
                                        )
@@ -80,7 +81,7 @@ class magento_res_partner(orm.Model):
     _inherits = {'res.partner': 'openerp_id'}
     _description = 'Magento Partner'
 
-    _rec_name = 'website_id'
+    _rec_name = 'name'
 
     def _get_mag_partner_from_website(self, cr, uid, ids, context=None):
         mag_partner_obj = self.pool['magento.res.partner']
@@ -191,6 +192,8 @@ class magento_address(orm.Model):
     _sql_constraints = [
         ('magento_uniq', 'unique(backend_id, magento_id)',
          'A partner address with same ID on Magento already exists.'),
+        ('openerp_uniq', 'unique(backend_id, openerp_id)',
+         'A partner address can only have one binding by backend.'),
     ]
 
 
@@ -249,10 +252,11 @@ class PartnerBatchImport(DelayedBatchImport):
         from_date = filters.pop('from_date', None)
         to_date = filters.pop('to_date', None)
         magento_website_ids = [filters.pop('magento_website_id')]
-        record_ids = self.backend_adapter.search(filters,
-                                                 from_date,
-                                                 to_date,
-                                                 magento_website_ids)
+        record_ids = self.backend_adapter.search(
+            filters,
+            from_date=from_date,
+            to_date=to_date,
+            magento_website_ids=magento_website_ids)
         _logger.info('search for magento partners %s returned %s',
                      filters, record_ids)
         for record_id in record_ids:
@@ -342,6 +346,18 @@ class PartnerImportMapper(ImportMapper):
         binder = self.get_binder_for_model('magento.website')
         website_id = binder.to_openerp(record['website_id'])
         return {'website_id': website_id}
+
+    @only_create
+    @mapping
+    def company_id(self, record):
+        binder = self.get_binder_for_model('magento.storeview')
+        binding_id = binder.to_openerp(record['store_id'])
+        if binding_id:
+            storeview = self.session.browse('magento.storeview',
+                                            binding_id)
+            if storeview.store_id and storeview.store_id.company_id:
+                return {'company_id': storeview.store_id.company_id.id}
+        return {'company_id': False}
 
     @mapping
     def lang(self, record):
@@ -509,7 +525,7 @@ class BaseAddressImportMapper(ImportMapper):
         if prefix:
             title_ids = self.session.search('res.partner.title',
                                             [('domain', '=', 'contact'),
-                                             ('shortcut', 'ilike', prefix)])
+                                             ('shortcut', '=ilike', prefix)])
             if title_ids:
                 title_id = title_ids[0]
             else:
@@ -518,6 +534,19 @@ class BaseAddressImportMapper(ImportMapper):
                                                 'shortcut': prefix,
                                                 'name': prefix})
         return {'title': title_id}
+
+    @only_create
+    @mapping
+    def company_id(self, record):
+        parent_id = record.get('parent_id')
+        if parent_id:
+            parent = self.session.browse('res.partner', parent_id)
+            if parent.company_id:
+                return {'company_id': parent.company_id.id}
+            else:
+                return {'company_id': False}
+        # Don't return anything, we are merging into an existing partner
+        return
 
 
 @magento
@@ -565,6 +594,11 @@ class AddressAdapter(GenericAdapter):
         return [int(row['customer_address_id']) for row
                 in self._call('%s.list' % self._magento_model,
                               [filters] if filters else [{}])]
+
+    def create(self, customer_id, data):
+        """ Create a record on the external system """
+        return self._call('%s.create' % self._magento_model,
+                          [customer_id, data])
 
 
 @magento

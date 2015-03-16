@@ -82,6 +82,15 @@ class StockPicking(orm.Model):
             default=default,
             context=context)
 
+    # Copy also has an issue on stock.picking.out.
+    def copy_data(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        default['magento_bind_ids'] = False
+        return super(stock_picking_out, self).copy_data(cr, uid, id,
+                                                        default=default,
+                                                        context=context)
+
 
 @magento
 class StockPickingAdapter(GenericAdapter):
@@ -215,7 +224,8 @@ class MagentoPickingExport(ExportSynchronizer):
         else:
             self.binder.bind(magento_id, binding_id)
             # ensure that we store the external ID
-            self.session.commit()
+            if not self.session.context.get('__test_no_commit'):
+                self.session.commit()
 
 
 @on_picking_out_done
