@@ -1,6 +1,20 @@
 Changelog
 ---------
 
+3.0.0 (unreleased)
+~~~~~~~~~~~~~~~~~~
+
+* Migrated on the new Odoo API and the new Connector API
+* Extended the test coverage
+* Show the failed calls in the logger with the ERROR level
+* New Docker image for Magento, mentionned in the documentation
+* Allow to choose a default sales team for sales orders on the storeviews
+* Lot of improvements/cleaning of the code
+* The binders can now return records (new ``browse`` argument)
+* The Importer now pass the binding report instead of the binding_id
+  internally
+* Remove sale.shop
+
 2.5.0 (2015-01-06)
 ~~~~~~~~~~~~~~~~~~
 
