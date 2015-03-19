@@ -137,6 +137,10 @@ class MagentoBaseExporter(Exporter):
         """ Flow of the synchronization, implemented in inherited classes"""
         raise NotImplementedError
 
+    def _after_export(self):
+        """ Can do several actions after exporting a record on magento """
+        pass
+
 
 class MagentoExporter(MagentoBaseExporter):
     """ A common flow for the exports to Magento """
@@ -319,10 +323,6 @@ class MagentoExporter(MagentoBaseExporter):
 
         """
         return self.mapper.map_record(self.binding_record)
-
-    def _after_export(self):
-        """ Can do several actions after exporting a record on magento """
-        pass
 
     def _validate_data(self, data):
         """ Check if the values to import are correct
