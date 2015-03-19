@@ -25,8 +25,8 @@ from openerp.addons.magentoerpconnect.unit.import_synchronizer import (
 from .common import (mock_api,
                      mock_job_delay_to_direct,
                      mock_urlopen_image,
+                     SetUpMagentoSynchronized,
                      )
-from .test_synchronization import SetUpMagentoSynchronized
 from .test_data import magento_base_responses
 
 

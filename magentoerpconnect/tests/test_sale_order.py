@@ -24,10 +24,11 @@ from openerp.addons.magentoerpconnect.unit.import_synchronizer import (
     import_record)
 import openerp.tests.common as common
 from .common import (mock_api,
-                     mock_urlopen_image)
+                     mock_urlopen_image,
+                     SetUpMagentoSynchronized,
+                     )
 from .test_data import magento_base_responses
 from .data_guest_order import guest_order_responses
-from .test_synchronization import SetUpMagentoSynchronized
 from ..sale import export_state_change
 
 DB = common.DB

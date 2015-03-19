@@ -26,7 +26,13 @@ Helpers usable in the tests
 import importlib
 import mock
 from contextlib import contextmanager
-from ..unit.backend_adapter import call_to_key
+import openerp.tests.common as common
+from openerp.addons.connector.session import ConnectorSession
+from openerp.addons.magentoerpconnect.unit.import_synchronizer import (
+    import_batch,
+)
+from openerp.addons.magentoerpconnect.unit.backend_adapter import call_to_key
+from .test_data import magento_base_responses
 
 
 class TestResponder(object):
@@ -171,3 +177,53 @@ class MagentoHelper(object):
             return int(result[0] or 0) + 1
         else:
             return 1
+
+
+class SetUpMagentoBase(common.TransactionCase):
+    """ Base class - Test the imports from a Magento Mock.
+
+    The data returned by Magento are those created for the
+    demo version of Magento on a standard 1.7 version.
+    """
+
+    def setUp(self):
+        super(SetUpMagentoBase, self).setUp()
+        self.backend_model = self.env['magento.backend']
+        self.session = ConnectorSession(self.env.cr, self.env.uid,
+                                        context=self.env.context)
+        warehouse = self.env.ref('stock.warehouse0')
+        self.backend = self.backend_model.create(
+            {'name': 'Test Magento',
+             'version': '1.7',
+             'location': 'http://anyurl',
+             'username': 'guewen',
+             'warehouse_id': warehouse.id,
+             'password': '42'}
+        )
+        self.backend_id = self.backend.id
+        # payment method needed to import a sale order
+        workflow = self.env.ref(
+            'sale_automatic_workflow.manual_validation')
+        journal = self.env.ref('account.check_journal')
+        self.payment_term = self.env.ref('account.'
+                                         'account_payment_term_advance')
+        self.env['payment.method'].create(
+            {'name': 'checkmo',
+             'workflow_process_id': workflow.id,
+             'import_rule': 'always',
+             'days_before_cancel': 0,
+             'payment_term_id': self.payment_term.id,
+             'journal_id': journal.id})
+
+    def get_magento_helper(self, model_name):
+        return MagentoHelper(self.cr, self.registry, model_name)
+
+
+class SetUpMagentoSynchronized(SetUpMagentoBase):
+
+    def setUp(self):
+        super(SetUpMagentoSynchronized, self).setUp()
+        with mock_api(magento_base_responses):
+            import_batch(self.session, 'magento.website', self.backend_id)
+            import_batch(self.session, 'magento.store', self.backend_id)
+            import_batch(self.session, 'magento.storeview', self.backend_id)

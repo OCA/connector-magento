@@ -23,56 +23,12 @@ from openerp.addons.connector.exception import InvalidDataError
 from openerp.addons.magentoerpconnect.unit.import_synchronizer import (
     import_batch,
     import_record)
-from openerp.addons.connector.session import ConnectorSession
-import openerp.tests.common as common
 from .common import (mock_api,
                      mock_urlopen_image,
-                     MagentoHelper)
+                     SetUpMagentoBase,
+                     SetUpMagentoSynchronized,
+                     )
 from .test_data import magento_base_responses
-
-
-DB = common.DB
-ADMIN_USER_ID = common.ADMIN_USER_ID
-
-
-class SetUpMagentoBase(common.TransactionCase):
-    """ Base class - Test the imports from a Magento Mock.
-
-    The data returned by Magento are those created for the
-    demo version of Magento on a standard 1.7 version.
-    """
-
-    def setUp(self):
-        super(SetUpMagentoBase, self).setUp()
-        self.backend_model = self.env['magento.backend']
-        self.session = ConnectorSession(self.env.cr, self.env.uid,
-                                        context=self.env.context)
-        warehouse = self.env.ref('stock.warehouse0')
-        self.backend = self.backend_model.create(
-            {'name': 'Test Magento',
-             'version': '1.7',
-             'location': 'http://anyurl',
-             'username': 'guewen',
-             'warehouse_id': warehouse.id,
-             'password': '42'}
-        )
-        self.backend_id = self.backend.id
-        # payment method needed to import a sale order
-        workflow = self.env.ref(
-            'sale_automatic_workflow.manual_validation')
-        journal = self.env.ref('account.check_journal')
-        self.payment_term = self.env.ref('account.'
-                                         'account_payment_term_advance')
-        self.env['payment.method'].create(
-            {'name': 'checkmo',
-             'workflow_process_id': workflow.id,
-             'import_rule': 'always',
-             'days_before_cancel': 0,
-             'payment_term_id': self.payment_term.id,
-             'journal_id': journal.id})
-
-    def get_magento_helper(self, model_name):
-        return MagentoHelper(self.cr, self.registry, model_name)
 
 
 class TestBaseMagento(SetUpMagentoBase):
@@ -100,19 +56,8 @@ class TestBaseMagento(SetUpMagentoBase):
         # TODO; install & configure languages on storeviews
 
 
-class SetUpMagentoSynchronized(SetUpMagentoBase):
-
-    def setUp(self):
-        super(SetUpMagentoSynchronized, self).setUp()
-        with mock_api(magento_base_responses):
-            import_batch(self.session, 'magento.website', self.backend_id)
-            import_batch(self.session, 'magento.store', self.backend_id)
-            import_batch(self.session, 'magento.storeview', self.backend_id)
-
-
 class TestImportMagento(SetUpMagentoSynchronized):
-    """ Test the imports from a Magento Mock.
-    """
+    """ Test the imports from a Magento Mock. """
 
     def test_import_product_category(self):
         """ Import of a product category """
