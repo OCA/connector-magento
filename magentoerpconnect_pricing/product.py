@@ -37,9 +37,8 @@ from openerp.addons.magentoerpconnect.related_action import (
 )
 
 
-# TODO: replace a price mapper only, not the full mapper
-@magento(replacing=product.ProductImportMapper)
-class ProductImportMapper(product.ProductImportMapper):
+@magento(replacing=product.PriceProductImportMapper)
+class PriceProductImportMapper(product.PriceProductImportMapper):
     _model_name = 'magento.product.product'
 
     @only_create
@@ -48,7 +47,7 @@ class ProductImportMapper(product.ProductImportMapper):
         """ The price is imported at the creation of
         the product, then it is only modified and exported
         from OpenERP """
-        return super(ProductImportMapper, self).price(record)
+        return super(PriceProductImportMapper, self).price(record)
 
 
 @magento
