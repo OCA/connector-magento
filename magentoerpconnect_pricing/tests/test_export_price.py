@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+import mock
 from openerp import fields
 from openerp.addons.magentoerpconnect.unit.import_synchronizer import (
     import_record)
@@ -165,3 +166,41 @@ class TestExportPrice(SetUpMagentoSynchronized):
             self.assertEqual(values, {'price': 52})
             self.assertEqual(website_id, '1')
             self.assertEqual(id_type, 'id')
+
+    def test_change_pricelist_on_backend(self):
+        """ Change pricelist on backend exports all product prices """
+        job_path = ('openerp.addons.magentoerpconnect_pricing.'
+                    'magento_model.export_product_price')
+
+        admin_website = self.env['magento.website'].search(
+            [('backend_id', '=', self.backend_id),
+             ('magento_id', '=', '0')],
+            limit=1,
+        )
+        with mock.patch(job_path) as export_product_price:
+            # it will update the prices on the default website (id '0')
+            self.backend.pricelist_id = self._create_pricelist()
+            export_product_price.delay.assert_called_with(
+                mock.ANY,
+                'magento.product.product',
+                self.binding.id,
+                website_id=admin_website.id)
+
+    def test_change_pricelist_on_website(self):
+        """ Change pricelist on backend exports all product prices """
+        job_path = ('openerp.addons.magentoerpconnect_pricing.'
+                    'magento_model.export_product_price')
+
+        public_website = self.env['magento.website'].search(
+            [('backend_id', '=', self.backend_id),
+             ('magento_id', '=', '1')],
+            limit=1,
+        )
+        with mock.patch(job_path) as export_product_price:
+            # it will update the prices on the default website (id '0')
+            public_website.pricelist_id = self._create_pricelist()
+            export_product_price.delay.assert_called_with(
+                mock.ANY,
+                'magento.product.product',
+                self.binding.id,
+                website_id=public_website.id)
