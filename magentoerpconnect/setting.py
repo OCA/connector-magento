@@ -34,7 +34,3 @@ class MagentoConfigSettings(models.TransientModel):
         string="Export Partners to Magento (experimental)",
         help="This installs the module magentoerpconnect_export_partner.",
     )
-    module_magentoerpconnect_catalog = fields.Boolean(
-        string="Handle the product's catalog (not implemented)",
-        help="This installs the module magentoerpconnect_catalog.",
-    )

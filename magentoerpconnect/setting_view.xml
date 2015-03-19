@@ -26,10 +26,6 @@
                                 <field name="module_magentoerpconnect_export_partner" class="oe_inline"/>
                                 <label for="module_magentoerpconnect_export_partner"/>
                             </div>
-                            <div>
-                                <field name="module_magentoerpconnect_catalog" class="oe_inline"/>
-                                <label for="module_magentoerpconnect_catalog"/>
-                            </div>
                         </div>
                     </group>
                 </xpath>
