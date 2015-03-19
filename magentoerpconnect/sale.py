@@ -588,6 +588,11 @@ class SaleOrderImportMapper(ImportMapper):
         map_record = comment_mapper.map_record(record)
         return map_record.values(**self.options)
 
+    @mapping
+    def pricelist_id(self, record):
+        pricelist_mapper = self.unit_for(PricelistSaleOrderImportMapper)
+        return pricelist_mapper.map_record(record).values(**self.options)
+
 
 @magento
 class SaleOrderImporter(MagentoImporter):
@@ -932,6 +937,15 @@ class SaleOrderImporter(MagentoImporter):
 
 
 SaleOrderImport = SaleOrderImporter  # deprecated
+
+
+@magento
+class PricelistSaleOrderImportMapper(ImportMapper):
+    """ Mapper for importing the sales order pricelist
+
+    Does nothing by default. Replaced in magentoerpconnect_pricing.
+    """
+    _model_name = 'magento.sale.order'
 
 
 @magento
