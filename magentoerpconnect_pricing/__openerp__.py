@@ -27,15 +27,6 @@
  'author': "Camptocamp,Odoo Community Association (OCA)",
  'license': 'AGPL-3',
  'website': 'http://www.odoo-magento-connector.com',
- 'description': """
-Magento Connector - Pricing
-===========================
-
-Extension for **Magento Connector**.
-
-The prices of the products are managed in OpenERP using pricelists and
-are pushed to Magento.
-""",
  'images': [],
  'demo': [],
  'data': ['magento_model_view.xml',
