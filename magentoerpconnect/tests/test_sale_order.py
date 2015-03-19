@@ -35,9 +35,11 @@ ADMIN_USER_ID = common.ADMIN_USER_ID
 
 class TestSaleOrder(SetUpMagentoSynchronized):
 
-    def _import_sale_order(self, increment_id):
+    def _import_sale_order(self, increment_id, responses=None):
+        if responses is None:
+            responses = magento_base_responses
         backend_id = self.backend_id
-        with mock_api(magento_base_responses):
+        with mock_api(responses):
             with mock_urlopen_image():
                 import_record(self.session,
                               'magento.sale.order',

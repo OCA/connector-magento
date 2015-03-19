@@ -93,12 +93,40 @@ def mock_job_delay_to_direct(job_path):
         yield patched_job
 
 
+class ChainMap(dict):
+
+    def __init__(self, *maps):
+        self._maps = maps
+
+    def __getitem__(self, key):
+        for mapping in self._maps:
+            try:
+                return mapping[key]
+            except KeyError:
+                pass
+        raise KeyError(key)
+
+    def __contains__(self, key):
+        try:
+            self[key]
+        except KeyError:
+            return False
+        else:
+            return True
+
+
 @contextmanager
 def mock_api(responses, key_func=None):
     """
+    The responses argument is a dict with the methods and arguments as keys
+    and the responses as values. It can also be a list of such dicts.
+    When it is a list, the key is searched in the firsts dicts first.
+
     :param responses: responses returned by Magento
     :type responses: dict
     """
+    if isinstance(responses, (list, tuple)):
+        responses = ChainMap(*responses)
     get_magento_response = TestResponder(responses, key_func=key_func)
     with mock.patch('magento.API') as API:
         api_mock = mock.MagicMock(name='magento.api')
