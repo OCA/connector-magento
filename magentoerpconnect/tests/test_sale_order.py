@@ -26,6 +26,7 @@ import openerp.tests.common as common
 from .common import (mock_api,
                      mock_urlopen_image)
 from .test_data import magento_base_responses
+from .data_guest_order import guest_order_responses
 from .test_synchronization import SetUpMagentoSynchronized
 from ..sale import export_state_change
 
@@ -191,3 +192,11 @@ class TestSaleOrder(SetUpMagentoSynchronized):
         storeview.section_id = team
         binding = self._import_sale_order(900000691)
         self.assertEqual(binding.section_id, team)
+
+    def test_import_guest_order(self):
+        binding = self._import_sale_order(900000700,
+                                          responses=[magento_base_responses,
+                                                     guest_order_responses])
+        partner_binding = binding.partner_id.magento_bind_ids
+        self.assertEqual(partner_binding.magento_id, 'guestorder:900000700')
+        self.assertTrue(partner_binding.guest_customer)
