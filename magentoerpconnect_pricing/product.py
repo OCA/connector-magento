@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    Author: Guewen Baconnier
-#    Copyright 2013 Camptocamp SA
+#    Copyright 2013-2015 Camptocamp SA
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -66,10 +66,8 @@ class ProductPriceExporter(MagentoBaseExporter):
         if pricelist_id is None:
             # a False value will set the 'Use default value' in Magento
             return False
-        with self.session.change_context({'pricelist': pricelist_id}):
-            return self.session.read(self.model._name,
-                                     self.binding_id,
-                                     ['price'])['price']
+        model = self.model.with_context(pricelist=pricelist_id)
+        return model.browse(self.binding_id).price
 
     def _update(self, data, storeview_id=None):
         self.backend_adapter.write(self.magento_id, data,
@@ -117,14 +115,14 @@ class ProductPriceExporter(MagentoBaseExporter):
             # - BUT the Magento API expects a storeview id to modify
             #   a price on a website (and not a website id...)
             # So we take the first storeview of the website to update.
-            storeview_ids = self.session.search(
-                'magento.storeview',
-                [('store_id.website_id', '=', website.id)])
-            if not storeview_ids:
+            storeview = self.env['magento.storeview'].search(
+                [('store_id.website_id', '=', website.id)],
+                limit=1)
+            if not storeview:
                 continue
-            magento_storeview = storeview_binder.to_backend(storeview_ids[0])
+            magento_storeview_id = storeview_binder.to_backend(storeview.id)
             price = self._get_price(site_pricelist_id)
-            self._update({'price': price}, storeview_id=magento_storeview)
+            self._update({'price': price}, storeview_id=magento_storeview_id)
         self.binder.bind(self.magento_id, self.binding_id)
         return _('Prices have been updated.')
 
@@ -134,9 +132,8 @@ def product_price_changed(session, model_name, record_id, fields=None):
     """ When a product.product price has been changed """
     if session.context.get('connector_no_export'):
         return
-    model = session.pool.get(model_name)
-    record = model.browse(session.cr, session.uid,
-                          record_id, context=session.context)
+    model = session.env[model_name]
+    record = model.browse(record_id)
     for binding in record.magento_bind_ids:
         export_product_price.delay(session,
                                    binding._model._name,
@@ -148,8 +145,10 @@ def product_price_changed(session, model_name, record_id, fields=None):
 @related_action(action=unwrap_binding)
 def export_product_price(session, model_name, record_id, website_id=None):
     """ Export the price of a product. """
-    product_bind = session.browse(model_name, record_id)
-    backend_id = product_bind.backend_id.id
+    product_binding = session.env[model_name].browse(record_id)
+    if not product_binding.exists():
+        return
+    backend_id = product_binding.backend_id.id
     env = get_environment(session, model_name, backend_id)
     price_exporter = env.get_connector_unit(ProductPriceExporter)
     return price_exporter.run(record_id, website_id=website_id)
