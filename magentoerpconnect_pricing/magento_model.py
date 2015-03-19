@@ -19,39 +19,32 @@
 #
 ##############################################################################
 
-from openerp.osv import fields, orm
-from openerp.tools.translate import _
+from openerp import models, fields, api, _
 from openerp.addons.connector.session import ConnectorSession
 from .product import export_product_price
 
 
-class magento_backend(orm.Model):
+class MagentoBackend(models.Model):
     _inherit = 'magento.backend'
 
-    def _get_pricelist_id(self, cr, uid, context=None):
-        data_obj = self.pool.get('ir.model.data')
-        ref = data_obj.get_object_reference(cr, uid, 'product', 'list0')
-        if ref:
-            return ref[1]
-        return False
+    @api.model
+    def _get_pricelist_id(self):
+        return self.env.ref('product.list0').id
 
-    _columns = {
-        'pricelist_id': fields.many2one('product.pricelist',
-                                        'Pricelist',
-                                        required=True,
-                                        domain="[('type', '=', 'sale')]",
-                                        help='The price list used to define '
-                                             'the prices of the products in '
-                                             'Magento.'),
-    }
+    pricelist_id = fields.Many2one(comodel_name='product.pricelist',
+                                   string='Pricelist',
+                                   required=True,
+                                   default=_get_pricelist_id,
+                                   domain="[('type', '=', 'sale')]",
+                                   help='The price list used to define '
+                                        'the prices of the products in '
+                                        'Magento.')
 
-    _defaults = {
-        'pricelist_id': _get_pricelist_id,
-    }
-
-    def onchange_pricelist_id(self, cr, uid, ids, pricelist_id, context=None):
-        if not ids:  # new record
-            return {}
+    @api.onchange('pricelist_id')
+    def onchange_pricelist_id(self):
+        if not self.id:
+            # no warning for new records
+            return
         warning = {
             'title': _('Warning'),
             'message': _('If you change the pricelist of the backend, '
@@ -60,50 +53,46 @@ class magento_backend(orm.Model):
         }
         return {'warning': warning}
 
-    def _update_default_prices(self, cr, uid, ids, context=None):
+    @api.multi
+    def _update_default_prices(self):
         """ Update the default prices of the products linked with
         this backend.
 
         The default prices are linked with the 'Admin' website (id: 0).
         """
-        website_obj = self.pool.get('magento.website')
-        website_ids = website_obj.search(cr, uid,
-                                         [('backend_id', 'in', ids),
-                                          ('magento_id', '=', '0')],
-                                         context=context)
-        website_obj.update_all_prices(cr, uid, website_ids, context=context)
+        website_model = self.env['magento.website']
+        websites = website_model.search([('backend_id', 'in', self.ids),
+                                         ('magento_id', '=', '0')])
+        websites.update_all_prices()
 
-    def write(self, cr, uid, ids, vals, context=None):
+    @api.multi
+    def write(self, vals):
         if 'pricelist_id' in vals:
-            self._update_default_prices(cr, uid, ids, context=context)
-        return super(magento_backend, self).write(cr, uid, ids,
-                                                  vals, context=context)
+            self._update_default_prices()
+        return super(MagentoBackend, self).write(vals)
 
 
-class magento_website(orm.Model):
+class MagentoWebsite(models.Model):
     _inherit = 'magento.website'
 
-    _columns = {
-        'pricelist_id': fields.many2one('product.pricelist',
-                                        'Pricelist',
-                                        domain="[('type', '=', 'sale')]",
-                                        help='The pricelist used to define '
-                                             'the prices of the products in '
-                                             'Magento for this website.\n'
-                                             'Choose a pricelist only if the '
-                                             'prices are different for this '
-                                             'website.\n'
-                                             'When empty, the default price '
-                                             'will be used.'),
-    }
+    pricelist_id = fields.Many2one(comodel_name='product.pricelist',
+                                   string='Pricelist',
+                                   domain="[('type', '=', 'sale')]",
+                                   help='The pricelist used to define '
+                                        'the prices of the products in '
+                                        'Magento for this website.\n'
+                                        'Choose a pricelist only if the '
+                                        'prices are different for this '
+                                        'website.\n'
+                                        'When empty, the default price '
+                                        'will be used.')
 
-    def update_all_prices(self, cr, uid, ids, context=None):
-        """ Update the prices of all the products linked to the
-        website. """
-        if not hasattr(ids, '__iter__'):
-            ids = [ids]
-        for website in self.browse(cr, uid, ids, context=context):
-            session = ConnectorSession(cr, uid, context=context)
+    @api.multi
+    def update_all_prices(self):
+        """ Update the prices of all the products linked to the website. """
+        session = ConnectorSession(self.env.cr, self.env.uid,
+                                   context=self.env.context)
+        for website in self:
             if website.magento_id == '0':
                 # 'Admin' website -> default values
                 # Update the default prices on all the products.
@@ -117,9 +106,8 @@ class magento_website(orm.Model):
                                            website_id=website.id)
         return True
 
-    def onchange_pricelist_id(self, cr, uid, ids, pricelist_id, context=None):
-        if not ids:  # new record
-            return {}
+    @api.onchange('pricelist_id')
+    def onchange_pricelist_id(self):
         warning = {
             'title': _('Warning'),
             'message': _('If you change the pricelist of the website, '
@@ -128,8 +116,8 @@ class magento_website(orm.Model):
         }
         return {'warning': warning}
 
-    def write(self, cr, uid, ids, vals, context=None):
+    @api.multi
+    def write(self, vals):
         if 'pricelist_id' in vals:
-            self.update_all_prices(cr, uid, ids, context=context)
-        return super(magento_website, self).write(cr, uid, ids,
-                                                  vals, context=context)
+            self.update_all_prices()
+        return super(MagentoWebsite, self).write(vals)
