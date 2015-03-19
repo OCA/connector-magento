@@ -436,7 +436,7 @@ class ProductImportMapper(ImportMapper):
     @mapping
     def is_active(self, record):
         mapper = self.unit_for(IsActiveProductImportMapper)
-        return mapper.map_record(record).values()
+        return mapper.map_record(record).values(**self.options)
 
     @mapping
     def price(self, record):
@@ -502,7 +502,7 @@ class ProductImportMapper(ImportMapper):
     def bundle_mapping(self, record):
         if record['type_id'] == 'bundle':
             bundle_mapper = self.unit_for(BundleProductImportMapper)
-            return bundle_mapper.map_record(record).values()
+            return bundle_mapper.map_record(record).values(**self.options)
 
 
 @magento

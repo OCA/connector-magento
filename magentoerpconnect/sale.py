@@ -586,7 +586,7 @@ class SaleOrderImportMapper(ImportMapper):
     def sale_order_comment(self, record):
         comment_mapper = self.unit_for(SaleOrderCommentImportMapper)
         map_record = comment_mapper.map_record(record)
-        return map_record.values()
+        return map_record.values(**self.options)
 
 
 @magento
