@@ -28,7 +28,7 @@ from .backend import magento_myversion
 class magento_res_partner(models.Model):
     _inherit = 'magento.res.partner'
 
-    created_in = fields.Char(name='Created In', readonly=True)
+    created_in = fields.Char(string='Created In', readonly=True)
 
 
 class res_partner(models.Model):
