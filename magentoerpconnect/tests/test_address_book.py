@@ -25,12 +25,12 @@ from openerp.addons.magentoerpconnect.unit.import_synchronizer import (
 from openerp.addons.connector.session import ConnectorSession
 import openerp.tests.common as common
 from .common import mock_api
-from .test_data import magento_base_responses
-from .test_data_address_book import (no_address,
-                                     individual_1_address,
-                                     individual_2_addresses,
-                                     company_1_address,
-                                     company_2_addresses)
+from .data_base import magento_base_responses
+from .data_address_book import (no_address,
+                                individual_1_address,
+                                individual_2_addresses,
+                                company_1_address,
+                                company_2_addresses)
 
 DB = common.DB
 ADMIN_USER_ID = common.ADMIN_USER_ID

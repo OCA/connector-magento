@@ -27,7 +27,7 @@ from .common import (mock_api,
                      mock_urlopen_image,
                      SetUpMagentoSynchronized,
                      )
-from .test_data import magento_base_responses
+from .data_base import magento_base_responses
 
 
 class TestExportPicking(SetUpMagentoSynchronized):

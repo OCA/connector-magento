@@ -30,7 +30,7 @@ from openerp.addons.magentoerpconnect.unit.import_synchronizer import (
 from .common import (mock_api,
                      mock_job_delay_to_direct,
                      mock_urlopen_image)
-from .test_data import magento_base_responses
+from .data_base import magento_base_responses
 
 
 class TestExportInvoice(common.TransactionCase):

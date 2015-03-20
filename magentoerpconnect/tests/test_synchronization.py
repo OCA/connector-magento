@@ -28,7 +28,7 @@ from .common import (mock_api,
                      SetUpMagentoBase,
                      SetUpMagentoSynchronized,
                      )
-from .test_data import magento_base_responses
+from .data_base import magento_base_responses
 
 
 class TestBaseMagento(SetUpMagentoBase):

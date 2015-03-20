@@ -10,7 +10,7 @@ from openerp.addons.connector.queue.job import (
 from openerp.addons.connector.session import (
     ConnectorSession)
 from .common import mock_api
-from .test_data import magento_base_responses
+from .data_base import magento_base_responses
 from ..unit.import_synchronizer import import_batch, import_record
 from ..unit.export_synchronizer import export_record
 

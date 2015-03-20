@@ -22,7 +22,7 @@
 from openerp.addons.magentoerpconnect.unit.import_synchronizer import (
     import_record)
 from .common import mock_api, SetUpMagentoSynchronized
-from .test_data import magento_base_responses
+from .data_base import magento_base_responses
 
 
 class TestPartnerCategory(SetUpMagentoSynchronized):

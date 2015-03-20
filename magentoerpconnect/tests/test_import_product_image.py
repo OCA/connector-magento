@@ -28,8 +28,8 @@ from openerp.addons.magentoerpconnect.unit.import_synchronizer import (
 from openerp.addons.connector.session import ConnectorSession
 import openerp.tests.common as common
 from .common import mock_api, MockResponseImage
-from .test_data import magento_base_responses
-from .test_data_product import simple_product_and_images
+from .data_base import magento_base_responses
+from .data_product import simple_product_and_images
 from openerp.addons.magentoerpconnect.product import (
     CatalogImageImporter,
     ProductProductAdapter,

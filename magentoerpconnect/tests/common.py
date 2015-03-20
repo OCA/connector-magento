@@ -32,7 +32,7 @@ from openerp.addons.magentoerpconnect.unit.import_synchronizer import (
     import_batch,
 )
 from openerp.addons.magentoerpconnect.unit.backend_adapter import call_to_key
-from .test_data import magento_base_responses
+from .data_base import magento_base_responses
 
 
 class TestResponder(object):
