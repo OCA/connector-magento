@@ -499,8 +499,10 @@ class ClaimCommentBatchImport(DelayedBatchImport):
 
     def _import_record(self, record, **kwargs):
         """ Import the record directly """
+        # Set priority to 20 to have more chance that it would be executed
+        # after the claim import
         return super(ClaimCommentBatchImport, self)._import_record(
-            record, max_retries=0, priority=5)
+            record, max_retries=0, priority=20)
 
     def run(self, filters=None):
         """ Run the synchronization """
@@ -591,8 +593,10 @@ class ClaimAttachmentBatchImport(DelayedBatchImport):
 
     def _import_record(self, record, **kwargs):
         """ Import the record directly """
+        # Set priority to 20 to have more chance that it would be executed
+        # after the claim import
         return super(ClaimAttachmentBatchImport, self)._import_record(
-            record, max_retries=0, priority=5)
+            record, max_retries=0, priority=20)
 
     def run(self, filters=None):
         """ Run the synchronization """
@@ -718,7 +722,7 @@ class CrmClaimImportMapper(ImportMapper):
             invoice_ids = self.session.search(
                 'account.invoice',
                 [['sale_ids', 'in', order_ids]])
-            return {'ref': ref, 'invoice_id': invoice_ids and invoice_ids[0]}
+            return {'ref': ref, 'invoice_id': invoice_ids and invoice_ids[0], 'order_id': order_ids[0]}
 
     @mapping
     def state(self, record):
