@@ -27,21 +27,25 @@ from openerp.addons.connector.unit.mapper import mapping
 from openerp.addons.connector.exception import MappingError
 
 
-class magento_product_product(orm.Model):
+class MagentoProductProduct(orm.Model):
     _inherit = 'magento.product.product'
 
     _columns = {
-        'price_type': fields.selection([('dynamic', 'Dynamic'),('fixed', 'Fixed')],
+        'price_type': fields.selection([
+            ('dynamic', 'Dynamic'),
+            ('fixed', 'Fixed')
+        ],
             'Magento Price Type'),
     }
 
     def product_type_get(self, cr, uid, context=None):
         option = ('bundle', 'Bundle Product')
-        type_selection = super(magento_product_product, self).product_type_get(
+        type_selection = super(MagentoProductProduct, self).product_type_get(
             cr, uid, context=context)
         if option not in type_selection:
             type_selection.append(option)
         return type_selection
+
 
 @magento(replacing=product.BundleProductImportMapper)
 class BundleProductImportMapper(product.BundleProductImportMapper):
@@ -61,4 +65,4 @@ class BundleProductImportMapper(product.BundleProductImportMapper):
             return {'price_type': price_type}
         else:
             raise MappingError("The product magento %s has not price type." %
-                                   record['name'])
+                               record['name'])

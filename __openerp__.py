@@ -22,11 +22,10 @@
 {'name': 'Magentoerpconnect Bundle Split',
  'version': '1.0.0',
  'category': 'Connector',
- 'depends': [
-    'magentoerpconnect',
-    'sale_stock_relation_line',
-    'sale_invoice_relation_line',
-    ],
+ 'depends': ['magentoerpconnect',
+             'sale_stock_relation_line',
+             'sale_invoice_relation_line',
+            ],
  'author': 'MagentoERPconnect Core Editors',
  'license': 'AGPL-3',
  'description': """
@@ -36,18 +35,25 @@ Extension for **Magento Connector**, add management of bundle products
 
 Simple management of bundle items imported from Magento.
 
-Each item choosed in a bundle is imported as a sale order line, so you are able to have correct margin and products turnover.
+Each item choosed in a bundle is imported as a sale order line,
+so you are able to have correct margin and products turnover.
 
-The bundle product is imported with a price of 0.0 or with the total price and is a service.
+The bundle product is imported with a price of 0.0 or
+with the total price and is a service.
 
-For the shipment, the first item which was part of the bundle create the full shipment on Magento (limitation because Magento wait for the bundle product).
-The side effect is that the order will be marked as fully shipped on Magento even if the packing is sent in 2 times in OpenERP.
+For the shipment, the first item which was part of the bundle
+create the full shipment on Magento (limitation because
+Magento wait for the bundle product).
+The side effect is that the order will be marked as
+fully shipped on Magento even if the packing is sent in 2 times in OpenERP.
 
 Below link for :
 
-- the module 'sale_stock_relation_line' ===> https://code.launchpad.net/~akretion-team/+junk/sale-stock-relation-line.
+- the module 'sale_stock_relation_line' ===>
+https://github.com/akretion/sale-workflow/tree/7.0-sale-stock-relation-line.
 
-- the module 'sale_invoice_relation_line' ===> https://code.launchpad.net/~akretion-team/+junk/sale-invoice-relation-line.
+- the module 'sale_invoice_relation_line' ===>
+https://github.com/akretion/sale-workflow/tree/7.0-sale-invoice-relation-line.
  """,
  'data': ['product_view.xml'],
  'installable': True,

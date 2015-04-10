@@ -30,11 +30,11 @@ class SaleOrderLineBundleImportMapper(sale.SaleOrderLineBundleImportMapper):
     def price_is_zero(self, record):
         product_binder = self.get_binder_for_model('magento.product.product')
         magento_product_id = product_binder.to_openerp(record['product_id'])
-        magento_product = self.session.browse(
-            'magento.product.product', magento_product_id)
+        magento_product = self.session.browse('magento.product.product',
+                                              magento_product_id)
         if magento_product.price_type == 'dynamic':
             return True
-        
+
 
 @magento(replacing=sale.SaleOrderBundleImport)
 class SaleOrderBundleImport(sale.SaleOrderBundleImport):
