@@ -50,11 +50,6 @@ from .exception import OrderImportRuleRetry
 from .backend import magento
 from .connector import get_environment
 from .partner import PartnerImportMapper
-try:
-    import phpserialize
-except ImportError:
-    phpserialize = None
-
 
 PHPSERIALIZE_INFO = """
 phpserialize library is not installed on your system.
@@ -65,6 +60,13 @@ If you want to install this library, just run this command:
 pip install phpserialize """
 
 _logger = logging.getLogger(__name__)
+
+try:
+    import phpserialize
+except ImportError:
+    phpserialize = None
+    _logger.info(PHPSERIALIZE_INFO)
+
 
 ORDER_STATUS_MAPPING = {  # used in magentoerpconnect_order_comment
     'draft': 'pending',
@@ -534,9 +536,7 @@ class SaleOrderImport(MagentoImportSynchronizer):
 
         # Group the childs with their parent
         for item in resource['items']:
-            if phpserialize is None:
-                _logger.info(PHPSERIALIZE_INFO)
-            else:
+            if phpserialize is not None:
                 key = 'product_options'
                 if item.get(key):
                     # loads is used to unserialized php datas
