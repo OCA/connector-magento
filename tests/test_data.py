@@ -19,6 +19,9 @@
 #
 ##############################################################################
 
+# flake8: noqa : ignore style in this file because it is a data file
+# only
+
 """
 Magento responses for calls done by the connector.
 
@@ -1599,26 +1602,26 @@ magento_bundle_responses = \
                                                         'msrp': None,
                                                         'image_label': None},
  ('ol_catalog_product.info', (166, None, None, 'id')): {'activation_information': '',
-                                                     'categories': ['8'],
-                                                     'color': '24',
-                                                     'cost': None,
-                                                     'country_of_manufacture': None,
-                                                     'created_at': '2008-07-25 02:22:13',
-                                                     'custom_design': '',
-                                                     'custom_design_from': None,
-                                                     'custom_design_to': None,
-                                                     'custom_layout_update': '',
-                                                     'description': u'Re-defining the perception of advanced mobile phones\u2026 the HTC Touch Diamond\u2122 signals a giant leap forward in combining hi-tech prowess with intuitive usability and exhilarating design.\r\n\r\nFeaturing a sharp 2.8-inch touch screen housed within a stunning formation of brushed metal and flawless faceted edges, the HTC Touch Diamond is as beautiful to behold as it is to use.\r\n\r\nWith HTC\u2019s vibrant touch-responsive user interface, TouchFLO\u2122 3D, and ultra-fast HSDPA internet connectivity\u2026 the HTC Touch Diamond offers a rich online experience to rival a notebook computer, allowing you to interact with Google, YouTube, and Wikipedia as freely as you would with a broadband connection.\r\n\r\nYour contacts, favourite music, videos and photos are no longer an uninspired line of text. With TouchFLO 3D, album artwork, video stills and snapshots of your friends\u2019 and family\u2019s faces are brought to life for you to interact, play and launch at your fingertips.\r\n\r\nA 3.2 megapixel auto-focus camera will help you capture the perfect moment in style and with a massive 4GB of internal storage you can keep all the files you need. The integrated ultra-sensitive GPS will help you find your destination as quickly and efficiently as a dedicated satellite navigation unit.\r\n\r\nStyle and substance in a phone are no longer mutually exclusive. The HTC Touch Diamond has arrived.',
-                                                     'dimension': '102 mm (L) X 51 mm (W) X 11.35 mm (T)',
-                                                     'enable_googlecheckout': None,
-                                                     'gift_message_available': '',
-                                                     'group_price': [],
-                                                     'has_options': '0',
-                                                     'image_label': None,
-                                                     'in_depth': u'Re-defining the perception of advanced mobile phones\u2026 the HTC Touch Diamond\u2122 signals a giant leap forward in combining hi-tech prowess with intuitive usability and exhilarating design.\r\n\r\nFeaturing a sharp 2.8-inch touch screen housed within a stunning formation of brushed metal and flawless faceted edges, the HTC Touch Diamond is as beautiful to behold as it is to use.\r\n\r\nWith HTC\u2019s vibrant touch-responsive user interface, TouchFLO\u2122 3D, and ultra-fast HSDPA internet connectivity\u2026 the HTC Touch Diamond offers a rich online experience to rival a notebook computer, allowing you to interact with Google, YouTube, and Wikipedia as freely as you would with a broadband connection.\r\n\r\nYour contacts, favourite music, videos and photos are no longer an uninspired line of text. With TouchFLO 3D, album artwork, video stills and snapshots of your friends\u2019 and family\u2019s faces are brought to life for you to interact, play and launch at your fingertips.\r\n\r\nA 3.2 megapixel auto-focus camera will help you capture the perfect moment in style and with a massive 4GB of internal storage you can keep all the files you need. The integrated ultra-sensitive GPS will help you find your destination as quickly and efficiently as a dedicated satellite navigation unit.\r\n\r\nStyle and substance in a phone are no longer mutually exclusive. The HTC Touch Diamond has arrived.',
-                                                     'is_recurring': None,
-                                                     'manufacturer': '122',
-                                                     'meta_description': '',
+                                                        'categories': ['8'],
+                                                        'color': '24',
+                                                        'cost': None,
+                                                        'country_of_manufacture': None,
+                                                        'created_at': '2008-07-25 02:22:13',
+                                                        'custom_design': '',
+                                                        'custom_design_from': None,
+                                                        'custom_design_to': None,
+                                                        'custom_layout_update': '',
+                                                        'description': u'Re-defining the perception of advanced mobile phones\u2026 the HTC Touch Diamond\u2122 signals a giant leap forward in combining hi-tech prowess with intuitive usability and exhilarating design.\r\n\r\nFeaturing a sharp 2.8-inch touch screen housed within a stunning formation of brushed metal and flawless faceted edges, the HTC Touch Diamond is as beautiful to behold as it is to use.\r\n\r\nWith HTC\u2019s vibrant touch-responsive user interface, TouchFLO\u2122 3D, and ultra-fast HSDPA internet connectivity\u2026 the HTC Touch Diamond offers a rich online experience to rival a notebook computer, allowing you to interact with Google, YouTube, and Wikipedia as freely as you would with a broadband connection.\r\n\r\nYour contacts, favourite music, videos and photos are no longer an uninspired line of text. With TouchFLO 3D, album artwork, video stills and snapshots of your friends\u2019 and family\u2019s faces are brought to life for you to interact, play and launch at your fingertips.\r\n\r\nA 3.2 megapixel auto-focus camera will help you capture the perfect moment in style and with a massive 4GB of internal storage you can keep all the files you need. The integrated ultra-sensitive GPS will help you find your destination as quickly and efficiently as a dedicated satellite navigation unit.\r\n\r\nStyle and substance in a phone are no longer mutually exclusive. The HTC Touch Diamond has arrived.',
+                                                        'dimension': '102 mm (L) X 51 mm (W) X 11.35 mm (T)',
+                                                        'enable_googlecheckout': None,
+                                                        'gift_message_available': '',
+                                                        'group_price': [],
+                                                        'has_options': '0',
+                                                        'image_label': None,
+                                                        'in_depth': u'Re-defining the perception of advanced mobile phones\u2026 the HTC Touch Diamond\u2122 signals a giant leap forward in combining hi-tech prowess with intuitive usability and exhilarating design.\r\n\r\nFeaturing a sharp 2.8-inch touch screen housed within a stunning formation of brushed metal and flawless faceted edges, the HTC Touch Diamond is as beautiful to behold as it is to use.\r\n\r\nWith HTC\u2019s vibrant touch-responsive user interface, TouchFLO\u2122 3D, and ultra-fast HSDPA internet connectivity\u2026 the HTC Touch Diamond offers a rich online experience to rival a notebook computer, allowing you to interact with Google, YouTube, and Wikipedia as freely as you would with a broadband connection.\r\n\r\nYour contacts, favourite music, videos and photos are no longer an uninspired line of text. With TouchFLO 3D, album artwork, video stills and snapshots of your friends\u2019 and family\u2019s faces are brought to life for you to interact, play and launch at your fingertips.\r\n\r\nA 3.2 megapixel auto-focus camera will help you capture the perfect moment in style and with a massive 4GB of internal storage you can keep all the files you need. The integrated ultra-sensitive GPS will help you find your destination as quickly and efficiently as a dedicated satellite navigation unit.\r\n\r\nStyle and substance in a phone are no longer mutually exclusive. The HTC Touch Diamond has arrived.',
+                                                        'is_recurring': None,
+                                                        'manufacturer': '122',
+                                                        'meta_description': '',
                                                      'meta_keyword': '',
                                                      'meta_title': '',
                                                      'minimal_price': None,

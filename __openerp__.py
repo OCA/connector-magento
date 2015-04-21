@@ -23,9 +23,9 @@
  'version': '1.0.0',
  'category': 'Connector',
  'depends': ['magentoerpconnect',
-             'sale_stock_relation_line',
-             'sale_invoice_relation_line',
-            ],
+             'sale_line_stock_move_link',
+             'sale_line_invoice_line_link',
+             ],
  'author': 'MagentoERPconnect Core Editors',
  'license': 'AGPL-3',
  'description': """
@@ -47,15 +47,8 @@ Magento wait for the bundle product).
 The side effect is that the order will be marked as
 fully shipped on Magento even if the packing is sent in 2 times in OpenERP.
 
-Below link for :
-
-- the module 'sale_stock_relation_line' ===>
-https://github.com/akretion/sale-workflow/tree/7.0-sale-stock-relation-line.
-
-- the module 'sale_invoice_relation_line' ===>
-https://github.com/akretion/sale-workflow/tree/7.0-sale-invoice-relation-line.
  """,
  'data': ['product_view.xml'],
  'installable': True,
  'application': False,
-}
+ }
