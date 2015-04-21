@@ -97,6 +97,10 @@ Technical points:
 * Licensed under AGPL version 3
 * Designed to be usable with multiple Magento or any other e-commerce backends
   in the same time.
+* Optional use of 'phpserialize' python library to extract more info
+  from Magento (Serialized strings).
+  To install it, run this command: pip install phpserialize.
+
 
 Available extensions:
 
