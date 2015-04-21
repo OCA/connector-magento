@@ -50,6 +50,19 @@ from .exception import OrderImportRuleRetry
 from .backend import magento
 from .connector import get_environment
 from .partner import PartnerImportMapper
+try:
+    import phpserialize
+except ImportError:
+    phpserialize = None
+
+
+PHPSERIALIZE_INFO = """
+phpserialize library is not installed on your system.
+If you install it, Magento Connector can extract more info
+from Magento (Serialized strings).
+To customize extracted informations placement, customize your mapping
+If you want to install this library, just run this command:
+pip install phpserialize """
 
 _logger = logging.getLogger(__name__)
 
@@ -521,6 +534,18 @@ class SaleOrderImport(MagentoImportSynchronizer):
 
         # Group the childs with their parent
         for item in resource['items']:
+            if phpserialize is None:
+                _logger.info(PHPSERIALIZE_INFO)
+            else:
+                key = 'product_options'
+                if item.get(key):
+                    # loads is used to unserialized php datas
+                    try:
+                        item[key] = phpserialize.loads(
+                            item[key].encode('utf-8'), decode_strings=True)
+                    except ValueError as err:
+                        _logger.info('phpserialize failed to extract '
+                                     'the options %s', err)
             if item.get('parent_item_id'):
                 child_items.setdefault(item['parent_item_id'], []).append(item)
             else:
@@ -1029,7 +1054,6 @@ class SaleOrderLineImportMapper(ImportMapper):
 
     direct = [('qty_ordered', 'product_uom_qty'),
               ('qty_ordered', 'product_uos_qty'),
-              ('name', 'name'),
               ('item_id', 'magento_id'),
               ]
 
@@ -1056,7 +1080,28 @@ class SaleOrderLineImportMapper(ImportMapper):
         return {'product_id': product_id}
 
     @mapping
+    def name(self, record):
+        name = record['name']
+        if (phpserialize is not None and 'product_options' in record and
+                isinstance(record['product_options'], dict)):
+            if 'bundle_selection_attributes' in record['product_options']:
+                prd_opts = record['product_options']
+                bundle_select_unseria = phpserialize.loads(
+                    prd_opts['bundle_selection_attributes'].encode('utf-8'),
+                    decode_strings=True)
+                name += ': %s' % bundle_select_unseria['option_label']
+            # the bundle if any
+            if 'options' in record['product_options']:
+                options = [elm['label'] + ': ' + elm['print_value']
+                           for elm in
+                           record['product_options']['options'].values()]
+                name += _('\nOptions:\n  - ') + '\n  - '.join(options)
+        return {'name': name}
+
+    @mapping
     def product_options(self, record):
+        if phpserialize:
+            return {'notes': False}
         result = {}
         ifield = record['product_options']
         if ifield:
