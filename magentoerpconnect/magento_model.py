@@ -288,7 +288,7 @@ class MagentoBackend(models.Model):
             domain = []
         backends = self.search(domain)
         if backends:
-            getattr(backends, callback)
+            getattr(backends, callback)()
 
     @api.model
     def _scheduler_import_sale_orders(self, domain=None):
