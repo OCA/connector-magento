@@ -41,7 +41,6 @@ pathes = [os.path.join(BASE_PATH, path) for path in ADDONS_PATHS]
 options = ['--addons-path', ','.join(pathes)]
 openerp.tools.config.parse_config(options)
 os.environ['TZ'] = 'UTC'
-openerp.service.start_internal()
 
 # -- General configuration --------------------------------------------
 
