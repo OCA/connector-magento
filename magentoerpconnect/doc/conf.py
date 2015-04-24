@@ -25,7 +25,7 @@ import sphinx_bootstrap_theme
 sys.path.append(os.path.abspath('_themes'))
 sys.path.append(os.path.abspath('../../../odoo'))
 
-# Load OpenERP with correct addons-path so the doc can be built even if
+# Load Odoo with correct addons-path so the doc can be built even if
 # the addon import modules from other branches
 BASE_PATH = os.path.abspath(os.path.join(os.getcwd(), '../../..'))
 # You may need to change with your own paths
@@ -71,7 +71,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'OpenERP Magento Connector'
+project = u'Odoo Magento Connector'
 copyright = u'2013, Camptocamp SA'
 
 # The version info for the project you're documenting, acts as
@@ -130,7 +130,7 @@ html_theme = 'bootstrap'
 # the documentation.
 html_theme_options = {
     # Navigation bar title. (Default: ``project`` value)
-    'navbar_title': "OpenERP Magento Connector",
+    'navbar_title': "Odoo Magento Connector",
 
     # Tab name for entire site. (Default: "Site")
     'navbar_site_name': "Site",
@@ -260,7 +260,7 @@ latex_elements = {
 # start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
     ('index', 'openerp-magento-connector.tex',
-     u'OpenERP Magento Connector Documentation',
+     u'Odoo Magento Connector Documentation',
      u'Camptocamp SA', 'manual'),
 ]
 
@@ -291,7 +291,7 @@ latex_documents = [
 # (source start file, name, description, authors, manual section).
 man_pages = [
     ('index', 'openerp-magento-connector',
-     u'OpenERP Magento Connector Documentation',
+     u'Odoo Magento Connector Documentation',
      [u'Camptocamp SA'], 1)
 ]
 
@@ -305,10 +305,10 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    ('index', 'OpenERP Magento Connector',
-     u'OpenERP Magento Connector Documentation',
-     u'Camptocamp SA', 'OpenERP Magento Connector',
-     'Connector between OpenERP and Magento',
+    ('index', 'Odoo Magento Connector',
+     u'Odoo Magento Connector Documentation',
+     u'Camptocamp SA', 'Odoo Magento Connector',
+     'Connector between Odoo and Magento',
      'Miscellaneous'),
 ]
 
@@ -325,8 +325,8 @@ texinfo_documents = [
 # Example configuration for intersphinx: refer to the Python standard
 # library.
 intersphinx_mapping = {
-    'python': ('http://docs.python.org/2.6', None),
-    'openerpweb': ('http://doc.openerp.com/trunk/developers/web', None),
-    'openerpdev': ('http://doc.openerp.com/trunk/developers', None),
+    'python': ('http://docs.python.org/2.7', None),
+    'openerpweb': ('https://www.odoo.com/documentation/8.0/', None),
+    'openerpdev': ('https://www.odoo.com/documentation/8.0/', None),
     'openerpconnector': ('http://www.odoo-connector.com', None),
 }

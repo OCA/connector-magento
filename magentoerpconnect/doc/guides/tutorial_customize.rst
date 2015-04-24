@@ -6,9 +6,9 @@ Tutorial: customize the connector
 #################################
 
 This tutorial will explain how you can customize several parts of the
-connector in your own OpenERP module. It assumes that you already have
-some knowledge in the OpenERP development. You can still refer to the
-`official OpenERP documentation`_.
+connector in your own Odoo module. It assumes that you already have
+some knowledge in the Odoo development. You can still refer to the
+`official Odoo documentation`_.
 
 
 .. contents:: Sections:
@@ -16,7 +16,7 @@ some knowledge in the OpenERP development. You can still refer to the
    :backlinks: top
 
 
-.. _official OpenERP documentation: http://doc.openerp.com/trunk/developers/server/
+.. _official Odoo documentation: https://www.odoo.com/documentation/8.0/
 
 ***************************************
 Bootstrap your own customization module
@@ -30,10 +30,10 @@ customization module, we'll name it, in a very original manner,
 ``customize_example``. The final example module can be found in the root
 of the ``connector-magento`` repository.
 
-Common OpenERP files
-====================
+Common Odoo files
+=================
 
-A ``magentoerpconnect`` customization module is like any OpenERP module,
+A ``magentoerpconnect`` customization module is like any Odoo module,
 so you will first need to create the **manifest**
 ``customize_example/__openerp__.py``:
 
@@ -148,14 +148,14 @@ Things to note:
 * the version should be the same in the ``backend.Backend`` and the
   model.
 * We add the version in the model ``magento.backend`` so we'll be able to
-  select it from the OpenERP front-end.
+  select it from the Odoo front-end.
 * Do not forget to add the new python modules in ``__init__.py``.
 
-Use it in OpenERP
-=================
+Use it in Odoo
+==============
 
 Great, you now have the minimal stuff required to customize your
-connector. When you create your backend in OpenERP (menu ``Connectors >
+connector. When you create your backend in Odoo (menu ``Connectors >
 Magento > Backends``), you have now to select **1.7 - My Version**.
 
 In the next chapter, we'll cover the most common personalization:
@@ -168,7 +168,7 @@ In the next chapter, we'll cover the most common personalization:
 Add mappings of fields
 **********************
 
-The mappings of the fields define how the fields are related between OpenERP and Magento.
+The mappings of the fields define how the fields are related between Odoo and Magento.
 
 They defines whether field `A` should be written in field `B`, whether
 it should be converted then written to `C` and `D`, etc.
@@ -189,7 +189,7 @@ for the imports and the exports.
 
 See the documentation about :py:class:`~connector.unit.mapper.Mapper`.
 
-.. note:: The connector almost never works with the OpenERP Models
+.. note:: The connector almost never works with the Odoo Models
           directly. Instead, it works with its own models, which
           ``_inherits`` (note the final ``s``) the base models. For
           instance, the Magento model for ``res.partner`` is
@@ -236,7 +236,7 @@ it so you need to have a look on it.  For example, the mapping for
 Here we can see 2 types of mappings:
 
 * ``direct`` mappings, a field in Magento is directly written in the
-  OpenERP field. The Magento field is on the left, the OpenERP one is on
+  Odoo field. The Magento field is on the left, the Odoo one is on
   the right.
 * methods decorated with ``@mapping``, when the mapping is more complex
   and need to apply some logic. The name of the methods is meaningless.
@@ -246,7 +246,7 @@ Here we can see 2 types of mappings:
 
 .. note:: This is not covered here, but for the ``ExportMapper``, an
           additional decorator ``@changed_by()`` is used to filter the
-          mappings to apply according to the fields modified in OpenERP.
+          mappings to apply according to the fields modified in Odoo.
 
 
 Magento Models

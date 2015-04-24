@@ -22,7 +22,7 @@ using the :ref:`installation-guide` or either using our automated Buildout_ conf
 The manual installation is recommended if you need to add it on an existing
 installation or if you want to control your environment in your own manner.
 
-The Buildout_ config is an all-in-one package which installs OpenERP, the
+The Buildout_ config is an all-in-one package which installs Odoo, the
 connector and provides many facilities for the developers,
 it is based on the `Anybox Buildout Recipe`_.
 It includes developer tools such as:
@@ -50,8 +50,8 @@ Head over the next sections to discover the included tools
 .. _Buildout: http://www.buildout.org
 .. _`Anybox Buildout Recipe`: https://pypi.python.org/pypi/anybox.recipe.openerp
 
-Start OpenERP
-=============
+Start Odoo
+==========
 
 All the commands are launched from the root directory of the buildout.
 
@@ -71,7 +71,7 @@ To start the supervisord daemon, run::
 
     $ bin/supervisord
 
-The default configuration starts OpenERP with 4 workers and 2 Connector
+The default configuration starts Odoo with 4 workers and 2 Connector
 workers. This can be changed in the buildout.cfg file in the ``supervisor`` section.
 
 The services can be managed on::
@@ -199,7 +199,7 @@ Writing tests
 =============
 
 Every new feature in the connector should have tests. We use exclusively the
-``unittest2`` tests with the OpenERP extensions.
+``unittest2`` tests with the Odoo extensions.
 
 The tests are located in ``magentoerpconnect/tests``.
 
@@ -263,6 +263,6 @@ See how to `Run the tests`_
 Useful links:
 
 * unittest documentation: http://docs.python.org/dev/library/unittest.html
-* OpenERP's documentation on tests: https://doc.openerp.com/trunk/server/05_test_framework/
+* Odoo's documentation on tests: https://doc.openerp.com/trunk/server/05_test_framework/
 
 .. _`ERPpeek`: https://erppeek.readthedocs.org/en/latest/

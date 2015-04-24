@@ -3,15 +3,15 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-#########################
-OpenERP Magento Connector
-#########################
+######################
+Odoo Magento Connector
+######################
 
-*OpenERP Magento Connector* (also known as *MagentoERPconnect*) is a
-bi-directional connector, 100% compatible with the last `OpenERP`_ 7.0 and
+*Odoo Magento Connector* (also known as *MagentoERPconnect*) is a
+bi-directional connector, 100% compatible with the last `Odoo`_ 7.0 and
 latest `Magento`_ versions.
 
-Based on the `OpenERP Connector`_ framework, this new release of
+Based on the `Odoo Connector`_ framework, this new release of
 MagentoERPconnect has been initiated by `Camptocamp`_ and is mainly
 developed and maintained by `Camptocamp`_ and `Akretion`_ with several other
 :ref:`contributors`.
@@ -30,20 +30,20 @@ Core Features
   multi-warehouse, multi-language
 * **Synchronization** of products catalog, customers, sales orders, stock levels,
   shipments, packages' tracking numbers, invoices…
-* **Built on top of the** `OpenERP Connector`_ **framework with a strong and
+* **Built on top of the** `Odoo Connector`_ **framework with a strong and
   efficient core**: it can then be extended or modified easily from
   separate addons
 * **Payment workflow automation**: depending on the mean of payment (credit
   card, wire transfer), possibility to automate workflows in
-  OpenERP (automatic order validation, automatic invoice validation…).
+  Odoo (automatic order validation, automatic invoice validation…).
   For instance, a sales order paid by credit card will automatically
   create an invoice with the "paid" status
 * Load testing results: **in a single day, successful import of more
-  than 10'000 sales orders** from Magento to OpenERP!
+  than 10'000 sales orders** from Magento to Odoo!
 
-.. _`OpenERP Connector`: http://www.odoo-connector.com
+.. _`Odoo Connector`: http://www.odoo-connector.com
 .. _Camptocamp: http://www.camptocamp.com
-.. _OpenERP: http://www.odoo.com
+.. _Odoo: http://www.odoo.com
 .. _Magento: http://www.magento.com
 .. _Akretion: http://www.akretion.com
 .. _`source code is available on GitHub`: https://github.com/OCA/connector-magento/tree/7.0
@@ -57,7 +57,7 @@ Workflow
 .. raw:: html
 
     <div style="margin-top:10px;">
-        <iframe src="http://www.slideshare.net/slideshow/embed_code/27685907" width="427" height="356" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC;border-width:1px 1px 0;margin-bottom:5px" allowfullscreen> </iframe> <div style="margin-bottom:5px"> <strong> <a href="https://fr.slideshare.net/camptocamp/openerp-magento-connector-new-generation-workflow" title="OpenERP Magento Connector &quot;New Generation&quot; Workflow" target="_blank">OpenERP Magento Connector &quot;New Generation&quot; Workflow</a> </strong> from <strong><a href="http://www.slideshare.net/camptocamp" target="_blank">Camptocamp</a></strong> </div>
+        <iframe src="http://www.slideshare.net/slideshow/embed_code/27685907" width="427" height="356" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC;border-width:1px 1px 0;margin-bottom:5px" allowfullscreen> </iframe> <div style="margin-bottom:5px"> <strong> <a href="https://fr.slideshare.net/camptocamp/openerp-magento-connector-new-generation-workflow" title="Odoo Magento Connector &quot;New Generation&quot; Workflow" target="_blank">Odoo Magento Connector &quot;New Generation&quot; Workflow</a> </strong> from <strong><a href="http://www.slideshare.net/camptocamp" target="_blank">Camptocamp</a></strong> </div>
     </div>
 
 **************************

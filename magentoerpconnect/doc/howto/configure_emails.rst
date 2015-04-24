@@ -11,4 +11,4 @@ On the Magento Stores, activate the options:
 
 If you want Magento to send email on thoses events.
 
-You can otherwise configure OpenERP to send e-mails.
+You can otherwise configure Odoo to send e-mails.

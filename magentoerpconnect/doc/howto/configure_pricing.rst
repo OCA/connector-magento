@@ -6,7 +6,7 @@ How to configure pricing
 ########################
 
 Install the pricing extensions by going in: `Settings > Configuration >
-Connector` and by checking the `Price are managed in OpenERP with
+Connector` and by checking the `Price are managed in Odoo with
 pricelists` option.
 
 **********************************
@@ -21,7 +21,7 @@ Prices are different accross websites
 *************************************
 
 .. note:: Verify that the option `Use pricelists to adapt your price per
-          customers` is active in the OpenERP `Settings > Configuration
+          customers` is active in the Odoo `Settings > Configuration
           > Sales`.
 
 The pricelist used for the prices sent to Magento is configured on the

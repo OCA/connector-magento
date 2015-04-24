@@ -10,7 +10,7 @@ Installation Guide
 Installation
 ************
 
-The installation steps assume that you already have a functioning OpenERP server.
+The installation steps assume that you already have a functioning Odoo server.
 
 If you are a developer, you may want to install the Connector using our
 buildout configuration, head over :ref:`installation-with-buildout`.
@@ -21,10 +21,10 @@ Requirements on both servers
 ============================
 
 The ``ntp`` package should be install on the servers hosting Magento and
-OpenERP to ensure a correct synchronization between them
+Odoo to ensure a correct synchronization between them
 
-OpenERP
-=======
+Odoo
+====
 
 Clone the repositories below in the path where you chosed to store the addons::
 
@@ -39,7 +39,7 @@ Clone the repositories below in the path where you chosed to store the addons::
                in another directory.
 
 Add the branches in the addons path, either using the server command
-line or adding them in the OpenERP server configuration file.
+line or adding them in the Odoo server configuration file.
 
 Example using the command line argument::
 
@@ -54,7 +54,7 @@ So install it with either pip or either easy_install::
 
 Note that you may need to use the root rights on your system.
 
-In OpenERP, update the modules list using `Settings > Modules > Update
+In Odoo, update the modules list using `Settings > Modules > Update
 Modules List`.
 
 Go to the menu `Settings > Modules > Installed Modules`, remove the

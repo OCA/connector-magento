@@ -101,9 +101,9 @@ You'll probably need to work with 4 connector units:
 * a Backend Adapter
 * a Binder
 
-You will also need to create / change the OpenERP models.
+You will also need to create / change the Odoo models.
 
-.. note:: Keep in mind: try to modify at least as possible the OpenERP
+.. note:: Keep in mind: try to modify at least as possible the Odoo
           models and classes.
 
 The synchronizer will handle the flow of the synchronization. It will
@@ -347,7 +347,7 @@ The synchronizer asks to the appropriate :py:class:`~connector.unit.mapper.Mappe
 Mapper
 ''''''
 
-The :py:class:`connector.unit.mapper.Mapper` takes the record from Magento, and generates the OpenERP
+The :py:class:`connector.unit.mapper.Mapper` takes the record from Magento, and generates the Odoo
 record. (or the reverse for the export Mappers)
 
 The mapper for the customer groups is as follows::

@@ -11,7 +11,7 @@ How do I...
 Why...
 -----------
 
-... are the taxes computed in OpenERP with a small difference (1-2 cts)?
-   OpenERP computes the taxes based on the total per lines. On Magento, you have
+... are the taxes computed in Odoo with a small difference (1-2 cts)?
+   Odoo computes the taxes based on the total per lines. On Magento, you have
    the choice between 'Total', 'Total per line' or 'Unit Price'. Be sure to select
    the 'Total per line' option on Magento!

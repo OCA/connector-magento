@@ -1,13 +1,13 @@
 .. _key-questions:
 
 
-##################################################
-Key questions when connecting OpenERP with Magento
-##################################################
+###############################################
+Key questions when connecting Odoo with Magento
+###############################################
 
-Installing a connector between OpenERP and Magento
+Installing a connector between Odoo and Magento
 is not as simple as clicking on the 'Install' button
-in the OpenERP Apps.
+in the Odoo Apps.
 
 In the e-commerce domain,
 there are many use cases
@@ -61,7 +61,7 @@ Do you need to block a sale order according to some conditions?
 The connector adds this possibility,
 it applies some rules,
 for example, it blocks the sale order
-if the total amount is different in OpenERP and in Magento,
+if the total amount is different in Odoo and in Magento,
 so that is a safe-guard against errors.
 
 You can add your own rules, see :ref:`configure-exception-rules`.
@@ -82,21 +82,21 @@ Master of data
 Where should the data of the products be maintained and edited?
 
 Magento is the master of data:
-  Managing the catalog in Magento has the lowest impact on OpenERP.
+  Managing the catalog in Magento has the lowest impact on Odoo.
   Much information stay only on Magento
   (product attributes, images, links).
-  The categories of products are still imported in OpenERP for
+  The categories of products are still imported in Odoo for
   classification.
-  However 2 related informations will be updated in OpenERP and
+  However 2 related informations will be updated in Odoo and
   exported to Magento:
 
   * Available quantity in the stock
-  * Price of the products, based on the OpenERP pricelists (optionally)
+  * Price of the products, based on the Odoo pricelists (optionally)
 
-OpenERP is the master of data:
+Odoo is the master of data:
   As of today, the handling of the catalog
   in the connector has not been implemented
-  (it was in the version for OpenERP 6.1).
+  (it was in the version for Odoo 6.1).
   It is in the :doc:`/project/roadmap` though.
 
 Types of products
@@ -131,7 +131,7 @@ Discounts
 =========
 
 What kind of discount do you plan do use?
-OpenERP can't have such advanced discounts as Magento,
+Odoo can't have such advanced discounts as Magento,
 so try to keep the things simple here
 if you do not want too much specific developments
 in your implementation.
@@ -142,7 +142,7 @@ Pricing
 Do you plan to use multi-currency?
 
 Do you plan to have different prices per websites?
-You will need to create different price lists in OpenERP.
+You will need to create different price lists in Odoo.
 
 **********
 Accounting
@@ -168,7 +168,7 @@ Fiscal Positions
 ================
 
 Due to the limitations of the Magento API and the intrinsic difference
-between OpenERP and Magento,
+between Odoo and Magento,
 the fiscal positions are not synchronized.
 If you need to use fiscal positions,
 you may want to use the module
@@ -176,7 +176,7 @@ you may want to use the module
 `account-fiscal-rule`_.
 
 Note that this configuration will be done
-1 time in Magento and 1 time in OpenERP.
+1 time in Magento and 1 time in Odoo.
 But once the configuration is done, that works fine.
 
 .. _`account-fiscal-rule`: https://github.com/OCA/account-fiscal-rule/tree/7.0
@@ -217,7 +217,7 @@ Replacement of products
 
 Do you sometimes replace products in the sales orders?
 Are you going to modify the sales order on Magento,
-or do you want to modify the delivery orders in OpenERP?
+or do you want to modify the delivery orders in Odoo?
 
 The latter choice could be complicated because Magento
 does not allow to change products in delivery orders.
@@ -232,7 +232,7 @@ Do you want tracking numbers on your deliveries?
 
 For the printing of your packets' labels,
 are you going to use external software
-or do you want to print them directly from OpenERP?
+or do you want to print them directly from Odoo?
 
 .. todo:: add a pointer to the modules, I don't have the url actually.
 
@@ -249,7 +249,7 @@ Technical
 E-mails
 =======
 
-Would you want to send e-mails from Magento or from OpenERP?
+Would you want to send e-mails from Magento or from Odoo?
 Which transactional e-mails do you plan to send?
 
 Translations
@@ -257,13 +257,13 @@ Translations
 
 Do you need translations for the descriptions of your products?
 
-The language must be configured on the Magento Storeviews in OpenERP,
+The language must be configured on the Magento Storeviews in Odoo,
 think about it before importing your whole catalog.
 
 Which fields to synchronize
 ===========================
 
-Think about which fields you have in Magento and you need in OpenERP.
+Think about which fields you have in Magento and you need in Odoo.
 You will maybe need to create a customization module
 and add the mapping for the new fields,
 see :ref:`add-custom-mappings`

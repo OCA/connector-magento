@@ -23,7 +23,7 @@ Their execution is not immediate.
 If you see no jobs executed in more than 1 minute, possibilities are:
 
 1. Jobs are assigned to a worker which died. A worker
-   can die when OpenERP reloads his modules registry (after a module
+   can die when Odoo reloads his modules registry (after a module
    upgrade for instance). The dead workers are cleaned after 5 minutes,
    then the jobs are enqueued in a new one.
 
@@ -33,7 +33,7 @@ If you see no jobs executed in more than 1 minute, possibilities are:
 #. The scheduler action is not running, check in ``Settings > Scheduler
    > Scheduled Actions`` if the action ``Enqueue Jobs`` is active.
 
-#. OpenERP is running in multiprocess and it doesn't have a Cron Worker
+#. Odoo is running in multiprocess and it doesn't have a Cron Worker
    process running (when using Gunicorn).
 
 
@@ -61,7 +61,7 @@ What happens if I shutdown the server when jobs are processing?
 ===============================================================
 
 When jobs are interrupted, they won't commit any changes to the database
-and will be restarted on the start of the OpenERP server.
+and will be restarted on the start of the Odoo server.
 
 Note that the actions performed on Magento by a job could of course not
 be reverted, so they will be done 2 times.
@@ -70,10 +70,10 @@ be reverted, so they will be done 2 times.
 Why do I have a couple of Workers?
 ==================================
 
-When OpenERP is running in standalone (one process),
+When Odoo is running in standalone (one process),
 you'll always have 1 Jobs Worker.
-When OpenERP is running in multiprocess,
-you'll have 1 Jobs Worker for each OpenERP worker.
+When Odoo is running in multiprocess,
+you'll have 1 Jobs Worker for each Odoo worker.
 
 .. note:: To benefits of multiple workers, you need to:
 

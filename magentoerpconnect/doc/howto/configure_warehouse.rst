@@ -14,6 +14,6 @@ By default, the quantity send to Magento is the forecasted quantity,
 but you can use another standard or custom field by changing the field
 `Stock Field`.
 
-For each Magento Store, the connector has created an OpenERP Sale Shop.
+For each Magento Store, the connector has created an Odoo Sale Shop.
 So you may want to check the Sales Shops to ensure they have the correct
 warehouses.

@@ -9,10 +9,10 @@ How to cancel / modify a sale order
 Handle a sale order cancelled on Magento
 ****************************************
 
-If a sales order has already been imported in OpenERP and is cancelled
-in Magento, the change won't be reflected in OpenERP.  If a sales order
+If a sales order has already been imported in Odoo and is cancelled
+in Magento, the change won't be reflected in Odoo.  If a sales order
 is still waiting for a payment and is canceled, it won't be imported in
-OpenERP.
+Odoo.
 
 *******************
 Modify a sale order
@@ -31,7 +31,7 @@ The changes would not be repercuted on the invoices neither.
 Instead, you can modify the sale order on the Magento backend.
 When Magento modifies a sale order,
 it cancels it and creates a new one.
-When the new order is imported in OpenERP,
+When the new order is imported in Odoo,
 it flags the old one as 'Cancelled on Backend',
 then link the new order with the old one as a 'parent' order.
 

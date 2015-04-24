@@ -9,7 +9,7 @@ Find the configuration in the menu
 `Warehouse > Configuration > Delivery Methods`.
 
 For each shipping method in Magento,
-you need to create a delivery method in OpenERP.
+you need to create a delivery method in Odoo.
 
 The connector creates a product `[SHIP] Shipping costs`,
 you can use it for the Delivery Product.
