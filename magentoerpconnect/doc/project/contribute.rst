@@ -207,7 +207,7 @@ The tests run without any connection to Magento. They mock the API.  In order
 to test the connector with representative data, we record real
 responses/requests, then use them in the tests. The reference data we use are
 those of the Magento demo, which are automatically installed when you install
-Magento using theses instructions: `Magento Vagrant`_.
+Magento using theses instructions: `Magento on Docker`_.
 
 Thus, in the ``tests`` folder, you will find files with only data, and the
 others with the tests.
