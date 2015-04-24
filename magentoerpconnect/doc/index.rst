@@ -8,7 +8,7 @@ Odoo Magento Connector
 ######################
 
 *Odoo Magento Connector* (also known as *MagentoERPconnect*) is a
-bi-directional connector, 100% compatible with the last `Odoo`_ 7.0 and
+bi-directional connector, 100% compatible with the last `Odoo`_ 8.0 and
 latest `Magento`_ versions.
 
 Based on the `Odoo Connector`_ framework, this new release of
@@ -46,7 +46,7 @@ Core Features
 .. _Odoo: http://www.odoo.com
 .. _Magento: http://www.magento.com
 .. _Akretion: http://www.akretion.com
-.. _`source code is available on GitHub`: https://github.com/OCA/connector-magento/tree/7.0
+.. _`source code is available on GitHub`: https://github.com/OCA/connector-magento
 .. _`AGPL version 3`: http://www.gnu.org/licenses/agpl-3.0.html
 .. _`project's mailing list`: https://launchpad.net/~openerp-connector-community
 
