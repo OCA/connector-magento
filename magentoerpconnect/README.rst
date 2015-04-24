@@ -92,6 +92,20 @@ See `contributors' list`_
 
 .. _contributors' list: ./AUTHORS
 
+Migration Funders
+-----------------
+
+A fund raising has been done during the year 2015, allowing us to migrate the Magento Connector to Odoo 8.0.
+Many thanks to all of the funders and especially to the top funders:
+
+ * Ursa Information Systems Inc. (USA)
+ * Logic Supply Inc. (USA)
+ * Debonix France SAS (France)
+ * Playrapid SARL (France)
+ * BIG Consulting GmbH (Germany)
+ * Openfellas UG (Germany)
+ * Intero Technologies GmbH (Germany)
+
 Maintainer
 ----------
 
