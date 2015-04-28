@@ -38,9 +38,10 @@ class TestImportMagento(SetUpMagentoSynchronized):
         """ Import of a bundle product """
         backend_id = self.backend_id
         with mock_api(magento_bundle_responses):
-            import_record(self.session,
-                          'magento.product.product',
-                          backend_id, 164)
+            with mock_urlopen_image():
+                import_record(self.session,
+                              'magento.product.product',
+                              backend_id, 164)
         mag_product_model = self.registry('magento.product.product')
         mag_product_ids = mag_product_model.search(self.cr, self.uid, [
             ('backend_id', '=', backend_id),
