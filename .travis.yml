@@ -20,8 +20,8 @@ install:
   - git clone https://github.com/OCA/maintainer-quality-tools.git ${HOME}/maintainer-quality-tools
   - export PATH=${HOME}/maintainer-quality-tools/travis:${PATH}
   - travis_install_nightly
-  - sudo pip install magento
-  - sudo pip install beautifulsoup4
+  - pip install magento
+  - pip install beautifulsoup4
   - git clone https://github.com/OCA/connector ${HOME}/connector -b ${VERSION}
   - git clone https://github.com/OCA/connector-ecommerce ${HOME}/connector-ecommerce -b ${VERSION}
   - git clone https://github.com/OCA/sale-workflow ${HOME}/sale-workflow -b ${VERSION}
