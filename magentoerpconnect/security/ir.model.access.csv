@@ -12,7 +12,7 @@
 "access_magento_account_invoice","magento_account_invoice connector manager","model_magento_account_invoice","connector.group_connector_manager",1,1,1,1
 "access_magento_sale_order","magento_sale_order connector manager","model_magento_sale_order","connector.group_connector_manager",1,1,1,1
 "access_magento_sale_order_line","magento_sale_order_line connector manager","model_magento_sale_order_line","connector.group_connector_manager",1,1,1,1
-"access_magento_stock_picking_out","magento_stock_picking_out connector manager","model_magento_stock_picking_out","connector.group_connector_manager",1,1,1,1
+"access_magento_stock_picking_out","magento_stock_picking connector manager","model_magento_stock_picking","connector.group_connector_manager",1,1,1,1
 "access_magento_backend_user","magento_backend user","model_magento_backend","base.group_sale_salesman",1,0,0,0
 "access_magento_backend_sale_manager","magento_backend manager","model_magento_backend","base.group_sale_manager",1,0,0,0
 "access_magento_product_product_user","magento_product_product user","model_magento_product_product","base.group_sale_salesman",1,0,0,0
@@ -33,6 +33,6 @@
 "access_res_partner_group_user","magento_res_partner group_user","model_magento_res_partner","base.group_user",1,0,0,0
 "access_res_partner_category_group_user","magento_res_partner_category group_user","model_magento_res_partner_category","base.group_user",1,0,0,0
 "access_address_group_user","magento_address_group_user","model_magento_address","base.group_user",1,0,0,0
-"access_stock_picking_out_user","magento_stock.picking.out user","model_magento_stock_picking_out","stock.group_stock_user",1,1,1,1
-"access_stock_picking_out_manager","magento_stock.picking.out manager","model_magento_stock_picking_out","stock.group_stock_manager",1,1,1,1
+"access_stock_picking_out_user","magento_stock.picking user","model_magento_stock_picking","stock.group_stock_user",1,1,1,1
+"access_stock_picking_out_manager","magento_stock.picking manager","model_magento_stock_picking","stock.group_stock_manager",1,1,1,1
 

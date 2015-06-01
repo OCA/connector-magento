@@ -3,7 +3,7 @@
     <data noupdate="0">
 
         <record id="view_stock_picking_out_magento_form" model="ir.ui.view">
-            <field name="name">stock.picking.out.magento.form</field>
+            <field name="name">stock.picking.magento.form</field>
             <field name="model">stock.picking</field>
             <field name="inherit_id" ref="connector_ecommerce.view_stock_picking_out_connector_form"/>
             <field name="arch" type="xml">
@@ -19,8 +19,8 @@
         </record>
 
         <record id="view_magento_stock_picking_out_form" model="ir.ui.view">
-            <field name="name">magento.stock.picking.out.form</field>
-            <field name="model">magento.stock.picking.out</field>
+            <field name="name">magento.stock.picking.form</field>
+            <field name="model">magento.stock.picking</field>
             <field name="arch" type="xml">
                 <form string="Magento Delivery Order"
                         create="false" delete="false">
@@ -34,8 +34,8 @@
         </record>
 
         <record id="view_magento_stock_picking_out_tree" model="ir.ui.view">
-            <field name="name">magento.stock.picking.out.tree</field>
-            <field name="model">magento.stock.picking.out</field>
+            <field name="name">magento.stock.picking.tree</field>
+            <field name="model">magento.stock.picking</field>
             <field name="arch" type="xml">
                 <tree string="Magento Delivery Order"
                         create="false" delete="false">

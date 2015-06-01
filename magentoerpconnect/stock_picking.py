@@ -39,7 +39,7 @@ _logger = logging.getLogger(__name__)
 
 
 class MagentoStockPicking(models.Model):
-    _name = 'magento.stock.picking.out'
+    _name = 'magento.stock.picking'
     _inherit = 'magento.binding'
     _inherits = {'stock.picking': 'openerp_id'}
     _description = 'Magento Delivery Order'
@@ -61,7 +61,7 @@ class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
     magento_bind_ids = fields.One2many(
-        comodel_name='magento.stock.picking.out',
+        comodel_name='magento.stock.picking',
         inverse_name='openerp_id',
         string="Magento Bindings",
     )
@@ -69,7 +69,7 @@ class StockPicking(models.Model):
 
 @magento
 class StockPickingAdapter(GenericAdapter):
-    _model_name = 'magento.stock.picking.out'
+    _model_name = 'magento.stock.picking'
     _magento_model = 'sales_order_shipment'
     _admin_path = 'sales_shipment/view/shipment_id/{id}'
 
@@ -114,7 +114,7 @@ class StockPickingAdapter(GenericAdapter):
 
 @magento
 class MagentoPickingExporter(Exporter):
-    _model_name = ['magento.stock.picking.out']
+    _model_name = ['magento.stock.picking']
 
     def _get_args(self, picking, lines_info=None):
         if lines_info is None:
@@ -208,7 +208,7 @@ MagentoPickingExport = MagentoPickingExporter  # deprecated
 @on_picking_out_done
 def picking_out_done(session, model_name, record_id, picking_method):
     """
-    Create a ``magento.stock.picking.out`` record. This record will then
+    Create a ``magento.stock.picking`` record. This record will then
     be exported to Magento.
 
     :param picking_method: picking_method, can be 'complete' or 'partial'
@@ -219,14 +219,14 @@ def picking_out_done(session, model_name, record_id, picking_method):
     if not sale:
         return
     for magento_sale in sale.magento_bind_ids:
-        session.env['magento.stock.picking.out'].create({
+        session.env['magento.stock.picking'].create({
             'backend_id': magento_sale.backend_id.id,
             'openerp_id': picking.id,
             'magento_order_id': magento_sale.id,
             'picking_method': picking_method})
 
 
-@on_record_create(model_names='magento.stock.picking.out')
+@on_record_create(model_names='magento.stock.picking')
 def delay_export_picking_out(session, model_name, record_id, vals):
     binding = session.env[model_name].browse(record_id)
     # tracking number is sent when:

@@ -68,7 +68,7 @@ msgid "A sale order line with the same ID on Magento already exists."
 msgstr ""
 
 #. module: magentoerpconnect
-#: sql_constraint:magento.stock.picking.out:0
+#: sql_constraint:magento.stock.picking:0
 msgid "A stock picking with same ID on Magento already exists."
 msgstr ""
 
@@ -193,7 +193,7 @@ msgid "Company"
 msgstr ""
 
 #. module: magentoerpconnect
-#: selection:magento.stock.picking.out,picking_method:0
+#: selection:magento.stock.picking,picking_method:0
 msgid "Complete"
 msgstr ""
 
@@ -256,7 +256,7 @@ msgid "Default Shipping"
 msgstr ""
 
 #. module: magentoerpconnect
-#: model:ir.model,name:magentoerpconnect.model_stock_picking_out
+#: model:ir.model,name:magentoerpconnect.model_stock_picking
 msgid "Delivery Orders"
 msgstr ""
 
@@ -330,7 +330,7 @@ msgstr ""
 #: field:magento.res.partner.category,magento_id:0
 #: field:magento.sale.order,magento_id:0
 #: field:magento.sale.order.line,magento_id:0
-#: field:magento.stock.picking.out,magento_id:0
+#: field:magento.stock.picking,magento_id:0
 #: field:magento.store,magento_id:0
 #: field:magento.storeview,magento_id:0
 #: field:magento.website,magento_id:0
@@ -459,7 +459,7 @@ msgstr ""
 #: field:magento.res.partner.category,sync_date:0
 #: field:magento.sale.order,sync_date:0
 #: field:magento.sale.order.line,sync_date:0
-#: field:magento.stock.picking.out,sync_date:0
+#: field:magento.stock.picking,sync_date:0
 #: field:magento.store,sync_date:0
 #: field:magento.storeview,sync_date:0
 #: field:magento.website,sync_date:0
@@ -502,7 +502,7 @@ msgstr ""
 #: field:magento.res.partner.category,backend_id:0
 #: field:magento.sale.order,backend_id:0
 #: field:magento.sale.order.line,backend_id:0
-#: field:magento.stock.picking.out,backend_id:0
+#: field:magento.stock.picking,backend_id:0
 #: field:magento.store,backend_id:0
 #: field:magento.storeview,backend_id:0
 #: field:magento.website,backend_id:0
@@ -539,8 +539,8 @@ msgstr ""
 #: field:sale.order.line,magento_bind_ids:0
 #: field:sale.shop,magento_bind_ids:0
 #: field:stock.picking,magento_bind_ids:0
-#: view:stock.picking.out:0
-#: field:stock.picking.out,magento_bind_ids:0
+#: view:stock.picking:0
+#: field:stock.picking,magento_bind_ids:0
 msgid "Magento Bindings"
 msgstr ""
 
@@ -560,8 +560,8 @@ msgid "Magento Configuration"
 msgstr ""
 
 #. module: magentoerpconnect
-#: model:ir.model,name:magentoerpconnect.model_magento_stock_picking_out
-#: view:magento.stock.picking.out:0
+#: model:ir.model,name:magentoerpconnect.model_magento_stock_picking
+#: view:magento.stock.picking:0
 msgid "Magento Delivery Order"
 msgstr ""
 
@@ -625,7 +625,7 @@ msgstr ""
 #: model:ir.model,name:magentoerpconnect.model_magento_sale_order
 #: field:magento.account.invoice,magento_order_id:0
 #: field:magento.sale.order.line,magento_order_id:0
-#: field:magento.stock.picking.out,magento_order_id:0
+#: field:magento.stock.picking,magento_order_id:0
 msgid "Magento Sale Order"
 msgstr ""
 
@@ -768,7 +768,7 @@ msgid "Parent Magento Order"
 msgstr ""
 
 #. module: magentoerpconnect
-#: selection:magento.stock.picking.out,picking_method:0
+#: selection:magento.stock.picking,picking_method:0
 msgid "Partial"
 msgstr ""
 
@@ -805,7 +805,7 @@ msgid "Picking List"
 msgstr ""
 
 #. module: magentoerpconnect
-#: field:magento.stock.picking.out,picking_method:0
+#: field:magento.stock.picking,picking_method:0
 msgid "Picking Method"
 msgstr ""
 
@@ -917,7 +917,7 @@ msgid "Stock Field"
 msgstr ""
 
 #. module: magentoerpconnect
-#: field:magento.stock.picking.out,openerp_id:0
+#: field:magento.stock.picking,openerp_id:0
 msgid "Stock Picking"
 msgstr ""
 

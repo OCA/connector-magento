@@ -48,7 +48,7 @@ class MagentoModelBinder(MagentoBinder):
         'magento.res.partner.category',
         'magento.product.category',
         'magento.product.product',
-        'magento.stock.picking.out',
+        'magento.stock.picking',
         'magento.sale.order',
         'magento.sale.order.line',
         'magento.account.invoice',
