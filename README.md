@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/OCA/connector-magento.svg?branch=8.0)](https://travis-ci.org/OCA/connector-magento)
-[![Coverage Status](https://coveralls.io/repos/OCA/connector-magento/badge.png?branch=8.0)](https://coveralls.io/r/OCA/connector-magento?branch=8.0)
+[![Coverage Status](https://coveralls.io/repos/OCA/connector-magento/badge.svg?branch=8.0)](https://coveralls.io/r/OCA/connector-magento?branch=8.0)
 
 Odoo Connector Magento Modules
 ==============================
