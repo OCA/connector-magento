@@ -71,7 +71,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'Odoo Magento Connector'
-copyright = u'2013, Camptocamp SA'
+copyright = u'2013-2015, Odoo Community Association (OCA)'
 
 # The version info for the project you're documenting, acts as
 # replacement for |version| and |release|, also used in various other
@@ -260,7 +260,7 @@ latex_elements = {
 latex_documents = [
     ('index', 'openerp-magento-connector.tex',
      u'Odoo Magento Connector Documentation',
-     u'Camptocamp SA', 'manual'),
+     u'Odoo Community Association (OCA)', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the
@@ -291,7 +291,7 @@ latex_documents = [
 man_pages = [
     ('index', 'openerp-magento-connector',
      u'Odoo Magento Connector Documentation',
-     [u'Camptocamp SA'], 1)
+     [u'Odoo Community Association (OCA)'], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -306,7 +306,7 @@ man_pages = [
 texinfo_documents = [
     ('index', 'Odoo Magento Connector',
      u'Odoo Magento Connector Documentation',
-     u'Camptocamp SA', 'Odoo Magento Connector',
+     u'Odoo Community Association (OCA)', 'Odoo Magento Connector',
      'Connector between Odoo and Magento',
      'Miscellaneous'),
 ]
