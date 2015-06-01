@@ -126,7 +126,7 @@ def delay_export_tracking_number(session, model_name, record_id):
                                      priority=20)
 
 
-@job
+@job(default_channel='root.magento')
 @related_action(action=unwrap_binding)
 def export_tracking_number(session, model_name, record_id):
     """ Export the tracking number of a delivery order. """

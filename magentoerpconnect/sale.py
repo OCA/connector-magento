@@ -1027,7 +1027,7 @@ class MagentoGiftOrderLineBuilder(GiftOrderLineBuilder):
     _model_name = 'magento.sale.order'
 
 
-@job
+@job(default_channel='root.magento')
 def sale_order_import_batch(session, model_name, backend_id, filters=None):
     """ Prepare a batch import of records from Magento """
     if filters is None:
@@ -1084,7 +1084,7 @@ class StateExporter(Exporter):
         self.binder.bind(magento_id, binding_id)
 
 
-@job
+@job(default_channel='root.magento')
 def export_state_change(session, model_name, binding_id, allowed_states=None,
                         comment=None, notify=None):
     """ Change state of a sales order on Magento """

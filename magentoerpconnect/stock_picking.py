@@ -242,7 +242,7 @@ def delay_export_picking_out(session, model_name, record_id, vals):
                               with_tracking=with_tracking)
 
 
-@job
+@job(default_channel='root.magento')
 @related_action(action=unwrap_binding)
 def export_picking_done(session, model_name, record_id, with_tracking=True):
     """ Export a complete or partial delivery order. """

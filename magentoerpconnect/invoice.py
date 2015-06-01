@@ -252,7 +252,7 @@ def delay_export_account_invoice(session, model_name, record_id, vals):
     export_invoice.delay(session, model_name, record_id)
 
 
-@job
+@job(default_channel='root.magento')
 @related_action(action=unwrap_binding)
 def export_invoice_paid(session, model_name, record_id):
     """ Deprecated in 2.1.0.dev0. """
@@ -261,7 +261,7 @@ def export_invoice_paid(session, model_name, record_id):
     return export_invoice(session, model_name, record_id)
 
 
-@job
+@job(default_channel='root.magento')
 @related_action(action=unwrap_binding)
 def export_invoice(session, model_name, record_id):
     """ Export a validated or paid invoice. """

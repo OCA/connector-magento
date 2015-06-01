@@ -41,7 +41,7 @@ class MagentoDeleter(Deleter):
 MagentoDeleteSynchronizer = MagentoDeleter  # deprecated
 
 
-@job
+@job(default_channel='root.magento')
 @related_action(action=link)
 def export_delete_record(session, model_name, backend_id, magento_id):
     """ Delete a record on Magento """

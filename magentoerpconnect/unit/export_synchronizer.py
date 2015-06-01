@@ -414,7 +414,7 @@ class MagentoExporter(MagentoBaseExporter):
         return _('Record exported with ID %s on Magento.') % self.magento_id
 
 
-@job
+@job(default_channel='root.magento')
 @related_action(action=unwrap_binding)
 def export_record(session, model_name, binding_id, fields=None):
     """ Export a record on Magento """

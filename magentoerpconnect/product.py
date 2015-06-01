@@ -672,7 +672,7 @@ def magento_product_modified(session, model_name, record_id, vals):
                                        priority=20)
 
 
-@job
+@job(default_channel='root.magento')
 @related_action(action=unwrap_binding)
 def export_product_inventory(session, model_name, record_id, fields=None):
     """ Export the inventory configuration and quantity of a product. """

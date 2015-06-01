@@ -362,7 +362,7 @@ class AddCheckpoint(ConnectorUnit):
                        self.backend_record.id)
 
 
-@job
+@job(default_channel='root.magento')
 def import_batch(session, model_name, backend_id, filters=None):
     """ Prepare a batch import of records from Magento """
     env = get_environment(session, model_name, backend_id)
@@ -370,7 +370,7 @@ def import_batch(session, model_name, backend_id, filters=None):
     importer.run(filters=filters)
 
 
-@job
+@job(default_channel='root.magento')
 @related_action(action=link)
 def import_record(session, model_name, backend_id, magento_id, force=False):
     """ Import a record from Magento """
