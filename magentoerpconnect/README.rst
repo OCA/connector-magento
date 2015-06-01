@@ -4,20 +4,20 @@
 Magento Connector
 =================
 
-This is the new release of the Open-Source connector linking OpenERP and
+This is the new release of the Open-Source connector linking Odoo and
 Magento also known under the name of **Magentoerpconnect**.  It is
 build on top of the `connector`_ framework. It is is structured so that
 it can be extended or modified easily from separate addons, a factor of
 success when the implementations of Magento vary a lot.
 
-Magento OpenERP Connector is part of the Odoo Community Association (OCA).
+Magento Odoo Connector is part of the Odoo Community Association (OCA).
 The `source is on GitHub`_.
 
 This connector is designed to have a strong and efficient core, with the
 ability to extend it with extension modules or local customizations.
 
 In other words, the core module contains the minimal scope to run your
-e-commerce with OpenERP and Magento. More advanced features are
+e-commerce with Odoo and Magento. More advanced features are
 installable using extensions.
 
 It features:
@@ -29,10 +29,10 @@ Synchronizations:
 * Import the categories of products, with translations
 * Import the products, with translations and main image
 * Import the sales orders
-* Update the the stock quantities,
+* Export of the the stock quantities,
   with configuration of the warehouse and an option to choose the stock
   field to use
-* Export the delivery orders
+* Export the delivery orders status
 * Export the tracking numbers
 * Create the invoices on Magento and get their number back
 * Resolve and import the dependencies when they are not yet imported
