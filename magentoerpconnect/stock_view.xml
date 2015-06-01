@@ -23,7 +23,7 @@
             <field name="model">magento.stock.picking.out</field>
             <field name="arch" type="xml">
                 <form string="Magento Delivery Order"
-                        create="false" delete="false" version="7.0">
+                        create="false" delete="false">
                     <group>
                         <field name="backend_id"/>
                         <field name="magento_id"/>
@@ -38,7 +38,7 @@
             <field name="model">magento.stock.picking.out</field>
             <field name="arch" type="xml">
                 <tree string="Magento Delivery Order"
-                        create="false" delete="false" version="7.0">
+                        create="false" delete="false">
                     <field name="backend_id"/>
                     <field name="magento_id"/>
                     <field name="picking_method"/>

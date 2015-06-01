@@ -24,7 +24,7 @@
             <field name="name">magento.product.category.form</field>
             <field name="model">magento.product.category</field>
             <field name="arch" type="xml">
-                <form string="Magento Product Category" version="7.0">
+                <form string="Magento Product Category">
                     <group>
                         <field name="backend_id"/>
                         <field name="magento_id"/>
@@ -40,7 +40,7 @@
             <field name="name">magento.product.category.tree</field>
             <field name="model">magento.product.category</field>
             <field name="arch" type="xml">
-                <tree string="Magento Product Category" version="7.0">
+                <tree string="Magento Product Category">
                     <field name="backend_id"/>
                 </tree>
             </field>
@@ -71,7 +71,7 @@
             <field name="name">magento.product.product.form</field>
             <field name="model">magento.product.product</field>
             <field name="arch" type="xml">
-                <form string="Magento Product" version="7.0">
+                <form string="Magento Product">
                     <group>
                         <field name="backend_id"/>
                         <field name="magento_id"/>
@@ -99,7 +99,7 @@
             <field name="name">magento.product.product.tree</field>
             <field name="model">magento.product.product</field>
             <field name="arch" type="xml">
-                <tree string="Magento Product" version="7.0">
+                <tree string="Magento Product">
                     <field name="backend_id"/>
                     <field name="product_type"/>
                 </tree>
