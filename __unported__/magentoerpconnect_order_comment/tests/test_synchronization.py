@@ -21,7 +21,7 @@
 
 from openerp.addons.magentoerpconnect.tests.test_synchronization import (
     SetUpMagentoSynchronized)
-from openerp.addons.magentoerpconnect.tests.test_data import (
+from openerp.addons.magentoerpconnect.tests.data_base import (
     magento_base_responses)
 from openerp.addons.magentoerpconnect.unit.import_synchronizer import (
     import_record)

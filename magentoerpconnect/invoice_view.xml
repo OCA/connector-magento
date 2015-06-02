@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+
+        <record id="view_invoice_magento_form" model="ir.ui.view">
+            <field name="name">account.invoice.magento.form</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="connector_ecommerce.view_invoice_connector_form"/>
+            <field name="arch" type="xml">
+                <page name="connector" position="attributes">
+                    <attribute name="invisible">0</attribute>
+                </page>
+                <page name="connector" position="inside">
+                    <group string="Magento Bindings">
+                        <field name="magento_bind_ids" nolabel="1"/>
+                    </group>
+                </page>
+            </field>
+        </record>
+
+        <record id="view_magento_account_invoice_form" model="ir.ui.view">
+            <field name="name">magento.account.invoice.form</field>
+            <field name="model">magento.account.invoice</field>
+            <field name="arch" type="xml">
+                <form string="Magento Invoice"
+                        create="false" delete="false">
+                    <group>
+                        <field name="backend_id"/>
+                        <field name="magento_id"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_magento_account_invoice_tree" model="ir.ui.view">
+            <field name="name">magento.account.invoice.tree</field>
+            <field name="model">magento.account.invoice</field>
+            <field name="arch" type="xml">
+                <tree string="Magento Invoice"
+                        create="false" delete="false">
+                    <field name="backend_id"/>
+                    <field name="magento_id"/>
+                </tree>
+            </field>
+        </record>
+
+    </data>
+</openerp>

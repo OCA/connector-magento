@@ -3,6 +3,7 @@
 #
 #    Author: Guewen Baconnier
 #    Copyright 2013 Camptocamp SA
+#    Copyright 2013 Akretion
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,28 +20,42 @@
 #
 ##############################################################################
 
-{'name': 'Magento Connector - Export Partners (Experimental)',
- 'version': '2.0.0',
+{'name': 'Magento Connector',
+ 'version': '3.0.0',
  'category': 'Connector',
- 'depends': ['magentoerpconnect',
+ 'depends': ['account',
+             'product',
+             'delivery',
+             'sale_stock',
+             'connector_ecommerce',
+             'product_m2mcategories',
              ],
+ 'external_dependencies': {
+     'python': ['magento'],
+ },
  'author': "Camptocamp,Akretion,Odoo Community Association (OCA)",
  'license': 'AGPL-3',
  'website': 'http://www.odoo-magento-connector.com',
- 'description': """
-Magento Connector - Export Partners
-===================================
-
-Extension for **Magento Connector**, export the partners to Magento.
-
-This module is considered as experimental, the creation of the partners
-is not guaranted to work correctly.  No password are defined on the
-customer accounts.
-""",
- 'images': [],
+ 'images': ['images/magento_backend.png',
+            'images/jobs.png',
+            'images/product_binding.png',
+            'images/invoice_binding.png',
+            'images/magentoerpconnect.png',
+            ],
  'demo': [],
- 'data': ['partner_view.xml',
+ 'data': ['setting_view.xml',
+          'magentoerpconnect_data.xml',
+          'magento_model_view.xml',
+          'product_view.xml',
+          'partner_view.xml',
+          'sale_view.xml',
+          'invoice_view.xml',
+          'magentoerpconnect_menu.xml',
+          'delivery_view.xml',
+          'stock_view.xml',
+          'security/ir.model.access.csv',
+          'payment_method_view.xml',
           ],
- 'installable': False,
- 'application': False,
+ 'installable': True,
+ 'application': True,
  }

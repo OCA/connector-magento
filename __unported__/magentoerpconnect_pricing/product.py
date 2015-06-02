@@ -98,7 +98,7 @@ class ProductPriceExporter(MagentoBaseExporter):
 
         # export the price for websites if they have a different
         # pricelist
-        storeview_binder = self.get_binder_for_model('magento.storeview')
+        storeview_binder = self.binder_for('magento.storeview')
         for website in self.backend_record.website_ids:
             if website_id is not None and website.id != website_id:
                 continue

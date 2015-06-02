@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+
+        <record id="view_stock_picking_out_magento_form" model="ir.ui.view">
+            <field name="name">stock.picking.magento.form</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="connector_ecommerce.view_stock_picking_out_connector_form"/>
+            <field name="arch" type="xml">
+                <page name="connector" position="attributes">
+                    <attribute name="invisible">0</attribute>
+                </page>
+                <page name="connector" position="inside">
+                    <group string="Magento Bindings">
+                        <field name="magento_bind_ids" nolabel="1"/>
+                    </group>
+                </page>
+            </field>
+        </record>
+
+        <record id="view_magento_stock_picking_out_form" model="ir.ui.view">
+            <field name="name">magento.stock.picking.form</field>
+            <field name="model">magento.stock.picking</field>
+            <field name="arch" type="xml">
+                <form string="Magento Delivery Order"
+                        create="false" delete="false">
+                    <group>
+                        <field name="backend_id"/>
+                        <field name="magento_id"/>
+                        <field name="picking_method"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_magento_stock_picking_out_tree" model="ir.ui.view">
+            <field name="name">magento.stock.picking.tree</field>
+            <field name="model">magento.stock.picking</field>
+            <field name="arch" type="xml">
+                <tree string="Magento Delivery Order"
+                        create="false" delete="false">
+                    <field name="backend_id"/>
+                    <field name="magento_id"/>
+                    <field name="picking_method"/>
+                </tree>
+            </field>
+        </record>
+
+    </data>
+</openerp>

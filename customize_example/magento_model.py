@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    Author: Guewen Baconnier
-#    Copyright 2013 Camptocamp SA
+#    Copyright 2013-2015 Camptocamp SA
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -18,29 +19,16 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+from openerp import models, api
 
-{'name': 'Magento Connector - Export Partners (Experimental)',
- 'version': '2.0.0',
- 'category': 'Connector',
- 'depends': ['magentoerpconnect',
-             ],
- 'author': "Camptocamp,Akretion,Odoo Community Association (OCA)",
- 'license': 'AGPL-3',
- 'website': 'http://www.odoo-magento-connector.com',
- 'description': """
-Magento Connector - Export Partners
-===================================
 
-Extension for **Magento Connector**, export the partners to Magento.
+class MagentoBackend(models.Model):
+    _inherit = 'magento.backend'
 
-This module is considered as experimental, the creation of the partners
-is not guaranted to work correctly.  No password are defined on the
-customer accounts.
-""",
- 'images': [],
- 'demo': [],
- 'data': ['partner_view.xml',
-          ],
- 'installable': False,
- 'application': False,
- }
+    @api.model
+    def select_versions(self):
+        """ Available versions in the backend. """
+        versions = super(MagentoBackend, self).select_versions()
+        # '1.7-myversion' is the same string that we have in backend.py
+        versions.append(('1.7-myversion', '1.7 My Version'))
+        return versions

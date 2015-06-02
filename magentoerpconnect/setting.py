@@ -19,24 +19,18 @@
 #
 ##############################################################################
 
-from openerp.addons.magentoerpconnect.backend import magento
-from openerp.addons.magentoerpconnect import sale
-from openerp.addons.connector.unit.mapper import mapping
+from openerp import models, fields
 
 
-@magento(replacing=sale.SaleOrderImportMapper)
-class SaleOrderImportMapper(sale.SaleOrderImportMapper):
-    _model_name = 'magento.sale.order'
+class MagentoConfigSettings(models.TransientModel):
+    _inherit = 'connector.config.settings'
 
-    @mapping
-    def pricelist_id(self, record):
-        """ Assign to the sale order the price list used on
-        the Magento Website or Backend """
-        website_binder = self.binder_for('magento.website')
-        oe_website_id = website_binder.to_openerp(record['website_id'])
-        website = self.session.browse('magento.website', oe_website_id)
-        if website.pricelist_id:
-            pricelist_id = website.pricelist_id.id
-        else:
-            pricelist_id = self.backend_record.pricelist_id.id
-        return {'pricelist_id': pricelist_id}
+    module_magentoerpconnect_pricing = fields.Boolean(
+        string="Prices are managed in OpenERP with pricelists",
+        help="Prices are set in OpenERP and exported to Magento.\n\n"
+             "This installs the module magentoerpconnect_pricing.",
+    )
+    module_magentoerpconnect_export_partner = fields.Boolean(
+        string="Export Partners to Magento (experimental)",
+        help="This installs the module magentoerpconnect_export_partner.",
+    )

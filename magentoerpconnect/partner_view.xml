@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_partner_form" model="ir.ui.view">
+            <field name="name">res.partner.form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="connector.view_partner_connector_form" />
+            <field name="arch" type="xml">
+                <field name="date" position="after">
+                    <field name="birthday"/>
+                </field>
+                <field name="street" position="before">
+                    <field name="company" placeholder="Company"/>
+                </field>
+                <page name="connector" position="attributes">
+                    <attribute name="invisible">0</attribute>
+                </page>
+                <page name="connector" position="inside">
+                    <group string="Magento Bindings">
+                        <field name="magento_bind_ids" nolabel="1"/>
+                    </group>
+                    <group string="Magento Address Bindings">
+                        <field name="magento_address_bind_ids" nolabel="1"/>
+                    </group>
+                </page>
+            </field>
+        </record>
+
+        <record id="view_magento_res_partner_form" model="ir.ui.view">
+            <field name="name">magento.res.partner.form</field>
+            <field name="model">magento.res.partner</field>
+            <field name="arch" type="xml">
+                <form string="Magento Partner" create="false"
+                       delete="false">
+                    <group>
+                        <field name="website_id"/>
+                        <field name="backend_id"/>
+                        <field name="magento_id"/>
+                        <field name="created_at"/>
+                        <field name="updated_at"/>
+                        <field name="group_id"/>
+                        <field name="emailid"/>
+                        <field name="taxvat"/>
+                        <field name="newsletter"/>
+                        <field name="consider_as_company"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_magento_res_partner_tree" model="ir.ui.view">
+            <field name="name">magento.res.partner.tree</field>
+            <field name="model">magento.res.partner</field>
+            <field name="arch" type="xml">
+                <tree string="Magento Partner" create="false"
+                       delete="false">
+                    <field name="backend_id"/>
+                    <field name="website_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_magento_address_form" model="ir.ui.view">
+            <field name="name">magento.address.form</field>
+            <field name="model">magento.address</field>
+            <field name="arch" type="xml">
+                <form string="Magento Address" create="false"
+                       delete="false">
+                    <group>
+                        <field name="website_id"/>
+                        <field name="backend_id"/>
+                        <field name="magento_partner_id"/>
+                        <field name="magento_id"/>
+                        <field name="created_at"/>
+                        <field name="updated_at"/>
+                        <field name="is_default_billing"/>
+                        <field name="is_default_shipping"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_magento_address_tree" model="ir.ui.view">
+            <field name="name">magento.address.tree</field>
+            <field name="model">magento.address</field>
+            <field name="arch" type="xml">
+                <tree string="Magento Address" create="false"
+                       delete="false">
+                    <field name="backend_id"/>
+                    <field name="website_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_partner_category_form" model="ir.ui.view">
+            <field name="name">res.partner.category.form</field>
+            <field name="model">res.partner.category</field>
+            <field name="inherit_id" ref="base.view_partner_category_form" />
+            <field name="arch" type="xml">
+                <field name="parent_id" position="after">
+                    <field name="magento_bind_ids">
+                        <form string="Magento">
+                            <field name="backend_id"/>
+                            <field name="magento_id"/>
+                        </form>
+                        <tree string="Magento">
+                            <field name="backend_id"/>
+                        </tree>
+                    </field>
+                </field>
+            </field>
+        </record>
+
+    </data>
+</openerp>

@@ -1,10 +1,10 @@
 [![Build Status](https://travis-ci.org/OCA/connector-magento.svg?branch=8.0)](https://travis-ci.org/OCA/connector-magento)
-[![Coverage Status](https://coveralls.io/repos/OCA/connector-magento/badge.png?branch=8.0)](https://coveralls.io/r/OCA/connector-magento?branch=8.0)
+[![Coverage Status](https://coveralls.io/repos/OCA/connector-magento/badge.svg?branch=8.0)](https://coveralls.io/r/OCA/connector-magento?branch=8.0)
 
 Odoo Connector Magento Modules
 ==============================
 
-*OpenERP Magento Connector (also known as MagentoERPconnect) is a bi-directional connector, 100% compatible with the last OpenERP 7.0 and latest Magento versions.*
+*Odoo Magento Connector (also known as MagentoERPconnect) is a bi-directional connector, 100% compatible with the last OpenERP 8.0 and latest Magento versions (1.x).*
 
 This new release of MagentoERPconnect is based on the [OpenERP Connector framework](https://github.com/OCA/connector).
 
