@@ -19,10 +19,16 @@
 #
 ##############################################################################
 
-from openerp.addons.magentoerpconnect.tests.test_synchronization import SetUpMagentoSynchronized
-from openerp.addons.magentoerpconnect.unit.import_synchronizer import import_record
-from openerp.addons.magentoerpconnect_rma.claim import (export_claim_comment,
-                                                        export_claim_attachment)
+# flake8: noqa : ignore style in this file because it is a data file
+# only
+
+from openerp.addons.magentoerpconnect.tests.test_synchronization import \
+    SetUpMagentoSynchronized
+from openerp.addons.magentoerpconnect.unit.import_synchronizer import \
+    import_record
+from openerp.addons.magentoerpconnect_rma.claim import (
+    export_claim_comment,
+    export_claim_attachment)
 from openerp.addons.magentoerpconnect.tests.common import (mock_api,
                                                            mock_urlopen_image)
 from .test_data import magento_rma_responses
@@ -48,26 +54,28 @@ class SetUpMagentoWithCrmClaim(SetUpMagentoSynchronized):
 
 class TestImportMagento(SetUpMagentoWithCrmClaim):
     """
-        Test the imports of Claims, Claim Comments and Claim Attachments from a Magento Mock.
+        Test the imports of Claims, Claim Comments and
+        Claim Attachments from a Magento Mock.
     """
 
     def test_import_claim_with_attachment(self):
         """ Import a Claim: check """
         backend_id = self.backend_id
-        #with mock_api(magento_rma_responses):
+        # with mock_api(magento_rma_responses):
         #    with mock_urlopen_image():
         #        import_record(self.session, 'magento.crm.claim',
         #                      backend_id, 18)
-        #mag_claim_model = self.registry('magento.crm.claim')
-        #mag_claim_ids = mag_claim_model.search(self.cr,
+        # mag_claim_model = self.registry('magento.crm.claim')
+        # mag_claim_ids = mag_claim_model.search(self.cr,
         #                               self.uid,
         #                               [('backend_id', '=', backend_id),
         #                                ('magento_id', '=', '18')])
 
         self.assertEqual(len(self.mag_claim_ids), 1)
 
-        #claim = mag_claim_model.read(self.cr, self.uid, mag_claim_ids[0], ['openerp_id'])
-        #claim_id = claim['openerp_id'][0]
+        # claim = mag_claim_model.read(
+        #    self.cr, self.uid, mag_claim_ids[0], ['openerp_id'])
+        # claim_id = claim['openerp_id'][0]
         mag_attachment_model = self.registry('magento.claim.attachment')
         mag_attachment_ids = mag_attachment_model.search(
             self.cr, self.uid,
@@ -75,7 +83,6 @@ class TestImportMagento(SetUpMagentoWithCrmClaim):
              ('res_id', '=', self.mag_claim.openerp_id.id)])
 
         self.assertEqual(len(mag_attachment_ids), 1)
-
 
     def test_import_claim_comment(self):
         """ Import a Claim Comment: check """
@@ -100,14 +107,15 @@ class TestImportMagento(SetUpMagentoWithCrmClaim):
         backend_id = self.backend_id
         with mock_api(magento_rma_responses):
             import_record(self.session, 'magento.claim.attachment',
-                          backend_id, {'content' : '',
-                                       'updated_at': '2014-05-19 14:52:14',
-                                       'filename': '700b46f82e18b168b2100437da1fc09f',
-                                       'is_customer': '1',
-                                       'mimetype': 'image/png',
-                                       'name': '60.png',
-                                       'rma_attachment_id': '60',
-                                       'rma_id': '18'})
+                          backend_id, {
+                              'content': '',
+                              'updated_at': '2014-05-19 14:52:14',
+                              'filename': '700b46f82e18b168b2100437da1fc09f',
+                              'is_customer': '1',
+                              'mimetype': 'image/png',
+                              'name': '60.png',
+                              'rma_attachment_id': '60',
+                              'rma_id': '18'})
 
         mag_attachment_model = self.registry('magento.claim.attachment')
         mag_attachment_ids = mag_attachment_model.search(
@@ -115,23 +123,24 @@ class TestImportMagento(SetUpMagentoWithCrmClaim):
             [('backend_id', '=', backend_id),
              ('res_id', '=', self.mag_claim.openerp_id.id),
              ('magento_id', '=', '60')])
-        
         self.assertEqual(len(mag_attachment_ids), 1)
 
 
 class TestExportMagento(SetUpMagentoWithCrmClaim):
     """
-        Test the exports of Claim Comments and Claim Attachments to a Magento Mock.
+        Test the exports of Claim Comments and
+        Claim Attachments to a Magento Mock.
     """
 
     def test_export_claim_comment(self):
         """ Export a Claim Comment: check """
         response = {
-            'rma_comment.create': {'created_at': '2014-05-19 14:51:10',
-                                   'is_customer': '0',
-                                   'message': '<p>nous allons traiter votre reclamation au plus vite</p>',
-                                   'rma_comment_id': '67',
-                                   'rma_id': '18'},
+            'rma_comment.create': {
+                'created_at': '2014-05-19 14:51:10',
+                'is_customer': '0',
+                'message': '<p>nous allons traiter votre reclamation au plus vite</p>',
+                'rma_comment_id': '67',
+                'rma_id': '18'},
         }
         with mock_api(response, key_func=lambda m, a: m) as calls_done:
             mag_comment_model = self.registry('magento.claim.comment')
@@ -186,10 +195,11 @@ class TestExportMagento(SetUpMagentoWithCrmClaim):
                 'type': 'binary',
             })
 
-            mag_attachment_id = mag_attachment_model.search(self.cr, self.uid, [
-                ('backend_id', '=', self.backend_id),
-                ('openerp_id', '=', attachment_id),
-                ])[0]
+            mag_attachment_id = mag_attachment_model.search(
+                self.cr, self.uid, [
+                    ('backend_id', '=', self.backend_id),
+                    ('openerp_id', '=', attachment_id),
+                    ])[0]
 
             export_claim_attachment(
                 self.session, 'magento.claim.attachment', mag_attachment_id)

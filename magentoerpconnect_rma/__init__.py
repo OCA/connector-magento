@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import connector
-import magento_model
-import claim
+from . import connector
+from . import magento_model
+from . import claim

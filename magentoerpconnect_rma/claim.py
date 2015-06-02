@@ -3,7 +3,7 @@
 #                                                                             #
 #   Copyright (C) 2012 Akretion David BEAL <david.beal@akretion.com>          #
 #   Copyright (C) 2012 Akretion Sébastien BEAU <sebastien.beau@akretion.com>  #
-#   Copyright (C) 2014 Akretion  Chafique DELLI <chafique.delli@akretion.com> #
+#   Copyright (C) 2014 Akretion Chafique DELLI <chafique.delli@akretion.com>  #
 #                                                                             #
 #   This program is free software: you can redistribute it and/or modify      #
 #   it under the terms of the GNU Affero General Public License as            #
@@ -149,10 +149,12 @@ class MagentoClaimLine(orm.Model):
             relation='magento.backend',
             string='Magento Backend',
             store={
-                'magento.claim.line':
-            (lambda self, cr, uid, ids, c=None: ids, ['magento_claim_id'], 10),
-                'magento.crm.claim':
-            (_get_lines_from_claim, ['backend_id'], 20),
+                'magento.claim.line': (
+                    lambda self, cr, uid, ids, c=None: ids,
+                    ['magento_claim_id'],
+                    10),
+                'magento.crm.claim': (
+                    _get_lines_from_claim, ['backend_id'], 20),
             },
             readonly=True),
     }
@@ -164,17 +166,15 @@ class MagentoClaimLine(orm.Model):
 
     def create(self, cr, uid, vals, context=None):
         magento_claim_id = vals['magento_claim_id']
-        info = self.pool['magento.crm.claim'].read(cr, uid,
-                                                   [magento_claim_id],
-                                                   ['openerp_id', 'description'],
-                                                   context=context)
+        info = self.pool['magento.crm.claim'].read(
+            cr, uid, [magento_claim_id], ['openerp_id', 'description'],
+            context=context)
         claim_id = info[0]['openerp_id']
         descr = info[0]['description']
         vals['claim_id'] = claim_id[0]
         vals['claim_descr'] = descr
-        return super(MagentoClaimLine, self).create(cr, uid,
-                                                    vals,
-                                                    context=context)
+        return super(MagentoClaimLine, self).create(
+            cr, uid, vals, context=context)
 
 
 class MailMessage(orm.Model):
@@ -219,10 +219,14 @@ class MagentoClaimComment(orm.Model):
             relation='magento.backend',
             string='Magento Backend',
             store={
-                'magento.claim.comment':
-            (lambda self, cr, uid, ids, c=None: ids, ['magento_claim_id'], 10),
-                'magento.crm.claim':
-            (_get_comments_from_claim, ['backend_id'], 20),
+                'magento.claim.comment': (
+                    lambda self, cr, uid, ids, c=None: ids,
+                    ['magento_claim_id'],
+                    10),
+                'magento.crm.claim': (
+                    _get_comments_from_claim,
+                    ['backend_id'],
+                    20),
             },
             readonly=True),
     }
@@ -244,9 +248,8 @@ class MagentoClaimComment(orm.Model):
         vals['model'] = 'crm.claim'
         if 'subtype_id' in vals.keys() and not vals['subtype_id']:
             vals['subject'] = 'Customer Message'
-        return super(MagentoClaimComment, self).create(cr, uid,
-                                                       vals,
-                                                       context=context)
+        return super(MagentoClaimComment, self).create(
+            cr, uid, vals, context=context)
 
 
 class IrAttachment(orm.Model):
@@ -296,10 +299,12 @@ class MagentoClaimAttachment(orm.Model):
             relation='magento.backend',
             string='Magento Backend',
             store={
-                'magento.claim.attachment':
-            (lambda self, cr, uid, ids, c=None: ids, ['magento_claim_id'], 10),
-                'magento.crm.claim':
-            (_get_attachments_from_claim, ['backend_id'], 20),
+                'magento.claim.attachment': (
+                    lambda self, cr, uid, ids, c=None: ids,
+                    ['magento_claim_id'],
+                    10),
+                'magento.crm.claim': (
+                    _get_attachments_from_claim, ['backend_id'], 20),
             },
             readonly=True),
     }
@@ -319,9 +324,8 @@ class MagentoClaimAttachment(orm.Model):
         vals['claim_id'] = claim_id
         vals['res_id'] = claim_id
         vals['res_model'] = 'crm.claim'
-        return super(MagentoClaimAttachment, self).create(cr, uid,
-                                                          vals,
-                                                          context=context)
+        return super(MagentoClaimAttachment, self).create(
+            cr, uid, vals, context=context)
 
 
 @magento
@@ -366,7 +370,8 @@ class CrmClaimAdapter(GenericAdapter):
         """
         Update claim state un Magento.
         """
-        return self._call('%s.update' % self._magento_model, [id, vals['state']])
+        return self._call(
+            '%s.update' % self._magento_model, [id, vals['state']])
 
 
 @magento
@@ -389,7 +394,8 @@ class ClaimCommentAdapter(GenericAdapter):
         """ Search records according to some criterias
         and returns their information
         """
-        backend = self.session.browse('magento.backend', self.backend_record.id)
+        backend = self.session.browse(
+            'magento.backend', self.backend_record.id)
         if filters is None:
             filters = {}
         if from_date is not None:
@@ -401,11 +407,14 @@ class ClaimCommentAdapter(GenericAdapter):
 
     def create(self, is_customer, message, created_at, rma_id):
         """ Create a claim comment on the external system """
-        return self._call('%s.create' % self._magento_model,
-                          [{'is_customer': is_customer,
-                           'message': message,
-                           'created_at': created_at,
-                           'rma_id': rma_id}])
+        return self._call(
+            '%s.create' % self._magento_model, [{
+                'is_customer': is_customer,
+                'message': message,
+                'created_at': created_at,
+                'rma_id': rma_id
+                }]
+            )
 
 
 @magento
@@ -428,7 +437,8 @@ class ClaimAttachmentAdapter(GenericAdapter):
         """ Search records according to some criterias
         and returns their information
         """
-        backend = self.session.browse('magento.backend', self.backend_record.id)
+        backend = self.session.browse(
+            'magento.backend', self.backend_record.id)
         if filters is None:
             filters = {}
         if from_date is not None:
@@ -567,8 +577,8 @@ class ClaimCommentImport(MagentoImportSynchronizer):
             claim_importer.run(record['rma_id'])
 
     def _create(self, data):
-        #we test whether the comment already exists in 'magento.claim.comment'
-        #it may have been created during the import dependencies (RMA import)
+        # we test whether the comment already exists in 'magento.claim.comment'
+        # it may have been created during the import dependencies (RMA import)
         openerp_binding_id = False
         if 'magento_id' in data and data.get('magento_id'):
             openerp_binding_id = self.session.search(
@@ -608,8 +618,9 @@ class ClaimAttachmentBatchImport(DelayedBatchImport):
             record_ids.append(int(records[index]['rma_attachment_id']))
             index += 1
             self._import_record(record)
-        _logger.info('search for magento claim attachments from %s returned %s',
-                     filters, record_ids)
+        _logger.info(
+            'search for magento claim attachments from %s returned %s',
+            filters, record_ids)
 
 
 @magento
@@ -660,22 +671,23 @@ class ClaimAttachmentImport(MagentoImportSynchronizer):
             claim_importer.run(record['rma_id'])
 
     def _create(self, data):
-        #we test whether the attachment already exists in 'magento.claim.attachment'
-        #it may have been created during the import dependencies (RMA import)
-        openerp_binding_id = False
+        # we test whether the attachment already exists in
+        # 'magento.claim.attachment'
+        # it may have been created during the import dependencies (RMA import)
+        erp_binding_id = False
         if 'magento_id' in data and data.get('magento_id'):
-            openerp_binding_id = self.session.search(
+            erp_binding_id = self.session.search(
                 self.model._name, [
                     ('magento_id', '=', data['magento_id']),
                     ('backend_id', '=', self.backend_record.id)
                 ])
-        if not openerp_binding_id:
-            openerp_binding_id = super(ClaimAttachmentImport, self)._create(data)
+        if not erp_binding_id:
+            erp_binding_id = super(ClaimAttachmentImport, self)._create(data)
             checkpoint = self.get_connector_unit_for_model(AddCheckpoint)
-            checkpoint.run(openerp_binding_id)
+            checkpoint.run(erp_binding_id)
         else:
-            openerp_binding_id = openerp_binding_id[0]
-        return openerp_binding_id
+            erp_binding_id = erp_binding_id[0]
+        return erp_binding_id
 
 
 @magento
@@ -690,15 +702,15 @@ class CrmClaimImportMapper(ImportMapper):
     children = [
         ('items', 'magento_claim_line_ids', 'magento.claim.line'),
         ('comments', 'magento_claim_comment_ids', 'magento.claim.comment'),
-        ('attachments', 'magento_claim_attachment_ids', 'magento.claim.attachment'),
+        ('attachments',
+         'magento_claim_attachment_ids',
+         'magento.claim.attachment'),
     ]
 
     def _map_child(self, map_record, from_attr, to_attr, model_name):
         if from_attr in map_record.source:
-            return super(CrmClaimImportMapper, self)._map_child(map_record,
-                                                                from_attr,
-                                                                to_attr,
-                                                                model_name)
+            return super(CrmClaimImportMapper, self)._map_child(
+                map_record, from_attr, to_attr, model_name)
 
     @mapping
     def partner_id(self, record):
@@ -722,7 +734,10 @@ class CrmClaimImportMapper(ImportMapper):
             invoice_ids = self.session.search(
                 'account.invoice',
                 [['sale_ids', 'in', order_ids]])
-            return {'ref': ref, 'invoice_id': invoice_ids and invoice_ids[0], 'order_id': order_ids[0]}
+            return {
+                'ref': ref,
+                'invoice_id': invoice_ids and invoice_ids[0],
+                'order_id': order_ids[0]}
 
     @mapping
     def state(self, record):
@@ -901,7 +916,8 @@ def crm_claim_import_batch(session, model_name, backend_id, filters=None):
     """ Prepare a batch import of claims from Magento """
     if filters is None:
         filters = {}
-    assert 'magento_storeview_id' in filters, 'Missing information about Magento Storeview'
+    assert 'magento_storeview_id' in filters, \
+           'Missing information about Magento Storeview'
     env = get_environment(session, model_name, backend_id)
     importer = env.get_connector_unit(CrmClaimBatchImport)
     importer.run(filters)
@@ -912,18 +928,21 @@ def claim_comment_import_batch(session, model_name, backend_id, filters=None):
     """ Prepare a batch import of claim comments from Magento """
     if filters is None:
         filters = {}
-    assert 'magento_storeview_id' in filters, 'Missing information about Magento Storeview'
+    assert 'magento_storeview_id' in filters, \
+           'Missing information about Magento Storeview'
     env = get_environment(session, model_name, backend_id)
     importer = env.get_connector_unit(ClaimCommentBatchImport)
     importer.run(filters)
 
 
 @job
-def claim_attachment_import_batch(session, model_name, backend_id, filters=None):
+def claim_attachment_import_batch(
+        session, model_name, backend_id, filters=None):
     """ Prepare a batch import of claim attachments from Magento """
     if filters is None:
         filters = {}
-    assert 'magento_storeview_id' in filters, 'Missing information about Magento Storeview'
+    assert 'magento_storeview_id' in filters, \
+           'Missing information about Magento Storeview'
     env = get_environment(session, model_name, backend_id)
     importer = env.get_connector_unit(ClaimAttachmentBatchImport)
     importer.run(filters)
@@ -932,8 +951,8 @@ def claim_attachment_import_batch(session, model_name, backend_id, filters=None)
 @on_record_write(model_names='crm.claim')
 def delay_export_all_bindings(session, model_name, record_id, vals):
     if 'stage_id' in vals:
-        magentoerpconnect.delay_export_all_bindings(session, model_name,
-                                                record_id, vals=vals)
+        magentoerpconnect.delay_export_all_bindings(
+            session, model_name, record_id, vals=vals)
 
 
 @magento
@@ -1131,7 +1150,8 @@ def export_claim_attachment(session, model_name, record_id):
     attachment = session.browse(model_name, record_id)
     backend_id = attachment.backend_id.id
     env = get_environment(session, model_name, backend_id)
-    attachment_exporter = env.get_connector_unit(MagentoClaimAttachmentExporter)
+    attachment_exporter = env.get_connector_unit(
+        MagentoClaimAttachmentExporter)
     return attachment_exporter.run(record_id)
 
 
@@ -1166,7 +1186,8 @@ class MagentoClaimAttachmentBinder(MagentoModelBinder):
         ]
 
     def bind(self, external_id, binding_id):
-        if isinstance(external_id, dict) and external_id.get('rma_attachment_id'):
+        if (isinstance(external_id, dict) and
+                external_id.get('rma_attachment_id')):
             external_id = external_id['rma_attachment_id']
         return super(MagentoClaimAttachmentBinder, self).bind(
             external_id, binding_id)

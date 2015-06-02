@@ -36,16 +36,17 @@ RMA (Return Merchandise Authorization) importation from Magento
 Functionnalities:
     - claims import
     - attachments (from 'claims') synchronisation (import/export)
-    - mail messages (from 'claims') synchronisation (import/export) : 'internal notes' are not exported (only mail)
+    - mail messages (from 'claims') synchronisation (import/export) :
+        'internal notes' are not exported (only mail)
 
 Requirements:
     Magento installation with module 'rma' embeded
  """,
  'data': [
-    'magento_model_view.xml',
-    'ir_attachment_view.xml',
-    'claim_data.xml',
-    ],
+     'magento_model_view.xml',
+     'ir_attachment_view.xml',
+     'claim_data.xml',
+     ],
  'installable': True,
  'application': False,
-}
+ }
