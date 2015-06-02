@@ -1,7 +1,7 @@
 Changelog
 ---------
 
-3.0.0 (unreleased)
+3.0.0 (2015-06-02)
 ~~~~~~~~~~~~~~~~~~
 
 * Migrated on the new Odoo API and the new Connector API
