@@ -201,3 +201,30 @@ class TestSaleOrder(SetUpMagentoSynchronized):
         partner_binding = binding.partner_id.magento_bind_ids
         self.assertEqual(partner_binding.magento_id, 'guestorder:900000700')
         self.assertTrue(partner_binding.guest_customer)
+
+    def test_import_carrier_product(self):
+        """ Product of a carrier is used in the sale line """
+        product = self.env['product.product'].create({
+            'name': 'Carrier Product',
+        })
+        self.env['delivery.carrier'].create({
+            'name': 'Flatrate',
+            'partner_id': self.env.ref('base.main_partner').id,
+            'product_id': product.id,
+            'magento_code': 'flatrate_flatrate',
+            'magento_carrier_code': 'flatrate_flatrate',
+        })
+        binding = self._import_sale_order(900000691)
+        # check if we have a line with the carrier product,
+        # which is the shipping line
+        shipping_line = False
+        for line in binding.order_line:
+            if line.product_id == product:
+                shipping_line = True
+        self.assertTrue(shipping_line,
+                        msg='No shipping line with the product of the carrier '
+                            'has been found. Line names: %s' %
+                            (', '.join("%s (%s)" % (line.name,
+                                                    line.product_id.name)
+                                       for line
+                                       in binding.order_line),))
