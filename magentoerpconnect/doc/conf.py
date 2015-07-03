@@ -14,33 +14,56 @@
 
 import sys
 import os
-import openerp
 import sphinx_bootstrap_theme
 
-# If extensions (or modules to document with autodoc) are in another
-# directory, add these directories to sys.path here. If the directory is
-# relative to the documentation root, use os.path.abspath to make it
-# absolute, like shown here.
-# sys.path.insert(0, os.path.abspath('.'))
 sys.path.append(os.path.abspath('_themes'))
-sys.path.append(os.path.abspath('../../../odoo'))
 
-# Load Odoo with correct addons-path so the doc can be built even if
-# the addon import modules from other branches
-BASE_PATH = os.path.abspath(os.path.join(os.getcwd(), '../../..'))
-# You may need to change with your own paths
-ADDONS_PATHS = ('odoo/openerp/addons',
-                'odoo/addons',
-                'connector',
-                'connector-ecommerce',
-                'e-commerce',
-                'sale-workflow',
-                'product-attribute',
-                'connector-magento')
-pathes = [os.path.join(BASE_PATH, path) for path in ADDONS_PATHS]
-options = ['--addons-path', ','.join(pathes)]
-openerp.tools.config.parse_config(options)
-os.environ['TZ'] = 'UTC'
+if os.environ.get('TRAVIS_BUILD_DIR') and os.environ.get('VERSION'):
+    # build from travis
+    repos_home = os.environ['HOME']
+    odoo_folder = 'odoo-8.0'
+    odoo_root = os.path.join(repos_home, odoo_folder)
+    build_path = os.environ['TRAVIS_BUILD_DIR']
+else:
+    # build from a buildout
+    odoo_root = os.path.abspath('../../../odoo')
+    repos_home = os.path.abspath('../../..')
+    build_path = os.path.abspath('../..')
+
+repos = [repo for repo in os.listdir(repos_home)
+         if os.path.isdir(os.path.join(repos_home, repo))
+         and not repo.startswith('.')]
+
+addons_paths = []
+
+
+def add_path(*paths):
+    addons_paths.append(
+        os.path.join(*paths)
+    )
+
+add_path(odoo_root, 'openerp', 'addons')
+add_path(odoo_root, 'addons')
+add_path(build_path)
+
+# filter addons-paths which are not dependencies (we have other
+# directories such as "builds" on travis)
+with open('../../oca_dependencies.txt', 'r') as depfile:
+    dependencies = depfile.read().split()
+for repo in repos:
+    if repo in dependencies:
+        add_path(repos_home, repo)
+
+addons = [x for x in os.listdir(build_path)
+          if not x.startswith(('.', '__')) and
+          os.path.isdir(os.path.join(build_path, x))]
+
+# sphinxodoo.ext.autodoc variables
+sphinxodoo_root_path = odoo_root
+sphinxodoo_addons = addons
+sphinxodoo_addons_path = addons_paths
+sys.path.append(build_path)
+
 
 # -- General configuration --------------------------------------------
 
@@ -53,7 +76,9 @@ os.environ['TZ'] = 'UTC'
 extensions = ['sphinx.ext.autodoc',
               'sphinx.ext.intersphinx',
               'sphinx.ext.todo',
-              'sphinx.ext.viewcode']
+              'sphinx.ext.viewcode',
+              'sphinxodoo.ext.autodoc',
+              ]
 
 todo_include_todos = False
 
