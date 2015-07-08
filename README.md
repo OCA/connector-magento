@@ -13,3 +13,7 @@ The mailing list for this project is on https://launchpad.net/~openerp-connector
 Documentation:
 http://www.odoo-magento-connector.com
 http://www.odoo-connector.com
+
+Translation Status
+------------------
+[![Transifex Status](https://www.transifex.com/projects/p/OCA-connector-magento-8-0/chart/image_png)](https://www.transifex.com/projects/p/OCA-connector-magento-8-0)
