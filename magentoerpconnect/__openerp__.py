@@ -21,7 +21,7 @@
 ##############################################################################
 
 {'name': 'Magento Connector',
- 'version': '2.4.2',
+ 'version': '2.5.0',
  'category': 'Connector',
  'depends': ['account',
              'product',
@@ -33,7 +33,7 @@
  'external_dependencies': {
      'python': ['magento'],
  },
- 'author': 'Connector Core Editors',
+ 'author': "Camptocamp,Akretion,Odoo Community Association (OCA)",
  'license': 'AGPL-3',
  'website': 'http://www.odoo-magento-connector.com',
  'description': """

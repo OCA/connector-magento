@@ -24,7 +24,7 @@
     'category': 'Connector',
     'depends': ['magentoerpconnect',
                 ],
-    'author': 'MagentoERPconnect Core Editors',
+    'author': "Akretion,Odoo Community Association (OCA)",
     'license': 'AGPL-3',
     'website': 'http://www.odoo-magento-connector.com',
     'description': """
@@ -57,6 +57,7 @@ Settings / options
     },
     'data': [
         'magento_model_view.xml',
+        'security/ir.model.access.csv',
     ],
     'installable': True,
     'application': False,

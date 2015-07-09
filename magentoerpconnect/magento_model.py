@@ -144,7 +144,6 @@ class magento_backend(orm.Model):
             'Import products from date'),
         'import_categories_from_date': fields.datetime(
             'Import categories from date'),
-        'catalog_price_tax_included': fields.boolean('Prices include tax'),
         'product_stock_field_id': fields.many2one(
             'ir.model.fields',
             string='Stock Field',
@@ -273,14 +272,19 @@ class magento_backend(orm.Model):
                                'import_products_from_date', context=context)
         return True
 
+    def _domain_for_update_product_stock_qty(self, cr, uid, ids, context=None):
+        return [
+            ('backend_id', 'in', ids),
+            ('type', '!=', 'service'),
+            ('no_stock_sync', '=', False), ]
+
     def update_product_stock_qty(self, cr, uid, ids, context=None):
         if not hasattr(ids, '__iter__'):
             ids = [ids]
         mag_product_obj = self.pool.get('magento.product.product')
-        product_ids = mag_product_obj.search(cr, uid,
-                                             [('backend_id', 'in', ids),
-                                              ('no_stock_sync', '=', False)],
-                                             context=context)
+        domain = self._domain_for_update_product_stock_qty(cr, uid, ids,
+                                                           context=context)
+        product_ids = mag_product_obj.search(cr, uid, domain, context=context)
         mag_product_obj.recompute_magento_qty(cr, uid, product_ids,
                                               context=context)
         return True
@@ -525,6 +529,7 @@ class magento_storeview(orm.Model):
             'No Sales Order Synchronization',
             help='Check if the storeview is active in Magento '
                  'but its sales orders should not be imported.'),
+        'catalog_price_tax_included': fields.boolean('Prices include tax'),
     }
 
     _defaults = {
