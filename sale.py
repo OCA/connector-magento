@@ -23,8 +23,8 @@ from openerp.addons.magentoerpconnect import sale
 from openerp.addons.magentoerpconnect.backend import magento
 
 
-@magento(replacing=sale.SaleOrderLineBundleImportMapper)
-class SaleOrderLineBundleImportMapper(sale.SaleOrderLineBundleImportMapper):
+@magento(replacing=sale.BundleLineStrategy)
+class BundleLineStrategy(sale.BundleLineStrategy):
     _model_name = 'magento.sale.order.line'
 
     def price_is_zero(self, record):
@@ -36,15 +36,16 @@ class SaleOrderLineBundleImportMapper(sale.SaleOrderLineBundleImportMapper):
             return True
 
 
-@magento(replacing=sale.SaleOrderBundleImport)
-class SaleOrderBundleImport(sale.SaleOrderBundleImport):
+@magento(replacing=sale.BundleLineLinker)
+class BundleLineLinker(sale.BundleLineLinker):
     _model_name = ['magento.sale.order']
 
-    def link_hierarchical_lines(self, binding_id):
+    def link_lines(self, record):
         line_binder = self.get_binder_for_model('magento.sale.order.line')
-        magento_sale_order = self.session.browse(self.model._name, binding_id)
-        for line in magento_sale_order.magento_order_line_ids:
-            if line.magento_parent_item_id:
-                parent_id = line_binder.to_openerp(
-                    line.magento_parent_item_id, unwrap=True)
+        for item in record['items']:
+            if item['parent_item_id']:
+                line_id = line_binder.to_openerp(item['item_id'], unwrap=True)
+                line = self.session.browse('sale.order.line', line_id)
+                parent_id = line_binder.to_openerp(item['parent_item_id'],
+                                                   unwrap=True)
                 line.write({'line_parent_id': parent_id})

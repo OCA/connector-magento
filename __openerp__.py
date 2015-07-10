@@ -26,11 +26,11 @@
              'picking_line_sale_link',
              'invoice_line_sale_link',
              ],
- 'author': 'MagentoERPconnect Core Editors',
+ 'author': 'Akretion,Odoo Community Association (OCA)',
  'license': 'AGPL-3',
  'description': """
-Magento Connector - BUNDLE SPLIT
-=======================================
+Magento Connector - Bundle Split
+================================
 Extension for **Magento Connector**, add management of bundle products
 
 Simple management of bundle items imported from Magento.
