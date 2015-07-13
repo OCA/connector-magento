@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_product_category_form" model="ir.ui.view">
+            <field name="name">product.category.form.magento</field>
+            <field name="model">product.category</field>
+            <field name="inherit_id" ref="product.product_category_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet/group[1]" position="inside">
+                    <newline/>
+                    <group name="magento" string="Magento Bindings">
+                        <field name="magento_bind_ids" nolabel="1">
+                            <tree>
+                                <field name="backend_id"/>
+                            </tree>
+                        </field>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_magento_product_category_form" model="ir.ui.view">
+            <field name="name">magento.product.category.form</field>
+            <field name="model">magento.product.category</field>
+            <field name="arch" type="xml">
+                <form string="Magento Product Category">
+                    <group>
+                        <field name="backend_id"/>
+                        <field name="magento_id"/>
+                        <field name="description"/>
+                        <field name="magento_parent_id"/>
+                        <field name="magento_child_ids"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_magento_product_category_tree" model="ir.ui.view">
+            <field name="name">magento.product.category.tree</field>
+            <field name="model">magento.product.category</field>
+            <field name="arch" type="xml">
+                <tree string="Magento Product Category">
+                    <field name="backend_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="product_normal_form_view" model="ir.ui.view">
+            <field name="name">product.product.form</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="connector_base_product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <page name="connector" position="attributes">
+                    <attribute name="invisible">0</attribute>
+                </page>
+                <page name="connector" position="inside">
+                    <group string="Magento Bindings">
+                        <field name="magento_bind_ids" nolabel="1">
+                            <tree>
+                                <field name="backend_id"/>
+                                <field name="product_type"/>
+                            </tree>
+                        </field>
+                    </group>
+                </page>
+            </field>
+        </record>
+
+        <record id="view_magento_product_form" model="ir.ui.view">
+            <field name="name">magento.product.product.form</field>
+            <field name="model">magento.product.product</field>
+            <field name="arch" type="xml">
+                <form string="Magento Product">
+                    <group>
+                        <field name="backend_id"/>
+                        <field name="magento_id"/>
+                        <field name="created_at" readonly="1"/>
+                        <field name="updated_at" readonly="1"/>
+                        <field name="product_type" readonly="1"/>
+                    </group>
+                    <group string="Inventory Options">
+                        <field name="no_stock_sync"/>
+                        <field name="manage_stock"/>
+                        <field name="backorders"/>
+                        <div class="oe_inline">
+                            <label for="magento_qty" class="oe_inline" />
+                            <field name="magento_qty" readonly="1" class="oe_inline"
+                                nolabel="1"/>
+                            <button name="recompute_magento_qty" string="(recompute)"
+                                class="oe_link oe_inline" type="object"/>
+                        </div>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_magento_product_tree" model="ir.ui.view">
+            <field name="name">magento.product.product.tree</field>
+            <field name="model">magento.product.product</field>
+            <field name="arch" type="xml">
+                <tree string="Magento Product">
+                    <field name="backend_id"/>
+                    <field name="product_type"/>
+                </tree>
+            </field>
+        </record>
+
+    </data>
+</openerp>

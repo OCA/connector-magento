@@ -25,9 +25,9 @@
  'depends': ['magentoerpconnect',
              ],
  'external_dependencies': {},
- 'author': 'Connector Core Editors',
+ 'author': "initOS GmbH & Co. KG,Odoo Community Association (OCA)",
  'license': 'AGPL-3',
- 'website': 'http://www.openerp-magento-connector.com',
+ 'website': 'http://www.odoo-magento-connector.com',
  'description': """
 
 """,

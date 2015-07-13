@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!-- After installation of the module, open the connector menu -->
+        <record id="base.open_menu" model="ir.actions.todo">
+            <field name="action_id" ref="connector.action_client_connector_menu"/>
+            <field name="state">open</field>
+        </record>
+
+        <record id="view_magento_config_settings" model="ir.ui.view">
+            <field name="name">Connector Settings</field>
+            <field name="model">connector.config.settings</field>
+            <field name="inherit_id" ref="connector.view_connector_config_settings"/>
+            <field name="arch" type="xml">
+                <xpath expr="/form/group[1]" position="after">
+                    <separator string="Magentoerpconnect"/>
+                    <group>
+                        <label for="id" string="Extensions"/>
+                        <div>
+                            <div>
+                                <field name="module_magentoerpconnect_pricing" class="oe_inline"/>
+                                <label for="module_magentoerpconnect_pricing"/>
+                            </div>
+                            <div>
+                                <field name="module_magentoerpconnect_export_partner" class="oe_inline"/>
+                                <label for="module_magentoerpconnect_export_partner"/>
+                            </div>
+                        </div>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>
+
+

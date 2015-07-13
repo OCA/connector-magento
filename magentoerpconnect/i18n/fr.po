@@ -1,0 +1,1248 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* magentoerpconnect
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 7.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-06-10 14:00+0000\n"
+"PO-Revision-Date: 2014-01-06 13:12+0000\n"
+"Last-Translator: Guewen Baconnier @ Camptocamp <Unknown>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2014-06-24 06:34+0000\n"
+"X-Generator: Launchpad (build 17065)\n"
+
+#. module: magentoerpconnect
+#: help:magento.sale.order,magento_order_id:0
+msgid "'order_id' field in Magento"
+msgstr "Champ 'order_id' dans Magento"
+
+#. module: magentoerpconnect
+#: view:magento.product.product:0
+msgid "(recompute)"
+msgstr "(recalculer)"
+
+#. module: magentoerpconnect
+#: sql_constraint:magento.backend:0
+msgid "A backend with the same sale prefix already exists"
+msgstr ""
+
+#. module: magentoerpconnect
+#: sql_constraint:magento.address:0
+msgid "A partner address with same ID on Magento already exists."
+msgstr "Une adresse avec le même ID Magento existe déjà."
+
+#. module: magentoerpconnect
+#: sql_constraint:magento.res.partner.category:0
+msgid "A partner tag with same ID on Magento already exists."
+msgstr "Une catégorie de partenaire avec le même ID Magento existe déjà."
+
+#. module: magentoerpconnect
+#: sql_constraint:magento.res.partner:0
+msgid "A partner with same ID on Magento already exists for this website."
+msgstr "Un client Magento avec le même ID Magento existe déjà."
+
+#. module: magentoerpconnect
+#: help:magento.backend,sale_prefix:0
+msgid ""
+"A prefix put before the name of imported sales orders.\n"
+"For instance, if the prefix is 'mag-', the sales order 100000692 in Magento, "
+"will be named 'mag-100000692' in OpenERP."
+msgstr ""
+
+#. module: magentoerpconnect
+#: sql_constraint:magento.product.category:0
+msgid "A product category with same ID on Magento already exists."
+msgstr "Une catégorie d'articles avec le même ID Magento existe déjà."
+
+#. module: magentoerpconnect
+#: sql_constraint:magento.product.product:0
+msgid "A product with the same ID on Magento already exists"
+msgstr "Un article avec le même ID Magento existe déjà."
+
+#. module: magentoerpconnect
+#: sql_constraint:magento.sale.order:0
+#: sql_constraint:magento.sale.order.line:0
+msgid "A sale order line with the same ID on Magento already exists."
+msgstr "Une ligne de commande avec le même ID Magento existe déjà."
+
+#. module: magentoerpconnect
+#: sql_constraint:magento.stock.picking:0
+msgid "A stock picking with same ID on Magento already exists."
+msgstr "Un bon de livraison avec le même ID Magento existe déjà."
+
+#. module: magentoerpconnect
+#: sql_constraint:magento.store:0
+msgid "A store with the same ID on Magento already exists."
+msgstr "Une boutique Magento avec le même ID Magento existe déjà."
+
+#. module: magentoerpconnect
+#: sql_constraint:magento.storeview:0
+msgid "A storeview with same ID on Magento already exists."
+msgstr "Une vue magasin Magento avec le même ID Magento existe déjà."
+
+#. module: magentoerpconnect
+#: sql_constraint:magento.website:0
+msgid "A website with the same ID on Magento already exists."
+msgstr "Un site web avec le même ID sur Magento existe déjà."
+
+#. module: magentoerpconnect
+#: view:magento.backend:0
+msgid "API"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,is_magento_order_address:0
+msgid "Address from a Magento Order"
+msgstr "Adresse d'une commande Magento"
+
+#. module: magentoerpconnect
+#: field:magento.backend,admin_location:0
+msgid "Admin Location"
+msgstr ""
+
+#. module: magentoerpconnect
+#: view:magento.backend:0
+msgid "Advanced Configuration"
+msgstr "Configuration avancée"
+
+#. module: magentoerpconnect
+#: help:magento.res.partner,consider_as_company:0
+msgid ""
+"An account imported with a 'company' in the billing address is considered as "
+"a company.\n"
+" The partner takes the name of the company and is not merged with the "
+"billing address."
+msgstr ""
+
+#. module: magentoerpconnect
+#: sql_constraint:magento.account.invoice:0
+msgid "An invoice with the same ID on Magento already exists."
+msgstr "Une facture Magento avec le même ID Magento existe déjà."
+
+#. module: magentoerpconnect
+#: model:ir.ui.menu,name:magentoerpconnect.menu_magento_backend
+msgid "Backends"
+msgstr "Backends"
+
+#. module: magentoerpconnect
+#: field:magento.backend,auth_basic_password:0
+msgid "Basic Auth. Password"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.backend,auth_basic_username:0
+msgid "Basic Auth. Username"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.backend,auth_basic_password:0
+msgid "Basic access authentication web server side password"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.backend,auth_basic_username:0
+msgid "Basic access authentication web server side username"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:res.partner,birthday:0
+msgid "Birthday"
+msgstr "Anniversaire"
+
+#. module: magentoerpconnect
+#: view:magento.backend:0
+msgid ""
+"By clicking on the buttons,\n"
+"                                    you will initiate the synchronizations\n"
+"                                    with Magento.\n"
+"                                    Note that the import or exports\n"
+"                                    won't be done directly,\n"
+"                                    they will create 'Jobs'\n"
+"                                    executed as soon as possible."
+msgstr ""
+"En cliquant sur les boutons,\n"
+"                                    Vous allez initier les synchronisations\n"
+"                                    avec Magento.\n"
+"                                    Important: les imports et exports\n"
+"                                    ne sont pas exécutés immédiatement,\n"
+"                                    ils vont créer des 'jobs',\n"
+"                                    exécutés aussitôt que possible."
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_delivery_carrier
+msgid "Carrier"
+msgstr "Transporteur"
+
+#. module: magentoerpconnect
+#: help:magento.storeview,no_sales_order_sync:0
+msgid ""
+"Check if the storeview is active in Magento but its sales orders should not "
+"be imported."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.product.product,no_stock_sync:0
+msgid "Check this to exclude the product from stock synchronizations."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.backend,product_stock_field_id:0
+msgid ""
+"Choose the field of the product which will be used for stock inventory "
+"updates.\n"
+"If empty, Quantity Available is used."
+msgstr ""
+"Choisir le champ de l'article qui doit être utilisé pour mettre à jour la "
+"quantité en stock.Quand le champ est vide, la quantité en stock est utilisée."
+
+#. module: magentoerpconnect
+#: field:magento.storeview,code:0
+#: field:magento.website,code:0
+msgid "Code"
+msgstr "Code"
+
+#. module: magentoerpconnect
+#: view:res.partner:0
+#: field:res.partner,company:0
+msgid "Company"
+msgstr "Société"
+
+#. module: magentoerpconnect
+#: selection:magento.stock.picking,picking_method:0
+msgid "Complete"
+msgstr "Complet"
+
+#. module: magentoerpconnect
+#: field:magento.product.product,magento_qty:0
+msgid "Computed Quantity"
+msgstr "Quantité calculée"
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_connector_config_settings
+msgid "Connector Configuration"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.res.partner,consider_as_company:0
+msgid "Considered as company"
+msgstr ""
+
+#. module: magentoerpconnect
+#: view:payment.method:0
+msgid "Create invoice on"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.store,create_invoice_on:0
+#: field:payment.method,create_invoice_on:0
+msgid "Create invoice on action"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,created_at:0
+#: field:magento.product.product,created_at:0
+#: field:magento.res.partner,created_at:0
+msgid "Created At (on Magento)"
+msgstr "Créé le (sur Magento)"
+
+#. module: magentoerpconnect
+#: field:magento.backend,use_custom_api_path:0
+msgid "Custom Api Path"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,is_default_billing:0
+msgid "Default Invoice"
+msgstr "Adresse de facturation par défaut"
+
+#. module: magentoerpconnect
+#: field:magento.backend,default_lang_id:0
+msgid "Default Language"
+msgstr "Langue par défaut"
+
+#. module: magentoerpconnect
+#: field:magento.backend,default_category_id:0
+msgid "Default Product Category"
+msgstr "Catégorie d'articles par défaut"
+
+#. module: magentoerpconnect
+#: field:magento.address,is_default_shipping:0
+msgid "Default Shipping"
+msgstr "Adresse de livraison par défaut"
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_stock_picking
+msgid "Delivery Orders"
+msgstr "Bons de livraisons"
+
+#. module: magentoerpconnect
+#: field:magento.product.category,description:0
+msgid "Description"
+msgstr "Description"
+
+#. module: magentoerpconnect
+#: selection:magento.product.product,manage_stock:0
+msgid "Do Not Manage Stock"
+msgstr "Ne pas gérer les stock"
+
+#. module: magentoerpconnect
+#: help:magento.store,send_invoice_paid_mail:0
+msgid ""
+"Does the invoice export/creation should send an email notification on "
+"Magento side?"
+msgstr ""
+"Définit si Magento doit envoyer un e-mail lors de l'export des factures."
+
+#. module: magentoerpconnect
+#: help:magento.store,send_picking_done_mail:0
+msgid ""
+"Does the picking export/creation should send an email notification on "
+"Magento side?"
+msgstr ""
+"Définit si Magento doit envoyer un e-mail lors de l'export des bons de "
+"livraisons."
+
+#. module: magentoerpconnect
+#: field:magento.res.partner,emailid:0
+msgid "E-mail address"
+msgstr "Adresse e-mail"
+
+#. module: magentoerpconnect
+#: field:magento.storeview,enabled:0
+msgid "Enabled"
+msgstr "Activé"
+
+#. module: magentoerpconnect
+#: field:connector.config.settings,module_magentoerpconnect_export_partner:0
+msgid "Export Partners to Magento (experimental)"
+msgstr ""
+"Exporter les clients vers Magento (expérimental, ne pas utiliser en "
+"production)"
+
+#. module: magentoerpconnect
+#: field:delivery.carrier,magento_export_tracking:0
+msgid "Export tracking numbers"
+msgstr "Exporter la référence de suivi transporteur"
+
+#. module: magentoerpconnect
+#: view:connector.config.settings:0
+msgid "Extensions"
+msgstr "Extensions"
+
+#. module: magentoerpconnect
+#: field:magento.res.partner,guest_customer:0
+msgid "Guest Customer"
+msgstr "Client invité"
+
+#. module: magentoerpconnect
+#: view:magento.backend:0
+msgid "HTTP Authentication"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:connector.config.settings,module_magentoerpconnect_catalog:0
+msgid "Handle the product's catalog (not implemented)"
+msgstr "Gérer le catalogue d'articles depuis OpenERP (non supporté)"
+
+#. module: magentoerpconnect
+#: field:magento.account.invoice,magento_id:0
+#: field:magento.address,magento_id:0
+#: field:magento.binding,magento_id:0
+#: field:magento.product.category,magento_id:0
+#: field:magento.product.product,magento_id:0
+#: field:magento.res.partner,magento_id:0
+#: field:magento.res.partner.category,magento_id:0
+#: field:magento.sale.order,magento_id:0
+#: field:magento.sale.order.line,magento_id:0
+#: field:magento.stock.picking,magento_id:0
+#: field:magento.store,magento_id:0
+#: field:magento.storeview,magento_id:0
+#: field:magento.website,magento_id:0
+msgid "ID on Magento"
+msgstr "ID sur Magento"
+
+#. module: magentoerpconnect
+#: help:magento.backend,default_category_id:0
+msgid ""
+"If a default category is selected, products imported without a category will "
+"be linked to it."
+msgstr ""
+"Si une catégorie par défaut est sélectionnée, les articles importés sans "
+"catégorie y seront liés."
+
+#. module: magentoerpconnect
+#: help:magento.backend,default_lang_id:0
+msgid ""
+"If a default language is selected, the records will be imported in the "
+"translation of this language.\n"
+"Note that a similar configuration exists for each storeview."
+msgstr ""
+"Si une langue par défaut est sélectionnée, les enregistements seront "
+"importés dans la traduction de cette langue.\n"
+"Note: une configuration similaire peut être définie sur chaque vue magasin."
+
+#. module: magentoerpconnect
+#: view:magento.storeview:0
+msgid "Import Sale Orders"
+msgstr "Importer les commandes"
+
+#. module: magentoerpconnect
+#: view:magento.storeview:0
+msgid "Import Sale Orders since"
+msgstr "Importer les commandes depuis"
+
+#. module: magentoerpconnect
+#: view:magento.backend:0
+msgid "Import all customer groups"
+msgstr "Importer tous les groupes client"
+
+#. module: magentoerpconnect
+#: field:magento.backend,import_categories_from_date:0
+msgid "Import categories from date"
+msgstr "Importer les catégories depuis la date"
+
+#. module: magentoerpconnect
+#: view:magento.backend:0
+#: view:magento.website:0
+msgid "Import in background"
+msgstr "Importer en arrière-plan"
+
+#. module: magentoerpconnect
+#: view:magento.backend:0
+msgid "Import partners from all websites"
+msgstr "Importer les clients de tous les sites web"
+
+#. module: magentoerpconnect
+#: field:magento.website,import_partners_from_date:0
+msgid "Import partners from date"
+msgstr "Importer les clients depuis la date"
+
+#. module: magentoerpconnect
+#: view:magento.website:0
+msgid "Import partners since"
+msgstr "Importer les partenaires depuis"
+
+#. module: magentoerpconnect
+#: view:magento.backend:0
+msgid "Import products categories since"
+msgstr "Importer les catégories d'articles depuis"
+
+#. module: magentoerpconnect
+#: field:magento.backend,import_products_from_date:0
+msgid "Import products from date"
+msgstr "Importer les articles depuis la date"
+
+#. module: magentoerpconnect
+#: view:magento.backend:0
+msgid "Import products since"
+msgstr "Importer les articles depuis"
+
+#. module: magentoerpconnect
+#: field:magento.storeview,import_orders_from_date:0
+msgid "Import sale orders from date"
+msgstr "Importer les commandes depuis une date"
+
+#. module: magentoerpconnect
+#: view:magento.backend:0
+msgid "Import sales orders from all store views"
+msgstr "Importer les commandes depuis toutes les vues magasin"
+
+#. module: magentoerpconnect
+#: view:magento.backend:0
+#: view:magento.storeview:0
+#: view:magento.website:0
+msgid "Imports"
+msgstr "Imports"
+
+#. module: magentoerpconnect
+#: view:magento.store:0
+#: view:magento.storeview:0
+#: view:magento.website:0
+msgid "Informations"
+msgstr "Informations"
+
+#. module: magentoerpconnect
+#: view:magento.product.product:0
+msgid "Inventory Options"
+msgstr "Options d'inventaire"
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_account_invoice
+#: field:magento.account.invoice,openerp_id:0
+msgid "Invoice"
+msgstr "Facture"
+
+#. module: magentoerpconnect
+#: field:magento.storeview,lang_id:0
+msgid "Language"
+msgstr "Langue"
+
+#. module: magentoerpconnect
+#: help:magento.product.product,magento_qty:0
+msgid "Last computed quantity to send on Magento."
+msgstr "Dernière quantité calculée à envoyer à Magento"
+
+#. module: magentoerpconnect
+#: field:magento.account.invoice,sync_date:0
+#: field:magento.address,sync_date:0
+#: field:magento.binding,sync_date:0
+#: field:magento.product.category,sync_date:0
+#: field:magento.product.product,sync_date:0
+#: field:magento.res.partner,sync_date:0
+#: field:magento.res.partner.category,sync_date:0
+#: field:magento.sale.order,sync_date:0
+#: field:magento.sale.order.line,sync_date:0
+#: field:magento.stock.picking,sync_date:0
+#: field:magento.store,sync_date:0
+#: field:magento.storeview,sync_date:0
+#: field:magento.website,sync_date:0
+msgid "Last synchronization date"
+msgstr "Dernière date de synchronisation"
+
+#. module: magentoerpconnect
+#: field:magento.backend,location:0
+msgid "Location"
+msgstr "Emplacement"
+
+#. module: magentoerpconnect
+#: model:ir.ui.menu,name:magentoerpconnect.menu_magento_root
+#: view:payment.method:0
+#: view:res.partner.category:0
+msgid "Magento"
+msgstr "Magento"
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_magento_address
+#: view:magento.address:0
+msgid "Magento Address"
+msgstr "Adresse Magento"
+
+#. module: magentoerpconnect
+#: view:res.partner:0
+#: field:res.partner,magento_address_bind_ids:0
+msgid "Magento Address Bindings"
+msgstr "Liens avec les adresses Magento"
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_magento_backend
+#: field:magento.account.invoice,backend_id:0
+#: field:magento.address,backend_id:0
+#: view:magento.backend:0
+#: field:magento.binding,backend_id:0
+#: field:magento.product.category,backend_id:0
+#: field:magento.product.product,backend_id:0
+#: field:magento.res.partner,backend_id:0
+#: field:magento.res.partner.category,backend_id:0
+#: field:magento.sale.order,backend_id:0
+#: field:magento.sale.order.line,backend_id:0
+#: field:magento.stock.picking,backend_id:0
+#: field:magento.store,backend_id:0
+#: field:magento.storeview,backend_id:0
+#: field:magento.website,backend_id:0
+msgid "Magento Backend"
+msgstr "Backend Magento"
+
+#. module: magentoerpconnect
+#: model:ir.actions.act_window,name:magentoerpconnect.action_magento_backend
+msgid "Magento Backends"
+msgstr "Backends Magento"
+
+#. module: magentoerpconnect
+#: field:delivery.carrier,magento_carrier_code:0
+msgid "Magento Base Carrier Code"
+msgstr "Code de base de transporteur sur Magento"
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_magento_binding
+#: model:ir.model,name:magentoerpconnect.model_magento_res_partner_category
+msgid "Magento Binding (abstract)"
+msgstr "Lien Magento (abstrait)"
+
+#. module: magentoerpconnect
+#: view:account.invoice:0
+#: field:account.invoice,magento_bind_ids:0
+#: view:product.category:0
+#: field:product.category,magento_bind_ids:0
+#: view:product.product:0
+#: field:product.product,magento_bind_ids:0
+#: view:res.partner:0
+#: field:res.partner,magento_bind_ids:0
+#: field:res.partner.category,magento_bind_ids:0
+#: field:sale.order,magento_bind_ids:0
+#: field:sale.order.line,magento_bind_ids:0
+#: field:sale.shop,magento_bind_ids:0
+#: field:stock.picking,magento_bind_ids:0
+#: view:stock.picking:0
+#: field:stock.picking,magento_bind_ids:0
+msgid "Magento Bindings"
+msgstr "Liens Magento"
+
+#. module: magentoerpconnect
+#: field:delivery.carrier,magento_code:0
+msgid "Magento Carrier Code"
+msgstr "Code de transporteur Magento"
+
+#. module: magentoerpconnect
+#: field:magento.product.category,magento_child_ids:0
+msgid "Magento Child Categories"
+msgstr "Catégories filles Magento"
+
+#. module: magentoerpconnect
+#: view:magento.backend:0
+msgid "Magento Configuration"
+msgstr "Configuration Magento"
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_magento_stock_picking
+#: view:magento.stock.picking:0
+msgid "Magento Delivery Order"
+msgstr "Bon de livraison Magento"
+
+#. module: magentoerpconnect
+#: field:magento.res.partner,group_id:0
+msgid "Magento Group (Category)"
+msgstr "Groupe de client Magento (Catégorie)"
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_magento_account_invoice
+#: view:magento.account.invoice:0
+msgid "Magento Invoice"
+msgstr "Facture Magento"
+
+#. module: magentoerpconnect
+#: field:magento.sale.order,magento_order_id:0
+msgid "Magento Order ID"
+msgstr "ID de commande Magento"
+
+#. module: magentoerpconnect
+#: field:magento.sale.order,magento_order_line_ids:0
+msgid "Magento Order Lines"
+msgstr "Lignes de commande Magento"
+
+#. module: magentoerpconnect
+#: field:magento.product.category,magento_parent_id:0
+msgid "Magento Parent Category"
+msgstr "Catégorie parente dans Magento"
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_magento_res_partner
+#: field:magento.address,magento_partner_id:0
+#: view:magento.res.partner:0
+msgid "Magento Partner"
+msgstr "Client Magento"
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_magento_product_product
+#: view:magento.product.product:0
+msgid "Magento Product"
+msgstr "Article Magento"
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_magento_product_category
+#: view:magento.product.category:0
+msgid "Magento Product Category"
+msgstr "Catégorie d'articles Magento"
+
+#. module: magentoerpconnect
+#: field:magento.product.product,product_type:0
+msgid "Magento Product Type"
+msgstr "Type d'article Magento"
+
+#. module: magentoerpconnect
+#: field:magento.backend,product_binding_ids:0
+#: field:magento.website,product_binding_ids:0
+msgid "Magento Products"
+msgstr "Articles Magento"
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_magento_sale_order
+#: field:magento.account.invoice,magento_order_id:0
+#: field:magento.sale.order.line,magento_order_id:0
+#: field:magento.stock.picking,magento_order_id:0
+msgid "Magento Sale Order"
+msgstr "Commande Magento"
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_magento_sale_order_line
+msgid "Magento Sale Order Line"
+msgstr "Ligne de commande Magento"
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_magento_store
+#: view:magento.store:0
+msgid "Magento Store"
+msgstr "Magasin Magento"
+
+#. module: magentoerpconnect
+#: model:ir.actions.act_window,name:magentoerpconnect.action_magento_store
+msgid "Magento Stores"
+msgstr "Magasins Magento"
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_magento_storeview
+#: field:magento.sale.order,storeview_id:0
+#: view:magento.storeview:0
+msgid "Magento Storeview"
+msgstr "Vue magasin Magento"
+
+#. module: magentoerpconnect
+#: model:ir.actions.act_window,name:magentoerpconnect.action_magento_storeview
+msgid "Magento Storeviews"
+msgstr "Vues magasin Magento"
+
+#. module: magentoerpconnect
+#: field:delivery.carrier,magento_tracking_title:0
+msgid "Magento Tracking Title"
+msgstr "Titre de suivi de livraison sur Magento"
+
+#. module: magentoerpconnect
+#: field:magento.res.partner,taxvat:0
+msgid "Magento VAT"
+msgstr "TVA Magento"
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_magento_website
+#: field:magento.address,website_id:0
+#: field:magento.res.partner,website_id:0
+#: field:magento.store,website_id:0
+#: view:magento.website:0
+msgid "Magento Website"
+msgstr "Site web Magento"
+
+#. module: magentoerpconnect
+#: model:ir.actions.act_window,name:magentoerpconnect.action_magento_website
+msgid "Magento Websites"
+msgstr "Sites web Magento"
+
+#. module: magentoerpconnect
+#: view:connector.config.settings:0
+msgid "Magentoerpconnect"
+msgstr "Magentoerpconnect"
+
+#. module: magentoerpconnect
+#: view:magento.backend:0
+msgid "Main Configuration"
+msgstr "Configuration principale"
+
+#. module: magentoerpconnect
+#: field:magento.product.product,backorders:0
+msgid "Manage Inventory Backorders"
+msgstr "Commandes en rupture de stock"
+
+#. module: magentoerpconnect
+#: selection:magento.product.product,manage_stock:0
+msgid "Manage Stock"
+msgstr "Gérer les stocks"
+
+#. module: magentoerpconnect
+#: field:magento.product.product,manage_stock:0
+msgid "Manage Stock Level"
+msgstr "Gérer les stocks"
+
+#. module: magentoerpconnect
+#: field:magento.backend,name:0
+#: field:magento.storeview,name:0
+#: field:magento.website,name:0
+msgid "Name"
+msgstr "Nom"
+
+#. module: magentoerpconnect
+#: field:magento.res.partner,newsletter:0
+msgid "Newsletter"
+msgstr "Newsletter"
+
+#. module: magentoerpconnect
+#: field:magento.storeview,no_sales_order_sync:0
+msgid "No Sales Order Synchronization"
+msgstr ""
+
+#. module: magentoerpconnect
+#: selection:magento.product.product,backorders:0
+msgid "No Sell"
+msgstr "Pas de commandes au delà des stocks"
+
+#. module: magentoerpconnect
+#: field:magento.product.product,no_stock_sync:0
+msgid "No Stock Synchronization"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.sale.order.line,notes:0
+msgid "Notes"
+msgstr "Notes"
+
+#. module: magentoerpconnect
+#: view:magento.backend:0
+msgid ""
+"Once imported,\n"
+"                                    some types of records,\n"
+"                                    like the products or categories,\n"
+"                                    need a manual review.\n"
+"                                    You will find the list\n"
+"                                    of the new records to review\n"
+"                                    in the menu 'Connectors > Checkpoint'."
+msgstr ""
+"Une fois importés,\n"
+"                                    certains types d'enregistrements,\n"
+"                                    comme les articles ou les catégories,\n"
+"                                    nécessitent un contrôle manuel.\n"
+"                                    Vous trouverez la liste\n"
+"                                    des nouveaux enregistrements à vérifier\n"
+"                                    dans le menu 'Connecteurs > Point de "
+"contrôle'."
+
+#. module: magentoerpconnect
+#: view:magento.store:0
+#: view:magento.storeview:0
+#: view:magento.website:0
+msgid "Options"
+msgstr "Options"
+
+#. module: magentoerpconnect
+#: selection:magento.store,create_invoice_on:0
+#: selection:payment.method,create_invoice_on:0
+msgid "Paid"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.sale.order,magento_parent_id:0
+msgid "Parent Magento Order"
+msgstr "Commande Magento parente"
+
+#. module: magentoerpconnect
+#: selection:magento.stock.picking,picking_method:0
+msgid "Partial"
+msgstr "Partiel"
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_res_partner
+#: field:magento.address,openerp_id:0
+#: field:magento.res.partner,openerp_id:0
+msgid "Partner"
+msgstr "Partenaire"
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_res_partner_category
+msgid "Partner Categories"
+msgstr "Catégories de clients"
+
+#. module: magentoerpconnect
+#: field:magento.res.partner.category,openerp_id:0
+msgid "Partner Category"
+msgstr "Catégorie de partenaire"
+
+#. module: magentoerpconnect
+#: field:magento.backend,password:0
+msgid "Password"
+msgstr "Mot de passe"
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_payment_method
+msgid "Payment Method"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_stock_picking
+msgid "Picking List"
+msgstr "Liste de colisage"
+
+#. module: magentoerpconnect
+#: field:magento.stock.picking,picking_method:0
+msgid "Picking Method"
+msgstr "Méthode de livraison"
+
+#. module: magentoerpconnect
+#: field:connector.config.settings,module_magentoerpconnect_pricing:0
+msgid "Prices are managed in OpenERP with pricelists"
+msgstr "Les prix de vente sont gérés dans OpenERP avec des listes de prix"
+
+#. module: magentoerpconnect
+#: help:connector.config.settings,module_magentoerpconnect_pricing:0
+msgid ""
+"Prices are set in OpenERP and exported to Magento.\n"
+"\n"
+"This installs the module magentoerpconnect_pricing."
+msgstr ""
+"Les prix sont définis dans OpenERP et exportés vers Magento.\n"
+"\n"
+"Installe le module magentoerpconnect_pricing."
+
+#. module: magentoerpconnect
+#: field:magento.backend,catalog_price_tax_included:0
+msgid "Prices include tax"
+msgstr "Prix taxes-incluses"
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_product_product
+#: field:magento.product.product,openerp_id:0
+msgid "Product"
+msgstr "Article"
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_product_category
+#: field:magento.product.category,openerp_id:0
+msgid "Product Category"
+msgstr "Catégorie d'articles"
+
+#. module: magentoerpconnect
+#: field:magento.sale.order,openerp_id:0
+msgid "Sale Order"
+msgstr "Bons de Commande"
+
+#. module: magentoerpconnect
+#: field:magento.sale.order.line,openerp_id:0
+msgid "Sale Order Line"
+msgstr "Ligne de commande"
+
+#. module: magentoerpconnect
+#: field:magento.backend,sale_prefix:0
+msgid "Sale Prefix"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.store,openerp_id:0
+msgid "Sale Shop"
+msgstr "Magasin"
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_sale_order
+msgid "Sales Order"
+msgstr "Bon de commande"
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Ligne de commande"
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_sale_shop
+msgid "Sales Shop"
+msgstr "Magasin"
+
+#. module: magentoerpconnect
+#: selection:magento.product.product,backorders:0
+msgid "Sell Quantity < 0"
+msgstr "Autoriser les quantités négatives"
+
+#. module: magentoerpconnect
+#: selection:magento.product.product,backorders:0
+msgid "Sell Quantity < 0 and Use Customer Notification"
+msgstr "Autoriser les quantités négatives et prévenir le client"
+
+#. module: magentoerpconnect
+#: field:magento.store,send_invoice_paid_mail:0
+msgid "Send email notification on invoice validated/paid"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.store,send_picking_done_mail:0
+msgid "Send email notification on picking done"
+msgstr "Envoi d'e-mail de notification lors des expéditions"
+
+#. module: magentoerpconnect
+#: help:payment.method,create_invoice_on:0
+msgid ""
+"Should the invoice be created in Magento when it is validated or when it is "
+"paid in OpenERP?\n"
+"If nothing is set, the option falls back to the same option on the Magento "
+"store related to the sales order."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.store,create_invoice_on:0
+msgid ""
+"Should the invoice be created in Magento when it is validated or when it is "
+"paid in OpenERP?\n"
+"This only takes effect if the sales order's related payment method is not "
+"giving an option for this by itself. (See Payment Methods)"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.storeview,sort_order:0
+#: field:magento.website,sort_order:0
+msgid "Sort Order"
+msgstr "Tri"
+
+#. module: magentoerpconnect
+#: field:magento.backend,product_stock_field_id:0
+msgid "Stock Field"
+msgstr "Champ de stock"
+
+#. module: magentoerpconnect
+#: field:magento.stock.picking,openerp_id:0
+msgid "Stock Picking"
+msgstr "Bon de livraison"
+
+#. module: magentoerpconnect
+#: field:magento.storeview,store_id:0
+msgid "Store"
+msgstr "Magasin"
+
+#. module: magentoerpconnect
+#: model:ir.ui.menu,name:magentoerpconnect.menu_magento_store
+#: view:magento.website:0
+#: field:magento.website,store_ids:0
+msgid "Stores"
+msgstr "Magasins"
+
+#. module: magentoerpconnect
+#: model:ir.ui.menu,name:magentoerpconnect.menu_magento_storeview
+#: view:magento.store:0
+#: field:magento.store,storeview_ids:0
+msgid "Storeviews"
+msgstr "Vues Magasin"
+
+#. module: magentoerpconnect
+#: view:magento.backend:0
+msgid "Synchronize Metadata"
+msgstr "Synchronizer les méta-données"
+
+#. module: magentoerpconnect
+#: field:magento.res.partner.category,tax_class_id:0
+msgid "Tax Class ID"
+msgstr "ID de classe de taxe"
+
+#. module: magentoerpconnect
+#: field:magento.sale.order.line,tax_rate:0
+msgid "Tax Rate"
+msgstr "Taux de taxe"
+
+#. module: magentoerpconnect
+#: model:sale.exception,description:magentoerpconnect.excep_wrong_total_amount
+msgid ""
+"The amount computed in OpenERP doesn't match with the amount in Magento.\n"
+"\n"
+"Cause:\n"
+"The taxes are probably different between OpenERP and Magento. A fiscal "
+"position could have changed the final price.\n"
+"\n"
+"Resolution:\n"
+"Check your taxes and fiscal positions configuration and correct them if "
+"necessary."
+msgstr ""
+"Le montant total calculé par OpenERP ne correspond pas au montant calculé "
+"par Magento.\n"
+"\n"
+"Cause:\n"
+"La configuration des taxes est probablement différente entre OpenERP et "
+"Magento. Une position fiscale peut avoir modifié le prix final.\n"
+"\n"
+"Résolution:\n"
+"Contrôler la configuration des taxes et positions fiscales et les corriger "
+"si nécessaire."
+
+#. module: magentoerpconnect
+#: help:magento.backend,use_custom_api_path:0
+msgid ""
+"The default API path is '/index.php/api/xmlrpc'. Check this box if you use a "
+"custom API path, in that case, the location has to be completed with the "
+"custom API path "
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:sale.exception,description:magentoerpconnect.excep_wrong_total_amount_tax
+msgid ""
+"The tax amount computed in OpenERP doesn't match with the tax amount in "
+"Magento.\n"
+"\n"
+"Cause:\n"
+"The taxes are probably different between OpenERP and Magento. A fiscal "
+"position could have changed the final price.\n"
+"\n"
+"Resolution:\n"
+"Check your taxes and fiscal positions configuration and correct them if "
+"necessary."
+msgstr ""
+"Les taxes calculées par OpenERP ne correspondent pas aux tax calculées par "
+"Magento.\n"
+"\n"
+"Cause:\n"
+"La configuration des taxes est probablement différente entre OpenERP et "
+"Magento. Une position fiscale peut avoir modifié le prix final.\n"
+"\n"
+"Résolution:\n"
+"Contrôler la configuration des taxes et positions fiscales et les corriger "
+"si nécessaire."
+
+#. module: magentoerpconnect
+#: help:connector.config.settings,module_magentoerpconnect_catalog:0
+msgid "This installs the module magentoerpconnect_catalog."
+msgstr "Installe le module magentoerpconnect_catalog"
+
+#. module: magentoerpconnect
+#: help:connector.config.settings,module_magentoerpconnect_export_partner:0
+msgid "This installs the module magentoerpconnect_export_partner."
+msgstr "Installe le module magentoerpconnect_export_partner."
+
+#. module: magentoerpconnect
+#: view:magento.backend:0
+msgid ""
+"This option should respect the same\n"
+"                                      configuration than Magento.  Pay\n"
+"                                      attention to the taxes on the "
+"products,\n"
+"                                      which should surely include prices "
+"when\n"
+"                                      this option is activated."
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:sale.exception,name:magentoerpconnect.excep_wrong_total_amount
+msgid "Total Amount differs from Magento"
+msgstr "Le montant total diffère de Magento"
+
+#. module: magentoerpconnect
+#: model:sale.exception,name:magentoerpconnect.excep_wrong_total_amount_tax
+msgid "Total Tax Amount differs from Magento"
+msgstr "Le montant total des taxes diffère de Magento"
+
+#. module: magentoerpconnect
+#: field:magento.sale.order,total_amount:0
+msgid "Total amount"
+msgstr "Montant total"
+
+#. module: magentoerpconnect
+#: field:magento.sale.order,total_amount_tax:0
+msgid "Total amount w. tax"
+msgstr "Montant total avec taxes"
+
+#. module: magentoerpconnect
+#: view:magento.backend:0
+msgid "Update"
+msgstr "Mettre à jour"
+
+#. module: magentoerpconnect
+#: view:magento.backend:0
+msgid "Update all the products stock quantities"
+msgstr "Mettre à jour toutes les quantités en stock"
+
+#. module: magentoerpconnect
+#: field:magento.address,updated_at:0
+#: field:magento.product.product,updated_at:0
+#: field:magento.res.partner,updated_at:0
+msgid "Updated At (on Magento)"
+msgstr "Mis à jour le (sur Magento)"
+
+#. module: magentoerpconnect
+#: help:magento.backend,location:0
+msgid "Url to magento application"
+msgstr ""
+
+#. module: magentoerpconnect
+#: selection:magento.product.product,backorders:0
+#: selection:magento.product.product,manage_stock:0
+msgid "Use Default Config"
+msgstr "Utiliser la configuration par défaut"
+
+#. module: magentoerpconnect
+#: field:magento.backend,use_auth_basic:0
+msgid "Use HTTP Auth Basic"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.backend,use_auth_basic:0
+msgid ""
+"Use a Basic Access Authentication for the API. The Magento server could be "
+"configured to restrict access using a HTTP authentication based on a "
+"username and a password."
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.backend,username:0
+msgid "Username"
+msgstr "Utilisateur"
+
+#. module: magentoerpconnect
+#: selection:magento.store,create_invoice_on:0
+#: selection:payment.method,create_invoice_on:0
+msgid "Validate"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.backend,version:0
+msgid "Version"
+msgstr "Version"
+
+#. module: magentoerpconnect
+#: field:magento.backend,warehouse_id:0
+msgid "Warehouse"
+msgstr "Entrepôt"
+
+#. module: magentoerpconnect
+#: help:magento.backend,warehouse_id:0
+msgid "Warehouse used to compute the stock quantities."
+msgstr "Entrepôt utilisé pour calculer les quantités en stock."
+
+#. module: magentoerpconnect
+#: help:magento.backend,password:0
+msgid "Webservice password"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.backend,username:0
+msgid "Webservice user"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.backend,website_ids:0
+msgid "Website"
+msgstr "Site web"
+
+#. module: magentoerpconnect
+#: model:ir.ui.menu,name:magentoerpconnect.menu_magento_website
+#: view:magento.backend:0
+#: field:magento.product.product,website_ids:0
+msgid "Websites"
+msgstr "Sites web"
+
+#. module: magentoerpconnect
+#: help:magento.storeview,import_orders_from_date:0
+msgid ""
+"do not consider non-imported sale orders before this date. Leave empty to "
+"import all sale orders"
+msgstr ""
+"Ignore les commandes non importées avant cette date. Laisser vide pour "
+"importer toutes les commandes."
+
+#. module: magentoerpconnect
+#: view:magento.backend:0
+msgid "e.g. http://my.magento.com"
+msgstr "Ex. http://mon.magento.com"
+
+#. module: magentoerpconnect
+#: view:magento.backend:0
+msgid "e.g. http://my.magento.com/admin"
+msgstr ""
+
+#. module: magentoerpconnect
+#: view:magento.backend:0
+msgid "mag-"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_magentoerpconnect_installed
+msgid "magentoerpconnect.installed"
+msgstr "magentoerpconnect.installed"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/stock_picking.py:200
+#, python-format
+msgid "Already exported"
+msgstr "Déjà exporté"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/stock_tracking.py:100
+#, python-format
+msgid "Le bon de livraison %s n'a pas d'ID Magento, "
+"impossible d'exporter le numéro de suivi."
+msgstr ""
+
+#. module: magentoerpconnect
+#: sql_constraint:magento.account.invoice:0
+msgid "A Magento binding for this invoice already exists."
+msgstr "Un lien Magento pour cette facture existe déjà."
