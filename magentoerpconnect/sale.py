@@ -235,7 +235,7 @@ class magento_sale_order_line(orm.Model):
                                  digits_compute=dp.get_precision('Account')),
         # XXX common to all ecom sale orders
         'notes': fields.char('Notes'),
-        }
+    }
 
     _sql_constraints = [
         ('magento_uniq', 'unique(backend_id, magento_id)',
@@ -482,6 +482,14 @@ class SaleOrderMoveComment(ConnectorUnit):
 
 
 @magento
+class BundleLineLinker(ConnectorUnit):
+    _model_name = ['magento.sale.order']
+
+    def link_lines(self, record):
+        return True
+
+
+@magento
 class SaleOrderImport(MagentoImportSynchronizer):
     _model_name = ['magento.sale.order']
 
@@ -566,6 +574,12 @@ class SaleOrderImport(MagentoImportSynchronizer):
             for field in ['sku', 'product_id', 'name']:
                 item[field] = child_items[0][field]
             return item
+        elif product_type == 'bundle':
+            items = []
+            bundle_item = top_item.copy()
+            items = [child for child in child_items]
+            items.insert(0, bundle_item)
+            return items
         return top_item
 
     def _import_customer_group(self, group_id):
@@ -631,7 +645,16 @@ class SaleOrderImport(MagentoImportSynchronizer):
                                    {'canceled_in_backend': True})
             current_bind_id = parent_bind_id
 
+    def _link_lines(self):
+        """ Get Magento order lines to link the parent order line.
+        """
+        record = self.magento_record
+        bundle_import = self.get_connector_unit_for_model(
+            BundleLineLinker, self.model._name)
+        bundle_import.link_lines(record)
+
     def _after_import(self, binding_id):
+        self._link_lines()
         self._link_parent_orders(binding_id)
         self._create_payment(binding_id)
         binding = self.session.browse(self.model._name, binding_id)
@@ -753,8 +776,9 @@ class SaleOrderImport(MagentoImportSynchronizer):
             importer.run(record['customer_id'])
             partner_bind_id = partner_binder.to_openerp(record['customer_id'])
 
-        partner = sess.browse('magento.res.partner',
-                              partner_bind_id).openerp_id
+        partner_id = sess.read(
+            'magento.res.partner',
+            partner_bind_id, ['openerp_id'])['openerp_id'][0]
 
         # Import of addresses. We just can't rely on the
         # ``customer_address_id`` field given by Magento, because it is
@@ -773,7 +797,7 @@ class SaleOrderImport(MagentoImportSynchronizer):
 
         # For the orders which are from guests, we let the addresses
         # as active because they don't have an address book.
-        addresses_defaults = {'parent_id': partner.id,
+        addresses_defaults = {'parent_id': partner_id,
                               'magento_partner_id': partner_bind_id,
                               'email': record.get('customer_email', False),
                               'active': is_guest_order,
@@ -785,9 +809,8 @@ class SaleOrderImport(MagentoImportSynchronizer):
         def create_address(address_record):
             map_record = addr_mapper.map_record(address_record)
             map_record.update(addresses_defaults)
-            values = map_record.values(for_create=True,
-                                       parent_partner=partner)
-            address_bind_id = sess.create('magento.address', values)
+            address_bind_id = sess.create('magento.address',
+                                          map_record.values(for_create=True))
             return sess.read('magento.address',
                              address_bind_id,
                              ['openerp_id'])['openerp_id'][0]
@@ -798,7 +821,7 @@ class SaleOrderImport(MagentoImportSynchronizer):
         if record['shipping_address']:
             shipping_id = create_address(record['shipping_address'])
 
-        self.partner_id = partner.id
+        self.partner_id = partner_id
         self.partner_invoice_id = billing_id
         self.partner_shipping_id = shipping_id or billing_id
 
@@ -1024,6 +1047,14 @@ class MagentoSaleOrderOnChange(SaleOrderOnChange):
 
 
 @magento
+class BundleLineStrategy(ConnectorUnit):
+    _model_name = 'magento.sale.order.line'
+
+    def price_is_zero(self, record):
+        return False
+
+
+@magento
 class SaleOrderLineImportMapper(ImportMapper):
     _model_name = 'magento.sale.order.line'
 
@@ -1076,6 +1107,12 @@ class SaleOrderLineImportMapper(ImportMapper):
     @mapping
     def price(self, record):
         result = {}
+        if record['product_type'] == 'bundle':
+            bundle_mapper = self.get_connector_unit_for_model(
+                BundleLineStrategy, self.model._name)
+            if bundle_mapper.price_is_zero(record):
+                result['price_unit'] = 0
+                return result
         base_row_total = float(record['base_row_total'] or 0.)
         base_row_total_incl_tax = float(record['base_row_total_incl_tax'] or
                                         0.)
