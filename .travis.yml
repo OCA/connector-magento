@@ -1,3 +1,5 @@
+sudo: false
+
 addons:
   apt:
     packages:
@@ -5,8 +7,13 @@ addons:
       - python-lxml # because pip installation is slow
 
 language: python
+
 python:
   - "2.7"
+
+cache:
+  - pip
+  - apt
 
 env:
   matrix:
