@@ -258,8 +258,7 @@ and add a method (and add in the view as well, I won't write the view's xml here
 
         @api.multi
         def import_customer_groups(self):
-            session = connector.ConnectorSession(self.env.cr, self.env.uid,
-                                                 context=self.env.context)
+            session = ConnectorSession.from_env(self.env)
             for backend_id in self.ids:
                 job.import_batch.delay(session, 'magento.res.partner.category',
                                        backend_id)
@@ -268,7 +267,7 @@ and add a method (and add in the view as well, I won't write the view's xml here
 
 Observations:
 
-* Declare a :py:class:`connector.connector.ConnectorSession`.
+* Encapsulate Odoo environment in a :py:class:`openerp.addons.connector.session.ConnectorSession`.
 * Delay the job ``import_batch`` when we click on the button.
 * if the arguments were given to ``import_batch`` directly (without the
   ``.delay()``, the import would be done synchronously.
