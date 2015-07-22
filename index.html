@@ -1,1 +1,490 @@
-placeholder for docs builds
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Odoo Magento Connector &mdash; Odoo Magento Connector  documentation</title>
+    
+    <link rel="stylesheet" href="_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootswatch-3.3.4/united/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="Odoo Magento Connector  documentation" href="#" />
+    <link rel="next" title="Installation Guide" href="guides/installation_guide.html" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-7628916-4', 'odoo-magento-connector.com');
+  ga('send', 'pageview');
+
+</script>
+
+  </head>
+  <body role="document">
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">
+          Odoo Magento Connector</a>
+        <span class="navbar-text navbar-version pull-left"><b></b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="guides/installation_guide.html">Installation Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="guides/installation_guide.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/installation_guide.html#after-the-installation">After the installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/installation_guide.html#on-a-daily-basis">On a daily basis</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="guides/key_questions.html">Key questions when connecting Odoo with Magento</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="guides/key_questions.html#sale-workflows">Sale workflows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/key_questions.html#catalog">Catalog</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/key_questions.html#pricing">Pricing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/key_questions.html#accounting">Accounting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/key_questions.html#stock-availability-deliveries">Stock, availability, deliveries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/key_questions.html#technical">Technical</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="howto/configure_translations.html">How to configure translations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="howto/configure_warehouse.html">How to configure warehouses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="howto/configure_pricing.html">How to configure pricing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="howto/configure_pricing.html#prices-are-shared-accross-websites">Prices are shared accross websites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="howto/configure_pricing.html#prices-are-different-accross-websites">Prices are different accross websites</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="howto/configure_payment_methods.html">Howto: configure payment methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="howto/configure_automatic_workflows.html">Howto: configure automatic workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="howto/configure_exception_rules.html">Howto: configure exception rules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="howto/configure_shipping_methods.html">How to configure shipping methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="howto/configure_emails.html">How to configure emails</a></li>
+<li class="toctree-l1"><a class="reference internal" href="howto/configure_schedulers.html">How to configure schedulers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="howto/configure_taxes.html">How to configure taxes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guides/connector_checkpoint.html">Check the connector checkpoint</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guides/monitor_resolve_jobs.html">Monitor and resolve jobs</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="guides/monitor_resolve_jobs.html#q-a">Q&amp;A</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="howto/modify_an_order.html">How to cancel / modify a sale order</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="howto/modify_an_order.html#handle-a-sale-order-cancelled-on-magento">Handle a sale order cancelled on Magento</a></li>
+<li class="toctree-l2"><a class="reference internal" href="howto/modify_an_order.html#modify-a-sale-order">Modify a sale order</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="howto/faq.html">FAQ</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="howto/faq.html#how-do-i">How do I...</a></li>
+<li class="toctree-l2"><a class="reference internal" href="howto/faq.html#why">Why...</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="project/contribute.html">Developer&#8217;s guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="project/contribute.html#connector-with-batteries-included-buildout">Connector with batteries included (buildout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="project/contribute.html#magento-on-docker">Magento on Docker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="project/contribute.html#how-to-help">How to help</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="guides/tutorial_development.html">Tutorial: development</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="guides/tutorial_development.html#run-a-function-on-an-event">Run a function on an Event</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/tutorial_development.html#find-the-connector-unit-for-a-model">Find the &#8216;connector unit&#8217; for a model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/tutorial_development.html#create-an-import">Create an import</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="guides/tutorial_customize.html">Tutorial: customize the connector</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="guides/tutorial_customize.html#bootstrap-your-own-customization-module">Bootstrap your own customization module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/tutorial_customize.html#add-mappings-of-fields">Add mappings of fields</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/api_connector.html">Connector</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/api_consumer.html">Consumers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/api_backend.html">Backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/api_binder.html">Binders</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/api_synchronizer.html">Synchronizers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/api_synchronizer.html#module-openerp.addons.magentoerpconnect.unit.import_synchronizer">Import</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/api_synchronizer.html#module-openerp.addons.magentoerpconnect.unit.export_synchronizer">Export</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/api_synchronizer.html#module-openerp.addons.magentoerpconnect.unit.delete_synchronizer">Delete</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/api_backend_adapter.html">Backend Adapters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/api_exception.html">Exceptions</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/api_delivery.html">Delivery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/api_invoice.html">Invoice</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/api_magento_model.html">Magento Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/api_partner.html">Partner</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/api_partner_category.html">Partner Category</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/api_product.html">Product</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/api_product_category.html">Product Category</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/api_sale.html">Sale</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/api_stock_picking.html">Stock Picking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/api_stock_tracking.html">Stock Tracking</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="project/roadmap.html">Roadmap</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="project/roadmap.html#catalog">Catalog</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="project/contributors.html">Contributors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="project/contributors.html#financial-contributors">Financial Contributors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="project/changes.html">Changes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="project/changes.html#id2">3.0.0 (2015-06-02)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="project/changes.html#id3">2.5.0 (2015-01-06)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="project/changes.html#id4">2.4.2 (2014-06-16)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="project/changes.html#id5">2.4.1 (2014-06-10)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="project/changes.html#id6">2.4.0 (2014-05-26)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="project/changes.html#id7">2.3.1 (2014-01-23)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="project/changes.html#warning-api-changes">2.3.0 (2014-01-15 warning: API changes)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="project/changes.html#id8">2.2.1 (2013.11.22)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="project/changes.html#public-release-2013-11-06">2.2.0 (public release - 2013.11.06)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="project/changes.html#id9">2.1.0 (2013.08.05)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="project/changes.html#id10">2.0.0</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">Odoo Magento Connector</a><ul>
+<li><a class="reference internal" href="#core-features">Core Features</a></li>
+<li><a class="reference internal" href="#workflow">Workflow</a></li>
+<li><a class="reference internal" href="#top-financial-contributors">Top financial contributors</a></li>
+<li><a class="reference internal" href="#first-steps">First steps</a></li>
+<li><a class="reference internal" href="#using-and-configuring-the-connector">Using and configuring the connector</a></li>
+<li><a class="reference internal" href="#developing-on-the-connector">Developing on the connector</a><ul>
+<li><a class="reference internal" href="#develop">Develop</a></li>
+<li><a class="reference internal" href="#tutorials">Tutorials</a></li>
+<li><a class="reference internal" href="#api">API</a><ul>
+<li><a class="reference internal" href="#general-api">General API</a></li>
+<li><a class="reference internal" href="#models-api">Models API</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#project">Project</a></li>
+<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="guides/installation_guide.html" title="Next Chapter: Installation Guide"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">Installation Gui... &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      
+  <div class="section" id="odoo-magento-connector">
+<h1>Odoo Magento Connector<a class="headerlink" href="#odoo-magento-connector" title="Permalink to this headline">¶</a></h1>
+<p><em>Odoo Magento Connector</em> (also known as <em>MagentoERPconnect</em>) is a
+bi-directional connector, 100% compatible with the last <a class="reference external" href="http://www.odoo.com">Odoo</a> 8.0 and
+latest <a class="reference external" href="http://www.magento.com">Magento</a> versions.</p>
+<p>Based on the <a class="reference external" href="http://www.odoo-connector.com">Odoo Connector</a> framework, this new release of
+MagentoERPconnect has been initiated by <a class="reference external" href="http://www.camptocamp.com">Camptocamp</a> and is mainly
+developed and maintained by <a class="reference external" href="http://www.camptocamp.com">Camptocamp</a> and <a class="reference external" href="http://www.akretion.com">Akretion</a> with several other
+<a class="reference internal" href="project/contributors.html#contributors"><span>Contributors</span></a>.</p>
+<p><em>Subscribe to the</em> <a class="reference external" href="https://launchpad.net/~openerp-connector-community">project&#8217;s mailing list</a></p>
+<p><em>Learn how to contribute with the</em> <a class="reference internal" href="project/contribute.html#contribute"><span>Developer&#8217;s guide</span></a></p>
+<div class="section" id="core-features">
+<h2>Core Features<a class="headerlink" href="#core-features" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><strong>100% Open Source</strong> (<a class="reference external" href="http://www.gnu.org/licenses/agpl-3.0.html">AGPL version 3</a>): the full <a class="reference external" href="https://github.com/OCA/connector-magento">source code is available
+on GitHub</a></li>
+<li><strong>Multis</strong>: multi-instances, multi-e-shop, multi-currency,
+multi-warehouse, multi-language</li>
+<li><strong>Synchronization</strong> of products catalog, customers, sales orders, stock levels,
+shipments, packages&#8217; tracking numbers, invoices…</li>
+<li><strong>Built on top of the</strong> <a class="reference external" href="http://www.odoo-connector.com">Odoo Connector</a> <strong>framework with a strong and
+efficient core</strong>: it can then be extended or modified easily from
+separate addons</li>
+<li><strong>Payment workflow automation</strong>: depending on the mean of payment (credit
+card, wire transfer), possibility to automate workflows in
+Odoo (automatic order validation, automatic invoice validation…).
+For instance, a sales order paid by credit card will automatically
+create an invoice with the &#8220;paid&#8221; status</li>
+<li>Load testing results: <strong>in a single day, successful import of more
+than 10&#8216;000 sales orders</strong> from Magento to Odoo!</li>
+</ul>
+</div>
+<div class="section" id="workflow">
+<h2>Workflow<a class="headerlink" href="#workflow" title="Permalink to this headline">¶</a></h2>
+<div style="margin-top:10px;">
+    <iframe src="http://www.slideshare.net/slideshow/embed_code/27685907" width="427" height="356" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC;border-width:1px 1px 0;margin-bottom:5px" allowfullscreen> </iframe> <div style="margin-bottom:5px"> <strong> <a href="https://fr.slideshare.net/camptocamp/openerp-magento-connector-new-generation-workflow" title="Odoo Magento Connector &quot;New Generation&quot; Workflow" target="_blank">Odoo Magento Connector &quot;New Generation&quot; Workflow</a> </strong> from <strong><a href="http://www.slideshare.net/camptocamp" target="_blank">Camptocamp</a></strong> </div>
+</div></div>
+<div class="section" id="top-financial-contributors">
+<h2>Top financial contributors<a class="headerlink" href="#top-financial-contributors" title="Permalink to this headline">¶</a></h2>
+<a class="reference external image-reference" href="http://www.logicsupply.com"><img alt="Logic Supply" src="_images/LogicSupply_Orange_260x80_transparent.png" /></a>
+<a class="reference external image-reference" href="http://www.debonix.fr"><img alt="Debonix" src="_images/logo-debonix.jpg" /></a>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p><em>See all the project&#8217;s</em> <a class="reference internal" href="project/contributors.html#financial-contributors"><span>Financial Contributors</span></a>.</p>
+</div>
+<div class="section" id="first-steps">
+<h2>First steps<a class="headerlink" href="#first-steps" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="guides/installation_guide.html">Installation Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="guides/installation_guide.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/installation_guide.html#after-the-installation">After the installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/installation_guide.html#on-a-daily-basis">On a daily basis</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="guides/key_questions.html">Key questions when connecting Odoo with Magento</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="guides/key_questions.html#sale-workflows">Sale workflows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/key_questions.html#catalog">Catalog</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/key_questions.html#pricing">Pricing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/key_questions.html#accounting">Accounting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/key_questions.html#stock-availability-deliveries">Stock, availability, deliveries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/key_questions.html#technical">Technical</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="using-and-configuring-the-connector">
+<h2>Using and configuring the connector<a class="headerlink" href="#using-and-configuring-the-connector" title="Permalink to this headline">¶</a></h2>
+<p>Be efficient using and configuring the connector.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="howto/configure_translations.html">How to configure translations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="howto/configure_warehouse.html">How to configure warehouses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="howto/configure_pricing.html">How to configure pricing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="howto/configure_payment_methods.html">Howto: configure payment methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="howto/configure_automatic_workflows.html">Howto: configure automatic workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="howto/configure_exception_rules.html">Howto: configure exception rules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="howto/configure_shipping_methods.html">How to configure shipping methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="howto/configure_emails.html">How to configure emails</a></li>
+<li class="toctree-l1"><a class="reference internal" href="howto/configure_schedulers.html">How to configure schedulers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="howto/configure_taxes.html">How to configure taxes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guides/connector_checkpoint.html">Check the connector checkpoint</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guides/monitor_resolve_jobs.html">Monitor and resolve jobs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="howto/modify_an_order.html">How to cancel / modify a sale order</a></li>
+<li class="toctree-l1"><a class="reference internal" href="howto/faq.html">FAQ</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="developing-on-the-connector">
+<h2>Developing on the connector<a class="headerlink" href="#developing-on-the-connector" title="Permalink to this headline">¶</a></h2>
+<p>Learn about how you can contribute or use the connector as a developer.</p>
+<div class="section" id="develop">
+<h3>Develop<a class="headerlink" href="#develop" title="Permalink to this headline">¶</a></h3>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="project/contribute.html">Developer&#8217;s guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="project/contribute.html#connector-with-batteries-included-buildout">Connector with batteries included (buildout)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="project/contribute.html#installing-the-buildout">Installing the buildout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="project/contribute.html#start-odoo">Start Odoo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="project/contribute.html#start-with-supervisord">Start with Supervisord</a></li>
+<li class="toctree-l3"><a class="reference internal" href="project/contribute.html#run-the-tests">Run the tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="project/contribute.html#build-the-documentation">Build the documentation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="project/contribute.html#magento-on-docker">Magento on Docker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="project/contribute.html#how-to-help">How to help</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="project/contribute.html#mailing-list">Mailing list</a></li>
+<li class="toctree-l3"><a class="reference internal" href="project/contribute.html#file-an-issue">File an Issue</a></li>
+<li class="toctree-l3"><a class="reference internal" href="project/contribute.html#submit-pull-requests-for-features-or-fixes">Submit Pull Requests for features or fixes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="project/contribute.html#improve-the-documentation">Improve the documentation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="project/contribute.html#translations">Translations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="project/contribute.html#writing-tests">Writing tests</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="tutorials">
+<h3>Tutorials<a class="headerlink" href="#tutorials" title="Permalink to this headline">¶</a></h3>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="guides/tutorial_development.html">Tutorial: development</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="guides/tutorial_development.html#run-a-function-on-an-event">Run a function on an Event</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/tutorial_development.html#find-the-connector-unit-for-a-model">Find the &#8216;connector unit&#8217; for a model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/tutorial_development.html#create-an-import">Create an import</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="guides/tutorial_customize.html">Tutorial: customize the connector</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="guides/tutorial_customize.html#bootstrap-your-own-customization-module">Bootstrap your own customization module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/tutorial_customize.html#add-mappings-of-fields">Add mappings of fields</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="api">
+<h3>API<a class="headerlink" href="#api" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="general-api">
+<h4>General API<a class="headerlink" href="#general-api" title="Permalink to this headline">¶</a></h4>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/api_connector.html">Connector</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/api_consumer.html">Consumers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/api_backend.html">Backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/api_binder.html">Binders</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/api_synchronizer.html">Synchronizers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/api_synchronizer.html#module-openerp.addons.magentoerpconnect.unit.import_synchronizer">Import</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/api_synchronizer.html#module-openerp.addons.magentoerpconnect.unit.export_synchronizer">Export</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/api_synchronizer.html#module-openerp.addons.magentoerpconnect.unit.delete_synchronizer">Delete</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/api_backend_adapter.html">Backend Adapters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/api_exception.html">Exceptions</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="models-api">
+<h4>Models API<a class="headerlink" href="#models-api" title="Permalink to this headline">¶</a></h4>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/api_delivery.html">Delivery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/api_invoice.html">Invoice</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/api_magento_model.html">Magento Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/api_partner.html">Partner</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/api_partner_category.html">Partner Category</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/api_product.html">Product</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/api_product_category.html">Product Category</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/api_sale.html">Sale</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/api_stock_picking.html">Stock Picking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/api_stock_tracking.html">Stock Tracking</a></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="project">
+<h2>Project<a class="headerlink" href="#project" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="project/roadmap.html">Roadmap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="project/contributors.html">Contributors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="project/contributors.html#financial-contributors">Financial Contributors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="project/changes.html">Changes</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="indices-and-tables">
+<h2>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><a class="reference internal" href="genindex.html"><span>Index</span></a></li>
+<li><a class="reference internal" href="py-modindex.html"><span>Module Index</span></a></li>
+<li><a class="reference internal" href="search.html"><span>Search Page</span></a></li>
+</ul>
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+<div id="sourcelink">
+  <a href="_sources/index.txt"
+     rel="nofollow">Source</a>
+</div>
+      
+    </p>
+    <p>
+        &copy; Copyright 2013-2015, Odoo Community Association (OCA).<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

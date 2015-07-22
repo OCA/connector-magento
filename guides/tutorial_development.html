@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Tutorial: development &mdash; Odoo Magento Connector  documentation</title>
+    
+    <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/bootswatch-3.3.4/united/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="Odoo Magento Connector  documentation" href="../index.html" />
+    <link rel="next" title="Tutorial: customize the connector" href="tutorial_customize.html" />
+    <link rel="prev" title="Developer’s guide" href="../project/contribute.html" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-7628916-4', 'odoo-magento-connector.com');
+  ga('send', 'pageview');
+
+</script>
+
+  </head>
+  <body role="document">
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          Odoo Magento Connector</a>
+        <span class="navbar-text navbar-version pull-left"><b></b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="installation_guide.html">Installation Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="installation_guide.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation_guide.html#after-the-installation">After the installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation_guide.html#on-a-daily-basis">On a daily basis</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="key_questions.html">Key questions when connecting Odoo with Magento</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="key_questions.html#sale-workflows">Sale workflows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="key_questions.html#catalog">Catalog</a></li>
+<li class="toctree-l2"><a class="reference internal" href="key_questions.html#pricing">Pricing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="key_questions.html#accounting">Accounting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="key_questions.html#stock-availability-deliveries">Stock, availability, deliveries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="key_questions.html#technical">Technical</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../howto/configure_translations.html">How to configure translations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../howto/configure_warehouse.html">How to configure warehouses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../howto/configure_pricing.html">How to configure pricing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../howto/configure_pricing.html#prices-are-shared-accross-websites">Prices are shared accross websites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../howto/configure_pricing.html#prices-are-different-accross-websites">Prices are different accross websites</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../howto/configure_payment_methods.html">Howto: configure payment methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../howto/configure_automatic_workflows.html">Howto: configure automatic workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../howto/configure_exception_rules.html">Howto: configure exception rules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../howto/configure_shipping_methods.html">How to configure shipping methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../howto/configure_emails.html">How to configure emails</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../howto/configure_schedulers.html">How to configure schedulers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../howto/configure_taxes.html">How to configure taxes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="connector_checkpoint.html">Check the connector checkpoint</a></li>
+<li class="toctree-l1"><a class="reference internal" href="monitor_resolve_jobs.html">Monitor and resolve jobs</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="monitor_resolve_jobs.html#q-a">Q&amp;A</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../howto/modify_an_order.html">How to cancel / modify a sale order</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../howto/modify_an_order.html#handle-a-sale-order-cancelled-on-magento">Handle a sale order cancelled on Magento</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../howto/modify_an_order.html#modify-a-sale-order">Modify a sale order</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../howto/faq.html">FAQ</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../howto/faq.html#how-do-i">How do I...</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../howto/faq.html#why">Why...</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../project/contribute.html">Developer&#8217;s guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../project/contribute.html#connector-with-batteries-included-buildout">Connector with batteries included (buildout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../project/contribute.html#magento-on-docker">Magento on Docker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../project/contribute.html#how-to-help">How to help</a></li>
+</ul>
+</li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="">Tutorial: development</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#run-a-function-on-an-event">Run a function on an Event</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#find-the-connector-unit-for-a-model">Find the &#8216;connector unit&#8217; for a model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#create-an-import">Create an import</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_customize.html">Tutorial: customize the connector</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_customize.html#bootstrap-your-own-customization-module">Bootstrap your own customization module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_customize.html#add-mappings-of-fields">Add mappings of fields</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/api_connector.html">Connector</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/api_consumer.html">Consumers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/api_backend.html">Backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/api_binder.html">Binders</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/api_synchronizer.html">Synchronizers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../api/api_synchronizer.html#module-openerp.addons.magentoerpconnect.unit.import_synchronizer">Import</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/api_synchronizer.html#module-openerp.addons.magentoerpconnect.unit.export_synchronizer">Export</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/api_synchronizer.html#module-openerp.addons.magentoerpconnect.unit.delete_synchronizer">Delete</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api/api_backend_adapter.html">Backend Adapters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/api_exception.html">Exceptions</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/api_delivery.html">Delivery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/api_invoice.html">Invoice</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/api_magento_model.html">Magento Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/api_partner.html">Partner</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/api_partner_category.html">Partner Category</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/api_product.html">Product</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/api_product_category.html">Product Category</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/api_sale.html">Sale</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/api_stock_picking.html">Stock Picking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/api_stock_tracking.html">Stock Tracking</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../project/roadmap.html">Roadmap</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../project/roadmap.html#catalog">Catalog</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../project/contributors.html">Contributors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../project/contributors.html#financial-contributors">Financial Contributors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../project/changes.html">Changes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../project/changes.html#id2">3.0.0 (2015-06-02)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../project/changes.html#id3">2.5.0 (2015-01-06)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../project/changes.html#id4">2.4.2 (2014-06-16)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../project/changes.html#id5">2.4.1 (2014-06-10)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../project/changes.html#id6">2.4.0 (2014-05-26)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../project/changes.html#id7">2.3.1 (2014-01-23)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../project/changes.html#warning-api-changes">2.3.0 (2014-01-15 warning: API changes)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../project/changes.html#id8">2.2.1 (2013.11.22)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../project/changes.html#public-release-2013-11-06">2.2.0 (public release - 2013.11.06)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../project/changes.html#id9">2.1.0 (2013.08.05)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../project/changes.html#id10">2.0.0</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">Tutorial: development</a><ul>
+<li><a class="reference internal" href="#run-a-function-on-an-event">Run a function on an Event</a></li>
+<li><a class="reference internal" href="#find-the-connector-unit-for-a-model">Find the &#8216;connector unit&#8217; for a model</a></li>
+<li><a class="reference internal" href="#create-an-import">Create an import</a><ul>
+<li><a class="reference internal" href="#models">Models</a></li>
+<li><a class="reference internal" href="#batch-importer">Batch Importer</a></li>
+<li><a class="reference internal" href="#backend-adapter">Backend Adapter</a></li>
+<li><a class="reference internal" href="#delay-execution-of-our-batch-import">Delay execution of our Batch Import</a></li>
+<li><a class="reference internal" href="#overview-on-the-jobs">Overview on the jobs</a></li>
+<li><a class="reference internal" href="#record-importer">Record Importer</a></li>
+<li><a class="reference internal" href="#mapper">Mapper</a></li>
+<li><a class="reference internal" href="#binder">Binder</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="../project/contribute.html" title="Previous Chapter: Developer’s guide"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; Developer’s guid...</span>
+    </a>
+  </li>
+  <li>
+    <a href="tutorial_customize.html" title="Next Chapter: Tutorial: customize the connector"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">Tutorial: custom... &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      
+  <div class="section" id="tutorial-development">
+<span id="id1"></span><h1>Tutorial: development<a class="headerlink" href="#tutorial-development" title="Permalink to this headline">¶</a></h1>
+<p>This tutorial explains how to take part in the development of
+Magentoerpconnect. It will explain how to use the different pieces of
+the <code class="docutils literal"><span class="pre">Connector</span></code> addon to synchronize records with Magento.</p>
+<div class="contents local topic" id="sections">
+<p class="topic-title first">Sections:</p>
+<ul class="simple">
+<li><a class="reference internal" href="#run-a-function-on-an-event" id="id2">Run a function on an Event</a></li>
+<li><a class="reference internal" href="#find-the-connector-unit-for-a-model" id="id3">Find the &#8216;connector unit&#8217; for a model</a></li>
+<li><a class="reference internal" href="#create-an-import" id="id4">Create an import</a><ul>
+<li><a class="reference internal" href="#models" id="id5">Models</a></li>
+<li><a class="reference internal" href="#batch-importer" id="id6">Batch Importer</a></li>
+<li><a class="reference internal" href="#backend-adapter" id="id7">Backend Adapter</a></li>
+<li><a class="reference internal" href="#delay-execution-of-our-batch-import" id="id8">Delay execution of our Batch Import</a></li>
+<li><a class="reference internal" href="#overview-on-the-jobs" id="id9">Overview on the jobs</a></li>
+<li><a class="reference internal" href="#record-importer" id="id10">Record Importer</a></li>
+<li><a class="reference internal" href="#mapper" id="id11">Mapper</a></li>
+<li><a class="reference internal" href="#binder" id="id12">Binder</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="run-a-function-on-an-event">
+<h2><a class="toc-backref" href="#sections">Run a function on an Event</a><a class="headerlink" href="#run-a-function-on-an-event" title="Permalink to this headline">¶</a></h2>
+<p>3 events are registered in the <code class="docutils literal"><span class="pre">Connector</span></code> addon:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">on_record_create</span></code></li>
+<li><code class="docutils literal"><span class="pre">on_record_write</span></code></li>
+<li><code class="docutils literal"><span class="pre">on_record_unlink</span></code></li>
+</ul>
+<p>If you need to create a new <a class="reference external" href="http://www.odoo-connector.com/api/api_event.html#connector.event.Event" title="(in Connector v)"><code class="xref py py-class docutils literal"><span class="pre">connector.event.Event</span></code></a>, please
+refer to the <code class="docutils literal"><span class="pre">Connector</span></code> documentation.</p>
+<p>When a function has to be run when an event is fired, it must be
+registered on this event. Those functions are called <code class="docutils literal"><span class="pre">Consumers</span></code>.</p>
+<p>In <code class="docutils literal"><span class="pre">magentoerpconnect/consumer.py</span></code>, some consumers are already
+defined. You can add your one, it should be decorated by
+<code class="xref py py-func docutils literal"><span class="pre">openerp.addons.magentoerpconnect.consumer.magento_consumer()</span></code> and by the event
+which has to fire it:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@on_record_write</span><span class="p">(</span><span class="n">model_names</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;my.model&#39;</span><span class="p">])</span>
+<span class="nd">@magento_consumer</span>
+<span class="k">def</span> <span class="nf">my_consumer</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">record_id</span><span class="p">,</span> <span class="n">vals</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">print</span> <span class="s">&#39;Yeah&#39;</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The consumers always start with the arguments <code class="docutils literal"><span class="pre">session</span></code> and
+<code class="docutils literal"><span class="pre">model_name</span></code>. The next arguments vary, but they are defined
+by the <a class="reference external" href="http://www.odoo-connector.com/api/api_event.html#connector.event.Event" title="(in Connector v)"><code class="xref py py-class docutils literal"><span class="pre">connector.event.Event</span></code></a></p>
+</div>
+</div>
+<div class="section" id="find-the-connector-unit-for-a-model">
+<h2><a class="toc-backref" href="#sections">Find the &#8216;connector unit&#8217; for a model</a><a class="headerlink" href="#find-the-connector-unit-for-a-model" title="Permalink to this headline">¶</a></h2>
+<p>Assume that you already have a <code class="docutils literal"><span class="pre">ConnectorEnvironment</span></code>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">A <code class="docutils literal"><span class="pre">ConnectorEnvironment</span></code> is the scope where the synchronizations
+are done. It contains the browse record of the backend
+(<code class="docutils literal"><span class="pre">magento.backend</span></code>), a <code class="docutils literal"><span class="pre">ConnectorSession</span></code> (container for <code class="docutils literal"><span class="pre">cr</span></code>,
+<code class="docutils literal"><span class="pre">uid</span></code>, <code class="docutils literal"><span class="pre">context</span></code>) and the name of the model we are working with).</p>
+</div>
+<p>You can get an instance of the <code class="docutils literal"><span class="pre">ConnectorUnit</span></code> to use from the
+environment.  You&#8217;ll need to ask a connector unit with the base class
+which interests you.  Say you want a Synchronizer which import records
+from Magento:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">importer</span> <span class="o">=</span> <span class="n">environment</span><span class="o">.</span><span class="n">get_connector_unit</span><span class="p">(</span><span class="n">MagentoImporter</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">importer</span></code> is an instance of the importer to use for the model of the
+environment.</p>
+<p>Say you want a binder for your model:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">binder</span> <span class="o">=</span> <span class="n">environment</span><span class="o">.</span><span class="n">get_connector_unit</span><span class="p">(</span><span class="n">connector</span><span class="o">.</span><span class="n">Binder</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">binder</span></code> is an instance of the binder for your model.</p>
+<p>And so on...</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Every <code class="docutils literal"><span class="pre">ConnectorUnit</span></code> instance keeps the environment as
+attribute. It means that you can access to the environment
+from a synchronizer with <code class="docutils literal"><span class="pre">self.connector_env</span></code>.</p>
+</div>
+<p>When you are already inside a <code class="docutils literal"><span class="pre">ConnectorUnit</span></code> though you can use the shortcuts:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># for the current model</span>
+<span class="n">importer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">unit_for</span><span class="p">(</span><span class="n">MagentoImporter</span><span class="p">)</span>
+<span class="c"># for another model</span>
+<span class="n">importer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">unit_for</span><span class="p">(</span><span class="n">MagentoImporter</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s">&#39;another.model&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>As the binders are the most used <code class="docutils literal"><span class="pre">ConnectorUnit</span></code> classes, they have a
+dedicated shortcut:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># for the current model</span>
+<span class="n">binder</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">binder_for</span><span class="p">()</span>
+<span class="c"># for another model</span>
+<span class="n">binder</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">binder_for</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s">&#39;another.model&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="create-an-import">
+<h2><a class="toc-backref" href="#sections">Create an import</a><a class="headerlink" href="#create-an-import" title="Permalink to this headline">¶</a></h2>
+<p>You&#8217;ll probably need to work with 4 connector units:</p>
+<ul class="simple">
+<li>a Synchronizer (presumably 2, we&#8217;ll see why soon)</li>
+<li>a Mapper</li>
+<li>a Backend Adapter</li>
+<li>a Binder</li>
+</ul>
+<p>You will also need to create / change the Odoo models.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Keep in mind: try to modify at least as possible the Odoo
+models and classes.</p>
+</div>
+<p>The synchronizer will handle the flow of the synchronization. It will
+get the data from Magento using the Backend Adapter, transform it using
+the Mapper, and use the Binder(s) to search the relation(s) with other
+imported records.</p>
+<p>Why do we need 2 synchronizers? Because an import is generally done in 2
+phases:</p>
+<ol class="arabic simple">
+<li>The first synchronizer searches the list of all the ids to import.</li>
+<li>The second synchronizer imports all the ids atomically (in separate
+jobs).</li>
+</ol>
+<p>We&#8217;ll see in details a simple import: customer groups.
+Customer groups are importer as categories of partners
+(<code class="docutils literal"><span class="pre">res.partner.category</span></code>).</p>
+<div class="section" id="models">
+<h3><a class="toc-backref" href="#sections">Models</a><a class="headerlink" href="#models" title="Permalink to this headline">¶</a></h3>
+<p>First, we create the model:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">MagentoResPartnerCategory</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">_name</span> <span class="o">=</span> <span class="s">&#39;magento.res.partner.category&#39;</span>
+    <span class="n">_inherit</span> <span class="o">=</span> <span class="s">&#39;magento.binding&#39;</span>
+    <span class="n">_inherits</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;res.partner.category&#39;</span><span class="p">:</span> <span class="s">&#39;openerp_id&#39;</span><span class="p">}</span>
+
+    <span class="n">openerp_id</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Many2one</span><span class="p">(</span><span class="n">comodel_name</span><span class="o">=</span><span class="s">&#39;res.partner.category&#39;</span><span class="p">,</span>
+                                 <span class="n">string</span><span class="o">=</span><span class="s">&#39;Partner Category&#39;</span><span class="p">,</span>
+                                 <span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+                                 <span class="n">ondelete</span><span class="o">=</span><span class="s">&#39;cascade&#39;</span><span class="p">)</span>
+    <span class="n">tax_class_id</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Integer</span><span class="p">(</span><span class="n">string</span><span class="o">=</span><span class="s">&#39;Tax Class ID&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Observations:</p>
+<ul class="simple">
+<li>We do not change <code class="docutils literal"><span class="pre">res.partner.category</span></code> but create a
+<code class="docutils literal"><span class="pre">magento.res.partner.category</span></code> model instead.</li>
+<li>It <cite>_inherit</cite> from <cite>magento.binding</cite></li>
+<li>It contains the links to the Magento backend, the category and the
+ID on Magento (inherited from <code class="docutils literal"><span class="pre">magento.binding</span></code>).</li>
+<li>This model stores the data related to one category and one Magento
+backend as well, so this data does not pollute the category and does
+not criss-cross when several backends are connected.</li>
+<li>It <code class="docutils literal"><span class="pre">_inherits</span></code> the <code class="docutils literal"><span class="pre">res.partner.category</span></code> so we can directly use
+this model for the imports and the exports without complications.</li>
+</ul>
+<p>We need to add the field <code class="docutils literal"><span class="pre">magento_bind_ids</span></code> in
+<code class="docutils literal"><span class="pre">res.partner.category</span></code> to relate to the Magento Bindings:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">ResPartnerCategory</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">_inherit</span> <span class="o">=</span> <span class="s">&#39;res.partner.category&#39;</span>
+
+    <span class="n">magento_bind_ids</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">One2many</span><span class="p">(</span>
+        <span class="n">comodel_name</span><span class="o">=</span><span class="s">&#39;magento.res.partner.category&#39;</span><span class="p">,</span>
+        <span class="n">inverse_name</span><span class="o">=</span><span class="s">&#39;openerp_id&#39;</span><span class="p">,</span>
+        <span class="n">string</span><span class="o">=</span><span class="s">&#39;Magento Bindings&#39;</span><span class="p">,</span>
+        <span class="n">readonly</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+<p>That&#8217;s the only thing we need to change (besides the view) in the
+Odoo&#8217;s models!</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The name of the field <code class="docutils literal"><span class="pre">magento_bind_ids</span></code> is a convention.</p>
+</div>
+<p>Ok, we&#8217;re done with the models. Now the <strong>synchronizations</strong>!</p>
+</div>
+<div class="section" id="batch-importer">
+<h3><a class="toc-backref" href="#sections">Batch Importer</a><a class="headerlink" href="#batch-importer" title="Permalink to this headline">¶</a></h3>
+<p>The first Synchronizer, which get the full list of ids to import is
+usually a subclass of
+<code class="xref py py-class docutils literal"><span class="pre">magentoerpconnect.unit.import_synchronizer.BatchImporter</span></code>.</p>
+<p>The customer groups are simple enough to use a generic class:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@magento</span>
+<span class="k">class</span> <span class="nc">DelayedBatchImporter</span><span class="p">(</span><span class="n">BatchImporter</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Delay import of the records &quot;&quot;&quot;</span>
+    <span class="n">_model_name</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s">&#39;magento.res.partner.category&#39;</span><span class="p">,</span>
+            <span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">_import_record</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Delay the import of the records&quot;&quot;&quot;</span>
+        <span class="n">job</span><span class="o">.</span><span class="n">import_record</span><span class="o">.</span><span class="n">delay</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="p">,</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">_name</span><span class="p">,</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">backend_record</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                                <span class="n">record</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Observations:</p>
+<ul class="simple">
+<li>Decorated by <code class="docutils literal"><span class="pre">&#64;magento</span></code>: this synchronizer will be available for all
+versions of Magento. Decorated with <code class="docutils literal"><span class="pre">&#64;magento1700</span></code> it would be only
+available for Magento 1.7.</li>
+<li><code class="docutils literal"><span class="pre">_model_name</span></code>: the list of models allowed to use this synchronizer</li>
+<li>We just override the <code class="docutils literal"><span class="pre">_import_record</span></code> hook, the search has already
+be done in
+<code class="xref py py-class docutils literal"><span class="pre">magentoerpconnect.unit.import_synchronizer.BatchImporter</span></code>.</li>
+<li><code class="docutils literal"><span class="pre">import_record</span></code> is a job to import a record from its ID.</li>
+<li>Delay the import of each record, a job will be created for each record id.</li>
+<li>This synchronization does not need any Binder nor Mapper, but does
+need a Backend Adapter to be able to speak with Magento.</li>
+</ul>
+<p>So, let&#8217;s implement the <strong>Backend Adapter</strong>.</p>
+</div>
+<div class="section" id="backend-adapter">
+<h3><a class="toc-backref" href="#sections">Backend Adapter</a><a class="headerlink" href="#backend-adapter" title="Permalink to this headline">¶</a></h3>
+<p>Most of the Magento objects can use the generic class
+:py:class`magentoerpconnect.unit.backend_adapter.GenericAdapter`.
+However, the <code class="docutils literal"><span class="pre">search</span></code> entry point is not implemented in the API for
+customer groups.</p>
+<p>We&#8217;ll replace it using <code class="docutils literal"><span class="pre">list</span></code> and select only the ids:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@magento</span>
+<span class="k">class</span> <span class="nc">PartnerCategoryAdapter</span><span class="p">(</span><span class="n">GenericAdapter</span><span class="p">):</span>
+    <span class="n">_model_name</span> <span class="o">=</span> <span class="s">&#39;magento.res.partner.category&#39;</span>
+    <span class="n">_magento_model</span> <span class="o">=</span> <span class="s">&#39;ol_customer_groups&#39;</span>
+
+    <span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filters</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Search records according to some criterias</span>
+<span class="sd">        and returns a list of ids</span>
+
+<span class="sd">        :rtype: list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s">&#39;customer_group_id&#39;</span><span class="p">])</span> <span class="k">for</span> <span class="n">row</span>
+                   <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call</span><span class="p">(</span><span class="s">&#39;</span><span class="si">%s</span><span class="s">.list&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_magento_model</span><span class="p">,</span>
+                                 <span class="p">[</span><span class="n">filters</span><span class="p">]</span> <span class="k">if</span> <span class="n">filters</span> <span class="k">else</span> <span class="p">[{}])]</span>
+</pre></div>
+</div>
+<p>Observations:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">_model_name</span></code> is just <code class="docutils literal"><span class="pre">magento.res.partner.category</span></code>, this adapter
+is available only for this model.</li>
+<li><code class="docutils literal"><span class="pre">_magento_model</span></code> is the first part of the entry points in the API
+(ie. <code class="docutils literal"><span class="pre">ol_customer_groups.list</span></code>)</li>
+<li>Only the <code class="docutils literal"><span class="pre">search</span></code> method is overriden.</li>
+</ul>
+<p>We have all the pieces for the first part of the synchronization, just
+need to...</p>
+</div>
+<div class="section" id="delay-execution-of-our-batch-import">
+<h3><a class="toc-backref" href="#sections">Delay execution of our Batch Import</a><a class="headerlink" href="#delay-execution-of-our-batch-import" title="Permalink to this headline">¶</a></h3>
+<p>This import will be called from the <strong>Magento Backend</strong>, we inherit <code class="docutils literal"><span class="pre">magento.backend</span></code>
+and add a method (and add in the view as well, I won&#8217;t write the view&#8217;s xml here):</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">MagentoBackend</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">_inherit</span> <span class="o">=</span> <span class="s">&#39;magento.backend&#39;</span>
+
+    <span class="nd">@api.multi</span>
+    <span class="k">def</span> <span class="nf">import_customer_groups</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">session</span> <span class="o">=</span> <span class="n">connector</span><span class="o">.</span><span class="n">ConnectorSession</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">cr</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">uid</span><span class="p">,</span>
+                                             <span class="n">context</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">context</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">backend_id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ids</span><span class="p">:</span>
+            <span class="n">job</span><span class="o">.</span><span class="n">import_batch</span><span class="o">.</span><span class="n">delay</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="s">&#39;magento.res.partner.category&#39;</span><span class="p">,</span>
+                                   <span class="n">backend_id</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">True</span>
+</pre></div>
+</div>
+<p>Observations:</p>
+<ul class="simple">
+<li>Declare a <code class="xref py py-class docutils literal"><span class="pre">connector.connector.ConnectorSession</span></code>.</li>
+<li>Delay the job <code class="docutils literal"><span class="pre">import_batch</span></code> when we click on the button.</li>
+<li>if the arguments were given to <code class="docutils literal"><span class="pre">import_batch</span></code> directly (without the
+<code class="docutils literal"><span class="pre">.delay()</span></code>, the import would be done synchronously.</li>
+</ul>
+</div>
+<div class="section" id="overview-on-the-jobs">
+<h3><a class="toc-backref" href="#sections">Overview on the jobs</a><a class="headerlink" href="#overview-on-the-jobs" title="Permalink to this headline">¶</a></h3>
+<p>We use 2 jobs: <code class="docutils literal"><span class="pre">import_record</span></code> and <code class="docutils literal"><span class="pre">import_batch</span></code>. These jobs are
+already there so you don&#8217;t need to write them, but we can have a look
+on them to understand what they do:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">_get_environment</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">backend_id</span><span class="p">):</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">env</span><span class="p">[</span><span class="s">&#39;magento.backend&#39;</span><span class="p">]</span>
+    <span class="n">backend_record</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">browse</span><span class="p">(</span><span class="n">backend_id</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">connector</span><span class="o">.</span><span class="n">Environment</span><span class="p">(</span><span class="n">backend_record</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">model_name</span><span class="p">)</span>
+
+
+<span class="nd">@connector.job</span>
+<span class="k">def</span> <span class="nf">import_batch</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">backend_id</span><span class="p">,</span> <span class="n">filters</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Prepare a batch import of records from Magento &quot;&quot;&quot;</span>
+    <span class="n">env</span> <span class="o">=</span> <span class="n">_get_environment</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">backend_id</span><span class="p">)</span>
+    <span class="n">importer</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">get_connector_unit</span><span class="p">(</span><span class="n">BatchImporter</span><span class="p">)</span>
+    <span class="n">importer</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">filters</span><span class="p">)</span>
+
+
+<span class="nd">@connector.job</span>
+<span class="k">def</span> <span class="nf">import_record</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">backend_id</span><span class="p">,</span> <span class="n">magento_id</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Import a record from Magento &quot;&quot;&quot;</span>
+    <span class="n">env</span> <span class="o">=</span> <span class="n">_get_environment</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">backend_id</span><span class="p">)</span>
+    <span class="n">importer</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">get_connector_unit</span><span class="p">(</span><span class="n">MagentoImporter</span><span class="p">)</span>
+    <span class="n">importer</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">magento_id</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Observations:</p>
+<ul class="simple">
+<li>Decorated by <code class="xref py py-class docutils literal"><span class="pre">connector.queue.job.job</span></code>, allow to
+<code class="docutils literal"><span class="pre">delay</span></code> the function.</li>
+<li>We create a new environment and ask for the good importer, respectively
+for batch imports and record imports. The environment returns an
+instance of the importer to use.</li>
+<li>The docstring of the job is its description for the user.</li>
+</ul>
+<p>At this point, if one click on the button to import the categories, the
+batch import would run, generate one job for each category to import,
+and then all these jobs would fail. We need to create the second
+synchronizer, the mapper and the binder.</p>
+</div>
+<div class="section" id="record-importer">
+<h3><a class="toc-backref" href="#sections">Record Importer</a><a class="headerlink" href="#record-importer" title="Permalink to this headline">¶</a></h3>
+<p>The import of customer groups is so simple that it can use a generic
+class
+<a class="reference internal" href="../api/api_synchronizer.html#openerp.addons.magentoerpconnect.unit.import_synchronizer.SimpleRecordImporter" title="openerp.addons.magentoerpconnect.unit.import_synchronizer.SimpleRecordImporter"><code class="xref py py-class docutils literal"><span class="pre">openerp.addons.magentoerpconnect.unit.import_synchronizer.SimpleRecordImporter</span></code></a>.
+We just need to add the model in the <code class="docutils literal"><span class="pre">_model_name</span></code> attribute:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@magento</span>
+<span class="k">class</span> <span class="nc">SimpleRecordImporter</span><span class="p">(</span><span class="n">MagentoImporter</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Import one Magento Website &quot;&quot;&quot;</span>
+    <span class="n">_model_name</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s">&#39;magento.website&#39;</span><span class="p">,</span>
+            <span class="s">&#39;magento.store&#39;</span><span class="p">,</span>
+            <span class="s">&#39;magento.storeview&#39;</span><span class="p">,</span>
+            <span class="s">&#39;magento.res.partner.category&#39;</span><span class="p">,</span>
+        <span class="p">]</span>
+</pre></div>
+</div>
+<p>However, most of the imports will be more complicated than that. You
+will often need to create a new class for a model, where you will need
+to use some of the hooks to change the behavior
+(<code class="docutils literal"><span class="pre">_import_dependencies</span></code>, <code class="docutils literal"><span class="pre">_after_import</span></code> for example).
+Refers to the importers already created in the module and to the base
+class
+<a class="reference internal" href="../api/api_synchronizer.html#openerp.addons.magentoerpconnect.unit.import_synchronizer.MagentoImporter" title="openerp.addons.magentoerpconnect.unit.import_synchronizer.MagentoImporter"><code class="xref py py-class docutils literal"><span class="pre">openerp.addons.magentoerpconnect.unit.import_synchronizer.MagentoImporter</span></code></a>.</p>
+<p>The synchronizer asks to the appropriate <a class="reference external" href="http://www.odoo-connector.com/api/api_mapper.html#connector.unit.mapper.Mapper" title="(in Connector v)"><code class="xref py py-class docutils literal"><span class="pre">Mapper</span></code></a>  to transform the data
+(in <code class="docutils literal"><span class="pre">_map_data</span></code>). Here is how we&#8217;ll create the <a class="reference external" href="http://www.odoo-connector.com/api/api_mapper.html#connector.unit.mapper.Mapper" title="(in Connector v)"><code class="xref py py-class docutils literal"><span class="pre">Mapper</span></code></a>.</p>
+</div>
+<div class="section" id="mapper">
+<h3><a class="toc-backref" href="#sections">Mapper</a><a class="headerlink" href="#mapper" title="Permalink to this headline">¶</a></h3>
+<p>The <a class="reference external" href="http://www.odoo-connector.com/api/api_mapper.html#connector.unit.mapper.Mapper" title="(in Connector v)"><code class="xref py py-class docutils literal"><span class="pre">connector.unit.mapper.Mapper</span></code></a> takes the record from Magento, and generates the Odoo
+record. (or the reverse for the export Mappers)</p>
+<p>The mapper for the customer groups is as follows:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@magento</span>
+<span class="k">class</span> <span class="nc">PartnerCategoryImportMapper</span><span class="p">(</span><span class="n">connector</span><span class="o">.</span><span class="n">ImportMapper</span><span class="p">):</span>
+    <span class="n">_model_name</span> <span class="o">=</span> <span class="s">&#39;magento.res.partner.category&#39;</span>
+
+    <span class="n">direct</span> <span class="o">=</span> <span class="p">[(</span><span class="s">&#39;customer_group_code&#39;</span><span class="p">,</span> <span class="s">&#39;name&#39;</span><span class="p">),</span>
+              <span class="p">(</span><span class="s">&#39;tax_class_id&#39;</span><span class="p">,</span> <span class="s">&#39;tax_class_id&#39;</span><span class="p">),</span>
+              <span class="p">]</span>
+
+    <span class="nd">@mapping</span>
+    <span class="k">def</span> <span class="nf">magento_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s">&#39;magento_id&#39;</span><span class="p">:</span> <span class="n">record</span><span class="p">[</span><span class="s">&#39;customer_group_id&#39;</span><span class="p">]}</span>
+
+    <span class="nd">@mapping</span>
+    <span class="k">def</span> <span class="nf">backend_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s">&#39;backend_id&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend_record</span><span class="o">.</span><span class="n">id</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>Observations:</p>
+<ul class="simple">
+<li>Some mappings are in <code class="docutils literal"><span class="pre">direct</span></code> and some use a method with a
+<code class="docutils literal"><span class="pre">&#64;mapping</span></code> decorator.</li>
+<li>Methods allow to have more complex mappings. (see documentation on
+<a class="reference external" href="http://www.odoo-connector.com/api/api_mapper.html#connector.unit.mapper.Mapper" title="(in Connector v)"><code class="xref py py-class docutils literal"><span class="pre">Mapper</span></code></a>)</li>
+</ul>
+</div>
+<div class="section" id="binder">
+<h3><a class="toc-backref" href="#sections">Binder</a><a class="headerlink" href="#binder" title="Permalink to this headline">¶</a></h3>
+<p>For the last piece of the construct, it will be an easy one, because
+normally all the Magento Models will use the same Binder, the so called
+<a class="reference internal" href="../api/api_binder.html#openerp.addons.magentoerpconnect.unit.binder.MagentoModelBinder" title="openerp.addons.magentoerpconnect.unit.binder.MagentoModelBinder"><code class="xref py py-class docutils literal"><span class="pre">MagentoModelBinder</span></code></a>.</p>
+<p>We just need to add our model in the <code class="docutils literal"><span class="pre">_model_name</span></code> attribute:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@magento</span>
+<span class="k">class</span> <span class="nc">MagentoModelBinder</span><span class="p">(</span><span class="n">MagentoBinder</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Bindings are done directly on the model</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_model_name</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s">&#39;magento.website&#39;</span><span class="p">,</span>
+            <span class="s">&#39;magento.store&#39;</span><span class="p">,</span>
+            <span class="s">&#39;magento.storeview&#39;</span><span class="p">,</span>
+            <span class="s">&#39;magento.res.partner.category&#39;</span><span class="p">,</span>
+        <span class="p">]</span>
+
+<span class="p">[</span><span class="o">...</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+<div id="sourcelink">
+  <a href="../_sources/guides/tutorial_development.txt"
+     rel="nofollow">Source</a>
+</div>
+      
+    </p>
+    <p>
+        &copy; Copyright 2013-2015, Odoo Community Association (OCA).<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

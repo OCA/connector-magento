@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>openerp.addons.magentoerpconnect.partner_category &mdash; Odoo Magento Connector  documentation</title>
+    
+    <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/bootswatch-3.3.4/united/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../../../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="Odoo Magento Connector  documentation" href="../../../../index.html" />
+    <link rel="up" title="Module code" href="../../../index.html" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-7628916-4', 'odoo-magento-connector.com');
+  ga('send', 'pageview');
+
+</script>
+
+  </head>
+  <body role="document">
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../../index.html">
+          Odoo Magento Connector</a>
+        <span class="navbar-text navbar-version pull-left"><b></b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guides/installation_guide.html">Installation Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../guides/installation_guide.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../guides/installation_guide.html#after-the-installation">After the installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../guides/installation_guide.html#on-a-daily-basis">On a daily basis</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guides/key_questions.html">Key questions when connecting Odoo with Magento</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../guides/key_questions.html#sale-workflows">Sale workflows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../guides/key_questions.html#catalog">Catalog</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../guides/key_questions.html#pricing">Pricing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../guides/key_questions.html#accounting">Accounting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../guides/key_questions.html#stock-availability-deliveries">Stock, availability, deliveries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../guides/key_questions.html#technical">Technical</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../howto/configure_translations.html">How to configure translations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../howto/configure_warehouse.html">How to configure warehouses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../howto/configure_pricing.html">How to configure pricing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../howto/configure_pricing.html#prices-are-shared-accross-websites">Prices are shared accross websites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../howto/configure_pricing.html#prices-are-different-accross-websites">Prices are different accross websites</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../howto/configure_payment_methods.html">Howto: configure payment methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../howto/configure_automatic_workflows.html">Howto: configure automatic workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../howto/configure_exception_rules.html">Howto: configure exception rules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../howto/configure_shipping_methods.html">How to configure shipping methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../howto/configure_emails.html">How to configure emails</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../howto/configure_schedulers.html">How to configure schedulers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../howto/configure_taxes.html">How to configure taxes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guides/connector_checkpoint.html">Check the connector checkpoint</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guides/monitor_resolve_jobs.html">Monitor and resolve jobs</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../guides/monitor_resolve_jobs.html#q-a">Q&amp;A</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../howto/modify_an_order.html">How to cancel / modify a sale order</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../howto/modify_an_order.html#handle-a-sale-order-cancelled-on-magento">Handle a sale order cancelled on Magento</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../howto/modify_an_order.html#modify-a-sale-order">Modify a sale order</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../howto/faq.html">FAQ</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../howto/faq.html#how-do-i">How do I...</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../howto/faq.html#why">Why...</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../project/contribute.html">Developer&#8217;s guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../project/contribute.html#connector-with-batteries-included-buildout">Connector with batteries included (buildout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../project/contribute.html#magento-on-docker">Magento on Docker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../project/contribute.html#how-to-help">How to help</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guides/tutorial_development.html">Tutorial: development</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../guides/tutorial_development.html#run-a-function-on-an-event">Run a function on an Event</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../guides/tutorial_development.html#find-the-connector-unit-for-a-model">Find the &#8216;connector unit&#8217; for a model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../guides/tutorial_development.html#create-an-import">Create an import</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guides/tutorial_customize.html">Tutorial: customize the connector</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../guides/tutorial_customize.html#bootstrap-your-own-customization-module">Bootstrap your own customization module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../guides/tutorial_customize.html#add-mappings-of-fields">Add mappings of fields</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api/api_connector.html">Connector</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api/api_consumer.html">Consumers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api/api_backend.html">Backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api/api_binder.html">Binders</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api/api_synchronizer.html">Synchronizers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/api_synchronizer.html#module-openerp.addons.magentoerpconnect.unit.import_synchronizer">Import</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/api_synchronizer.html#module-openerp.addons.magentoerpconnect.unit.export_synchronizer">Export</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/api_synchronizer.html#module-openerp.addons.magentoerpconnect.unit.delete_synchronizer">Delete</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api/api_backend_adapter.html">Backend Adapters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api/api_exception.html">Exceptions</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api/api_delivery.html">Delivery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api/api_invoice.html">Invoice</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api/api_magento_model.html">Magento Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api/api_partner.html">Partner</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api/api_partner_category.html">Partner Category</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api/api_product.html">Product</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api/api_product_category.html">Product Category</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api/api_sale.html">Sale</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api/api_stock_picking.html">Stock Picking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api/api_stock_tracking.html">Stock Tracking</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../project/roadmap.html">Roadmap</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../project/roadmap.html#catalog">Catalog</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../project/contributors.html">Contributors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../project/contributors.html#financial-contributors">Financial Contributors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../project/changes.html">Changes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../project/changes.html#id2">3.0.0 (2015-06-02)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../project/changes.html#id3">2.5.0 (2015-01-06)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../project/changes.html#id4">2.4.2 (2014-06-16)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../project/changes.html#id5">2.4.1 (2014-06-10)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../project/changes.html#id6">2.4.0 (2014-05-26)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../project/changes.html#id7">2.3.1 (2014-01-23)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../project/changes.html#warning-api-changes">2.3.0 (2014-01-15 warning: API changes)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../project/changes.html#id8">2.2.1 (2013.11.22)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../project/changes.html#public-release-2013-11-06">2.2.0 (public release - 2013.11.06)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../project/changes.html#id9">2.1.0 (2013.08.05)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../project/changes.html#id10">2.0.0</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      
+  <h1>Source code for openerp.addons.magentoerpconnect.partner_category</h1><div class="highlight"><pre>
+<span class="c"># -*- coding: utf-8 -*-</span>
+<span class="c">##############################################################################</span>
+<span class="c">#</span>
+<span class="c">#    Author: Guewen Baconnier</span>
+<span class="c">#    Copyright 2013 Camptocamp SA</span>
+<span class="c">#</span>
+<span class="c">#    This program is free software: you can redistribute it and/or modify</span>
+<span class="c">#    it under the terms of the GNU Affero General Public License as</span>
+<span class="c">#    published by the Free Software Foundation, either version 3 of the</span>
+<span class="c">#    License, or (at your option) any later version.</span>
+<span class="c">#</span>
+<span class="c">#    This program is distributed in the hope that it will be useful,</span>
+<span class="c">#    but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c">#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c">#    GNU Affero General Public License for more details.</span>
+<span class="c">#</span>
+<span class="c">#    You should have received a copy of the GNU Affero General Public License</span>
+<span class="c">#    along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+<span class="c">#</span>
+<span class="c">##############################################################################</span>
+
+<span class="kn">from</span> <span class="nn">openerp</span> <span class="kn">import</span> <span class="n">models</span><span class="p">,</span> <span class="n">fields</span>
+<span class="kn">from</span> <span class="nn">openerp.addons.connector.unit.mapper</span> <span class="kn">import</span> <span class="p">(</span><span class="n">mapping</span><span class="p">,</span>
+                                                  <span class="n">only_create</span><span class="p">,</span>
+                                                  <span class="n">ImportMapper</span>
+                                                  <span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.unit.backend_adapter</span> <span class="kn">import</span> <span class="n">GenericAdapter</span>
+<span class="kn">from</span> <span class="nn">.unit.import_synchronizer</span> <span class="kn">import</span> <span class="n">DelayedBatchImporter</span>
+<span class="kn">from</span> <span class="nn">.backend</span> <span class="kn">import</span> <span class="n">magento</span>
+
+
+<div class="viewcode-block" id="ResPartnerCategory"><a class="viewcode-back" href="../../../../api/api_partner_category.html#openerp.addons.magentoerpconnect.partner_category.ResPartnerCategory">[docs]</a><span class="k">class</span> <span class="nc">ResPartnerCategory</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">_inherit</span> <span class="o">=</span> <span class="s">&#39;res.partner.category&#39;</span>
+
+    <span class="n">magento_bind_ids</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">One2many</span><span class="p">(</span>
+        <span class="n">comodel_name</span><span class="o">=</span><span class="s">&#39;magento.res.partner.category&#39;</span><span class="p">,</span>
+        <span class="n">inverse_name</span><span class="o">=</span><span class="s">&#39;openerp_id&#39;</span><span class="p">,</span>
+        <span class="n">string</span><span class="o">=</span><span class="s">&#39;Magento Bindings&#39;</span><span class="p">,</span>
+        <span class="n">readonly</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+    <span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="MagentoResPartnerCategory"><a class="viewcode-back" href="../../../../api/api_partner_category.html#openerp.addons.magentoerpconnect.partner_category.MagentoResPartnerCategory">[docs]</a><span class="k">class</span> <span class="nc">MagentoResPartnerCategory</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">_name</span> <span class="o">=</span> <span class="s">&#39;magento.res.partner.category&#39;</span>
+    <span class="n">_inherit</span> <span class="o">=</span> <span class="s">&#39;magento.binding&#39;</span>
+    <span class="n">_inherits</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;res.partner.category&#39;</span><span class="p">:</span> <span class="s">&#39;openerp_id&#39;</span><span class="p">}</span>
+
+    <span class="n">openerp_id</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Many2one</span><span class="p">(</span><span class="n">comodel_name</span><span class="o">=</span><span class="s">&#39;res.partner.category&#39;</span><span class="p">,</span>
+                                 <span class="n">string</span><span class="o">=</span><span class="s">&#39;Partner Category&#39;</span><span class="p">,</span>
+                                 <span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+                                 <span class="n">ondelete</span><span class="o">=</span><span class="s">&#39;cascade&#39;</span><span class="p">)</span>
+    <span class="c"># TODO : replace by a m2o when tax class will be implemented</span>
+    <span class="n">tax_class_id</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Integer</span><span class="p">(</span><span class="n">string</span><span class="o">=</span><span class="s">&#39;Tax Class ID&#39;</span><span class="p">)</span>
+
+</div>
+<span class="nd">@magento</span>
+<div class="viewcode-block" id="PartnerCategoryAdapter"><a class="viewcode-back" href="../../../../api/api_partner_category.html#openerp.addons.magentoerpconnect.partner_category.PartnerCategoryAdapter">[docs]</a><span class="k">class</span> <span class="nc">PartnerCategoryAdapter</span><span class="p">(</span><span class="n">GenericAdapter</span><span class="p">):</span>
+    <span class="n">_model_name</span> <span class="o">=</span> <span class="s">&#39;magento.res.partner.category&#39;</span>
+    <span class="n">_magento_model</span> <span class="o">=</span> <span class="s">&#39;ol_customer_groups&#39;</span>
+    <span class="n">_admin_path</span> <span class="o">=</span> <span class="s">&#39;/customer_group/edit/id/{id}&#39;</span>
+
+<div class="viewcode-block" id="PartnerCategoryAdapter.search"><a class="viewcode-back" href="../../../../api/api_partner_category.html#openerp.addons.magentoerpconnect.partner_category.PartnerCategoryAdapter.search">[docs]</a>    <span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filters</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Search records according to some criterias</span>
+<span class="sd">        and returns a list of ids</span>
+
+<span class="sd">        :rtype: list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s">&#39;customer_group_id&#39;</span><span class="p">])</span> <span class="k">for</span> <span class="n">row</span>
+                <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call</span><span class="p">(</span><span class="s">&#39;</span><span class="si">%s</span><span class="s">.list&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_magento_model</span><span class="p">,</span>
+                              <span class="p">[</span><span class="n">filters</span><span class="p">]</span> <span class="k">if</span> <span class="n">filters</span> <span class="k">else</span> <span class="p">[{}])]</span>
+
+</div></div>
+<span class="nd">@magento</span>
+<div class="viewcode-block" id="PartnerCategoryBatchImporter"><a class="viewcode-back" href="../../../../api/api_partner_category.html#openerp.addons.magentoerpconnect.partner_category.PartnerCategoryBatchImporter">[docs]</a><span class="k">class</span> <span class="nc">PartnerCategoryBatchImporter</span><span class="p">(</span><span class="n">DelayedBatchImporter</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Delay import of the records &quot;&quot;&quot;</span>
+    <span class="n">_model_name</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;magento.res.partner.category&#39;</span><span class="p">]</span>
+
+</div>
+<span class="n">PartnerCategoryBatchImport</span> <span class="o">=</span> <span class="n">PartnerCategoryBatchImporter</span>  <span class="c"># deprecated</span>
+
+
+<span class="nd">@magento</span>
+<div class="viewcode-block" id="PartnerCategoryImportMapper"><a class="viewcode-back" href="../../../../api/api_partner_category.html#openerp.addons.magentoerpconnect.partner_category.PartnerCategoryImportMapper">[docs]</a><span class="k">class</span> <span class="nc">PartnerCategoryImportMapper</span><span class="p">(</span><span class="n">ImportMapper</span><span class="p">):</span>
+    <span class="n">_model_name</span> <span class="o">=</span> <span class="s">&#39;magento.res.partner.category&#39;</span>
+
+    <span class="n">direct</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span><span class="s">&#39;customer_group_code&#39;</span><span class="p">,</span> <span class="s">&#39;name&#39;</span><span class="p">),</span>
+        <span class="p">(</span><span class="s">&#39;tax_class_id&#39;</span><span class="p">,</span> <span class="s">&#39;tax_class_id&#39;</span><span class="p">),</span>
+    <span class="p">]</span>
+
+    <span class="nd">@mapping</span>
+<div class="viewcode-block" id="PartnerCategoryImportMapper.magento_id"><a class="viewcode-back" href="../../../../api/api_partner_category.html#openerp.addons.magentoerpconnect.partner_category.PartnerCategoryImportMapper.magento_id">[docs]</a>    <span class="k">def</span> <span class="nf">magento_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s">&#39;magento_id&#39;</span><span class="p">:</span> <span class="n">record</span><span class="p">[</span><span class="s">&#39;customer_group_id&#39;</span><span class="p">]}</span>
+</div>
+    <span class="nd">@mapping</span>
+<div class="viewcode-block" id="PartnerCategoryImportMapper.backend_id"><a class="viewcode-back" href="../../../../api/api_partner_category.html#openerp.addons.magentoerpconnect.partner_category.PartnerCategoryImportMapper.backend_id">[docs]</a>    <span class="k">def</span> <span class="nf">backend_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s">&#39;backend_id&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend_record</span><span class="o">.</span><span class="n">id</span><span class="p">}</span>
+</div>
+    <span class="nd">@only_create</span>
+    <span class="nd">@mapping</span>
+<div class="viewcode-block" id="PartnerCategoryImportMapper.openerp_id"><a class="viewcode-back" href="../../../../api/api_partner_category.html#openerp.addons.magentoerpconnect.partner_category.PartnerCategoryImportMapper.openerp_id">[docs]</a>    <span class="k">def</span> <span class="nf">openerp_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Will bind the category on a existing one with the same name.&quot;&quot;&quot;</span>
+        <span class="n">existing</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">[</span><span class="s">&#39;res.partner.category&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">search</span><span class="p">(</span>
+            <span class="p">[(</span><span class="s">&#39;name&#39;</span><span class="p">,</span> <span class="s">&#39;=&#39;</span><span class="p">,</span> <span class="n">record</span><span class="p">[</span><span class="s">&#39;customer_group_code&#39;</span><span class="p">])],</span>
+            <span class="n">limit</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">existing</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s">&#39;openerp_id&#39;</span><span class="p">:</span> <span class="n">existing</span><span class="o">.</span><span class="n">id</span><span class="p">}</span></div></div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+      
+    </p>
+    <p>
+        &copy; Copyright 2013-2015, Odoo Community Association (OCA).<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

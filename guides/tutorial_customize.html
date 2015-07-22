@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Tutorial: customize the connector &mdash; Odoo Magento Connector  documentation</title>
+    
+    <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/bootswatch-3.3.4/united/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="Odoo Magento Connector  documentation" href="../index.html" />
+    <link rel="next" title="Connector" href="../api/api_connector.html" />
+    <link rel="prev" title="Tutorial: development" href="tutorial_development.html" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-7628916-4', 'odoo-magento-connector.com');
+  ga('send', 'pageview');
+
+</script>
+
+  </head>
+  <body role="document">
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          Odoo Magento Connector</a>
+        <span class="navbar-text navbar-version pull-left"><b></b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="installation_guide.html">Installation Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="installation_guide.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation_guide.html#after-the-installation">After the installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation_guide.html#on-a-daily-basis">On a daily basis</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="key_questions.html">Key questions when connecting Odoo with Magento</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="key_questions.html#sale-workflows">Sale workflows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="key_questions.html#catalog">Catalog</a></li>
+<li class="toctree-l2"><a class="reference internal" href="key_questions.html#pricing">Pricing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="key_questions.html#accounting">Accounting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="key_questions.html#stock-availability-deliveries">Stock, availability, deliveries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="key_questions.html#technical">Technical</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../howto/configure_translations.html">How to configure translations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../howto/configure_warehouse.html">How to configure warehouses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../howto/configure_pricing.html">How to configure pricing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../howto/configure_pricing.html#prices-are-shared-accross-websites">Prices are shared accross websites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../howto/configure_pricing.html#prices-are-different-accross-websites">Prices are different accross websites</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../howto/configure_payment_methods.html">Howto: configure payment methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../howto/configure_automatic_workflows.html">Howto: configure automatic workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../howto/configure_exception_rules.html">Howto: configure exception rules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../howto/configure_shipping_methods.html">How to configure shipping methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../howto/configure_emails.html">How to configure emails</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../howto/configure_schedulers.html">How to configure schedulers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../howto/configure_taxes.html">How to configure taxes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="connector_checkpoint.html">Check the connector checkpoint</a></li>
+<li class="toctree-l1"><a class="reference internal" href="monitor_resolve_jobs.html">Monitor and resolve jobs</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="monitor_resolve_jobs.html#q-a">Q&amp;A</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../howto/modify_an_order.html">How to cancel / modify a sale order</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../howto/modify_an_order.html#handle-a-sale-order-cancelled-on-magento">Handle a sale order cancelled on Magento</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../howto/modify_an_order.html#modify-a-sale-order">Modify a sale order</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../howto/faq.html">FAQ</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../howto/faq.html#how-do-i">How do I...</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../howto/faq.html#why">Why...</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../project/contribute.html">Developer&#8217;s guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../project/contribute.html#connector-with-batteries-included-buildout">Connector with batteries included (buildout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../project/contribute.html#magento-on-docker">Magento on Docker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../project/contribute.html#how-to-help">How to help</a></li>
+</ul>
+</li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="tutorial_development.html">Tutorial: development</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_development.html#run-a-function-on-an-event">Run a function on an Event</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_development.html#find-the-connector-unit-for-a-model">Find the &#8216;connector unit&#8217; for a model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_development.html#create-an-import">Create an import</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">Tutorial: customize the connector</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#bootstrap-your-own-customization-module">Bootstrap your own customization module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#add-mappings-of-fields">Add mappings of fields</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/api_connector.html">Connector</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/api_consumer.html">Consumers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/api_backend.html">Backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/api_binder.html">Binders</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/api_synchronizer.html">Synchronizers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../api/api_synchronizer.html#module-openerp.addons.magentoerpconnect.unit.import_synchronizer">Import</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/api_synchronizer.html#module-openerp.addons.magentoerpconnect.unit.export_synchronizer">Export</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/api_synchronizer.html#module-openerp.addons.magentoerpconnect.unit.delete_synchronizer">Delete</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api/api_backend_adapter.html">Backend Adapters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/api_exception.html">Exceptions</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/api_delivery.html">Delivery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/api_invoice.html">Invoice</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/api_magento_model.html">Magento Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/api_partner.html">Partner</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/api_partner_category.html">Partner Category</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/api_product.html">Product</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/api_product_category.html">Product Category</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/api_sale.html">Sale</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/api_stock_picking.html">Stock Picking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/api_stock_tracking.html">Stock Tracking</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../project/roadmap.html">Roadmap</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../project/roadmap.html#catalog">Catalog</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../project/contributors.html">Contributors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../project/contributors.html#financial-contributors">Financial Contributors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../project/changes.html">Changes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../project/changes.html#id2">3.0.0 (2015-06-02)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../project/changes.html#id3">2.5.0 (2015-01-06)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../project/changes.html#id4">2.4.2 (2014-06-16)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../project/changes.html#id5">2.4.1 (2014-06-10)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../project/changes.html#id6">2.4.0 (2014-05-26)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../project/changes.html#id7">2.3.1 (2014-01-23)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../project/changes.html#warning-api-changes">2.3.0 (2014-01-15 warning: API changes)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../project/changes.html#id8">2.2.1 (2013.11.22)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../project/changes.html#public-release-2013-11-06">2.2.0 (public release - 2013.11.06)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../project/changes.html#id9">2.1.0 (2013.08.05)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../project/changes.html#id10">2.0.0</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">Tutorial: customize the connector</a><ul>
+<li><a class="reference internal" href="#bootstrap-your-own-customization-module">Bootstrap your own customization module</a><ul>
+<li><a class="reference internal" href="#common-odoo-files">Common Odoo files</a></li>
+<li><a class="reference internal" href="#install-the-module-in-the-connector">Install the module in the connector</a></li>
+<li><a class="reference internal" href="#create-your-custom-backend">Create your custom Backend</a></li>
+<li><a class="reference internal" href="#use-it-in-odoo">Use it in Odoo</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#add-mappings-of-fields">Add mappings of fields</a><ul>
+<li><a class="reference internal" href="#a-bit-of-theory">A bit of theory</a></li>
+<li><a class="reference internal" href="#magento-models">Magento Models</a></li>
+<li><a class="reference internal" href="#examples">Examples</a><ul>
+<li><a class="reference internal" href="#example-1">Example 1.</a></li>
+<li><a class="reference internal" href="#example-2">Example 2.</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#and-now">And now?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="tutorial_development.html" title="Previous Chapter: Tutorial: development"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; Tutorial: develo...</span>
+    </a>
+  </li>
+  <li>
+    <a href="../api/api_connector.html" title="Next Chapter: Connector"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">Connector &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      
+  <div class="section" id="tutorial-customize-the-connector">
+<span id="tutorial-customize"></span><h1>Tutorial: customize the connector<a class="headerlink" href="#tutorial-customize-the-connector" title="Permalink to this headline">¶</a></h1>
+<p>This tutorial will explain how you can customize several parts of the
+connector in your own Odoo module. It assumes that you already have
+some knowledge in the Odoo development. You can still refer to the
+<a class="reference external" href="https://www.odoo.com/documentation/8.0/">official Odoo documentation</a>.</p>
+<div class="contents local topic" id="sections">
+<p class="topic-title first">Sections:</p>
+<ul class="simple">
+<li><a class="reference internal" href="#bootstrap-your-own-customization-module" id="id1">Bootstrap your own customization module</a><ul>
+<li><a class="reference internal" href="#common-odoo-files" id="id2">Common Odoo files</a></li>
+<li><a class="reference internal" href="#install-the-module-in-the-connector" id="id3">Install the module in the connector</a></li>
+<li><a class="reference internal" href="#create-your-custom-backend" id="id4">Create your custom Backend</a></li>
+<li><a class="reference internal" href="#use-it-in-odoo" id="id5">Use it in Odoo</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#add-mappings-of-fields" id="id6">Add mappings of fields</a><ul>
+<li><a class="reference internal" href="#a-bit-of-theory" id="id7">A bit of theory</a></li>
+<li><a class="reference internal" href="#magento-models" id="id8">Magento Models</a></li>
+<li><a class="reference internal" href="#examples" id="id9">Examples</a><ul>
+<li><a class="reference internal" href="#example-1" id="id10">Example 1.</a></li>
+<li><a class="reference internal" href="#example-2" id="id11">Example 2.</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#and-now" id="id12">And now?</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="bootstrap-your-own-customization-module">
+<h2><a class="toc-backref" href="#sections">Bootstrap your own customization module</a><a class="headerlink" href="#bootstrap-your-own-customization-module" title="Permalink to this headline">¶</a></h2>
+<p>You should never make changes in the official modules, instead, you need
+to create your own module and apply your personalizations from there.</p>
+<p>As an example, throughout this tutorial, we&#8217;ll create our own
+customization module, we&#8217;ll name it, in a very original manner,
+<code class="docutils literal"><span class="pre">customize_example</span></code>. The final example module can be found in the root
+of the <code class="docutils literal"><span class="pre">connector-magento</span></code> repository.</p>
+<div class="section" id="common-odoo-files">
+<h3><a class="toc-backref" href="#sections">Common Odoo files</a><a class="headerlink" href="#common-odoo-files" title="Permalink to this headline">¶</a></h3>
+<p>A <code class="docutils literal"><span class="pre">magentoerpconnect</span></code> customization module is like any Odoo module,
+so you will first need to create the <strong>manifest</strong>
+<code class="docutils literal"><span class="pre">customize_example/__openerp__.py</span></code>:</p>
+<div class="highlight-python"><div class="highlight"><pre> <span class="c"># -*- coding: utf-8 -*-</span>
+ <span class="p">{</span><span class="s">&#39;name&#39;</span><span class="p">:</span> <span class="s">&#39;Magento Connector Customization&#39;</span><span class="p">,</span>
+  <span class="s">&#39;version&#39;</span><span class="p">:</span> <span class="s">&#39;1.0.0&#39;</span><span class="p">,</span>
+<span class="hll">  <span class="s">&#39;category&#39;</span><span class="p">:</span> <span class="s">&#39;Connector&#39;</span><span class="p">,</span>
+</span><span class="hll">  <span class="s">&#39;depends&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;magentoerpconnect&#39;</span><span class="p">,</span>
+</span>              <span class="p">],</span>
+  <span class="s">&#39;author&#39;</span><span class="p">:</span> <span class="s">&#39;Myself&#39;</span><span class="p">,</span>
+  <span class="s">&#39;license&#39;</span><span class="p">:</span> <span class="s">&#39;AGPL-3&#39;</span><span class="p">,</span>
+  <span class="s">&#39;description&#39;</span><span class="p">:</span> <span class="s">&quot;&quot;&quot;</span>
+<span class="s"> Magento Connector Customization</span>
+<span class="s"> ===============================</span>
+
+<span class="s"> Explain what this module changes.</span>
+<span class="s"> &quot;&quot;&quot;</span><span class="p">,</span>
+  <span class="s">&#39;data&#39;</span><span class="p">:</span> <span class="p">[],</span>
+  <span class="s">&#39;installable&#39;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
+  <span class="s">&#39;application&#39;</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>
+ <span class="p">}</span>
+</pre></div>
+</div>
+<p>Nothing special but 2 things to note:</p>
+<ul class="simple">
+<li>It depends from <code class="docutils literal"><span class="pre">magentoerpconnect</span></code>.</li>
+<li>The module category should preferably be <code class="docutils literal"><span class="pre">Connector</span></code>.</li>
+</ul>
+<p>Of course, you also need to create the <code class="docutils literal"><span class="pre">__init__.py</span></code> file where you will
+put the imports of your python modules.</p>
+</div>
+<div class="section" id="install-the-module-in-the-connector">
+<h3><a class="toc-backref" href="#sections">Install the module in the connector</a><a class="headerlink" href="#install-the-module-in-the-connector" title="Permalink to this headline">¶</a></h3>
+<p>Each new module needs to be plugged in the connector&#8217;s framework.
+That&#8217;s just a matter of following a convention and creating
+<code class="docutils literal"><span class="pre">connector.py</span></code> in which you will call the
+<code class="docutils literal"><span class="pre">install_in_connector</span></code> function:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">openerp.addons.connector.connector</span> <span class="kn">import</span> <span class="n">install_in_connector</span>
+
+
+<span class="n">install_in_connector</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">If you miss this line of code, your custom ConnectorUnit
+classes won&#8217;t be used.</p>
+</div>
+</div>
+<div class="section" id="create-your-custom-backend">
+<h3><a class="toc-backref" href="#sections">Create your custom Backend</a><a class="headerlink" href="#create-your-custom-backend" title="Permalink to this headline">¶</a></h3>
+<p>The connector can support the synchronization with various Magento
+versions.</p>
+<p>Actually the supported versions are referenced in
+<code class="docutils literal"><span class="pre">magentoerpconnect/backend.py</span></code>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">openerp.addons.connector.backend</span> <span class="kn">as</span> <span class="nn">backend</span>
+
+<span class="n">magento</span> <span class="o">=</span> <span class="n">backend</span><span class="o">.</span><span class="n">Backend</span><span class="p">(</span><span class="s">&#39;magento&#39;</span><span class="p">)</span>
+<span class="n">magento1700</span> <span class="o">=</span> <span class="n">backend</span><span class="o">.</span><span class="n">Backend</span><span class="p">(</span><span class="n">parent</span><span class="o">=</span><span class="n">magento</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="s">&#39;1.7&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In the connector, we are able to link pieces of code to a specific
+version of Magento. If I link a piece of code to <code class="docutils literal"><span class="pre">magento1700</span></code>, it
+will be executed only if my Magento&#8217;s version is actually Magento 1.7.</p>
+<p><code class="docutils literal"><span class="pre">magento</span></code> is the parent of <code class="docutils literal"><span class="pre">magento1700</span></code>. When the latter has no
+specific piece of code, it will execute the former&#8217;s one.</p>
+<p>As you want to change parts of code specifically to <strong>your version</strong> of
+Magento, you need to:</p>
+<ul class="simple">
+<li>create your own backend version</li>
+<li>link your custom parts of code with your own backend version (we&#8217;ll
+cover this later)</li>
+</ul>
+<p>Let&#8217;s create our own backend, in <code class="docutils literal"><span class="pre">customize_example/backend.py</span></code>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># -*- coding: utf-8 -*-</span>
+<span class="kn">import</span> <span class="nn">openerp.addons.connector.backend</span> <span class="kn">as</span> <span class="nn">backend</span>
+<span class="kn">import</span> <span class="nn">openerp.addons.magentoerpconnect.backend</span> <span class="kn">as</span> <span class="nn">magento_backend</span>
+
+<span class="n">magento_myversion</span> <span class="o">=</span> <span class="n">backend</span><span class="o">.</span><span class="n">Backend</span><span class="p">(</span><span class="n">parent</span><span class="o">=</span><span class="n">magento_backend</span><span class="o">.</span><span class="n">magento1700</span><span class="p">,</span>
+                                    <span class="n">version</span><span class="o">=</span><span class="s">&#39;1.7-myversion&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>And in <code class="docutils literal"><span class="pre">customize_example/magento_model.py</span></code>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># -*- coding: utf-8 -*-</span>
+<span class="kn">from</span> <span class="nn">openerp</span> <span class="kn">import</span> <span class="n">models</span><span class="p">,</span> <span class="n">api</span>
+
+
+<span class="k">class</span> <span class="nc">MagentoBackend</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">_inherit</span> <span class="o">=</span> <span class="s">&#39;magento.backend&#39;</span>
+
+    <span class="nd">@api.model</span>
+    <span class="k">def</span> <span class="nf">select_versions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Available versions in the backend.</span>
+
+<span class="sd">        Can be inherited to add custom versions.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">versions</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">MagentoBackend</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">select_versions</span><span class="p">()</span>
+        <span class="n">versions</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s">&#39;1.7-myversion&#39;</span><span class="p">,</span> <span class="s">&#39;1.7 - My Version&#39;</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">versions</span>
+</pre></div>
+</div>
+<p>Things to note:</p>
+<ul class="simple">
+<li>The <code class="docutils literal"><span class="pre">parent</span></code> argument of my version is the 1.7 version. You have to
+set the correct parent according to your Magento version. If your
+Magento version does not exist, take the nearest version.</li>
+<li>the version should be the same in the <code class="docutils literal"><span class="pre">backend.Backend</span></code> and the
+model.</li>
+<li>We add the version in the model <code class="docutils literal"><span class="pre">magento.backend</span></code> so we&#8217;ll be able to
+select it from the Odoo front-end.</li>
+<li>Do not forget to add the new python modules in <code class="docutils literal"><span class="pre">__init__.py</span></code>.</li>
+</ul>
+</div>
+<div class="section" id="use-it-in-odoo">
+<h3><a class="toc-backref" href="#sections">Use it in Odoo</a><a class="headerlink" href="#use-it-in-odoo" title="Permalink to this headline">¶</a></h3>
+<p>Great, you now have the minimal stuff required to customize your
+connector. When you create your backend in Odoo (menu <code class="docutils literal"><span class="pre">Connectors</span> <span class="pre">&gt;</span>
+<span class="pre">Magento</span> <span class="pre">&gt;</span> <span class="pre">Backends</span></code>), you have now to select <strong>1.7 - My Version</strong>.</p>
+<p>In the next chapter, we&#8217;ll cover the most common personalization:
+<a class="reference internal" href="#add-mappings-of-fields">Add mappings of fields</a>.</p>
+</div>
+</div>
+<div class="section" id="add-mappings-of-fields">
+<span id="add-custom-mappings"></span><h2><a class="toc-backref" href="#sections">Add mappings of fields</a><a class="headerlink" href="#add-mappings-of-fields" title="Permalink to this headline">¶</a></h2>
+<p>The mappings of the fields define how the fields are related between Odoo and Magento.</p>
+<p>They defines whether field <cite>A</cite> should be written in field <cite>B</cite>, whether
+it should be converted then written to <cite>C</cite> and <cite>D</cite>, etc.</p>
+<p>To be able to customize the mappings, you need to already have a
+customization module. If that&#8217;s not already done, you can go through the
+previous chapter: <a class="reference internal" href="#bootstrap-your-own-customization-module">Bootstrap your own customization module</a>.</p>
+<p>We&#8217;ll see how to map new fields on the imports.</p>
+<div class="section" id="a-bit-of-theory">
+<h3><a class="toc-backref" href="#sections">A bit of theory</a><a class="headerlink" href="#a-bit-of-theory" title="Permalink to this headline">¶</a></h3>
+<p>The mappings of the fields are defined in subclasses of
+<a class="reference external" href="http://www.odoo-connector.com/api/api_mapper.html#connector.unit.mapper.ImportMapper" title="(in Connector v)"><code class="xref py py-class docutils literal"><span class="pre">connector.unit.mapper.ImportMapper</span></code></a> or
+<a class="reference external" href="http://www.odoo-connector.com/api/api_mapper.html#connector.unit.mapper.ExportMapper" title="(in Connector v)"><code class="xref py py-class docutils literal"><span class="pre">connector.unit.mapper.ExportMapper</span></code></a>, respectively
+for the imports and the exports.</p>
+<p>See the documentation about <a class="reference external" href="http://www.odoo-connector.com/api/api_mapper.html#connector.unit.mapper.Mapper" title="(in Connector v)"><code class="xref py py-class docutils literal"><span class="pre">Mapper</span></code></a>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>The connector almost never works with the Odoo Models
+directly. Instead, it works with its own models, which
+<code class="docutils literal"><span class="pre">_inherits</span></code> (note the final <code class="docutils literal"><span class="pre">s</span></code>) the base models. For
+instance, the Magento model for <code class="docutils literal"><span class="pre">res.partner</span></code> is
+<code class="docutils literal"><span class="pre">magento.res.partner</span></code>. That&#8217;s why you&#8217;ll see
+<code class="docutils literal"><span class="pre">magento.res.partner</span></code> below.</p>
+<p class="last">More details in <a class="reference internal" href="#magento-models">Magento Models</a>.</p>
+</div>
+<p>When you need to change the mappings, you&#8217;ll need to dive in the
+<code class="docutils literal"><span class="pre">magentoerpconnect</span></code>&#8216;s code and locate the class which does this job for
+your model. You won&#8217;t change anything in this class, but you&#8217;ll extend
+it so you need to have a look on it.  For example, the mapping for
+<code class="docutils literal"><span class="pre">magento.res.partner</span></code> in <code class="docutils literal"><span class="pre">magentoerpconnect</span></code> is the following
+(excerpt):</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@magento</span>
+<span class="k">class</span> <span class="nc">PartnerImportMapper</span><span class="p">(</span><span class="n">ImportMapper</span><span class="p">):</span>
+    <span class="n">_model_name</span> <span class="o">=</span> <span class="s">&#39;magento.res.partner&#39;</span>
+
+    <span class="n">direct</span> <span class="o">=</span> <span class="p">[(</span><span class="s">&#39;email&#39;</span><span class="p">,</span> <span class="s">&#39;email&#39;</span><span class="p">),</span>
+              <span class="p">(</span><span class="s">&#39;dob&#39;</span><span class="p">,</span> <span class="s">&#39;birthday&#39;</span><span class="p">),</span>
+              <span class="p">(</span><span class="s">&#39;created_at&#39;</span><span class="p">,</span> <span class="s">&#39;created_at&#39;</span><span class="p">),</span>
+              <span class="p">(</span><span class="s">&#39;updated_at&#39;</span><span class="p">,</span> <span class="s">&#39;updated_at&#39;</span><span class="p">),</span>
+              <span class="p">(</span><span class="s">&#39;email&#39;</span><span class="p">,</span> <span class="s">&#39;emailid&#39;</span><span class="p">),</span>
+              <span class="p">(</span><span class="s">&#39;taxvat&#39;</span><span class="p">,</span> <span class="s">&#39;taxvat&#39;</span><span class="p">),</span>
+              <span class="p">(</span><span class="s">&#39;group_id&#39;</span><span class="p">,</span> <span class="s">&#39;group_id&#39;</span><span class="p">),</span>
+              <span class="p">]</span>
+
+    <span class="nd">@mapping</span>
+    <span class="k">def</span> <span class="nf">is_company</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
+        <span class="c"># partners are companies so we can bind</span>
+        <span class="c"># addresses on them</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s">&#39;is_company&#39;</span><span class="p">:</span> <span class="bp">True</span><span class="p">}</span>
+
+    <span class="nd">@mapping</span>
+    <span class="k">def</span> <span class="nf">names</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
+        <span class="n">parts</span> <span class="o">=</span> <span class="p">[</span><span class="n">part</span> <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="p">(</span><span class="n">record</span><span class="p">[</span><span class="s">&#39;firstname&#39;</span><span class="p">],</span>
+                                   <span class="n">record</span><span class="p">[</span><span class="s">&#39;middlename&#39;</span><span class="p">],</span>
+                                   <span class="n">record</span><span class="p">[</span><span class="s">&#39;lastname&#39;</span><span class="p">])</span> <span class="k">if</span> <span class="n">part</span><span class="p">]</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s">&#39;name&#39;</span><span class="p">:</span> <span class="s">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">parts</span><span class="p">)}</span>
+
+    <span class="p">[</span><span class="o">...</span><span class="n">snip</span><span class="o">...</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Here we can see 2 types of mappings:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">direct</span></code> mappings, a field in Magento is directly written in the
+Odoo field. The Magento field is on the left, the Odoo one is on
+the right.</li>
+<li>methods decorated with <code class="docutils literal"><span class="pre">&#64;mapping</span></code>, when the mapping is more complex
+and need to apply some logic. The name of the methods is meaningless.
+They should return a <code class="docutils literal"><span class="pre">dict</span></code> with the field(s) to update and their
+values. A <code class="docutils literal"><span class="pre">None</span></code> return value will be ignored.</li>
+<li>the <code class="docutils literal"><span class="pre">record</span></code> argument receives the Magento record.</li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This is not covered here, but for the <code class="docutils literal"><span class="pre">ExportMapper</span></code>, an
+additional decorator <code class="docutils literal"><span class="pre">&#64;changed_by()</span></code> is used to filter the
+mappings to apply according to the fields modified in Odoo.</p>
+</div>
+</div>
+<div class="section" id="magento-models">
+<h3><a class="toc-backref" href="#sections">Magento Models</a><a class="headerlink" href="#magento-models" title="Permalink to this headline">¶</a></h3>
+<p>As said in the previous section, the connector uses its own models
+on top of the base ones. The connector&#8217;s models are usually in the form
+<code class="docutils literal"><span class="pre">magento.{model_name}</span></code>.</p>
+<p>Basically, a Magento Model is an <code class="docutils literal"><span class="pre">_inherits</span></code> from the base model, so
+it knows all the original fields along with its own. Its own fields are
+the ID of the record on Magento, the <code class="docutils literal"><span class="pre">many2one</span></code> relations to the
+<code class="docutils literal"><span class="pre">magento.backend</span></code> or to the <code class="docutils literal"><span class="pre">magento.website</span></code> and the attributes
+which are peculiar to Magento.</p>
+<p>Example with an excerpt of the fields for <code class="docutils literal"><span class="pre">magento.res.partner</span></code>:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">openerp_id</span></code>: <code class="docutils literal"><span class="pre">Many2one</span></code> to the <code class="docutils literal"><span class="pre">res.partner</span></code> (<code class="docutils literal"><span class="pre">_inherits</span></code>)</li>
+<li><code class="docutils literal"><span class="pre">backend_id</span></code>: <code class="docutils literal"><span class="pre">Many2one</span></code> to the <code class="docutils literal"><span class="pre">magento.backend</span></code> model (Magento
+Instance), for the partner this is a <code class="docutils literal"><span class="pre">related</span></code> because we already
+have a link to the website, itself associated to a <code class="docutils literal"><span class="pre">magento.backend</span></code>.</li>
+<li><code class="docutils literal"><span class="pre">website_id</span></code>: <code class="docutils literal"><span class="pre">Many2one</span></code> to the <code class="docutils literal"><span class="pre">magento.website</span></code> model</li>
+<li><code class="docutils literal"><span class="pre">magento_id</span></code>: the ID of the customer on Magento</li>
+<li><code class="docutils literal"><span class="pre">group_id</span></code>: <code class="docutils literal"><span class="pre">Many2one</span></code> to the <code class="docutils literal"><span class="pre">magento.res.partner.category</span></code>,
+itself a Magento model for <code class="docutils literal"><span class="pre">res.partner.category</span></code> (Customer Groups)</li>
+<li><code class="docutils literal"><span class="pre">created_at</span></code>: created_at field from Magento</li>
+<li><code class="docutils literal"><span class="pre">taxvat</span></code>: taxvat field from Magento</li>
+<li>and all the fields from <code class="docutils literal"><span class="pre">res.partner</span></code></li>
+</ul>
+<p>This datamodel allows to:</p>
+<ul class="simple">
+<li>Share the same <code class="docutils literal"><span class="pre">res.partner</span></code> with several <code class="docutils literal"><span class="pre">magento.website</span></code>  (or
+even several <code class="docutils literal"><span class="pre">magento.backend</span></code>) as we can have as many
+<code class="docutils literal"><span class="pre">magento.res.partner</span></code> as we want on top of a <code class="docutils literal"><span class="pre">res.partner</span></code>.</li>
+<li>The values can be different for each website or backend</li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">In the mappings, we&#8217;ll write some fields on <code class="docutils literal"><span class="pre">res.partner</span></code>
+(via <code class="docutils literal"><span class="pre">_inherits</span></code>) and some on <code class="docutils literal"><span class="pre">magento.res.partner</span></code>. When
+we want to add a new field, we have to decide where to add it.
+That&#8217;s a matter of: does it make more sense do have this data
+on the base model rather than on the Magento&#8217;s one and should
+this data be shared between all websites / backends?</p>
+</div>
+</div>
+<div class="section" id="examples">
+<h3><a class="toc-backref" href="#sections">Examples</a><a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="example-1">
+<h4><a class="toc-backref" href="#sections">Example 1.</a><a class="headerlink" href="#example-1" title="Permalink to this headline">¶</a></h4>
+<p>I want to import the field <code class="docutils literal"><span class="pre">created_in</span></code> from customers.</p>
+<p>I add it on <code class="docutils literal"><span class="pre">magento.res.partner</span></code> because it doesn&#8217;t make sense on
+<code class="docutils literal"><span class="pre">res.partner</span></code>.</p>
+<p>For this field, the Magento API returns a string. I add it in
+<code class="docutils literal"><span class="pre">customize_example/partner.py</span></code> (I willingly skip the part &#8216;add them in
+the views&#8217;):</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># -*- coding: utf-8 -*-</span>
+<span class="kn">from</span> <span class="nn">openerp</span> <span class="kn">import</span> <span class="n">models</span><span class="p">,</span> <span class="n">fields</span>
+
+<span class="k">class</span> <span class="nc">MagentoResPartner</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">_inherit</span> <span class="o">=</span> <span class="s">&#39;magento.res.partner&#39;</span>
+
+    <span class="n">created_in</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Char</span><span class="p">(</span><span class="n">string</span><span class="o">=</span><span class="s">&#39;Created In&#39;</span><span class="p">,</span> <span class="n">readonly</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In the same file, I add the import of the Magento Backend to use and the
+current mapper:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">openerp.addons.magentoerpconnect.partner</span> <span class="kn">import</span> <span class="n">PartnerImportMapper</span>
+<span class="kn">from</span> <span class="nn">.backend</span> <span class="kn">import</span> <span class="n">magento_myversion</span>
+</pre></div>
+</div>
+<p>And I extend the partner&#8217;s mapper, decorated with
+<code class="docutils literal"><span class="pre">&#64;magento_myversion</span></code>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@magento_myversion</span>
+<span class="k">class</span> <span class="nc">MyPartnerImportMapper</span><span class="p">(</span><span class="n">PartnerImportMapper</span><span class="p">):</span>
+    <span class="n">_model_name</span> <span class="o">=</span> <span class="s">&#39;magento.res.partner&#39;</span>
+
+    <span class="n">direct</span> <span class="o">=</span> <span class="n">PartnerImportMapper</span><span class="o">.</span><span class="n">direct</span> <span class="o">+</span> <span class="p">[(</span><span class="s">&#39;created_in&#39;</span><span class="p">,</span> <span class="s">&#39;created_in&#39;</span><span class="p">)]</span>
+</pre></div>
+</div>
+<p>And that&#8217;s it! The field will be imported along with the other fields.</p>
+<div class="admonition attention">
+<p class="first admonition-title">Attention</p>
+<p class="last">Verify that you have selected the right version when you
+have created your backend in <code class="docutils literal"><span class="pre">Connectors</span> <span class="pre">&gt;</span> <span class="pre">Magento</span> <span class="pre">&gt;</span> <span class="pre">Backends</span></code>
+otherwise your code will not be used.</p>
+</div>
+</div>
+<div class="section" id="example-2">
+<h4><a class="toc-backref" href="#sections">Example 2.</a><a class="headerlink" href="#example-2" title="Permalink to this headline">¶</a></h4>
+<p>I want to import the <code class="docutils literal"><span class="pre">gender</span></code> field. This one is a bit special because
+Magento maps &#8216;Male&#8217; to <code class="docutils literal"><span class="pre">123</span></code> and &#8216;Female&#8217; to <code class="docutils literal"><span class="pre">124</span></code>. They are surely
+the identifiers of the attributes in Magento, and there&#8217;s maybe an entry
+point in the API to get the proper values, but for the sake of the
+example, we&#8217;ll assume we can hard-code theses values in the mappings.</p>
+<p>This time, I will create the field in <code class="docutils literal"><span class="pre">res.partner</span></code>, because the value
+will likely be the same even if we have many <code class="docutils literal"><span class="pre">magento.res.partner</span></code> and
+this information can be useful at this level.</p>
+<p>In <code class="docutils literal"><span class="pre">customize_example/partner.py</span></code>, I write:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># -*- coding: utf-8 -*-</span>
+<span class="kn">from</span> <span class="nn">openerp</span> <span class="kn">import</span> <span class="n">models</span><span class="p">,</span> <span class="n">fields</span>
+
+<span class="k">class</span> <span class="nc">ResPartner</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">_inherit</span> <span class="o">=</span> <span class="s">&#39;res.partner&#39;</span>
+
+    <span class="n">gender</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Selection</span><span class="p">(</span><span class="n">selection</span><span class="o">=</span><span class="p">[(</span><span class="s">&#39;male&#39;</span><span class="p">,</span> <span class="s">&#39;Male&#39;</span><span class="p">),</span>
+                                         <span class="p">(</span><span class="s">&#39;female&#39;</span><span class="p">,</span> <span class="s">&#39;Female&#39;</span><span class="p">)],</span>
+                              <span class="n">string</span><span class="o">=</span><span class="s">&#39;Gender&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The same imports than in the <a class="reference internal" href="#example-1">Example 1.</a> are needed, but we need to
+import <code class="docutils literal"><span class="pre">mapping</span></code> too:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">openerp.addons.connector.unit.mapper</span> <span class="kn">import</span> <span class="n">mapping</span>
+<span class="kn">from</span> <span class="nn">openerp.addons.magentoerpconnect.partner</span> <span class="kn">import</span> <span class="n">PartnerImportMapper</span>
+<span class="kn">from</span> <span class="nn">.backend</span> <span class="kn">import</span> <span class="n">magento_myversion</span>
+</pre></div>
+</div>
+<p>This is not a <cite>direct</cite> mapping, I will use a method to define the
+<code class="docutils literal"><span class="pre">gender</span></code> value:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">MAGENTO_GENDER</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;123&#39;</span><span class="p">:</span> <span class="s">&#39;male&#39;</span><span class="p">,</span>
+                  <span class="s">&#39;124&#39;</span><span class="p">:</span> <span class="s">&#39;female&#39;</span><span class="p">}</span>
+
+<span class="nd">@magento_myversion</span>
+<span class="k">class</span> <span class="nc">MyPartnerImportMapper</span><span class="p">(</span><span class="n">PartnerImportMapper</span><span class="p">):</span>
+    <span class="n">_model_name</span> <span class="o">=</span> <span class="s">&#39;magento.res.partner&#39;</span>
+
+    <span class="nd">@mapping</span>
+    <span class="k">def</span> <span class="nf">gender</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
+        <span class="n">gender</span> <span class="o">=</span> <span class="n">MAGENTO_GENDER</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">record</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;gender&#39;</span><span class="p">))</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s">&#39;gender&#39;</span><span class="p">:</span> <span class="n">gender</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal"><span class="pre">gender</span></code> field will now be imported.</p>
+</div>
+</div>
+<div class="section" id="and-now">
+<h3><a class="toc-backref" href="#sections">And now?</a><a class="headerlink" href="#and-now" title="Permalink to this headline">¶</a></h3>
+<p>With theses principles, you should now be able to extend the original
+mappings and add your own ones. This is applicable for the customers but
+for any other model actually imported as well.</p>
+</div>
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+<div id="sourcelink">
+  <a href="../_sources/guides/tutorial_customize.txt"
+     rel="nofollow">Source</a>
+</div>
+      
+    </p>
+    <p>
+        &copy; Copyright 2013-2015, Odoo Community Association (OCA).<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>
