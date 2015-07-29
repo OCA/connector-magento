@@ -21,7 +21,7 @@
 import logging
 from openerp import fields, models, api
 try:
-    from server_environment import serv_config
+    from openerp.addons.server_environment import serv_config
 except ImportError:
     logging.getLogger('openerp.module').warning(
         'server_environment not available in addons path. '
