@@ -35,6 +35,6 @@ that allows configuration support for various environments (test, prod,...)""",
  'website': 'http://www.camptocamp.com',
  'data': [],
  'test': [],
- 'installable': False,
+ 'installable': True,
  'auto_install': False,
  }
