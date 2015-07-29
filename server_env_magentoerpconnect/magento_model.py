@@ -54,10 +54,18 @@ class magento_backend(models.Model):
 
     @api.model
     def _get_env_fields(self):
+        """Return the list of fields that are concerned
+        by the environment setup
+
+        :return: a list of field name
+        :rtype: list
+        """
+
         return ['password', 'username', 'location']
 
     @api.one
     def _get_environment_config_by_name(self):
+        """Compute the fields values for current environment"""
         for backend in self:
             for field_name in self._get_env_fields():
                 section_name = '.'.join(
