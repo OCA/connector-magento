@@ -704,7 +704,7 @@
 
         <span class="k">if</span> <span class="n">values</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;carrier_id&#39;</span><span class="p">):</span>
             <span class="n">carrier</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">[</span><span class="s">&#39;delivery.carrier&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">browse</span><span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="s">&#39;carrier_id&#39;</span><span class="p">])</span>
-            <span class="n">line_builder</span><span class="o">.</span><span class="n">product_id</span> <span class="o">=</span> <span class="n">carrier</span><span class="o">.</span><span class="n">product_id</span>
+            <span class="n">line_builder</span><span class="o">.</span><span class="n">product</span> <span class="o">=</span> <span class="n">carrier</span><span class="o">.</span><span class="n">product_id</span>
 
         <span class="n">line</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">line_builder</span><span class="o">.</span><span class="n">get_line</span><span class="p">())</span>
         <span class="n">values</span><span class="p">[</span><span class="s">&#39;order_line&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
