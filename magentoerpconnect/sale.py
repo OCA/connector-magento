@@ -465,7 +465,7 @@ class SaleOrderImportMapper(ImportMapper):
 
         if values.get('carrier_id'):
             carrier = self.env['delivery.carrier'].browse(values['carrier_id'])
-            line_builder.product_id = carrier.product_id
+            line_builder.product = carrier.product_id
 
         line = (0, 0, line_builder.get_line())
         values['order_line'].append(line)
