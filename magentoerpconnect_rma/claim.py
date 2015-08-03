@@ -500,6 +500,12 @@ class CrmClaimImport(MagentoImportSynchronizer):
         checkpoint.run(openerp_binding_id)
         return openerp_binding_id
 
+    def _must_skip(self):
+        if self._get_binding_id():
+            _logger.debug('Claim %s already exist, skip import'
+                          % self.magento_id)
+            return True
+        return False
 
 @magento
 class ClaimCommentBatchImport(DelayedBatchImport):
