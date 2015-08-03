@@ -743,12 +743,19 @@ class CrmClaimImportMapper(ImportMapper):
 
     @mapping
     def state(self, record):
-        state = 'draft'
-        return {'state': state}
+        sess = self.session
+        model_data_obj = sess.pool['ir.model.data']
+        __, stage_id = model_data_obj.get_object_reference(
+                    sess.cr, sess.uid, 'crm_claim', 'stage_claim1')
+        return {'stage_id': stage_id}
 
     @mapping
     def backend_id(self, record):
         return {'backend_id': self.backend_record.id}
+
+    @mapping
+    def number(self, record):
+            return {'number': record['rma_id']}
 
 
 @magento
