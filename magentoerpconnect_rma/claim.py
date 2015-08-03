@@ -734,10 +734,12 @@ class CrmClaimImportMapper(ImportMapper):
             invoice_ids = self.session.search(
                 'account.invoice',
                 [['sale_ids', 'in', order_ids]])
+            order = self.session.browse('sale.order', order_ids[0])
             return {
                 'ref': ref,
                 'invoice_id': invoice_ids and invoice_ids[0],
-                'order_id': order_ids[0]}
+                'order_id': order_ids[0],
+                'delivery_address_id': order.partner_shipping_id.id}
 
     @mapping
     def state(self, record):
