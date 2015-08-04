@@ -46,6 +46,7 @@ Requirements:
      'magento_model_view.xml',
      'ir_attachment_view.xml',
      'claim_data.xml',
+     'security/ir.model.access.csv',
      ],
  'installable': True,
  'application': False,
