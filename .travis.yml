@@ -5,6 +5,7 @@ addons:
     packages:
       - expect-dev  # provides unbuffer utility
       - python-lxml # because pip installation is slow
+      - tree
 
 language: python
 
@@ -43,6 +44,7 @@ install:
   - pip install beautifulsoup4
   - pip install sphinx sphinx_bootstrap_theme sphinx-intl odoo-sphinx-autodoc
   - printf '[options]\n\nrunning_env = dev' > ${HOME}/.openerp_serverrc
+  - if [ "$LINT_CHECK" != "1" ] ; then ln -s ${HOME}/server-tools/server_environment_files_sample ${HOME}/server-tools/server_environment_files; fi
 
 script:
   - if [ "$DOCS" != "1" ] ; then travis_run_tests; fi
