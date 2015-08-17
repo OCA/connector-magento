@@ -496,8 +496,6 @@ class CrmClaimImport(MagentoImportSynchronizer):
 
     def _create(self, data):
         openerp_binding_id = super(CrmClaimImport, self)._create(data)
-        checkpoint = self.get_connector_unit_for_model(AddCheckpoint)
-        checkpoint.run(openerp_binding_id)
         return openerp_binding_id
 
     def _must_skip(self):
@@ -594,8 +592,6 @@ class ClaimCommentImport(MagentoImportSynchronizer):
                 ])
         if not openerp_binding_id:
             openerp_binding_id = super(ClaimCommentImport, self)._create(data)
-            checkpoint = self.get_connector_unit_for_model(AddCheckpoint)
-            checkpoint.run(openerp_binding_id)
         else:
             openerp_binding_id = openerp_binding_id[0]
         return openerp_binding_id
@@ -689,8 +685,6 @@ class ClaimAttachmentImport(MagentoImportSynchronizer):
                 ])
         if not erp_binding_id:
             erp_binding_id = super(ClaimAttachmentImport, self)._create(data)
-            checkpoint = self.get_connector_unit_for_model(AddCheckpoint)
-            checkpoint.run(erp_binding_id)
         else:
             erp_binding_id = erp_binding_id[0]
         return erp_binding_id
