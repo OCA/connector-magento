@@ -23,6 +23,7 @@
 import logging
 from datetime import datetime, timedelta
 from openerp import models, fields, api, _
+from openerp.exceptions import Warning
 from openerp.addons.connector.session import ConnectorSession
 from openerp.addons.connector.connector import ConnectorUnit
 from openerp.addons.connector.unit.mapper import mapping, ImportMapper
@@ -201,17 +202,23 @@ class MagentoBackend(models.Model):
 
     @api.multi
     def synchronize_metadata(self):
-        session = ConnectorSession(self.env.cr, self.env.uid,
-                                   context=self.env.context)
-        for backend in self:
-            for model in ('magento.website',
-                          'magento.store',
-                          'magento.storeview'):
-                # import directly, do not delay because this
-                # is a fast operation, a direct return is fine
-                # and it is simpler to import them sequentially
-                import_batch(session, model, backend.id)
-        return True
+        try:
+            session = ConnectorSession(self.env.cr, self.env.uid,
+                                       context=self.env.context)
+            for backend in self:
+                for model in ('magento.website',
+                              'magento.store',
+                              'magento.storeview'):
+                    # import directly, do not delay because this
+                    # is a fast operation, a direct return is fine
+                    # and it is simpler to import them sequentially
+                    import_batch(session, model, backend.id)
+            return True
+        except Exception as e:
+            _logger.error(e.message, exc_info=True)
+            raise Warning(
+                _(u"Check your configuration, we can't get the data.\
+                Here is the error:\n%s") % str(e).decode('utf-8', 'ignore'))
 
     @api.multi
     def import_partners(self):
