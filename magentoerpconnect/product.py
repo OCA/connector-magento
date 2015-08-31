@@ -330,7 +330,7 @@ class CatalogImageImporter(ImportSynchronizer):
     _model_name = ['magento.product.product',
                    ]
 
-    def _get_images(self, storeview_id=None):
+    def _get_images(self, storeview_id=False):
         return self.backend_adapter.get_images(self.magento_id, storeview_id)
 
     def _sort_images(self, images):
