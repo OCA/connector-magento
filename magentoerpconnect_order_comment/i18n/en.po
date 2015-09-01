@@ -1,0 +1,141 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * magentoerpconnect_order_comment
+# 
+# Translators:
+msgid ""
+msgstr ""
+"Project-Id-Version: connector-magento (7.0)\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-08-31 15:18+0000\n"
+"PO-Revision-Date: 2015-07-08 12:12+0000\n"
+"Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
+"Language-Team: English (http://www.transifex.com/oca/OCA-connector-magento-7-0/language/en/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: en\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: magentoerpconnect_order_comment
+#: field:magento.sale.comment,openerp_id:0
+msgid "Sale Comment"
+msgstr "Sale Comment"
+
+#. module: magentoerpconnect_order_comment
+#: field:magento.sale.comment,storeid:0
+msgid "Store id"
+msgstr "Store id"
+
+#. module: magentoerpconnect_order_comment
+#: code:addons/magentoerpconnect_order_comment/sale.py:212
+#, python-format
+msgid "visible on front"
+msgstr "visible on front"
+
+#. module: magentoerpconnect_order_comment
+#: field:magento.sale.comment,sync_date:0
+msgid "Last synchronization date"
+msgstr "Last synchronization date"
+
+#. module: magentoerpconnect_order_comment
+#: field:magento.sale.order,magento_order_comment_ids:0
+msgid "Magento Sale comments"
+msgstr "Magento Sale comments"
+
+#. module: magentoerpconnect_order_comment
+#: code:addons/magentoerpconnect_order_comment/magento_model.py:31
+#: help:magento.store,send_sale_comment_mail:0
+#, python-format
+msgid ""
+"Require Magento to send email on 'sale order comment' based on 'send a "
+"message' case (not 'log a note')"
+msgstr "Require Magento to send email on 'sale order comment' based on 'send a message' case (not 'log a note')"
+
+#. module: magentoerpconnect_order_comment
+#: model:ir.model,name:magentoerpconnect_order_comment.model_magentoerpconnect_order_comment_installed
+msgid "magentoerpconnect_order_comment.installed"
+msgstr "magentoerpconnect_order_comment.installed"
+
+#. module: magentoerpconnect_order_comment
+#: code:addons/magentoerpconnect_order_comment/sale.py:207
+#, python-format
+msgid "Magento comment in %s status"
+msgstr "Magento comment in %s status"
+
+#. module: magentoerpconnect_order_comment
+#: code:addons/magentoerpconnect_order_comment/sale.py:65
+#, python-format
+msgid "Sent to Magento"
+msgstr "Sent to Magento"
+
+#. module: magentoerpconnect_order_comment
+#: field:mail.message,magento_sale_bind_ids:0
+msgid "Magento Bindings"
+msgstr "Magento Bindings"
+
+#. module: magentoerpconnect_order_comment
+#: field:magento.sale.comment,magento_id:0
+msgid "ID on Magento"
+msgstr "ID on Magento"
+
+#. module: magentoerpconnect_order_comment
+#: field:magento.sale.comment,status:0
+msgid "Order status"
+msgstr "Order status"
+
+#. module: magentoerpconnect_order_comment
+#: field:magento.sale.comment,is_customer_notified:0
+msgid "Customer notified"
+msgstr "Customer notified"
+
+#. module: magentoerpconnect_order_comment
+#: field:magento.sale.comment,backend_id:0
+msgid "Magento Backend"
+msgstr "Magento Backend"
+
+#. module: magentoerpconnect_order_comment
+#: model:ir.model,name:magentoerpconnect_order_comment.model_magento_store
+msgid "Magento Store"
+msgstr "Magento Store"
+
+#. module: magentoerpconnect_order_comment
+#: field:magento.store,send_sale_comment_mail:0
+msgid "Send email notification on sale comment"
+msgstr "Send email notification on sale comment"
+
+#. module: magentoerpconnect_order_comment
+#: code:addons/magentoerpconnect_order_comment/sale.py:210
+#, python-format
+msgid "customer notified"
+msgstr "customer notified"
+
+#. module: magentoerpconnect_order_comment
+#: model:ir.model,name:magentoerpconnect_order_comment.model_magento_sale_order
+#: field:magento.sale.comment,magento_sale_order_id:0
+msgid "Magento Sale Order"
+msgstr "Magento Sale Order"
+
+#. module: magentoerpconnect_order_comment
+#: help:magento.sale.comment,is_customer_notified:0
+#: help:magento.sale.comment,is_visible_on_front:0
+#: help:magento.sale.comment,status:0 help:magento.sale.comment,storeid:0
+msgid ""
+"This field is a technical / configuration field for the sale comment on Magento. \n"
+"Please refer to the Magento documentation for details. "
+msgstr "This field is a technical / configuration field for the sale comment on Magento. \nPlease refer to the Magento documentation for details. "
+
+#. module: magentoerpconnect_order_comment
+#: field:magento.sale.comment,is_visible_on_front:0
+msgid "Visible on front"
+msgstr "Visible on front"
+
+#. module: magentoerpconnect_order_comment
+#: model:ir.model,name:magentoerpconnect_order_comment.model_magento_sale_comment
+msgid "Magento Sale Comment"
+msgstr "Magento Sale Comment"
+
+#. module: magentoerpconnect_order_comment
+#: model:ir.model,name:magentoerpconnect_order_comment.model_mail_message
+msgid "Message"
+msgstr "Message"
