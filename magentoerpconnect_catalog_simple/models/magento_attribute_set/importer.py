@@ -16,56 +16,13 @@
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-from openerp import models, api, fields
+
 from openerp.addons.magentoerpconnect.backend import magento
 from openerp.addons.magentoerpconnect.unit.import_synchronizer import (
-    import_batch,
     DirectBatchImporter,
     MagentoImporter
     )
-from openerp.addons.magentoerpconnect.unit.binder import MagentoModelBinder
-from openerp.addons.magentoerpconnect.unit.backend_adapter import (
-    GenericAdapter)
 from openerp.addons.connector.unit.mapper import ImportMapper, mapping
-from openerp.addons.connector.session import ConnectorSession
-
-
-class MagentoBackend(models.Model):
-    _inherit = 'magento.backend'
-
-    @api.multi
-    def synchronize_metadata(self):
-        super(MagentoBackend, self).synchronize_metadata()
-
-        session = ConnectorSession.from_env(self.env)
-        for backend in self:
-            import_batch(session, 'magento.attribute.set', backend.id)
-
-        return True
-
-
-class MagentoAttributeSet(models.Model):
-    _name = 'magento.attribute.set'
-    _inherit = 'magento.binding'
-    _description = 'Magento Attribute Set'
-
-    name = fields.Char()
-
-
-@magento
-class AttributeSetAdapter(GenericAdapter):
-    _model_name = 'magento.attribute.set'
-    _magento_model = 'product_attribute_set'
-#     _admin_path = 'system_store/editGroup/group_id/{id}'
-
-    # redefinir search
-    def list(self):
-        """ Search records according to some criteria
-        and returns a list of ids
-
-        :rtype: list
-        """
-        return self._call('%s.list' % self._magento_model, [])
 
 
 @magento
@@ -88,13 +45,6 @@ class AttributeSetBatchImporter(DirectBatchImporter):
         for record in records:
             importer = self.unit_for(MagentoImporter)
             importer.run(record['set_id'], record=record)
-
-
-@magento
-class AttributeSetBinder(MagentoModelBinder):
-    _model_name = [
-        'magento.attribute.set'
-    ]
 
 
 @magento
