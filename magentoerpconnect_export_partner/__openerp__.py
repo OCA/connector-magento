@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    Author: Florian da Costa
-#    Copyright 2014 Akretion
+#    Author: Guewen Baconnier
+#    Copyright 2013 Camptocamp SA
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,11 +19,28 @@
 #
 ##############################################################################
 
-from . import test_synchronization
+{'name': 'Magento Connector - Export Partners (Experimental)',
+ 'version': '2.0.0',
+ 'category': 'Connector',
+ 'depends': ['magentoerpconnect',
+             ],
+ 'author': "Camptocamp,Akretion,Odoo Community Association (OCA)",
+ 'license': 'AGPL-3',
+ 'website': 'http://www.odoo-magento-connector.com',
+ 'description': """
+Magento Connector - Export Partners
+===================================
 
-fast_suite = [
-]
+Extension for **Magento Connector**, export the partners to Magento.
 
-checks = [
-    test_synchronization,
-]
+This module is considered as experimental, the creation of the partners
+is not guaranted to work correctly.  No password are defined on the
+customer accounts.
+""",
+ 'images': [],
+ 'demo': [],
+ 'data': ['partner_view.xml',
+          ],
+ 'installable': True,
+ 'application': False,
+ }

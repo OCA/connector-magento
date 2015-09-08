@@ -24,7 +24,7 @@ from openerp.addons.connector.unit.mapper import (mapping,
                                                   ExportMapper)
 from openerp.addons.connector.exception import InvalidDataError
 from openerp.addons.magentoerpconnect.unit.delete_synchronizer import (
-    MagentoDeleteSynchronizer
+    MagentoDeleter
 )
 from openerp.addons.magentoerpconnect.unit.export_synchronizer import (
     MagentoExporter
@@ -33,7 +33,7 @@ from openerp.addons.magentoerpconnect.backend import magento
 
 
 @magento
-class PartnerDeleteSynchronizer(MagentoDeleteSynchronizer):
+class PartnerDeleteSynchronizer(MagentoDeleter):
     """ Partner deleter for Magento """
     _model_name = ['magento.res.partner',
                    'magento.address']
@@ -117,7 +117,7 @@ class AddressExport(MagentoExporter):
         if missing_fields:
             raise InvalidDataError("The address does not contain one or "
                                    "several mandatory fields for "
-                                   "Magento : %s" %
+                                   "Magento: %s" %
                                    missing_fields)
 
     def _create(self, data):
@@ -175,13 +175,13 @@ class PartnerAddressExportMapper(ExportMapper):
     @changed_by('parent_id', 'openerp_id')
     @mapping
     def partner(self, record):
-        binder = self.get_binder_for_model('magento.res.partner')
+        binder = self.binder_for(model='magento.res.partner')
         if record.parent_id:
-            erp_partner_id = record.parent_id.id
+            partner_id = record.parent_id
         else:
-            erp_partner_id = record.openerp_id.id
-        mag_partner_id = binder.to_backend(erp_partner_id, wrap=True)
-        return {'customer_id': mag_partner_id}
+            partner_id = record.openerp_id
+        binding_partner_id = binder.to_backend(partner_id, wrap=True)
+        return {'customer_id': binding_partner_id}
 
     @changed_by('name')
     @mapping
