@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_magento_attribute_set_form" model="ir.ui.view">
+            <field name="name">magento.attribute.set.form</field>
+            <field name="model">magento.attribute.set</field>
+            <field name="arch" type="xml">
+                <form string="Magento Attribute Set" create="false"
+                        delete="false">
+                    <sheet>
+                        <h1>
+                            <field name="name" class="oe_inline"/>
+                        </h1>
+                        <group string="Informations">
+                            <field name="magento_id" invisible="1"/>
+                            <field name="backend_id" readonly="1"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_magento_attribute_set_tree" model="ir.ui.view">
+            <field name="name">magento.attribute.set.tree</field>
+            <field name="model">magento.attribute.set</field>
+            <field name="arch" type="xml">
+                <tree string="Magento Attribute Set" create="false"
+                        delete="false">
+                    <field name="name"/>
+                    <field name="backend_id"/>
+                    <field name="magento_id" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_magento_attribute_set" model="ir.actions.act_window">
+            <field name="name">Magento Attribute Sets</field>
+            <field name="res_model">magento.attribute.set</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_magento_attribute_set_tree"/>
+        </record>
+
+        <menuitem id="menu_magento_attribute_set"
+            name="Attribute Sets"
+            parent="magentoerpconnect.menu_magento_root"
+            sequence="50"
+            action="action_magento_attribute_set"/>
+
+    </data>
+</openerp>
