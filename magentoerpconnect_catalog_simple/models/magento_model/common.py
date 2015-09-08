@@ -17,4 +17,22 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from . import models
+from openerp import models, api
+from openerp.addons.magentoerpconnect.unit.import_synchronizer import (
+    import_batch,
+    )
+from openerp.addons.connector.session import ConnectorSession
+
+
+class MagentoBackend(models.Model):
+    _inherit = 'magento.backend'
+
+    @api.multi
+    def synchronize_metadata(self):
+        super(MagentoBackend, self).synchronize_metadata()
+
+        session = ConnectorSession.from_env(self.env)
+        for backend in self:
+            import_batch(session, 'magento.attribute.set', backend.id)
+
+        return True
