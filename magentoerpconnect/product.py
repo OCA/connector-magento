@@ -27,6 +27,7 @@ import xmlrpclib
 import sys
 from collections import defaultdict
 from openerp import models, fields, api, _
+from openerp.addons.connector.connector import ConnectorUnit
 from openerp.addons.connector.queue.job import job, related_action
 from openerp.addons.connector.event import on_record_write
 from openerp.addons.connector.unit.synchronizer import (Importer,
@@ -434,6 +435,33 @@ class BundleImporter(Importer):
 
 
 @magento
+class WithCatalogProductImportMapper(ImportMapper):
+    """ Called at the end of the product Mapper
+
+    Does nothing, but is replaced in ``magentoerpconnect_catalog_simple``
+    which adds fields in the import.
+
+    """
+    _model_name = 'magento.product.product'
+
+
+@magento
+class CatalogImportMapperFinalizer(ConnectorUnit):
+    """ Finalize values for a product
+
+    Does nothing else than calling :class:`WithCatalogProductImportMapper`
+    but is meant to be extended if required, for instance to remove values
+    from the imported values when we are importing products.
+    """
+
+    def finalize(self, map_record, values, options):
+        mapper = self.unit_for(WithCatalogProductImportMapper)
+        map_record = mapper.map_record(map_record.source)
+        values.update(map_record.values(**options))
+        return values
+
+
+@magento
 class ProductImportMapper(ImportMapper):
     _model_name = 'magento.product.product'
     # TODO :     categ, special_price => minimal_price
@@ -517,6 +545,11 @@ class ProductImportMapper(ImportMapper):
         if record['type_id'] == 'bundle':
             bundle_mapper = self.unit_for(BundleProductImportMapper)
             return bundle_mapper.map_record(record).values(**self.options)
+
+    def finalize(self, map_record, values):
+        values = super(ProductImportMapper, self).finalize(map_record. values)
+        finalizer = self.unit_for(CatalogImportMapperFinalizer)
+        return finalizer.finalize(map_record, values, self.options)
 
 
 @magento
