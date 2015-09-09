@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 #
+#
 #    Author: Damien Crier
 #    Copyright 2015 Camptocamp SA
 #
@@ -16,17 +17,14 @@
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-{'name': 'Magento Catalog Simple',
- 'version': '8.0.1.0',
- 'category': 'Connector',
- 'depends': ['magentoerpconnect',
-             ],
- 'author': "Camptocamp,Odoo Community Association (OCA)",
- 'license': 'AGPL-3',
- 'website': 'http://www.odoo-magento-connector.com',
- 'data': ['views/magento_model_view.xml',
-          'views/product_view.xml',
-          ],
- 'installable': True,
- 'application': True,
- }
+#
+
+from openerp import models, fields
+
+
+class ProductTemplate(models.Model):
+    _inherit = 'product.template'
+
+    attribute_set_id = fields.Many2one('magento.attribute.set',
+                                       string='Attribute Set',
+                                       required=True)
