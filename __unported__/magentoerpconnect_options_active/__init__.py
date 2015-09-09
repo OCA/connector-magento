@@ -19,6 +19,5 @@
 #
 ##############################################################################
 
-from . import connector
 from . import magento_model
 from . import product
