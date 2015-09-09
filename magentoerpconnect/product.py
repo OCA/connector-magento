@@ -19,7 +19,6 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
 import logging
 import urllib2
 import base64
@@ -453,6 +452,7 @@ class CatalogImportMapperFinalizer(ConnectorUnit):
     but is meant to be extended if required, for instance to remove values
     from the imported values when we are importing products.
     """
+    _model_name = ['magento.product.product']
 
     def finalize(self, map_record, values, options):
         mapper = self.unit_for(WithCatalogProductImportMapper)
