@@ -549,7 +549,7 @@ class ProductImportMapper(ImportMapper):
             return bundle_mapper.map_record(record).values(**self.options)
 
     def finalize(self, map_record, values):
-        values = super(ProductImportMapper, self).finalize(map_record. values)
+        values = super(ProductImportMapper, self).finalize(map_record, values)
         finalizer = self.unit_for(CatalogImportMapperFinalizer)
         return finalizer.finalize(map_record, values, self.options)
 
