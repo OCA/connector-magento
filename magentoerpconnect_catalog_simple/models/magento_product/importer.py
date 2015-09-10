@@ -31,14 +31,11 @@ class ProductCatalogImportMapperFinalizerImporter(
     def _import_dependencies(self):
         """ Import the dependencies for the record"""
         record = self.magento_record
-        env = self.environment
         # import attribute set
         if record.get('set'):
-            binder = self.get_binder_for_model()
             set_id = record['set']
-            if binder.to_openerp(set_id) is None:
-                importer = env.get_connector_unit(AttributeSetBatchImporter)
-                importer.run(set_id)
+            self._import_dependency(set_id, 'magento.attribute.set',
+                                    importer_class=AttributeSetBatchImporter)
 
     @mapping
     def map_attribute_set(self, record):
