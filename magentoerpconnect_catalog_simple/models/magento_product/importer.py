@@ -16,29 +16,3 @@
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-
-from openerp.addons.magentoerpconnect.backend import magento
-from openerp.addons.connector.unit.mapper import mapping
-from openerp.addons.magentoerpconnect import product
-from ..magento_attribute_set.importer import AttributeSetBatchImporter
-
-
-@magento(replacing=product.WithCatalogProductImportMapper)
-class ProductCatalogImportMapperFinalizerImporter(
-        product.WithCatalogProductImportMapper):
-    _model_name = 'magento.product.product'
-
-    def _import_dependencies(self):
-        """ Import the dependencies for the record"""
-        record = self.magento_record
-        # import attribute set
-        if record.get('set'):
-            set_id = record['set']
-            self._import_dependency(set_id, 'magento.attribute.set',
-                                    importer_class=AttributeSetBatchImporter)
-
-    @mapping
-    def map_attribute_set(self, record):
-        binder = self.binder_for(model='magento.attribute.set')
-        binding_id = binder.to_openerp(record['set'])
-        return {'attribute_set_id': binding_id}

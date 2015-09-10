@@ -18,13 +18,3 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 #
-
-from openerp import models, fields
-
-
-class ProductTemplate(models.Model):
-    _inherit = 'product.template'
-
-    attribute_set_id = fields.Many2one('magento.attribute.set',
-                                       string='Attribute Set',
-                                       required=True)

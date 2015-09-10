@@ -44,6 +44,7 @@ from .unit.backend_adapter import (GenericAdapter,
                                    )
 from .unit.mapper import normalize_datetime
 from .unit.import_synchronizer import (DelayedBatchImporter,
+                                       DirectBatchImporter,
                                        MagentoImporter,
                                        TranslationImporter,
                                        AddCheckpoint,
@@ -58,6 +59,92 @@ _logger = logging.getLogger(__name__)
 def chunks(items, length):
     for index in xrange(0, len(items), length):
         yield items[index:index + length]
+
+
+class MagentoAttributeSet(models.Model):
+    _name = 'magento.attribute.set'
+    _inherit = 'magento.binding'
+    _description = 'Magento Attribute Set'
+
+    name = fields.Char()
+
+
+@magento
+class AttributeSetAdapter(GenericAdapter):
+    _model_name = 'magento.attribute.set'
+    _magento_model = 'product_attribute_set'
+
+    def list(self):
+        """ Search records according to some criteria
+        and returns a list of ids
+
+        :rtype: list
+        """
+        return self._call('%s.list' % self._magento_model, [])
+
+    def read(self, id, attributes=None):
+        """ Returns the information of a record
+
+        :rtype: dict
+        """
+        results = self.list()
+        res = [result for result in results if result['set_id'] == id]
+        if res:
+            return res[0]
+        return {}
+
+
+@magento
+class AttributeSetBatchImporter(DirectBatchImporter):
+    """ Import the records directly, without delaying the jobs.
+
+    Import the Attribute Set
+
+    They are imported directly because this is a rare and fast operation,
+    and we don't really bother if it blocks the UI during this time.
+    (that's also a mean to rapidly check the connectivity with Magento).
+    """
+    _model_name = [
+        'magento.attribute.set'
+    ]
+
+    def run(self, filters=None):
+        """ Run the synchronization """
+        records = self.backend_adapter.list()
+        for record in records:
+            importer = self.unit_for(MagentoImporter)
+            importer.run(record['set_id'], record=record)
+
+
+@magento
+class AttributeSetMapper(ImportMapper):
+    _model_name = 'magento.attribute.set'
+
+    direct = [('name', 'name')]
+
+    @mapping
+    def backend_id(self, record):
+        return {'backend_id': self.backend_record.id}
+
+
+@magento
+class AttributeSetImporter(MagentoImporter):
+    _model_name = ['magento.attribute.set']
+
+    def run(self, magento_id, force=False, record=None):
+        """ Run the synchronization
+
+        :param magento_id: identifier of the record on Magento
+        """
+        if record:
+            self.magento_record = record
+        return super(AttributeSetImporter, self).run(magento_id, force=force)
+
+    def _get_magento_data(self):
+        if self.magento_record:
+            return self.magento_record
+        else:
+            return super(AttributeSetImporter, self)._get_magento_data()
 
 
 class MagentoProductProduct(models.Model):
@@ -207,6 +294,14 @@ class ProductProduct(models.Model):
         inverse_name='openerp_id',
         string='Magento Bindings',
     )
+
+
+class ProductTemplate(models.Model):
+    _inherit = 'product.template'
+
+    attribute_set_id = fields.Many2one('magento.attribute.set',
+                                       string='Attribute Set',
+                                       required=True)
 
 
 @magento
@@ -478,6 +573,12 @@ class ProductImportMapper(ImportMapper):
               ]
 
     @mapping
+    def map_attribute_set(self, record):
+        binder = self.binder_for(model='magento.attribute.set')
+        binding_id = binder.to_openerp(record['set'])
+        return {'attribute_set_id': binding_id}
+
+    @mapping
     def is_active(self, record):
         mapper = self.unit_for(IsActiveProductImportMapper)
         return mapper.map_record(record).values(**self.options)
@@ -575,6 +676,10 @@ class ProductImporter(MagentoImporter):
                                     'magento.product.category')
         if record['type_id'] == 'bundle':
             self._import_bundle_dependencies()
+
+        if record.get('set', False):
+            self._import_dependency(record['set'],
+                                    'magento.attribute.set')
 
     def _validate_product_type(self, data):
         """ Check if the product type is in the selection (so we can
