@@ -206,7 +206,8 @@ class MagentoBackend(models.Model):
         for backend in self:
             for model in ('magento.website',
                           'magento.store',
-                          'magento.storeview'):
+                          'magento.storeview',
+                          'magento.attribute.set'):
                 # import directly, do not delay because this
                 # is a fast operation, a direct return is fine
                 # and it is simpler to import them sequentially
