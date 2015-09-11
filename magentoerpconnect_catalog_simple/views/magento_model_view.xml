@@ -7,7 +7,7 @@
             <field name="model">magento.attribute.set</field>
             <field name="arch" type="xml">
                 <form string="Magento Attribute Set" create="false"
-                        delete="false">
+                        delete="false" edit="false">
                     <sheet>
                         <h1>
                             <field name="name" class="oe_inline"/>
