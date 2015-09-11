@@ -75,6 +75,7 @@
                     <group>
                         <field name="backend_id"/>
                         <field name="magento_id"/>
+                        <field name="tax_class_id"/>
                         <field name="created_at" readonly="1"/>
                         <field name="updated_at" readonly="1"/>
                         <field name="visibility" />
