@@ -61,6 +61,14 @@ def chunks(items, length):
         yield items[index:index + length]
 
 
+class MagentoTaxClass(models.Model):
+    _name = 'magento.tax.class'
+    _inherit = 'magento.binding'
+    _description = 'Magento Tax Class'
+
+    name = fields.Char()
+
+
 class MagentoAttributeSet(models.Model):
     _name = 'magento.attribute.set'
     _inherit = 'magento.binding'
@@ -165,6 +173,10 @@ class MagentoProductProduct(models.Model):
             # ('downloadable', 'Downloadable Product'),
         ]
 
+    tax_class_id = fields.Many2one(comodel_name='magento.tax.class',
+                                   string='Tax class',
+                                   required=True,
+                                   ondelete='restrict')
     openerp_id = fields.Many2one(comodel_name='product.product',
                                  string='Product',
                                  required=True,
@@ -577,6 +589,12 @@ class ProductImportMapper(ImportMapper):
         binder = self.binder_for(model='magento.attribute.set')
         binding_id = binder.to_openerp(record['set'])
         return {'attribute_set_id': binding_id}
+
+    @mapping
+    def map_tax_class(self, record):
+        binder = self.binder_for(model='magento.tax.class')
+        binding_id = binder.to_openerp(record['tax_class_id'])
+        return {'tax_class_id': binding_id}
 
     @mapping
     def is_active(self, record):

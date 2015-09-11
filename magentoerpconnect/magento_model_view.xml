@@ -66,6 +66,12 @@
                                     in the menu 'Connectors > Checkpoint'.
                                 </p>
                                 <group>
+                                    <label string="Magento taxes already imported ?" class="oe_inline"/>
+                                    <div>
+                                        <field name="tax_imported"/>
+                                    </div>
+                                </group>
+                                <group>
                                     <label string="Import all customer groups" class="oe_inline"/>
                                     <div>
                                         <button name="import_customer_groups"

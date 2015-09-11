@@ -2,6 +2,53 @@
 <openerp>
     <data>
 
+        <record id="view_magento_tax_class_form" model="ir.ui.view">
+            <field name="name">magento.tax.class.form</field>
+            <field name="model">magento.tax.class</field>
+            <field name="arch" type="xml">
+                <form string="Magento Product Tax" create="false"
+                        delete="false" edit="false">
+                    <sheet>
+                        <h1>
+                            <field name="name" class="oe_inline"/>
+                        </h1>
+                        <group string="Informations">
+                            <field name="magento_id" invisible="1"/>
+                            <field name="backend_id" readonly="1"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_magento_tax_class_tree" model="ir.ui.view">
+            <field name="name">magento.tax.class.tree</field>
+            <field name="model">magento.tax.class</field>
+            <field name="arch" type="xml">
+                <tree string="Magento Product Tax" create="false"
+                        delete="false">
+                    <field name="name"/>
+                    <field name="backend_id"/>
+                    <field name="magento_id" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_magento_tax_class" model="ir.actions.act_window">
+            <field name="name">Magento Product Tax</field>
+            <field name="res_model">magento.tax.class</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_magento_tax_class_tree"/>
+        </record>
+
+        <menuitem id="menu_magento_tax_class"
+            name="Magento Product Tax"
+            parent="magentoerpconnect.menu_magento_root"
+            sequence="60"
+            action="action_magento_tax_class"/>
+
+
         <record id="view_magento_attribute_set_form" model="ir.ui.view">
             <field name="name">magento.attribute.set.form</field>
             <field name="model">magento.attribute.set</field>
