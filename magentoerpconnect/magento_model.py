@@ -66,6 +66,7 @@ class MagentoBackend(models.Model):
             limit=1)
         return field
 
+    tax_imported = fields.Boolean(default=False)
     version = fields.Selection(selection='select_versions', required=True)
     location = fields.Char(
         string='Location',
@@ -201,6 +202,12 @@ class MagentoBackend(models.Model):
 
     @api.multi
     def synchronize_metadata(self):
+        mag_tax_class_obj = self.env['magento.tax.class']
+        default_tax_list = [
+            {'name': 'default', 'magento_id': 1},
+            {'name': 'Taxable Goods', 'magento_id': 2},
+            {'name': 'Shipping', 'magento_id': 4},
+            ]
         session = ConnectorSession(self.env.cr, self.env.uid,
                                    context=self.env.context)
         for backend in self:
@@ -212,6 +219,14 @@ class MagentoBackend(models.Model):
                 # is a fast operation, a direct return is fine
                 # and it is simpler to import them sequentially
                 import_batch(session, model, backend.id)
+
+            # create magento.tax.class records as we don't import them
+            if not backend.tax_imported:
+                for tax_dict in default_tax_list:
+                    tax_dict.update(backend_id=backend.id)
+                    mag_tax_class_obj.create(tax_dict)
+                backend.tax_imported = True
+
         return True
 
     @api.multi

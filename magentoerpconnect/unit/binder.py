@@ -37,6 +37,7 @@ class MagentoDirectModelBinder(MagentoBinder):
         'magento.store',
         'magento.storeview',
         'magento.attribute.set',
+        'magento.tax.class',
     ]
 
     def to_openerp(self, external_id, unwrap=False, browse=False):
