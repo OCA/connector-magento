@@ -22,7 +22,8 @@ from openerp.addons.connector.unit.mapper import (mapping,
 from openerp.addons.magentoerpconnect.unit.delete_synchronizer import (
     MagentoDeleteSynchronizer)
 from openerp.addons.magentoerpconnect.unit.export_synchronizer import (
-    MagentoExporter)
+    MagentoExporter,
+    MagentoTranslationExporter)
 from openerp.addons.magentoerpconnect.backend import magento
 from openerp.addons.connector.exception import MappingError
 from openerp.addons.connector.event import on_record_write
@@ -53,32 +54,6 @@ class ProductProductConfigurableExport(ConnectorUnit):
     def _export_configurable_link(self, binding):
         """ Export the link for the configurable product"""
         return
-
-
-@magento
-class ProductProductExporter(MagentoExporter):
-    _model_name = ['magento.product.product']
-
-    @property
-    def mapper(self):
-        if self._mapper is None:
-            self._mapper = self.get_connector_unit_for_model(
-                ProductProductExportMapper)
-        return self._mapper
-
-    def _should_import(self):
-        """Product are only edited on OpenERP Side"""
-        return False
-
-    def _create(self, data):
-        """ Create the Magento record """
-        # special check on data before export
-        sku = data.pop('sku')
-        attr_set_id = data.pop('attrset')
-        product_type = data.pop('product_type')
-        self._validate_data(data)
-        return self.backend_adapter.create(product_type,
-                                           attr_set_id, sku, data)
 
 
 @magento
@@ -150,3 +125,42 @@ class ProductProductExportMapper(ExportMapper):
                 if m_categ.backend_id.id == self.backend_record.id:
                     categ_ids.append(m_categ.magento_id)
         return {'categories': categ_ids}
+
+
+@magento
+class ProductProductTranslationExporter(MagentoTranslationExporter):
+    _model_name = ['magento.product.product']
+
+    def _should_import(self):
+        """Product are only edited on OpenERP Side"""
+        return False
+
+
+@magento
+class ProductProductExporter(MagentoExporter):
+    _model_name = ['magento.product.product']
+
+    @property
+    def mapper(self):
+        if self._mapper is None:
+            self._mapper = self.get_connector_unit_for_model(
+                ProductProductExportMapper)
+        return self._mapper
+
+    def _should_import(self):
+        """Product are only edited on OpenERP Side"""
+        return False
+
+    def _create(self, data):
+        """ Create the Magento record """
+        # special check on data before export
+        sku = data.pop('sku')
+        attr_set_id = data.pop('attrset')
+        product_type = data.pop('product_type')
+        self._validate_data(data)
+        return self.backend_adapter.create(product_type,
+                                           attr_set_id, sku, data)
+
+    def _after_export(self):
+        translation_exporter = self.unit_for(ProductProductTranslationExporter)
+        translation_exporter.run(self.binding_id)
