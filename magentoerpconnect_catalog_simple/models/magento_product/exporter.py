@@ -68,7 +68,6 @@ class ProductProductExportMapper(ExportMapper):
                 'price': record.lst_price,
                 'short_description': record.description_sale,
                 'type': record.product_type,
-                'created_at': record.created_at,
                 'visibility': record.visibility,
                 'product_type': record.product_type,
                 }
@@ -95,6 +94,13 @@ class ProductProductExportMapper(ExportMapper):
         return {'updated_at': updated_at}
 
     @mapping
+    def created_at(self, record):
+        created_at = record.created_at
+        if not created_at:
+            created_at = '1970-01-01'
+        return {'created_at': created_at}
+
+    @mapping
     def website_ids(self, record):
         website_ids = []
         for website_id in record.website_ids:
@@ -104,7 +110,7 @@ class ProductProductExportMapper(ExportMapper):
 
     @mapping
     def status(self, record):
-        return {'status': record.active and "1" or "0"}
+        return {'status': record.active and "1" or "2"}
 
     @mapping
     def tax_class(self, record):
@@ -162,5 +168,6 @@ class ProductProductExporter(MagentoExporter):
                                            attr_set_id, sku, data)
 
     def _after_export(self):
+        # translation export
         translation_exporter = self.unit_for(ProductProductTranslationExporter)
         translation_exporter.run(self.binding_id)
