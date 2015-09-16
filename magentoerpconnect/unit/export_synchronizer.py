@@ -434,6 +434,53 @@ class MagentoTranslationExporter(MagentoBaseExporter):
                                (not fields or field in fields)]
         return translatable_fields
 
+    def _map_data(self):
+        """ Returns an instance of
+        :py:class:`~openerp.addons.connector.unit.mapper.MapRecord`
+
+        """
+        return self.mapper.map_record(self.binding_record)
+
+    def _update_data(self, map_record, fields=None, **kwargs):
+        """ Get the data to pass to :py:meth:`_update` """
+        return map_record.values(fields=fields, **kwargs)
+
+    def _validate_data(self, data):
+        """ Check if the values to import are correct
+
+        Kept for retro-compatibility. To remove in 8.0
+
+        Pro-actively check before the ``Model.create`` or ``Model.update``
+        if some fields are missing or invalid
+
+        Raise `InvalidDataError`
+        """
+        _logger.warning('Deprecated: _validate_data is deprecated '
+                        'in favor of validate_create_data() '
+                        'and validate_update_data()')
+        self._validate_create_data(data)
+        self._validate_update_data(data)
+
+    def _validate_create_data(self, data):
+        """ Check if the values to import are correct
+
+        Pro-actively check before the ``Model.create`` if some fields
+        are missing or invalid
+
+        Raise `InvalidDataError`
+        """
+        return
+
+    def _validate_update_data(self, data):
+        """ Check if the values to import are correct
+
+        Pro-actively check before the ``Model.update`` if some fields
+        are missing or invalid
+
+        Raise `InvalidDataError`
+        """
+        return
+
     def _run(self, fields=None):
         assert self.magento_id
         default_lang = self.backend_record.default_lang_id
