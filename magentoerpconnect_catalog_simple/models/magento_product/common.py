@@ -27,6 +27,7 @@ _logger = logging.getLogger(__name__)
 class MagentoProductProduct(models.Model):
     _inherit = 'magento.product.product'
 
+    website_ids = fields.Many2many(readonly=False)
     active = fields.Boolean(default=True,
                             help="When a binding is unactivated, the product "
                                  "is delete from Magento. This allow to remove"
