@@ -91,6 +91,12 @@
                 <field name="website_ids" position="after">
                     <field name="active"/>
                 </field>
+                <xpath expr="//field[@name='created_at']" position="attributes">
+                    <attribute name="readonly">0</attribute>
+                </xpath>
+                <xpath expr="//field[@name='updated_at']" position="attributes">
+                    <attribute name="readonly">0</attribute>
+                </xpath>
             </field>
         </record>
         
