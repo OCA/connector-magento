@@ -26594,4 +26594,5 @@ magento_base_responses = \
                                                       'weight': '0.0000',
                                                       'x_forwarded_for': None},
         ('sales_order.get_parent', (900000691,)): False,
+        ('product_attribute_set.list', ()): [{'name': 'Default', 'set_id': '4'}],
      }
