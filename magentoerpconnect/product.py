@@ -324,8 +324,7 @@ class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
     attribute_set_id = fields.Many2one('magento.attribute.set',
-                                       string='Attribute Set',
-                                       required=True)
+                                       string='Attribute Set')
 
 
 @magento
