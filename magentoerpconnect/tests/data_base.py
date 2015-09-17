@@ -8487,6 +8487,7 @@ magento_base_responses = \
                                                            'sku': '1114',
                                                            'small_image_label': None,
                                                            'status': '1',
+                                                           'tax_class_id': '2',
                                                            'thumbnail_label': None,
                                                            'type': 'grouped',
                                                            'type_id': 'grouped',
