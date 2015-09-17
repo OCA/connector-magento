@@ -173,10 +173,22 @@ class MagentoProductProduct(models.Model):
             # ('downloadable', 'Downloadable Product'),
         ]
 
+    @api.model
+    def get_default_magento_tax(self):
+        mag_tax_obj = self.env['magento.tax.class']
+        tax_id = False
+        if self.backend_id:
+            tax_id = mag_tax_obj.search(
+                [('backend_id', '=', self.backend_id.id)])[0]
+        else:
+            tax_id = mag_tax_obj.search([])[0]
+        return tax_id
+
     tax_class_id = fields.Many2one(comodel_name='magento.tax.class',
                                    string='Tax class',
                                    required=True,
-                                   ondelete='restrict')
+                                   ondelete='restrict',
+                                   default=get_default_magento_tax)
     openerp_id = fields.Many2one(comodel_name='product.product',
                                  string='Product',
                                  required=True,
