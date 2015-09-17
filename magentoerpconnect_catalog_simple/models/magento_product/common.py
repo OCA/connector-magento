@@ -20,6 +20,8 @@
 from openerp import api, models, fields
 from openerp import exceptions
 from openerp.tools.translate import _
+from openerp.addons.connector.session import ConnectorSession
+from .event import on_product_create, on_product_write
 import logging
 _logger = logging.getLogger(__name__)
 
@@ -111,22 +113,25 @@ class ProductProduct(models.Model):
 
     @api.multi
     def write(self, vals):
-        super(ProductProduct, self).write(vals)
+        self_context = self.with_context(from_product_ids=self.ids)
+        result = super(ProductProduct, self_context).write(vals)
+        session = ConnectorSession.from_env(self.env)
+        for product_id in self.ids:
+            on_product_write.fire(session, self._name, product_id, vals)
         if vals.get('active', True) is False:
             for product in self:
                 for bind in product.magento_bind_ids:
                     bind.write({'active': False})
-#         if 'sale_ok' in vals:
-#             self.automatic_binding(vals['sale_ok'])
-        return True
+        return result
 
     @api.model
     def create(self, vals):
-        product = super(ProductProduct, self).create(vals)
-#         if product.sale_ok:
-#             product.automatic_binding(True)
+        self_context = self.with_context(from_product_ids=self.ids)
+        product = super(ProductProduct, self_context).create(vals)
+        session = ConnectorSession.from_env(self.env)
+        on_product_create.fire(session, self._name, product.id, vals)
         return product
-
+    
     @api.constrains('name', 'description')
     def _check_description(self):
         if self.name == self.description:
@@ -149,3 +154,31 @@ class ProductProduct(models.Model):
                   'duplicated binding : %s')
                 % ", ".join([str(x[0]) for x in result]))
         return True
+
+class ProductTemplate(models.Model):
+    _inherit = 'product.template'
+
+    @api.multi
+    def write(self, vals):
+        result = super(ProductTemplate, self).write(vals)
+        # If a field of the template has been modified, we want to
+        # export this field on all the variants on this product.
+        # If only fields of variants have been modified, they have
+        # already be exported by the event on 'product.product'
+        if any(field for field in vals if field in self._columns):
+            session = ConnectorSession.from_env(self.env)
+            variants = self.mapped('product_variant_ids')
+            # When the 'write()' is done on 'product.product', avoid
+            # to fire the event 2 times. Event has been fired on the
+            # variant, do not fire it on the template.
+            # We'll export the *other* variants of the template though
+            # as soon as template fields have been modified.
+            if self.env.context.get('from_product_ids'):
+                from_product_ids = self.env.context['from_product_ids']
+                product_model = self.env['product.product']
+                triggered_products = product_model.browse(from_product_ids)
+                variants -= triggered_products
+            for variant_id in variants.ids:
+                on_product_write.fire(session, variants._model._name,
+                                      variant_id, vals)
+        return result
