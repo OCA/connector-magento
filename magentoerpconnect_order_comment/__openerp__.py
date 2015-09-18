@@ -57,6 +57,7 @@ Settings / options
     },
     'data': [
         'magento_model_view.xml',
+        'security/ir.model.access.csv',
     ],
     'installable': True,
     'application': False,

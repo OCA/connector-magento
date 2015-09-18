@@ -36,7 +36,7 @@ This set of data contains examples of imported products.
 
 # a simple product with images
 simple_product_and_images = {
-    ('ol_catalog_product.info', (122, None, None, 'id')): {'categories': ['1'],
+    ('ol_catalog_product.info', (122, False, False, 'id')): {'categories': ['1'],
                                                         'color': '60',
                                                         'cost': '2.0000',
                                                         'country_of_manufacture': None,
@@ -92,7 +92,7 @@ simple_product_and_images = {
                                                         'visibility': '1',
                                                         'websites': ['1'],
                                                         'weight': '0.5000'},
-    ('product_media.list', (122, None, 'id')): [{'exclude': '1',
+    ('product_media.list', (122, False, 'id')): [{'exclude': '1',
                                                  'file': '/i/n/ink-eater-krylon-bombear-destroyed-tee-2.jpg',
                                                  'label': '',
                                                  'position': '0',

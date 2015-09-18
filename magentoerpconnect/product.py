@@ -288,7 +288,7 @@ class ProductProductAdapter(GenericAdapter):
         return self._call('ol_catalog_product.create',
             [product_type, attr_set_id, sku, data])
 
-    def read(self, id, storeview_id=None, attributes=None):
+    def read(self, id, storeview_id=False, attributes=False):
         """ Returns the information of a record
 
         :rtype: dict
@@ -304,17 +304,17 @@ class ProductProductAdapter(GenericAdapter):
         return self._call('%s.info' % self._magento_model,
                           [sku, storeview_id, attributes, 'sku'])
 
-    def write(self, id, data, storeview_id=None):
+    def write(self, id, data, storeview_id=False):
         """ Update records on the external system """
         # XXX actually only ol_catalog_product.update works
         # the PHP connector maybe breaks the catalog_product.update
         return self._call('ol_catalog_product.update',
                           [int(id), data, storeview_id, 'id'])
 
-    def get_images(self, id, storeview_id=None):
+    def get_images(self, id, storeview_id=False):
         return self._call('product_media.list', [int(id), storeview_id, 'id'])
 
-    def read_image(self, id, image_name, storeview_id=None):
+    def read_image(self, id, image_name, storeview_id=False):
         return self._call('product_media.info',
                           [int(id), image_name, storeview_id, 'id'])
 
@@ -357,7 +357,7 @@ class CatalogImageImporter(ImportSynchronizer):
     _model_name = ['magento.product.product',
                    ]
 
-    def _get_images(self, storeview_id=None):
+    def _get_images(self, storeview_id=False):
         return self.backend_adapter.get_images(self.magento_id, storeview_id)
 
     def _sort_images(self, images):
