@@ -1033,18 +1033,50 @@ class SaleOrderLineImportMapper(ImportMapper):
               ('item_id', 'magento_id'),
               ]
 
-    @mapping
-    def discount_amount(self, record):
-        discount_value = float(record.get('discount_amount') or 0)
+    def _need_base_amount(self, map_record):
+        record = map_record._source
+        magento_storeview_id = self.session.search('magento.storeview',
+                                                   [('magento_id',
+                                                     '=',
+                                                     record['store_id'])])
+        storeview = self.session.browse('magento.storeview',
+                                        magento_storeview_id[0])
+        openerp_store_currency = storeview.store_id.\
+            openerp_id.pricelist_id.currency_id.name
+
+        sale_record = map_record._parent._source
+        global_magento_currency = sale_record['global_currency_code']
+
+        return global_magento_currency == openerp_store_currency
+
+    def _select_compute_mode(self, map_record):
+        compute_mode = ''
+        if self._need_base_amount(map_record):
+            compute_mode = 'base_'
+        compute_mode += 'row_total'
         if self.options.tax_include:
-            row_total = float(record.get('row_total_incl_tax') or 0)
-        else:
-            row_total = float(record.get('row_total') or 0)
+            compute_mode += '_incl_tax'
+        return compute_mode
+
+    def _get_price_unit(self, row_total, record):
+        qty_ordered = float(record['qty_ordered'])
+        price_unit = row_total / qty_ordered
+        return price_unit
+
+    def _get_discount(self, row_total, record):
+        discount_value = float(record.get('discount_amount', 0))
         discount = 0
         if discount_value > 0 and row_total > 0:
             discount = 100 * discount_value / row_total
-        result = {'discount': discount}
-        return result
+        return discount
+
+    def finalize(self, map_record, values):
+        compute_mode = self._select_compute_mode(map_record)
+        record = map_record._source
+        row_total = float(record.get(compute_mode, 0))
+        values['price_unit'] = self._get_price_unit(row_total, record)
+        values['discount'] = self._get_discount(row_total, record)
+        return values
 
     @mapping
     def product_id(self, record):
@@ -1071,19 +1103,6 @@ class SaleOrderLineImportMapper(ImportMapper):
                                                           record['sku']))
             notes = "".join(options_label).replace('""', '\n').replace('"', '')
             result = {'notes': notes}
-        return result
-
-    @mapping
-    def price(self, record):
-        result = {}
-        base_row_total = float(record['base_row_total'] or 0.)
-        base_row_total_incl_tax = float(record['base_row_total_incl_tax'] or
-                                        0.)
-        qty_ordered = float(record['qty_ordered'])
-        if self.options.tax_include:
-            result['price_unit'] = base_row_total_incl_tax / qty_ordered
-        else:
-            result['price_unit'] = base_row_total / qty_ordered
         return result
 
 
