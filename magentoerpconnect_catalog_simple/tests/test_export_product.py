@@ -93,8 +93,7 @@ class TestExportProduct(common.TransactionCase):
         """
         
         """
-        job_path = ('openerp.addons.magentoerpconnect_catalog_simple.'
-                    'models.magento_product.exporter.export_product')
+        job_path = ('openerp.addons.magentoerpconnect.unit.export_synchronizer.export_record')
         response = {
             'ol_catalog_product.create': 177,
         }
