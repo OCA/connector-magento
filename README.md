@@ -14,6 +14,27 @@ Documentation:
 http://www.odoo-magento-connector.com
 http://www.odoo-connector.com
 
+[//]: # (addons)
+Available addons
+----------------
+addon | version | summary
+--- | --- | ---
+[customize_example](customize_example/) | 1.0.0 | Magento Connector Customization Example
+[magentoerpconnect](magentoerpconnect/) | 3.0.0 | Magento Connector
+
+Unported addons
+---------------
+addon | version | summary
+--- | --- | ---
+[magentoerpconnect_catalog](__unported__/magentoerpconnect_catalog/) | 2.0.0 (unported) | Magento Connector - Catalog
+[magentoerpconnect_export_partner](__unported__/magentoerpconnect_export_partner/) | 2.0.0 (unported) | Magento Connector - Export Partners (Experimental)
+[magentoerpconnect_options_active](__unported__/magentoerpconnect_options_active/) | 1.0.0 (unported) | Magento Connector Option Active Products
+[magentoerpconnect_order_comment](__unported__/magentoerpconnect_order_comment/) | 0.1 (unported) | Magento Connector - Order comment
+[magentoerpconnect_pricing](__unported__/magentoerpconnect_pricing/) | 2.0.0 (unported) | Magento Connector - Pricing
+[server_env_magentoerpconnect](__unported__/server_env_magentoerpconnect/) | 1.0 (unported) | Server environment for Magento Connector
+
+[//]: # (end addons)
+
 Translation Status
 ------------------
 [![Transifex Status](https://www.transifex.com/projects/p/OCA-connector-magento-8-0/chart/image_png)](https://www.transifex.com/projects/p/OCA-connector-magento-8-0)
