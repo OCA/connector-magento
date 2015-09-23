@@ -34,15 +34,15 @@ import openerp.addons.magentoerpconnect.consumer as magentoerpconnect
 from openerp.addons.connector.queue.job import job, related_action
 
 
-import functools
-from openerp import exceptions, _
-from openerp.addons.connector import related_action as ra
-from openerp.addons.magentoerpconnect.connector import get_environment
-from openerp.addons.magentoerpconnect.unit.backend_adapter import GenericAdapter
-from openerp.addons.magentoerpconnect.unit.binder import MagentoBinder
-
-unwrap_binding = functools.partial(ra.unwrap_binding,
-                                   binder_class=MagentoBinder)
+# import functools
+# from openerp import exceptions, _
+# from openerp.addons.connector import related_action as ra
+# from openerp.addons.magentoerpconnect.connector import get_environment
+# from openerp.addons.magentoerpconnect.unit.backend_adapter import GenericAdapter
+# from openerp.addons.magentoerpconnect.unit.binder import MagentoBinder
+# 
+# unwrap_binding = functools.partial(ra.unwrap_binding,
+#                                    binder_class=MagentoBinder)
 
 
 @on_record_write(model_names=[
@@ -185,12 +185,12 @@ class ProductProductExporter(MagentoExporter):
         translation_exporter.run(self.binding_id)
 
 
-@job(default_channel='root.magento')
-@related_action(action=unwrap_binding)
-def export_product(session, model_name, record_id):
-    """ Export a product. """
-    product = session.env[model_name].browse(record_id)
-    backend_id = product.backend_id.id
-    env = get_environment(session, model_name, backend_id)
-    product_exporter = env.get_connector_unit(ProductProductExporter)
-    return product_exporter.run(record_id)
+# @job(default_channel='root.magento')
+# @related_action(action=unwrap_binding)
+# def export_product(session, model_name, record_id):
+#     """ Export a product. """
+#     product = session.env[model_name].browse(record_id)
+#     backend_id = product.backend_id.id
+#     env = get_environment(session, model_name, backend_id)
+#     product_exporter = env.get_connector_unit(ProductProductExporter)
+#     return product_exporter.run(record_id)
