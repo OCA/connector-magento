@@ -93,20 +93,20 @@ class TestExportProduct(common.TransactionCase):
         """
         
         """
-        job_path = ('openerp.addons.magentoerpconnect.unit.export_synchronizer.export_record')
+        job_path = ('openerp.addons.magentoerpconnect.consumer.export_record')
         response = {
             'ol_catalog_product.create': 177,
         }
         with mock_job_delay_to_direct(job_path), \
                 mock_api(response, key_func=lambda m, a: m) as calls_done:
-            product = self.env['product.product'].create(
-                {'name': 'TEST export',
-                 'default_code': 'default_code-export',
-                 'description': 'description',
-                 'description_sale': 'description sale',
-                 'weight': 4.56,
-                 'active': True,
-                 'magento_bind_ids': [
+            vals = {
+                'name': 'TEST export',
+                'default_code': 'default_code-export',
+                'description': 'description',
+                'description_sale': 'description sale',
+                'weight': 4.56,
+                'active': True,
+                'magento_bind_ids': [
                     (0,0,{
                         'backend_id': self.backend.id,
                         'website_ids': [
@@ -121,11 +121,11 @@ class TestExportProduct(common.TransactionCase):
                         'active': True,
                         }
                     )],
-                 'lst_price': 1.23,
-                 'attribute_set_id': self.env['magento.attribute.set'].search(
+                'lst_price': 1.23,
+                'attribute_set_id': self.env['magento.attribute.set'].search(
                                         [('magento_id', '=', '9')]).id,
                  }
-                )
+            product = self.env['product.product'].create(vals)
             self.assertEqual(len(calls_done), 1)
             method, args_tuple = calls_done[0]
             self.assertEqual(method, 'ol_catalog_product.create')
