@@ -89,7 +89,7 @@ class TestExportProduct(common.TransactionCase):
 #         self.invoice_model = self.env['account.invoice']
 #         self.invoice = self.invoice_model.browse(invoice_id)
 
-    def testExportProductApi(self):
+    def testCreateProductApi(self):
         """
         
         """
@@ -129,35 +129,54 @@ class TestExportProduct(common.TransactionCase):
             self.assertEqual(len(calls_done), 1)
             method, args_tuple = calls_done[0]
             self.assertEqual(method, 'ol_catalog_product.create')
+
+    def testWriteProductApi(self):
+        """
+
+        """
+        job_path = ('openerp.addons.magentoerpconnect.consumer.export_record')
+        response = {
+            'ol_catalog_product.create': 177,
+        }
+        with mock_job_delay_to_direct(job_path), \
+                mock_api(response, key_func=lambda m, a: m) as calls_done:
+            vals = {
+                'name': 'TEST export',
+                'default_code': 'default_code-export',
+                'description': 'description',
+                'description_sale': 'description sale',
+                'weight': 4.56,
+                'active': True,
+                'magento_bind_ids': [
+                    (0,0,{
+                        'backend_id': self.backend.id,
+                        'website_ids': [
+                            (6, 0,
+                            self.env['magento.website'].search(
+                                [('backend_id', '=', self.backend.id)]
+                                ).ids
+                            )
+                        ],
+                        'updated_at': '2015-09-17',
+                        'created_at': '2015-09-17',
+                        'active': True,
+                        }
+                    )],
+                'lst_price': 1.23,
+                'attribute_set_id': self.env['magento.attribute.set'].search(
+                                        [('magento_id', '=', '9')]).id,
+                 }
+            product = self.env['product.product'].create(vals)
+            self.assertEqual(len(calls_done), 1)
+            method, args_tuple = calls_done[0]
+            self.assertEqual(method, 'ol_catalog_product.create')
             
-#     def test_export_invoice_api(self):
-#         """ Exporting an invoice: call towards the Magento API """
-#         job_path = ('openerp.addons.magentoerpconnect.'
-#                     'invoice.export_invoice')
-#         response = {
-#             'sales_order_invoice.create': 987654321,
-#         }
-#         # we setup the payment method so it exports the invoices as soon
-#         # as they are validated (open)
-#         self.payment_method.write({'create_invoice_on': 'open'})
-#         self.stores.write({'send_invoice_paid_mail': True})
-#  
-#         with mock_job_delay_to_direct(job_path), \
-#                 mock_api(response, key_func=lambda m, a: m) as calls_done:
-#             self._invoice_open()
-#  
-#             # Here we check what call with which args has been done by the
-#             # BackendAdapter towards Magento to create the invoice
-#             self.assertEqual(len(calls_done), 1)
-#             method, (mag_order_id, items,
-#                      comment, email, include_comment) = calls_done[0]
-#             self.assertEqual(method, 'sales_order_invoice.create')
-#             self.assertEqual(mag_order_id, '900000691')
-#             self.assertEqual(items, {'1713': 1.0, '1714': 1.0})
-#             self.assertEqual(comment, _("Invoice Created"))
-#             self.assertEqual(email, True)
-#             self.assertFalse(include_comment)
-#  
-#         self.assertEquals(len(self.invoice.magento_bind_ids), 1)
-#         binding = self.invoice.magento_bind_ids
-#         self.assertEquals(binding.magento_id, '987654321')
+        response_write = {'ol_catalog_product.update': True}
+        with mock_job_delay_to_direct(job_path), \
+            mock_api(response_write, key_func=lambda m, a: m) as calls_done_write:
+            product.write({'lst_price': 4.56})
+            self.assertEqual(len(calls_done_write), 1)
+            # raises because it launches write for product.template
+            # AND product.product objects
+            wmethod, wargs_tuple = calls_done_write[0]
+            self.assertEqual(wmethod, 'ol_catalog_product.update')
