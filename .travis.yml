@@ -43,19 +43,6 @@ install:
   - pip install beautifulsoup4
   - pip install sphinx sphinx_bootstrap_theme sphinx-intl odoo-sphinx-autodoc
   - printf '[options]\n\nrunning_env = dev' > ${HOME}/.openerp_serverrc
-  # DO NOT MERGE. Only used to get a correct build in the WIP branch
-  - git config --global user.email "travis@example.com"
-  - git config --global user.name "travis"
-  - pushd ${HOME}/connector
-  - git pull --no-edit origin pull/47/head
-  - popd
-  - pushd ${HOME}/e-commerce
-  - git pull --no-edit origin pull/35/head
-  - git pull --no-edit origin pull/34/head
-  - popd
-  - pushd ${HOME}/connector-ecommerce
-  - git pull --no-edit origin pull/18/head
-  - popd
 
 script:
   - if [ "$DOCS" != "1" ] ; then travis_run_tests; fi
