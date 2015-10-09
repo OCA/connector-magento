@@ -19,8 +19,8 @@ Available addons
 ----------------
 addon | version | summary
 --- | --- | ---
-[customize_example](customize_example/) | 1.0.0 | Magento Connector Customization Example
-[magentoerpconnect](magentoerpconnect/) | 3.0.0 | Magento Connector
+[customize_example](customize_example/) | 8.0.1.0.0 | Magento Connector Customization Example
+[magentoerpconnect](magentoerpconnect/) | 8.0.3.0.0 | Magento Connector
 
 Unported addons
 ---------------
