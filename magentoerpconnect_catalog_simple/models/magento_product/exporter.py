@@ -31,18 +31,7 @@ from openerp.addons.connector.connector import ConnectorUnit
 import logging
 _logger = logging.getLogger(__name__)
 import openerp.addons.magentoerpconnect.consumer as magentoerpconnect
-from openerp.addons.connector.queue.job import job, related_action
-
-
-# import functools
-# from openerp import exceptions, _
-# from openerp.addons.connector import related_action as ra
-# from openerp.addons.magentoerpconnect.connector import get_environment
-# from openerp.addons.magentoerpconnect.unit.backend_adapter import GenericAdapter
-# from openerp.addons.magentoerpconnect.unit.binder import MagentoBinder
-# 
-# unwrap_binding = functools.partial(ra.unwrap_binding,
-#                                    binder_class=MagentoBinder)
+from openerp.addons.magentoerpconnect.product import ProductInventoryExporter
 
 
 @on_record_write(model_names=[
@@ -158,6 +147,12 @@ class ProductProductTranslationExporter(MagentoTranslationExporter):
 class ProductProductExporter(MagentoExporter):
     _model_name = ['magento.product.product']
 
+    create_mode = False
+
+    def _run(self, fields=None):
+        self.create_mode = not(bool(self.magento_id))
+        return super(ProductProductExporter, self)._run(fields=fields)
+
     @property
     def mapper(self):
         if self._mapper is None:
@@ -184,6 +179,9 @@ class ProductProductExporter(MagentoExporter):
         translation_exporter = self.unit_for(ProductProductTranslationExporter)
         translation_exporter.run(self.binding_id)
 
+        if self.create_mode:
+            inventory_exporter = self.unit_for(ProductInventoryExporter)
+            inventory_exporter.run(self.binding_id, ['magento_qty'])
 
 # @job(default_channel='root.magento')
 # @related_action(action=unwrap_binding)
