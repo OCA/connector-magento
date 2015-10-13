@@ -74,11 +74,16 @@ class ProductProduct(models.Model):
     @api.multi
     def _prepare_create_magento_auto_binding(self, backend_id):
         self.ensure_one()
+        bkend_obj = self.env['magento.backend']
+        bkend_brw = bkend_obj.browse(backend_id)
         return {
             'backend_id': backend_id,
             'openerp_id': self.id,
             'visibility': '4',
             'status': '1',
+            'created_at': fields.Date.today(),
+            'updated_at': fields.Date.today(),
+            'tax_class_id': bkend_brw.default_mag_tax_id.id
         }
 
     @api.multi
@@ -118,10 +123,16 @@ class ProductProduct(models.Model):
         session = ConnectorSession.from_env(self.env)
         for product_id in self.ids:
             on_product_write.fire(session, self._name, product_id, vals)
+
         if vals.get('active', True) is False:
             for product in self:
                 for bind in product.magento_bind_ids:
                     bind.write({'active': False})
+
+        if 'sale_ok' in vals:
+            for product in self:
+                product.automatic_binding(vals['sale_ok'])
+
         return result
 
     @api.model
@@ -130,8 +141,11 @@ class ProductProduct(models.Model):
         product = super(ProductProduct, self_context).create(vals)
         session = ConnectorSession.from_env(self.env)
         on_product_create.fire(session, self._name, product.id, vals)
+        if product.sale_ok:
+            product.automatic_binding(True)
+
         return product
-    
+
     @api.constrains('name', 'description')
     def _check_description(self):
         if self.name == self.description:
@@ -154,6 +168,7 @@ class ProductProduct(models.Model):
                   'duplicated binding : %s')
                 % ", ".join([str(x[0]) for x in result]))
         return True
+
 
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
