@@ -16,3 +16,18 @@
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
+
+from openerp import api, models, fields
+
+
+class MagentoBackend(models.Model):
+    _inherit = 'magento.backend'
+
+    auto_bind_product = fields.Boolean(
+        string='Auto Bind Product',
+        default=False,
+        help="Tic that box if you want to automatically export the"
+             "product when it's available for sell (sale_ok is tic)"
+        )
+    default_mag_tax_id = fields.Many2one('magento.tax.class',
+                                         string='Default tax')
