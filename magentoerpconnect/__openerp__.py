@@ -56,6 +56,6 @@
           'security/ir.model.access.csv',
           'payment_method_view.xml',
           ],
- 'installable': True,
+ 'installable': False,
  'application': True,
  }
