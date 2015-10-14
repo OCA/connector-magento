@@ -23,7 +23,7 @@ env:
   - TRANSIFEX="1" TRANSIFEX_USER='transbot@odoo-community.org'
   - DOCS="1"
   global:
-  - VERSION="8.0" TESTS="0" LINT_CHECK="0" TRANSIFEX="0" DOCS="0"
+  - VERSION="9.0" TESTS="0" LINT_CHECK="0" TRANSIFEX="0" DOCS="0"
     # Token for Travis docs builds generated with:
     # $ travis encrypt GH_TOKEN=xxxxxxx -r OCA/connector-magento
     # Where xxxxxxx  is the GitHub token which needs only the 'public_repo'
