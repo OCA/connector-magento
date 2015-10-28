@@ -82,6 +82,10 @@ class AttributeSetAdapter(GenericAdapter):
     _model_name = 'magento.attribute.set'
     _magento_model = 'product_attribute_set'
 
+    def create(self, name, skeleton):
+        return self._call('%s.create' % self._magento_model,
+                          [name, skeleton])
+
     def list(self):
         """ Search records according to some criteria
         and returns a list of ids

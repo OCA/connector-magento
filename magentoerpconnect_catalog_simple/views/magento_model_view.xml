@@ -62,15 +62,16 @@
             <field name="name">magento.attribute.set.form</field>
             <field name="model">magento.attribute.set</field>
             <field name="arch" type="xml">
-                <form string="Magento Attribute Set" create="false"
+                <form string="Magento Attribute Set"
                         delete="false" edit="false">
                     <sheet>
                         <h1>
                             <field name="name" class="oe_inline"/>
                         </h1>
                         <group string="Informations">
-                            <field name="magento_id" invisible="1"/>
-                            <field name="backend_id" readonly="1"/>
+                            <field name="parent_model_id"/>
+                            <field name="magento_id" readonly="1"/>
+                            <field name="backend_id"/>
                         </group>
                     </sheet>
                 </form>
@@ -81,11 +82,11 @@
             <field name="name">magento.attribute.set.tree</field>
             <field name="model">magento.attribute.set</field>
             <field name="arch" type="xml">
-                <tree string="Magento Attribute Set" create="false"
+                <tree string="Magento Attribute Set"
                         delete="false">
                     <field name="name"/>
                     <field name="backend_id"/>
-                    <field name="magento_id" invisible="1"/>
+                    <field name="magento_id" readonly="1"/>
                 </tree>
             </field>
         </record>
