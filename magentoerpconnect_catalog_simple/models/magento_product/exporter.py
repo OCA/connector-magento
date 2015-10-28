@@ -17,6 +17,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+from openerp import models, fields, api, _
 from openerp.addons.connector.unit.mapper import (mapping,
                                                   ExportMapper)
 from openerp.addons.magentoerpconnect.unit.delete_synchronizer import (
@@ -26,7 +27,10 @@ from openerp.addons.magentoerpconnect.unit.export_synchronizer import (
     MagentoTranslationExporter)
 from openerp.addons.magentoerpconnect.backend import magento
 from openerp.addons.connector.exception import MappingError
-from openerp.addons.connector.event import on_record_write
+from openerp.addons.connector.event import (
+    on_record_write,
+    on_record_create
+    )
 from openerp.addons.connector.connector import ConnectorUnit
 import logging
 _logger = logging.getLogger(__name__)
@@ -55,6 +59,46 @@ class ProductProductConfigurableExport(ConnectorUnit):
     def _export_configurable_link(self, binding):
         """ Export the link for the configurable product"""
         return
+
+
+class MagentoAttributeSet(models.Model):
+    _inherit = 'magento.attribute.set'
+
+    parent_model_id = fields.Many2one(comodel_name='magento.attribute.set',
+                                      string='Skeleton',
+                                      required=False,
+                                      ondelete='restrict')
+
+
+@magento
+class AttributeSetExporter(MagentoExporter):
+    _model_name = 'magento.attribute.set'
+
+    def _create(self, data):
+        """ Create the Magento record """
+        # special check on data before export
+        return self.backend_adapter.create(data['name'], data['parent_name'])
+
+
+@magento
+class AttributeSetExportMapper(ExportMapper):
+    _model_name = 'magento.attribute.set'
+
+    @mapping
+    def base(self, record):
+        binder = self.get_binder_for_model('magento.attribute.set')
+        parent_set_id = binder.to_backend(record.parent_model_id.id, wrap=True)
+        return {'name': record.name,
+                'parent_name': parent_set_id} 
+
+
+@on_record_create(model_names=[
+#     'magento.product.category',
+    'magento.attribute.set',
+    ])
+def delay_export(session, model_name, record_id, vals=None):
+    magentoerpconnect.delay_export(session, model_name,
+                                   record_id, vals=vals)
 
 
 @magento
