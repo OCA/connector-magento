@@ -16,7 +16,7 @@ MagentoERPconnect has been initiated by `Camptocamp`_ and is mainly
 developed and maintained by `Camptocamp`_ and `Akretion`_ with several other
 :ref:`contributors`.
 
-*Subscribe to the* `project's mailing list`_
+*Subscribe to the* `project's mailing list (name: Connectors)`_
 
 *Learn how to contribute with the* :ref:`contribute`
 
@@ -48,7 +48,7 @@ Core Features
 .. _Akretion: http://www.akretion.com
 .. _`source code is available on GitHub`: https://github.com/OCA/connector-magento/tree/7.0
 .. _`AGPL version 3`: http://www.gnu.org/licenses/agpl-3.0.html
-.. _`project's mailing list`: https://launchpad.net/~openerp-connector-community
+.. _`project's mailing list (name: Connectors)`: https://odoo-community.org/groups
 
 ********
 Workflow

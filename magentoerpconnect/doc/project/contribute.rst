@@ -126,8 +126,7 @@ Mailing list
 ============
 
 The main channel for the discussion is the mailing list, you are invited to
-join the team on: https://launchpad.net/~openerp-connector-community and
-subscribe to the mailing list.
+subscribe on the list named 'Connectors' on: https://odoo-community.org/groups
 
 File an Issue
 =============
