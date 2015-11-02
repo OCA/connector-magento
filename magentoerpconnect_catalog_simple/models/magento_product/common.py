@@ -142,7 +142,8 @@ class ProductProduct(models.Model):
         session = ConnectorSession.from_env(self.env)
         on_product_create.fire(session, self._name, product.id, vals)
         if product.sale_ok:
-            product.automatic_binding(True)
+            if not product._context.get('connector_no_export', False):
+                product.automatic_binding(True)
 
         return product
 
