@@ -234,7 +234,7 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-12 content">
       
   <h1>Source code for openerp.addons.magentoerpconnect.unit.import_synchronizer</h1><div class="highlight"><pre>
 <span class="c"># -*- coding: utf-8 -*-</span>
@@ -432,6 +432,15 @@
 <span class="sd">        :param magento_id: identifier of the record on Magento</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">magento_id</span> <span class="o">=</span> <span class="n">magento_id</span>
+        <span class="n">lock_name</span> <span class="o">=</span> <span class="s">&#39;import({}, {}, {}, {})&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">backend_record</span><span class="o">.</span><span class="n">_name</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">backend_record</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">_name</span><span class="p">,</span>
+            <span class="n">magento_id</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="c"># Keep a lock on this import until the transaction is committed</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">advisory_lock_or_retry</span><span class="p">(</span><span class="n">lock_name</span><span class="p">)</span>
+
         <span class="k">try</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">magento_record</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_magento_data</span><span class="p">()</span>
         <span class="k">except</span> <span class="n">IDMissingInBackend</span><span class="p">:</span>
