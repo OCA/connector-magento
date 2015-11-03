@@ -193,6 +193,15 @@ class MagentoImporter(Importer):
         :param magento_id: identifier of the record on Magento
         """
         self.magento_id = magento_id
+        lock_name = 'import({}, {}, {}, {})'.format(
+            self.backend_record._name,
+            self.backend_record.id,
+            self.model._name,
+            magento_id,
+        )
+        # Keep a lock on this import until the transaction is committed
+        self.advisory_lock_or_retry(lock_name)
+
         try:
             self.magento_record = self._get_magento_data()
         except IDMissingInBackend:
