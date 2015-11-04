@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="product_pricelist_mapping_tree_view" model="ir.ui.view">
+            <field name="name">product.pricelist.mapping.tree</field>
+            <field name="model">product.pricelist.mapping</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Pricelist Mappings">
+                    <field name="name"/>
+                    <field name="pricelist_ids" widget="one2many_list"/>
+                </tree>
+            </field>
+        </record>
+        <record id="product_pricelist_mapping_form_view" model="ir.ui.view">
+            <field name="name">product.pricelist.mapping.form</field>
+            <field name="model">product.pricelist.mapping</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Pricelist Mapping">
+                    <label for="name" class="oe_edit_only"/>
+                    <h1>
+                        <field name="name"/>
+                    </h1>
+                    <group string="Mapped Pricelists">
+                        <field name="pricelist_ids" colspan="4" nolabel="1"
+                            widget="many2many_tags"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="product_pricelist_mapping_action" model="ir.actions.act_window">
+            <field name="name">Pricelist Mappings</field>
+            <field name="res_model">product.pricelist.mapping</field>
+            <field name="view_id" ref="product_pricelist_mapping_tree_view"/>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a pricelist mapping
+              </p>
+              <p>
+                A price list mapping is used to map similar pricelist with
+                different currencies.
+              </p>
+            </field>
+        </record>
+
+        <menuitem
+            action="product_pricelist_mapping_action" id="menu_product_pricelist_mapping"
+            parent="product.menu_product_pricelist_main" sequence="15"
+            groups="product.group_sale_pricelist"/>
+
+        <record id="product_pricelist_view" model="ir.ui.view">
+            <field name="name">product.pricelist.form</field>
+            <field name="model">product.pricelist</field>
+            <field name="inherit_id" ref="product.product_pricelist_view"/>
+            <field name="arch" type="xml">
+                <field name="company_id" position="after">
+                    <field name="mapping_id"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</openerp>
