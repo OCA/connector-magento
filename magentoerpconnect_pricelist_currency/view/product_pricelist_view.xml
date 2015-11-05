@@ -4,7 +4,6 @@
         <record id="product_pricelist_mapping_tree_view" model="ir.ui.view">
             <field name="name">product.pricelist.mapping.tree</field>
             <field name="model">product.pricelist.mapping</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Pricelist Mappings">
                     <field name="name"/>
@@ -15,7 +14,6 @@
         <record id="product_pricelist_mapping_form_view" model="ir.ui.view">
             <field name="name">product.pricelist.mapping.form</field>
             <field name="model">product.pricelist.mapping</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Pricelist Mapping">
                     <label for="name" class="oe_edit_only"/>
