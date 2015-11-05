@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    Author: Guewen Baconnier
-#    Copyright 2013-2015 Camptocamp SA
+#    Copyright 2015 Camptocamp SA
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,11 +19,5 @@
 #
 ##############################################################################
 
-from . import test_synchronization
-
-fast_suite = [
-]
-
-checks = [
-    test_synchronization,
-]
+from . import test_export_price
+from . import test_import_price
