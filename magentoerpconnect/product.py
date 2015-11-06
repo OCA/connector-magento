@@ -440,10 +440,8 @@ class ProductImportMapper(ImportMapper):
 
     @mapping
     def price(self, record):
-        """ The price is imported at the creation of
-        the product, then it is only modified and exported
-        from OpenERP """
-        return {'list_price': record.get('price', 0.0)}
+        mapper = self.unit_for(PriceProductImportMapper)
+        return mapper.map_record(record).values(**self.options)
 
     @mapping
     def type(self, record):
@@ -589,6 +587,15 @@ class ProductImporter(MagentoImporter):
 
 
 ProductImport = ProductImporter  # deprecated
+
+
+@magento
+class PriceProductImportMapper(ImportMapper):
+    _model_name = 'magento.product.product'
+
+    @mapping
+    def price(self, record):
+        return {'list_price': record.get('price', 0.0)}
 
 
 @magento

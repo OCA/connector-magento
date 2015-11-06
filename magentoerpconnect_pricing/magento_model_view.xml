@@ -8,7 +8,7 @@
             <field name="inherit_id" ref="magentoerpconnect.view_magento_backend_form"/>
             <field name="arch" type="xml">
                 <field name="warehouse_id" position="after">
-                    <field name="pricelist_id" on_change="onchange_pricelist_id(pricelist_id)"/>
+                    <field name="pricelist_id"/>
                 </field>
             </field>
         </record>
@@ -21,7 +21,6 @@
                 <group name="options" position="inside">
                     <field name="pricelist_id"
                         attrs="{'invisible': [('magento_id', '==', '0')]}"
-                        on_change="onchange_pricelist_id(pricelist_id)"
                         groups="product.group_sale_pricelist"/>
                 </group>
             </field>

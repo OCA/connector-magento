@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    Author: Guewen Baconnier
-#    Copyright 2013 Camptocamp SA
+#    Copyright 2013-2015 Camptocamp SA
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -24,8 +24,8 @@ from openerp.addons.magentoerpconnect import sale
 from openerp.addons.connector.unit.mapper import mapping
 
 
-@magento(replacing=sale.SaleOrderImportMapper)
-class SaleOrderImportMapper(sale.SaleOrderImportMapper):
+@magento(replacing=sale.PricelistSaleOrderImportMapper)
+class PricelistSaleOrderImportMapper(sale.PricelistSaleOrderImportMapper):
     _model_name = 'magento.sale.order'
 
     @mapping
@@ -33,8 +33,7 @@ class SaleOrderImportMapper(sale.SaleOrderImportMapper):
         """ Assign to the sale order the price list used on
         the Magento Website or Backend """
         website_binder = self.binder_for('magento.website')
-        oe_website_id = website_binder.to_openerp(record['website_id'])
-        website = self.session.browse('magento.website', oe_website_id)
+        website = website_binder.to_openerp(record['website_id'], browse=True)
         if website.pricelist_id:
             pricelist_id = website.pricelist_id.id
         else:

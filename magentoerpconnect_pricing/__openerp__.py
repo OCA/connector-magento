@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    Author: Guewen Baconnier
-#    Copyright 2013 Camptocamp SA
+#    Copyright 2013-2015 Camptocamp SA
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -27,19 +27,10 @@
  'author': "Camptocamp,Odoo Community Association (OCA)",
  'license': 'AGPL-3',
  'website': 'http://www.odoo-magento-connector.com',
- 'description': """
-Magento Connector - Pricing
-===========================
-
-Extension for **Magento Connector**.
-
-The prices of the products are managed in OpenERP using pricelists and
-are pushed to Magento.
-""",
  'images': [],
  'demo': [],
  'data': ['magento_model_view.xml',
           ],
- 'installable': False,
+ 'installable': True,
  'application': False,
  }
