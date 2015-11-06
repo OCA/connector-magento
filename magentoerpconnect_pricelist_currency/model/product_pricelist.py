@@ -44,5 +44,5 @@ class ProductPricelist(models.Model):
         currency_pricelist = self.search([
             ('currency_id', '=', currency_id),
             ('mapping_id', '=', self.mapping_id.id)
-        ])
-        return currency_pricelist and currency_pricelist[0] or self
+        ], limit=1)
+        return currency_pricelist or self
