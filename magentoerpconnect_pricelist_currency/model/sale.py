@@ -22,8 +22,8 @@
 from openerp import models, fields
 from openerp.addons.connector.unit.mapper import mapping
 from openerp.addons.magentoerpconnect.backend import magento
-from openerp.addons.magentoerpconnect.sale import SaleOrderImportMapper, \
-    SaleOrderImporter
+from openerp.addons.magentoerpconnect.sale import \
+    SaleOrderCurrencyImportMapper, SaleOrderPricelistCurrencyAssign
 
 
 class MagentoSaleOrder(models.Model):
@@ -32,13 +32,13 @@ class MagentoSaleOrder(models.Model):
     magento_currency_id = fields.Many2one('res.currency', 'Magento Currency')
 
 
-@magento(replacing=SaleOrderImportMapper)
-class SaleOrderPricelistImportMapper(SaleOrderImportMapper):
+@magento(replacing=SaleOrderCurrencyImportMapper)
+class SaleOrderCurrencyImportMapper(SaleOrderCurrencyImportMapper):
     _model_name = 'magento.sale.order'
 
     @mapping
-    def pricelist_id(self, record):
-        """ Assign a pricelist in the same currency that order in magento"""
+    def currency_id(self, record):
+        """ Maps magento sale currency """
         currency_model = self.env['res.currency']
         currency = currency_model.search([
             ('name', '=', record['order_currency_code'])
@@ -46,12 +46,13 @@ class SaleOrderPricelistImportMapper(SaleOrderImportMapper):
         return {'magento_currency_id': currency.id}
 
 
-@magento(replacing=SaleOrderImporter)
-class SaleOrderPricelistImporter(SaleOrderImporter):
+@magento(replacing=SaleOrderPricelistCurrencyAssign)
+class SaleOrderPricelistCurrencyAssign(SaleOrderPricelistCurrencyAssign):
     _model_name = ['magento.sale.order']
 
-    def _after_import(self, binding):
-        super(SaleOrderPricelistImporter, self)._after_import(binding)
+    def change_pricelist_currency(self, binding):
+        super(SaleOrderPricelistCurrencyAssign, self).\
+            change_pricelist_currency(binding)
         if binding.pricelist_id.currency_id != binding.magento_currency_id:
             pricelist = binding.pricelist_id.get_pricelist_for_currency(
                 binding.magento_currency_id.id)
