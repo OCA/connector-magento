@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-07-22 09:38+0000\n"
+"POT-Creation-Date: 2015-11-05 19:13+0000\n"
 "PO-Revision-Date: 2015-07-08 12:07+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: English (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/en/)\n"
@@ -89,13 +89,13 @@ msgid "Already exported"
 msgstr "Already exported"
 
 #. module: magentoerpconnect
-#: code:addons/magentoerpconnect/sale.py:611
+#: code:addons/magentoerpconnect/sale.py:616
 #, python-format
 msgid "Already imported"
 msgstr "Already imported"
 
 #. module: magentoerpconnect
-#: code:addons/magentoerpconnect/unit/import_synchronizer.py:208
+#: code:addons/magentoerpconnect/unit/import_synchronizer.py:217
 #, python-format
 msgid "Already up-to-date."
 msgstr "Already up-to-date."
@@ -747,7 +747,7 @@ msgid "Magento Websites"
 msgstr "Magento Websites"
 
 #. module: magentoerpconnect
-#: code:addons/magentoerpconnect/sale.py:1079
+#: code:addons/magentoerpconnect/sale.py:1093
 #, python-format
 msgid "Magento sales order is already in state %s"
 msgstr "Magento sales order is already in state %s"
@@ -937,7 +937,7 @@ msgid "Record %s deleted on Magento"
 msgstr "Record %s deleted on Magento"
 
 #. module: magentoerpconnect
-#: code:addons/magentoerpconnect/unit/import_synchronizer.py:199
+#: code:addons/magentoerpconnect/unit/import_synchronizer.py:208
 #, python-format
 msgid "Record does no longer exist in Magento"
 msgstr "Record does no longer exist in Magento"
@@ -964,7 +964,7 @@ msgid "Sale Prefix"
 msgstr "Sale Prefix"
 
 #. module: magentoerpconnect
-#: code:addons/magentoerpconnect/sale.py:1075
+#: code:addons/magentoerpconnect/sale.py:1089
 #, python-format
 msgid "Sale is not linked with a Magento sales order"
 msgstr "Sale is not linked with a Magento sales order"
@@ -1033,7 +1033,7 @@ msgid "Sort Order"
 msgstr "Sort Order"
 
 #. module: magentoerpconnect
-#: code:addons/magentoerpconnect/sale.py:1072
+#: code:addons/magentoerpconnect/sale.py:1086
 #, python-format
 msgid "State %s is not exported."
 msgstr "State %s is not exported."
@@ -1101,7 +1101,7 @@ msgid "The carrier %s does not export tracking numbers."
 msgstr "The carrier %s does not export tracking numbers."
 
 #. module: magentoerpconnect
-#: code:addons/magentoerpconnect/product.py:558
+#: code:addons/magentoerpconnect/product.py:556
 #, python-format
 msgid ""
 "The configurable product is not imported in OpenERP, because only the simple"
