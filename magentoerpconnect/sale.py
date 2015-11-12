@@ -453,12 +453,13 @@ class SaleOrderImportMapper(ImportMapper):
     def _add_shipping_line(self, map_record, values):
         record = map_record.source
         amount_incl = float(record.get('base_shipping_incl_tax') or 0.0)
-        amount_excl = float(record.get('shipping_amount') or 0.0)
+        amount_excl = float(record.get('base_shipping_amount') or 0.0)
         if not (amount_incl or amount_excl):
             return values
         line_builder = self.unit_for(MagentoShippingLineBuilder)
         if self.options.tax_include:
-            discount = float(record.get('shipping_discount_amount') or 0.0)
+            discount = float(record.get('base_shipping_discount_amount')
+                             or 0.0)
             line_builder.price_unit = (amount_incl - discount)
         else:
             line_builder.price_unit = amount_excl
@@ -690,7 +691,7 @@ class SaleOrderImporter(MagentoImporter):
     def _create_payment(self, binding):
         if not binding.payment_method_id.journal_id:
             return
-        amount = self.magento_record.get('payment', {}).get('amount_paid')
+        amount = self.magento_record.get('payment', {}).get('base_amount_paid')
         if amount:
             amount = float(amount)  # magento gives a str
             binding.openerp_id.automatic_payment(amount)
@@ -974,11 +975,11 @@ class SaleOrderLineImportMapper(ImportMapper):
 
     @mapping
     def discount_amount(self, record):
-        discount_value = float(record.get('discount_amount') or 0)
+        discount_value = float(record.get('base_discount_amount') or 0)
         if self.options.tax_include:
-            row_total = float(record.get('row_total_incl_tax') or 0)
+            row_total = float(record.get('base_row_total_incl_tax') or 0)
         else:
-            row_total = float(record.get('row_total') or 0)
+            row_total = float(record.get('base_row_total') or 0)
         discount = 0
         if discount_value > 0 and row_total > 0:
             discount = 100 * discount_value / row_total

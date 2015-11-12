@@ -54,6 +54,19 @@ class TestSaleOrder(SetUpMagentoSynchronized):
         self.assertEqual(len(binding), 1)
         return binding
 
+    def _create_carrier_product(self):
+        product = self.env['product.product'].create({
+            'name': 'Carrier Product',
+        })
+        self.env['delivery.carrier'].create({
+            'name': 'Flatrate',
+            'partner_id': self.env.ref('base.main_partner').id,
+            'product_id': product.id,
+            'magento_code': 'flatrate_flatrate',
+            'magento_carrier_code': 'flatrate_flatrate',
+        })
+        return product
+
     def test_copy_quotation(self):
         """ Copy a sales order with copy_quotation move bindings """
         binding = self._import_sale_order(900000691)
@@ -204,16 +217,7 @@ class TestSaleOrder(SetUpMagentoSynchronized):
 
     def test_import_carrier_product(self):
         """ Product of a carrier is used in the sale line """
-        product = self.env['product.product'].create({
-            'name': 'Carrier Product',
-        })
-        self.env['delivery.carrier'].create({
-            'name': 'Flatrate',
-            'partner_id': self.env.ref('base.main_partner').id,
-            'product_id': product.id,
-            'magento_code': 'flatrate_flatrate',
-            'magento_carrier_code': 'flatrate_flatrate',
-        })
+        product = self._create_carrier_product()
         binding = self._import_sale_order(900000691)
         # check if we have a line with the carrier product,
         # which is the shipping line
@@ -228,3 +232,16 @@ class TestSaleOrder(SetUpMagentoSynchronized):
                                                     line.product_id.name)
                                        for line
                                        in binding.order_line),))
+
+    def test_import_different_currency_rate_order(self):
+        """ Sales Order with different currency imported with base prices """
+        product = self._create_carrier_product()
+        binding = self._import_sale_order(200000391)
+        for line in binding.order_line:
+            if line.product_id == product:
+                self.assertEqual(line.price_subtotal, 10,
+                                 msg="Shipping price must be 10 in "
+                                 "base currency")
+        self.assertEqual(binding.amount_total, 2459.98,
+                         msg="Order Total amount must be 2459.98 in "
+                         "base currency")
