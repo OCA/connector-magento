@@ -18,7 +18,7 @@
 #
 ##############################################################################
 
-from openerp import models, fields, _
+from openerp import models, fields
 
 
 class MagentoStore(models.Model):
@@ -26,6 +26,6 @@ class MagentoStore(models.Model):
 
     send_sale_comment_mail = fields.Boolean(
         'Send email notification on sale comment',
-        help=_("Require Magento to send email on 'sale order comment' "
-               "based on 'send a message' case (not 'log a note')"),
+        help="Require Magento to send email on 'sale order comment' "
+             "based on 'send a message' case (not 'log a note')",
         default=False)
