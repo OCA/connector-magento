@@ -569,6 +569,18 @@ class SaleOrderImportMapper(ImportMapper):
         if team:
             return {'section_id': team.id}
 
+    @mapping
+    def project_id(self, record):
+        project_id = self.options.storeview.account_analytic_id
+        if project_id:
+            return {'project_id': project_id.id}
+
+    @mapping
+    def fiscal_position(self, record):
+        fiscal_position = self.options.storeview.fiscal_position_id
+        if fiscal_position:
+            return {'fiscal_position': fiscal_position.id}
+
     # partner_id, partner_invoice_id, partner_shipping_id
     # are done in the importer
 
