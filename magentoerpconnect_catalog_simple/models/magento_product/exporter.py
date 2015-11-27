@@ -17,7 +17,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from openerp import models, fields, api, _
+from openerp import models, fields
 from openerp.addons.connector.unit.mapper import (mapping,
                                                   ExportMapper)
 from openerp.addons.magentoerpconnect.unit.delete_synchronizer import (
@@ -89,14 +89,13 @@ class AttributeSetExportMapper(ExportMapper):
         binder = self.get_binder_for_model('magento.attribute.set')
         parent_set_id = binder.to_backend(record.parent_model_id.id, wrap=True)
         return {'name': record.name,
-                'parent_name': parent_set_id} 
+                'parent_name': parent_set_id}
 
 
 @on_record_create(model_names=[
-#     'magento.product.category',
     'magento.attribute.set',
     ])
-def delay_export(session, model_name, record_id, vals=None):
+def delay_export2(session, model_name, record_id, vals=None):
     magentoerpconnect.delay_export(session, model_name,
                                    record_id, vals=vals)
 

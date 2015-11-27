@@ -19,19 +19,17 @@
 #
 ##############################################################################
 
-import mock
-
 import openerp.tests.common as common
-from openerp import _
 from openerp.addons.connector.session import ConnectorSession
 from openerp.addons.magentoerpconnect.unit.import_synchronizer import (
-    import_batch,
-    import_record)
-from openerp.addons.magentoerpconnect.tests.common import (mock_api,
-    mock_job_delay_to_direct,
-    mock_urlopen_image)
+    import_batch)
+from openerp.addons.magentoerpconnect.tests.common import (
+    mock_api,
+    mock_job_delay_to_direct
+    )
 from openerp.addons.magentoerpconnect.tests.data_base import (
-    magento_base_responses)
+    magento_base_responses
+    )
 
 
 class TestExportProduct(common.TransactionCase):
@@ -91,7 +89,7 @@ class TestExportProduct(common.TransactionCase):
 
     def testCreateProductApi(self):
         """
-        
+
         """
         job_path = ('openerp.addons.magentoerpconnect.consumer.export_record')
         response = {
@@ -107,25 +105,25 @@ class TestExportProduct(common.TransactionCase):
                 'weight': 4.56,
                 'active': True,
                 'magento_bind_ids': [
-                    (0,0,{
+                    (0, 0, {
                         'backend_id': self.backend.id,
                         'website_ids': [
-                            (6, 0, 
-                            self.env['magento.website'].search(
-                                [('backend_id', '=', self.backend.id)]
-                                ).ids
-                            )
+                            (6, 0,
+                             self.env['magento.website'].search(
+                                [('backend_id', '=', self.backend.id)]).ids
+                             )
                         ],
                         'updated_at': '2015-09-17',
                         'created_at': '2015-09-17',
                         'active': True,
                         }
-                    )],
+                     )
+                    ],
                 'lst_price': 1.23,
                 'attribute_set_id': self.env['magento.attribute.set'].search(
-                                        [('magento_id', '=', '9')]).id,
-                 }
-            product = self.env['product.product'].create(vals)
+                    [('magento_id', '=', '9')]).id,
+                }
+            self.env['product.product'].create(vals)
             self.assertEqual(len(calls_done), 1)
             method, args_tuple = calls_done[0]
             self.assertEqual(method, 'ol_catalog_product.create')
@@ -148,32 +146,34 @@ class TestExportProduct(common.TransactionCase):
                 'weight': 4.56,
                 'active': True,
                 'magento_bind_ids': [
-                    (0,0,{
+                    (0, 0, {
                         'backend_id': self.backend.id,
                         'website_ids': [
                             (6, 0,
-                            self.env['magento.website'].search(
-                                [('backend_id', '=', self.backend.id)]
-                                ).ids
-                            )
+                             self.env['magento.website'].search(
+                                 [('backend_id', '=', self.backend.id)]
+                                 ).ids
+                             )
                         ],
                         'updated_at': '2015-09-17',
                         'created_at': '2015-09-17',
                         'active': True,
                         }
-                    )],
+                     )
+                    ],
                 'lst_price': 1.23,
                 'attribute_set_id': self.env['magento.attribute.set'].search(
-                                        [('magento_id', '=', '9')]).id,
-                 }
+                    [('magento_id', '=', '9')]).id,
+                }
             product = self.env['product.product'].create(vals)
             self.assertEqual(len(calls_done), 1)
             method, args_tuple = calls_done[0]
             self.assertEqual(method, 'ol_catalog_product.create')
-            
+
         response_write = {'ol_catalog_product.update': True}
         with mock_job_delay_to_direct(job_path), \
-            mock_api(response_write, key_func=lambda m, a: m) as calls_done_write:
+            mock_api(response_write, key_func=lambda m, a: m) \
+                as calls_done_write:
             product.write({'lst_price': 4.56})
             self.assertEqual(len(calls_done_write), 1)
             # raises because it launches write for product.template
