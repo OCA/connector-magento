@@ -273,9 +273,9 @@
         <span class="k">return</span> <span class="n">env</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">with</span> <span class="n">env</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">change_context</span><span class="p">(</span><span class="n">lang</span><span class="o">=</span><span class="n">lang_code</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">env</span>
+            <span class="k">return</span> <span class="n">env</span></div>
 
-</div>
+
 <div class="viewcode-block" id="MagentoBinding"><a class="viewcode-back" href="../../../../api/api_connector.html#openerp.addons.magentoerpconnect.connector.MagentoBinding">[docs]</a><span class="k">class</span> <span class="nc">MagentoBinding</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">AbstractModel</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Abstract Model for the Bindigs.</span>
 
@@ -300,9 +300,9 @@
     <span class="n">_sql_constraints</span> <span class="o">=</span> <span class="p">[</span>
         <span class="p">(</span><span class="s">&#39;magento_uniq&#39;</span><span class="p">,</span> <span class="s">&#39;unique(backend_id, magento_id)&#39;</span><span class="p">,</span>
          <span class="s">&#39;A binding already exists with the same Magento ID.&#39;</span><span class="p">),</span>
-    <span class="p">]</span>
+    <span class="p">]</span></div>
 
-</div>
+
 <div class="viewcode-block" id="add_checkpoint"><a class="viewcode-back" href="../../../../api/api_connector.html#openerp.addons.magentoerpconnect.connector.add_checkpoint">[docs]</a><span class="k">def</span> <span class="nf">add_checkpoint</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">record_id</span><span class="p">,</span> <span class="n">backend_id</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Add a row in the model ``connector.checkpoint`` for a record,</span>
 <span class="sd">    meaning it has to be reviewed by a user.</span>
@@ -335,7 +335,7 @@
     </p>
     <p>
         &copy; Copyright 2013-2015, Odoo Community Association (OCA).<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.3.<br/>
     </p>
   </div>
 </footer>

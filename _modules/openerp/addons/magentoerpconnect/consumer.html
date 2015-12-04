@@ -273,9 +273,9 @@
     <span class="k">if</span> <span class="n">session</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;connector_no_export&#39;</span><span class="p">):</span>
         <span class="k">return</span>
     <span class="n">fields</span> <span class="o">=</span> <span class="n">vals</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
-    <span class="n">export_record</span><span class="o">.</span><span class="n">delay</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">record_id</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="n">fields</span><span class="p">)</span>
+    <span class="n">export_record</span><span class="o">.</span><span class="n">delay</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">record_id</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="n">fields</span><span class="p">)</span></div>
 
-</div>
+
 <div class="viewcode-block" id="delay_export_all_bindings"><a class="viewcode-back" href="../../../../api/api_consumer.html#openerp.addons.magentoerpconnect.consumer.delay_export_all_bindings">[docs]</a><span class="k">def</span> <span class="nf">delay_export_all_bindings</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">record_id</span><span class="p">,</span> <span class="n">vals</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Delay a job which export all the bindings of a record.</span>
 
@@ -288,9 +288,9 @@
     <span class="n">fields</span> <span class="o">=</span> <span class="n">vals</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">binding</span> <span class="ow">in</span> <span class="n">record</span><span class="o">.</span><span class="n">magento_bind_ids</span><span class="p">:</span>
         <span class="n">export_record</span><span class="o">.</span><span class="n">delay</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">binding</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">_name</span><span class="p">,</span> <span class="n">binding</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-                            <span class="n">fields</span><span class="o">=</span><span class="n">fields</span><span class="p">)</span>
+                            <span class="n">fields</span><span class="o">=</span><span class="n">fields</span><span class="p">)</span></div>
 
-</div>
+
 <div class="viewcode-block" id="delay_unlink"><a class="viewcode-back" href="../../../../api/api_consumer.html#openerp.addons.magentoerpconnect.consumer.delay_unlink">[docs]</a><span class="k">def</span> <span class="nf">delay_unlink</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">record_id</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Delay a job which delete a record on Magento.</span>
 
@@ -319,7 +319,7 @@
     </p>
     <p>
         &copy; Copyright 2013-2015, Odoo Community Association (OCA).<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.3.<br/>
     </p>
   </div>
 </footer>

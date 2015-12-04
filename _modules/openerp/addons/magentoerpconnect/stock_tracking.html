@@ -343,9 +343,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_validate</span><span class="p">(</span><span class="n">picking</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_check_allowed_carrier</span><span class="p">(</span><span class="n">picking</span><span class="p">,</span> <span class="n">sale_binding_id</span><span class="o">.</span><span class="n">magento_id</span><span class="p">)</span>
         <span class="n">tracking_args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_tracking_args</span><span class="p">(</span><span class="n">picking</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">backend_adapter</span><span class="o">.</span><span class="n">add_tracking_number</span><span class="p">(</span><span class="n">magento_id</span><span class="p">,</span> <span class="o">*</span><span class="n">tracking_args</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">backend_adapter</span><span class="o">.</span><span class="n">add_tracking_number</span><span class="p">(</span><span class="n">magento_id</span><span class="p">,</span> <span class="o">*</span><span class="n">tracking_args</span><span class="p">)</span></div></div>
 
-</div></div>
+
 <span class="n">MagentoTrackingExport</span> <span class="o">=</span> <span class="n">MagentoTrackingExporter</span>  <span class="c"># deprecated</span>
 
 
@@ -362,9 +362,9 @@
         <span class="n">export_tracking_number</span><span class="o">.</span><span class="n">delay</span><span class="p">(</span><span class="n">session</span><span class="p">,</span>
                                      <span class="n">binding</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">_name</span><span class="p">,</span>
                                      <span class="n">binding</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-                                     <span class="n">priority</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+                                     <span class="n">priority</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span></div>
 
-</div>
+
 <span class="nd">@job</span><span class="p">(</span><span class="n">default_channel</span><span class="o">=</span><span class="s">&#39;root.magento&#39;</span><span class="p">)</span>
 <span class="nd">@related_action</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="n">unwrap_binding</span><span class="p">)</span>
 <div class="viewcode-block" id="export_tracking_number"><a class="viewcode-back" href="../../../../api/api_stock_tracking.html#openerp.addons.magentoerpconnect.stock_tracking.export_tracking_number">[docs]</a><span class="k">def</span> <span class="nf">export_tracking_number</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">record_id</span><span class="p">):</span>
@@ -391,7 +391,7 @@
     </p>
     <p>
         &copy; Copyright 2013-2015, Odoo Community Association (OCA).<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.3.<br/>
     </p>
   </div>
 </footer>

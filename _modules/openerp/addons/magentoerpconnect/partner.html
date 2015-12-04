@@ -307,9 +307,9 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">fields</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">ResPartner</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">_address_fields</span><span class="p">()</span>
         <span class="n">fields</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&#39;company&#39;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">fields</span>
+        <span class="k">return</span> <span class="n">fields</span></div>
 
-</div>
+
 <div class="viewcode-block" id="MagentoResPartner"><a class="viewcode-back" href="../../../../api/api_partner.html#openerp.addons.magentoerpconnect.partner.MagentoResPartner">[docs]</a><span class="k">class</span> <span class="nc">MagentoResPartner</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
     <span class="n">_name</span> <span class="o">=</span> <span class="s">&#39;magento.res.partner&#39;</span>
     <span class="n">_inherit</span> <span class="o">=</span> <span class="s">&#39;magento.binding&#39;</span>
@@ -351,9 +351,9 @@
              <span class="s">&quot;the billing address is considered as a company.</span><span class="se">\n</span><span class="s"> &quot;</span>
              <span class="s">&quot;The partner takes the name of the company and &quot;</span>
              <span class="s">&quot;is not merged with the billing address.&quot;</span><span class="p">,</span>
-    <span class="p">)</span>
+    <span class="p">)</span></div>
 
-</div>
+
 <div class="viewcode-block" id="MagentoAddress"><a class="viewcode-back" href="../../../../api/api_partner.html#openerp.addons.magentoerpconnect.partner.MagentoAddress">[docs]</a><span class="k">class</span> <span class="nc">MagentoAddress</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
     <span class="n">_name</span> <span class="o">=</span> <span class="s">&#39;magento.address&#39;</span>
     <span class="n">_inherit</span> <span class="o">=</span> <span class="s">&#39;magento.binding&#39;</span>
@@ -399,9 +399,9 @@
     <span class="n">_sql_constraints</span> <span class="o">=</span> <span class="p">[</span>
         <span class="p">(</span><span class="s">&#39;openerp_uniq&#39;</span><span class="p">,</span> <span class="s">&#39;unique(backend_id, openerp_id)&#39;</span><span class="p">,</span>
          <span class="s">&#39;A partner address can only have one binding by backend.&#39;</span><span class="p">),</span>
-    <span class="p">]</span>
+    <span class="p">]</span></div>
 
-</div>
+
 <span class="nd">@magento</span>
 <div class="viewcode-block" id="PartnerAdapter"><a class="viewcode-back" href="../../../../api/api_partner.html#openerp.addons.magentoerpconnect.partner.PartnerAdapter">[docs]</a><span class="k">class</span> <span class="nc">PartnerAdapter</span><span class="p">(</span><span class="n">GenericAdapter</span><span class="p">):</span>
     <span class="n">_model_name</span> <span class="o">=</span> <span class="s">&#39;magento.res.partner&#39;</span>
@@ -442,9 +442,9 @@
 
         <span class="c"># the search method is on ol_customer instead of customer</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call</span><span class="p">(</span><span class="s">&#39;ol_customer.search&#39;</span><span class="p">,</span>
-                          <span class="p">[</span><span class="n">filters</span><span class="p">]</span> <span class="k">if</span> <span class="n">filters</span> <span class="k">else</span> <span class="p">[{}])</span>
+                          <span class="p">[</span><span class="n">filters</span><span class="p">]</span> <span class="k">if</span> <span class="n">filters</span> <span class="k">else</span> <span class="p">[{}])</span></div></div>
 
-</div></div>
+
 <span class="nd">@magento</span>
 <div class="viewcode-block" id="PartnerBatchImporter"><a class="viewcode-back" href="../../../../api/api_partner.html#openerp.addons.magentoerpconnect.partner.PartnerBatchImporter">[docs]</a><span class="k">class</span> <span class="nc">PartnerBatchImporter</span><span class="p">(</span><span class="n">DelayedBatchImporter</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Import the Magento Partners.</span>
@@ -466,9 +466,9 @@
         <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&#39;search for magento partners </span><span class="si">%s</span><span class="s"> returned </span><span class="si">%s</span><span class="s">&#39;</span><span class="p">,</span>
                      <span class="n">filters</span><span class="p">,</span> <span class="n">record_ids</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">record_id</span> <span class="ow">in</span> <span class="n">record_ids</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_import_record</span><span class="p">(</span><span class="n">record_id</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_import_record</span><span class="p">(</span><span class="n">record_id</span><span class="p">)</span></div></div>
 
-</div></div>
+
 <span class="n">PartnerBatchImport</span> <span class="o">=</span> <span class="n">PartnerBatchImporter</span>  <span class="c"># deprecated</span>
 
 
@@ -488,21 +488,21 @@
 
     <span class="nd">@only_create</span>
     <span class="nd">@mapping</span>
-<div class="viewcode-block" id="PartnerImportMapper.is_company"><a class="viewcode-back" href="../../../../api/api_partner.html#openerp.addons.magentoerpconnect.partner.PartnerImportMapper.is_company">[docs]</a>    <span class="k">def</span> <span class="nf">is_company</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
+<div class="viewcode-block" id="PartnerImportMapper.is_company"><a class="viewcode-back" href="../../../../api/api_partner.html#openerp.addons.magentoerpconnect.partner.PartnerImportMapper.is_company">[docs]</a>    <span class="k">def</span> <span class="nf">is_company</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span></div>
         <span class="c"># partners are companies so we can bind</span>
         <span class="c"># addresses on them</span>
         <span class="k">return</span> <span class="p">{</span><span class="s">&#39;is_company&#39;</span><span class="p">:</span> <span class="bp">True</span><span class="p">}</span>
-</div>
+
     <span class="nd">@mapping</span>
-<div class="viewcode-block" id="PartnerImportMapper.names"><a class="viewcode-back" href="../../../../api/api_partner.html#openerp.addons.magentoerpconnect.partner.PartnerImportMapper.names">[docs]</a>    <span class="k">def</span> <span class="nf">names</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
+<div class="viewcode-block" id="PartnerImportMapper.names"><a class="viewcode-back" href="../../../../api/api_partner.html#openerp.addons.magentoerpconnect.partner.PartnerImportMapper.names">[docs]</a>    <span class="k">def</span> <span class="nf">names</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span></div>
         <span class="c"># TODO create a glue module for base_surname</span>
         <span class="n">parts</span> <span class="o">=</span> <span class="p">[</span><span class="n">part</span> <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="p">(</span><span class="n">record</span><span class="p">[</span><span class="s">&#39;firstname&#39;</span><span class="p">],</span>
                                    <span class="n">record</span><span class="p">[</span><span class="s">&#39;middlename&#39;</span><span class="p">],</span>
                                    <span class="n">record</span><span class="p">[</span><span class="s">&#39;lastname&#39;</span><span class="p">])</span> <span class="k">if</span> <span class="n">part</span><span class="p">]</span>
         <span class="k">return</span> <span class="p">{</span><span class="s">&#39;name&#39;</span><span class="p">:</span> <span class="s">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">parts</span><span class="p">)}</span>
-</div>
+
     <span class="nd">@mapping</span>
-<div class="viewcode-block" id="PartnerImportMapper.customer_group_id"><a class="viewcode-back" href="../../../../api/api_partner.html#openerp.addons.magentoerpconnect.partner.PartnerImportMapper.customer_group_id">[docs]</a>    <span class="k">def</span> <span class="nf">customer_group_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
+<div class="viewcode-block" id="PartnerImportMapper.customer_group_id"><a class="viewcode-back" href="../../../../api/api_partner.html#openerp.addons.magentoerpconnect.partner.PartnerImportMapper.customer_group_id">[docs]</a>    <span class="k">def</span> <span class="nf">customer_group_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span></div>
         <span class="c"># import customer groups</span>
         <span class="n">binder</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">binder_for</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s">&#39;magento.res.partner.category&#39;</span><span class="p">)</span>
         <span class="n">category_id</span> <span class="o">=</span> <span class="n">binder</span><span class="o">.</span><span class="n">to_openerp</span><span class="p">(</span><span class="n">record</span><span class="p">[</span><span class="s">&#39;group_id&#39;</span><span class="p">],</span> <span class="n">unwrap</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
@@ -515,13 +515,13 @@
         <span class="c"># FIXME: should remove the previous tag (all the other tags from</span>
         <span class="c"># the same backend)</span>
         <span class="k">return</span> <span class="p">{</span><span class="s">&#39;category_id&#39;</span><span class="p">:</span> <span class="p">[(</span><span class="mi">4</span><span class="p">,</span> <span class="n">category_id</span><span class="p">)]}</span>
-</div>
+
     <span class="nd">@mapping</span>
 <div class="viewcode-block" id="PartnerImportMapper.website_id"><a class="viewcode-back" href="../../../../api/api_partner.html#openerp.addons.magentoerpconnect.partner.PartnerImportMapper.website_id">[docs]</a>    <span class="k">def</span> <span class="nf">website_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
         <span class="n">binder</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">binder_for</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s">&#39;magento.website&#39;</span><span class="p">)</span>
         <span class="n">website_id</span> <span class="o">=</span> <span class="n">binder</span><span class="o">.</span><span class="n">to_openerp</span><span class="p">(</span><span class="n">record</span><span class="p">[</span><span class="s">&#39;website_id&#39;</span><span class="p">])</span>
-        <span class="k">return</span> <span class="p">{</span><span class="s">&#39;website_id&#39;</span><span class="p">:</span> <span class="n">website_id</span><span class="p">}</span>
-</div>
+        <span class="k">return</span> <span class="p">{</span><span class="s">&#39;website_id&#39;</span><span class="p">:</span> <span class="n">website_id</span><span class="p">}</span></div>
+
     <span class="nd">@only_create</span>
     <span class="nd">@mapping</span>
 <div class="viewcode-block" id="PartnerImportMapper.company_id"><a class="viewcode-back" href="../../../../api/api_partner.html#openerp.addons.magentoerpconnect.partner.PartnerImportMapper.company_id">[docs]</a>    <span class="k">def</span> <span class="nf">company_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
@@ -531,25 +531,25 @@
             <span class="n">company</span> <span class="o">=</span> <span class="n">storeview</span><span class="o">.</span><span class="n">backend_id</span><span class="o">.</span><span class="n">company_id</span>
             <span class="k">if</span> <span class="n">company</span><span class="p">:</span>
                 <span class="k">return</span> <span class="p">{</span><span class="s">&#39;company_id&#39;</span><span class="p">:</span> <span class="n">company</span><span class="o">.</span><span class="n">id</span><span class="p">}</span>
-        <span class="k">return</span> <span class="p">{</span><span class="s">&#39;company_id&#39;</span><span class="p">:</span> <span class="bp">False</span><span class="p">}</span>
-</div>
+        <span class="k">return</span> <span class="p">{</span><span class="s">&#39;company_id&#39;</span><span class="p">:</span> <span class="bp">False</span><span class="p">}</span></div>
+
     <span class="nd">@mapping</span>
 <div class="viewcode-block" id="PartnerImportMapper.lang"><a class="viewcode-back" href="../../../../api/api_partner.html#openerp.addons.magentoerpconnect.partner.PartnerImportMapper.lang">[docs]</a>    <span class="k">def</span> <span class="nf">lang</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
         <span class="n">binder</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">binder_for</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s">&#39;magento.storeview&#39;</span><span class="p">)</span>
         <span class="n">storeview</span> <span class="o">=</span> <span class="n">binder</span><span class="o">.</span><span class="n">to_openerp</span><span class="p">(</span><span class="n">record</span><span class="p">[</span><span class="s">&#39;store_id&#39;</span><span class="p">],</span> <span class="n">browse</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">storeview</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">storeview</span><span class="o">.</span><span class="n">lang_id</span><span class="p">:</span>
-                <span class="k">return</span> <span class="p">{</span><span class="s">&#39;lang&#39;</span><span class="p">:</span> <span class="n">storeview</span><span class="o">.</span><span class="n">lang_id</span><span class="o">.</span><span class="n">code</span><span class="p">}</span>
-</div>
+                <span class="k">return</span> <span class="p">{</span><span class="s">&#39;lang&#39;</span><span class="p">:</span> <span class="n">storeview</span><span class="o">.</span><span class="n">lang_id</span><span class="o">.</span><span class="n">code</span><span class="p">}</span></div>
+
     <span class="nd">@only_create</span>
     <span class="nd">@mapping</span>
 <div class="viewcode-block" id="PartnerImportMapper.customer"><a class="viewcode-back" href="../../../../api/api_partner.html#openerp.addons.magentoerpconnect.partner.PartnerImportMapper.customer">[docs]</a>    <span class="k">def</span> <span class="nf">customer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">{</span><span class="s">&#39;customer&#39;</span><span class="p">:</span> <span class="bp">True</span><span class="p">}</span>
-</div>
+        <span class="k">return</span> <span class="p">{</span><span class="s">&#39;customer&#39;</span><span class="p">:</span> <span class="bp">True</span><span class="p">}</span></div>
+
     <span class="nd">@mapping</span>
 <div class="viewcode-block" id="PartnerImportMapper.type"><a class="viewcode-back" href="../../../../api/api_partner.html#openerp.addons.magentoerpconnect.partner.PartnerImportMapper.type">[docs]</a>    <span class="k">def</span> <span class="nf">type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;default&#39;</span><span class="p">}</span>
-</div>
+        <span class="k">return</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;default&#39;</span><span class="p">}</span></div>
+
     <span class="nd">@only_create</span>
     <span class="nd">@mapping</span>
 <div class="viewcode-block" id="PartnerImportMapper.openerp_id"><a class="viewcode-back" href="../../../../api/api_partner.html#openerp.addons.magentoerpconnect.partner.PartnerImportMapper.openerp_id">[docs]</a>    <span class="k">def</span> <span class="nf">openerp_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
@@ -564,9 +564,9 @@
             <span class="n">limit</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="k">if</span> <span class="n">partner</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">{</span><span class="s">&#39;openerp_id&#39;</span><span class="p">:</span> <span class="n">partner</span><span class="o">.</span><span class="n">id</span><span class="p">}</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s">&#39;openerp_id&#39;</span><span class="p">:</span> <span class="n">partner</span><span class="o">.</span><span class="n">id</span><span class="p">}</span></div></div>
 
-</div></div>
+
 <span class="nd">@magento</span>
 <div class="viewcode-block" id="PartnerImporter"><a class="viewcode-back" href="../../../../api/api_partner.html#openerp.addons.magentoerpconnect.partner.PartnerImporter">[docs]</a><span class="k">class</span> <span class="nc">PartnerImporter</span><span class="p">(</span><span class="n">MagentoImporter</span><span class="p">):</span>
     <span class="n">_model_name</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;magento.res.partner&#39;</span><span class="p">]</span>
@@ -582,9 +582,9 @@
     <span class="k">def</span> <span class="nf">_after_import</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">partner_binding</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Import the addresses &quot;&quot;&quot;</span>
         <span class="n">book</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">unit_for</span><span class="p">(</span><span class="n">PartnerAddressBook</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s">&#39;magento.address&#39;</span><span class="p">)</span>
-        <span class="n">book</span><span class="o">.</span><span class="n">import_addresses</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">magento_id</span><span class="p">,</span> <span class="n">partner_binding</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="n">book</span><span class="o">.</span><span class="n">import_addresses</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">magento_id</span><span class="p">,</span> <span class="n">partner_binding</span><span class="o">.</span><span class="n">id</span><span class="p">)</span></div>
 
-</div>
+
 <span class="n">PartnerImport</span> <span class="o">=</span> <span class="n">PartnerImporter</span>  <span class="c"># deprecated</span>
 
 
@@ -628,8 +628,8 @@
                                             <span class="n">partner_binding_id</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">address_id</span><span class="p">,</span> <span class="n">infos</span> <span class="ow">in</span> <span class="n">addresses</span><span class="p">:</span>
             <span class="n">importer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">unit_for</span><span class="p">(</span><span class="n">MagentoImporter</span><span class="p">)</span>
-            <span class="n">importer</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">address_id</span><span class="p">,</span> <span class="n">address_infos</span><span class="o">=</span><span class="n">infos</span><span class="p">)</span>
-</div>
+            <span class="n">importer</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">address_id</span><span class="p">,</span> <span class="n">address_infos</span><span class="o">=</span><span class="n">infos</span><span class="p">)</span></div>
+
     <span class="k">def</span> <span class="nf">_get_address_infos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">magento_partner_id</span><span class="p">,</span> <span class="n">partner_binding_id</span><span class="p">):</span>
         <span class="n">adapter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">unit_for</span><span class="p">(</span><span class="n">BackendAdapter</span><span class="p">)</span>
         <span class="n">mag_address_ids</span> <span class="o">=</span> <span class="n">adapter</span><span class="o">.</span><span class="n">search</span><span class="p">({</span><span class="s">&#39;customer_id&#39;</span><span class="p">:</span>
@@ -666,9 +666,9 @@
             <span class="n">address_infos</span> <span class="o">=</span> <span class="n">AddressInfos</span><span class="p">(</span><span class="n">magento_record</span><span class="o">=</span><span class="n">magento_record</span><span class="p">,</span>
                                          <span class="n">partner_binding_id</span><span class="o">=</span><span class="n">partner_binding_id</span><span class="p">,</span>
                                          <span class="n">merge</span><span class="o">=</span><span class="n">merge</span><span class="p">)</span>
-            <span class="k">yield</span> <span class="n">address_id</span><span class="p">,</span> <span class="n">address_infos</span>
+            <span class="k">yield</span> <span class="n">address_id</span><span class="p">,</span> <span class="n">address_infos</span></div>
 
-</div>
+
 <div class="viewcode-block" id="BaseAddressImportMapper"><a class="viewcode-back" href="../../../../api/api_partner.html#openerp.addons.magentoerpconnect.partner.BaseAddressImportMapper">[docs]</a><span class="k">class</span> <span class="nc">BaseAddressImportMapper</span><span class="p">(</span><span class="n">ImportMapper</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Defines the base mappings for the imports</span>
 <span class="sd">    in ``res.partner`` (state, country, ...)</span>
@@ -689,8 +689,8 @@
             <span class="n">limit</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="k">if</span> <span class="n">state</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">{</span><span class="s">&#39;state_id&#39;</span><span class="p">:</span> <span class="n">state</span><span class="o">.</span><span class="n">id</span><span class="p">}</span>
-</div>
+            <span class="k">return</span> <span class="p">{</span><span class="s">&#39;state_id&#39;</span><span class="p">:</span> <span class="n">state</span><span class="o">.</span><span class="n">id</span><span class="p">}</span></div>
+
     <span class="nd">@mapping</span>
 <div class="viewcode-block" id="BaseAddressImportMapper.country"><a class="viewcode-back" href="../../../../api/api_partner.html#openerp.addons.magentoerpconnect.partner.BaseAddressImportMapper.country">[docs]</a>    <span class="k">def</span> <span class="nf">country</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">record</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;country_id&#39;</span><span class="p">):</span>
@@ -700,8 +700,8 @@
             <span class="n">limit</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="k">if</span> <span class="n">country</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">{</span><span class="s">&#39;country_id&#39;</span><span class="p">:</span> <span class="n">country</span><span class="o">.</span><span class="n">id</span><span class="p">}</span>
-</div>
+            <span class="k">return</span> <span class="p">{</span><span class="s">&#39;country_id&#39;</span><span class="p">:</span> <span class="n">country</span><span class="o">.</span><span class="n">id</span><span class="p">}</span></div>
+
     <span class="nd">@mapping</span>
 <div class="viewcode-block" id="BaseAddressImportMapper.street"><a class="viewcode-back" href="../../../../api/api_partner.html#openerp.addons.magentoerpconnect.partner.BaseAddressImportMapper.street">[docs]</a>    <span class="k">def</span> <span class="nf">street</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
         <span class="n">value</span> <span class="o">=</span> <span class="n">record</span><span class="p">[</span><span class="s">&#39;street&#39;</span><span class="p">]</span>
@@ -712,8 +712,8 @@
             <span class="n">result</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;street&#39;</span><span class="p">:</span> <span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s">&#39;street2&#39;</span><span class="p">:</span> <span class="s">u&#39; - &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">[</span><span class="mi">1</span><span class="p">:])}</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">result</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">return</span> <span class="n">result</span>
-</div>
+        <span class="k">return</span> <span class="n">result</span></div>
+
     <span class="nd">@mapping</span>
 <div class="viewcode-block" id="BaseAddressImportMapper.title"><a class="viewcode-back" href="../../../../api/api_partner.html#openerp.addons.magentoerpconnect.partner.BaseAddressImportMapper.title">[docs]</a>    <span class="k">def</span> <span class="nf">title</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
         <span class="n">prefix</span> <span class="o">=</span> <span class="n">record</span><span class="p">[</span><span class="s">&#39;prefix&#39;</span><span class="p">]</span>
@@ -731,8 +731,8 @@
                  <span class="s">&#39;name&#39;</span><span class="p">:</span> <span class="n">prefix</span><span class="p">,</span>
                  <span class="p">}</span>
             <span class="p">)</span>
-        <span class="k">return</span> <span class="p">{</span><span class="s">&#39;title&#39;</span><span class="p">:</span> <span class="n">title</span><span class="o">.</span><span class="n">id</span><span class="p">}</span>
-</div>
+        <span class="k">return</span> <span class="p">{</span><span class="s">&#39;title&#39;</span><span class="p">:</span> <span class="n">title</span><span class="o">.</span><span class="n">id</span><span class="p">}</span></div>
+
     <span class="nd">@only_create</span>
     <span class="nd">@mapping</span>
 <div class="viewcode-block" id="BaseAddressImportMapper.company_id"><a class="viewcode-back" href="../../../../api/api_partner.html#openerp.addons.magentoerpconnect.partner.BaseAddressImportMapper.company_id">[docs]</a>    <span class="k">def</span> <span class="nf">company_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
@@ -743,9 +743,9 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">return</span> <span class="p">{</span><span class="s">&#39;company_id&#39;</span><span class="p">:</span> <span class="bp">False</span><span class="p">}</span>
         <span class="c"># Don&#39;t return anything, we are merging into an existing partner</span>
-        <span class="k">return</span>
+        <span class="k">return</span></div></div>
 
-</div></div>
+
 <span class="nd">@magento</span>
 <div class="viewcode-block" id="CompanyImportMapper"><a class="viewcode-back" href="../../../../api/api_partner.html#openerp.addons.magentoerpconnect.partner.CompanyImportMapper">[docs]</a><span class="k">class</span> <span class="nc">CompanyImportMapper</span><span class="p">(</span><span class="n">BaseAddressImportMapper</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Special mapping used when we import a company.</span>
@@ -774,9 +774,9 @@
 
     <span class="nd">@mapping</span>
 <div class="viewcode-block" id="CompanyImportMapper.consider_as_company"><a class="viewcode-back" href="../../../../api/api_partner.html#openerp.addons.magentoerpconnect.partner.CompanyImportMapper.consider_as_company">[docs]</a>    <span class="k">def</span> <span class="nf">consider_as_company</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">{</span><span class="s">&#39;consider_as_company&#39;</span><span class="p">:</span> <span class="bp">True</span><span class="p">}</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s">&#39;consider_as_company&#39;</span><span class="p">:</span> <span class="bp">True</span><span class="p">}</span></div></div>
 
-</div></div>
+
 <span class="nd">@magento</span>
 <div class="viewcode-block" id="AddressAdapter"><a class="viewcode-back" href="../../../../api/api_partner.html#openerp.addons.magentoerpconnect.partner.AddressAdapter">[docs]</a><span class="k">class</span> <span class="nc">AddressAdapter</span><span class="p">(</span><span class="n">GenericAdapter</span><span class="p">):</span>
     <span class="n">_model_name</span> <span class="o">=</span> <span class="s">&#39;magento.address&#39;</span>
@@ -790,14 +790,14 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s">&#39;customer_address_id&#39;</span><span class="p">])</span> <span class="k">for</span> <span class="n">row</span>
                 <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call</span><span class="p">(</span><span class="s">&#39;</span><span class="si">%s</span><span class="s">.list&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_magento_model</span><span class="p">,</span>
-                              <span class="p">[</span><span class="n">filters</span><span class="p">]</span> <span class="k">if</span> <span class="n">filters</span> <span class="k">else</span> <span class="p">[{}])]</span>
-</div>
+                              <span class="p">[</span><span class="n">filters</span><span class="p">]</span> <span class="k">if</span> <span class="n">filters</span> <span class="k">else</span> <span class="p">[{}])]</span></div>
+
 <div class="viewcode-block" id="AddressAdapter.create"><a class="viewcode-back" href="../../../../api/api_partner.html#openerp.addons.magentoerpconnect.partner.AddressAdapter.create">[docs]</a>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">customer_id</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Create a record on the external system &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call</span><span class="p">(</span><span class="s">&#39;</span><span class="si">%s</span><span class="s">.create&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_magento_model</span><span class="p">,</span>
-                          <span class="p">[</span><span class="n">customer_id</span><span class="p">,</span> <span class="n">data</span><span class="p">])</span>
+                          <span class="p">[</span><span class="n">customer_id</span><span class="p">,</span> <span class="n">data</span><span class="p">])</span></div></div>
 
-</div></div>
+
 <span class="nd">@magento</span>
 <div class="viewcode-block" id="AddressImporter"><a class="viewcode-back" href="../../../../api/api_partner.html#openerp.addons.magentoerpconnect.partner.AddressImporter">[docs]</a><span class="k">class</span> <span class="nc">AddressImporter</span><span class="p">(</span><span class="n">MagentoImporter</span><span class="p">):</span>
     <span class="n">_model_name</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;magento.address&#39;</span><span class="p">]</span>
@@ -809,8 +809,8 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">address_infos</span> <span class="o">=</span> <span class="n">AddressInfos</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">address_infos</span> <span class="o">=</span> <span class="n">address_infos</span>
-        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">AddressImporter</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">magento_id</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="n">force</span><span class="p">)</span>
-</div>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">AddressImporter</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">magento_id</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="n">force</span><span class="p">)</span></div>
+
     <span class="k">def</span> <span class="nf">_get_magento_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Return the raw Magento data for ``self.magento_id`` &quot;&quot;&quot;</span>
         <span class="c"># we already read the data from the Partner Importer</span>
@@ -839,9 +839,9 @@
 
     <span class="k">def</span> <span class="nf">_create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
         <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_define_partner_relationship</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">AddressImporter</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">_create</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">AddressImporter</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">_create</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div>
 
-</div>
+
 <span class="n">AddressImport</span> <span class="o">=</span> <span class="n">AddressImporter</span>  <span class="c"># deprecated</span>
 
 
@@ -862,17 +862,17 @@
     <span class="p">]</span>
 
     <span class="nd">@mapping</span>
-<div class="viewcode-block" id="AddressImportMapper.names"><a class="viewcode-back" href="../../../../api/api_partner.html#openerp.addons.magentoerpconnect.partner.AddressImportMapper.names">[docs]</a>    <span class="k">def</span> <span class="nf">names</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
+<div class="viewcode-block" id="AddressImportMapper.names"><a class="viewcode-back" href="../../../../api/api_partner.html#openerp.addons.magentoerpconnect.partner.AddressImportMapper.names">[docs]</a>    <span class="k">def</span> <span class="nf">names</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span></div>
         <span class="c"># TODO create a glue module for base_surname</span>
         <span class="n">parts</span> <span class="o">=</span> <span class="p">[</span><span class="n">part</span> <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="p">(</span><span class="n">record</span><span class="p">[</span><span class="s">&#39;firstname&#39;</span><span class="p">],</span>
                                    <span class="n">record</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;middlename&#39;</span><span class="p">),</span>
                                    <span class="n">record</span><span class="p">[</span><span class="s">&#39;lastname&#39;</span><span class="p">])</span> <span class="k">if</span> <span class="n">part</span><span class="p">]</span>
         <span class="k">return</span> <span class="p">{</span><span class="s">&#39;name&#39;</span><span class="p">:</span> <span class="s">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">parts</span><span class="p">)}</span>
-</div>
+
     <span class="nd">@mapping</span>
 <div class="viewcode-block" id="AddressImportMapper.use_parent_address"><a class="viewcode-back" href="../../../../api/api_partner.html#openerp.addons.magentoerpconnect.partner.AddressImportMapper.use_parent_address">[docs]</a>    <span class="k">def</span> <span class="nf">use_parent_address</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">{</span><span class="s">&#39;use_parent_address&#39;</span><span class="p">:</span> <span class="bp">False</span><span class="p">}</span>
-</div>
+        <span class="k">return</span> <span class="p">{</span><span class="s">&#39;use_parent_address&#39;</span><span class="p">:</span> <span class="bp">False</span><span class="p">}</span></div>
+
     <span class="nd">@mapping</span>
 <div class="viewcode-block" id="AddressImportMapper.type"><a class="viewcode-back" href="../../../../api/api_partner.html#openerp.addons.magentoerpconnect.partner.AddressImportMapper.type">[docs]</a>    <span class="k">def</span> <span class="nf">type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">record</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;is_default_billing&#39;</span><span class="p">):</span>
@@ -881,9 +881,9 @@
             <span class="n">address_type</span> <span class="o">=</span> <span class="s">&#39;delivery&#39;</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">address_type</span> <span class="o">=</span> <span class="s">&#39;contact&#39;</span>
-        <span class="k">return</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="n">address_type</span><span class="p">}</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="n">address_type</span><span class="p">}</span></div></div>
 
-</div></div>
+
 <span class="nd">@job</span><span class="p">(</span><span class="n">default_channel</span><span class="o">=</span><span class="s">&#39;root.magento&#39;</span><span class="p">)</span>
 <div class="viewcode-block" id="partner_import_batch"><a class="viewcode-back" href="../../../../api/api_partner.html#openerp.addons.magentoerpconnect.partner.partner_import_batch">[docs]</a><span class="k">def</span> <span class="nf">partner_import_batch</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">backend_id</span><span class="p">,</span> <span class="n">filters</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Prepare the import of partners modified on Magento &quot;&quot;&quot;</span>
@@ -911,7 +911,7 @@
     </p>
     <p>
         &copy; Copyright 2013-2015, Odoo Community Association (OCA).<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.3.<br/>
     </p>
   </div>
 </footer>

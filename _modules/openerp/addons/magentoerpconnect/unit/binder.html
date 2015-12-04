@@ -264,9 +264,9 @@
 
 
 <div class="viewcode-block" id="MagentoBinder"><a class="viewcode-back" href="../../../../../api/api_binder.html#openerp.addons.magentoerpconnect.unit.binder.MagentoBinder">[docs]</a><span class="k">class</span> <span class="nc">MagentoBinder</span><span class="p">(</span><span class="n">Binder</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Generic Binder for Magento &quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot; Generic Binder for Magento &quot;&quot;&quot;</span></div>
 
-</div>
+
 <span class="nd">@magento</span>
 <div class="viewcode-block" id="MagentoModelBinder"><a class="viewcode-back" href="../../../../../api/api_binder.html#openerp.addons.magentoerpconnect.unit.binder.MagentoModelBinder">[docs]</a><span class="k">class</span> <span class="nc">MagentoModelBinder</span><span class="p">(</span><span class="n">MagentoBinder</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -314,8 +314,8 @@
         <span class="k">if</span> <span class="n">unwrap</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">bindings</span><span class="o">.</span><span class="n">openerp_id</span> <span class="k">if</span> <span class="n">browse</span> <span class="k">else</span> <span class="n">bindings</span><span class="o">.</span><span class="n">openerp_id</span><span class="o">.</span><span class="n">id</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">bindings</span> <span class="k">if</span> <span class="n">browse</span> <span class="k">else</span> <span class="n">bindings</span><span class="o">.</span><span class="n">id</span>
-</div>
+            <span class="k">return</span> <span class="n">bindings</span> <span class="k">if</span> <span class="n">browse</span> <span class="k">else</span> <span class="n">bindings</span><span class="o">.</span><span class="n">id</span></div>
+
 <div class="viewcode-block" id="MagentoModelBinder.to_backend"><a class="viewcode-back" href="../../../../../api/api_binder.html#openerp.addons.magentoerpconnect.unit.binder.MagentoModelBinder.to_backend">[docs]</a>    <span class="k">def</span> <span class="nf">to_backend</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record_id</span><span class="p">,</span> <span class="n">wrap</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Give the external ID for an OpenERP ID</span>
 
@@ -346,8 +346,8 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="n">record</span><span class="p">:</span>
             <span class="n">record</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">browse</span><span class="p">(</span><span class="n">record_id</span><span class="p">)</span>
         <span class="k">assert</span> <span class="n">record</span>
-        <span class="k">return</span> <span class="n">record</span><span class="o">.</span><span class="n">magento_id</span>
-</div>
+        <span class="k">return</span> <span class="n">record</span><span class="o">.</span><span class="n">magento_id</span></div>
+
 <div class="viewcode-block" id="MagentoModelBinder.bind"><a class="viewcode-back" href="../../../../../api/api_binder.html#openerp.addons.magentoerpconnect.unit.binder.MagentoModelBinder.bind">[docs]</a>    <span class="k">def</span> <span class="nf">bind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">external_id</span><span class="p">,</span> <span class="n">binding_id</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Create the link between an external ID and an OpenERP ID and</span>
 <span class="sd">        update the last synchronization date.</span>
@@ -369,8 +369,8 @@
         <span class="n">binding_id</span><span class="o">.</span><span class="n">with_context</span><span class="p">(</span><span class="n">connector_no_export</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
             <span class="p">{</span><span class="s">&#39;magento_id&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">external_id</span><span class="p">),</span>
              <span class="s">&#39;sync_date&#39;</span><span class="p">:</span> <span class="n">now_fmt</span><span class="p">,</span>
-             <span class="p">})</span>
-</div>
+             <span class="p">})</span></div>
+
 <div class="viewcode-block" id="MagentoModelBinder.unwrap_binding"><a class="viewcode-back" href="../../../../../api/api_binder.html#openerp.addons.magentoerpconnect.unit.binder.MagentoModelBinder.unwrap_binding">[docs]</a>    <span class="k">def</span> <span class="nf">unwrap_binding</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">binding_id</span><span class="p">,</span> <span class="n">browse</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; For a binding record, gives the normal record.</span>
 
@@ -388,8 +388,8 @@
         <span class="n">openerp_record</span> <span class="o">=</span> <span class="n">binding</span><span class="o">.</span><span class="n">openerp_id</span>
         <span class="k">if</span> <span class="n">browse</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">openerp_record</span>
-        <span class="k">return</span> <span class="n">openerp_record</span><span class="o">.</span><span class="n">id</span>
-</div>
+        <span class="k">return</span> <span class="n">openerp_record</span><span class="o">.</span><span class="n">id</span></div>
+
 <div class="viewcode-block" id="MagentoModelBinder.unwrap_model"><a class="viewcode-back" href="../../../../../api/api_binder.html#openerp.addons.magentoerpconnect.unit.binder.MagentoModelBinder.unwrap_model">[docs]</a>    <span class="k">def</span> <span class="nf">unwrap_model</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; For a binding model, gives the name of the normal model.</span>
 
@@ -422,7 +422,7 @@
     </p>
     <p>
         &copy; Copyright 2013-2015, Odoo Community Association (OCA).<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.3.<br/>
     </p>
   </div>
 </footer>

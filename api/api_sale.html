@@ -601,6 +601,14 @@ cursor and returning a pair (total, decimal)</td>
 </dd></dl>
 
 <dl class="class">
+<dt id="openerp.addons.magentoerpconnect.sale.PricelistSaleOrderImportMapper">
+<em class="property">class </em><code class="descclassname">openerp.addons.magentoerpconnect.sale.</code><code class="descname">PricelistSaleOrderImportMapper</code><span class="sig-paren">(</span><em>connector_env</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/openerp/addons/magentoerpconnect/sale.html#PricelistSaleOrderImportMapper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#openerp.addons.magentoerpconnect.sale.PricelistSaleOrderImportMapper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">openerp.addons.connector.unit.mapper.ImportMapper</span></code></p>
+<p>Mapper for importing the sales order pricelist</p>
+<p>Does nothing by default. Replaced in magentoerpconnect_pricing.</p>
+</dd></dl>
+
+<dl class="class">
 <dt id="openerp.addons.magentoerpconnect.sale.SaleImportRule">
 <em class="property">class </em><code class="descclassname">openerp.addons.magentoerpconnect.sale.</code><code class="descname">SaleImportRule</code><span class="sig-paren">(</span><em>connector_env</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/openerp/addons/magentoerpconnect/sale.html#SaleImportRule"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#openerp.addons.magentoerpconnect.sale.SaleImportRule" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">openerp.addons.connector.connector.ConnectorUnit</span></code></p>
@@ -770,7 +778,7 @@ and returns a list of ids</p>
 
 <dl class="attribute">
 <dt id="openerp.addons.magentoerpconnect.sale.SaleOrderImportMapper.direct">
-<code class="descname">direct</code><em class="property"> = [('increment_id', 'magento_id'), ('order_id', 'magento_order_id'), ('grand_total', 'total_amount'), ('tax_amount', 'total_amount_tax'), (&lt;function modifier at 0x5277b18&gt;, 'date_order'), ('store_id', 'storeview_id')]</em><a class="headerlink" href="#openerp.addons.magentoerpconnect.sale.SaleOrderImportMapper.direct" title="Permalink to this definition">¶</a></dt>
+<code class="descname">direct</code><em class="property"> = [('increment_id', 'magento_id'), ('order_id', 'magento_order_id'), ('grand_total', 'total_amount'), ('tax_amount', 'total_amount_tax'), (&lt;function modifier at 0x5281d70&gt;, 'date_order'), ('store_id', 'storeview_id')]</em><a class="headerlink" href="#openerp.addons.magentoerpconnect.sale.SaleOrderImportMapper.direct" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -786,6 +794,11 @@ and returns a list of ids</p>
 <dl class="method">
 <dt id="openerp.addons.magentoerpconnect.sale.SaleOrderImportMapper.payment">
 <code class="descname">payment</code><span class="sig-paren">(</span><em>record</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/openerp/addons/magentoerpconnect/sale.html#SaleOrderImportMapper.payment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#openerp.addons.magentoerpconnect.sale.SaleOrderImportMapper.payment" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="openerp.addons.magentoerpconnect.sale.SaleOrderImportMapper.pricelist_id">
+<code class="descname">pricelist_id</code><span class="sig-paren">(</span><em>record</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/openerp/addons/magentoerpconnect/sale.html#SaleOrderImportMapper.pricelist_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#openerp.addons.magentoerpconnect.sale.SaleOrderImportMapper.pricelist_id" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -979,7 +992,7 @@ comment</li>
     </p>
     <p>
         &copy; Copyright 2013-2015, Odoo Community Association (OCA).<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.3.<br/>
     </p>
   </div>
 </footer>
