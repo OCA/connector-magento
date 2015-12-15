@@ -199,8 +199,6 @@ class MagentoImporter(Importer):
             self.model._name,
             magento_id,
         )
-        # Keep a lock on this import until the transaction is committed
-        self.advisory_lock_or_retry(lock_name)
 
         try:
             self.magento_record = self._get_magento_data()
@@ -215,6 +213,11 @@ class MagentoImporter(Importer):
 
         if not force and self._is_uptodate(binding):
             return _('Already up-to-date.')
+
+        # Keep a lock on this import until the transaction is committed
+        # The lock is kept since we have detected that the informations
+        # will be updated into Odoo
+        self.advisory_lock_or_retry(lock_name)
         self._before_import()
 
         # import the missing linked resources
