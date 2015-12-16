@@ -808,6 +808,18 @@
         <span class="k">if</span> <span class="n">team</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">{</span><span class="s">&#39;section_id&#39;</span><span class="p">:</span> <span class="n">team</span><span class="o">.</span><span class="n">id</span><span class="p">}</span></div>
 
+    <span class="nd">@mapping</span>
+<div class="viewcode-block" id="SaleOrderImportMapper.project_id"><a class="viewcode-back" href="../../../../api/api_sale.html#openerp.addons.magentoerpconnect.sale.SaleOrderImportMapper.project_id">[docs]</a>    <span class="k">def</span> <span class="nf">project_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
+        <span class="n">project_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">storeview</span><span class="o">.</span><span class="n">account_analytic_id</span>
+        <span class="k">if</span> <span class="n">project_id</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s">&#39;project_id&#39;</span><span class="p">:</span> <span class="n">project_id</span><span class="o">.</span><span class="n">id</span><span class="p">}</span></div>
+
+    <span class="nd">@mapping</span>
+<div class="viewcode-block" id="SaleOrderImportMapper.fiscal_position"><a class="viewcode-back" href="../../../../api/api_sale.html#openerp.addons.magentoerpconnect.sale.SaleOrderImportMapper.fiscal_position">[docs]</a>    <span class="k">def</span> <span class="nf">fiscal_position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
+        <span class="n">fiscal_position</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">storeview</span><span class="o">.</span><span class="n">fiscal_position_id</span>
+        <span class="k">if</span> <span class="n">fiscal_position</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s">&#39;fiscal_position&#39;</span><span class="p">:</span> <span class="n">fiscal_position</span><span class="o">.</span><span class="n">id</span><span class="p">}</span></div>
+
     <span class="c"># partner_id, partner_invoice_id, partner_shipping_id</span>
     <span class="c"># are done in the importer</span>
 

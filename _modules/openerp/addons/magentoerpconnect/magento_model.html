@@ -405,6 +405,21 @@
         <span class="n">string</span><span class="o">=</span><span class="s">&#39;Magento Products&#39;</span><span class="p">,</span>
         <span class="n">readonly</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
     <span class="p">)</span>
+    <span class="n">account_analytic_id</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Many2one</span><span class="p">(</span>
+        <span class="n">comodel_name</span><span class="o">=</span><span class="s">&#39;account.analytic.account&#39;</span><span class="p">,</span>
+        <span class="n">string</span><span class="o">=</span><span class="s">&#39;Analytic account&#39;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s">&#39;If specified, this analytic account will be used to fill the &#39;</span>
+        <span class="s">&#39;field  on the sale order created by the connector. The value can &#39;</span>
+        <span class="s">&#39;also be specified on website or the store or the store view.&#39;</span>
+    <span class="p">)</span>
+    <span class="n">fiscal_position_id</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Many2one</span><span class="p">(</span>
+        <span class="n">comodel_name</span><span class="o">=</span><span class="s">&#39;account.fiscal.position&#39;</span><span class="p">,</span>
+        <span class="n">string</span><span class="o">=</span><span class="s">&#39;Fiscal position&#39;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s">&#39;If specified, this fiscal position will be used to fill the &#39;</span>
+        <span class="s">&#39;field fiscal position on the sale order created by the connector.&#39;</span>
+        <span class="s">&#39;The value can also be specified on website or the store or the &#39;</span>
+        <span class="s">&#39;store view.&#39;</span>
+    <span class="p">)</span>
 
     <span class="n">_sql_constraints</span> <span class="o">=</span> <span class="p">[</span>
         <span class="p">(</span><span class="s">&#39;sale_prefix_uniq&#39;</span><span class="p">,</span> <span class="s">&#39;unique(sale_prefix)&#39;</span><span class="p">,</span>
@@ -570,10 +585,59 @@
         <span class="k">return</span> <span class="n">path</span></div></div>
 
 
+<div class="viewcode-block" id="MagentoConfigSpecializer"><a class="viewcode-back" href="../../../../api/api_magento_model.html#openerp.addons.magentoerpconnect.magento_model.MagentoConfigSpecializer">[docs]</a><span class="k">class</span> <span class="nc">MagentoConfigSpecializer</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">AbstractModel</span><span class="p">):</span>
+    <span class="n">_name</span> <span class="o">=</span> <span class="s">&#39;magento.config.specializer&#39;</span>
+
+    <span class="n">specific_account_analytic_id</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Many2one</span><span class="p">(</span>
+        <span class="n">comodel_name</span><span class="o">=</span><span class="s">&#39;account.analytic.account&#39;</span><span class="p">,</span>
+        <span class="n">string</span><span class="o">=</span><span class="s">&#39;Specific analytic account&#39;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s">&#39;If specified, this analytic account will be used to fill the &#39;</span>
+        <span class="s">&#39;field on the sale order created by the connector. The value can &#39;</span>
+        <span class="s">&#39;also be specified on website or the store or the store view.&#39;</span>
+    <span class="p">)</span>
+    <span class="n">specific_fiscal_position_id</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Many2one</span><span class="p">(</span>
+        <span class="n">comodel_name</span><span class="o">=</span><span class="s">&#39;account.fiscal.position&#39;</span><span class="p">,</span>
+        <span class="n">string</span><span class="o">=</span><span class="s">&#39;Specific fiscal position&#39;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s">&#39;If specified, this fiscal position will be used to fill the &#39;</span>
+        <span class="s">&#39;field fiscal position on the sale order created by the connector.&#39;</span>
+        <span class="s">&#39;The value can also be specified on website or the store or the &#39;</span>
+        <span class="s">&#39;store view.&#39;</span>
+    <span class="p">)</span>
+    <span class="n">account_analytic_id</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Many2one</span><span class="p">(</span>
+        <span class="n">comodel_name</span><span class="o">=</span><span class="s">&#39;account.analytic.account&#39;</span><span class="p">,</span>
+        <span class="n">string</span><span class="o">=</span><span class="s">&#39;Analytic account&#39;</span><span class="p">,</span>
+        <span class="n">compute</span><span class="o">=</span><span class="s">&#39;_get_account_analytic_id&#39;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">fiscal_position_id</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Many2one</span><span class="p">(</span>
+        <span class="n">comodel_name</span><span class="o">=</span><span class="s">&#39;account.fiscal.position&#39;</span><span class="p">,</span>
+        <span class="n">string</span><span class="o">=</span><span class="s">&#39;Fiscal position&#39;</span><span class="p">,</span>
+        <span class="n">compute</span><span class="o">=</span><span class="s">&#39;_get_fiscal_position_id&#39;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">_parent</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent_name</span><span class="p">)</span>
+
+    <span class="nd">@api.multi</span>
+    <span class="k">def</span> <span class="nf">_get_account_analytic_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">this</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="n">this</span><span class="o">.</span><span class="n">account_analytic_id</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">this</span><span class="o">.</span><span class="n">specific_account_analytic_id</span> <span class="ow">or</span>
+                <span class="n">this</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">account_analytic_id</span><span class="p">)</span>
+
+    <span class="nd">@api.multi</span>
+    <span class="k">def</span> <span class="nf">_get_fiscal_position_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">this</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="n">this</span><span class="o">.</span><span class="n">fiscal_position_id</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">this</span><span class="o">.</span><span class="n">specific_fiscal_position_id</span> <span class="ow">or</span>
+                <span class="n">this</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">fiscal_position_id</span><span class="p">)</span></div>
+
+
 <div class="viewcode-block" id="MagentoWebsite"><a class="viewcode-back" href="../../../../api/api_magento_model.html#openerp.addons.magentoerpconnect.magento_model.MagentoWebsite">[docs]</a><span class="k">class</span> <span class="nc">MagentoWebsite</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
     <span class="n">_name</span> <span class="o">=</span> <span class="s">&#39;magento.website&#39;</span>
-    <span class="n">_inherit</span> <span class="o">=</span> <span class="s">&#39;magento.binding&#39;</span>
+    <span class="n">_inherit</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;magento.binding&#39;</span><span class="p">,</span> <span class="s">&#39;magento.config.specializer&#39;</span><span class="p">]</span>
     <span class="n">_description</span> <span class="o">=</span> <span class="s">&#39;Magento Website&#39;</span>
+    <span class="n">_parent_name</span> <span class="o">=</span> <span class="s">&#39;backend_id&#39;</span>
 
     <span class="n">_order</span> <span class="o">=</span> <span class="s">&#39;sort_order ASC, id ASC&#39;</span>
 
@@ -629,8 +693,9 @@
 
 <div class="viewcode-block" id="MagentoStore"><a class="viewcode-back" href="../../../../api/api_magento_model.html#openerp.addons.magentoerpconnect.magento_model.MagentoStore">[docs]</a><span class="k">class</span> <span class="nc">MagentoStore</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
     <span class="n">_name</span> <span class="o">=</span> <span class="s">&#39;magento.store&#39;</span>
-    <span class="n">_inherit</span> <span class="o">=</span> <span class="s">&#39;magento.binding&#39;</span>
+    <span class="n">_inherit</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;magento.binding&#39;</span><span class="p">,</span> <span class="s">&#39;magento.config.specializer&#39;</span><span class="p">]</span>
     <span class="n">_description</span> <span class="o">=</span> <span class="s">&#39;Magento Store&#39;</span>
+    <span class="n">_parent_name</span> <span class="o">=</span> <span class="s">&#39;website_id&#39;</span>
 
     <span class="n">name</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Char</span><span class="p">()</span>
     <span class="n">website_id</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Many2one</span><span class="p">(</span>
@@ -681,8 +746,9 @@
 
 <div class="viewcode-block" id="MagentoStoreview"><a class="viewcode-back" href="../../../../api/api_magento_model.html#openerp.addons.magentoerpconnect.magento_model.MagentoStoreview">[docs]</a><span class="k">class</span> <span class="nc">MagentoStoreview</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
     <span class="n">_name</span> <span class="o">=</span> <span class="s">&#39;magento.storeview&#39;</span>
-    <span class="n">_inherit</span> <span class="o">=</span> <span class="s">&#39;magento.binding&#39;</span>
+    <span class="n">_inherit</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;magento.binding&#39;</span><span class="p">,</span> <span class="s">&#39;magento.config.specializer&#39;</span><span class="p">]</span>
     <span class="n">_description</span> <span class="o">=</span> <span class="s">&quot;Magento Storeview&quot;</span>
+    <span class="n">_parent_name</span> <span class="o">=</span> <span class="s">&#39;store_id&#39;</span>
 
     <span class="n">_order</span> <span class="o">=</span> <span class="s">&#39;sort_order ASC, id ASC&#39;</span>
 

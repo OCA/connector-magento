@@ -255,6 +255,36 @@
 <em class="property">class </em><code class="descclassname">openerp.addons.magentoerpconnect.magento_model.</code><code class="descname">MagentoBackend</code><span class="sig-paren">(</span><em>pool</em>, <em>cr</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/openerp/addons/magentoerpconnect/magento_model.html#MagentoBackend"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#openerp.addons.magentoerpconnect.magento_model.MagentoBackend" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://www.odoo.com/documentation/8.0/reference/orm.html#openerp.models.Model" title="(in odoo v8.0)"><code class="xref py py-class docutils literal"><span class="pre">openerp.models.Model</span></code></a></p>
 <dl class="attribute">
+<dt id="openerp.addons.magentoerpconnect.magento_model.MagentoBackend.account_analytic_id">
+<code class="descname">account_analytic_id</code><a class="headerlink" href="#openerp.addons.magentoerpconnect.magento_model.MagentoBackend.account_analytic_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>The value of such a field is a recordset of size 0 (no
+record) or 1 (a single record).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>comodel_name</strong> &#8211; name of the target model (string)</li>
+<li><strong>domain</strong> &#8211; an optional domain to set on candidate values on the
+client side (domain or string)</li>
+<li><strong>context</strong> &#8211; an optional context to use on the client side when
+handling that field (dictionary)</li>
+<li><strong>ondelete</strong> &#8211; what to do when the referred record is deleted;
+possible values are: <code class="docutils literal"><span class="pre">'set</span> <span class="pre">null'</span></code>, <code class="docutils literal"><span class="pre">'restrict'</span></code>, <code class="docutils literal"><span class="pre">'cascade'</span></code></li>
+<li><strong>auto_join</strong> &#8211; whether JOINs are generated upon search through that
+field (boolean, by default <code class="docutils literal"><span class="pre">False</span></code>)</li>
+<li><strong>delegate</strong> &#8211; set it to <code class="docutils literal"><span class="pre">True</span></code> to make fields of the target model
+accessible from the current model (corresponds to <code class="docutils literal"><span class="pre">_inherits</span></code>)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>The attribute <code class="docutils literal"><span class="pre">comodel_name</span></code> is mandatory except in the case of related
+fields or field extensions.</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="openerp.addons.magentoerpconnect.magento_model.MagentoBackend.admin_location">
 <code class="descname">admin_location</code><a class="headerlink" href="#openerp.addons.magentoerpconnect.magento_model.MagentoBackend.admin_location" title="Permalink to this definition">¶</a></dt>
 <dd><p>Basic string field, can be length-limited, usually displayed as a
@@ -381,6 +411,36 @@ fields or field extensions.</p>
 <dl class="attribute">
 <dt id="openerp.addons.magentoerpconnect.magento_model.MagentoBackend.default_lang_id">
 <code class="descname">default_lang_id</code><a class="headerlink" href="#openerp.addons.magentoerpconnect.magento_model.MagentoBackend.default_lang_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>The value of such a field is a recordset of size 0 (no
+record) or 1 (a single record).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>comodel_name</strong> &#8211; name of the target model (string)</li>
+<li><strong>domain</strong> &#8211; an optional domain to set on candidate values on the
+client side (domain or string)</li>
+<li><strong>context</strong> &#8211; an optional context to use on the client side when
+handling that field (dictionary)</li>
+<li><strong>ondelete</strong> &#8211; what to do when the referred record is deleted;
+possible values are: <code class="docutils literal"><span class="pre">'set</span> <span class="pre">null'</span></code>, <code class="docutils literal"><span class="pre">'restrict'</span></code>, <code class="docutils literal"><span class="pre">'cascade'</span></code></li>
+<li><strong>auto_join</strong> &#8211; whether JOINs are generated upon search through that
+field (boolean, by default <code class="docutils literal"><span class="pre">False</span></code>)</li>
+<li><strong>delegate</strong> &#8211; set it to <code class="docutils literal"><span class="pre">True</span></code> to make fields of the target model
+accessible from the current model (corresponds to <code class="docutils literal"><span class="pre">_inherits</span></code>)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>The attribute <code class="docutils literal"><span class="pre">comodel_name</span></code> is mandatory except in the case of related
+fields or field extensions.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="openerp.addons.magentoerpconnect.magento_model.MagentoBackend.fiscal_position_id">
+<code class="descname">fiscal_position_id</code><a class="headerlink" href="#openerp.addons.magentoerpconnect.magento_model.MagentoBackend.fiscal_position_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>The value of such a field is a recordset of size 0 (no
 record) or 1 (a single record).</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -698,6 +758,132 @@ field (boolean, by default <code class="docutils literal"><span class="pre">Fals
 </table>
 <p>The attributes <code class="docutils literal"><span class="pre">comodel_name</span></code> and <code class="docutils literal"><span class="pre">inverse_name</span></code> are mandatory except in
 the case of related fields or field extensions.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="openerp.addons.magentoerpconnect.magento_model.MagentoConfigSpecializer">
+<em class="property">class </em><code class="descclassname">openerp.addons.magentoerpconnect.magento_model.</code><code class="descname">MagentoConfigSpecializer</code><span class="sig-paren">(</span><em>pool</em>, <em>cr</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/openerp/addons/magentoerpconnect/magento_model.html#MagentoConfigSpecializer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#openerp.addons.magentoerpconnect.magento_model.MagentoConfigSpecializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">openerp.models.AbstractModel</span></code></p>
+<dl class="attribute">
+<dt id="openerp.addons.magentoerpconnect.magento_model.MagentoConfigSpecializer.account_analytic_id">
+<code class="descname">account_analytic_id</code><a class="headerlink" href="#openerp.addons.magentoerpconnect.magento_model.MagentoConfigSpecializer.account_analytic_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>The value of such a field is a recordset of size 0 (no
+record) or 1 (a single record).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>comodel_name</strong> &#8211; name of the target model (string)</li>
+<li><strong>domain</strong> &#8211; an optional domain to set on candidate values on the
+client side (domain or string)</li>
+<li><strong>context</strong> &#8211; an optional context to use on the client side when
+handling that field (dictionary)</li>
+<li><strong>ondelete</strong> &#8211; what to do when the referred record is deleted;
+possible values are: <code class="docutils literal"><span class="pre">'set</span> <span class="pre">null'</span></code>, <code class="docutils literal"><span class="pre">'restrict'</span></code>, <code class="docutils literal"><span class="pre">'cascade'</span></code></li>
+<li><strong>auto_join</strong> &#8211; whether JOINs are generated upon search through that
+field (boolean, by default <code class="docutils literal"><span class="pre">False</span></code>)</li>
+<li><strong>delegate</strong> &#8211; set it to <code class="docutils literal"><span class="pre">True</span></code> to make fields of the target model
+accessible from the current model (corresponds to <code class="docutils literal"><span class="pre">_inherits</span></code>)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>The attribute <code class="docutils literal"><span class="pre">comodel_name</span></code> is mandatory except in the case of related
+fields or field extensions.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="openerp.addons.magentoerpconnect.magento_model.MagentoConfigSpecializer.fiscal_position_id">
+<code class="descname">fiscal_position_id</code><a class="headerlink" href="#openerp.addons.magentoerpconnect.magento_model.MagentoConfigSpecializer.fiscal_position_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>The value of such a field is a recordset of size 0 (no
+record) or 1 (a single record).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>comodel_name</strong> &#8211; name of the target model (string)</li>
+<li><strong>domain</strong> &#8211; an optional domain to set on candidate values on the
+client side (domain or string)</li>
+<li><strong>context</strong> &#8211; an optional context to use on the client side when
+handling that field (dictionary)</li>
+<li><strong>ondelete</strong> &#8211; what to do when the referred record is deleted;
+possible values are: <code class="docutils literal"><span class="pre">'set</span> <span class="pre">null'</span></code>, <code class="docutils literal"><span class="pre">'restrict'</span></code>, <code class="docutils literal"><span class="pre">'cascade'</span></code></li>
+<li><strong>auto_join</strong> &#8211; whether JOINs are generated upon search through that
+field (boolean, by default <code class="docutils literal"><span class="pre">False</span></code>)</li>
+<li><strong>delegate</strong> &#8211; set it to <code class="docutils literal"><span class="pre">True</span></code> to make fields of the target model
+accessible from the current model (corresponds to <code class="docutils literal"><span class="pre">_inherits</span></code>)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>The attribute <code class="docutils literal"><span class="pre">comodel_name</span></code> is mandatory except in the case of related
+fields or field extensions.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="openerp.addons.magentoerpconnect.magento_model.MagentoConfigSpecializer.specific_account_analytic_id">
+<code class="descname">specific_account_analytic_id</code><a class="headerlink" href="#openerp.addons.magentoerpconnect.magento_model.MagentoConfigSpecializer.specific_account_analytic_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>The value of such a field is a recordset of size 0 (no
+record) or 1 (a single record).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>comodel_name</strong> &#8211; name of the target model (string)</li>
+<li><strong>domain</strong> &#8211; an optional domain to set on candidate values on the
+client side (domain or string)</li>
+<li><strong>context</strong> &#8211; an optional context to use on the client side when
+handling that field (dictionary)</li>
+<li><strong>ondelete</strong> &#8211; what to do when the referred record is deleted;
+possible values are: <code class="docutils literal"><span class="pre">'set</span> <span class="pre">null'</span></code>, <code class="docutils literal"><span class="pre">'restrict'</span></code>, <code class="docutils literal"><span class="pre">'cascade'</span></code></li>
+<li><strong>auto_join</strong> &#8211; whether JOINs are generated upon search through that
+field (boolean, by default <code class="docutils literal"><span class="pre">False</span></code>)</li>
+<li><strong>delegate</strong> &#8211; set it to <code class="docutils literal"><span class="pre">True</span></code> to make fields of the target model
+accessible from the current model (corresponds to <code class="docutils literal"><span class="pre">_inherits</span></code>)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>The attribute <code class="docutils literal"><span class="pre">comodel_name</span></code> is mandatory except in the case of related
+fields or field extensions.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="openerp.addons.magentoerpconnect.magento_model.MagentoConfigSpecializer.specific_fiscal_position_id">
+<code class="descname">specific_fiscal_position_id</code><a class="headerlink" href="#openerp.addons.magentoerpconnect.magento_model.MagentoConfigSpecializer.specific_fiscal_position_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>The value of such a field is a recordset of size 0 (no
+record) or 1 (a single record).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>comodel_name</strong> &#8211; name of the target model (string)</li>
+<li><strong>domain</strong> &#8211; an optional domain to set on candidate values on the
+client side (domain or string)</li>
+<li><strong>context</strong> &#8211; an optional context to use on the client side when
+handling that field (dictionary)</li>
+<li><strong>ondelete</strong> &#8211; what to do when the referred record is deleted;
+possible values are: <code class="docutils literal"><span class="pre">'set</span> <span class="pre">null'</span></code>, <code class="docutils literal"><span class="pre">'restrict'</span></code>, <code class="docutils literal"><span class="pre">'cascade'</span></code></li>
+<li><strong>auto_join</strong> &#8211; whether JOINs are generated upon search through that
+field (boolean, by default <code class="docutils literal"><span class="pre">False</span></code>)</li>
+<li><strong>delegate</strong> &#8211; set it to <code class="docutils literal"><span class="pre">True</span></code> to make fields of the target model
+accessible from the current model (corresponds to <code class="docutils literal"><span class="pre">_inherits</span></code>)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>The attribute <code class="docutils literal"><span class="pre">comodel_name</span></code> is mandatory except in the case of related
+fields or field extensions.</p>
 </dd></dl>
 
 </dd></dl>
