@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-11-05 19:13+0000\n"
-"PO-Revision-Date: 2015-09-17 01:20+0000\n"
-"Last-Translator: Gustavo Lepri <gustavolepri@gmail.com>\n"
+"POT-Creation-Date: 2015-12-16 10:10+0000\n"
+"PO-Revision-Date: 2015-12-16 10:11+0000\n"
+"Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -90,7 +90,7 @@ msgid "Already exported"
 msgstr "Já exportado"
 
 #. module: magentoerpconnect
-#: code:addons/magentoerpconnect/sale.py:616
+#: code:addons/magentoerpconnect/sale.py:628
 #, python-format
 msgid "Already imported"
 msgstr "Já importado"
@@ -106,6 +106,11 @@ msgstr "Já atualizado."
 msgid ""
 "An account imported with a 'company' in the billing address is considered as a company.\n"
 " The partner takes the name of the company and is not merged with the billing address."
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.backend,account_analytic_id:0
+msgid "Analytic account"
 msgstr ""
 
 #. module: magentoerpconnect
@@ -334,6 +339,11 @@ msgid "Extensions"
 msgstr "Extensões"
 
 #. module: magentoerpconnect
+#: field:magento.backend,fiscal_position_id:0
+msgid "Fiscal position"
+msgstr ""
+
+#. module: magentoerpconnect
 #: field:magento.res.partner,guest_customer:0
 msgid "Guest Customer"
 msgstr ""
@@ -346,11 +356,12 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.account.invoice,id:0 field:magento.address,id:0
 #: field:magento.backend,id:0 field:magento.binding,id:0
-#: field:magento.product.category,id:0 field:magento.product.product,id:0
-#: field:magento.res.partner,id:0 field:magento.res.partner.category,id:0
-#: field:magento.sale.order,id:0 field:magento.sale.order.line,id:0
-#: field:magento.stock.picking,id:0 field:magento.store,id:0
-#: field:magento.storeview,id:0 field:magento.website,id:0
+#: field:magento.config.specializer,id:0 field:magento.product.category,id:0
+#: field:magento.product.product,id:0 field:magento.res.partner,id:0
+#: field:magento.res.partner.category,id:0 field:magento.sale.order,id:0
+#: field:magento.sale.order.line,id:0 field:magento.stock.picking,id:0
+#: field:magento.store,id:0 field:magento.storeview,id:0
+#: field:magento.website,id:0
 msgid "ID"
 msgstr "ID"
 
@@ -380,6 +391,37 @@ msgstr ""
 msgid ""
 "If a default language is selected, the records will be imported in the translation of this language.\n"
 "Note that a similar configuration exists for each storeview."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.backend,account_analytic_id:0
+msgid ""
+"If specified, this analytic account will be used to fill the field  on the "
+"sale order created by the connector. The value can also be specified on "
+"website or the store or the store view."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.config.specializer,specific_account_analytic_id:0
+#: help:magento.store,specific_account_analytic_id:0
+#: help:magento.storeview,specific_account_analytic_id:0
+#: help:magento.website,specific_account_analytic_id:0
+msgid ""
+"If specified, this analytic account will be used to fill the field on the "
+"sale order created by the connector. The value can also be specified on "
+"website or the store or the store view."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.backend,fiscal_position_id:0
+#: help:magento.config.specializer,specific_fiscal_position_id:0
+#: help:magento.store,specific_fiscal_position_id:0
+#: help:magento.storeview,specific_fiscal_position_id:0
+#: help:magento.website,specific_fiscal_position_id:0
+msgid ""
+"If specified, this fiscal position will be used to fill the field fiscal "
+"position on the sale order created by the connector.The value can also be "
+"specified on website or the store or the store view."
 msgstr ""
 
 #. module: magentoerpconnect
@@ -748,7 +790,7 @@ msgid "Magento Websites"
 msgstr ""
 
 #. module: magentoerpconnect
-#: code:addons/magentoerpconnect/sale.py:1093
+#: code:addons/magentoerpconnect/sale.py:1105
 #, python-format
 msgid "Magento sales order is already in state %s"
 msgstr ""
@@ -965,7 +1007,7 @@ msgid "Sale Prefix"
 msgstr ""
 
 #. module: magentoerpconnect
-#: code:addons/magentoerpconnect/sale.py:1089
+#: code:addons/magentoerpconnect/sale.py:1101
 #, python-format
 msgid "Sale is not linked with a Magento sales order"
 msgstr ""
@@ -1034,7 +1076,23 @@ msgid "Sort Order"
 msgstr ""
 
 #. module: magentoerpconnect
-#: code:addons/magentoerpconnect/sale.py:1086
+#: field:magento.config.specializer,specific_account_analytic_id:0
+#: field:magento.store,specific_account_analytic_id:0
+#: field:magento.storeview,specific_account_analytic_id:0
+#: field:magento.website,specific_account_analytic_id:0
+msgid "Specific analytic account"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.config.specializer,specific_fiscal_position_id:0
+#: field:magento.store,specific_fiscal_position_id:0
+#: field:magento.storeview,specific_fiscal_position_id:0
+#: field:magento.website,specific_fiscal_position_id:0
+msgid "Specific fiscal position"
+msgstr ""
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/sale.py:1098
 #, python-format
 msgid "State %s is not exported."
 msgstr ""
@@ -1165,7 +1223,7 @@ msgid "Total amount w. tax"
 msgstr ""
 
 #. module: magentoerpconnect
-#: code:addons/magentoerpconnect/magento_model.py:575
+#: code:addons/magentoerpconnect/magento_model.py:641
 #, python-format
 msgid "Undefined"
 msgstr ""
