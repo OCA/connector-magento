@@ -4,13 +4,14 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Rudolf Schnapka <rs@techno-flex.de>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-07-22 09:38+0000\n"
-"PO-Revision-Date: 2015-07-08 12:07+0000\n"
-"Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
+"POT-Creation-Date: 2016-01-05 01:39+0000\n"
+"PO-Revision-Date: 2016-01-14 14:18+0000\n"
+"Last-Translator: Rudolf Schnapka <rs@techno-flex.de>\n"
 "Language-Team: German (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,7 +32,7 @@ msgstr "(neuberechnen)"
 #. module: magentoerpconnect
 #: sql_constraint:magento.account.invoice:0
 msgid "A Magento binding for this invoice already exists."
-msgstr ""
+msgstr "Eine Verknüpfung zu Magento besteht für diese Rechnung bereits."
 
 #. module: magentoerpconnect
 #: sql_constraint:magento.backend:0
@@ -49,19 +50,19 @@ msgstr "Ein Backend mit gleichem Verkaufs-Präfix besteht bereits"
 #: sql_constraint:magento.stock.picking:0 sql_constraint:magento.store:0
 #: sql_constraint:magento.storeview:0 sql_constraint:magento.website:0
 msgid "A binding already exists with the same Magento ID."
-msgstr ""
+msgstr "Eine Verknüpfung zu Magento mit der gleichen Magento-ID besteht bereits."
 
 #. module: magentoerpconnect
 #: sql_constraint:magento.address:0
 msgid "A partner address can only have one binding by backend."
-msgstr ""
+msgstr "Eine Partneranschrift darf per Backend nur eine Verknüpfung aufweisen."
 
 #. module: magentoerpconnect
 #: help:magento.backend,sale_prefix:0
 msgid ""
 "A prefix put before the name of imported sales orders.\n"
 "For instance, if the prefix is 'mag-', the sales order 100000692 in Magento, will be named 'mag-100000692' in OpenERP."
-msgstr ""
+msgstr "Ein Präfix, welches dem importierten Verkaufsauftrag vorangestellt wird.\nIst z.B. das Präfix 'mag-' und der Verkaufsauftrag aus Magento die Bezeichnung 100000692, dann wird der importierte Auftrag 'mag-100000692' benannt."
 
 #. module: magentoerpconnect
 #: view:magento.backend:magentoerpconnect.view_magento_backend_form
@@ -87,16 +88,16 @@ msgstr "Erweiterte Einstellungen"
 #: code:addons/magentoerpconnect/stock_picking.py:173
 #, python-format
 msgid "Already exported"
-msgstr ""
+msgstr "Bereits exportiert"
 
 #. module: magentoerpconnect
-#: code:addons/magentoerpconnect/sale.py:611
+#: code:addons/magentoerpconnect/sale.py:628
 #, python-format
 msgid "Already imported"
-msgstr ""
+msgstr "Bereits importiert"
 
 #. module: magentoerpconnect
-#: code:addons/magentoerpconnect/unit/import_synchronizer.py:208
+#: code:addons/magentoerpconnect/unit/import_synchronizer.py:217
 #, python-format
 msgid "Already up-to-date."
 msgstr ""
@@ -107,6 +108,11 @@ msgid ""
 "An account imported with a 'company' in the billing address is considered as a company.\n"
 " The partner takes the name of the company and is not merged with the billing address."
 msgstr "Ein Konto, welches ein Unternehmen als Rechnungsanschrift führt, wird als Unternehmen betrachtet.\nDer Partner bekommt den Namen des Unternehmens und wird nicht mit der Rechnungsanschrift zusammengeführt."
+
+#. module: magentoerpconnect
+#: field:magento.backend,account_analytic_id:0
+msgid "Analytic account"
+msgstr "Kostenstelle"
 
 #. module: magentoerpconnect
 #: model:ir.ui.menu,name:magentoerpconnect.menu_magento_backend
@@ -156,7 +162,7 @@ msgstr "Beim Klicken des Buttons,\n                                      weden S
 msgid ""
 "Canceled: the delivery order does not contain lines from the original sale "
 "order."
-msgstr ""
+msgstr "Storniert: Der Lieferschein enthält keine Positionen des Ursprungsauftrags."
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_delivery_carrier
@@ -243,7 +249,7 @@ msgstr "Erstellt am (in Magento)"
 #: field:magento.stock.picking,create_uid:0 field:magento.store,create_uid:0
 #: field:magento.storeview,create_uid:0 field:magento.website,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Angelegt durch"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,create_date:0
@@ -257,7 +263,7 @@ msgstr ""
 #: field:magento.stock.picking,create_date:0 field:magento.store,create_date:0
 #: field:magento.storeview,create_date:0 field:magento.website,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Angelegt am"
 
 #. module: magentoerpconnect
 #: field:magento.backend,use_custom_api_path:0
@@ -334,6 +340,11 @@ msgid "Extensions"
 msgstr "Erweiterungen"
 
 #. module: magentoerpconnect
+#: field:magento.backend,fiscal_position_id:0
+msgid "Fiscal position"
+msgstr ""
+
+#. module: magentoerpconnect
 #: field:magento.res.partner,guest_customer:0
 msgid "Guest Customer"
 msgstr "Gastkunde"
@@ -346,11 +357,12 @@ msgstr "HTTP Authentifizierung"
 #. module: magentoerpconnect
 #: field:magento.account.invoice,id:0 field:magento.address,id:0
 #: field:magento.backend,id:0 field:magento.binding,id:0
-#: field:magento.product.category,id:0 field:magento.product.product,id:0
-#: field:magento.res.partner,id:0 field:magento.res.partner.category,id:0
-#: field:magento.sale.order,id:0 field:magento.sale.order.line,id:0
-#: field:magento.stock.picking,id:0 field:magento.store,id:0
-#: field:magento.storeview,id:0 field:magento.website,id:0
+#: field:magento.config.specializer,id:0 field:magento.product.category,id:0
+#: field:magento.product.product,id:0 field:magento.res.partner,id:0
+#: field:magento.res.partner.category,id:0 field:magento.sale.order,id:0
+#: field:magento.sale.order.line,id:0 field:magento.stock.picking,id:0
+#: field:magento.store,id:0 field:magento.storeview,id:0
+#: field:magento.website,id:0
 msgid "ID"
 msgstr ""
 
@@ -381,6 +393,37 @@ msgid ""
 "If a default language is selected, the records will be imported in the translation of this language.\n"
 "Note that a similar configuration exists for each storeview."
 msgstr "Wenn Vorgabesprache ausgewählt, werden die Datensätze in der Übersetzung dieser Sprache importiert.\nEine entsprechende Einstellung gibt es auch je Storeview."
+
+#. module: magentoerpconnect
+#: help:magento.backend,account_analytic_id:0
+msgid ""
+"If specified, this analytic account will be used to fill the field  on the "
+"sale order created by the connector. The value can also be specified on "
+"website or the store or the store view."
+msgstr "Wenn angegeben, wird diese Kostenstelle im durch den Connector erstellten Verkaufsauftrag verwendet. Der Wert kann auch für die Webseite, den Store oder die Store-Sicht eingepflegt werden."
+
+#. module: magentoerpconnect
+#: help:magento.config.specializer,specific_account_analytic_id:0
+#: help:magento.store,specific_account_analytic_id:0
+#: help:magento.storeview,specific_account_analytic_id:0
+#: help:magento.website,specific_account_analytic_id:0
+msgid ""
+"If specified, this analytic account will be used to fill the field on the "
+"sale order created by the connector. The value can also be specified on "
+"website or the store or the store view."
+msgstr "Wenn angegeben, wird diese Kostenstelle im durch den Connector erstellten Verkaufsauftrag verwendet. Der Wert kann auch für die Webseite, den Store oder die Store-Sicht eingepflegt werden."
+
+#. module: magentoerpconnect
+#: help:magento.backend,fiscal_position_id:0
+#: help:magento.config.specializer,specific_fiscal_position_id:0
+#: help:magento.store,specific_fiscal_position_id:0
+#: help:magento.storeview,specific_fiscal_position_id:0
+#: help:magento.website,specific_fiscal_position_id:0
+msgid ""
+"If specified, this fiscal position will be used to fill the field fiscal "
+"position on the sale order created by the connector.The value can also be "
+"specified on website or the store or the store view."
+msgstr "Wenn angegeben, wird diese Steuerzuordnung im durch den Connector erstellten Verkaufsauftrag verwendet. Der Wert kann auch für die Webseite, den Store oder die Store-Sicht eingepflegt werden."
 
 #. module: magentoerpconnect
 #: view:magento.storeview:magentoerpconnect.view_magento_storeview_form
@@ -478,7 +521,7 @@ msgstr "Rechnung"
 #: code:addons/magentoerpconnect/tests/test_export_invoice.py:225
 #, python-format
 msgid "Invoice Created"
-msgstr ""
+msgstr "Rechnung angelegt"
 
 #. module: magentoerpconnect
 #: field:magento.storeview,lang_id:0
@@ -497,7 +540,7 @@ msgstr "Sprache"
 #: field:magento.stock.picking,write_uid:0 field:magento.store,write_uid:0
 #: field:magento.storeview,write_uid:0 field:magento.website,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Zuletzt aktualisiert durch"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,write_date:0
@@ -511,7 +554,7 @@ msgstr ""
 #: field:magento.stock.picking,write_date:0 field:magento.store,write_date:0
 #: field:magento.storeview,write_date:0 field:magento.website,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Zuletzt aktualisiert am"
 
 #. module: magentoerpconnect
 #: help:magento.product.product,magento_qty:0
@@ -748,7 +791,7 @@ msgid "Magento Websites"
 msgstr "Magento-Webseiten"
 
 #. module: magentoerpconnect
-#: code:addons/magentoerpconnect/sale.py:1079
+#: code:addons/magentoerpconnect/sale.py:1105
 #, python-format
 msgid "Magento sales order is already in state %s"
 msgstr ""
@@ -810,13 +853,13 @@ msgstr "Keine Bestands-Synchronisation"
 msgid ""
 "No admin URL configured on the backend or no admin path is defined for this "
 "record."
-msgstr ""
+msgstr "Keine Admin-URL für dieses Backend oder kein Adminpfad für diesen Datensatz festgelegt"
 
 #. module: magentoerpconnect
 #: code:addons/magentoerpconnect/stock_tracking.py:83
 #, python-format
 msgid "No tracking number to send."
-msgstr ""
+msgstr "Keine Trackingnummer zum Senden."
 
 #. module: magentoerpconnect
 #: field:magento.sale.order.line,notes:0
@@ -828,7 +871,7 @@ msgstr "Notizen"
 #: code:addons/magentoerpconnect/unit/export_synchronizer.py:412
 #, python-format
 msgid "Nothing to export."
-msgstr ""
+msgstr "Nichts zu exportieren."
 
 #. module: magentoerpconnect
 #: view:magento.backend:magentoerpconnect.view_magento_backend_form
@@ -879,7 +922,7 @@ msgstr "Partnerkategorie"
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_res_partner_category
 msgid "Partner Tags"
-msgstr ""
+msgstr "Partner-Schlagworte"
 
 #. module: magentoerpconnect
 #: field:magento.backend,password:0
@@ -935,19 +978,19 @@ msgstr "Produktkategorie"
 #: code:addons/magentoerpconnect/unit/delete_synchronizer.py:38
 #, python-format
 msgid "Record %s deleted on Magento"
-msgstr ""
+msgstr "Datensatz %s in Magemnto gelöscht"
 
 #. module: magentoerpconnect
-#: code:addons/magentoerpconnect/unit/import_synchronizer.py:199
+#: code:addons/magentoerpconnect/unit/import_synchronizer.py:208
 #, python-format
 msgid "Record does no longer exist in Magento"
-msgstr ""
+msgstr "Datensatz besteht in Magento nicht mehr"
 
 #. module: magentoerpconnect
 #: code:addons/magentoerpconnect/unit/export_synchronizer.py:414
 #, python-format
 msgid "Record exported with ID %s on Magento."
-msgstr ""
+msgstr "Datensatz mit ID %s nach Magento exportiert."
 
 #. module: magentoerpconnect
 #: field:magento.sale.order,openerp_id:0
@@ -965,10 +1008,10 @@ msgid "Sale Prefix"
 msgstr "Verkaufs-Präfix"
 
 #. module: magentoerpconnect
-#: code:addons/magentoerpconnect/sale.py:1075
+#: code:addons/magentoerpconnect/sale.py:1101
 #, python-format
 msgid "Sale is not linked with a Magento sales order"
-msgstr ""
+msgstr "Verkauf ist nicht mit einem Magento-Verkaufsauftrag verknüpft"
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_sale_order
@@ -983,7 +1026,7 @@ msgstr "Auftragsposition"
 #. module: magentoerpconnect
 #: field:magento.storeview,section_id:0
 msgid "Sales Team"
-msgstr ""
+msgstr "Verkaufsteam"
 
 #. module: magentoerpconnect
 #: selection:magento.product.product,backorders:0
@@ -1012,7 +1055,7 @@ msgstr "Sende Versandbestätigung per E-Mail"
 #: code:addons/magentoerpconnect/tests/test_export_picking.py:169
 #, python-format
 msgid "Shipping Created"
-msgstr ""
+msgstr "Auslieferung angelegt"
 
 #. module: magentoerpconnect
 #: help:payment.method,create_invoice_on:0
@@ -1034,10 +1077,26 @@ msgid "Sort Order"
 msgstr "Sortierung"
 
 #. module: magentoerpconnect
-#: code:addons/magentoerpconnect/sale.py:1072
+#: field:magento.config.specializer,specific_account_analytic_id:0
+#: field:magento.store,specific_account_analytic_id:0
+#: field:magento.storeview,specific_account_analytic_id:0
+#: field:magento.website,specific_account_analytic_id:0
+msgid "Specific analytic account"
+msgstr "Besondere Kostenstelle"
+
+#. module: magentoerpconnect
+#: field:magento.config.specializer,specific_fiscal_position_id:0
+#: field:magento.store,specific_fiscal_position_id:0
+#: field:magento.storeview,specific_fiscal_position_id:0
+#: field:magento.website,specific_fiscal_position_id:0
+msgid "Specific fiscal position"
+msgstr "Besondere Steuerzuordnung"
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/sale.py:1098
 #, python-format
 msgid "State %s is not exported."
-msgstr ""
+msgstr "Status %s wurde nicht exportiert."
 
 #. module: magentoerpconnect
 #: field:magento.backend,product_stock_field_id:0
@@ -1099,15 +1158,15 @@ msgstr "Die in OpenERP errechnete Summe stimmt nicht mit der aus Magento überei
 #: code:addons/magentoerpconnect/stock_tracking.py:80
 #, python-format
 msgid "The carrier %s does not export tracking numbers."
-msgstr ""
+msgstr "Der Frachtführer %s exportiert keine Trackingnummern."
 
 #. module: magentoerpconnect
-#: code:addons/magentoerpconnect/product.py:558
+#: code:addons/magentoerpconnect/product.py:556
 #, python-format
 msgid ""
 "The configurable product is not imported in OpenERP, because only the simple"
 " products are used in the sales orders."
-msgstr ""
+msgstr "Das konfigurierbare Produkt wurde nicht importiert, das nur einfache Produkte im Verkaufsauftrag anwendung finden."
 
 #. module: magentoerpconnect
 #: help:magento.backend,use_custom_api_path:0
@@ -1142,7 +1201,7 @@ msgid ""
 "                              attention to the taxes on the products,\n"
 "                              which should surely include prices when\n"
 "                              this option is activated."
-msgstr ""
+msgstr "Diese Option sollte der Einstellung in Magento entsprechen. Achten Sie auf die Versteuerung von Produkten, welche ganz sicher inklusive (Bruttopreise) sein sollten, wenn diese Option angewählt ist."
 
 #. module: magentoerpconnect
 #: model:sale.exception,name:magentoerpconnect.excep_wrong_total_amount
@@ -1165,10 +1224,10 @@ msgid "Total amount w. tax"
 msgstr "Bruttogesamtbetrag"
 
 #. module: magentoerpconnect
-#: code:addons/magentoerpconnect/magento_model.py:575
+#: code:addons/magentoerpconnect/magento_model.py:641
 #, python-format
 msgid "Undefined"
-msgstr ""
+msgstr "Nicht definiert"
 
 #. module: magentoerpconnect
 #: view:magento.backend:magentoerpconnect.view_magento_backend_form
