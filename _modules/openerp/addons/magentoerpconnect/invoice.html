@@ -237,26 +237,26 @@
     <div class="col-md-12 content">
       
   <h1>Source code for openerp.addons.magentoerpconnect.invoice</h1><div class="highlight"><pre>
-<span class="c"># -*- coding: utf-8 -*-</span>
-<span class="c">##############################################################################</span>
-<span class="c">#</span>
-<span class="c">#    Author: Joël Grand-Guillaume, Guewen Baconnier</span>
-<span class="c">#    Copyright 2013 Camptocamp SA</span>
-<span class="c">#</span>
-<span class="c">#    This program is free software: you can redistribute it and/or modify</span>
-<span class="c">#    it under the terms of the GNU Affero General Public License as</span>
-<span class="c">#    published by the Free Software Foundation, either version 3 of the</span>
-<span class="c">#    License, or (at your option) any later version.</span>
-<span class="c">#</span>
-<span class="c">#    This program is distributed in the hope that it will be useful,</span>
-<span class="c">#    but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
-<span class="c">#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
-<span class="c">#    GNU Affero General Public License for more details.</span>
-<span class="c">#</span>
-<span class="c">#    You should have received a copy of the GNU Affero General Public License</span>
-<span class="c">#    along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
-<span class="c">#</span>
-<span class="c">##############################################################################</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1">##############################################################################</span>
+<span class="c1">#</span>
+<span class="c1">#    Author: Joël Grand-Guillaume, Guewen Baconnier</span>
+<span class="c1">#    Copyright 2013 Camptocamp SA</span>
+<span class="c1">#</span>
+<span class="c1">#    This program is free software: you can redistribute it and/or modify</span>
+<span class="c1">#    it under the terms of the GNU Affero General Public License as</span>
+<span class="c1">#    published by the Free Software Foundation, either version 3 of the</span>
+<span class="c1">#    License, or (at your option) any later version.</span>
+<span class="c1">#</span>
+<span class="c1">#    This program is distributed in the hope that it will be useful,</span>
+<span class="c1">#    but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1">#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c1">#    GNU Affero General Public License for more details.</span>
+<span class="c1">#</span>
+<span class="c1">#    You should have received a copy of the GNU Affero General Public License</span>
+<span class="c1">#    along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+<span class="c1">#</span>
+<span class="c1">##############################################################################</span>
 
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">xmlrpclib</span>
@@ -277,22 +277,22 @@
 
 <div class="viewcode-block" id="MagentoAccountInvoice"><a class="viewcode-back" href="../../../../api/api_invoice.html#openerp.addons.magentoerpconnect.invoice.MagentoAccountInvoice">[docs]</a><span class="k">class</span> <span class="nc">MagentoAccountInvoice</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Binding Model for the Magento Invoice &quot;&quot;&quot;</span>
-    <span class="n">_name</span> <span class="o">=</span> <span class="s">&#39;magento.account.invoice&#39;</span>
-    <span class="n">_inherit</span> <span class="o">=</span> <span class="s">&#39;magento.binding&#39;</span>
-    <span class="n">_inherits</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;account.invoice&#39;</span><span class="p">:</span> <span class="s">&#39;openerp_id&#39;</span><span class="p">}</span>
-    <span class="n">_description</span> <span class="o">=</span> <span class="s">&#39;Magento Invoice&#39;</span>
+    <span class="n">_name</span> <span class="o">=</span> <span class="s1">&#39;magento.account.invoice&#39;</span>
+    <span class="n">_inherit</span> <span class="o">=</span> <span class="s1">&#39;magento.binding&#39;</span>
+    <span class="n">_inherits</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;account.invoice&#39;</span><span class="p">:</span> <span class="s1">&#39;openerp_id&#39;</span><span class="p">}</span>
+    <span class="n">_description</span> <span class="o">=</span> <span class="s1">&#39;Magento Invoice&#39;</span>
 
-    <span class="n">openerp_id</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Many2one</span><span class="p">(</span><span class="n">comodel_name</span><span class="o">=</span><span class="s">&#39;account.invoice&#39;</span><span class="p">,</span>
-                                 <span class="n">string</span><span class="o">=</span><span class="s">&#39;Invoice&#39;</span><span class="p">,</span>
+    <span class="n">openerp_id</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Many2one</span><span class="p">(</span><span class="n">comodel_name</span><span class="o">=</span><span class="s1">&#39;account.invoice&#39;</span><span class="p">,</span>
+                                 <span class="n">string</span><span class="o">=</span><span class="s1">&#39;Invoice&#39;</span><span class="p">,</span>
                                  <span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
-                                 <span class="n">ondelete</span><span class="o">=</span><span class="s">&#39;cascade&#39;</span><span class="p">)</span>
-    <span class="n">magento_order_id</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Many2one</span><span class="p">(</span><span class="n">comodel_name</span><span class="o">=</span><span class="s">&#39;magento.sale.order&#39;</span><span class="p">,</span>
-                                       <span class="n">string</span><span class="o">=</span><span class="s">&#39;Magento Sale Order&#39;</span><span class="p">,</span>
-                                       <span class="n">ondelete</span><span class="o">=</span><span class="s">&#39;set null&#39;</span><span class="p">)</span>
+                                 <span class="n">ondelete</span><span class="o">=</span><span class="s1">&#39;cascade&#39;</span><span class="p">)</span>
+    <span class="n">magento_order_id</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Many2one</span><span class="p">(</span><span class="n">comodel_name</span><span class="o">=</span><span class="s1">&#39;magento.sale.order&#39;</span><span class="p">,</span>
+                                       <span class="n">string</span><span class="o">=</span><span class="s1">&#39;Magento Sale Order&#39;</span><span class="p">,</span>
+                                       <span class="n">ondelete</span><span class="o">=</span><span class="s1">&#39;set null&#39;</span><span class="p">)</span>
 
     <span class="n">_sql_constraints</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="p">(</span><span class="s">&#39;openerp_uniq&#39;</span><span class="p">,</span> <span class="s">&#39;unique(backend_id, openerp_id)&#39;</span><span class="p">,</span>
-         <span class="s">&#39;A Magento binding for this invoice already exists.&#39;</span><span class="p">),</span>
+        <span class="p">(</span><span class="s1">&#39;openerp_uniq&#39;</span><span class="p">,</span> <span class="s1">&#39;unique(backend_id, openerp_id)&#39;</span><span class="p">,</span>
+         <span class="s1">&#39;A Magento binding for this invoice already exists.&#39;</span><span class="p">),</span>
     <span class="p">]</span></div>
 
 
@@ -300,28 +300,28 @@
     <span class="sd">&quot;&quot;&quot; Adds the ``one2many`` relation to the Magento bindings</span>
 <span class="sd">    (``magento_bind_ids``)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">_inherit</span> <span class="o">=</span> <span class="s">&#39;account.invoice&#39;</span>
+    <span class="n">_inherit</span> <span class="o">=</span> <span class="s1">&#39;account.invoice&#39;</span>
 
     <span class="n">magento_bind_ids</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">One2many</span><span class="p">(</span>
-        <span class="n">comodel_name</span><span class="o">=</span><span class="s">&#39;magento.account.invoice&#39;</span><span class="p">,</span>
-        <span class="n">inverse_name</span><span class="o">=</span><span class="s">&#39;openerp_id&#39;</span><span class="p">,</span>
-        <span class="n">string</span><span class="o">=</span><span class="s">&#39;Magento Bindings&#39;</span><span class="p">,</span>
+        <span class="n">comodel_name</span><span class="o">=</span><span class="s1">&#39;magento.account.invoice&#39;</span><span class="p">,</span>
+        <span class="n">inverse_name</span><span class="o">=</span><span class="s1">&#39;openerp_id&#39;</span><span class="p">,</span>
+        <span class="n">string</span><span class="o">=</span><span class="s1">&#39;Magento Bindings&#39;</span><span class="p">,</span>
     <span class="p">)</span></div>
 
 
 <span class="nd">@magento</span>
 <div class="viewcode-block" id="AccountInvoiceAdapter"><a class="viewcode-back" href="../../../../api/api_invoice.html#openerp.addons.magentoerpconnect.invoice.AccountInvoiceAdapter">[docs]</a><span class="k">class</span> <span class="nc">AccountInvoiceAdapter</span><span class="p">(</span><span class="n">GenericAdapter</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Backend Adapter for the Magento Invoice &quot;&quot;&quot;</span>
-    <span class="n">_model_name</span> <span class="o">=</span> <span class="s">&#39;magento.account.invoice&#39;</span>
-    <span class="n">_magento_model</span> <span class="o">=</span> <span class="s">&#39;sales_order_invoice&#39;</span>
-    <span class="n">_admin_path</span> <span class="o">=</span> <span class="s">&#39;sales_invoice/view/invoice_id/{id}&#39;</span>
+    <span class="n">_model_name</span> <span class="o">=</span> <span class="s1">&#39;magento.account.invoice&#39;</span>
+    <span class="n">_magento_model</span> <span class="o">=</span> <span class="s1">&#39;sales_order_invoice&#39;</span>
+    <span class="n">_admin_path</span> <span class="o">=</span> <span class="s1">&#39;sales_invoice/view/invoice_id/{id}&#39;</span>
 
     <span class="k">def</span> <span class="nf">_call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">arguments</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">AccountInvoiceAdapter</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">_call</span><span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="n">arguments</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">xmlrpclib</span><span class="o">.</span><span class="n">Fault</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
-            <span class="c"># this is the error in the Magento API</span>
-            <span class="c"># when the invoice does not exist</span>
+            <span class="c1"># this is the error in the Magento API</span>
+            <span class="c1"># when the invoice does not exist</span>
             <span class="k">if</span> <span class="n">err</span><span class="o">.</span><span class="n">faultCode</span> <span class="o">==</span> <span class="mi">100</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">IDMissingInBackend</span>
             <span class="k">else</span><span class="p">:</span>
@@ -330,7 +330,7 @@
 <div class="viewcode-block" id="AccountInvoiceAdapter.create"><a class="viewcode-back" href="../../../../api/api_invoice.html#openerp.addons.magentoerpconnect.invoice.AccountInvoiceAdapter.create">[docs]</a>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order_increment_id</span><span class="p">,</span> <span class="n">items</span><span class="p">,</span> <span class="n">comment</span><span class="p">,</span> <span class="n">email</span><span class="p">,</span>
                <span class="n">include_comment</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Create a record on the external system &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call</span><span class="p">(</span><span class="s">&#39;</span><span class="si">%s</span><span class="s">.create&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_magento_model</span><span class="p">,</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">.create&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_magento_model</span><span class="p">,</span>
                           <span class="p">[</span><span class="n">order_increment_id</span><span class="p">,</span> <span class="n">items</span><span class="p">,</span> <span class="n">comment</span><span class="p">,</span>
                            <span class="n">email</span><span class="p">,</span> <span class="n">include_comment</span><span class="p">])</span></div>
 
@@ -344,21 +344,21 @@
         <span class="k">if</span> <span class="n">filters</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="n">filters</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">if</span> <span class="n">order_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="n">filters</span><span class="p">[</span><span class="s">&#39;order_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;eq&#39;</span><span class="p">:</span> <span class="n">order_id</span><span class="p">}</span>
+            <span class="n">filters</span><span class="p">[</span><span class="s1">&#39;order_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;eq&#39;</span><span class="p">:</span> <span class="n">order_id</span><span class="p">}</span>
         <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">AccountInvoiceAdapter</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">search_read</span><span class="p">(</span><span class="n">filters</span><span class="o">=</span><span class="n">filters</span><span class="p">)</span></div></div>
 
 
 <span class="nd">@magento</span>
 <div class="viewcode-block" id="MagentoInvoiceExporter"><a class="viewcode-back" href="../../../../api/api_invoice.html#openerp.addons.magentoerpconnect.invoice.MagentoInvoiceExporter">[docs]</a><span class="k">class</span> <span class="nc">MagentoInvoiceExporter</span><span class="p">(</span><span class="n">Exporter</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Export invoices to Magento &quot;&quot;&quot;</span>
-    <span class="n">_model_name</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;magento.account.invoice&#39;</span><span class="p">]</span>
+    <span class="n">_model_name</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;magento.account.invoice&#39;</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="nf">_export_invoice</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">magento_id</span><span class="p">,</span> <span class="n">lines_info</span><span class="p">,</span> <span class="n">mail_notification</span><span class="p">):</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">lines_info</span><span class="p">:</span>  <span class="c"># invoice without any line for the sale order</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">lines_info</span><span class="p">:</span>  <span class="c1"># invoice without any line for the sale order</span>
             <span class="k">return</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend_adapter</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">magento_id</span><span class="p">,</span>
                                            <span class="n">lines_info</span><span class="p">,</span>
-                                           <span class="n">_</span><span class="p">(</span><span class="s">&quot;Invoice Created&quot;</span><span class="p">),</span>
+                                           <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Invoice Created&quot;</span><span class="p">),</span>
                                            <span class="n">mail_notification</span><span class="p">,</span>
                                            <span class="bp">False</span><span class="p">)</span>
 
@@ -373,14 +373,14 @@
 <span class="sd">        :rtype: dict</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">item_qty</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="c"># get product and quantities to invoice</span>
-        <span class="c"># if no magento id found, do not export it</span>
+        <span class="c1"># get product and quantities to invoice</span>
+        <span class="c1"># if no magento id found, do not export it</span>
         <span class="n">order</span> <span class="o">=</span> <span class="n">invoice</span><span class="o">.</span><span class="n">magento_order_id</span>
         <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">invoice</span><span class="o">.</span><span class="n">invoice_line</span><span class="p">:</span>
             <span class="n">product</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">product_id</span>
-            <span class="c"># find the order line with the same product</span>
-            <span class="c"># and get the magento item_id (id of the line)</span>
-            <span class="c"># to invoice</span>
+            <span class="c1"># find the order line with the same product</span>
+            <span class="c1"># and get the magento item_id (id of the line)</span>
+            <span class="c1"># to invoice</span>
             <span class="n">order_line</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">line</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">order</span><span class="o">.</span><span class="n">magento_order_line_ids</span>
                                <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">product_id</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">product</span><span class="o">.</span><span class="n">id</span><span class="p">),</span>
                               <span class="bp">None</span><span class="p">)</span>
@@ -407,29 +407,29 @@
                                               <span class="n">lines_info</span><span class="p">,</span>
                                               <span class="n">mail_notification</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">xmlrpclib</span><span class="o">.</span><span class="n">Fault</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
-            <span class="c"># When the invoice is already created on Magento, it returns:</span>
-            <span class="c"># &lt;Fault 102: &#39;Cannot do invoice for order.&#39;&gt;</span>
-            <span class="c"># We&#39;ll search the Magento invoice ID to store it in OpenERP</span>
+            <span class="c1"># When the invoice is already created on Magento, it returns:</span>
+            <span class="c1"># &lt;Fault 102: &#39;Cannot do invoice for order.&#39;&gt;</span>
+            <span class="c1"># We&#39;ll search the Magento invoice ID to store it in OpenERP</span>
             <span class="k">if</span> <span class="n">err</span><span class="o">.</span><span class="n">faultCode</span> <span class="o">==</span> <span class="mi">102</span><span class="p">:</span>
-                <span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&#39;Invoice already exists on Magento for &#39;</span>
-                              <span class="s">&#39;sale order with magento id </span><span class="si">%s</span><span class="s">, trying to find &#39;</span>
-                              <span class="s">&#39;the invoice id.&#39;</span><span class="p">,</span>
+                <span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Invoice already exists on Magento for &#39;</span>
+                              <span class="s1">&#39;sale order with magento id </span><span class="si">%s</span><span class="s1">, trying to find &#39;</span>
+                              <span class="s1">&#39;the invoice id.&#39;</span><span class="p">,</span>
                               <span class="n">magento_order</span><span class="o">.</span><span class="n">magento_id</span><span class="p">)</span>
                 <span class="n">magento_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_existing_invoice</span><span class="p">(</span><span class="n">magento_order</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">magento_id</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-                    <span class="c"># In that case, we let the exception bubble up so</span>
-                    <span class="c"># the user is informed of the 102 error.</span>
-                    <span class="c"># We couldn&#39;t find the invoice supposedly existing</span>
-                    <span class="c"># so an investigation may be necessary.</span>
+                    <span class="c1"># In that case, we let the exception bubble up so</span>
+                    <span class="c1"># the user is informed of the 102 error.</span>
+                    <span class="c1"># We couldn&#39;t find the invoice supposedly existing</span>
+                    <span class="c1"># so an investigation may be necessary.</span>
                     <span class="k">raise</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span>
-        <span class="c"># When the invoice already exists on Magento, it may return</span>
-        <span class="c"># a 102 error (handled above) or return silently without ID</span>
+        <span class="c1"># When the invoice already exists on Magento, it may return</span>
+        <span class="c1"># a 102 error (handled above) or return silently without ID</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">magento_id</span><span class="p">:</span>
-            <span class="c"># If Magento returned no ID, try to find the Magento</span>
-            <span class="c"># invoice, but if we don&#39;t find it, let consider the job</span>
-            <span class="c"># as done, because Magento did not raised an error</span>
+            <span class="c1"># If Magento returned no ID, try to find the Magento</span>
+            <span class="c1"># invoice, but if we don&#39;t find it, let consider the job</span>
+            <span class="c1"># as done, because Magento did not raised an error</span>
             <span class="n">magento_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_existing_invoice</span><span class="p">(</span><span class="n">magento_order</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">magento_id</span><span class="p">:</span>
@@ -442,10 +442,10 @@
             <span class="k">return</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">invoices</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">return</span>
-        <span class="k">return</span> <span class="n">invoices</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s">&#39;increment_id&#39;</span><span class="p">]</span></div>
+        <span class="k">return</span> <span class="n">invoices</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;increment_id&#39;</span><span class="p">]</span></div>
 
 
-<span class="n">MagentoInvoiceSynchronizer</span> <span class="o">=</span> <span class="n">MagentoInvoiceExporter</span>  <span class="c"># deprecated</span>
+<span class="n">MagentoInvoiceSynchronizer</span> <span class="o">=</span> <span class="n">MagentoInvoiceExporter</span>  <span class="c1"># deprecated</span>
 
 
 <span class="nd">@on_invoice_validated</span>
@@ -456,8 +456,8 @@
 <span class="sd">    be exported to Magento.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">invoice</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">env</span><span class="p">[</span><span class="n">model_name</span><span class="p">]</span><span class="o">.</span><span class="n">browse</span><span class="p">(</span><span class="n">record_id</span><span class="p">)</span>
-    <span class="c"># find the magento store to retrieve the backend</span>
-    <span class="c"># we use the shop as many sale orders can be related to an invoice</span>
+    <span class="c1"># find the magento store to retrieve the backend</span>
+    <span class="c1"># we use the shop as many sale orders can be related to an invoice</span>
     <span class="k">for</span> <span class="n">sale</span> <span class="ow">in</span> <span class="n">invoice</span><span class="o">.</span><span class="n">sale_ids</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">magento_sale</span> <span class="ow">in</span> <span class="n">sale</span><span class="o">.</span><span class="n">magento_bind_ids</span><span class="p">:</span>
             <span class="n">binding_exists</span> <span class="o">=</span> <span class="bp">False</span>
@@ -467,8 +467,8 @@
                     <span class="k">break</span>
             <span class="k">if</span> <span class="n">binding_exists</span><span class="p">:</span>
                 <span class="k">continue</span>
-            <span class="c"># Check if invoice state matches configuration setting</span>
-            <span class="c"># for when to export an invoice</span>
+            <span class="c1"># Check if invoice state matches configuration setting</span>
+            <span class="c1"># for when to export an invoice</span>
             <span class="n">magento_store</span> <span class="o">=</span> <span class="n">magento_sale</span><span class="o">.</span><span class="n">store_id</span>
             <span class="n">payment_method</span> <span class="o">=</span> <span class="n">sale</span><span class="o">.</span><span class="n">payment_method_id</span>
             <span class="k">if</span> <span class="n">payment_method</span> <span class="ow">and</span> <span class="n">payment_method</span><span class="o">.</span><span class="n">create_invoice_on</span><span class="p">:</span>
@@ -477,13 +477,13 @@
                 <span class="n">create_invoice</span> <span class="o">=</span> <span class="n">magento_store</span><span class="o">.</span><span class="n">create_invoice_on</span>
 
             <span class="k">if</span> <span class="n">create_invoice</span> <span class="o">==</span> <span class="n">invoice</span><span class="o">.</span><span class="n">state</span><span class="p">:</span>
-                <span class="n">session</span><span class="o">.</span><span class="n">env</span><span class="p">[</span><span class="s">&#39;magento.account.invoice&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">create</span><span class="p">({</span>
-                    <span class="s">&#39;backend_id&#39;</span><span class="p">:</span> <span class="n">magento_sale</span><span class="o">.</span><span class="n">backend_id</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-                    <span class="s">&#39;openerp_id&#39;</span><span class="p">:</span> <span class="n">invoice</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-                    <span class="s">&#39;magento_order_id&#39;</span><span class="p">:</span> <span class="n">magento_sale</span><span class="o">.</span><span class="n">id</span><span class="p">})</span></div>
+                <span class="n">session</span><span class="o">.</span><span class="n">env</span><span class="p">[</span><span class="s1">&#39;magento.account.invoice&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">create</span><span class="p">({</span>
+                    <span class="s1">&#39;backend_id&#39;</span><span class="p">:</span> <span class="n">magento_sale</span><span class="o">.</span><span class="n">backend_id</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                    <span class="s1">&#39;openerp_id&#39;</span><span class="p">:</span> <span class="n">invoice</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                    <span class="s1">&#39;magento_order_id&#39;</span><span class="p">:</span> <span class="n">magento_sale</span><span class="o">.</span><span class="n">id</span><span class="p">})</span></div>
 
 
-<span class="nd">@on_record_create</span><span class="p">(</span><span class="n">model_names</span><span class="o">=</span><span class="s">&#39;magento.account.invoice&#39;</span><span class="p">)</span>
+<span class="nd">@on_record_create</span><span class="p">(</span><span class="n">model_names</span><span class="o">=</span><span class="s1">&#39;magento.account.invoice&#39;</span><span class="p">)</span>
 <div class="viewcode-block" id="delay_export_account_invoice"><a class="viewcode-back" href="../../../../api/api_invoice.html#openerp.addons.magentoerpconnect.invoice.delay_export_account_invoice">[docs]</a><span class="k">def</span> <span class="nf">delay_export_account_invoice</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">record_id</span><span class="p">,</span> <span class="n">vals</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Delay the job to export the magento invoice.</span>
@@ -491,16 +491,16 @@
     <span class="n">export_invoice</span><span class="o">.</span><span class="n">delay</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">record_id</span><span class="p">)</span></div>
 
 
-<span class="nd">@job</span><span class="p">(</span><span class="n">default_channel</span><span class="o">=</span><span class="s">&#39;root.magento&#39;</span><span class="p">)</span>
+<span class="nd">@job</span><span class="p">(</span><span class="n">default_channel</span><span class="o">=</span><span class="s1">&#39;root.magento&#39;</span><span class="p">)</span>
 <span class="nd">@related_action</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="n">unwrap_binding</span><span class="p">)</span>
 <div class="viewcode-block" id="export_invoice_paid"><a class="viewcode-back" href="../../../../api/api_invoice.html#openerp.addons.magentoerpconnect.invoice.export_invoice_paid">[docs]</a><span class="k">def</span> <span class="nf">export_invoice_paid</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">record_id</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Deprecated in 2.1.0.dev0. &quot;&quot;&quot;</span>
-    <span class="n">_logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s">&#39;Deprecated: the export_invoice_paid() job is deprecated &#39;</span>
-                    <span class="s">&#39;in favor of export_invoice()&#39;</span><span class="p">)</span>
+    <span class="n">_logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Deprecated: the export_invoice_paid() job is deprecated &#39;</span>
+                    <span class="s1">&#39;in favor of export_invoice()&#39;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">export_invoice</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">record_id</span><span class="p">)</span></div>
 
 
-<span class="nd">@job</span><span class="p">(</span><span class="n">default_channel</span><span class="o">=</span><span class="s">&#39;root.magento&#39;</span><span class="p">)</span>
+<span class="nd">@job</span><span class="p">(</span><span class="n">default_channel</span><span class="o">=</span><span class="s1">&#39;root.magento&#39;</span><span class="p">)</span>
 <span class="nd">@related_action</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="n">unwrap_binding</span><span class="p">)</span>
 <div class="viewcode-block" id="export_invoice"><a class="viewcode-back" href="../../../../api/api_invoice.html#openerp.addons.magentoerpconnect.invoice.export_invoice">[docs]</a><span class="k">def</span> <span class="nf">export_invoice</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">record_id</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Export a validated or paid invoice. &quot;&quot;&quot;</span>
@@ -526,7 +526,7 @@
     </p>
     <p>
         &copy; Copyright 2013-2015, Odoo Community Association (OCA).<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.3.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.4.<br/>
     </p>
   </div>
 </footer>

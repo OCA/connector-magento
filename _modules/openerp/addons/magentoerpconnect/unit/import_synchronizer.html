@@ -237,26 +237,26 @@
     <div class="col-md-12 content">
       
   <h1>Source code for openerp.addons.magentoerpconnect.unit.import_synchronizer</h1><div class="highlight"><pre>
-<span class="c"># -*- coding: utf-8 -*-</span>
-<span class="c">##############################################################################</span>
-<span class="c">#</span>
-<span class="c">#    Author: Guewen Baconnier</span>
-<span class="c">#    Copyright 2013 Camptocamp SA</span>
-<span class="c">#</span>
-<span class="c">#    This program is free software: you can redistribute it and/or modify</span>
-<span class="c">#    it under the terms of the GNU Affero General Public License as</span>
-<span class="c">#    published by the Free Software Foundation, either version 3 of the</span>
-<span class="c">#    License, or (at your option) any later version.</span>
-<span class="c">#</span>
-<span class="c">#    This program is distributed in the hope that it will be useful,</span>
-<span class="c">#    but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
-<span class="c">#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
-<span class="c">#    GNU Affero General Public License for more details.</span>
-<span class="c">#</span>
-<span class="c">#    You should have received a copy of the GNU Affero General Public License</span>
-<span class="c">#    along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
-<span class="c">#</span>
-<span class="c">##############################################################################</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1">##############################################################################</span>
+<span class="c1">#</span>
+<span class="c1">#    Author: Guewen Baconnier</span>
+<span class="c1">#    Copyright 2013 Camptocamp SA</span>
+<span class="c1">#</span>
+<span class="c1">#    This program is free software: you can redistribute it and/or modify</span>
+<span class="c1">#    it under the terms of the GNU Affero General Public License as</span>
+<span class="c1">#    published by the Free Software Foundation, either version 3 of the</span>
+<span class="c1">#    License, or (at your option) any later version.</span>
+<span class="c1">#</span>
+<span class="c1">#    This program is distributed in the hope that it will be useful,</span>
+<span class="c1">#    but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1">#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c1">#    GNU Affero General Public License for more details.</span>
+<span class="c1">#</span>
+<span class="c1">#    You should have received a copy of the GNU Affero General Public License</span>
+<span class="c1">#    along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+<span class="c1">#</span>
+<span class="c1">##############################################################################</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
 
@@ -307,22 +307,22 @@
         <span class="sd">&quot;&quot;&quot;Return True if the import should be skipped because</span>
 <span class="sd">        it is already up-to-date in OpenERP&quot;&quot;&quot;</span>
         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">magento_record</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">magento_record</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;updated_at&#39;</span><span class="p">):</span>
-            <span class="k">return</span>  <span class="c"># no update date on Magento, always import it.</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">magento_record</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;updated_at&#39;</span><span class="p">):</span>
+            <span class="k">return</span>  <span class="c1"># no update date on Magento, always import it.</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">binding</span><span class="p">:</span>
-            <span class="k">return</span>  <span class="c"># it does not exist so it should not be skipped</span>
+            <span class="k">return</span>  <span class="c1"># it does not exist so it should not be skipped</span>
         <span class="n">sync</span> <span class="o">=</span> <span class="n">binding</span><span class="o">.</span><span class="n">sync_date</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">sync</span><span class="p">:</span>
             <span class="k">return</span>
         <span class="n">from_string</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Datetime</span><span class="o">.</span><span class="n">from_string</span>
         <span class="n">sync_date</span> <span class="o">=</span> <span class="n">from_string</span><span class="p">(</span><span class="n">sync</span><span class="p">)</span>
-        <span class="n">magento_date</span> <span class="o">=</span> <span class="n">from_string</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">magento_record</span><span class="p">[</span><span class="s">&#39;updated_at&#39;</span><span class="p">])</span>
-        <span class="c"># if the last synchronization date is greater than the last</span>
-        <span class="c"># update in magento, we skip the import.</span>
-        <span class="c"># Important: at the beginning of the exporters flows, we have to</span>
-        <span class="c"># check if the magento_date is more recent than the sync_date</span>
-        <span class="c"># and if so, schedule a new import. If we don&#39;t do that, we&#39;ll</span>
-        <span class="c"># miss changes done in Magento</span>
+        <span class="n">magento_date</span> <span class="o">=</span> <span class="n">from_string</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">magento_record</span><span class="p">[</span><span class="s1">&#39;updated_at&#39;</span><span class="p">])</span>
+        <span class="c1"># if the last synchronization date is greater than the last</span>
+        <span class="c1"># update in magento, we skip the import.</span>
+        <span class="c1"># Important: at the beginning of the exporters flows, we have to</span>
+        <span class="c1"># check if the magento_date is more recent than the sync_date</span>
+        <span class="c1"># and if so, schedule a new import. If we don&#39;t do that, we&#39;ll</span>
+        <span class="c1"># miss changes done in Magento</span>
         <span class="k">return</span> <span class="n">magento_date</span> <span class="o">&lt;</span> <span class="n">sync_date</span>
 
     <span class="k">def</span> <span class="nf">_import_dependency</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">magento_id</span><span class="p">,</span> <span class="n">binding_model</span><span class="p">,</span>
@@ -404,11 +404,11 @@
 
     <span class="k">def</span> <span class="nf">_create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Create the OpenERP record &quot;&quot;&quot;</span>
-        <span class="c"># special check on data before import</span>
+        <span class="c1"># special check on data before import</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_validate_data</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
         <span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">with_context</span><span class="p">(</span><span class="n">connector_no_export</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
         <span class="n">binding</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-        <span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&#39;</span><span class="si">%d</span><span class="s"> created from magento </span><span class="si">%s</span><span class="s">&#39;</span><span class="p">,</span> <span class="n">binding</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">magento_id</span><span class="p">)</span>
+        <span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%d</span><span class="s1"> created from magento </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">binding</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">magento_id</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">binding</span>
 
     <span class="k">def</span> <span class="nf">_update_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">map_record</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -416,10 +416,10 @@
 
     <span class="k">def</span> <span class="nf">_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">binding</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Update an OpenERP record &quot;&quot;&quot;</span>
-        <span class="c"># special check on data before import</span>
+        <span class="c1"># special check on data before import</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_validate_data</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
         <span class="n">binding</span><span class="o">.</span><span class="n">with_context</span><span class="p">(</span><span class="n">connector_no_export</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-        <span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&#39;</span><span class="si">%d</span><span class="s"> updated from magento </span><span class="si">%s</span><span class="s">&#39;</span><span class="p">,</span> <span class="n">binding</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">magento_id</span><span class="p">)</span>
+        <span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%d</span><span class="s1"> updated from magento </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">binding</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">magento_id</span><span class="p">)</span>
         <span class="k">return</span>
 
     <span class="k">def</span> <span class="nf">_after_import</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">binding</span><span class="p">):</span>
@@ -432,19 +432,19 @@
 <span class="sd">        :param magento_id: identifier of the record on Magento</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">magento_id</span> <span class="o">=</span> <span class="n">magento_id</span>
-        <span class="n">lock_name</span> <span class="o">=</span> <span class="s">&#39;import({}, {}, {}, {})&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">lock_name</span> <span class="o">=</span> <span class="s1">&#39;import({}, {}, {}, {})&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">backend_record</span><span class="o">.</span><span class="n">_name</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">backend_record</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">_name</span><span class="p">,</span>
             <span class="n">magento_id</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="c"># Keep a lock on this import until the transaction is committed</span>
+        <span class="c1"># Keep a lock on this import until the transaction is committed</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">advisory_lock_or_retry</span><span class="p">(</span><span class="n">lock_name</span><span class="p">)</span>
 
         <span class="k">try</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">magento_record</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_magento_data</span><span class="p">()</span>
         <span class="k">except</span> <span class="n">IDMissingInBackend</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">_</span><span class="p">(</span><span class="s">&#39;Record does no longer exist in Magento&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">_</span><span class="p">(</span><span class="s1">&#39;Record does no longer exist in Magento&#39;</span><span class="p">)</span>
 
         <span class="n">skip</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_must_skip</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">skip</span><span class="p">:</span>
@@ -453,10 +453,10 @@
         <span class="n">binding</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_binding</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">force</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_uptodate</span><span class="p">(</span><span class="n">binding</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">_</span><span class="p">(</span><span class="s">&#39;Already up-to-date.&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">_</span><span class="p">(</span><span class="s1">&#39;Already up-to-date.&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_before_import</span><span class="p">()</span>
 
-        <span class="c"># import the missing linked resources</span>
+        <span class="c1"># import the missing linked resources</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_import_dependencies</span><span class="p">()</span>
 
         <span class="n">map_record</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_map_data</span><span class="p">()</span>
@@ -473,7 +473,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_after_import</span><span class="p">(</span><span class="n">binding</span><span class="p">)</span></div></div>
 
 
-<span class="n">MagentoImportSynchronizer</span> <span class="o">=</span> <span class="n">MagentoImporter</span>  <span class="c"># deprecated</span>
+<span class="n">MagentoImportSynchronizer</span> <span class="o">=</span> <span class="n">MagentoImporter</span>  <span class="c1"># deprecated</span>
 
 
 <div class="viewcode-block" id="BatchImporter"><a class="viewcode-back" href="../../../../../api/api_synchronizer.html#openerp.addons.magentoerpconnect.unit.import_synchronizer.BatchImporter">[docs]</a><span class="k">class</span> <span class="nc">BatchImporter</span><span class="p">(</span><span class="n">Importer</span><span class="p">):</span>
@@ -496,7 +496,7 @@
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
 
-<span class="n">BatchImportSynchronizer</span> <span class="o">=</span> <span class="n">BatchImporter</span>  <span class="c"># deprecated</span>
+<span class="n">BatchImportSynchronizer</span> <span class="o">=</span> <span class="n">BatchImporter</span>  <span class="c1"># deprecated</span>
 
 
 <div class="viewcode-block" id="DirectBatchImporter"><a class="viewcode-back" href="../../../../../api/api_synchronizer.html#openerp.addons.magentoerpconnect.unit.import_synchronizer.DirectBatchImporter">[docs]</a><span class="k">class</span> <span class="nc">DirectBatchImporter</span><span class="p">(</span><span class="n">BatchImporter</span><span class="p">):</span>
@@ -511,7 +511,7 @@
                       <span class="n">record_id</span><span class="p">)</span></div>
 
 
-<span class="n">DirectBatchImport</span> <span class="o">=</span> <span class="n">DirectBatchImporter</span>  <span class="c"># deprecated</span>
+<span class="n">DirectBatchImport</span> <span class="o">=</span> <span class="n">DirectBatchImporter</span>  <span class="c1"># deprecated</span>
 
 
 <div class="viewcode-block" id="DelayedBatchImporter"><a class="viewcode-back" href="../../../../../api/api_synchronizer.html#openerp.addons.magentoerpconnect.unit.import_synchronizer.DelayedBatchImporter">[docs]</a><span class="k">class</span> <span class="nc">DelayedBatchImporter</span><span class="p">(</span><span class="n">BatchImporter</span><span class="p">):</span>
@@ -527,19 +527,19 @@
                             <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
-<span class="n">DelayedBatchImport</span> <span class="o">=</span> <span class="n">DelayedBatchImporter</span>  <span class="c"># deprecated</span>
+<span class="n">DelayedBatchImport</span> <span class="o">=</span> <span class="n">DelayedBatchImporter</span>  <span class="c1"># deprecated</span>
 
 
 <span class="nd">@magento</span>
 <div class="viewcode-block" id="SimpleRecordImporter"><a class="viewcode-back" href="../../../../../api/api_synchronizer.html#openerp.addons.magentoerpconnect.unit.import_synchronizer.SimpleRecordImporter">[docs]</a><span class="k">class</span> <span class="nc">SimpleRecordImporter</span><span class="p">(</span><span class="n">MagentoImporter</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Import one Magento Website &quot;&quot;&quot;</span>
     <span class="n">_model_name</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="s">&#39;magento.website&#39;</span><span class="p">,</span>
-        <span class="s">&#39;magento.res.partner.category&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;magento.website&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;magento.res.partner.category&#39;</span><span class="p">,</span>
     <span class="p">]</span></div>
 
 
-<span class="n">SimpleRecordImport</span> <span class="o">=</span> <span class="n">SimpleRecordImporter</span>  <span class="c"># deprecated</span>
+<span class="n">SimpleRecordImport</span> <span class="o">=</span> <span class="n">SimpleRecordImporter</span>  <span class="c1"># deprecated</span>
 
 
 <span class="nd">@magento</span>
@@ -550,8 +550,8 @@
 <span class="sd">    For instance from the products and products&#39; categories importers.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">_model_name</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;magento.product.category&#39;</span><span class="p">,</span>
-                   <span class="s">&#39;magento.product.product&#39;</span><span class="p">,</span>
+    <span class="n">_model_name</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;magento.product.category&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;magento.product.product&#39;</span><span class="p">,</span>
                    <span class="p">]</span>
 
     <span class="k">def</span> <span class="nf">_get_magento_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">storeview_id</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
@@ -560,8 +560,8 @@
 
 <div class="viewcode-block" id="TranslationImporter.run"><a class="viewcode-back" href="../../../../../api/api_synchronizer.html#openerp.addons.magentoerpconnect.unit.import_synchronizer.TranslationImporter.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">magento_id</span><span class="p">,</span> <span class="n">binding_id</span><span class="p">,</span> <span class="n">mapper_class</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">magento_id</span> <span class="o">=</span> <span class="n">magento_id</span>
-        <span class="n">storeviews</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">[</span><span class="s">&#39;magento.storeview&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">search</span><span class="p">(</span>
-            <span class="p">[(</span><span class="s">&#39;backend_id&#39;</span><span class="p">,</span> <span class="s">&#39;=&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend_record</span><span class="o">.</span><span class="n">id</span><span class="p">)]</span>
+        <span class="n">storeviews</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">[</span><span class="s1">&#39;magento.storeview&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">search</span><span class="p">(</span>
+            <span class="p">[(</span><span class="s1">&#39;backend_id&#39;</span><span class="p">,</span> <span class="s1">&#39;=&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend_record</span><span class="o">.</span><span class="n">id</span><span class="p">)]</span>
         <span class="p">)</span>
         <span class="n">default_lang</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend_record</span><span class="o">.</span><span class="n">default_lang_id</span>
         <span class="n">lang_storeviews</span> <span class="o">=</span> <span class="p">[</span><span class="n">sv</span> <span class="k">for</span> <span class="n">sv</span> <span class="ow">in</span> <span class="n">storeviews</span>
@@ -569,10 +569,10 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="n">lang_storeviews</span><span class="p">:</span>
             <span class="k">return</span>
 
-        <span class="c"># find the translatable fields of the model</span>
+        <span class="c1"># find the translatable fields of the model</span>
         <span class="n">fields</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">fields_get</span><span class="p">()</span>
         <span class="n">translatable_fields</span> <span class="o">=</span> <span class="p">[</span><span class="n">field</span> <span class="k">for</span> <span class="n">field</span><span class="p">,</span> <span class="n">attrs</span> <span class="ow">in</span> <span class="n">fields</span><span class="o">.</span><span class="n">iteritems</span><span class="p">()</span>
-                               <span class="k">if</span> <span class="n">attrs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;translate&#39;</span><span class="p">)]</span>
+                               <span class="k">if</span> <span class="n">attrs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;translate&#39;</span><span class="p">)]</span>
 
         <span class="k">if</span> <span class="n">mapper_class</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="n">mapper</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mapper</span>
@@ -597,8 +597,8 @@
     <span class="sd">&quot;&quot;&quot; Add a connector.checkpoint on the underlying model</span>
 <span class="sd">    (not the magento.* but the _inherits&#39;ed model) &quot;&quot;&quot;</span>
 
-    <span class="n">_model_name</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;magento.product.product&#39;</span><span class="p">,</span>
-                   <span class="s">&#39;magento.product.category&#39;</span><span class="p">,</span>
+    <span class="n">_model_name</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;magento.product.product&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;magento.product.category&#39;</span><span class="p">,</span>
                    <span class="p">]</span>
 
 <div class="viewcode-block" id="AddCheckpoint.run"><a class="viewcode-back" href="../../../../../api/api_synchronizer.html#openerp.addons.magentoerpconnect.unit.import_synchronizer.AddCheckpoint.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">openerp_binding_id</span><span class="p">):</span>
@@ -610,7 +610,7 @@
                        <span class="bp">self</span><span class="o">.</span><span class="n">backend_record</span><span class="o">.</span><span class="n">id</span><span class="p">)</span></div></div>
 
 
-<span class="nd">@job</span><span class="p">(</span><span class="n">default_channel</span><span class="o">=</span><span class="s">&#39;root.magento&#39;</span><span class="p">)</span>
+<span class="nd">@job</span><span class="p">(</span><span class="n">default_channel</span><span class="o">=</span><span class="s1">&#39;root.magento&#39;</span><span class="p">)</span>
 <div class="viewcode-block" id="import_batch"><a class="viewcode-back" href="../../../../../api/api_synchronizer.html#openerp.addons.magentoerpconnect.unit.import_synchronizer.import_batch">[docs]</a><span class="k">def</span> <span class="nf">import_batch</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">backend_id</span><span class="p">,</span> <span class="n">filters</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Prepare a batch import of records from Magento &quot;&quot;&quot;</span>
     <span class="n">env</span> <span class="o">=</span> <span class="n">get_environment</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">backend_id</span><span class="p">)</span>
@@ -618,7 +618,7 @@
     <span class="n">importer</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">filters</span><span class="o">=</span><span class="n">filters</span><span class="p">)</span></div>
 
 
-<span class="nd">@job</span><span class="p">(</span><span class="n">default_channel</span><span class="o">=</span><span class="s">&#39;root.magento&#39;</span><span class="p">)</span>
+<span class="nd">@job</span><span class="p">(</span><span class="n">default_channel</span><span class="o">=</span><span class="s1">&#39;root.magento&#39;</span><span class="p">)</span>
 <span class="nd">@related_action</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="n">link</span><span class="p">)</span>
 <div class="viewcode-block" id="import_record"><a class="viewcode-back" href="../../../../../api/api_synchronizer.html#openerp.addons.magentoerpconnect.unit.import_synchronizer.import_record">[docs]</a><span class="k">def</span> <span class="nf">import_record</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">backend_id</span><span class="p">,</span> <span class="n">magento_id</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Import a record from Magento &quot;&quot;&quot;</span>
@@ -642,7 +642,7 @@
     </p>
     <p>
         &copy; Copyright 2013-2015, Odoo Community Association (OCA).<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.3.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.4.<br/>
     </p>
   </div>
 </footer>

@@ -470,9 +470,9 @@ others with the tests.</p>
                              <span class="bp">self</span><span class="o">.</span><span class="n">magento</span><span class="o">.</span><span class="n">username</span><span class="p">,</span>
                              <span class="bp">self</span><span class="o">.</span><span class="n">magento</span><span class="o">.</span><span class="n">password</span><span class="p">)</span> <span class="k">as</span> <span class="n">api</span><span class="p">:</span>
              <span class="n">result</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="n">arguments</span><span class="p">)</span>
-<span class="hll">             <span class="c"># Uncomment to record requests/responses in ``recorder``</span>
-</span><span class="hll">             <span class="c"># record(method, arguments, result)</span>
-</span>             <span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;api.call(</span><span class="si">%s</span><span class="s">, </span><span class="si">%s</span><span class="s">) returned </span><span class="si">%s</span><span class="s">&quot;</span><span class="p">,</span>
+<span class="hll">             <span class="c1"># Uncomment to record requests/responses in ``recorder``</span>
+</span><span class="hll">             <span class="c1"># record(method, arguments, result)</span>
+</span>             <span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;api.call(</span><span class="si">%s</span><span class="s2">, </span><span class="si">%s</span><span class="s2">) returned </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
                            <span class="n">method</span><span class="p">,</span> <span class="n">arguments</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
              <span class="k">return</span> <span class="n">result</span>
 </pre></div>
@@ -495,8 +495,8 @@ output them using a tool such as <a class="reference external" href="https://erp
 <span class="k">def</span> <span class="nf">test_new</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="o">&lt;...&gt;</span>
     <span class="k">with</span> <span class="n">mock_api</span><span class="p">(</span><span class="n">new_set_of_data</span><span class="p">):</span>
-        <span class="c"># do what the test needs, such as, for instance:</span>
-        <span class="n">import_batch</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="s">&#39;magento.website&#39;</span><span class="p">,</span> <span class="n">backend_id</span><span class="p">)</span>
+        <span class="c1"># do what the test needs, such as, for instance:</span>
+        <span class="n">import_batch</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="s1">&#39;magento.website&#39;</span><span class="p">,</span> <span class="n">backend_id</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>See how to <a class="reference internal" href="#run-the-tests">Run the tests</a></p>
@@ -529,7 +529,7 @@ output them using a tool such as <a class="reference external" href="https://erp
     </p>
     <p>
         &copy; Copyright 2013-2015, Odoo Community Association (OCA).<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.3.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.4.<br/>
     </p>
   </div>
 </footer>

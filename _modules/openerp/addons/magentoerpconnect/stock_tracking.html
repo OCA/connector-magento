@@ -237,26 +237,26 @@
     <div class="col-md-12 content">
       
   <h1>Source code for openerp.addons.magentoerpconnect.stock_tracking</h1><div class="highlight"><pre>
-<span class="c"># -*- coding: utf-8 -*-</span>
-<span class="c">##############################################################################</span>
-<span class="c">#</span>
-<span class="c">#    Author: Guewen Baconnier</span>
-<span class="c">#    Copyright 2013 Camptocamp SA</span>
-<span class="c">#</span>
-<span class="c">#    This program is free software: you can redistribute it and/or modify</span>
-<span class="c">#    it under the terms of the GNU Affero General Public License as</span>
-<span class="c">#    published by the Free Software Foundation, either version 3 of the</span>
-<span class="c">#    License, or (at your option) any later version.</span>
-<span class="c">#</span>
-<span class="c">#    This program is distributed in the hope that it will be useful,</span>
-<span class="c">#    but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
-<span class="c">#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
-<span class="c">#    GNU Affero General Public License for more details.</span>
-<span class="c">#</span>
-<span class="c">#    You should have received a copy of the GNU Affero General Public License</span>
-<span class="c">#    along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
-<span class="c">#</span>
-<span class="c">##############################################################################</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1">##############################################################################</span>
+<span class="c1">#</span>
+<span class="c1">#    Author: Guewen Baconnier</span>
+<span class="c1">#    Copyright 2013 Camptocamp SA</span>
+<span class="c1">#</span>
+<span class="c1">#    This program is free software: you can redistribute it and/or modify</span>
+<span class="c1">#    it under the terms of the GNU Affero General Public License as</span>
+<span class="c1">#    published by the Free Software Foundation, either version 3 of the</span>
+<span class="c1">#    License, or (at your option) any later version.</span>
+<span class="c1">#</span>
+<span class="c1">#    This program is distributed in the hope that it will be useful,</span>
+<span class="c1">#    but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1">#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c1">#    GNU Affero General Public License for more details.</span>
+<span class="c1">#</span>
+<span class="c1">#    You should have received a copy of the GNU Affero General Public License</span>
+<span class="c1">#    along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+<span class="c1">#</span>
+<span class="c1">##############################################################################</span>
 
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">from</span> <span class="nn">openerp</span> <span class="kn">import</span> <span class="n">_</span>
@@ -273,71 +273,71 @@
 
 <span class="nd">@magento</span>
 <div class="viewcode-block" id="MagentoTrackingExporter"><a class="viewcode-back" href="../../../../api/api_stock_tracking.html#openerp.addons.magentoerpconnect.stock_tracking.MagentoTrackingExporter">[docs]</a><span class="k">class</span> <span class="nc">MagentoTrackingExporter</span><span class="p">(</span><span class="n">Exporter</span><span class="p">):</span>
-    <span class="n">_model_name</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;magento.stock.picking&#39;</span><span class="p">]</span>
+    <span class="n">_model_name</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;magento.stock.picking&#39;</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="nf">_get_tracking_args</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">picking</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">(</span><span class="n">picking</span><span class="o">.</span><span class="n">carrier_id</span><span class="o">.</span><span class="n">magento_carrier_code</span><span class="p">,</span>
-                <span class="n">picking</span><span class="o">.</span><span class="n">carrier_id</span><span class="o">.</span><span class="n">magento_tracking_title</span> <span class="ow">or</span> <span class="s">&#39;&#39;</span><span class="p">,</span>
+                <span class="n">picking</span><span class="o">.</span><span class="n">carrier_id</span><span class="o">.</span><span class="n">magento_tracking_title</span> <span class="ow">or</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
                 <span class="n">picking</span><span class="o">.</span><span class="n">carrier_tracking_ref</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">picking</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">picking</span><span class="o">.</span><span class="n">state</span> <span class="o">!=</span> <span class="s">&#39;done&#39;</span><span class="p">:</span>  <span class="c"># should not happen</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;Wrong value for picking state, &quot;</span>
-                             <span class="s">&quot;it must be &#39;done&#39;, found: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">picking</span><span class="o">.</span><span class="n">state</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">picking</span><span class="o">.</span><span class="n">state</span> <span class="o">!=</span> <span class="s1">&#39;done&#39;</span><span class="p">:</span>  <span class="c1"># should not happen</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Wrong value for picking state, &quot;</span>
+                             <span class="s2">&quot;it must be &#39;done&#39;, found: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">picking</span><span class="o">.</span><span class="n">state</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">picking</span><span class="o">.</span><span class="n">carrier_id</span><span class="o">.</span><span class="n">magento_carrier_code</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">FailedJobError</span><span class="p">(</span><span class="s">&quot;Wrong value for the Magento carrier code &quot;</span>
-                                 <span class="s">&quot;defined in the picking.&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">FailedJobError</span><span class="p">(</span><span class="s2">&quot;Wrong value for the Magento carrier code &quot;</span>
+                                 <span class="s2">&quot;defined in the picking.&quot;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_check_allowed_carrier</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">picking</span><span class="p">,</span> <span class="n">magento_id</span><span class="p">):</span>
         <span class="n">allowed_carriers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend_adapter</span><span class="o">.</span><span class="n">get_carriers</span><span class="p">(</span><span class="n">magento_id</span><span class="p">)</span>
         <span class="n">carrier</span> <span class="o">=</span> <span class="n">picking</span><span class="o">.</span><span class="n">carrier_id</span>
         <span class="k">if</span> <span class="n">carrier</span><span class="o">.</span><span class="n">magento_carrier_code</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">allowed_carriers</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">FailedJobError</span><span class="p">(</span><span class="s">&quot;The carrier </span><span class="si">%(name)s</span><span class="s"> does not accept &quot;</span>
-                                 <span class="s">&quot;tracking numbers on Magento.</span><span class="se">\n\n</span><span class="s">&quot;</span>
-                                 <span class="s">&quot;Tracking codes accepted by Magento:</span><span class="se">\n</span><span class="s">&quot;</span>
-                                 <span class="s">&quot;</span><span class="si">%(allowed)s</span><span class="s">.</span><span class="se">\n\n</span><span class="s">&quot;</span>
-                                 <span class="s">&quot;Actual tracking code:</span><span class="se">\n</span><span class="si">%(code)s</span><span class="se">\n\n</span><span class="s">&quot;</span>
-                                 <span class="s">&quot;Resolution:</span><span class="se">\n</span><span class="s">&quot;</span>
-                                 <span class="s">&quot;* Add support of </span><span class="si">%(code)s</span><span class="s"> in Magento</span><span class="se">\n</span><span class="s">&quot;</span>
-                                 <span class="s">&quot;* Or deactivate the export of tracking &quot;</span>
-                                 <span class="s">&quot;numbers in the setup of the carrier &quot;</span>
-                                 <span class="s">&quot;</span><span class="si">%(name)s</span><span class="s">.&quot;</span> <span class="o">%</span>
-                                 <span class="p">{</span><span class="s">&#39;name&#39;</span><span class="p">:</span> <span class="n">carrier</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-                                  <span class="s">&#39;allowed&#39;</span><span class="p">:</span> <span class="n">allowed_carriers</span><span class="p">,</span>
-                                  <span class="s">&#39;code&#39;</span><span class="p">:</span> <span class="n">carrier</span><span class="o">.</span><span class="n">magento_carrier_code</span><span class="p">})</span>
+            <span class="k">raise</span> <span class="n">FailedJobError</span><span class="p">(</span><span class="s2">&quot;The carrier </span><span class="si">%(name)s</span><span class="s2"> does not accept &quot;</span>
+                                 <span class="s2">&quot;tracking numbers on Magento.</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+                                 <span class="s2">&quot;Tracking codes accepted by Magento:</span><span class="se">\n</span><span class="s2">&quot;</span>
+                                 <span class="s2">&quot;</span><span class="si">%(allowed)s</span><span class="s2">.</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+                                 <span class="s2">&quot;Actual tracking code:</span><span class="se">\n</span><span class="si">%(code)s</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+                                 <span class="s2">&quot;Resolution:</span><span class="se">\n</span><span class="s2">&quot;</span>
+                                 <span class="s2">&quot;* Add support of </span><span class="si">%(code)s</span><span class="s2"> in Magento</span><span class="se">\n</span><span class="s2">&quot;</span>
+                                 <span class="s2">&quot;* Or deactivate the export of tracking &quot;</span>
+                                 <span class="s2">&quot;numbers in the setup of the carrier &quot;</span>
+                                 <span class="s2">&quot;</span><span class="si">%(name)s</span><span class="s2">.&quot;</span> <span class="o">%</span>
+                                 <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">carrier</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                                  <span class="s1">&#39;allowed&#39;</span><span class="p">:</span> <span class="n">allowed_carriers</span><span class="p">,</span>
+                                  <span class="s1">&#39;code&#39;</span><span class="p">:</span> <span class="n">carrier</span><span class="o">.</span><span class="n">magento_carrier_code</span><span class="p">})</span>
 
 <div class="viewcode-block" id="MagentoTrackingExporter.run"><a class="viewcode-back" href="../../../../api/api_stock_tracking.html#openerp.addons.magentoerpconnect.stock_tracking.MagentoTrackingExporter.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">binding_id</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Export the tracking number of a picking to Magento &quot;&quot;&quot;</span>
-        <span class="c"># verify the picking is done + magento id exists</span>
+        <span class="c1"># verify the picking is done + magento id exists</span>
         <span class="n">picking</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">browse</span><span class="p">(</span><span class="n">binding_id</span><span class="p">)</span>
         <span class="n">carrier</span> <span class="o">=</span> <span class="n">picking</span><span class="o">.</span><span class="n">carrier_id</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">carrier</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">FailedJobError</span><span class="p">(</span><span class="s">&#39;The carrier is missing on the picking </span><span class="si">%s</span><span class="s">.&#39;</span> <span class="o">%</span>
+            <span class="k">return</span> <span class="n">FailedJobError</span><span class="p">(</span><span class="s1">&#39;The carrier is missing on the picking </span><span class="si">%s</span><span class="s1">.&#39;</span> <span class="o">%</span>
                                   <span class="n">picking</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">carrier</span><span class="o">.</span><span class="n">magento_export_tracking</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">_</span><span class="p">(</span><span class="s">&#39;The carrier </span><span class="si">%s</span><span class="s"> does not export &#39;</span>
-                     <span class="s">&#39;tracking numbers.&#39;</span><span class="p">)</span> <span class="o">%</span> <span class="n">carrier</span><span class="o">.</span><span class="n">name</span>
+            <span class="k">return</span> <span class="n">_</span><span class="p">(</span><span class="s1">&#39;The carrier </span><span class="si">%s</span><span class="s1"> does not export &#39;</span>
+                     <span class="s1">&#39;tracking numbers.&#39;</span><span class="p">)</span> <span class="o">%</span> <span class="n">carrier</span><span class="o">.</span><span class="n">name</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">picking</span><span class="o">.</span><span class="n">carrier_tracking_ref</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">_</span><span class="p">(</span><span class="s">&#39;No tracking number to send.&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">_</span><span class="p">(</span><span class="s1">&#39;No tracking number to send.&#39;</span><span class="p">)</span>
 
         <span class="n">sale_binding_id</span> <span class="o">=</span> <span class="n">picking</span><span class="o">.</span><span class="n">magento_order_id</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">sale_binding_id</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">FailedJobError</span><span class="p">(</span><span class="s">&quot;No sales order is linked with the picking &quot;</span>
-                                  <span class="s">&quot;</span><span class="si">%s</span><span class="s">, can&#39;t export the tracking number.&quot;</span> <span class="o">%</span>
+            <span class="k">return</span> <span class="n">FailedJobError</span><span class="p">(</span><span class="s2">&quot;No sales order is linked with the picking &quot;</span>
+                                  <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">, can&#39;t export the tracking number.&quot;</span> <span class="o">%</span>
                                   <span class="n">picking</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 
         <span class="n">binder</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">binder_for</span><span class="p">()</span>
         <span class="n">magento_id</span> <span class="o">=</span> <span class="n">binder</span><span class="o">.</span><span class="n">to_backend</span><span class="p">(</span><span class="n">binding_id</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">magento_id</span><span class="p">:</span>
-            <span class="c"># avoid circular reference</span>
+            <span class="c1"># avoid circular reference</span>
             <span class="kn">from</span> <span class="nn">.stock_picking</span> <span class="kn">import</span> <span class="n">MagentoPickingExport</span>
             <span class="n">picking_exporter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">unit_for</span><span class="p">(</span><span class="n">MagentoPickingExport</span><span class="p">)</span>
             <span class="n">picking_exporter</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">binding_id</span><span class="p">)</span>
             <span class="n">magento_id</span> <span class="o">=</span> <span class="n">binder</span><span class="o">.</span><span class="n">to_backend</span><span class="p">(</span><span class="n">binding_id</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">magento_id</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">FailedJobError</span><span class="p">(</span><span class="s">&quot;The delivery order </span><span class="si">%s</span><span class="s"> has no Magento ID, &quot;</span>
-                                  <span class="s">&quot;can&#39;t export the tracking number.&quot;</span> <span class="o">%</span>
+            <span class="k">return</span> <span class="n">FailedJobError</span><span class="p">(</span><span class="s2">&quot;The delivery order </span><span class="si">%s</span><span class="s2"> has no Magento ID, &quot;</span>
+                                  <span class="s2">&quot;can&#39;t export the tracking number.&quot;</span> <span class="o">%</span>
                                   <span class="n">picking</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_validate</span><span class="p">(</span><span class="n">picking</span><span class="p">)</span>
@@ -346,7 +346,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">backend_adapter</span><span class="o">.</span><span class="n">add_tracking_number</span><span class="p">(</span><span class="n">magento_id</span><span class="p">,</span> <span class="o">*</span><span class="n">tracking_args</span><span class="p">)</span></div></div>
 
 
-<span class="n">MagentoTrackingExport</span> <span class="o">=</span> <span class="n">MagentoTrackingExporter</span>  <span class="c"># deprecated</span>
+<span class="n">MagentoTrackingExport</span> <span class="o">=</span> <span class="n">MagentoTrackingExporter</span>  <span class="c1"># deprecated</span>
 
 
 <span class="nd">@on_tracking_number_added</span>
@@ -355,17 +355,17 @@
 <span class="sd">    Call a job to export the tracking number to a existing picking that</span>
 <span class="sd">    must be in done state.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">picking</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">env</span><span class="p">[</span><span class="s">&#39;stock.picking&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">browse</span><span class="p">(</span><span class="n">record_id</span><span class="p">)</span>
+    <span class="n">picking</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">env</span><span class="p">[</span><span class="s1">&#39;stock.picking&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">browse</span><span class="p">(</span><span class="n">record_id</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">binding</span> <span class="ow">in</span> <span class="n">picking</span><span class="o">.</span><span class="n">magento_bind_ids</span><span class="p">:</span>
-        <span class="c"># Set the priority to 20 to have more chance that it would be</span>
-        <span class="c"># executed after the picking creation</span>
+        <span class="c1"># Set the priority to 20 to have more chance that it would be</span>
+        <span class="c1"># executed after the picking creation</span>
         <span class="n">export_tracking_number</span><span class="o">.</span><span class="n">delay</span><span class="p">(</span><span class="n">session</span><span class="p">,</span>
                                      <span class="n">binding</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">_name</span><span class="p">,</span>
                                      <span class="n">binding</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
                                      <span class="n">priority</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span></div>
 
 
-<span class="nd">@job</span><span class="p">(</span><span class="n">default_channel</span><span class="o">=</span><span class="s">&#39;root.magento&#39;</span><span class="p">)</span>
+<span class="nd">@job</span><span class="p">(</span><span class="n">default_channel</span><span class="o">=</span><span class="s1">&#39;root.magento&#39;</span><span class="p">)</span>
 <span class="nd">@related_action</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="n">unwrap_binding</span><span class="p">)</span>
 <div class="viewcode-block" id="export_tracking_number"><a class="viewcode-back" href="../../../../api/api_stock_tracking.html#openerp.addons.magentoerpconnect.stock_tracking.export_tracking_number">[docs]</a><span class="k">def</span> <span class="nf">export_tracking_number</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">record_id</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Export the tracking number of a delivery order. &quot;&quot;&quot;</span>
@@ -391,7 +391,7 @@
     </p>
     <p>
         &copy; Copyright 2013-2015, Odoo Community Association (OCA).<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.3.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.4.<br/>
     </p>
   </div>
 </footer>

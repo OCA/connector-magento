@@ -237,26 +237,26 @@
     <div class="col-md-12 content">
       
   <h1>Source code for openerp.addons.magentoerpconnect.unit.backend_adapter</h1><div class="highlight"><pre>
-<span class="c"># -*- coding: utf-8 -*-</span>
-<span class="c">##############################################################################</span>
-<span class="c">#</span>
-<span class="c">#    Author: Guewen Baconnier</span>
-<span class="c">#    Copyright 2013 Camptocamp SA</span>
-<span class="c">#</span>
-<span class="c">#    This program is free software: you can redistribute it and/or modify</span>
-<span class="c">#    it under the terms of the GNU Affero General Public License as</span>
-<span class="c">#    published by the Free Software Foundation, either version 3 of the</span>
-<span class="c">#    License, or (at your option) any later version.</span>
-<span class="c">#</span>
-<span class="c">#    This program is distributed in the hope that it will be useful,</span>
-<span class="c">#    but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
-<span class="c">#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
-<span class="c">#    GNU Affero General Public License for more details.</span>
-<span class="c">#</span>
-<span class="c">#    You should have received a copy of the GNU Affero General Public License</span>
-<span class="c">#    along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
-<span class="c">#</span>
-<span class="c">##############################################################################</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1">##############################################################################</span>
+<span class="c1">#</span>
+<span class="c1">#    Author: Guewen Baconnier</span>
+<span class="c1">#    Copyright 2013 Camptocamp SA</span>
+<span class="c1">#</span>
+<span class="c1">#    This program is free software: you can redistribute it and/or modify</span>
+<span class="c1">#    it under the terms of the GNU Affero General Public License as</span>
+<span class="c1">#    published by the Free Software Foundation, either version 3 of the</span>
+<span class="c1">#    License, or (at your option) any later version.</span>
+<span class="c1">#</span>
+<span class="c1">#    This program is distributed in the hope that it will be useful,</span>
+<span class="c1">#    but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1">#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c1">#    GNU Affero General Public License for more details.</span>
+<span class="c1">#</span>
+<span class="c1">#    You should have received a copy of the GNU Affero General Public License</span>
+<span class="c1">#    along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+<span class="c1">#</span>
+<span class="c1">##############################################################################</span>
 
 <span class="kn">import</span> <span class="nn">socket</span>
 <span class="kn">import</span> <span class="nn">logging</span>
@@ -270,7 +270,7 @@
 <span class="n">_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
 
 
-<span class="n">MAGENTO_DATETIME_FORMAT</span> <span class="o">=</span> <span class="s">&#39;%Y/%m/</span><span class="si">%d</span><span class="s"> %H:%M:%S&#39;</span>
+<span class="n">MAGENTO_DATETIME_FORMAT</span> <span class="o">=</span> <span class="s1">&#39;%Y/%m/</span><span class="si">%d</span><span class="s1"> %H:%M:%S&#39;</span>
 
 
 <span class="n">recorder</span> <span class="o">=</span> <span class="p">{}</span>
@@ -310,9 +310,9 @@
 
 <div class="viewcode-block" id="output_recorder"><a class="viewcode-back" href="../../../../../api/api_backend_adapter.html#openerp.addons.magentoerpconnect.unit.backend_adapter.output_recorder">[docs]</a><span class="k">def</span> <span class="nf">output_recorder</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
     <span class="kn">import</span> <span class="nn">pprint</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
         <span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="n">recorder</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
-    <span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&#39;recorder written to file </span><span class="si">%s</span><span class="s">&#39;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span></div>
+    <span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;recorder written to file </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="MagentoLocation"><a class="viewcode-back" href="../../../../../api/api_backend_adapter.html#openerp.addons.magentoerpconnect.unit.backend_adapter.MagentoLocation">[docs]</a><span class="k">class</span> <span class="nc">MagentoLocation</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span></div>
@@ -334,9 +334,9 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_auth_basic</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">location</span>
         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">auth_basic_username</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">auth_basic_password</span>
-        <span class="n">replacement</span> <span class="o">=</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s">:</span><span class="si">%s</span><span class="s">@&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">auth_basic_username</span><span class="p">,</span>
+        <span class="n">replacement</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">:</span><span class="si">%s</span><span class="s2">@&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">auth_basic_username</span><span class="p">,</span>
                                   <span class="bp">self</span><span class="o">.</span><span class="n">auth_basic_password</span><span class="p">)</span>
-        <span class="n">location</span> <span class="o">=</span> <span class="n">location</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&#39;://&#39;</span><span class="p">,</span> <span class="s">&#39;://&#39;</span> <span class="o">+</span> <span class="n">replacement</span><span class="p">)</span>
+        <span class="n">location</span> <span class="o">=</span> <span class="n">location</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;://&#39;</span><span class="p">,</span> <span class="s1">&#39;://&#39;</span> <span class="o">+</span> <span class="n">replacement</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">location</span>
 
 
@@ -391,14 +391,14 @@
     <span class="k">def</span> <span class="nf">_call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">arguments</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">custom_url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">magento</span><span class="o">.</span><span class="n">use_custom_api_path</span>
-            <span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;Start calling Magento api </span><span class="si">%s</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">method</span><span class="p">)</span>
+            <span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Start calling Magento api </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">method</span><span class="p">)</span>
             <span class="k">with</span> <span class="n">magentolib</span><span class="o">.</span><span class="n">API</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">magento</span><span class="o">.</span><span class="n">location</span><span class="p">,</span>
                                 <span class="bp">self</span><span class="o">.</span><span class="n">magento</span><span class="o">.</span><span class="n">username</span><span class="p">,</span>
                                 <span class="bp">self</span><span class="o">.</span><span class="n">magento</span><span class="o">.</span><span class="n">password</span><span class="p">,</span>
                                 <span class="n">full_url</span><span class="o">=</span><span class="n">custom_url</span><span class="p">)</span> <span class="k">as</span> <span class="n">api</span><span class="p">:</span>
-                <span class="c"># When Magento is installed on PHP 5.4+, the API</span>
-                <span class="c"># may return garble data if the arguments contain</span>
-                <span class="c"># trailing None.</span>
+                <span class="c1"># When Magento is installed on PHP 5.4+, the API</span>
+                <span class="c1"># may return garble data if the arguments contain</span>
+                <span class="c1"># trailing None.</span>
                 <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arguments</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
                     <span class="k">while</span> <span class="n">arguments</span> <span class="ow">and</span> <span class="n">arguments</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
                         <span class="n">arguments</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
@@ -406,29 +406,29 @@
                 <span class="k">try</span><span class="p">:</span>
                     <span class="n">result</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="n">arguments</span><span class="p">)</span>
                 <span class="k">except</span><span class="p">:</span>
-                    <span class="n">_logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s">&quot;api.call(</span><span class="si">%s</span><span class="s">, </span><span class="si">%s</span><span class="s">) failed&quot;</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">arguments</span><span class="p">)</span>
+                    <span class="n">_logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;api.call(</span><span class="si">%s</span><span class="s2">, </span><span class="si">%s</span><span class="s2">) failed&quot;</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">arguments</span><span class="p">)</span>
                     <span class="k">raise</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;api.call(</span><span class="si">%s</span><span class="s">, </span><span class="si">%s</span><span class="s">) returned </span><span class="si">%s</span><span class="s"> in </span><span class="si">%s</span><span class="s"> seconds&quot;</span><span class="p">,</span>
+                    <span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;api.call(</span><span class="si">%s</span><span class="s2">, </span><span class="si">%s</span><span class="s2">) returned </span><span class="si">%s</span><span class="s2"> in </span><span class="si">%s</span><span class="s2"> seconds&quot;</span><span class="p">,</span>
                                   <span class="n">method</span><span class="p">,</span> <span class="n">arguments</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span>
                                   <span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span><span class="o">.</span><span class="n">seconds</span><span class="p">)</span>
-                <span class="c"># Uncomment to record requests/responses in ``recorder``</span>
-                <span class="c"># record(method, arguments, result)</span>
+                <span class="c1"># Uncomment to record requests/responses in ``recorder``</span>
+                <span class="c1"># record(method, arguments, result)</span>
                 <span class="k">return</span> <span class="n">result</span>
         <span class="k">except</span> <span class="p">(</span><span class="n">socket</span><span class="o">.</span><span class="n">gaierror</span><span class="p">,</span> <span class="n">socket</span><span class="o">.</span><span class="n">error</span><span class="p">,</span> <span class="n">socket</span><span class="o">.</span><span class="n">timeout</span><span class="p">)</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">NetworkRetryableError</span><span class="p">(</span>
-                <span class="s">&#39;A network error caused the failure of the job: &#39;</span>
-                <span class="s">&#39;</span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">err</span><span class="p">)</span>
+                <span class="s1">&#39;A network error caused the failure of the job: &#39;</span>
+                <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">err</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">xmlrpclib</span><span class="o">.</span><span class="n">ProtocolError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">err</span><span class="o">.</span><span class="n">errcode</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">502</span><span class="p">,</span>   <span class="c"># Bad gateway</span>
-                               <span class="mi">503</span><span class="p">,</span>   <span class="c"># Service unavailable</span>
-                               <span class="mi">504</span><span class="p">]:</span>  <span class="c"># Gateway timeout</span>
+            <span class="k">if</span> <span class="n">err</span><span class="o">.</span><span class="n">errcode</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">502</span><span class="p">,</span>   <span class="c1"># Bad gateway</span>
+                               <span class="mi">503</span><span class="p">,</span>   <span class="c1"># Service unavailable</span>
+                               <span class="mi">504</span><span class="p">]:</span>  <span class="c1"># Gateway timeout</span>
                 <span class="k">raise</span> <span class="n">RetryableJobError</span><span class="p">(</span>
-                    <span class="s">&#39;A protocol error caused the failure of the job:</span><span class="se">\n</span><span class="s">&#39;</span>
-                    <span class="s">&#39;URL: </span><span class="si">%s</span><span class="se">\n</span><span class="s">&#39;</span>
-                    <span class="s">&#39;HTTP/HTTPS headers: </span><span class="si">%s</span><span class="se">\n</span><span class="s">&#39;</span>
-                    <span class="s">&#39;Error code: </span><span class="si">%d</span><span class="se">\n</span><span class="s">&#39;</span>
-                    <span class="s">&#39;Error message: </span><span class="si">%s</span><span class="se">\n</span><span class="s">&#39;</span> <span class="o">%</span>
+                    <span class="s1">&#39;A protocol error caused the failure of the job:</span><span class="se">\n</span><span class="s1">&#39;</span>
+                    <span class="s1">&#39;URL: </span><span class="si">%s</span><span class="se">\n</span><span class="s1">&#39;</span>
+                    <span class="s1">&#39;HTTP/HTTPS headers: </span><span class="si">%s</span><span class="se">\n</span><span class="s1">&#39;</span>
+                    <span class="s1">&#39;Error code: </span><span class="si">%d</span><span class="se">\n</span><span class="s1">&#39;</span>
+                    <span class="s1">&#39;Error message: </span><span class="si">%s</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span>
                     <span class="p">(</span><span class="n">err</span><span class="o">.</span><span class="n">url</span><span class="p">,</span> <span class="n">err</span><span class="o">.</span><span class="n">headers</span><span class="p">,</span> <span class="n">err</span><span class="o">.</span><span class="n">errcode</span><span class="p">,</span> <span class="n">err</span><span class="o">.</span><span class="n">errmsg</span><span class="p">))</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span></div>
@@ -446,7 +446,7 @@
 
 <span class="sd">        :rtype: list</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call</span><span class="p">(</span><span class="s">&#39;</span><span class="si">%s</span><span class="s">.search&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_magento_model</span><span class="p">,</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">.search&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_magento_model</span><span class="p">,</span>
                           <span class="p">[</span><span class="n">filters</span><span class="p">]</span> <span class="k">if</span> <span class="n">filters</span> <span class="k">else</span> <span class="p">[{}])</span>
 
     <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">attributes</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
@@ -456,49 +456,49 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">arguments</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="nb">id</span><span class="p">)]</span>
         <span class="k">if</span> <span class="n">attributes</span><span class="p">:</span>
-            <span class="c"># Avoid to pass Null values in attributes. Workaround for</span>
-            <span class="c"># https://bugs.launchpad.net/openerp-connector-magento/+bug/1210775</span>
-            <span class="c"># When Magento is installed on PHP 5.4 and the compatibility patch</span>
-            <span class="c"># http://magento.com/blog/magento-news/magento-now-supports-php-54</span>
-            <span class="c"># is not installed, calling info() with None in attributes</span>
-            <span class="c"># would return a wrong result (almost empty list of</span>
-            <span class="c"># attributes). The right correction is to install the</span>
-            <span class="c"># compatibility patch on Magento.</span>
+            <span class="c1"># Avoid to pass Null values in attributes. Workaround for</span>
+            <span class="c1"># https://bugs.launchpad.net/openerp-connector-magento/+bug/1210775</span>
+            <span class="c1"># When Magento is installed on PHP 5.4 and the compatibility patch</span>
+            <span class="c1"># http://magento.com/blog/magento-news/magento-now-supports-php-54</span>
+            <span class="c1"># is not installed, calling info() with None in attributes</span>
+            <span class="c1"># would return a wrong result (almost empty list of</span>
+            <span class="c1"># attributes). The right correction is to install the</span>
+            <span class="c1"># compatibility patch on Magento.</span>
             <span class="n">arguments</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">attributes</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call</span><span class="p">(</span><span class="s">&#39;</span><span class="si">%s</span><span class="s">.info&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_magento_model</span><span class="p">,</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">.info&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_magento_model</span><span class="p">,</span>
                           <span class="n">arguments</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">search_read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filters</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Search records according to some criterias</span>
 <span class="sd">        and returns their information&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call</span><span class="p">(</span><span class="s">&#39;</span><span class="si">%s</span><span class="s">.list&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_magento_model</span><span class="p">,</span> <span class="p">[</span><span class="n">filters</span><span class="p">])</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">.list&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_magento_model</span><span class="p">,</span> <span class="p">[</span><span class="n">filters</span><span class="p">])</span>
 
     <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Create a record on the external system &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call</span><span class="p">(</span><span class="s">&#39;</span><span class="si">%s</span><span class="s">.create&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_magento_model</span><span class="p">,</span> <span class="p">[</span><span class="n">data</span><span class="p">])</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">.create&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_magento_model</span><span class="p">,</span> <span class="p">[</span><span class="n">data</span><span class="p">])</span>
 
     <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Update records on the external system &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call</span><span class="p">(</span><span class="s">&#39;</span><span class="si">%s</span><span class="s">.update&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_magento_model</span><span class="p">,</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">.update&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_magento_model</span><span class="p">,</span>
                           <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="nb">id</span><span class="p">),</span> <span class="n">data</span><span class="p">])</span>
 
     <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Delete a record on the external system &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call</span><span class="p">(</span><span class="s">&#39;</span><span class="si">%s</span><span class="s">.delete&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_magento_model</span><span class="p">,</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="nb">id</span><span class="p">)])</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">.delete&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_magento_model</span><span class="p">,</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="nb">id</span><span class="p">)])</span>
 
     <span class="k">def</span> <span class="nf">admin_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Return the URL in the Magento admin for a record &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_admin_path</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;No admin path is defined for this record&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;No admin path is defined for this record&#39;</span><span class="p">)</span>
         <span class="n">backend</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend_record</span>
         <span class="n">url</span> <span class="o">=</span> <span class="n">backend</span><span class="o">.</span><span class="n">admin_location</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">url</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;No admin URL configured on the backend.&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;No admin URL configured on the backend.&#39;</span><span class="p">)</span>
         <span class="n">path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_admin_path</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_magento_model</span><span class="p">,</span>
                                        <span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">)</span>
-        <span class="n">url</span> <span class="o">=</span> <span class="n">url</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s">&#39;/&#39;</span><span class="p">)</span>
-        <span class="n">path</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s">&#39;/&#39;</span><span class="p">)</span>
-        <span class="n">url</span> <span class="o">=</span> <span class="s">&#39;/&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="n">url</span><span class="p">,</span> <span class="n">path</span><span class="p">))</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">url</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="n">url</span><span class="p">,</span> <span class="n">path</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">url</span>
 </pre></div>
 
@@ -517,7 +517,7 @@
     </p>
     <p>
         &copy; Copyright 2013-2015, Odoo Community Association (OCA).<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.3.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.4.<br/>
     </p>
   </div>
 </footer>

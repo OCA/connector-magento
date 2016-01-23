@@ -302,10 +302,10 @@ registered on this event. Those functions are called <code class="docutils liter
 defined. You can add your one, it should be decorated by
 <code class="xref py py-func docutils literal"><span class="pre">openerp.addons.magentoerpconnect.consumer.magento_consumer()</span></code> and by the event
 which has to fire it:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="nd">@on_record_write</span><span class="p">(</span><span class="n">model_names</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;my.model&#39;</span><span class="p">])</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@on_record_write</span><span class="p">(</span><span class="n">model_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;my.model&#39;</span><span class="p">])</span>
 <span class="nd">@magento_consumer</span>
 <span class="k">def</span> <span class="nf">my_consumer</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">record_id</span><span class="p">,</span> <span class="n">vals</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-    <span class="k">print</span> <span class="s">&#39;Yeah&#39;</span>
+    <span class="k">print</span> <span class="s1">&#39;Yeah&#39;</span>
 </pre></div>
 </div>
 <div class="admonition note">
@@ -347,18 +347,18 @@ attribute. It means that you can access to the environment
 from a synchronizer with <code class="docutils literal"><span class="pre">self.connector_env</span></code>.</p>
 </div>
 <p>When you are already inside a <code class="docutils literal"><span class="pre">ConnectorUnit</span></code> though you can use the shortcuts:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="c"># for the current model</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="c1"># for the current model</span>
 <span class="n">importer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">unit_for</span><span class="p">(</span><span class="n">MagentoImporter</span><span class="p">)</span>
-<span class="c"># for another model</span>
-<span class="n">importer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">unit_for</span><span class="p">(</span><span class="n">MagentoImporter</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s">&#39;another.model&#39;</span><span class="p">)</span>
+<span class="c1"># for another model</span>
+<span class="n">importer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">unit_for</span><span class="p">(</span><span class="n">MagentoImporter</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s1">&#39;another.model&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>As the binders are the most used <code class="docutils literal"><span class="pre">ConnectorUnit</span></code> classes, they have a
 dedicated shortcut:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="c"># for the current model</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="c1"># for the current model</span>
 <span class="n">binder</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">binder_for</span><span class="p">()</span>
-<span class="c"># for another model</span>
-<span class="n">binder</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">binder_for</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s">&#39;another.model&#39;</span><span class="p">)</span>
+<span class="c1"># for another model</span>
+<span class="n">binder</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">binder_for</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s1">&#39;another.model&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -395,15 +395,15 @@ Customer groups are importer as categories of partners
 <h3><a class="toc-backref" href="#sections">Models</a><a class="headerlink" href="#models" title="Permalink to this headline">¶</a></h3>
 <p>First, we create the model:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">MagentoResPartnerCategory</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
-    <span class="n">_name</span> <span class="o">=</span> <span class="s">&#39;magento.res.partner.category&#39;</span>
-    <span class="n">_inherit</span> <span class="o">=</span> <span class="s">&#39;magento.binding&#39;</span>
-    <span class="n">_inherits</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;res.partner.category&#39;</span><span class="p">:</span> <span class="s">&#39;openerp_id&#39;</span><span class="p">}</span>
+    <span class="n">_name</span> <span class="o">=</span> <span class="s1">&#39;magento.res.partner.category&#39;</span>
+    <span class="n">_inherit</span> <span class="o">=</span> <span class="s1">&#39;magento.binding&#39;</span>
+    <span class="n">_inherits</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;res.partner.category&#39;</span><span class="p">:</span> <span class="s1">&#39;openerp_id&#39;</span><span class="p">}</span>
 
-    <span class="n">openerp_id</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Many2one</span><span class="p">(</span><span class="n">comodel_name</span><span class="o">=</span><span class="s">&#39;res.partner.category&#39;</span><span class="p">,</span>
-                                 <span class="n">string</span><span class="o">=</span><span class="s">&#39;Partner Category&#39;</span><span class="p">,</span>
+    <span class="n">openerp_id</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Many2one</span><span class="p">(</span><span class="n">comodel_name</span><span class="o">=</span><span class="s1">&#39;res.partner.category&#39;</span><span class="p">,</span>
+                                 <span class="n">string</span><span class="o">=</span><span class="s1">&#39;Partner Category&#39;</span><span class="p">,</span>
                                  <span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
-                                 <span class="n">ondelete</span><span class="o">=</span><span class="s">&#39;cascade&#39;</span><span class="p">)</span>
-    <span class="n">tax_class_id</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Integer</span><span class="p">(</span><span class="n">string</span><span class="o">=</span><span class="s">&#39;Tax Class ID&#39;</span><span class="p">)</span>
+                                 <span class="n">ondelete</span><span class="o">=</span><span class="s1">&#39;cascade&#39;</span><span class="p">)</span>
+    <span class="n">tax_class_id</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Integer</span><span class="p">(</span><span class="n">string</span><span class="o">=</span><span class="s1">&#39;Tax Class ID&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Observations:</p>
@@ -422,12 +422,12 @@ this model for the imports and the exports without complications.</li>
 <p>We need to add the field <code class="docutils literal"><span class="pre">magento_bind_ids</span></code> in
 <code class="docutils literal"><span class="pre">res.partner.category</span></code> to relate to the Magento Bindings:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">ResPartnerCategory</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
-    <span class="n">_inherit</span> <span class="o">=</span> <span class="s">&#39;res.partner.category&#39;</span>
+    <span class="n">_inherit</span> <span class="o">=</span> <span class="s1">&#39;res.partner.category&#39;</span>
 
     <span class="n">magento_bind_ids</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">One2many</span><span class="p">(</span>
-        <span class="n">comodel_name</span><span class="o">=</span><span class="s">&#39;magento.res.partner.category&#39;</span><span class="p">,</span>
-        <span class="n">inverse_name</span><span class="o">=</span><span class="s">&#39;openerp_id&#39;</span><span class="p">,</span>
-        <span class="n">string</span><span class="o">=</span><span class="s">&#39;Magento Bindings&#39;</span><span class="p">,</span>
+        <span class="n">comodel_name</span><span class="o">=</span><span class="s1">&#39;magento.res.partner.category&#39;</span><span class="p">,</span>
+        <span class="n">inverse_name</span><span class="o">=</span><span class="s1">&#39;openerp_id&#39;</span><span class="p">,</span>
+        <span class="n">string</span><span class="o">=</span><span class="s1">&#39;Magento Bindings&#39;</span><span class="p">,</span>
         <span class="n">readonly</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
     <span class="p">)</span>
 </pre></div>
@@ -450,7 +450,7 @@ usually a subclass of
 <span class="k">class</span> <span class="nc">DelayedBatchImporter</span><span class="p">(</span><span class="n">BatchImporter</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Delay import of the records &quot;&quot;&quot;</span>
     <span class="n">_model_name</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="s">&#39;magento.res.partner.category&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;magento.res.partner.category&#39;</span><span class="p">,</span>
             <span class="p">]</span>
 
     <span class="k">def</span> <span class="nf">_import_record</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
@@ -486,8 +486,8 @@ customer groups.</p>
 <p>We&#8217;ll replace it using <code class="docutils literal"><span class="pre">list</span></code> and select only the ids:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="nd">@magento</span>
 <span class="k">class</span> <span class="nc">PartnerCategoryAdapter</span><span class="p">(</span><span class="n">GenericAdapter</span><span class="p">):</span>
-    <span class="n">_model_name</span> <span class="o">=</span> <span class="s">&#39;magento.res.partner.category&#39;</span>
-    <span class="n">_magento_model</span> <span class="o">=</span> <span class="s">&#39;ol_customer_groups&#39;</span>
+    <span class="n">_model_name</span> <span class="o">=</span> <span class="s1">&#39;magento.res.partner.category&#39;</span>
+    <span class="n">_magento_model</span> <span class="o">=</span> <span class="s1">&#39;ol_customer_groups&#39;</span>
 
     <span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filters</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Search records according to some criterias</span>
@@ -495,8 +495,8 @@ customer groups.</p>
 
 <span class="sd">        :rtype: list</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s">&#39;customer_group_id&#39;</span><span class="p">])</span> <span class="k">for</span> <span class="n">row</span>
-                   <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call</span><span class="p">(</span><span class="s">&#39;</span><span class="si">%s</span><span class="s">.list&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_magento_model</span><span class="p">,</span>
+        <span class="k">return</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;customer_group_id&#39;</span><span class="p">])</span> <span class="k">for</span> <span class="n">row</span>
+                   <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">.list&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_magento_model</span><span class="p">,</span>
                                  <span class="p">[</span><span class="n">filters</span><span class="p">]</span> <span class="k">if</span> <span class="n">filters</span> <span class="k">else</span> <span class="p">[{}])]</span>
 </pre></div>
 </div>
@@ -516,14 +516,14 @@ need to...</p>
 <p>This import will be called from the <strong>Magento Backend</strong>, we inherit <code class="docutils literal"><span class="pre">magento.backend</span></code>
 and add a method (and add in the view as well, I won&#8217;t write the view&#8217;s xml here):</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">MagentoBackend</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
-    <span class="n">_inherit</span> <span class="o">=</span> <span class="s">&#39;magento.backend&#39;</span>
+    <span class="n">_inherit</span> <span class="o">=</span> <span class="s1">&#39;magento.backend&#39;</span>
 
     <span class="nd">@api.multi</span>
     <span class="k">def</span> <span class="nf">import_customer_groups</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">session</span> <span class="o">=</span> <span class="n">connector</span><span class="o">.</span><span class="n">ConnectorSession</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">cr</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">uid</span><span class="p">,</span>
                                              <span class="n">context</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">context</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">backend_id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ids</span><span class="p">:</span>
-            <span class="n">job</span><span class="o">.</span><span class="n">import_batch</span><span class="o">.</span><span class="n">delay</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="s">&#39;magento.res.partner.category&#39;</span><span class="p">,</span>
+            <span class="n">job</span><span class="o">.</span><span class="n">import_batch</span><span class="o">.</span><span class="n">delay</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="s1">&#39;magento.res.partner.category&#39;</span><span class="p">,</span>
                                    <span class="n">backend_id</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">True</span>
@@ -543,7 +543,7 @@ and add a method (and add in the view as well, I won&#8217;t write the view&#821
 already there so you don&#8217;t need to write them, but we can have a look
 on them to understand what they do:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">_get_environment</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">backend_id</span><span class="p">):</span>
-    <span class="n">model</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">env</span><span class="p">[</span><span class="s">&#39;magento.backend&#39;</span><span class="p">]</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">env</span><span class="p">[</span><span class="s1">&#39;magento.backend&#39;</span><span class="p">]</span>
     <span class="n">backend_record</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">browse</span><span class="p">(</span><span class="n">backend_id</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">connector</span><span class="o">.</span><span class="n">Environment</span><span class="p">(</span><span class="n">backend_record</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">model_name</span><span class="p">)</span>
 
@@ -588,10 +588,10 @@ We just need to add the model in the <code class="docutils literal"><span class=
 <span class="k">class</span> <span class="nc">SimpleRecordImporter</span><span class="p">(</span><span class="n">MagentoImporter</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Import one Magento Website &quot;&quot;&quot;</span>
     <span class="n">_model_name</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="s">&#39;magento.website&#39;</span><span class="p">,</span>
-            <span class="s">&#39;magento.store&#39;</span><span class="p">,</span>
-            <span class="s">&#39;magento.storeview&#39;</span><span class="p">,</span>
-            <span class="s">&#39;magento.res.partner.category&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;magento.website&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;magento.store&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;magento.storeview&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;magento.res.partner.category&#39;</span><span class="p">,</span>
         <span class="p">]</span>
 </pre></div>
 </div>
@@ -612,19 +612,19 @@ record. (or the reverse for the export Mappers)</p>
 <p>The mapper for the customer groups is as follows:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="nd">@magento</span>
 <span class="k">class</span> <span class="nc">PartnerCategoryImportMapper</span><span class="p">(</span><span class="n">connector</span><span class="o">.</span><span class="n">ImportMapper</span><span class="p">):</span>
-    <span class="n">_model_name</span> <span class="o">=</span> <span class="s">&#39;magento.res.partner.category&#39;</span>
+    <span class="n">_model_name</span> <span class="o">=</span> <span class="s1">&#39;magento.res.partner.category&#39;</span>
 
-    <span class="n">direct</span> <span class="o">=</span> <span class="p">[(</span><span class="s">&#39;customer_group_code&#39;</span><span class="p">,</span> <span class="s">&#39;name&#39;</span><span class="p">),</span>
-              <span class="p">(</span><span class="s">&#39;tax_class_id&#39;</span><span class="p">,</span> <span class="s">&#39;tax_class_id&#39;</span><span class="p">),</span>
+    <span class="n">direct</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;customer_group_code&#39;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">),</span>
+              <span class="p">(</span><span class="s1">&#39;tax_class_id&#39;</span><span class="p">,</span> <span class="s1">&#39;tax_class_id&#39;</span><span class="p">),</span>
               <span class="p">]</span>
 
     <span class="nd">@mapping</span>
     <span class="k">def</span> <span class="nf">magento_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">{</span><span class="s">&#39;magento_id&#39;</span><span class="p">:</span> <span class="n">record</span><span class="p">[</span><span class="s">&#39;customer_group_id&#39;</span><span class="p">]}</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;magento_id&#39;</span><span class="p">:</span> <span class="n">record</span><span class="p">[</span><span class="s1">&#39;customer_group_id&#39;</span><span class="p">]}</span>
 
     <span class="nd">@mapping</span>
     <span class="k">def</span> <span class="nf">backend_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">{</span><span class="s">&#39;backend_id&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend_record</span><span class="o">.</span><span class="n">id</span><span class="p">}</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;backend_id&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend_record</span><span class="o">.</span><span class="n">id</span><span class="p">}</span>
 </pre></div>
 </div>
 <p>Observations:</p>
@@ -647,10 +647,10 @@ normally all the Magento Models will use the same Binder, the so called
 <span class="sd">    Bindings are done directly on the model</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">_model_name</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="s">&#39;magento.website&#39;</span><span class="p">,</span>
-            <span class="s">&#39;magento.store&#39;</span><span class="p">,</span>
-            <span class="s">&#39;magento.storeview&#39;</span><span class="p">,</span>
-            <span class="s">&#39;magento.res.partner.category&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;magento.website&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;magento.store&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;magento.storeview&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;magento.res.partner.category&#39;</span><span class="p">,</span>
         <span class="p">]</span>
 
 <span class="p">[</span><span class="o">...</span><span class="p">]</span>
@@ -680,7 +680,7 @@ normally all the Magento Models will use the same Binder, the so called
     </p>
     <p>
         &copy; Copyright 2013-2015, Odoo Community Association (OCA).<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.3.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.4.<br/>
     </p>
   </div>
 </footer>
