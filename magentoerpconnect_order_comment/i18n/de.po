@@ -3,13 +3,14 @@
 # * magentoerpconnect_order_comment
 # 
 # Translators:
+# Rudolf Schnapka <rs@techno-flex.de>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (7.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-31 15:18+0000\n"
-"PO-Revision-Date: 2015-07-08 12:12+0000\n"
-"Last-Translator: <>\n"
+"POT-Creation-Date: 2015-12-15 13:26+0000\n"
+"PO-Revision-Date: 2016-01-14 13:22+0000\n"
+"Last-Translator: Rudolf Schnapka <rs@techno-flex.de>\n"
 "Language-Team: German (http://www.transifex.com/oca/OCA-connector-magento-7-0/language/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,18 +21,18 @@ msgstr ""
 #. module: magentoerpconnect_order_comment
 #: field:magento.sale.comment,openerp_id:0
 msgid "Sale Comment"
-msgstr ""
+msgstr "Bemerkung zum Verkauf"
 
 #. module: magentoerpconnect_order_comment
 #: field:magento.sale.comment,storeid:0
 msgid "Store id"
-msgstr ""
+msgstr "Filial-ID"
 
 #. module: magentoerpconnect_order_comment
 #: code:addons/magentoerpconnect_order_comment/sale.py:212
 #, python-format
 msgid "visible on front"
-msgstr ""
+msgstr "In Front sichtbar"
 
 #. module: magentoerpconnect_order_comment
 #: field:magento.sale.comment,sync_date:0
@@ -41,7 +42,7 @@ msgstr "Letzte Synchronisierung"
 #. module: magentoerpconnect_order_comment
 #: field:magento.sale.order,magento_order_comment_ids:0
 msgid "Magento Sale comments"
-msgstr ""
+msgstr "Verkaufsbemerkung in Magento"
 
 #. module: magentoerpconnect_order_comment
 #: code:addons/magentoerpconnect_order_comment/magento_model.py:31
@@ -50,7 +51,7 @@ msgstr ""
 msgid ""
 "Require Magento to send email on 'sale order comment' based on 'send a "
 "message' case (not 'log a note')"
-msgstr ""
+msgstr "Erfordert, dass Magento zur Verkaufsbemerkung basierend auf 'Sende eine Mitteilung' (nicht 'log a note') eine EMail versendet"
 
 #. module: magentoerpconnect_order_comment
 #: model:ir.model,name:magentoerpconnect_order_comment.model_magentoerpconnect_order_comment_installed
@@ -61,13 +62,13 @@ msgstr ""
 #: code:addons/magentoerpconnect_order_comment/sale.py:207
 #, python-format
 msgid "Magento comment in %s status"
-msgstr ""
+msgstr "Bemerkung hat in Magento den Status %s"
 
 #. module: magentoerpconnect_order_comment
 #: code:addons/magentoerpconnect_order_comment/sale.py:65
 #, python-format
 msgid "Sent to Magento"
-msgstr ""
+msgstr "Zu Magento übertragen"
 
 #. module: magentoerpconnect_order_comment
 #: field:mail.message,magento_sale_bind_ids:0
@@ -82,12 +83,12 @@ msgstr "ID in Magento"
 #. module: magentoerpconnect_order_comment
 #: field:magento.sale.comment,status:0
 msgid "Order status"
-msgstr ""
+msgstr "Auftragsstatus"
 
 #. module: magentoerpconnect_order_comment
 #: field:magento.sale.comment,is_customer_notified:0
 msgid "Customer notified"
-msgstr ""
+msgstr "Kunde ist informiert"
 
 #. module: magentoerpconnect_order_comment
 #: field:magento.sale.comment,backend_id:0
@@ -102,13 +103,13 @@ msgstr "Magento-Store"
 #. module: magentoerpconnect_order_comment
 #: field:magento.store,send_sale_comment_mail:0
 msgid "Send email notification on sale comment"
-msgstr ""
+msgstr "Sende Auftragsstatus zur Auftragsbemerkung"
 
 #. module: magentoerpconnect_order_comment
 #: code:addons/magentoerpconnect_order_comment/sale.py:210
 #, python-format
 msgid "customer notified"
-msgstr ""
+msgstr "Kunde ist informiert"
 
 #. module: magentoerpconnect_order_comment
 #: model:ir.model,name:magentoerpconnect_order_comment.model_magento_sale_order
@@ -123,19 +124,19 @@ msgstr "Magento-Auftrag"
 msgid ""
 "This field is a technical / configuration field for the sale comment on Magento. \n"
 "Please refer to the Magento documentation for details. "
-msgstr ""
+msgstr "Dieses Feld dient technischen Einstellungen zur Auftragsbemerkung in Magento.\nSiehe Magento-Dokumentation für Details."
 
 #. module: magentoerpconnect_order_comment
 #: field:magento.sale.comment,is_visible_on_front:0
 msgid "Visible on front"
-msgstr ""
+msgstr "An Front sichtbar"
 
 #. module: magentoerpconnect_order_comment
 #: model:ir.model,name:magentoerpconnect_order_comment.model_magento_sale_comment
 msgid "Magento Sale Comment"
-msgstr ""
+msgstr "Auftragsbemerkung Magento"
 
 #. module: magentoerpconnect_order_comment
 #: model:ir.model,name:magentoerpconnect_order_comment.model_mail_message
 msgid "Message"
-msgstr ""
+msgstr "Mitteilung"
