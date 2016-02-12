@@ -29,7 +29,7 @@ class MagentoBackend(models.Model):
 
     @api.model
     def _get_pricelist_id(self):
-        return self.env.ref('product.list0').id
+        return self.env.ref('product.list0')
 
     pricelist_id = fields.Many2one(comodel_name='product.pricelist',
                                    string='Pricelist',
