@@ -497,10 +497,10 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call</span><span class="p">(</span><span class="s1">&#39;product_media.info&#39;</span><span class="p">,</span>
                           <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="nb">id</span><span class="p">),</span> <span class="n">image_name</span><span class="p">,</span> <span class="n">storeview_id</span><span class="p">,</span> <span class="s1">&#39;id&#39;</span><span class="p">])</span></div>
 
-<div class="viewcode-block" id="ProductProductAdapter.update_inventory"><a class="viewcode-back" href="../../../../api/api_product.html#openerp.addons.magentoerpconnect.product.ProductProductAdapter.update_inventory">[docs]</a>    <span class="k">def</span> <span class="nf">update_inventory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span></div>
+<div class="viewcode-block" id="ProductProductAdapter.update_inventory"><a class="viewcode-back" href="../../../../api/api_product.html#openerp.addons.magentoerpconnect.product.ProductProductAdapter.update_inventory">[docs]</a>    <span class="k">def</span> <span class="nf">update_inventory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
         <span class="c1"># product_stock.update is too slow</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call</span><span class="p">(</span><span class="s1">&#39;oerp_cataloginventory_stock_item.update&#39;</span><span class="p">,</span>
-                          <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="nb">id</span><span class="p">),</span> <span class="n">data</span><span class="p">])</span></div>
+                          <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="nb">id</span><span class="p">),</span> <span class="n">data</span><span class="p">])</span></div></div>
 
 
 <span class="nd">@magento</span>
@@ -944,7 +944,7 @@
     </p>
     <p>
         &copy; Copyright 2013-2015, Odoo Community Association (OCA).<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.4.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.5.<br/>
     </p>
   </div>
 </footer>
