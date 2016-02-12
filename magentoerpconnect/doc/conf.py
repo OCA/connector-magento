@@ -44,8 +44,8 @@ add_path(odoo_root, 'addons')
 add_path(build_path)
 
 deps_repos = [repo for repo in os.listdir(deps_path)
-              if os.path.isdir(os.path.join(deps_path, repo))
-              and not repo.startswith('.')]
+              if os.path.isdir(os.path.join(deps_path, repo)) and
+              not repo.startswith('.')]
 
 for repo in deps_repos:
     add_path(deps_path, repo)
