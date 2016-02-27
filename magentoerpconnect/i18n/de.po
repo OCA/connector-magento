@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-05 01:39+0000\n"
-"PO-Revision-Date: 2016-01-14 14:18+0000\n"
+"PO-Revision-Date: 2016-02-25 12:57+0000\n"
 "Last-Translator: Rudolf Schnapka <rs@techno-flex.de>\n"
 "Language-Team: German (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/de/)\n"
 "MIME-Version: 1.0\n"
@@ -100,7 +100,7 @@ msgstr "Bereits importiert"
 #: code:addons/magentoerpconnect/unit/import_synchronizer.py:217
 #, python-format
 msgid "Already up-to-date."
-msgstr ""
+msgstr "Bereits aktuell"
 
 #. module: magentoerpconnect
 #: help:magento.res.partner,consider_as_company:0
@@ -342,7 +342,7 @@ msgstr "Erweiterungen"
 #. module: magentoerpconnect
 #: field:magento.backend,fiscal_position_id:0
 msgid "Fiscal position"
-msgstr ""
+msgstr "Steuerzuordnung"
 
 #. module: magentoerpconnect
 #: field:magento.res.partner,guest_customer:0
@@ -364,7 +364,7 @@ msgstr "HTTP Authentifizierung"
 #: field:magento.store,id:0 field:magento.storeview,id:0
 #: field:magento.website,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,magento_id:0
@@ -794,7 +794,7 @@ msgstr "Magento-Webseiten"
 #: code:addons/magentoerpconnect/sale.py:1105
 #, python-format
 msgid "Magento sales order is already in state %s"
-msgstr ""
+msgstr "Magento-Verkaufsauftrag hat bereits den Status %s"
 
 #. module: magentoerpconnect
 #: view:connector.config.settings:magentoerpconnect.view_magento_config_settings
