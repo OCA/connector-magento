@@ -313,7 +313,7 @@ It includes developer tools such as:</p>
 <p>So we highly recommend to use this configuration for development.</p>
 <p>Here are the configuration files <a class="reference external" href="https://github.com/guewen/odoo-connector-magento-buildout">https://github.com/guewen/odoo-connector-magento-buildout</a>.</p>
 <p>Clone the repo:</p>
-<div class="highlight-python"><div class="highlight"><pre>$ git clone https://github.com/guewen/odoo-connector-magento-buildout.git -b 8.0 odoo-connector-magento
+<div class="highlight-python"><div class="highlight"><pre><span></span>$ git clone https://github.com/guewen/odoo-connector-magento-buildout.git -b 8.0 odoo-connector-magento
 </pre></div>
 </div>
 <p>and follow the installation steps.</p>
@@ -329,11 +329,11 @@ You can also use <a class="reference external" href="http://pythonhosted.org/any
 <h3><a class="toc-backref" href="#sections">Start Odoo</a><a class="headerlink" href="#start-odoo" title="Permalink to this headline">¶</a></h3>
 <p>All the commands are launched from the root directory of the buildout.</p>
 <p>In standalone mode (jobs will be threaded):</p>
-<div class="highlight-python"><div class="highlight"><pre>$ bin/start_openerp
+<div class="highlight-python"><div class="highlight"><pre><span></span>$ bin/start_openerp
 </pre></div>
 </div>
 <p>With workers (multiprocessing), you need to start dedicated Connector Workers for the jobs:</p>
-<div class="highlight-python"><div class="highlight"><pre>$ bin/start_openerp --workers=4
+<div class="highlight-python"><div class="highlight"><pre><span></span>$ bin/start_openerp --workers=4
 $ bin/start_connector_worker --workers=2
 </pre></div>
 </div>
@@ -341,13 +341,13 @@ $ bin/start_connector_worker --workers=2
 <div class="section" id="start-with-supervisord">
 <h3><a class="toc-backref" href="#sections">Start with Supervisord</a><a class="headerlink" href="#start-with-supervisord" title="Permalink to this headline">¶</a></h3>
 <p>To start the supervisord daemon, run:</p>
-<div class="highlight-python"><div class="highlight"><pre>$ bin/supervisord
+<div class="highlight-python"><div class="highlight"><pre><span></span>$ bin/supervisord
 </pre></div>
 </div>
 <p>The default configuration starts Odoo with 4 workers and 2 Connector
 workers. This can be changed in the buildout.cfg file in the <code class="docutils literal"><span class="pre">supervisor</span></code> section.</p>
 <p>The services can be managed on:</p>
-<div class="highlight-python"><div class="highlight"><pre>$ bin/supervisorctl
+<div class="highlight-python"><div class="highlight"><pre><span></span>$ bin/supervisorctl
 </pre></div>
 </div>
 </div>
@@ -355,12 +355,12 @@ workers. This can be changed in the buildout.cfg file in the <code class="docuti
 <h3><a class="toc-backref" href="#sections">Run the tests</a><a class="headerlink" href="#run-the-tests" title="Permalink to this headline">¶</a></h3>
 <p>The Magento Connector and the Connector framework do not use YAML tests, but only
 <code class="docutils literal"><span class="pre">unittest2</span></code> tests. The following command lines will run them:</p>
-<div class="highlight-python"><div class="highlight"><pre>$ bin/runtests --database db-name -u connector
+<div class="highlight-python"><div class="highlight"><pre><span></span>$ bin/runtests --database db-name -u connector
 $ bin/runtests --database db-name -u magentoerpconnect
 </pre></div>
 </div>
 <p>Use the help arguments for more information about the options:</p>
-<div class="highlight-python"><div class="highlight"><pre>$ bin/runtests --help
+<div class="highlight-python"><div class="highlight"><pre><span></span>$ bin/runtests --help
 $ bin/runtests --help-oe
 </pre></div>
 </div>
@@ -368,7 +368,7 @@ $ bin/runtests --help-oe
 <div class="section" id="build-the-documentation">
 <h3><a class="toc-backref" href="#sections">Build the documentation</a><a class="headerlink" href="#build-the-documentation" title="Permalink to this headline">¶</a></h3>
 <p>The documentation uses <a class="reference external" href="http://www.sphinx-doc.org">Sphinx</a>, use the following lines to build them in HTML:</p>
-<div class="highlight-python"><div class="highlight"><pre>$ bin/sphinxbuilder_connector
+<div class="highlight-python"><div class="highlight"><pre><span></span>$ bin/sphinxbuilder_connector
 $ bin/sphinxbuilder_connector_magento
 </pre></div>
 </div>
@@ -464,7 +464,7 @@ Magento using theses instructions: <a class="reference internal" href="#magento-
 others with the tests.</p>
 <p>In order to record data, you can proceed as follows:</p>
 <p>In <code class="docutils literal"><span class="pre">magentoerpconnect/unit/backend_adapter.py</span></code> at lines 130,130:</p>
-<div class="highlight-python"><div class="highlight"><pre> <span class="k">def</span> <span class="nf">_call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">arguments</span><span class="p">):</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span> <span class="k">def</span> <span class="nf">_call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">arguments</span><span class="p">):</span>
      <span class="k">try</span><span class="p">:</span>
          <span class="k">with</span> <span class="n">magentolib</span><span class="o">.</span><span class="n">API</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">magento</span><span class="o">.</span><span class="n">location</span><span class="p">,</span>
                              <span class="bp">self</span><span class="o">.</span><span class="n">magento</span><span class="o">.</span><span class="n">username</span><span class="p">,</span>
@@ -482,13 +482,13 @@ Then, as soon as you will start the server, all the requests and responses
 will be stored in global dict. Once you have recorded some exchanges, you can
 output them using a tool such as <a class="reference external" href="https://erppeek.readthedocs.org/en/latest/">ERPpeek</a> and by calling the method
 <code class="xref py py-class docutils literal"><span class="pre">output_recorder</span></code>:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">client</span><span class="o">.</span><span class="n">MagentoBackend</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">output_recorder</span><span class="p">([])</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">MagentoBackend</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">output_recorder</span><span class="p">([])</span>
 </pre></div>
 </div>
 <p>A path is returned with the location of the file.</p>
 <p>When you want to use a set of test data in a test, just use
 <code class="xref py py-func docutils literal"><span class="pre">mock_api()</span></code>:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">.common</span> <span class="kn">import</span> <span class="n">mock_api</span><span class="p">,</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">.common</span> <span class="kn">import</span> <span class="n">mock_api</span><span class="p">,</span>
 <span class="kn">from</span> <span class="nn">.a_data_module</span> <span class="kn">import</span> <span class="n">new_set_of_data</span>
 
 <span class="o">&lt;...&gt;</span>

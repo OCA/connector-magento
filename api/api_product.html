@@ -270,7 +270,7 @@ are set as failed, because there is no known way to import them.
 An additional module that implements the import should be installed.</p>
 <p>If you want to create a custom importer for the bundles, you have to
 declare the ConnectorUnit on your backend:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="nd">@magento_custom</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="nd">@magento_custom</span>
 <span class="k">class</span> <span class="nc">XBundleImporter</span><span class="p">(</span><span class="n">BundleImporter</span><span class="p">):</span>
     <span class="n">_model_name</span> <span class="o">=</span> <span class="s1">&#39;magento.product.product&#39;</span>
 
@@ -279,7 +279,7 @@ declare the ConnectorUnit on your backend:</p>
 </div>
 <p>If you want to create a generic module that import bundles, you have
 to replace the current ConnectorUnit:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="nd">@magento</span><span class="p">(</span><span class="n">replacing</span><span class="o">=</span><span class="n">BundleImporter</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="nd">@magento</span><span class="p">(</span><span class="n">replacing</span><span class="o">=</span><span class="n">BundleImporter</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">XBundleImporter</span><span class="p">(</span><span class="n">BundleImporter</span><span class="p">):</span>
     <span class="n">_model_name</span> <span class="o">=</span> <span class="s1">&#39;magento.product.product&#39;</span>
 
@@ -287,7 +287,7 @@ to replace the current ConnectorUnit:</p>
 </pre></div>
 </div>
 <p>And to add the bundle type in the supported product types:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">magento_product_product</span><span class="p">(</span><span class="n">orm</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">magento_product_product</span><span class="p">(</span><span class="n">orm</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
     <span class="n">_inherit</span> <span class="o">=</span> <span class="s1">&#39;magento.product.product&#39;</span>
 
     <span class="k">def</span> <span class="nf">product_type_get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cr</span><span class="p">,</span> <span class="n">uid</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
@@ -611,7 +611,7 @@ Import from a date</p>
 
 <dl class="attribute">
 <dt id="openerp.addons.magentoerpconnect.product.ProductImportMapper.direct">
-<code class="descname">direct</code><em class="property"> = [('name', 'name'), ('description', 'description'), ('weight', 'weight'), ('cost', 'standard_price'), ('short_description', 'description_sale'), ('sku', 'default_code'), ('type_id', 'product_type'), (&lt;function modifier at 0x5568668&gt;, 'created_at'), (&lt;function modifier at 0x55686e0&gt;, 'updated_at')]</em><a class="headerlink" href="#openerp.addons.magentoerpconnect.product.ProductImportMapper.direct" title="Permalink to this definition">¶</a></dt>
+<code class="descname">direct</code><em class="property"> = [('name', 'name'), ('description', 'description'), ('weight', 'weight'), ('cost', 'standard_price'), ('short_description', 'description_sale'), ('sku', 'default_code'), ('type_id', 'product_type'), (&lt;function modifier at 0x48b16e0&gt;, 'created_at'), (&lt;function modifier at 0x48b1758&gt;, 'updated_at')]</em><a class="headerlink" href="#openerp.addons.magentoerpconnect.product.ProductImportMapper.direct" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">

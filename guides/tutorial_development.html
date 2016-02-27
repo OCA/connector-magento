@@ -302,7 +302,7 @@ registered on this event. Those functions are called <code class="docutils liter
 defined. You can add your one, it should be decorated by
 <code class="xref py py-func docutils literal"><span class="pre">openerp.addons.magentoerpconnect.consumer.magento_consumer()</span></code> and by the event
 which has to fire it:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="nd">@on_record_write</span><span class="p">(</span><span class="n">model_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;my.model&#39;</span><span class="p">])</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="nd">@on_record_write</span><span class="p">(</span><span class="n">model_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;my.model&#39;</span><span class="p">])</span>
 <span class="nd">@magento_consumer</span>
 <span class="k">def</span> <span class="nf">my_consumer</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">record_id</span><span class="p">,</span> <span class="n">vals</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="k">print</span> <span class="s1">&#39;Yeah&#39;</span>
@@ -329,13 +329,13 @@ are done. It contains the browse record of the backend
 environment.  You&#8217;ll need to ask a connector unit with the base class
 which interests you.  Say you want a Synchronizer which import records
 from Magento:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">importer</span> <span class="o">=</span> <span class="n">environment</span><span class="o">.</span><span class="n">get_connector_unit</span><span class="p">(</span><span class="n">MagentoImporter</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">importer</span> <span class="o">=</span> <span class="n">environment</span><span class="o">.</span><span class="n">get_connector_unit</span><span class="p">(</span><span class="n">MagentoImporter</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><code class="docutils literal"><span class="pre">importer</span></code> is an instance of the importer to use for the model of the
 environment.</p>
 <p>Say you want a binder for your model:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">binder</span> <span class="o">=</span> <span class="n">environment</span><span class="o">.</span><span class="n">get_connector_unit</span><span class="p">(</span><span class="n">connector</span><span class="o">.</span><span class="n">Binder</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">binder</span> <span class="o">=</span> <span class="n">environment</span><span class="o">.</span><span class="n">get_connector_unit</span><span class="p">(</span><span class="n">connector</span><span class="o">.</span><span class="n">Binder</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><code class="docutils literal"><span class="pre">binder</span></code> is an instance of the binder for your model.</p>
@@ -347,7 +347,7 @@ attribute. It means that you can access to the environment
 from a synchronizer with <code class="docutils literal"><span class="pre">self.connector_env</span></code>.</p>
 </div>
 <p>When you are already inside a <code class="docutils literal"><span class="pre">ConnectorUnit</span></code> though you can use the shortcuts:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="c1"># for the current model</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># for the current model</span>
 <span class="n">importer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">unit_for</span><span class="p">(</span><span class="n">MagentoImporter</span><span class="p">)</span>
 <span class="c1"># for another model</span>
 <span class="n">importer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">unit_for</span><span class="p">(</span><span class="n">MagentoImporter</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s1">&#39;another.model&#39;</span><span class="p">)</span>
@@ -355,7 +355,7 @@ from a synchronizer with <code class="docutils literal"><span class="pre">self.c
 </div>
 <p>As the binders are the most used <code class="docutils literal"><span class="pre">ConnectorUnit</span></code> classes, they have a
 dedicated shortcut:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="c1"># for the current model</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># for the current model</span>
 <span class="n">binder</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">binder_for</span><span class="p">()</span>
 <span class="c1"># for another model</span>
 <span class="n">binder</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">binder_for</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s1">&#39;another.model&#39;</span><span class="p">)</span>
@@ -394,7 +394,7 @@ Customer groups are importer as categories of partners
 <div class="section" id="models">
 <h3><a class="toc-backref" href="#sections">Models</a><a class="headerlink" href="#models" title="Permalink to this headline">¶</a></h3>
 <p>First, we create the model:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">MagentoResPartnerCategory</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MagentoResPartnerCategory</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
     <span class="n">_name</span> <span class="o">=</span> <span class="s1">&#39;magento.res.partner.category&#39;</span>
     <span class="n">_inherit</span> <span class="o">=</span> <span class="s1">&#39;magento.binding&#39;</span>
     <span class="n">_inherits</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;res.partner.category&#39;</span><span class="p">:</span> <span class="s1">&#39;openerp_id&#39;</span><span class="p">}</span>
@@ -421,7 +421,7 @@ this model for the imports and the exports without complications.</li>
 </ul>
 <p>We need to add the field <code class="docutils literal"><span class="pre">magento_bind_ids</span></code> in
 <code class="docutils literal"><span class="pre">res.partner.category</span></code> to relate to the Magento Bindings:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">ResPartnerCategory</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">ResPartnerCategory</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
     <span class="n">_inherit</span> <span class="o">=</span> <span class="s1">&#39;res.partner.category&#39;</span>
 
     <span class="n">magento_bind_ids</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">One2many</span><span class="p">(</span>
@@ -446,7 +446,7 @@ Odoo&#8217;s models!</p>
 usually a subclass of
 <code class="xref py py-class docutils literal"><span class="pre">magentoerpconnect.unit.import_synchronizer.BatchImporter</span></code>.</p>
 <p>The customer groups are simple enough to use a generic class:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="nd">@magento</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="nd">@magento</span>
 <span class="k">class</span> <span class="nc">DelayedBatchImporter</span><span class="p">(</span><span class="n">BatchImporter</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Delay import of the records &quot;&quot;&quot;</span>
     <span class="n">_model_name</span> <span class="o">=</span> <span class="p">[</span>
@@ -484,7 +484,7 @@ need a Backend Adapter to be able to speak with Magento.</li>
 However, the <code class="docutils literal"><span class="pre">search</span></code> entry point is not implemented in the API for
 customer groups.</p>
 <p>We&#8217;ll replace it using <code class="docutils literal"><span class="pre">list</span></code> and select only the ids:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="nd">@magento</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="nd">@magento</span>
 <span class="k">class</span> <span class="nc">PartnerCategoryAdapter</span><span class="p">(</span><span class="n">GenericAdapter</span><span class="p">):</span>
     <span class="n">_model_name</span> <span class="o">=</span> <span class="s1">&#39;magento.res.partner.category&#39;</span>
     <span class="n">_magento_model</span> <span class="o">=</span> <span class="s1">&#39;ol_customer_groups&#39;</span>
@@ -515,7 +515,7 @@ need to...</p>
 <h3><a class="toc-backref" href="#sections">Delay execution of our Batch Import</a><a class="headerlink" href="#delay-execution-of-our-batch-import" title="Permalink to this headline">¶</a></h3>
 <p>This import will be called from the <strong>Magento Backend</strong>, we inherit <code class="docutils literal"><span class="pre">magento.backend</span></code>
 and add a method (and add in the view as well, I won&#8217;t write the view&#8217;s xml here):</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">MagentoBackend</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MagentoBackend</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
     <span class="n">_inherit</span> <span class="o">=</span> <span class="s1">&#39;magento.backend&#39;</span>
 
     <span class="nd">@api.multi</span>
@@ -542,7 +542,7 @@ and add a method (and add in the view as well, I won&#8217;t write the view&#821
 <p>We use 2 jobs: <code class="docutils literal"><span class="pre">import_record</span></code> and <code class="docutils literal"><span class="pre">import_batch</span></code>. These jobs are
 already there so you don&#8217;t need to write them, but we can have a look
 on them to understand what they do:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">_get_environment</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">backend_id</span><span class="p">):</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">_get_environment</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">backend_id</span><span class="p">):</span>
     <span class="n">model</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">env</span><span class="p">[</span><span class="s1">&#39;magento.backend&#39;</span><span class="p">]</span>
     <span class="n">backend_record</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">browse</span><span class="p">(</span><span class="n">backend_id</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">connector</span><span class="o">.</span><span class="n">Environment</span><span class="p">(</span><span class="n">backend_record</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">model_name</span><span class="p">)</span>
@@ -584,7 +584,7 @@ synchronizer, the mapper and the binder.</p>
 class
 <a class="reference internal" href="../api/api_synchronizer.html#openerp.addons.magentoerpconnect.unit.import_synchronizer.SimpleRecordImporter" title="openerp.addons.magentoerpconnect.unit.import_synchronizer.SimpleRecordImporter"><code class="xref py py-class docutils literal"><span class="pre">openerp.addons.magentoerpconnect.unit.import_synchronizer.SimpleRecordImporter</span></code></a>.
 We just need to add the model in the <code class="docutils literal"><span class="pre">_model_name</span></code> attribute:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="nd">@magento</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="nd">@magento</span>
 <span class="k">class</span> <span class="nc">SimpleRecordImporter</span><span class="p">(</span><span class="n">MagentoImporter</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Import one Magento Website &quot;&quot;&quot;</span>
     <span class="n">_model_name</span> <span class="o">=</span> <span class="p">[</span>
@@ -610,7 +610,7 @@ class
 <p>The <a class="reference external" href="http://www.odoo-connector.com/api/api_mapper.html#connector.unit.mapper.Mapper" title="(in Connector v)"><code class="xref py py-class docutils literal"><span class="pre">connector.unit.mapper.Mapper</span></code></a> takes the record from Magento, and generates the Odoo
 record. (or the reverse for the export Mappers)</p>
 <p>The mapper for the customer groups is as follows:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="nd">@magento</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="nd">@magento</span>
 <span class="k">class</span> <span class="nc">PartnerCategoryImportMapper</span><span class="p">(</span><span class="n">connector</span><span class="o">.</span><span class="n">ImportMapper</span><span class="p">):</span>
     <span class="n">_model_name</span> <span class="o">=</span> <span class="s1">&#39;magento.res.partner.category&#39;</span>
 
@@ -641,7 +641,7 @@ record. (or the reverse for the export Mappers)</p>
 normally all the Magento Models will use the same Binder, the so called
 <a class="reference internal" href="../api/api_binder.html#openerp.addons.magentoerpconnect.unit.binder.MagentoModelBinder" title="openerp.addons.magentoerpconnect.unit.binder.MagentoModelBinder"><code class="xref py py-class docutils literal"><span class="pre">MagentoModelBinder</span></code></a>.</p>
 <p>We just need to add our model in the <code class="docutils literal"><span class="pre">_model_name</span></code> attribute:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="nd">@magento</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="nd">@magento</span>
 <span class="k">class</span> <span class="nc">MagentoModelBinder</span><span class="p">(</span><span class="n">MagentoBinder</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Bindings are done directly on the model</span>
