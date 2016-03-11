@@ -35,19 +35,16 @@ class magento_backend(models.Model):
 
     location = fields.Char(
         compute='_get_environment_config_by_name',
-        string='Location',
         readonly=True,
         required=False,
     )
     username = fields.Char(
         compute='_get_environment_config_by_name',
-        string='Username',
         readonly=True,
         required=False,
         )
     password = fields.Char(
         compute='_get_environment_config_by_name',
-        string='Password',
         readonly=True,
         required=False,
     )
@@ -63,19 +60,19 @@ class magento_backend(models.Model):
 
         return ['password', 'username', 'location']
 
-    @api.one
+    @api.multi
     def _get_environment_config_by_name(self):
         """Compute the fields values for current environment"""
         for backend in self:
-            for field_name in self._get_env_fields():
+            for field_name in backend._get_env_fields():
                 section_name = '.'.join(
-                    (self._name.replace('.', '_'), backend.name)
+                    (backend._name.replace('.', '_'), backend.name)
                 )
                 try:
                     value = serv_config.get(section_name, field_name)
-                    self[field_name] = value
+                    backend[field_name] = value
                 except:
                     _logger.exception('error trying to read field %s '
                                       'in section %s', field_name,
                                       section_name)
-                    self[field_name] = False
+                    backend[field_name] = False
