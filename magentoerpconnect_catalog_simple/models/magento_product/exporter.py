@@ -32,10 +32,11 @@ from openerp.addons.connector.event import (
     on_record_create
     )
 from openerp.addons.connector.connector import ConnectorUnit
-import logging
-_logger = logging.getLogger(__name__)
 import openerp.addons.magentoerpconnect.consumer as magentoerpconnect
 from openerp.addons.magentoerpconnect.product import ProductInventoryExporter
+
+import logging
+_logger = logging.getLogger(__name__)
 
 
 @on_record_write(model_names=[
