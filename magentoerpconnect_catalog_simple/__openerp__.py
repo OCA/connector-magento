@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
-##############################################################################
 #
-#    Author: Guewen Baconnier
-#    Copyright 2014 Camptocamp SA
+#    Author: Damien Crier
+#    Copyright 2015 Camptocamp SA
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -17,24 +16,18 @@
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-##############################################################################
-
-{'name': 'Server environment for Magento Connector',
- 'version': '1.0',
- 'author': "Camptocamp,Odoo Community Association (OCA)",
- 'maintainer': 'Camptocamp',
- 'license': 'AGPL-3',
- 'category': 'Tools',
- 'complexity': 'expert',
- 'depends': ['base',
-             'server_environment',
-             'magentoerpconnect',
+{'name': 'Magento Catalog Simple',
+ 'version': '8.0.1.0',
+ 'category': 'Connector',
+ 'depends': ['magentoerpconnect',
              ],
- 'summary': """Server environment for Magento Connector
-that allows configuration support for various environments (test, prod,...)""",
- 'website': 'http://www.camptocamp.com',
- 'data': [],
- 'test': [],
+ 'author': "Camptocamp,Odoo Community Association (OCA)",
+ 'license': 'AGPL-3',
+ 'website': 'http://www.odoo-magento-connector.com',
+ 'data': ['security/ir.model.access.csv',
+          'views/magento_model_view.xml',
+          'views/product_view.xml',
+          ],
  'installable': True,
- 'auto_install': False,
+ 'application': True,
  }

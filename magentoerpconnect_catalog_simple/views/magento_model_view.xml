@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        
+        <record id="view_magento_backend_form" model="ir.ui.view">
+            <field name="model">magento.backend</field>
+            <field name="inherit_id" ref="magentoerpconnect.view_magento_backend_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook/page[@name='advanced_configuration']/group/field[@name='default_category_id']" position="after">
+                    <field name="auto_bind_product"/>
+                    <field name="default_mag_tax_id" attrs="{'required': [('auto_bind_product', '!=', False)]}" domain="[('backend_id','=',id)]"/>
+                </xpath>
+            </field>
+        </record>
+        
+        <record id="view_magento_tax_class_form" model="ir.ui.view">
+            <field name="name">magento.tax.class.form</field>
+            <field name="model">magento.tax.class</field>
+            <field name="arch" type="xml">
+                <form string="Magento Product Tax" delete="false">
+                    <sheet>
+                        <h1>
+                            <field name="name" class="oe_inline"/>
+                        </h1>
+                        <group string="Informations">
+                            <field name="magento_id"/>
+                            <field name="backend_id"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_magento_tax_class_tree" model="ir.ui.view">
+            <field name="name">magento.tax.class.tree</field>
+            <field name="model">magento.tax.class</field>
+            <field name="arch" type="xml">
+                <tree string="Magento Product Tax" delete="false">
+                    <field name="name"/>
+                    <field name="backend_id"/>
+                    <field name="magento_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_magento_tax_class" model="ir.actions.act_window">
+            <field name="name">Magento Product Tax</field>
+            <field name="res_model">magento.tax.class</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_magento_tax_class_tree"/>
+        </record>
+
+        <menuitem id="menu_magento_tax_class"
+            name="Magento Product Tax"
+            parent="magentoerpconnect.menu_magento_root"
+            sequence="60"
+            action="action_magento_tax_class"/>
+
+
+        <record id="view_magento_attribute_set_form" model="ir.ui.view">
+            <field name="name">magento.attribute.set.form</field>
+            <field name="model">magento.attribute.set</field>
+            <field name="arch" type="xml">
+                <form string="Magento Attribute Set"
+                        delete="false" edit="false">
+                    <sheet>
+                        <h1>
+                            <field name="name" class="oe_inline"/>
+                        </h1>
+                        <group string="Informations">
+                            <field name="parent_model_id"/>
+                            <field name="magento_id" readonly="1"/>
+                            <field name="backend_id"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_magento_attribute_set_tree" model="ir.ui.view">
+            <field name="name">magento.attribute.set.tree</field>
+            <field name="model">magento.attribute.set</field>
+            <field name="arch" type="xml">
+                <tree string="Magento Attribute Set"
+                        delete="false">
+                    <field name="name"/>
+                    <field name="backend_id"/>
+                    <field name="magento_id" readonly="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_magento_attribute_set" model="ir.actions.act_window">
+            <field name="name">Magento Attribute Sets</field>
+            <field name="res_model">magento.attribute.set</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_magento_attribute_set_tree"/>
+        </record>
+
+        <menuitem id="menu_magento_attribute_set"
+            name="Attribute Sets"
+            parent="magentoerpconnect.menu_magento_root"
+            sequence="50"
+            action="action_magento_attribute_set"/>
+
+    </data>
+</openerp>

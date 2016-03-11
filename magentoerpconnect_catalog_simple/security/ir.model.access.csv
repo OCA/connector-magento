@@ -1,0 +1,5 @@
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+"access_magento_tax_class","magento tax class manager","magentoerpconnect.model_magento_tax_class","connector.group_connector_manager",1,1,1,1
+"access_magento_attribute_set","magento attribute set manager","magentoerpconnect.model_magento_attribute_set","connector.group_connector_manager",1,1,1,1
+"access_magento__tax_class_user","magento tax class user","magentoerpconnect.model_magento_tax_class","base.group_sale_salesman",1,0,0,0
+"access_magento_attribute_set_user","magento attribute set user","magentoerpconnect.model_magento_attribute_set","base.group_sale_salesman",1,0,0,0

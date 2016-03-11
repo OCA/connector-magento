@@ -189,6 +189,7 @@ class SetUpMagentoBase(common.TransactionCase):
     def setUp(self):
         super(SetUpMagentoBase, self).setUp()
         self.backend_model = self.env['magento.backend']
+        self.mag_tax_class_obj = self.env['magento.tax.class']
         self.session = ConnectorSession(self.env.cr, self.env.uid,
                                         context=self.env.context)
         warehouse = self.env.ref('stock.warehouse0')
@@ -200,6 +201,17 @@ class SetUpMagentoBase(common.TransactionCase):
              'warehouse_id': warehouse.id,
              'password': '42'}
         )
+        default_tax_list = [
+            {'name': 'default', 'magento_id': '0'},
+            {'name': 'Taxable Goods', 'magento_id': '1'},
+            {'name': 'normal', 'magento_id': '2'},
+            {'name': 'Shipping', 'magento_id': '3'},
+            ]
+        if not self.backend.tax_imported:
+            for tax_dict in default_tax_list:
+                tax_dict.update(backend_id=self.backend.id)
+                self.mag_tax_class_obj.create(tax_dict)
+            self.backend.tax_imported = True
         self.backend_id = self.backend.id
         # payment method needed to import a sale order
         workflow = self.env.ref(

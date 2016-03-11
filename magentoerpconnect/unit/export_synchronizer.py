@@ -414,6 +414,105 @@ class MagentoExporter(MagentoBaseExporter):
         return _('Record exported with ID %s on Magento.') % self.magento_id
 
 
+class MagentoTranslationExporter(MagentoBaseExporter):
+    """ A translation exporter
+
+    Must be called in the ``_after_export`` method of an exporter.
+    """
+
+    def _get_translatable_field(self, fields):
+        """ Find the translatable fields of the model
+
+        Note we consider that a translatable field in Magento must be a
+        translatable field in OpenERP and vice-versa.  You can change
+        this behaviour in your own module.
+        """
+        all_fields = self.model.fields_get()
+
+        translatable_fields = [field for field, attrs in all_fields.iteritems()
+                               if attrs.get('translate') and
+                               (not fields or field in fields)]
+        return translatable_fields
+
+    def _map_data(self):
+        """ Returns an instance of
+        :py:class:`~openerp.addons.connector.unit.mapper.MapRecord`
+
+        """
+        return self.mapper.map_record(self.binding_record)
+
+    def _update_data(self, map_record, fields=None, **kwargs):
+        """ Get the data to pass to :py:meth:`_update` """
+        return map_record.values(fields=fields, **kwargs)
+
+    def _validate_data(self, data):
+        """ Check if the values to import are correct
+
+        Kept for retro-compatibility. To remove in 8.0
+
+        Pro-actively check before the ``Model.create`` or ``Model.update``
+        if some fields are missing or invalid
+
+        Raise `InvalidDataError`
+        """
+        _logger.warning('Deprecated: _validate_data is deprecated '
+                        'in favor of validate_create_data() '
+                        'and validate_update_data()')
+        self._validate_create_data(data)
+        self._validate_update_data(data)
+
+    def _validate_create_data(self, data):
+        """ Check if the values to import are correct
+
+        Pro-actively check before the ``Model.create`` if some fields
+        are missing or invalid
+
+        Raise `InvalidDataError`
+        """
+        return
+
+    def _validate_update_data(self, data):
+        """ Check if the values to import are correct
+
+        Pro-actively check before the ``Model.update`` if some fields
+        are missing or invalid
+
+        Raise `InvalidDataError`
+        """
+        return
+
+    def _run(self, fields=None):
+        assert self.magento_id
+        default_lang = self.backend_record.default_lang_id
+        session = self.session
+
+        storeviews = session.env['magento.storeview'].search([
+            ('backend_id', '=', self.backend_record.id)
+        ])
+        lang_storeviews = [sv for sv in storeviews
+                           if sv.lang_id and sv.lang_id != default_lang]
+        if not lang_storeviews:
+            return
+        translatable_fields = self._get_translatable_field(fields)
+        if not translatable_fields:
+            return
+        for storeview in lang_storeviews:
+            lang_code = storeview.lang_id.code
+            model = self.model.with_context(lang=lang_code)
+            self.binding_record = model.browse(self.binding_id)
+            map_record = self._map_data()
+            record = self._update_data(map_record,
+                                       fields=translatable_fields)
+            if not record:
+                continue
+            # special check on data before export
+            self._validate_data(record)
+            binder = self.binder_for('magento.storeview')
+            magento_storeview_id = binder.to_backend(storeview)
+            self.backend_adapter.write(
+                self.magento_id, record, magento_storeview_id)
+
+
 @job(default_channel='root.magento')
 @related_action(action=unwrap_binding)
 def export_record(session, model_name, binding_id, fields=None):
