@@ -3,13 +3,14 @@
 # * magentoerpconnect
 # 
 # Translators:
+# Matjaž Mozetič <m.mozetic@matmoz.si>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-05 01:39+0000\n"
-"PO-Revision-Date: 2016-02-24 19:23+0000\n"
-"Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
+"POT-Creation-Date: 2016-02-27 06:54+0000\n"
+"PO-Revision-Date: 2016-03-12 06:46+0000\n"
+"Last-Translator: Matjaž Mozetič <m.mozetic@matmoz.si>\n"
 "Language-Team: Slovenian (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,22 +21,22 @@ msgstr ""
 #. module: magentoerpconnect
 #: help:magento.sale.order,magento_order_id:0
 msgid "'order_id' field in Magento"
-msgstr ""
+msgstr "Polje 'order_id' v Magentu"
 
 #. module: magentoerpconnect
 #: view:magento.product.product:magentoerpconnect.view_magento_product_form
 msgid "(recompute)"
-msgstr ""
+msgstr "(preračunaj)"
 
 #. module: magentoerpconnect
 #: sql_constraint:magento.account.invoice:0
 msgid "A Magento binding for this invoice already exists."
-msgstr ""
+msgstr "Za ta račun že obstaja Magento vezava."
 
 #. module: magentoerpconnect
 #: sql_constraint:magento.backend:0
 msgid "A backend with the same sale prefix already exists"
-msgstr ""
+msgstr "Ozadje z enako prodajno predpono že obstaja."
 
 #. module: magentoerpconnect
 #: sql_constraint:magento.account.invoice:0 sql_constraint:magento.address:0
@@ -48,74 +49,74 @@ msgstr ""
 #: sql_constraint:magento.stock.picking:0 sql_constraint:magento.store:0
 #: sql_constraint:magento.storeview:0 sql_constraint:magento.website:0
 msgid "A binding already exists with the same Magento ID."
-msgstr ""
+msgstr "Vezava z enakim Magento ID že obstaja."
 
 #. module: magentoerpconnect
 #: sql_constraint:magento.address:0
 msgid "A partner address can only have one binding by backend."
-msgstr ""
+msgstr "Partnerjev naslov ima lahko le eno vezavo na ozadje."
 
 #. module: magentoerpconnect
 #: help:magento.backend,sale_prefix:0
 msgid ""
 "A prefix put before the name of imported sales orders.\n"
 "For instance, if the prefix is 'mag-', the sales order 100000692 in Magento, will be named 'mag-100000692' in OpenERP."
-msgstr ""
+msgstr "Predpona pred nazivom uvoženih prodajnih nalogov.\nČe je npr. predpona 'mag-', bo prodajni nalog 100000692 v Magentu imenovan 'mag-100000692' v OpenERP."
 
 #. module: magentoerpconnect
 #: view:magento.backend:magentoerpconnect.view_magento_backend_form
 msgid "API"
-msgstr ""
+msgstr "API"
 
 #. module: magentoerpconnect
 #: field:magento.address,is_magento_order_address:0
 msgid "Address from a Magento Order"
-msgstr ""
+msgstr "Naslov iz Magento naloga"
 
 #. module: magentoerpconnect
 #: field:magento.backend,admin_location:0
 msgid "Admin Location"
-msgstr ""
+msgstr "Lokacija administratorja"
 
 #. module: magentoerpconnect
 #: view:magento.backend:magentoerpconnect.view_magento_backend_form
 msgid "Advanced Configuration"
-msgstr ""
+msgstr "Napredne nastavitve"
 
 #. module: magentoerpconnect
 #: code:addons/magentoerpconnect/stock_picking.py:173
 #, python-format
 msgid "Already exported"
-msgstr ""
+msgstr "Že izvoženo"
 
 #. module: magentoerpconnect
 #: code:addons/magentoerpconnect/sale.py:628
 #, python-format
 msgid "Already imported"
-msgstr ""
+msgstr "Že uvoženo"
 
 #. module: magentoerpconnect
 #: code:addons/magentoerpconnect/unit/import_synchronizer.py:217
 #, python-format
 msgid "Already up-to-date."
-msgstr ""
+msgstr "Že posodobljeno"
 
 #. module: magentoerpconnect
 #: help:magento.res.partner,consider_as_company:0
 msgid ""
 "An account imported with a 'company' in the billing address is considered as a company.\n"
 " The partner takes the name of the company and is not merged with the billing address."
-msgstr ""
+msgstr "Konto uvožen s 'company' v naslovu za račun se upošteva kot družba.\n Partner prevzame naziv družbe in ni združen z naslovom za račun."
 
 #. module: magentoerpconnect
 #: field:magento.backend,account_analytic_id:0
 msgid "Analytic account"
-msgstr ""
+msgstr "Analitični konto"
 
 #. module: magentoerpconnect
 #: model:ir.ui.menu,name:magentoerpconnect.menu_magento_backend
 msgid "Backends"
-msgstr ""
+msgstr "Ozadja"
 
 #. module: magentoerpconnect
 #: field:magento.backend,auth_basic_password:0
