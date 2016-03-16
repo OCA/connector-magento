@@ -53,6 +53,6 @@ Exemple of the section to put in the configuration file::
  'website': 'http://www.camptocamp.com',
  'data': [],
  'test': [],
- 'installable': False,
+ 'installable': True,
  'auto_install': False,
  }

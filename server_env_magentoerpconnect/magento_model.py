@@ -18,11 +18,10 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
 import logging
-from openerp.osv import fields, orm
+from openerp import fields, models, api
 try:
-    from server_environment import serv_config
+    from openerp.addons.server_environment import serv_config
 except ImportError:
     logging.getLogger('openerp.module').warning(
         'server_environment not available in addons path. '
@@ -31,41 +30,49 @@ except ImportError:
 _logger = logging.getLogger(__name__)
 
 
-class magento_backend(orm.Model):
+class magento_backend(models.Model):
     _inherit = 'magento.backend'
 
-    def _get_environment_config_by_name(self, cr, uid, ids, field_names,
-                                        arg, context=None):
-        values = {}
-        for backend in self.browse(cr, uid, ids, context=context):
-            values[backend.id] = {}
-            for field_name in field_names:
-                section_name = '.'.join((self._name.replace('.', '_'),
-                                         backend.name))
+    location = fields.Char(
+        compute='_get_environment_config_by_name',
+        readonly=True,
+        required=False,
+    )
+    username = fields.Char(
+        compute='_get_environment_config_by_name',
+        readonly=True,
+        required=False,
+        )
+    password = fields.Char(
+        compute='_get_environment_config_by_name',
+        readonly=True,
+        required=False,
+    )
+
+    @api.model
+    def _get_env_fields(self):
+        """Return the list of fields that are concerned
+        by the environment setup
+
+        :return: a list of field name
+        :rtype: list
+        """
+
+        return ['password', 'username', 'location']
+
+    @api.multi
+    def _get_environment_config_by_name(self):
+        """Compute the fields values for current environment"""
+        for backend in self:
+            for field_name in backend._get_env_fields():
+                section_name = '.'.join(
+                    (backend._name.replace('.', '_'), backend.name)
+                )
                 try:
                     value = serv_config.get(section_name, field_name)
-                    values[backend.id][field_name] = value
+                    backend[field_name] = value
                 except:
                     _logger.exception('error trying to read field %s '
                                       'in section %s', field_name,
                                       section_name)
-                    values[backend.id][field_name] = False
-        return values
-
-    _columns = {
-        'location': fields.function(
-            _get_environment_config_by_name,
-            string='Location',
-            type='char',
-            multi='connection_config'),
-        'username': fields.function(
-            _get_environment_config_by_name,
-            string='Username',
-            type='char',
-            multi='connection_config'),
-        'password': fields.function(
-            _get_environment_config_by_name,
-            string='Password',
-            type='char',
-            multi='connection_config'),
-    }
+                    backend[field_name] = False
