@@ -579,6 +579,16 @@ class AddressImporter(MagentoImporter):
             return self.address_infos.magento_record
         else:
             return super(AddressImporter, self)._get_magento_data()
+    
+    def _clean_fields_company(self, data):
+        """ Avoid overwrite name field when we import a company. """
+        if data.get('is_default_billing', False) and data.get('company', False):
+            data['name'] = data['company']
+        return data
+
+    def _update(self, binding, data):
+        data = self._clean_fields_company(data)
+        return super(AddressImporter, self)._update(binding, data)
 
     def _define_partner_relationship(self, data):
         """ Link address with partner or parent company. """
