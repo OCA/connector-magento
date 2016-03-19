@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (7.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-01 17:35+0000\n"
+"POT-Creation-Date: 2016-03-17 13:35+0000\n"
 "PO-Revision-Date: 2015-09-20 01:24+0000\n"
 "Last-Translator: Armando Vulcano Junior <vulcano@uol.com.br>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/oca/OCA-connector-magento-7-0/language/pt_BR/)\n"
@@ -569,7 +569,7 @@ msgid "Import Sale Orders since"
 msgstr "Importar Pedidos Venda desde"
 
 #. module: magentoerpconnect
-#: code:addons/magentoerpconnect/sale.py:1150
+#: code:addons/magentoerpconnect/sale.py:1149
 #, python-format
 msgid "Sale is not linked with a Magento sales order"
 msgstr "Venda não está relacionada a um pedido venda Magento"
@@ -988,7 +988,7 @@ msgid "A storeview with same ID on Magento already exists."
 msgstr ""
 
 #. module: magentoerpconnect
-#: code:addons/magentoerpconnect/sale.py:1154
+#: code:addons/magentoerpconnect/sale.py:1153
 #, python-format
 msgid "Magento sales order is already in state %s"
 msgstr ""
@@ -1035,7 +1035,7 @@ msgid "Custom Api Path"
 msgstr ""
 
 #. module: magentoerpconnect
-#: code:addons/magentoerpconnect/sale.py:1147
+#: code:addons/magentoerpconnect/sale.py:1146
 #, python-format
 msgid "State %s is not exported."
 msgstr ""

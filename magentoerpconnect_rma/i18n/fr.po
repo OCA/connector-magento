@@ -1,0 +1,259 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * magentoerpconnect_rma
+# 
+# Translators:
+msgid ""
+msgstr ""
+"Project-Id-Version: connector-magento (7.0)\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-03-17 13:35+0000\n"
+"PO-Revision-Date: 2016-03-17 13:36+0000\n"
+"Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
+"Language-Team: French (http://www.transifex.com/oca/OCA-connector-magento-7-0/language/fr/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: fr\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. module: magentoerpconnect_rma
+#: sql_constraint:magento.crm.claim:0
+msgid "A Claim with the same ID on Magento already exists."
+msgstr "Une RMA avec le même ID sur Magento existe déjà."
+
+#. module: magentoerpconnect_rma
+#: help:magento.crm.claim,magento_claim_id:0
+msgid "'rma_id' field in Magento"
+msgstr "champ 'rma_id' dans Magento"
+
+#. module: magentoerpconnect_rma
+#: field:magento.backend,import_claim_attachments_from_date:0
+msgid "Import claim attachments from date"
+msgstr "Importer les pièces jointes de RMA à partir de la date"
+
+#. module: magentoerpconnect_rma
+#: sql_constraint:magento.claim.comment:0
+msgid "A Claim Comment with the same ID on Magento already exists."
+msgstr "Un Commentaire de RMA avec le même ID sur Magento existe déjà."
+
+#. module: magentoerpconnect_rma
+#: field:magento.claim.attachment,sync_date:0
+#: field:magento.claim.comment,sync_date:0
+#: field:magento.claim.line,sync_date:0 field:magento.crm.claim,sync_date:0
+msgid "Last synchronization date"
+msgstr "Date de la dernière synchronisation"
+
+#. module: magentoerpconnect_rma
+#: field:crm.claim,claim_attachment_ids:0
+msgid "Claim Attachments"
+msgstr "Pièces Jointes de RMA"
+
+#. module: magentoerpconnect_rma
+#: help:claim.line,order_line_id:0
+msgid "The sale order line related to the returned product"
+msgstr "La ligne de commande concernant le produit renvoyé"
+
+#. module: magentoerpconnect_rma
+#: field:magento.crm.claim,magento_claim_comment_ids:0
+msgid "Magento Claim Comments"
+msgstr "Commentaires de RMA Magento"
+
+#. module: magentoerpconnect_rma
+#: model:ir.model,name:magentoerpconnect_rma.model_claim_line
+msgid "List of product to return"
+msgstr "Liste des produits à retourner"
+
+#. module: magentoerpconnect_rma
+#: sql_constraint:magento.claim.attachment:0
+msgid "A Claim Attachment with the same ID on Magento already exists."
+msgstr "Une Pièce Jointe de RMA avec le même ID sur Magento existe déjà."
+
+#. module: magentoerpconnect_rma
+#: field:magento.crm.claim,magento_claim_id:0
+msgid "Magento Claim ID"
+msgstr "ID de RMA Magento"
+
+#. module: magentoerpconnect_rma
+#: field:magento.claim.attachment,openerp_id:0
+msgid "Claim Attachment"
+msgstr "Pièce Jointe de RMA"
+
+#. module: magentoerpconnect_rma
+#: field:magento.backend,import_claim_comments_from_date:0
+msgid "Import claim comments from date"
+msgstr "Importer les commentaires de RMA à partir de la date"
+
+#. module: magentoerpconnect_rma
+#: model:ir.model,name:magentoerpconnect_rma.model_ir_attachment
+msgid "ir.attachment"
+msgstr "ir.attachment"
+
+#. module: magentoerpconnect_rma
+#: view:magento.backend:0
+msgid "Import in background"
+msgstr "Importer en arrière-plan"
+
+#. module: magentoerpconnect_rma
+#: field:claim.line,magento_bind_ids:0 field:crm.claim,magento_bind_ids:0
+#: field:ir.attachment,magento_claim_bind_ids:0
+#: field:mail.message,magento_claim_bind_ids:0
+msgid "Magento Bindings"
+msgstr "Magento Bindings"
+
+#. module: magentoerpconnect_rma
+#: field:magento.claim.attachment,magento_id:0
+#: field:magento.claim.comment,magento_id:0
+#: field:magento.claim.line,magento_id:0 field:magento.crm.claim,magento_id:0
+msgid "ID on Magento"
+msgstr "ID sur Magento"
+
+#. module: magentoerpconnect_rma
+#: sql_constraint:magento.claim.line:0
+msgid "A Claim Line with the same ID on Magento already exists."
+msgstr "Une Ligne de RMA avec le même ID sur Magento existe déjà."
+
+#. module: magentoerpconnect_rma
+#: field:magento.backend,import_claims_from_date:0
+msgid "Import claims from date"
+msgstr "Importer les RMA à partir de la date"
+
+#. module: magentoerpconnect_rma
+#: view:magento.backend:0
+msgid "Import claim comments since"
+msgstr "Importer les commentaires de RMA depuis"
+
+#. module: magentoerpconnect_rma
+#: selection:ir.attachment,attachment_type:0
+msgid "Customer"
+msgstr "Client"
+
+#. module: magentoerpconnect_rma
+#: field:magento.crm.claim,magento_claim_attachment_ids:0
+msgid "Magento Claim Attachments"
+msgstr "Pièces jointes de RMA Magento"
+
+#. module: magentoerpconnect_rma
+#: field:magento.claim.comment,openerp_id:0
+msgid "Claim Comment"
+msgstr "Commentaire de RMA"
+
+#. module: magentoerpconnect_rma
+#: code:addons/magentoerpconnect_rma/claim.py:557
+#: code:addons/magentoerpconnect_rma/claim.py:649
+#, python-format
+msgid "Already up-to-date."
+msgstr ""
+
+#. module: magentoerpconnect_rma
+#: field:crm.claim,claim_id:0
+msgid "Claim ID"
+msgstr "ID de RMA"
+
+#. module: magentoerpconnect_rma
+#: model:ir.model,name:magentoerpconnect_rma.model_magento_backend
+#: field:magento.claim.attachment,backend_id:0
+#: field:magento.claim.comment,backend_id:0
+#: field:magento.claim.line,backend_id:0 field:magento.crm.claim,backend_id:0
+msgid "Magento Backend"
+msgstr "Backend Magento"
+
+#. module: magentoerpconnect_rma
+#: field:magento.claim.line,openerp_id:0
+msgid "Claim Line"
+msgstr "Ligne de RMA"
+
+#. module: magentoerpconnect_rma
+#: model:ir.model,name:magentoerpconnect_rma.model_magentoerpconnect_rma_installed
+msgid "magentoerpconnect_rma.installed"
+msgstr "magentoerpconnect_rma.installed"
+
+#. module: magentoerpconnect_rma
+#: model:ir.model,name:magentoerpconnect_rma.model_magento_crm_claim
+#: field:magento.claim.attachment,magento_claim_id:0
+#: field:magento.claim.comment,magento_claim_id:0
+#: field:magento.claim.line,magento_claim_id:0
+msgid "Magento Claim"
+msgstr "RMA Magento"
+
+#. module: magentoerpconnect_rma
+#: selection:ir.attachment,attachment_type:0
+msgid "Seller"
+msgstr "Vendeur"
+
+#. module: magentoerpconnect_rma
+#: field:crm.claim,claim_comment_ids:0
+msgid "Claim Comments"
+msgstr "Commentaires de RMA"
+
+#. module: magentoerpconnect_rma
+#: field:ir.attachment,claim_id:0
+#: model:ir.model,name:magentoerpconnect_rma.model_crm_claim
+#: field:magento.crm.claim,openerp_id:0 field:mail.message,claim_id:0
+msgid "Claim"
+msgstr "Claim"
+
+#. module: magentoerpconnect_rma
+#: view:magento.backend:0
+msgid "Import claims since"
+msgstr "Importer les RMA depuis"
+
+#. module: magentoerpconnect_rma
+#: view:magento.backend:0
+msgid "Import claim attachments since"
+msgstr "Importer les pièces jointes de RMA depuis"
+
+#. module: magentoerpconnect_rma
+#: field:ir.attachment,attachment_type:0
+msgid "Attachment Type"
+msgstr "Type de pièce jointe"
+
+#. module: magentoerpconnect_rma
+#: field:claim.line,sequence:0
+msgid "Sequence"
+msgstr "Séquence"
+
+#. module: magentoerpconnect_rma
+#: field:magento.crm.claim,magento_claim_line_ids:0
+msgid "Magento Claim Lines"
+msgstr "Lignes de RMA Magento"
+
+#. module: magentoerpconnect_rma
+#: model:ir.model,name:magentoerpconnect_rma.model_magento_claim_comment
+msgid "Magento Claim Comment"
+msgstr "Commentaire de RMA Magento"
+
+#. module: magentoerpconnect_rma
+#: help:claim.line,sequence:0
+msgid "Gives the sequence of this line when displaying the claim."
+msgstr "Donne la séquence de cette ligne lors de l'affichage de la RMA."
+
+#. module: magentoerpconnect_rma
+#: field:ir.attachment,created_at:0
+msgid "Created At (on Magento)"
+msgstr "Créé à (sur Magento)"
+
+#. module: magentoerpconnect_rma
+#: model:ir.model,name:magentoerpconnect_rma.model_magento_claim_attachment
+msgid "Magento Claim Attachment"
+msgstr "Pièce Jointe de RMA Magento"
+
+#. module: magentoerpconnect_rma
+#: model:ir.model,name:magentoerpconnect_rma.model_mail_message
+msgid "Message"
+msgstr "Message"
+
+#. module: magentoerpconnect_rma
+#: field:claim.line,order_line_id:0
+msgid "Order Line"
+msgstr "Ligne de Commande"
+
+#. module: magentoerpconnect_rma
+#: model:ir.model,name:magentoerpconnect_rma.model_magento_claim_line
+msgid "Magento Claim Line"
+msgstr "Ligne de RMA Magento"
+
+#. module: magentoerpconnect_rma
+#: help:crm.claim,claim_id:0
+msgid "'res_id' field in OpenErp"
+msgstr "champ 'res_id' dans OpenErp"
