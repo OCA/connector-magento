@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-12-16 10:10+0000\n"
-"PO-Revision-Date: 2015-12-16 10:11+0000\n"
+"POT-Creation-Date: 2016-03-17 01:39+0000\n"
+"PO-Revision-Date: 2016-03-16 08:10+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: English (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/en/)\n"
 "MIME-Version: 1.0\n"
@@ -574,11 +574,6 @@ msgid "Last synchronization date"
 msgstr "Last synchronization date"
 
 #. module: magentoerpconnect
-#: field:magento.backend,location:0
-msgid "Location"
-msgstr "Location"
-
-#. module: magentoerpconnect
 #: model:ir.ui.menu,name:magentoerpconnect.menu_magento_root
 #: view:payment.method:magentoerpconnect.payment_method_view_form
 #: view:res.partner.category:magentoerpconnect.view_partner_category_form
@@ -923,11 +918,6 @@ msgid "Partner Tags"
 msgstr "Partner Tags"
 
 #. module: magentoerpconnect
-#: field:magento.backend,password:0
-msgid "Password"
-msgstr "Password"
-
-#. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_payment_method
 msgid "Payment Method"
 msgstr "Payment Method"
@@ -1245,11 +1235,6 @@ msgid "Updated At (on Magento)"
 msgstr "Updated At (on Magento)"
 
 #. module: magentoerpconnect
-#: help:magento.backend,location:0
-msgid "Url to magento application"
-msgstr "Url to magento application"
-
-#. module: magentoerpconnect
 #: selection:magento.product.product,backorders:0
 #: selection:magento.product.product,manage_stock:0
 msgid "Use Default Config"
@@ -1267,11 +1252,6 @@ msgid ""
 "configured to restrict access using a HTTP authentication based on a "
 "username and a password."
 msgstr "Use a Basic Access Authentication for the API. The Magento server could be configured to restrict access using a HTTP authentication based on a username and a password."
-
-#. module: magentoerpconnect
-#: field:magento.backend,username:0
-msgid "Username"
-msgstr "Username"
 
 #. module: magentoerpconnect
 #: selection:magento.store,create_invoice_on:0
@@ -1293,16 +1273,6 @@ msgstr "Warehouse"
 #: help:magento.backend,warehouse_id:0
 msgid "Warehouse used to compute the stock quantities."
 msgstr "Warehouse used to compute the stock quantities."
-
-#. module: magentoerpconnect
-#: help:magento.backend,password:0
-msgid "Webservice password"
-msgstr "Webservice password"
-
-#. module: magentoerpconnect
-#: help:magento.backend,username:0
-msgid "Webservice user"
-msgstr "Webservice user"
 
 #. module: magentoerpconnect
 #: field:magento.backend,website_ids:0

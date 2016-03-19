@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-02-27 06:54+0000\n"
-"PO-Revision-Date: 2016-03-12 06:46+0000\n"
+"POT-Creation-Date: 2016-03-17 01:39+0000\n"
+"PO-Revision-Date: 2016-03-19 06:45+0000\n"
 "Last-Translator: Matjaž Mozetič <m.mozetic@matmoz.si>\n"
 "Language-Team: Slovenian (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/sl/)\n"
 "MIME-Version: 1.0\n"
@@ -121,27 +121,27 @@ msgstr "Ozadja"
 #. module: magentoerpconnect
 #: field:magento.backend,auth_basic_password:0
 msgid "Basic Auth. Password"
-msgstr ""
+msgstr "Osnovno poobl. geslo"
 
 #. module: magentoerpconnect
 #: field:magento.backend,auth_basic_username:0
 msgid "Basic Auth. Username"
-msgstr ""
+msgstr "Osnovni poobl. uporabniško ime"
 
 #. module: magentoerpconnect
 #: help:magento.backend,auth_basic_password:0
 msgid "Basic access authentication web server side password"
-msgstr ""
+msgstr "Geslo za strežniško stran osnovnega overjenega dostopa"
 
 #. module: magentoerpconnect
 #: help:magento.backend,auth_basic_username:0
 msgid "Basic access authentication web server side username"
-msgstr ""
+msgstr "Uporabniško ime za strežniško stran osnovnega overjenega dostopa"
 
 #. module: magentoerpconnect
 #: field:res.partner,birthday:0
 msgid "Birthday"
-msgstr ""
+msgstr "Rojstni dan"
 
 #. module: magentoerpconnect
 #: view:magento.backend:magentoerpconnect.view_magento_backend_form
@@ -153,7 +153,7 @@ msgid ""
 "                                    won't be done directly,\n"
 "                                    they will create 'Jobs'\n"
 "                                    executed as soon as possible."
-msgstr ""
+msgstr "S klikom na gumbe\n                                    boste zagnali sinhronizacijo\n                                    z Magento.\n                                    Upoštevajte, da se uvozi in izvozi\n                                    ne opravijo neposredno,\n                                    temveč ustvarijo 'Opravke',\n                                    ki se izvedejo takoj, ko je mogoče."
 
 #. module: magentoerpconnect
 #: code:addons/magentoerpconnect/stock_picking.py:180
@@ -161,80 +161,80 @@ msgstr ""
 msgid ""
 "Canceled: the delivery order does not contain lines from the original sale "
 "order."
-msgstr ""
+msgstr "Preklicano: dobavni nalog ne vsebuje postavk iz izvornega prodajnega naloga"
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_delivery_carrier
 msgid "Carrier"
-msgstr ""
+msgstr "Prevoznik"
 
 #. module: magentoerpconnect
 #: help:magento.storeview,no_sales_order_sync:0
 msgid ""
 "Check if the storeview is active in Magento but its sales orders should not "
 "be imported."
-msgstr ""
+msgstr "Označi, če je v Magento 'storeview' aktiven, a se njegovih prodajnih nalogov ne uvaža."
 
 #. module: magentoerpconnect
 #: help:magento.product.product,no_stock_sync:0
 msgid "Check this to exclude the product from stock synchronizations."
-msgstr ""
+msgstr "Označi za izključitev proizvoda iz sinhronizacije zaloge."
 
 #. module: magentoerpconnect
 #: help:magento.backend,product_stock_field_id:0
 msgid ""
 "Choose the field of the product which will be used for stock inventory updates.\n"
 "If empty, Quantity Available is used."
-msgstr ""
+msgstr "Izberi polje proizvoda, ki se bo uporabljalo za posodobitve inventarja zaloge.\nČe prazno, se uporabi razpoložljiva količina."
 
 #. module: magentoerpconnect
 #: field:magento.storeview,code:0 field:magento.website,code:0
 msgid "Code"
-msgstr ""
+msgstr "Koda"
 
 #. module: magentoerpconnect
 #: view:res.partner:magentoerpconnect.view_partner_form
 #: field:res.partner,company:0
 msgid "Company"
-msgstr ""
+msgstr "Družba"
 
 #. module: magentoerpconnect
 #: selection:magento.stock.picking,picking_method:0
 msgid "Complete"
-msgstr ""
+msgstr "Celotno"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,magento_qty:0
 msgid "Computed Quantity"
-msgstr ""
+msgstr "Obdelana količina"
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_connector_config_settings
 msgid "Connector Configuration"
-msgstr ""
+msgstr "Nastavitve povezovalnika"
 
 #. module: magentoerpconnect
 #: field:magento.res.partner,consider_as_company:0
 msgid "Considered as company"
-msgstr ""
+msgstr "Obravnavano kot družba"
 
 #. module: magentoerpconnect
 #: view:payment.method:magentoerpconnect.payment_method_view_form
 msgid "Create invoice on"
-msgstr ""
+msgstr "Ustvari račun ob"
 
 #. module: magentoerpconnect
 #: field:magento.store,create_invoice_on:0
 #: field:payment.method,create_invoice_on:0
 msgid "Create invoice on action"
-msgstr ""
+msgstr "Ustvari račun ob ukrepu"
 
 #. module: magentoerpconnect
 #: field:magento.address,created_at:0
 #: field:magento.product.product,created_at:0
 #: field:magento.res.partner,created_at:0
 msgid "Created At (on Magento)"
-msgstr ""
+msgstr "Ustvarjeno pri (na Magentu)"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,create_uid:0
@@ -248,7 +248,7 @@ msgstr ""
 #: field:magento.stock.picking,create_uid:0 field:magento.store,create_uid:0
 #: field:magento.storeview,create_uid:0 field:magento.website,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Ustvaril"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,create_date:0
@@ -262,96 +262,96 @@ msgstr ""
 #: field:magento.stock.picking,create_date:0 field:magento.store,create_date:0
 #: field:magento.storeview,create_date:0 field:magento.website,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Ustvarjeno"
 
 #. module: magentoerpconnect
 #: field:magento.backend,use_custom_api_path:0
 msgid "Custom Api Path"
-msgstr ""
+msgstr "Prilagojena pot do API"
 
 #. module: magentoerpconnect
 #: field:magento.address,is_default_billing:0
 msgid "Default Invoice"
-msgstr ""
+msgstr "Privzeti račun"
 
 #. module: magentoerpconnect
 #: field:magento.backend,default_lang_id:0
 msgid "Default Language"
-msgstr ""
+msgstr "Privzeti jezik"
 
 #. module: magentoerpconnect
 #: field:magento.backend,default_category_id:0
 msgid "Default Product Category"
-msgstr ""
+msgstr "Privzeta kategorija proizvodov"
 
 #. module: magentoerpconnect
 #: field:magento.address,is_default_shipping:0
 msgid "Default Shipping"
-msgstr ""
+msgstr "Privzeta odprema"
 
 #. module: magentoerpconnect
 #: field:magento.product.category,description:0
 msgid "Description"
-msgstr ""
+msgstr "Opis"
 
 #. module: magentoerpconnect
 #: selection:magento.product.product,manage_stock:0
 msgid "Do Not Manage Stock"
-msgstr ""
+msgstr "Ne upravljaj zaloge"
 
 #. module: magentoerpconnect
 #: help:magento.store,send_invoice_paid_mail:0
 msgid ""
 "Does the invoice export/creation should send an email notification on "
 "Magento side?"
-msgstr ""
+msgstr "Naj izvoz/ustvarjanje računa pošlje e-poštno obvestilo na Magento stran?"
 
 #. module: magentoerpconnect
 #: help:magento.store,send_picking_done_mail:0
 msgid ""
 "Does the picking export/creation should send an email notification on "
 "Magento side?"
-msgstr ""
+msgstr "Naj izvoz/ustvarjanje zbirnika pošlje e-poštno obvestilo na Magento stran?"
 
 #. module: magentoerpconnect
 #: field:magento.res.partner,emailid:0
 msgid "E-mail address"
-msgstr ""
+msgstr "E-poštni naslov"
 
 #. module: magentoerpconnect
 #: field:magento.storeview,enabled:0
 msgid "Enabled"
-msgstr ""
+msgstr "Omogočeno"
 
 #. module: magentoerpconnect
 #: field:connector.config.settings,module_magentoerpconnect_export_partner:0
 msgid "Export Partners to Magento (experimental)"
-msgstr ""
+msgstr "Izvoz partnerjev v Magento (eksperimentalno)"
 
 #. module: magentoerpconnect
 #: field:delivery.carrier,magento_export_tracking:0
 msgid "Export tracking numbers"
-msgstr ""
+msgstr "Izvoz sledilnih številk"
 
 #. module: magentoerpconnect
 #: view:connector.config.settings:magentoerpconnect.view_magento_config_settings
 msgid "Extensions"
-msgstr ""
+msgstr "Razširitve"
 
 #. module: magentoerpconnect
 #: field:magento.backend,fiscal_position_id:0
 msgid "Fiscal position"
-msgstr ""
+msgstr "Fiskalni položaj"
 
 #. module: magentoerpconnect
 #: field:magento.res.partner,guest_customer:0
 msgid "Guest Customer"
-msgstr ""
+msgstr "Gostujoči kupec"
 
 #. module: magentoerpconnect
 #: view:magento.backend:magentoerpconnect.view_magento_backend_form
 msgid "HTTP Authentication"
-msgstr ""
+msgstr "HTTP overjanje"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,id:0 field:magento.address,id:0
@@ -363,7 +363,7 @@ msgstr ""
 #: field:magento.store,id:0 field:magento.storeview,id:0
 #: field:magento.website,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,magento_id:0
@@ -377,21 +377,21 @@ msgstr ""
 #: field:magento.stock.picking,magento_id:0 field:magento.store,magento_id:0
 #: field:magento.storeview,magento_id:0 field:magento.website,magento_id:0
 msgid "ID on Magento"
-msgstr ""
+msgstr "ID pri Magentu"
 
 #. module: magentoerpconnect
 #: help:magento.backend,default_category_id:0
 msgid ""
 "If a default category is selected, products imported without a category will"
 " be linked to it."
-msgstr ""
+msgstr "Če je privzeta kategorija izbrana, se uvoženi proizvodi brez kategorije povežejo z le-to."
 
 #. module: magentoerpconnect
 #: help:magento.backend,default_lang_id:0
 msgid ""
 "If a default language is selected, the records will be imported in the translation of this language.\n"
 "Note that a similar configuration exists for each storeview."
-msgstr ""
+msgstr "Če je izbran privzeti jezik, se zapisi uvozijo v prevod tega jezika.\nPodobna nastavitev obstaja za vsak 'storeview'."
 
 #. module: magentoerpconnect
 #: help:magento.backend,account_analytic_id:0
@@ -399,7 +399,7 @@ msgid ""
 "If specified, this analytic account will be used to fill the field  on the "
 "sale order created by the connector. The value can also be specified on "
 "website or the store or the store view."
-msgstr ""
+msgstr "Če določeno, se ta analitični konto uporablja za izpolnjevanje polja prodajnega naloga, ki ga ustvari povezovalnik. Vrednost se lahko določi tudi na spletni strani ali trgovini v trgovinskem prikazu."
 
 #. module: magentoerpconnect
 #: help:magento.config.specializer,specific_account_analytic_id:0
@@ -410,7 +410,7 @@ msgid ""
 "If specified, this analytic account will be used to fill the field on the "
 "sale order created by the connector. The value can also be specified on "
 "website or the store or the store view."
-msgstr ""
+msgstr "Če določeno, se ta analitični konto uporablja za izpolnjevanje polja prodajnega naloga, ki ga ustvari povezovalnik. Vrednost se lahko določi tudi na spletni strani ali trgovini v trgovinskem prikazu."
 
 #. module: magentoerpconnect
 #: help:magento.backend,fiscal_position_id:0
@@ -422,110 +422,110 @@ msgid ""
 "If specified, this fiscal position will be used to fill the field fiscal "
 "position on the sale order created by the connector.The value can also be "
 "specified on website or the store or the store view."
-msgstr ""
+msgstr "Če določeno, se ta fiskalni položaj uporablja za izpolnjevanje polja prodajnega naloga, ki ga ustvari povezovalnik. Vrednost se lahko določi tudi na spletni strani ali trgovini v trgovinskem prikazu."
 
 #. module: magentoerpconnect
 #: view:magento.storeview:magentoerpconnect.view_magento_storeview_form
 msgid "Import Sale Orders"
-msgstr ""
+msgstr "Uvoz prodajnih nalogov"
 
 #. module: magentoerpconnect
 #: view:magento.storeview:magentoerpconnect.view_magento_storeview_form
 msgid "Import Sale Orders since"
-msgstr ""
+msgstr "Uvozi prodajne naloge od"
 
 #. module: magentoerpconnect
 #: view:magento.backend:magentoerpconnect.view_magento_backend_form
 msgid "Import all customer groups"
-msgstr ""
+msgstr "Uvozi vse skupine kupcev"
 
 #. module: magentoerpconnect
 #: field:magento.backend,import_categories_from_date:0
 msgid "Import categories from date"
-msgstr ""
+msgstr "Uvozi kategorije od dne"
 
 #. module: magentoerpconnect
 #: view:magento.backend:magentoerpconnect.view_magento_backend_form
 #: view:magento.website:magentoerpconnect.view_magento_website_form
 msgid "Import in background"
-msgstr ""
+msgstr "Uvoz v ozadju"
 
 #. module: magentoerpconnect
 #: view:magento.backend:magentoerpconnect.view_magento_backend_form
 msgid "Import partners from all websites"
-msgstr ""
+msgstr "Uvoz partnerjev iz vseh spletnih strani"
 
 #. module: magentoerpconnect
 #: field:magento.website,import_partners_from_date:0
 msgid "Import partners from date"
-msgstr ""
+msgstr "Uvoz partnerjev od dne"
 
 #. module: magentoerpconnect
 #: view:magento.website:magentoerpconnect.view_magento_website_form
 msgid "Import partners since"
-msgstr ""
+msgstr "Uvoz partnerjev od"
 
 #. module: magentoerpconnect
 #: view:magento.backend:magentoerpconnect.view_magento_backend_form
 msgid "Import products categories since"
-msgstr ""
+msgstr "Uvoz kategorij proizvodov od"
 
 #. module: magentoerpconnect
 #: field:magento.backend,import_products_from_date:0
 msgid "Import products from date"
-msgstr ""
+msgstr "Uvozi proizvode od dne"
 
 #. module: magentoerpconnect
 #: view:magento.backend:magentoerpconnect.view_magento_backend_form
 msgid "Import products since"
-msgstr ""
+msgstr "Uvozi proizvode od"
 
 #. module: magentoerpconnect
 #: field:magento.storeview,import_orders_from_date:0
 msgid "Import sale orders from date"
-msgstr ""
+msgstr "Uvozi prodajne naloge od dne"
 
 #. module: magentoerpconnect
 #: view:magento.backend:magentoerpconnect.view_magento_backend_form
 msgid "Import sales orders from all store views"
-msgstr ""
+msgstr "Uvozi prodajne naloge iz vseh trgovinskih prikazov"
 
 #. module: magentoerpconnect
 #: view:magento.backend:magentoerpconnect.view_magento_backend_form
 #: view:magento.storeview:magentoerpconnect.view_magento_storeview_form
 #: view:magento.website:magentoerpconnect.view_magento_website_form
 msgid "Imports"
-msgstr ""
+msgstr "Uvozi"
 
 #. module: magentoerpconnect
 #: view:magento.store:magentoerpconnect.view_magento_store_form
 #: view:magento.storeview:magentoerpconnect.view_magento_storeview_form
 #: view:magento.website:magentoerpconnect.view_magento_website_form
 msgid "Informations"
-msgstr ""
+msgstr "Informacije"
 
 #. module: magentoerpconnect
 #: view:magento.product.product:magentoerpconnect.view_magento_product_form
 msgid "Inventory Options"
-msgstr ""
+msgstr "Opcije zaloge"
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_account_invoice
 #: field:magento.account.invoice,openerp_id:0
 msgid "Invoice"
-msgstr ""
+msgstr "Račun"
 
 #. module: magentoerpconnect
 #: code:addons/magentoerpconnect/invoice.py:122
 #: code:addons/magentoerpconnect/tests/test_export_invoice.py:225
 #, python-format
 msgid "Invoice Created"
-msgstr ""
+msgstr "Račun ustvarjen"
 
 #. module: magentoerpconnect
 #: field:magento.storeview,lang_id:0
 msgid "Language"
-msgstr ""
+msgstr "Jezik"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,write_uid:0 field:magento.address,write_uid:0
@@ -539,7 +539,7 @@ msgstr ""
 #: field:magento.stock.picking,write_uid:0 field:magento.store,write_uid:0
 #: field:magento.storeview,write_uid:0 field:magento.website,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Zadnji posodobil"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,write_date:0
@@ -553,12 +553,12 @@ msgstr ""
 #: field:magento.stock.picking,write_date:0 field:magento.store,write_date:0
 #: field:magento.storeview,write_date:0 field:magento.website,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Zadnjič posodobljeno"
 
 #. module: magentoerpconnect
 #: help:magento.product.product,magento_qty:0
 msgid "Last computed quantity to send on Magento."
-msgstr ""
+msgstr "Zadnja obdelana količina za pošiljanje v Magento"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,sync_date:0 field:magento.address,sync_date:0
@@ -572,32 +572,27 @@ msgstr ""
 #: field:magento.stock.picking,sync_date:0 field:magento.store,sync_date:0
 #: field:magento.storeview,sync_date:0 field:magento.website,sync_date:0
 msgid "Last synchronization date"
-msgstr ""
-
-#. module: magentoerpconnect
-#: field:magento.backend,location:0
-msgid "Location"
-msgstr ""
+msgstr "Datum zadnje sinhronizacije"
 
 #. module: magentoerpconnect
 #: model:ir.ui.menu,name:magentoerpconnect.menu_magento_root
 #: view:payment.method:magentoerpconnect.payment_method_view_form
 #: view:res.partner.category:magentoerpconnect.view_partner_category_form
 msgid "Magento"
-msgstr ""
+msgstr "Magento"
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_magento_address
 #: view:magento.address:magentoerpconnect.view_magento_address_form
 #: view:magento.address:magentoerpconnect.view_magento_address_tree
 msgid "Magento Address"
-msgstr ""
+msgstr "Magento naslov"
 
 #. module: magentoerpconnect
 #: view:res.partner:magentoerpconnect.view_partner_form
 #: field:res.partner,magento_address_bind_ids:0
 msgid "Magento Address Bindings"
-msgstr ""
+msgstr "Vezave na Magento naslov"
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_magento_backend
@@ -620,13 +615,13 @@ msgstr "Magento ozadje"
 #. module: magentoerpconnect
 #: model:ir.actions.act_window,name:magentoerpconnect.action_magento_backend
 msgid "Magento Backends"
-msgstr ""
+msgstr "Magento ozadja"
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_magento_binding
 #: model:ir.model,name:magentoerpconnect.model_magento_res_partner_category
 msgid "Magento Binding (abstract)"
-msgstr ""
+msgstr "Magento vezave (povzetek)"
 
 #. module: magentoerpconnect
 #: view:account.invoice:magentoerpconnect.view_invoice_magento_form
@@ -643,56 +638,56 @@ msgstr ""
 #: view:stock.picking:magentoerpconnect.view_stock_picking_out_magento_form
 #: field:stock.picking,magento_bind_ids:0
 msgid "Magento Bindings"
-msgstr ""
+msgstr "Magento vezave"
 
 #. module: magentoerpconnect
 #: field:delivery.carrier,magento_code:0
 msgid "Magento Carrier Code"
-msgstr ""
+msgstr "Magento koda prevoznika"
 
 #. module: magentoerpconnect
 #: field:magento.product.category,magento_child_ids:0
 msgid "Magento Child Categories"
-msgstr ""
+msgstr "Magento podrejene kategorije"
 
 #. module: magentoerpconnect
 #: view:magento.backend:magentoerpconnect.view_magento_backend_form
 msgid "Magento Configuration"
-msgstr ""
+msgstr "Magento nastavitve"
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_magento_stock_picking
 #: view:magento.stock.picking:magentoerpconnect.view_magento_stock_picking_out_form
 #: view:magento.stock.picking:magentoerpconnect.view_magento_stock_picking_out_tree
 msgid "Magento Delivery Order"
-msgstr ""
+msgstr "Magento dobavni nalog"
 
 #. module: magentoerpconnect
 #: field:magento.res.partner,group_id:0
 msgid "Magento Group (Category)"
-msgstr ""
+msgstr "Magento skupina (kategorija)"
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_magento_account_invoice
 #: view:magento.account.invoice:magentoerpconnect.view_magento_account_invoice_form
 #: view:magento.account.invoice:magentoerpconnect.view_magento_account_invoice_tree
 msgid "Magento Invoice"
-msgstr ""
+msgstr "Magento račun"
 
 #. module: magentoerpconnect
 #: field:magento.sale.order,magento_order_id:0
 msgid "Magento Order ID"
-msgstr ""
+msgstr "Magento ID naloga"
 
 #. module: magentoerpconnect
 #: field:magento.sale.order,magento_order_line_ids:0
 msgid "Magento Order Lines"
-msgstr ""
+msgstr "Magento postavke naloga"
 
 #. module: magentoerpconnect
 #: field:magento.product.category,magento_parent_id:0
 msgid "Magento Parent Category"
-msgstr ""
+msgstr "Magento nadrejena kategorija"
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_magento_res_partner
@@ -707,25 +702,25 @@ msgstr "Magento partner"
 #: view:magento.product.product:magentoerpconnect.view_magento_product_form
 #: view:magento.product.product:magentoerpconnect.view_magento_product_tree
 msgid "Magento Product"
-msgstr ""
+msgstr "Magento proizvod"
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_magento_product_category
 #: view:magento.product.category:magentoerpconnect.view_magento_product_category_form
 #: view:magento.product.category:magentoerpconnect.view_magento_product_category_tree
 msgid "Magento Product Category"
-msgstr ""
+msgstr "Magento kategorija proizvoda"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,product_type:0
 msgid "Magento Product Type"
-msgstr ""
+msgstr "Magento tip proizvoda"
 
 #. module: magentoerpconnect
 #: field:magento.backend,product_binding_ids:0
 #: field:magento.website,product_binding_ids:0
 msgid "Magento Products"
-msgstr ""
+msgstr "Magento proizvodi"
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_magento_sale_order
@@ -733,24 +728,24 @@ msgstr ""
 #: field:magento.sale.order.line,magento_order_id:0
 #: field:magento.stock.picking,magento_order_id:0
 msgid "Magento Sale Order"
-msgstr ""
+msgstr "Magento prodajni nalog"
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_magento_sale_order_line
 msgid "Magento Sale Order Line"
-msgstr ""
+msgstr "Magento postavka prodajnega naloga"
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_magento_store
 #: view:magento.store:magentoerpconnect.view_magento_store_form
 #: view:magento.store:magentoerpconnect.view_magento_store_tree
 msgid "Magento Store"
-msgstr ""
+msgstr "Magento trgovina"
 
 #. module: magentoerpconnect
 #: model:ir.actions.act_window,name:magentoerpconnect.action_magento_store
 msgid "Magento Stores"
-msgstr ""
+msgstr "Magento trgovine"
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_magento_storeview
@@ -758,22 +753,22 @@ msgstr ""
 #: view:magento.storeview:magentoerpconnect.view_magento_storeview_form
 #: view:magento.storeview:magentoerpconnect.view_magento_storeview_tree
 msgid "Magento Storeview"
-msgstr ""
+msgstr "Magento trgovinski prikaz"
 
 #. module: magentoerpconnect
 #: model:ir.actions.act_window,name:magentoerpconnect.action_magento_storeview
 msgid "Magento Storeviews"
-msgstr ""
+msgstr "Magento trgovinski prikazi"
 
 #. module: magentoerpconnect
 #: field:delivery.carrier,magento_tracking_title:0
 msgid "Magento Tracking Title"
-msgstr ""
+msgstr "Magento naziv sledenja"
 
 #. module: magentoerpconnect
 #: field:magento.res.partner,taxvat:0
 msgid "Magento VAT"
-msgstr ""
+msgstr "Magento DDV"
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_magento_website
@@ -787,64 +782,64 @@ msgstr "Magento spletna stran"
 #. module: magentoerpconnect
 #: model:ir.actions.act_window,name:magentoerpconnect.action_magento_website
 msgid "Magento Websites"
-msgstr ""
+msgstr "Magento spletne strani"
 
 #. module: magentoerpconnect
 #: code:addons/magentoerpconnect/sale.py:1105
 #, python-format
 msgid "Magento sales order is already in state %s"
-msgstr ""
+msgstr "Magento prodajni nalog je že v stanju %s"
 
 #. module: magentoerpconnect
 #: view:connector.config.settings:magentoerpconnect.view_magento_config_settings
 msgid "Magentoerpconnect"
-msgstr ""
+msgstr "Magentoerpconnect"
 
 #. module: magentoerpconnect
 #: view:magento.backend:magentoerpconnect.view_magento_backend_form
 msgid "Main Configuration"
-msgstr ""
+msgstr "Glavne nastavitve"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,backorders:0
 msgid "Manage Inventory Backorders"
-msgstr ""
+msgstr "Upravljanje izostankov zalog"
 
 #. module: magentoerpconnect
 #: selection:magento.product.product,manage_stock:0
 msgid "Manage Stock"
-msgstr ""
+msgstr "Upravljanje zaloge"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,manage_stock:0
 msgid "Manage Stock Level"
-msgstr ""
+msgstr "Upravljanje nivoja zaloge"
 
 #. module: magentoerpconnect
 #: field:magento.backend,name:0 field:magento.store,name:0
 #: field:magento.storeview,name:0 field:magento.website,name:0
 msgid "Name"
-msgstr ""
+msgstr "Naziv"
 
 #. module: magentoerpconnect
 #: field:magento.res.partner,newsletter:0
 msgid "Newsletter"
-msgstr ""
+msgstr "Novice"
 
 #. module: magentoerpconnect
 #: field:magento.storeview,no_sales_order_sync:0
 msgid "No Sales Order Synchronization"
-msgstr ""
+msgstr "Brez sinhronizacije prodajnega naloga"
 
 #. module: magentoerpconnect
 #: selection:magento.product.product,backorders:0
 msgid "No Sell"
-msgstr ""
+msgstr "Brez prodaje"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,no_stock_sync:0
 msgid "No Stock Synchronization"
-msgstr ""
+msgstr "Brez sinhronizacije zaloge"
 
 #. module: magentoerpconnect
 #: code:addons/magentoerpconnect/related_action.py:55
@@ -852,25 +847,25 @@ msgstr ""
 msgid ""
 "No admin URL configured on the backend or no admin path is defined for this "
 "record."
-msgstr ""
+msgstr "V ozadju ni nastavljena URL povezava ali pot do administratorja za ta zapis."
 
 #. module: magentoerpconnect
 #: code:addons/magentoerpconnect/stock_tracking.py:83
 #, python-format
 msgid "No tracking number to send."
-msgstr ""
+msgstr "Brez sledilne številke za pošiljanje."
 
 #. module: magentoerpconnect
 #: field:magento.sale.order.line,notes:0
 msgid "Notes"
-msgstr ""
+msgstr "Opombe"
 
 #. module: magentoerpconnect
 #: code:addons/magentoerpconnect/unit/export_synchronizer.py:407
 #: code:addons/magentoerpconnect/unit/export_synchronizer.py:412
 #, python-format
 msgid "Nothing to export."
-msgstr ""
+msgstr "Ni kaj izvoziti."
 
 #. module: magentoerpconnect
 #: view:magento.backend:magentoerpconnect.view_magento_backend_form
@@ -882,30 +877,30 @@ msgid ""
 "                                    You will find the list\n"
 "                                    of the new records to review\n"
 "                                    in the menu 'Connectors > Checkpoint'."
-msgstr ""
+msgstr "Ko se uvozijo,\n                                    nekateri tipi zapisov,\n                                    kot proizvodi ali kategorije,\n                                    potrebujejo ročni pregled.\n                                    Seznam zapisov za pregled\n                                    boste našli v meniju\n                                    'Povezovalniki > Kontrolna točka'."
 
 #. module: magentoerpconnect
 #: view:magento.store:magentoerpconnect.view_magento_store_form
 #: view:magento.storeview:magentoerpconnect.view_magento_storeview_form
 #: view:magento.website:magentoerpconnect.view_magento_website_form
 msgid "Options"
-msgstr ""
+msgstr "Opcije"
 
 #. module: magentoerpconnect
 #: selection:magento.store,create_invoice_on:0
 #: selection:payment.method,create_invoice_on:0
 msgid "Paid"
-msgstr ""
+msgstr "Plačano"
 
 #. module: magentoerpconnect
 #: field:magento.sale.order,magento_parent_id:0
 msgid "Parent Magento Order"
-msgstr ""
+msgstr "Nadrejeni Magento nalog"
 
 #. module: magentoerpconnect
 #: selection:magento.stock.picking,picking_method:0
 msgid "Partial"
-msgstr ""
+msgstr "Delno"
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_res_partner
@@ -916,37 +911,32 @@ msgstr "Partner"
 #. module: magentoerpconnect
 #: field:magento.res.partner.category,openerp_id:0
 msgid "Partner Category"
-msgstr ""
+msgstr "Kategorija partnerja"
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_res_partner_category
 msgid "Partner Tags"
-msgstr ""
-
-#. module: magentoerpconnect
-#: field:magento.backend,password:0
-msgid "Password"
-msgstr ""
+msgstr "Oznake partnerja"
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_payment_method
 msgid "Payment Method"
-msgstr ""
+msgstr "Plačilna metoda"
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_stock_picking
 msgid "Picking List"
-msgstr ""
+msgstr "Zbirni seznam"
 
 #. module: magentoerpconnect
 #: field:magento.stock.picking,picking_method:0
 msgid "Picking Method"
-msgstr ""
+msgstr "Zbirna metoda"
 
 #. module: magentoerpconnect
 #: field:connector.config.settings,module_magentoerpconnect_pricing:0
 msgid "Prices are managed in OpenERP with pricelists"
-msgstr ""
+msgstr "V OpenERP se cene upravlja preko cenikov"
 
 #. module: magentoerpconnect
 #: help:connector.config.settings,module_magentoerpconnect_pricing:0
@@ -954,98 +944,98 @@ msgid ""
 "Prices are set in OpenERP and exported to Magento.\n"
 "\n"
 "This installs the module magentoerpconnect_pricing."
-msgstr ""
+msgstr "Cene se določijo v OpenERP in izvozijo v Magento.\n\nNamesti modul magentoerpconnect_pricing."
 
 #. module: magentoerpconnect
 #: field:magento.storeview,catalog_price_tax_included:0
 msgid "Prices include tax"
-msgstr ""
+msgstr "Cene vsebujejo davek"
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_product_product
 #: field:magento.product.product,openerp_id:0
 msgid "Product"
-msgstr ""
+msgstr "Proizvod"
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_product_category
 #: field:magento.product.category,openerp_id:0
 msgid "Product Category"
-msgstr ""
+msgstr "Kategorija proizvoda"
 
 #. module: magentoerpconnect
 #: code:addons/magentoerpconnect/unit/delete_synchronizer.py:38
 #, python-format
 msgid "Record %s deleted on Magento"
-msgstr ""
+msgstr "Zapis %s je bil izbrisan v Magentu"
 
 #. module: magentoerpconnect
 #: code:addons/magentoerpconnect/unit/import_synchronizer.py:208
 #, python-format
 msgid "Record does no longer exist in Magento"
-msgstr ""
+msgstr "Zapis ne obstaja več v Magentu"
 
 #. module: magentoerpconnect
 #: code:addons/magentoerpconnect/unit/export_synchronizer.py:414
 #, python-format
 msgid "Record exported with ID %s on Magento."
-msgstr ""
+msgstr "Zapis izvožen z ID %s v Magento."
 
 #. module: magentoerpconnect
 #: field:magento.sale.order,openerp_id:0
 msgid "Sale Order"
-msgstr ""
+msgstr "Prodajni nalog"
 
 #. module: magentoerpconnect
 #: field:magento.sale.order.line,openerp_id:0
 msgid "Sale Order Line"
-msgstr ""
+msgstr "Postavka prodajnega naloga"
 
 #. module: magentoerpconnect
 #: field:magento.backend,sale_prefix:0
 msgid "Sale Prefix"
-msgstr ""
+msgstr "Prodajna predpona"
 
 #. module: magentoerpconnect
 #: code:addons/magentoerpconnect/sale.py:1101
 #, python-format
 msgid "Sale is not linked with a Magento sales order"
-msgstr ""
+msgstr "Prodaja ni povezana z Magento prodajnim nalogom"
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_sale_order
 msgid "Sales Order"
-msgstr ""
+msgstr "Prodajni nalog"
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_sale_order_line
 msgid "Sales Order Line"
-msgstr ""
+msgstr "Postavka prodajnega naloga"
 
 #. module: magentoerpconnect
 #: field:magento.storeview,section_id:0
 msgid "Sales Team"
-msgstr ""
+msgstr "Prodajna ekipa"
 
 #. module: magentoerpconnect
 #: selection:magento.product.product,backorders:0
 msgid "Sell Quantity < 0"
-msgstr ""
+msgstr "Prodajna količina < 0"
 
 #. module: magentoerpconnect
 #: selection:magento.product.product,backorders:0
 msgid "Sell Quantity < 0 and Use Customer Notification"
-msgstr ""
+msgstr "Prodajna količina < 0 in uporaba obveščanja kupca"
 
 #. module: magentoerpconnect
 #: field:magento.store,send_invoice_paid_mail:0
 msgid "Send email notification on invoice validated/paid"
-msgstr ""
+msgstr "Pošlji e-poštno obvestilo ob potrditvi/plačilu računa"
 
 #. module: magentoerpconnect
 #: field:magento.store,send_picking_done_mail:0
 msgid "Send email notification on picking done"
-msgstr ""
+msgstr "Pošlji e-poštno obvestilo ob zaključku zbirnika"
 
 #. module: magentoerpconnect
 #: code:addons/magentoerpconnect/stock_picking.py:126
@@ -1054,26 +1044,26 @@ msgstr ""
 #: code:addons/magentoerpconnect/tests/test_export_picking.py:169
 #, python-format
 msgid "Shipping Created"
-msgstr ""
+msgstr "Odprema ustvarjena"
 
 #. module: magentoerpconnect
 #: help:payment.method,create_invoice_on:0
 msgid ""
 "Should the invoice be created in Magento when it is validated or when it is paid in OpenERP?\n"
 "If nothing is set, the option falls back to the same option on the Magento store related to the sales order."
-msgstr ""
+msgstr "Naj se račun v Magentu ustvari po overjanju ali po plačilu v OpenERP?\nČe ni nastavljeno nič, se spet ponastavi na iste nastavitve kot v Magento trgovini glede prodajnega naloga."
 
 #. module: magentoerpconnect
 #: help:magento.store,create_invoice_on:0
 msgid ""
 "Should the invoice be created in Magento when it is validated or when it is paid in OpenERP?\n"
 "This only takes effect if the sales order's related payment method is not giving an option for this by itself. (See Payment Methods)"
-msgstr ""
+msgstr "Naj se račun v Magentu ustvari po overjanju ali po plačilu v OpenERP?\nUčinkuje le, če plačilna metoda prodajnega naloga ne že sama podaja opcije za to. (Glej plačilne metode)"
 
 #. module: magentoerpconnect
 #: field:magento.storeview,sort_order:0 field:magento.website,sort_order:0
 msgid "Sort Order"
-msgstr ""
+msgstr "Vrstni red"
 
 #. module: magentoerpconnect
 #: field:magento.config.specializer,specific_account_analytic_id:0
@@ -1081,7 +1071,7 @@ msgstr ""
 #: field:magento.storeview,specific_account_analytic_id:0
 #: field:magento.website,specific_account_analytic_id:0
 msgid "Specific analytic account"
-msgstr ""
+msgstr "Specifični analitični konto"
 
 #. module: magentoerpconnect
 #: field:magento.config.specializer,specific_fiscal_position_id:0
@@ -1089,47 +1079,47 @@ msgstr ""
 #: field:magento.storeview,specific_fiscal_position_id:0
 #: field:magento.website,specific_fiscal_position_id:0
 msgid "Specific fiscal position"
-msgstr ""
+msgstr "Specifični fiskalni položaj"
 
 #. module: magentoerpconnect
 #: code:addons/magentoerpconnect/sale.py:1098
 #, python-format
 msgid "State %s is not exported."
-msgstr ""
+msgstr "Stanje %s ni izvoženo."
 
 #. module: magentoerpconnect
 #: field:magento.backend,product_stock_field_id:0
 msgid "Stock Field"
-msgstr ""
+msgstr "Polje zaloge"
 
 #. module: magentoerpconnect
 #: field:magento.stock.picking,openerp_id:0
 msgid "Stock Picking"
-msgstr ""
+msgstr "Zbirnik zaloge"
 
 #. module: magentoerpconnect
 #: field:magento.storeview,store_id:0
 msgid "Store"
-msgstr ""
+msgstr "Trgovina"
 
 #. module: magentoerpconnect
 #: model:ir.ui.menu,name:magentoerpconnect.menu_magento_store
 #: view:magento.website:magentoerpconnect.view_magento_website_form
 #: field:magento.website,store_ids:0
 msgid "Stores"
-msgstr ""
+msgstr "Trgovine"
 
 #. module: magentoerpconnect
 #: model:ir.ui.menu,name:magentoerpconnect.menu_magento_storeview
 #: view:magento.store:magentoerpconnect.view_magento_store_form
 #: field:magento.store,storeview_ids:0
 msgid "Storeviews"
-msgstr ""
+msgstr "Trgovinski prikazi"
 
 #. module: magentoerpconnect
 #: view:magento.backend:magentoerpconnect.view_magento_backend_form
 msgid "Synchronize Metadata"
-msgstr ""
+msgstr "Sinhronizacija metadata"
 
 #. module: magentoerpconnect
 #: field:magento.res.partner.category,tax_class_id:0
@@ -1246,11 +1236,6 @@ msgid "Updated At (on Magento)"
 msgstr ""
 
 #. module: magentoerpconnect
-#: help:magento.backend,location:0
-msgid "Url to magento application"
-msgstr ""
-
-#. module: magentoerpconnect
 #: selection:magento.product.product,backorders:0
 #: selection:magento.product.product,manage_stock:0
 msgid "Use Default Config"
@@ -1267,11 +1252,6 @@ msgid ""
 "Use a Basic Access Authentication for the API. The Magento server could be "
 "configured to restrict access using a HTTP authentication based on a "
 "username and a password."
-msgstr ""
-
-#. module: magentoerpconnect
-#: field:magento.backend,username:0
-msgid "Username"
 msgstr ""
 
 #. module: magentoerpconnect
@@ -1293,16 +1273,6 @@ msgstr ""
 #. module: magentoerpconnect
 #: help:magento.backend,warehouse_id:0
 msgid "Warehouse used to compute the stock quantities."
-msgstr ""
-
-#. module: magentoerpconnect
-#: help:magento.backend,password:0
-msgid "Webservice password"
-msgstr ""
-
-#. module: magentoerpconnect
-#: help:magento.backend,username:0
-msgid "Webservice user"
 msgstr ""
 
 #. module: magentoerpconnect

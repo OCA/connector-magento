@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-12-16 10:10+0000\n"
-"PO-Revision-Date: 2015-12-16 10:11+0000\n"
+"POT-Creation-Date: 2016-03-17 01:39+0000\n"
+"PO-Revision-Date: 2016-03-16 08:10+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/pt_BR/)\n"
 "MIME-Version: 1.0\n"
@@ -575,11 +575,6 @@ msgid "Last synchronization date"
 msgstr ""
 
 #. module: magentoerpconnect
-#: field:magento.backend,location:0
-msgid "Location"
-msgstr ""
-
-#. module: magentoerpconnect
 #: model:ir.ui.menu,name:magentoerpconnect.menu_magento_root
 #: view:payment.method:magentoerpconnect.payment_method_view_form
 #: view:res.partner.category:magentoerpconnect.view_partner_category_form
@@ -924,11 +919,6 @@ msgid "Partner Tags"
 msgstr ""
 
 #. module: magentoerpconnect
-#: field:magento.backend,password:0
-msgid "Password"
-msgstr ""
-
-#. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_payment_method
 msgid "Payment Method"
 msgstr ""
@@ -1246,11 +1236,6 @@ msgid "Updated At (on Magento)"
 msgstr ""
 
 #. module: magentoerpconnect
-#: help:magento.backend,location:0
-msgid "Url to magento application"
-msgstr ""
-
-#. module: magentoerpconnect
 #: selection:magento.product.product,backorders:0
 #: selection:magento.product.product,manage_stock:0
 msgid "Use Default Config"
@@ -1268,11 +1253,6 @@ msgid ""
 "configured to restrict access using a HTTP authentication based on a "
 "username and a password."
 msgstr ""
-
-#. module: magentoerpconnect
-#: field:magento.backend,username:0
-msgid "Username"
-msgstr "Usuário"
 
 #. module: magentoerpconnect
 #: selection:magento.store,create_invoice_on:0
@@ -1293,16 +1273,6 @@ msgstr ""
 #. module: magentoerpconnect
 #: help:magento.backend,warehouse_id:0
 msgid "Warehouse used to compute the stock quantities."
-msgstr ""
-
-#. module: magentoerpconnect
-#: help:magento.backend,password:0
-msgid "Webservice password"
-msgstr ""
-
-#. module: magentoerpconnect
-#: help:magento.backend,username:0
-msgid "Webservice user"
 msgstr ""
 
 #. module: magentoerpconnect
