@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-03-17 01:39+0000\n"
-"PO-Revision-Date: 2016-03-19 06:45+0000\n"
+"POT-Creation-Date: 2016-03-19 07:44+0000\n"
+"PO-Revision-Date: 2016-03-20 07:01+0000\n"
 "Last-Translator: Matjaž Mozetič <m.mozetic@matmoz.si>\n"
 "Language-Team: Slovenian (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/sl/)\n"
 "MIME-Version: 1.0\n"
@@ -1124,12 +1124,12 @@ msgstr "Sinhronizacija metadata"
 #. module: magentoerpconnect
 #: field:magento.res.partner.category,tax_class_id:0
 msgid "Tax Class ID"
-msgstr ""
+msgstr "ID davčnega razreda"
 
 #. module: magentoerpconnect
 #: field:magento.sale.order.line,tax_rate:0
 msgid "Tax Rate"
-msgstr ""
+msgstr "Davčna stopnja"
 
 #. module: magentoerpconnect
 #: model:sale.exception,description:magentoerpconnect.excep_wrong_total_amount
@@ -1141,13 +1141,13 @@ msgid ""
 "\n"
 "Resolution:\n"
 "Check your taxes and fiscal positions configuration and correct them if necessary."
-msgstr ""
+msgstr "Znesek izračunan v OpenERP ne ustreza znesku iz Magento.\n\nVzrok:\nDavki v OpenERP in Magento se verjetno razlikujejo. Končno ceno je mogoče spremenil fiskalni položaj.\n\nRešitev:\nPreverite nastavitve davkov in fiskalnih položajev ter jih po potrebi popravite."
 
 #. module: magentoerpconnect
 #: code:addons/magentoerpconnect/stock_tracking.py:80
 #, python-format
 msgid "The carrier %s does not export tracking numbers."
-msgstr ""
+msgstr "Prevoznik %s ne izvaža sledilnih številk."
 
 #. module: magentoerpconnect
 #: code:addons/magentoerpconnect/product.py:556
@@ -1155,7 +1155,7 @@ msgstr ""
 msgid ""
 "The configurable product is not imported in OpenERP, because only the simple"
 " products are used in the sales orders."
-msgstr ""
+msgstr "Nastavljiv proizvod ni uvožen v OpenERP, ker se v prodajnih nalogih uporabljajo le enostavni proizvodi."
 
 #. module: magentoerpconnect
 #: help:magento.backend,use_custom_api_path:0
@@ -1163,7 +1163,7 @@ msgid ""
 "The default API path is '/index.php/api/xmlrpc'. Check this box if you use a"
 " custom API path, in that case, the location has to be completed with the "
 "custom API path "
-msgstr ""
+msgstr "Privzeta pot API je '/index.php/api/xmlrpc'. Označite to polje, če uporabljate prilagojeno pot do API; v takem primeru se lokacija zaključi s prilagojeno potjo do API"
 
 #. module: magentoerpconnect
 #: model:sale.exception,description:magentoerpconnect.excep_wrong_total_amount_tax
@@ -1175,12 +1175,12 @@ msgid ""
 "\n"
 "Resolution:\n"
 "Check your taxes and fiscal positions configuration and correct them if necessary."
-msgstr ""
+msgstr "Znesek izračunan v OpenERP ne ustreza znesku iz Magento.\n\n Vzrok:\nDavki v OpenERP in Magento se verjetno razlikujejo. Končno ceno je mogoče spremenil fiskalni položaj.\n\n Rešitev:\nPreverite nastavitve davkov in fiskalnih položajev ter jih po potrebi popravite."
 
 #. module: magentoerpconnect
 #: help:connector.config.settings,module_magentoerpconnect_export_partner:0
 msgid "This installs the module magentoerpconnect_export_partner."
-msgstr ""
+msgstr "Namesti modul magentoerpconnect_export_partner."
 
 #. module: magentoerpconnect
 #: view:magento.storeview:magentoerpconnect.view_magento_storeview_form
@@ -1190,61 +1190,61 @@ msgid ""
 "                              attention to the taxes on the products,\n"
 "                              which should surely include prices when\n"
 "                              this option is activated."
-msgstr ""
+msgstr "Ta opcija mora upoštevati iste\n                              nastavitve kot Magento.  Pazite\n                              na davke pri proizvodih,\n                              ki morajo zagotovo biti vključeni v ceno,\n                              kadar je ta opcija aktivirana."
 
 #. module: magentoerpconnect
 #: model:sale.exception,name:magentoerpconnect.excep_wrong_total_amount
 msgid "Total Amount differs from Magento"
-msgstr ""
+msgstr "Skupni znesek se pri Magento razlikuje"
 
 #. module: magentoerpconnect
 #: model:sale.exception,name:magentoerpconnect.excep_wrong_total_amount_tax
 msgid "Total Tax Amount differs from Magento"
-msgstr ""
+msgstr "Skupni znesek davka se pri Magento razlikuje"
 
 #. module: magentoerpconnect
 #: field:magento.sale.order,total_amount:0
 msgid "Total amount"
-msgstr ""
+msgstr "Skupni znesek"
 
 #. module: magentoerpconnect
 #: field:magento.sale.order,total_amount_tax:0
 msgid "Total amount w. tax"
-msgstr ""
+msgstr "Skupni znesek brez davka"
 
 #. module: magentoerpconnect
 #: code:addons/magentoerpconnect/magento_model.py:641
 #, python-format
 msgid "Undefined"
-msgstr ""
+msgstr "Nedoločeno"
 
 #. module: magentoerpconnect
 #: view:magento.backend:magentoerpconnect.view_magento_backend_form
 msgid "Update"
-msgstr ""
+msgstr "Posodobitev"
 
 #. module: magentoerpconnect
 #: view:magento.backend:magentoerpconnect.view_magento_backend_form
 msgid "Update all the products stock quantities"
-msgstr ""
+msgstr "Posodobitev vseh količin zalog proizvodov"
 
 #. module: magentoerpconnect
 #: field:magento.address,updated_at:0
 #: field:magento.product.product,updated_at:0
 #: field:magento.res.partner,updated_at:0
 msgid "Updated At (on Magento)"
-msgstr ""
+msgstr "Posodobljeno (na Magentu)"
 
 #. module: magentoerpconnect
 #: selection:magento.product.product,backorders:0
 #: selection:magento.product.product,manage_stock:0
 msgid "Use Default Config"
-msgstr ""
+msgstr "Uporabi privzete nastavitve"
 
 #. module: magentoerpconnect
 #: field:magento.backend,use_auth_basic:0
 msgid "Use HTTP Auth Basic"
-msgstr ""
+msgstr "Uporabi "
 
 #. module: magentoerpconnect
 #: help:magento.backend,use_auth_basic:0
@@ -1252,59 +1252,59 @@ msgid ""
 "Use a Basic Access Authentication for the API. The Magento server could be "
 "configured to restrict access using a HTTP authentication based on a "
 "username and a password."
-msgstr ""
+msgstr "Uporabi osnovno overjanje dostopa za API. Magento strežnik se lahko nastavi, da omejuje dostop s HTTP overjanjem na osnovi uporabniškega imena in gesla."
 
 #. module: magentoerpconnect
 #: selection:magento.store,create_invoice_on:0
 #: selection:payment.method,create_invoice_on:0
 msgid "Validate"
-msgstr ""
+msgstr "Overi"
 
 #. module: magentoerpconnect
 #: field:magento.backend,version:0
 msgid "Version"
-msgstr ""
+msgstr "Verzija"
 
 #. module: magentoerpconnect
 #: field:magento.backend,warehouse_id:0
 msgid "Warehouse"
-msgstr ""
+msgstr "Skladišče"
 
 #. module: magentoerpconnect
 #: help:magento.backend,warehouse_id:0
 msgid "Warehouse used to compute the stock quantities."
-msgstr ""
+msgstr "Skladišče za obračun količin zaloge."
 
 #. module: magentoerpconnect
 #: field:magento.backend,website_ids:0
 msgid "Website"
-msgstr ""
+msgstr "Spletna stran"
 
 #. module: magentoerpconnect
 #: model:ir.ui.menu,name:magentoerpconnect.menu_magento_website
 #: view:magento.backend:magentoerpconnect.view_magento_backend_form
 #: field:magento.product.product,website_ids:0
 msgid "Websites"
-msgstr ""
+msgstr "Spletne strani"
 
 #. module: magentoerpconnect
 #: help:magento.storeview,import_orders_from_date:0
 msgid ""
 "do not consider non-imported sale orders before this date. Leave empty to "
 "import all sale orders"
-msgstr ""
+msgstr "ne upoštevaj ne-uvoženih prodajnih nalogov pred tem datumov. Pustite prazno za uvoz vseh prodajnih nalogov"
 
 #. module: magentoerpconnect
 #: view:magento.backend:magentoerpconnect.view_magento_backend_form
 msgid "e.g. http://my.magento.com"
-msgstr ""
+msgstr "npr. http://my.magento.com"
 
 #. module: magentoerpconnect
 #: view:magento.backend:magentoerpconnect.view_magento_backend_form
 msgid "e.g. http://my.magento.com/admin"
-msgstr ""
+msgstr "npr. http://my.magento.com/admin"
 
 #. module: magentoerpconnect
 #: view:magento.backend:magentoerpconnect.view_magento_backend_form
 msgid "mag-"
-msgstr ""
+msgstr "mag-"
