@@ -731,9 +731,10 @@ class CrmClaimImportMapper(ImportMapper):
             [['name', '=', record['order_increment_id']]])
         if order_ids:
             ref = 'sale.order,' + str(order_ids[0])
-            invoice_ids = self.session.search(
-                'account.invoice',
-                [['sale_ids', 'in', order_ids]])
+            invoice_ids = self.session.search('account.invoice', [
+                ('sale_ids', 'in', order_ids),
+                ('type', '=', 'out_invoice'),
+            ])
             order = self.session.browse('sale.order', order_ids[0])
             return {
                 'ref': ref,
@@ -811,14 +812,15 @@ class ClaimLineImportMapper(ImportMapper):
         order_line = self.session.browse(
             'magento.sale.order.line', order_line_ids[0])
         product_id = order_line.openerp_id.product_id.id
-        invoice_ids = self.session.search(
-            'account.invoice',
-            [['sale_ids', 'in', [order_line.order_id.id]]])
+        invoice_ids = self.session.search('account.invoice', [
+            ('sale_ids', 'in', [order_line.order_id.id]),
+            ('type', '=', 'out_invoice'),
+            ])
         if not invoice_ids:
             return {}
         line_ids = self.session.search(
             'account.invoice.line',
-            [['invoice_id', '=', invoice_ids[0]],
+            [['invoice_id', 'in', invoice_ids],
              ['product_id', '=', product_id]])
         return {'invoice_line_id': line_ids and line_ids[0]}
 
