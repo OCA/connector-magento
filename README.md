@@ -8,7 +8,7 @@ Odoo Connector Magento Modules
 
 This new release of MagentoERPconnect is based on the [OpenERP Connector framework](https://github.com/OCA/connector).
 
-The mailing list for this project is on https://launchpad.net/~openerp-connector-community
+The mailing list for this project is named 'Connectors' and is on https://odoo-community.org/groups
 
 Documentation:
 http://www.odoo-magento-connector.com
