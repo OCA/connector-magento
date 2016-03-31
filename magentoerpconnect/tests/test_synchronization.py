@@ -285,7 +285,7 @@ class TestImportMagentoConcurrentSync(SetUpMagentoSynchronized):
         self.registry2 = RegistryManager.get(get_db_name())
         self.cr2 = self.registry2.cursor()
         self.env2 = api.Environment(self.cr2, self.env.uid, {})
-        backend2 = mock.Mock(name='Backend Record')
+        backend2 = mock.MagicMock(name='Backend Record')
         backend2._name = 'magento.backend'
         backend2.id = self.backend_id
         self.backend2 = backend2
