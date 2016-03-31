@@ -78,7 +78,7 @@
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"><ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="">Installation Guide</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation Guide</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#after-the-installation">After the installation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#on-a-daily-basis">On a daily basis</a></li>
@@ -265,7 +265,7 @@
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
 <p>The installation steps assume that you already have a functioning Odoo server.</p>
 <p>If you are a developer, you may want to install the Connector using our
-buildout configuration, head over <a class="reference internal" href="../project/contribute.html#installation-with-buildout"><span>Connector with batteries included (buildout)</span></a>.</p>
+buildout configuration, head over <a class="reference internal" href="../project/contribute.html#installation-with-buildout"><span class="std std-ref">Connector with batteries included (buildout)</span></a>.</p>
 <p>For the manual installation, just stay there.</p>
 <div class="section" id="requirements-on-both-servers">
 <h3>Requirements on both servers<a class="headerlink" href="#requirements-on-both-servers" title="Permalink to this headline">¶</a></h3>
@@ -275,7 +275,7 @@ Odoo to ensure a correct synchronization between them</p>
 <div class="section" id="odoo">
 <h3>Odoo<a class="headerlink" href="#odoo" title="Permalink to this headline">¶</a></h3>
 <p>Clone the repositories below in the path where you chosed to store the addons:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span>$ git clone git@github.com:OCA/connector.git -b 8.0
+<div class="highlight-default"><div class="highlight"><pre><span></span>$ git clone git@github.com:OCA/connector.git -b 8.0
 $ git clone git@github.com:OCA/connector-ecommerce.git -b 8.0
 $ git clone git@github.com:OCA/connector-magento.git -b 8.0
 $ git clone git@github.com:OCA/e-commerce.git -b 8.0
@@ -291,12 +291,12 @@ in another directory.</p>
 <p>Add the branches in the addons path, either using the server command
 line or adding them in the Odoo server configuration file.</p>
 <p>Example using the command line argument:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span>$ /path/to/openerp-server --addons-path /path/to/connector,/path/to/connector-ecommerce,/path/to/connector-magento,/path/to/e-commerce,/path/to/product-attribute,/path/to/sale-workflow
+<div class="highlight-default"><div class="highlight"><pre><span></span>$ /path/to/openerp-server --addons-path /path/to/connector,/path/to/connector-ecommerce,/path/to/connector-magento,/path/to/e-commerce,/path/to/product-attribute,/path/to/sale-workflow
 </pre></div>
 </div>
 <p>You also need to install the <code class="docutils literal"><span class="pre">magento</span></code> Python package.
 So install it with either pip or either easy_install:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span>$ pip install magento
+<div class="highlight-default"><div class="highlight"><pre><span></span>$ pip install magento
 
 $ easy_install magento
 </pre></div>
@@ -314,7 +314,7 @@ Modules List</cite>.</p>
 is still used  by the connector. But the version published on <cite>Magento
 Connect</cite> is outdated.</p>
 <p>Download the following <code class="docutils literal"><span class="pre">Bazaar</span></code> branch and install it in Magento:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span>$ bzr branch lp:magentoerpconnect/magento-module-oerp6.x-stable magento-module
+<div class="highlight-default"><div class="highlight"><pre><span></span>$ bzr branch lp:magentoerpconnect/magento-module-oerp6.x-stable magento-module
 </pre></div>
 </div>
 <p>In order to install it:</p>
@@ -351,18 +351,18 @@ In <cite>User Role</cite>, choose the <cite>openerp</cite> role.</li>
 <h2>After the installation<a class="headerlink" href="#after-the-installation" title="Permalink to this headline">¶</a></h2>
 <p>Once the addon is installed, you may want to:</p>
 <ol class="arabic simple">
-<li>Read or read again <a class="reference internal" href="key_questions.html#key-questions"><span>Key questions when connecting Odoo with Magento</span></a></li>
+<li>Read or read again <a class="reference internal" href="key_questions.html#key-questions"><span class="std std-ref">Key questions when connecting Odoo with Magento</span></a></li>
 <li>Assign the <cite>Connector Manager</cite> group on your user.</li>
 <li>Create the Backend in <cite>Connectors &gt; Magento &gt; Backend</cite>,
 use the role created in <a class="reference internal" href="#configuring-the-magento-web-services">Configuring the Magento web-services</a>.</li>
 <li>Synchronize the initial metadata using the button <cite>Synchronize Metadata</cite> on the backend.</li>
-<li>Configure the translations if you use them: <a class="reference internal" href="../howto/configure_translations.html#configure-translations"><span>How to configure translations</span></a></li>
-<li>Configure: <a class="reference internal" href="../howto/configure_emails.html#configure-emails"><span>How to configure emails</span></a></li>
-<li>Configure: <a class="reference internal" href="../howto/configure_payment_methods.html#configure-payment-methods"><span>Howto: configure payment methods</span></a></li>
-<li>Configure: <a class="reference internal" href="../howto/configure_automatic_workflows.html#configure-automatic-workflows"><span>Howto: configure automatic workflows</span></a></li>
-<li>Configure: <a class="reference internal" href="../howto/configure_shipping_methods.html#configure-shipping-methods"><span>How to configure shipping methods</span></a></li>
-<li>Configure: <a class="reference internal" href="../howto/configure_warehouse.html#configure-warehouses"><span>How to configure warehouses</span></a></li>
-<li>Configure: <a class="reference internal" href="../howto/configure_pricing.html#configure-pricing"><span>How to configure pricing</span></a></li>
+<li>Configure the translations if you use them: <a class="reference internal" href="../howto/configure_translations.html#configure-translations"><span class="std std-ref">How to configure translations</span></a></li>
+<li>Configure: <a class="reference internal" href="../howto/configure_emails.html#configure-emails"><span class="std std-ref">How to configure emails</span></a></li>
+<li>Configure: <a class="reference internal" href="../howto/configure_payment_methods.html#configure-payment-methods"><span class="std std-ref">Howto: configure payment methods</span></a></li>
+<li>Configure: <a class="reference internal" href="../howto/configure_automatic_workflows.html#configure-automatic-workflows"><span class="std std-ref">Howto: configure automatic workflows</span></a></li>
+<li>Configure: <a class="reference internal" href="../howto/configure_shipping_methods.html#configure-shipping-methods"><span class="std std-ref">How to configure shipping methods</span></a></li>
+<li>Configure: <a class="reference internal" href="../howto/configure_warehouse.html#configure-warehouses"><span class="std std-ref">How to configure warehouses</span></a></li>
+<li>Configure: <a class="reference internal" href="../howto/configure_pricing.html#configure-pricing"><span class="std std-ref">How to configure pricing</span></a></li>
 </ol>
 <p>On the backend,</p>
 <ol class="arabic simple">
@@ -371,21 +371,21 @@ use the role created in <a class="reference internal" href="#configuring-the-mag
 will be imported on the fly with the sales orders</li>
 <li>Import the product categories</li>
 <li>Configure the default values (accounting, ...)
-of the new categories, using the <a class="reference internal" href="connector_checkpoint.html#connector-checkpoint"><span>Check the connector checkpoint</span></a></li>
+of the new categories, using the <a class="reference internal" href="connector_checkpoint.html#connector-checkpoint"><span class="std std-ref">Check the connector checkpoint</span></a></li>
 <li>Import the products</li>
 <li>Configure the new products (accounting, suppliers, stock rules, ...)
-of the new products, using the <a class="reference internal" href="connector_checkpoint.html#connector-checkpoint"><span>Check the connector checkpoint</span></a></li>
+of the new products, using the <a class="reference internal" href="connector_checkpoint.html#connector-checkpoint"><span class="std std-ref">Check the connector checkpoint</span></a></li>
 <li>Create an inventory for your products</li>
 <li>Update the stock quantities on Magento</li>
 <li>Import the sales orders</li>
-<li>Once you are all done and happy, configure the schedulers: <a class="reference internal" href="../howto/configure_schedulers.html#configure-schedulers"><span>How to configure schedulers</span></a></li>
+<li>Once you are all done and happy, configure the schedulers: <a class="reference internal" href="../howto/configure_schedulers.html#configure-schedulers"><span class="std std-ref">How to configure schedulers</span></a></li>
 </ol>
 </div>
 <div class="section" id="on-a-daily-basis">
 <h2>On a daily basis<a class="headerlink" href="#on-a-daily-basis" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li><a class="reference internal" href="connector_checkpoint.html#connector-checkpoint"><span>Check the connector checkpoint</span></a></li>
-<li><a class="reference internal" href="monitor_resolve_jobs.html#monitor-resolve-jobs"><span>Monitor and resolve jobs</span></a></li>
+<li><a class="reference internal" href="connector_checkpoint.html#connector-checkpoint"><span class="std std-ref">Check the connector checkpoint</span></a></li>
+<li><a class="reference internal" href="monitor_resolve_jobs.html#monitor-resolve-jobs"><span class="std std-ref">Monitor and resolve jobs</span></a></li>
 </ul>
 </div>
 </div>
@@ -410,7 +410,7 @@ of the new products, using the <a class="reference internal" href="connector_che
     </p>
     <p>
         &copy; Copyright 2013-2015, Odoo Community Association (OCA).<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.6.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.<br/>
     </p>
   </div>
 </footer>

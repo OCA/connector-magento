@@ -140,7 +140,7 @@
 <li class="toctree-l2"><a class="reference internal" href="tutorial_development.html#create-an-import">Create an import</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current"><a class="current reference internal" href="">Tutorial: customize the connector</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Tutorial: customize the connector</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#bootstrap-your-own-customization-module">Bootstrap your own customization module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#add-mappings-of-fields">Add mappings of fields</a></li>
 </ul>
@@ -344,7 +344,7 @@ put the imports of your python modules.</p>
 That&#8217;s just a matter of following a convention and creating
 <code class="docutils literal"><span class="pre">connector.py</span></code> in which you will call the
 <code class="docutils literal"><span class="pre">install_in_connector</span></code> function:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">openerp.addons.connector.connector</span> <span class="kn">import</span> <span class="n">install_in_connector</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">openerp.addons.connector.connector</span> <span class="k">import</span> <span class="n">install_in_connector</span>
 
 
 <span class="n">install_in_connector</span><span class="p">()</span>
@@ -362,7 +362,7 @@ classes won&#8217;t be used.</p>
 versions.</p>
 <p>Actually the supported versions are referenced in
 <code class="docutils literal"><span class="pre">magentoerpconnect/backend.py</span></code>:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">openerp.addons.connector.backend</span> <span class="kn">as</span> <span class="nn">backend</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">openerp.addons.connector.backend</span> <span class="k">as</span> <span class="nn">backend</span>
 
 <span class="n">magento</span> <span class="o">=</span> <span class="n">backend</span><span class="o">.</span><span class="n">Backend</span><span class="p">(</span><span class="s1">&#39;magento&#39;</span><span class="p">)</span>
 <span class="n">magento1700</span> <span class="o">=</span> <span class="n">backend</span><span class="o">.</span><span class="n">Backend</span><span class="p">(</span><span class="n">parent</span><span class="o">=</span><span class="n">magento</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="s1">&#39;1.7&#39;</span><span class="p">)</span>
@@ -381,23 +381,23 @@ Magento, you need to:</p>
 cover this later)</li>
 </ul>
 <p>Let&#8217;s create our own backend, in <code class="docutils literal"><span class="pre">customize_example/backend.py</span></code>:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># -*- coding: utf-8 -*-</span>
-<span class="kn">import</span> <span class="nn">openerp.addons.connector.backend</span> <span class="kn">as</span> <span class="nn">backend</span>
-<span class="kn">import</span> <span class="nn">openerp.addons.magentoerpconnect.backend</span> <span class="kn">as</span> <span class="nn">magento_backend</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="kn">import</span> <span class="nn">openerp.addons.connector.backend</span> <span class="k">as</span> <span class="nn">backend</span>
+<span class="kn">import</span> <span class="nn">openerp.addons.magentoerpconnect.backend</span> <span class="k">as</span> <span class="nn">magento_backend</span>
 
 <span class="n">magento_myversion</span> <span class="o">=</span> <span class="n">backend</span><span class="o">.</span><span class="n">Backend</span><span class="p">(</span><span class="n">parent</span><span class="o">=</span><span class="n">magento_backend</span><span class="o">.</span><span class="n">magento1700</span><span class="p">,</span>
                                     <span class="n">version</span><span class="o">=</span><span class="s1">&#39;1.7-myversion&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>And in <code class="docutils literal"><span class="pre">customize_example/magento_model.py</span></code>:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># -*- coding: utf-8 -*-</span>
-<span class="kn">from</span> <span class="nn">openerp</span> <span class="kn">import</span> <span class="n">models</span><span class="p">,</span> <span class="n">api</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="kn">from</span> <span class="nn">openerp</span> <span class="k">import</span> <span class="n">models</span><span class="p">,</span> <span class="n">api</span>
 
 
 <span class="k">class</span> <span class="nc">MagentoBackend</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
     <span class="n">_inherit</span> <span class="o">=</span> <span class="s1">&#39;magento.backend&#39;</span>
 
-    <span class="nd">@api.model</span>
+    <span class="nd">@api</span><span class="o">.</span><span class="n">model</span>
     <span class="k">def</span> <span class="nf">select_versions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Available versions in the backend.</span>
 
@@ -461,7 +461,7 @@ your model. You won&#8217;t change anything in this class, but you&#8217;ll exte
 it so you need to have a look on it.  For example, the mapping for
 <code class="docutils literal"><span class="pre">magento.res.partner</span></code> in <code class="docutils literal"><span class="pre">magentoerpconnect</span></code> is the following
 (excerpt):</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="nd">@magento</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="nd">@magento</span>
 <span class="k">class</span> <span class="nc">PartnerImportMapper</span><span class="p">(</span><span class="n">ImportMapper</span><span class="p">):</span>
     <span class="n">_model_name</span> <span class="o">=</span> <span class="s1">&#39;magento.res.partner&#39;</span>
 
@@ -478,7 +478,7 @@ it so you need to have a look on it.  For example, the mapping for
     <span class="k">def</span> <span class="nf">is_company</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
         <span class="c1"># partners are companies so we can bind</span>
         <span class="c1"># addresses on them</span>
-        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;is_company&#39;</span><span class="p">:</span> <span class="bp">True</span><span class="p">}</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;is_company&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
 
     <span class="nd">@mapping</span>
     <span class="k">def</span> <span class="nf">names</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
@@ -559,24 +559,24 @@ this data be shared between all websites / backends?</p>
 <p>For this field, the Magento API returns a string. I add it in
 <code class="docutils literal"><span class="pre">customize_example/partner.py</span></code> (I willingly skip the part &#8216;add them in
 the views&#8217;):</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># -*- coding: utf-8 -*-</span>
-<span class="kn">from</span> <span class="nn">openerp</span> <span class="kn">import</span> <span class="n">models</span><span class="p">,</span> <span class="n">fields</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="kn">from</span> <span class="nn">openerp</span> <span class="k">import</span> <span class="n">models</span><span class="p">,</span> <span class="n">fields</span>
 
 <span class="k">class</span> <span class="nc">MagentoResPartner</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
     <span class="n">_inherit</span> <span class="o">=</span> <span class="s1">&#39;magento.res.partner&#39;</span>
 
-    <span class="n">created_in</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Char</span><span class="p">(</span><span class="n">string</span><span class="o">=</span><span class="s1">&#39;Created In&#39;</span><span class="p">,</span> <span class="n">readonly</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">created_in</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Char</span><span class="p">(</span><span class="n">string</span><span class="o">=</span><span class="s1">&#39;Created In&#39;</span><span class="p">,</span> <span class="n">readonly</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>In the same file, I add the import of the Magento Backend to use and the
 current mapper:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">openerp.addons.magentoerpconnect.partner</span> <span class="kn">import</span> <span class="n">PartnerImportMapper</span>
-<span class="kn">from</span> <span class="nn">.backend</span> <span class="kn">import</span> <span class="n">magento_myversion</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">openerp.addons.magentoerpconnect.partner</span> <span class="k">import</span> <span class="n">PartnerImportMapper</span>
+<span class="kn">from</span> <span class="nn">.backend</span> <span class="k">import</span> <span class="n">magento_myversion</span>
 </pre></div>
 </div>
 <p>And I extend the partner&#8217;s mapper, decorated with
 <code class="docutils literal"><span class="pre">&#64;magento_myversion</span></code>:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="nd">@magento_myversion</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="nd">@magento_myversion</span>
 <span class="k">class</span> <span class="nc">MyPartnerImportMapper</span><span class="p">(</span><span class="n">PartnerImportMapper</span><span class="p">):</span>
     <span class="n">_model_name</span> <span class="o">=</span> <span class="s1">&#39;magento.res.partner&#39;</span>
 
@@ -602,8 +602,8 @@ example, we&#8217;ll assume we can hard-code theses values in the mappings.</p>
 will likely be the same even if we have many <code class="docutils literal"><span class="pre">magento.res.partner</span></code> and
 this information can be useful at this level.</p>
 <p>In <code class="docutils literal"><span class="pre">customize_example/partner.py</span></code>, I write:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># -*- coding: utf-8 -*-</span>
-<span class="kn">from</span> <span class="nn">openerp</span> <span class="kn">import</span> <span class="n">models</span><span class="p">,</span> <span class="n">fields</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="kn">from</span> <span class="nn">openerp</span> <span class="k">import</span> <span class="n">models</span><span class="p">,</span> <span class="n">fields</span>
 
 <span class="k">class</span> <span class="nc">ResPartner</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
     <span class="n">_inherit</span> <span class="o">=</span> <span class="s1">&#39;res.partner&#39;</span>
@@ -615,14 +615,14 @@ this information can be useful at this level.</p>
 </div>
 <p>The same imports than in the <a class="reference internal" href="#example-1">Example 1.</a> are needed, but we need to
 import <code class="docutils literal"><span class="pre">mapping</span></code> too:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">openerp.addons.connector.unit.mapper</span> <span class="kn">import</span> <span class="n">mapping</span>
-<span class="kn">from</span> <span class="nn">openerp.addons.magentoerpconnect.partner</span> <span class="kn">import</span> <span class="n">PartnerImportMapper</span>
-<span class="kn">from</span> <span class="nn">.backend</span> <span class="kn">import</span> <span class="n">magento_myversion</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">openerp.addons.connector.unit.mapper</span> <span class="k">import</span> <span class="n">mapping</span>
+<span class="kn">from</span> <span class="nn">openerp.addons.magentoerpconnect.partner</span> <span class="k">import</span> <span class="n">PartnerImportMapper</span>
+<span class="kn">from</span> <span class="nn">.backend</span> <span class="k">import</span> <span class="n">magento_myversion</span>
 </pre></div>
 </div>
 <p>This is not a <cite>direct</cite> mapping, I will use a method to define the
 <code class="docutils literal"><span class="pre">gender</span></code> value:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">MAGENTO_GENDER</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;123&#39;</span><span class="p">:</span> <span class="s1">&#39;male&#39;</span><span class="p">,</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">MAGENTO_GENDER</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;123&#39;</span><span class="p">:</span> <span class="s1">&#39;male&#39;</span><span class="p">,</span>
                   <span class="s1">&#39;124&#39;</span><span class="p">:</span> <span class="s1">&#39;female&#39;</span><span class="p">}</span>
 
 <span class="nd">@magento_myversion</span>
@@ -667,7 +667,7 @@ for any other model actually imported as well.</p>
     </p>
     <p>
         &copy; Copyright 2013-2015, Odoo Community Association (OCA).<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.6.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.<br/>
     </p>
   </div>
 </footer>

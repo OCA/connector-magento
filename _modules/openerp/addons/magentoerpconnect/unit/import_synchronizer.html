@@ -438,8 +438,6 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">_name</span><span class="p">,</span>
             <span class="n">magento_id</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="c1"># Keep a lock on this import until the transaction is committed</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">advisory_lock_or_retry</span><span class="p">(</span><span class="n">lock_name</span><span class="p">)</span>
 
         <span class="k">try</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">magento_record</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_magento_data</span><span class="p">()</span>
@@ -454,6 +452,11 @@
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">force</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_uptodate</span><span class="p">(</span><span class="n">binding</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">_</span><span class="p">(</span><span class="s1">&#39;Already up-to-date.&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Keep a lock on this import until the transaction is committed</span>
+        <span class="c1"># The lock is kept since we have detected that the informations</span>
+        <span class="c1"># will be updated into Odoo</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">advisory_lock_or_retry</span><span class="p">(</span><span class="n">lock_name</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_before_import</span><span class="p">()</span>
 
         <span class="c1"># import the missing linked resources</span>
@@ -642,7 +645,7 @@
     </p>
     <p>
         &copy; Copyright 2013-2015, Odoo Community Association (OCA).<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.6.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.<br/>
     </p>
   </div>
 </footer>

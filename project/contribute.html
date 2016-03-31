@@ -126,7 +126,7 @@
 </li>
 </ul>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="">Developer&#8217;s guide</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Developer&#8217;s guide</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#connector-with-batteries-included-buildout">Connector with batteries included (buildout)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#magento-on-docker">Magento on Docker</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#how-to-help">How to help</a></li>
@@ -298,7 +298,7 @@
 <div class="section" id="installing-the-buildout">
 <h3><a class="toc-backref" href="#sections">Installing the buildout</a><a class="headerlink" href="#installing-the-buildout" title="Permalink to this headline">¶</a></h3>
 <p>When you want to install the Magento connector, you can either install it manually
-using the <a class="reference internal" href="../guides/installation_guide.html#installation-guide"><span>Installation Guide</span></a> or either using our automated <a class="reference external" href="http://www.buildout.org">Buildout</a> config.
+using the <a class="reference internal" href="../guides/installation_guide.html#installation-guide"><span class="std std-ref">Installation Guide</span></a> or either using our automated <a class="reference external" href="http://www.buildout.org">Buildout</a> config.
 The manual installation is recommended if you need to add it on an existing
 installation or if you want to control your environment in your own manner.</p>
 <p>The <a class="reference external" href="http://www.buildout.org">Buildout</a> config is an all-in-one package which installs Odoo, the
@@ -313,7 +313,7 @@ It includes developer tools such as:</p>
 <p>So we highly recommend to use this configuration for development.</p>
 <p>Here are the configuration files <a class="reference external" href="https://github.com/guewen/odoo-connector-magento-buildout">https://github.com/guewen/odoo-connector-magento-buildout</a>.</p>
 <p>Clone the repo:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span>$ git clone https://github.com/guewen/odoo-connector-magento-buildout.git -b 8.0 odoo-connector-magento
+<div class="highlight-default"><div class="highlight"><pre><span></span>$ git clone https://github.com/guewen/odoo-connector-magento-buildout.git -b 8.0 odoo-connector-magento
 </pre></div>
 </div>
 <p>and follow the installation steps.</p>
@@ -329,11 +329,11 @@ You can also use <a class="reference external" href="http://pythonhosted.org/any
 <h3><a class="toc-backref" href="#sections">Start Odoo</a><a class="headerlink" href="#start-odoo" title="Permalink to this headline">¶</a></h3>
 <p>All the commands are launched from the root directory of the buildout.</p>
 <p>In standalone mode (jobs will be threaded):</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span>$ bin/start_openerp
+<div class="highlight-default"><div class="highlight"><pre><span></span>$ bin/start_openerp
 </pre></div>
 </div>
 <p>With workers (multiprocessing), you need to start dedicated Connector Workers for the jobs:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span>$ bin/start_openerp --workers=4
+<div class="highlight-default"><div class="highlight"><pre><span></span>$ bin/start_openerp --workers=4
 $ bin/start_connector_worker --workers=2
 </pre></div>
 </div>
@@ -341,13 +341,13 @@ $ bin/start_connector_worker --workers=2
 <div class="section" id="start-with-supervisord">
 <h3><a class="toc-backref" href="#sections">Start with Supervisord</a><a class="headerlink" href="#start-with-supervisord" title="Permalink to this headline">¶</a></h3>
 <p>To start the supervisord daemon, run:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span>$ bin/supervisord
+<div class="highlight-default"><div class="highlight"><pre><span></span>$ bin/supervisord
 </pre></div>
 </div>
 <p>The default configuration starts Odoo with 4 workers and 2 Connector
 workers. This can be changed in the buildout.cfg file in the <code class="docutils literal"><span class="pre">supervisor</span></code> section.</p>
 <p>The services can be managed on:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span>$ bin/supervisorctl
+<div class="highlight-default"><div class="highlight"><pre><span></span>$ bin/supervisorctl
 </pre></div>
 </div>
 </div>
@@ -355,12 +355,12 @@ workers. This can be changed in the buildout.cfg file in the <code class="docuti
 <h3><a class="toc-backref" href="#sections">Run the tests</a><a class="headerlink" href="#run-the-tests" title="Permalink to this headline">¶</a></h3>
 <p>The Magento Connector and the Connector framework do not use YAML tests, but only
 <code class="docutils literal"><span class="pre">unittest2</span></code> tests. The following command lines will run them:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span>$ bin/runtests --database db-name -u connector
+<div class="highlight-default"><div class="highlight"><pre><span></span>$ bin/runtests --database db-name -u connector
 $ bin/runtests --database db-name -u magentoerpconnect
 </pre></div>
 </div>
 <p>Use the help arguments for more information about the options:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span>$ bin/runtests --help
+<div class="highlight-default"><div class="highlight"><pre><span></span>$ bin/runtests --help
 $ bin/runtests --help-oe
 </pre></div>
 </div>
@@ -368,7 +368,7 @@ $ bin/runtests --help-oe
 <div class="section" id="build-the-documentation">
 <h3><a class="toc-backref" href="#sections">Build the documentation</a><a class="headerlink" href="#build-the-documentation" title="Permalink to this headline">¶</a></h3>
 <p>The documentation uses <a class="reference external" href="http://www.sphinx-doc.org">Sphinx</a>, use the following lines to build them in HTML:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span>$ bin/sphinxbuilder_connector
+<div class="highlight-default"><div class="highlight"><pre><span></span>$ bin/sphinxbuilder_connector
 $ bin/sphinxbuilder_connector_magento
 </pre></div>
 </div>
@@ -529,7 +529,7 @@ output them using a tool such as <a class="reference external" href="https://erp
     </p>
     <p>
         &copy; Copyright 2013-2015, Odoo Community Association (OCA).<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.6.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.<br/>
     </p>
   </div>
 </footer>
