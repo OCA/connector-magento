@@ -520,8 +520,7 @@ and add a method (and add in the view as well, I won&#8217;t write the view&#821
 
     <span class="nd">@api</span><span class="o">.</span><span class="n">multi</span>
     <span class="k">def</span> <span class="nf">import_customer_groups</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">session</span> <span class="o">=</span> <span class="n">connector</span><span class="o">.</span><span class="n">ConnectorSession</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">cr</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">uid</span><span class="p">,</span>
-                                             <span class="n">context</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">context</span><span class="p">)</span>
+        <span class="n">session</span> <span class="o">=</span> <span class="n">ConnectorSession</span><span class="o">.</span><span class="n">from_env</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">backend_id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ids</span><span class="p">:</span>
             <span class="n">job</span><span class="o">.</span><span class="n">import_batch</span><span class="o">.</span><span class="n">delay</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="s1">&#39;magento.res.partner.category&#39;</span><span class="p">,</span>
                                    <span class="n">backend_id</span><span class="p">)</span>
@@ -531,7 +530,7 @@ and add a method (and add in the view as well, I won&#8217;t write the view&#821
 </div>
 <p>Observations:</p>
 <ul class="simple">
-<li>Declare a <code class="xref py py-class docutils literal"><span class="pre">connector.connector.ConnectorSession</span></code>.</li>
+<li>Encapsulate Odoo environment in a <code class="xref py py-class docutils literal"><span class="pre">openerp.addons.connector.session.ConnectorSession</span></code>.</li>
 <li>Delay the job <code class="docutils literal"><span class="pre">import_batch</span></code> when we click on the button.</li>
 <li>if the arguments were given to <code class="docutils literal"><span class="pre">import_batch</span></code> directly (without the
 <code class="docutils literal"><span class="pre">.delay()</span></code>, the import would be done synchronously.</li>
