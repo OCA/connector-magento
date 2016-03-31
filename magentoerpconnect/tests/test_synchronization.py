@@ -314,5 +314,8 @@ class TestImportMagentoConcurrentSync(SetUpMagentoSynchronized):
             'magento.product.category'
         )
         importer2 = ProductCategoryImporter(connector_env2)
-        with self.assertRaises(RetryableJobError):
-            importer2.run(1)
+        fields_path = ('openerp.addons.magentoerpconnect'
+                       '.unit.import_synchronizer.fields')
+        with mock.patch(fields_path):
+            with self.assertRaises(RetryableJobError):
+                importer2.run(1)
