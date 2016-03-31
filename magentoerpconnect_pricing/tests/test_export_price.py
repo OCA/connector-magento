@@ -32,10 +32,10 @@ from openerp.addons.magentoerpconnect.tests.common import (
     mock_urlopen_image,
     SetUpMagentoSynchronized,
 )
-from openerp.addons.magentoerpconnect.tests.test_data import (
+from openerp.addons.magentoerpconnect.tests.data_base import (
     magento_base_responses,
 )
-from openerp.addons.magentoerpconnect.tests.test_data_product import (
+from openerp.addons.magentoerpconnect.tests.data_product import (
     simple_product_and_images,
 )
 
