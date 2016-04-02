@@ -3,12 +3,25 @@
 # * magentoerpconnect
 # 
 # Translators:
+# Accounts-Payable - Alkemics, 2015
+# Alejandro Santana <alejandrosantana@anubia.es>, 2015
+# Antonio Trueba, 2016
+# CarlesAntoli <carlesantoli@hotmail.com>, 2015
+# Chen-Do LU <clu@alkemics.com>, 2015
+# Dimitrios Glentadakis <dglent@gmail.com>, 2013-2014, 2015-2016
+# Efstathios Iosifidis <iefstathios@gmail.com>, 2014
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
+# François Breysse <fb@alkemics.com>, 2015
 # Guewen Baconnier <guewen.baconnier@camptocamp.com>, 2015
+# Hotellook, 2014
+# Jim Spentzos, 2014
+# Matjaž Mozetič <m.mozetic@matmoz.si>, 2015-2016
+# njeudy <njeudy@tuxservices.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-03-17 01:39+0000\n"
+"POT-Creation-Date: 2016-03-31 06:24+0000\n"
 "PO-Revision-Date: 2016-03-16 08:10+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: French (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/fr/)\n"
@@ -96,7 +109,7 @@ msgid "Already imported"
 msgstr "Déjà importé"
 
 #. module: magentoerpconnect
-#: code:addons/magentoerpconnect/unit/import_synchronizer.py:217
+#: code:addons/magentoerpconnect/unit/import_synchronizer.py:215
 #, python-format
 msgid "Already up-to-date."
 msgstr "Déjà à jour"
@@ -970,7 +983,7 @@ msgid "Record %s deleted on Magento"
 msgstr "Enregistrement %s supprimé sur Magento"
 
 #. module: magentoerpconnect
-#: code:addons/magentoerpconnect/unit/import_synchronizer.py:208
+#: code:addons/magentoerpconnect/unit/import_synchronizer.py:206
 #, python-format
 msgid "Record does no longer exist in Magento"
 msgstr "L'enregistrement n'existe plus sur Magento"
