@@ -181,6 +181,12 @@ class MagentoBackend(models.Model):
         'The value can also be specified on website or the store or the '
         'store view.'
     )
+    is_multi_company = fields.Boolean(
+        string='Is Backend Multi-Company',
+        help="If this flag is set, it is possible to choose warehouse at each "
+             "level. "
+             "When import partner, ignore company_id if this flag is set.",
+    )
 
     _sql_constraints = [
         ('sale_prefix_uniq', 'unique(sale_prefix)',
