@@ -576,10 +576,13 @@ class MagentoStoreview(models.Model):
 
     @api.multi
     def import_sale_orders(self):
-        session = ConnectorSession(self.env.cr, self.env.uid,
-                                   context=self.env.context)
         import_start_time = datetime.now()
         for storeview in self:
+            user_id = storeview.sudo().warehouse_id.company_id.\
+                magento_company_user_id.id or self.env.uid
+            session = ConnectorSession(self.env.cr, user_id,
+                                       context=self.env.context)
+
             if storeview.no_sales_order_sync:
                 _logger.debug("The storeview '%s' is active in Magento "
                               "but is configured not to import the "
