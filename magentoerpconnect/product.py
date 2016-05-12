@@ -21,7 +21,7 @@
 ##############################################################################
 
 import logging
-import urllib2
+import requests
 import base64
 import xmlrpclib
 import sys
@@ -37,6 +37,7 @@ from openerp.addons.connector.exception import (MappingError,
                                                 IDMissingInBackend
                                                 )
 from openerp.addons.connector.unit.mapper import (mapping,
+                                                  only_create,
                                                   ImportMapper,
                                                   )
 from .unit.backend_adapter import (GenericAdapter,
@@ -49,7 +50,7 @@ from .unit.import_synchronizer import (DelayedBatchImporter,
                                        AddCheckpoint,
                                        )
 from .connector import get_environment
-from .backend import magento
+from .backend import magento, magento2000
 from .related_action import unwrap_binding
 
 _logger = logging.getLogger(__name__)
@@ -203,6 +204,9 @@ class ProductProduct(models.Model):
 class ProductProductAdapter(GenericAdapter):
     _model_name = 'magento.product.product'
     _magento_model = 'catalog_product'
+    _magento2_model = 'products'
+    _magento2_search = 'products'
+    _magento2_key = 'sku'
     _admin_path = '/{model}/edit/id/{id}'
 
     def _call(self, method, arguments):
@@ -231,6 +235,8 @@ class ProductProductAdapter(GenericAdapter):
         if to_date is not None:
             filters.setdefault('updated_at', {})
             filters['updated_at']['to'] = to_date.strftime(dt_fmt)
+        if self.magento.version == '2.0':
+            return super(ProductProductAdapter, self).search(filters=filters)
         # TODO add a search entry point on the Magento API
         return [int(row['product_id']) for row
                 in self._call('%s.list' % self._magento_model,
@@ -241,6 +247,14 @@ class ProductProductAdapter(GenericAdapter):
 
         :rtype: dict
         """
+        if self.magento.version == '2.0':
+            # TODO: storeview context in Magento 2.0
+            res = super(ProductProductAdapter, self).read(
+                id, attributes=attributes)
+            if res:
+                for attr in res.get('custom_attributes', []):
+                    res[attr['attribute_code']] = attr['value']
+            return res
         return self._call('ol_catalog_product.info',
                           [int(id), storeview_id, attributes, 'id'])
 
@@ -248,20 +262,36 @@ class ProductProductAdapter(GenericAdapter):
         """ Update records on the external system """
         # XXX actually only ol_catalog_product.update works
         # the PHP connector maybe breaks the catalog_product.update
+        if self.magento.version == '2.0':
+            raise NotImplementedError  # TODO
         return self._call('ol_catalog_product.update',
                           [int(id), data, storeview_id, 'id'])
 
-    def get_images(self, id, storeview_id=None):
+    def get_images(self, id, storeview_id=None, data=None):
         return self._call('product_media.list', [int(id), storeview_id, 'id'])
 
     def read_image(self, id, image_name, storeview_id=None):
+        if self.magento.version == '2.0':
+            raise NotImplementedError  # TODO
         return self._call('product_media.info',
                           [int(id), image_name, storeview_id, 'id'])
 
     def update_inventory(self, id, data):
+        if self.magento.version == '2.0':
+            raise NotImplementedError  # TODO
         # product_stock.update is too slow
         return self._call('oerp_cataloginventory_stock_item.update',
                           [int(id), data])
+
+
+@magento2000
+class ProductProductAdapter2000(ProductProductAdapter):
+
+    def get_images(self, id, storeview_id=None, data=None):
+        assert data
+        return (entry for entry in
+                data.get('media_gallery_entries', [])
+                if entry['media_type'] == 'image')
 
 
 @magento
@@ -300,8 +330,9 @@ class CatalogImageImporter(Importer):
     _model_name = ['magento.product.product',
                    ]
 
-    def _get_images(self, storeview_id=None):
-        return self.backend_adapter.get_images(self.magento_id, storeview_id)
+    def _get_images(self, storeview_id=None, data=None):
+        return self.backend_adapter.get_images(
+            self.magento_id, storeview_id, data=data)
 
     def _sort_images(self, images):
         """ Returns a list of images sorted by their priority.
@@ -328,35 +359,34 @@ class CatalogImageImporter(Importer):
 
     def _get_binary_image(self, image_data):
         url = image_data['url'].encode('utf8')
-        try:
-            request = urllib2.Request(url)
-            if self.backend_record.auth_basic_username \
-                    and self.backend_record.auth_basic_password:
-                base64string = base64.b64encode(
-                    '%s:%s' % (self.backend_record.auth_basic_username,
-                               self.backend_record.auth_basic_password))
-                request.add_header("Authorization", "Basic %s" % base64string)
-            binary = urllib2.urlopen(request)
-        except urllib2.HTTPError as err:
-            if err.code == 404:
-                # the image is just missing, we skip it
-                return
-            else:
-                # we don't know why we couldn't download the image
-                # so we propagate the error, the import will fail
-                # and we have to check why it couldn't be accessed
-                raise
+        headers = {}
+        if (self.backend_record.auth_basic_username and
+                self.backend_record.auth_basic_password):
+            base64string = base64.b64encode(
+                '%s:%s' % (self.backend_record.auth_basic_username,
+                           self.backend_record.auth_basic_password))
+            headers['Authorization'] = "Basic %s" % base64string
+        # TODO: make verification of ssl a backend setting
+        request = requests.get(url, headers=headers,
+                               verify=self.backend_record.verify_ssl)
+        if request.status_code == 404:
+            # the image is just missing, we skip it
+            return
         else:
-            return binary.read()
+            # we don't know why we couldn't download the image
+            # so we propagate the error, the import will fail
+            # and we have to check why it couldn't be accessed
+            request.raise_for_status()
+        return request.content
 
     def _write_image_data(self, binding_id, binary, image_data):
         model = self.model.with_context(connector_no_export=True)
         binding = model.browse(binding_id)
         binding.write({'image': base64.b64encode(binary)})
 
-    def run(self, magento_id, binding_id):
+    def run(self, magento_id, binding_id, data=None):
         self.magento_id = magento_id
-        images = self._get_images()
+        images = self._get_images(data=data)
         images = self._sort_images(images)
         binary = None
         image_data = None
@@ -366,6 +396,20 @@ class CatalogImageImporter(Importer):
         if not binary:
             return
         self._write_image_data(binding_id, binary, image_data)
+
+
+@magento2000
+class CatalogImageImporter2000(CatalogImageImporter):
+
+    def _get_binary_image(self, image_data):
+        if 'magento.product.product' in self._model_name:
+            model = 'product'
+        else:
+            raise NotImplementedError  # Categories?
+        image_data['url'] = '%s/media/catalog/%s/%s' % (
+            self.backend_record.location, model, image_data['file'])
+        return super(CatalogImageImporter2000, self)._get_binary_image(
+            image_data)
 
 
 @magento
@@ -440,6 +484,7 @@ class ProductImportMapper(ImportMapper):
 
     @mapping
     def is_active(self, record):
+        # TODO: products are imported as inactive (templates are active though)
         mapper = self.unit_for(IsActiveProductImportMapper)
         return mapper.map_record(record).values(**self.options)
 
@@ -467,7 +512,7 @@ class ProductImportMapper(ImportMapper):
 
     @mapping
     def categories(self, record):
-        mag_categories = record['categories']
+        mag_categories = record.get('categories', record['category_ids'])
         binder = self.binder_for('magento.product.category')
 
         category_ids = []
@@ -509,6 +554,28 @@ class ProductImportMapper(ImportMapper):
             bundle_mapper = self.unit_for(BundleProductImportMapper)
             return bundle_mapper.map_record(record).values(**self.options)
 
+    @only_create
+    @mapping
+    def openerp_id(self, record):
+        """ Will bind the product to an existing one with the same code """
+        product = self.env['product.product'].search(
+            [('default_code', '=', record['sku'])], limit=1)
+        if product:
+            return {'openerp_id': product.id}
+
+
+@magento2000
+class ProductImportMapper2000(ProductImportMapper):
+
+    @mapping
+    def website_ids(self, record):
+        # https://github.com/magento/magento2/issues/3864
+        return {}
+
+    @mapping
+    def magento_id(self, record):
+        return {'magento_id': record['sku']}
+
 
 @magento
 class ProductImporter(MagentoImporter):
@@ -528,7 +595,8 @@ class ProductImporter(MagentoImporter):
         """ Import the dependencies for the record"""
         record = self.magento_record
         # import related categories
-        for mag_category_id in record['categories']:
+        for mag_category_id in record.get(
+                'categories', record['category_ids']):
             self._import_dependency(mag_category_id,
                                     'magento.product.category')
         if record['type_id'] == 'bundle':
@@ -586,7 +654,8 @@ class ProductImporter(MagentoImporter):
         translation_importer.run(self.magento_id, binding.id,
                                  mapper_class=ProductImportMapper)
         image_importer = self.unit_for(CatalogImageImporter)
-        image_importer.run(self.magento_id, binding.id)
+        image_importer.run(self.magento_id, binding.id,
+                           data=self.magento_record)
 
         if self.magento_record['type_id'] == 'bundle':
             bundle_importer = self.unit_for(BundleImporter)
@@ -594,6 +663,22 @@ class ProductImporter(MagentoImporter):
 
 
 ProductImport = ProductImporter  # deprecated
+
+
+@magento2000
+class ProductImporter2000(ProductImporter):
+
+    def _get_binding(self):
+        return self.binder.to_openerp(self.magento_record['sku'], browse=True)
+
+    def _import_bundle_dependencies(self):
+        """ Import the dependencies for a Bundle """
+        for product_link in [
+                product_link for option in self.magento_record[
+                    'extension_attributes']['bundle_product_options']
+                for product_link in option['product_links']]:
+            self._import_dependency(product_link['sku'],
+                                    'magento.product.product')
 
 
 @magento
@@ -612,9 +697,9 @@ class IsActiveProductImportMapper(ImportMapper):
     @mapping
     def is_active(self, record):
         """Check if the product is active in Magento
-        and set active flag in OpenERP
-        status == 1 in Magento means active"""
-        return {'active': (record.get('status') == '1')}
+        and set active flag in Odoo. Status == 1 in Magento means active.
+        2.0 REST API returns an integer, 1.x a string. """
+        return {'active': (record.get('status') in ('1', 1))}
 
 
 @magento

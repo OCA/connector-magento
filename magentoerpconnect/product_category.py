@@ -32,11 +32,13 @@ from .unit.backend_adapter import (GenericAdapter,
                                    MAGENTO_DATETIME_FORMAT,
                                    )
 from .unit.import_synchronizer import (DelayedBatchImporter,
+                                       DirectBatchImporter,
                                        MagentoImporter,
                                        TranslationImporter,
                                        AddCheckpoint,
                                        )
-from .backend import magento
+from .backend import magento, magento1700, magento2000
+from .connector import get_environment
 
 _logger = logging.getLogger(__name__)
 
@@ -78,6 +80,8 @@ class ProductCategory(models.Model):
 class ProductCategoryAdapter(GenericAdapter):
     _model_name = 'magento.product.category'
     _magento_model = 'catalog_category'
+    _magento2_model = 'categories'
+    _magento2_key = 'id'
     _admin_path = '/{model}/index/'
 
     def _call(self, method, arguments):
@@ -109,6 +113,9 @@ class ProductCategoryAdapter(GenericAdapter):
             filters.setdefault('updated_at', {})
             filters['updated_at']['to'] = to_date.strftime(dt_fmt)
 
+        if self.magento.version == '2.0':
+            return super(ProductCategoryAdapter, self).search(filters=filters)
+
         return self._call('oerp_catalog_category.search',
                           [filters] if filters else [{}])
 
@@ -117,6 +124,10 @@ class ProductCategoryAdapter(GenericAdapter):
 
         :rtype: dict
         """
+
+        if self.magento.version == '2.0':
+            # TODO: storeview context in mag 2.0
+            return super(ProductCategoryAdapter, self).read(id, attributes)
         return self._call('%s.info' % self._magento_model,
                           [int(id), storeview_id, attributes])
 
@@ -125,6 +136,9 @@ class ProductCategoryAdapter(GenericAdapter):
 
         :rtype: dict
         """
+        if self.magento.version == '2.0':
+            raise NotImplementedError  # TODO
+
         def filter_ids(tree):
             children = {}
             if tree['children']:
@@ -139,27 +153,41 @@ class ProductCategoryAdapter(GenericAdapter):
         return filter_ids(tree)
 
     def move(self, categ_id, parent_id, after_categ_id=None):
+        if self.magento.version == '2.0':
+            return self._call(
+                '%s/%s/move' % (self._magento2_model, categ_id), {
+                    'parent_id': parent_id,
+                    'after_id': after_categ_id,
+                })
         return self._call('%s.move' % self._magento_model,
                           [categ_id, parent_id, after_categ_id])
 
     def get_assigned_product(self, categ_id):
+        if self.magento.version == '2.0':
+            raise NotImplementedError  # TODO
         return self._call('%s.assignedProducts' % self._magento_model,
                           [categ_id])
 
     def assign_product(self, categ_id, product_id, position=0):
+        if self.magento.version == '2.0':
+            raise NotImplementedError  # TODO
         return self._call('%s.assignProduct' % self._magento_model,
                           [categ_id, product_id, position, 'id'])
 
     def update_product(self, categ_id, product_id, position=0):
+        if self.magento.version == '2.0':
+            raise NotImplementedError  # TODO
         return self._call('%s.updateProduct' % self._magento_model,
                           [categ_id, product_id, position, 'id'])
 
     def remove_product(self, categ_id, product_id):
+        if self.magento.version == '2.0':
+            raise NotImplementedError  # TODO
         return self._call('%s.removeProduct' % self._magento_model,
                           [categ_id, product_id, 'id'])
 
 
-@magento
+@magento1700
 class ProductCategoryBatchImporter(DelayedBatchImporter):
     """ Import the Magento Product Categories.
 
@@ -201,6 +229,29 @@ class ProductCategoryBatchImporter(DelayedBatchImporter):
 
 
 ProductCategoryBatchImport = ProductCategoryBatchImporter  # deprecated
+
+
+@magento2000
+class ProductCategoryBatchImporter2000(DirectBatchImporter):
+    """ Only a full tree of categories can be retrieved. """
+    _model_name = ['magento.product.category']
+
+    def run(self, filters=None):
+        """ Run the synchronization """
+
+        env = get_environment(
+            self.session, self.model._name, self.backend_record.id)
+        importer = env.get_connector_unit(MagentoImporter)
+
+        tree = self.backend_adapter.search_read()
+
+        def import_branch(branch):
+            children = branch.pop('children_data', [])
+            importer.run(branch['id'], data=branch)
+            for child in children:
+                import_branch(child)
+
+        import_branch(tree)
 
 
 @magento
@@ -269,3 +320,11 @@ class ProductCategoryImportMapper(ImportMapper):
                                "magento id %s is not imported." %
                                record['parent_id'])
         return {'parent_id': category_id, 'magento_parent_id': mag_cat_id}
+
+
+@magento2000
+class ProductCategoryImportMapper2000(ProductCategoryImportMapper):
+
+    @mapping
+    def magento_id(self, record):
+        return {'magento_id': record['id']}

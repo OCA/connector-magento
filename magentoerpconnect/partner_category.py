@@ -26,7 +26,7 @@ from openerp.addons.connector.unit.mapper import (mapping,
                                                   )
 from .unit.backend_adapter import GenericAdapter
 from .unit.import_synchronizer import DelayedBatchImporter
-from .backend import magento
+from .backend import magento, magento2000
 
 
 class ResPartnerCategory(models.Model):
@@ -57,6 +57,9 @@ class MagentoResPartnerCategory(models.Model):
 class PartnerCategoryAdapter(GenericAdapter):
     _model_name = 'magento.res.partner.category'
     _magento_model = 'ol_customer_groups'
+    _magento2_model = 'customerGroups'
+    _magento2_search = 'customerGroups/search'
+    _magento2_key = 'id'
     _admin_path = '/customer_group/edit/id/{id}'
 
     def search(self, filters=None):
@@ -65,6 +68,8 @@ class PartnerCategoryAdapter(GenericAdapter):
 
         :rtype: list
         """
+        if self.magento.version == '2.0':
+            return super(PartnerCategoryAdapter, self).search(filters=filters)
         return [int(row['customer_group_id']) for row
                 in self._call('%s.list' % self._magento_model,
                               [filters] if filters else [{}])]
@@ -90,7 +95,7 @@ class PartnerCategoryImportMapper(ImportMapper):
 
     @mapping
     def magento_id(self, record):
-        return {'magento_id': record['customer_group_id']}
+        return {'magento_id': record.get('id') or record['customer_group_id']}
 
     @mapping
     def backend_id(self, record):
@@ -99,10 +104,20 @@ class PartnerCategoryImportMapper(ImportMapper):
     @only_create
     @mapping
     def openerp_id(self, record):
-        """ Will bind the category on a existing one with the same name."""
+        """ Will bind the category on a existing one with the same name.
+        The corresponding field changed to 'code' in 2.0 """
+        name = record.get('code') or record['customer_group_code']
         existing = self.env['res.partner.category'].search(
-            [('name', '=', record['customer_group_code'])],
-            limit=1,
-        )
+            [('name', '=', name)], limit=1)
         if existing:
             return {'openerp_id': existing.id}
+
+
+@magento2000
+class PartnerCategoryImportMapper2000(PartnerCategoryImportMapper):
+    _model_name = 'magento.res.partner.category'
+
+    direct = [
+        ('code', 'name'),
+        ('tax_class_id', 'tax_class_id'),
+    ]

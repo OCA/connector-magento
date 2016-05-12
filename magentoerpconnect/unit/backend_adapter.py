@@ -78,12 +78,14 @@ def output_recorder(filename):
 
 class MagentoLocation(object):
 
-    def __init__(self, location, username, password,
-                 use_custom_api_path=False):
+    def __init__(self, location, username, password, version,
+                 use_custom_api_path=False, verify_ssl=True):
         self._location = location
         self.username = username
         self.password = password
         self.use_custom_api_path = use_custom_api_path
+        self.version = version
+        self.verify_ssl = verify_ssl
 
         self.use_auth_basic = False
         self.auth_basic_username = None
@@ -116,7 +118,9 @@ class MagentoCRUDAdapter(CRUDAdapter):
             backend.location,
             backend.username,
             backend.password,
-            use_custom_api_path=backend.use_custom_api_path)
+            backend.version,
+            use_custom_api_path=backend.use_custom_api_path,
+            verify_ssl=backend.verify_ssl)
         if backend.use_auth_basic:
             magento.use_auth_basic = True
             magento.auth_basic_username = backend.auth_basic_username
@@ -149,14 +153,17 @@ class MagentoCRUDAdapter(CRUDAdapter):
         """ Delete a record on the external system """
         raise NotImplementedError
 
-    def _call(self, method, arguments):
+    def _call(self, method, arguments=None):
         try:
             custom_url = self.magento.use_custom_api_path
+            protocol = 'rest' if self.magento.version == '2.0' else 'xmlrpc'
             _logger.debug("Start calling Magento api %s", method)
             with magentolib.API(self.magento.location,
                                 self.magento.username,
                                 self.magento.password,
-                                full_url=custom_url) as api:
+                                protocol=protocol,
+                                full_url=custom_url,
+                                verify_ssl=self.magento.verify_ssl) as api:
                 # When Magento is installed on PHP 5.4+, the API
                 # may return garble data if the arguments contain
                 # trailing None.
@@ -199,14 +206,78 @@ class GenericAdapter(MagentoCRUDAdapter):
 
     _model_name = None
     _magento_model = None
+    _magento2_model = None
+    _magento2_search = None
+    _magento2_key = None
     _admin_path = None
+
+    @staticmethod
+    def get_searchCriteria(filters):
+        """ Craft Magento 2.0 searchCriteria from filters, for example:
+
+        'searchCriteria[filter_groups][0][filters][0][field]': 'website_id',
+        'searchCriteria[filter_groups][0][filters][0][value]': '1,2',
+        'searchCriteria[filter_groups][0][filters][0][condition_type]': 'in',
+
+        Presumably, filter_groups are joined with AND, while filters in the
+        same group are joined with OR (not supported here).
+        """
+        filters = filters or {}
+        res = {}
+        count = 0
+        expr = 'searchCriteria[filter_groups][%s][filters][0][%s]'
+        # http://devdocs.magento.com/guides/v2.0/howdoi/webapi/\
+        #    search-criteria.html
+        operators = [
+            'eq', 'finset', 'from', 'gt', 'gteq', 'in', 'like', 'lt',
+            'lteq', 'moreq', 'neq', 'nin', 'notnull', 'null', 'to']
+        for field in filters.keys():
+            for op in filters[field].keys():
+                assert op in operators
+                value = filters[field][op]
+                if isinstance(value, (list, set)):
+                    value = ','.join([unicode(v) for v in value])
+                res.update({
+                    expr % (count, 'field'): field,
+                    expr % (count, 'condition_type'): op,
+                    expr % (count, 'value'): value,
+                })
+                count += 1
+        _logger.debug('searchCriteria %s from %s', res, filters)
+        return res if res else {'searchCriteria': ''}
 
     def search(self, filters=None):
         """ Search records according to some criterias
-        and returns a list of ids
+        and returns a list of unique identifiers.
+
+        2.0: query the resource to return the key field for all records.
+        Filter out the 0, which designates a magic value, such as the global
+        scope for websites, store groups and store views, or the category for
+        customers that have not yet logged in.
+
+        /search APIs return a dictionary with a top level 'items' key.
+        Repository APIs return a list of items.
 
         :rtype: list
         """
+        if self.magento.version == '2.0':
+            key = self._magento2_key or 'id'
+            params = {}
+            if self._magento2_search:
+                params['fields'] = 'items[%s]' % key
+                params.update(self.get_searchCriteria(filters))
+            else:
+                params['fields'] = key
+                if filters:
+                    raise NotImplementedError  # Unexpected much?
+            res = self._call(
+                self._magento2_search or self._magento2_model,
+                params)
+            if 'items' in res:
+                res = res['items'] or []
+            return [item[key] for item in res if item[key] != 0]
+
+        # 1.x
         return self._call('%s.search' % self._magento_model,
                           [filters] if filters else [{}])
 
@@ -215,6 +286,22 @@ class GenericAdapter(MagentoCRUDAdapter):
 
         :rtype: dict
         """
+        if self.magento.version == '2.0':
+
+            def escape(term):
+                if isinstance(term, basestring):
+                    return term.replace('+', '%2B')
+                return term
+
+            if attributes:
+                raise NotImplementedError
+            if self._magento2_key:
+                return self._call('%s/%s' % (self._magento2_model, escape(id)),
+                                  attributes)
+            else:
+                res = self._call(self._magento2_model)
+                return next(record for record in res if record['id'] == id)
+
         arguments = [int(id)]
         if attributes:
             # Avoid to pass Null values in attributes. Workaround for
@@ -232,6 +319,18 @@ class GenericAdapter(MagentoCRUDAdapter):
     def search_read(self, filters=None):
         """ Search records according to some criterias
         and returns their information"""
+        if self.magento.version == '2.0':
+            params = {}
+            if self._magento2_search:
+                params.update(self.get_searchCriteria(filters))
+            else:
+                if filters:
+                    raise NotImplementedError  # Unexpected much?
+            res = self._call(
+                self._magento2_search or self._magento2_model,
+                params)
+            return res
+
         return self._call('%s.list' % self._magento_model, [filters])
 
     def create(self, data):

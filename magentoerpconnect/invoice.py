@@ -266,6 +266,8 @@ def export_invoice_paid(session, model_name, record_id):
 def export_invoice(session, model_name, record_id):
     """ Export a validated or paid invoice. """
     invoice = session.env[model_name].browse(record_id)
+    if invoice.backend_id.version == '2.0':
+        return  # TODO
     backend_id = invoice.backend_id.id
     env = get_environment(session, model_name, backend_id)
     invoice_exporter = env.get_connector_unit(MagentoInvoiceExporter)

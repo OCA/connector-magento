@@ -219,6 +219,8 @@ def picking_out_done(session, model_name, record_id, picking_method):
     if not sale:
         return
     for magento_sale in sale.magento_bind_ids:
+        if magento_sale.backend_id.version == '2.0':
+            continue  # TODO
         session.env['magento.stock.picking'].create({
             'backend_id': magento_sale.backend_id.id,
             'openerp_id': picking.id,
