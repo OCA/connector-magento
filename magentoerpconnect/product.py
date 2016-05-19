@@ -322,7 +322,7 @@ class CatalogImageImporter(Importer):
             try:
                 position = int(image['position'])
             except ValueError:
-                position = sys.maxint
+                position = sys.maxsize
             return (primary, -position)
         return sorted(images, key=priority)
 

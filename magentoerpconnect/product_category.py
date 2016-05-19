@@ -194,8 +194,9 @@ class ProductCategoryBatchImporter(DelayedBatchImporter):
                 # However, importers have to ensure that their parent is
                 # there and import it if it doesn't exist
                 if updated_ids is None or node_id in updated_ids:
-                    self._import_record(node_id, priority=base_priority+level)
-                import_nodes(children, level=level+1)
+                    self._import_record(
+                        node_id, priority=base_priority + level)
+                import_nodes(children, level=level + 1)
         tree = self.backend_adapter.tree()
         import_nodes(tree)
 
