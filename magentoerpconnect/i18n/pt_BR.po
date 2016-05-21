@@ -4,20 +4,21 @@
 # 
 # Translators:
 # Antonio Trueba, 2016
-# Davor Bojkić <bole@dajmi5.com>, 2015
+# Bole <bole@dajmi5.com>, 2015
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2012,2014
 # Gustavo Lepri <gustavolepri@gmail.com>, 2015
 # Hotellook, 2014
 # Matjaž Mozetič <m.mozetic@matmoz.si>, 2015
+# Paulo Ricardo <ti@shoppingescritorio.com.br>, 2016
 # Rudolf Schnapka <rs@techno-flex.de>, 2015-2016
 # Thomas A. Jaeger, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-03-31 06:24+0000\n"
-"PO-Revision-Date: 2016-03-16 08:10+0000\n"
-"Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
+"POT-Creation-Date: 2016-04-14 03:34+0000\n"
+"PO-Revision-Date: 2016-05-16 17:02+0000\n"
+"Last-Translator: Paulo Ricardo <ti@shoppingescritorio.com.br>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,12 +34,12 @@ msgstr "Campo 'order_id' no Magento"
 #. module: magentoerpconnect
 #: view:magento.product.product:magentoerpconnect.view_magento_product_form
 msgid "(recompute)"
-msgstr ""
+msgstr "(recalcular)"
 
 #. module: magentoerpconnect
 #: sql_constraint:magento.account.invoice:0
 msgid "A Magento binding for this invoice already exists."
-msgstr ""
+msgstr "Já existe uma ligação Magento para essa fatura."
 
 #. module: magentoerpconnect
 #: sql_constraint:magento.backend:0
@@ -78,7 +79,7 @@ msgstr "API"
 #. module: magentoerpconnect
 #: field:magento.address,is_magento_order_address:0
 msgid "Address from a Magento Order"
-msgstr ""
+msgstr "Endereço de uma Ordem do Magento"
 
 #. module: magentoerpconnect
 #: field:magento.backend,admin_location:0
@@ -88,7 +89,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: view:magento.backend:magentoerpconnect.view_magento_backend_form
 msgid "Advanced Configuration"
-msgstr ""
+msgstr "Configurações Avançadas"
 
 #. module: magentoerpconnect
 #: code:addons/magentoerpconnect/stock_picking.py:173
@@ -118,12 +119,12 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.backend,account_analytic_id:0
 msgid "Analytic account"
-msgstr ""
+msgstr "Conta Analítica"
 
 #. module: magentoerpconnect
 #: model:ir.ui.menu,name:magentoerpconnect.menu_magento_backend
 msgid "Backends"
-msgstr ""
+msgstr "Backends"
 
 #. module: magentoerpconnect
 #: field:magento.backend,auth_basic_password:0
@@ -617,7 +618,7 @@ msgstr ""
 #: field:magento.stock.picking,backend_id:0 field:magento.store,backend_id:0
 #: field:magento.storeview,backend_id:0 field:magento.website,backend_id:0
 msgid "Magento Backend"
-msgstr ""
+msgstr "Magento Backend"
 
 #. module: magentoerpconnect
 #: model:ir.actions.act_window,name:magentoerpconnect.action_magento_backend
@@ -784,7 +785,7 @@ msgstr ""
 #: view:magento.website:magentoerpconnect.view_magento_website_form
 #: view:magento.website:magentoerpconnect.view_magento_website_tree
 msgid "Magento Website"
-msgstr ""
+msgstr "Magento Website"
 
 #. module: magentoerpconnect
 #: model:ir.actions.act_window,name:magentoerpconnect.action_magento_website
@@ -1202,56 +1203,56 @@ msgstr ""
 #. module: magentoerpconnect
 #: model:sale.exception,name:magentoerpconnect.excep_wrong_total_amount
 msgid "Total Amount differs from Magento"
-msgstr ""
+msgstr "Valor total é diferente do Magento"
 
 #. module: magentoerpconnect
 #: model:sale.exception,name:magentoerpconnect.excep_wrong_total_amount_tax
 msgid "Total Tax Amount differs from Magento"
-msgstr ""
+msgstr "Valor total do imposto é diferente do Magento"
 
 #. module: magentoerpconnect
 #: field:magento.sale.order,total_amount:0
 msgid "Total amount"
-msgstr ""
+msgstr "Valor Total"
 
 #. module: magentoerpconnect
 #: field:magento.sale.order,total_amount_tax:0
 msgid "Total amount w. tax"
-msgstr ""
+msgstr "Valor total imposto"
 
 #. module: magentoerpconnect
 #: code:addons/magentoerpconnect/magento_model.py:641
 #, python-format
 msgid "Undefined"
-msgstr ""
+msgstr "Indefinido"
 
 #. module: magentoerpconnect
 #: view:magento.backend:magentoerpconnect.view_magento_backend_form
 msgid "Update"
-msgstr ""
+msgstr "Atualizar"
 
 #. module: magentoerpconnect
 #: view:magento.backend:magentoerpconnect.view_magento_backend_form
 msgid "Update all the products stock quantities"
-msgstr ""
+msgstr "Atualizar a quantidade de estoque de todos os produtos"
 
 #. module: magentoerpconnect
 #: field:magento.address,updated_at:0
 #: field:magento.product.product,updated_at:0
 #: field:magento.res.partner,updated_at:0
 msgid "Updated At (on Magento)"
-msgstr ""
+msgstr "Atualizado em (no Magento)"
 
 #. module: magentoerpconnect
 #: selection:magento.product.product,backorders:0
 #: selection:magento.product.product,manage_stock:0
 msgid "Use Default Config"
-msgstr ""
+msgstr "Usar Configurações Padrão"
 
 #. module: magentoerpconnect
 #: field:magento.backend,use_auth_basic:0
 msgid "Use HTTP Auth Basic"
-msgstr ""
+msgstr "Usar Autenticação Básica HTTP"
 
 #. module: magentoerpconnect
 #: help:magento.backend,use_auth_basic:0
@@ -1259,47 +1260,47 @@ msgid ""
 "Use a Basic Access Authentication for the API. The Magento server could be "
 "configured to restrict access using a HTTP authentication based on a "
 "username and a password."
-msgstr ""
+msgstr "Use uma autenticação de acesso básico para o API. O servidor Magento pode ser configurado para restringir o acesso usando a autenticação HTTP baseado em um nome de usuário e uma senha."
 
 #. module: magentoerpconnect
 #: selection:magento.store,create_invoice_on:0
 #: selection:payment.method,create_invoice_on:0
 msgid "Validate"
-msgstr ""
+msgstr "Validar"
 
 #. module: magentoerpconnect
 #: field:magento.backend,version:0
 msgid "Version"
-msgstr ""
+msgstr "Versão"
 
 #. module: magentoerpconnect
 #: field:magento.backend,warehouse_id:0
 msgid "Warehouse"
-msgstr ""
+msgstr "Armazém"
 
 #. module: magentoerpconnect
 #: help:magento.backend,warehouse_id:0
 msgid "Warehouse used to compute the stock quantities."
-msgstr ""
+msgstr "Armazém usado para calcular as quantidades de estoque."
 
 #. module: magentoerpconnect
 #: field:magento.backend,website_ids:0
 msgid "Website"
-msgstr ""
+msgstr "Website"
 
 #. module: magentoerpconnect
 #: model:ir.ui.menu,name:magentoerpconnect.menu_magento_website
 #: view:magento.backend:magentoerpconnect.view_magento_backend_form
 #: field:magento.product.product,website_ids:0
 msgid "Websites"
-msgstr ""
+msgstr "Websites"
 
 #. module: magentoerpconnect
 #: help:magento.storeview,import_orders_from_date:0
 msgid ""
 "do not consider non-imported sale orders before this date. Leave empty to "
 "import all sale orders"
-msgstr ""
+msgstr "Não considerar ordens de vendas não importadas antes desta data. Deixe em branco para importar todas as ordens de venda"
 
 #. module: magentoerpconnect
 #: view:magento.backend:magentoerpconnect.view_magento_backend_form
