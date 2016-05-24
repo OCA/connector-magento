@@ -71,11 +71,11 @@ class MagentoProductProduct(models.Model):
         return [
             ('simple', 'Simple Product'),
             ('configurable', 'Configurable Product'),
+            ('virtual', 'Virtual Product'),
+            ('downloadable', 'Downloadable Product'),
             # XXX activate when supported
             # ('grouped', 'Grouped Product'),
-            # ('virtual', 'Virtual Product'),
             # ('bundle', 'Bundle Product'),
-            # ('downloadable', 'Downloadable Product'),
         ]
 
     openerp_id = fields.Many2one(comodel_name='product.product',
@@ -447,6 +447,8 @@ class ProductImportMapper(ImportMapper):
     def type(self, record):
         if record['type_id'] == 'simple':
             return {'type': 'product'}
+        elif record['type_id'] in ('virtual', 'downloadable'):
+            return {'type': 'service'}
         return
 
     @mapping
