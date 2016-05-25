@@ -5,7 +5,7 @@
             <field name="digits">3</field>
         </record>
 
-        <record forcecreate="True" id="ir_cron_import_sale_orders" model="ir.cron">
+        <record model="ir.cron" id="ir_cron_import_sale_orders" forcecreate="True">
             <field name="name">Magento - Import Sales Orders</field>
             <field eval="False" name="active"/>
             <field name="user_id" ref="base.user_root"/>
@@ -18,7 +18,7 @@
             <field eval="'()'" name="args"/>
         </record>
 
-        <record forcecreate="True" id="ir_cron_import_customer_groups" model="ir.cron">
+        <record model="ir.cron" id="ir_cron_import_customer_groups" forcecreate="True">
             <field name="name">Magento - Import Customer Groups</field>
             <field eval="False" name="active"/>
             <field name="user_id" ref="base.user_root"/>
@@ -31,7 +31,7 @@
             <field eval="'()'" name="args"/>
         </record>
 
-        <record forcecreate="True" id="ir_cron_import_partners" model="ir.cron">
+        <record model="ir.cron" id="ir_cron_import_partners" forcecreate="True">
             <field name="name">Magento - Import Partners</field>
             <field eval="False" name="active"/>
             <field name="user_id" ref="base.user_root"/>
@@ -44,7 +44,7 @@
             <field eval="'()'" name="args"/>
         </record>
 
-        <record forcecreate="True" id="ir_cron_import_product_categories" model="ir.cron">
+        <record model="ir.cron" id="ir_cron_import_product_categories" forcecreate="True">
             <field name="name">Magento -  Import Product Categories</field>
             <field eval="False" name="active"/>
             <field name="user_id" ref="base.user_root"/>
@@ -57,7 +57,7 @@
             <field eval="'()'" name="args"/>
         </record>
         
-        <record forcecreate="True" id="ir_cron_import_product_product" model="ir.cron">
+        <record model="ir.cron" id="ir_cron_import_product_product" forcecreate="True">
             <field name="name">Magento -  Import Products</field>
             <field eval="False" name="active"/>
             <field name="user_id" ref="base.user_root"/>
@@ -70,7 +70,7 @@
             <field eval="'()'" name="args"/>
         </record>
 
-        <record forcecreate="True" id="ir_cron_update_product_stock_qty" model="ir.cron">
+        <record model="ir.cron" id="ir_cron_update_product_stock_qty" forcecreate="True">
             <field name="name">Magento -  Update Stock Quantities</field>
             <field eval="False" name="active"/>
             <field name="user_id" ref="base.user_root"/>
