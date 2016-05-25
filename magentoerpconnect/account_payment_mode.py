@@ -1,9 +1,13 @@
 # -*- coding: utf-8 -*-
+# © 2013 Guewen Baconnier,Camptocamp SA,Akretion
+# © 2016 Sodexis
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+
 from openerp import models, fields
 
 
-class PaymentMethod(models.Model):
-    _inherit = "payment.method"
+class AccountPaymentMode(models.Model):
+    _inherit = "account.payment.mode"
 
     create_invoice_on = fields.Selection(
         selection=[('open', 'Validate'),
