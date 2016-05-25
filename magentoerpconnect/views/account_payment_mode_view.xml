@@ -1,11 +1,10 @@
 <?xml version ="1.0" encoding="utf-8"?>
 
-<openerp>
-  <data>
+<odoo>
 
-    <record id="payment_method_view_form" model="ir.ui.view">
-      <field name="model">payment.method</field>
-      <field name="inherit_id" ref="connector_ecommerce.payment_method_view_form"/>
+    <record id="account_payment_mode_form_inherit" model="ir.ui.view">
+      <field name="model">account.payment.mode</field>
+      <field name="inherit_id" ref="connector_ecommerce.account_payment_mode_form_inherit"/>
       <field name="arch" type="xml">
 
         <group name="import_rule" position="after">
@@ -17,5 +16,4 @@
       </field>
     </record>
 
-  </data>
-</openerp>
+</odoo>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data noupdate="1">
         <record id="product.decimal_discount" model="decimal.precision">
             <field name="digits">3</field>
@@ -117,4 +117,4 @@ if order.magento_bind_ids and abs(order.amount_tax - order.magento_bind_ids[0].t
         </record>
 
     </data>
-</openerp>
+</odoo>
