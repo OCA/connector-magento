@@ -395,18 +395,18 @@ class SaleImportRule(ConnectorUnit):
         :rtype: boolean
         """
         payment_method = record['payment']['method']
-        method = self.env['payment.method'].search(
+        method = self.env['account.payment.mode'].search(
             [('name', '=', payment_method)],
             limit=1,
         )
         if not method:
             raise FailedJobError(
-                "The configuration is missing for the Payment Method '%s'.\n\n"
+                "The configuration is missing for the Payment Mode '%s'.\n\n"
                 "Resolution:\n"
                 "- Go to "
-                "'Sales > Configuration > Sales > Customer Payment Method\n"
-                "- Create a new Payment Method with name '%s'\n"
-                "-Eventually  link the Payment Method to an existing Workflow "
+                "'Accounting > Configuration > Management > Payment Modes\n"
+                "- Create a new Payment Mode with name '%s'\n"
+                "-Eventually  link the Payment Mode to an existing Workflow "
                 "Process or create a new one." % (payment_method,
                                                   payment_method))
         self._rule_global(record, method)
@@ -519,14 +519,14 @@ class SaleOrderImportMapper(ImportMapper):
     @mapping
     def payment(self, record):
         record_method = record['payment']['method']
-        method = self.env['payment.method'].search(
+        method = self.env['account.payment.mode'].search(
             [['name', '=', record_method]],
             limit=1,
         )
         assert method, ("method %s should exist because the import fails "
                         "in SaleOrderImporter._before_import when it is "
                         " missing" % record['payment']['method'])
-        return {'payment_method_id': method.id}
+        return {'payment_mode_id': method.id}
 
     @mapping
     def shipping_method(self, record):
@@ -688,14 +688,6 @@ class SaleOrderImporter(MagentoImporter):
         rules = self.unit_for(SaleImportRule)
         rules.check(self.magento_record)
 
-    def _create_payment(self, binding):
-        if not binding.payment_method_id.journal_id:
-            return
-        amount = self.magento_record.get('payment', {}).get('amount_paid')
-        if amount:
-            amount = float(amount)  # magento gives a str
-            binding.openerp_id.automatic_payment(amount)
-
     def _link_parent_orders(self, binding):
         """ Link the magento.sale.order to its parent orders.
 
@@ -730,7 +722,6 @@ class SaleOrderImporter(MagentoImporter):
 
     def _after_import(self, binding):
         self._link_parent_orders(binding)
-        self._create_payment(binding)
         if binding.magento_parent_id:
             move_comment = self.unit_for(SaleOrderMoveComment)
             move_comment.move(binding)
@@ -965,7 +956,7 @@ class SaleOrderLineImportMapper(ImportMapper):
     _model_name = 'magento.sale.order.line'
 
     direct = [('qty_ordered', 'product_uom_qty'),
-              ('qty_ordered', 'product_uos_qty'),
+              ('qty_ordered', 'product_qty'),
               ('name', 'name'),
               ('item_id', 'magento_id'),
               ]

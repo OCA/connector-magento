@@ -293,7 +293,7 @@ class PartnerImportMapper(ImportMapper):
 
     @mapping
     def type(self, record):
-        return {'type': 'default'}
+        return {'type': 'contact'}
 
     @only_create
     @mapping
@@ -467,14 +467,12 @@ class BaseAddressImportMapper(ImportMapper):
         if not prefix:
             return
         title = self.env['res.partner.title'].search(
-            [('domain', '=', 'contact'),
-             ('shortcut', '=ilike', prefix)],
+            [('shortcut', '=ilike', prefix)],
             limit=1
         )
         if not title:
             title = self.env['res.partner.title'].create(
-                {'domain': 'contact',
-                 'shortcut': prefix,
+                {'shortcut': prefix,
                  'name': prefix,
                  }
             )
@@ -577,7 +575,7 @@ class AddressImporter(MagentoImporter):
             # it won't be imported as an independent address,
             # but will be linked with the main res.partner
             data['openerp_id'] = partner.id
-            data['type'] = 'default'
+            data['type'] = 'contact'
         else:
             data['parent_id'] = partner.id
             data['lang'] = partner.lang
