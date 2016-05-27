@@ -8,7 +8,8 @@ from openerp import _
 from openerp.addons.connector.queue.job import job, related_action
 from openerp.addons.connector.exception import FailedJobError
 from openerp.addons.connector.unit.synchronizer import Exporter
-from openerp.addons.connector_ecommerce.event import on_tracking_number_added
+from openerp.addons.connector_ecommerce.models.event import (
+    on_tracking_number_added)
 from .connector import get_environment
 from .backend import magento
 from .related_action import unwrap_binding

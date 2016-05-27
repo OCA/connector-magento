@@ -9,8 +9,10 @@ from openerp import models, fields, _
 from openerp.addons.connector.queue.job import job, related_action
 from openerp.addons.connector.unit.synchronizer import Exporter
 from openerp.addons.connector.event import on_record_create
-from openerp.addons.connector_ecommerce.event import (on_invoice_paid,
-                                                      on_invoice_validated)
+from openerp.addons.connector_ecommerce.models.event import (
+    on_invoice_paid,
+    on_invoice_validated
+)
 from openerp.addons.connector.exception import IDMissingInBackend
 from .unit.backend_adapter import GenericAdapter
 from .connector import get_environment
@@ -215,7 +217,7 @@ def invoice_create_bindings(session, model_name, record_id):
             # Check if invoice state matches configuration setting
             # for when to export an invoice
             magento_store = magento_sale.store_id
-            payment_method = sale.payment_method_id
+            payment_method = sale.payment_mode_id
             if payment_method and payment_method.create_invoice_on:
                 create_invoice = payment_method.create_invoice_on
             else:

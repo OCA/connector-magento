@@ -12,7 +12,7 @@ from openerp.addons.connector.event import on_record_create
 from openerp.addons.connector.exception import NothingToDoJob
 from openerp.addons.connector.unit.synchronizer import Exporter
 from openerp.addons.connector.exception import IDMissingInBackend
-from openerp.addons.connector_ecommerce.event import on_picking_out_done
+from openerp.addons.connector_ecommerce.models.event import on_picking_out_done
 from .unit.backend_adapter import GenericAdapter
 from .connector import get_environment
 from .backend import magento
