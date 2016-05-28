@@ -3,12 +3,21 @@
 # * customize_example
 # 
 # Translators:
+# Carles Antoli <carlesantoli@hotmail.com>, 2015
+# Christophe CHAUVET <christophe.chauvet@gmail.com>, 2015
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2010,2012,2014
 # Giacomo <giacomo.spettoli@gmail.com>, 2015
+# Giedrius Slavinskas <giedrius@inovera.lt>, 2012
+# Guewen Baconnier <guewen.baconnier@camptocamp.com>, 2015
+# Hotellook, 2014
+# Maxime Chambreuil <maxime.chambreuil@gmail.com>, 2015
+# Rudolf Schnapka <rs@techno-flex.de>, 2015-2016
+# Thomas A. Jaeger, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-07-22 09:38+0000\n"
+"POT-Creation-Date: 2016-05-21 09:43+0000\n"
 "PO-Revision-Date: 2015-08-02 23:04+0000\n"
 "Last-Translator: Giacomo <giacomo.spettoli@gmail.com>\n"
 "Language-Team: Italian (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/it/)\n"
@@ -29,7 +38,7 @@ msgid "Female"
 msgstr "Femmina"
 
 #. module: customize_example
-#: field:res.partner,gender:0
+#: field:magento.res.partner,gender:0 field:res.partner,gender:0
 msgid "Gender"
 msgstr "Genere"
 

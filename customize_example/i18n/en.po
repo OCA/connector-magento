@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-07-22 09:38+0000\n"
+"POT-Creation-Date: 2016-05-21 09:43+0000\n"
 "PO-Revision-Date: 2015-07-08 12:07+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: English (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/en/)\n"
@@ -28,7 +28,7 @@ msgid "Female"
 msgstr "Female"
 
 #. module: customize_example
-#: field:res.partner,gender:0
+#: field:magento.res.partner,gender:0 field:res.partner,gender:0
 msgid "Gender"
 msgstr "Gender"
 
