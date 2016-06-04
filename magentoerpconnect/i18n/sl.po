@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-05-21 09:43+0000\n"
-"PO-Revision-Date: 2016-05-27 04:53+0000\n"
+"POT-Creation-Date: 2016-05-28 09:49+0000\n"
+"PO-Revision-Date: 2016-05-30 08:51+0000\n"
 "Last-Translator: Matjaž Mozetič <m.mozetic@matmoz.si>\n"
 "Language-Team: Slovenian (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/sl/)\n"
 "MIME-Version: 1.0\n"
@@ -1529,7 +1529,7 @@ msgstr "Je različica proizvoda"
 #. module: magentoerpconnect
 #: help:magento.sale.order,invoiced:0
 msgid "It indicates that an invoice has been paid."
-msgstr ""
+msgstr "Oznaka, da je račun bil plačan."
 
 #. module: magentoerpconnect
 #: help:magento.sale.order,invoice_exists:0
@@ -3229,41 +3229,41 @@ msgstr "Znesek izračunan v OpenERP ne ustreza znesku iz Magento.\n\n Vzrok:\nDa
 #. module: magentoerpconnect
 #: help:magento.sale.order,amount_tax:0
 msgid "The tax amount."
-msgstr ""
+msgstr "Znesek davka"
 
 #. module: magentoerpconnect
 #: help:magento.sale.order,amount_total:0
 msgid "The total amount."
-msgstr ""
+msgstr "Skupni znesek"
 
 #. module: magentoerpconnect
 #: help:magento.product.product,volume:0
 msgid "The volume in m3."
-msgstr ""
+msgstr "Prostornina v m3"
 
 #. module: magentoerpconnect
 #: help:magento.product.product,property_account_expense:0
 msgid ""
 "This account will be used for invoices instead of the default one to value "
 "expenses for the current product."
-msgstr ""
+msgstr "Konto za račune namesto privzetega za vrednotenje stroškov trenutnega proizvoda."
 
 #. module: magentoerpconnect
 #: help:magento.product.product,property_account_income:0
 msgid ""
 "This account will be used for invoices instead of the default one to value "
 "sales for the current product."
-msgstr ""
+msgstr "Konto za račune namesto privzetega za vrednotenje prodaje trenutnega proizvoda."
 
 #. module: magentoerpconnect
 #: help:magento.product.category,property_account_expense_categ:0
 msgid "This account will be used for invoices to value expenses."
-msgstr ""
+msgstr "Konto za račune pri vrednotenju stroškov."
 
 #. module: magentoerpconnect
 #: help:magento.product.category,property_account_income_categ:0
 msgid "This account will be used for invoices to value sales."
-msgstr ""
+msgstr "Konto za račune pri vrednotenju prodaje."
 
 #. module: magentoerpconnect
 #: help:magento.address,property_account_payable:0
@@ -3271,7 +3271,7 @@ msgstr ""
 msgid ""
 "This account will be used instead of the default one as the payable account "
 "for the current partner"
-msgstr ""
+msgstr "Ta konto bo uporabljen namesto privzetega kot konto obveznosti za trenutnega partnerja."
 
 #. module: magentoerpconnect
 #: help:magento.address,property_account_receivable:0
@@ -3279,13 +3279,13 @@ msgstr ""
 msgid ""
 "This account will be used instead of the default one as the receivable "
 "account for the current partner"
-msgstr ""
+msgstr "Ta konto se bo uporabljal namesto privzetega konta terjatev za tega partnerja"
 
 #. module: magentoerpconnect
 #: help:magento.address,property_delivery_carrier:0
 #: help:magento.res.partner,property_delivery_carrier:0
 msgid "This delivery method will be used when invoicing from picking."
-msgstr ""
+msgstr "Metoda dostave, ki bo uporabljena pri neposrednem obračunu iz zbirnika."
 
 #. module: magentoerpconnect
 #: help:magento.address,image:0 help:magento.res.partner,image:0
@@ -3416,13 +3416,13 @@ msgstr "Časovni razmak"
 #. module: magentoerpconnect
 #: field:magento.address,title:0 field:magento.res.partner,title:0
 msgid "Title"
-msgstr ""
+msgstr "Naziv"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,amount_total:0
 #: field:magento.sale.order,amount_total:0
 msgid "Total"
-msgstr ""
+msgstr "Skupaj"
 
 #. module: magentoerpconnect
 #: model:sale.exception,name:magentoerpconnect.excep_wrong_total_amount
@@ -3433,17 +3433,17 @@ msgstr "Skupni znesek se pri Magento razlikuje"
 #: field:magento.address,total_invoiced:0
 #: field:magento.res.partner,total_invoiced:0
 msgid "Total Invoiced"
-msgstr ""
+msgstr "Skupaj obračunano"
 
 #. module: magentoerpconnect
 #: field:magento.address,debit:0 field:magento.res.partner,debit:0
 msgid "Total Payable"
-msgstr ""
+msgstr "Skupaj obveznosti"
 
 #. module: magentoerpconnect
 #: field:magento.address,credit:0 field:magento.res.partner,credit:0
 msgid "Total Receivable"
-msgstr ""
+msgstr "Skupaj terjatev"
 
 #. module: magentoerpconnect
 #: model:sale.exception,name:magentoerpconnect.excep_wrong_total_amount_tax
@@ -3458,7 +3458,7 @@ msgstr "Skupni znesek"
 #. module: magentoerpconnect
 #: help:magento.address,credit:0 help:magento.res.partner,credit:0
 msgid "Total amount this customer owes you."
-msgstr ""
+msgstr "Skupni znesek, ki vam ga dolguje ta stranka."
 
 #. module: magentoerpconnect
 #: field:magento.sale.order,total_amount_tax:0
@@ -3468,34 +3468,34 @@ msgstr "Skupni znesek brez davka"
 #. module: magentoerpconnect
 #: help:magento.address,debit:0 help:magento.res.partner,debit:0
 msgid "Total amount you have to pay to this supplier."
-msgstr ""
+msgstr "Skupni znesek za plačilo temu dobavitelju."
 
 #. module: magentoerpconnect
 #: field:magento.product.category,total_route_ids:0
 msgid "Total routes"
-msgstr ""
+msgstr "Skupaj prog"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,track_incoming:0
 msgid "Track Incoming Lots"
-msgstr ""
+msgstr "Sledenje vhodnih lotov"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,track_outgoing:0
 msgid "Track Outgoing Lots"
-msgstr ""
+msgstr "Slenenje izhodnih lotov"
 
 #. module: magentoerpconnect
 #: help:magento.stock.picking,recompute_pack_op:0
 msgid ""
 "True if reserved quants changed, which mean we might need to recompute the "
 "package operations"
-msgstr ""
+msgstr "Pravilno, če se rezervirani kvanti spremenijo, kar pomeni, da bi lahko bilo potrebno ponovno obdelati pakirne operacije"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,type:0
 msgid "Type"
-msgstr ""
+msgstr "Tip"
 
 #. module: magentoerpconnect
 #: code:addons/magentoerpconnect/magento_model.py:641
@@ -3508,38 +3508,38 @@ msgstr "Nedoločeno"
 msgid ""
 "Unique number of the invoice, computed automatically when the invoice is "
 "created."
-msgstr ""
+msgstr "Zaporedna številka računa, izračunana avtomatično ob nastanku računa."
 
 #. module: magentoerpconnect
 #: field:magento.sale.order.line,price_unit:0
 msgid "Unit Price"
-msgstr ""
+msgstr "Cena enote"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,uom_id:0
 #: field:magento.stock.picking,weight_uom_id:0
 msgid "Unit of Measure"
-msgstr ""
+msgstr "Enota mere"
 
 #. module: magentoerpconnect
 #: field:magento.sale.order.line,product_uom:0
 msgid "Unit of Measure "
-msgstr ""
+msgstr "Enota mere"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,uos_coeff:0
 msgid "Unit of Measure -> UOS Coeff"
-msgstr ""
+msgstr "Enota mere -> koef. prodajne EM"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,uos_id:0
 msgid "Unit of Sale"
-msgstr ""
+msgstr "Prodajna enota"
 
 #. module: magentoerpconnect
 #: help:magento.stock.picking,weight_uom_id:0
 msgid "Unit of measurement for Weight"
-msgstr ""
+msgstr "Enota mere za maso"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,message_unread:0
@@ -3549,12 +3549,12 @@ msgstr ""
 #: field:magento.sale.order,message_unread:0
 #: field:magento.stock.picking,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Neprebrana sporočila"
 
 #. module: magentoerpconnect
 #: field:magento.sale.order,amount_untaxed:0
 msgid "Untaxed Amount"
-msgstr ""
+msgstr "Neobdavčen znesek"
 
 #. module: magentoerpconnect
 #: view:magento.backend:magentoerpconnect.view_magento_backend_form
@@ -3576,13 +3576,13 @@ msgstr "Posodobljeno (na Magentu)"
 #. module: magentoerpconnect
 #: help:magento.backend,location:0
 msgid "Url to magento application"
-msgstr ""
+msgstr "URL do aplikacije Magento"
 
 #. module: magentoerpconnect
 #: field:magento.address,use_parent_address:0
 #: field:magento.res.partner,use_parent_address:0
 msgid "Use Company Address"
-msgstr ""
+msgstr "Uporabi naslov podjetja"
 
 #. module: magentoerpconnect
 #: selection:magento.product.product,backorders:0
@@ -3608,23 +3608,23 @@ msgstr "Uporabi osnovno overjanje dostopa za API. Magento strežnik se lahko nas
 msgid ""
 "Used to select automatically the right address according to the context in "
 "sales and purchases documents."
-msgstr ""
+msgstr "Uporabljeno za samodejno izbiro pravega naslova, glede na kontekst v prodajnih in nabavnih dokumentih."
 
 #. module: magentoerpconnect
 #: field:magento.backend,username:0
 msgid "Username"
-msgstr ""
+msgstr "Uporabniško ime"
 
 #. module: magentoerpconnect
 #: field:magento.address,user_ids:0 field:magento.res.partner,user_ids:0
 msgid "Users"
-msgstr ""
+msgstr "Uporabniki"
 
 #. module: magentoerpconnect
 #: field:magento.address,vat_subjected:0
 #: field:magento.res.partner,vat_subjected:0
 msgid "VAT Legal Statement"
-msgstr ""
+msgstr "DDV izpisek"
 
 #. module: magentoerpconnect
 #: selection:magento.store,create_invoice_on:0
@@ -3635,17 +3635,17 @@ msgstr "Overi"
 #. module: magentoerpconnect
 #: field:magento.product.product,price_extra:0
 msgid "Variant Extra Price"
-msgstr ""
+msgstr "Dodatek k ceni za varianto"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,image_variant:0
 msgid "Variant Image"
-msgstr ""
+msgstr "Slika variante"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,check_total:0
 msgid "Verification Total"
-msgstr ""
+msgstr "Skupaj za potrjevanje"
 
 #. module: magentoerpconnect
 #: field:magento.backend,version:0
@@ -3655,7 +3655,7 @@ msgstr "Verzija"
 #. module: magentoerpconnect
 #: field:magento.product.product,volume:0 field:magento.stock.picking,volume:0
 msgid "Volume"
-msgstr ""
+msgstr "Prostornina"
 
 #. module: magentoerpconnect
 #: field:magento.backend,warehouse_id:0
@@ -3672,17 +3672,17 @@ msgstr "Skladišče za obračun količin zaloge."
 #. module: magentoerpconnect
 #: field:magento.product.product,warranty:0
 msgid "Warranty"
-msgstr ""
+msgstr "Garancija"
 
 #. module: magentoerpconnect
 #: help:magento.backend,password:0
 msgid "Webservice password"
-msgstr ""
+msgstr "Geslo spletne storitve"
 
 #. module: magentoerpconnect
 #: help:magento.backend,username:0
 msgid "Webservice user"
-msgstr ""
+msgstr "Uporabnik spletne storitve"
 
 #. module: magentoerpconnect
 #: field:magento.address,website:0 field:magento.backend,website_ids:0
@@ -3693,7 +3693,7 @@ msgstr "Spletna stran"
 #. module: magentoerpconnect
 #: help:magento.address,website:0 help:magento.res.partner,website:0
 msgid "Website of Partner or Company"
-msgstr ""
+msgstr "Spletna stran partnerja"
 
 #. module: magentoerpconnect
 #: model:ir.ui.menu,name:magentoerpconnect.menu_magento_website
@@ -3706,7 +3706,7 @@ msgstr "Spletne strani"
 #: field:magento.sale.order.line,th_weight:0
 #: field:magento.stock.picking,weight:0
 msgid "Weight"
-msgstr ""
+msgstr "Masa"
 
 #. module: magentoerpconnect
 #: help:magento.product.category,property_stock_account_input_categ:0
@@ -3763,7 +3763,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.address,zip:0 field:magento.res.partner,zip:0
 msgid "Zip"
-msgstr ""
+msgstr "Poštna št."
 
 #. module: magentoerpconnect
 #: help:magento.storeview,import_orders_from_date:0
@@ -3790,7 +3790,7 @@ msgstr "mag-"
 #. module: magentoerpconnect
 #: help:magento.stock.picking,pack_operation_exist:0
 msgid "technical field for attrs in view"
-msgstr ""
+msgstr "tehnično polje za atribute prikaza"
 
 #. module: magentoerpconnect
 #: help:magento.stock.picking,quant_reserved_exist:0
@@ -3804,4 +3804,4 @@ msgstr ""
 #: field:magento.product.product,qty_available_text:0
 #: field:magento.res.partner,has_image:0
 msgid "unknown"
-msgstr ""
+msgstr "neznano"
