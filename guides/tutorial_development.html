@@ -9,7 +9,7 @@
     
     <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/bootswatch-3.3.4/united/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/bootswatch-3.3.6/united/bootstrap.min.css" type="text/css" />
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     
     <script type="text/javascript">
@@ -26,7 +26,7 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
     <link rel="top" title="Odoo Magento Connector  documentation" href="../index.html" />
     <link rel="next" title="Tutorial: customize the connector" href="tutorial_customize.html" />
@@ -294,7 +294,7 @@ the <code class="docutils literal"><span class="pre">Connector</span></code> add
 <li><code class="docutils literal"><span class="pre">on_record_write</span></code></li>
 <li><code class="docutils literal"><span class="pre">on_record_unlink</span></code></li>
 </ul>
-<p>If you need to create a new <a class="reference external" href="http://www.odoo-connector.com/api/api_event.html#connector.event.Event" title="(in Connector v)"><code class="xref py py-class docutils literal"><span class="pre">connector.event.Event</span></code></a>, please
+<p>If you need to create a new <a class="reference external" href="http://odoo-connector.com/api/api_event.html#connector.event.Event" title="(in Connector v)"><code class="xref py py-class docutils literal"><span class="pre">connector.event.Event</span></code></a>, please
 refer to the <code class="docutils literal"><span class="pre">Connector</span></code> documentation.</p>
 <p>When a function has to be run when an event is fired, it must be
 registered on this event. Those functions are called <code class="docutils literal"><span class="pre">Consumers</span></code>.</p>
@@ -312,7 +312,7 @@ which has to fire it:</p>
 <p class="first admonition-title">Note</p>
 <p class="last">The consumers always start with the arguments <code class="docutils literal"><span class="pre">session</span></code> and
 <code class="docutils literal"><span class="pre">model_name</span></code>. The next arguments vary, but they are defined
-by the <a class="reference external" href="http://www.odoo-connector.com/api/api_event.html#connector.event.Event" title="(in Connector v)"><code class="xref py py-class docutils literal"><span class="pre">connector.event.Event</span></code></a></p>
+by the <a class="reference external" href="http://odoo-connector.com/api/api_event.html#connector.event.Event" title="(in Connector v)"><code class="xref py py-class docutils literal"><span class="pre">connector.event.Event</span></code></a></p>
 </div>
 </div>
 <div class="section" id="find-the-connector-unit-for-a-model">
@@ -601,12 +601,12 @@ to use some of the hooks to change the behavior
 Refers to the importers already created in the module and to the base
 class
 <a class="reference internal" href="../api/api_synchronizer.html#openerp.addons.magentoerpconnect.unit.import_synchronizer.MagentoImporter" title="openerp.addons.magentoerpconnect.unit.import_synchronizer.MagentoImporter"><code class="xref py py-class docutils literal"><span class="pre">openerp.addons.magentoerpconnect.unit.import_synchronizer.MagentoImporter</span></code></a>.</p>
-<p>The synchronizer asks to the appropriate <a class="reference external" href="http://www.odoo-connector.com/api/api_mapper.html#connector.unit.mapper.Mapper" title="(in Connector v)"><code class="xref py py-class docutils literal"><span class="pre">Mapper</span></code></a>  to transform the data
-(in <code class="docutils literal"><span class="pre">_map_data</span></code>). Here is how we&#8217;ll create the <a class="reference external" href="http://www.odoo-connector.com/api/api_mapper.html#connector.unit.mapper.Mapper" title="(in Connector v)"><code class="xref py py-class docutils literal"><span class="pre">Mapper</span></code></a>.</p>
+<p>The synchronizer asks to the appropriate <a class="reference external" href="http://odoo-connector.com/api/api_mapper.html#connector.unit.mapper.Mapper" title="(in Connector v)"><code class="xref py py-class docutils literal"><span class="pre">Mapper</span></code></a>  to transform the data
+(in <code class="docutils literal"><span class="pre">_map_data</span></code>). Here is how we&#8217;ll create the <a class="reference external" href="http://odoo-connector.com/api/api_mapper.html#connector.unit.mapper.Mapper" title="(in Connector v)"><code class="xref py py-class docutils literal"><span class="pre">Mapper</span></code></a>.</p>
 </div>
 <div class="section" id="mapper">
 <h3><a class="toc-backref" href="#sections">Mapper</a><a class="headerlink" href="#mapper" title="Permalink to this headline">¶</a></h3>
-<p>The <a class="reference external" href="http://www.odoo-connector.com/api/api_mapper.html#connector.unit.mapper.Mapper" title="(in Connector v)"><code class="xref py py-class docutils literal"><span class="pre">connector.unit.mapper.Mapper</span></code></a> takes the record from Magento, and generates the Odoo
+<p>The <a class="reference external" href="http://odoo-connector.com/api/api_mapper.html#connector.unit.mapper.Mapper" title="(in Connector v)"><code class="xref py py-class docutils literal"><span class="pre">connector.unit.mapper.Mapper</span></code></a> takes the record from Magento, and generates the Odoo
 record. (or the reverse for the export Mappers)</p>
 <p>The mapper for the customer groups is as follows:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="nd">@magento</span>
@@ -631,7 +631,7 @@ record. (or the reverse for the export Mappers)</p>
 <li>Some mappings are in <code class="docutils literal"><span class="pre">direct</span></code> and some use a method with a
 <code class="docutils literal"><span class="pre">&#64;mapping</span></code> decorator.</li>
 <li>Methods allow to have more complex mappings. (see documentation on
-<a class="reference external" href="http://www.odoo-connector.com/api/api_mapper.html#connector.unit.mapper.Mapper" title="(in Connector v)"><code class="xref py py-class docutils literal"><span class="pre">Mapper</span></code></a>)</li>
+<a class="reference external" href="http://odoo-connector.com/api/api_mapper.html#connector.unit.mapper.Mapper" title="(in Connector v)"><code class="xref py py-class docutils literal"><span class="pre">Mapper</span></code></a>)</li>
 </ul>
 </div>
 <div class="section" id="binder">
@@ -679,7 +679,7 @@ normally all the Magento Models will use the same Binder, the so called
     </p>
     <p>
         &copy; Copyright 2013-2015, Odoo Community Association (OCA).<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.3.<br/>
     </p>
   </div>
 </footer>

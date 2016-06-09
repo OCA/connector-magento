@@ -9,7 +9,7 @@
     
     <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/bootswatch-3.3.4/united/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/bootswatch-3.3.6/united/bootstrap.min.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     
     <script type="text/javascript">
@@ -26,7 +26,7 @@
     <script type="text/javascript" src="../../_static/doctools.js"></script>
     <script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
     <link rel="top" title="Odoo Magento Connector  documentation" href="../../index.html" />
     <link rel="up" title="Module code" href="../index.html" />
@@ -934,7 +934,8 @@
 
     <span class="k">def</span> <span class="nf">_description_help</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">help</span> <span class="ow">and</span> <span class="n">env</span><span class="o">.</span><span class="n">lang</span><span class="p">:</span>
-            <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">,</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="n">field</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_field</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">,</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">model_name</span><span class="p">,</span> <span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
             <span class="n">trans</span> <span class="o">=</span> <span class="n">env</span><span class="p">[</span><span class="s1">&#39;ir.translation&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">_get_source</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="s1">&#39;help&#39;</span><span class="p">,</span> <span class="n">env</span><span class="o">.</span><span class="n">lang</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">trans</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">help</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">help</span>
@@ -1210,7 +1211,7 @@
         <span class="c1"># invalidate the fields that depend on self, and prepare recomputation</span>
         <span class="n">spec</span> <span class="o">=</span> <span class="p">[(</span><span class="bp">self</span><span class="p">,</span> <span class="n">records</span><span class="o">.</span><span class="n">_ids</span><span class="p">)]</span>
         <span class="k">for</span> <span class="n">field</span><span class="p">,</span> <span class="n">path</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_triggers</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">path</span> <span class="ow">and</span> <span class="n">field</span><span class="o">.</span><span class="n">store</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">path</span> <span class="ow">and</span> <span class="n">field</span><span class="o">.</span><span class="n">compute</span> <span class="ow">and</span> <span class="n">field</span><span class="o">.</span><span class="n">store</span><span class="p">:</span>
                 <span class="c1"># don&#39;t move this line to function top, see log</span>
                 <span class="n">env</span> <span class="o">=</span> <span class="n">records</span><span class="o">.</span><span class="n">env</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">SUPERUSER_ID</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;active_test&#39;</span><span class="p">:</span> <span class="bp">False</span><span class="p">})</span>
                 <span class="n">target</span> <span class="o">=</span> <span class="n">env</span><span class="p">[</span><span class="n">field</span><span class="o">.</span><span class="n">model_name</span><span class="p">]</span><span class="o">.</span><span class="n">search</span><span class="p">([(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;in&#39;</span><span class="p">,</span> <span class="n">records</span><span class="o">.</span><span class="n">ids</span><span class="p">)])</span>
@@ -1952,12 +1953,24 @@
 
     <span class="k">def</span> <span class="nf">_compute_related</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">records</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Compute the related field ``self`` on ``records``. &quot;&quot;&quot;</span>
-        <span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">records</span><span class="p">:</span>
-            <span class="n">value</span> <span class="o">=</span> <span class="n">record</span>
-            <span class="c1"># traverse the intermediate fields, and keep at most one record</span>
-            <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">related</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
-                <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="n">name</span><span class="p">][:</span><span class="mi">1</span><span class="p">]</span>
-            <span class="n">record</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">related</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">_RelationalMulti</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">_compute_related</span><span class="p">(</span><span class="n">records</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">related_sudo</span><span class="p">:</span>
+            <span class="c1"># determine which records in the relation are actually accessible</span>
+            <span class="n">target</span> <span class="o">=</span> <span class="n">records</span><span class="o">.</span><span class="n">mapped</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="n">target_ids</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">target</span><span class="o">.</span><span class="n">search</span><span class="p">([(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;in&#39;</span><span class="p">,</span> <span class="n">target</span><span class="o">.</span><span class="n">ids</span><span class="p">)])</span><span class="o">.</span><span class="n">ids</span><span class="p">)</span>
+            <span class="n">accessible</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">target</span><span class="p">:</span> <span class="n">target</span><span class="o">.</span><span class="n">id</span> <span class="ow">in</span> <span class="n">target_ids</span>
+            <span class="c1"># filter values to keep the accessible records only</span>
+            <span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">records</span><span class="p">:</span>
+                <span class="n">record</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">record</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">filtered</span><span class="p">(</span><span class="n">accessible</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">setup_triggers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">_RelationalMulti</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">setup_triggers</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+        <span class="c1"># also invalidate self when fields appearing in the domain are modified</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">comodel</span> <span class="o">=</span> <span class="n">env</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">comodel_name</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">))</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">basestring</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_setup_dependency</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">],</span> <span class="n">comodel</span><span class="p">,</span> <span class="n">arg</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">))</span>
 
 
 <span class="k">class</span> <span class="nc">One2many</span><span class="p">(</span><span class="n">_RelationalMulti</span><span class="p">):</span>
@@ -2150,7 +2163,7 @@
     </p>
     <p>
         &copy; Copyright 2013-2015, Odoo Community Association (OCA).<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.3.<br/>
     </p>
   </div>
 </footer>
