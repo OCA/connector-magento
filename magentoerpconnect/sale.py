@@ -404,9 +404,9 @@ class SaleImportRule(ConnectorUnit):
                 "The configuration is missing for the Payment Mode '%s'.\n\n"
                 "Resolution:\n"
                 "- Go to "
-                "'Accounting > Configuration > Management > Payment Modes\n"
+                "'Accounting > Configuration > Management > Payment Modes'\n"
                 "- Create a new Payment Mode with name '%s'\n"
-                "-Eventually  link the Payment Mode to an existing Workflow "
+                "- Eventually link the Payment Mode to an existing Workflow "
                 "Process or create a new one." % (payment_method,
                                                   payment_method))
         self._rule_global(record, method)
