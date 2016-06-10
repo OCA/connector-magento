@@ -554,9 +554,9 @@ class SaleOrderImportMapper(ImportMapper):
 
     @mapping
     def sales_team(self, record):
-        team = self.options.storeview.section_id
+        team = self.options.storeview.team_id
         if team:
-            return {'section_id': team.id}
+            return {'team_id': team.id}
 
     @mapping
     def project_id(self, record):

@@ -317,7 +317,7 @@
                         <field name="specific_account_analytic_id" groups="sale.group_analytic_accounting" class="oe_edit_only" />
                         <field name="fiscal_position_id" class="oe_read_only"/>
                         <field name="specific_fiscal_position_id" class="oe_edit_only" />
-                        <field name="section_id" options="{'no_create': True}" groups="base.group_multi_salesteams"/>
+                        <field name="team_id" options="{'no_create': True}" groups="base.group_multi_salesteams"/>
                         <field name="lang_id" widget="selection"/>
                         <field name="catalog_price_tax_included"/>
                         <p attrs="{'invisible': [('catalog_price_tax_included', '=', False)]}">

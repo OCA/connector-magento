@@ -246,10 +246,10 @@ class TestSaleOrder(SetUpMagentoSynchronized):
             ('backend_id', '=', self.backend_id),
             ('magento_id', '=', '1')
         ])
-        team = self.env['crm.case.section'].create({'name': 'Magento Team'})
-        storeview.section_id = team
+        team = self.env['crm.team'].create({'name': 'Magento Team'})
+        storeview.team_id = team
         binding = self._import_sale_order(900000691)
-        self.assertEqual(binding.section_id, team)
+        self.assertEqual(binding.team_id, team)
 
     def test_import_guest_order(self):
         binding = self._import_sale_order(900000700,
