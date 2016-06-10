@@ -512,8 +512,7 @@ class MagentoStoreview(models.Model):
                                ondelete='cascade',
                                readonly=True)
     lang_id = fields.Many2one(comodel_name='res.lang', string='Language')
-    section_id = fields.Many2one(comodel_name='crm.case.section',
-                                 string='Sales Team')
+    team_id = fields.Many2one(comodel_name='crm.team', string='Sales Team')
     backend_id = fields.Many2one(
         comodel_name='magento.backend',
         related='store_id.website_id.backend_id',
