@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-05-28 09:49+0000\n"
-"PO-Revision-Date: 2016-05-30 08:51+0000\n"
+"POT-Creation-Date: 2016-06-09 07:17+0000\n"
+"PO-Revision-Date: 2016-06-09 07:03+0000\n"
 "Last-Translator: Matjaž Mozetič <m.mozetic@matmoz.si>\n"
 "Language-Team: Slovenian (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/sl/)\n"
 "MIME-Version: 1.0\n"
@@ -39,7 +39,7 @@ msgid ""
 "                * Transferred: has been processed, can't be modified or cancelled anymore\n"
 "\n"
 "                * Cancelled: has been cancelled, can't be confirmed anymore"
-msgstr ""
+msgstr "\n                * Osnutek: še ne potrjeno in ne načrtovano dokler ne bo potrjeno\n\n                * Čakanje na drugo operacijo: čakanje na drug premik za nadaljevanje preden postane samodejno razpoložljivo (npr. za procesne tokove Po naročilu)\n\n                * Čakanje na razpoložljivost: še vedno čakamo proizvode, da bodo na razpolago\n\n                * Delno na voljo: nekateri proizvodi so na voljo in rezervirani\n\n                * Pripravljeno na premik: proizvodi so rezervirani in čakajo le na potrditev.\n\n                * Premaknjeno: že obdelano in ne more se več spreminjati ali preklicati\n\n                * Preklicano: preklicano in ne more se več potrditi"
 
 #. module: magentoerpconnect
 #: help:magento.account.invoice,state:0
@@ -85,7 +85,7 @@ msgid ""
 "* The 'Exception' status is set when the related sales order is set as exception.                     \n"
 "* The 'Done' status is set when the sales order line has been picked.                     \n"
 "* The 'Cancelled' status is set when a user cancel the sales order related."
-msgstr ""
+msgstr "* Status 'Osnutek' je nastavljen pri osnutku prodajnega naloga.                     \n* Status 'Potrjeno' je nastavljen po potrditvi prodajnega naloga.                     \n* Status 'Izjema' je nastavljen, kadar je prodajni nalog v izjemnem stanju.                     \n* Status 'Opravljeno' je nastavljen, ko je postavka prodajnega naloga obdelana in v zbirniku.                     \n* Status 'Preklicano' je nastavljen, kadar uporabnik prekliče prodajni nalog."
 
 #. module: magentoerpconnect
 #: sql_constraint:magento.account.invoice:0
@@ -115,7 +115,7 @@ msgstr "Vezava z enakim Magento ID že obstaja."
 msgid ""
 "A category of the view type is a virtual category that can be used as the "
 "parent of another category to create a hierarchical structure."
-msgstr ""
+msgstr "Kategorija tipa prikaza je navidezna kategorija, ki se lahko uporablja kot nadrejena drugi kategoriji pri pripravi hierarhične strukture."
 
 #. module: magentoerpconnect
 #: help:magento.product.product,description_sale:0
@@ -123,7 +123,7 @@ msgid ""
 "A description of the Product that you want to communicate to your customers."
 " This description will be copied to every Sale Order, Delivery Order and "
 "Customer Invoice/Refund"
-msgstr ""
+msgstr "Opis proizvoda, ki ga želite podati kupcem. Ta opis se kopira v vsak prodajni nalog, dostavni nalog in izdani račun/dobropis"
 
 #. module: magentoerpconnect
 #: help:magento.product.product,description_purchase:0
@@ -131,7 +131,7 @@ msgid ""
 "A description of the Product that you want to communicate to your suppliers."
 " This description will be copied to every Purchase Order, Receipt and "
 "Supplier Invoice/Refund."
-msgstr ""
+msgstr "Opis proizvoda, ki ga želite podati dobaviteljem. Ta opis se kopira v vsak nabavni nalog, prejem in prejeti račun/dobropis."
 
 #. module: magentoerpconnect
 #: help:magento.sale.order,parent_need_cancel:0
