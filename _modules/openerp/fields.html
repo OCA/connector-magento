@@ -1237,6 +1237,13 @@
         <span class="c1"># ``records``, except fields currently being computed</span>
         <span class="n">spec</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">field</span><span class="p">,</span> <span class="n">path</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_triggers</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">field</span><span class="o">.</span><span class="n">compute</span><span class="p">:</span>
+                <span class="c1"># Note: do not invalidate non-computed fields. Such fields may</span>
+                <span class="c1"># require invalidation in general (like *2many fields with</span>
+                <span class="c1"># domains) but should not be invalidated in this case, because</span>
+                <span class="c1"># we would simply lose their values during an onchange!</span>
+                <span class="k">continue</span>
+
             <span class="n">target</span> <span class="o">=</span> <span class="n">env</span><span class="p">[</span><span class="n">field</span><span class="o">.</span><span class="n">model_name</span><span class="p">]</span>
             <span class="n">computed</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">browse</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">computed</span><span class="p">[</span><span class="n">field</span><span class="p">])</span>
             <span class="k">if</span> <span class="n">path</span> <span class="o">==</span> <span class="s1">&#39;id&#39;</span><span class="p">:</span>
@@ -2163,7 +2170,7 @@
     </p>
     <p>
         &copy; Copyright 2013-2015, Odoo Community Association (OCA).<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.3.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.4.<br/>
     </p>
   </div>
 </footer>
