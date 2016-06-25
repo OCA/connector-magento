@@ -310,11 +310,11 @@
         <span class="k">return</span> <span class="p">[</span>
             <span class="p">(</span><span class="s1">&#39;simple&#39;</span><span class="p">,</span> <span class="s1">&#39;Simple Product&#39;</span><span class="p">),</span>
             <span class="p">(</span><span class="s1">&#39;configurable&#39;</span><span class="p">,</span> <span class="s1">&#39;Configurable Product&#39;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;virtual&#39;</span><span class="p">,</span> <span class="s1">&#39;Virtual Product&#39;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;downloadable&#39;</span><span class="p">,</span> <span class="s1">&#39;Downloadable Product&#39;</span><span class="p">),</span>
             <span class="c1"># XXX activate when supported</span>
             <span class="c1"># (&#39;grouped&#39;, &#39;Grouped Product&#39;),</span>
-            <span class="c1"># (&#39;virtual&#39;, &#39;Virtual Product&#39;),</span>
             <span class="c1"># (&#39;bundle&#39;, &#39;Bundle Product&#39;),</span>
-            <span class="c1"># (&#39;downloadable&#39;, &#39;Downloadable Product&#39;),</span>
         <span class="p">]</span></div>
 
     <span class="n">openerp_id</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Many2one</span><span class="p">(</span><span class="n">comodel_name</span><span class="o">=</span><span class="s1">&#39;product.product&#39;</span><span class="p">,</span>
@@ -686,6 +686,8 @@
 <div class="viewcode-block" id="ProductImportMapper.type"><a class="viewcode-back" href="../../../../api/api_product.html#openerp.addons.magentoerpconnect.product.ProductImportMapper.type">[docs]</a>    <span class="k">def</span> <span class="nf">type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">record</span><span class="p">[</span><span class="s1">&#39;type_id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;simple&#39;</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;product&#39;</span><span class="p">}</span>
+        <span class="k">elif</span> <span class="n">record</span><span class="p">[</span><span class="s1">&#39;type_id&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;virtual&#39;</span><span class="p">,</span> <span class="s1">&#39;downloadable&#39;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;service&#39;</span><span class="p">}</span>
         <span class="k">return</span></div>
 
     <span class="nd">@mapping</span>
