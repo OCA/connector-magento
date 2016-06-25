@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-06-09 07:17+0000\n"
-"PO-Revision-Date: 2016-06-09 07:03+0000\n"
+"POT-Creation-Date: 2016-06-11 10:11+0000\n"
+"PO-Revision-Date: 2016-06-16 10:57+0000\n"
 "Last-Translator: Matjaž Mozetič <m.mozetic@matmoz.si>\n"
 "Language-Team: Slovenian (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/sl/)\n"
 "MIME-Version: 1.0\n"
@@ -138,17 +138,17 @@ msgstr "Opis proizvoda, ki ga želite podati dobaviteljem. Ta opis se kopira v v
 msgid ""
 "A parent sales order has been canceled on the backend and needs to be "
 "canceled."
-msgstr ""
+msgstr "V ozadju je bil preklican nadrejen prodajni nalog in mora biti preklicano."
 
 #. module: magentoerpconnect
 #: help:magento.sale.order,parent_id:0
 msgid "A parent sales order is a sales order replaced by this one."
-msgstr ""
+msgstr "Ta prodajni nalog bo zamenjal nadrejenega."
 
 #. module: magentoerpconnect
 #: field:magento.sale.order,parent_need_cancel:0
 msgid "A parent sales order needs cancel"
-msgstr ""
+msgstr "Nadrejen prodajni nalog mora biti preklican"
 
 #. module: magentoerpconnect
 #: sql_constraint:magento.address:0
@@ -158,14 +158,14 @@ msgstr "Partnerjev naslov ima lahko le eno vezavo na ozadje."
 #. module: magentoerpconnect
 #: help:magento.sale.order.line,address_allotment_id:0
 msgid "A partner to whom the particular product needs to be allotted."
-msgstr ""
+msgstr "Partner, kateremu mora biti dodeljen določen proizvod."
 
 #. module: magentoerpconnect
 #: help:magento.product.product,description:0
 msgid ""
 "A precise description of the Product, used only for internal information "
 "purposes."
-msgstr ""
+msgstr "Natančen opis proizvoda, ki se uporablja za namene notranjega informiranja."
 
 #. module: magentoerpconnect
 #: help:magento.backend,sale_prefix:0
