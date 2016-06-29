@@ -154,13 +154,17 @@ class TestImportMagento(SetUpMagentoSynchronized):
                               backend_id, 54)
 
     def test_import_product_virtual(self):
-        """ Virtual should fail: not yet supported """
+        """ Virtual products are created as service products """
         backend_id = self.backend_id
         with mock_api(magento_base_responses):
-            with self.assertRaises(InvalidDataError):
-                import_record(self.session,
-                              'magento.product.product',
-                              backend_id, 144)
+            import_record(self.session,
+                          'magento.product.product',
+                          backend_id, 144)
+
+        product_model = self.env['magento.product.product']
+        product = product_model.search([('backend_id', '=', backend_id),
+                                        ('magento_id', '=', '144')])
+        self.assertEqual(product.type, 'service')
 
     def test_import_sale_order(self):
         """ Import sale order: check """
