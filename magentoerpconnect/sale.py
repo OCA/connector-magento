@@ -872,13 +872,10 @@ class SaleOrderImporter(MagentoImporter):
         # the partner form or the searches. Too many adresses would
         # be displayed.
         # They are never synchronized.
-
-        # For the orders which are from guests, we let the addresses
-        # as active because they don't have an address book.
         addresses_defaults = {'parent_id': partner.id,
                               'magento_partner_id': partner_binding.id,
                               'email': record.get('customer_email', False),
-                              'active': is_guest_order,
+                              'active': False,
                               'is_magento_order_address': True}
 
         addr_mapper = self.unit_for(ImportMapper, model='magento.address')
