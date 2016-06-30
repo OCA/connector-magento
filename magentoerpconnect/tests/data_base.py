@@ -23485,6 +23485,7 @@ magento_base_responses = \
                                                                'small_image',
                                                                'image'],
                                                      'url': 'http://yushan.wrk.lsn:9100/media/catalog/product/c/r/crucial-512mb-pc4200-ddr2-533mhz-memory.jpg'}],
+        ('product_media.list', (144, None, 'id')): [],
         ('product_media.list', (145, None, 'id')): [{'exclude': '1',
                                                      'file': '/a/m/amd-phenom-x4-9850-black-ed-2-50ghz-retail.jpg',
                                                      'label': '',
