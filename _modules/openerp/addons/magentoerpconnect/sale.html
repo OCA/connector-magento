@@ -1111,13 +1111,10 @@
         <span class="c1"># the partner form or the searches. Too many adresses would</span>
         <span class="c1"># be displayed.</span>
         <span class="c1"># They are never synchronized.</span>
-
-        <span class="c1"># For the orders which are from guests, we let the addresses</span>
-        <span class="c1"># as active because they don&#39;t have an address book.</span>
         <span class="n">addresses_defaults</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;parent_id&#39;</span><span class="p">:</span> <span class="n">partner</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
                               <span class="s1">&#39;magento_partner_id&#39;</span><span class="p">:</span> <span class="n">partner_binding</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
                               <span class="s1">&#39;email&#39;</span><span class="p">:</span> <span class="n">record</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;customer_email&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">),</span>
-                              <span class="s1">&#39;active&#39;</span><span class="p">:</span> <span class="n">is_guest_order</span><span class="p">,</span>
+                              <span class="s1">&#39;active&#39;</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>
                               <span class="s1">&#39;is_magento_order_address&#39;</span><span class="p">:</span> <span class="bp">True</span><span class="p">}</span>
 
         <span class="n">addr_mapper</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">unit_for</span><span class="p">(</span><span class="n">ImportMapper</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s1">&#39;magento.address&#39;</span><span class="p">)</span>
