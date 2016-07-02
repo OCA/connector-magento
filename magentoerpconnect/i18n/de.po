@@ -7,6 +7,7 @@
 # bossnm11 <bossnm11@gmail.com>, 2014
 # Carles Antoli <carlesantoli@hotmail.com>, 2015
 # Carles Antoli <carlesantoli@hotmail.com>, 2015
+# Carles Antoli <carlesantoli@hotmail.com>, 2015
 # Chanseok <kcsgoodboy@gmail.com>, 2014
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2010,2012,2014
 # Giedrius Slavinskas <giedrius@inovera.lt>, 2012
@@ -26,7 +27,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-05-21 09:43+0000\n"
+"POT-Creation-Date: 2016-06-30 07:39+0000\n"
 "PO-Revision-Date: 2016-05-26 10:58+0000\n"
 "Last-Translator: Rudolf Schnapka <rs@techno-flex.de>\n"
 "Language-Team: German (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/de/)\n"
@@ -1939,7 +1940,7 @@ msgid "Magento Websites"
 msgstr "Magento-Webseiten"
 
 #. module: magentoerpconnect
-#: code:addons/magentoerpconnect/sale.py:1105
+#: code:addons/magentoerpconnect/sale.py:1102
 #, python-format
 msgid "Magento sales order is already in state %s"
 msgstr "Magento-Verkaufsauftrag hat bereits den Status %s"
@@ -2687,7 +2688,7 @@ msgid "Sale Workflow Process"
 msgstr ""
 
 #. module: magentoerpconnect
-#: code:addons/magentoerpconnect/sale.py:1101
+#: code:addons/magentoerpconnect/sale.py:1098
 #, python-format
 msgid "Sale is not linked with a Magento sales order"
 msgstr "Verkauf ist nicht mit einem Magento-Verkaufsauftrag verknüpft"
@@ -2910,7 +2911,7 @@ msgid "State"
 msgstr ""
 
 #. module: magentoerpconnect
-#: code:addons/magentoerpconnect/sale.py:1098
+#: code:addons/magentoerpconnect/sale.py:1095
 #, python-format
 msgid "State %s is not exported."
 msgstr "Status %s wurde nicht exportiert."
@@ -3165,7 +3166,7 @@ msgid ""
 msgstr ""
 
 #. module: magentoerpconnect
-#: code:addons/magentoerpconnect/product.py:556
+#: code:addons/magentoerpconnect/product.py:558
 #, python-format
 msgid ""
 "The configurable product is not imported in OpenERP, because only the simple"

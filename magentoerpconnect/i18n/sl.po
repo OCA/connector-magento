@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-06-11 10:11+0000\n"
-"PO-Revision-Date: 2016-06-16 10:57+0000\n"
+"POT-Creation-Date: 2016-06-30 07:39+0000\n"
+"PO-Revision-Date: 2016-07-01 06:46+0000\n"
 "Last-Translator: Matjaž Mozetič <m.mozetic@matmoz.si>\n"
 "Language-Team: Slovenian (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/sl/)\n"
 "MIME-Version: 1.0\n"
@@ -231,7 +231,7 @@ msgstr "Napredne nastavitve"
 #. module: magentoerpconnect
 #: field:magento.sale.order.line,address_allotment_id:0
 msgid "Allotment Partner"
-msgstr ""
+msgstr "Dodelitveni partner"
 
 #. module: magentoerpconnect
 #: code:addons/magentoerpconnect/stock_picking.py:173
@@ -413,7 +413,7 @@ msgstr "Sledilni sklic prevoznika"
 #. module: magentoerpconnect
 #: field:magento.product.product,loc_case:0
 msgid "Case"
-msgstr ""
+msgstr "Primer"
 
 #. module: magentoerpconnect
 #: field:magento.res.partner.category,name:0
@@ -495,7 +495,7 @@ msgstr "Koda"
 msgid ""
 "Coefficient to convert default Unit of Measure to Unit of Sale\n"
 " uos = uom * coeff"
-msgstr ""
+msgstr "Koeficent pretvorbe privzete enote mere v prodajno enoto\n uos = uom * coeff"
 
 #. module: magentoerpconnect
 #: field:magento.address,color:0 field:magento.product.product,color:0
@@ -544,7 +544,7 @@ msgstr "Poln naslov"
 #: help:magento.sale.order,carrier_id:0
 msgid ""
 "Complete this field if you plan to invoice the shipping based on picking."
-msgstr ""
+msgstr "Izpolnite to polje, če nameravate zaračunavati odpremo na osnovi zbirnika."
 
 #. module: magentoerpconnect
 #: field:magento.product.product,magento_qty:0
@@ -571,7 +571,7 @@ msgstr "Obravnavano kot družba"
 msgid ""
 "Consumable: Will not imply stock management for this product. \n"
 "Stockable product: Will imply stock management for this product."
-msgstr ""
+msgstr "Potrošni: za ta proizvod se ne upravlja zaloge. \nZaloga: za ta proizvod se upravlja zaloge."
 
 #. module: magentoerpconnect
 #: field:magento.address,ref:0 field:magento.res.partner,ref:0
@@ -607,7 +607,7 @@ msgid ""
 "Cost price of the product template used for standard stock valuation in "
 "accounting and used as a base price on purchase orders. Expressed in the "
 "default unit of measure of the product."
-msgstr ""
+msgstr "Lastna cena predloge proizvoda, ki se uporablja za vrednotenje knjigovodskih zalog in kot osnovna cena za nabavne naloge. Izraženo je v privzeti enoti mere proizvoda."
 
 #. module: magentoerpconnect
 #: field:magento.product.product,cost_method:0
@@ -678,7 +678,7 @@ msgstr "Datum nastanka"
 #. module: magentoerpconnect
 #: help:magento.stock.picking,date:0
 msgid "Creation Date, usually the time of the order"
-msgstr ""
+msgstr "Datum nastanka, običajno čas nastanka naloga"
 
 #. module: magentoerpconnect
 #: field:magento.address,credit_limit:0
@@ -1078,12 +1078,12 @@ msgstr ""
 #. module: magentoerpconnect
 #: help:magento.product.category,sequence:0
 msgid "Gives the sequence order when displaying a list of product categories."
-msgstr ""
+msgstr "Podaja zaporedje ob prikazu seznama kategorij proizvodov."
 
 #. module: magentoerpconnect
 #: help:magento.sale.order.line,sequence:0
 msgid "Gives the sequence order when displaying a list of sales order lines."
-msgstr ""
+msgstr "Podaja zaporedje ob prikazu seznama postavk prodajnega naloga."
 
 #. module: magentoerpconnect
 #: help:magento.sale.order,state:0
@@ -1116,7 +1116,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: help:magento.sale.order,need_cancel:0
 msgid "Has been canceled on the backend, need to be canceled."
-msgstr ""
+msgstr "Preklicano v ozadju, potrebno je preklicati."
 
 #. module: magentoerpconnect
 #: help:magento.account.invoice,message_summary:0
@@ -1925,7 +1925,7 @@ msgid "Magento Websites"
 msgstr "Magento spletne strani"
 
 #. module: magentoerpconnect
-#: code:addons/magentoerpconnect/sale.py:1105
+#: code:addons/magentoerpconnect/sale.py:1102
 #, python-format
 msgid "Magento sales order is already in state %s"
 msgstr "Magento prodajni nalog je že v stanju %s"
@@ -2673,7 +2673,7 @@ msgid "Sale Workflow Process"
 msgstr "Prodajni procesni tok"
 
 #. module: magentoerpconnect
-#: code:addons/magentoerpconnect/sale.py:1101
+#: code:addons/magentoerpconnect/sale.py:1098
 #, python-format
 msgid "Sale is not linked with a Magento sales order"
 msgstr "Prodaja ni povezana z Magento prodajnim nalogom"
@@ -2896,7 +2896,7 @@ msgid "State"
 msgstr "Stanje"
 
 #. module: magentoerpconnect
-#: code:addons/magentoerpconnect/sale.py:1098
+#: code:addons/magentoerpconnect/sale.py:1095
 #, python-format
 msgid "State %s is not exported."
 msgstr "Stanje %s ni izvoženo."
@@ -3151,7 +3151,7 @@ msgid ""
 msgstr ""
 
 #. module: magentoerpconnect
-#: code:addons/magentoerpconnect/product.py:556
+#: code:addons/magentoerpconnect/product.py:558
 #, python-format
 msgid ""
 "The configurable product is not imported in OpenERP, because only the simple"
