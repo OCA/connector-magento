@@ -488,6 +488,9 @@ class SaleOrderImportMapper(ImportMapper):
         record = map_record.source
         if 'gift_cert_amount' not in record:
             return values
+        # if gift_cert_amount is zero
+        if not record.get('gift_cert_amount'):
+            return values
         amount = float(record['gift_cert_amount'])
         line_builder = self.unit_for(MagentoGiftOrderLineBuilder)
         line_builder.price_unit = amount
