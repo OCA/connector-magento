@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-06-30 07:39+0000\n"
-"PO-Revision-Date: 2016-07-01 06:46+0000\n"
+"POT-Creation-Date: 2016-07-02 11:02+0000\n"
+"PO-Revision-Date: 2016-07-08 08:25+0000\n"
 "Last-Translator: Matjaž Mozetič <m.mozetic@matmoz.si>\n"
 "Language-Team: Slovenian (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/sl/)\n"
 "MIME-Version: 1.0\n"
@@ -1028,21 +1028,21 @@ msgstr "Strategija vsiljenih odstranitev"
 msgid ""
 "Forces to specify a Serial Number for all moves containing this product and "
 "coming from a Supplier Location"
-msgstr ""
+msgstr "Vsili določitev serijske številke za vse premike, ki vsebujejo ta proizvod in prihajajo iz dobaviteljeve lokacije"
 
 #. module: magentoerpconnect
 #: help:magento.product.product,track_outgoing:0
 msgid ""
 "Forces to specify a Serial Number for all moves containing this product and "
 "going to a Customer Location"
-msgstr ""
+msgstr "Vsili določitev serijske številke za vse premike, ki vsebujejo ta proizvod in odhajajo na kupčevo lokacijo"
 
 #. module: magentoerpconnect
 #: help:magento.product.product,track_all:0
 msgid ""
 "Forces to specify a Serial Number on each and every operation related to "
 "this product"
-msgstr ""
+msgstr "Vsili določitev serijske številke za vse operacije v zvezi s tem proizvodom"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,virtual_available:0
@@ -1248,7 +1248,7 @@ msgstr ""
 #: help:magento.product.product,active:0
 msgid ""
 "If unchecked, it will allow you to hide the product without removing it."
-msgstr ""
+msgstr "Ko ni označeno, je dovoljeno skriti proizvod ne da bi ga odstranili."
 
 #. module: magentoerpconnect
 #: help:magento.account.invoice,payment_term:0
@@ -1285,21 +1285,21 @@ msgid ""
 "Image of the product variant (Big-sized image of product template if false)."
 " It is automatically resized as a 1024x1024px image, with aspect ratio "
 "preserved."
-msgstr ""
+msgstr "Slika različice proizvoda (velika slika predloge proizvoda če je 'false'). Samodejno se spremeni v 1024x1024px in ohrani razmerje."
 
 #. module: magentoerpconnect
 #: help:magento.product.product,image_medium:0
 msgid ""
 "Image of the product variant (Medium-sized image of product template if "
 "false)."
-msgstr ""
+msgstr "Slika različice proizvoda (srednje velika slika predloge proizvoda če je 'false')."
 
 #. module: magentoerpconnect
 #: help:magento.product.product,image_small:0
 msgid ""
 "Image of the product variant (Small-sized image of product template if "
 "false)."
-msgstr ""
+msgstr "Slika različice proizvoda (majhna slika predloge proizvoda če je 'false')."
 
 #. module: magentoerpconnect
 #: view:magento.storeview:magentoerpconnect.view_magento_storeview_form
@@ -1411,14 +1411,14 @@ msgstr "Interni sklic"
 #. module: magentoerpconnect
 #: help:magento.product.product,ean13:0
 msgid "International Article Number used for product identification."
-msgstr ""
+msgstr "Mednarodna številka artikla uporabljena za identifikacijo proizvoda."
 
 #. module: magentoerpconnect
 #: help:magento.sale.order,incoterm:0
 msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
-msgstr ""
+msgstr "Mednarodni komercialni pogoji so serija predhodno določenih komercialnih pogojev v uporabi pri mednarodnih transakcijah."
 
 #. module: magentoerpconnect
 #: field:magento.product.product,property_stock_inventory:0
@@ -1534,7 +1534,7 @@ msgstr "Oznaka, da je račun bil plačan."
 #. module: magentoerpconnect
 #: help:magento.sale.order,invoice_exists:0
 msgid "It indicates that sales order has at least one invoice."
-msgstr ""
+msgstr "Oznaka, da prodajni nalog vsebuje vsaj en račun."
 
 #. module: magentoerpconnect
 #: help:magento.account.invoice,reconciled:0
@@ -3176,29 +3176,29 @@ msgstr ""
 #. module: magentoerpconnect
 #: help:magento.product.product,weight:0
 msgid "The gross weight in Kg."
-msgstr ""
+msgstr "Bruto masa v kg"
 
 #. module: magentoerpconnect
 #: help:magento.address,user_id:0 help:magento.res.partner,user_id:0
 msgid ""
 "The internal user that is in charge of communicating with this contact if "
 "any."
-msgstr ""
+msgstr "Interni uporabnik zadolžen za komunikacije s tem stikom."
 
 #. module: magentoerpconnect
 #: help:magento.product.product,weight_net:0
 msgid "The net weight in Kg."
-msgstr ""
+msgstr "Neto masa v kg"
 
 #. module: magentoerpconnect
 #: help:magento.account.invoice,account_id:0
 msgid "The partner account used for this invoice."
-msgstr ""
+msgstr "Konto partnerja za ta račun."
 
 #. module: magentoerpconnect
 #: help:magento.account.invoice,reference:0
 msgid "The partner reference of this invoice."
-msgstr ""
+msgstr "Sklic partnerja za ta račun."
 
 #. module: magentoerpconnect
 #: help:magento.address,tz:0 help:magento.res.partner,tz:0
@@ -3309,7 +3309,7 @@ msgstr "Namesti modul magentoerpconnect_export_partner."
 #. module: magentoerpconnect
 #: help:magento.product.product,seller_qty:0
 msgid "This is minimum quantity to purchase from Main Supplier."
-msgstr ""
+msgstr "Minimalna nabavna količina pri glavnem dobavitelju."
 
 #. module: magentoerpconnect
 #: help:magento.product.product,seller_delay:0
@@ -3317,7 +3317,7 @@ msgid ""
 "This is the average delay in days between the purchase order confirmation "
 "and the receipts for this product and for the default supplier. It is used "
 "by the scheduler to order requests based on reordering delays."
-msgstr ""
+msgstr "Povprečni zamik v dnevih med potrditvijo nabavnega naloga in prejemom za ta proizvod in privzetega dobavitelja. Uporablja se pri razporejevalniku za urejanje zahtevkov glede na zamike pri ponovnem naročanju."
 
 #. module: magentoerpconnect
 #: help:magento.sale.order,invoice_ids:0
@@ -3325,12 +3325,12 @@ msgid ""
 "This is the list of invoices that have been generated for this sales order. "
 "The same sales order may have been invoiced in several times (by line for "
 "example)."
-msgstr ""
+msgstr "Seznam računov, ki so bili ustvarjeni za ta prodajni nalog. Isti prodajni nalog je lahko večkrat obračunan (npr. po postavki)."
 
 #. module: magentoerpconnect
 #: help:magento.product.product,price_extra:0
 msgid "This is the sum of the extra price of all attributes"
-msgstr ""
+msgstr "Vsota dodatka k ceni za vse atribute"
 
 #. module: magentoerpconnect
 #: view:magento.storeview:magentoerpconnect.view_magento_storeview_form
@@ -3348,7 +3348,7 @@ msgstr "Ta opcija mora upoštevati iste\n                              nastavitv
 msgid ""
 "This payment term will be used instead of the default one for purchase "
 "orders and supplier invoices"
-msgstr ""
+msgstr "Plačilni pogoj, ki bo uporabljen namesto privzetega za nabavne naloge in prejete račune."
 
 #. module: magentoerpconnect
 #: help:magento.address,property_payment_term:0
