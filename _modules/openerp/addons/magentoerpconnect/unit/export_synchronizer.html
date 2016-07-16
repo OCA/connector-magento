@@ -260,21 +260,21 @@
 
 <span class="kn">import</span> <span class="nn">logging</span>
 
-<span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">contextmanager</span>
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">contextlib</span> <span class="k">import</span> <span class="n">contextmanager</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span>
 
 <span class="kn">import</span> <span class="nn">psycopg2</span>
 
 <span class="kn">import</span> <span class="nn">openerp</span>
-<span class="kn">from</span> <span class="nn">openerp.tools.translate</span> <span class="kn">import</span> <span class="n">_</span>
-<span class="kn">from</span> <span class="nn">openerp.addons.connector.queue.job</span> <span class="kn">import</span> <span class="n">job</span><span class="p">,</span> <span class="n">related_action</span>
-<span class="kn">from</span> <span class="nn">openerp.addons.connector.unit.synchronizer</span> <span class="kn">import</span> <span class="n">Exporter</span>
-<span class="kn">from</span> <span class="nn">openerp.addons.connector.exception</span> <span class="kn">import</span> <span class="p">(</span><span class="n">IDMissingInBackend</span><span class="p">,</span>
+<span class="kn">from</span> <span class="nn">openerp.tools.translate</span> <span class="k">import</span> <span class="n">_</span>
+<span class="kn">from</span> <span class="nn">openerp.addons.connector.queue.job</span> <span class="k">import</span> <span class="n">job</span><span class="p">,</span> <span class="n">related_action</span>
+<span class="kn">from</span> <span class="nn">openerp.addons.connector.unit.synchronizer</span> <span class="k">import</span> <span class="n">Exporter</span>
+<span class="kn">from</span> <span class="nn">openerp.addons.connector.exception</span> <span class="k">import</span> <span class="p">(</span><span class="n">IDMissingInBackend</span><span class="p">,</span>
                                                 <span class="n">RetryableJobError</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">.import_synchronizer</span> <span class="kn">import</span> <span class="n">import_record</span>
-<span class="kn">from</span> <span class="nn">.backend_adapter</span> <span class="kn">import</span> <span class="n">MAGENTO_DATETIME_FORMAT</span>
-<span class="kn">from</span> <span class="nn">..connector</span> <span class="kn">import</span> <span class="n">get_environment</span>
-<span class="kn">from</span> <span class="nn">..related_action</span> <span class="kn">import</span> <span class="n">unwrap_binding</span>
+<span class="kn">from</span> <span class="nn">.import_synchronizer</span> <span class="k">import</span> <span class="n">import_record</span>
+<span class="kn">from</span> <span class="nn">.backend_adapter</span> <span class="k">import</span> <span class="n">MAGENTO_DATETIME_FORMAT</span>
+<span class="kn">from</span> <span class="nn">..connector</span> <span class="k">import</span> <span class="n">get_environment</span>
+<span class="kn">from</span> <span class="nn">..related_action</span> <span class="k">import</span> <span class="n">unwrap_binding</span>
 
 <span class="n">_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
 
@@ -301,8 +301,8 @@
 <span class="sd">        :type connector_env: :class:`connector.connector.ConnectorEnvironment`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">MagentoBaseExporter</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">connector_env</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">binding_id</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">magento_id</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">binding_id</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">magento_id</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">def</span> <span class="nf">_delay_import</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Schedule an import of the record.</span>
@@ -315,7 +315,7 @@
         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">magento_id</span>
         <span class="n">import_record</span><span class="o">.</span><span class="n">delay</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">_name</span><span class="p">,</span>
                             <span class="bp">self</span><span class="o">.</span><span class="n">backend_record</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">magento_id</span><span class="p">,</span>
-                            <span class="n">force</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+                            <span class="n">force</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_should_import</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Before the export, compare the update date</span>
@@ -325,15 +325,15 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">binding_record</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">magento_id</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">False</span>
+            <span class="k">return</span> <span class="kc">False</span>
         <span class="n">sync</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">binding_record</span><span class="o">.</span><span class="n">sync_date</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">sync</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">True</span>
+            <span class="k">return</span> <span class="kc">True</span>
         <span class="n">record</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend_adapter</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">magento_id</span><span class="p">,</span>
                                            <span class="n">attributes</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;updated_at&#39;</span><span class="p">])</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">record</span><span class="p">[</span><span class="s1">&#39;updated_at&#39;</span><span class="p">]:</span>
             <span class="c1"># in rare case it can be empty, in doubt, import it</span>
-            <span class="k">return</span> <span class="bp">False</span>
+            <span class="k">return</span> <span class="kc">False</span>
         <span class="n">sync_date</span> <span class="o">=</span> <span class="n">openerp</span><span class="o">.</span><span class="n">fields</span><span class="o">.</span><span class="n">Datetime</span><span class="o">.</span><span class="n">from_string</span><span class="p">(</span><span class="n">sync</span><span class="p">)</span>
         <span class="n">magento_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">record</span><span class="p">[</span><span class="s1">&#39;updated_at&#39;</span><span class="p">],</span>
                                          <span class="n">MAGENTO_DATETIME_FORMAT</span><span class="p">)</span>
@@ -355,8 +355,8 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="n">should_import</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_should_import</span><span class="p">()</span>
         <span class="k">except</span> <span class="n">IDMissingInBackend</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">magento_id</span> <span class="o">=</span> <span class="bp">None</span>
-            <span class="n">should_import</span> <span class="o">=</span> <span class="bp">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">magento_id</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">should_import</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">if</span> <span class="n">should_import</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_delay_import</span><span class="p">()</span>
 
@@ -390,7 +390,7 @@
 <span class="sd">        :type connector_env: :class:`connector.connector.ConnectorEnvironment`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">MagentoExporter</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">connector_env</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">binding_record</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">binding_record</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">def</span> <span class="nf">_lock</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Lock the binding record.</span>
@@ -412,7 +412,7 @@
                <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">_table</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">cr</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">binding_id</span><span class="p">,</span> <span class="p">),</span>
-                                    <span class="n">log_exceptions</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+                                    <span class="n">log_exceptions</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">psycopg2</span><span class="o">.</span><span class="n">OperationalError</span><span class="p">:</span>
             <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;A concurrent job is already exporting the same &#39;</span>
                          <span class="s1">&#39;record (</span><span class="si">%s</span><span class="s1"> with id </span><span class="si">%s</span><span class="s1">). Job delayed later.&#39;</span><span class="p">,</span>
@@ -424,7 +424,7 @@
 
     <span class="k">def</span> <span class="nf">_has_to_skip</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Return True if the export can be skipped &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">False</span>
+        <span class="k">return</span> <span class="kc">False</span>
 
     <span class="nd">@contextmanager</span>
     <span class="k">def</span> <span class="nf">_retry_unique_violation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -458,9 +458,9 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span>
 
-    <span class="k">def</span> <span class="nf">_export_dependency</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">relation</span><span class="p">,</span> <span class="n">binding_model</span><span class="p">,</span> <span class="n">exporter_class</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+    <span class="k">def</span> <span class="nf">_export_dependency</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">relation</span><span class="p">,</span> <span class="n">binding_model</span><span class="p">,</span> <span class="n">exporter_class</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                            <span class="n">binding_field</span><span class="o">=</span><span class="s1">&#39;magento_bind_ids&#39;</span><span class="p">,</span>
-                           <span class="n">binding_extra_vals</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+                           <span class="n">binding_extra_vals</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Export a dependency. The exporter class is a subclass of</span>
 <span class="sd">        ``MagentoExporter``. If a more precise class need to be defined,</span>
@@ -501,7 +501,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">relation</span><span class="p">:</span>
             <span class="k">return</span>
-        <span class="k">if</span> <span class="n">exporter_class</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">exporter_class</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">exporter_class</span> <span class="o">=</span> <span class="n">MagentoExporter</span>
         <span class="n">rel_binder</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">binder_for</span><span class="p">(</span><span class="n">binding_model</span><span class="p">)</span>
         <span class="c1"># wrap is typically True if the relation is for instance a</span>
@@ -533,7 +533,7 @@
                 <span class="c1"># openerp_id) should exist on the binding model</span>
                 <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_retry_unique_violation</span><span class="p">():</span>
                     <span class="n">binding</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">[</span><span class="n">binding_model</span><span class="p">]</span>
-                               <span class="o">.</span><span class="n">with_context</span><span class="p">(</span><span class="n">connector_no_export</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+                               <span class="o">.</span><span class="n">with_context</span><span class="p">(</span><span class="n">connector_no_export</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
                                <span class="o">.</span><span class="n">sudo</span><span class="p">()</span>
                                <span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">bind_values</span><span class="p">))</span>
                     <span class="c1"># Eager commit to avoid having 2 jobs</span>
@@ -599,9 +599,9 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span>
 
-    <span class="k">def</span> <span class="nf">_create_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">map_record</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_create_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">map_record</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Get the data to pass to :py:meth:`_create` &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">map_record</span><span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="n">for_create</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="n">fields</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">map_record</span><span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="n">for_create</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="n">fields</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Create the Magento record &quot;&quot;&quot;</span>
@@ -609,7 +609,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_validate_create_data</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend_adapter</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_update_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">map_record</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_update_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">map_record</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Get the data to pass to :py:meth:`_update` &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">map_record</span><span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="n">fields</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
@@ -620,13 +620,13 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_validate_update_data</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">backend_adapter</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">magento_id</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Flow of the synchronization, implemented in inherited classes&quot;&quot;&quot;</span>
         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">binding_id</span>
         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">binding_record</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">magento_id</span><span class="p">:</span>
-            <span class="n">fields</span> <span class="o">=</span> <span class="bp">None</span>  <span class="c1"># should be created with all the fields</span>
+            <span class="n">fields</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># should be created with all the fields</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_has_to_skip</span><span class="p">():</span>
             <span class="k">return</span>
@@ -655,7 +655,7 @@
 
 <span class="nd">@job</span><span class="p">(</span><span class="n">default_channel</span><span class="o">=</span><span class="s1">&#39;root.magento&#39;</span><span class="p">)</span>
 <span class="nd">@related_action</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="n">unwrap_binding</span><span class="p">)</span>
-<div class="viewcode-block" id="export_record"><a class="viewcode-back" href="../../../../../api/api_synchronizer.html#openerp.addons.magentoerpconnect.unit.export_synchronizer.export_record">[docs]</a><span class="k">def</span> <span class="nf">export_record</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">binding_id</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="export_record"><a class="viewcode-back" href="../../../../../api/api_synchronizer.html#openerp.addons.magentoerpconnect.unit.export_synchronizer.export_record">[docs]</a><span class="k">def</span> <span class="nf">export_record</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">binding_id</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Export a record on Magento &quot;&quot;&quot;</span>
     <span class="n">record</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">env</span><span class="p">[</span><span class="n">model_name</span><span class="p">]</span><span class="o">.</span><span class="n">browse</span><span class="p">(</span><span class="n">binding_id</span><span class="p">)</span>
     <span class="n">env</span> <span class="o">=</span> <span class="n">get_environment</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">record</span><span class="o">.</span><span class="n">backend_id</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
@@ -678,7 +678,7 @@
     </p>
     <p>
         &copy; Copyright 2013-2015, Odoo Community Association (OCA).<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.4.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.5.<br/>
     </p>
   </div>
 </footer>

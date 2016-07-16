@@ -260,20 +260,20 @@
 <span class="c1">##############################################################################</span>
 
 <span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
-<span class="kn">from</span> <span class="nn">openerp</span> <span class="kn">import</span> <span class="n">models</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">api</span><span class="p">,</span> <span class="n">_</span>
-<span class="kn">from</span> <span class="nn">openerp.addons.connector.session</span> <span class="kn">import</span> <span class="n">ConnectorSession</span>
-<span class="kn">from</span> <span class="nn">openerp.addons.connector.connector</span> <span class="kn">import</span> <span class="n">ConnectorUnit</span>
-<span class="kn">from</span> <span class="nn">openerp.addons.connector.unit.mapper</span> <span class="kn">import</span> <span class="n">mapping</span><span class="p">,</span> <span class="n">ImportMapper</span>
-<span class="kn">from</span> <span class="nn">.unit.backend_adapter</span> <span class="kn">import</span> <span class="n">GenericAdapter</span>
-<span class="kn">from</span> <span class="nn">.unit.import_synchronizer</span> <span class="kn">import</span> <span class="p">(</span><span class="n">import_batch</span><span class="p">,</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+<span class="kn">from</span> <span class="nn">openerp</span> <span class="k">import</span> <span class="n">models</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">api</span><span class="p">,</span> <span class="n">_</span>
+<span class="kn">from</span> <span class="nn">openerp.addons.connector.session</span> <span class="k">import</span> <span class="n">ConnectorSession</span>
+<span class="kn">from</span> <span class="nn">openerp.addons.connector.connector</span> <span class="k">import</span> <span class="n">ConnectorUnit</span>
+<span class="kn">from</span> <span class="nn">openerp.addons.connector.unit.mapper</span> <span class="k">import</span> <span class="n">mapping</span><span class="p">,</span> <span class="n">ImportMapper</span>
+<span class="kn">from</span> <span class="nn">.unit.backend_adapter</span> <span class="k">import</span> <span class="n">GenericAdapter</span>
+<span class="kn">from</span> <span class="nn">.unit.import_synchronizer</span> <span class="k">import</span> <span class="p">(</span><span class="n">import_batch</span><span class="p">,</span>
                                        <span class="n">DirectBatchImporter</span><span class="p">,</span>
                                        <span class="n">MagentoImporter</span><span class="p">,</span>
                                        <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">.partner</span> <span class="kn">import</span> <span class="n">partner_import_batch</span>
-<span class="kn">from</span> <span class="nn">.sale</span> <span class="kn">import</span> <span class="n">sale_order_import_batch</span>
-<span class="kn">from</span> <span class="nn">.backend</span> <span class="kn">import</span> <span class="n">magento</span>
-<span class="kn">from</span> <span class="nn">.connector</span> <span class="kn">import</span> <span class="n">add_checkpoint</span>
+<span class="kn">from</span> <span class="nn">.partner</span> <span class="k">import</span> <span class="n">partner_import_batch</span>
+<span class="kn">from</span> <span class="nn">.sale</span> <span class="k">import</span> <span class="n">sale_order_import_batch</span>
+<span class="kn">from</span> <span class="nn">.backend</span> <span class="k">import</span> <span class="n">magento</span>
+<span class="kn">from</span> <span class="nn">.connector</span> <span class="k">import</span> <span class="n">add_checkpoint</span>
 
 <span class="n">_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
 
@@ -287,7 +287,7 @@
 
     <span class="n">_backend_type</span> <span class="o">=</span> <span class="s1">&#39;magento&#39;</span>
 
-    <span class="nd">@api.model</span>
+    <span class="nd">@api</span><span class="o">.</span><span class="n">model</span>
 <div class="viewcode-block" id="MagentoBackend.select_versions"><a class="viewcode-back" href="../../../../api/api_magento_model.html#openerp.addons.magentoerpconnect.magento_model.MagentoBackend.select_versions">[docs]</a>    <span class="k">def</span> <span class="nf">select_versions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Available versions in the backend.</span>
 
@@ -297,7 +297,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">[(</span><span class="s1">&#39;1.7&#39;</span><span class="p">,</span> <span class="s1">&#39;1.7+&#39;</span><span class="p">)]</span></div>
 
-    <span class="nd">@api.model</span>
+    <span class="nd">@api</span><span class="o">.</span><span class="n">model</span>
     <span class="k">def</span> <span class="nf">_get_stock_field_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">field</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">[</span><span class="s1">&#39;ir.model.fields&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">search</span><span class="p">(</span>
             <span class="p">[(</span><span class="s1">&#39;model&#39;</span><span class="p">,</span> <span class="s1">&#39;=&#39;</span><span class="p">,</span> <span class="s1">&#39;product.product&#39;</span><span class="p">),</span>
@@ -305,10 +305,10 @@
             <span class="n">limit</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">field</span>
 
-    <span class="n">version</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Selection</span><span class="p">(</span><span class="n">selection</span><span class="o">=</span><span class="s1">&#39;select_versions&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">version</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Selection</span><span class="p">(</span><span class="n">selection</span><span class="o">=</span><span class="s1">&#39;select_versions&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">location</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Char</span><span class="p">(</span>
         <span class="n">string</span><span class="o">=</span><span class="s1">&#39;Location&#39;</span><span class="p">,</span>
-        <span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+        <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Url to magento application&quot;</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">admin_location</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Char</span><span class="p">(</span><span class="n">string</span><span class="o">=</span><span class="s1">&#39;Admin Location&#39;</span><span class="p">)</span>
@@ -351,7 +351,7 @@
     <span class="n">warehouse_id</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Many2one</span><span class="p">(</span>
         <span class="n">comodel_name</span><span class="o">=</span><span class="s1">&#39;stock.warehouse&#39;</span><span class="p">,</span>
         <span class="n">string</span><span class="o">=</span><span class="s1">&#39;Warehouse&#39;</span><span class="p">,</span>
-        <span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+        <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Warehouse used to compute the &#39;</span>
              <span class="s1">&#39;stock quantities.&#39;</span><span class="p">,</span>
     <span class="p">)</span>
@@ -359,13 +359,13 @@
         <span class="n">comodel_name</span><span class="o">=</span><span class="s1">&#39;res.company&#39;</span><span class="p">,</span>
         <span class="n">related</span><span class="o">=</span><span class="s1">&#39;warehouse_id.company_id&#39;</span><span class="p">,</span>
         <span class="n">string</span><span class="o">=</span><span class="s1">&#39;Company&#39;</span><span class="p">,</span>
-        <span class="n">readonly</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+        <span class="n">readonly</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">website_ids</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">One2many</span><span class="p">(</span>
         <span class="n">comodel_name</span><span class="o">=</span><span class="s1">&#39;magento.website&#39;</span><span class="p">,</span>
         <span class="n">inverse_name</span><span class="o">=</span><span class="s1">&#39;backend_id&#39;</span><span class="p">,</span>
         <span class="n">string</span><span class="o">=</span><span class="s1">&#39;Website&#39;</span><span class="p">,</span>
-        <span class="n">readonly</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+        <span class="n">readonly</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">default_lang_id</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Many2one</span><span class="p">(</span>
         <span class="n">comodel_name</span><span class="o">=</span><span class="s1">&#39;res.lang&#39;</span><span class="p">,</span>
@@ -403,7 +403,7 @@
         <span class="n">comodel_name</span><span class="o">=</span><span class="s1">&#39;magento.product.product&#39;</span><span class="p">,</span>
         <span class="n">inverse_name</span><span class="o">=</span><span class="s1">&#39;backend_id&#39;</span><span class="p">,</span>
         <span class="n">string</span><span class="o">=</span><span class="s1">&#39;Magento Products&#39;</span><span class="p">,</span>
-        <span class="n">readonly</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+        <span class="n">readonly</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">account_analytic_id</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Many2one</span><span class="p">(</span>
         <span class="n">comodel_name</span><span class="o">=</span><span class="s1">&#39;account.analytic.account&#39;</span><span class="p">,</span>
@@ -426,7 +426,7 @@
          <span class="s2">&quot;A backend with the same sale prefix already exists&quot;</span><span class="p">)</span>
     <span class="p">]</span>
 
-    <span class="nd">@api.multi</span>
+    <span class="nd">@api</span><span class="o">.</span><span class="n">multi</span>
 <div class="viewcode-block" id="MagentoBackend.check_magento_structure"><a class="viewcode-back" href="../../../../api/api_magento_model.html#openerp.addons.magentoerpconnect.magento_model.MagentoBackend.check_magento_structure">[docs]</a>    <span class="k">def</span> <span class="nf">check_magento_structure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Used in each data import.</span>
 
@@ -436,9 +436,9 @@
             <span class="n">websites</span> <span class="o">=</span> <span class="n">backend</span><span class="o">.</span><span class="n">website_ids</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">websites</span><span class="p">:</span>
                 <span class="n">backend</span><span class="o">.</span><span class="n">synchronize_metadata</span><span class="p">()</span>
-        <span class="k">return</span> <span class="bp">True</span></div>
+        <span class="k">return</span> <span class="kc">True</span></div>
 
-    <span class="nd">@api.multi</span>
+    <span class="nd">@api</span><span class="o">.</span><span class="n">multi</span>
 <div class="viewcode-block" id="MagentoBackend.synchronize_metadata"><a class="viewcode-back" href="../../../../api/api_magento_model.html#openerp.addons.magentoerpconnect.magento_model.MagentoBackend.synchronize_metadata">[docs]</a>    <span class="k">def</span> <span class="nf">synchronize_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">session</span> <span class="o">=</span> <span class="n">ConnectorSession</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">cr</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">uid</span><span class="p">,</span>
                                    <span class="n">context</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">context</span><span class="p">)</span>
@@ -450,25 +450,25 @@
                 <span class="c1"># is a fast operation, a direct return is fine</span>
                 <span class="c1"># and it is simpler to import them sequentially</span>
                 <span class="n">import_batch</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">backend</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">True</span></div>
+        <span class="k">return</span> <span class="kc">True</span></div>
 
-    <span class="nd">@api.multi</span>
+    <span class="nd">@api</span><span class="o">.</span><span class="n">multi</span>
 <div class="viewcode-block" id="MagentoBackend.import_partners"><a class="viewcode-back" href="../../../../api/api_magento_model.html#openerp.addons.magentoerpconnect.magento_model.MagentoBackend.import_partners">[docs]</a>    <span class="k">def</span> <span class="nf">import_partners</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Import partners from all websites &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">backend</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
             <span class="n">backend</span><span class="o">.</span><span class="n">check_magento_structure</span><span class="p">()</span>
             <span class="n">backend</span><span class="o">.</span><span class="n">website_ids</span><span class="o">.</span><span class="n">import_partners</span><span class="p">()</span>
-        <span class="k">return</span> <span class="bp">True</span></div>
+        <span class="k">return</span> <span class="kc">True</span></div>
 
-    <span class="nd">@api.multi</span>
+    <span class="nd">@api</span><span class="o">.</span><span class="n">multi</span>
 <div class="viewcode-block" id="MagentoBackend.import_sale_orders"><a class="viewcode-back" href="../../../../api/api_magento_model.html#openerp.addons.magentoerpconnect.magento_model.MagentoBackend.import_sale_orders">[docs]</a>    <span class="k">def</span> <span class="nf">import_sale_orders</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Import sale orders from all store views &quot;&quot;&quot;</span>
         <span class="n">storeview_obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">[</span><span class="s1">&#39;magento.storeview&#39;</span><span class="p">]</span>
         <span class="n">storeviews</span> <span class="o">=</span> <span class="n">storeview_obj</span><span class="o">.</span><span class="n">search</span><span class="p">([(</span><span class="s1">&#39;backend_id&#39;</span><span class="p">,</span> <span class="s1">&#39;in&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ids</span><span class="p">)])</span>
         <span class="n">storeviews</span><span class="o">.</span><span class="n">import_sale_orders</span><span class="p">()</span>
-        <span class="k">return</span> <span class="bp">True</span></div>
+        <span class="k">return</span> <span class="kc">True</span></div>
 
-    <span class="nd">@api.multi</span>
+    <span class="nd">@api</span><span class="o">.</span><span class="n">multi</span>
 <div class="viewcode-block" id="MagentoBackend.import_customer_groups"><a class="viewcode-back" href="../../../../api/api_magento_model.html#openerp.addons.magentoerpconnect.magento_model.MagentoBackend.import_customer_groups">[docs]</a>    <span class="k">def</span> <span class="nf">import_customer_groups</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">session</span> <span class="o">=</span> <span class="n">ConnectorSession</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">cr</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">uid</span><span class="p">,</span>
                                    <span class="n">context</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">context</span><span class="p">)</span>
@@ -477,9 +477,9 @@
             <span class="n">import_batch</span><span class="o">.</span><span class="n">delay</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="s1">&#39;magento.res.partner.category&#39;</span><span class="p">,</span>
                                <span class="n">backend</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="bp">True</span></div>
+        <span class="k">return</span> <span class="kc">True</span></div>
 
-    <span class="nd">@api.multi</span>
+    <span class="nd">@api</span><span class="o">.</span><span class="n">multi</span>
     <span class="k">def</span> <span class="nf">_import_from_date</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">from_date_field</span><span class="p">):</span>
         <span class="n">session</span> <span class="o">=</span> <span class="n">ConnectorSession</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">cr</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">uid</span><span class="p">,</span>
                                    <span class="n">context</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">context</span><span class="p">)</span>
@@ -490,7 +490,7 @@
             <span class="k">if</span> <span class="n">from_date</span><span class="p">:</span>
                 <span class="n">from_date</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Datetime</span><span class="o">.</span><span class="n">from_string</span><span class="p">(</span><span class="n">from_date</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">from_date</span> <span class="o">=</span> <span class="bp">None</span>
+                <span class="n">from_date</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="n">import_batch</span><span class="o">.</span><span class="n">delay</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span>
                                <span class="n">backend</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
                                <span class="n">filters</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;from_date&#39;</span><span class="p">:</span> <span class="n">from_date</span><span class="p">,</span>
@@ -508,73 +508,73 @@
         <span class="n">next_time</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Datetime</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">next_time</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">write</span><span class="p">({</span><span class="n">from_date_field</span><span class="p">:</span> <span class="n">next_time</span><span class="p">})</span>
 
-    <span class="nd">@api.multi</span>
+    <span class="nd">@api</span><span class="o">.</span><span class="n">multi</span>
 <div class="viewcode-block" id="MagentoBackend.import_product_categories"><a class="viewcode-back" href="../../../../api/api_magento_model.html#openerp.addons.magentoerpconnect.magento_model.MagentoBackend.import_product_categories">[docs]</a>    <span class="k">def</span> <span class="nf">import_product_categories</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_import_from_date</span><span class="p">(</span><span class="s1">&#39;magento.product.category&#39;</span><span class="p">,</span>
                                <span class="s1">&#39;import_categories_from_date&#39;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">True</span></div>
+        <span class="k">return</span> <span class="kc">True</span></div>
 
-    <span class="nd">@api.multi</span>
+    <span class="nd">@api</span><span class="o">.</span><span class="n">multi</span>
 <div class="viewcode-block" id="MagentoBackend.import_product_product"><a class="viewcode-back" href="../../../../api/api_magento_model.html#openerp.addons.magentoerpconnect.magento_model.MagentoBackend.import_product_product">[docs]</a>    <span class="k">def</span> <span class="nf">import_product_product</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_import_from_date</span><span class="p">(</span><span class="s1">&#39;magento.product.product&#39;</span><span class="p">,</span>
                                <span class="s1">&#39;import_products_from_date&#39;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">True</span></div>
+        <span class="k">return</span> <span class="kc">True</span></div>
 
-    <span class="nd">@api.multi</span>
+    <span class="nd">@api</span><span class="o">.</span><span class="n">multi</span>
     <span class="k">def</span> <span class="nf">_domain_for_update_product_stock_qty</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">[</span>
             <span class="p">(</span><span class="s1">&#39;backend_id&#39;</span><span class="p">,</span> <span class="s1">&#39;in&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ids</span><span class="p">),</span>
             <span class="p">(</span><span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="s1">&#39;!=&#39;</span><span class="p">,</span> <span class="s1">&#39;service&#39;</span><span class="p">),</span>
-            <span class="p">(</span><span class="s1">&#39;no_stock_sync&#39;</span><span class="p">,</span> <span class="s1">&#39;=&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;no_stock_sync&#39;</span><span class="p">,</span> <span class="s1">&#39;=&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
         <span class="p">]</span>
 
-    <span class="nd">@api.multi</span>
+    <span class="nd">@api</span><span class="o">.</span><span class="n">multi</span>
 <div class="viewcode-block" id="MagentoBackend.update_product_stock_qty"><a class="viewcode-back" href="../../../../api/api_magento_model.html#openerp.addons.magentoerpconnect.magento_model.MagentoBackend.update_product_stock_qty">[docs]</a>    <span class="k">def</span> <span class="nf">update_product_stock_qty</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">mag_product_obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">[</span><span class="s1">&#39;magento.product.product&#39;</span><span class="p">]</span>
         <span class="n">domain</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_domain_for_update_product_stock_qty</span><span class="p">()</span>
         <span class="n">magento_products</span> <span class="o">=</span> <span class="n">mag_product_obj</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">domain</span><span class="p">)</span>
         <span class="n">magento_products</span><span class="o">.</span><span class="n">recompute_magento_qty</span><span class="p">()</span>
-        <span class="k">return</span> <span class="bp">True</span></div>
+        <span class="k">return</span> <span class="kc">True</span></div>
 
-    <span class="nd">@api.model</span>
-    <span class="k">def</span> <span class="nf">_magento_backend</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callback</span><span class="p">,</span> <span class="n">domain</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">domain</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="nd">@api</span><span class="o">.</span><span class="n">model</span>
+    <span class="k">def</span> <span class="nf">_magento_backend</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callback</span><span class="p">,</span> <span class="n">domain</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">domain</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">domain</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">backends</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">domain</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">backends</span><span class="p">:</span>
             <span class="nb">getattr</span><span class="p">(</span><span class="n">backends</span><span class="p">,</span> <span class="n">callback</span><span class="p">)()</span>
 
-    <span class="nd">@api.model</span>
-    <span class="k">def</span> <span class="nf">_scheduler_import_sale_orders</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">domain</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="nd">@api</span><span class="o">.</span><span class="n">model</span>
+    <span class="k">def</span> <span class="nf">_scheduler_import_sale_orders</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">domain</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_magento_backend</span><span class="p">(</span><span class="s1">&#39;import_sale_orders&#39;</span><span class="p">,</span> <span class="n">domain</span><span class="o">=</span><span class="n">domain</span><span class="p">)</span>
 
-    <span class="nd">@api.model</span>
-    <span class="k">def</span> <span class="nf">_scheduler_import_customer_groups</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">domain</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="nd">@api</span><span class="o">.</span><span class="n">model</span>
+    <span class="k">def</span> <span class="nf">_scheduler_import_customer_groups</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">domain</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_magento_backend</span><span class="p">(</span><span class="s1">&#39;import_customer_groups&#39;</span><span class="p">,</span> <span class="n">domain</span><span class="o">=</span><span class="n">domain</span><span class="p">)</span>
 
-    <span class="nd">@api.model</span>
-    <span class="k">def</span> <span class="nf">_scheduler_import_partners</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">domain</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="nd">@api</span><span class="o">.</span><span class="n">model</span>
+    <span class="k">def</span> <span class="nf">_scheduler_import_partners</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">domain</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_magento_backend</span><span class="p">(</span><span class="s1">&#39;import_partners&#39;</span><span class="p">,</span> <span class="n">domain</span><span class="o">=</span><span class="n">domain</span><span class="p">)</span>
 
-    <span class="nd">@api.model</span>
-    <span class="k">def</span> <span class="nf">_scheduler_import_product_categories</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">domain</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="nd">@api</span><span class="o">.</span><span class="n">model</span>
+    <span class="k">def</span> <span class="nf">_scheduler_import_product_categories</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">domain</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_magento_backend</span><span class="p">(</span><span class="s1">&#39;import_product_categories&#39;</span><span class="p">,</span> <span class="n">domain</span><span class="o">=</span><span class="n">domain</span><span class="p">)</span>
 
-    <span class="nd">@api.model</span>
-    <span class="k">def</span> <span class="nf">_scheduler_import_product_product</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">domain</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="nd">@api</span><span class="o">.</span><span class="n">model</span>
+    <span class="k">def</span> <span class="nf">_scheduler_import_product_product</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">domain</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_magento_backend</span><span class="p">(</span><span class="s1">&#39;import_product_product&#39;</span><span class="p">,</span> <span class="n">domain</span><span class="o">=</span><span class="n">domain</span><span class="p">)</span>
 
-    <span class="nd">@api.model</span>
-    <span class="k">def</span> <span class="nf">_scheduler_update_product_stock_qty</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">domain</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="nd">@api</span><span class="o">.</span><span class="n">model</span>
+    <span class="k">def</span> <span class="nf">_scheduler_update_product_stock_qty</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">domain</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_magento_backend</span><span class="p">(</span><span class="s1">&#39;update_product_stock_qty&#39;</span><span class="p">,</span> <span class="n">domain</span><span class="o">=</span><span class="n">domain</span><span class="p">)</span>
 
-    <span class="nd">@api.multi</span>
+    <span class="nd">@api</span><span class="o">.</span><span class="n">multi</span>
 <div class="viewcode-block" id="MagentoBackend.output_recorder"><a class="viewcode-back" href="../../../../api/api_magento_model.html#openerp.addons.magentoerpconnect.magento_model.MagentoBackend.output_recorder">[docs]</a>    <span class="k">def</span> <span class="nf">output_recorder</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Utility method to output a file containing all the recorded</span>
 <span class="sd">        requests / responses with Magento.  Used to generate test data.</span>
 <span class="sd">        Should be called with ``erppeek`` for instance.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="kn">from</span> <span class="nn">.unit.backend_adapter</span> <span class="kn">import</span> <span class="n">output_recorder</span>
+        <span class="kn">from</span> <span class="nn">.unit.backend_adapter</span> <span class="k">import</span> <span class="n">output_recorder</span>
         <span class="kn">import</span> <span class="nn">os</span>
         <span class="kn">import</span> <span class="nn">tempfile</span>
         <span class="n">fmt</span> <span class="o">=</span> <span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">-%H-%M-%S&#39;</span>
@@ -618,14 +618,14 @@
     <span class="k">def</span> <span class="nf">_parent</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent_name</span><span class="p">)</span>
 
-    <span class="nd">@api.multi</span>
+    <span class="nd">@api</span><span class="o">.</span><span class="n">multi</span>
     <span class="k">def</span> <span class="nf">_get_account_analytic_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">this</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
             <span class="n">this</span><span class="o">.</span><span class="n">account_analytic_id</span> <span class="o">=</span> <span class="p">(</span>
                 <span class="n">this</span><span class="o">.</span><span class="n">specific_account_analytic_id</span> <span class="ow">or</span>
                 <span class="n">this</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">account_analytic_id</span><span class="p">)</span>
 
-    <span class="nd">@api.multi</span>
+    <span class="nd">@api</span><span class="o">.</span><span class="n">multi</span>
     <span class="k">def</span> <span class="nf">_get_fiscal_position_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">this</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
             <span class="n">this</span><span class="o">.</span><span class="n">fiscal_position_id</span> <span class="o">=</span> <span class="p">(</span>
@@ -641,14 +641,14 @@
 
     <span class="n">_order</span> <span class="o">=</span> <span class="s1">&#39;sort_order ASC, id ASC&#39;</span>
 
-    <span class="n">name</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Char</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">readonly</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-    <span class="n">code</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Char</span><span class="p">(</span><span class="n">readonly</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-    <span class="n">sort_order</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Integer</span><span class="p">(</span><span class="n">string</span><span class="o">=</span><span class="s1">&#39;Sort Order&#39;</span><span class="p">,</span> <span class="n">readonly</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Char</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">readonly</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">code</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Char</span><span class="p">(</span><span class="n">readonly</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">sort_order</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Integer</span><span class="p">(</span><span class="n">string</span><span class="o">=</span><span class="s1">&#39;Sort Order&#39;</span><span class="p">,</span> <span class="n">readonly</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">store_ids</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">One2many</span><span class="p">(</span>
         <span class="n">comodel_name</span><span class="o">=</span><span class="s1">&#39;magento.store&#39;</span><span class="p">,</span>
         <span class="n">inverse_name</span><span class="o">=</span><span class="s1">&#39;website_id&#39;</span><span class="p">,</span>
         <span class="n">string</span><span class="o">=</span><span class="s1">&#39;Stores&#39;</span><span class="p">,</span>
-        <span class="n">readonly</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+        <span class="n">readonly</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">import_partners_from_date</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Datetime</span><span class="p">(</span>
         <span class="n">string</span><span class="o">=</span><span class="s1">&#39;Import partners from date&#39;</span><span class="p">,</span>
@@ -656,10 +656,10 @@
     <span class="n">product_binding_ids</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Many2many</span><span class="p">(</span>
         <span class="n">comodel_name</span><span class="o">=</span><span class="s1">&#39;magento.product.product&#39;</span><span class="p">,</span>
         <span class="n">string</span><span class="o">=</span><span class="s1">&#39;Magento Products&#39;</span><span class="p">,</span>
-        <span class="n">readonly</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+        <span class="n">readonly</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="p">)</span>
 
-    <span class="nd">@api.multi</span>
+    <span class="nd">@api</span><span class="o">.</span><span class="n">multi</span>
 <div class="viewcode-block" id="MagentoWebsite.import_partners"><a class="viewcode-back" href="../../../../api/api_magento_model.html#openerp.addons.magentoerpconnect.magento_model.MagentoWebsite.import_partners">[docs]</a>    <span class="k">def</span> <span class="nf">import_partners</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">session</span> <span class="o">=</span> <span class="n">ConnectorSession</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">cr</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">uid</span><span class="p">,</span>
                                    <span class="n">context</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">context</span><span class="p">)</span>
@@ -670,7 +670,7 @@
                 <span class="n">from_string</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Datetime</span><span class="o">.</span><span class="n">from_string</span>
                 <span class="n">from_date</span> <span class="o">=</span> <span class="n">from_string</span><span class="p">(</span><span class="n">website</span><span class="o">.</span><span class="n">import_partners_from_date</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">from_date</span> <span class="o">=</span> <span class="bp">None</span>
+                <span class="n">from_date</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="n">partner_import_batch</span><span class="o">.</span><span class="n">delay</span><span class="p">(</span>
                 <span class="n">session</span><span class="p">,</span> <span class="s1">&#39;magento.res.partner&#39;</span><span class="p">,</span> <span class="n">backend_id</span><span class="p">,</span>
                 <span class="p">{</span><span class="s1">&#39;magento_website_id&#39;</span><span class="p">:</span> <span class="n">website</span><span class="o">.</span><span class="n">magento_id</span><span class="p">,</span>
@@ -688,7 +688,7 @@
         <span class="n">next_time</span> <span class="o">=</span> <span class="n">import_start_time</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">IMPORT_DELTA_BUFFER</span><span class="p">)</span>
         <span class="n">next_time</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Datetime</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">next_time</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">write</span><span class="p">({</span><span class="s1">&#39;import_partners_from_date&#39;</span><span class="p">:</span> <span class="n">next_time</span><span class="p">})</span>
-        <span class="k">return</span> <span class="bp">True</span></div></div>
+        <span class="k">return</span> <span class="kc">True</span></div></div>
 
 
 <div class="viewcode-block" id="MagentoStore"><a class="viewcode-back" href="../../../../api/api_magento_model.html#openerp.addons.magentoerpconnect.magento_model.MagentoStore">[docs]</a><span class="k">class</span> <span class="nc">MagentoStore</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
@@ -701,24 +701,24 @@
     <span class="n">website_id</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Many2one</span><span class="p">(</span>
         <span class="n">comodel_name</span><span class="o">=</span><span class="s1">&#39;magento.website&#39;</span><span class="p">,</span>
         <span class="n">string</span><span class="o">=</span><span class="s1">&#39;Magento Website&#39;</span><span class="p">,</span>
-        <span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
-        <span class="n">readonly</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+        <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">readonly</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">ondelete</span><span class="o">=</span><span class="s1">&#39;cascade&#39;</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">backend_id</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Many2one</span><span class="p">(</span>
         <span class="n">comodel_name</span><span class="o">=</span><span class="s1">&#39;magento.backend&#39;</span><span class="p">,</span>
         <span class="n">related</span><span class="o">=</span><span class="s1">&#39;website_id.backend_id&#39;</span><span class="p">,</span>
         <span class="n">string</span><span class="o">=</span><span class="s1">&#39;Magento Backend&#39;</span><span class="p">,</span>
-        <span class="n">store</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
-        <span class="n">readonly</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+        <span class="n">store</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">readonly</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="c1"># override &#39;magento.binding&#39;, can&#39;t be INSERTed if True:</span>
-        <span class="n">required</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+        <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">storeview_ids</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">One2many</span><span class="p">(</span>
         <span class="n">comodel_name</span><span class="o">=</span><span class="s1">&#39;magento.storeview&#39;</span><span class="p">,</span>
         <span class="n">inverse_name</span><span class="o">=</span><span class="s1">&#39;store_id&#39;</span><span class="p">,</span>
         <span class="n">string</span><span class="o">=</span><span class="s2">&quot;Storeviews&quot;</span><span class="p">,</span>
-        <span class="n">readonly</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+        <span class="n">readonly</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">send_picking_done_mail</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Boolean</span><span class="p">(</span>
         <span class="n">string</span><span class="o">=</span><span class="s1">&#39;Send email notification on picking done&#39;</span><span class="p">,</span>
@@ -735,7 +735,7 @@
                    <span class="p">(</span><span class="s1">&#39;paid&#39;</span><span class="p">,</span> <span class="s1">&#39;Paid&#39;</span><span class="p">)],</span>
         <span class="n">string</span><span class="o">=</span><span class="s1">&#39;Create invoice on action&#39;</span><span class="p">,</span>
         <span class="n">default</span><span class="o">=</span><span class="s1">&#39;paid&#39;</span><span class="p">,</span>
-        <span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+        <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Should the invoice be created in Magento &quot;</span>
              <span class="s2">&quot;when it is validated or when it is paid in OpenERP?</span><span class="se">\n</span><span class="s2">&quot;</span>
              <span class="s2">&quot;This only takes effect if the sales order&#39;s related &quot;</span>
@@ -752,14 +752,14 @@
 
     <span class="n">_order</span> <span class="o">=</span> <span class="s1">&#39;sort_order ASC, id ASC&#39;</span>
 
-    <span class="n">name</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Char</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">readonly</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-    <span class="n">code</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Char</span><span class="p">(</span><span class="n">readonly</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-    <span class="n">enabled</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Boolean</span><span class="p">(</span><span class="n">string</span><span class="o">=</span><span class="s1">&#39;Enabled&#39;</span><span class="p">,</span> <span class="n">readonly</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-    <span class="n">sort_order</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Integer</span><span class="p">(</span><span class="n">string</span><span class="o">=</span><span class="s1">&#39;Sort Order&#39;</span><span class="p">,</span> <span class="n">readonly</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Char</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">readonly</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">code</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Char</span><span class="p">(</span><span class="n">readonly</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">enabled</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Boolean</span><span class="p">(</span><span class="n">string</span><span class="o">=</span><span class="s1">&#39;Enabled&#39;</span><span class="p">,</span> <span class="n">readonly</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">sort_order</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Integer</span><span class="p">(</span><span class="n">string</span><span class="o">=</span><span class="s1">&#39;Sort Order&#39;</span><span class="p">,</span> <span class="n">readonly</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">store_id</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Many2one</span><span class="p">(</span><span class="n">comodel_name</span><span class="o">=</span><span class="s1">&#39;magento.store&#39;</span><span class="p">,</span>
                                <span class="n">string</span><span class="o">=</span><span class="s1">&#39;Store&#39;</span><span class="p">,</span>
                                <span class="n">ondelete</span><span class="o">=</span><span class="s1">&#39;cascade&#39;</span><span class="p">,</span>
-                               <span class="n">readonly</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+                               <span class="n">readonly</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">lang_id</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Many2one</span><span class="p">(</span><span class="n">comodel_name</span><span class="o">=</span><span class="s1">&#39;res.lang&#39;</span><span class="p">,</span> <span class="n">string</span><span class="o">=</span><span class="s1">&#39;Language&#39;</span><span class="p">)</span>
     <span class="n">section_id</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Many2one</span><span class="p">(</span><span class="n">comodel_name</span><span class="o">=</span><span class="s1">&#39;crm.case.section&#39;</span><span class="p">,</span>
                                  <span class="n">string</span><span class="o">=</span><span class="s1">&#39;Sales Team&#39;</span><span class="p">)</span>
@@ -767,10 +767,10 @@
         <span class="n">comodel_name</span><span class="o">=</span><span class="s1">&#39;magento.backend&#39;</span><span class="p">,</span>
         <span class="n">related</span><span class="o">=</span><span class="s1">&#39;store_id.website_id.backend_id&#39;</span><span class="p">,</span>
         <span class="n">string</span><span class="o">=</span><span class="s1">&#39;Magento Backend&#39;</span><span class="p">,</span>
-        <span class="n">store</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
-        <span class="n">readonly</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+        <span class="n">store</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">readonly</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="c1"># override &#39;magento.binding&#39;, can&#39;t be INSERTed if True:</span>
-        <span class="n">required</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+        <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">import_orders_from_date</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Datetime</span><span class="p">(</span>
         <span class="n">string</span><span class="o">=</span><span class="s1">&#39;Import sale orders from date&#39;</span><span class="p">,</span>
@@ -784,7 +784,7 @@
     <span class="p">)</span>
     <span class="n">catalog_price_tax_included</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Boolean</span><span class="p">(</span><span class="n">string</span><span class="o">=</span><span class="s1">&#39;Prices include tax&#39;</span><span class="p">)</span>
 
-    <span class="nd">@api.multi</span>
+    <span class="nd">@api</span><span class="o">.</span><span class="n">multi</span>
 <div class="viewcode-block" id="MagentoStoreview.import_sale_orders"><a class="viewcode-back" href="../../../../api/api_magento_model.html#openerp.addons.magentoerpconnect.magento_model.MagentoStoreview.import_sale_orders">[docs]</a>    <span class="k">def</span> <span class="nf">import_sale_orders</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">session</span> <span class="o">=</span> <span class="n">ConnectorSession</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">cr</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">uid</span><span class="p">,</span>
                                    <span class="n">context</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">context</span><span class="p">)</span>
@@ -800,7 +800,7 @@
                 <span class="n">from_string</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Datetime</span><span class="o">.</span><span class="n">from_string</span>
                 <span class="n">from_date</span> <span class="o">=</span> <span class="n">from_string</span><span class="p">(</span><span class="n">storeview</span><span class="o">.</span><span class="n">import_orders_from_date</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">from_date</span> <span class="o">=</span> <span class="bp">None</span>
+                <span class="n">from_date</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="n">sale_order_import_batch</span><span class="o">.</span><span class="n">delay</span><span class="p">(</span>
                 <span class="n">session</span><span class="p">,</span>
                 <span class="s1">&#39;magento.sale.order&#39;</span><span class="p">,</span>
@@ -822,28 +822,28 @@
         <span class="n">next_time</span> <span class="o">=</span> <span class="n">import_start_time</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">IMPORT_DELTA_BUFFER</span><span class="p">)</span>
         <span class="n">next_time</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Datetime</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">next_time</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">write</span><span class="p">({</span><span class="s1">&#39;import_orders_from_date&#39;</span><span class="p">:</span> <span class="n">next_time</span><span class="p">})</span>
-        <span class="k">return</span> <span class="bp">True</span></div></div>
+        <span class="k">return</span> <span class="kc">True</span></div></div>
 
 
 <span class="nd">@magento</span>
 <div class="viewcode-block" id="WebsiteAdapter"><a class="viewcode-back" href="../../../../api/api_magento_model.html#openerp.addons.magentoerpconnect.magento_model.WebsiteAdapter">[docs]</a><span class="k">class</span> <span class="nc">WebsiteAdapter</span><span class="p">(</span><span class="n">GenericAdapter</span><span class="p">):</span>
     <span class="n">_model_name</span> <span class="o">=</span> <span class="s1">&#39;magento.website&#39;</span>
     <span class="n">_magento_model</span> <span class="o">=</span> <span class="s1">&#39;ol_websites&#39;</span>
-    <span class="n">_admin_path</span> <span class="o">=</span> <span class="s1">&#39;system_store/editWebsite/website_id/{id}&#39;</span></div>
+    <span class="n">_admin_path</span> <span class="o">=</span> <span class="s1">&#39;system_store/editWebsite/website_id/</span><span class="si">{id}</span><span class="s1">&#39;</span></div>
 
 
 <span class="nd">@magento</span>
 <div class="viewcode-block" id="StoreAdapter"><a class="viewcode-back" href="../../../../api/api_magento_model.html#openerp.addons.magentoerpconnect.magento_model.StoreAdapter">[docs]</a><span class="k">class</span> <span class="nc">StoreAdapter</span><span class="p">(</span><span class="n">GenericAdapter</span><span class="p">):</span>
     <span class="n">_model_name</span> <span class="o">=</span> <span class="s1">&#39;magento.store&#39;</span>
     <span class="n">_magento_model</span> <span class="o">=</span> <span class="s1">&#39;ol_groups&#39;</span>
-    <span class="n">_admin_path</span> <span class="o">=</span> <span class="s1">&#39;system_store/editGroup/group_id/{id}&#39;</span></div>
+    <span class="n">_admin_path</span> <span class="o">=</span> <span class="s1">&#39;system_store/editGroup/group_id/</span><span class="si">{id}</span><span class="s1">&#39;</span></div>
 
 
 <span class="nd">@magento</span>
 <div class="viewcode-block" id="StoreviewAdapter"><a class="viewcode-back" href="../../../../api/api_magento_model.html#openerp.addons.magentoerpconnect.magento_model.StoreviewAdapter">[docs]</a><span class="k">class</span> <span class="nc">StoreviewAdapter</span><span class="p">(</span><span class="n">GenericAdapter</span><span class="p">):</span>
     <span class="n">_model_name</span> <span class="o">=</span> <span class="s1">&#39;magento.storeview&#39;</span>
     <span class="n">_magento_model</span> <span class="o">=</span> <span class="s1">&#39;ol_storeviews&#39;</span>
-    <span class="n">_admin_path</span> <span class="o">=</span> <span class="s1">&#39;system_store/editStore/store_id/{id}&#39;</span></div>
+    <span class="n">_admin_path</span> <span class="o">=</span> <span class="s1">&#39;system_store/editStore/store_id/</span><span class="si">{id}</span><span class="s1">&#39;</span></div>
 
 
 <span class="nd">@magento</span>
@@ -876,7 +876,7 @@
     <span class="nd">@mapping</span>
 <div class="viewcode-block" id="WebsiteImportMapper.name"><a class="viewcode-back" href="../../../../api/api_magento_model.html#openerp.addons.magentoerpconnect.magento_model.WebsiteImportMapper.name">[docs]</a>    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
         <span class="n">name</span> <span class="o">=</span> <span class="n">record</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">name</span> <span class="o">=</span> <span class="n">_</span><span class="p">(</span><span class="s1">&#39;Undefined&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">name</span><span class="p">}</span></div>
 
@@ -982,7 +982,7 @@
     </p>
     <p>
         &copy; Copyright 2013-2015, Odoo Community Association (OCA).<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.4.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.5.<br/>
     </p>
   </div>
 </footer>

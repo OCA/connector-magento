@@ -260,22 +260,22 @@
 
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">xmlrpclib</span>
-<span class="kn">from</span> <span class="nn">openerp</span> <span class="kn">import</span> <span class="n">models</span><span class="p">,</span> <span class="n">fields</span>
-<span class="kn">from</span> <span class="nn">openerp.addons.connector.unit.mapper</span> <span class="kn">import</span> <span class="p">(</span><span class="n">mapping</span><span class="p">,</span>
+<span class="kn">from</span> <span class="nn">openerp</span> <span class="k">import</span> <span class="n">models</span><span class="p">,</span> <span class="n">fields</span>
+<span class="kn">from</span> <span class="nn">openerp.addons.connector.unit.mapper</span> <span class="k">import</span> <span class="p">(</span><span class="n">mapping</span><span class="p">,</span>
                                                   <span class="n">ImportMapper</span>
                                                   <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">openerp.addons.connector.exception</span> <span class="kn">import</span> <span class="p">(</span><span class="n">IDMissingInBackend</span><span class="p">,</span>
+<span class="kn">from</span> <span class="nn">openerp.addons.connector.exception</span> <span class="k">import</span> <span class="p">(</span><span class="n">IDMissingInBackend</span><span class="p">,</span>
                                                 <span class="n">MappingError</span><span class="p">,</span>
                                                 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">.unit.backend_adapter</span> <span class="kn">import</span> <span class="p">(</span><span class="n">GenericAdapter</span><span class="p">,</span>
+<span class="kn">from</span> <span class="nn">.unit.backend_adapter</span> <span class="k">import</span> <span class="p">(</span><span class="n">GenericAdapter</span><span class="p">,</span>
                                    <span class="n">MAGENTO_DATETIME_FORMAT</span><span class="p">,</span>
                                    <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">.unit.import_synchronizer</span> <span class="kn">import</span> <span class="p">(</span><span class="n">DelayedBatchImporter</span><span class="p">,</span>
+<span class="kn">from</span> <span class="nn">.unit.import_synchronizer</span> <span class="k">import</span> <span class="p">(</span><span class="n">DelayedBatchImporter</span><span class="p">,</span>
                                        <span class="n">MagentoImporter</span><span class="p">,</span>
                                        <span class="n">TranslationImporter</span><span class="p">,</span>
                                        <span class="n">AddCheckpoint</span><span class="p">,</span>
                                        <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">.backend</span> <span class="kn">import</span> <span class="n">magento</span>
+<span class="kn">from</span> <span class="nn">.backend</span> <span class="k">import</span> <span class="n">magento</span>
 
 <span class="n">_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
 
@@ -288,9 +288,9 @@
 
     <span class="n">openerp_id</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Many2one</span><span class="p">(</span><span class="n">comodel_name</span><span class="o">=</span><span class="s1">&#39;product.category&#39;</span><span class="p">,</span>
                                  <span class="n">string</span><span class="o">=</span><span class="s1">&#39;Product Category&#39;</span><span class="p">,</span>
-                                 <span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+                                 <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                                  <span class="n">ondelete</span><span class="o">=</span><span class="s1">&#39;cascade&#39;</span><span class="p">)</span>
-    <span class="n">description</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Text</span><span class="p">(</span><span class="n">translate</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">description</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Text</span><span class="p">(</span><span class="n">translate</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">magento_parent_id</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Many2one</span><span class="p">(</span>
         <span class="n">comodel_name</span><span class="o">=</span><span class="s1">&#39;magento.product.category&#39;</span><span class="p">,</span>
         <span class="n">string</span><span class="o">=</span><span class="s1">&#39;Magento Parent Category&#39;</span><span class="p">,</span>
@@ -317,7 +317,7 @@
 <div class="viewcode-block" id="ProductCategoryAdapter"><a class="viewcode-back" href="../../../../api/api_product_category.html#openerp.addons.magentoerpconnect.product_category.ProductCategoryAdapter">[docs]</a><span class="k">class</span> <span class="nc">ProductCategoryAdapter</span><span class="p">(</span><span class="n">GenericAdapter</span><span class="p">):</span>
     <span class="n">_model_name</span> <span class="o">=</span> <span class="s1">&#39;magento.product.category&#39;</span>
     <span class="n">_magento_model</span> <span class="o">=</span> <span class="s1">&#39;catalog_category&#39;</span>
-    <span class="n">_admin_path</span> <span class="o">=</span> <span class="s1">&#39;/{model}/index/&#39;</span>
+    <span class="n">_admin_path</span> <span class="o">=</span> <span class="s1">&#39;/</span><span class="si">{model}</span><span class="s1">/index/&#39;</span>
 
     <span class="k">def</span> <span class="nf">_call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">arguments</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
@@ -330,28 +330,28 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span>
 
-<div class="viewcode-block" id="ProductCategoryAdapter.search"><a class="viewcode-back" href="../../../../api/api_product_category.html#openerp.addons.magentoerpconnect.product_category.ProductCategoryAdapter.search">[docs]</a>    <span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filters</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">from_date</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">to_date</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="ProductCategoryAdapter.search"><a class="viewcode-back" href="../../../../api/api_product_category.html#openerp.addons.magentoerpconnect.product_category.ProductCategoryAdapter.search">[docs]</a>    <span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">from_date</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">to_date</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Search records according to some criteria and return a</span>
 <span class="sd">        list of ids</span>
 
 <span class="sd">        :rtype: list</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">filters</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">filters</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">filters</span> <span class="o">=</span> <span class="p">{}</span>
 
         <span class="n">dt_fmt</span> <span class="o">=</span> <span class="n">MAGENTO_DATETIME_FORMAT</span>
-        <span class="k">if</span> <span class="n">from_date</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">from_date</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">filters</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;updated_at&#39;</span><span class="p">,</span> <span class="p">{})</span>
             <span class="c1"># updated_at include the created records</span>
             <span class="n">filters</span><span class="p">[</span><span class="s1">&#39;updated_at&#39;</span><span class="p">][</span><span class="s1">&#39;from&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">from_date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="n">dt_fmt</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">to_date</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">to_date</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">filters</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;updated_at&#39;</span><span class="p">,</span> <span class="p">{})</span>
             <span class="n">filters</span><span class="p">[</span><span class="s1">&#39;updated_at&#39;</span><span class="p">][</span><span class="s1">&#39;to&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">to_date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="n">dt_fmt</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call</span><span class="p">(</span><span class="s1">&#39;oerp_catalog_category.search&#39;</span><span class="p">,</span>
                           <span class="p">[</span><span class="n">filters</span><span class="p">]</span> <span class="k">if</span> <span class="n">filters</span> <span class="k">else</span> <span class="p">[{}])</span></div>
 
-<div class="viewcode-block" id="ProductCategoryAdapter.read"><a class="viewcode-back" href="../../../../api/api_product_category.html#openerp.addons.magentoerpconnect.product_category.ProductCategoryAdapter.read">[docs]</a>    <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">storeview_id</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">attributes</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="ProductCategoryAdapter.read"><a class="viewcode-back" href="../../../../api/api_product_category.html#openerp.addons.magentoerpconnect.product_category.ProductCategoryAdapter.read">[docs]</a>    <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">storeview_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">attributes</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Returns the information of a record</span>
 
 <span class="sd">        :rtype: dict</span>
@@ -359,7 +359,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">.info&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_magento_model</span><span class="p">,</span>
                           <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="nb">id</span><span class="p">),</span> <span class="n">storeview_id</span><span class="p">,</span> <span class="n">attributes</span><span class="p">])</span></div>
 
-<div class="viewcode-block" id="ProductCategoryAdapter.tree"><a class="viewcode-back" href="../../../../api/api_product_category.html#openerp.addons.magentoerpconnect.product_category.ProductCategoryAdapter.tree">[docs]</a>    <span class="k">def</span> <span class="nf">tree</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent_id</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">storeview_id</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="ProductCategoryAdapter.tree"><a class="viewcode-back" href="../../../../api/api_product_category.html#openerp.addons.magentoerpconnect.product_category.ProductCategoryAdapter.tree">[docs]</a>    <span class="k">def</span> <span class="nf">tree</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">storeview_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Returns a tree of product categories</span>
 
 <span class="sd">        :rtype: dict</span>
@@ -377,7 +377,7 @@
                           <span class="p">[</span><span class="n">parent_id</span><span class="p">,</span> <span class="n">storeview_id</span><span class="p">])</span>
         <span class="k">return</span> <span class="n">filter_ids</span><span class="p">(</span><span class="n">tree</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="ProductCategoryAdapter.move"><a class="viewcode-back" href="../../../../api/api_product_category.html#openerp.addons.magentoerpconnect.product_category.ProductCategoryAdapter.move">[docs]</a>    <span class="k">def</span> <span class="nf">move</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">categ_id</span><span class="p">,</span> <span class="n">parent_id</span><span class="p">,</span> <span class="n">after_categ_id</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="ProductCategoryAdapter.move"><a class="viewcode-back" href="../../../../api/api_product_category.html#openerp.addons.magentoerpconnect.product_category.ProductCategoryAdapter.move">[docs]</a>    <span class="k">def</span> <span class="nf">move</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">categ_id</span><span class="p">,</span> <span class="n">parent_id</span><span class="p">,</span> <span class="n">after_categ_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">.move&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_magento_model</span><span class="p">,</span>
                           <span class="p">[</span><span class="n">categ_id</span><span class="p">,</span> <span class="n">parent_id</span><span class="p">,</span> <span class="n">after_categ_id</span><span class="p">])</span></div>
 
@@ -408,21 +408,21 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">_model_name</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;magento.product.category&#39;</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="nf">_import_record</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">magento_id</span><span class="p">,</span> <span class="n">priority</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_import_record</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">magento_id</span><span class="p">,</span> <span class="n">priority</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Delay a job for the import &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">ProductCategoryBatchImporter</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">_import_record</span><span class="p">(</span>
             <span class="n">magento_id</span><span class="p">,</span> <span class="n">priority</span><span class="o">=</span><span class="n">priority</span><span class="p">)</span>
 
-<div class="viewcode-block" id="ProductCategoryBatchImporter.run"><a class="viewcode-back" href="../../../../api/api_product_category.html#openerp.addons.magentoerpconnect.product_category.ProductCategoryBatchImporter.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filters</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="ProductCategoryBatchImporter.run"><a class="viewcode-back" href="../../../../api/api_product_category.html#openerp.addons.magentoerpconnect.product_category.ProductCategoryBatchImporter.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filters</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Run the synchronization &quot;&quot;&quot;</span>
-        <span class="n">from_date</span> <span class="o">=</span> <span class="n">filters</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;from_date&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
-        <span class="n">to_date</span> <span class="o">=</span> <span class="n">filters</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;to_date&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+        <span class="n">from_date</span> <span class="o">=</span> <span class="n">filters</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;from_date&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">to_date</span> <span class="o">=</span> <span class="n">filters</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;to_date&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">from_date</span> <span class="ow">or</span> <span class="n">to_date</span><span class="p">:</span>
             <span class="n">updated_ids</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend_adapter</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">filters</span><span class="p">,</span>
                                                       <span class="n">from_date</span><span class="o">=</span><span class="n">from_date</span><span class="p">,</span>
                                                       <span class="n">to_date</span><span class="o">=</span><span class="n">to_date</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">updated_ids</span> <span class="o">=</span> <span class="bp">None</span>
+            <span class="n">updated_ids</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="n">base_priority</span> <span class="o">=</span> <span class="mi">10</span>
 
@@ -432,7 +432,7 @@
                 <span class="c1"># more chance to be imported before the childrens.</span>
                 <span class="c1"># However, importers have to ensure that their parent is</span>
                 <span class="c1"># there and import it if it doesn&#39;t exist</span>
-                <span class="k">if</span> <span class="n">updated_ids</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span> <span class="n">node_id</span> <span class="ow">in</span> <span class="n">updated_ids</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">updated_ids</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">node_id</span> <span class="ow">in</span> <span class="n">updated_ids</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_import_record</span><span class="p">(</span><span class="n">node_id</span><span class="p">,</span> <span class="n">priority</span><span class="o">=</span><span class="n">base_priority</span><span class="o">+</span><span class="n">level</span><span class="p">)</span>
                 <span class="n">import_nodes</span><span class="p">(</span><span class="n">children</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="n">level</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
         <span class="n">tree</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend_adapter</span><span class="o">.</span><span class="n">tree</span><span class="p">()</span>
@@ -453,7 +453,7 @@
         <span class="c1"># the root category has a 0 parent_id</span>
         <span class="k">if</span> <span class="n">record</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;parent_id&#39;</span><span class="p">):</span>
             <span class="n">parent_id</span> <span class="o">=</span> <span class="n">record</span><span class="p">[</span><span class="s1">&#39;parent_id&#39;</span><span class="p">]</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">binder</span><span class="o">.</span><span class="n">to_openerp</span><span class="p">(</span><span class="n">parent_id</span><span class="p">)</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">binder</span><span class="o">.</span><span class="n">to_openerp</span><span class="p">(</span><span class="n">parent_id</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">importer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">unit_for</span><span class="p">(</span><span class="n">MagentoImporter</span><span class="p">)</span>
                 <span class="n">importer</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">parent_id</span><span class="p">)</span>
 
@@ -500,10 +500,10 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="n">record</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;parent_id&#39;</span><span class="p">):</span>
             <span class="k">return</span>
         <span class="n">binder</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">binder_for</span><span class="p">()</span>
-        <span class="n">category_id</span> <span class="o">=</span> <span class="n">binder</span><span class="o">.</span><span class="n">to_openerp</span><span class="p">(</span><span class="n">record</span><span class="p">[</span><span class="s1">&#39;parent_id&#39;</span><span class="p">],</span> <span class="n">unwrap</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="n">category_id</span> <span class="o">=</span> <span class="n">binder</span><span class="o">.</span><span class="n">to_openerp</span><span class="p">(</span><span class="n">record</span><span class="p">[</span><span class="s1">&#39;parent_id&#39;</span><span class="p">],</span> <span class="n">unwrap</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">mag_cat_id</span> <span class="o">=</span> <span class="n">binder</span><span class="o">.</span><span class="n">to_openerp</span><span class="p">(</span><span class="n">record</span><span class="p">[</span><span class="s1">&#39;parent_id&#39;</span><span class="p">])</span>
 
-        <span class="k">if</span> <span class="n">category_id</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">category_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">MappingError</span><span class="p">(</span><span class="s2">&quot;The product category with &quot;</span>
                                <span class="s2">&quot;magento id </span><span class="si">%s</span><span class="s2"> is not imported.&quot;</span> <span class="o">%</span>
                                <span class="n">record</span><span class="p">[</span><span class="s1">&#39;parent_id&#39;</span><span class="p">])</span>
@@ -525,7 +525,7 @@
     </p>
     <p>
         &copy; Copyright 2013-2015, Odoo Community Association (OCA).<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.4.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.5.<br/>
     </p>
   </div>
 </footer>

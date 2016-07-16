@@ -259,8 +259,8 @@
 <span class="c1">##############################################################################</span>
 
 <span class="kn">import</span> <span class="nn">openerp</span>
-<span class="kn">from</span> <span class="nn">openerp.addons.connector.connector</span> <span class="kn">import</span> <span class="n">Binder</span>
-<span class="kn">from</span> <span class="nn">..backend</span> <span class="kn">import</span> <span class="n">magento</span>
+<span class="kn">from</span> <span class="nn">openerp.addons.connector.connector</span> <span class="k">import</span> <span class="n">Binder</span>
+<span class="kn">from</span> <span class="nn">..backend</span> <span class="k">import</span> <span class="n">magento</span>
 
 
 <div class="viewcode-block" id="MagentoBinder"><a class="viewcode-back" href="../../../../../api/api_binder.html#openerp.addons.magentoerpconnect.unit.binder.MagentoBinder">[docs]</a><span class="k">class</span> <span class="nc">MagentoBinder</span><span class="p">(</span><span class="n">Binder</span><span class="p">):</span>
@@ -293,7 +293,7 @@
         <span class="s1">&#39;magento.account.invoice&#39;</span><span class="p">,</span>
     <span class="p">]</span>
 
-<div class="viewcode-block" id="MagentoModelBinder.to_openerp"><a class="viewcode-back" href="../../../../../api/api_binder.html#openerp.addons.magentoerpconnect.unit.binder.MagentoModelBinder.to_openerp">[docs]</a>    <span class="k">def</span> <span class="nf">to_openerp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">external_id</span><span class="p">,</span> <span class="n">unwrap</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">browse</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+<div class="viewcode-block" id="MagentoModelBinder.to_openerp"><a class="viewcode-back" href="../../../../../api/api_binder.html#openerp.addons.magentoerpconnect.unit.binder.MagentoModelBinder.to_openerp">[docs]</a>    <span class="k">def</span> <span class="nf">to_openerp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">external_id</span><span class="p">,</span> <span class="n">unwrap</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">browse</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Give the OpenERP ID for an external ID</span>
 
 <span class="sd">        :param external_id: external ID for which we want the OpenERP ID</span>
@@ -304,19 +304,19 @@
 <span class="sd">                 or an empty recordset if no binding is found</span>
 <span class="sd">        :rtype: recordset</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">bindings</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">with_context</span><span class="p">(</span><span class="n">active_test</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span><span class="o">.</span><span class="n">search</span><span class="p">(</span>
+        <span class="n">bindings</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">with_context</span><span class="p">(</span><span class="n">active_test</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">search</span><span class="p">(</span>
             <span class="p">[(</span><span class="s1">&#39;magento_id&#39;</span><span class="p">,</span> <span class="s1">&#39;=&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">external_id</span><span class="p">)),</span>
              <span class="p">(</span><span class="s1">&#39;backend_id&#39;</span><span class="p">,</span> <span class="s1">&#39;=&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend_record</span><span class="o">.</span><span class="n">id</span><span class="p">)]</span>
         <span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">bindings</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">browse</span><span class="p">()</span> <span class="k">if</span> <span class="n">browse</span> <span class="k">else</span> <span class="bp">None</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">browse</span><span class="p">()</span> <span class="k">if</span> <span class="n">browse</span> <span class="k">else</span> <span class="kc">None</span>
         <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">bindings</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Several records found: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">bindings</span><span class="p">,)</span>
         <span class="k">if</span> <span class="n">unwrap</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">bindings</span><span class="o">.</span><span class="n">openerp_id</span> <span class="k">if</span> <span class="n">browse</span> <span class="k">else</span> <span class="n">bindings</span><span class="o">.</span><span class="n">openerp_id</span><span class="o">.</span><span class="n">id</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">bindings</span> <span class="k">if</span> <span class="n">browse</span> <span class="k">else</span> <span class="n">bindings</span><span class="o">.</span><span class="n">id</span></div>
 
-<div class="viewcode-block" id="MagentoModelBinder.to_backend"><a class="viewcode-back" href="../../../../../api/api_binder.html#openerp.addons.magentoerpconnect.unit.binder.MagentoModelBinder.to_backend">[docs]</a>    <span class="k">def</span> <span class="nf">to_backend</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record_id</span><span class="p">,</span> <span class="n">wrap</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+<div class="viewcode-block" id="MagentoModelBinder.to_backend"><a class="viewcode-back" href="../../../../../api/api_binder.html#openerp.addons.magentoerpconnect.unit.binder.MagentoModelBinder.to_backend">[docs]</a>    <span class="k">def</span> <span class="nf">to_backend</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record_id</span><span class="p">,</span> <span class="n">wrap</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Give the external ID for an OpenERP ID</span>
 
 <span class="sd">        :param record_id: OpenERP ID for which we want the external id</span>
@@ -333,7 +333,7 @@
             <span class="n">record</span> <span class="o">=</span> <span class="n">record_id</span>
             <span class="n">record_id</span> <span class="o">=</span> <span class="n">record_id</span><span class="o">.</span><span class="n">id</span>
         <span class="k">if</span> <span class="n">wrap</span><span class="p">:</span>
-            <span class="n">binding</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">with_context</span><span class="p">(</span><span class="n">active_test</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span><span class="o">.</span><span class="n">search</span><span class="p">(</span>
+            <span class="n">binding</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">with_context</span><span class="p">(</span><span class="n">active_test</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">search</span><span class="p">(</span>
                 <span class="p">[(</span><span class="s1">&#39;openerp_id&#39;</span><span class="p">,</span> <span class="s1">&#39;=&#39;</span><span class="p">,</span> <span class="n">record_id</span><span class="p">),</span>
                  <span class="p">(</span><span class="s1">&#39;backend_id&#39;</span><span class="p">,</span> <span class="s1">&#39;=&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend_record</span><span class="o">.</span><span class="n">id</span><span class="p">),</span>
                  <span class="p">]</span>
@@ -342,7 +342,7 @@
                 <span class="n">binding</span><span class="o">.</span><span class="n">ensure_one</span><span class="p">()</span>
                 <span class="k">return</span> <span class="n">binding</span><span class="o">.</span><span class="n">magento_id</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">return</span> <span class="bp">None</span>
+                <span class="k">return</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">record</span><span class="p">:</span>
             <span class="n">record</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">browse</span><span class="p">(</span><span class="n">record_id</span><span class="p">)</span>
         <span class="k">assert</span> <span class="n">record</span>
@@ -366,12 +366,12 @@
         <span class="n">now_fmt</span> <span class="o">=</span> <span class="n">openerp</span><span class="o">.</span><span class="n">fields</span><span class="o">.</span><span class="n">Datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">binding_id</span><span class="p">,</span> <span class="n">openerp</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">BaseModel</span><span class="p">):</span>
             <span class="n">binding_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">browse</span><span class="p">(</span><span class="n">binding_id</span><span class="p">)</span>
-        <span class="n">binding_id</span><span class="o">.</span><span class="n">with_context</span><span class="p">(</span><span class="n">connector_no_export</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
+        <span class="n">binding_id</span><span class="o">.</span><span class="n">with_context</span><span class="p">(</span><span class="n">connector_no_export</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
             <span class="p">{</span><span class="s1">&#39;magento_id&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">external_id</span><span class="p">),</span>
              <span class="s1">&#39;sync_date&#39;</span><span class="p">:</span> <span class="n">now_fmt</span><span class="p">,</span>
              <span class="p">})</span></div>
 
-<div class="viewcode-block" id="MagentoModelBinder.unwrap_binding"><a class="viewcode-back" href="../../../../../api/api_binder.html#openerp.addons.magentoerpconnect.unit.binder.MagentoModelBinder.unwrap_binding">[docs]</a>    <span class="k">def</span> <span class="nf">unwrap_binding</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">binding_id</span><span class="p">,</span> <span class="n">browse</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+<div class="viewcode-block" id="MagentoModelBinder.unwrap_binding"><a class="viewcode-back" href="../../../../../api/api_binder.html#openerp.addons.magentoerpconnect.unit.binder.MagentoModelBinder.unwrap_binding">[docs]</a>    <span class="k">def</span> <span class="nf">unwrap_binding</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">binding_id</span><span class="p">,</span> <span class="n">browse</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; For a binding record, gives the normal record.</span>
 
 <span class="sd">        Example: when called with a ``magento.product.product`` id,</span>
@@ -422,7 +422,7 @@
     </p>
     <p>
         &copy; Copyright 2013-2015, Odoo Community Association (OCA).<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.4.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.5.<br/>
     </p>
   </div>
 </footer>

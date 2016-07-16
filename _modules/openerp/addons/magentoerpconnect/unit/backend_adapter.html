@@ -262,11 +262,11 @@
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">xmlrpclib</span>
 
-<span class="kn">import</span> <span class="nn">magento</span> <span class="kn">as</span> <span class="nn">magentolib</span>
-<span class="kn">from</span> <span class="nn">openerp.addons.connector.unit.backend_adapter</span> <span class="kn">import</span> <span class="n">CRUDAdapter</span>
-<span class="kn">from</span> <span class="nn">openerp.addons.connector.exception</span> <span class="kn">import</span> <span class="p">(</span><span class="n">NetworkRetryableError</span><span class="p">,</span>
+<span class="kn">import</span> <span class="nn">magento</span> <span class="k">as</span> <span class="nn">magentolib</span>
+<span class="kn">from</span> <span class="nn">openerp.addons.connector.unit.backend_adapter</span> <span class="k">import</span> <span class="n">CRUDAdapter</span>
+<span class="kn">from</span> <span class="nn">openerp.addons.connector.exception</span> <span class="k">import</span> <span class="p">(</span><span class="n">NetworkRetryableError</span><span class="p">,</span>
                                                 <span class="n">RetryableJobError</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span>
 <span class="n">_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
 
 
@@ -318,15 +318,15 @@
 <div class="viewcode-block" id="MagentoLocation"><a class="viewcode-back" href="../../../../../api/api_backend_adapter.html#openerp.addons.magentoerpconnect.unit.backend_adapter.MagentoLocation">[docs]</a><span class="k">class</span> <span class="nc">MagentoLocation</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">location</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span>
-                 <span class="n">use_custom_api_path</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+                 <span class="n">use_custom_api_path</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_location</span> <span class="o">=</span> <span class="n">location</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">username</span> <span class="o">=</span> <span class="n">username</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">password</span> <span class="o">=</span> <span class="n">password</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">use_custom_api_path</span> <span class="o">=</span> <span class="n">use_custom_api_path</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">use_auth_basic</span> <span class="o">=</span> <span class="bp">False</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">auth_basic_username</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">auth_basic_password</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">use_auth_basic</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">auth_basic_username</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">auth_basic_password</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">location</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -357,21 +357,21 @@
             <span class="n">backend</span><span class="o">.</span><span class="n">password</span><span class="p">,</span>
             <span class="n">use_custom_api_path</span><span class="o">=</span><span class="n">backend</span><span class="o">.</span><span class="n">use_custom_api_path</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">backend</span><span class="o">.</span><span class="n">use_auth_basic</span><span class="p">:</span>
-            <span class="n">magento</span><span class="o">.</span><span class="n">use_auth_basic</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="n">magento</span><span class="o">.</span><span class="n">use_auth_basic</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="n">magento</span><span class="o">.</span><span class="n">auth_basic_username</span> <span class="o">=</span> <span class="n">backend</span><span class="o">.</span><span class="n">auth_basic_username</span>
             <span class="n">magento</span><span class="o">.</span><span class="n">auth_basic_password</span> <span class="o">=</span> <span class="n">backend</span><span class="o">.</span><span class="n">auth_basic_password</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">magento</span> <span class="o">=</span> <span class="n">magento</span>
 
-<div class="viewcode-block" id="MagentoCRUDAdapter.search"><a class="viewcode-back" href="../../../../../api/api_backend_adapter.html#openerp.addons.magentoerpconnect.unit.backend_adapter.MagentoCRUDAdapter.search">[docs]</a>    <span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filters</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="MagentoCRUDAdapter.search"><a class="viewcode-back" href="../../../../../api/api_backend_adapter.html#openerp.addons.magentoerpconnect.unit.backend_adapter.MagentoCRUDAdapter.search">[docs]</a>    <span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filters</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Search records according to some criterias</span>
 <span class="sd">        and returns a list of ids &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
-<div class="viewcode-block" id="MagentoCRUDAdapter.read"><a class="viewcode-back" href="../../../../../api/api_backend_adapter.html#openerp.addons.magentoerpconnect.unit.backend_adapter.MagentoCRUDAdapter.read">[docs]</a>    <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">attributes</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="MagentoCRUDAdapter.read"><a class="viewcode-back" href="../../../../../api/api_backend_adapter.html#openerp.addons.magentoerpconnect.unit.backend_adapter.MagentoCRUDAdapter.read">[docs]</a>    <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">attributes</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Returns the information of a record &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
-<div class="viewcode-block" id="MagentoCRUDAdapter.search_read"><a class="viewcode-back" href="../../../../../api/api_backend_adapter.html#openerp.addons.magentoerpconnect.unit.backend_adapter.MagentoCRUDAdapter.search_read">[docs]</a>    <span class="k">def</span> <span class="nf">search_read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filters</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="MagentoCRUDAdapter.search_read"><a class="viewcode-back" href="../../../../../api/api_backend_adapter.html#openerp.addons.magentoerpconnect.unit.backend_adapter.MagentoCRUDAdapter.search_read">[docs]</a>    <span class="k">def</span> <span class="nf">search_read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filters</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Search records according to some criterias</span>
 <span class="sd">        and returns their information&quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
@@ -400,7 +400,7 @@
                 <span class="c1"># may return garble data if the arguments contain</span>
                 <span class="c1"># trailing None.</span>
                 <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arguments</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
-                    <span class="k">while</span> <span class="n">arguments</span> <span class="ow">and</span> <span class="n">arguments</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                    <span class="k">while</span> <span class="n">arguments</span> <span class="ow">and</span> <span class="n">arguments</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                         <span class="n">arguments</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
                 <span class="n">start</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
                 <span class="k">try</span><span class="p">:</span>
@@ -436,11 +436,11 @@
 
 <div class="viewcode-block" id="GenericAdapter"><a class="viewcode-back" href="../../../../../api/api_backend_adapter.html#openerp.addons.magentoerpconnect.unit.backend_adapter.GenericAdapter">[docs]</a><span class="k">class</span> <span class="nc">GenericAdapter</span><span class="p">(</span><span class="n">MagentoCRUDAdapter</span><span class="p">):</span>
 
-    <span class="n">_model_name</span> <span class="o">=</span> <span class="bp">None</span>
-    <span class="n">_magento_model</span> <span class="o">=</span> <span class="bp">None</span>
-    <span class="n">_admin_path</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">_model_name</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_magento_model</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_admin_path</span> <span class="o">=</span> <span class="kc">None</span>
 
-<div class="viewcode-block" id="GenericAdapter.search"><a class="viewcode-back" href="../../../../../api/api_backend_adapter.html#openerp.addons.magentoerpconnect.unit.backend_adapter.GenericAdapter.search">[docs]</a>    <span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filters</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="GenericAdapter.search"><a class="viewcode-back" href="../../../../../api/api_backend_adapter.html#openerp.addons.magentoerpconnect.unit.backend_adapter.GenericAdapter.search">[docs]</a>    <span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filters</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Search records according to some criterias</span>
 <span class="sd">        and returns a list of ids</span>
 
@@ -449,7 +449,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">.search&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_magento_model</span><span class="p">,</span>
                           <span class="p">[</span><span class="n">filters</span><span class="p">]</span> <span class="k">if</span> <span class="n">filters</span> <span class="k">else</span> <span class="p">[{}])</span></div>
 
-<div class="viewcode-block" id="GenericAdapter.read"><a class="viewcode-back" href="../../../../../api/api_backend_adapter.html#openerp.addons.magentoerpconnect.unit.backend_adapter.GenericAdapter.read">[docs]</a>    <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">attributes</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="GenericAdapter.read"><a class="viewcode-back" href="../../../../../api/api_backend_adapter.html#openerp.addons.magentoerpconnect.unit.backend_adapter.GenericAdapter.read">[docs]</a>    <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">attributes</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Returns the information of a record</span>
 
 <span class="sd">        :rtype: dict</span>
@@ -468,7 +468,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">.info&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_magento_model</span><span class="p">,</span>
                           <span class="n">arguments</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="GenericAdapter.search_read"><a class="viewcode-back" href="../../../../../api/api_backend_adapter.html#openerp.addons.magentoerpconnect.unit.backend_adapter.GenericAdapter.search_read">[docs]</a>    <span class="k">def</span> <span class="nf">search_read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filters</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="GenericAdapter.search_read"><a class="viewcode-back" href="../../../../../api/api_backend_adapter.html#openerp.addons.magentoerpconnect.unit.backend_adapter.GenericAdapter.search_read">[docs]</a>    <span class="k">def</span> <span class="nf">search_read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filters</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Search records according to some criterias</span>
 <span class="sd">        and returns their information&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">.list&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_magento_model</span><span class="p">,</span> <span class="p">[</span><span class="n">filters</span><span class="p">])</span></div>
@@ -488,7 +488,7 @@
 
 <div class="viewcode-block" id="GenericAdapter.admin_url"><a class="viewcode-back" href="../../../../../api/api_backend_adapter.html#openerp.addons.magentoerpconnect.unit.backend_adapter.GenericAdapter.admin_url">[docs]</a>    <span class="k">def</span> <span class="nf">admin_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Return the URL in the Magento admin for a record &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_admin_path</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_admin_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;No admin path is defined for this record&#39;</span><span class="p">)</span>
         <span class="n">backend</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend_record</span>
         <span class="n">url</span> <span class="o">=</span> <span class="n">backend</span><span class="o">.</span><span class="n">admin_location</span>
@@ -517,7 +517,7 @@
     </p>
     <p>
         &copy; Copyright 2013-2015, Odoo Community Association (OCA).<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.4.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.5.<br/>
     </p>
   </div>
 </footer>
