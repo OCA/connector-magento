@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-07-02 11:02+0000\n"
-"PO-Revision-Date: 2016-07-08 08:25+0000\n"
+"POT-Creation-Date: 2016-07-09 11:01+0000\n"
+"PO-Revision-Date: 2016-07-14 06:16+0000\n"
 "Last-Translator: Matjaž Mozetič <m.mozetic@matmoz.si>\n"
 "Language-Team: Slovenian (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/sl/)\n"
 "MIME-Version: 1.0\n"
@@ -1111,7 +1111,7 @@ msgstr "HTTP overjanje"
 #. module: magentoerpconnect
 #: field:magento.product.product,has_checkpoint:0
 msgid "Has Checkpoint"
-msgstr ""
+msgstr "Ima kontrolno točko"
 
 #. module: magentoerpconnect
 #: help:magento.sale.order,need_cancel:0
@@ -1551,7 +1551,7 @@ msgstr "Oznaka, da je bil račun poslan."
 #. module: magentoerpconnect
 #: help:magento.stock.picking,move_type:0
 msgid "It specifies goods to be deliver partially or all at once"
-msgstr ""
+msgstr "Določi, če naj se dobrine dostavijo delno ali v celoti"
 
 #. module: magentoerpconnect
 #: field:magento.address,function:0 field:magento.res.partner,function:0
@@ -2112,7 +2112,7 @@ msgstr "Število pakiranj"
 msgid ""
 "Number of days between the order confirmation and the shipping of the "
 "products to the customer"
-msgstr ""
+msgstr "Število dni med potrditvijo naloga in odpremo proizvodov kupcu"
 
 #. module: magentoerpconnect
 #: help:magento.sale.order,order_policy:0
@@ -2332,7 +2332,7 @@ msgstr "Politika prejemanja e-pošte za nova sporočila potisnjena v zasebni pre
 #: field:magento.account.invoice,portal_payment_options:0
 #: field:magento.sale.order,portal_payment_options:0
 msgid "Portal Payment Options"
-msgstr ""
+msgstr "Plačilne opcije portala"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,price:0
@@ -2719,12 +2719,12 @@ msgstr ""
 #. module: magentoerpconnect
 #: help:magento.stock.picking,max_date:0
 msgid "Scheduled time for the last part of the shipment to be processed"
-msgstr ""
+msgstr "Načrtovani čas za obdelavo zadnjega dela pošiljke"
 
 #. module: magentoerpconnect
 #: help:magento.product.product,categ_id:0
 msgid "Select category for the current product"
-msgstr ""
+msgstr "Izbira kategorije trenutnega proizvoda"
 
 #. module: magentoerpconnect
 #: help:magento.address,use_parent_address:0
@@ -2732,7 +2732,7 @@ msgstr ""
 msgid ""
 "Select this if you want to set company's address information  for this "
 "contact"
-msgstr ""
+msgstr "Izberite, če za ta stik želite nastaviti naslov podjetja"
 
 #. module: magentoerpconnect
 #: selection:magento.product.product,backorders:0
@@ -2770,7 +2770,7 @@ msgstr "Zaporedje"
 msgid ""
 "Set a specific removal strategy that will be used regardless of the source "
 "location for this product category"
-msgstr ""
+msgstr "Nastavitev specifične strategije odstranjevanja, ki se bo uporabila ne glede na lokacijo vira za to kategorijo proizvodov."
 
 #. module: magentoerpconnect
 #: code:addons/magentoerpconnect/stock_picking.py:126
@@ -2875,12 +2875,12 @@ msgstr "Specifični fiskalni položaj"
 msgid ""
 "Specify a unit of measure here if invoicing is made in another unit of "
 "measure than inventory. Keep empty to use the default unit of measure."
-msgstr ""
+msgstr "Tu določite enoto mere, če se obračun opravlja v drugi enoti mere kot je določena v inventarju. Pustite prazno za uporabo privzete enote mere."
 
 #. module: magentoerpconnect
 #: help:magento.product.product,sale_ok:0
 msgid "Specify if the product can be selected in a sales order line."
-msgstr ""
+msgstr "Določa, če se proizvod lahko izbira v sklopu postavke prodajnega naloga."
 
 #. module: magentoerpconnect
 #: help:magento.product.product,cost_method:0
