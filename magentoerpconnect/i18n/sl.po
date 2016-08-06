@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-07-18 11:44+0000\n"
-"PO-Revision-Date: 2016-07-25 09:23+0000\n"
+"POT-Creation-Date: 2016-07-30 11:06+0000\n"
+"PO-Revision-Date: 2016-08-05 12:09+0000\n"
 "Last-Translator: Matjaž Mozetič <m.mozetic@matmoz.si>\n"
 "Language-Team: Slovenian (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/sl/)\n"
 "MIME-Version: 1.0\n"
@@ -3106,7 +3106,7 @@ msgstr "Pogoji in pravila"
 #. module: magentoerpconnect
 #: help:magento.res.partner.category,active:0
 msgid "The active field allows you to hide the category without removing it."
-msgstr ""
+msgstr "Aktivno polje omogoča skrivanje kategorije, ne da bi jo odstranili."
 
 #. module: magentoerpconnect
 #: model:sale.exception,description:magentoerpconnect.excep_wrong_total_amount
@@ -3136,7 +3136,7 @@ msgid ""
 "The average delay in days between the confirmation of the customer order and"
 " the delivery of the finished products. It's the time you promise to your "
 "customers."
-msgstr ""
+msgstr "Povprečna zamuda v dnevih med potrditvijo naročila kupca in dobavo končanih proizvodov. To je čas, ki ga svojim kupcem obljubimo."
 
 #. module: magentoerpconnect
 #: code:addons/magentoerpconnect/stock_tracking.py:80
@@ -3148,7 +3148,7 @@ msgstr "Prevoznik %s ne izvaža sledilnih številk."
 #: help:magento.account.invoice,commercial_partner_id:0
 msgid ""
 "The commercial entity that will be used on Journal Entries for this invoice"
-msgstr ""
+msgstr "Komercialna entiteta, ki bo uporabljena na dnevniških vnosih za ta račun."
 
 #. module: magentoerpconnect
 #: code:addons/magentoerpconnect/product.py:558
@@ -3171,7 +3171,7 @@ msgstr "Privzeta pot API je '/index.php/api/xmlrpc'. Označite to polje, če upo
 #: help:magento.res.partner,property_account_position:0
 msgid ""
 "The fiscal position will determine taxes and accounts used for the partner."
-msgstr ""
+msgstr "Fiskalni položaj določi davke in konte, ki bodo uporabljeni za partnerja."
 
 #. module: magentoerpconnect
 #: help:magento.product.product,weight:0
@@ -3212,7 +3212,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: help:magento.account.invoice,supplier_invoice_number:0
 msgid "The reference of this invoice as provided by the supplier."
-msgstr ""
+msgstr "Sklic računa, ki ga poda dobavitelj."
 
 #. module: magentoerpconnect
 #: model:sale.exception,description:magentoerpconnect.excep_wrong_total_amount_tax
