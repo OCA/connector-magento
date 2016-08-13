@@ -3,8 +3,8 @@
 # * magentoerpconnect
 # 
 # Translators:
-# Ahmet Altınışık <aaltinisik@altinkaya.com.tr>, 2013
-# Ahmet Altınışık <aaltinisik@altinkaya.com.tr>, 2013
+# Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2013
+# Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2013
 # Antonio Trueba, 2016
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 # Matjaž Mozetič <m.mozetic@matmoz.si>, 2015-2016
@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-07-30 11:06+0000\n"
-"PO-Revision-Date: 2016-08-05 12:09+0000\n"
+"POT-Creation-Date: 2016-08-06 11:43+0000\n"
+"PO-Revision-Date: 2016-08-08 10:27+0000\n"
 "Last-Translator: Matjaž Mozetič <m.mozetic@matmoz.si>\n"
 "Language-Team: Slovenian (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/sl/)\n"
 "MIME-Version: 1.0\n"
@@ -3292,14 +3292,14 @@ msgstr "Metoda dostave, ki bo uporabljena pri neposrednem obračunu iz zbirnika.
 msgid ""
 "This field holds the image used as avatar for this contact, limited to "
 "1024x1024px"
-msgstr ""
+msgstr "To polje vsebuje sliko, ki se uporablja za avatar stika, omejena na 1024x1024px"
 
 #. module: magentoerpconnect
 #: help:magento.product.product,image_variant:0
 msgid ""
 "This field holds the image used as image for the product variant, limited to"
 " 1024x1024px."
-msgstr ""
+msgstr "To polje vsebuje sliko, ki se uporablja kot slika različice proizvoda, omejena na 1024x1024px"
 
 #. module: magentoerpconnect
 #: help:connector.config.settings,module_magentoerpconnect_export_partner:0
@@ -3356,7 +3356,7 @@ msgstr "Plačilni pogoj, ki bo uporabljen namesto privzetega za nabavne naloge i
 msgid ""
 "This payment term will be used instead of the default one for sale orders "
 "and customer invoices"
-msgstr ""
+msgstr "Plačilni pogoj, ki bo uporabljen namesto privzetega za prodajne naloge in izdane račune."
 
 #. module: magentoerpconnect
 #: help:magento.address,property_product_pricelist:0
@@ -3364,7 +3364,7 @@ msgstr ""
 msgid ""
 "This pricelist will be used, instead of the default one, for sales to the "
 "current partner"
-msgstr ""
+msgstr "Ta cenik bo uporabljen namesto privzetega za prodajo trenutnemu partnerju."
 
 #. module: magentoerpconnect
 #: help:magento.address,property_stock_customer:0
@@ -3797,7 +3797,7 @@ msgstr "tehnično polje za atribute prikaza"
 msgid ""
 "technical field used to know if there is already at least one quant reserved"
 " on moves of a given picking"
-msgstr ""
+msgstr "tehnično polje za ugotovitev, če je vsaj en kvant že rezerviran na premikih danega zbirnika"
 
 #. module: magentoerpconnect
 #: field:magento.address,has_image:0
