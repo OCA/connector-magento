@@ -466,6 +466,8 @@ class BaseAddressImportMapper(ImportMapper):
     @mapping
     def street(self, record):
         value = record['street']
+        if not value:
+            return {}
         lines = [line.strip() for line in value.split('\n') if line.strip()]
         if len(lines) == 1:
             result = {'street': lines[0], 'street2': False}
