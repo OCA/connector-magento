@@ -358,7 +358,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># the external ID can be 0 on Magento! Prevent False values</span>
         <span class="c1"># like False, None, or &quot;&quot;, but not 0.</span>
-        <span class="k">assert</span> <span class="p">(</span><span class="n">external_id</span> <span class="ow">or</span> <span class="n">external_id</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="n">binding_id</span><span class="p">,</span> <span class="p">(</span>
+        <span class="k">assert</span> <span class="p">(</span><span class="n">external_id</span> <span class="ow">or</span> <span class="n">external_id</span> <span class="ow">is</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="n">binding_id</span><span class="p">,</span> <span class="p">(</span>
             <span class="s2">&quot;external_id or binding_id missing, &quot;</span>
             <span class="s2">&quot;got: </span><span class="si">%s</span><span class="s2">, </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">external_id</span><span class="p">,</span> <span class="n">binding_id</span><span class="p">)</span>
         <span class="p">)</span>
