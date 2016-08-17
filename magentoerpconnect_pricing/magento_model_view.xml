@@ -10,6 +10,9 @@
                 <field name="warehouse_id" position="after">
                     <field name="pricelist_id"/>
                 </field>
+                <field name="fiscal_position_id" position="after">
+                    <field name="update_prices"/>
+                </field>
             </field>
         </record>
 
