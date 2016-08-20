@@ -5,6 +5,7 @@
 # Translators:
 # Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2013
 # Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2013
+# Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2013
 # Antonio Trueba, 2016
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 # Matjaž Mozetič <m.mozetic@matmoz.si>, 2015-2016
@@ -12,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-06 11:43+0000\n"
-"PO-Revision-Date: 2016-08-08 10:27+0000\n"
+"POT-Creation-Date: 2016-08-17 14:58+0000\n"
+"PO-Revision-Date: 2016-08-13 07:54+0000\n"
 "Last-Translator: Matjaž Mozetič <m.mozetic@matmoz.si>\n"
 "Language-Team: Slovenian (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/sl/)\n"
 "MIME-Version: 1.0\n"
@@ -1242,7 +1243,7 @@ msgstr "Če je izbrani jezik naložen v sistem, bodo vsi dokumenti vezani na ta 
 msgid ""
 "If this shipment was split, then this field links to the shipment which "
 "contains the already processed part."
-msgstr ""
+msgstr "Če je ta pošiljka bila razdeljena, je to polje povezava do pošiljke z že obdelanim delom."
 
 #. module: magentoerpconnect
 #: help:magento.product.product,active:0
@@ -2714,7 +2715,7 @@ msgstr "Načrtovani datum"
 msgid ""
 "Scheduled time for the first part of the shipment to be processed. Setting "
 "manually a value here would set it as expected date for all the stock moves."
-msgstr ""
+msgstr "Načrtovani čas za prvi del odpreme, ki bo obdelan. Ročna nastavitev te vrednosti bi ga nastavila kot pričakovani datum za vse premike zalog."
 
 #. module: magentoerpconnect
 #: help:magento.stock.picking,max_date:0
@@ -2888,7 +2889,7 @@ msgid ""
 "Standard Price: The cost price is manually updated at the end of a specific period (usually every year).\n"
 "                    Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
 "                    Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example)."
-msgstr ""
+msgstr "Standardna cena: lastna cena se ročno posodobi ob koncu določenega obdobja (običajno vsako leto).\n                    Povprečna cena: lastna cena se ponovno izračuna ob vsaki vhodni pošiljki in se uporablja za vrednotenje proizvoda.\n                    Realna cena: lastna cena se prikaže kot cena zadnjega izhodnega proizvoda (uporabi se na primer pri izgubi inventarja)."
 
 #. module: magentoerpconnect
 #: field:magento.address,state_id:0 field:magento.res.partner,state_id:0
@@ -3091,7 +3092,7 @@ msgstr "Davki"
 msgid ""
 "Technical field used to display the correct label on print button in the "
 "picking view"
-msgstr ""
+msgstr "Tehnično polje, ki se uporablja za prikaz pravilne oznake na gumbu za tiskanje pri prikazu zbirnika."
 
 #. module: magentoerpconnect
 #: field:magento.product.product,name_template:0
@@ -3207,7 +3208,7 @@ msgid ""
 "printed reports. It is important to set a value for this field. You should "
 "use the same timezone that is otherwise used to pick and render date and "
 "time values: your computer's timezone."
-msgstr ""
+msgstr "Partnerjev časovni pas za prikaz pravilnih vrednosti časa in datuma v tiskanih poročilih. Pomembno je, da se nastavi vrednost za to polje. Uporabljati bi morali isti časovni pas, kot se uporablja za izbiro in prikaz datumskih in časovnih vrednosti: časovni pas vašega računalnika."
 
 #. module: magentoerpconnect
 #: help:magento.account.invoice,supplier_invoice_number:0
