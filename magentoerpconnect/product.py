@@ -19,7 +19,6 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
 import logging
 import urllib2
 import base64
@@ -27,6 +26,7 @@ import xmlrpclib
 import sys
 from collections import defaultdict
 from openerp import models, fields, api, _
+from openerp.addons.connector.connector import ConnectorUnit
 from openerp.addons.connector.queue.job import job, related_action
 from openerp.addons.connector.event import on_record_write
 from openerp.addons.connector.unit.synchronizer import (Importer,
@@ -44,6 +44,7 @@ from .unit.backend_adapter import (GenericAdapter,
                                    )
 from .unit.mapper import normalize_datetime
 from .unit.import_synchronizer import (DelayedBatchImporter,
+                                       DirectBatchImporter,
                                        MagentoImporter,
                                        TranslationImporter,
                                        AddCheckpoint,
@@ -58,6 +59,104 @@ _logger = logging.getLogger(__name__)
 def chunks(items, length):
     for index in xrange(0, len(items), length):
         yield items[index:index + length]
+
+
+class MagentoTaxClass(models.Model):
+    _name = 'magento.tax.class'
+    _inherit = 'magento.binding'
+    _description = 'Magento Tax Class'
+
+    name = fields.Char()
+
+
+class MagentoAttributeSet(models.Model):
+    _name = 'magento.attribute.set'
+    _inherit = 'magento.binding'
+    _description = 'Magento Attribute Set'
+
+    name = fields.Char()
+
+
+@magento
+class AttributeSetAdapter(GenericAdapter):
+    _model_name = 'magento.attribute.set'
+    _magento_model = 'product_attribute_set'
+
+    def create(self, name, skeleton):
+        return self._call('%s.create' % self._magento_model,
+                          [name, skeleton])
+
+    def list(self):
+        """ Search records according to some criteria
+        and returns a list of ids
+
+        :rtype: list
+        """
+        return self._call('%s.list' % self._magento_model, [])
+
+    def read(self, id, attributes=None):
+        """ Returns the information of a record
+
+        :rtype: dict
+        """
+        results = self.list()
+        res = [result for result in results if result['set_id'] == id]
+        if res:
+            return res[0]
+        return {}
+
+
+@magento
+class AttributeSetBatchImporter(DirectBatchImporter):
+    """ Import the records directly, without delaying the jobs.
+
+    Import the Attribute Set
+
+    They are imported directly because this is a rare and fast operation,
+    and we don't really bother if it blocks the UI during this time.
+    (that's also a mean to rapidly check the connectivity with Magento).
+    """
+    _model_name = [
+        'magento.attribute.set'
+    ]
+
+    def run(self, filters=None):
+        """ Run the synchronization """
+        records = self.backend_adapter.list()
+        for record in records:
+            importer = self.unit_for(MagentoImporter)
+            importer.run(record['set_id'], record=record)
+
+
+@magento
+class AttributeSetMapper(ImportMapper):
+    _model_name = 'magento.attribute.set'
+
+    direct = [('name', 'name')]
+
+    @mapping
+    def backend_id(self, record):
+        return {'backend_id': self.backend_record.id}
+
+
+@magento
+class AttributeSetImporter(MagentoImporter):
+    _model_name = ['magento.attribute.set']
+
+    def run(self, magento_id, force=False, record=None):
+        """ Run the synchronization
+
+        :param magento_id: identifier of the record on Magento
+        """
+        if record:
+            self.magento_record = record
+        return super(AttributeSetImporter, self).run(magento_id, force=force)
+
+    def _get_magento_data(self):
+        if self.magento_record:
+            return self.magento_record
+        else:
+            return super(AttributeSetImporter, self)._get_magento_data()
 
 
 class MagentoProductProduct(models.Model):
@@ -78,6 +177,22 @@ class MagentoProductProduct(models.Model):
             # ('bundle', 'Bundle Product'),
         ]
 
+    @api.model
+    def get_default_magento_tax(self):
+        mag_tax_obj = self.env['magento.tax.class']
+        tax_id = False
+        if self.backend_id:
+            tax_id = mag_tax_obj.search(
+                [('backend_id', '=', self.backend_id.id)])[0]
+        else:
+            tax_id = mag_tax_obj.search([])[0]
+        return tax_id
+
+    tax_class_id = fields.Many2one(comodel_name='magento.tax.class',
+                                   string='Tax class',
+                                   required=True,
+                                   ondelete='restrict',
+                                   default=get_default_magento_tax)
     openerp_id = fields.Many2one(comodel_name='product.product',
                                  string='Product',
                                  required=True,
@@ -118,6 +233,16 @@ class MagentoProductProduct(models.Model):
         required=False,
         help="Check this to exclude the product "
              "from stock synchronizations.",
+    )
+    visibility = fields.Selection(
+        selection=[('1', 'Not Visible Individually'),
+                   ('2', 'Catalog'),
+                   ('3', 'Search'),
+                   ('4', 'Catalog, Search'),
+                   ],
+        string='Visibility',
+        default='4',
+        required=True,
     )
 
     RECOMPUTE_QTY_STEP = 1000  # products at a time
@@ -199,6 +324,13 @@ class ProductProduct(models.Model):
     )
 
 
+class ProductTemplate(models.Model):
+    _inherit = 'product.template'
+
+    attribute_set_id = fields.Many2one('magento.attribute.set',
+                                       string='Attribute Set')
+
+
 @magento
 class ProductProductAdapter(GenericAdapter):
     _model_name = 'magento.product.product'
@@ -235,6 +367,11 @@ class ProductProductAdapter(GenericAdapter):
         return [int(row['product_id']) for row
                 in self._call('%s.list' % self._magento_model,
                               [filters] if filters else [{}])]
+
+    def create(self, product_type, attr_set_id, sku, data):
+        # Only ol_catalog_product.create works for export configurable product
+        return self._call('ol_catalog_product.create',
+                          [product_type, attr_set_id, sku, data])
 
     def read(self, id, storeview_id=None, attributes=None):
         """ Returns the information of a record
@@ -419,6 +556,34 @@ class BundleImporter(Importer):
 
 
 @magento
+class WithCatalogProductImportMapper(ImportMapper):
+    """ Called at the end of the product Mapper
+
+    Does nothing, but is replaced in ``magentoerpconnect_catalog_simple``
+    which adds fields in the import.
+
+    """
+    _model_name = 'magento.product.product'
+
+
+@magento
+class CatalogImportMapperFinalizer(ConnectorUnit):
+    """ Finalize values for a product
+
+    Does nothing else than calling :class:`WithCatalogProductImportMapper`
+    but is meant to be extended if required, for instance to remove values
+    from the imported values when we are importing products.
+    """
+    _model_name = ['magento.product.product']
+
+    def finalize(self, map_record, values, options):
+        mapper = self.unit_for(WithCatalogProductImportMapper)
+        map_record = mapper.map_record(map_record.source)
+        values.update(map_record.values(**options))
+        return values
+
+
+@magento
 class ProductImportMapper(ImportMapper):
     _model_name = 'magento.product.product'
     # TODO :     categ, special_price => minimal_price
@@ -431,7 +596,20 @@ class ProductImportMapper(ImportMapper):
               ('type_id', 'product_type'),
               (normalize_datetime('created_at'), 'created_at'),
               (normalize_datetime('updated_at'), 'updated_at'),
+              ('visibility', 'visibility'),
               ]
+
+    @mapping
+    def map_attribute_set(self, record):
+        binder = self.binder_for(model='magento.attribute.set')
+        binding_id = binder.to_openerp(record['set'])
+        return {'attribute_set_id': binding_id}
+
+    @mapping
+    def map_tax_class(self, record):
+        binder = self.binder_for(model='magento.tax.class')
+        binding_id = binder.to_openerp(record['tax_class_id'])
+        return {'tax_class_id': binding_id}
 
     @mapping
     def is_active(self, record):
@@ -504,6 +682,11 @@ class ProductImportMapper(ImportMapper):
             bundle_mapper = self.unit_for(BundleProductImportMapper)
             return bundle_mapper.map_record(record).values(**self.options)
 
+    def finalize(self, map_record, values):
+        values = super(ProductImportMapper, self).finalize(map_record, values)
+        finalizer = self.unit_for(CatalogImportMapperFinalizer)
+        return finalizer.finalize(map_record, values, self.options)
+
 
 @magento
 class ProductImporter(MagentoImporter):
@@ -528,6 +711,10 @@ class ProductImporter(MagentoImporter):
                                     'magento.product.category')
         if record['type_id'] == 'bundle':
             self._import_bundle_dependencies()
+
+        if record.get('set', False):
+            self._import_dependency(record['set'],
+                                    'magento.attribute.set')
 
     def _validate_product_type(self, data):
         """ Check if the product type is in the selection (so we can
