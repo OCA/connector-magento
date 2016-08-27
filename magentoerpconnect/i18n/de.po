@@ -27,9 +27,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-07-18 11:44+0000\n"
-"PO-Revision-Date: 2016-05-26 10:58+0000\n"
-"Last-Translator: Rudolf Schnapka <rs@techno-flex.de>\n"
+"POT-Creation-Date: 2016-08-22 09:45+0000\n"
+"PO-Revision-Date: 2016-08-22 09:45+0000\n"
+"Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: German (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -481,6 +481,14 @@ msgstr "Wählen Sie diese Box an, wenn dies ein Mitarbeiter ist."
 #: help:magento.product.product,no_stock_sync:0
 msgid "Check this to exclude the product from stock synchronizations."
 msgstr "Auswählen, wenn das Produkt von der Bestandssynchronisierung ausgeschlossen sein sollen."
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/magento_model.py:219
+#, python-format
+msgid ""
+"Check your configuration, we can't get the data. Here is the error:\n"
+"%s"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.product.category,child_id:0
@@ -3513,7 +3521,7 @@ msgid "Type"
 msgstr ""
 
 #. module: magentoerpconnect
-#: code:addons/magentoerpconnect/magento_model.py:641
+#: code:addons/magentoerpconnect/magento_model.py:648
 #, python-format
 msgid "Undefined"
 msgstr "Nicht definiert"
