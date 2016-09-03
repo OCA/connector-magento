@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 09:45+0000\n"
-"PO-Revision-Date: 2016-08-25 09:35+0000\n"
+"POT-Creation-Date: 2016-08-27 07:44+0000\n"
+"PO-Revision-Date: 2016-09-02 09:00+0000\n"
 "Last-Translator: Matjaž Mozetič <m.mozetic@matmoz.si>\n"
 "Language-Team: Slovenian (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/sl/)\n"
 "MIME-Version: 1.0\n"
@@ -3734,7 +3734,7 @@ msgid ""
 "incoming stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the source location. When not set on the "
 "product, the one from the product category is used."
-msgstr ""
+msgstr "Ob izvajanju vrednortenja zalog v realnem času se dnevniške proti-postavke za vse vhodne premike zaloge knjižijo na ta konto, razen, če je na ciljni lokaciji določen specifičen konto vrednotenja. Če ni nastavljeno na proizod, se uporabi nastavitev iz kategorije proizvoda."
 
 #. module: magentoerpconnect
 #: help:magento.product.category,property_stock_account_output_categ:0
@@ -3744,7 +3744,7 @@ msgid ""
 "specific valuation account set on the destination location. This is the "
 "default value for all products in this category. It can also directly be set"
 " on each product"
-msgstr ""
+msgstr "Ob izvajanju vrednortenja zalog v realnem času se dnevniške proti-postavke za vse izhodne premike zaloge knjižijo na ta konto, razen, če je na ciljni lokaciji določen specifičen konto vrednotenja. To je privzeta vrednost za vse proizvode te kategorije. Nastavi se lahko tudi neposredno za vsak proizvod."
 
 #. module: magentoerpconnect
 #: help:magento.product.product,property_stock_account_output:0
@@ -3753,21 +3753,21 @@ msgid ""
 "outgoing stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the destination location. When not set on "
 "the product, the one from the product category is used."
-msgstr ""
+msgstr "Ob izvajanju vrednortenja zalog v realnem času se dnevniške proti-postavke za vse izhodne premike zaloge knjižijo na ta konto, razen, če je na ciljni lokaciji določen specifičen konto vrednotenja. Če ni nastavljeno na proizod, se uporabi nastavitev iz kategorije proizvoda."
 
 #. module: magentoerpconnect
 #: help:magento.product.category,property_stock_journal:0
 msgid ""
 "When doing real-time inventory valuation, this is the Accounting Journal in "
 "which entries will be automatically posted when stock moves are processed."
-msgstr ""
+msgstr "Ob izvajanju vrednotenja zalog v realnem času, se vnosi ob obdelavi premikov zaloge samodejno knjižijo v ta knjigovodski dnevnik."
 
 #. module: magentoerpconnect
 #: help:magento.product.category,property_stock_valuation_account_id:0
 msgid ""
 "When real-time inventory valuation is enabled on a product, this account "
 "will hold the current value of the products."
-msgstr ""
+msgstr "Ko je na proizvodu omogočeno vrednotenje zalog, bo ta konto vseboval trenutno vrednost proizvodov."
 
 #. module: magentoerpconnect
 #: field:magento.address,zip:0 field:magento.res.partner,zip:0
