@@ -27,8 +27,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 09:45+0000\n"
-"PO-Revision-Date: 2016-08-22 09:45+0000\n"
+"POT-Creation-Date: 2016-09-03 07:42+0000\n"
+"PO-Revision-Date: 2016-09-16 21:45+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: German (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/de/)\n"
 "MIME-Version: 1.0\n"
@@ -2197,7 +2197,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.sale.order.line,product_packaging:0
 msgid "Packaging"
-msgstr ""
+msgstr "Verpackung"
 
 #. module: magentoerpconnect
 #: field:magento.sale.order,invoiced:0
@@ -3445,7 +3445,7 @@ msgstr ""
 #: field:magento.account.invoice,amount_total:0
 #: field:magento.sale.order,amount_total:0
 msgid "Total"
-msgstr ""
+msgstr "Total"
 
 #. module: magentoerpconnect
 #: model:sale.exception,name:magentoerpconnect.excep_wrong_total_amount

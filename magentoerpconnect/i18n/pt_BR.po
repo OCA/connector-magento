@@ -17,8 +17,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 09:45+0000\n"
-"PO-Revision-Date: 2016-08-22 09:45+0000\n"
+"POT-Creation-Date: 2016-09-03 07:42+0000\n"
+"PO-Revision-Date: 2016-09-09 11:31+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/pt_BR/)\n"
 "MIME-Version: 1.0\n"
@@ -1643,7 +1643,7 @@ msgstr ""
 #: field:magento.stock.picking,write_uid:0 field:magento.store,write_uid:0
 #: field:magento.storeview,write_uid:0 field:magento.website,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Última atualização por"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,write_date:0
@@ -1657,7 +1657,7 @@ msgstr ""
 #: field:magento.stock.picking,write_date:0 field:magento.store,write_date:0
 #: field:magento.storeview,write_date:0 field:magento.website,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Última atualização em"
 
 #. module: magentoerpconnect
 #: help:magento.product.product,magento_qty:0
@@ -2253,7 +2253,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.backend,password:0
 msgid "Password"
-msgstr ""
+msgstr "Senha"
 
 #. module: magentoerpconnect
 #: field:magento.address,debit_limit:0 field:magento.res.partner,debit_limit:0
@@ -3435,7 +3435,7 @@ msgstr ""
 #: field:magento.account.invoice,amount_total:0
 #: field:magento.sale.order,amount_total:0
 msgid "Total"
-msgstr ""
+msgstr "Total"
 
 #. module: magentoerpconnect
 #: model:sale.exception,name:magentoerpconnect.excep_wrong_total_amount

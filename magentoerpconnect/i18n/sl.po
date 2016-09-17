@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-27 07:44+0000\n"
-"PO-Revision-Date: 2016-09-02 09:00+0000\n"
+"POT-Creation-Date: 2016-09-03 07:42+0000\n"
+"PO-Revision-Date: 2016-09-16 21:45+0000\n"
 "Last-Translator: Matjaž Mozetič <m.mozetic@matmoz.si>\n"
 "Language-Team: Slovenian (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/sl/)\n"
 "MIME-Version: 1.0\n"
@@ -1065,7 +1065,7 @@ msgid ""
 "In a context with a single Stock Location, this includes goods stored in this location, or any of its children.\n"
 "In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
-msgstr ""
+msgstr "Napoved količine (izračunano kot Razpoložljiva - Izhodna + Vhodna)\nV kontekstu posamezne lokacije zaloge vključuje blago shranjeno na tej in njej podrejenih lokacijah..\nV kontekstu posameznega skladišča vključuje blago shranjeno na lokaciji zaloge tega skladišča in njej podrejenih.\nDrugače vključuje blago shranjeno na katerikoli lokaciji zaloge tipa 'interno'."
 
 #. module: magentoerpconnect
 #: field:magento.product.product,track_all:0
@@ -1100,7 +1100,7 @@ msgid ""
 "Gives the status of the quotation or sales order.              \n"
 "The exception status is automatically set when a cancel operation occurs               in the invoice validation (Invoice Exception) or in the picking list process (Shipping Exception).\n"
 "The 'Waiting Schedule' status is set when the invoice is confirmed               but waiting for the scheduler to run on the order date."
-msgstr ""
+msgstr "Poda status predračuna ali prodajnega naloga.                            \nStatus izjeme se samodejno nastavi ob preklicu pri overjanju računa (izjema računa) ali procesu zbirnega seznama (izjema odpreme).\nStatus 'Čakanje razporeda' se nastavi, ko je račun potrjen, a čaka zagon razporejevalnika na datum naloga."
 
 #. module: magentoerpconnect
 #: field:magento.product.product,weight:0
@@ -1195,7 +1195,7 @@ msgid ""
 "If opt-out is checked, this contact has refused to receive emails for mass "
 "mailing and marketing campaign. Filter 'Available for Mass Mailing' allows "
 "users to filter the partners when performing mass mailing."
-msgstr ""
+msgstr "Če je označena odjava, pomeni, da ta stik zavrača sprejemanje e-pošte za masovna razpošiljanja in marketinške kampanje. Filter 'Na voljo za masovno pošto' omogoča uporabnikom filtriranje partnerjev pri izvajanju masovnega razpošiljanja."
 
 #. module: magentoerpconnect
 #: help:magento.product.product,valuation:0
@@ -2517,7 +2517,7 @@ msgid ""
 "In a context with a single Stock Location, this includes goods arriving to this Location, or any of its children.\n"
 "In a context with a single Warehouse, this includes goods arriving to the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods arriving to any Stock Location with 'internal' type."
-msgstr ""
+msgstr "Količina proizvodov, katerih prihod se pričakuje.\nV kontekstu posamezne lokacije zaloge vključuje blago, ki prihaja na to ali njej podrejeno lokacijo.\nV kontekstu posameznega skladišča vključuje blago, ki prihaja na lokacijo zaloge tega ali njemu podrejenega skladišča.\nDrugače vključuje blago, ki prihaja na katerokoli lokacijo internega tipa."
 
 #. module: magentoerpconnect
 #: help:magento.product.product,outgoing_qty:0
@@ -2526,7 +2526,7 @@ msgid ""
 "In a context with a single Stock Location, this includes goods leaving this Location, or any of its children.\n"
 "In a context with a single Warehouse, this includes goods leaving the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods leaving any Stock Location with 'internal' type."
-msgstr ""
+msgstr "Količina proizvodov, za katere se pričakuje odhod.\nV kontekstu posamezne lokacije zaloge vključuje blago, ki prihaja na to ali njej podrejeno lokacijo.\nV kontekstu posameznega skladišča vključuje blago, ki prihaja na lokacijo zaloge tega ali njemu podrejenega skladišča.\nDrugače vključuje blago, ki prihaja na katerokoli lokacijo internega tipa."
 
 #. module: magentoerpconnect
 #: field:magento.product.product,loc_rack:0
@@ -3725,7 +3725,7 @@ msgid ""
 "specific valuation account set on the source location. This is the default "
 "value for all products in this category. It can also directly be set on each"
 " product"
-msgstr ""
+msgstr "Ob izvajanju vrednotenja zalog v realnem času se dnevniške proti-postavke za vse vhodne premike zaloge knjižijo na ta konto, razen, če je na ciljni lokaciji določen specifičen konto vrednotenja. To je privzeta vrednost za vse proizvode te kategorije. Nastavi se lahko tudi neposredno za vsak proizvod."
 
 #. module: magentoerpconnect
 #: help:magento.product.product,property_stock_account_input:0

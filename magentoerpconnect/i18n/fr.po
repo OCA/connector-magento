@@ -24,8 +24,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 09:45+0000\n"
-"PO-Revision-Date: 2016-08-22 09:45+0000\n"
+"POT-Creation-Date: 2016-09-03 07:42+0000\n"
+"PO-Revision-Date: 2016-09-16 21:46+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: French (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -637,7 +637,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.address,country_id:0 field:magento.res.partner,country_id:0
 msgid "Country"
-msgstr ""
+msgstr "Pays"
 
 #. module: magentoerpconnect
 #: field:magento.sale.order,order_policy:0
@@ -765,7 +765,7 @@ msgstr ""
 #: field:magento.address,date:0 field:magento.res.partner,date:0
 #: field:magento.sale.order,date_order:0
 msgid "Date"
-msgstr ""
+msgstr "Date"
 
 #. module: magentoerpconnect
 #: help:magento.stock.picking,date_done:0
@@ -845,7 +845,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.sale.order,shipped:0
 msgid "Delivered"
-msgstr ""
+msgstr "Livré"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,delivery_count:0
@@ -914,7 +914,7 @@ msgstr ""
 #: field:magento.store,display_name:0 field:magento.storeview,display_name:0
 #: field:magento.website,display_name:0
 msgid "Display Name"
-msgstr ""
+msgstr "Nom à afficher"
 
 #. module: magentoerpconnect
 #: selection:magento.product.product,manage_stock:0
@@ -958,7 +958,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.address,email:0 field:magento.res.partner,email:0
 msgid "Email"
-msgstr ""
+msgstr "Courriel"
 
 #. module: magentoerpconnect
 #: field:magento.address,employee:0 field:magento.res.partner,employee:0
@@ -1636,7 +1636,7 @@ msgstr ""
 #: field:magento.store,__last_update:0 field:magento.storeview,__last_update:0
 #: field:magento.website,__last_update:0
 msgid "Last Modified on"
-msgstr ""
+msgstr "Dernière modification le"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,write_uid:0 field:magento.address,write_uid:0
@@ -2777,7 +2777,7 @@ msgstr "Envoi d'e-mail de notification lors des expéditions"
 #. module: magentoerpconnect
 #: field:magento.account.invoice,sent:0
 msgid "Sent"
-msgstr ""
+msgstr "Envoyé"
 
 #. module: magentoerpconnect
 #: field:magento.product.category,sequence:0
@@ -2913,7 +2913,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.address,state_id:0 field:magento.res.partner,state_id:0
 msgid "State"
-msgstr ""
+msgstr "État"
 
 #. module: magentoerpconnect
 #: code:addons/magentoerpconnect/sale.py:1098
@@ -3442,7 +3442,7 @@ msgstr ""
 #: field:magento.account.invoice,amount_total:0
 #: field:magento.sale.order,amount_total:0
 msgid "Total"
-msgstr ""
+msgstr "Total"
 
 #. module: magentoerpconnect
 #: model:sale.exception,name:magentoerpconnect.excep_wrong_total_amount
@@ -3515,7 +3515,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.account.invoice,type:0
 msgid "Type"
-msgstr ""
+msgstr "Type"
 
 #. module: magentoerpconnect
 #: code:addons/magentoerpconnect/magento_model.py:648
