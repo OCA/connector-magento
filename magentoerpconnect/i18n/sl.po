@@ -3,32 +3,31 @@
 # * magentoerpconnect
 # 
 # Translators:
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (7.0)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-17 15:09+0000\n"
-"PO-Revision-Date: 2016-09-09 11:33+0000\n"
-"Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
-"Language-Team: Italian (http://www.transifex.com/oca/OCA-connector-magento-7-0/language/it/)\n"
+"PO-Revision-Date: 2015-07-08 12:13+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: Slovenian (http://www.transifex.com/oca/OCA-connector-magento-7-0/language/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: it\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: sl\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
 
 #. module: magentoerpconnect
 #: help:magento.store,send_invoice_paid_mail:0
 msgid ""
 "Does the invoice export/creation should send an email notification on "
 "Magento side?"
-msgstr "Si vuole che l'esportazione/creazione di fatture invii un email di notifica da Magento?"
+msgstr ""
 
 #. module: magentoerpconnect
 #: view:magento.backend:0
 msgid "Import sales orders from all store views"
-msgstr "Importa ordini di vendita da tutte le viste negozio."
+msgstr ""
 
 #. module: magentoerpconnect
 #: model:sale.exception,description:magentoerpconnect.excep_wrong_total_amount_tax
@@ -45,7 +44,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: help:magento.backend,warehouse_id:0
 msgid "Warehouse used to compute the stock quantities."
-msgstr "Magazzino usato per la valorizzazione delle scorte."
+msgstr ""
 
 #. module: magentoerpconnect
 #: selection:magento.store,create_invoice_on:0
@@ -65,7 +64,7 @@ msgstr ""
 #: field:magento.stock.picking.out,sync_date:0 field:magento.store,sync_date:0
 #: field:magento.storeview,sync_date:0 field:magento.website,sync_date:0
 msgid "Last synchronization date"
-msgstr "Data ultima sincronizzazione"
+msgstr ""
 
 #. module: magentoerpconnect
 #: help:magento.backend,default_category_id:0
@@ -259,7 +258,7 @@ msgstr ""
 #: model:ir.model,name:magentoerpconnect.model_res_partner
 #: field:magento.address,openerp_id:0 field:magento.res.partner,openerp_id:0
 msgid "Partner"
-msgstr ""
+msgstr "Partner"
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_sale_order
@@ -274,7 +273,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Linea d'ordine di vendita"
+msgstr "Postavka prodajnega naloga"
 
 #. module: magentoerpconnect
 #: field:magento.storeview,no_sales_order_sync:0
@@ -717,7 +716,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.backend,website_ids:0
 msgid "Website"
-msgstr ""
+msgstr "Spletna stran"
 
 #. module: magentoerpconnect
 #: view:magento.backend:0
@@ -852,7 +851,7 @@ msgstr ""
 #: code:addons/magentoerpconnect/related_action.py:56
 #, python-format
 msgid "Error"
-msgstr ""
+msgstr "Napaka"
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_res_partner_category
@@ -1059,7 +1058,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.backend,password:0
 msgid "Password"
-msgstr ""
+msgstr "Geslo"
 
 #. module: magentoerpconnect
 #: view:magento.backend:0
@@ -1120,7 +1119,7 @@ msgstr ""
 #: model:ir.model,name:magentoerpconnect.model_product_product
 #: field:magento.product.product,openerp_id:0
 msgid "Product"
-msgstr "Prodotto"
+msgstr "Proizvod"
 
 #. module: magentoerpconnect
 #: view:magento.backend:0

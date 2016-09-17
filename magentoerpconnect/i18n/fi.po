@@ -3,19 +3,18 @@
 # * magentoerpconnect
 # 
 # Translators:
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (7.0)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-17 15:09+0000\n"
-"PO-Revision-Date: 2016-09-09 11:33+0000\n"
-"Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
-"Language-Team: Italian (http://www.transifex.com/oca/OCA-connector-magento-7-0/language/it/)\n"
+"PO-Revision-Date: 2015-07-08 12:13+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: Finnish (http://www.transifex.com/oca/OCA-connector-magento-7-0/language/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: it\n"
+"Language: fi\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: magentoerpconnect
@@ -23,12 +22,12 @@ msgstr ""
 msgid ""
 "Does the invoice export/creation should send an email notification on "
 "Magento side?"
-msgstr "Si vuole che l'esportazione/creazione di fatture invii un email di notifica da Magento?"
+msgstr ""
 
 #. module: magentoerpconnect
 #: view:magento.backend:0
 msgid "Import sales orders from all store views"
-msgstr "Importa ordini di vendita da tutte le viste negozio."
+msgstr ""
 
 #. module: magentoerpconnect
 #: model:sale.exception,description:magentoerpconnect.excep_wrong_total_amount_tax
@@ -45,7 +44,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: help:magento.backend,warehouse_id:0
 msgid "Warehouse used to compute the stock quantities."
-msgstr "Magazzino usato per la valorizzazione delle scorte."
+msgstr ""
 
 #. module: magentoerpconnect
 #: selection:magento.store,create_invoice_on:0
@@ -65,7 +64,7 @@ msgstr ""
 #: field:magento.stock.picking.out,sync_date:0 field:magento.store,sync_date:0
 #: field:magento.storeview,sync_date:0 field:magento.website,sync_date:0
 msgid "Last synchronization date"
-msgstr "Data ultima sincronizzazione"
+msgstr ""
 
 #. module: magentoerpconnect
 #: help:magento.backend,default_category_id:0
@@ -274,7 +273,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Linea d'ordine di vendita"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.storeview,no_sales_order_sync:0
@@ -1120,7 +1119,7 @@ msgstr ""
 #: model:ir.model,name:magentoerpconnect.model_product_product
 #: field:magento.product.product,openerp_id:0
 msgid "Product"
-msgstr "Prodotto"
+msgstr "Tuote"
 
 #. module: magentoerpconnect
 #: view:magento.backend:0

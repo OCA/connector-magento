@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (7.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-31 15:18+0000\n"
-"PO-Revision-Date: 2015-07-08 12:13+0000\n"
+"POT-Creation-Date: 2016-08-17 15:09+0000\n"
+"PO-Revision-Date: 2016-09-16 21:46+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: French (http://www.transifex.com/oca/OCA-connector-magento-7-0/language/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -851,7 +851,7 @@ msgstr "Importer les commandes depuis une date"
 #: code:addons/magentoerpconnect/related_action.py:56
 #, python-format
 msgid "Error"
-msgstr ""
+msgstr "Erreur"
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_res_partner_category
