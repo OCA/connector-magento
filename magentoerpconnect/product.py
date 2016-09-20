@@ -349,18 +349,23 @@ class CatalogImageImporter(Importer):
         else:
             return binary.read()
 
+    def _write_image_data(self, binding_id, binary, image_data):
+        model = self.model.with_context(connector_no_export=True)
+        binding = model.browse(binding_id)
+        binding.write({'image': base64.b64encode(binary)})
+
     def run(self, magento_id, binding_id):
         self.magento_id = magento_id
         images = self._get_images()
         images = self._sort_images(images)
         binary = None
+        image_data = None
         while not binary and images:
-            binary = self._get_binary_image(images.pop())
+            image_data = images.pop()
+            binary = self._get_binary_image(image_data)
         if not binary:
             return
-        model = self.model.with_context(connector_no_export=True)
-        binding = model.browse(binding_id)
-        binding.write({'image': base64.b64encode(binary)})
+        self._write_image_data(binding_id, binary, image_data)
 
 
 @magento
