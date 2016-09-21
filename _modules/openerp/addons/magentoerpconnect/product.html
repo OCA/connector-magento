@@ -588,18 +588,23 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">binary</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
 
+    <span class="k">def</span> <span class="nf">_write_image_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">binding_id</span><span class="p">,</span> <span class="n">binary</span><span class="p">,</span> <span class="n">image_data</span><span class="p">):</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">with_context</span><span class="p">(</span><span class="n">connector_no_export</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">binding</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">browse</span><span class="p">(</span><span class="n">binding_id</span><span class="p">)</span>
+        <span class="n">binding</span><span class="o">.</span><span class="n">write</span><span class="p">({</span><span class="s1">&#39;image&#39;</span><span class="p">:</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">binary</span><span class="p">)})</span>
+
 <div class="viewcode-block" id="CatalogImageImporter.run"><a class="viewcode-back" href="../../../../api/api_product.html#openerp.addons.magentoerpconnect.product.CatalogImageImporter.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">magento_id</span><span class="p">,</span> <span class="n">binding_id</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">magento_id</span> <span class="o">=</span> <span class="n">magento_id</span>
         <span class="n">images</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_images</span><span class="p">()</span>
         <span class="n">images</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sort_images</span><span class="p">(</span><span class="n">images</span><span class="p">)</span>
         <span class="n">binary</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">image_data</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">while</span> <span class="ow">not</span> <span class="n">binary</span> <span class="ow">and</span> <span class="n">images</span><span class="p">:</span>
-            <span class="n">binary</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_binary_image</span><span class="p">(</span><span class="n">images</span><span class="o">.</span><span class="n">pop</span><span class="p">())</span>
+            <span class="n">image_data</span> <span class="o">=</span> <span class="n">images</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+            <span class="n">binary</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_binary_image</span><span class="p">(</span><span class="n">image_data</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">binary</span><span class="p">:</span>
             <span class="k">return</span>
-        <span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">with_context</span><span class="p">(</span><span class="n">connector_no_export</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">binding</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">browse</span><span class="p">(</span><span class="n">binding_id</span><span class="p">)</span>
-        <span class="n">binding</span><span class="o">.</span><span class="n">write</span><span class="p">({</span><span class="s1">&#39;image&#39;</span><span class="p">:</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">binary</span><span class="p">)})</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_write_image_data</span><span class="p">(</span><span class="n">binding_id</span><span class="p">,</span> <span class="n">binary</span><span class="p">,</span> <span class="n">image_data</span><span class="p">)</span></div></div>
 
 
 <span class="nd">@magento</span>
