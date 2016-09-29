@@ -469,7 +469,7 @@ class ProductImportMapper(ImportMapper):
         mag_categories = record['categories']
         binder = self.binder_for('magento.product.category')
         curr_product = self.binder_for('magento.product.product').to_openerp(
-            record['product_id']
+            record['product_id'], unwrap=True
         )
         curr_product_rec = self.env['product.product'].browse(curr_product)
         category_ids = []
