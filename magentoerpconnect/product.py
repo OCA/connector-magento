@@ -491,7 +491,11 @@ class ProductImportMapper(ImportMapper):
                 main_categ_id = default_categ.id
 
         result = {'categ_ids': [(6, 0, category_ids)]}
-        if main_categ_id:  # OpenERP assign 'All Products' if not specified
+        # OpenERP assign 'All Products' if not specified
+        # skip main cat assignment if the current main category is already in
+        # categ_ids
+        if (main_categ_id and
+                self.backend_record.categ_id.id not in category_ids):
             result['categ_id'] = main_categ_id
         return result
 
