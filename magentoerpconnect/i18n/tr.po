@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-03 07:42+0000\n"
-"PO-Revision-Date: 2016-09-09 11:33+0000\n"
+"POT-Creation-Date: 2016-09-21 06:37+0000\n"
+"PO-Revision-Date: 2016-10-04 09:43+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: Turkish (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/tr/)\n"
 "MIME-Version: 1.0\n"
@@ -870,7 +870,7 @@ msgstr ""
 #: field:magento.product.product,description:0
 #: field:magento.sale.order.line,name:0
 msgid "Description"
-msgstr ""
+msgstr "Açıklama"
 
 #. module: magentoerpconnect
 #: field:magento.stock.picking,location_dest_id:0
@@ -3154,7 +3154,7 @@ msgid ""
 msgstr ""
 
 #. module: magentoerpconnect
-#: code:addons/magentoerpconnect/product.py:558
+#: code:addons/magentoerpconnect/product.py:563
 #, python-format
 msgid ""
 "The configurable product is not imported in OpenERP, because only the simple"

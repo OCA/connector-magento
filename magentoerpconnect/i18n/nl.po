@@ -4,7 +4,7 @@
 # 
 # Translators:
 # bossnm11 <bossnm11@gmail.com>, 2014
-# Chanseok <kcsgoodboy@gmail.com>, 2014
+# Chanseok <kcsgoodboy@naver.com>, 2014
 # danimaribeiro <danimaribeiro@gmail.com>, 2015
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 # Hotellook, 2014
@@ -22,8 +22,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-05-21 09:43+0000\n"
-"PO-Revision-Date: 2016-05-21 09:43+0000\n"
+"POT-Creation-Date: 2016-09-21 06:37+0000\n"
+"PO-Revision-Date: 2016-09-17 18:43+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: Dutch (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -211,7 +211,7 @@ msgstr ""
 #: field:magento.res.partner,active:0
 #: field:magento.res.partner.category,active:0
 msgid "Active"
-msgstr ""
+msgstr "Actief"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,comment:0
@@ -250,7 +250,7 @@ msgid "Already exported"
 msgstr ""
 
 #. module: magentoerpconnect
-#: code:addons/magentoerpconnect/sale.py:628
+#: code:addons/magentoerpconnect/sale.py:631
 #, python-format
 msgid "Already imported"
 msgstr ""
@@ -475,6 +475,14 @@ msgstr ""
 #. module: magentoerpconnect
 #: help:magento.product.product,no_stock_sync:0
 msgid "Check this to exclude the product from stock synchronizations."
+msgstr ""
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/magento_model.py:219
+#, python-format
+msgid ""
+"Check your configuration, we can't get the data. Here is the error:\n"
+"%s"
 msgstr ""
 
 #. module: magentoerpconnect
@@ -904,7 +912,7 @@ msgstr ""
 #: field:magento.store,display_name:0 field:magento.storeview,display_name:0
 #: field:magento.website,display_name:0
 msgid "Display Name"
-msgstr ""
+msgstr "Te tonen naam"
 
 #. module: magentoerpconnect
 #: selection:magento.product.product,manage_stock:0
@@ -1626,7 +1634,7 @@ msgstr ""
 #: field:magento.store,__last_update:0 field:magento.storeview,__last_update:0
 #: field:magento.website,__last_update:0
 msgid "Last Modified on"
-msgstr ""
+msgstr "Laatst bijgewerkt op"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,write_uid:0 field:magento.address,write_uid:0
@@ -3161,7 +3169,7 @@ msgid ""
 msgstr ""
 
 #. module: magentoerpconnect
-#: code:addons/magentoerpconnect/product.py:556
+#: code:addons/magentoerpconnect/product.py:563
 #, python-format
 msgid ""
 "The configurable product is not imported in OpenERP, because only the simple"
@@ -3505,10 +3513,10 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.account.invoice,type:0
 msgid "Type"
-msgstr ""
+msgstr "Type"
 
 #. module: magentoerpconnect
-#: code:addons/magentoerpconnect/magento_model.py:641
+#: code:addons/magentoerpconnect/magento_model.py:648
 #, python-format
 msgid "Undefined"
 msgstr ""

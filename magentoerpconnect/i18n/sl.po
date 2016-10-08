@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-03 07:42+0000\n"
-"PO-Revision-Date: 2016-09-16 21:45+0000\n"
+"POT-Creation-Date: 2016-09-21 06:37+0000\n"
+"PO-Revision-Date: 2016-10-04 09:42+0000\n"
 "Last-Translator: Matjaž Mozetič <m.mozetic@matmoz.si>\n"
 "Language-Team: Slovenian (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/sl/)\n"
 "MIME-Version: 1.0\n"
@@ -3160,7 +3160,7 @@ msgid ""
 msgstr "Komercialna entiteta, ki bo uporabljena na dnevniških vnosih za ta račun."
 
 #. module: magentoerpconnect
-#: code:addons/magentoerpconnect/product.py:558
+#: code:addons/magentoerpconnect/product.py:563
 #, python-format
 msgid ""
 "The configurable product is not imported in OpenERP, because only the simple"

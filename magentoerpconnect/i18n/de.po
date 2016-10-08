@@ -8,7 +8,7 @@
 # Carles Antoli <carlesantoli@hotmail.com>, 2015
 # Carles Antoli <carlesantoli@hotmail.com>, 2015
 # Carles Antoli <carlesantoli@hotmail.com>, 2015
-# Chanseok <kcsgoodboy@gmail.com>, 2014
+# Chanseok <kcsgoodboy@naver.com>, 2014
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2010,2012,2014
 # Giedrius Slavinskas <giedrius@inovera.lt>, 2012
 # Hotellook, 2014
@@ -27,8 +27,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-03 07:42+0000\n"
-"PO-Revision-Date: 2016-09-16 21:45+0000\n"
+"POT-Creation-Date: 2016-09-21 06:37+0000\n"
+"PO-Revision-Date: 2016-10-04 09:42+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: German (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/de/)\n"
 "MIME-Version: 1.0\n"
@@ -1584,7 +1584,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.account.invoice,journal_id:0
 msgid "Journal"
-msgstr ""
+msgstr "Journal"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,move_id:0
@@ -1639,7 +1639,7 @@ msgstr ""
 #: field:magento.store,__last_update:0 field:magento.storeview,__last_update:0
 #: field:magento.website,__last_update:0
 msgid "Last Modified on"
-msgstr ""
+msgstr "Zuletzt geändert am"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,write_uid:0 field:magento.address,write_uid:0
@@ -2258,7 +2258,7 @@ msgstr "Partner-Schlagworte"
 #. module: magentoerpconnect
 #: field:magento.res.partner.category,partner_ids:0
 msgid "Partners"
-msgstr ""
+msgstr "Partner"
 
 #. module: magentoerpconnect
 #: field:magento.backend,password:0
@@ -3174,7 +3174,7 @@ msgid ""
 msgstr ""
 
 #. module: magentoerpconnect
-#: code:addons/magentoerpconnect/product.py:558
+#: code:addons/magentoerpconnect/product.py:563
 #, python-format
 msgid ""
 "The configurable product is not imported in OpenERP, because only the simple"

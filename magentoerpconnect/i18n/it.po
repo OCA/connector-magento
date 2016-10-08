@@ -17,8 +17,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-03 07:42+0000\n"
-"PO-Revision-Date: 2016-09-09 12:25+0000\n"
+"POT-Creation-Date: 2016-09-21 06:37+0000\n"
+"PO-Revision-Date: 2016-10-07 12:52+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: Italian (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/it/)\n"
 "MIME-Version: 1.0\n"
@@ -1574,7 +1574,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.account.invoice,journal_id:0
 msgid "Journal"
-msgstr ""
+msgstr "Sezionale"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,move_id:0
@@ -2177,7 +2177,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.stock.picking,owner_id:0
 msgid "Owner"
-msgstr ""
+msgstr "Proprietario"
 
 #. module: magentoerpconnect
 #: field:magento.stock.picking,pack_operation_exist:0
@@ -2321,7 +2321,7 @@ msgstr "Metodo di picking"
 #. module: magentoerpconnect
 #: field:magento.stock.picking,picking_type_id:0
 msgid "Picking Type"
-msgstr ""
+msgstr "Tipo Picking"
 
 #. module: magentoerpconnect
 #: field:magento.stock.picking,picking_type_code:0
@@ -2589,7 +2589,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: help:magento.account.invoice,origin:0
 msgid "Reference of the document that produced this invoice."
-msgstr ""
+msgstr "Riferimento del documento che ha generato questa fattura"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,name:0
@@ -3164,7 +3164,7 @@ msgid ""
 msgstr ""
 
 #. module: magentoerpconnect
-#: code:addons/magentoerpconnect/product.py:558
+#: code:addons/magentoerpconnect/product.py:563
 #, python-format
 msgid ""
 "The configurable product is not imported in OpenERP, because only the simple"
@@ -3508,7 +3508,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.account.invoice,type:0
 msgid "Type"
-msgstr ""
+msgstr "Tipo"
 
 #. module: magentoerpconnect
 #: code:addons/magentoerpconnect/magento_model.py:648
