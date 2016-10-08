@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (7.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-17 15:09+0000\n"
-"PO-Revision-Date: 2016-09-09 11:33+0000\n"
+"POT-Creation-Date: 2016-09-17 07:51+0000\n"
+"PO-Revision-Date: 2016-10-04 09:43+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: Italian (http://www.transifex.com/oca/OCA-connector-magento-7-0/language/it/)\n"
 "MIME-Version: 1.0\n"
@@ -106,7 +106,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: view:res.partner:0 field:res.partner,company:0
 msgid "Company"
-msgstr ""
+msgstr "Azienda"
 
 #. module: magentoerpconnect
 #: sql_constraint:magento.website:0
@@ -259,12 +259,12 @@ msgstr ""
 #: model:ir.model,name:magentoerpconnect.model_res_partner
 #: field:magento.address,openerp_id:0 field:magento.res.partner,openerp_id:0
 msgid "Partner"
-msgstr ""
+msgstr "Partner"
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_sale_order
 msgid "Sales Order"
-msgstr ""
+msgstr "Ordini di Vendita"
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_stock_picking_out
@@ -913,7 +913,7 @@ msgstr ""
 #: model:ir.model,name:magentoerpconnect.model_account_invoice
 #: field:magento.account.invoice,openerp_id:0
 msgid "Invoice"
-msgstr ""
+msgstr "Fattura"
 
 #. module: magentoerpconnect
 #: code:addons/magentoerpconnect/stock_tracking.py:83
@@ -1017,7 +1017,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.product.category,description:0
 msgid "Description"
-msgstr ""
+msgstr "Descrizione"
 
 #. module: magentoerpconnect
 #: selection:magento.product.product,backorders:0
