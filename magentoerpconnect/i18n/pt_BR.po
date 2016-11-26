@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-21 06:37+0000\n"
-"PO-Revision-Date: 2016-10-04 09:43+0000\n"
+"PO-Revision-Date: 2016-11-25 14:55+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/pt_BR/)\n"
 "MIME-Version: 1.0\n"
@@ -206,7 +206,7 @@ msgstr ""
 #: field:magento.res.partner,active:0
 #: field:magento.res.partner.category,active:0
 msgid "Active"
-msgstr ""
+msgstr "Ativo"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,comment:0
@@ -758,7 +758,7 @@ msgstr ""
 #: field:magento.address,date:0 field:magento.res.partner,date:0
 #: field:magento.sale.order,date_order:0
 msgid "Date"
-msgstr ""
+msgstr "Data"
 
 #. module: magentoerpconnect
 #: help:magento.stock.picking,date_done:0
@@ -1005,7 +1005,7 @@ msgstr ""
 #: field:magento.res.partner,property_account_position:0
 #: field:magento.sale.order,fiscal_position:0
 msgid "Fiscal Position"
-msgstr ""
+msgstr "Posição Fiscal"
 
 #. module: magentoerpconnect
 #: field:magento.backend,fiscal_position_id:0
@@ -1452,7 +1452,7 @@ msgstr ""
 #: model:ir.model,name:magentoerpconnect.model_account_invoice
 #: field:magento.account.invoice,openerp_id:0
 msgid "Invoice"
-msgstr ""
+msgstr "Fatura"
 
 #. module: magentoerpconnect
 #: field:magento.sale.order,partner_invoice_id:0
@@ -2045,7 +2045,7 @@ msgstr ""
 #: field:magento.res.partner,name:0 field:magento.store,name:0
 #: field:magento.storeview,name:0 field:magento.website,name:0
 msgid "Name"
-msgstr ""
+msgstr "Nome"
 
 #. module: magentoerpconnect
 #: field:magento.sale.order,need_cancel:0
@@ -2233,7 +2233,7 @@ msgstr ""
 #: field:magento.address,openerp_id:0 field:magento.res.partner,openerp_id:0
 #: field:magento.stock.picking,partner_id:0
 msgid "Partner"
-msgstr ""
+msgstr "Parceiro"
 
 #. module: magentoerpconnect
 #: field:magento.res.partner.category,openerp_id:0
@@ -2394,7 +2394,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.stock.picking,priority:0
 msgid "Priority"
-msgstr ""
+msgstr "Prioridade"
 
 #. module: magentoerpconnect
 #: help:magento.stock.picking,priority:0
@@ -2430,7 +2430,7 @@ msgstr ""
 #: field:magento.sale.order.line,product_id:0
 #: field:magento.stock.picking,product_id:0
 msgid "Product"
-msgstr ""
+msgstr "Produto"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,attribute_line_ids:0
@@ -2906,7 +2906,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.address,state_id:0 field:magento.res.partner,state_id:0
 msgid "State"
-msgstr ""
+msgstr "Estado"
 
 #. module: magentoerpconnect
 #: code:addons/magentoerpconnect/sale.py:1098
@@ -3007,7 +3007,7 @@ msgstr ""
 #: field:magento.address,supplier:0 field:magento.product.product,seller_ids:0
 #: field:magento.res.partner,supplier:0
 msgid "Supplier"
-msgstr ""
+msgstr "Fornecedor"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,supplier_invoice_number:0
@@ -3631,7 +3631,7 @@ msgstr "Usuário"
 #. module: magentoerpconnect
 #: field:magento.address,user_ids:0 field:magento.res.partner,user_ids:0
 msgid "Users"
-msgstr ""
+msgstr "Usuários"
 
 #. module: magentoerpconnect
 #: field:magento.address,vat_subjected:0

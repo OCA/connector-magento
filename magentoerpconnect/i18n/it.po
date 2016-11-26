@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-21 06:37+0000\n"
-"PO-Revision-Date: 2016-10-07 12:52+0000\n"
+"PO-Revision-Date: 2016-11-25 14:57+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: Italian (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/it/)\n"
 "MIME-Version: 1.0\n"
@@ -206,7 +206,7 @@ msgstr ""
 #: field:magento.res.partner,active:0
 #: field:magento.res.partner.category,active:0
 msgid "Active"
-msgstr ""
+msgstr "Attivo"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,comment:0
@@ -612,7 +612,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.product.product,standard_price:0
 msgid "Cost Price"
-msgstr ""
+msgstr "Prezzo di Costo"
 
 #. module: magentoerpconnect
 #: help:magento.product.product,standard_price:0
@@ -725,7 +725,7 @@ msgstr "Percorso del API personalizzato"
 #: field:magento.sale.order,partner_id:0
 #: field:magento.sale.order.line,order_partner_id:0
 msgid "Customer"
-msgstr ""
+msgstr "Cliente"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,sale_delay:0
@@ -758,7 +758,7 @@ msgstr ""
 #: field:magento.address,date:0 field:magento.res.partner,date:0
 #: field:magento.sale.order,date_order:0
 msgid "Date"
-msgstr ""
+msgstr "Data"
 
 #. module: magentoerpconnect
 #: help:magento.stock.picking,date_done:0
@@ -778,7 +778,7 @@ msgstr ""
 #: help:magento.sale.order,message_last_post:0
 #: help:magento.stock.picking,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Date of the last message posted on the record."
 
 #. module: magentoerpconnect
 #: help:magento.sale.order,date_confirm:0
@@ -843,7 +843,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.product.product,delivery_count:0
 msgid "Delivery"
-msgstr ""
+msgstr "Consegna"
 
 #. module: magentoerpconnect
 #: field:magento.sale.order,partner_shipping_id:0
@@ -1024,7 +1024,7 @@ msgstr ""
 #: field:magento.sale.order,message_follower_ids:0
 #: field:magento.stock.picking,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Followers"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,period_id:0
@@ -1109,7 +1109,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.product.product,weight:0
 msgid "Gross Weight"
-msgstr ""
+msgstr "Peso Lordo"
 
 #. module: magentoerpconnect
 #: field:magento.res.partner,guest_customer:0
@@ -1191,7 +1191,7 @@ msgstr "Se una lingua di default viene selezionata, i record verranno importati 
 #: help:magento.sale.order,message_unread:0
 #: help:magento.stock.picking,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "If checked new messages require your attention."
 
 #. module: magentoerpconnect
 #: help:magento.address,opt_out:0 help:magento.res.partner,opt_out:0
@@ -1612,7 +1612,7 @@ msgstr "Lingua"
 #: field:magento.sale.order,message_last_post:0
 #: field:magento.stock.picking,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "Last Message Date"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,__last_update:0
@@ -2016,7 +2016,7 @@ msgstr ""
 #: field:magento.sale.order,message_ids:0
 #: field:magento.stock.picking,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Messages"
 
 #. module: magentoerpconnect
 #: help:magento.account.invoice,message_ids:0
@@ -2361,7 +2361,7 @@ msgstr ""
 #: field:magento.product.product,pricelist_id:0
 #: field:magento.sale.order,pricelist_id:0
 msgid "Pricelist"
-msgstr ""
+msgstr "Listino prezzi"
 
 #. module: magentoerpconnect
 #: help:magento.sale.order,pricelist_id:0
@@ -2394,7 +2394,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.stock.picking,priority:0
 msgid "Priority"
-msgstr ""
+msgstr "Priorità"
 
 #. module: magentoerpconnect
 #: help:magento.stock.picking,priority:0
@@ -2457,7 +2457,7 @@ msgstr ""
 #: field:magento.product.product,product_tmpl_id:0
 #: field:magento.sale.order.line,product_tmpl_id:0
 msgid "Product Template"
-msgstr ""
+msgstr "Template Prodotto"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,type:0
@@ -2477,7 +2477,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.product.product,product_variant_ids:0
 msgid "Products"
-msgstr ""
+msgstr "Prodotti"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,lst_price:0
@@ -2502,7 +2502,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.sale.order.line,product_uom_qty:0
 msgid "Quantity"
-msgstr ""
+msgstr "Quantità"
 
 #. module: magentoerpconnect
 #: field:magento.sale.order.line,product_uos_qty:0
@@ -2574,7 +2574,7 @@ msgstr "Il record è stato esportato con ID %s su Magento"
 #. module: magentoerpconnect
 #: field:magento.stock.picking,name:0
 msgid "Reference"
-msgstr ""
+msgstr "Riferimento"
 
 #. module: magentoerpconnect
 #: help:magento.stock.picking,origin:0
@@ -2906,7 +2906,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.address,state_id:0 field:magento.res.partner,state_id:0
 msgid "State"
-msgstr ""
+msgstr "Stato"
 
 #. module: magentoerpconnect
 #: code:addons/magentoerpconnect/sale.py:1098
@@ -2919,7 +2919,7 @@ msgstr "Lo stato %s non è esportato."
 #: field:magento.sale.order,state:0 field:magento.sale.order.line,state:0
 #: field:magento.stock.picking,state:0
 msgid "Status"
-msgstr ""
+msgstr "Stato"
 
 #. module: magentoerpconnect
 #: field:magento.backend,product_stock_field_id:0
@@ -3001,7 +3001,7 @@ msgstr ""
 #: field:magento.sale.order,message_summary:0
 #: field:magento.stock.picking,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Periodo Iva"
 
 #. module: magentoerpconnect
 #: field:magento.address,supplier:0 field:magento.product.product,seller_ids:0
@@ -3526,13 +3526,13 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.sale.order.line,price_unit:0
 msgid "Unit Price"
-msgstr ""
+msgstr "Prezzo Unitario"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,uom_id:0
 #: field:magento.stock.picking,weight_uom_id:0
 msgid "Unit of Measure"
-msgstr ""
+msgstr "Unità di Misura"
 
 #. module: magentoerpconnect
 #: field:magento.sale.order.line,product_uom:0
@@ -3562,7 +3562,7 @@ msgstr ""
 #: field:magento.sale.order,message_unread:0
 #: field:magento.stock.picking,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Unread Messages"
 
 #. module: magentoerpconnect
 #: field:magento.sale.order,amount_untaxed:0
@@ -3631,7 +3631,7 @@ msgstr "Username"
 #. module: magentoerpconnect
 #: field:magento.address,user_ids:0 field:magento.res.partner,user_ids:0
 msgid "Users"
-msgstr ""
+msgstr "Utenti"
 
 #. module: magentoerpconnect
 #: field:magento.address,vat_subjected:0
@@ -3668,7 +3668,7 @@ msgstr "Versione"
 #. module: magentoerpconnect
 #: field:magento.product.product,volume:0 field:magento.stock.picking,volume:0
 msgid "Volume"
-msgstr ""
+msgstr "Volume"
 
 #. module: magentoerpconnect
 #: field:magento.backend,warehouse_id:0

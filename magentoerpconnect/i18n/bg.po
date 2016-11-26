@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-21 06:37+0000\n"
-"PO-Revision-Date: 2016-09-25 14:54+0000\n"
+"PO-Revision-Date: 2016-11-25 14:57+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: Bulgarian (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/bg/)\n"
 "MIME-Version: 1.0\n"
@@ -715,7 +715,7 @@ msgstr ""
 #: field:magento.sale.order,partner_id:0
 #: field:magento.sale.order.line,order_partner_id:0
 msgid "Customer"
-msgstr ""
+msgstr "Клиент"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,sale_delay:0
@@ -768,7 +768,7 @@ msgstr ""
 #: help:magento.sale.order,message_last_post:0
 #: help:magento.stock.picking,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Дата на последното съобщение, публикувано на записа."
 
 #. module: magentoerpconnect
 #: help:magento.sale.order,date_confirm:0
@@ -897,7 +897,7 @@ msgstr ""
 #: field:magento.store,display_name:0 field:magento.storeview,display_name:0
 #: field:magento.website,display_name:0
 msgid "Display Name"
-msgstr ""
+msgstr "Име за Показване"
 
 #. module: magentoerpconnect
 #: selection:magento.product.product,manage_stock:0
@@ -1014,7 +1014,7 @@ msgstr ""
 #: field:magento.sale.order,message_follower_ids:0
 #: field:magento.stock.picking,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Последователи"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,period_id:0
@@ -1181,7 +1181,7 @@ msgstr ""
 #: help:magento.sale.order,message_unread:0
 #: help:magento.stock.picking,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Ако е отбелязано, новите съобщения ще изискват внимание."
 
 #. module: magentoerpconnect
 #: help:magento.address,opt_out:0 help:magento.res.partner,opt_out:0
@@ -1280,7 +1280,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.address,image:0 field:magento.res.partner,image:0
 msgid "Image"
-msgstr ""
+msgstr "Изображение"
 
 #. module: magentoerpconnect
 #: help:magento.product.product,image:0
@@ -1602,7 +1602,7 @@ msgstr ""
 #: field:magento.sale.order,message_last_post:0
 #: field:magento.stock.picking,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "Дата на последното съобщение"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,__last_update:0
@@ -2006,7 +2006,7 @@ msgstr ""
 #: field:magento.sale.order,message_ids:0
 #: field:magento.stock.picking,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Съобщения"
 
 #. module: magentoerpconnect
 #: help:magento.account.invoice,message_ids:0
@@ -2016,7 +2016,7 @@ msgstr ""
 #: help:magento.sale.order,message_ids:0
 #: help:magento.stock.picking,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "История на събщенията и комуникациите"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,orderpoint_ids:0
@@ -2766,7 +2766,7 @@ msgstr ""
 #: field:magento.product.category,sequence:0
 #: field:magento.sale.order.line,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Последователност"
 
 #. module: magentoerpconnect
 #: help:magento.product.category,removal_strategy_id:0
@@ -2997,7 +2997,7 @@ msgstr ""
 #: field:magento.address,supplier:0 field:magento.product.product,seller_ids:0
 #: field:magento.res.partner,supplier:0
 msgid "Supplier"
-msgstr ""
+msgstr "Доставчик"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,supplier_invoice_number:0
@@ -3044,7 +3044,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.address,category_id:0 field:magento.res.partner,category_id:0
 msgid "Tags"
-msgstr ""
+msgstr "Етикети"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,amount_tax:0
@@ -3419,7 +3419,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.address,title:0 field:magento.res.partner,title:0
 msgid "Title"
-msgstr ""
+msgstr "Заглавие"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,amount_total:0
@@ -3498,7 +3498,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.account.invoice,type:0
 msgid "Type"
-msgstr ""
+msgstr "Вид"
 
 #. module: magentoerpconnect
 #: code:addons/magentoerpconnect/magento_model.py:648
@@ -3552,7 +3552,7 @@ msgstr ""
 #: field:magento.sale.order,message_unread:0
 #: field:magento.stock.picking,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Непрочетени съобщения"
 
 #. module: magentoerpconnect
 #: field:magento.sale.order,amount_untaxed:0
@@ -3691,7 +3691,7 @@ msgstr ""
 #: field:magento.address,website:0 field:magento.backend,website_ids:0
 #: field:magento.res.partner,website:0
 msgid "Website"
-msgstr ""
+msgstr "Уебсайт"
 
 #. module: magentoerpconnect
 #: help:magento.address,website:0 help:magento.res.partner,website:0

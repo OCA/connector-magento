@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-21 06:37+0000\n"
-"PO-Revision-Date: 2016-10-04 09:42+0000\n"
+"PO-Revision-Date: 2016-11-22 12:24+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: Russian (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -2035,7 +2035,7 @@ msgstr ""
 #: field:magento.res.partner,name:0 field:magento.store,name:0
 #: field:magento.storeview,name:0 field:magento.website,name:0
 msgid "Name"
-msgstr ""
+msgstr "Название"
 
 #. module: magentoerpconnect
 #: field:magento.sale.order,need_cancel:0
@@ -3691,7 +3691,7 @@ msgstr ""
 #: field:magento.address,website:0 field:magento.backend,website_ids:0
 #: field:magento.res.partner,website:0
 msgid "Website"
-msgstr ""
+msgstr "Сайт"
 
 #. module: magentoerpconnect
 #: help:magento.address,website:0 help:magento.res.partner,website:0

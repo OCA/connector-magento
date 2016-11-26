@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-03 07:42+0000\n"
-"PO-Revision-Date: 2016-09-09 12:26+0000\n"
+"POT-Creation-Date: 2016-09-21 06:37+0000\n"
+"PO-Revision-Date: 2016-11-22 16:30+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: Greek (Greece) (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/el_GR/)\n"
 "MIME-Version: 1.0\n"
@@ -620,7 +620,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.address,country_id:0 field:magento.res.partner,country_id:0
 msgid "Country"
-msgstr ""
+msgstr "Χώρα"
 
 #. module: magentoerpconnect
 #: field:magento.sale.order,order_policy:0
@@ -715,7 +715,7 @@ msgstr ""
 #: field:magento.sale.order,partner_id:0
 #: field:magento.sale.order.line,order_partner_id:0
 msgid "Customer"
-msgstr ""
+msgstr "Πελάτης"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,sale_delay:0
@@ -748,7 +748,7 @@ msgstr ""
 #: field:magento.address,date:0 field:magento.res.partner,date:0
 #: field:magento.sale.order,date_order:0
 msgid "Date"
-msgstr ""
+msgstr "Ημερομηνία"
 
 #. module: magentoerpconnect
 #: help:magento.stock.picking,date_done:0
@@ -870,7 +870,7 @@ msgstr ""
 #: field:magento.product.product,description:0
 #: field:magento.sale.order.line,name:0
 msgid "Description"
-msgstr ""
+msgstr "Περιγραφή"
 
 #. module: magentoerpconnect
 #: field:magento.stock.picking,location_dest_id:0
@@ -880,7 +880,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.sale.order.line,discount:0
 msgid "Discount (%)"
-msgstr ""
+msgstr "Έκπτωση (%)"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,display_name:0
@@ -1442,7 +1442,7 @@ msgstr ""
 #: model:ir.model,name:magentoerpconnect.model_account_invoice
 #: field:magento.account.invoice,openerp_id:0
 msgid "Invoice"
-msgstr ""
+msgstr "Τιμολόγιο"
 
 #. module: magentoerpconnect
 #: field:magento.sale.order,partner_invoice_id:0
@@ -2223,7 +2223,7 @@ msgstr ""
 #: field:magento.address,openerp_id:0 field:magento.res.partner,openerp_id:0
 #: field:magento.stock.picking,partner_id:0
 msgid "Partner"
-msgstr ""
+msgstr "Συνεργάτης"
 
 #. module: magentoerpconnect
 #: field:magento.res.partner.category,openerp_id:0
@@ -2760,7 +2760,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.account.invoice,sent:0
 msgid "Sent"
-msgstr ""
+msgstr "Αποστολή"
 
 #. module: magentoerpconnect
 #: field:magento.product.category,sequence:0
@@ -2909,7 +2909,7 @@ msgstr ""
 #: field:magento.sale.order,state:0 field:magento.sale.order.line,state:0
 #: field:magento.stock.picking,state:0
 msgid "Status"
-msgstr ""
+msgstr "Κατάσταση"
 
 #. module: magentoerpconnect
 #: field:magento.backend,product_stock_field_id:0
@@ -2997,7 +2997,7 @@ msgstr ""
 #: field:magento.address,supplier:0 field:magento.product.product,seller_ids:0
 #: field:magento.res.partner,supplier:0
 msgid "Supplier"
-msgstr ""
+msgstr "Προμηθευτής"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,supplier_invoice_number:0
@@ -3154,7 +3154,7 @@ msgid ""
 msgstr ""
 
 #. module: magentoerpconnect
-#: code:addons/magentoerpconnect/product.py:558
+#: code:addons/magentoerpconnect/product.py:563
 #, python-format
 msgid ""
 "The configurable product is not imported in OpenERP, because only the simple"
@@ -3691,7 +3691,7 @@ msgstr ""
 #: field:magento.address,website:0 field:magento.backend,website_ids:0
 #: field:magento.res.partner,website:0
 msgid "Website"
-msgstr ""
+msgstr "Ιστότοπος"
 
 #. module: magentoerpconnect
 #: help:magento.address,website:0 help:magento.res.partner,website:0

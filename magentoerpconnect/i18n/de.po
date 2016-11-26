@@ -28,7 +28,7 @@ msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-21 06:37+0000\n"
-"PO-Revision-Date: 2016-10-04 09:42+0000\n"
+"PO-Revision-Date: 2016-11-25 14:55+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: German (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/de/)\n"
 "MIME-Version: 1.0\n"
@@ -2118,7 +2118,7 @@ msgstr "Nichts zu exportieren."
 #. module: magentoerpconnect
 #: field:magento.account.invoice,number:0
 msgid "Number"
-msgstr ""
+msgstr "Nummer"
 
 #. module: magentoerpconnect
 #: field:magento.sale.order.line,number_packages:0
@@ -2431,7 +2431,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.sale.order.line,procurement_ids:0
 msgid "Procurements"
-msgstr ""
+msgstr "Beschaffungen"
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_product_product
@@ -2467,7 +2467,7 @@ msgstr ""
 #: field:magento.product.product,product_tmpl_id:0
 #: field:magento.sale.order.line,product_tmpl_id:0
 msgid "Product Template"
-msgstr ""
+msgstr "Produktvorlage"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,type:0
@@ -2807,7 +2807,7 @@ msgstr "Auslieferung angelegt"
 #. module: magentoerpconnect
 #: field:magento.sale.order,picking_policy:0
 msgid "Shipping Policy"
-msgstr ""
+msgstr "Lieferbedingung"
 
 #. module: magentoerpconnect
 #: help:payment.method,create_invoice_on:0
@@ -2916,7 +2916,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.address,state_id:0 field:magento.res.partner,state_id:0
 msgid "State"
-msgstr ""
+msgstr "Status"
 
 #. module: magentoerpconnect
 #: code:addons/magentoerpconnect/sale.py:1098
@@ -2929,7 +2929,7 @@ msgstr "Status %s wurde nicht exportiert."
 #: field:magento.sale.order,state:0 field:magento.sale.order.line,state:0
 #: field:magento.stock.picking,state:0
 msgid "Status"
-msgstr ""
+msgstr "Status"
 
 #. module: magentoerpconnect
 #: field:magento.backend,product_stock_field_id:0
@@ -3518,7 +3518,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.account.invoice,type:0
 msgid "Type"
-msgstr ""
+msgstr "Art"
 
 #. module: magentoerpconnect
 #: code:addons/magentoerpconnect/magento_model.py:648
@@ -3641,7 +3641,7 @@ msgstr "Benutzername"
 #. module: magentoerpconnect
 #: field:magento.address,user_ids:0 field:magento.res.partner,user_ids:0
 msgid "Users"
-msgstr ""
+msgstr "Benutzer"
 
 #. module: magentoerpconnect
 #: field:magento.address,vat_subjected:0

@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-21 06:37+0000\n"
-"PO-Revision-Date: 2016-10-04 09:42+0000\n"
+"PO-Revision-Date: 2016-11-22 16:25+0000\n"
 "Last-Translator: Matjaž Mozetič <m.mozetic@matmoz.si>\n"
 "Language-Team: Slovenian (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/sl/)\n"
 "MIME-Version: 1.0\n"
@@ -1206,7 +1206,7 @@ msgid ""
 "account set on the product category will represent the current inventory "
 "value, and the stock input and stock output account will hold the "
 "counterpart moves for incoming and outgoing products."
-msgstr ""
+msgstr "Če je za proizvod omogočeno vrednotenje v realnem času, bo sistem samodejno zapisal dnevniške vnose za ustrezajoče se premike zalog, vena proizvoda bo, kot je določena v 'Metodi vrednotenja'. Konto variacije zaloge nastavljen v kategoriji proizvoda bo predstavljal trenutno vrednost zalog, konta vhodnih in izhodnih zalog pa bosta vsebovala proti-postavke premikov za vhodne in izhodne proizvode."
 
 #. module: magentoerpconnect
 #: help:magento.backend,account_analytic_id:0
@@ -2032,7 +2032,7 @@ msgstr "Pravila minimalnih zalog"
 #. module: magentoerpconnect
 #: field:magento.address,mobile:0 field:magento.res.partner,mobile:0
 msgid "Mobile"
-msgstr ""
+msgstr "Mobilno"
 
 #. module: magentoerpconnect
 #: field:magento.address,name:0 field:magento.backend,name:0
@@ -2129,7 +2129,7 @@ msgid ""
 "On demand: A draft invoice can be created from the sales order when needed. \n"
 "On delivery order: A draft invoice can be created from the delivery order when the products have been delivered. \n"
 "Before delivery: A draft invoice is created from the sales order and must be paid before the products can be delivered."
-msgstr ""
+msgstr "Po potrebi: osnutek računa se ustvari iz prodajnega naloga po potrebi. \nOb dostavnem nalogu: osnutek računa se ustvari iz dostavnega naloga po dostavi proizvodov. \nPred dostavo: osnutek računa se ustvari iz prodajnega naloga in mora biti plačan preden se proizvodi dostavljajo."
 
 #. module: magentoerpconnect
 #: view:magento.backend:magentoerpconnect.view_magento_backend_form
@@ -2531,7 +2531,7 @@ msgstr "Količina proizvodov, za katere se pričakuje odhod.\nV kontekstu posame
 #. module: magentoerpconnect
 #: field:magento.product.product,loc_rack:0
 msgid "Rack"
-msgstr ""
+msgstr "Regal"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,reception_count:0

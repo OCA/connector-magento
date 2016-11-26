@@ -3,11 +3,24 @@
 # * magentoerpconnect_pricing
 # 
 # Translators:
+# Alexsandro Haag <alex@hgsoft.com.br>, 2015
+# Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2013
+# Antonio Trueba, 2016
+# Christophe CHAUVET <christophe.chauvet@gmail.com>, 2015
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012,2014
+# Hotellook, 2014
+# Isabelle RICHARD <isabellerichard89@gmail.com>, 2015
+# llum.birque@gmail.com <llum.birque@gmail.com>, 2015
+# Lixon Jean-Yves <ls.development.nc@gmail.com>, 2016
+# Matjaž Mozetič <m.mozetic@matmoz.si>, 2015
+# Rudolf Schnapka <rs@techno-flex.de>, 2015
+# Stéphane Bidoul <sbi@skynet.be>, 2015
+# yterrettaz, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-11-05 19:13+0000\n"
+"POT-Creation-Date: 2016-09-21 06:37+0000\n"
 "PO-Revision-Date: 2015-11-05 07:46+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: Spanish (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/es/)\n"
@@ -46,7 +59,7 @@ msgstr "Sitio Web Magento"
 #. module: magentoerpconnect_pricing
 #: field:magento.backend,pricelist_id:0 field:magento.website,pricelist_id:0
 msgid "Pricelist"
-msgstr ""
+msgstr "Tarifa"
 
 #. module: magentoerpconnect_pricing
 #: code:addons/magentoerpconnect_pricing/product.py:127
@@ -72,4 +85,4 @@ msgstr ""
 #: code:addons/magentoerpconnect_pricing/magento_model.py:112
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Aviso"

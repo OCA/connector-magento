@@ -3,11 +3,27 @@
 # * magentoerpconnect_pricing
 # 
 # Translators:
+# Accounts-Payable - Alkemics, 2015
+# Antonio Trueba, 2016
+# Chen-Do LU <clu@alkemics.com>, 2015
+# Dimitrios Glentadakis <dglent@gmail.com>, 2013-2014, 2015-2016
+# Efstathios Iosifidis <iefstathios@gmail.com>, 2014
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012,2014
+# François Breysse <fb@alkemics.com>, 2015
+# Giacomo <giacomo.spettoli@gmail.com>, 2015
+# Guewen Baconnier <guewen.baconnier@camptocamp.com>, 2015
+# Hotellook, 2014
+# Jim Spentzos, 2014
+# Matjaž Mozetič <m.mozetic@matmoz.si>, 2015
+# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2015
+# njeudy <njeudy@tuxservices.com>, 2015
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2015
+# Rudolf Schnapka <rs@techno-flex.de>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-11-05 19:13+0000\n"
+"POT-Creation-Date: 2016-09-21 06:37+0000\n"
 "PO-Revision-Date: 2015-11-05 07:46+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: Italian (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/it/)\n"
@@ -46,7 +62,7 @@ msgstr "Sito web di Magento"
 #. module: magentoerpconnect_pricing
 #: field:magento.backend,pricelist_id:0 field:magento.website,pricelist_id:0
 msgid "Pricelist"
-msgstr ""
+msgstr "Listino prezzi"
 
 #. module: magentoerpconnect_pricing
 #: code:addons/magentoerpconnect_pricing/product.py:127

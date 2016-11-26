@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-21 06:37+0000\n"
-"PO-Revision-Date: 2016-10-04 09:43+0000\n"
+"PO-Revision-Date: 2016-11-25 14:56+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -768,7 +768,7 @@ msgstr ""
 #: help:magento.sale.order,message_last_post:0
 #: help:magento.stock.picking,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "发布到记录上的最后消息的日期"
 
 #. module: magentoerpconnect
 #: help:magento.sale.order,date_confirm:0
@@ -870,7 +870,7 @@ msgstr ""
 #: field:magento.product.product,description:0
 #: field:magento.sale.order.line,name:0
 msgid "Description"
-msgstr ""
+msgstr "说明"
 
 #. module: magentoerpconnect
 #: field:magento.stock.picking,location_dest_id:0
@@ -897,7 +897,7 @@ msgstr ""
 #: field:magento.store,display_name:0 field:magento.storeview,display_name:0
 #: field:magento.website,display_name:0
 msgid "Display Name"
-msgstr ""
+msgstr "显示名称"
 
 #. module: magentoerpconnect
 #: selection:magento.product.product,manage_stock:0
@@ -1014,7 +1014,7 @@ msgstr ""
 #: field:magento.sale.order,message_follower_ids:0
 #: field:magento.stock.picking,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "关注者"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,period_id:0
@@ -1181,7 +1181,7 @@ msgstr ""
 #: help:magento.sale.order,message_unread:0
 #: help:magento.stock.picking,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "查看是否有需要留意的新信息。"
 
 #. module: magentoerpconnect
 #: help:magento.address,opt_out:0 help:magento.res.partner,opt_out:0
@@ -1280,7 +1280,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.address,image:0 field:magento.res.partner,image:0
 msgid "Image"
-msgstr ""
+msgstr "图像"
 
 #. module: magentoerpconnect
 #: help:magento.product.product,image:0
@@ -1602,7 +1602,7 @@ msgstr ""
 #: field:magento.sale.order,message_last_post:0
 #: field:magento.stock.picking,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "最后消息日期"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,__last_update:0
@@ -1619,7 +1619,7 @@ msgstr ""
 #: field:magento.store,__last_update:0 field:magento.storeview,__last_update:0
 #: field:magento.website,__last_update:0
 msgid "Last Modified on"
-msgstr ""
+msgstr "最后修改时间"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,write_uid:0 field:magento.address,write_uid:0
@@ -2006,7 +2006,7 @@ msgstr ""
 #: field:magento.sale.order,message_ids:0
 #: field:magento.stock.picking,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "消息"
 
 #. module: magentoerpconnect
 #: help:magento.account.invoice,message_ids:0
@@ -2016,7 +2016,7 @@ msgstr ""
 #: help:magento.sale.order,message_ids:0
 #: help:magento.stock.picking,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "消息和通信历史"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,orderpoint_ids:0
@@ -2035,7 +2035,7 @@ msgstr ""
 #: field:magento.res.partner,name:0 field:magento.store,name:0
 #: field:magento.storeview,name:0 field:magento.website,name:0
 msgid "Name"
-msgstr ""
+msgstr "名称"
 
 #. module: magentoerpconnect
 #: field:magento.sale.order,need_cancel:0
@@ -2686,7 +2686,7 @@ msgstr ""
 #: field:magento.address,sale_order_ids:0
 #: field:magento.res.partner,sale_order_ids:0
 msgid "Sales Order"
-msgstr ""
+msgstr "销售订单"
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_sale_order_line
@@ -2766,7 +2766,7 @@ msgstr ""
 #: field:magento.product.category,sequence:0
 #: field:magento.sale.order.line,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "序号"
 
 #. module: magentoerpconnect
 #: help:magento.product.category,removal_strategy_id:0
@@ -3044,7 +3044,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.address,category_id:0 field:magento.res.partner,category_id:0
 msgid "Tags"
-msgstr ""
+msgstr "标签"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,amount_tax:0
@@ -3419,13 +3419,13 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.address,title:0 field:magento.res.partner,title:0
 msgid "Title"
-msgstr ""
+msgstr "称谓"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,amount_total:0
 #: field:magento.sale.order,amount_total:0
 msgid "Total"
-msgstr ""
+msgstr "总计"
 
 #. module: magentoerpconnect
 #: model:sale.exception,name:magentoerpconnect.excep_wrong_total_amount
@@ -3498,7 +3498,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.account.invoice,type:0
 msgid "Type"
-msgstr ""
+msgstr "类型"
 
 #. module: magentoerpconnect
 #: code:addons/magentoerpconnect/magento_model.py:648
@@ -3552,7 +3552,7 @@ msgstr ""
 #: field:magento.sale.order,message_unread:0
 #: field:magento.stock.picking,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "未读消息"
 
 #. module: magentoerpconnect
 #: field:magento.sale.order,amount_untaxed:0
@@ -3691,7 +3691,7 @@ msgstr ""
 #: field:magento.address,website:0 field:magento.backend,website_ids:0
 #: field:magento.res.partner,website:0
 msgid "Website"
-msgstr ""
+msgstr "网站"
 
 #. module: magentoerpconnect
 #: help:magento.address,website:0 help:magento.res.partner,website:0

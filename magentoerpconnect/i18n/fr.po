@@ -25,7 +25,7 @@ msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-21 06:37+0000\n"
-"PO-Revision-Date: 2016-10-04 11:17+0000\n"
+"PO-Revision-Date: 2016-11-25 14:55+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: French (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -194,7 +194,7 @@ msgstr "API"
 #. module: magentoerpconnect
 #: field:magento.account.invoice,account_id:0
 msgid "Account"
-msgstr ""
+msgstr "Compte"
 
 #. module: magentoerpconnect
 #: field:magento.address,property_account_payable:0
@@ -213,12 +213,12 @@ msgstr ""
 #: field:magento.res.partner,active:0
 #: field:magento.res.partner.category,active:0
 msgid "Active"
-msgstr ""
+msgstr "Actif"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,comment:0
 msgid "Additional Information"
-msgstr ""
+msgstr "Informations complémentaires."
 
 #. module: magentoerpconnect
 #: field:magento.address,type:0 field:magento.res.partner,type:0
@@ -313,7 +313,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.account.invoice,partner_bank_id:0
 msgid "Bank Account"
-msgstr ""
+msgstr "Compte bancaire"
 
 #. module: magentoerpconnect
 #: help:magento.account.invoice,partner_bank_id:0
@@ -528,7 +528,7 @@ msgstr ""
 #: field:magento.address,commercial_partner_id:0
 #: field:magento.res.partner,commercial_partner_id:0
 msgid "Commercial Entity"
-msgstr ""
+msgstr "Entité commerciale"
 
 #. module: magentoerpconnect
 #: field:magento.address,ref_companies:0
@@ -710,7 +710,7 @@ msgstr ""
 #: field:magento.account.invoice,currency_id:0
 #: field:magento.sale.order,currency_id:0
 msgid "Currency"
-msgstr ""
+msgstr "Devise"
 
 #. module: magentoerpconnect
 #: help:magento.product.product,qty_available:0
@@ -785,7 +785,7 @@ msgstr ""
 #: help:magento.sale.order,message_last_post:0
 #: help:magento.stock.picking,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Date du dernier message publié sur cet enregistrement"
 
 #. module: magentoerpconnect
 #: help:magento.sale.order,date_confirm:0
@@ -850,7 +850,7 @@ msgstr "Livré"
 #. module: magentoerpconnect
 #: field:magento.product.product,delivery_count:0
 msgid "Delivery"
-msgstr ""
+msgstr "Livraison"
 
 #. module: magentoerpconnect
 #: field:magento.sale.order,partner_shipping_id:0
@@ -938,7 +938,7 @@ msgstr "Définit si Magento doit envoyer un e-mail lors de l'export des bons de 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,date_due:0
 msgid "Due Date"
-msgstr ""
+msgstr "Date d'échéance"
 
 #. module: magentoerpconnect
 #: field:magento.res.partner,emailid:0
@@ -1031,7 +1031,7 @@ msgstr ""
 #: field:magento.sale.order,message_follower_ids:0
 #: field:magento.stock.picking,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Abonnés"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,period_id:0
@@ -1148,7 +1148,7 @@ msgstr ""
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
+msgstr "Contient le résumé de la discussion (nombre de messages, ...). Ce résumé est au format HTML pour permettre son utilisation dans la vue kanban."
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,id:0 field:magento.address,id:0
@@ -1198,7 +1198,7 @@ msgstr "Si une langue par défaut est sélectionnée, les enregistements seront 
 #: help:magento.sale.order,message_unread:0
 #: help:magento.stock.picking,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Si coché, les nouveaux messages seront portés à votre attention."
 
 #. module: magentoerpconnect
 #: help:magento.address,opt_out:0 help:magento.res.partner,opt_out:0
@@ -1539,7 +1539,7 @@ msgstr ""
 #: field:magento.sale.order,message_is_follower:0
 #: field:magento.stock.picking,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "Est un abonné"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,is_product_variant:0
@@ -1581,7 +1581,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.account.invoice,journal_id:0
 msgid "Journal"
-msgstr ""
+msgstr "Journal"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,move_id:0
@@ -1619,7 +1619,7 @@ msgstr "Langue"
 #: field:magento.sale.order,message_last_post:0
 #: field:magento.stock.picking,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "Date du dernier message"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,__last_update:0
@@ -2023,7 +2023,7 @@ msgstr ""
 #: field:magento.sale.order,message_ids:0
 #: field:magento.stock.picking,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Messages"
 
 #. module: magentoerpconnect
 #: help:magento.account.invoice,message_ids:0
@@ -2033,7 +2033,7 @@ msgstr ""
 #: help:magento.sale.order,message_ids:0
 #: help:magento.stock.picking,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Historique des messages et communications"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,orderpoint_ids:0
@@ -2115,7 +2115,7 @@ msgstr "Rien à exporter."
 #. module: magentoerpconnect
 #: field:magento.account.invoice,number:0
 msgid "Number"
-msgstr ""
+msgstr "Numéro"
 
 #. module: magentoerpconnect
 #: field:magento.sale.order.line,number_packages:0
@@ -2125,7 +2125,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.stock.picking,number_of_packages:0
 msgid "Number of Packages"
-msgstr ""
+msgstr "Nombre de Paquet"
 
 #. module: magentoerpconnect
 #: help:magento.sale.order.line,delay:0
@@ -2276,7 +2276,7 @@ msgstr "Méthode de paiement"
 #. module: magentoerpconnect
 #: field:magento.account.invoice,reference_type:0
 msgid "Payment Reference"
-msgstr ""
+msgstr "Référence du paiement"
 
 #. module: magentoerpconnect
 #: field:magento.sale.order,payment_term:0
@@ -2291,7 +2291,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.account.invoice,payment_ids:0
 msgid "Payments"
-msgstr ""
+msgstr "Paiements"
 
 #. module: magentoerpconnect
 #: field:magento.sale.order,payment_ids:0
@@ -2464,7 +2464,7 @@ msgstr ""
 #: field:magento.product.product,product_tmpl_id:0
 #: field:magento.sale.order.line,product_tmpl_id:0
 msgid "Product Template"
-msgstr ""
+msgstr "Modèle d'article"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,type:0
@@ -2484,7 +2484,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.product.product,product_variant_ids:0
 msgid "Products"
-msgstr ""
+msgstr "Articles"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,lst_price:0
@@ -2581,7 +2581,7 @@ msgstr "Enregistrement exporté sur Magento avec l'Id. %s"
 #. module: magentoerpconnect
 #: field:magento.stock.picking,name:0
 msgid "Reference"
-msgstr ""
+msgstr "Référence"
 
 #. module: magentoerpconnect
 #: help:magento.stock.picking,origin:0
@@ -2926,7 +2926,7 @@ msgstr "L'état %s n'est pas exporté."
 #: field:magento.sale.order,state:0 field:magento.sale.order.line,state:0
 #: field:magento.stock.picking,state:0
 msgid "Status"
-msgstr ""
+msgstr "Statut"
 
 #. module: magentoerpconnect
 #: field:magento.backend,product_stock_field_id:0
@@ -3008,13 +3008,13 @@ msgstr ""
 #: field:magento.sale.order,message_summary:0
 #: field:magento.stock.picking,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Résumé"
 
 #. module: magentoerpconnect
 #: field:magento.address,supplier:0 field:magento.product.product,seller_ids:0
 #: field:magento.res.partner,supplier:0
 msgid "Supplier"
-msgstr ""
+msgstr "Fournisseur"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,supplier_invoice_number:0
@@ -3539,7 +3539,7 @@ msgstr ""
 #: field:magento.product.product,uom_id:0
 #: field:magento.stock.picking,weight_uom_id:0
 msgid "Unit of Measure"
-msgstr ""
+msgstr "Unité de mesure"
 
 #. module: magentoerpconnect
 #: field:magento.sale.order.line,product_uom:0
@@ -3569,7 +3569,7 @@ msgstr ""
 #: field:magento.sale.order,message_unread:0
 #: field:magento.stock.picking,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Messages non-lus"
 
 #. module: magentoerpconnect
 #: field:magento.sale.order,amount_untaxed:0
@@ -3638,7 +3638,7 @@ msgstr "Utilisateur"
 #. module: magentoerpconnect
 #: field:magento.address,user_ids:0 field:magento.res.partner,user_ids:0
 msgid "Users"
-msgstr ""
+msgstr "Utilisateurs"
 
 #. module: magentoerpconnect
 #: field:magento.address,vat_subjected:0
