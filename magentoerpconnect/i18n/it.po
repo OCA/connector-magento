@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: connector-magento (7.0)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-17 07:51+0000\n"
-"PO-Revision-Date: 2016-10-04 09:43+0000\n"
+"PO-Revision-Date: 2016-11-25 14:57+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: Italian (http://www.transifex.com/oca/OCA-connector-magento-7-0/language/it/)\n"
 "MIME-Version: 1.0\n"
@@ -171,7 +171,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.sale.order.line,notes:0
 msgid "Notes"
-msgstr ""
+msgstr "Note"
 
 #. module: magentoerpconnect
 #: sql_constraint:magento.backend:0
@@ -360,12 +360,12 @@ msgstr ""
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_stock_picking
 msgid "Picking List"
-msgstr ""
+msgstr "Lista Picking"
 
 #. module: magentoerpconnect
 #: field:magento.backend,warehouse_id:0
 msgid "Warehouse"
-msgstr ""
+msgstr "Magazzino"
 
 #. module: magentoerpconnect
 #: field:magento.storeview,catalog_price_tax_included:0
@@ -397,7 +397,7 @@ msgstr ""
 #: model:ir.model,name:magentoerpconnect.model_product_category
 #: field:magento.product.category,openerp_id:0
 msgid "Product Category"
-msgstr ""
+msgstr "Categoria Prodotto"
 
 #. module: magentoerpconnect
 #: view:magento.storeview:0
@@ -625,7 +625,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_delivery_carrier
 msgid "Carrier"
-msgstr ""
+msgstr "Corriere"
 
 #. module: magentoerpconnect
 #: field:magento.res.partner.category,tax_class_id:0
@@ -717,7 +717,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.backend,website_ids:0
 msgid "Website"
-msgstr ""
+msgstr "Sito"
 
 #. module: magentoerpconnect
 #: view:magento.backend:0
@@ -1086,7 +1086,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.sale.order,openerp_id:0
 msgid "Sale Order"
-msgstr ""
+msgstr "Ordine di vendita"
 
 #. module: magentoerpconnect
 #: view:magento.backend:0
@@ -1097,7 +1097,7 @@ msgstr ""
 #: field:magento.backend,name:0 field:magento.storeview,name:0
 #: field:magento.website,name:0
 msgid "Name"
-msgstr ""
+msgstr "Nome"
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_magento_website

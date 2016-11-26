@@ -716,7 +716,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.backend,website_ids:0
 msgid "Website"
-msgstr ""
+msgstr "Уебсайт"
 
 #. module: magentoerpconnect
 #: view:magento.backend:0

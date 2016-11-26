@@ -126,7 +126,7 @@ msgstr ""
 #. module: magentoerpconnect_rma
 #: selection:ir.attachment,attachment_type:0
 msgid "Customer"
-msgstr ""
+msgstr "Cliente"
 
 #. module: magentoerpconnect_rma
 #: field:magento.crm.claim,magento_claim_attachment_ids:0
