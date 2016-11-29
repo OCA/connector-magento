@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-21 06:37+0000\n"
-"PO-Revision-Date: 2016-11-25 14:56+0000\n"
+"POT-Creation-Date: 2016-11-26 04:53+0000\n"
+"PO-Revision-Date: 2016-11-29 09:33+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: Croatian (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/hr/)\n"
 "MIME-Version: 1.0\n"
@@ -196,7 +196,7 @@ msgstr ""
 #: field:magento.res.partner,active:0
 #: field:magento.res.partner.category,active:0
 msgid "Active"
-msgstr ""
+msgstr "Aktivno"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,comment:0
@@ -491,7 +491,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.storeview,code:0 field:magento.website,code:0
 msgid "Code"
-msgstr ""
+msgstr "Šifra"
 
 #. module: magentoerpconnect
 #: help:magento.product.product,uos_coeff:0
@@ -530,7 +530,7 @@ msgstr ""
 #: view:res.partner:magentoerpconnect.view_partner_form
 #: field:res.partner,company:0
 msgid "Company"
-msgstr ""
+msgstr "Poduzeće"
 
 #. module: magentoerpconnect
 #: selection:magento.stock.picking,picking_method:0
@@ -2686,7 +2686,7 @@ msgstr ""
 #: field:magento.address,sale_order_ids:0
 #: field:magento.res.partner,sale_order_ids:0
 msgid "Sales Order"
-msgstr ""
+msgstr "Prodajni nalog"
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_sale_order_line
