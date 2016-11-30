@@ -18,6 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+import re
 
 
 def normalize_datetime(field):
@@ -25,6 +26,14 @@ def normalize_datetime(field):
     no real date is set to null for correct import to
     OpenERP"""
     def modifier(self, record, to_attr):
+        fdate = record[field]
+        if not fdate:
+            return None
+        if len(fdate) < 19:
+            return None
+        if not re.match("^(\d){4}(-(\d){2}){2} (\d){2}(:(\d){2}){2}$",
+                        fdate[:19]):
+            return None
         if record[field] == '0000-00-00 00:00:00':
             return None
         return record[field]
