@@ -241,7 +241,7 @@ msgstr ""
 #. module: magentoerpconnect_rma
 #: model:ir.model,name:magentoerpconnect_rma.model_mail_message
 msgid "Message"
-msgstr ""
+msgstr "Mensagem"
 
 #. module: magentoerpconnect_rma
 #: field:claim.line,order_line_id:0
