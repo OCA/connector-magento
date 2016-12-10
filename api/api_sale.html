@@ -18,7 +18,8 @@
         VERSION:     '',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
       };
     </script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
@@ -30,7 +31,6 @@
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Odoo Magento Connector  documentation" href="../index.html" />
     <link rel="next" title="Stock Picking" href="api_stock_picking.html" />
     <link rel="prev" title="Product Category" href="api_product_category.html" />
 
@@ -780,7 +780,7 @@ and returns a list of ids</p>
 
 <dl class="attribute">
 <dt id="openerp.addons.magentoerpconnect.sale.SaleOrderImportMapper.direct">
-<code class="descname">direct</code><em class="property"> = [('increment_id', 'magento_id'), ('order_id', 'magento_order_id'), ('grand_total', 'total_amount'), ('tax_amount', 'total_amount_tax'), (&lt;function modifier at 0x5de37d0&gt;, 'date_order'), ('store_id', 'storeview_id')]</em><a class="headerlink" href="#openerp.addons.magentoerpconnect.sale.SaleOrderImportMapper.direct" title="Permalink to this definition">¶</a></dt>
+<code class="descname">direct</code><em class="property"> = [('increment_id', 'magento_id'), ('order_id', 'magento_order_id'), ('grand_total', 'total_amount'), ('tax_amount', 'total_amount_tax'), (&lt;function modifier at 0x4499140&gt;, 'date_order'), ('store_id', 'storeview_id')]</em><a class="headerlink" href="#openerp.addons.magentoerpconnect.sale.SaleOrderImportMapper.direct" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -997,14 +997,14 @@ comment</li>
         <br/>
         
 <div id="sourcelink">
-  <a href="../_sources/api/api_sale.txt"
+  <a href="../_sources/api/api_sale.rst.txt"
      rel="nofollow">Source</a>
 </div>
       
     </p>
     <p>
         &copy; Copyright 2013-2015, Odoo Community Association (OCA).<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.9.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.<br/>
     </p>
   </div>
 </footer>
