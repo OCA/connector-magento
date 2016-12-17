@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-21 06:37+0000\n"
-"PO-Revision-Date: 2016-11-25 14:58+0000\n"
+"POT-Creation-Date: 2016-12-10 01:19+0000\n"
+"PO-Revision-Date: 2016-12-12 11:45+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: Portuguese (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/pt/)\n"
 "MIME-Version: 1.0\n"
@@ -196,7 +196,7 @@ msgstr ""
 #: field:magento.res.partner,active:0
 #: field:magento.res.partner.category,active:0
 msgid "Active"
-msgstr ""
+msgstr "Ativo"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,comment:0
@@ -530,7 +530,7 @@ msgstr ""
 #: view:res.partner:magentoerpconnect.view_partner_form
 #: field:res.partner,company:0
 msgid "Company"
-msgstr ""
+msgstr "Empresa"
 
 #. module: magentoerpconnect
 #: selection:magento.stock.picking,picking_method:0
@@ -3498,7 +3498,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.account.invoice,type:0
 msgid "Type"
-msgstr ""
+msgstr "Tipo"
 
 #. module: magentoerpconnect
 #: code:addons/magentoerpconnect/magento_model.py:648

@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-21 06:37+0000\n"
-"PO-Revision-Date: 2016-11-25 14:55+0000\n"
+"POT-Creation-Date: 2016-12-10 01:19+0000\n"
+"PO-Revision-Date: 2016-12-15 10:12+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: Portuguese (Portugal) (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/pt_PT/)\n"
 "MIME-Version: 1.0\n"
@@ -196,7 +196,7 @@ msgstr ""
 #: field:magento.res.partner,active:0
 #: field:magento.res.partner.category,active:0
 msgid "Active"
-msgstr ""
+msgstr "Ativo"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,comment:0
@@ -530,7 +530,7 @@ msgstr ""
 #: view:res.partner:magentoerpconnect.view_partner_form
 #: field:res.partner,company:0
 msgid "Company"
-msgstr ""
+msgstr "Empresa"
 
 #. module: magentoerpconnect
 #: selection:magento.stock.picking,picking_method:0
@@ -715,7 +715,7 @@ msgstr ""
 #: field:magento.sale.order,partner_id:0
 #: field:magento.sale.order.line,order_partner_id:0
 msgid "Customer"
-msgstr ""
+msgstr "Cliente"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,sale_delay:0
@@ -870,7 +870,7 @@ msgstr ""
 #: field:magento.product.product,description:0
 #: field:magento.sale.order.line,name:0
 msgid "Description"
-msgstr ""
+msgstr "Descrição"
 
 #. module: magentoerpconnect
 #: field:magento.stock.picking,location_dest_id:0
@@ -1442,7 +1442,7 @@ msgstr ""
 #: model:ir.model,name:magentoerpconnect.model_account_invoice
 #: field:magento.account.invoice,openerp_id:0
 msgid "Invoice"
-msgstr ""
+msgstr "Fatura"
 
 #. module: magentoerpconnect
 #: field:magento.sale.order,partner_invoice_id:0
@@ -2098,7 +2098,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.account.invoice,number:0
 msgid "Number"
-msgstr ""
+msgstr "Número"
 
 #. module: magentoerpconnect
 #: field:magento.sale.order.line,number_packages:0
@@ -2564,7 +2564,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.stock.picking,name:0
 msgid "Reference"
-msgstr ""
+msgstr "Referência"
 
 #. module: magentoerpconnect
 #: help:magento.stock.picking,origin:0
@@ -2997,7 +2997,7 @@ msgstr "Resumo"
 #: field:magento.address,supplier:0 field:magento.product.product,seller_ids:0
 #: field:magento.res.partner,supplier:0
 msgid "Supplier"
-msgstr ""
+msgstr "Fornecedor"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,supplier_invoice_number:0
@@ -3425,7 +3425,7 @@ msgstr ""
 #: field:magento.account.invoice,amount_total:0
 #: field:magento.sale.order,amount_total:0
 msgid "Total"
-msgstr ""
+msgstr "Total"
 
 #. module: magentoerpconnect
 #: model:sale.exception,name:magentoerpconnect.excep_wrong_total_amount
@@ -3498,7 +3498,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.account.invoice,type:0
 msgid "Type"
-msgstr ""
+msgstr "Tipo"
 
 #. module: magentoerpconnect
 #: code:addons/magentoerpconnect/magento_model.py:648

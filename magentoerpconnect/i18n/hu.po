@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-21 06:37+0000\n"
-"PO-Revision-Date: 2016-10-11 09:49+0000\n"
+"POT-Creation-Date: 2016-12-10 01:19+0000\n"
+"PO-Revision-Date: 2016-12-12 18:09+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: Hungarian (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -2686,7 +2686,7 @@ msgstr ""
 #: field:magento.address,sale_order_ids:0
 #: field:magento.res.partner,sale_order_ids:0
 msgid "Sales Order"
-msgstr ""
+msgstr "Vevői megrendelés"
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_sale_order_line
