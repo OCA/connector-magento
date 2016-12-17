@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (7.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-17 07:51+0000\n"
+"POT-Creation-Date: 2016-12-10 01:15+0000\n"
 "PO-Revision-Date: 2015-07-08 12:13+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: Portuguese (Portugal) (http://www.transifex.com/oca/OCA-connector-magento-7-0/language/pt_PT/)\n"
@@ -105,7 +105,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: view:res.partner:0 field:res.partner,company:0
 msgid "Company"
-msgstr ""
+msgstr "Empresa"
 
 #. module: magentoerpconnect
 #: sql_constraint:magento.website:0
@@ -912,7 +912,7 @@ msgstr ""
 #: model:ir.model,name:magentoerpconnect.model_account_invoice
 #: field:magento.account.invoice,openerp_id:0
 msgid "Invoice"
-msgstr ""
+msgstr "Fatura"
 
 #. module: magentoerpconnect
 #: code:addons/magentoerpconnect/stock_tracking.py:83
@@ -1016,7 +1016,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.product.category,description:0
 msgid "Description"
-msgstr ""
+msgstr "Descrição"
 
 #. module: magentoerpconnect
 #: selection:magento.product.product,backorders:0

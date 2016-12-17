@@ -10,11 +10,11 @@ msgstr ""
 "POT-Creation-Date: 2016-12-10 01:15+0000\n"
 "PO-Revision-Date: 2015-07-08 12:13+0000\n"
 "Last-Translator: <>\n"
-"Language-Team: Portuguese (http://www.transifex.com/oca/OCA-connector-magento-7-0/language/pt/)\n"
+"Language-Team: Hungarian (http://www.transifex.com/oca/OCA-connector-magento-7-0/language/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: pt\n"
+"Language: hu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: magentoerpconnect
@@ -105,7 +105,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: view:res.partner:0 field:res.partner,company:0
 msgid "Company"
-msgstr "Empresa"
+msgstr ""
 
 #. module: magentoerpconnect
 #: sql_constraint:magento.website:0
@@ -258,12 +258,12 @@ msgstr ""
 #: model:ir.model,name:magentoerpconnect.model_res_partner
 #: field:magento.address,openerp_id:0 field:magento.res.partner,openerp_id:0
 msgid "Partner"
-msgstr "Parceiro"
+msgstr ""
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_sale_order
 msgid "Sales Order"
-msgstr ""
+msgstr "Vevői megrendelés"
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_stock_picking_out
@@ -716,7 +716,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.backend,website_ids:0
 msgid "Website"
-msgstr ""
+msgstr "Honlap"
 
 #. module: magentoerpconnect
 #: view:magento.backend:0
@@ -1016,7 +1016,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.product.category,description:0
 msgid "Description"
-msgstr ""
+msgstr "Leírás"
 
 #. module: magentoerpconnect
 #: selection:magento.product.product,backorders:0
@@ -1096,7 +1096,7 @@ msgstr ""
 #: field:magento.backend,name:0 field:magento.storeview,name:0
 #: field:magento.website,name:0
 msgid "Name"
-msgstr "Nome"
+msgstr "Név"
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_magento_website
