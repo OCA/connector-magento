@@ -17,8 +17,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-03 01:01+0000\n"
-"PO-Revision-Date: 2016-12-08 11:56+0000\n"
+"POT-Creation-Date: 2016-12-17 01:10+0000\n"
+"PO-Revision-Date: 2016-12-23 08:32+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: Italian (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/it/)\n"
 "MIME-Version: 1.0\n"
@@ -951,7 +951,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.address,email:0 field:magento.res.partner,email:0
 msgid "Email"
-msgstr ""
+msgstr "Email"
 
 #. module: magentoerpconnect
 #: field:magento.address,employee:0 field:magento.res.partner,employee:0
@@ -1532,7 +1532,7 @@ msgstr ""
 #: field:magento.sale.order,message_is_follower:0
 #: field:magento.stock.picking,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "È un follower"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,is_product_variant:0
@@ -2776,7 +2776,7 @@ msgstr ""
 #: field:magento.product.category,sequence:0
 #: field:magento.sale.order.line,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Sequenza"
 
 #. module: magentoerpconnect
 #: help:magento.product.category,removal_strategy_id:0
@@ -3719,7 +3719,7 @@ msgstr "Siti web"
 #: field:magento.sale.order.line,th_weight:0
 #: field:magento.stock.picking,weight:0
 msgid "Weight"
-msgstr ""
+msgstr "Peso [g]"
 
 #. module: magentoerpconnect
 #: help:magento.product.category,property_stock_account_input_categ:0

@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-10 01:19+0000\n"
-"PO-Revision-Date: 2016-12-12 11:45+0000\n"
+"POT-Creation-Date: 2016-12-17 01:10+0000\n"
+"PO-Revision-Date: 2016-12-23 08:32+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: Portuguese (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/pt/)\n"
 "MIME-Version: 1.0\n"
@@ -2420,7 +2420,7 @@ msgstr ""
 #: field:magento.sale.order.line,product_id:0
 #: field:magento.stock.picking,product_id:0
 msgid "Product"
-msgstr ""
+msgstr "Produto"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,attribute_line_ids:0
@@ -2492,7 +2492,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.sale.order.line,product_uom_qty:0
 msgid "Quantity"
-msgstr ""
+msgstr "Quantidade"
 
 #. module: magentoerpconnect
 #: field:magento.sale.order.line,product_uos_qty:0

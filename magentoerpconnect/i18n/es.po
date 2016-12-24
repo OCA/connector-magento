@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-10 01:19+0000\n"
-"PO-Revision-Date: 2016-12-16 00:24+0000\n"
+"POT-Creation-Date: 2016-12-17 01:10+0000\n"
+"PO-Revision-Date: 2016-12-23 23:43+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: Spanish (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/es/)\n"
 "MIME-Version: 1.0\n"
@@ -1996,7 +1996,7 @@ msgstr ""
 #: field:magento.product.product,image_medium:0
 #: field:magento.res.partner,image_medium:0
 msgid "Medium-sized image"
-msgstr ""
+msgstr "Imagen de tamaño medio"
 
 #. module: magentoerpconnect
 #: help:magento.address,image_medium:0 help:magento.res.partner,image_medium:0
@@ -2175,7 +2175,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.stock.picking,owner_id:0
 msgid "Owner"
-msgstr ""
+msgstr "Propietario"
 
 #. module: magentoerpconnect
 #: field:magento.stock.picking,pack_operation_exist:0
@@ -2774,7 +2774,7 @@ msgstr "Enviado"
 #: field:magento.product.category,sequence:0
 #: field:magento.sale.order.line,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Secuencia"
 
 #. module: magentoerpconnect
 #: help:magento.product.category,removal_strategy_id:0
@@ -2844,7 +2844,7 @@ msgstr ""
 #: field:magento.product.product,image_small:0
 #: field:magento.res.partner,image_small:0
 msgid "Small-sized image"
-msgstr ""
+msgstr "Imagen de tamaño pequeño"
 
 #. module: magentoerpconnect
 #: help:magento.address,image_small:0 help:magento.res.partner,image_small:0
@@ -3057,7 +3057,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.account.invoice,amount_tax:0
 msgid "Tax"
-msgstr ""
+msgstr "Impuesto"
 
 #. module: magentoerpconnect
 #: field:magento.res.partner.category,tax_class_id:0

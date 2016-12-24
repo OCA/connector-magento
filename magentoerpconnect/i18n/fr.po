@@ -24,8 +24,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-21 06:37+0000\n"
-"PO-Revision-Date: 2016-11-25 14:55+0000\n"
+"POT-Creation-Date: 2016-12-17 01:10+0000\n"
+"PO-Revision-Date: 2016-12-23 08:32+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: French (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -601,7 +601,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.address,child_ids:0 field:magento.res.partner,child_ids:0
 msgid "Contacts"
-msgstr ""
+msgstr "Contacts"
 
 #. module: magentoerpconnect
 #: field:magento.sale.order,project_id:0
@@ -963,7 +963,7 @@ msgstr "Courriel"
 #. module: magentoerpconnect
 #: field:magento.address,employee:0 field:magento.res.partner,employee:0
 msgid "Employee"
-msgstr ""
+msgstr "Employé"
 
 #. module: magentoerpconnect
 #: field:magento.storeview,enabled:0
@@ -2255,7 +2255,7 @@ msgstr "Catégories de partenaires"
 #. module: magentoerpconnect
 #: field:magento.res.partner.category,partner_ids:0
 msgid "Partners"
-msgstr ""
+msgstr "Partenaires"
 
 #. module: magentoerpconnect
 #: field:magento.backend,password:0

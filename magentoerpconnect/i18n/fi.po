@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-21 06:37+0000\n"
-"PO-Revision-Date: 2016-11-25 14:55+0000\n"
+"POT-Creation-Date: 2016-12-17 01:10+0000\n"
+"PO-Revision-Date: 2016-12-23 08:31+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: Finnish (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/fi/)\n"
 "MIME-Version: 1.0\n"
@@ -1694,7 +1694,7 @@ msgstr ""
 #: field:magento.product.product,location_id:0
 #: field:magento.stock.picking,location_id:0
 msgid "Location"
-msgstr ""
+msgstr "Sijainti"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,packaging_ids:0

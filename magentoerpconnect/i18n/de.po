@@ -28,8 +28,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-10 01:19+0000\n"
-"PO-Revision-Date: 2016-12-16 12:44+0000\n"
+"POT-Creation-Date: 2016-12-17 01:10+0000\n"
+"PO-Revision-Date: 2016-12-23 13:59+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: German (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/de/)\n"
 "MIME-Version: 1.0\n"
@@ -1623,7 +1623,7 @@ msgstr "Sprache"
 #: field:magento.sale.order,message_last_post:0
 #: field:magento.stock.picking,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "Datum letzte Nachricht"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,__last_update:0
@@ -2280,7 +2280,7 @@ msgstr "Zahlweise"
 #. module: magentoerpconnect
 #: field:magento.account.invoice,reference_type:0
 msgid "Payment Reference"
-msgstr ""
+msgstr "Zahlungsreferenz"
 
 #. module: magentoerpconnect
 #: field:magento.sale.order,payment_term:0
@@ -2513,7 +2513,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.sale.order.line,product_uom_qty:0
 msgid "Quantity"
-msgstr ""
+msgstr "Anzahl"
 
 #. module: magentoerpconnect
 #: field:magento.sale.order.line,product_uos_qty:0
@@ -2787,7 +2787,7 @@ msgstr ""
 #: field:magento.product.category,sequence:0
 #: field:magento.sale.order.line,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Reihenfolge"
 
 #. module: magentoerpconnect
 #: help:magento.product.category,removal_strategy_id:0

@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-21 06:37+0000\n"
-"PO-Revision-Date: 2016-11-22 16:25+0000\n"
+"POT-Creation-Date: 2016-12-17 01:10+0000\n"
+"PO-Revision-Date: 2016-12-22 21:03+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: Slovak (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/sk/)\n"
 "MIME-Version: 1.0\n"
@@ -196,7 +196,7 @@ msgstr ""
 #: field:magento.res.partner,active:0
 #: field:magento.res.partner.category,active:0
 msgid "Active"
-msgstr ""
+msgstr "Aktívne"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,comment:0
@@ -715,7 +715,7 @@ msgstr ""
 #: field:magento.sale.order,partner_id:0
 #: field:magento.sale.order.line,order_partner_id:0
 msgid "Customer"
-msgstr ""
+msgstr "Zákazník"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,sale_delay:0
@@ -2223,7 +2223,7 @@ msgstr ""
 #: field:magento.address,openerp_id:0 field:magento.res.partner,openerp_id:0
 #: field:magento.stock.picking,partner_id:0
 msgid "Partner"
-msgstr ""
+msgstr "Partner"
 
 #. module: magentoerpconnect
 #: field:magento.res.partner.category,openerp_id:0
@@ -2997,7 +2997,7 @@ msgstr ""
 #: field:magento.address,supplier:0 field:magento.product.product,seller_ids:0
 #: field:magento.res.partner,supplier:0
 msgid "Supplier"
-msgstr ""
+msgstr "Dodávateľ"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,supplier_invoice_number:0
