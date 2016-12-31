@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (7.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-17 07:51+0000\n"
+"POT-Creation-Date: 2016-12-24 00:52+0000\n"
 "PO-Revision-Date: 2015-07-08 12:13+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: Turkish (http://www.transifex.com/oca/OCA-connector-magento-7-0/language/tr/)\n"
@@ -105,7 +105,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: view:res.partner:0 field:res.partner,company:0
 msgid "Company"
-msgstr ""
+msgstr "Şirket"
 
 #. module: magentoerpconnect
 #: sql_constraint:magento.website:0
@@ -258,7 +258,7 @@ msgstr ""
 #: model:ir.model,name:magentoerpconnect.model_res_partner
 #: field:magento.address,openerp_id:0 field:magento.res.partner,openerp_id:0
 msgid "Partner"
-msgstr ""
+msgstr "İş Ortağı"
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_sale_order
@@ -752,7 +752,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: view:magento.store:0 view:magento.storeview:0 view:magento.website:0
 msgid "Options"
-msgstr ""
+msgstr "Seçenekler"
 
 #. module: magentoerpconnect
 #: field:res.partner,birthday:0
@@ -876,7 +876,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.storeview,code:0 field:magento.website,code:0
 msgid "Code"
-msgstr ""
+msgstr "Kod"
 
 #. module: magentoerpconnect
 #: field:magento.sale.order.line,tax_rate:0
@@ -912,7 +912,7 @@ msgstr ""
 #: model:ir.model,name:magentoerpconnect.model_account_invoice
 #: field:magento.account.invoice,openerp_id:0
 msgid "Invoice"
-msgstr ""
+msgstr "Fatura"
 
 #. module: magentoerpconnect
 #: code:addons/magentoerpconnect/stock_tracking.py:83
