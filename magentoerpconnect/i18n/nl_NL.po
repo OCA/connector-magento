@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-03 07:42+0000\n"
-"PO-Revision-Date: 2016-09-09 11:31+0000\n"
+"POT-Creation-Date: 2016-12-24 00:56+0000\n"
+"PO-Revision-Date: 2016-12-27 08:21+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: Dutch (Netherlands) (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/nl_NL/)\n"
 "MIME-Version: 1.0\n"
@@ -715,7 +715,7 @@ msgstr ""
 #: field:magento.sale.order,partner_id:0
 #: field:magento.sale.order.line,order_partner_id:0
 msgid "Customer"
-msgstr ""
+msgstr "Klant"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,sale_delay:0
@@ -3154,7 +3154,7 @@ msgid ""
 msgstr ""
 
 #. module: magentoerpconnect
-#: code:addons/magentoerpconnect/product.py:558
+#: code:addons/magentoerpconnect/product.py:563
 #, python-format
 msgid ""
 "The configurable product is not imported in OpenERP, because only the simple"

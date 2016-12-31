@@ -1,0 +1,3810 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * magentoerpconnect
+# 
+# Translators:
+msgid ""
+msgstr ""
+"Project-Id-Version: connector-magento (8.0)\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-12-24 00:56+0000\n"
+"PO-Revision-Date: 2016-12-27 08:24+0000\n"
+"Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
+"Language-Team: Slovak (Slovakia) (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/sk_SK/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: sk_SK\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+
+#. module: magentoerpconnect
+#: help:magento.stock.picking,state:0
+msgid ""
+"\n"
+"                * Draft: not confirmed yet and will not be scheduled until confirmed\n"
+"\n"
+"                * Waiting Another Operation: waiting for another move to proceed before it becomes automatically available (e.g. in Make-To-Order flows)\n"
+"\n"
+"                * Waiting Availability: still waiting for the availability of products\n"
+"\n"
+"                * Partially Available: some products are available and reserved\n"
+"\n"
+"                * Ready to Transfer: products reserved, simply waiting for confirmation.\n"
+"\n"
+"                * Transferred: has been processed, can't be modified or cancelled anymore\n"
+"\n"
+"                * Cancelled: has been cancelled, can't be confirmed anymore"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.account.invoice,state:0
+msgid ""
+" * The 'Draft' status is used when a user is encoding a new and unconfirmed Invoice.\n"
+" * The 'Pro-forma' when invoice is in Pro-forma status,invoice does not have an invoice number.\n"
+" * The 'Open' status is used when user create invoice,a invoice number is generated.Its in open status till user does not pay invoice.\n"
+" * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
+" * The 'Cancelled' status is used when user cancel invoice."
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.product,sales_count:0
+msgid "# Sales"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.product,product_variant_count:0
+msgid "# of Product Variants"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,sale_order_count:0
+#: field:magento.res.partner,sale_order_count:0
+msgid "# of Sales Order"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.sale.order,magento_order_id:0
+msgid "'order_id' field in Magento"
+msgstr ""
+
+#. module: magentoerpconnect
+#: view:magento.product.product:magentoerpconnect.view_magento_product_form
+msgid "(recompute)"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.sale.order.line,state:0
+msgid ""
+"* The 'Draft' status is set when the related sales order in draft status.                     \n"
+"* The 'Confirmed' status is set when the related sales order is confirmed.                     \n"
+"* The 'Exception' status is set when the related sales order is set as exception.                     \n"
+"* The 'Done' status is set when the sales order line has been picked.                     \n"
+"* The 'Cancelled' status is set when a user cancel the sales order related."
+msgstr ""
+
+#. module: magentoerpconnect
+#: sql_constraint:magento.account.invoice:0
+msgid "A Magento binding for this invoice already exists."
+msgstr ""
+
+#. module: magentoerpconnect
+#: sql_constraint:magento.backend:0
+msgid "A backend with the same sale prefix already exists"
+msgstr ""
+
+#. module: magentoerpconnect
+#: sql_constraint:magento.account.invoice:0 sql_constraint:magento.address:0
+#: sql_constraint:magento.binding:0 sql_constraint:magento.product.category:0
+#: sql_constraint:magento.product.product:0
+#: sql_constraint:magento.res.partner:0
+#: sql_constraint:magento.res.partner.category:0
+#: sql_constraint:magento.sale.order:0
+#: sql_constraint:magento.sale.order.line:0
+#: sql_constraint:magento.stock.picking:0 sql_constraint:magento.store:0
+#: sql_constraint:magento.storeview:0 sql_constraint:magento.website:0
+msgid "A binding already exists with the same Magento ID."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.product.category,type:0
+msgid ""
+"A category of the view type is a virtual category that can be used as the "
+"parent of another category to create a hierarchical structure."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.product.product,description_sale:0
+msgid ""
+"A description of the Product that you want to communicate to your customers."
+" This description will be copied to every Sale Order, Delivery Order and "
+"Customer Invoice/Refund"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.product.product,description_purchase:0
+msgid ""
+"A description of the Product that you want to communicate to your suppliers."
+" This description will be copied to every Purchase Order, Receipt and "
+"Supplier Invoice/Refund."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.sale.order,parent_need_cancel:0
+msgid ""
+"A parent sales order has been canceled on the backend and needs to be "
+"canceled."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.sale.order,parent_id:0
+msgid "A parent sales order is a sales order replaced by this one."
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.sale.order,parent_need_cancel:0
+msgid "A parent sales order needs cancel"
+msgstr ""
+
+#. module: magentoerpconnect
+#: sql_constraint:magento.address:0
+msgid "A partner address can only have one binding by backend."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.sale.order.line,address_allotment_id:0
+msgid "A partner to whom the particular product needs to be allotted."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.product.product,description:0
+msgid ""
+"A precise description of the Product, used only for internal information "
+"purposes."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.backend,sale_prefix:0
+msgid ""
+"A prefix put before the name of imported sales orders.\n"
+"For instance, if the prefix is 'mag-', the sales order 100000692 in Magento, will be named 'mag-100000692' in OpenERP."
+msgstr ""
+
+#. module: magentoerpconnect
+#: view:magento.backend:magentoerpconnect.view_magento_backend_form
+msgid "API"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.account.invoice,account_id:0
+msgid "Account"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,property_account_payable:0
+#: field:magento.res.partner,property_account_payable:0
+msgid "Account Payable"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,property_account_receivable:0
+#: field:magento.res.partner,property_account_receivable:0
+msgid "Account Receivable"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,active:0 field:magento.product.product,active:0
+#: field:magento.res.partner,active:0
+#: field:magento.res.partner.category,active:0
+msgid "Active"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.account.invoice,comment:0
+msgid "Additional Information"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,type:0 field:magento.res.partner,type:0
+msgid "Address Type"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,is_magento_order_address:0
+msgid "Address from a Magento Order"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.backend,admin_location:0
+msgid "Admin Location"
+msgstr ""
+
+#. module: magentoerpconnect
+#: view:magento.backend:magentoerpconnect.view_magento_backend_form
+msgid "Advanced Configuration"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.sale.order.line,address_allotment_id:0
+msgid "Allotment Partner"
+msgstr ""
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/stock_picking.py:173
+#, python-format
+msgid "Already exported"
+msgstr ""
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/sale.py:631
+#, python-format
+msgid "Already imported"
+msgstr ""
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/unit/import_synchronizer.py:215
+#, python-format
+msgid "Already up-to-date."
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.sale.order,amount_paid:0
+msgid "Amount Paid"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.res.partner,consider_as_company:0
+msgid ""
+"An account imported with a 'company' in the billing address is considered as a company.\n"
+" The partner takes the name of the company and is not merged with the billing address."
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.backend,account_analytic_id:0
+#: field:magento.config.specializer,account_analytic_id:0
+#: field:magento.store,account_analytic_id:0
+#: field:magento.storeview,account_analytic_id:0
+#: field:magento.website,account_analytic_id:0
+msgid "Analytic account"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.product,attribute_value_ids:0
+msgid "Attributes"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.sale.order,workflow_process_id:0
+msgid "Automatic Workflow"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.stock.picking,backorder_id:0
+msgid "Back Order of"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:ir.ui.menu,name:magentoerpconnect.menu_magento_backend
+msgid "Backends"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.account.invoice,residual:0
+#: field:magento.sale.order,residual:0
+msgid "Balance"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.account.invoice,partner_bank_id:0
+msgid "Bank Account"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.account.invoice,partner_bank_id:0
+msgid ""
+"Bank Account Number to which the invoice will be paid. A Company bank "
+"account if this is a Customer Invoice or Supplier Refund, otherwise a "
+"Partner bank account number."
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,bank_ids:0 field:magento.res.partner,bank_ids:0
+msgid "Banks"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.product.product,list_price:0
+msgid ""
+"Base price to compute the customer price. Sometimes called the catalog "
+"price."
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.backend,auth_basic_password:0
+msgid "Basic Auth. Password"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.backend,auth_basic_username:0
+msgid "Basic Auth. Username"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.backend,auth_basic_password:0
+msgid "Basic access authentication web server side password"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.backend,auth_basic_username:0
+msgid "Basic access authentication web server side username"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.product,image:0
+msgid "Big-sized image"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,birthdate:0 field:magento.res.partner,birthdate:0
+msgid "Birthdate"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,birthday:0 field:magento.res.partner,birthday:0
+#: field:res.partner,birthday:0
+msgid "Birthday"
+msgstr ""
+
+#. module: magentoerpconnect
+#: view:magento.backend:magentoerpconnect.view_magento_backend_form
+msgid ""
+"By clicking on the buttons,\n"
+"                                    you will initiate the synchronizations\n"
+"                                    with Magento.\n"
+"                                    Note that the import or exports\n"
+"                                    won't be done directly,\n"
+"                                    they will create 'Jobs'\n"
+"                                    executed as soon as possible."
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.product,rental:0
+msgid "Can be Rent"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.product,sale_ok:0
+msgid "Can be Sold"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.sale.order,canceled_in_backend:0
+msgid "Canceled in backend"
+msgstr ""
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/stock_picking.py:180
+#, python-format
+msgid ""
+"Canceled: the delivery order does not contain lines from the original sale "
+"order."
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.sale.order,cancellation_resolved:0
+msgid "Cancellation from the backend resolved"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_delivery_carrier
+#: field:magento.stock.picking,carrier_id:0
+msgid "Carrier"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.stock.picking,carrier_tracking_ref:0
+msgid "Carrier Tracking Ref"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.product,loc_case:0
+msgid "Case"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.res.partner.category,name:0
+msgid "Category Name"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.category,type:0
+msgid "Category Type"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.address,is_company:0 help:magento.res.partner,is_company:0
+msgid "Check if the contact is a company, otherwise it is a person"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.storeview,no_sales_order_sync:0
+msgid ""
+"Check if the storeview is active in Magento but its sales orders should not "
+"be imported."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.address,vat_subjected:0
+#: help:magento.res.partner,vat_subjected:0
+msgid ""
+"Check this box if the partner is subjected to the VAT. It will be used for "
+"the VAT legal statement."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.address,customer:0 help:magento.res.partner,customer:0
+msgid "Check this box if this contact is a customer."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.address,supplier:0 help:magento.res.partner,supplier:0
+msgid ""
+"Check this box if this contact is a supplier. If it's not checked, purchase "
+"people will not see it when encoding a purchase order."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.address,employee:0 help:magento.res.partner,employee:0
+msgid "Check this box if this contact is an Employee."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.product.product,no_stock_sync:0
+msgid "Check this to exclude the product from stock synchronizations."
+msgstr ""
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/magento_model.py:219
+#, python-format
+msgid ""
+"Check your configuration, we can't get the data. Here is the error:\n"
+"%s"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.category,child_id:0
+#: field:magento.res.partner.category,child_ids:0
+msgid "Child Categories"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.backend,product_stock_field_id:0
+msgid ""
+"Choose the field of the product which will be used for stock inventory updates.\n"
+"If empty, Quantity Available is used."
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,city:0 field:magento.res.partner,city:0
+msgid "City"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.storeview,code:0 field:magento.website,code:0
+msgid "Code"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.product.product,uos_coeff:0
+msgid ""
+"Coefficient to convert default Unit of Measure to Unit of Sale\n"
+" uos = uom * coeff"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,color:0 field:magento.product.product,color:0
+#: field:magento.res.partner,color:0
+msgid "Color Index"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.account.invoice,commercial_partner_id:0
+#: field:magento.address,commercial_partner_id:0
+#: field:magento.res.partner,commercial_partner_id:0
+msgid "Commercial Entity"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,ref_companies:0
+#: field:magento.res.partner,ref_companies:0
+msgid "Companies that refers to partner"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.account.invoice,company_id:0 field:magento.address,company:0
+#: field:magento.address,company_id:0 field:magento.backend,company_id:0
+#: field:magento.product.product,company_id:0
+#: field:magento.res.partner,company:0 field:magento.res.partner,company_id:0
+#: field:magento.sale.order,company_id:0
+#: field:magento.sale.order.line,company_id:0
+#: field:magento.stock.picking,company_id:0
+#: view:res.partner:magentoerpconnect.view_partner_form
+#: field:res.partner,company:0
+msgid "Company"
+msgstr ""
+
+#. module: magentoerpconnect
+#: selection:magento.stock.picking,picking_method:0
+msgid "Complete"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,contact_address:0
+#: field:magento.res.partner,contact_address:0
+msgid "Complete Address"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.sale.order,carrier_id:0
+msgid ""
+"Complete this field if you plan to invoice the shipping based on picking."
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.product,magento_qty:0
+msgid "Computed Quantity"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.sale.order,date_confirm:0
+msgid "Confirmation Date"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_connector_config_settings
+msgid "Connector Configuration"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.res.partner,consider_as_company:0
+msgid "Considered as company"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.product.product,type:0
+msgid ""
+"Consumable: Will not imply stock management for this product. \n"
+"Stockable product: Will imply stock management for this product."
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,ref:0 field:magento.res.partner,ref:0
+msgid "Contact Reference"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,child_ids:0 field:magento.res.partner,child_ids:0
+msgid "Contacts"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.sale.order,project_id:0
+msgid "Contract / Analytic"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,contract_ids:0
+#: field:magento.address,contracts_count:0
+#: field:magento.res.partner,contract_ids:0
+#: field:magento.res.partner,contracts_count:0
+msgid "Contracts"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.product,standard_price:0
+msgid "Cost Price"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.product.product,standard_price:0
+msgid ""
+"Cost price of the product template used for standard stock valuation in "
+"accounting and used as a base price on purchase orders. Expressed in the "
+"default unit of measure of the product."
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.product,cost_method:0
+msgid "Costing Method"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,country_id:0 field:magento.res.partner,country_id:0
+msgid "Country"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.sale.order,order_policy:0
+msgid "Create Invoice"
+msgstr ""
+
+#. module: magentoerpconnect
+#: view:payment.method:magentoerpconnect.payment_method_view_form
+msgid "Create invoice on"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.store,create_invoice_on:0
+#: field:payment.method,create_invoice_on:0
+msgid "Create invoice on action"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,created_at:0
+#: field:magento.product.product,created_at:0
+#: field:magento.res.partner,created_at:0
+msgid "Created At (on Magento)"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.account.invoice,create_uid:0
+#: field:magento.address,create_uid:0 field:magento.backend,create_uid:0
+#: field:magento.product.category,create_uid:0
+#: field:magento.product.product,create_uid:0
+#: field:magento.res.partner,create_uid:0
+#: field:magento.res.partner.category,create_uid:0
+#: field:magento.sale.order,create_uid:0
+#: field:magento.sale.order.line,create_uid:0
+#: field:magento.stock.picking,create_uid:0 field:magento.store,create_uid:0
+#: field:magento.storeview,create_uid:0 field:magento.website,create_uid:0
+msgid "Created by"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.account.invoice,create_date:0
+#: field:magento.address,create_date:0 field:magento.backend,create_date:0
+#: field:magento.product.category,create_date:0
+#: field:magento.product.product,create_date:0
+#: field:magento.res.partner,create_date:0
+#: field:magento.res.partner.category,create_date:0
+#: field:magento.sale.order,create_date:0
+#: field:magento.sale.order.line,create_date:0
+#: field:magento.stock.picking,create_date:0 field:magento.store,create_date:0
+#: field:magento.storeview,create_date:0 field:magento.website,create_date:0
+msgid "Created on"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.stock.picking,date:0
+msgid "Creation Date"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.stock.picking,date:0
+msgid "Creation Date, usually the time of the order"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,credit_limit:0
+#: field:magento.res.partner,credit_limit:0
+msgid "Credit Limit"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.account.invoice,currency_id:0
+#: field:magento.sale.order,currency_id:0
+msgid "Currency"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.product.product,qty_available:0
+msgid ""
+"Current quantity of products.\n"
+"In a context with a single Stock Location, this includes goods stored at this Location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
+"stored in the Stock Location of the Warehouse of this Shop, or any of its children.\n"
+"Otherwise, this includes goods stored in any Stock Location with 'internal' type."
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.backend,use_custom_api_path:0
+msgid "Custom Api Path"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,customer:0 field:magento.res.partner,customer:0
+#: field:magento.sale.order,partner_id:0
+#: field:magento.sale.order.line,order_partner_id:0
+msgid "Customer"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.product,sale_delay:0
+msgid "Customer Lead Time"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,property_stock_customer:0
+#: field:magento.res.partner,property_stock_customer:0
+msgid "Customer Location"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,property_payment_term:0
+#: field:magento.res.partner,property_payment_term:0
+msgid "Customer Payment Term"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.product,taxes_id:0
+msgid "Customer Taxes"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.product,partner_ref:0
+msgid "Customer ref"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,date:0 field:magento.res.partner,date:0
+#: field:magento.sale.order,date_order:0
+msgid "Date"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.stock.picking,date_done:0
+msgid "Date of Completion"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.stock.picking,date_done:0
+msgid "Date of Transfer"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.account.invoice,message_last_post:0
+#: help:magento.address,message_last_post:0
+#: help:magento.product.product,message_last_post:0
+#: help:magento.res.partner,message_last_post:0
+#: help:magento.sale.order,message_last_post:0
+#: help:magento.stock.picking,message_last_post:0
+msgid "Date of the last message posted on the record."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.sale.order,date_confirm:0
+msgid "Date on which sales order is confirmed."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.address,last_reconciliation_date:0
+#: help:magento.res.partner,last_reconciliation_date:0
+msgid ""
+"Date on which the partner accounting entries were fully reconciled last "
+"time. It differs from the last date where a reconciliation has been made for"
+" this partner, as here we depict the fact that nothing more was to be "
+"reconciled at this date. This can be achieved in 2 different ways: either "
+"the last unreconciled debit/credit entry of this partner was reconciled, "
+"either the user pressed the button \"Nothing more to reconcile\" during the "
+"manual reconciliation process."
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,is_default_billing:0
+msgid "Default Invoice"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.backend,default_lang_id:0
+msgid "Default Language"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.stock.picking,owner_id:0
+msgid "Default Owner"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.backend,default_category_id:0
+msgid "Default Product Category"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,is_default_shipping:0
+msgid "Default Shipping"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.product.product,uom_id:0
+msgid "Default Unit of Measure used for all stock operation."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.product.product,uom_po_id:0
+msgid ""
+"Default Unit of Measure used for purchase orders. It must be in the same "
+"category than the default unit of measure."
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.sale.order,shipped:0
+msgid "Delivered"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.product,delivery_count:0
+msgid "Delivery"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.sale.order,partner_shipping_id:0
+msgid "Delivery Address"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.sale.order.line,delay:0
+msgid "Delivery Lead Time"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,property_delivery_carrier:0
+#: field:magento.res.partner,property_delivery_carrier:0
+#: field:magento.sale.order,carrier_id:0
+#: field:magento.stock.picking,move_type:0
+msgid "Delivery Method"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.sale.order,partner_shipping_id:0
+msgid "Delivery address for current sales order."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.product.product,route_ids:0
+msgid ""
+"Depending on the modules installed, this will allow you to define the route "
+"of the product: whether it will be bought, manufactured, MTO/MTS,..."
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.category,description:0
+#: field:magento.product.product,description:0
+#: field:magento.sale.order.line,name:0
+msgid "Description"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.stock.picking,location_dest_id:0
+msgid "Destination Location"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.sale.order.line,discount:0
+msgid "Discount (%)"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.account.invoice,display_name:0
+#: field:magento.address,display_name:0 field:magento.backend,display_name:0
+#: field:magento.binding,display_name:0
+#: field:magento.config.specializer,display_name:0
+#: field:magento.product.category,display_name:0
+#: field:magento.product.product,display_name:0
+#: field:magento.res.partner,display_name:0
+#: field:magento.res.partner.category,display_name:0
+#: field:magento.sale.order,display_name:0
+#: field:magento.sale.order.line,display_name:0
+#: field:magento.stock.picking,display_name:0
+#: field:magento.store,display_name:0 field:magento.storeview,display_name:0
+#: field:magento.website,display_name:0
+msgid "Display Name"
+msgstr ""
+
+#. module: magentoerpconnect
+#: selection:magento.product.product,manage_stock:0
+msgid "Do Not Manage Stock"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.store,send_invoice_paid_mail:0
+msgid ""
+"Does the invoice export/creation should send an email notification on "
+"Magento side?"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.store,send_picking_done_mail:0
+msgid ""
+"Does the picking export/creation should send an email notification on "
+"Magento side?"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.account.invoice,date_due:0
+msgid "Due Date"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.res.partner,emailid:0
+msgid "E-mail address"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,ean13:0 field:magento.res.partner,ean13:0
+msgid "EAN13"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.product,ean13:0
+msgid "EAN13 Barcode"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,email:0 field:magento.res.partner,email:0
+msgid "Email"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,employee:0 field:magento.res.partner,employee:0
+msgid "Employee"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.storeview,enabled:0
+msgid "Enabled"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.account.invoice,move_lines:0
+msgid "Entry Lines"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.sale.order,exception_ids:0
+msgid "Exceptions"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.category,property_account_expense_categ:0
+#: field:magento.product.product,property_account_expense:0
+msgid "Expense Account"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:connector.config.settings,module_magentoerpconnect_export_partner:0
+msgid "Export Partners to Magento (experimental)"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:delivery.carrier,magento_export_tracking:0
+msgid "Export tracking numbers"
+msgstr ""
+
+#. module: magentoerpconnect
+#: view:connector.config.settings:magentoerpconnect.view_magento_config_settings
+msgid "Extensions"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,fax:0 field:magento.res.partner,fax:0
+msgid "Fax"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.account.invoice,fiscal_position:0
+#: field:magento.address,property_account_position:0
+#: field:magento.res.partner,property_account_position:0
+#: field:magento.sale.order,fiscal_position:0
+msgid "Fiscal Position"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.backend,fiscal_position_id:0
+#: field:magento.config.specializer,fiscal_position_id:0
+#: field:magento.store,fiscal_position_id:0
+#: field:magento.storeview,fiscal_position_id:0
+#: field:magento.website,fiscal_position_id:0
+msgid "Fiscal position"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.account.invoice,message_follower_ids:0
+#: field:magento.address,message_follower_ids:0
+#: field:magento.product.product,message_follower_ids:0
+#: field:magento.res.partner,message_follower_ids:0
+#: field:magento.sale.order,message_follower_ids:0
+#: field:magento.stock.picking,message_follower_ids:0
+msgid "Followers"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.account.invoice,period_id:0
+msgid "Force Period"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.category,removal_strategy_id:0
+msgid "Force Removal Strategy"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.product.product,track_incoming:0
+msgid ""
+"Forces to specify a Serial Number for all moves containing this product and "
+"coming from a Supplier Location"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.product.product,track_outgoing:0
+msgid ""
+"Forces to specify a Serial Number for all moves containing this product and "
+"going to a Customer Location"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.product.product,track_all:0
+msgid ""
+"Forces to specify a Serial Number on each and every operation related to "
+"this product"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.product,virtual_available:0
+msgid "Forecast Quantity"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.product.product,virtual_available:0
+msgid ""
+"Forecast quantity (computed as Quantity On Hand - Outgoing + Incoming)\n"
+"In a context with a single Stock Location, this includes goods stored in this location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
+"Otherwise, this includes goods stored in any Stock Location with 'internal' type."
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.product,track_all:0
+msgid "Full Lots Traceability"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.res.partner.category,complete_name:0
+msgid "Full Name"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.product.product,packaging_ids:0
+msgid ""
+"Gives the different ways to package the same product. This has no impact on "
+"the picking order and is mainly used if you use the EDI module."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.product.category,sequence:0
+msgid "Gives the sequence order when displaying a list of product categories."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.sale.order.line,sequence:0
+msgid "Gives the sequence order when displaying a list of sales order lines."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.sale.order,state:0
+msgid ""
+"Gives the status of the quotation or sales order.              \n"
+"The exception status is automatically set when a cancel operation occurs               in the invoice validation (Invoice Exception) or in the picking list process (Shipping Exception).\n"
+"The 'Waiting Schedule' status is set when the invoice is confirmed               but waiting for the scheduler to run on the order date."
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.product,weight:0
+msgid "Gross Weight"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.res.partner,guest_customer:0
+msgid "Guest Customer"
+msgstr ""
+
+#. module: magentoerpconnect
+#: view:magento.backend:magentoerpconnect.view_magento_backend_form
+msgid "HTTP Authentication"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.product,has_checkpoint:0
+msgid "Has Checkpoint"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.sale.order,need_cancel:0
+msgid "Has been canceled on the backend, need to be canceled."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.account.invoice,message_summary:0
+#: help:magento.address,message_summary:0
+#: help:magento.product.product,message_summary:0
+#: help:magento.res.partner,message_summary:0
+#: help:magento.sale.order,message_summary:0
+#: help:magento.stock.picking,message_summary:0
+msgid ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.account.invoice,id:0 field:magento.address,id:0
+#: field:magento.backend,id:0 field:magento.binding,id:0
+#: field:magento.config.specializer,id:0 field:magento.product.category,id:0
+#: field:magento.product.product,id:0 field:magento.res.partner,id:0
+#: field:magento.res.partner.category,id:0 field:magento.sale.order,id:0
+#: field:magento.sale.order.line,id:0 field:magento.stock.picking,id:0
+#: field:magento.store,id:0 field:magento.storeview,id:0
+#: field:magento.website,id:0
+msgid "ID"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.account.invoice,magento_id:0
+#: field:magento.address,magento_id:0 field:magento.binding,magento_id:0
+#: field:magento.product.category,magento_id:0
+#: field:magento.product.product,magento_id:0
+#: field:magento.res.partner,magento_id:0
+#: field:magento.res.partner.category,magento_id:0
+#: field:magento.sale.order,magento_id:0
+#: field:magento.sale.order.line,magento_id:0
+#: field:magento.stock.picking,magento_id:0 field:magento.store,magento_id:0
+#: field:magento.storeview,magento_id:0 field:magento.website,magento_id:0
+msgid "ID on Magento"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.backend,default_category_id:0
+msgid ""
+"If a default category is selected, products imported without a category will"
+" be linked to it."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.backend,default_lang_id:0
+msgid ""
+"If a default language is selected, the records will be imported in the translation of this language.\n"
+"Note that a similar configuration exists for each storeview."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.account.invoice,message_unread:0
+#: help:magento.address,message_unread:0
+#: help:magento.product.product,message_unread:0
+#: help:magento.res.partner,message_unread:0
+#: help:magento.sale.order,message_unread:0
+#: help:magento.stock.picking,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.address,opt_out:0 help:magento.res.partner,opt_out:0
+msgid ""
+"If opt-out is checked, this contact has refused to receive emails for mass "
+"mailing and marketing campaign. Filter 'Available for Mass Mailing' allows "
+"users to filter the partners when performing mass mailing."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.product.product,valuation:0
+msgid ""
+"If real-time valuation is enabled for a product, the system will "
+"automatically write journal entries corresponding to stock moves, with "
+"product price as specified by the 'Costing Method'The inventory variation "
+"account set on the product category will represent the current inventory "
+"value, and the stock input and stock output account will hold the "
+"counterpart moves for incoming and outgoing products."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.backend,account_analytic_id:0
+msgid ""
+"If specified, this analytic account will be used to fill the field  on the "
+"sale order created by the connector. The value can also be specified on "
+"website or the store or the store view."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.config.specializer,specific_account_analytic_id:0
+#: help:magento.store,specific_account_analytic_id:0
+#: help:magento.storeview,specific_account_analytic_id:0
+#: help:magento.website,specific_account_analytic_id:0
+msgid ""
+"If specified, this analytic account will be used to fill the field on the "
+"sale order created by the connector. The value can also be specified on "
+"website or the store or the store view."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.backend,fiscal_position_id:0
+#: help:magento.config.specializer,specific_fiscal_position_id:0
+#: help:magento.store,specific_fiscal_position_id:0
+#: help:magento.storeview,specific_fiscal_position_id:0
+#: help:magento.website,specific_fiscal_position_id:0
+msgid ""
+"If specified, this fiscal position will be used to fill the field fiscal "
+"position on the sale order created by the connector.The value can also be "
+"specified on website or the store or the store view."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.address,lang:0 help:magento.res.partner,lang:0
+msgid ""
+"If the selected language is loaded in the system, all documents related to "
+"this contact will be printed in this language. If not, it will be English."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.stock.picking,backorder_id:0
+msgid ""
+"If this shipment was split, then this field links to the shipment which "
+"contains the already processed part."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.product.product,active:0
+msgid ""
+"If unchecked, it will allow you to hide the product without removing it."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.account.invoice,payment_term:0
+msgid ""
+"If you use payment terms, the due date will be computed automatically at the"
+" generation of accounting entries. If you keep the payment term and the due "
+"date empty, it means direct payment. The payment term may compute several "
+"due dates, for example 50% now, 50% in one month."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.account.invoice,date_due:0
+msgid ""
+"If you use payment terms, the due date will be computed automatically at the"
+" generation of accounting entries. The payment term may compute several due "
+"dates, for example 50% now and 50% in one month, but if you want to force a "
+"due date, make sure that the payment term is not set on the invoice. If you "
+"keep the payment term and the due date empty, it means direct payment."
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.sale.order,ignore_exceptions:0
+msgid "Ignore Exceptions"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,image:0 field:magento.res.partner,image:0
+msgid "Image"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.product.product,image:0
+msgid ""
+"Image of the product variant (Big-sized image of product template if false)."
+" It is automatically resized as a 1024x1024px image, with aspect ratio "
+"preserved."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.product.product,image_medium:0
+msgid ""
+"Image of the product variant (Medium-sized image of product template if "
+"false)."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.product.product,image_small:0
+msgid ""
+"Image of the product variant (Small-sized image of product template if "
+"false)."
+msgstr ""
+
+#. module: magentoerpconnect
+#: view:magento.storeview:magentoerpconnect.view_magento_storeview_form
+msgid "Import Sale Orders"
+msgstr ""
+
+#. module: magentoerpconnect
+#: view:magento.storeview:magentoerpconnect.view_magento_storeview_form
+msgid "Import Sale Orders since"
+msgstr ""
+
+#. module: magentoerpconnect
+#: view:magento.backend:magentoerpconnect.view_magento_backend_form
+msgid "Import all customer groups"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.backend,import_categories_from_date:0
+msgid "Import categories from date"
+msgstr ""
+
+#. module: magentoerpconnect
+#: view:magento.backend:magentoerpconnect.view_magento_backend_form
+#: view:magento.website:magentoerpconnect.view_magento_website_form
+msgid "Import in background"
+msgstr ""
+
+#. module: magentoerpconnect
+#: view:magento.backend:magentoerpconnect.view_magento_backend_form
+msgid "Import partners from all websites"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.website,import_partners_from_date:0
+msgid "Import partners from date"
+msgstr ""
+
+#. module: magentoerpconnect
+#: view:magento.website:magentoerpconnect.view_magento_website_form
+msgid "Import partners since"
+msgstr ""
+
+#. module: magentoerpconnect
+#: view:magento.backend:magentoerpconnect.view_magento_backend_form
+msgid "Import products categories since"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.backend,import_products_from_date:0
+msgid "Import products from date"
+msgstr ""
+
+#. module: magentoerpconnect
+#: view:magento.backend:magentoerpconnect.view_magento_backend_form
+msgid "Import products since"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.storeview,import_orders_from_date:0
+msgid "Import sale orders from date"
+msgstr ""
+
+#. module: magentoerpconnect
+#: view:magento.backend:magentoerpconnect.view_magento_backend_form
+msgid "Import sales orders from all store views"
+msgstr ""
+
+#. module: magentoerpconnect
+#: view:magento.backend:magentoerpconnect.view_magento_backend_form
+#: view:magento.storeview:magentoerpconnect.view_magento_storeview_form
+#: view:magento.website:magentoerpconnect.view_magento_website_form
+msgid "Imports"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.category,property_account_income_categ:0
+#: field:magento.product.product,property_account_income:0
+msgid "Income Account"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.product,incoming_qty:0
+msgid "Incoming"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.sale.order,incoterm:0
+msgid "Incoterm"
+msgstr ""
+
+#. module: magentoerpconnect
+#: view:magento.store:magentoerpconnect.view_magento_store_form
+#: view:magento.storeview:magentoerpconnect.view_magento_storeview_form
+#: view:magento.website:magentoerpconnect.view_magento_website_form
+msgid "Informations"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.stock.picking,move_lines:0
+msgid "Internal Moves"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.product,code:0
+#: field:magento.product.product,default_code:0
+msgid "Internal Reference"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.product.product,ean13:0
+msgid "International Article Number used for product identification."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.sale.order,incoterm:0
+msgid ""
+"International Commercial Terms are a series of predefined commercial terms "
+"used in international transactions."
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.product,property_stock_inventory:0
+msgid "Inventory Location"
+msgstr ""
+
+#. module: magentoerpconnect
+#: view:magento.product.product:magentoerpconnect.view_magento_product_form
+msgid "Inventory Options"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.product,valuation:0
+msgid "Inventory Valuation"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_account_invoice
+#: field:magento.account.invoice,openerp_id:0
+msgid "Invoice"
+msgstr "Faktúra"
+
+#. module: magentoerpconnect
+#: field:magento.sale.order,partner_invoice_id:0
+msgid "Invoice Address"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.stock.picking,invoice_state:0
+msgid "Invoice Control"
+msgstr ""
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/invoice.py:122
+#: code:addons/magentoerpconnect/tests/test_export_invoice.py:225
+#, python-format
+msgid "Invoice Created"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.account.invoice,date_invoice:0
+msgid "Invoice Date"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.account.invoice,invoice_line:0
+#: field:magento.sale.order.line,invoice_lines:0
+msgid "Invoice Lines"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.account.invoice,internal_number:0
+msgid "Invoice Number"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.account.invoice,reference:0
+msgid "Invoice Reference"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.sale.order,partner_invoice_id:0
+msgid "Invoice address for current sales order."
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.sale.order,invoice_exists:0
+#: field:magento.sale.order.line,invoiced:0
+msgid "Invoiced"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.sale.order,invoiced_rate:0
+msgid "Invoiced Ratio"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,invoice_ids:0 field:magento.res.partner,invoice_ids:0
+#: field:magento.sale.order,invoice_ids:0
+msgid "Invoices"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,is_company:0 field:magento.res.partner,is_company:0
+msgid "Is a Company"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.sale.order.line,is_delivery:0
+msgid "Is a Delivery"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.account.invoice,message_is_follower:0
+#: field:magento.address,message_is_follower:0
+#: field:magento.product.product,message_is_follower:0
+#: field:magento.res.partner,message_is_follower:0
+#: field:magento.sale.order,message_is_follower:0
+#: field:magento.stock.picking,message_is_follower:0
+msgid "Is a Follower"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.product,is_product_variant:0
+msgid "Is product variant"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.sale.order,invoiced:0
+msgid "It indicates that an invoice has been paid."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.sale.order,invoice_exists:0
+msgid "It indicates that sales order has at least one invoice."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.account.invoice,reconciled:0
+msgid ""
+"It indicates that the invoice has been paid and the journal entry of the "
+"invoice has been reconciled with one or several journal entries of payment."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.account.invoice,sent:0
+msgid "It indicates that the invoice has been sent."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.stock.picking,move_type:0
+msgid "It specifies goods to be deliver partially or all at once"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,function:0 field:magento.res.partner,function:0
+msgid "Job Position"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.account.invoice,journal_id:0
+msgid "Journal"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.account.invoice,move_id:0
+#: field:magento.account.invoice,move_name:0
+msgid "Journal Entry"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,journal_item_count:0
+#: field:magento.res.partner,journal_item_count:0
+msgid "Journal Items"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.account.invoice,date_invoice:0
+msgid "Keep empty to use the current date"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.account.invoice,period_id:0
+msgid "Keep empty to use the period of the validation(invoice) date."
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,lang:0 field:magento.res.partner,lang:0
+#: field:magento.storeview,lang_id:0
+msgid "Language"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.account.invoice,message_last_post:0
+#: field:magento.address,message_last_post:0
+#: field:magento.product.product,message_last_post:0
+#: field:magento.res.partner,message_last_post:0
+#: field:magento.sale.order,message_last_post:0
+#: field:magento.stock.picking,message_last_post:0
+msgid "Last Message Date"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.account.invoice,__last_update:0
+#: field:magento.address,__last_update:0 field:magento.backend,__last_update:0
+#: field:magento.binding,__last_update:0
+#: field:magento.config.specializer,__last_update:0
+#: field:magento.product.category,__last_update:0
+#: field:magento.product.product,__last_update:0
+#: field:magento.res.partner,__last_update:0
+#: field:magento.res.partner.category,__last_update:0
+#: field:magento.sale.order,__last_update:0
+#: field:magento.sale.order.line,__last_update:0
+#: field:magento.stock.picking,__last_update:0
+#: field:magento.store,__last_update:0 field:magento.storeview,__last_update:0
+#: field:magento.website,__last_update:0
+msgid "Last Modified on"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.account.invoice,write_uid:0 field:magento.address,write_uid:0
+#: field:magento.backend,write_uid:0
+#: field:magento.product.category,write_uid:0
+#: field:magento.product.product,write_uid:0
+#: field:magento.res.partner,write_uid:0
+#: field:magento.res.partner.category,write_uid:0
+#: field:magento.sale.order,write_uid:0
+#: field:magento.sale.order.line,write_uid:0
+#: field:magento.stock.picking,write_uid:0 field:magento.store,write_uid:0
+#: field:magento.storeview,write_uid:0 field:magento.website,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.account.invoice,write_date:0
+#: field:magento.address,write_date:0 field:magento.backend,write_date:0
+#: field:magento.product.category,write_date:0
+#: field:magento.product.product,write_date:0
+#: field:magento.res.partner,write_date:0
+#: field:magento.res.partner.category,write_date:0
+#: field:magento.sale.order,write_date:0
+#: field:magento.sale.order.line,write_date:0
+#: field:magento.stock.picking,write_date:0 field:magento.store,write_date:0
+#: field:magento.storeview,write_date:0 field:magento.website,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.product.product,magento_qty:0
+msgid "Last computed quantity to send on Magento."
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.account.invoice,sync_date:0 field:magento.address,sync_date:0
+#: field:magento.binding,sync_date:0
+#: field:magento.product.category,sync_date:0
+#: field:magento.product.product,sync_date:0
+#: field:magento.res.partner,sync_date:0
+#: field:magento.res.partner.category,sync_date:0
+#: field:magento.sale.order,sync_date:0
+#: field:magento.sale.order.line,sync_date:0
+#: field:magento.stock.picking,sync_date:0 field:magento.store,sync_date:0
+#: field:magento.storeview,sync_date:0 field:magento.website,sync_date:0
+msgid "Last synchronization date"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,last_reconciliation_date:0
+#: field:magento.res.partner,last_reconciliation_date:0
+msgid "Latest Full Reconciliation Date"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.category,parent_left:0
+msgid "Left Parent"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.res.partner.category,parent_left:0
+msgid "Left parent"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.account.invoice,move_id:0
+msgid "Link to the automatically generated Journal Items."
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.backend,location:0
+#: field:magento.product.product,location_id:0
+#: field:magento.stock.picking,location_id:0
+msgid "Location"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.product,packaging_ids:0
+msgid "Logistical Units"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:ir.ui.menu,name:magentoerpconnect.menu_magento_root
+#: view:payment.method:magentoerpconnect.payment_method_view_form
+#: view:res.partner.category:magentoerpconnect.view_partner_category_form
+msgid "Magento"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_magento_address
+#: view:magento.address:magentoerpconnect.view_magento_address_form
+#: view:magento.address:magentoerpconnect.view_magento_address_tree
+msgid "Magento Address"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,magento_address_bind_ids:0
+#: field:magento.res.partner,magento_address_bind_ids:0
+#: view:res.partner:magentoerpconnect.view_partner_form
+#: field:res.partner,magento_address_bind_ids:0
+msgid "Magento Address Bindings"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_magento_backend
+#: field:magento.account.invoice,backend_id:0
+#: field:magento.address,backend_id:0
+#: view:magento.backend:magentoerpconnect.view_magento_backend_form
+#: view:magento.backend:magentoerpconnect.view_magento_backend_tree
+#: field:magento.binding,backend_id:0
+#: field:magento.product.category,backend_id:0
+#: field:magento.product.product,backend_id:0
+#: field:magento.res.partner,backend_id:0
+#: field:magento.res.partner.category,backend_id:0
+#: field:magento.sale.order,backend_id:0
+#: field:magento.sale.order.line,backend_id:0
+#: field:magento.stock.picking,backend_id:0 field:magento.store,backend_id:0
+#: field:magento.storeview,backend_id:0 field:magento.website,backend_id:0
+msgid "Magento Backend"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:ir.actions.act_window,name:magentoerpconnect.action_magento_backend
+msgid "Magento Backends"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:delivery.carrier,magento_carrier_code:0
+msgid "Magento Base Carrier Code"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_magento_binding
+#: model:ir.model,name:magentoerpconnect.model_magento_res_partner_category
+msgid "Magento Binding (abstract)"
+msgstr ""
+
+#. module: magentoerpconnect
+#: view:account.invoice:magentoerpconnect.view_invoice_magento_form
+#: field:account.invoice,magento_bind_ids:0
+#: field:magento.account.invoice,magento_bind_ids:0
+#: field:magento.address,magento_bind_ids:0
+#: field:magento.product.category,magento_bind_ids:0
+#: field:magento.product.product,magento_bind_ids:0
+#: field:magento.res.partner,magento_bind_ids:0
+#: field:magento.res.partner.category,magento_bind_ids:0
+#: field:magento.sale.order,magento_bind_ids:0
+#: field:magento.sale.order.line,magento_bind_ids:0
+#: field:magento.stock.picking,magento_bind_ids:0
+#: view:product.category:magentoerpconnect.view_product_category_form
+#: field:product.category,magento_bind_ids:0
+#: view:product.product:magentoerpconnect.product_normal_form_view
+#: field:product.product,magento_bind_ids:0
+#: view:res.partner:magentoerpconnect.view_partner_form
+#: field:res.partner,magento_bind_ids:0
+#: field:res.partner.category,magento_bind_ids:0
+#: field:sale.order,magento_bind_ids:0
+#: field:sale.order.line,magento_bind_ids:0
+#: view:stock.picking:magentoerpconnect.view_stock_picking_out_magento_form
+#: field:stock.picking,magento_bind_ids:0
+msgid "Magento Bindings"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:delivery.carrier,magento_code:0
+msgid "Magento Carrier Code"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.category,magento_child_ids:0
+msgid "Magento Child Categories"
+msgstr ""
+
+#. module: magentoerpconnect
+#: view:magento.backend:magentoerpconnect.view_magento_backend_form
+msgid "Magento Configuration"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_magento_stock_picking
+#: view:magento.stock.picking:magentoerpconnect.view_magento_stock_picking_out_form
+#: view:magento.stock.picking:magentoerpconnect.view_magento_stock_picking_out_tree
+msgid "Magento Delivery Order"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.res.partner,group_id:0
+msgid "Magento Group (Category)"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_magento_account_invoice
+#: view:magento.account.invoice:magentoerpconnect.view_magento_account_invoice_form
+#: view:magento.account.invoice:magentoerpconnect.view_magento_account_invoice_tree
+msgid "Magento Invoice"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.sale.order,magento_order_id:0
+msgid "Magento Order ID"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.sale.order,magento_order_line_ids:0
+msgid "Magento Order Lines"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.category,magento_parent_id:0
+msgid "Magento Parent Category"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_magento_res_partner
+#: field:magento.address,magento_partner_id:0
+#: view:magento.res.partner:magentoerpconnect.view_magento_res_partner_form
+#: view:magento.res.partner:magentoerpconnect.view_magento_res_partner_tree
+msgid "Magento Partner"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_magento_product_product
+#: view:magento.product.product:magentoerpconnect.view_magento_product_form
+#: view:magento.product.product:magentoerpconnect.view_magento_product_tree
+msgid "Magento Product"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_magento_product_category
+#: view:magento.product.category:magentoerpconnect.view_magento_product_category_form
+#: view:magento.product.category:magentoerpconnect.view_magento_product_category_tree
+msgid "Magento Product Category"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.product,product_type:0
+msgid "Magento Product Type"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.backend,product_binding_ids:0
+#: field:magento.website,product_binding_ids:0
+msgid "Magento Products"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_magento_sale_order
+#: field:magento.account.invoice,magento_order_id:0
+#: field:magento.sale.order.line,magento_order_id:0
+#: field:magento.stock.picking,magento_order_id:0
+msgid "Magento Sale Order"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_magento_sale_order_line
+msgid "Magento Sale Order Line"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_magento_store
+#: view:magento.store:magentoerpconnect.view_magento_store_form
+#: view:magento.store:magentoerpconnect.view_magento_store_tree
+msgid "Magento Store"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:ir.actions.act_window,name:magentoerpconnect.action_magento_store
+msgid "Magento Stores"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_magento_storeview
+#: field:magento.sale.order,storeview_id:0
+#: view:magento.storeview:magentoerpconnect.view_magento_storeview_form
+#: view:magento.storeview:magentoerpconnect.view_magento_storeview_tree
+msgid "Magento Storeview"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:ir.actions.act_window,name:magentoerpconnect.action_magento_storeview
+msgid "Magento Storeviews"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:delivery.carrier,magento_tracking_title:0
+msgid "Magento Tracking Title"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.res.partner,taxvat:0
+msgid "Magento VAT"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_magento_website
+#: field:magento.address,website_id:0 field:magento.res.partner,website_id:0
+#: field:magento.store,website_id:0
+#: view:magento.website:magentoerpconnect.view_magento_website_form
+#: view:magento.website:magentoerpconnect.view_magento_website_tree
+msgid "Magento Website"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:ir.actions.act_window,name:magentoerpconnect.action_magento_website
+msgid "Magento Websites"
+msgstr ""
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/sale.py:1105
+#, python-format
+msgid "Magento sales order is already in state %s"
+msgstr ""
+
+#. module: magentoerpconnect
+#: view:connector.config.settings:magentoerpconnect.view_magento_config_settings
+msgid "Magentoerpconnect"
+msgstr ""
+
+#. module: magentoerpconnect
+#: view:magento.backend:magentoerpconnect.view_magento_backend_form
+msgid "Main Configuration"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.sale.order,main_exception_id:0
+msgid "Main Exception"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.product,seller_id:0
+msgid "Main Supplier"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.product.product,seller_id:0
+msgid "Main Supplier who has highest priority in Supplier List."
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.product,backorders:0
+msgid "Manage Inventory Backorders"
+msgstr ""
+
+#. module: magentoerpconnect
+#: selection:magento.product.product,manage_stock:0
+msgid "Manage Stock"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.product,manage_stock:0
+msgid "Manage Stock Level"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.stock.picking,max_date:0
+msgid "Max. Expected Date"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.product,mes_type:0
+msgid "Measure Type"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,image_medium:0
+#: field:magento.product.product,image_medium:0
+#: field:magento.res.partner,image_medium:0
+msgid "Medium-sized image"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.address,image_medium:0 help:magento.res.partner,image_medium:0
+msgid ""
+"Medium-sized image of this contact. It is automatically resized as a "
+"128x128px image, with aspect ratio preserved. Use this field in form views "
+"or some kanban views."
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.account.invoice,message_ids:0
+#: field:magento.address,message_ids:0
+#: field:magento.product.product,message_ids:0
+#: field:magento.res.partner,message_ids:0
+#: field:magento.sale.order,message_ids:0
+#: field:magento.stock.picking,message_ids:0
+msgid "Messages"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.account.invoice,message_ids:0
+#: help:magento.address,message_ids:0
+#: help:magento.product.product,message_ids:0
+#: help:magento.res.partner,message_ids:0
+#: help:magento.sale.order,message_ids:0
+#: help:magento.stock.picking,message_ids:0
+msgid "Messages and communication history"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.product,orderpoint_ids:0
+msgid "Minimum Stock Rules"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,mobile:0 field:magento.res.partner,mobile:0
+msgid "Mobile"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,name:0 field:magento.backend,name:0
+#: field:magento.product.category,complete_name:0
+#: field:magento.product.category,name:0 field:magento.product.product,name:0
+#: field:magento.res.partner,name:0 field:magento.store,name:0
+#: field:magento.storeview,name:0 field:magento.website,name:0
+msgid "Name"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.sale.order,need_cancel:0
+msgid "Need to be canceled"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.product,weight_net:0
+#: field:magento.stock.picking,weight_net:0
+msgid "Net Weight"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.res.partner,newsletter:0
+msgid "Newsletter"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.storeview,no_sales_order_sync:0
+msgid "No Sales Order Synchronization"
+msgstr ""
+
+#. module: magentoerpconnect
+#: selection:magento.product.product,backorders:0
+msgid "No Sell"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.product,no_stock_sync:0
+msgid "No Stock Synchronization"
+msgstr ""
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/related_action.py:55
+#, python-format
+msgid ""
+"No admin URL configured on the backend or no admin path is defined for this "
+"record."
+msgstr ""
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/stock_tracking.py:83
+#, python-format
+msgid "No tracking number to send."
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,comment:0 field:magento.res.partner,comment:0
+#: field:magento.sale.order.line,notes:0 field:magento.stock.picking,note:0
+msgid "Notes"
+msgstr ""
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/unit/export_synchronizer.py:407
+#: code:addons/magentoerpconnect/unit/export_synchronizer.py:412
+#, python-format
+msgid "Nothing to export."
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.account.invoice,number:0
+msgid "Number"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.sale.order.line,number_packages:0
+msgid "Number Packages"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.stock.picking,number_of_packages:0
+msgid "Number of Packages"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.sale.order.line,delay:0
+msgid ""
+"Number of days between the order confirmation and the shipping of the "
+"products to the customer"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.sale.order,order_policy:0
+msgid ""
+"On demand: A draft invoice can be created from the sales order when needed. \n"
+"On delivery order: A draft invoice can be created from the delivery order when the products have been delivered. \n"
+"Before delivery: A draft invoice is created from the sales order and must be paid before the products can be delivered."
+msgstr ""
+
+#. module: magentoerpconnect
+#: view:magento.backend:magentoerpconnect.view_magento_backend_form
+msgid ""
+"Once imported,\n"
+"                                    some types of records,\n"
+"                                    like the products or categories,\n"
+"                                    need a manual review.\n"
+"                                    You will find the list\n"
+"                                    of the new records to review\n"
+"                                    in the menu 'Connectors > Checkpoint'."
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,opt_out:0 field:magento.res.partner,opt_out:0
+msgid "Opt-Out"
+msgstr ""
+
+#. module: magentoerpconnect
+#: view:magento.store:magentoerpconnect.view_magento_store_form
+#: view:magento.storeview:magentoerpconnect.view_magento_storeview_form
+#: view:magento.website:magentoerpconnect.view_magento_website_form
+msgid "Options"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.sale.order,order_line:0
+msgid "Order Lines"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.sale.order,name:0 field:magento.sale.order.line,order_id:0
+msgid "Order Reference"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.product,outgoing_qty:0
+msgid "Outgoing"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.stock.picking,owner_id:0
+msgid "Owner"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.stock.picking,pack_operation_exist:0
+msgid "Pack Operation Exists?"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.sale.order.line,product_packaging:0
+msgid "Packaging"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.sale.order,invoiced:0
+#: selection:magento.store,create_invoice_on:0
+#: selection:payment.method,create_invoice_on:0
+msgid "Paid"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.account.invoice,reconciled:0
+msgid "Paid/Reconciled"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.category,parent_id:0
+#: field:magento.res.partner.category,parent_id:0
+msgid "Parent Category"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.sale.order,magento_parent_id:0
+msgid "Parent Magento Order"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.sale.order,parent_id:0
+msgid "Parent Order"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,parent_name:0 field:magento.res.partner,parent_name:0
+msgid "Parent name"
+msgstr ""
+
+#. module: magentoerpconnect
+#: selection:magento.stock.picking,picking_method:0
+msgid "Partial"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_res_partner
+#: field:magento.account.invoice,partner_id:0
+#: field:magento.address,openerp_id:0 field:magento.res.partner,openerp_id:0
+#: field:magento.stock.picking,partner_id:0
+msgid "Partner"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.res.partner.category,openerp_id:0
+msgid "Partner Category"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_res_partner_category
+msgid "Partner Tags"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.res.partner.category,partner_ids:0
+msgid "Partners"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.backend,password:0
+msgid "Password"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,debit_limit:0 field:magento.res.partner,debit_limit:0
+msgid "Payable Limit"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_payment_method
+#: field:magento.sale.order,payment_method_id:0
+msgid "Payment Method"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.account.invoice,reference_type:0
+msgid "Payment Reference"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.sale.order,payment_term:0
+msgid "Payment Term"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.account.invoice,payment_term:0
+msgid "Payment Terms"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.account.invoice,payment_ids:0
+msgid "Payments"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.sale.order,payment_ids:0
+msgid "Payments Entries"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.account.invoice,paypal_url:0
+#: field:magento.sale.order,paypal_url:0
+msgid "Paypal Url"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,phone:0 field:magento.res.partner,phone:0
+msgid "Phone"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.sale.order,picking_policy:0
+msgid ""
+"Pick 'Deliver each product when available' if you allow partial delivery."
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_stock_picking
+msgid "Picking List"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.stock.picking,picking_method:0
+msgid "Picking Method"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.stock.picking,picking_type_id:0
+msgid "Picking Type"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.stock.picking,picking_type_code:0
+msgid "Picking Type Code"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.sale.order,picking_ids:0
+msgid "Picking associated to this sale"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.address,notify_email:0 help:magento.res.partner,notify_email:0
+msgid ""
+"Policy to receive emails for new messages pushed to your personal Inbox:\n"
+"- Never: no emails are sent\n"
+"- All Messages: for every notification you receive in your Inbox"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.account.invoice,portal_payment_options:0
+#: field:magento.sale.order,portal_payment_options:0
+msgid "Portal Payment Options"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.product,price:0
+msgid "Price"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.sale.order.line,price_reduce:0
+msgid "Price Reduce"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.product,pricelist_id:0
+#: field:magento.sale.order,pricelist_id:0
+msgid "Pricelist"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.sale.order,pricelist_id:0
+msgid "Pricelist for current sales order."
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:connector.config.settings,module_magentoerpconnect_pricing:0
+msgid "Prices are managed in OpenERP with pricelists"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:connector.config.settings,module_magentoerpconnect_pricing:0
+msgid ""
+"Prices are set in OpenERP and exported to Magento.\n"
+"\n"
+"This installs the module magentoerpconnect_pricing."
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.storeview,catalog_price_tax_included:0
+msgid "Prices include tax"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.product,categ_id:0
+msgid "Pricing/Primary Category"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.stock.picking,priority:0
+msgid "Priority"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.stock.picking,priority:0
+msgid ""
+"Priority for this picking. Setting manually a value here would set it as "
+"priority for all the moves"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.stock.picking,group_id:0
+msgid "Procurement Group"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.product,property_stock_procurement:0
+msgid "Procurement Location"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.sale.order,procurement_group_id:0
+msgid "Procurement group"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.sale.order.line,procurement_ids:0
+msgid "Procurements"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_product_product
+#: field:magento.product.product,openerp_id:0
+#: field:magento.sale.order,product_id:0
+#: field:magento.sale.order.line,product_id:0
+#: field:magento.stock.picking,product_id:0
+msgid "Product"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.product,attribute_line_ids:0
+msgid "Product Attributes"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.product,categ_ids:0
+msgid "Product Categories"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_product_category
+#: field:magento.product.category,openerp_id:0
+msgid "Product Category"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.product,product_manager:0
+msgid "Product Manager"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.product,product_tmpl_id:0
+#: field:magento.sale.order.line,product_tmpl_id:0
+msgid "Product Template"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.product,type:0
+msgid "Product Type"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.sale.order.line,product_uos:0
+msgid "Product UoS"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.product,property_stock_production:0
+msgid "Production Location"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.product,product_variant_ids:0
+msgid "Products"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.product,lst_price:0
+msgid "Public Price"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.product,description_purchase:0
+msgid "Purchase Description"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.product,uom_po_id:0
+msgid "Purchase Unit of Measure"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.stock.picking,quant_reserved_exist:0
+msgid "Quant already reserved ?"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.sale.order.line,product_uom_qty:0
+msgid "Quantity"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.sale.order.line,product_uos_qty:0
+msgid "Quantity (UoS)"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.product,qty_available:0
+msgid "Quantity On Hand"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.product.product,incoming_qty:0
+msgid ""
+"Quantity of products that are planned to arrive.\n"
+"In a context with a single Stock Location, this includes goods arriving to this Location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods arriving to the Stock Location of this Warehouse, or any of its children.\n"
+"Otherwise, this includes goods arriving to any Stock Location with 'internal' type."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.product.product,outgoing_qty:0
+msgid ""
+"Quantity of products that are planned to leave.\n"
+"In a context with a single Stock Location, this includes goods leaving this Location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods leaving the Stock Location of this Warehouse, or any of its children.\n"
+"Otherwise, this includes goods leaving any Stock Location with 'internal' type."
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.product,loc_rack:0
+msgid "Rack"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.product,reception_count:0
+msgid "Receipt"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,notify_email:0
+#: field:magento.res.partner,notify_email:0
+msgid "Receive Inbox Notifications by Email"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.stock.picking,recompute_pack_op:0
+msgid "Recompute pack operation?"
+msgstr ""
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/unit/delete_synchronizer.py:38
+#, python-format
+msgid "Record %s deleted on Magento"
+msgstr ""
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/unit/import_synchronizer.py:206
+#, python-format
+msgid "Record does no longer exist in Magento"
+msgstr ""
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/unit/export_synchronizer.py:414
+#, python-format
+msgid "Record exported with ID %s on Magento."
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.stock.picking,name:0
+msgid "Reference"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.stock.picking,origin:0
+msgid "Reference of the document"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.sale.order,origin:0
+msgid "Reference of the document that generated this sales order request."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.account.invoice,origin:0
+msgid "Reference of the document that produced this invoice."
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.account.invoice,name:0
+#: field:magento.sale.order,client_order_ref:0
+msgid "Reference/Description"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,parent_id:0 field:magento.res.partner,parent_id:0
+msgid "Related Company"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.stock.picking,pack_operation_ids:0
+msgid "Related Packing Operations"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.stock.picking,related_backorder_ids:0
+msgid "Related backorders"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.account.invoice,residual:0
+msgid "Remaining amount due."
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.category,parent_right:0
+msgid "Right Parent"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.res.partner.category,parent_right:0
+msgid "Right parent"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.sale.order.line,route_id:0
+msgid "Route"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.category,route_ids:0
+#: field:magento.product.product,route_ids:0
+msgid "Routes"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.product,loc_row:0
+msgid "Row"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.product,description_sale:0
+msgid "Sale Description"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.sale.order,openerp_id:0 field:magento.stock.picking,sale_id:0
+msgid "Sale Order"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.sale.order.line,openerp_id:0
+msgid "Sale Order Line"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.account.invoice,sale_ids:0
+msgid "Sale Orders"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.backend,sale_prefix:0
+msgid "Sale Prefix"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.product,list_price:0
+msgid "Sale Price"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,property_product_pricelist:0
+#: field:magento.res.partner,property_product_pricelist:0
+msgid "Sale Pricelist"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.account.invoice,workflow_process_id:0
+#: field:magento.stock.picking,workflow_process_id:0
+msgid "Sale Workflow Process"
+msgstr ""
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/sale.py:1101
+#, python-format
+msgid "Sale is not linked with a Magento sales order"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_sale_order
+#: field:magento.address,sale_order_ids:0
+#: field:magento.res.partner,sale_order_ids:0
+msgid "Sales Order"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:ir.model,name:magentoerpconnect.model_sale_order_line
+msgid "Sales Order Line"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.account.invoice,section_id:0
+#: field:magento.address,section_id:0 field:magento.res.partner,section_id:0
+#: field:magento.sale.order,section_id:0 field:magento.storeview,section_id:0
+msgid "Sales Team"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.account.invoice,user_id:0 field:magento.address,user_id:0
+#: field:magento.res.partner,user_id:0 field:magento.sale.order,user_id:0
+#: field:magento.sale.order.line,salesman_id:0
+msgid "Salesperson"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.stock.picking,min_date:0
+msgid "Scheduled Date"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.stock.picking,min_date:0
+msgid ""
+"Scheduled time for the first part of the shipment to be processed. Setting "
+"manually a value here would set it as expected date for all the stock moves."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.stock.picking,max_date:0
+msgid "Scheduled time for the last part of the shipment to be processed"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.product.product,categ_id:0
+msgid "Select category for the current product"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.address,use_parent_address:0
+#: help:magento.res.partner,use_parent_address:0
+msgid ""
+"Select this if you want to set company's address information  for this "
+"contact"
+msgstr ""
+
+#. module: magentoerpconnect
+#: selection:magento.product.product,backorders:0
+msgid "Sell Quantity < 0"
+msgstr ""
+
+#. module: magentoerpconnect
+#: selection:magento.product.product,backorders:0
+msgid "Sell Quantity < 0 and Use Customer Notification"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.store,send_invoice_paid_mail:0
+msgid "Send email notification on invoice validated/paid"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.store,send_picking_done_mail:0
+msgid "Send email notification on picking done"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.account.invoice,sent:0
+msgid "Sent"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.category,sequence:0
+#: field:magento.sale.order.line,sequence:0
+msgid "Sequence"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.product.category,removal_strategy_id:0
+msgid ""
+"Set a specific removal strategy that will be used regardless of the source "
+"location for this product category"
+msgstr ""
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/stock_picking.py:126
+#: code:addons/magentoerpconnect/tests/test_export_picking.py:89
+#: code:addons/magentoerpconnect/tests/test_export_picking.py:135
+#: code:addons/magentoerpconnect/tests/test_export_picking.py:169
+#, python-format
+msgid "Shipping Created"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.sale.order,picking_policy:0
+msgid "Shipping Policy"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:payment.method,create_invoice_on:0
+msgid ""
+"Should the invoice be created in Magento when it is validated or when it is paid in OpenERP?\n"
+"If nothing is set, the option falls back to the same option on the Magento store related to the sales order."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.store,create_invoice_on:0
+msgid ""
+"Should the invoice be created in Magento when it is validated or when it is paid in OpenERP?\n"
+"This only takes effect if the sales order's related payment method is not giving an option for this by itself. (See Payment Methods)"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,signup_expiration:0
+#: field:magento.res.partner,signup_expiration:0
+msgid "Signup Expiration"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,signup_token:0
+#: field:magento.res.partner,signup_token:0
+msgid "Signup Token"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,signup_type:0 field:magento.res.partner,signup_type:0
+msgid "Signup Token Type"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,signup_valid:0
+#: field:magento.res.partner,signup_valid:0
+msgid "Signup Token is Valid"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,signup_url:0 field:magento.res.partner,signup_url:0
+msgid "Signup URL"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,image_small:0
+#: field:magento.product.product,image_small:0
+#: field:magento.res.partner,image_small:0
+msgid "Small-sized image"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.address,image_small:0 help:magento.res.partner,image_small:0
+msgid ""
+"Small-sized image of this contact. It is automatically resized as a 64x64px "
+"image, with aspect ratio preserved. Use this field anywhere a small image is"
+" required."
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.storeview,sort_order:0 field:magento.website,sort_order:0
+msgid "Sort Order"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.account.invoice,origin:0 field:magento.sale.order,origin:0
+#: field:magento.stock.picking,origin:0
+msgid "Source Document"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.config.specializer,specific_account_analytic_id:0
+#: field:magento.store,specific_account_analytic_id:0
+#: field:magento.storeview,specific_account_analytic_id:0
+#: field:magento.website,specific_account_analytic_id:0
+msgid "Specific analytic account"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.config.specializer,specific_fiscal_position_id:0
+#: field:magento.store,specific_fiscal_position_id:0
+#: field:magento.storeview,specific_fiscal_position_id:0
+#: field:magento.website,specific_fiscal_position_id:0
+msgid "Specific fiscal position"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.product.product,uos_id:0
+msgid ""
+"Specify a unit of measure here if invoicing is made in another unit of "
+"measure than inventory. Keep empty to use the default unit of measure."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.product.product,sale_ok:0
+msgid "Specify if the product can be selected in a sales order line."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.product.product,cost_method:0
+msgid ""
+"Standard Price: The cost price is manually updated at the end of a specific period (usually every year).\n"
+"                    Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
+"                    Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example)."
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,state_id:0 field:magento.res.partner,state_id:0
+msgid "State"
+msgstr ""
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/sale.py:1098
+#, python-format
+msgid "State %s is not exported."
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.account.invoice,state:0 field:magento.product.product,state:0
+#: field:magento.sale.order,state:0 field:magento.sale.order.line,state:0
+#: field:magento.stock.picking,state:0
+msgid "Status"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.backend,product_stock_field_id:0
+msgid "Stock Field"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.category,property_stock_account_input_categ:0
+#: field:magento.product.product,property_stock_account_input:0
+msgid "Stock Input Account"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.category,property_stock_journal:0
+msgid "Stock Journal"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.category,property_stock_account_output_categ:0
+#: field:magento.product.product,property_stock_account_output:0
+msgid "Stock Output Account"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.stock.picking,openerp_id:0
+msgid "Stock Picking"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.category,property_stock_valuation_account_id:0
+msgid "Stock Valuation Account"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.storeview,store_id:0
+msgid "Store"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:ir.ui.menu,name:magentoerpconnect.menu_magento_store
+#: view:magento.website:magentoerpconnect.view_magento_website_form
+#: field:magento.website,store_ids:0
+msgid "Stores"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.sale.order,store_id:0
+msgid "Storeview"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:ir.ui.menu,name:magentoerpconnect.menu_magento_storeview
+#: view:magento.store:magentoerpconnect.view_magento_store_form
+#: field:magento.store,storeview_ids:0
+msgid "Storeviews"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,street:0 field:magento.res.partner,street:0
+msgid "Street"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,street2:0 field:magento.res.partner,street2:0
+msgid "Street2"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.account.invoice,amount_untaxed:0
+#: field:magento.sale.order.line,price_subtotal:0
+msgid "Subtotal"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.account.invoice,message_summary:0
+#: field:magento.address,message_summary:0
+#: field:magento.product.product,message_summary:0
+#: field:magento.res.partner,message_summary:0
+#: field:magento.sale.order,message_summary:0
+#: field:magento.stock.picking,message_summary:0
+msgid "Summary"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,supplier:0 field:magento.product.product,seller_ids:0
+#: field:magento.res.partner,supplier:0
+msgid "Supplier"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.account.invoice,supplier_invoice_number:0
+msgid "Supplier Invoice Number"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.product,seller_delay:0
+msgid "Supplier Lead Time"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,property_stock_supplier:0
+#: field:magento.res.partner,property_stock_supplier:0
+msgid "Supplier Location"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,property_supplier_payment_term:0
+#: field:magento.res.partner,property_supplier_payment_term:0
+msgid "Supplier Payment Term"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.product,seller_qty:0
+msgid "Supplier Quantity"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.product,supplier_taxes_id:0
+msgid "Supplier Taxes"
+msgstr ""
+
+#. module: magentoerpconnect
+#: view:magento.backend:magentoerpconnect.view_magento_backend_form
+msgid "Synchronize Metadata"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,vat:0 field:magento.res.partner,vat:0
+msgid "TIN"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,category_id:0 field:magento.res.partner,category_id:0
+msgid "Tags"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.account.invoice,amount_tax:0
+msgid "Tax"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.res.partner.category,tax_class_id:0
+msgid "Tax Class ID"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.product,tax_group_id:0
+msgid "Tax Group"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.address,vat:0 help:magento.res.partner,vat:0
+msgid ""
+"Tax Identification Number. Check the box if this contact is subjected to "
+"taxes. Used by the some of the legal statements."
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.account.invoice,tax_line:0
+msgid "Tax Lines"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.sale.order.line,tax_rate:0
+msgid "Tax Rate"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.product.product,tax_group_id:0
+msgid "Tax groups are used with some external system like Prestashop"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.sale.order,amount_tax:0
+#: field:magento.sale.order.line,tax_id:0
+msgid "Taxes"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.stock.picking,picking_type_code:0
+msgid ""
+"Technical field used to display the correct label on print button in the "
+"picking view"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.product,name_template:0
+msgid "Template Name"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.sale.order,note:0
+msgid "Terms and conditions"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.res.partner.category,active:0
+msgid "The active field allows you to hide the category without removing it."
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:sale.exception,description:magentoerpconnect.excep_wrong_total_amount
+msgid ""
+"The amount computed in OpenERP doesn't match with the amount in Magento.\n"
+"\n"
+"Cause:\n"
+"The taxes are probably different between OpenERP and Magento. A fiscal position could have changed the final price.\n"
+"\n"
+"Resolution:\n"
+"Check your taxes and fiscal positions configuration and correct them if necessary."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.sale.order,amount_untaxed:0
+msgid "The amount without tax."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.sale.order,project_id:0
+msgid "The analytic account related to a sales order."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.product.product,sale_delay:0
+msgid ""
+"The average delay in days between the confirmation of the customer order and"
+" the delivery of the finished products. It's the time you promise to your "
+"customers."
+msgstr ""
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/stock_tracking.py:80
+#, python-format
+msgid "The carrier %s does not export tracking numbers."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.account.invoice,commercial_partner_id:0
+msgid ""
+"The commercial entity that will be used on Journal Entries for this invoice"
+msgstr ""
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/product.py:563
+#, python-format
+msgid ""
+"The configurable product is not imported in OpenERP, because only the simple"
+" products are used in the sales orders."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.backend,use_custom_api_path:0
+msgid ""
+"The default API path is '/index.php/api/xmlrpc'. Check this box if you use a"
+" custom API path, in that case, the location has to be completed with the "
+"custom API path "
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.address,property_account_position:0
+#: help:magento.res.partner,property_account_position:0
+msgid ""
+"The fiscal position will determine taxes and accounts used for the partner."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.product.product,weight:0
+msgid "The gross weight in Kg."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.address,user_id:0 help:magento.res.partner,user_id:0
+msgid ""
+"The internal user that is in charge of communicating with this contact if "
+"any."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.product.product,weight_net:0
+msgid "The net weight in Kg."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.account.invoice,account_id:0
+msgid "The partner account used for this invoice."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.account.invoice,reference:0
+msgid "The partner reference of this invoice."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.address,tz:0 help:magento.res.partner,tz:0
+msgid ""
+"The partner's timezone, used to output proper date and time values inside "
+"printed reports. It is important to set a value for this field. You should "
+"use the same timezone that is otherwise used to pick and render date and "
+"time values: your computer's timezone."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.account.invoice,supplier_invoice_number:0
+msgid "The reference of this invoice as provided by the supplier."
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:sale.exception,description:magentoerpconnect.excep_wrong_total_amount_tax
+msgid ""
+"The tax amount computed in OpenERP doesn't match with the tax amount in Magento.\n"
+"\n"
+"Cause:\n"
+"The taxes are probably different between OpenERP and Magento. A fiscal position could have changed the final price.\n"
+"\n"
+"Resolution:\n"
+"Check your taxes and fiscal positions configuration and correct them if necessary."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.sale.order,amount_tax:0
+msgid "The tax amount."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.sale.order,amount_total:0
+msgid "The total amount."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.product.product,volume:0
+msgid "The volume in m3."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.product.product,property_account_expense:0
+msgid ""
+"This account will be used for invoices instead of the default one to value "
+"expenses for the current product."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.product.product,property_account_income:0
+msgid ""
+"This account will be used for invoices instead of the default one to value "
+"sales for the current product."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.product.category,property_account_expense_categ:0
+msgid "This account will be used for invoices to value expenses."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.product.category,property_account_income_categ:0
+msgid "This account will be used for invoices to value sales."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.address,property_account_payable:0
+#: help:magento.res.partner,property_account_payable:0
+msgid ""
+"This account will be used instead of the default one as the payable account "
+"for the current partner"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.address,property_account_receivable:0
+#: help:magento.res.partner,property_account_receivable:0
+msgid ""
+"This account will be used instead of the default one as the receivable "
+"account for the current partner"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.address,property_delivery_carrier:0
+#: help:magento.res.partner,property_delivery_carrier:0
+msgid "This delivery method will be used when invoicing from picking."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.address,image:0 help:magento.res.partner,image:0
+msgid ""
+"This field holds the image used as avatar for this contact, limited to "
+"1024x1024px"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.product.product,image_variant:0
+msgid ""
+"This field holds the image used as image for the product variant, limited to"
+" 1024x1024px."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:connector.config.settings,module_magentoerpconnect_export_partner:0
+msgid "This installs the module magentoerpconnect_export_partner."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.product.product,seller_qty:0
+msgid "This is minimum quantity to purchase from Main Supplier."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.product.product,seller_delay:0
+msgid ""
+"This is the average delay in days between the purchase order confirmation "
+"and the receipts for this product and for the default supplier. It is used "
+"by the scheduler to order requests based on reordering delays."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.sale.order,invoice_ids:0
+msgid ""
+"This is the list of invoices that have been generated for this sales order. "
+"The same sales order may have been invoiced in several times (by line for "
+"example)."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.product.product,price_extra:0
+msgid "This is the sum of the extra price of all attributes"
+msgstr ""
+
+#. module: magentoerpconnect
+#: view:magento.storeview:magentoerpconnect.view_magento_storeview_form
+msgid ""
+"This option should respect the same\n"
+"                              configuration as Magento.  Pay\n"
+"                              attention to the taxes on the products,\n"
+"                              which should surely include prices when\n"
+"                              this option is activated."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.address,property_supplier_payment_term:0
+#: help:magento.res.partner,property_supplier_payment_term:0
+msgid ""
+"This payment term will be used instead of the default one for purchase "
+"orders and supplier invoices"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.address,property_payment_term:0
+#: help:magento.res.partner,property_payment_term:0
+msgid ""
+"This payment term will be used instead of the default one for sale orders "
+"and customer invoices"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.address,property_product_pricelist:0
+#: help:magento.res.partner,property_product_pricelist:0
+msgid ""
+"This pricelist will be used, instead of the default one, for sales to the "
+"current partner"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.address,property_stock_customer:0
+#: help:magento.res.partner,property_stock_customer:0
+msgid ""
+"This stock location will be used, instead of the default one, as the "
+"destination location for goods you send to this partner"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.address,property_stock_supplier:0
+#: help:magento.res.partner,property_stock_supplier:0
+msgid ""
+"This stock location will be used, instead of the default one, as the source "
+"location for goods you receive from the current partner"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.product.product,property_stock_production:0
+msgid ""
+"This stock location will be used, instead of the default one, as the source "
+"location for stock moves generated by manufacturing orders."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.product.product,property_stock_procurement:0
+msgid ""
+"This stock location will be used, instead of the default one, as the source "
+"location for stock moves generated by procurements."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.product.product,property_stock_inventory:0
+msgid ""
+"This stock location will be used, instead of the default one, as the source "
+"location for stock moves generated when you do an inventory."
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,tz:0 field:magento.res.partner,tz:0
+msgid "Timezone"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,tz_offset:0 field:magento.res.partner,tz_offset:0
+msgid "Timezone offset"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,title:0 field:magento.res.partner,title:0
+msgid "Title"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.account.invoice,amount_total:0
+#: field:magento.sale.order,amount_total:0
+msgid "Total"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:sale.exception,name:magentoerpconnect.excep_wrong_total_amount
+msgid "Total Amount differs from Magento"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,total_invoiced:0
+#: field:magento.res.partner,total_invoiced:0
+msgid "Total Invoiced"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,debit:0 field:magento.res.partner,debit:0
+msgid "Total Payable"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,credit:0 field:magento.res.partner,credit:0
+msgid "Total Receivable"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:sale.exception,name:magentoerpconnect.excep_wrong_total_amount_tax
+msgid "Total Tax Amount differs from Magento"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.sale.order,total_amount:0
+msgid "Total amount"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.address,credit:0 help:magento.res.partner,credit:0
+msgid "Total amount this customer owes you."
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.sale.order,total_amount_tax:0
+msgid "Total amount w. tax"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.address,debit:0 help:magento.res.partner,debit:0
+msgid "Total amount you have to pay to this supplier."
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.category,total_route_ids:0
+msgid "Total routes"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.product,track_incoming:0
+msgid "Track Incoming Lots"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.product,track_outgoing:0
+msgid "Track Outgoing Lots"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.stock.picking,recompute_pack_op:0
+msgid ""
+"True if reserved quants changed, which mean we might need to recompute the "
+"package operations"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.account.invoice,type:0
+msgid "Type"
+msgstr ""
+
+#. module: magentoerpconnect
+#: code:addons/magentoerpconnect/magento_model.py:648
+#, python-format
+msgid "Undefined"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.account.invoice,internal_number:0
+msgid ""
+"Unique number of the invoice, computed automatically when the invoice is "
+"created."
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.sale.order.line,price_unit:0
+msgid "Unit Price"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.product,uom_id:0
+#: field:magento.stock.picking,weight_uom_id:0
+msgid "Unit of Measure"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.sale.order.line,product_uom:0
+msgid "Unit of Measure "
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.product,uos_coeff:0
+msgid "Unit of Measure -> UOS Coeff"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.product,uos_id:0
+msgid "Unit of Sale"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.stock.picking,weight_uom_id:0
+msgid "Unit of measurement for Weight"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.account.invoice,message_unread:0
+#: field:magento.address,message_unread:0
+#: field:magento.product.product,message_unread:0
+#: field:magento.res.partner,message_unread:0
+#: field:magento.sale.order,message_unread:0
+#: field:magento.stock.picking,message_unread:0
+msgid "Unread Messages"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.sale.order,amount_untaxed:0
+msgid "Untaxed Amount"
+msgstr ""
+
+#. module: magentoerpconnect
+#: view:magento.backend:magentoerpconnect.view_magento_backend_form
+msgid "Update"
+msgstr ""
+
+#. module: magentoerpconnect
+#: view:magento.backend:magentoerpconnect.view_magento_backend_form
+msgid "Update all the products stock quantities"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,updated_at:0
+#: field:magento.product.product,updated_at:0
+#: field:magento.res.partner,updated_at:0
+msgid "Updated At (on Magento)"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.backend,location:0
+msgid "Url to magento application"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,use_parent_address:0
+#: field:magento.res.partner,use_parent_address:0
+msgid "Use Company Address"
+msgstr ""
+
+#. module: magentoerpconnect
+#: selection:magento.product.product,backorders:0
+#: selection:magento.product.product,manage_stock:0
+msgid "Use Default Config"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.backend,use_auth_basic:0
+msgid "Use HTTP Auth Basic"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.backend,use_auth_basic:0
+msgid ""
+"Use a Basic Access Authentication for the API. The Magento server could be "
+"configured to restrict access using a HTTP authentication based on a "
+"username and a password."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.address,type:0 help:magento.res.partner,type:0
+msgid ""
+"Used to select automatically the right address according to the context in "
+"sales and purchases documents."
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.backend,username:0
+msgid "Username"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,user_ids:0 field:magento.res.partner,user_ids:0
+msgid "Users"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,vat_subjected:0
+#: field:magento.res.partner,vat_subjected:0
+msgid "VAT Legal Statement"
+msgstr ""
+
+#. module: magentoerpconnect
+#: selection:magento.store,create_invoice_on:0
+#: selection:payment.method,create_invoice_on:0
+msgid "Validate"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.product,price_extra:0
+msgid "Variant Extra Price"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.product,image_variant:0
+msgid "Variant Image"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.account.invoice,check_total:0
+msgid "Verification Total"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.backend,version:0
+msgid "Version"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.product,volume:0 field:magento.stock.picking,volume:0
+msgid "Volume"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.backend,warehouse_id:0
+#: field:magento.product.product,warehouse_id:0
+#: field:magento.sale.order,warehouse_id:0
+msgid "Warehouse"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.backend,warehouse_id:0
+msgid "Warehouse used to compute the stock quantities."
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.product.product,warranty:0
+msgid "Warranty"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.backend,password:0
+msgid "Webservice password"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.backend,username:0
+msgid "Webservice user"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,website:0 field:magento.backend,website_ids:0
+#: field:magento.res.partner,website:0
+msgid "Website"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.address,website:0 help:magento.res.partner,website:0
+msgid "Website of Partner or Company"
+msgstr ""
+
+#. module: magentoerpconnect
+#: model:ir.ui.menu,name:magentoerpconnect.menu_magento_website
+#: view:magento.backend:magentoerpconnect.view_magento_backend_form
+#: field:magento.product.product,website_ids:0
+msgid "Websites"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.sale.order.line,th_weight:0
+#: field:magento.stock.picking,weight:0
+msgid "Weight"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.product.category,property_stock_account_input_categ:0
+msgid ""
+"When doing real-time inventory valuation, counterpart journal items for all "
+"incoming stock moves will be posted in this account, unless there is a "
+"specific valuation account set on the source location. This is the default "
+"value for all products in this category. It can also directly be set on each"
+" product"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.product.product,property_stock_account_input:0
+msgid ""
+"When doing real-time inventory valuation, counterpart journal items for all "
+"incoming stock moves will be posted in this account, unless there is a "
+"specific valuation account set on the source location. When not set on the "
+"product, the one from the product category is used."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.product.category,property_stock_account_output_categ:0
+msgid ""
+"When doing real-time inventory valuation, counterpart journal items for all "
+"outgoing stock moves will be posted in this account, unless there is a "
+"specific valuation account set on the destination location. This is the "
+"default value for all products in this category. It can also directly be set"
+" on each product"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.product.product,property_stock_account_output:0
+msgid ""
+"When doing real-time inventory valuation, counterpart journal items for all "
+"outgoing stock moves will be posted in this account, unless there is a "
+"specific valuation account set on the destination location. When not set on "
+"the product, the one from the product category is used."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.product.category,property_stock_journal:0
+msgid ""
+"When doing real-time inventory valuation, this is the Accounting Journal in "
+"which entries will be automatically posted when stock moves are processed."
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.product.category,property_stock_valuation_account_id:0
+msgid ""
+"When real-time inventory valuation is enabled on a product, this account "
+"will hold the current value of the products."
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,zip:0 field:magento.res.partner,zip:0
+msgid "Zip"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.storeview,import_orders_from_date:0
+msgid ""
+"do not consider non-imported sale orders before this date. Leave empty to "
+"import all sale orders"
+msgstr ""
+
+#. module: magentoerpconnect
+#: view:magento.backend:magentoerpconnect.view_magento_backend_form
+msgid "e.g. http://my.magento.com"
+msgstr ""
+
+#. module: magentoerpconnect
+#: view:magento.backend:magentoerpconnect.view_magento_backend_form
+msgid "e.g. http://my.magento.com/admin"
+msgstr ""
+
+#. module: magentoerpconnect
+#: view:magento.backend:magentoerpconnect.view_magento_backend_form
+msgid "mag-"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.stock.picking,pack_operation_exist:0
+msgid "technical field for attrs in view"
+msgstr ""
+
+#. module: magentoerpconnect
+#: help:magento.stock.picking,quant_reserved_exist:0
+msgid ""
+"technical field used to know if there is already at least one quant reserved"
+" on moves of a given picking"
+msgstr ""
+
+#. module: magentoerpconnect
+#: field:magento.address,has_image:0
+#: field:magento.product.product,qty_available_text:0
+#: field:magento.res.partner,has_image:0
+msgid "unknown"
+msgstr ""

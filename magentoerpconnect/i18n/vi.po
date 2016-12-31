@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-21 06:37+0000\n"
-"PO-Revision-Date: 2016-10-11 09:47+0000\n"
+"POT-Creation-Date: 2016-12-24 00:56+0000\n"
+"PO-Revision-Date: 2016-12-27 08:20+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: Vietnamese (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/vi/)\n"
 "MIME-Version: 1.0\n"
@@ -2223,7 +2223,7 @@ msgstr ""
 #: field:magento.address,openerp_id:0 field:magento.res.partner,openerp_id:0
 #: field:magento.stock.picking,partner_id:0
 msgid "Partner"
-msgstr ""
+msgstr "Đối tác"
 
 #. module: magentoerpconnect
 #: field:magento.res.partner.category,openerp_id:0

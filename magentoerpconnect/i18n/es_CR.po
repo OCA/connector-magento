@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-21 06:37+0000\n"
-"PO-Revision-Date: 2016-10-11 09:49+0000\n"
+"POT-Creation-Date: 2016-12-24 00:56+0000\n"
+"PO-Revision-Date: 2016-12-27 08:24+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: Spanish (Costa Rica) (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/es_CR/)\n"
 "MIME-Version: 1.0\n"
@@ -657,7 +657,7 @@ msgstr ""
 #: field:magento.stock.picking,create_uid:0 field:magento.store,create_uid:0
 #: field:magento.storeview,create_uid:0 field:magento.website,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Creado por"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,create_date:0
@@ -1442,7 +1442,7 @@ msgstr ""
 #: model:ir.model,name:magentoerpconnect.model_account_invoice
 #: field:magento.account.invoice,openerp_id:0
 msgid "Invoice"
-msgstr ""
+msgstr "Factura"
 
 #. module: magentoerpconnect
 #: field:magento.sale.order,partner_invoice_id:0
@@ -1633,7 +1633,7 @@ msgstr ""
 #: field:magento.stock.picking,write_uid:0 field:magento.store,write_uid:0
 #: field:magento.storeview,write_uid:0 field:magento.website,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Ultima actualización por"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,write_date:0
@@ -1647,7 +1647,7 @@ msgstr ""
 #: field:magento.stock.picking,write_date:0 field:magento.store,write_date:0
 #: field:magento.storeview,write_date:0 field:magento.website,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Ultima actualización en"
 
 #. module: magentoerpconnect
 #: help:magento.product.product,magento_qty:0
@@ -2223,7 +2223,7 @@ msgstr ""
 #: field:magento.address,openerp_id:0 field:magento.res.partner,openerp_id:0
 #: field:magento.stock.picking,partner_id:0
 msgid "Partner"
-msgstr ""
+msgstr "Empresa"
 
 #. module: magentoerpconnect
 #: field:magento.res.partner.category,openerp_id:0

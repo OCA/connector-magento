@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-17 01:10+0000\n"
-"PO-Revision-Date: 2016-12-23 23:43+0000\n"
+"POT-Creation-Date: 2016-12-24 00:56+0000\n"
+"PO-Revision-Date: 2016-12-27 13:11+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: Spanish (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/es/)\n"
 "MIME-Version: 1.0\n"
@@ -2267,7 +2267,7 @@ msgstr "Método de pago"
 #. module: magentoerpconnect
 #: field:magento.account.invoice,reference_type:0
 msgid "Payment Reference"
-msgstr ""
+msgstr "Referencia de pago"
 
 #. module: magentoerpconnect
 #: field:magento.sale.order,payment_term:0
@@ -2282,7 +2282,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.account.invoice,payment_ids:0
 msgid "Payments"
-msgstr ""
+msgstr "Pagos"
 
 #. module: magentoerpconnect
 #: field:magento.sale.order,payment_ids:0

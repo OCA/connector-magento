@@ -24,8 +24,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-17 01:10+0000\n"
-"PO-Revision-Date: 2016-12-23 08:32+0000\n"
+"POT-Creation-Date: 2016-12-24 00:56+0000\n"
+"PO-Revision-Date: 2016-12-30 09:20+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: French (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -973,7 +973,7 @@ msgstr "Activé"
 #. module: magentoerpconnect
 #: field:magento.account.invoice,move_lines:0
 msgid "Entry Lines"
-msgstr ""
+msgstr "Lignes d'écriture"
 
 #. module: magentoerpconnect
 #: field:magento.sale.order,exception_ids:0
@@ -1012,7 +1012,7 @@ msgstr ""
 #: field:magento.res.partner,property_account_position:0
 #: field:magento.sale.order,fiscal_position:0
 msgid "Fiscal Position"
-msgstr ""
+msgstr "Position fiscale"
 
 #. module: magentoerpconnect
 #: field:magento.backend,fiscal_position_id:0
@@ -1519,7 +1519,7 @@ msgstr ""
 #: field:magento.address,invoice_ids:0 field:magento.res.partner,invoice_ids:0
 #: field:magento.sale.order,invoice_ids:0
 msgid "Invoices"
-msgstr ""
+msgstr "Factures"
 
 #. module: magentoerpconnect
 #: field:magento.address,is_company:0 field:magento.res.partner,is_company:0
@@ -1587,13 +1587,13 @@ msgstr "Journal"
 #: field:magento.account.invoice,move_id:0
 #: field:magento.account.invoice,move_name:0
 msgid "Journal Entry"
-msgstr ""
+msgstr "Pièce comptable"
 
 #. module: magentoerpconnect
 #: field:magento.address,journal_item_count:0
 #: field:magento.res.partner,journal_item_count:0
 msgid "Journal Items"
-msgstr ""
+msgstr "Écritures du journal"
 
 #. module: magentoerpconnect
 #: help:magento.account.invoice,date_invoice:0

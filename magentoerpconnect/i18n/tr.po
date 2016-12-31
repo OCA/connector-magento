@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-17 01:10+0000\n"
-"PO-Revision-Date: 2016-12-23 08:32+0000\n"
+"POT-Creation-Date: 2016-12-24 00:56+0000\n"
+"PO-Revision-Date: 2016-12-30 22:02+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: Turkish (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/tr/)\n"
 "MIME-Version: 1.0\n"
@@ -196,7 +196,7 @@ msgstr ""
 #: field:magento.res.partner,active:0
 #: field:magento.res.partner.category,active:0
 msgid "Active"
-msgstr ""
+msgstr "Aktif"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,comment:0
@@ -346,7 +346,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.address,birthdate:0 field:magento.res.partner,birthdate:0
 msgid "Birthdate"
-msgstr ""
+msgstr "Doğum Günü"
 
 #. module: magentoerpconnect
 #: field:magento.address,birthday:0 field:magento.res.partner,birthday:0
@@ -491,7 +491,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.storeview,code:0 field:magento.website,code:0
 msgid "Code"
-msgstr ""
+msgstr "Kod"
 
 #. module: magentoerpconnect
 #: help:magento.product.product,uos_coeff:0
@@ -530,7 +530,7 @@ msgstr ""
 #: view:res.partner:magentoerpconnect.view_partner_form
 #: field:res.partner,company:0
 msgid "Company"
-msgstr ""
+msgstr "Şirket"
 
 #. module: magentoerpconnect
 #: selection:magento.stock.picking,picking_method:0
@@ -584,7 +584,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.address,child_ids:0 field:magento.res.partner,child_ids:0
 msgid "Contacts"
-msgstr ""
+msgstr "Kişiler"
 
 #. module: magentoerpconnect
 #: field:magento.sale.order,project_id:0
@@ -620,7 +620,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.address,country_id:0 field:magento.res.partner,country_id:0
 msgid "Country"
-msgstr ""
+msgstr "Ülke"
 
 #. module: magentoerpconnect
 #: field:magento.sale.order,order_policy:0
@@ -715,7 +715,7 @@ msgstr ""
 #: field:magento.sale.order,partner_id:0
 #: field:magento.sale.order.line,order_partner_id:0
 msgid "Customer"
-msgstr ""
+msgstr "Müşteri"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,sale_delay:0
@@ -897,7 +897,7 @@ msgstr ""
 #: field:magento.store,display_name:0 field:magento.storeview,display_name:0
 #: field:magento.website,display_name:0
 msgid "Display Name"
-msgstr ""
+msgstr "Görünen İsim"
 
 #. module: magentoerpconnect
 #: selection:magento.product.product,manage_stock:0
@@ -941,7 +941,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.address,email:0 field:magento.res.partner,email:0
 msgid "Email"
-msgstr ""
+msgstr "Eposta"
 
 #. module: magentoerpconnect
 #: field:magento.address,employee:0 field:magento.res.partner,employee:0
@@ -1131,7 +1131,7 @@ msgstr ""
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
+msgstr "Sohbet özetini tutar (kaç mesa vs) Bu özet kanban görünümleri gibi yerlerde kullanılmak için doğrudan HTML formatındadır. "
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,id:0 field:magento.address,id:0
@@ -1280,7 +1280,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.address,image:0 field:magento.res.partner,image:0
 msgid "Image"
-msgstr ""
+msgstr "Resim"
 
 #. module: magentoerpconnect
 #: help:magento.product.product,image:0
@@ -1442,7 +1442,7 @@ msgstr ""
 #: model:ir.model,name:magentoerpconnect.model_account_invoice
 #: field:magento.account.invoice,openerp_id:0
 msgid "Invoice"
-msgstr ""
+msgstr "Fatura"
 
 #. module: magentoerpconnect
 #: field:magento.sale.order,partner_invoice_id:0
@@ -1619,7 +1619,7 @@ msgstr "Son mesaj tarihi"
 #: field:magento.store,__last_update:0 field:magento.storeview,__last_update:0
 #: field:magento.website,__last_update:0
 msgid "Last Modified on"
-msgstr ""
+msgstr "Son değişiklik"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,write_uid:0 field:magento.address,write_uid:0
@@ -1988,7 +1988,7 @@ msgstr ""
 #: field:magento.product.product,image_medium:0
 #: field:magento.res.partner,image_medium:0
 msgid "Medium-sized image"
-msgstr ""
+msgstr "Orta boylu resim"
 
 #. module: magentoerpconnect
 #: help:magento.address,image_medium:0 help:magento.res.partner,image_medium:0
@@ -2016,7 +2016,7 @@ msgstr "Mesajlar"
 #: help:magento.sale.order,message_ids:0
 #: help:magento.stock.picking,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Mesaj ve iletişim geçmişi"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,orderpoint_ids:0
@@ -2147,7 +2147,7 @@ msgstr ""
 #: view:magento.storeview:magentoerpconnect.view_magento_storeview_form
 #: view:magento.website:magentoerpconnect.view_magento_website_form
 msgid "Options"
-msgstr ""
+msgstr "Seçenekler"
 
 #. module: magentoerpconnect
 #: field:magento.sale.order,order_line:0
@@ -2167,7 +2167,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.stock.picking,owner_id:0
 msgid "Owner"
-msgstr ""
+msgstr "Sahibi"
 
 #. module: magentoerpconnect
 #: field:magento.stock.picking,pack_operation_exist:0
@@ -2223,7 +2223,7 @@ msgstr ""
 #: field:magento.address,openerp_id:0 field:magento.res.partner,openerp_id:0
 #: field:magento.stock.picking,partner_id:0
 msgid "Partner"
-msgstr ""
+msgstr "İş Ortağı"
 
 #. module: magentoerpconnect
 #: field:magento.res.partner.category,openerp_id:0
@@ -2238,7 +2238,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.res.partner.category,partner_ids:0
 msgid "Partners"
-msgstr ""
+msgstr "Ortaklar"
 
 #. module: magentoerpconnect
 #: field:magento.backend,password:0
@@ -2836,7 +2836,7 @@ msgstr ""
 #: field:magento.product.product,image_small:0
 #: field:magento.res.partner,image_small:0
 msgid "Small-sized image"
-msgstr ""
+msgstr "Küçük-boylu resim"
 
 #. module: magentoerpconnect
 #: help:magento.address,image_small:0 help:magento.res.partner,image_small:0
@@ -3498,7 +3498,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.account.invoice,type:0
 msgid "Type"
-msgstr ""
+msgstr "Tipi"
 
 #. module: magentoerpconnect
 #: code:addons/magentoerpconnect/magento_model.py:648
@@ -3709,7 +3709,7 @@ msgstr ""
 #: field:magento.sale.order.line,th_weight:0
 #: field:magento.stock.picking,weight:0
 msgid "Weight"
-msgstr ""
+msgstr "Ağırlık"
 
 #. module: magentoerpconnect
 #: help:magento.product.category,property_stock_account_input_categ:0

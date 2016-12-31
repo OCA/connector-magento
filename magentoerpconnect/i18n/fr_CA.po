@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-21 06:37+0000\n"
-"PO-Revision-Date: 2016-11-22 12:24+0000\n"
+"POT-Creation-Date: 2016-12-24 00:56+0000\n"
+"PO-Revision-Date: 2016-12-27 08:25+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: French (Canada) (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/fr_CA/)\n"
 "MIME-Version: 1.0\n"
@@ -657,7 +657,7 @@ msgstr ""
 #: field:magento.stock.picking,create_uid:0 field:magento.store,create_uid:0
 #: field:magento.storeview,create_uid:0 field:magento.website,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Créé par"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,create_date:0
@@ -671,7 +671,7 @@ msgstr ""
 #: field:magento.stock.picking,create_date:0 field:magento.store,create_date:0
 #: field:magento.storeview,create_date:0 field:magento.website,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Créé le"
 
 #. module: magentoerpconnect
 #: field:magento.stock.picking,date:0
@@ -897,7 +897,7 @@ msgstr ""
 #: field:magento.store,display_name:0 field:magento.storeview,display_name:0
 #: field:magento.website,display_name:0
 msgid "Display Name"
-msgstr ""
+msgstr "Afficher le nom"
 
 #. module: magentoerpconnect
 #: selection:magento.product.product,manage_stock:0
@@ -1143,7 +1143,7 @@ msgstr ""
 #: field:magento.store,id:0 field:magento.storeview,id:0
 #: field:magento.website,id:0
 msgid "ID"
-msgstr ""
+msgstr "Identifiant"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,magento_id:0
@@ -1442,7 +1442,7 @@ msgstr ""
 #: model:ir.model,name:magentoerpconnect.model_account_invoice
 #: field:magento.account.invoice,openerp_id:0
 msgid "Invoice"
-msgstr ""
+msgstr "Facture"
 
 #. module: magentoerpconnect
 #: field:magento.sale.order,partner_invoice_id:0
@@ -1633,7 +1633,7 @@ msgstr ""
 #: field:magento.stock.picking,write_uid:0 field:magento.store,write_uid:0
 #: field:magento.storeview,write_uid:0 field:magento.website,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Dernière mise à jour par"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,write_date:0
@@ -1647,7 +1647,7 @@ msgstr ""
 #: field:magento.stock.picking,write_date:0 field:magento.store,write_date:0
 #: field:magento.storeview,write_date:0 field:magento.website,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Dernière mise à jour le"
 
 #. module: magentoerpconnect
 #: help:magento.product.product,magento_qty:0
@@ -2223,7 +2223,7 @@ msgstr ""
 #: field:magento.address,openerp_id:0 field:magento.res.partner,openerp_id:0
 #: field:magento.stock.picking,partner_id:0
 msgid "Partner"
-msgstr ""
+msgstr "Partenaire"
 
 #. module: magentoerpconnect
 #: field:magento.res.partner.category,openerp_id:0
