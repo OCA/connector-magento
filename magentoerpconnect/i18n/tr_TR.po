@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-12-31 02:24+0000\n"
-"PO-Revision-Date: 2017-01-05 20:42+0000\n"
+"PO-Revision-Date: 2017-01-06 08:11+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
-"Language-Team: Turkish (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/tr/)\n"
+"Language-Team: Turkish (Turkey) (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/tr_TR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: tr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Language: tr_TR\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: magentoerpconnect
 #: help:magento.stock.picking,state:0
@@ -196,7 +196,7 @@ msgstr ""
 #: field:magento.res.partner,active:0
 #: field:magento.res.partner.category,active:0
 msgid "Active"
-msgstr "Aktif"
+msgstr "Etkin"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,comment:0
@@ -275,7 +275,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.sale.order,workflow_process_id:0
 msgid "Automatic Workflow"
-msgstr ""
+msgstr "Otomatik iş akışı"
 
 #. module: magentoerpconnect
 #: field:magento.stock.picking,backorder_id:0
@@ -346,7 +346,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.address,birthdate:0 field:magento.res.partner,birthdate:0
 msgid "Birthdate"
-msgstr "Doğum Günü"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.address,birthday:0 field:magento.res.partner,birthday:0
@@ -491,7 +491,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.storeview,code:0 field:magento.website,code:0
 msgid "Code"
-msgstr "Kod"
+msgstr ""
 
 #. module: magentoerpconnect
 #: help:magento.product.product,uos_coeff:0
@@ -530,7 +530,7 @@ msgstr ""
 #: view:res.partner:magentoerpconnect.view_partner_form
 #: field:res.partner,company:0
 msgid "Company"
-msgstr "Şirket"
+msgstr "Firma"
 
 #. module: magentoerpconnect
 #: selection:magento.stock.picking,picking_method:0
@@ -584,7 +584,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.address,child_ids:0 field:magento.res.partner,child_ids:0
 msgid "Contacts"
-msgstr "Kişiler"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.sale.order,project_id:0
@@ -620,12 +620,12 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.address,country_id:0 field:magento.res.partner,country_id:0
 msgid "Country"
-msgstr "Ülke"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.sale.order,order_policy:0
 msgid "Create Invoice"
-msgstr ""
+msgstr "Fatura oluştur"
 
 #. module: magentoerpconnect
 #: view:payment.method:magentoerpconnect.payment_method_view_form
@@ -671,7 +671,7 @@ msgstr "Oluşturan"
 #: field:magento.stock.picking,create_date:0 field:magento.store,create_date:0
 #: field:magento.storeview,create_date:0 field:magento.website,create_date:0
 msgid "Created on"
-msgstr "Oluşturuldu"
+msgstr "Oluşturulma tarihi"
 
 #. module: magentoerpconnect
 #: field:magento.stock.picking,date:0
@@ -715,7 +715,7 @@ msgstr ""
 #: field:magento.sale.order,partner_id:0
 #: field:magento.sale.order.line,order_partner_id:0
 msgid "Customer"
-msgstr "Müşteri"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.product.product,sale_delay:0
@@ -748,7 +748,7 @@ msgstr ""
 #: field:magento.address,date:0 field:magento.res.partner,date:0
 #: field:magento.sale.order,date_order:0
 msgid "Date"
-msgstr "Tarih"
+msgstr ""
 
 #. module: magentoerpconnect
 #: help:magento.stock.picking,date_done:0
@@ -768,7 +768,7 @@ msgstr ""
 #: help:magento.sale.order,message_last_post:0
 #: help:magento.stock.picking,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr "Kayıda eklenen son mesajın tarihi."
+msgstr ""
 
 #. module: magentoerpconnect
 #: help:magento.sale.order,date_confirm:0
@@ -880,7 +880,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.sale.order.line,discount:0
 msgid "Discount (%)"
-msgstr ""
+msgstr "İndirim (%)"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,display_name:0
@@ -897,7 +897,7 @@ msgstr ""
 #: field:magento.store,display_name:0 field:magento.storeview,display_name:0
 #: field:magento.website,display_name:0
 msgid "Display Name"
-msgstr "Görünen İsim"
+msgstr "Görünen ad"
 
 #. module: magentoerpconnect
 #: selection:magento.product.product,manage_stock:0
@@ -941,7 +941,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.address,email:0 field:magento.res.partner,email:0
 msgid "Email"
-msgstr "Eposta"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.address,employee:0 field:magento.res.partner,employee:0
@@ -961,7 +961,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.sale.order,exception_ids:0
 msgid "Exceptions"
-msgstr ""
+msgstr "İstisnalar"
 
 #. module: magentoerpconnect
 #: field:magento.product.category,property_account_expense_categ:0
@@ -1014,7 +1014,7 @@ msgstr ""
 #: field:magento.sale.order,message_follower_ids:0
 #: field:magento.stock.picking,message_follower_ids:0
 msgid "Followers"
-msgstr "Takipçiler"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,period_id:0
@@ -1131,7 +1131,7 @@ msgstr ""
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr "Sohbet özetini tutar (kaç mesa vs) Bu özet kanban görünümleri gibi yerlerde kullanılmak için doğrudan HTML formatındadır. "
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,id:0 field:magento.address,id:0
@@ -1143,7 +1143,7 @@ msgstr "Sohbet özetini tutar (kaç mesa vs) Bu özet kanban görünümleri gibi
 #: field:magento.store,id:0 field:magento.storeview,id:0
 #: field:magento.website,id:0
 msgid "ID"
-msgstr "ID"
+msgstr "Kimlik"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,magento_id:0
@@ -1181,7 +1181,7 @@ msgstr ""
 #: help:magento.sale.order,message_unread:0
 #: help:magento.stock.picking,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr "Eğer işaretlenirse yeni mesajlar dikkatinizi ister."
+msgstr ""
 
 #. module: magentoerpconnect
 #: help:magento.address,opt_out:0 help:magento.res.partner,opt_out:0
@@ -1275,12 +1275,12 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.sale.order,ignore_exceptions:0
 msgid "Ignore Exceptions"
-msgstr ""
+msgstr "İstisnaları görmezden gel"
 
 #. module: magentoerpconnect
 #: field:magento.address,image:0 field:magento.res.partner,image:0
 msgid "Image"
-msgstr "Resim"
+msgstr ""
 
 #. module: magentoerpconnect
 #: help:magento.product.product,image:0
@@ -1391,7 +1391,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.sale.order,incoterm:0
 msgid "Incoterm"
-msgstr ""
+msgstr "Incoterm"
 
 #. module: magentoerpconnect
 #: view:magento.store:magentoerpconnect.view_magento_store_form
@@ -1452,7 +1452,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.stock.picking,invoice_state:0
 msgid "Invoice Control"
-msgstr ""
+msgstr "Fatura kontrol"
 
 #. module: magentoerpconnect
 #: code:addons/magentoerpconnect/invoice.py:122
@@ -1602,7 +1602,7 @@ msgstr ""
 #: field:magento.sale.order,message_last_post:0
 #: field:magento.stock.picking,message_last_post:0
 msgid "Last Message Date"
-msgstr "Son mesaj tarihi"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,__last_update:0
@@ -1619,7 +1619,7 @@ msgstr "Son mesaj tarihi"
 #: field:magento.store,__last_update:0 field:magento.storeview,__last_update:0
 #: field:magento.website,__last_update:0
 msgid "Last Modified on"
-msgstr "Son değişiklik"
+msgstr "En son güncelleme tarihi"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,write_uid:0 field:magento.address,write_uid:0
@@ -1633,7 +1633,7 @@ msgstr "Son değişiklik"
 #: field:magento.stock.picking,write_uid:0 field:magento.store,write_uid:0
 #: field:magento.storeview,write_uid:0 field:magento.website,write_uid:0
 msgid "Last Updated by"
-msgstr "Son güncelleyen"
+msgstr "En son güncelleyen "
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,write_date:0
@@ -1647,7 +1647,7 @@ msgstr "Son güncelleyen"
 #: field:magento.stock.picking,write_date:0 field:magento.store,write_date:0
 #: field:magento.storeview,write_date:0 field:magento.website,write_date:0
 msgid "Last Updated on"
-msgstr "Son güncelleme"
+msgstr "En son güncelleme tarihi"
 
 #. module: magentoerpconnect
 #: help:magento.product.product,magento_qty:0
@@ -1694,7 +1694,7 @@ msgstr ""
 #: field:magento.product.product,location_id:0
 #: field:magento.stock.picking,location_id:0
 msgid "Location"
-msgstr ""
+msgstr "Konum"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,packaging_ids:0
@@ -1946,7 +1946,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.sale.order,main_exception_id:0
 msgid "Main Exception"
-msgstr ""
+msgstr "Asıl istisna"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,seller_id:0
@@ -1988,7 +1988,7 @@ msgstr ""
 #: field:magento.product.product,image_medium:0
 #: field:magento.res.partner,image_medium:0
 msgid "Medium-sized image"
-msgstr "Orta boylu resim"
+msgstr ""
 
 #. module: magentoerpconnect
 #: help:magento.address,image_medium:0 help:magento.res.partner,image_medium:0
@@ -2006,7 +2006,7 @@ msgstr ""
 #: field:magento.sale.order,message_ids:0
 #: field:magento.stock.picking,message_ids:0
 msgid "Messages"
-msgstr "Mesajlar"
+msgstr ""
 
 #. module: magentoerpconnect
 #: help:magento.account.invoice,message_ids:0
@@ -2016,7 +2016,7 @@ msgstr "Mesajlar"
 #: help:magento.sale.order,message_ids:0
 #: help:magento.stock.picking,message_ids:0
 msgid "Messages and communication history"
-msgstr "Mesaj ve iletişim geçmişi"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.product.product,orderpoint_ids:0
@@ -2035,7 +2035,7 @@ msgstr ""
 #: field:magento.res.partner,name:0 field:magento.store,name:0
 #: field:magento.storeview,name:0 field:magento.website,name:0
 msgid "Name"
-msgstr "Adı"
+msgstr "Ad"
 
 #. module: magentoerpconnect
 #: field:magento.sale.order,need_cancel:0
@@ -2147,17 +2147,17 @@ msgstr ""
 #: view:magento.storeview:magentoerpconnect.view_magento_storeview_form
 #: view:magento.website:magentoerpconnect.view_magento_website_form
 msgid "Options"
-msgstr "Seçenekler"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.sale.order,order_line:0
 msgid "Order Lines"
-msgstr ""
+msgstr "Sipariş satırları"
 
 #. module: magentoerpconnect
 #: field:magento.sale.order,name:0 field:magento.sale.order.line,order_id:0
 msgid "Order Reference"
-msgstr ""
+msgstr "Sipariş referansı"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,outgoing_qty:0
@@ -2167,7 +2167,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.stock.picking,owner_id:0
 msgid "Owner"
-msgstr "Sahibi"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.stock.picking,pack_operation_exist:0
@@ -2223,7 +2223,7 @@ msgstr ""
 #: field:magento.address,openerp_id:0 field:magento.res.partner,openerp_id:0
 #: field:magento.stock.picking,partner_id:0
 msgid "Partner"
-msgstr "İş Ortağı"
+msgstr "Ortak"
 
 #. module: magentoerpconnect
 #: field:magento.res.partner.category,openerp_id:0
@@ -2238,7 +2238,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.res.partner.category,partner_ids:0
 msgid "Partners"
-msgstr "Ortaklar"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.backend,password:0
@@ -2264,7 +2264,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.sale.order,payment_term:0
 msgid "Payment Term"
-msgstr ""
+msgstr "Ödeme şekli"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,payment_term:0
@@ -2301,7 +2301,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_stock_picking
 msgid "Picking List"
-msgstr ""
+msgstr "Seçim listesi"
 
 #. module: magentoerpconnect
 #: field:magento.stock.picking,picking_method:0
@@ -2351,7 +2351,7 @@ msgstr ""
 #: field:magento.product.product,pricelist_id:0
 #: field:magento.sale.order,pricelist_id:0
 msgid "Pricelist"
-msgstr ""
+msgstr "Fiyat listesi"
 
 #. module: magentoerpconnect
 #: help:magento.sale.order,pricelist_id:0
@@ -2406,7 +2406,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.sale.order,procurement_group_id:0
 msgid "Procurement group"
-msgstr ""
+msgstr "Satınalma grubu"
 
 #. module: magentoerpconnect
 #: field:magento.sale.order.line,procurement_ids:0
@@ -2420,7 +2420,7 @@ msgstr ""
 #: field:magento.sale.order.line,product_id:0
 #: field:magento.stock.picking,product_id:0
 msgid "Product"
-msgstr ""
+msgstr "Ürün"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,attribute_line_ids:0
@@ -2447,7 +2447,7 @@ msgstr ""
 #: field:magento.product.product,product_tmpl_id:0
 #: field:magento.sale.order.line,product_tmpl_id:0
 msgid "Product Template"
-msgstr ""
+msgstr "Ürün şablonu"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,type:0
@@ -2467,7 +2467,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.product.product,product_variant_ids:0
 msgid "Products"
-msgstr ""
+msgstr "Ürünler"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,lst_price:0
@@ -2492,7 +2492,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.sale.order.line,product_uom_qty:0
 msgid "Quantity"
-msgstr ""
+msgstr "Miktar"
 
 #. module: magentoerpconnect
 #: field:magento.sale.order.line,product_uos_qty:0
@@ -2641,17 +2641,17 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.sale.order,openerp_id:0 field:magento.stock.picking,sale_id:0
 msgid "Sale Order"
-msgstr ""
+msgstr "Satış emri"
 
 #. module: magentoerpconnect
 #: field:magento.sale.order.line,openerp_id:0
 msgid "Sale Order Line"
-msgstr ""
+msgstr "Satış emri satırı"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,sale_ids:0
 msgid "Sale Orders"
-msgstr ""
+msgstr "Satış emirleri"
 
 #. module: magentoerpconnect
 #: field:magento.backend,sale_prefix:0
@@ -2673,7 +2673,7 @@ msgstr ""
 #: field:magento.account.invoice,workflow_process_id:0
 #: field:magento.stock.picking,workflow_process_id:0
 msgid "Sale Workflow Process"
-msgstr ""
+msgstr "Satış iş akışı süreci"
 
 #. module: magentoerpconnect
 #: code:addons/magentoerpconnect/sale.py:1101
@@ -2686,19 +2686,19 @@ msgstr ""
 #: field:magento.address,sale_order_ids:0
 #: field:magento.res.partner,sale_order_ids:0
 msgid "Sales Order"
-msgstr ""
+msgstr "Satış emri"
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_sale_order_line
 msgid "Sales Order Line"
-msgstr ""
+msgstr "Sipariş emri satırı "
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,section_id:0
 #: field:magento.address,section_id:0 field:magento.res.partner,section_id:0
 #: field:magento.sale.order,section_id:0 field:magento.storeview,section_id:0
 msgid "Sales Team"
-msgstr ""
+msgstr "Satış takımı"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,user_id:0 field:magento.address,user_id:0
@@ -2787,7 +2787,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.sale.order,picking_policy:0
 msgid "Shipping Policy"
-msgstr ""
+msgstr "Nakliye politikas"
 
 #. module: magentoerpconnect
 #: help:payment.method,create_invoice_on:0
@@ -2836,7 +2836,7 @@ msgstr ""
 #: field:magento.product.product,image_small:0
 #: field:magento.res.partner,image_small:0
 msgid "Small-sized image"
-msgstr "Küçük-boylu resim"
+msgstr ""
 
 #. module: magentoerpconnect
 #: help:magento.address,image_small:0 help:magento.res.partner,image_small:0
@@ -2896,7 +2896,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.address,state_id:0 field:magento.res.partner,state_id:0
 msgid "State"
-msgstr "Durum"
+msgstr "Hal"
 
 #. module: magentoerpconnect
 #: code:addons/magentoerpconnect/sale.py:1098
@@ -2909,7 +2909,7 @@ msgstr ""
 #: field:magento.sale.order,state:0 field:magento.sale.order.line,state:0
 #: field:magento.stock.picking,state:0
 msgid "Status"
-msgstr ""
+msgstr "Durum"
 
 #. module: magentoerpconnect
 #: field:magento.backend,product_stock_field_id:0
@@ -3498,7 +3498,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.account.invoice,type:0
 msgid "Type"
-msgstr "Tipi"
+msgstr "Tip"
 
 #. module: magentoerpconnect
 #: code:addons/magentoerpconnect/magento_model.py:648
@@ -3516,7 +3516,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.sale.order.line,price_unit:0
 msgid "Unit Price"
-msgstr ""
+msgstr "Birim fiyat"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,uom_id:0
@@ -3527,7 +3527,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.sale.order.line,product_uom:0
 msgid "Unit of Measure "
-msgstr ""
+msgstr "Ölçüm birimi"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,uos_coeff:0
@@ -3552,7 +3552,7 @@ msgstr ""
 #: field:magento.sale.order,message_unread:0
 #: field:magento.stock.picking,message_unread:0
 msgid "Unread Messages"
-msgstr "Okunmamış mesajlar"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.sale.order,amount_untaxed:0
@@ -3665,7 +3665,7 @@ msgstr ""
 #: field:magento.product.product,warehouse_id:0
 #: field:magento.sale.order,warehouse_id:0
 msgid "Warehouse"
-msgstr ""
+msgstr "Depo"
 
 #. module: magentoerpconnect
 #: help:magento.backend,warehouse_id:0
@@ -3709,7 +3709,7 @@ msgstr ""
 #: field:magento.sale.order.line,th_weight:0
 #: field:magento.stock.picking,weight:0
 msgid "Weight"
-msgstr "Ağırlık"
+msgstr ""
 
 #. module: magentoerpconnect
 #: help:magento.product.category,property_stock_account_input_categ:0
