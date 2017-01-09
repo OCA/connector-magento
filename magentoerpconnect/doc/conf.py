@@ -39,6 +39,7 @@ def add_path(*paths):
         os.path.join(*paths)
     )
 
+
 add_path(odoo_root, 'openerp', 'addons')
 add_path(odoo_root, 'addons')
 add_path(build_path)
