@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (7.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-17 07:51+0000\n"
+"POT-Creation-Date: 2017-01-07 01:25+0000\n"
 "PO-Revision-Date: 2015-07-08 12:13+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: Spanish (Spain) (http://www.transifex.com/oca/OCA-connector-magento-7-0/language/es_ES/)\n"
@@ -349,7 +349,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.backend,location:0
 msgid "Location"
-msgstr ""
+msgstr "Ubicación"
 
 #. module: magentoerpconnect
 #: view:magento.backend:0
@@ -1119,7 +1119,7 @@ msgstr ""
 #: model:ir.model,name:magentoerpconnect.model_product_product
 #: field:magento.product.product,openerp_id:0
 msgid "Product"
-msgstr ""
+msgstr "Producto"
 
 #. module: magentoerpconnect
 #: view:magento.backend:0

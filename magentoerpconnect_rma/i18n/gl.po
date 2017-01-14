@@ -211,7 +211,7 @@ msgstr ""
 #. module: magentoerpconnect_rma
 #: field:claim.line,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Secuencia"
 
 #. module: magentoerpconnect_rma
 #: field:magento.crm.claim,magento_claim_line_ids:0
