@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-21 06:37+0000\n"
-"PO-Revision-Date: 2016-11-22 16:30+0000\n"
+"POT-Creation-Date: 2017-01-07 01:30+0000\n"
+"PO-Revision-Date: 2017-01-13 09:26+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: Greek (Greece) (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/el_GR/)\n"
 "MIME-Version: 1.0\n"
@@ -3621,7 +3621,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.address,user_ids:0 field:magento.res.partner,user_ids:0
 msgid "Users"
-msgstr ""
+msgstr "Χρήστες"
 
 #. module: magentoerpconnect
 #: field:magento.address,vat_subjected:0

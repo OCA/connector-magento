@@ -24,8 +24,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-24 00:56+0000\n"
-"PO-Revision-Date: 2016-12-30 09:20+0000\n"
+"POT-Creation-Date: 2017-01-07 01:30+0000\n"
+"PO-Revision-Date: 2017-01-13 09:23+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: French (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -61,7 +61,7 @@ msgid ""
 " * The 'Open' status is used when user create invoice,a invoice number is generated.Its in open status till user does not pay invoice.\n"
 " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
-msgstr ""
+msgstr " * The 'Draft' status is used when a user is encoding a new and unconfirmed Invoice.\n * The 'Pro-forma' when invoice is in Pro-forma status,invoice does not have an invoice number.\n * The 'Open' status is used when user create invoice,a invoice number is generated.Its in open status till user does not pay invoice.\n * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n * The 'Cancelled' status is used when user cancel invoice."
 
 #. module: magentoerpconnect
 #: field:magento.product.product,sales_count:0
@@ -308,7 +308,7 @@ msgstr "Backends"
 #: field:magento.account.invoice,residual:0
 #: field:magento.sale.order,residual:0
 msgid "Balance"
-msgstr ""
+msgstr "Balance"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,partner_bank_id:0
@@ -897,7 +897,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.sale.order.line,discount:0
 msgid "Discount (%)"
-msgstr ""
+msgstr "Remise (%)"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,display_name:0
@@ -2783,7 +2783,7 @@ msgstr "Envoyé"
 #: field:magento.product.category,sequence:0
 #: field:magento.sale.order.line,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Sequence"
 
 #. module: magentoerpconnect
 #: help:magento.product.category,removal_strategy_id:0

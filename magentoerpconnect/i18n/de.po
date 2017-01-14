@@ -28,8 +28,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-17 01:10+0000\n"
-"PO-Revision-Date: 2016-12-23 13:59+0000\n"
+"POT-Creation-Date: 2017-01-07 01:30+0000\n"
+"PO-Revision-Date: 2017-01-13 09:20+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: German (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/de/)\n"
 "MIME-Version: 1.0\n"
@@ -2488,7 +2488,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.product.product,product_variant_ids:0
 msgid "Products"
-msgstr ""
+msgstr "Produkte"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,lst_price:0
@@ -2585,7 +2585,7 @@ msgstr "Datensatz mit ID %s nach Magento exportiert."
 #. module: magentoerpconnect
 #: field:magento.stock.picking,name:0
 msgid "Reference"
-msgstr ""
+msgstr "Referenz"
 
 #. module: magentoerpconnect
 #: help:magento.stock.picking,origin:0
@@ -3543,7 +3543,7 @@ msgstr ""
 #: field:magento.product.product,uom_id:0
 #: field:magento.stock.picking,weight_uom_id:0
 msgid "Unit of Measure"
-msgstr ""
+msgstr "Mengeneinheit"
 
 #. module: magentoerpconnect
 #: field:magento.sale.order.line,product_uom:0

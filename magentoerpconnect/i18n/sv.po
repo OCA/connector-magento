@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-24 00:56+0000\n"
-"PO-Revision-Date: 2016-12-27 08:25+0000\n"
+"POT-Creation-Date: 2017-01-07 01:30+0000\n"
+"PO-Revision-Date: 2017-01-13 09:30+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: Swedish (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/sv/)\n"
 "MIME-Version: 1.0\n"
@@ -748,7 +748,7 @@ msgstr ""
 #: field:magento.address,date:0 field:magento.res.partner,date:0
 #: field:magento.sale.order,date_order:0
 msgid "Date"
-msgstr ""
+msgstr "Datum"
 
 #. module: magentoerpconnect
 #: help:magento.stock.picking,date_done:0

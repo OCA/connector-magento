@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-24 00:56+0000\n"
-"PO-Revision-Date: 2016-12-27 08:22+0000\n"
+"POT-Creation-Date: 2017-01-07 01:30+0000\n"
+"PO-Revision-Date: 2017-01-13 09:26+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: Portuguese (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/pt/)\n"
 "MIME-Version: 1.0\n"
@@ -491,7 +491,7 @@ msgstr "Cidade"
 #. module: magentoerpconnect
 #: field:magento.storeview,code:0 field:magento.website,code:0
 msgid "Code"
-msgstr ""
+msgstr "Código"
 
 #. module: magentoerpconnect
 #: help:magento.product.product,uos_coeff:0
@@ -748,7 +748,7 @@ msgstr ""
 #: field:magento.address,date:0 field:magento.res.partner,date:0
 #: field:magento.sale.order,date_order:0
 msgid "Date"
-msgstr ""
+msgstr "Data"
 
 #. module: magentoerpconnect
 #: help:magento.stock.picking,date_done:0
@@ -870,7 +870,7 @@ msgstr ""
 #: field:magento.product.product,description:0
 #: field:magento.sale.order.line,name:0
 msgid "Description"
-msgstr ""
+msgstr "Descrição"
 
 #. module: magentoerpconnect
 #: field:magento.stock.picking,location_dest_id:0
@@ -2467,7 +2467,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.product.product,product_variant_ids:0
 msgid "Products"
-msgstr ""
+msgstr "Produtos"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,lst_price:0
@@ -2564,7 +2564,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.stock.picking,name:0
 msgid "Reference"
-msgstr ""
+msgstr "Referência"
 
 #. module: magentoerpconnect
 #: help:magento.stock.picking,origin:0
@@ -2766,7 +2766,7 @@ msgstr ""
 #: field:magento.product.category,sequence:0
 #: field:magento.sale.order.line,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Sequência"
 
 #. module: magentoerpconnect
 #: help:magento.product.category,removal_strategy_id:0
@@ -3522,7 +3522,7 @@ msgstr ""
 #: field:magento.product.product,uom_id:0
 #: field:magento.stock.picking,weight_uom_id:0
 msgid "Unit of Measure"
-msgstr ""
+msgstr "Unidade de Medida"
 
 #. module: magentoerpconnect
 #: field:magento.sale.order.line,product_uom:0

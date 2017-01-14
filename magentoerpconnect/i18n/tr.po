@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-31 02:24+0000\n"
-"PO-Revision-Date: 2017-01-05 20:42+0000\n"
+"POT-Creation-Date: 2017-01-07 01:30+0000\n"
+"PO-Revision-Date: 2017-01-13 09:22+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: Turkish (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/tr/)\n"
 "MIME-Version: 1.0\n"
@@ -1464,7 +1464,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.account.invoice,date_invoice:0
 msgid "Invoice Date"
-msgstr ""
+msgstr "Fatura Tarihi"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,invoice_line:0
@@ -1564,7 +1564,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.account.invoice,journal_id:0
 msgid "Journal"
-msgstr ""
+msgstr "Yevmiye Defteri"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,move_id:0
@@ -2301,7 +2301,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_stock_picking
 msgid "Picking List"
-msgstr ""
+msgstr "Toplama Listesi"
 
 #. module: magentoerpconnect
 #: field:magento.stock.picking,picking_method:0
@@ -2351,7 +2351,7 @@ msgstr ""
 #: field:magento.product.product,pricelist_id:0
 #: field:magento.sale.order,pricelist_id:0
 msgid "Pricelist"
-msgstr ""
+msgstr "Fiyat Listesi"
 
 #. module: magentoerpconnect
 #: help:magento.sale.order,pricelist_id:0
@@ -2420,7 +2420,7 @@ msgstr ""
 #: field:magento.sale.order.line,product_id:0
 #: field:magento.stock.picking,product_id:0
 msgid "Product"
-msgstr ""
+msgstr "Ürün"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,attribute_line_ids:0
@@ -2686,12 +2686,12 @@ msgstr ""
 #: field:magento.address,sale_order_ids:0
 #: field:magento.res.partner,sale_order_ids:0
 msgid "Sales Order"
-msgstr ""
+msgstr "Satış Siparişi"
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_sale_order_line
 msgid "Sales Order Line"
-msgstr ""
+msgstr "Satış Siparişi Hattı"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,section_id:0
@@ -3049,7 +3049,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.account.invoice,amount_tax:0
 msgid "Tax"
-msgstr ""
+msgstr "Vergi"
 
 #. module: magentoerpconnect
 #: field:magento.res.partner.category,tax_class_id:0
@@ -3516,7 +3516,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.sale.order.line,price_unit:0
 msgid "Unit Price"
-msgstr ""
+msgstr "Birim Fiyatı"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,uom_id:0
@@ -3633,7 +3633,7 @@ msgstr ""
 #: selection:magento.store,create_invoice_on:0
 #: selection:payment.method,create_invoice_on:0
 msgid "Validate"
-msgstr ""
+msgstr "Doğrula"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,price_extra:0
