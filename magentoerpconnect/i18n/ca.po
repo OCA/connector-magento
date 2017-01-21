@@ -105,7 +105,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: view:res.partner:0 field:res.partner,company:0
 msgid "Company"
-msgstr ""
+msgstr "Empresa"
 
 #. module: magentoerpconnect
 #: sql_constraint:magento.website:0
@@ -263,7 +263,7 @@ msgstr "Empresa"
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_sale_order
 msgid "Sales Order"
-msgstr ""
+msgstr "Comandes de venda"
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_stock_picking_out
@@ -273,7 +273,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_sale_order_line
 msgid "Sales Order Line"
-msgstr ""
+msgstr "Línia de comanda de vendes"
 
 #. module: magentoerpconnect
 #: field:magento.storeview,no_sales_order_sync:0
@@ -1096,7 +1096,7 @@ msgstr ""
 #: field:magento.backend,name:0 field:magento.storeview,name:0
 #: field:magento.website,name:0
 msgid "Name"
-msgstr ""
+msgstr "Nom"
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_magento_website
@@ -1119,7 +1119,7 @@ msgstr ""
 #: model:ir.model,name:magentoerpconnect.model_product_product
 #: field:magento.product.product,openerp_id:0
 msgid "Product"
-msgstr ""
+msgstr "Producte"
 
 #. module: magentoerpconnect
 #: view:magento.backend:0
