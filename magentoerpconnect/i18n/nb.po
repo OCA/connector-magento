@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-07 01:30+0000\n"
-"PO-Revision-Date: 2017-01-13 09:28+0000\n"
+"POT-Creation-Date: 2017-01-14 01:58+0000\n"
+"PO-Revision-Date: 2017-01-19 20:16+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: Norwegian Bokmål (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/nb/)\n"
 "MIME-Version: 1.0\n"
@@ -530,7 +530,7 @@ msgstr ""
 #: view:res.partner:magentoerpconnect.view_partner_form
 #: field:res.partner,company:0
 msgid "Company"
-msgstr ""
+msgstr "Firma"
 
 #. module: magentoerpconnect
 #: selection:magento.stock.picking,picking_method:0
@@ -676,7 +676,7 @@ msgstr "Opprettet den"
 #. module: magentoerpconnect
 #: field:magento.stock.picking,date:0
 msgid "Creation Date"
-msgstr ""
+msgstr "Opprettelsesdato"
 
 #. module: magentoerpconnect
 #: help:magento.stock.picking,date:0
@@ -941,7 +941,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.address,email:0 field:magento.res.partner,email:0
 msgid "Email"
-msgstr ""
+msgstr "E-post"
 
 #. module: magentoerpconnect
 #: field:magento.address,employee:0 field:magento.res.partner,employee:0
@@ -2290,7 +2290,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.address,phone:0 field:magento.res.partner,phone:0
 msgid "Phone"
-msgstr ""
+msgstr "Telefon"
 
 #. module: magentoerpconnect
 #: help:magento.sale.order,picking_policy:0
@@ -2384,7 +2384,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.stock.picking,priority:0
 msgid "Priority"
-msgstr ""
+msgstr "Prioritet"
 
 #. module: magentoerpconnect
 #: help:magento.stock.picking,priority:0
@@ -2564,7 +2564,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.stock.picking,name:0
 msgid "Reference"
-msgstr ""
+msgstr "Referanse"
 
 #. module: magentoerpconnect
 #: help:magento.stock.picking,origin:0
@@ -2698,7 +2698,7 @@ msgstr ""
 #: field:magento.address,section_id:0 field:magento.res.partner,section_id:0
 #: field:magento.sale.order,section_id:0 field:magento.storeview,section_id:0
 msgid "Sales Team"
-msgstr ""
+msgstr "Salgsteam"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,user_id:0 field:magento.address,user_id:0

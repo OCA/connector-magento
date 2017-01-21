@@ -17,8 +17,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-17 01:10+0000\n"
-"PO-Revision-Date: 2016-12-23 08:32+0000\n"
+"POT-Creation-Date: 2017-01-14 01:58+0000\n"
+"PO-Revision-Date: 2017-01-14 17:50+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: Italian (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/it/)\n"
 "MIME-Version: 1.0\n"
@@ -931,7 +931,7 @@ msgstr "L'esportazione/creazione di un picking dovrebbe inviare una email di not
 #. module: magentoerpconnect
 #: field:magento.account.invoice,date_due:0
 msgid "Due Date"
-msgstr ""
+msgstr "Scadenza"
 
 #. module: magentoerpconnect
 #: field:magento.res.partner,emailid:0

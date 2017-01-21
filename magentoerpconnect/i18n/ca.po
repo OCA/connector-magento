@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-07 01:30+0000\n"
-"PO-Revision-Date: 2017-01-13 09:22+0000\n"
+"POT-Creation-Date: 2017-01-14 01:58+0000\n"
+"PO-Revision-Date: 2017-01-17 19:46+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: Catalan (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/ca/)\n"
 "MIME-Version: 1.0\n"
@@ -196,7 +196,7 @@ msgstr ""
 #: field:magento.res.partner,active:0
 #: field:magento.res.partner.category,active:0
 msgid "Active"
-msgstr ""
+msgstr "Actiu"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,comment:0
@@ -530,7 +530,7 @@ msgstr ""
 #: view:res.partner:magentoerpconnect.view_partner_form
 #: field:res.partner,company:0
 msgid "Company"
-msgstr ""
+msgstr "Empresa"
 
 #. module: magentoerpconnect
 #: selection:magento.stock.picking,picking_method:0
@@ -880,7 +880,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.sale.order.line,discount:0
 msgid "Discount (%)"
-msgstr ""
+msgstr "Descompte (%)"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,display_name:0
@@ -1491,7 +1491,7 @@ msgstr ""
 #: field:magento.sale.order,invoice_exists:0
 #: field:magento.sale.order.line,invoiced:0
 msgid "Invoiced"
-msgstr ""
+msgstr "Facturat"
 
 #. module: magentoerpconnect
 #: field:magento.sale.order,invoiced_rate:0
@@ -1564,7 +1564,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.account.invoice,journal_id:0
 msgid "Journal"
-msgstr ""
+msgstr "Diari"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,move_id:0
@@ -1581,7 +1581,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: help:magento.account.invoice,date_invoice:0
 msgid "Keep empty to use the current date"
-msgstr ""
+msgstr "Mantingui en blanc per utilitzar la data actual"
 
 #. module: magentoerpconnect
 #: help:magento.account.invoice,period_id:0
@@ -2035,7 +2035,7 @@ msgstr ""
 #: field:magento.res.partner,name:0 field:magento.store,name:0
 #: field:magento.storeview,name:0 field:magento.website,name:0
 msgid "Name"
-msgstr ""
+msgstr "Nom"
 
 #. module: magentoerpconnect
 #: field:magento.sale.order,need_cancel:0
@@ -2420,7 +2420,7 @@ msgstr ""
 #: field:magento.sale.order.line,product_id:0
 #: field:magento.stock.picking,product_id:0
 msgid "Product"
-msgstr ""
+msgstr "Producte"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,attribute_line_ids:0
@@ -2447,7 +2447,7 @@ msgstr ""
 #: field:magento.product.product,product_tmpl_id:0
 #: field:magento.sale.order.line,product_tmpl_id:0
 msgid "Product Template"
-msgstr ""
+msgstr "Plantilla del producte"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,type:0
@@ -2492,7 +2492,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.sale.order.line,product_uom_qty:0
 msgid "Quantity"
-msgstr ""
+msgstr "Quantitat"
 
 #. module: magentoerpconnect
 #: field:magento.sale.order.line,product_uos_qty:0
@@ -2686,12 +2686,12 @@ msgstr ""
 #: field:magento.address,sale_order_ids:0
 #: field:magento.res.partner,sale_order_ids:0
 msgid "Sales Order"
-msgstr ""
+msgstr "Comandes de venda"
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_sale_order_line
 msgid "Sales Order Line"
-msgstr ""
+msgstr "Línia de comanda de vendes"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,section_id:0
@@ -2981,7 +2981,7 @@ msgstr ""
 #: field:magento.account.invoice,amount_untaxed:0
 #: field:magento.sale.order.line,price_subtotal:0
 msgid "Subtotal"
-msgstr ""
+msgstr "Subtotal"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,message_summary:0
@@ -3516,7 +3516,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.sale.order.line,price_unit:0
 msgid "Unit Price"
-msgstr ""
+msgstr "Preu unitari"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,uom_id:0
@@ -3621,7 +3621,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.address,user_ids:0 field:magento.res.partner,user_ids:0
 msgid "Users"
-msgstr ""
+msgstr "Usuaris"
 
 #. module: magentoerpconnect
 #: field:magento.address,vat_subjected:0
