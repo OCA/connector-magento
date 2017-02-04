@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-07 01:30+0000\n"
-"PO-Revision-Date: 2017-01-13 09:20+0000\n"
+"POT-Creation-Date: 2017-01-21 01:45+0000\n"
+"PO-Revision-Date: 2017-01-30 09:36+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: Spanish (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/es/)\n"
 "MIME-Version: 1.0\n"
@@ -929,7 +929,7 @@ msgstr "Does the picking export/creation should send an email notification on Ma
 #. module: magentoerpconnect
 #: field:magento.account.invoice,date_due:0
 msgid "Due Date"
-msgstr ""
+msgstr "Fecha vencimiento"
 
 #. module: magentoerpconnect
 #: field:magento.res.partner,emailid:0
@@ -1589,7 +1589,7 @@ msgstr "Apuntes contables"
 #. module: magentoerpconnect
 #: help:magento.account.invoice,date_invoice:0
 msgid "Keep empty to use the current date"
-msgstr ""
+msgstr "Deje vacío para usar la fecha actual"
 
 #. module: magentoerpconnect
 #: help:magento.account.invoice,period_id:0
@@ -2277,7 +2277,7 @@ msgstr "Plazo de pago"
 #. module: magentoerpconnect
 #: field:magento.account.invoice,payment_term:0
 msgid "Payment Terms"
-msgstr ""
+msgstr "Plazos de pago"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,payment_ids:0
