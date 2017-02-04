@@ -277,7 +277,7 @@
 <span class="kn">from</span> <span class="nn">..connector</span> <span class="k">import</span> <span class="n">get_environment</span>
 <span class="kn">from</span> <span class="nn">..related_action</span> <span class="k">import</span> <span class="n">unwrap_binding</span>
 
-<span class="n">_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+<span class="n">_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
 <span class="sd">&quot;&quot;&quot;</span>
@@ -301,7 +301,7 @@
 <span class="sd">        :param connector_env: current environment (backend, session, ...)</span>
 <span class="sd">        :type connector_env: :class:`connector.connector.ConnectorEnvironment`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">MagentoBaseExporter</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">connector_env</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">MagentoBaseExporter</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">connector_env</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">binding_id</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">magento_id</span> <span class="o">=</span> <span class="kc">None</span>
 
@@ -390,7 +390,7 @@
 <span class="sd">        :param connector_env: current environment (backend, session, ...)</span>
 <span class="sd">        :type connector_env: :class:`connector.connector.ConnectorEnvironment`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">MagentoExporter</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">connector_env</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">MagentoExporter</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">connector_env</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">binding_record</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">def</span> <span class="nf">_lock</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -679,7 +679,7 @@
     </p>
     <p>
         &copy; Copyright 2013-2015, Odoo Community Association (OCA).<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.1.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.2.<br/>
     </p>
   </div>
 </footer>

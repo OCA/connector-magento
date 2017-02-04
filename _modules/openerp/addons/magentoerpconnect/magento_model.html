@@ -277,7 +277,7 @@
 <span class="kn">from</span> <span class="nn">.backend</span> <span class="k">import</span> <span class="n">magento</span>
 <span class="kn">from</span> <span class="nn">.connector</span> <span class="k">import</span> <span class="n">add_checkpoint</span>
 
-<span class="n">_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+<span class="n">_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 <span class="n">IMPORT_DELTA_BUFFER</span> <span class="o">=</span> <span class="mi">30</span>  <span class="c1"># seconds</span>
 
@@ -456,8 +456,8 @@
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="n">_logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="p">,</span> <span class="n">exc_info</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="k">raise</span> <span class="n">UserError</span><span class="p">(</span>
-                <span class="n">_</span><span class="p">(</span><span class="s2">u&quot;Check your configuration, we can&#39;t get the data. &quot;</span>
-                  <span class="s2">u&quot;Here is the error:</span><span class="se">\n</span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">)</span> <span class="o">%</span>
+                <span class="n">_</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;Check your configuration, we can&#39;t get the data. &quot;</span>
+                  <span class="sa">u</span><span class="s2">&quot;Here is the error:</span><span class="se">\n</span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">)</span> <span class="o">%</span>
                 <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">,</span> <span class="s1">&#39;ignore&#39;</span><span class="p">))</span></div>
 
     <span class="nd">@api</span><span class="o">.</span><span class="n">multi</span>
@@ -990,7 +990,7 @@
     </p>
     <p>
         &copy; Copyright 2013-2015, Odoo Community Association (OCA).<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.1.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.2.<br/>
     </p>
   </div>
 </footer>

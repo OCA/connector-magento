@@ -282,7 +282,7 @@
 <span class="kn">from</span> <span class="nn">.backend</span> <span class="k">import</span> <span class="n">magento</span>
 <span class="kn">from</span> <span class="nn">.connector</span> <span class="k">import</span> <span class="n">get_environment</span>
 
-<span class="n">_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+<span class="n">_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="ResPartner"><a class="viewcode-back" href="../../../../api/api_partner.html#openerp.addons.magentoerpconnect.partner.ResPartner">[docs]</a><span class="k">class</span> <span class="nc">ResPartner</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
@@ -712,7 +712,7 @@
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">result</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;street&#39;</span><span class="p">:</span> <span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;street2&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}</span>
         <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
-            <span class="n">result</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;street&#39;</span><span class="p">:</span> <span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;street2&#39;</span><span class="p">:</span> <span class="s1">u&#39; - &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">[</span><span class="mi">1</span><span class="p">:])}</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;street&#39;</span><span class="p">:</span> <span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;street2&#39;</span><span class="p">:</span> <span class="sa">u</span><span class="s1">&#39; - &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">[</span><span class="mi">1</span><span class="p">:])}</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">result</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">return</span> <span class="n">result</span></div>
@@ -914,7 +914,7 @@
     </p>
     <p>
         &copy; Copyright 2013-2015, Odoo Community Association (OCA).<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.1.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.2.<br/>
     </p>
   </div>
 </footer>
