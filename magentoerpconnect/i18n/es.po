@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-21 01:45+0000\n"
-"PO-Revision-Date: 2017-01-30 09:36+0000\n"
+"POT-Creation-Date: 2017-02-04 01:21+0000\n"
+"PO-Revision-Date: 2017-02-10 21:40+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: Spanish (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/es/)\n"
 "MIME-Version: 1.0\n"
@@ -2713,7 +2713,7 @@ msgstr ""
 #: field:magento.res.partner,user_id:0 field:magento.sale.order,user_id:0
 #: field:magento.sale.order.line,salesman_id:0
 msgid "Salesperson"
-msgstr ""
+msgstr "Comercial"
 
 #. module: magentoerpconnect
 #: field:magento.stock.picking,min_date:0
