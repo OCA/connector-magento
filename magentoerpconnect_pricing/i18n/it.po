@@ -14,7 +14,9 @@
 # Guewen Baconnier <guewen.baconnier@camptocamp.com>, 2015
 # Hotellook, 2014
 # Jim Spentzos, 2014
+# Jim Spentzos, 2014
 # Matjaž Mozetič <m.mozetic@matmoz.si>, 2015
+# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2015
 # Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2015
 # njeudy <njeudy@tuxservices.com>, 2015
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2015
@@ -23,7 +25,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-21 06:37+0000\n"
+"POT-Creation-Date: 2017-02-11 01:18+0000\n"
 "PO-Revision-Date: 2015-11-05 07:46+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: Italian (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/it/)\n"
@@ -88,4 +90,4 @@ msgstr ""
 #: code:addons/magentoerpconnect_pricing/magento_model.py:112
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Warning"

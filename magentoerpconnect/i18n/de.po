@@ -10,6 +10,7 @@
 # Carles Antoli <carlesantoli@hotmail.com>, 2015
 # Chanseok Kang <kcsgoodboy@naver.com>, 2014
 # Chanseok Kang <kcsgoodboy@naver.com>, 2014
+# Chanseok Kang <kcsgoodboy@naver.com>, 2014
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2010,2012,2014
 # Giedrius Slavinskas <giedrius@inovera.lt>, 2012
 # Hotellook, 2014
@@ -28,8 +29,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-04 01:21+0000\n"
-"PO-Revision-Date: 2017-02-09 11:36+0000\n"
+"POT-Creation-Date: 2017-02-11 01:18+0000\n"
+"PO-Revision-Date: 2017-02-17 15:35+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: German (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/de/)\n"
 "MIME-Version: 1.0\n"
@@ -3070,7 +3071,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.account.invoice,amount_tax:0
 msgid "Tax"
-msgstr ""
+msgstr "Steuer"
 
 #. module: magentoerpconnect
 #: field:magento.res.partner.category,tax_class_id:0
