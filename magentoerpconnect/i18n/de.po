@@ -29,8 +29,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-11 01:18+0000\n"
-"PO-Revision-Date: 2017-02-17 15:35+0000\n"
+"POT-Creation-Date: 2017-02-18 01:38+0000\n"
+"PO-Revision-Date: 2017-02-25 00:50+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: German (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/de/)\n"
 "MIME-Version: 1.0\n"
@@ -1282,7 +1282,7 @@ msgid ""
 " generation of accounting entries. If you keep the payment term and the due "
 "date empty, it means direct payment. The payment term may compute several "
 "due dates, for example 50% now, 50% in one month."
-msgstr ""
+msgstr "Wenn Sie Zahlungsbedingungen verwenden, wird das Fälligkeitsdatum automatisch beim Anlegen der Buchungen errechnet. Wenn Sie die Zahlungsbedingung und das Fälligkeitsadtum leer lassen, bedeutet dies sofortige Fälligkeit. Die Zahlungsbedingung kann mehrer Fälligkeiten ermitteln, z.B. 50% sofort und 50% in einem Monat."
 
 #. module: magentoerpconnect
 #: help:magento.account.invoice,date_due:0
@@ -1486,7 +1486,7 @@ msgstr "Rechnung angelegt"
 #. module: magentoerpconnect
 #: field:magento.account.invoice,date_invoice:0
 msgid "Invoice Date"
-msgstr ""
+msgstr "Rechnungsdatum"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,invoice_line:0
@@ -1544,7 +1544,7 @@ msgstr ""
 #: field:magento.sale.order,message_is_follower:0
 #: field:magento.stock.picking,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "Ist Follower"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,is_product_variant:0
@@ -1603,7 +1603,7 @@ msgstr "Journalposten"
 #. module: magentoerpconnect
 #: help:magento.account.invoice,date_invoice:0
 msgid "Keep empty to use the current date"
-msgstr ""
+msgstr "Leer lassen, um aktuelles Datum zu verwenden"
 
 #. module: magentoerpconnect
 #: help:magento.account.invoice,period_id:0
@@ -2038,7 +2038,7 @@ msgstr "Nachrichten"
 #: help:magento.sale.order,message_ids:0
 #: help:magento.stock.picking,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Meldungs- und Kommunikationsverlauf"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,orderpoint_ids:0
@@ -2291,7 +2291,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.account.invoice,payment_term:0
 msgid "Payment Terms"
-msgstr ""
+msgstr "Zahlungsbedingungen"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,payment_ids:0
@@ -2601,7 +2601,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: help:magento.account.invoice,origin:0
 msgid "Reference of the document that produced this invoice."
-msgstr ""
+msgstr "Bezug auf den Beleg, der zu dieser Rechnung führte."
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,name:0
@@ -2727,7 +2727,7 @@ msgstr "Verkaufsteam"
 #: field:magento.res.partner,user_id:0 field:magento.sale.order,user_id:0
 #: field:magento.sale.order.line,salesman_id:0
 msgid "Salesperson"
-msgstr ""
+msgstr "Verkäufer"
 
 #. module: magentoerpconnect
 #: field:magento.stock.picking,min_date:0
@@ -3019,7 +3019,7 @@ msgstr ""
 #: field:magento.address,supplier:0 field:magento.product.product,seller_ids:0
 #: field:magento.res.partner,supplier:0
 msgid "Supplier"
-msgstr ""
+msgstr "Lieferant"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,supplier_invoice_number:0
@@ -3670,7 +3670,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.account.invoice,check_total:0
 msgid "Verification Total"
-msgstr ""
+msgstr "Gesamtbetragsprüfung"
 
 #. module: magentoerpconnect
 #: field:magento.backend,version:0

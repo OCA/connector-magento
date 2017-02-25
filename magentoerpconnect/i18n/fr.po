@@ -24,8 +24,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-11 01:18+0000\n"
-"PO-Revision-Date: 2017-02-17 15:35+0000\n"
+"POT-Creation-Date: 2017-02-18 01:38+0000\n"
+"PO-Revision-Date: 2017-02-21 17:54+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: French (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -282,7 +282,7 @@ msgstr "Un compte importé avec une société dans l'adresse de facturation est 
 #: field:magento.storeview,account_analytic_id:0
 #: field:magento.website,account_analytic_id:0
 msgid "Analytic account"
-msgstr ""
+msgstr "Compte Analytique"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,attribute_value_ids:0
@@ -860,7 +860,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.sale.order.line,delay:0
 msgid "Delivery Lead Time"
-msgstr ""
+msgstr "Délai de livraison"
 
 #. module: magentoerpconnect
 #: field:magento.address,property_delivery_carrier:0
@@ -2174,7 +2174,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.sale.order,name:0 field:magento.sale.order.line,order_id:0
 msgid "Order Reference"
-msgstr ""
+msgstr "Référence de commande"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,outgoing_qty:0
@@ -2328,7 +2328,7 @@ msgstr "Méthode de livraison"
 #. module: magentoerpconnect
 #: field:magento.stock.picking,picking_type_id:0
 msgid "Picking Type"
-msgstr ""
+msgstr "Type de cueillette"
 
 #. module: magentoerpconnect
 #: field:magento.stock.picking,picking_type_code:0
@@ -2637,7 +2637,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.sale.order.line,route_id:0
 msgid "Route"
-msgstr ""
+msgstr "Route"
 
 #. module: magentoerpconnect
 #: field:magento.product.category,route_ids:0
@@ -2727,7 +2727,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.stock.picking,min_date:0
 msgid "Scheduled Date"
-msgstr ""
+msgstr "Date Prévue"
 
 #. module: magentoerpconnect
 #: help:magento.stock.picking,min_date:0
@@ -2998,7 +2998,7 @@ msgstr ""
 #: field:magento.account.invoice,amount_untaxed:0
 #: field:magento.sale.order.line,price_subtotal:0
 msgid "Subtotal"
-msgstr ""
+msgstr "Sous-total"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,message_summary:0
@@ -3104,7 +3104,7 @@ msgstr ""
 #: field:magento.sale.order,amount_tax:0
 #: field:magento.sale.order.line,tax_id:0
 msgid "Taxes"
-msgstr ""
+msgstr "Taxes"
 
 #. module: magentoerpconnect
 #: help:magento.stock.picking,picking_type_code:0
@@ -3533,7 +3533,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.sale.order.line,price_unit:0
 msgid "Unit Price"
-msgstr ""
+msgstr "Prix Unitaire"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,uom_id:0
