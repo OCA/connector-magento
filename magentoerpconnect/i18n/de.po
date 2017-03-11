@@ -29,8 +29,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-18 01:38+0000\n"
-"PO-Revision-Date: 2017-02-25 00:50+0000\n"
+"POT-Creation-Date: 2017-03-04 01:41+0000\n"
+"PO-Revision-Date: 2017-03-10 13:16+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: German (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/de/)\n"
 "MIME-Version: 1.0\n"
@@ -1302,7 +1302,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.address,image:0 field:magento.res.partner,image:0
 msgid "Image"
-msgstr ""
+msgstr "Bild"
 
 #. module: magentoerpconnect
 #: help:magento.product.product,image:0
@@ -1492,7 +1492,7 @@ msgstr "Rechnungsdatum"
 #: field:magento.account.invoice,invoice_line:0
 #: field:magento.sale.order.line,invoice_lines:0
 msgid "Invoice Lines"
-msgstr ""
+msgstr "Abrechnungspositionen"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,internal_number:0
@@ -1502,7 +1502,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.account.invoice,reference:0
 msgid "Invoice Reference"
-msgstr ""
+msgstr "Rechnungsbezug"
 
 #. module: magentoerpconnect
 #: help:magento.sale.order,partner_invoice_id:0
@@ -2010,7 +2010,7 @@ msgstr ""
 #: field:magento.product.product,image_medium:0
 #: field:magento.res.partner,image_medium:0
 msgid "Medium-sized image"
-msgstr ""
+msgstr "Mittelgroßes Bild"
 
 #. module: magentoerpconnect
 #: help:magento.address,image_medium:0 help:magento.res.partner,image_medium:0
@@ -2189,7 +2189,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.stock.picking,owner_id:0
 msgid "Owner"
-msgstr ""
+msgstr "Besitzer"
 
 #. module: magentoerpconnect
 #: field:magento.stock.picking,pack_operation_exist:0
@@ -2749,7 +2749,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: help:magento.product.product,categ_id:0
 msgid "Select category for the current product"
-msgstr ""
+msgstr "Kategorie für dieses Produkt wählen"
 
 #. module: magentoerpconnect
 #: help:magento.address,use_parent_address:0
@@ -2782,7 +2782,7 @@ msgstr "Sende Versandbestätigung per E-Mail"
 #. module: magentoerpconnect
 #: field:magento.account.invoice,sent:0
 msgid "Sent"
-msgstr ""
+msgstr "Gesendet"
 
 #. module: magentoerpconnect
 #: field:magento.product.category,sequence:0
@@ -2858,7 +2858,7 @@ msgstr ""
 #: field:magento.product.product,image_small:0
 #: field:magento.res.partner,image_small:0
 msgid "Small-sized image"
-msgstr ""
+msgstr "Bild mit kleinen Abmessungen"
 
 #. module: magentoerpconnect
 #: help:magento.address,image_small:0 help:magento.res.partner,image_small:0
@@ -3013,7 +3013,7 @@ msgstr ""
 #: field:magento.sale.order,message_summary:0
 #: field:magento.stock.picking,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Zusammenfassung"
 
 #. module: magentoerpconnect
 #: field:magento.address,supplier:0 field:magento.product.product,seller_ids:0
@@ -3458,7 +3458,7 @@ msgstr "Gesamtbetrag unterscheidet sich zu Magento"
 #: field:magento.address,total_invoiced:0
 #: field:magento.res.partner,total_invoiced:0
 msgid "Total Invoiced"
-msgstr ""
+msgstr "Abrechnungssumme"
 
 #. module: magentoerpconnect
 #: field:magento.address,debit:0 field:magento.res.partner,debit:0
