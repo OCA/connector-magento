@@ -1,0 +1,75 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * magentoerpconnect_pricing
+# 
+# Translators:
+msgid ""
+msgstr ""
+"Project-Id-Version: connector-magento (8.0)\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-03-11 01:50+0000\n"
+"PO-Revision-Date: 2015-11-05 07:46+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: Catalan (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/ca/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ca\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: magentoerpconnect_pricing
+#: code:addons/magentoerpconnect_pricing/magento_model.py:50
+#, python-format
+msgid ""
+"If you change the pricelist of the backend, the price of all the products "
+"will be updated in Magento."
+msgstr ""
+
+#. module: magentoerpconnect_pricing
+#: code:addons/magentoerpconnect_pricing/magento_model.py:113
+#, python-format
+msgid ""
+"If you change the pricelist of the website, the price of all the products "
+"linked with this website will be updated in Magento."
+msgstr ""
+
+#. module: magentoerpconnect_pricing
+#: model:ir.model,name:magentoerpconnect_pricing.model_magento_backend
+msgid "Magento Backend"
+msgstr ""
+
+#. module: magentoerpconnect_pricing
+#: model:ir.model,name:magentoerpconnect_pricing.model_magento_website
+msgid "Magento Website"
+msgstr ""
+
+#. module: magentoerpconnect_pricing
+#: field:magento.backend,pricelist_id:0 field:magento.website,pricelist_id:0
+msgid "Pricelist"
+msgstr "Tarifa de venda"
+
+#. module: magentoerpconnect_pricing
+#: code:addons/magentoerpconnect_pricing/product.py:127
+#, python-format
+msgid "Prices have been updated."
+msgstr ""
+
+#. module: magentoerpconnect_pricing
+#: help:magento.backend,pricelist_id:0
+msgid "The price list used to define the prices of the products in Magento."
+msgstr ""
+
+#. module: magentoerpconnect_pricing
+#: help:magento.website,pricelist_id:0
+msgid ""
+"The pricelist used to define the prices of the products in Magento for this website.\n"
+"Choose a pricelist only if the prices are different for this website.\n"
+"When empty, the default price will be used."
+msgstr ""
+
+#. module: magentoerpconnect_pricing
+#: code:addons/magentoerpconnect_pricing/magento_model.py:49
+#: code:addons/magentoerpconnect_pricing/magento_model.py:112
+#, python-format
+msgid "Warning"
+msgstr ""

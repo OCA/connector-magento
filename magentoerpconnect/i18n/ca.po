@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-14 01:58+0000\n"
-"PO-Revision-Date: 2017-01-17 19:46+0000\n"
+"POT-Creation-Date: 2017-03-11 01:50+0000\n"
+"PO-Revision-Date: 2017-03-14 18:36+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: Catalan (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/ca/)\n"
 "MIME-Version: 1.0\n"
@@ -597,7 +597,7 @@ msgstr ""
 #: field:magento.res.partner,contract_ids:0
 #: field:magento.res.partner,contracts_count:0
 msgid "Contracts"
-msgstr ""
+msgstr "Contractes"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,standard_price:0
@@ -870,7 +870,7 @@ msgstr ""
 #: field:magento.product.product,description:0
 #: field:magento.sale.order.line,name:0
 msgid "Description"
-msgstr ""
+msgstr "Descripció"
 
 #. module: magentoerpconnect
 #: field:magento.stock.picking,location_dest_id:0
@@ -1470,7 +1470,7 @@ msgstr ""
 #: field:magento.account.invoice,invoice_line:0
 #: field:magento.sale.order.line,invoice_lines:0
 msgid "Invoice Lines"
-msgstr ""
+msgstr "Línies de factura"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,internal_number:0
@@ -1502,7 +1502,7 @@ msgstr ""
 #: field:magento.address,invoice_ids:0 field:magento.res.partner,invoice_ids:0
 #: field:magento.sale.order,invoice_ids:0
 msgid "Invoices"
-msgstr ""
+msgstr "Factures"
 
 #. module: magentoerpconnect
 #: field:magento.address,is_company:0 field:magento.res.partner,is_company:0
@@ -2351,7 +2351,7 @@ msgstr ""
 #: field:magento.product.product,pricelist_id:0
 #: field:magento.sale.order,pricelist_id:0
 msgid "Pricelist"
-msgstr ""
+msgstr "Tarifa de venda"
 
 #. module: magentoerpconnect
 #: help:magento.sale.order,pricelist_id:0
@@ -3522,7 +3522,7 @@ msgstr "Preu unitari"
 #: field:magento.product.product,uom_id:0
 #: field:magento.stock.picking,weight_uom_id:0
 msgid "Unit of Measure"
-msgstr ""
+msgstr "Unitat de mesura"
 
 #. module: magentoerpconnect
 #: field:magento.sale.order.line,product_uom:0
