@@ -6,8 +6,12 @@ Magento Connector - Pricing
 
 Extension for **Magento Connector**.
 
-The prices of the products are managed in OpenERP using pricelists and
-are pushed to Magento.
+Pricelist options are added to the Magento backend and website settings. The
+pricelists are used to determine the order currency per website.
+
+By default, the pricelists are also used to manage the prices of the products
+in Odoo, pushing them to Magento. You can disable this option in the backend
+settings.
 
 Installation
 ============
@@ -21,6 +25,8 @@ Read http://odoo-magento-connector.com/howto/configure_pricing.html
 
 Limitations
 ===========
+
+The following limitations apply when pushing product prices to Magento:
 
 * The 'Catalog Price Scope' option on Magento must be set to 'Website'
 * The prices are exported when they are changed directly on the product,

@@ -43,11 +43,19 @@ class PriceProductImportMapper(product.PriceProductImportMapper):
 
     @only_create
     @mapping
-    def price(self, record):
+    def price_create(self, record):
         """ The price is imported at the creation of
         the product, then it is only modified and exported
         from OpenERP """
         return super(PriceProductImportMapper, self).price(record)
+
+    @mapping
+    def price(self, record):
+        """ Only process prices after update in Magento if the backend allows
+        it. This method is also run upon creation, but it should be harmless.
+        """
+        if not self.backend_record.update_prices:
+            return super(PriceProductImportMapper, self).price(record)
 
 
 @magento
@@ -135,10 +143,11 @@ def product_price_changed(session, model_name, record_id, fields=None):
     model = session.env[model_name]
     record = model.browse(record_id)
     for binding in record.magento_bind_ids:
-        export_product_price.delay(session,
-                                   binding._model._name,
-                                   binding.id,
-                                   priority=5)
+        if binding.backend_id.update_prices:
+            export_product_price.delay(session,
+                                       binding._model._name,
+                                       binding.id,
+                                       priority=5)
 
 
 @job

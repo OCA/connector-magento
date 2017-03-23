@@ -39,6 +39,10 @@ class MagentoBackend(models.Model):
                                    help='The price list used to define '
                                         'the prices of the products in '
                                         'Magento.')
+    update_prices = fields.Boolean(default=True,
+                                   help='Whether prices according to the '
+                                        'selected pricelist are pushed '
+                                        'to Magento')
 
     @api.onchange('pricelist_id')
     def onchange_pricelist_id(self):
@@ -60,8 +64,9 @@ class MagentoBackend(models.Model):
 
         The default prices are linked with the 'Admin' website (id: 0).
         """
+        backend_ids = self.filtered('update_prices').ids
         website_model = self.env['magento.website']
-        websites = website_model.search([('backend_id', 'in', self.ids),
+        websites = website_model.search([('backend_id', 'in', backend_ids),
                                          ('magento_id', '=', '0')])
         websites.update_all_prices()
 
@@ -78,7 +83,10 @@ class MagentoWebsite(models.Model):
     pricelist_id = fields.Many2one(comodel_name='product.pricelist',
                                    string='Pricelist',
                                    domain="[('type', '=', 'sale')]",
-                                   help='The pricelist used to define '
+                                   help='The pricelist used to define the '
+                                        'currency of the orders of this '
+                                        'website and, if price update is '
+                                        'activated on the backend, '
                                         'the prices of the products in '
                                         'Magento for this website.\n'
                                         'Choose a pricelist only if the '
@@ -92,7 +100,7 @@ class MagentoWebsite(models.Model):
         """ Update the prices of all the products linked to the website. """
         session = ConnectorSession(self.env.cr, self.env.uid,
                                    context=self.env.context)
-        for website in self:
+        for website in self.filtered('backend_id.update_prices'):
             if website.magento_id == '0':
                 # 'Admin' website -> default values
                 # Update the default prices on all the products.
@@ -112,7 +120,8 @@ class MagentoWebsite(models.Model):
             'title': _('Warning'),
             'message': _('If you change the pricelist of the website, '
                          'the price of all the products linked with this '
-                         'website will be updated in Magento.')
+                         'website will be updated in Magento if the price '
+                         'update is active on the backend.')
         }
         return {'warning': warning}
 
