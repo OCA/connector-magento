@@ -29,8 +29,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-04 01:41+0000\n"
-"PO-Revision-Date: 2017-03-10 13:16+0000\n"
+"POT-Creation-Date: 2017-03-23 15:24+0000\n"
+"PO-Revision-Date: 2017-03-24 15:28+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: German (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/de/)\n"
 "MIME-Version: 1.0\n"
@@ -1403,7 +1403,7 @@ msgstr "Importe"
 #: field:magento.product.category,property_account_income_categ:0
 #: field:magento.product.product,property_account_income:0
 msgid "Income Account"
-msgstr ""
+msgstr "Erlöskonto"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,incoming_qty:0
@@ -2286,7 +2286,7 @@ msgstr "Zahlungsreferenz"
 #. module: magentoerpconnect
 #: field:magento.sale.order,payment_term:0
 msgid "Payment Term"
-msgstr ""
+msgstr "Zahlungsbedingung"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,payment_term:0
@@ -3148,7 +3148,7 @@ msgstr "Die in OpenERP errechnete Summe stimmt nicht mit der aus Magento überei
 #. module: magentoerpconnect
 #: help:magento.sale.order,amount_untaxed:0
 msgid "The amount without tax."
-msgstr ""
+msgstr "Der Nettobetrag."
 
 #. module: magentoerpconnect
 #: help:magento.sale.order,project_id:0
@@ -3259,7 +3259,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: help:magento.sale.order,amount_total:0
 msgid "The total amount."
-msgstr ""
+msgstr "Der Bruttobetrag."
 
 #. module: magentoerpconnect
 #: help:magento.product.product,volume:0
@@ -3441,7 +3441,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.address,title:0 field:magento.res.partner,title:0
 msgid "Title"
-msgstr ""
+msgstr "Titel"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,amount_total:0
@@ -3549,7 +3549,7 @@ msgstr "Mengeneinheit"
 #. module: magentoerpconnect
 #: field:magento.sale.order.line,product_uom:0
 msgid "Unit of Measure "
-msgstr ""
+msgstr "Mengeneinheit"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,uos_coeff:0
@@ -3559,7 +3559,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.product.product,uos_id:0
 msgid "Unit of Sale"
-msgstr ""
+msgstr "Verkaufsmengeneinheit"
 
 #. module: magentoerpconnect
 #: help:magento.stock.picking,weight_uom_id:0
@@ -3579,7 +3579,7 @@ msgstr "Ungelesene Nachrichten"
 #. module: magentoerpconnect
 #: field:magento.sale.order,amount_untaxed:0
 msgid "Untaxed Amount"
-msgstr ""
+msgstr "Unversteuerter Betrag"
 
 #. module: magentoerpconnect
 #: view:magento.backend:magentoerpconnect.view_magento_backend_form

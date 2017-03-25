@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-07 01:30+0000\n"
-"PO-Revision-Date: 2017-01-13 09:22+0000\n"
+"POT-Creation-Date: 2017-03-23 15:24+0000\n"
+"PO-Revision-Date: 2017-03-23 20:09+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: Turkish (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/tr/)\n"
 "MIME-Version: 1.0\n"
@@ -921,7 +921,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.account.invoice,date_due:0
 msgid "Due Date"
-msgstr ""
+msgstr "Vade Tarihi"
 
 #. module: magentoerpconnect
 #: field:magento.res.partner,emailid:0
@@ -3425,7 +3425,7 @@ msgstr ""
 #: field:magento.account.invoice,amount_total:0
 #: field:magento.sale.order,amount_total:0
 msgid "Total"
-msgstr ""
+msgstr "Toplam"
 
 #. module: magentoerpconnect
 #: model:sale.exception,name:magentoerpconnect.excep_wrong_total_amount

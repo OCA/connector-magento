@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-18 01:38+0000\n"
-"PO-Revision-Date: 2017-02-24 11:53+0000\n"
+"POT-Creation-Date: 2017-03-23 15:24+0000\n"
+"PO-Revision-Date: 2017-03-24 18:23+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: Spanish (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/es/)\n"
 "MIME-Version: 1.0\n"
@@ -684,7 +684,7 @@ msgstr "Creado en"
 #. module: magentoerpconnect
 #: field:magento.stock.picking,date:0
 msgid "Creation Date"
-msgstr ""
+msgstr "Fecha de creación"
 
 #. module: magentoerpconnect
 #: help:magento.stock.picking,date:0
@@ -2298,7 +2298,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.address,phone:0 field:magento.res.partner,phone:0
 msgid "Phone"
-msgstr ""
+msgstr "Teléfono"
 
 #. module: magentoerpconnect
 #: help:magento.sale.order,picking_policy:0
@@ -2706,7 +2706,7 @@ msgstr "Lineas Pedidos Venta"
 #: field:magento.address,section_id:0 field:magento.res.partner,section_id:0
 #: field:magento.sale.order,section_id:0 field:magento.storeview,section_id:0
 msgid "Sales Team"
-msgstr ""
+msgstr "Equipo de ventas"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,user_id:0 field:magento.address,user_id:0
@@ -3052,7 +3052,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.address,category_id:0 field:magento.res.partner,category_id:0
 msgid "Tags"
-msgstr ""
+msgstr "Etiquetas"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,amount_tax:0

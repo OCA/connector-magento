@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-14 01:58+0000\n"
-"PO-Revision-Date: 2017-01-19 20:16+0000\n"
+"POT-Creation-Date: 2017-03-23 15:24+0000\n"
+"PO-Revision-Date: 2017-03-23 20:10+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: Swedish (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/sv/)\n"
 "MIME-Version: 1.0\n"
@@ -921,7 +921,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.account.invoice,date_due:0
 msgid "Due Date"
-msgstr ""
+msgstr "Förfallodatum"
 
 #. module: magentoerpconnect
 #: field:magento.res.partner,emailid:0
@@ -1464,7 +1464,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.account.invoice,date_invoice:0
 msgid "Invoice Date"
-msgstr ""
+msgstr "Fakturadatum"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,invoice_line:0

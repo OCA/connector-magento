@@ -4,8 +4,8 @@
 # 
 # Translators:
 # bossnm11 <bossnm11@gmail.com>, 2014
-# Chanseok <kcsgoodboy@naver.com>, 2014
-# Chanseok <kcsgoodboy@naver.com>, 2014
+# Chanseok Kang <kcsgoodboy@naver.com>, 2014
+# Chanseok Kang <kcsgoodboy@naver.com>, 2014
 # danimaribeiro <danimaribeiro@gmail.com>, 2015
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 # Hotellook, 2014
@@ -23,8 +23,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-07 01:30+0000\n"
-"PO-Revision-Date: 2017-01-13 09:28+0000\n"
+"POT-Creation-Date: 2017-03-23 15:24+0000\n"
+"PO-Revision-Date: 2017-03-23 20:09+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: Dutch (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -937,7 +937,7 @@ msgstr "Moet het exporteren of aanmaken van een uitgaande levering een e-mail st
 #. module: magentoerpconnect
 #: field:magento.account.invoice,date_due:0
 msgid "Due Date"
-msgstr ""
+msgstr "Vervaldatum"
 
 #. module: magentoerpconnect
 #: field:magento.res.partner,emailid:0
@@ -3441,7 +3441,7 @@ msgstr ""
 #: field:magento.account.invoice,amount_total:0
 #: field:magento.sale.order,amount_total:0
 msgid "Total"
-msgstr ""
+msgstr "Totaal"
 
 #. module: magentoerpconnect
 #: model:sale.exception,name:magentoerpconnect.excep_wrong_total_amount

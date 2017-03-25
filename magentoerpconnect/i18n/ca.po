@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-11 01:50+0000\n"
-"PO-Revision-Date: 2017-03-14 18:36+0000\n"
+"POT-Creation-Date: 2017-03-23 15:24+0000\n"
+"PO-Revision-Date: 2017-03-24 18:35+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: Catalan (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/ca/)\n"
 "MIME-Version: 1.0\n"
@@ -504,7 +504,7 @@ msgstr ""
 #: field:magento.address,color:0 field:magento.product.product,color:0
 #: field:magento.res.partner,color:0
 msgid "Color Index"
-msgstr ""
+msgstr "Índex de color "
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,commercial_partner_id:0
@@ -715,7 +715,7 @@ msgstr ""
 #: field:magento.sale.order,partner_id:0
 #: field:magento.sale.order.line,order_partner_id:0
 msgid "Customer"
-msgstr ""
+msgstr "Client "
 
 #. module: magentoerpconnect
 #: field:magento.product.product,sale_delay:0
@@ -921,7 +921,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.account.invoice,date_due:0
 msgid "Due Date"
-msgstr ""
+msgstr "Data venciment"
 
 #. module: magentoerpconnect
 #: field:magento.res.partner,emailid:0
@@ -951,7 +951,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.storeview,enabled:0
 msgid "Enabled"
-msgstr ""
+msgstr "Activat "
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,move_lines:0
@@ -1464,7 +1464,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.account.invoice,date_invoice:0
 msgid "Invoice Date"
-msgstr ""
+msgstr "Data factura"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,invoice_line:0
@@ -2167,7 +2167,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.stock.picking,owner_id:0
 msgid "Owner"
-msgstr ""
+msgstr "Propietari "
 
 #. module: magentoerpconnect
 #: field:magento.stock.picking,pack_operation_exist:0
@@ -2997,7 +2997,7 @@ msgstr ""
 #: field:magento.address,supplier:0 field:magento.product.product,seller_ids:0
 #: field:magento.res.partner,supplier:0
 msgid "Supplier"
-msgstr ""
+msgstr "Proveïdor "
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,supplier_invoice_number:0
@@ -3807,4 +3807,4 @@ msgstr ""
 #: field:magento.product.product,qty_available_text:0
 #: field:magento.res.partner,has_image:0
 msgid "unknown"
-msgstr ""
+msgstr "desconegut "

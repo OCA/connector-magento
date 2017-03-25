@@ -24,8 +24,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-04 01:41+0000\n"
-"PO-Revision-Date: 2017-03-10 13:16+0000\n"
+"POT-Creation-Date: 2017-03-23 15:24+0000\n"
+"PO-Revision-Date: 2017-03-23 20:10+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: French (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -1481,7 +1481,7 @@ msgstr "Facture créée"
 #. module: magentoerpconnect
 #: field:magento.account.invoice,date_invoice:0
 msgid "Invoice Date"
-msgstr ""
+msgstr "Date de facturation"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,invoice_line:0
@@ -2509,7 +2509,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.sale.order.line,product_uom_qty:0
 msgid "Quantity"
-msgstr ""
+msgstr "Quantité"
 
 #. module: magentoerpconnect
 #: field:magento.sale.order.line,product_uos_qty:0
