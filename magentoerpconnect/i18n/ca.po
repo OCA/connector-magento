@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (7.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-11 01:45+0000\n"
+"POT-Creation-Date: 2017-03-18 01:21+0000\n"
 "PO-Revision-Date: 2015-07-08 12:13+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: Catalan (http://www.transifex.com/oca/OCA-connector-magento-7-0/language/ca/)\n"
@@ -1108,7 +1108,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.storeview,enabled:0
 msgid "Enabled"
-msgstr ""
+msgstr "Activat "
 
 #. module: magentoerpconnect
 #: field:magento.product.product,backorders:0
