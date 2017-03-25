@@ -15,6 +15,7 @@ http://www.odoo-magento-connector.com
 http://www.odoo-connector.com
 
 [//]: # (addons)
+
 Available addons
 ----------------
 addon | version | summary
