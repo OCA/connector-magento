@@ -83,8 +83,9 @@ In order to install it:
    `magento_root/var/cache`
 
 
-.. important:: Please check if you have installed Magento on PHP with a *5.4.x** version.
-               Magento is **not compatible** with this version and would prevent the API to
+.. important:: This notice does not apply if you use a version of Magento above 1.7.
+               Please check if you have installed Magento 1.7 on PHP with a *5.4.x* version.
+               Magento 1.7 is **not compatible** with this version and would prevent the API to
                behave normally. In that case, you must retrograde to PHP 5.3.x or apply the
                patch provided by Magento (see http://magento.com/resources/system-requirements)
 

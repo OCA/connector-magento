@@ -143,6 +143,7 @@ def mock_api(responses, key_func=None):
 
 
 class MockResponseImage(object):
+
     def __init__(self, resp_data, code=200, msg='OK'):
         self.resp_data = resp_data
         self.code = code

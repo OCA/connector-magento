@@ -1,23 +1,7 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    Author: Guewen Baconnier
-#    Copyright 2013 Camptocamp SA
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# © 2013 Guewen Baconnier,Camptocamp SA,Akretion
+# © 2016 Sodexis
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 """
 
@@ -193,6 +177,13 @@ class MagentoImporter(Importer):
         :param magento_id: identifier of the record on Magento
         """
         self.magento_id = magento_id
+        lock_name = 'import({}, {}, {}, {})'.format(
+            self.backend_record._name,
+            self.backend_record.id,
+            self.model._name,
+            magento_id,
+        )
+
         try:
             self.magento_record = self._get_magento_data()
         except IDMissingInBackend:
@@ -206,6 +197,11 @@ class MagentoImporter(Importer):
 
         if not force and self._is_uptodate(binding):
             return _('Already up-to-date.')
+
+        # Keep a lock on this import until the transaction is committed
+        # The lock is kept since we have detected that the informations
+        # will be updated into Odoo
+        self.advisory_lock_or_retry(lock_name)
         self._before_import()
 
         # import the missing linked resources

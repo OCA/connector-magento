@@ -18,11 +18,23 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+import mock
 
-from openerp.addons.connector.exception import InvalidDataError
+from openerp import api
+from openerp.modules.registry import RegistryManager
+from openerp.tests.common import get_db_name
+from openerp.addons.connector.connector import ConnectorEnvironment
+from openerp.addons.connector.exception import (
+    InvalidDataError,
+    RetryableJobError,
+)
+from openerp.addons.connector.session import ConnectorSession
 from openerp.addons.magentoerpconnect.unit.import_synchronizer import (
     import_batch,
     import_record)
+from openerp.addons.magentoerpconnect.product_category import (
+    ProductCategoryImporter,
+)
 from .common import (mock_api,
                      mock_urlopen_image,
                      SetUpMagentoBase,
@@ -142,13 +154,17 @@ class TestImportMagento(SetUpMagentoSynchronized):
                               backend_id, 54)
 
     def test_import_product_virtual(self):
-        """ Virtual should fail: not yet supported """
+        """ Virtual products are created as service products """
         backend_id = self.backend_id
         with mock_api(magento_base_responses):
-            with self.assertRaises(InvalidDataError):
-                import_record(self.session,
-                              'magento.product.product',
-                              backend_id, 144)
+            import_record(self.session,
+                          'magento.product.product',
+                          backend_id, 144)
+
+        product_model = self.env['magento.product.product']
+        product = product_model.search([('backend_id', '=', backend_id),
+                                        ('magento_id', '=', '144')])
+        self.assertEqual(product.type, 'service')
 
     def test_import_sale_order(self):
         """ Import sale order: check """
@@ -264,3 +280,46 @@ class TestImportMagento(SetUpMagentoSynchronized):
             else:
                 self.fail('encountered unexpected sale '
                           'order line %s' % line.name)
+
+
+class TestImportMagentoConcurrentSync(SetUpMagentoSynchronized):
+
+    def setUp(self):
+        super(TestImportMagentoConcurrentSync, self).setUp()
+        self.registry2 = RegistryManager.get(get_db_name())
+        self.cr2 = self.registry2.cursor()
+        self.env2 = api.Environment(self.cr2, self.env.uid, {})
+        backend2 = mock.MagicMock(name='Backend Record')
+        backend2._name = 'magento.backend'
+        backend2.id = self.backend_id
+        self.backend2 = backend2
+        self.connector_session2 = ConnectorSession.from_env(self.env2)
+
+        @self.addCleanup
+        def reset_cr2():
+            # rollback and close the cursor, and reset the environments
+            self.env2.reset()
+            self.cr2.rollback()
+            self.cr2.close()
+
+    def test_concurrent_import(self):
+        connector_env = ConnectorEnvironment(
+            self.backend,
+            self.session,
+            'magento.product.category'
+        )
+        importer = ProductCategoryImporter(connector_env)
+        with mock_api(magento_base_responses):
+            importer.run(1)
+
+        connector_env2 = ConnectorEnvironment(
+            self.backend2,
+            self.connector_session2,
+            'magento.product.category'
+        )
+        importer2 = ProductCategoryImporter(connector_env2)
+        fields_path = ('openerp.addons.magentoerpconnect'
+                       '.unit.import_synchronizer.fields')
+        with mock.patch(fields_path):
+            with self.assertRaises(RetryableJobError):
+                importer2.run(1)

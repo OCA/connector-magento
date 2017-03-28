@@ -1,23 +1,7 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    Author: Guewen Baconnier
-#    Copyright 2013 Camptocamp SA
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# © 2013 Guewen Baconnier,Camptocamp SA,Akretion
+# © 2016 Sodexis
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 import logging
 import xmlrpclib
@@ -309,7 +293,7 @@ class PartnerImportMapper(ImportMapper):
 
     @mapping
     def type(self, record):
-        return {'type': 'default'}
+        return {'type': 'contact'}
 
     @only_create
     @mapping
@@ -466,6 +450,8 @@ class BaseAddressImportMapper(ImportMapper):
     @mapping
     def street(self, record):
         value = record['street']
+        if not value:
+            return {}
         lines = [line.strip() for line in value.split('\n') if line.strip()]
         if len(lines) == 1:
             result = {'street': lines[0], 'street2': False}
@@ -481,14 +467,12 @@ class BaseAddressImportMapper(ImportMapper):
         if not prefix:
             return
         title = self.env['res.partner.title'].search(
-            [('domain', '=', 'contact'),
-             ('shortcut', '=ilike', prefix)],
+            [('shortcut', '=ilike', prefix)],
             limit=1
         )
         if not title:
             title = self.env['res.partner.title'].create(
-                {'domain': 'contact',
-                 'shortcut': prefix,
+                {'shortcut': prefix,
                  'name': prefix,
                  }
             )
@@ -591,7 +575,7 @@ class AddressImporter(MagentoImporter):
             # it won't be imported as an independent address,
             # but will be linked with the main res.partner
             data['openerp_id'] = partner.id
-            data['type'] = 'default'
+            data['type'] = 'contact'
         else:
             data['parent_id'] = partner.id
             data['lang'] = partner.lang

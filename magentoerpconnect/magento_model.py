@@ -1,28 +1,12 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    Author: Guewen Baconnier
-#    Copyright 2013 Camptocamp SA
-#    Copyright 2013 Akretion
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# © 2013 Guewen Baconnier,Camptocamp SA,Akretion
+# © 2016 Sodexis
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 import logging
 from datetime import datetime, timedelta
 from openerp import models, fields, api, _
+from openerp.exceptions import Warning as UserError
 from openerp.addons.connector.session import ConnectorSession
 from openerp.addons.connector.connector import ConnectorUnit
 from openerp.addons.connector.unit.mapper import mapping, ImportMapper
@@ -166,6 +150,21 @@ class MagentoBackend(models.Model):
         string='Magento Products',
         readonly=True,
     )
+    account_analytic_id = fields.Many2one(
+        comodel_name='account.analytic.account',
+        string='Analytic account',
+        help='If specified, this analytic account will be used to fill the '
+        'field  on the sale order created by the connector. The value can '
+        'also be specified on website or the store or the store view.'
+    )
+    fiscal_position_id = fields.Many2one(
+        comodel_name='account.fiscal.position',
+        string='Fiscal position',
+        help='If specified, this fiscal position will be used to fill the '
+        'field fiscal position on the sale order created by the connector.'
+        'The value can also be specified on website or the store or the '
+        'store view.'
+    )
 
     _sql_constraints = [
         ('sale_prefix_uniq', 'unique(sale_prefix)',
@@ -186,17 +185,23 @@ class MagentoBackend(models.Model):
 
     @api.multi
     def synchronize_metadata(self):
-        session = ConnectorSession(self.env.cr, self.env.uid,
-                                   context=self.env.context)
-        for backend in self:
-            for model in ('magento.website',
-                          'magento.store',
-                          'magento.storeview'):
-                # import directly, do not delay because this
-                # is a fast operation, a direct return is fine
-                # and it is simpler to import them sequentially
-                import_batch(session, model, backend.id)
-        return True
+        try:
+            session = ConnectorSession.from_env(self.env)
+            for backend in self:
+                for model in ('magento.website',
+                              'magento.store',
+                              'magento.storeview'):
+                    # import directly, do not delay because this
+                    # is a fast operation, a direct return is fine
+                    # and it is simpler to import them sequentially
+                    import_batch(session, model, backend.id)
+            return True
+        except Exception as e:
+            _logger.error(e.message, exc_info=True)
+            raise UserError(
+                _(u"Check your configuration, we can't get the data. "
+                  u"Here is the error:\n%s") %
+                str(e).decode('utf-8', 'ignore'))
 
     @api.multi
     def import_partners(self):
@@ -331,10 +336,59 @@ class MagentoBackend(models.Model):
         return path
 
 
+class MagentoConfigSpecializer(models.AbstractModel):
+    _name = 'magento.config.specializer'
+
+    specific_account_analytic_id = fields.Many2one(
+        comodel_name='account.analytic.account',
+        string='Specific analytic account',
+        help='If specified, this analytic account will be used to fill the '
+        'field on the sale order created by the connector. The value can '
+        'also be specified on website or the store or the store view.'
+    )
+    specific_fiscal_position_id = fields.Many2one(
+        comodel_name='account.fiscal.position',
+        string='Specific fiscal position',
+        help='If specified, this fiscal position will be used to fill the '
+        'field fiscal position on the sale order created by the connector.'
+        'The value can also be specified on website or the store or the '
+        'store view.'
+    )
+    account_analytic_id = fields.Many2one(
+        comodel_name='account.analytic.account',
+        string='Analytic account',
+        compute='_get_account_analytic_id',
+    )
+    fiscal_position_id = fields.Many2one(
+        comodel_name='account.fiscal.position',
+        string='Fiscal position',
+        compute='_get_fiscal_position_id',
+    )
+
+    @property
+    def _parent(self):
+        return getattr(self, self._parent_name)
+
+    @api.multi
+    def _get_account_analytic_id(self):
+        for this in self:
+            this.account_analytic_id = (
+                this.specific_account_analytic_id or
+                this._parent.account_analytic_id)
+
+    @api.multi
+    def _get_fiscal_position_id(self):
+        for this in self:
+            this.fiscal_position_id = (
+                this.specific_fiscal_position_id or
+                this._parent.fiscal_position_id)
+
+
 class MagentoWebsite(models.Model):
     _name = 'magento.website'
-    _inherit = 'magento.binding'
+    _inherit = ['magento.binding', 'magento.config.specializer']
     _description = 'Magento Website'
+    _parent_name = 'backend_id'
 
     _order = 'sort_order ASC, id ASC'
 
@@ -390,8 +444,9 @@ class MagentoWebsite(models.Model):
 
 class MagentoStore(models.Model):
     _name = 'magento.store'
-    _inherit = 'magento.binding'
+    _inherit = ['magento.binding', 'magento.config.specializer']
     _description = 'Magento Store'
+    _parent_name = 'website_id'
 
     name = fields.Char()
     website_id = fields.Many2one(
@@ -442,8 +497,9 @@ class MagentoStore(models.Model):
 
 class MagentoStoreview(models.Model):
     _name = 'magento.storeview'
-    _inherit = 'magento.binding'
+    _inherit = ['magento.binding', 'magento.config.specializer']
     _description = "Magento Storeview"
+    _parent_name = 'store_id'
 
     _order = 'sort_order ASC, id ASC'
 
@@ -456,8 +512,7 @@ class MagentoStoreview(models.Model):
                                ondelete='cascade',
                                readonly=True)
     lang_id = fields.Many2one(comodel_name='res.lang', string='Language')
-    section_id = fields.Many2one(comodel_name='crm.case.section',
-                                 string='Sales Team')
+    team_id = fields.Many2one(comodel_name='crm.team', string='Sales Team')
     backend_id = fields.Many2one(
         comodel_name='magento.backend',
         related='store_id.website_id.backend_id',

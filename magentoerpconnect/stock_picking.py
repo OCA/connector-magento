@@ -1,23 +1,7 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    Author: Joël Grand-Guillaume
-#    Copyright 2013 Camptocamp SA
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# © 2013 Guewen Baconnier,Camptocamp SA,Akretion
+# © 2016 Sodexis
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 import logging
 import xmlrpclib
@@ -28,7 +12,7 @@ from openerp.addons.connector.event import on_record_create
 from openerp.addons.connector.exception import NothingToDoJob
 from openerp.addons.connector.unit.synchronizer import Exporter
 from openerp.addons.connector.exception import IDMissingInBackend
-from openerp.addons.connector_ecommerce.event import on_picking_out_done
+from openerp.addons.connector_ecommerce.models.event import on_picking_out_done
 from .unit.backend_adapter import GenericAdapter
 from .connector import get_environment
 from .backend import magento

@@ -21,18 +21,15 @@ sys.path.append(os.path.abspath('_themes'))
 if os.environ.get('TRAVIS_BUILD_DIR') and os.environ.get('VERSION'):
     # build from travis
     repos_home = os.environ['HOME']
+    deps_path = os.path.join(repos_home, 'dependencies')
     odoo_folder = 'odoo-8.0'
     odoo_root = os.path.join(repos_home, odoo_folder)
     build_path = os.environ['TRAVIS_BUILD_DIR']
 else:
     # build from a buildout
     odoo_root = os.path.abspath('../../../odoo')
-    repos_home = os.path.abspath('../../..')
+    deps_path = os.path.abspath('../../..')
     build_path = os.path.abspath('../..')
-
-repos = [repo for repo in os.listdir(repos_home)
-         if os.path.isdir(os.path.join(repos_home, repo))
-         and not repo.startswith('.')]
 
 addons_paths = []
 
@@ -46,13 +43,12 @@ add_path(odoo_root, 'openerp', 'addons')
 add_path(odoo_root, 'addons')
 add_path(build_path)
 
-# filter addons-paths which are not dependencies (we have other
-# directories such as "builds" on travis)
-with open('../../oca_dependencies.txt', 'r') as depfile:
-    dependencies = depfile.read().split()
-for repo in repos:
-    if repo in dependencies:
-        add_path(repos_home, repo)
+deps_repos = [repo for repo in os.listdir(deps_path)
+              if os.path.isdir(os.path.join(deps_path, repo)) and
+              not repo.startswith('.')]
+
+for repo in deps_repos:
+    add_path(deps_path, repo)
 
 addons = [x for x in os.listdir(build_path)
           if not x.startswith(('.', '__')) and

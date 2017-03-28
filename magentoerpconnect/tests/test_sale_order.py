@@ -54,6 +54,63 @@ class TestSaleOrder(SetUpMagentoSynchronized):
         self.assertEqual(len(binding), 1)
         return binding
 
+    def test_import_options(self):
+        """Test import options such as the account_analytic_account and
+        the fiscal_position that can be specified at different level of the
+        backend models (backend, wesite, store and storeview)
+        """
+        binding = self._import_sale_order(900000691)
+        self.assertFalse(binding.project_id)
+        self.assertFalse(binding.fiscal_position)
+        # keep a reference to backend models the website
+        storeview_id = binding.storeview_id
+        store_id = storeview_id.store_id
+        website_id = store_id.website_id
+        binding.openerp_id.unlink()
+        binding.unlink()
+        # define options at the backend level
+        fp1 = self.env['account.fiscal.position'].create({'name': "fp1"})
+        account_analytic_id = self.env['account.analytic.account'].create(
+            {'name': 'aaa1'})
+        self.backend.account_analytic_id = account_analytic_id
+        self.backend.fiscal_position_id = fp1.id
+        binding = self._import_sale_order(900000691)
+        self.assertEquals(binding.project_id, account_analytic_id)
+        self.assertEquals(binding.fiscal_position, fp1)
+        binding.openerp_id.unlink()
+        binding.unlink()
+        # define options at the website level
+        account_analytic_id = self.env['account.analytic.account'].create(
+            {'name': 'aaa2'})
+        fp2 = self.env['account.fiscal.position'].create({'name': "fp2"})
+        website_id.specific_account_analytic_id = account_analytic_id
+        website_id.specific_fiscal_position_id = fp2.id
+        binding = self._import_sale_order(900000691)
+        self.assertEquals(binding.project_id, account_analytic_id)
+        self.assertEquals(binding.fiscal_position, fp2)
+        binding.openerp_id.unlink()
+        binding.unlink()
+        # define options at the store level
+        account_analytic_id = self.env['account.analytic.account'].create(
+            {'name': 'aaa3'})
+        fp3 = self.env['account.fiscal.position'].create({'name': "fp3"})
+        store_id.specific_account_analytic_id = account_analytic_id
+        store_id.specific_fiscal_position_id = fp3.id
+        binding = self._import_sale_order(900000691)
+        self.assertEquals(binding.project_id, account_analytic_id)
+        self.assertEquals(binding.fiscal_position, fp3)
+        binding.openerp_id.unlink()
+        binding.unlink()
+        # define options at the storeview level
+        account_analytic_id = self.env['account.analytic.account'].create(
+            {'name': 'aaa4'})
+        fp4 = self.env['account.fiscal.position'].create({'name': "fp4"})
+        storeview_id.specific_account_analytic_id = account_analytic_id
+        storeview_id.specific_fiscal_position_id = fp4.id
+        binding = self._import_sale_order(900000691)
+        self.assertEquals(binding.project_id, account_analytic_id)
+        self.assertEquals(binding.fiscal_position, fp4)
+
     def test_copy_quotation(self):
         """ Copy a sales order with copy_quotation move bindings """
         binding = self._import_sale_order(900000691)
@@ -189,10 +246,10 @@ class TestSaleOrder(SetUpMagentoSynchronized):
             ('backend_id', '=', self.backend_id),
             ('magento_id', '=', '1')
         ])
-        team = self.env['crm.case.section'].create({'name': 'Magento Team'})
-        storeview.section_id = team
+        team = self.env['crm.team'].create({'name': 'Magento Team'})
+        storeview.team_id = team
         binding = self._import_sale_order(900000691)
-        self.assertEqual(binding.section_id, team)
+        self.assertEqual(binding.team_id, team)
 
     def test_import_guest_order(self):
         binding = self._import_sale_order(900000700,

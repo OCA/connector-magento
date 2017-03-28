@@ -1,23 +1,7 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    Author: Joel Grand-Guillaume
-#    Copyright 2013 Camptocamp SA
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# © 2013 Guewen Baconnier,Camptocamp SA,Akretion
+# © 2016 Sodexis
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 import logging
 import xmlrpclib
@@ -36,9 +20,11 @@ from openerp.addons.connector.unit.mapper import (mapping,
                                                   )
 from openerp.addons.connector_ecommerce.unit.sale_order_onchange import (
     SaleOrderOnChange)
-from openerp.addons.connector_ecommerce.sale import (ShippingLineBuilder,
-                                                     CashOnDeliveryLineBuilder,
-                                                     GiftOrderLineBuilder)
+
+from openerp.addons.connector_ecommerce.unit.line_builder import (
+    ShippingLineBuilder,
+    CashOnDeliveryLineBuilder,
+    GiftOrderLineBuilder)
 from .unit.backend_adapter import (GenericAdapter,
                                    MAGENTO_DATETIME_FORMAT,
                                    )
@@ -409,18 +395,18 @@ class SaleImportRule(ConnectorUnit):
         :rtype: boolean
         """
         payment_method = record['payment']['method']
-        method = self.env['payment.method'].search(
+        method = self.env['account.payment.mode'].search(
             [('name', '=', payment_method)],
             limit=1,
         )
         if not method:
             raise FailedJobError(
-                "The configuration is missing for the Payment Method '%s'.\n\n"
+                "The configuration is missing for the Payment Mode '%s'.\n\n"
                 "Resolution:\n"
                 "- Go to "
-                "'Sales > Configuration > Sales > Customer Payment Method\n"
-                "- Create a new Payment Method with name '%s'\n"
-                "-Eventually  link the Payment Method to an existing Workflow "
+                "'Accounting > Configuration > Management > Payment Modes'\n"
+                "- Create a new Payment Mode with name '%s'\n"
+                "- Eventually link the Payment Mode to an existing Workflow "
                 "Process or create a new one." % (payment_method,
                                                   payment_method))
         self._rule_global(record, method)
@@ -488,11 +474,14 @@ class SaleOrderImportMapper(ImportMapper):
         record = map_record.source
         if 'gift_cert_amount' not in record:
             return values
+        # if gift_cert_amount is zero
+        if not record.get('gift_cert_amount'):
+            return values
         amount = float(record['gift_cert_amount'])
         line_builder = self.unit_for(MagentoGiftOrderLineBuilder)
         line_builder.price_unit = amount
         if 'gift_cert_code' in record:
-            line_builder.code = record['gift_cert_code']
+            line_builder.gift_code = record['gift_cert_code']
         line = (0, 0, line_builder.get_line())
         values['order_line'].append(line)
         return values
@@ -530,14 +519,14 @@ class SaleOrderImportMapper(ImportMapper):
     @mapping
     def payment(self, record):
         record_method = record['payment']['method']
-        method = self.env['payment.method'].search(
+        method = self.env['account.payment.mode'].search(
             [['name', '=', record_method]],
             limit=1,
         )
         assert method, ("method %s should exist because the import fails "
                         "in SaleOrderImporter._before_import when it is "
                         " missing" % record['payment']['method'])
-        return {'payment_method_id': method.id}
+        return {'payment_mode_id': method.id}
 
     @mapping
     def shipping_method(self, record):
@@ -565,9 +554,21 @@ class SaleOrderImportMapper(ImportMapper):
 
     @mapping
     def sales_team(self, record):
-        team = self.options.storeview.section_id
+        team = self.options.storeview.team_id
         if team:
-            return {'section_id': team.id}
+            return {'team_id': team.id}
+
+    @mapping
+    def project_id(self, record):
+        project_id = self.options.storeview.account_analytic_id
+        if project_id:
+            return {'project_id': project_id.id}
+
+    @mapping
+    def fiscal_position(self, record):
+        fiscal_position = self.options.storeview.fiscal_position_id
+        if fiscal_position:
+            return {'fiscal_position': fiscal_position.id}
 
     # partner_id, partner_invoice_id, partner_shipping_id
     # are done in the importer
@@ -587,6 +588,11 @@ class SaleOrderImportMapper(ImportMapper):
         comment_mapper = self.unit_for(SaleOrderCommentImportMapper)
         map_record = comment_mapper.map_record(record)
         return map_record.values(**self.options)
+
+    @mapping
+    def pricelist_id(self, record):
+        pricelist_mapper = self.unit_for(PricelistSaleOrderImportMapper)
+        return pricelist_mapper.map_record(record).values(**self.options)
 
 
 @magento
@@ -682,14 +688,6 @@ class SaleOrderImporter(MagentoImporter):
         rules = self.unit_for(SaleImportRule)
         rules.check(self.magento_record)
 
-    def _create_payment(self, binding):
-        if not binding.payment_method_id.journal_id:
-            return
-        amount = self.magento_record.get('payment', {}).get('amount_paid')
-        if amount:
-            amount = float(amount)  # magento gives a str
-            binding.openerp_id.automatic_payment(amount)
-
     def _link_parent_orders(self, binding):
         """ Link the magento.sale.order to its parent orders.
 
@@ -724,7 +722,6 @@ class SaleOrderImporter(MagentoImporter):
 
     def _after_import(self, binding):
         self._link_parent_orders(binding)
-        self._create_payment(binding)
         if binding.magento_parent_id:
             move_comment = self.unit_for(SaleOrderMoveComment)
             move_comment.move(binding)
@@ -855,13 +852,10 @@ class SaleOrderImporter(MagentoImporter):
         # the partner form or the searches. Too many adresses would
         # be displayed.
         # They are never synchronized.
-
-        # For the orders which are from guests, we let the addresses
-        # as active because they don't have an address book.
         addresses_defaults = {'parent_id': partner.id,
                               'magento_partner_id': partner_binding.id,
                               'email': record.get('customer_email', False),
-                              'active': is_guest_order,
+                              'active': False,
                               'is_magento_order_address': True}
 
         addr_mapper = self.unit_for(ImportMapper, model='magento.address')
@@ -935,6 +929,15 @@ SaleOrderImport = SaleOrderImporter  # deprecated
 
 
 @magento
+class PricelistSaleOrderImportMapper(ImportMapper):
+    """ Mapper for importing the sales order pricelist
+
+    Does nothing by default. Replaced in magentoerpconnect_pricing.
+    """
+    _model_name = 'magento.sale.order'
+
+
+@magento
 class SaleOrderCommentImportMapper(ImportMapper):
     """ Mapper for importing comments of sales orders.
 
@@ -953,7 +956,7 @@ class SaleOrderLineImportMapper(ImportMapper):
     _model_name = 'magento.sale.order.line'
 
     direct = [('qty_ordered', 'product_uom_qty'),
-              ('qty_ordered', 'product_uos_qty'),
+              ('qty_ordered', 'product_qty'),
               ('name', 'name'),
               ('item_id', 'magento_id'),
               ]
