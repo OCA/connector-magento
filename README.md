@@ -25,6 +25,7 @@ addon | version | summary
 [magentoerpconnect_pricing](magentoerpconnect_pricing/) | 8.0.2.0.0 | Magento Connector - Pricing
 [server_env_magentoerpconnect](server_env_magentoerpconnect/) | 8.0.1.0.0 | Server environment for Magento Connector
 
+
 Unported addons
 ---------------
 addon | version | summary
