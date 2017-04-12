@@ -153,7 +153,7 @@ class MagentoCRUDAdapter(CRUDAdapter):
         """ Delete a record on the external system """
         raise NotImplementedError
 
-    def _call(self, method, arguments=None):
+    def _call(self, method, arguments=None, http_method=None):
         try:
             custom_url = self.magento.use_custom_api_path
             protocol = 'rest' if self.magento.version == '2.0' else 'xmlrpc'
@@ -172,9 +172,11 @@ class MagentoCRUDAdapter(CRUDAdapter):
                         arguments.pop()
                 start = datetime.now()
                 try:
-                    result = api.call(method, arguments)
+                    result = api.call(
+                        method, arguments, http_method=http_method)
                 except:
-                    _logger.error("api.call(%s, %s) failed", method, arguments)
+                    _logger.error("api.call(%s, %s, %s) failed",
+                                  method, arguments, http_method)
                     raise
                 else:
                     _logger.debug("api.call(%s, %s) returned %s in %s seconds",
