@@ -4,19 +4,20 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from . import setting
-from . import connector
-from . import backend
+from . import binding
+
+from . import components
 
 from . import magento_model
-from . import product
-from . import product_category
+# from . import product
+# from . import product_category
 from . import partner
 from . import partner_category
-from . import invoice
-from . import sale
-from . import delivery
-from . import stock_picking
-from . import stock_tracking
-from . import account_payment_mode
+# from . import invoice
+# from . import sale
+# from . import delivery
+# from . import stock_picking
+# from . import stock_tracking
+# from . import account_payment_mode
 
 from . import consumer

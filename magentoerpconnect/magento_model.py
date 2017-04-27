@@ -5,20 +5,12 @@
 
 import logging
 from datetime import datetime, timedelta
-from openerp import models, fields, api, _
-from openerp.exceptions import Warning as UserError
-from openerp.addons.connector.session import ConnectorSession
-from openerp.addons.connector.connector import ConnectorUnit
-from openerp.addons.connector.unit.mapper import mapping, ImportMapper
-from .unit.backend_adapter import GenericAdapter
-from .unit.import_synchronizer import (import_batch,
-                                       DirectBatchImporter,
-                                       MagentoImporter,
-                                       )
-from .partner import partner_import_batch
-from .sale import sale_order_import_batch
-from .backend import magento
-from .connector import add_checkpoint
+from odoo import models, fields, api, _
+from odoo.exceptions import UserError
+from odoo.addons.component.core import Component
+
+from odoo.addons.connector.unit.mapper import mapping
+from odoo.addons.connector.checkpoint import checkpoint
 
 _logger = logging.getLogger(__name__)
 
@@ -29,8 +21,6 @@ class MagentoBackend(models.Model):
     _name = 'magento.backend'
     _description = 'Magento Backend'
     _inherit = 'connector.backend'
-
-    _backend_type = 'magento'
 
     @api.model
     def select_versions(self):
@@ -91,7 +81,7 @@ class MagentoBackend(models.Model):
         help="A prefix put before the name of imported sales orders.\n"
              "For instance, if the prefix is 'mag-', the sales "
              "order 100000692 in Magento, will be named 'mag-100000692' "
-             "in OpenERP.",
+             "in Odoo.",
     )
     warehouse_id = fields.Many2one(
         comodel_name='stock.warehouse',
@@ -144,12 +134,12 @@ class MagentoBackend(models.Model):
              "stock inventory updates.\nIf empty, Quantity Available "
              "is used.",
     )
-    product_binding_ids = fields.One2many(
-        comodel_name='magento.product.product',
-        inverse_name='backend_id',
-        string='Magento Products',
-        readonly=True,
-    )
+    # product_binding_ids = fields.One2many(
+    #     comodel_name='magento.product.product',
+    #     inverse_name='backend_id',
+    #     string='Magento Products',
+    #     readonly=True,
+    # )
     account_analytic_id = fields.Many2one(
         comodel_name='account.analytic.account',
         string='Analytic account',
@@ -184,9 +174,23 @@ class MagentoBackend(models.Model):
         return True
 
     @api.multi
+    def work_on(self, model_name, **kwargs):
+        self.ensure_one()
+        lang = self.default_lang_id
+        if lang.code != self.env.context.get('lang'):
+            self = self.with_context(lang=lang.code)
+        return super(MagentoBackend, self).work_on(model_name, **kwargs)
+
+    @api.multi
+    def add_checkpoint(self, record):
+        self.ensure_one()
+        record.ensure_one()
+        return checkpoint.add_checkpoint(record._name, record.id,
+                                         self._name, self.id)
+
+    @api.multi
     def synchronize_metadata(self):
         try:
-            session = ConnectorSession.from_env(self.env)
             for backend in self:
                 for model in ('magento.website',
                               'magento.store',
@@ -195,6 +199,7 @@ class MagentoBackend(models.Model):
                     # is a fast operation, a direct return is fine
                     # and it is simpler to import them sequentially
                     import_batch(session, model, backend.id)
+                    self.env[model].with_delay().import_batch(backend)
             return True
         except Exception as e:
             _logger.error(e.message, exc_info=True)
@@ -221,31 +226,28 @@ class MagentoBackend(models.Model):
 
     @api.multi
     def import_customer_groups(self):
-        session = ConnectorSession(self.env.cr, self.env.uid,
-                                   context=self.env.context)
         for backend in self:
             backend.check_magento_structure()
-            import_batch.delay(session, 'magento.res.partner.category',
-                               backend.id)
-
+            self.env['magento.res.partner.category'].with_delay().import_batch(
+                backend,
+            )
         return True
 
     @api.multi
     def _import_from_date(self, model, from_date_field):
-        session = ConnectorSession(self.env.cr, self.env.uid,
-                                   context=self.env.context)
         import_start_time = datetime.now()
         for backend in self:
             backend.check_magento_structure()
-            from_date = getattr(backend, from_date_field)
+            from_date = backend[from_date_field]
             if from_date:
                 from_date = fields.Datetime.from_string(from_date)
             else:
                 from_date = None
-            import_batch.delay(session, model,
-                               backend.id,
-                               filters={'from_date': from_date,
-                                        'to_date': import_start_time})
+            self.env[model].with_delay().import_batch(
+                backend,
+                filters={'from_date': from_date,
+                         'to_date': import_start_time}
+            )
         # Records from Magento are imported based on their `created_at`
         # date.  This date is set on Magento at the beginning of a
         # transaction, so if the import is run between the beginning and
@@ -404,29 +406,28 @@ class MagentoWebsite(models.Model):
     import_partners_from_date = fields.Datetime(
         string='Import partners from date',
     )
-    product_binding_ids = fields.Many2many(
-        comodel_name='magento.product.product',
-        string='Magento Products',
-        readonly=True,
-    )
+    # product_binding_ids = fields.Many2many(
+    #     comodel_name='magento.product.product',
+    #     string='Magento Products',
+    #     readonly=True,
+    # )
 
     @api.multi
     def import_partners(self):
-        session = ConnectorSession(self.env.cr, self.env.uid,
-                                   context=self.env.context)
         import_start_time = datetime.now()
         for website in self:
-            backend_id = website.backend_id.id
+            backend = website.backend_id
             if website.import_partners_from_date:
                 from_string = fields.Datetime.from_string
                 from_date = from_string(website.import_partners_from_date)
             else:
                 from_date = None
-            partner_import_batch.delay(
-                session, 'magento.res.partner', backend_id,
-                {'magento_website_id': website.magento_id,
-                 'from_date': from_date,
-                 'to_date': import_start_time})
+            self.env['magento.res.partner'].with_delay().import_batch(
+                backend,
+                filters={'magento_website_id': website.magento_id,
+                         'from_date': from_date,
+                         'to_date': import_start_time}
+            )
         # Records from Magento are imported based on their `created_at`
         # date.  This date is set on Magento at the beginning of a
         # transaction, so if the import is run between the beginning and
@@ -488,7 +489,7 @@ class MagentoStore(models.Model):
         default='paid',
         required=True,
         help="Should the invoice be created in Magento "
-             "when it is validated or when it is paid in OpenERP?\n"
+             "when it is validated or when it is paid in Odoo?\n"
              "This only takes effect if the sales order's related "
              "payment method is not giving an option for this by "
              "itself. (See Payment Methods)",
@@ -575,29 +576,37 @@ class MagentoStoreview(models.Model):
         return True
 
 
-@magento
-class WebsiteAdapter(GenericAdapter):
-    _model_name = 'magento.website'
+class WebsiteAdapter(Component):
+    _name = 'magento.website.adapter'
+    _inherit = 'magento.adapter'
+    _collection = 'magento.backend'
+    _apply_on = 'magento.website'
+
     _magento_model = 'ol_websites'
     _admin_path = 'system_store/editWebsite/website_id/{id}'
 
 
-@magento
-class StoreAdapter(GenericAdapter):
-    _model_name = 'magento.store'
+class StoreAdapter(Component):
+    _name = 'magento.store.adapter'
+    _inherit = 'magento.adapter'
+    _collection = 'magento.backend'
+    _apply_on = 'magento.store'
+
     _magento_model = 'ol_groups'
     _admin_path = 'system_store/editGroup/group_id/{id}'
 
 
-@magento
-class StoreviewAdapter(GenericAdapter):
-    _model_name = 'magento.storeview'
+class StoreviewAdapter(Component):
+    _name = 'magento.storeview.adapter'
+    _inherit = 'magento.adapter'
+    _collection = 'magento.backend'
+    _apply_on = 'magento.storeview'
+
     _magento_model = 'ol_storeviews'
     _admin_path = 'system_store/editStore/store_id/{id}'
 
 
-@magento
-class MetadataBatchImporter(DirectBatchImporter):
+class MetadataBatchImporter(Component):
     """ Import the records directly, without delaying the jobs.
 
     Import the Magento Websites, Stores, Storeviews
@@ -606,19 +615,22 @@ class MetadataBatchImporter(DirectBatchImporter):
     and we don't really bother if it blocks the UI during this time.
     (that's also a mean to rapidly check the connectivity with Magento).
     """
-    _model_name = [
+
+    _name = 'magento.metadata.batch.importer'
+    _inherit = 'magento.direct.batch.importer'
+    _collection = 'magento.backend'
+    _apply_on = [
         'magento.website',
         'magento.store',
         'magento.storeview',
     ]
 
 
-MetadataBatchImport = MetadataBatchImporter  # deprecated
-
-
-@magento
-class WebsiteImportMapper(ImportMapper):
-    _model_name = 'magento.website'
+class WebsiteImportMapper(Component):
+    _name = 'magento.website.mapper'
+    _inherit = 'magento.import.mapper'
+    _collection = 'magento.backend'
+    _apply_on = 'magento.website'
 
     direct = [('code', 'code'),
               ('sort_order', 'sort_order')]
@@ -635,22 +647,26 @@ class WebsiteImportMapper(ImportMapper):
         return {'backend_id': self.backend_record.id}
 
 
-@magento
-class StoreImportMapper(ImportMapper):
-    _model_name = 'magento.store'
+class StoreImportMapper(Component):
+    _name = 'magento.store.mapper'
+    _inherit = 'magento.import.mapper'
+    _collection = 'magento.backend'
+    _apply_on = 'magento.store'
 
     direct = [('name', 'name')]
 
     @mapping
     def website_id(self, record):
         binder = self.binder_for(model='magento.website')
-        binding_id = binder.to_openerp(record['website_id'])
-        return {'website_id': binding_id}
+        binding = binder.to_internal(record['website_id'])
+        return {'website_id': binding.id}
 
 
-@magento
-class StoreviewImportMapper(ImportMapper):
-    _model_name = 'magento.storeview'
+class StoreviewImportMapper(Component):
+    _name = 'magento.storeview.mapper'
+    _inherit = 'magento.import.mapper'
+    _collection = 'magento.backend'
+    _apply_on = 'magento.storeview'
 
     direct = [
         ('name', 'name'),
@@ -662,56 +678,35 @@ class StoreviewImportMapper(ImportMapper):
     @mapping
     def store_id(self, record):
         binder = self.binder_for(model='magento.store')
-        binding_id = binder.to_openerp(record['group_id'])
-        return {'store_id': binding_id}
+        binding = binder.to_internal(record['group_id'])
+        return {'store_id': binding.id}
 
 
-@magento
-class StoreImporter(MagentoImporter):
+class StoreImporter(Component):
     """ Import one Magento Store (create a sale.shop via _inherits) """
-    _model_name = ['magento.store',
-                   ]
 
-    def _create(self, data):
-        binding = super(StoreImporter, self)._create(data)
-        checkpoint = self.unit_for(StoreAddCheckpoint)
-        checkpoint.run(binding.id)
-        return binding
-
-
-StoreImport = StoreImporter  # deprecated
-
-
-@magento
-class StoreviewImporter(MagentoImporter):
-    """ Import one Magento Storeview """
-    _model_name = ['magento.storeview',
-                   ]
+    _name = 'magento.store.importer'
+    _inherit = 'magento.importer'
+    _collection = 'magento.backend'
+    _apply_on = 'magento.store'
 
     def _create(self, data):
         binding = super(StoreviewImporter, self)._create(data)
-        checkpoint = self.unit_for(StoreAddCheckpoint)
-        checkpoint.run(binding.id)
+        checkpoint = self.components(usage='add.checkpoint')
+        checkpoint.run(binding)
         return binding
 
 
-StoreviewImport = StoreviewImporter  # deprecated
+class StoreviewImporter(Component):
+    """ Import one Magento Storeview """
 
+    _name = 'magento.storeview.importer'
+    _inherit = 'magento.importer'
+    _collection = 'magento.backend'
+    _apply_on = 'magento.storeview'
 
-@magento
-class StoreAddCheckpoint(ConnectorUnit):
-    """ Add a connector.checkpoint on the magento.storeview
-    or magento.store record
-    """
-    _model_name = ['magento.storeview',
-                   'magento.store',
-                   ]
-
-    def run(self, binding_id):
-        add_checkpoint(self.session,
-                       self.model._name,
-                       binding_id,
-                       self.backend_record.id)
-
-# backward compatibility
-StoreViewAddCheckpoint = magento(StoreAddCheckpoint)
+    def _create(self, data):
+        binding = super(StoreviewImporter, self)._create(data)
+        checkpoint = self.components(usage='add.checkpoint')
+        checkpoint.run(binding)
+        return binding

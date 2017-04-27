@@ -3,10 +3,10 @@
 # © 2016 Sodexis
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from openerp.addons.connector.connector import Binder
-from .unit.export_synchronizer import export_record
-from .unit.delete_synchronizer import export_delete_record
-from .connector import get_environment
+# from openerp.addons.connector.connector import Binder
+# from .unit.export_synchronizer import export_record
+# from .unit.delete_synchronizer import export_delete_record
+# from .connector import get_environment
 
 
 def delay_export(session, model_name, record_id, vals):
