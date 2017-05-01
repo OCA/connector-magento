@@ -24,8 +24,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-23 15:24+0000\n"
-"PO-Revision-Date: 2017-03-23 20:10+0000\n"
+"POT-Creation-Date: 2017-03-28 02:04+0000\n"
+"PO-Revision-Date: 2017-04-25 23:05+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: French (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -619,7 +619,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.product.product,standard_price:0
 msgid "Cost Price"
-msgstr ""
+msgstr "Prix de revient"
 
 #. module: magentoerpconnect
 #: help:magento.product.product,standard_price:0

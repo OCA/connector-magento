@@ -16,7 +16,7 @@
 # Hotellook, 2014
 # jeon <bluerespect@nate.com>, 2014
 # Jong-Dae Park <jdpark7@gmail.com>, 2013,2015
-# Kevin Min <gr326887@graded.br>, 2015
+# Gu Hong Min <placidmoon1@gmail.com>, 2015
 # Kunwoo Kim <crazyabtmath@naver.com>, 2015
 # LEE SI HYEONG <super2451894@gmail.com>, 2014
 # Matjaž Mozetič <m.mozetic@matmoz.si>, 2015
@@ -29,8 +29,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-23 15:24+0000\n"
-"PO-Revision-Date: 2017-03-24 15:28+0000\n"
+"POT-Creation-Date: 2017-03-28 02:04+0000\n"
+"PO-Revision-Date: 2017-04-25 10:43+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: German (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/de/)\n"
 "MIME-Version: 1.0\n"
@@ -1474,7 +1474,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.stock.picking,invoice_state:0
 msgid "Invoice Control"
-msgstr ""
+msgstr "Rechnungskontrolle"
 
 #. module: magentoerpconnect
 #: code:addons/magentoerpconnect/invoice.py:122
@@ -1524,12 +1524,12 @@ msgstr ""
 #: field:magento.address,invoice_ids:0 field:magento.res.partner,invoice_ids:0
 #: field:magento.sale.order,invoice_ids:0
 msgid "Invoices"
-msgstr ""
+msgstr "Rechnungen"
 
 #. module: magentoerpconnect
 #: field:magento.address,is_company:0 field:magento.res.partner,is_company:0
 msgid "Is a Company"
-msgstr ""
+msgstr "Ist ein Unternehmen?"
 
 #. module: magentoerpconnect
 #: field:magento.sale.order.line,is_delivery:0
@@ -1694,7 +1694,7 @@ msgstr "Letzte Synchronisierung"
 #: field:magento.address,last_reconciliation_date:0
 #: field:magento.res.partner,last_reconciliation_date:0
 msgid "Latest Full Reconciliation Date"
-msgstr ""
+msgstr "Letztes Datum eines Vollausgleichs"
 
 #. module: magentoerpconnect
 #: field:magento.product.category,parent_left:0
@@ -2018,7 +2018,7 @@ msgid ""
 "Medium-sized image of this contact. It is automatically resized as a "
 "128x128px image, with aspect ratio preserved. Use this field in form views "
 "or some kanban views."
-msgstr ""
+msgstr "Mittelgroßes Bild. Es wird automatisch auf 128 x 128 Pixel, unter Beibehaltung der Seitenverhältnisse, umgerechnet, sofern eine Seite diese Größe überschreitet. Verwenden Sie dieses Bild in Formularen und Kanban-Sichten"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,message_ids:0
@@ -2048,7 +2048,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.address,mobile:0 field:magento.res.partner,mobile:0
 msgid "Mobile"
-msgstr ""
+msgstr "Mobil"
 
 #. module: magentoerpconnect
 #: field:magento.address,name:0 field:magento.backend,name:0
@@ -2162,7 +2162,7 @@ msgstr "Einmal importiert,\n                                 einige Typen von Da
 #. module: magentoerpconnect
 #: field:magento.address,opt_out:0 field:magento.res.partner,opt_out:0
 msgid "Opt-Out"
-msgstr ""
+msgstr "Opt-Out"
 
 #. module: magentoerpconnect
 #: view:magento.store:magentoerpconnect.view_magento_store_form
@@ -2232,7 +2232,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.address,parent_name:0 field:magento.res.partner,parent_name:0
 msgid "Parent name"
-msgstr ""
+msgstr "Übergeordnetes Objekt"
 
 #. module: magentoerpconnect
 #: selection:magento.stock.picking,picking_method:0
@@ -2270,7 +2270,7 @@ msgstr "Passwort"
 #. module: magentoerpconnect
 #: field:magento.address,debit_limit:0 field:magento.res.partner,debit_limit:0
 msgid "Payable Limit"
-msgstr ""
+msgstr "Begrenzung Verbindlichkeiten"
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_payment_method
@@ -2312,7 +2312,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.address,phone:0 field:magento.res.partner,phone:0
 msgid "Phone"
-msgstr ""
+msgstr "Telefon"
 
 #. module: magentoerpconnect
 #: help:magento.sale.order,picking_policy:0
@@ -2333,7 +2333,7 @@ msgstr "Packmethode"
 #. module: magentoerpconnect
 #: field:magento.stock.picking,picking_type_id:0
 msgid "Picking Type"
-msgstr ""
+msgstr "Kommissionierungsart"
 
 #. module: magentoerpconnect
 #: field:magento.stock.picking,picking_type_code:0
@@ -2351,7 +2351,7 @@ msgid ""
 "Policy to receive emails for new messages pushed to your personal Inbox:\n"
 "- Never: no emails are sent\n"
 "- All Messages: for every notification you receive in your Inbox"
-msgstr ""
+msgstr "Regelung für die Weiterleitung neuer Emails in Ihr persönliches Postfach:\n- Niemals: Keine Nachricht wird weitergeleitet\n- Alle Nachrichten: Jede eingehende Mitteilung in Ihrem Posteingang"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,portal_payment_options:0
@@ -2406,7 +2406,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.stock.picking,priority:0
 msgid "Priority"
-msgstr ""
+msgstr "Priorität"
 
 #. module: magentoerpconnect
 #: help:magento.stock.picking,priority:0
@@ -2418,7 +2418,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.stock.picking,group_id:0
 msgid "Procurement Group"
-msgstr ""
+msgstr "Beschaffungsgruppe"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,property_stock_procurement:0
@@ -2479,7 +2479,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.sale.order.line,product_uos:0
 msgid "Product UoS"
-msgstr ""
+msgstr "Produkt VkME"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,property_stock_production:0
@@ -2533,7 +2533,7 @@ msgid ""
 "In a context with a single Stock Location, this includes goods arriving to this Location, or any of its children.\n"
 "In a context with a single Warehouse, this includes goods arriving to the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods arriving to any Stock Location with 'internal' type."
-msgstr ""
+msgstr "Plan-Zugang von Produktmengen.\nIn Zusammenhang mit einem einzelnen Lagerplatz, sind dies die Mengen an diesem und seinen untergeordneten Lagerplätzen.\nIn Zusammenhang mit einem einzelnen Lager sind dies die eingehenden Mengen an diesem und seinen untergeordneten Lagern.\nAnderenfalls sind dies die eingehenden Mengen aller 'internen' Lager."
 
 #. module: magentoerpconnect
 #: help:magento.product.product,outgoing_qty:0
@@ -2542,7 +2542,7 @@ msgid ""
 "In a context with a single Stock Location, this includes goods leaving this Location, or any of its children.\n"
 "In a context with a single Warehouse, this includes goods leaving the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods leaving any Stock Location with 'internal' type."
-msgstr ""
+msgstr "Plan-Abgang von Produktmengen.\nIn Zusammenhang mit einem einzelnen Lagerplatz sind dies die Mengen an diesem und seinen untergeordneten Lagerplätzen.\nIn Zusammenhang mit einem einzelnen Lager sind dies die abgehenden Mengen an diesem und seinen untergeordneten Lagern.\nAnderenfalls sind dies die Abgänge aller 'internen' Lager."
 
 #. module: magentoerpconnect
 #: field:magento.product.product,loc_rack:0
@@ -2558,7 +2558,7 @@ msgstr ""
 #: field:magento.address,notify_email:0
 #: field:magento.res.partner,notify_email:0
 msgid "Receive Inbox Notifications by Email"
-msgstr ""
+msgstr "Erhalte eingehende Mitteilungen per Email"
 
 #. module: magentoerpconnect
 #: field:magento.stock.picking,recompute_pack_op:0
@@ -2612,7 +2612,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.address,parent_id:0 field:magento.res.partner,parent_id:0
 msgid "Related Company"
-msgstr ""
+msgstr "Zugehöriges Unternehmen"
 
 #. module: magentoerpconnect
 #: field:magento.stock.picking,pack_operation_ids:0
@@ -2642,7 +2642,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.sale.order.line,route_id:0
 msgid "Route"
-msgstr ""
+msgstr "Route"
 
 #. module: magentoerpconnect
 #: field:magento.product.category,route_ids:0
@@ -2689,7 +2689,7 @@ msgstr ""
 #: field:magento.address,property_product_pricelist:0
 #: field:magento.res.partner,property_product_pricelist:0
 msgid "Sale Pricelist"
-msgstr ""
+msgstr "Verkaufspreisliste"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,workflow_process_id:0
@@ -2757,7 +2757,7 @@ msgstr "Kategorie für dieses Produkt wählen"
 msgid ""
 "Select this if you want to set company's address information  for this "
 "contact"
-msgstr ""
+msgstr "Anwählen, wenn Sie die Unternehmenanschrift für diesen Kontakt festlegen möchten"
 
 #. module: magentoerpconnect
 #: selection:magento.product.product,backorders:0
@@ -2829,29 +2829,29 @@ msgstr "Soll die Rechnung angelegt werden, wenn der Auftrag geprüft wurde oder 
 #: field:magento.address,signup_expiration:0
 #: field:magento.res.partner,signup_expiration:0
 msgid "Signup Expiration"
-msgstr ""
+msgstr "Anmeldungablaufdatum"
 
 #. module: magentoerpconnect
 #: field:magento.address,signup_token:0
 #: field:magento.res.partner,signup_token:0
 msgid "Signup Token"
-msgstr ""
+msgstr "Anmeldeschlüssel"
 
 #. module: magentoerpconnect
 #: field:magento.address,signup_type:0 field:magento.res.partner,signup_type:0
 msgid "Signup Token Type"
-msgstr ""
+msgstr "Anmeldeschlüsselart"
 
 #. module: magentoerpconnect
 #: field:magento.address,signup_valid:0
 #: field:magento.res.partner,signup_valid:0
 msgid "Signup Token is Valid"
-msgstr ""
+msgstr "Anmeldeschlüssel ist gültig"
 
 #. module: magentoerpconnect
 #: field:magento.address,signup_url:0 field:magento.res.partner,signup_url:0
 msgid "Signup URL"
-msgstr ""
+msgstr "Anmeldungs-URL"
 
 #. module: magentoerpconnect
 #: field:magento.address,image_small:0
@@ -2866,7 +2866,7 @@ msgid ""
 "Small-sized image of this contact. It is automatically resized as a 64x64px "
 "image, with aspect ratio preserved. Use this field anywhere a small image is"
 " required."
-msgstr ""
+msgstr "Kleines Bild. Dieses wird automatisch als 64 x 64 Bild, unter Beibehaltung des Seitenverhältnisses, umgerechnet. Verwenden Sie dieses Bild da, wo ein kleines Bild benötigt wird."
 
 #. module: magentoerpconnect
 #: field:magento.storeview,sort_order:0 field:magento.website,sort_order:0
@@ -2913,7 +2913,7 @@ msgid ""
 "Standard Price: The cost price is manually updated at the end of a specific period (usually every year).\n"
 "                    Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
 "                    Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example)."
-msgstr ""
+msgstr "Standardpreis: Die Einstandskosten werden manuell, zum Ende einer Periode (üblicherweise am Jahresende) aktualisiert..\nDurchschnittspreis: Der Einstandspreis wird mit jedem Warenzugang neu ermittelt und zur Bestandsbewertung herangezogen.\nIst-Preis: Der angezeigte Einstandspreis ist der, des letzten abgehenden Produkts (und wird z.B. bei Bestandsverlust eingesetzt)."
 
 #. module: magentoerpconnect
 #: field:magento.address,state_id:0 field:magento.res.partner,state_id:0
@@ -2992,12 +2992,12 @@ msgstr "Storeviews"
 #. module: magentoerpconnect
 #: field:magento.address,street:0 field:magento.res.partner,street:0
 msgid "Street"
-msgstr ""
+msgstr "Straße"
 
 #. module: magentoerpconnect
 #: field:magento.address,street2:0 field:magento.res.partner,street2:0
 msgid "Street2"
-msgstr ""
+msgstr "Straße2"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,amount_untaxed:0
@@ -3035,13 +3035,13 @@ msgstr ""
 #: field:magento.address,property_stock_supplier:0
 #: field:magento.res.partner,property_stock_supplier:0
 msgid "Supplier Location"
-msgstr ""
+msgstr "Lieferantenstandort"
 
 #. module: magentoerpconnect
 #: field:magento.address,property_supplier_payment_term:0
 #: field:magento.res.partner,property_supplier_payment_term:0
 msgid "Supplier Payment Term"
-msgstr ""
+msgstr "Lieferanten-Zahlungsbedingungen"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,seller_qty:0
@@ -3051,7 +3051,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.product.product,supplier_taxes_id:0
 msgid "Supplier Taxes"
-msgstr ""
+msgstr "Eingangssteuern"
 
 #. module: magentoerpconnect
 #: view:magento.backend:magentoerpconnect.view_magento_backend_form
@@ -3061,12 +3061,12 @@ msgstr "Synchronisiere Metadaten"
 #. module: magentoerpconnect
 #: field:magento.address,vat:0 field:magento.res.partner,vat:0
 msgid "TIN"
-msgstr ""
+msgstr "USt-ID:"
 
 #. module: magentoerpconnect
 #: field:magento.address,category_id:0 field:magento.res.partner,category_id:0
 msgid "Tags"
-msgstr ""
+msgstr "Schlagworte"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,amount_tax:0
@@ -3088,7 +3088,7 @@ msgstr ""
 msgid ""
 "Tax Identification Number. Check the box if this contact is subjected to "
 "taxes. Used by the some of the legal statements."
-msgstr ""
+msgstr "Steueridentifikationsnummer. Anwählen, wenn dieser Kontakt Steuerpflichtig ist. Verwendet durch einige Finanzberichte."
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,tax_line:0
@@ -3196,12 +3196,12 @@ msgstr "Der Vorgabe API-Pfad ist '/index.php/api/xmlrpc'. Wählen Sie diese Eins
 #: help:magento.res.partner,property_account_position:0
 msgid ""
 "The fiscal position will determine taxes and accounts used for the partner."
-msgstr ""
+msgstr "Die Steuerzuordnung bestimmt die Steuern und Konten, die bei diesem Partner Anwendung finden."
 
 #. module: magentoerpconnect
 #: help:magento.product.product,weight:0
 msgid "The gross weight in Kg."
-msgstr ""
+msgstr "Das Bruttogewicht in kg."
 
 #. module: magentoerpconnect
 #: help:magento.address,user_id:0 help:magento.res.partner,user_id:0
@@ -3213,7 +3213,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: help:magento.product.product,weight_net:0
 msgid "The net weight in Kg."
-msgstr ""
+msgstr "Das Nettogewicht in kg."
 
 #. module: magentoerpconnect
 #: help:magento.account.invoice,account_id:0
@@ -3232,7 +3232,7 @@ msgid ""
 "printed reports. It is important to set a value for this field. You should "
 "use the same timezone that is otherwise used to pick and render date and "
 "time values: your computer's timezone."
-msgstr ""
+msgstr "Des Partners Zeitzone, verwendet, um angepasste Datums- und Uhrzeitangaben in Drucksachen auszugeben. Es ist wichtig hier korrekte Angaben einzupflegen. Sie sollten die gleiche Zeitzone einstellen, die auch anderweitig genutzt wird, die Ihres Arbeitsplatzrechners."
 
 #. module: magentoerpconnect
 #: help:magento.account.invoice,supplier_invoice_number:0
@@ -3264,21 +3264,21 @@ msgstr "Der Bruttobetrag."
 #. module: magentoerpconnect
 #: help:magento.product.product,volume:0
 msgid "The volume in m3."
-msgstr ""
+msgstr "Das Volumen in m³."
 
 #. module: magentoerpconnect
 #: help:magento.product.product,property_account_expense:0
 msgid ""
 "This account will be used for invoices instead of the default one to value "
 "expenses for the current product."
-msgstr ""
+msgstr "Dieses Konto wird zur Abrechnung verwendet, anstelle des Vorgabe-Aufwandskontos dieses Produkts."
 
 #. module: magentoerpconnect
 #: help:magento.product.product,property_account_income:0
 msgid ""
 "This account will be used for invoices instead of the default one to value "
 "sales for the current product."
-msgstr ""
+msgstr "Dieses Konto wird zur Abrechnung verwendet, anstelle des Vorgabe-Erlöskontos dieses Produkts."
 
 #. module: magentoerpconnect
 #: help:magento.product.category,property_account_expense_categ:0
@@ -3296,7 +3296,7 @@ msgstr ""
 msgid ""
 "This account will be used instead of the default one as the payable account "
 "for the current partner"
-msgstr ""
+msgstr "Dieses Konto wird anstelle des Vorgabe-Kreditorenkontos dieses Partners."
 
 #. module: magentoerpconnect
 #: help:magento.address,property_account_receivable:0
@@ -3304,7 +3304,7 @@ msgstr ""
 msgid ""
 "This account will be used instead of the default one as the receivable "
 "account for the current partner"
-msgstr ""
+msgstr "Dieses Konto wird anstelle des Vorgabe-Debitorenkontos dieses Partners verwendet."
 
 #. module: magentoerpconnect
 #: help:magento.address,property_delivery_carrier:0
@@ -3317,7 +3317,7 @@ msgstr ""
 msgid ""
 "This field holds the image used as avatar for this contact, limited to "
 "1024x1024px"
-msgstr ""
+msgstr "Dieses Feld wird für das 1024x1024px grosse Avatar-Bild dieses Kontakts verwendet"
 
 #. module: magentoerpconnect
 #: help:magento.product.product,image_variant:0
@@ -3373,7 +3373,7 @@ msgstr "Diese Option sollte der Einstellung in Magento entsprechen. Achten Sie a
 msgid ""
 "This payment term will be used instead of the default one for purchase "
 "orders and supplier invoices"
-msgstr ""
+msgstr "Diese Zahlungsbedingung wird anstelle der Vorgabe bei Bestellungen und Eingangsrechnungen verwendet"
 
 #. module: magentoerpconnect
 #: help:magento.address,property_payment_term:0
@@ -3381,7 +3381,7 @@ msgstr ""
 msgid ""
 "This payment term will be used instead of the default one for sale orders "
 "and customer invoices"
-msgstr ""
+msgstr "Diese Zahlungsbedingung wird anstelle der Vorgabe bei Verkaufsaufträgen und Ausgangsrechnungen verwendet"
 
 #. module: magentoerpconnect
 #: help:magento.address,property_product_pricelist:0
@@ -3389,7 +3389,7 @@ msgstr ""
 msgid ""
 "This pricelist will be used, instead of the default one, for sales to the "
 "current partner"
-msgstr ""
+msgstr "Diese Preisliste wird anstelle der Vorgabe bei Verkäufen an diesen Partner verwendet"
 
 #. module: magentoerpconnect
 #: help:magento.address,property_stock_customer:0
@@ -3397,7 +3397,7 @@ msgstr ""
 msgid ""
 "This stock location will be used, instead of the default one, as the "
 "destination location for goods you send to this partner"
-msgstr ""
+msgstr "Dieses Lager wird anstelle der Vorgabe, als Zielort bei Warensendungen an diesen Partner, verwendet"
 
 #. module: magentoerpconnect
 #: help:magento.address,property_stock_supplier:0
@@ -3405,7 +3405,7 @@ msgstr ""
 msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for goods you receive from the current partner"
-msgstr ""
+msgstr "Dieses Lager wird anstelle der Vorgabe, als Herkunftsort bei Warenlieferungen von diesem Partner, verwendet"
 
 #. module: magentoerpconnect
 #: help:magento.product.product,property_stock_production:0
@@ -3431,12 +3431,12 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.address,tz:0 field:magento.res.partner,tz:0
 msgid "Timezone"
-msgstr ""
+msgstr "Zeitzone"
 
 #. module: magentoerpconnect
 #: field:magento.address,tz_offset:0 field:magento.res.partner,tz_offset:0
 msgid "Timezone offset"
-msgstr ""
+msgstr "Zeitzonenversatz"
 
 #. module: magentoerpconnect
 #: field:magento.address,title:0 field:magento.res.partner,title:0
@@ -3463,12 +3463,12 @@ msgstr "Abrechnungssumme"
 #. module: magentoerpconnect
 #: field:magento.address,debit:0 field:magento.res.partner,debit:0
 msgid "Total Payable"
-msgstr ""
+msgstr "Gesamtverbindlichkeit"
 
 #. module: magentoerpconnect
 #: field:magento.address,credit:0 field:magento.res.partner,credit:0
 msgid "Total Receivable"
-msgstr ""
+msgstr "Gesamtforderung"
 
 #. module: magentoerpconnect
 #: model:sale.exception,name:magentoerpconnect.excep_wrong_total_amount_tax
@@ -3483,7 +3483,7 @@ msgstr "Gesamtbetrag"
 #. module: magentoerpconnect
 #: help:magento.address,credit:0 help:magento.res.partner,credit:0
 msgid "Total amount this customer owes you."
-msgstr ""
+msgstr "Gesamtbetrag, den dieser Partner Ihnen schuldet."
 
 #. module: magentoerpconnect
 #: field:magento.sale.order,total_amount_tax:0
@@ -3493,7 +3493,7 @@ msgstr "Bruttogesamtbetrag"
 #. module: magentoerpconnect
 #: help:magento.address,debit:0 help:magento.res.partner,debit:0
 msgid "Total amount you have to pay to this supplier."
-msgstr ""
+msgstr "Gesamtbetrag, den Sie diesem Partner zahlen müssen."
 
 #. module: magentoerpconnect
 #: field:magento.product.category,total_route_ids:0
@@ -3538,7 +3538,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.sale.order.line,price_unit:0
 msgid "Unit Price"
-msgstr ""
+msgstr "Einzelpreis"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,uom_id:0
@@ -3607,7 +3607,7 @@ msgstr "URL zur Magento-Anwendung"
 #: field:magento.address,use_parent_address:0
 #: field:magento.res.partner,use_parent_address:0
 msgid "Use Company Address"
-msgstr ""
+msgstr "Verwende Unternehmensanschrift"
 
 #. module: magentoerpconnect
 #: selection:magento.product.product,backorders:0
@@ -3633,7 +3633,7 @@ msgstr "Eine einfache Zugriff-Authentifizierung zur API verwenden. Der Magento-S
 msgid ""
 "Used to select automatically the right address according to the context in "
 "sales and purchases documents."
-msgstr ""
+msgstr "Verwendet, um automatisch, im Kontext von Verkaufs- oder Einkaufsvorgängen, die richtige Anschrift zu wählen."
 
 #. module: magentoerpconnect
 #: field:magento.backend,username:0
@@ -3649,7 +3649,7 @@ msgstr "Benutzer"
 #: field:magento.address,vat_subjected:0
 #: field:magento.res.partner,vat_subjected:0
 msgid "VAT Legal Statement"
-msgstr ""
+msgstr "USt.-Erklärung"
 
 #. module: magentoerpconnect
 #: selection:magento.store,create_invoice_on:0
@@ -3680,7 +3680,7 @@ msgstr "Version"
 #. module: magentoerpconnect
 #: field:magento.product.product,volume:0 field:magento.stock.picking,volume:0
 msgid "Volume"
-msgstr ""
+msgstr "Volumen"
 
 #. module: magentoerpconnect
 #: field:magento.backend,warehouse_id:0
@@ -3718,7 +3718,7 @@ msgstr "Webseite"
 #. module: magentoerpconnect
 #: help:magento.address,website:0 help:magento.res.partner,website:0
 msgid "Website of Partner or Company"
-msgstr ""
+msgstr "Webseite des Partners oder Unternehmens"
 
 #. module: magentoerpconnect
 #: model:ir.ui.menu,name:magentoerpconnect.menu_magento_website
@@ -3731,7 +3731,7 @@ msgstr "Webseiten"
 #: field:magento.sale.order.line,th_weight:0
 #: field:magento.stock.picking,weight:0
 msgid "Weight"
-msgstr ""
+msgstr "Gewicht"
 
 #. module: magentoerpconnect
 #: help:magento.product.category,property_stock_account_input_categ:0
@@ -3788,7 +3788,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.address,zip:0 field:magento.res.partner,zip:0
 msgid "Zip"
-msgstr ""
+msgstr "PLZ"
 
 #. module: magentoerpconnect
 #: help:magento.storeview,import_orders_from_date:0
@@ -3829,4 +3829,4 @@ msgstr ""
 #: field:magento.product.product,qty_available_text:0
 #: field:magento.res.partner,has_image:0
 msgid "unknown"
-msgstr ""
+msgstr "unbekannt"

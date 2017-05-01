@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-23 15:24+0000\n"
-"PO-Revision-Date: 2017-03-23 20:10+0000\n"
+"POT-Creation-Date: 2017-03-28 02:04+0000\n"
+"PO-Revision-Date: 2017-04-25 10:43+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -880,7 +880,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.sale.order.line,discount:0
 msgid "Discount (%)"
-msgstr ""
+msgstr "折扣（%）"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,display_name:0
@@ -1131,7 +1131,7 @@ msgstr ""
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
+msgstr "HTML格式的简介，包括了各种项目的总结信息（比如消息数，作业数……）"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,id:0 field:magento.address,id:0
@@ -1502,7 +1502,7 @@ msgstr ""
 #: field:magento.address,invoice_ids:0 field:magento.res.partner,invoice_ids:0
 #: field:magento.sale.order,invoice_ids:0
 msgid "Invoices"
-msgstr ""
+msgstr "发票"
 
 #. module: magentoerpconnect
 #: field:magento.address,is_company:0 field:magento.res.partner,is_company:0
@@ -1522,7 +1522,7 @@ msgstr ""
 #: field:magento.sale.order,message_is_follower:0
 #: field:magento.stock.picking,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "关注者"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,is_product_variant:0
@@ -1564,7 +1564,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.account.invoice,journal_id:0
 msgid "Journal"
-msgstr ""
+msgstr "凭证簿"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,move_id:0
@@ -1576,7 +1576,7 @@ msgstr ""
 #: field:magento.address,journal_item_count:0
 #: field:magento.res.partner,journal_item_count:0
 msgid "Journal Items"
-msgstr ""
+msgstr "日记帐项目"
 
 #. module: magentoerpconnect
 #: help:magento.account.invoice,date_invoice:0
@@ -2564,7 +2564,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.stock.picking,name:0
 msgid "Reference"
-msgstr ""
+msgstr "引用"
 
 #. module: magentoerpconnect
 #: help:magento.stock.picking,origin:0

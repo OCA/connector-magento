@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-23 15:24+0000\n"
-"PO-Revision-Date: 2017-03-23 20:10+0000\n"
+"POT-Creation-Date: 2017-03-28 02:04+0000\n"
+"PO-Revision-Date: 2017-04-25 10:44+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: Mongolian (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/mn/)\n"
 "MIME-Version: 1.0\n"
@@ -530,7 +530,7 @@ msgstr ""
 #: view:res.partner:magentoerpconnect.view_partner_form
 #: field:res.partner,company:0
 msgid "Company"
-msgstr ""
+msgstr "Компани"
 
 #. module: magentoerpconnect
 #: selection:magento.stock.picking,picking_method:0
@@ -1564,7 +1564,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.account.invoice,journal_id:0
 msgid "Journal"
-msgstr ""
+msgstr "Журнал"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,move_id:0
@@ -2564,7 +2564,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.stock.picking,name:0
 msgid "Reference"
-msgstr ""
+msgstr "Код"
 
 #. module: magentoerpconnect
 #: help:magento.stock.picking,origin:0
@@ -2909,7 +2909,7 @@ msgstr ""
 #: field:magento.sale.order,state:0 field:magento.sale.order.line,state:0
 #: field:magento.stock.picking,state:0
 msgid "Status"
-msgstr ""
+msgstr "Төлөв"
 
 #. module: magentoerpconnect
 #: field:magento.backend,product_stock_field_id:0

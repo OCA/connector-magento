@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-23 15:24+0000\n"
-"PO-Revision-Date: 2017-03-24 18:23+0000\n"
+"POT-Creation-Date: 2017-03-28 02:04+0000\n"
+"PO-Revision-Date: 2017-04-28 09:21+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: Spanish (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/es/)\n"
 "MIME-Version: 1.0\n"
@@ -273,7 +273,7 @@ msgstr "Una cuenta importada con compañia en la dirección de facturación sera
 #: field:magento.storeview,account_analytic_id:0
 #: field:magento.website,account_analytic_id:0
 msgid "Analytic account"
-msgstr ""
+msgstr "Cuenta analítica"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,attribute_value_ids:0

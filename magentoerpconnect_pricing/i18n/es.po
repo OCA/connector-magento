@@ -13,7 +13,7 @@
 # Hotellook, 2014
 # Isabelle RICHARD <isabellerichard89@gmail.com>, 2015
 # Lixon Jean-Yves <ls.development.nc@gmail.com>, 2016
-# llum.birque@gmail.com <llum.birque@gmail.com>, 2015
+# llum.birque@gmail.com <inactive+Quim@transifex.com>, 2015
 # Lixon Jean-Yves <ls.development.nc@gmail.com>, 2016
 # Matjaž Mozetič <m.mozetic@matmoz.si>, 2015
 # Rudolf Schnapka <rs@techno-flex.de>, 2015
@@ -24,8 +24,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-23 15:24+0000\n"
-"PO-Revision-Date: 2017-03-23 15:24+0000\n"
+"POT-Creation-Date: 2017-03-28 02:04+0000\n"
+"PO-Revision-Date: 2017-04-01 11:28+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: Spanish (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/es/)\n"
 "MIME-Version: 1.0\n"
@@ -88,7 +88,7 @@ msgstr ""
 #. module: magentoerpconnect_pricing
 #: field:magento.backend,update_prices:0
 msgid "Update prices"
-msgstr ""
+msgstr "Actualizar precios"
 
 #. module: magentoerpconnect_pricing
 #: code:addons/magentoerpconnect_pricing/magento_model.py:53

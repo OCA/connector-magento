@@ -17,8 +17,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-23 15:24+0000\n"
-"PO-Revision-Date: 2017-03-23 20:09+0000\n"
+"POT-Creation-Date: 2017-03-28 02:04+0000\n"
+"PO-Revision-Date: 2017-04-25 22:46+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/pt_BR/)\n"
 "MIME-Version: 1.0\n"
@@ -408,7 +408,7 @@ msgstr ""
 #: model:ir.model,name:magentoerpconnect.model_delivery_carrier
 #: field:magento.stock.picking,carrier_id:0
 msgid "Carrier"
-msgstr ""
+msgstr "Transportador"
 
 #. module: magentoerpconnect
 #: field:magento.stock.picking,carrier_tracking_ref:0
@@ -1574,7 +1574,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.account.invoice,journal_id:0
 msgid "Journal"
-msgstr ""
+msgstr "Diário"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,move_id:0
@@ -2919,7 +2919,7 @@ msgstr ""
 #: field:magento.sale.order,state:0 field:magento.sale.order.line,state:0
 #: field:magento.stock.picking,state:0
 msgid "Status"
-msgstr ""
+msgstr "Status"
 
 #. module: magentoerpconnect
 #: field:magento.backend,product_stock_field_id:0
