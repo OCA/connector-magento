@@ -50,7 +50,7 @@ msgstr ""
 #: selection:magento.store,create_invoice_on:0
 #: selection:payment.method,create_invoice_on:0
 msgid "Validate"
-msgstr ""
+msgstr "Validar"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,sync_date:0 field:magento.address,sync_date:0
@@ -349,7 +349,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.backend,location:0
 msgid "Location"
-msgstr ""
+msgstr "Ubicació "
 
 #. module: magentoerpconnect
 #: view:magento.backend:0
@@ -1011,7 +1011,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_payment_method
 msgid "Payment Method"
-msgstr ""
+msgstr "Mètode de pagament"
 
 #. module: magentoerpconnect
 #: field:magento.product.category,description:0
@@ -1058,7 +1058,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.backend,password:0
 msgid "Password"
-msgstr ""
+msgstr "Contrasenya "
 
 #. module: magentoerpconnect
 #: view:magento.backend:0

@@ -10,11 +10,11 @@ msgstr ""
 "POT-Creation-Date: 2017-03-18 01:21+0000\n"
 "PO-Revision-Date: 2015-07-08 12:13+0000\n"
 "Last-Translator: <>\n"
-"Language-Team: Spanish (Ecuador) (http://www.transifex.com/oca/OCA-connector-magento-7-0/language/es_EC/)\n"
+"Language-Team: Catalan (Spain) (http://www.transifex.com/oca/OCA-connector-magento-7-0/language/ca_ES/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: es_EC\n"
+"Language: ca_ES\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: magentoerpconnect
@@ -105,7 +105,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: view:res.partner:0 field:res.partner,company:0
 msgid "Company"
-msgstr "Compañia"
+msgstr "Companyia"
 
 #. module: magentoerpconnect
 #: sql_constraint:magento.website:0
@@ -258,7 +258,7 @@ msgstr ""
 #: model:ir.model,name:magentoerpconnect.model_res_partner
 #: field:magento.address,openerp_id:0 field:magento.res.partner,openerp_id:0
 msgid "Partner"
-msgstr "Empresa"
+msgstr ""
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_sale_order
@@ -716,7 +716,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.backend,website_ids:0
 msgid "Website"
-msgstr "Sitio web"
+msgstr ""
 
 #. module: magentoerpconnect
 #: view:magento.backend:0
@@ -912,7 +912,7 @@ msgstr ""
 #: model:ir.model,name:magentoerpconnect.model_account_invoice
 #: field:magento.account.invoice,openerp_id:0
 msgid "Invoice"
-msgstr "Factura"
+msgstr ""
 
 #. module: magentoerpconnect
 #: code:addons/magentoerpconnect/stock_tracking.py:83
@@ -1016,7 +1016,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.product.category,description:0
 msgid "Description"
-msgstr "Descripción"
+msgstr ""
 
 #. module: magentoerpconnect
 #: selection:magento.product.product,backorders:0
@@ -1096,7 +1096,7 @@ msgstr ""
 #: field:magento.backend,name:0 field:magento.storeview,name:0
 #: field:magento.website,name:0
 msgid "Name"
-msgstr "Nombre"
+msgstr ""
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_magento_website
