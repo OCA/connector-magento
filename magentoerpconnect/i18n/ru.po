@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (7.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-18 01:21+0000\n"
+"POT-Creation-Date: 2017-05-01 16:19+0000\n"
 "PO-Revision-Date: 2015-07-08 12:13+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: Russian (http://www.transifex.com/oca/OCA-connector-magento-7-0/language/ru/)\n"
@@ -747,7 +747,7 @@ msgstr ""
 #: selection:magento.store,create_invoice_on:0
 #: selection:payment.method,create_invoice_on:0
 msgid "Paid"
-msgstr ""
+msgstr "Оплачен"
 
 #. module: magentoerpconnect
 #: view:magento.store:0 view:magento.storeview:0 view:magento.website:0
@@ -1119,7 +1119,7 @@ msgstr ""
 #: model:ir.model,name:magentoerpconnect.model_product_product
 #: field:magento.product.product,openerp_id:0
 msgid "Product"
-msgstr ""
+msgstr "Товар/Услуга"
 
 #. module: magentoerpconnect
 #: view:magento.backend:0
