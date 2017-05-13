@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-28 02:04+0000\n"
-"PO-Revision-Date: 2017-04-25 10:40+0000\n"
+"POT-Creation-Date: 2017-05-06 00:32+0000\n"
+"PO-Revision-Date: 2017-05-11 14:11+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: Russian (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -486,7 +486,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.address,city:0 field:magento.res.partner,city:0
 msgid "City"
-msgstr ""
+msgstr "Город"
 
 #. module: magentoerpconnect
 #: field:magento.storeview,code:0 field:magento.website,code:0
@@ -557,7 +557,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.sale.order,date_confirm:0
 msgid "Confirmation Date"
-msgstr ""
+msgstr "Дата подтверждения"
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_connector_config_settings
@@ -620,7 +620,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.address,country_id:0 field:magento.res.partner,country_id:0
 msgid "Country"
-msgstr ""
+msgstr "Страна"
 
 #. module: magentoerpconnect
 #: field:magento.sale.order,order_policy:0
@@ -880,7 +880,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.sale.order.line,discount:0
 msgid "Discount (%)"
-msgstr ""
+msgstr "Скидка (%)"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,display_name:0
@@ -941,7 +941,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.address,email:0 field:magento.res.partner,email:0
 msgid "Email"
-msgstr ""
+msgstr "Эл. почта"
 
 #. module: magentoerpconnect
 #: field:magento.address,employee:0 field:magento.res.partner,employee:0
@@ -1502,7 +1502,7 @@ msgstr ""
 #: field:magento.address,invoice_ids:0 field:magento.res.partner,invoice_ids:0
 #: field:magento.sale.order,invoice_ids:0
 msgid "Invoices"
-msgstr ""
+msgstr "Счета"
 
 #. module: magentoerpconnect
 #: field:magento.address,is_company:0 field:magento.res.partner,is_company:0
@@ -2184,7 +2184,7 @@ msgstr ""
 #: selection:magento.store,create_invoice_on:0
 #: selection:payment.method,create_invoice_on:0
 msgid "Paid"
-msgstr ""
+msgstr "Оплачен"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,reconciled:0
@@ -2290,7 +2290,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.address,phone:0 field:magento.res.partner,phone:0
 msgid "Phone"
-msgstr ""
+msgstr "Телефон"
 
 #. module: magentoerpconnect
 #: help:magento.sale.order,picking_policy:0
@@ -2420,7 +2420,7 @@ msgstr ""
 #: field:magento.sale.order.line,product_id:0
 #: field:magento.stock.picking,product_id:0
 msgid "Product"
-msgstr ""
+msgstr "Товар/Услуга"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,attribute_line_ids:0
@@ -2492,7 +2492,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.sale.order.line,product_uom_qty:0
 msgid "Quantity"
-msgstr ""
+msgstr "Кол-во"
 
 #. module: magentoerpconnect
 #: field:magento.sale.order.line,product_uos_qty:0
@@ -2970,7 +2970,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.address,street:0 field:magento.res.partner,street:0
 msgid "Street"
-msgstr ""
+msgstr "Доп. Адрес"
 
 #. module: magentoerpconnect
 #: field:magento.address,street2:0 field:magento.res.partner,street2:0
@@ -2981,7 +2981,7 @@ msgstr ""
 #: field:magento.account.invoice,amount_untaxed:0
 #: field:magento.sale.order.line,price_subtotal:0
 msgid "Subtotal"
-msgstr ""
+msgstr "Итого"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,message_summary:0
@@ -3516,7 +3516,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.sale.order.line,price_unit:0
 msgid "Unit Price"
-msgstr ""
+msgstr "Цена"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,uom_id:0

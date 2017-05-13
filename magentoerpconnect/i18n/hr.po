@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-28 02:04+0000\n"
-"PO-Revision-Date: 2017-04-25 10:40+0000\n"
+"POT-Creation-Date: 2017-05-06 00:32+0000\n"
+"PO-Revision-Date: 2017-05-11 14:12+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: Croatian (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/hr/)\n"
 "MIME-Version: 1.0\n"
@@ -2991,7 +2991,7 @@ msgstr ""
 #: field:magento.sale.order,message_summary:0
 #: field:magento.stock.picking,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Sažetak"
 
 #. module: magentoerpconnect
 #: field:magento.address,supplier:0 field:magento.product.product,seller_ids:0

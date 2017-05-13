@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-23 15:24+0000\n"
-"PO-Revision-Date: 2017-03-23 20:09+0000\n"
+"POT-Creation-Date: 2017-05-06 00:32+0000\n"
+"PO-Revision-Date: 2017-05-11 14:14+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: Finnish (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/fi/)\n"
 "MIME-Version: 1.0\n"
@@ -620,7 +620,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.address,country_id:0 field:magento.res.partner,country_id:0
 msgid "Country"
-msgstr ""
+msgstr "Maa"
 
 #. module: magentoerpconnect
 #: field:magento.sale.order,order_policy:0
@@ -828,7 +828,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.sale.order,shipped:0
 msgid "Delivered"
-msgstr ""
+msgstr "Toimitettu"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,delivery_count:0
@@ -941,7 +941,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.address,email:0 field:magento.res.partner,email:0
 msgid "Email"
-msgstr ""
+msgstr "Sähköposti"
 
 #. module: magentoerpconnect
 #: field:magento.address,employee:0 field:magento.res.partner,employee:0
@@ -3498,7 +3498,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.account.invoice,type:0
 msgid "Type"
-msgstr ""
+msgstr "Tyyppi"
 
 #. module: magentoerpconnect
 #: code:addons/magentoerpconnect/magento_model.py:648
