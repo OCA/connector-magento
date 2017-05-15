@@ -23,12 +23,16 @@ import socket
 import logging
 import xmlrpclib
 
-import magento as magentolib
 from openerp.addons.connector.unit.backend_adapter import CRUDAdapter
 from openerp.addons.connector.exception import (NetworkRetryableError,
                                                 RetryableJobError)
 from datetime import datetime
 _logger = logging.getLogger(__name__)
+
+try:
+    import magento as magentolib
+except ImportError as err:
+    _logger.debug('Cannot `import magento`.')
 
 
 MAGENTO_DATETIME_FORMAT = '%Y/%m/%d %H:%M:%S'

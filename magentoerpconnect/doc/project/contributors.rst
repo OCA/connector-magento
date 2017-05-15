@@ -21,10 +21,24 @@ Special thanks to:
 Financial Contributors
 ######################
 
-A fund raising has been done during the year 2013, allowing us to develop
-the connector framework and the Magento connector.
+Several fund raisings have been run since 2013. One for the initial development
+of the framework and the Magento connector and a second one for the migration
+to Odoo 8.0.
 
-Here is the list of the funders, ordered by the amount of the contribution:
+Odoo 8.0 funding:
+
+* **Ursa Information Systems Inc.**
+* **Debonix**
+* **OpenBIG**
+* **Burn Controllers**
+* **Logic Supply**
+* Intero Technologies GmbH
+* Credativ
+* Olivier Sabbah
+* bmark25
+* and more, see: https://www.indiegogo.com/projects/odoo-magento-connector-for-odoo-8-by-camptocamp#/backers
+
+Initial funding:
 
 * **Logic Supply**
 * **Debonix**
