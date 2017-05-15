@@ -263,12 +263,16 @@
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">xmlrpclib</span>
 
-<span class="kn">import</span> <span class="nn">magento</span> <span class="k">as</span> <span class="nn">magentolib</span>
 <span class="kn">from</span> <span class="nn">openerp.addons.connector.unit.backend_adapter</span> <span class="k">import</span> <span class="n">CRUDAdapter</span>
 <span class="kn">from</span> <span class="nn">openerp.addons.connector.exception</span> <span class="k">import</span> <span class="p">(</span><span class="n">NetworkRetryableError</span><span class="p">,</span>
                                                 <span class="n">RetryableJobError</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span>
 <span class="n">_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">magento</span> <span class="k">as</span> <span class="nn">magentolib</span>
+<span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+    <span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Cannot `import magento`.&#39;</span><span class="p">)</span>
 
 
 <span class="n">MAGENTO_DATETIME_FORMAT</span> <span class="o">=</span> <span class="s1">&#39;%Y/%m/</span><span class="si">%d</span><span class="s1"> %H:%M:%S&#39;</span>
@@ -518,7 +522,7 @@
     </p>
     <p>
         &copy; Copyright 2013-2015, Odoo Community Association (OCA).<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.5.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.6.<br/>
     </p>
   </div>
 </footer>
