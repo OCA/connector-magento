@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-05-06 00:32+0000\n"
-"PO-Revision-Date: 2017-05-11 14:12+0000\n"
+"POT-Creation-Date: 2017-05-15 15:29+0000\n"
+"PO-Revision-Date: 2017-05-16 12:00+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: Spanish (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/es/)\n"
 "MIME-Version: 1.0\n"
@@ -3717,7 +3717,7 @@ msgstr "Sitios Web"
 #: field:magento.sale.order.line,th_weight:0
 #: field:magento.stock.picking,weight:0
 msgid "Weight"
-msgstr ""
+msgstr "Peso"
 
 #. module: magentoerpconnect
 #: help:magento.product.category,property_stock_account_input_categ:0
