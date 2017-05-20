@@ -1,16 +1,13 @@
 <!DOCTYPE html>
 
-
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
     <title>openerp.addons.magentoerpconnect.stock_tracking &#8212; Odoo Magento Connector  documentation</title>
     
-    <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
-    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../../../../_static/bootswatch-3.3.6/united/bootstrap.min.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
@@ -49,7 +46,7 @@
 </script>
 
   </head>
-  <body role="document">
+  <body>
 
   <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -120,13 +117,13 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../howto/faq.html">FAQ</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../../../howto/faq.html#how-do-i">How do I...</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../../howto/faq.html#why">Why...</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../howto/faq.html#how-do-i">How do I…</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../howto/faq.html#why">Why…</a></li>
 </ul>
 </li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../../project/contribute.html">Developer&#8217;s guide</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../project/contribute.html">Developer’s guide</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../../project/contribute.html#connector-with-batteries-included-buildout">Connector with batteries included (buildout)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../project/contribute.html#magento-on-docker">Magento on Docker</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../project/contribute.html#how-to-help">How to help</a></li>
@@ -136,7 +133,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../guides/tutorial_development.html">Tutorial: development</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../../guides/tutorial_development.html#run-a-function-on-an-event">Run a function on an Event</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../../guides/tutorial_development.html#find-the-connector-unit-for-a-model">Find the &#8216;connector unit&#8217; for a model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../guides/tutorial_development.html#find-the-connector-unit-for-a-model">Find the ‘connector unit’ for a model</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../guides/tutorial_development.html#create-an-import">Create an import</a></li>
 </ul>
 </li>
@@ -272,8 +269,8 @@
 <span class="n">_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
-<span class="nd">@magento</span>
-<div class="viewcode-block" id="MagentoTrackingExporter"><a class="viewcode-back" href="../../../../api/api_stock_tracking.html#openerp.addons.magentoerpconnect.stock_tracking.MagentoTrackingExporter">[docs]</a><span class="k">class</span> <span class="nc">MagentoTrackingExporter</span><span class="p">(</span><span class="n">Exporter</span><span class="p">):</span>
+<div class="viewcode-block" id="MagentoTrackingExporter"><a class="viewcode-back" href="../../../../api/api_stock_tracking.html#openerp.addons.magentoerpconnect.stock_tracking.MagentoTrackingExporter">[docs]</a><span class="nd">@magento</span>
+<span class="k">class</span> <span class="nc">MagentoTrackingExporter</span><span class="p">(</span><span class="n">Exporter</span><span class="p">):</span>
     <span class="n">_model_name</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;magento.stock.picking&#39;</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="nf">_get_tracking_args</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">picking</span><span class="p">):</span>
@@ -350,8 +347,8 @@
 <span class="n">MagentoTrackingExport</span> <span class="o">=</span> <span class="n">MagentoTrackingExporter</span>  <span class="c1"># deprecated</span>
 
 
-<span class="nd">@on_tracking_number_added</span>
-<div class="viewcode-block" id="delay_export_tracking_number"><a class="viewcode-back" href="../../../../api/api_stock_tracking.html#openerp.addons.magentoerpconnect.stock_tracking.delay_export_tracking_number">[docs]</a><span class="k">def</span> <span class="nf">delay_export_tracking_number</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">record_id</span><span class="p">):</span>
+<div class="viewcode-block" id="delay_export_tracking_number"><a class="viewcode-back" href="../../../../api/api_stock_tracking.html#openerp.addons.magentoerpconnect.stock_tracking.delay_export_tracking_number">[docs]</a><span class="nd">@on_tracking_number_added</span>
+<span class="k">def</span> <span class="nf">delay_export_tracking_number</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">record_id</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Call a job to export the tracking number to a existing picking that</span>
 <span class="sd">    must be in done state.</span>
@@ -366,9 +363,9 @@
                                      <span class="n">priority</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span></div>
 
 
-<span class="nd">@job</span><span class="p">(</span><span class="n">default_channel</span><span class="o">=</span><span class="s1">&#39;root.magento&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="export_tracking_number"><a class="viewcode-back" href="../../../../api/api_stock_tracking.html#openerp.addons.magentoerpconnect.stock_tracking.export_tracking_number">[docs]</a><span class="nd">@job</span><span class="p">(</span><span class="n">default_channel</span><span class="o">=</span><span class="s1">&#39;root.magento&#39;</span><span class="p">)</span>
 <span class="nd">@related_action</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="n">unwrap_binding</span><span class="p">)</span>
-<div class="viewcode-block" id="export_tracking_number"><a class="viewcode-back" href="../../../../api/api_stock_tracking.html#openerp.addons.magentoerpconnect.stock_tracking.export_tracking_number">[docs]</a><span class="k">def</span> <span class="nf">export_tracking_number</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">record_id</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">export_tracking_number</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">record_id</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Export the tracking number of a delivery order. &quot;&quot;&quot;</span>
     <span class="n">picking</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">env</span><span class="p">[</span><span class="n">model_name</span><span class="p">]</span><span class="o">.</span><span class="n">browse</span><span class="p">(</span><span class="n">record_id</span><span class="p">)</span>
     <span class="n">backend_id</span> <span class="o">=</span> <span class="n">picking</span><span class="o">.</span><span class="n">backend_id</span><span class="o">.</span><span class="n">id</span>
@@ -392,7 +389,7 @@
     </p>
     <p>
         &copy; Copyright 2013-2015, Odoo Community Association (OCA).<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.6.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.1.<br/>
     </p>
   </div>
 </footer>

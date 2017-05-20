@@ -1,16 +1,13 @@
 <!DOCTYPE html>
 
-
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
     <title>Connector &#8212; Odoo Magento Connector  documentation</title>
     
-    <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/bootswatch-3.3.6/united/bootstrap.min.css" type="text/css" />
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
@@ -51,7 +48,7 @@
 </script>
 
   </head>
-  <body role="document">
+  <body>
 
   <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -122,13 +119,13 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../howto/faq.html">FAQ</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../howto/faq.html#how-do-i">How do I...</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../howto/faq.html#why">Why...</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../howto/faq.html#how-do-i">How do I…</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../howto/faq.html#why">Why…</a></li>
 </ul>
 </li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../project/contribute.html">Developer&#8217;s guide</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="../project/contribute.html">Developer’s guide</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../project/contribute.html#connector-with-batteries-included-buildout">Connector with batteries included (buildout)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../project/contribute.html#magento-on-docker">Magento on Docker</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../project/contribute.html#how-to-help">How to help</a></li>
@@ -138,7 +135,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../guides/tutorial_development.html">Tutorial: development</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../guides/tutorial_development.html#run-a-function-on-an-event">Run a function on an Event</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../guides/tutorial_development.html#find-the-connector-unit-for-a-model">Find the &#8216;connector unit&#8217; for a model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../guides/tutorial_development.html#find-the-connector-unit-for-a-model">Find the ‘connector unit’ for a model</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../guides/tutorial_development.html#create-an-import">Create an import</a></li>
 </ul>
 </li>
@@ -258,7 +255,7 @@
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">openerp.models.AbstractModel</span></code></p>
 <p>Abstract Model for the Bindigs.</p>
 <p>All the models used as bindings between Magento and OpenERP
-(<code class="docutils literal"><span class="pre">magento.res.partner</span></code>, <code class="docutils literal"><span class="pre">magento.product.product</span></code>, ...) should
+(<code class="docutils literal"><span class="pre">magento.res.partner</span></code>, <code class="docutils literal"><span class="pre">magento.product.product</span></code>, …) should
 <code class="docutils literal"><span class="pre">_inherit</span></code> it.</p>
 <dl class="attribute">
 <dt id="openerp.addons.magentoerpconnect.connector.MagentoBinding.backend_id">
@@ -270,16 +267,16 @@ record) or 1 (a single record).</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>comodel_name</strong> &#8211; name of the target model (string)</li>
-<li><strong>domain</strong> &#8211; an optional domain to set on candidate values on the
+<li><strong>comodel_name</strong> – name of the target model (string)</li>
+<li><strong>domain</strong> – an optional domain to set on candidate values on the
 client side (domain or string)</li>
-<li><strong>context</strong> &#8211; an optional context to use on the client side when
+<li><strong>context</strong> – an optional context to use on the client side when
 handling that field (dictionary)</li>
-<li><strong>ondelete</strong> &#8211; what to do when the referred record is deleted;
+<li><strong>ondelete</strong> – what to do when the referred record is deleted;
 possible values are: <code class="docutils literal"><span class="pre">'set</span> <span class="pre">null'</span></code>, <code class="docutils literal"><span class="pre">'restrict'</span></code>, <code class="docutils literal"><span class="pre">'cascade'</span></code></li>
-<li><strong>auto_join</strong> &#8211; whether JOINs are generated upon search through that
+<li><strong>auto_join</strong> – whether JOINs are generated upon search through that
 field (boolean, by default <code class="docutils literal"><span class="pre">False</span></code>)</li>
-<li><strong>delegate</strong> &#8211; set it to <code class="docutils literal"><span class="pre">True</span></code> to make fields of the target model
+<li><strong>delegate</strong> – set it to <code class="docutils literal"><span class="pre">True</span></code> to make fields of the target model
 accessible from the current model (corresponds to <code class="docutils literal"><span class="pre">_inherits</span></code>)</li>
 </ul>
 </td>
@@ -300,8 +297,8 @@ single-line string in clients</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>size</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; the maximum size of values stored for that field</li>
-<li><strong>translate</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; whether the values of this field can be translated</li>
+<li><strong>size</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – the maximum size of values stored for that field</li>
+<li><strong>translate</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) – whether the values of this field can be translated</li>
 </ul>
 </td>
 </tr>
@@ -321,10 +318,10 @@ meaning it has to be reviewed by a user.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>session</strong> (<code class="xref py py-class docutils literal"><span class="pre">openerp.addons.connector.session.ConnectorSession</span></code>) &#8211; current session</li>
-<li><strong>model_name</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; name of the model of the record to be reviewed</li>
-<li><strong>record_id</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; ID of the record to be reviewed</li>
-<li><strong>backend_id</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; ID of the Magento Backend</li>
+<li><strong>session</strong> (<code class="xref py py-class docutils literal"><span class="pre">openerp.addons.connector.session.ConnectorSession</span></code>) – current session</li>
+<li><strong>model_name</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) – name of the model of the record to be reviewed</li>
+<li><strong>record_id</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – ID of the record to be reviewed</li>
+<li><strong>backend_id</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – ID of the Magento Backend</li>
 </ul>
 </td>
 </tr>
@@ -360,7 +357,7 @@ meaning it has to be reviewed by a user.</p>
     </p>
     <p>
         &copy; Copyright 2013-2015, Odoo Community Association (OCA).<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.6.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.1.<br/>
     </p>
   </div>
 </footer>

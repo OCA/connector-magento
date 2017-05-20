@@ -1,16 +1,13 @@
 <!DOCTYPE html>
 
-
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
     <title>Changes &#8212; Odoo Magento Connector  documentation</title>
     
-    <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/bootswatch-3.3.6/united/bootstrap.min.css" type="text/css" />
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
@@ -50,7 +47,7 @@
 </script>
 
   </head>
-  <body role="document">
+  <body>
 
   <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -121,13 +118,13 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../howto/faq.html">FAQ</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../howto/faq.html#how-do-i">How do I...</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../howto/faq.html#why">Why...</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../howto/faq.html#how-do-i">How do I…</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../howto/faq.html#why">Why…</a></li>
 </ul>
 </li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="contribute.html">Developer&#8217;s guide</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="contribute.html">Developer’s guide</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="contribute.html#connector-with-batteries-included-buildout">Connector with batteries included (buildout)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="contribute.html#magento-on-docker">Magento on Docker</a></li>
 <li class="toctree-l2"><a class="reference internal" href="contribute.html#how-to-help">How to help</a></li>
@@ -137,7 +134,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../guides/tutorial_development.html">Tutorial: development</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../guides/tutorial_development.html#run-a-function-on-an-event">Run a function on an Event</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../guides/tutorial_development.html#find-the-connector-unit-for-a-model">Find the &#8216;connector unit&#8217; for a model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../guides/tutorial_development.html#find-the-connector-unit-for-a-model">Find the ‘connector unit’ for a model</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../guides/tutorial_development.html#create-an-import">Create an import</a></li>
 </ul>
 </li>
@@ -282,26 +279,26 @@ internally</li>
 <li>Add a backend adapter for the product categories #58</li>
 <li>Add basic units to allow handling bundle products in submodules #13</li>
 <li>Add mechanisms for the export of records (lock of bindings, helper for dependencies export) #33</li>
-<li>&#8216;New copy from quotation&#8217; rebinds the Magento order with the new copy #9</li>
+<li>‘New copy from quotation’ rebinds the Magento order with the new copy #9</li>
 <li>Better memory footprint and performance on update of stock quantity #11</li>
 <li>Fix: Magento sometimes returns no invoice id #29</li>
 <li>Fix: discount_amount with a None value #70</li>
-<li>Fix: mapping for res.partner.title too broad (mix up &#8220;Herr and Herr Dr.&#8221; #68</li>
-<li>Fix: error when a binding have a ID &#8220;0&#8221; which happens with Magento #61</li>
+<li>Fix: mapping for res.partner.title too broad (mix up “Herr and Herr Dr.” #68</li>
+<li>Fix: error when a binding have a ID “0” which happens with Magento #61</li>
 <li>Fix: allow to copy a stock picking #60</li>
 <li>Fix: compatibility with the fiscal position rules module #42</li>
 <li>Fix: Prevent to create duplicate bindings on invoices #39</li>
-<li>Fix: Remove trailing None on calls made to the Magento&#8217;s API (PHP 5.4 compatibility) #28</li>
+<li>Fix: Remove trailing None on calls made to the Magento’s API (PHP 5.4 compatibility) #28</li>
 <li>Fix: avoid to send twice a tracking number #16</li>
-<li>Fix: when a tracking&#8217;s job is executed before the export of the picking, the tracking&#8217;s job export the picking #16</li>
+<li>Fix: when a tracking’s job is executed before the export of the picking, the tracking’s job export the picking #16</li>
 <li>Fix: replace nltk by Beautifulsoup #40</li>
-<li>Fix:  Add a &#8216;to date&#8217; boundary to batch jobs #17</li>
+<li>Fix:  Add a ‘to date’ boundary to batch jobs #17</li>
 </ul>
 </div>
 <div class="section" id="id4">
 <h2>2.4.2 (2014-06-16)<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li>Fix: AssertionError: Several classes found for &lt;class &#8216;openerp.addons.connector.unit.mapper.ImportMapper&#8217;&gt; with session &lt;Session db_name: pruebas, uid: 1&gt;, model name: magento.product.product. Found: set([&lt;class &#8216;openerp.addons.magentoerpconnect.product.IsActiveProductImportMapper&#8217;&gt;, &lt;class &#8216;openerp.addons.magentoerpconnect.product.ProductImportMapper&#8217;&gt;])</li>
+<li>Fix: AssertionError: Several classes found for &lt;class ‘openerp.addons.connector.unit.mapper.ImportMapper’&gt; with session &lt;Session db_name: pruebas, uid: 1&gt;, model name: magento.product.product. Found: set([&lt;class ‘openerp.addons.magentoerpconnect.product.IsActiveProductImportMapper’&gt;, &lt;class ‘openerp.addons.magentoerpconnect.product.ProductImportMapper’&gt;])</li>
 </ul>
 </div>
 <div class="section" id="id5">
@@ -314,10 +311,10 @@ internally</li>
 <h2>2.4.0 (2014-05-26)<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>New helper in importer to import dependencies</li>
-<li>allow to customize the available versions without overriding the &#8216;version&#8217; field</li>
-<li>New option &#8216;Create Invoice On&#8217; on payment methods with options &#8216;on paid&#8217;, &#8216;on validate&#8217;</li>
+<li>allow to customize the available versions without overriding the ‘version’ field</li>
+<li>New option ‘Create Invoice On’ on payment methods with options ‘on paid’, ‘on validate’</li>
 <li>Using Magento on PHP 5.4 without using the compatibility patch would
-break syncs&#8217;. Correct solution is to install the patch on Magento
+break syncs’. Correct solution is to install the patch on Magento
 though! <a class="reference external" href="http://magento.com/blog/magento-news/magento-now-supports-php-54">http://magento.com/blog/magento-news/magento-now-supports-php-54</a></li>
 <li>Allow to use HTTP Auth Basic to connect to the Magento API</li>
 <li>Retry jobs when they hit a 502, 503 or 504 error</li>
@@ -326,9 +323,9 @@ though! <a class="reference external" href="http://magento.com/blog/magento-news
 <li>Possibility to exclude products from stock synchronizations</li>
 <li>Products disabled on Magento are imported disabled on OpenERP. An additional module allows more options.</li>
 <li>Possibility to disable import of sales orders per storeview</li>
-<li>Related Actions: open the form view on the record concerned by an export job, or open the Magento&#8217;s admin page
+<li>Related Actions: open the form view on the record concerned by an export job, or open the Magento’s admin page
 on importing jobs</li>
-<li>Special order lines (shipping, ...) are now the last lines of an order, not the first</li>
+<li>Special order lines (shipping, …) are now the last lines of an order, not the first</li>
 </ul>
 </div>
 <div class="section" id="id7">
@@ -340,8 +337,8 @@ on importing jobs</li>
 <div class="section" id="warning-api-changes">
 <h2>2.3.0 (2014-01-15 warning: API changes)<a class="headerlink" href="#warning-api-changes" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li>Compatibility with the Connector Framework: listeners &#8216;on_record_create&#8217; receives
-an additional argument &#8216;vals&#8217;; &#8216;on_record_write&#8217;s named argument &#8216;fields&#8217; becomes &#8216;vals&#8217;
+<li>Compatibility with the Connector Framework: listeners ‘on_record_create’ receives
+an additional argument ‘vals’; ‘on_record_write’s named argument ‘fields’ becomes ‘vals’
 and receives the full dictionary of values</li>
 <li>Fix: wrong main image imported on products (<a class="reference external" href="https://launchpad.net/bugs/1258418">https://launchpad.net/bugs/1258418</a>)</li>
 <li>Changes calls to Mapper according to the new API of the Mappers.
@@ -368,7 +365,7 @@ See branch: <a class="reference external" href="https://code.launchpad.net/~open
 <ul class="simple">
 <li>Option to choose if the invoices are exported to Magento on payment or validation (Thanks to Allison Miller)</li>
 <li>Allow to define a prefix for the name of the imported sales orders (Thanks to Augustin Cisterne-Kaas)</li>
-<li>Fix: &#8216;store_id&#8217; field in the Magento API contains the id of the storeview, and was mapped with the store. In some circumstances, sales orders may fail to import. (lp:1235269)</li>
+<li>Fix: ‘store_id’ field in the Magento API contains the id of the storeview, and was mapped with the store. In some circumstances, sales orders may fail to import. (lp:1235269)</li>
 <li>Support of configurable products in import of sales orders</li>
 </ul>
 </div>
@@ -377,10 +374,10 @@ See branch: <a class="reference external" href="https://code.launchpad.net/~open
 <ul class="simple">
 <li>Import of partners reviewed according to <a class="reference external" href="https://launchpad.net/bugs/1193281">https://launchpad.net/bugs/1193281</a>
 Especially to handle the b2b use cases better.</li>
-<li>Fix: Magento bindings duplicated with the &#8220;copy&#8221; method (<a class="reference external" href="https://launchpad.net/bugs/1205239">https://launchpad.net/bugs/1205239</a>)</li>
+<li>Fix: Magento bindings duplicated with the “copy” method (<a class="reference external" href="https://launchpad.net/bugs/1205239">https://launchpad.net/bugs/1205239</a>)</li>
 <li>Fix: 503 Service unavailable protocol error should be retried later (<a class="reference external" href="https://launchpad.net/bugs/1194733">https://launchpad.net/bugs/1194733</a>)</li>
 <li>Fix: Import of guest orders (<a class="reference external" href="https://bugs.launchpad.net/openerp-connector/+bug/1193239">https://bugs.launchpad.net/openerp-connector/+bug/1193239</a>)</li>
-<li>&#8216;Authorized&#8217; import rules to be able to import sales orders authorized by a payment institute but not paid yet. (Thanks to Brendan Clune)</li>
+<li>‘Authorized’ import rules to be able to import sales orders authorized by a payment institute but not paid yet. (Thanks to Brendan Clune)</li>
 <li>Define the partners relationships only on the creation of new records, allowing manual specification of company / contact relationships within OpenERP (Thanks to Brendan Clune)</li>
 <li>Fix: State information for partners not mapped correctly (Thanks to Brendan Clune) (<a class="reference external" href="https://launchpad.net/bugs/1183837">https://launchpad.net/bugs/1183837</a>)</li>
 <li>Many others: see the bazaar logs</li>
@@ -414,7 +411,7 @@ Especially to handle the b2b use cases better.</li>
     </p>
     <p>
         &copy; Copyright 2013-2015, Odoo Community Association (OCA).<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.6.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.1.<br/>
     </p>
   </div>
 </footer>

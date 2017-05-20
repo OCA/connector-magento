@@ -1,16 +1,13 @@
 <!DOCTYPE html>
 
-
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
     <title>Magento Models &#8212; Odoo Magento Connector  documentation</title>
     
-    <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/bootswatch-3.3.6/united/bootstrap.min.css" type="text/css" />
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
@@ -51,7 +48,7 @@
 </script>
 
   </head>
-  <body role="document">
+  <body>
 
   <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -122,13 +119,13 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../howto/faq.html">FAQ</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../howto/faq.html#how-do-i">How do I...</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../howto/faq.html#why">Why...</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../howto/faq.html#how-do-i">How do I…</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../howto/faq.html#why">Why…</a></li>
 </ul>
 </li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../project/contribute.html">Developer&#8217;s guide</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="../project/contribute.html">Developer’s guide</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../project/contribute.html#connector-with-batteries-included-buildout">Connector with batteries included (buildout)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../project/contribute.html#magento-on-docker">Magento on Docker</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../project/contribute.html#how-to-help">How to help</a></li>
@@ -138,7 +135,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../guides/tutorial_development.html">Tutorial: development</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../guides/tutorial_development.html#run-a-function-on-an-event">Run a function on an Event</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../guides/tutorial_development.html#find-the-connector-unit-for-a-model">Find the &#8216;connector unit&#8217; for a model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../guides/tutorial_development.html#find-the-connector-unit-for-a-model">Find the ‘connector unit’ for a model</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../guides/tutorial_development.html#create-an-import">Create an import</a></li>
 </ul>
 </li>
@@ -266,16 +263,16 @@ record) or 1 (a single record).</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>comodel_name</strong> &#8211; name of the target model (string)</li>
-<li><strong>domain</strong> &#8211; an optional domain to set on candidate values on the
+<li><strong>comodel_name</strong> – name of the target model (string)</li>
+<li><strong>domain</strong> – an optional domain to set on candidate values on the
 client side (domain or string)</li>
-<li><strong>context</strong> &#8211; an optional context to use on the client side when
+<li><strong>context</strong> – an optional context to use on the client side when
 handling that field (dictionary)</li>
-<li><strong>ondelete</strong> &#8211; what to do when the referred record is deleted;
+<li><strong>ondelete</strong> – what to do when the referred record is deleted;
 possible values are: <code class="docutils literal"><span class="pre">'set</span> <span class="pre">null'</span></code>, <code class="docutils literal"><span class="pre">'restrict'</span></code>, <code class="docutils literal"><span class="pre">'cascade'</span></code></li>
-<li><strong>auto_join</strong> &#8211; whether JOINs are generated upon search through that
+<li><strong>auto_join</strong> – whether JOINs are generated upon search through that
 field (boolean, by default <code class="docutils literal"><span class="pre">False</span></code>)</li>
-<li><strong>delegate</strong> &#8211; set it to <code class="docutils literal"><span class="pre">True</span></code> to make fields of the target model
+<li><strong>delegate</strong> – set it to <code class="docutils literal"><span class="pre">True</span></code> to make fields of the target model
 accessible from the current model (corresponds to <code class="docutils literal"><span class="pre">_inherits</span></code>)</li>
 </ul>
 </td>
@@ -296,8 +293,8 @@ single-line string in clients</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>size</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; the maximum size of values stored for that field</li>
-<li><strong>translate</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; whether the values of this field can be translated</li>
+<li><strong>size</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – the maximum size of values stored for that field</li>
+<li><strong>translate</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) – whether the values of this field can be translated</li>
 </ul>
 </td>
 </tr>
@@ -315,8 +312,8 @@ single-line string in clients</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>size</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; the maximum size of values stored for that field</li>
-<li><strong>translate</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; whether the values of this field can be translated</li>
+<li><strong>size</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – the maximum size of values stored for that field</li>
+<li><strong>translate</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) – whether the values of this field can be translated</li>
 </ul>
 </td>
 </tr>
@@ -334,8 +331,8 @@ single-line string in clients</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>size</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; the maximum size of values stored for that field</li>
-<li><strong>translate</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; whether the values of this field can be translated</li>
+<li><strong>size</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – the maximum size of values stored for that field</li>
+<li><strong>translate</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) – whether the values of this field can be translated</li>
 </ul>
 </td>
 </tr>
@@ -360,16 +357,16 @@ record) or 1 (a single record).</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>comodel_name</strong> &#8211; name of the target model (string)</li>
-<li><strong>domain</strong> &#8211; an optional domain to set on candidate values on the
+<li><strong>comodel_name</strong> – name of the target model (string)</li>
+<li><strong>domain</strong> – an optional domain to set on candidate values on the
 client side (domain or string)</li>
-<li><strong>context</strong> &#8211; an optional context to use on the client side when
+<li><strong>context</strong> – an optional context to use on the client side when
 handling that field (dictionary)</li>
-<li><strong>ondelete</strong> &#8211; what to do when the referred record is deleted;
+<li><strong>ondelete</strong> – what to do when the referred record is deleted;
 possible values are: <code class="docutils literal"><span class="pre">'set</span> <span class="pre">null'</span></code>, <code class="docutils literal"><span class="pre">'restrict'</span></code>, <code class="docutils literal"><span class="pre">'cascade'</span></code></li>
-<li><strong>auto_join</strong> &#8211; whether JOINs are generated upon search through that
+<li><strong>auto_join</strong> – whether JOINs are generated upon search through that
 field (boolean, by default <code class="docutils literal"><span class="pre">False</span></code>)</li>
-<li><strong>delegate</strong> &#8211; set it to <code class="docutils literal"><span class="pre">True</span></code> to make fields of the target model
+<li><strong>delegate</strong> – set it to <code class="docutils literal"><span class="pre">True</span></code> to make fields of the target model
 accessible from the current model (corresponds to <code class="docutils literal"><span class="pre">_inherits</span></code>)</li>
 </ul>
 </td>
@@ -390,16 +387,16 @@ record) or 1 (a single record).</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>comodel_name</strong> &#8211; name of the target model (string)</li>
-<li><strong>domain</strong> &#8211; an optional domain to set on candidate values on the
+<li><strong>comodel_name</strong> – name of the target model (string)</li>
+<li><strong>domain</strong> – an optional domain to set on candidate values on the
 client side (domain or string)</li>
-<li><strong>context</strong> &#8211; an optional context to use on the client side when
+<li><strong>context</strong> – an optional context to use on the client side when
 handling that field (dictionary)</li>
-<li><strong>ondelete</strong> &#8211; what to do when the referred record is deleted;
+<li><strong>ondelete</strong> – what to do when the referred record is deleted;
 possible values are: <code class="docutils literal"><span class="pre">'set</span> <span class="pre">null'</span></code>, <code class="docutils literal"><span class="pre">'restrict'</span></code>, <code class="docutils literal"><span class="pre">'cascade'</span></code></li>
-<li><strong>auto_join</strong> &#8211; whether JOINs are generated upon search through that
+<li><strong>auto_join</strong> – whether JOINs are generated upon search through that
 field (boolean, by default <code class="docutils literal"><span class="pre">False</span></code>)</li>
-<li><strong>delegate</strong> &#8211; set it to <code class="docutils literal"><span class="pre">True</span></code> to make fields of the target model
+<li><strong>delegate</strong> – set it to <code class="docutils literal"><span class="pre">True</span></code> to make fields of the target model
 accessible from the current model (corresponds to <code class="docutils literal"><span class="pre">_inherits</span></code>)</li>
 </ul>
 </td>
@@ -420,16 +417,16 @@ record) or 1 (a single record).</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>comodel_name</strong> &#8211; name of the target model (string)</li>
-<li><strong>domain</strong> &#8211; an optional domain to set on candidate values on the
+<li><strong>comodel_name</strong> – name of the target model (string)</li>
+<li><strong>domain</strong> – an optional domain to set on candidate values on the
 client side (domain or string)</li>
-<li><strong>context</strong> &#8211; an optional context to use on the client side when
+<li><strong>context</strong> – an optional context to use on the client side when
 handling that field (dictionary)</li>
-<li><strong>ondelete</strong> &#8211; what to do when the referred record is deleted;
+<li><strong>ondelete</strong> – what to do when the referred record is deleted;
 possible values are: <code class="docutils literal"><span class="pre">'set</span> <span class="pre">null'</span></code>, <code class="docutils literal"><span class="pre">'restrict'</span></code>, <code class="docutils literal"><span class="pre">'cascade'</span></code></li>
-<li><strong>auto_join</strong> &#8211; whether JOINs are generated upon search through that
+<li><strong>auto_join</strong> – whether JOINs are generated upon search through that
 field (boolean, by default <code class="docutils literal"><span class="pre">False</span></code>)</li>
-<li><strong>delegate</strong> &#8211; set it to <code class="docutils literal"><span class="pre">True</span></code> to make fields of the target model
+<li><strong>delegate</strong> – set it to <code class="docutils literal"><span class="pre">True</span></code> to make fields of the target model
 accessible from the current model (corresponds to <code class="docutils literal"><span class="pre">_inherits</span></code>)</li>
 </ul>
 </td>
@@ -450,16 +447,16 @@ record) or 1 (a single record).</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>comodel_name</strong> &#8211; name of the target model (string)</li>
-<li><strong>domain</strong> &#8211; an optional domain to set on candidate values on the
+<li><strong>comodel_name</strong> – name of the target model (string)</li>
+<li><strong>domain</strong> – an optional domain to set on candidate values on the
 client side (domain or string)</li>
-<li><strong>context</strong> &#8211; an optional context to use on the client side when
+<li><strong>context</strong> – an optional context to use on the client side when
 handling that field (dictionary)</li>
-<li><strong>ondelete</strong> &#8211; what to do when the referred record is deleted;
+<li><strong>ondelete</strong> – what to do when the referred record is deleted;
 possible values are: <code class="docutils literal"><span class="pre">'set</span> <span class="pre">null'</span></code>, <code class="docutils literal"><span class="pre">'restrict'</span></code>, <code class="docutils literal"><span class="pre">'cascade'</span></code></li>
-<li><strong>auto_join</strong> &#8211; whether JOINs are generated upon search through that
+<li><strong>auto_join</strong> – whether JOINs are generated upon search through that
 field (boolean, by default <code class="docutils literal"><span class="pre">False</span></code>)</li>
-<li><strong>delegate</strong> &#8211; set it to <code class="docutils literal"><span class="pre">True</span></code> to make fields of the target model
+<li><strong>delegate</strong> – set it to <code class="docutils literal"><span class="pre">True</span></code> to make fields of the target model
 accessible from the current model (corresponds to <code class="docutils literal"><span class="pre">_inherits</span></code>)</li>
 </ul>
 </td>
@@ -517,8 +514,8 @@ single-line string in clients</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>size</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; the maximum size of values stored for that field</li>
-<li><strong>translate</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; whether the values of this field can be translated</li>
+<li><strong>size</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – the maximum size of values stored for that field</li>
+<li><strong>translate</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) – whether the values of this field can be translated</li>
 </ul>
 </td>
 </tr>
@@ -544,8 +541,8 @@ single-line string in clients</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>size</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; the maximum size of values stored for that field</li>
-<li><strong>translate</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; whether the values of this field can be translated</li>
+<li><strong>size</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – the maximum size of values stored for that field</li>
+<li><strong>translate</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) – whether the values of this field can be translated</li>
 </ul>
 </td>
 </tr>
@@ -564,16 +561,16 @@ the current record.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>comodel_name</strong> &#8211; name of the target model (string)</li>
-<li><strong>inverse_name</strong> &#8211; name of the inverse <code class="docutils literal"><span class="pre">Many2one</span></code> field in
+<li><strong>comodel_name</strong> – name of the target model (string)</li>
+<li><strong>inverse_name</strong> – name of the inverse <code class="docutils literal"><span class="pre">Many2one</span></code> field in
 <code class="docutils literal"><span class="pre">comodel_name</span></code> (string)</li>
-<li><strong>domain</strong> &#8211; an optional domain to set on candidate values on the
+<li><strong>domain</strong> – an optional domain to set on candidate values on the
 client side (domain or string)</li>
-<li><strong>context</strong> &#8211; an optional context to use on the client side when
+<li><strong>context</strong> – an optional context to use on the client side when
 handling that field (dictionary)</li>
-<li><strong>auto_join</strong> &#8211; whether JOINs are generated upon search through that
+<li><strong>auto_join</strong> – whether JOINs are generated upon search through that
 field (boolean, by default <code class="docutils literal"><span class="pre">False</span></code>)</li>
-<li><strong>limit</strong> &#8211; optional limit to use upon read (integer)</li>
+<li><strong>limit</strong> – optional limit to use upon read (integer)</li>
 </ul>
 </td>
 </tr>
@@ -593,16 +590,16 @@ record) or 1 (a single record).</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>comodel_name</strong> &#8211; name of the target model (string)</li>
-<li><strong>domain</strong> &#8211; an optional domain to set on candidate values on the
+<li><strong>comodel_name</strong> – name of the target model (string)</li>
+<li><strong>domain</strong> – an optional domain to set on candidate values on the
 client side (domain or string)</li>
-<li><strong>context</strong> &#8211; an optional context to use on the client side when
+<li><strong>context</strong> – an optional context to use on the client side when
 handling that field (dictionary)</li>
-<li><strong>ondelete</strong> &#8211; what to do when the referred record is deleted;
+<li><strong>ondelete</strong> – what to do when the referred record is deleted;
 possible values are: <code class="docutils literal"><span class="pre">'set</span> <span class="pre">null'</span></code>, <code class="docutils literal"><span class="pre">'restrict'</span></code>, <code class="docutils literal"><span class="pre">'cascade'</span></code></li>
-<li><strong>auto_join</strong> &#8211; whether JOINs are generated upon search through that
+<li><strong>auto_join</strong> – whether JOINs are generated upon search through that
 field (boolean, by default <code class="docutils literal"><span class="pre">False</span></code>)</li>
-<li><strong>delegate</strong> &#8211; set it to <code class="docutils literal"><span class="pre">True</span></code> to make fields of the target model
+<li><strong>delegate</strong> – set it to <code class="docutils literal"><span class="pre">True</span></code> to make fields of the target model
 accessible from the current model (corresponds to <code class="docutils literal"><span class="pre">_inherits</span></code>)</li>
 </ul>
 </td>
@@ -623,8 +620,8 @@ single-line string in clients</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>size</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; the maximum size of values stored for that field</li>
-<li><strong>translate</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; whether the values of this field can be translated</li>
+<li><strong>size</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – the maximum size of values stored for that field</li>
+<li><strong>translate</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) – whether the values of this field can be translated</li>
 </ul>
 </td>
 </tr>
@@ -671,8 +668,8 @@ single-line string in clients</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>size</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; the maximum size of values stored for that field</li>
-<li><strong>translate</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; whether the values of this field can be translated</li>
+<li><strong>size</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – the maximum size of values stored for that field</li>
+<li><strong>translate</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) – whether the values of this field can be translated</li>
 </ul>
 </td>
 </tr>
@@ -688,10 +685,10 @@ single-line string in clients</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>selection</strong> &#8211; specifies the possible values for this field.
+<li><strong>selection</strong> – specifies the possible values for this field.
 It is given as either a list of pairs (<code class="docutils literal"><span class="pre">value</span></code>, <code class="docutils literal"><span class="pre">string</span></code>), or a
 model method, or a method name.</li>
-<li><strong>selection_add</strong> &#8211; provides an extension of the selection in the case
+<li><strong>selection_add</strong> – provides an extension of the selection in the case
 of an overridden field. It is a list of pairs (<code class="docutils literal"><span class="pre">value</span></code>, <code class="docutils literal"><span class="pre">string</span></code>).</li>
 </ul>
 </td>
@@ -712,16 +709,16 @@ record) or 1 (a single record).</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>comodel_name</strong> &#8211; name of the target model (string)</li>
-<li><strong>domain</strong> &#8211; an optional domain to set on candidate values on the
+<li><strong>comodel_name</strong> – name of the target model (string)</li>
+<li><strong>domain</strong> – an optional domain to set on candidate values on the
 client side (domain or string)</li>
-<li><strong>context</strong> &#8211; an optional context to use on the client side when
+<li><strong>context</strong> – an optional context to use on the client side when
 handling that field (dictionary)</li>
-<li><strong>ondelete</strong> &#8211; what to do when the referred record is deleted;
+<li><strong>ondelete</strong> – what to do when the referred record is deleted;
 possible values are: <code class="docutils literal"><span class="pre">'set</span> <span class="pre">null'</span></code>, <code class="docutils literal"><span class="pre">'restrict'</span></code>, <code class="docutils literal"><span class="pre">'cascade'</span></code></li>
-<li><strong>auto_join</strong> &#8211; whether JOINs are generated upon search through that
+<li><strong>auto_join</strong> – whether JOINs are generated upon search through that
 field (boolean, by default <code class="docutils literal"><span class="pre">False</span></code>)</li>
-<li><strong>delegate</strong> &#8211; set it to <code class="docutils literal"><span class="pre">True</span></code> to make fields of the target model
+<li><strong>delegate</strong> – set it to <code class="docutils literal"><span class="pre">True</span></code> to make fields of the target model
 accessible from the current model (corresponds to <code class="docutils literal"><span class="pre">_inherits</span></code>)</li>
 </ul>
 </td>
@@ -743,16 +740,16 @@ the current record.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>comodel_name</strong> &#8211; name of the target model (string)</li>
-<li><strong>inverse_name</strong> &#8211; name of the inverse <code class="docutils literal"><span class="pre">Many2one</span></code> field in
+<li><strong>comodel_name</strong> – name of the target model (string)</li>
+<li><strong>inverse_name</strong> – name of the inverse <code class="docutils literal"><span class="pre">Many2one</span></code> field in
 <code class="docutils literal"><span class="pre">comodel_name</span></code> (string)</li>
-<li><strong>domain</strong> &#8211; an optional domain to set on candidate values on the
+<li><strong>domain</strong> – an optional domain to set on candidate values on the
 client side (domain or string)</li>
-<li><strong>context</strong> &#8211; an optional context to use on the client side when
+<li><strong>context</strong> – an optional context to use on the client side when
 handling that field (dictionary)</li>
-<li><strong>auto_join</strong> &#8211; whether JOINs are generated upon search through that
+<li><strong>auto_join</strong> – whether JOINs are generated upon search through that
 field (boolean, by default <code class="docutils literal"><span class="pre">False</span></code>)</li>
-<li><strong>limit</strong> &#8211; optional limit to use upon read (integer)</li>
+<li><strong>limit</strong> – optional limit to use upon read (integer)</li>
 </ul>
 </td>
 </tr>
@@ -778,16 +775,16 @@ record) or 1 (a single record).</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>comodel_name</strong> &#8211; name of the target model (string)</li>
-<li><strong>domain</strong> &#8211; an optional domain to set on candidate values on the
+<li><strong>comodel_name</strong> – name of the target model (string)</li>
+<li><strong>domain</strong> – an optional domain to set on candidate values on the
 client side (domain or string)</li>
-<li><strong>context</strong> &#8211; an optional context to use on the client side when
+<li><strong>context</strong> – an optional context to use on the client side when
 handling that field (dictionary)</li>
-<li><strong>ondelete</strong> &#8211; what to do when the referred record is deleted;
+<li><strong>ondelete</strong> – what to do when the referred record is deleted;
 possible values are: <code class="docutils literal"><span class="pre">'set</span> <span class="pre">null'</span></code>, <code class="docutils literal"><span class="pre">'restrict'</span></code>, <code class="docutils literal"><span class="pre">'cascade'</span></code></li>
-<li><strong>auto_join</strong> &#8211; whether JOINs are generated upon search through that
+<li><strong>auto_join</strong> – whether JOINs are generated upon search through that
 field (boolean, by default <code class="docutils literal"><span class="pre">False</span></code>)</li>
-<li><strong>delegate</strong> &#8211; set it to <code class="docutils literal"><span class="pre">True</span></code> to make fields of the target model
+<li><strong>delegate</strong> – set it to <code class="docutils literal"><span class="pre">True</span></code> to make fields of the target model
 accessible from the current model (corresponds to <code class="docutils literal"><span class="pre">_inherits</span></code>)</li>
 </ul>
 </td>
@@ -808,16 +805,16 @@ record) or 1 (a single record).</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>comodel_name</strong> &#8211; name of the target model (string)</li>
-<li><strong>domain</strong> &#8211; an optional domain to set on candidate values on the
+<li><strong>comodel_name</strong> – name of the target model (string)</li>
+<li><strong>domain</strong> – an optional domain to set on candidate values on the
 client side (domain or string)</li>
-<li><strong>context</strong> &#8211; an optional context to use on the client side when
+<li><strong>context</strong> – an optional context to use on the client side when
 handling that field (dictionary)</li>
-<li><strong>ondelete</strong> &#8211; what to do when the referred record is deleted;
+<li><strong>ondelete</strong> – what to do when the referred record is deleted;
 possible values are: <code class="docutils literal"><span class="pre">'set</span> <span class="pre">null'</span></code>, <code class="docutils literal"><span class="pre">'restrict'</span></code>, <code class="docutils literal"><span class="pre">'cascade'</span></code></li>
-<li><strong>auto_join</strong> &#8211; whether JOINs are generated upon search through that
+<li><strong>auto_join</strong> – whether JOINs are generated upon search through that
 field (boolean, by default <code class="docutils literal"><span class="pre">False</span></code>)</li>
-<li><strong>delegate</strong> &#8211; set it to <code class="docutils literal"><span class="pre">True</span></code> to make fields of the target model
+<li><strong>delegate</strong> – set it to <code class="docutils literal"><span class="pre">True</span></code> to make fields of the target model
 accessible from the current model (corresponds to <code class="docutils literal"><span class="pre">_inherits</span></code>)</li>
 </ul>
 </td>
@@ -838,16 +835,16 @@ record) or 1 (a single record).</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>comodel_name</strong> &#8211; name of the target model (string)</li>
-<li><strong>domain</strong> &#8211; an optional domain to set on candidate values on the
+<li><strong>comodel_name</strong> – name of the target model (string)</li>
+<li><strong>domain</strong> – an optional domain to set on candidate values on the
 client side (domain or string)</li>
-<li><strong>context</strong> &#8211; an optional context to use on the client side when
+<li><strong>context</strong> – an optional context to use on the client side when
 handling that field (dictionary)</li>
-<li><strong>ondelete</strong> &#8211; what to do when the referred record is deleted;
+<li><strong>ondelete</strong> – what to do when the referred record is deleted;
 possible values are: <code class="docutils literal"><span class="pre">'set</span> <span class="pre">null'</span></code>, <code class="docutils literal"><span class="pre">'restrict'</span></code>, <code class="docutils literal"><span class="pre">'cascade'</span></code></li>
-<li><strong>auto_join</strong> &#8211; whether JOINs are generated upon search through that
+<li><strong>auto_join</strong> – whether JOINs are generated upon search through that
 field (boolean, by default <code class="docutils literal"><span class="pre">False</span></code>)</li>
-<li><strong>delegate</strong> &#8211; set it to <code class="docutils literal"><span class="pre">True</span></code> to make fields of the target model
+<li><strong>delegate</strong> – set it to <code class="docutils literal"><span class="pre">True</span></code> to make fields of the target model
 accessible from the current model (corresponds to <code class="docutils literal"><span class="pre">_inherits</span></code>)</li>
 </ul>
 </td>
@@ -868,16 +865,16 @@ record) or 1 (a single record).</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>comodel_name</strong> &#8211; name of the target model (string)</li>
-<li><strong>domain</strong> &#8211; an optional domain to set on candidate values on the
+<li><strong>comodel_name</strong> – name of the target model (string)</li>
+<li><strong>domain</strong> – an optional domain to set on candidate values on the
 client side (domain or string)</li>
-<li><strong>context</strong> &#8211; an optional context to use on the client side when
+<li><strong>context</strong> – an optional context to use on the client side when
 handling that field (dictionary)</li>
-<li><strong>ondelete</strong> &#8211; what to do when the referred record is deleted;
+<li><strong>ondelete</strong> – what to do when the referred record is deleted;
 possible values are: <code class="docutils literal"><span class="pre">'set</span> <span class="pre">null'</span></code>, <code class="docutils literal"><span class="pre">'restrict'</span></code>, <code class="docutils literal"><span class="pre">'cascade'</span></code></li>
-<li><strong>auto_join</strong> &#8211; whether JOINs are generated upon search through that
+<li><strong>auto_join</strong> – whether JOINs are generated upon search through that
 field (boolean, by default <code class="docutils literal"><span class="pre">False</span></code>)</li>
-<li><strong>delegate</strong> &#8211; set it to <code class="docutils literal"><span class="pre">True</span></code> to make fields of the target model
+<li><strong>delegate</strong> – set it to <code class="docutils literal"><span class="pre">True</span></code> to make fields of the target model
 accessible from the current model (corresponds to <code class="docutils literal"><span class="pre">_inherits</span></code>)</li>
 </ul>
 </td>
@@ -904,16 +901,16 @@ record) or 1 (a single record).</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>comodel_name</strong> &#8211; name of the target model (string)</li>
-<li><strong>domain</strong> &#8211; an optional domain to set on candidate values on the
+<li><strong>comodel_name</strong> – name of the target model (string)</li>
+<li><strong>domain</strong> – an optional domain to set on candidate values on the
 client side (domain or string)</li>
-<li><strong>context</strong> &#8211; an optional context to use on the client side when
+<li><strong>context</strong> – an optional context to use on the client side when
 handling that field (dictionary)</li>
-<li><strong>ondelete</strong> &#8211; what to do when the referred record is deleted;
+<li><strong>ondelete</strong> – what to do when the referred record is deleted;
 possible values are: <code class="docutils literal"><span class="pre">'set</span> <span class="pre">null'</span></code>, <code class="docutils literal"><span class="pre">'restrict'</span></code>, <code class="docutils literal"><span class="pre">'cascade'</span></code></li>
-<li><strong>auto_join</strong> &#8211; whether JOINs are generated upon search through that
+<li><strong>auto_join</strong> – whether JOINs are generated upon search through that
 field (boolean, by default <code class="docutils literal"><span class="pre">False</span></code>)</li>
-<li><strong>delegate</strong> &#8211; set it to <code class="docutils literal"><span class="pre">True</span></code> to make fields of the target model
+<li><strong>delegate</strong> – set it to <code class="docutils literal"><span class="pre">True</span></code> to make fields of the target model
 accessible from the current model (corresponds to <code class="docutils literal"><span class="pre">_inherits</span></code>)</li>
 </ul>
 </td>
@@ -932,10 +929,10 @@ fields or field extensions.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>selection</strong> &#8211; specifies the possible values for this field.
+<li><strong>selection</strong> – specifies the possible values for this field.
 It is given as either a list of pairs (<code class="docutils literal"><span class="pre">value</span></code>, <code class="docutils literal"><span class="pre">string</span></code>), or a
 model method, or a method name.</li>
-<li><strong>selection_add</strong> &#8211; provides an extension of the selection in the case
+<li><strong>selection_add</strong> – provides an extension of the selection in the case
 of an overridden field. It is a list of pairs (<code class="docutils literal"><span class="pre">value</span></code>, <code class="docutils literal"><span class="pre">string</span></code>).</li>
 </ul>
 </td>
@@ -956,8 +953,8 @@ single-line string in clients</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>size</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; the maximum size of values stored for that field</li>
-<li><strong>translate</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; whether the values of this field can be translated</li>
+<li><strong>size</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – the maximum size of values stored for that field</li>
+<li><strong>translate</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) – whether the values of this field can be translated</li>
 </ul>
 </td>
 </tr>
@@ -986,16 +983,16 @@ the current record.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>comodel_name</strong> &#8211; name of the target model (string)</li>
-<li><strong>inverse_name</strong> &#8211; name of the inverse <code class="docutils literal"><span class="pre">Many2one</span></code> field in
+<li><strong>comodel_name</strong> – name of the target model (string)</li>
+<li><strong>inverse_name</strong> – name of the inverse <code class="docutils literal"><span class="pre">Many2one</span></code> field in
 <code class="docutils literal"><span class="pre">comodel_name</span></code> (string)</li>
-<li><strong>domain</strong> &#8211; an optional domain to set on candidate values on the
+<li><strong>domain</strong> – an optional domain to set on candidate values on the
 client side (domain or string)</li>
-<li><strong>context</strong> &#8211; an optional context to use on the client side when
+<li><strong>context</strong> – an optional context to use on the client side when
 handling that field (dictionary)</li>
-<li><strong>auto_join</strong> &#8211; whether JOINs are generated upon search through that
+<li><strong>auto_join</strong> – whether JOINs are generated upon search through that
 field (boolean, by default <code class="docutils literal"><span class="pre">False</span></code>)</li>
-<li><strong>limit</strong> &#8211; optional limit to use upon read (integer)</li>
+<li><strong>limit</strong> – optional limit to use upon read (integer)</li>
 </ul>
 </td>
 </tr>
@@ -1015,16 +1012,16 @@ record) or 1 (a single record).</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>comodel_name</strong> &#8211; name of the target model (string)</li>
-<li><strong>domain</strong> &#8211; an optional domain to set on candidate values on the
+<li><strong>comodel_name</strong> – name of the target model (string)</li>
+<li><strong>domain</strong> – an optional domain to set on candidate values on the
 client side (domain or string)</li>
-<li><strong>context</strong> &#8211; an optional context to use on the client side when
+<li><strong>context</strong> – an optional context to use on the client side when
 handling that field (dictionary)</li>
-<li><strong>ondelete</strong> &#8211; what to do when the referred record is deleted;
+<li><strong>ondelete</strong> – what to do when the referred record is deleted;
 possible values are: <code class="docutils literal"><span class="pre">'set</span> <span class="pre">null'</span></code>, <code class="docutils literal"><span class="pre">'restrict'</span></code>, <code class="docutils literal"><span class="pre">'cascade'</span></code></li>
-<li><strong>auto_join</strong> &#8211; whether JOINs are generated upon search through that
+<li><strong>auto_join</strong> – whether JOINs are generated upon search through that
 field (boolean, by default <code class="docutils literal"><span class="pre">False</span></code>)</li>
-<li><strong>delegate</strong> &#8211; set it to <code class="docutils literal"><span class="pre">True</span></code> to make fields of the target model
+<li><strong>delegate</strong> – set it to <code class="docutils literal"><span class="pre">True</span></code> to make fields of the target model
 accessible from the current model (corresponds to <code class="docutils literal"><span class="pre">_inherits</span></code>)</li>
 </ul>
 </td>
@@ -1051,16 +1048,16 @@ record) or 1 (a single record).</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>comodel_name</strong> &#8211; name of the target model (string)</li>
-<li><strong>domain</strong> &#8211; an optional domain to set on candidate values on the
+<li><strong>comodel_name</strong> – name of the target model (string)</li>
+<li><strong>domain</strong> – an optional domain to set on candidate values on the
 client side (domain or string)</li>
-<li><strong>context</strong> &#8211; an optional context to use on the client side when
+<li><strong>context</strong> – an optional context to use on the client side when
 handling that field (dictionary)</li>
-<li><strong>ondelete</strong> &#8211; what to do when the referred record is deleted;
+<li><strong>ondelete</strong> – what to do when the referred record is deleted;
 possible values are: <code class="docutils literal"><span class="pre">'set</span> <span class="pre">null'</span></code>, <code class="docutils literal"><span class="pre">'restrict'</span></code>, <code class="docutils literal"><span class="pre">'cascade'</span></code></li>
-<li><strong>auto_join</strong> &#8211; whether JOINs are generated upon search through that
+<li><strong>auto_join</strong> – whether JOINs are generated upon search through that
 field (boolean, by default <code class="docutils literal"><span class="pre">False</span></code>)</li>
-<li><strong>delegate</strong> &#8211; set it to <code class="docutils literal"><span class="pre">True</span></code> to make fields of the target model
+<li><strong>delegate</strong> – set it to <code class="docutils literal"><span class="pre">True</span></code> to make fields of the target model
 accessible from the current model (corresponds to <code class="docutils literal"><span class="pre">_inherits</span></code>)</li>
 </ul>
 </td>
@@ -1086,8 +1083,8 @@ single-line string in clients</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>size</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; the maximum size of values stored for that field</li>
-<li><strong>translate</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; whether the values of this field can be translated</li>
+<li><strong>size</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – the maximum size of values stored for that field</li>
+<li><strong>translate</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) – whether the values of this field can be translated</li>
 </ul>
 </td>
 </tr>
@@ -1120,16 +1117,16 @@ record) or 1 (a single record).</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>comodel_name</strong> &#8211; name of the target model (string)</li>
-<li><strong>domain</strong> &#8211; an optional domain to set on candidate values on the
+<li><strong>comodel_name</strong> – name of the target model (string)</li>
+<li><strong>domain</strong> – an optional domain to set on candidate values on the
 client side (domain or string)</li>
-<li><strong>context</strong> &#8211; an optional context to use on the client side when
+<li><strong>context</strong> – an optional context to use on the client side when
 handling that field (dictionary)</li>
-<li><strong>ondelete</strong> &#8211; what to do when the referred record is deleted;
+<li><strong>ondelete</strong> – what to do when the referred record is deleted;
 possible values are: <code class="docutils literal"><span class="pre">'set</span> <span class="pre">null'</span></code>, <code class="docutils literal"><span class="pre">'restrict'</span></code>, <code class="docutils literal"><span class="pre">'cascade'</span></code></li>
-<li><strong>auto_join</strong> &#8211; whether JOINs are generated upon search through that
+<li><strong>auto_join</strong> – whether JOINs are generated upon search through that
 field (boolean, by default <code class="docutils literal"><span class="pre">False</span></code>)</li>
-<li><strong>delegate</strong> &#8211; set it to <code class="docutils literal"><span class="pre">True</span></code> to make fields of the target model
+<li><strong>delegate</strong> – set it to <code class="docutils literal"><span class="pre">True</span></code> to make fields of the target model
 accessible from the current model (corresponds to <code class="docutils literal"><span class="pre">_inherits</span></code>)</li>
 </ul>
 </td>
@@ -1150,8 +1147,8 @@ single-line string in clients</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>size</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; the maximum size of values stored for that field</li>
-<li><strong>translate</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; whether the values of this field can be translated</li>
+<li><strong>size</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – the maximum size of values stored for that field</li>
+<li><strong>translate</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) – whether the values of this field can be translated</li>
 </ul>
 </td>
 </tr>
@@ -1174,16 +1171,16 @@ record) or 1 (a single record).</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>comodel_name</strong> &#8211; name of the target model (string)</li>
-<li><strong>domain</strong> &#8211; an optional domain to set on candidate values on the
+<li><strong>comodel_name</strong> – name of the target model (string)</li>
+<li><strong>domain</strong> – an optional domain to set on candidate values on the
 client side (domain or string)</li>
-<li><strong>context</strong> &#8211; an optional context to use on the client side when
+<li><strong>context</strong> – an optional context to use on the client side when
 handling that field (dictionary)</li>
-<li><strong>ondelete</strong> &#8211; what to do when the referred record is deleted;
+<li><strong>ondelete</strong> – what to do when the referred record is deleted;
 possible values are: <code class="docutils literal"><span class="pre">'set</span> <span class="pre">null'</span></code>, <code class="docutils literal"><span class="pre">'restrict'</span></code>, <code class="docutils literal"><span class="pre">'cascade'</span></code></li>
-<li><strong>auto_join</strong> &#8211; whether JOINs are generated upon search through that
+<li><strong>auto_join</strong> – whether JOINs are generated upon search through that
 field (boolean, by default <code class="docutils literal"><span class="pre">False</span></code>)</li>
-<li><strong>delegate</strong> &#8211; set it to <code class="docutils literal"><span class="pre">True</span></code> to make fields of the target model
+<li><strong>delegate</strong> – set it to <code class="docutils literal"><span class="pre">True</span></code> to make fields of the target model
 accessible from the current model (corresponds to <code class="docutils literal"><span class="pre">_inherits</span></code>)</li>
 </ul>
 </td>
@@ -1209,16 +1206,16 @@ record) or 1 (a single record).</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>comodel_name</strong> &#8211; name of the target model (string)</li>
-<li><strong>domain</strong> &#8211; an optional domain to set on candidate values on the
+<li><strong>comodel_name</strong> – name of the target model (string)</li>
+<li><strong>domain</strong> – an optional domain to set on candidate values on the
 client side (domain or string)</li>
-<li><strong>context</strong> &#8211; an optional context to use on the client side when
+<li><strong>context</strong> – an optional context to use on the client side when
 handling that field (dictionary)</li>
-<li><strong>ondelete</strong> &#8211; what to do when the referred record is deleted;
+<li><strong>ondelete</strong> – what to do when the referred record is deleted;
 possible values are: <code class="docutils literal"><span class="pre">'set</span> <span class="pre">null'</span></code>, <code class="docutils literal"><span class="pre">'restrict'</span></code>, <code class="docutils literal"><span class="pre">'cascade'</span></code></li>
-<li><strong>auto_join</strong> &#8211; whether JOINs are generated upon search through that
+<li><strong>auto_join</strong> – whether JOINs are generated upon search through that
 field (boolean, by default <code class="docutils literal"><span class="pre">False</span></code>)</li>
-<li><strong>delegate</strong> &#8211; set it to <code class="docutils literal"><span class="pre">True</span></code> to make fields of the target model
+<li><strong>delegate</strong> – set it to <code class="docutils literal"><span class="pre">True</span></code> to make fields of the target model
 accessible from the current model (corresponds to <code class="docutils literal"><span class="pre">_inherits</span></code>)</li>
 </ul>
 </td>
@@ -1245,8 +1242,8 @@ single-line string in clients</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>size</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; the maximum size of values stored for that field</li>
-<li><strong>translate</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; whether the values of this field can be translated</li>
+<li><strong>size</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – the maximum size of values stored for that field</li>
+<li><strong>translate</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) – whether the values of this field can be translated</li>
 </ul>
 </td>
 </tr>
@@ -1274,8 +1271,8 @@ single-line string in clients</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>size</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; the maximum size of values stored for that field</li>
-<li><strong>translate</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; whether the values of this field can be translated</li>
+<li><strong>size</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – the maximum size of values stored for that field</li>
+<li><strong>translate</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) – whether the values of this field can be translated</li>
 </ul>
 </td>
 </tr>
@@ -1291,7 +1288,7 @@ single-line string in clients</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>comodel_name</strong> &#8211; name of the target model (string)</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>comodel_name</strong> – name of the target model (string)</td>
 </tr>
 </tbody>
 </table>
@@ -1302,11 +1299,11 @@ fields or field extensions.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>relation</strong> &#8211; optional name of the table that stores the relation in
+<li><strong>relation</strong> – optional name of the table that stores the relation in
 the database (string)</li>
-<li><strong>column1</strong> &#8211; optional name of the column referring to &#8220;these&#8221; records
+<li><strong>column1</strong> – optional name of the column referring to “these” records
 in the table <code class="docutils literal"><span class="pre">relation</span></code> (string)</li>
-<li><strong>column2</strong> &#8211; optional name of the column referring to &#8220;those&#8221; records
+<li><strong>column2</strong> – optional name of the column referring to “those” records
 in the table <code class="docutils literal"><span class="pre">relation</span></code> (string)</li>
 </ul>
 </td>
@@ -1321,11 +1318,11 @@ given, names are automatically generated from model names, provided
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>domain</strong> &#8211; an optional domain to set on candidate values on the
+<li><strong>domain</strong> – an optional domain to set on candidate values on the
 client side (domain or string)</li>
-<li><strong>context</strong> &#8211; an optional context to use on the client side when
+<li><strong>context</strong> – an optional context to use on the client side when
 handling that field (dictionary)</li>
-<li><strong>limit</strong> &#8211; optional limit to use upon read (integer)</li>
+<li><strong>limit</strong> – optional limit to use upon read (integer)</li>
 </ul>
 </td>
 </tr>
@@ -1349,16 +1346,16 @@ the current record.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>comodel_name</strong> &#8211; name of the target model (string)</li>
-<li><strong>inverse_name</strong> &#8211; name of the inverse <code class="docutils literal"><span class="pre">Many2one</span></code> field in
+<li><strong>comodel_name</strong> – name of the target model (string)</li>
+<li><strong>inverse_name</strong> – name of the inverse <code class="docutils literal"><span class="pre">Many2one</span></code> field in
 <code class="docutils literal"><span class="pre">comodel_name</span></code> (string)</li>
-<li><strong>domain</strong> &#8211; an optional domain to set on candidate values on the
+<li><strong>domain</strong> – an optional domain to set on candidate values on the
 client side (domain or string)</li>
-<li><strong>context</strong> &#8211; an optional context to use on the client side when
+<li><strong>context</strong> – an optional context to use on the client side when
 handling that field (dictionary)</li>
-<li><strong>auto_join</strong> &#8211; whether JOINs are generated upon search through that
+<li><strong>auto_join</strong> – whether JOINs are generated upon search through that
 field (boolean, by default <code class="docutils literal"><span class="pre">False</span></code>)</li>
-<li><strong>limit</strong> &#8211; optional limit to use upon read (integer)</li>
+<li><strong>limit</strong> – optional limit to use upon read (integer)</li>
 </ul>
 </td>
 </tr>
@@ -1383,8 +1380,8 @@ the case of related fields or field extensions.</p>
 <p>Import the records directly, without delaying the jobs.</p>
 <p>Import the Magento Websites, Stores, Storeviews</p>
 <p>They are imported directly because this is a rare and fast operation,
-and we don&#8217;t really bother if it blocks the UI during this time.
-(that&#8217;s also a mean to rapidly check the connectivity with Magento).</p>
+and we don’t really bother if it blocks the UI during this time.
+(that’s also a mean to rapidly check the connectivity with Magento).</p>
 </dd></dl>
 
 <dl class="class">
@@ -1418,7 +1415,7 @@ or magento.store record</p>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">openerp.addons.connector.unit.mapper.ImportMapper</span></code></p>
 <dl class="attribute">
 <dt id="openerp.addons.magentoerpconnect.magento_model.StoreImportMapper.direct">
-<code class="descname">direct</code><em class="property"> = [('name', 'name')]</em><a class="headerlink" href="#openerp.addons.magentoerpconnect.magento_model.StoreImportMapper.direct" title="Permalink to this definition">¶</a></dt>
+<code class="descname">direct</code><em class="property"> = [(‘name’, ‘name’)]</em><a class="headerlink" href="#openerp.addons.magentoerpconnect.magento_model.StoreImportMapper.direct" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1459,7 +1456,7 @@ or magento.store record</p>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">openerp.addons.connector.unit.mapper.ImportMapper</span></code></p>
 <dl class="attribute">
 <dt id="openerp.addons.magentoerpconnect.magento_model.StoreviewImportMapper.direct">
-<code class="descname">direct</code><em class="property"> = [('name', 'name'), ('code', 'code'), ('is_active', 'enabled'), ('sort_order', 'sort_order')]</em><a class="headerlink" href="#openerp.addons.magentoerpconnect.magento_model.StoreviewImportMapper.direct" title="Permalink to this definition">¶</a></dt>
+<code class="descname">direct</code><em class="property"> = [(‘name’, ‘name’), (‘code’, ‘code’), (‘is_active’, ‘enabled’), (‘sort_order’, ‘sort_order’)]</em><a class="headerlink" href="#openerp.addons.magentoerpconnect.magento_model.StoreviewImportMapper.direct" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1493,7 +1490,7 @@ or magento.store record</p>
 
 <dl class="attribute">
 <dt id="openerp.addons.magentoerpconnect.magento_model.WebsiteImportMapper.direct">
-<code class="descname">direct</code><em class="property"> = [('code', 'code'), ('sort_order', 'sort_order')]</em><a class="headerlink" href="#openerp.addons.magentoerpconnect.magento_model.WebsiteImportMapper.direct" title="Permalink to this definition">¶</a></dt>
+<code class="descname">direct</code><em class="property"> = [(‘code’, ‘code’), (‘sort_order’, ‘sort_order’)]</em><a class="headerlink" href="#openerp.addons.magentoerpconnect.magento_model.WebsiteImportMapper.direct" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1525,7 +1522,7 @@ or magento.store record</p>
     </p>
     <p>
         &copy; Copyright 2013-2015, Odoo Community Association (OCA).<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.6.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.1.<br/>
     </p>
   </div>
 </footer>

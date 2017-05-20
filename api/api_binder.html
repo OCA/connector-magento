@@ -1,16 +1,13 @@
 <!DOCTYPE html>
 
-
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
     <title>Binders &#8212; Odoo Magento Connector  documentation</title>
     
-    <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/bootswatch-3.3.6/united/bootstrap.min.css" type="text/css" />
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
@@ -51,7 +48,7 @@
 </script>
 
   </head>
-  <body role="document">
+  <body>
 
   <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -122,13 +119,13 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../howto/faq.html">FAQ</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../howto/faq.html#how-do-i">How do I...</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../howto/faq.html#why">Why...</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../howto/faq.html#how-do-i">How do I…</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../howto/faq.html#why">Why…</a></li>
 </ul>
 </li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../project/contribute.html">Developer&#8217;s guide</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="../project/contribute.html">Developer’s guide</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../project/contribute.html#connector-with-batteries-included-buildout">Connector with batteries included (buildout)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../project/contribute.html#magento-on-docker">Magento on Docker</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../project/contribute.html#how-to-help">How to help</a></li>
@@ -138,7 +135,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../guides/tutorial_development.html">Tutorial: development</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../guides/tutorial_development.html#run-a-function-on-an-event">Run a function on an Event</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../guides/tutorial_development.html#find-the-connector-unit-for-a-model">Find the &#8216;connector unit&#8217; for a model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../guides/tutorial_development.html#find-the-connector-unit-for-a-model">Find the ‘connector unit’ for a model</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../guides/tutorial_development.html#create-an-import">Create an import</a></li>
 </ul>
 </li>
@@ -279,8 +276,8 @@ update the last synchronization date.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>external_id</strong> &#8211; External ID to bind</li>
-<li><strong>binding_id</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; OpenERP ID to bind</li>
+<li><strong>external_id</strong> – External ID to bind</li>
+<li><strong>binding_id</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – OpenERP ID to bind</li>
 </ul>
 </td>
 </tr>
@@ -297,9 +294,9 @@ update the last synchronization date.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>record_id</strong> &#8211; OpenERP ID for which we want the external id
+<li><strong>record_id</strong> – OpenERP ID for which we want the external id
 or a recordset with one record</li>
-<li><strong>wrap</strong> &#8211; if False, record_id is the ID of the binding,
+<li><strong>wrap</strong> – if False, record_id is the ID of the binding,
 if True, record_id is the ID of the normal record, the
 method will search the corresponding binding and returns
 the backend id of the binding</li>
@@ -322,10 +319,10 @@ the backend id of the binding</li>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>external_id</strong> &#8211; external ID for which we want the OpenERP ID</li>
-<li><strong>unwrap</strong> &#8211; if True, returns the normal record (the one
-inherits&#8217;ed), else return the binding record</li>
-<li><strong>browse</strong> &#8211; if True, returns a recordset</li>
+<li><strong>external_id</strong> – external ID for which we want the OpenERP ID</li>
+<li><strong>unwrap</strong> – if True, returns the normal record (the one
+inherits’ed), else return the binding record</li>
+<li><strong>browse</strong> – if True, returns a recordset</li>
 </ul>
 </td>
 </tr>
@@ -350,7 +347,7 @@ it will return the corresponding <code class="docutils literal"><span class="pre
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>browse</strong> &#8211; when True, returns a browse_record instance
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>browse</strong> – when True, returns a browse_record instance
 rather than an ID</td>
 </tr>
 </tbody>
@@ -391,7 +388,7 @@ this is the field we use in the <code class="docutils literal"><span class="pre"
     </p>
     <p>
         &copy; Copyright 2013-2015, Odoo Community Association (OCA).<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.6.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.1.<br/>
     </p>
   </div>
 </footer>
