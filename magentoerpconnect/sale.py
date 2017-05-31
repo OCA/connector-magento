@@ -723,7 +723,9 @@ class SaleOrderImporter(MagentoImporter):
             # have to be extracted from the child
             for field in ['sku', 'product_id', 'name']:
                 item[field] = child_items[0][field]
-            return item
+            # Experimental support for configurable products with multiple
+            # subitems
+            return [item] + child_items[1:]
         elif product_type == 'bundle':
             return child_items
         return top_item
