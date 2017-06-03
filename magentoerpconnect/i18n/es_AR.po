@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-23 15:24+0000\n"
-"PO-Revision-Date: 2017-03-23 20:09+0000\n"
+"POT-Creation-Date: 2017-05-20 01:00+0000\n"
+"PO-Revision-Date: 2017-05-30 00:26+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: Spanish (Argentina) (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/es_AR/)\n"
 "MIME-Version: 1.0\n"
@@ -2301,7 +2301,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_stock_picking
 msgid "Picking List"
-msgstr ""
+msgstr "Remitos"
 
 #. module: magentoerpconnect
 #: field:magento.stock.picking,picking_method:0
