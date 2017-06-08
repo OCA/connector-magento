@@ -69,15 +69,15 @@ For the time being, the Magento extension originally built by OpenLabs
 is still used  by the connector. But the version published on `Magento
 Connect` is outdated.
 
-Download the following ``Bazaar`` branch and install it in Magento::
+Download the following ``Git`` repository and install it in Magento::
 
-    $ bzr branch lp:magentoerpconnect/magento-module-oerp6.x-stable magento-module
+    $ git clone https://github.com/OCA/connector-magento-php-extension 
 
 In order to install it:
 
-1. Move the `Openlabs` folder in the
+1. Move the `Oca` folder in the
    `magento_root/app/code/community`.
-#. Move the file `app/etc/modules/Openlabs_OpenERPConnector.xml` in
+#. Move the file `app/etc/modules/Oca_OdooConnector.xml` in
    `magento_root/app/etc/modules`.
 #. Flush the Magento cache from the admin panel or by removing everything in
    `magento_root/var/cache`
