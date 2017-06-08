@@ -77,7 +77,10 @@
                         <field name="magento_id"/>
                         <field name="created_at" readonly="1"/>
                         <field name="updated_at" readonly="1"/>
+                        <field name="visibility" />
+                        <field name="status" />
                         <field name="product_type" readonly="1"/>
+                        <field name="website_ids" />
                     </group>
                     <group string="Inventory Options">
                         <field name="no_stock_sync"/>

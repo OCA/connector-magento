@@ -26,6 +26,8 @@ from openerp.addons.magentoerpconnect.unit.import_synchronizer import (
     import_batch,
     import_record)
 from openerp.addons.connector.session import ConnectorSession
+from openerp.addons.magentoerpconnect.connector import get_environment
+from openerp.addons.connector.connector import Binder
 import openerp.tests.common as common
 from .common import (mock_api,
                      mock_urlopen_image,
@@ -80,6 +82,10 @@ class SetUpMagentoBase(common.TransactionCase):
                  'import_rule': 'always',
                  'days_before_cancel': 0,
                  'journal_id': journal_id})
+
+    def get_binder(self, model_name):
+        env = get_environment(self.session, model_name, self.backend_id)
+        return env.get_connector_unit(Binder)
 
     def get_magento_helper(self, model_name):
         return MagentoHelper(self.cr, self.registry, model_name)

@@ -95,6 +95,18 @@ class magento_product_product(orm.Model):
         'product_type': fields.selection(_product_type_get,
                                          'Magento Product Type',
                                          required=True),
+        'visibility': fields.selection(
+            [('1', 'Not Visible Individually'),
+             ('2', 'Catalog'),
+             ('3', 'Search'),
+             ('4', 'Catalog, Search')],
+            string='Visibility in Magento',
+            required=True),
+        'status': fields.selection(
+            [('1', 'Enabled'),
+             ('2', 'Disabled')],
+            string='Status in Magento',
+            required=True),
         'manage_stock': fields.selection(
             [('use_default', 'Use Default Config'),
              ('no', 'Do Not Manage Stock'),
@@ -124,6 +136,8 @@ class magento_product_product(orm.Model):
         'manage_stock': 'use_default',
         'backorders': 'use_default',
         'no_stock_sync': False,
+        'visibility': '4',
+        'status': '1',
         }
 
     _sql_constraints = [
@@ -269,6 +283,11 @@ class ProductProductAdapter(GenericAdapter):
                 in self._call('%s.list' % self._magento_model,
                               [filters] if filters else [{}])]
 
+    def create(self, product_type, attr_set_id, sku, data):
+        # Only ol_catalog_product.create works for export configurable product
+        return self._call('ol_catalog_product.create',
+            [product_type, attr_set_id, sku, data])
+
     def read(self, id, storeview_id=False, attributes=False):
         """ Returns the information of a record
 
@@ -276,6 +295,14 @@ class ProductProductAdapter(GenericAdapter):
         """
         return self._call('ol_catalog_product.info',
                           [int(id), storeview_id, attributes, 'id'])
+
+    def read_with_sku(self, sku, storeview_id=None, attributes=None):
+        """ Returns the information of a record
+
+        :rtype: dict
+        """
+        return self._call('%s.info' % self._magento_model,
+                          [sku, storeview_id, attributes, 'sku'])
 
     def write(self, id, data, storeview_id=False):
         """ Update records on the external system """
@@ -572,6 +599,8 @@ class ProductImportMapper(ImportMapper):
               ('type_id', 'product_type'),
               (normalize_datetime('created_at'), 'created_at'),
               (normalize_datetime('updated_at'), 'updated_at'),
+              ('visibility', 'visibility'),
+              ('status', 'status')
               ]
 
     @mapping
