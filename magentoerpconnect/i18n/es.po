@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-05-15 15:29+0000\n"
-"PO-Revision-Date: 2017-05-16 12:00+0000\n"
+"POT-Creation-Date: 2017-06-03 01:05+0000\n"
+"PO-Revision-Date: 2017-06-09 02:14+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: Spanish (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/es/)\n"
 "MIME-Version: 1.0\n"
@@ -1478,7 +1478,7 @@ msgstr "Fecha de la factura"
 #: field:magento.account.invoice,invoice_line:0
 #: field:magento.sale.order.line,invoice_lines:0
 msgid "Invoice Lines"
-msgstr ""
+msgstr "Líneas de factura"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,internal_number:0
@@ -2241,7 +2241,7 @@ msgstr "Categoría de empresa"
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_res_partner_category
 msgid "Partner Tags"
-msgstr ""
+msgstr "Etiquetas de empresa"
 
 #. module: magentoerpconnect
 #: field:magento.res.partner.category,partner_ids:0

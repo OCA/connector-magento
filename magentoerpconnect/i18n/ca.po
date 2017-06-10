@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-28 02:04+0000\n"
-"PO-Revision-Date: 2017-04-25 10:39+0000\n"
+"POT-Creation-Date: 2017-06-03 01:05+0000\n"
+"PO-Revision-Date: 2017-06-08 20:48+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: Catalan (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/ca/)\n"
 "MIME-Version: 1.0\n"
@@ -584,7 +584,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.address,child_ids:0 field:magento.res.partner,child_ids:0
 msgid "Contacts"
-msgstr ""
+msgstr "Contactes"
 
 #. module: magentoerpconnect
 #: field:magento.sale.order,project_id:0
@@ -2026,7 +2026,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.address,mobile:0 field:magento.res.partner,mobile:0
 msgid "Mobile"
-msgstr ""
+msgstr "Mòbil "
 
 #. module: magentoerpconnect
 #: field:magento.address,name:0 field:magento.backend,name:0
