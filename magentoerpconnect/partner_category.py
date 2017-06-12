@@ -4,7 +4,11 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo import models, fields
-from odoo.addons.connector.components.mapper import mapping, only_create
+from odoo.addons.connector.components.mapper import (
+    mapping,
+    only_create,
+    MetaMapper,
+)
 from odoo.addons.component.core import Component
 
 
@@ -62,6 +66,8 @@ class PartnerCategoryBatchImporter(Component):
 
 
 class PartnerCategoryImportMapper(Component):
+    __metaclass__ = MetaMapper
+
     _name = 'magento.partner.category.import.mapper'
     _inherit = 'magento.import.mapper'
     _collection = 'magento.backend'
