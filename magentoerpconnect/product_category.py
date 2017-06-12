@@ -153,10 +153,10 @@ class ProductCategoryBatchImporter(DelayedBatchImporter):
     """
     _model_name = ['magento.product.category']
 
-    def _import_record(self, external_id, priority=None):
+    def _import_record(self, external_id, job_options=None):
         """ Delay a job for the import """
         super(ProductCategoryBatchImporter, self)._import_record(
-            external_id, priority=priority)
+                external_id, job_options=job_options)
 
     def run(self, filters=None):
         """ Run the synchronization """
@@ -178,8 +178,11 @@ class ProductCategoryBatchImporter(DelayedBatchImporter):
                 # However, importers have to ensure that their parent is
                 # there and import it if it doesn't exist
                 if updated_ids is None or node_id in updated_ids:
+                    job_options = {
+                        'priority': base_priority + level,
+                    }
                     self._import_record(
-                        node_id, priority=base_priority + level)
+                        node_id, job_options=job_options)
                 import_nodes(children, level=level + 1)
         tree = self.backend_adapter.tree()
         import_nodes(tree)

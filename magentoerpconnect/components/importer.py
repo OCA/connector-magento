@@ -257,14 +257,10 @@ class DelayedBatchImporter(Component):
     _name = 'magento.delayed.batch.importer'
     _inherit = 'magento.batch.importer'
 
-    def _import_record(self, external_id, **kwargs):
+    def _import_record(self, external_id, job_options=None, **kwargs):
         """ Delay the import of the records"""
-        # TODO
-        # import_record.delay(self.session,
-        #                     self.model._name,
-        #                     self.backend_record.id,
-        #                     record_id,
-        #                     **kwargs)
+        delayable = self.model.with_delay(**job_options or {})
+        delayable.import_record(self.backend_record, external_id, **kwargs)
 
 
 class SimpleRecordImporter(Component):
