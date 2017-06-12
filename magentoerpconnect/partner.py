@@ -248,7 +248,6 @@ class PartnerImportMapper(Component):
 
     @mapping
     def names(self, record):
-        # TODO create a glue module for base_surname
         parts = [part for part in (record['firstname'],
                                    record['middlename'],
                                    record['lastname']) if part]
@@ -638,7 +637,6 @@ class AddressImportMapper(Component):
 
     @mapping
     def names(self, record):
-        # TODO create a glue module for base_surname
         parts = [part for part in (record['firstname'],
                                    record.get('middlename'),
                                    record['lastname']) if part]
