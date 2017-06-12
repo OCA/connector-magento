@@ -40,6 +40,7 @@ class MagentoBaseExporter(Component):
 
     _name = 'magento.base.exporter'
     _inherit = ['base.exporter', 'base.magento.connector']
+    _usage = 'record.exporter'
 
     def __init__(self, working_context):
         super(MagentoBaseExporter, self).__init__(working_context)

@@ -9,7 +9,7 @@ from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 from odoo.addons.component.core import Component
 
-from odoo.addons.connector.unit.mapper import mapping
+from odoo.addons.connector.components.mapper import mapping, MetaMapper
 from odoo.addons.connector.checkpoint import checkpoint
 
 _logger = logging.getLogger(__name__)
@@ -185,21 +185,20 @@ class MagentoBackend(models.Model):
     def add_checkpoint(self, record):
         self.ensure_one()
         record.ensure_one()
-        return checkpoint.add_checkpoint(record._name, record.id,
+        return checkpoint.add_checkpoint(self.env, record._name, record.id,
                                          self._name, self.id)
 
     @api.multi
     def synchronize_metadata(self):
         try:
             for backend in self:
-                for model in ('magento.website',
-                              'magento.store',
-                              'magento.storeview'):
+                for model_name in ('magento.website',
+                                   'magento.store',
+                                   'magento.storeview'):
                     # import directly, do not delay because this
                     # is a fast operation, a direct return is fine
                     # and it is simpler to import them sequentially
-                    import_batch(session, model, backend.id)
-                    self.env[model].with_delay().import_batch(backend)
+                    self.env[model_name].import_batch(backend)
             return True
         except Exception as e:
             _logger.error(e.message, exc_info=True)
@@ -627,6 +626,8 @@ class MetadataBatchImporter(Component):
 
 
 class WebsiteImportMapper(Component):
+    __metaclass__ = MetaMapper
+
     _name = 'magento.website.mapper'
     _inherit = 'magento.import.mapper'
     _collection = 'magento.backend'
@@ -648,6 +649,8 @@ class WebsiteImportMapper(Component):
 
 
 class StoreImportMapper(Component):
+    __metaclass__ = MetaMapper
+
     _name = 'magento.store.mapper'
     _inherit = 'magento.import.mapper'
     _collection = 'magento.backend'
@@ -663,6 +666,8 @@ class StoreImportMapper(Component):
 
 
 class StoreviewImportMapper(Component):
+    __metaclass__ = MetaMapper
+
     _name = 'magento.storeview.mapper'
     _inherit = 'magento.import.mapper'
     _collection = 'magento.backend'
@@ -691,7 +696,7 @@ class StoreImporter(Component):
     _apply_on = 'magento.store'
 
     def _create(self, data):
-        binding = super(StoreviewImporter, self)._create(data)
+        binding = super(StoreImporter, self)._create(data)
         checkpoint = self.components(usage='add.checkpoint')
         checkpoint.run(binding)
         return binding

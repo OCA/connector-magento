@@ -4,14 +4,19 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo.addons.component.core import Component
+from odoo.addons.connector.components.mapper import MetaMapper
 
 
 class MagentoImportMapper(Component):
+    __metaclass__ = MetaMapper
+
     _name = 'magento.import.mapper'
     _inherit = ['base.import.mapper', 'base.magento.connector']
 
 
 class MagentoExportMapper(Component):
+    __metaclass__ = MetaMapper
+
     _name = 'magento.export.mapper'
     _inherit = ['base.export.mapper', 'base.magento.connector']
 

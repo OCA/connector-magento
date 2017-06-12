@@ -28,6 +28,7 @@ class MagentoImporter(Component):
 
     _name = 'magento.importer'
     _inherit = ['base.importer', 'base.magento.connector']
+    _usage = 'record.importer'
 
     def __init__(self, work_context):
         super(MagentoImporter, self).__init__(work_context)
@@ -220,6 +221,7 @@ class BatchImporter(Component):
 
     _name = 'magento.batch.importer'
     _inherit = ['base.importer', 'base.magento.connector']
+    _usage = 'batch.importer'
 
     def run(self, filters=None):
         """ Run the synchronization """
@@ -243,10 +245,6 @@ class DirectBatchImporter(Component):
 
     def _import_record(self, external_id):
         """ Import the record directly """
-        # TODO
-        # import_record(self.model._name,
-        #               self.backend_record.id,
-        #               record_id)
         self.model.import_record(self.backend_record, external_id)
 
 

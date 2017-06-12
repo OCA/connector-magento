@@ -33,7 +33,7 @@
           'views/partner_view.xml',
           # 'views/sale_view.xml',
           # 'views/invoice_view.xml',
-          # 'views/magentoerpconnect_menu.xml',
+          'views/magentoerpconnect_menu.xml',
           # 'views/delivery_view.xml',
           # 'views/stock_view.xml',
           # 'views/account_payment_mode_view.xml',
