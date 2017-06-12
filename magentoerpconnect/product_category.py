@@ -5,22 +5,16 @@
 
 import logging
 import xmlrpclib
-from openerp import models, fields
-from openerp.addons.connector.unit.mapper import (mapping,
-                                                  ImportMapper
-                                                  )
-from openerp.addons.connector.exception import (IDMissingInBackend,
-                                                MappingError,
-                                                )
-from .unit.backend_adapter import (GenericAdapter,
-                                   MAGENTO_DATETIME_FORMAT,
-                                   )
-from .unit.import_synchronizer import (DelayedBatchImporter,
-                                       MagentoImporter,
-                                       TranslationImporter,
-                                       AddCheckpoint,
-                                       )
-from .backend import magento
+from odoo import models, fields
+from odoo.addons.connector.components.mapper import (
+    mapping,
+    MetaMapper,
+)
+from odoo.addons.connector.exception import (IDMissingInBackend,
+                                             MappingError,
+                                             )
+from odoo.addons.component.core import Component
+from .unit.backend_adapter import MAGENTO_DATETIME_FORMAT
 
 _logger = logging.getLogger(__name__)
 
@@ -28,13 +22,13 @@ _logger = logging.getLogger(__name__)
 class MagentoProductCategory(models.Model):
     _name = 'magento.product.category'
     _inherit = 'magento.binding'
-    _inherits = {'product.category': 'openerp_id'}
+    _inherits = {'product.category': 'odoo_id'}
     _description = 'Magento Product Category'
 
-    openerp_id = fields.Many2one(comodel_name='product.category',
-                                 string='Product Category',
-                                 required=True,
-                                 ondelete='cascade')
+    odoo_id = fields.Many2one(comodel_name='product.category',
+                              string='Product Category',
+                              required=True,
+                              ondelete='cascade')
     description = fields.Text(translate=True)
     magento_parent_id = fields.Many2one(
         comodel_name='magento.product.category',
@@ -53,14 +47,17 @@ class ProductCategory(models.Model):
 
     magento_bind_ids = fields.One2many(
         comodel_name='magento.product.category',
-        inverse_name='openerp_id',
+        inverse_name='odoo_id',
         string="Magento Bindings",
     )
 
 
-@magento
-class ProductCategoryAdapter(GenericAdapter):
-    _model_name = 'magento.product.category'
+class ProductCategoryAdapter(Component):
+    _name = 'magento.product.category.adapter'
+    _inherit = 'magento.adapter'
+    _collection = 'magento.backend'
+    _apply_on = 'magento.product.category'
+
     _magento_model = 'catalog_category'
     _admin_path = '/{model}/index/'
 
@@ -143,15 +140,17 @@ class ProductCategoryAdapter(GenericAdapter):
                           [categ_id, product_id, 'id'])
 
 
-@magento
-class ProductCategoryBatchImporter(DelayedBatchImporter):
+class ProductCategoryBatchImporter(Component):
     """ Import the Magento Product Categories.
 
     For every product category in the list, a delayed job is created.
     A priority is set on the jobs according to their level to rise the
     chance to have the top level categories imported first.
     """
-    _model_name = ['magento.product.category']
+    _name = 'magento.product.category.batch.importer'
+    _inherit = 'magento.delayed.batch.importer'
+    _collection = 'magento.backend'
+    _apply_on = ['magento.product.category']
 
     def _import_record(self, external_id, job_options=None):
         """ Delay a job for the import """
@@ -188,42 +187,37 @@ class ProductCategoryBatchImporter(DelayedBatchImporter):
         import_nodes(tree)
 
 
-ProductCategoryBatchImport = ProductCategoryBatchImporter  # deprecated
-
-
-@magento
-class ProductCategoryImporter(MagentoImporter):
-    _model_name = ['magento.product.category']
+class ProductCategoryImporter(Component):
+    _name = 'magento.product.category.importer'
+    _inherit = 'magento.importer'
+    _collection = 'magento.backend'
+    _apply_on = ['magento.product.category']
 
     def _import_dependencies(self):
         """ Import the dependencies for the record"""
         record = self.magento_record
         # import parent category
         # the root category has a 0 parent_id
-        if record.get('parent_id'):
-            parent_id = record['parent_id']
-            if self.binder.to_openerp(parent_id) is None:
-                importer = self.unit_for(MagentoImporter)
-                importer.run(parent_id)
+        self._import_dependency(record.get('parent_id'), self.model)
 
     def _create(self, data):
-        openerp_binding = super(ProductCategoryImporter, self)._create(data)
-        checkpoint = self.unit_for(AddCheckpoint)
-        checkpoint.run(openerp_binding.id)
-        return openerp_binding
+        binding = super(ProductCategoryImporter, self)._create(data)
+        self.backend_record.add_checkpoint(binding)
+        return binding
 
     def _after_import(self, binding):
         """ Hook called at the end of the import """
-        translation_importer = self.unit_for(TranslationImporter)
-        translation_importer.run(self.external_id, binding.id)
+        translation_importer = self.components(usage='translation.importer')
+        translation_importer.run(self.external_id, binding)
 
 
-ProductCategoryImport = ProductCategoryImporter  # deprecated
+class ProductCategoryImportMapper(Component):
+    __metaclass__ = MetaMapper
 
-
-@magento
-class ProductCategoryImportMapper(ImportMapper):
-    _model_name = 'magento.product.category'
+    _name = 'magento.product.category.import.mapper'
+    _inherit = 'magento.import.mapper'
+    _collection = 'magento.backend'
+    _apply_on = 'magento.product.category'
 
     direct = [
         ('description', 'description'),
@@ -237,10 +231,6 @@ class ProductCategoryImportMapper(ImportMapper):
             return {'name': record['name']}
 
     @mapping
-    def external_id(self, record):
-        return {'external_id': record['category_id']}
-
-    @mapping
     def backend_id(self, record):
         return {'backend_id': self.backend_record.id}
 
@@ -249,11 +239,12 @@ class ProductCategoryImportMapper(ImportMapper):
         if not record.get('parent_id'):
             return
         binder = self.binder_for()
-        category_id = binder.to_openerp(record['parent_id'], unwrap=True)
-        mag_cat_id = binder.to_openerp(record['parent_id'])
+        parent_binding = binder.to_internal(record['parent_id'])
 
-        if category_id is None:
+        if not parent_binding:
             raise MappingError("The product category with "
                                "magento id %s is not imported." %
                                record['parent_id'])
-        return {'parent_id': category_id, 'magento_parent_id': mag_cat_id}
+
+        parent = parent_binding.odoo_id
+        return {'parent_id': parent.id, 'magento_parent_id': parent_binding.id}

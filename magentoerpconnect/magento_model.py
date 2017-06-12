@@ -134,12 +134,12 @@ class MagentoBackend(models.Model):
              "stock inventory updates.\nIf empty, Quantity Available "
              "is used.",
     )
-    # product_binding_ids = fields.One2many(
-    #     comodel_name='magento.product.product',
-    #     inverse_name='backend_id',
-    #     string='Magento Products',
-    #     readonly=True,
-    # )
+    product_binding_ids = fields.One2many(
+        comodel_name='magento.product.product',
+        inverse_name='backend_id',
+        string='Magento Products',
+        readonly=True,
+    )
     account_analytic_id = fields.Many2one(
         comodel_name='account.analytic.account',
         string='Analytic account',
@@ -405,11 +405,11 @@ class MagentoWebsite(models.Model):
     import_partners_from_date = fields.Datetime(
         string='Import partners from date',
     )
-    # product_binding_ids = fields.Many2many(
-    #     comodel_name='magento.product.product',
-    #     string='Magento Products',
-    #     readonly=True,
-    # )
+    product_binding_ids = fields.Many2many(
+        comodel_name='magento.product.product',
+        string='Magento Products',
+        readonly=True,
+    )
 
     @api.multi
     def import_partners(self):

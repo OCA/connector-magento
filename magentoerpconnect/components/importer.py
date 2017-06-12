@@ -88,9 +88,9 @@ class MagentoImporter(Component):
         if not external_id:
             return
         binder = self.binder_for(binding_model)
-        if always or binder.to_internal(external_id) is None:
+        if always or not binder.to_internal(external_id):
             if importer is None:
-                importer = self.components(usage='importer',
+                importer = self.components(usage='record.importer',
                                            model_name=binding_model)
             importer.run(external_id)
 
@@ -285,6 +285,7 @@ class TranslationImporter(Component):
     _name = 'magento.translation.importer'
     _inherit = 'magento.importer'
     _collection = 'magento.backend'
+    _usage = 'translation.importer'
     _apply_on = ['magento.product.category',
                  'magento.product.product',
                  ]
@@ -293,7 +294,7 @@ class TranslationImporter(Component):
         """ Return the raw Magento data for ``self.external_id`` """
         return self.backend_adapter.read(self.external_id, storeview_id)
 
-    def run(self, external_id, binding_id, mapper=None):
+    def run(self, external_id, binding, mapper=None):
         self.external_id = external_id
         storeviews = self.env['magento.storeview'].search(
             [('backend_id', '=', self.backend_record.id)]
@@ -312,7 +313,6 @@ class TranslationImporter(Component):
         if mapper is None:
             mapper = self.mapper
 
-        binding = self.model.browse(binding_id)
         for storeview in lang_storeviews:
             lang_record = self._get_magento_data(storeview.external_id)
             map_record = mapper.map_record(lang_record)

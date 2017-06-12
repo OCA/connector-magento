@@ -10,7 +10,7 @@ from . import components
 
 from . import magento_model
 # from . import product
-# from . import product_category
+from . import product_category
 from . import partner
 from . import partner_category
 # from . import invoice

@@ -30,6 +30,7 @@
           # 'views/setting_view.xml',
           'views/magento_model_view.xml',
           # 'views/product_view.xml',
+          'views/product_category_view.xml',
           'views/partner_view.xml',
           # 'views/sale_view.xml',
           # 'views/invoice_view.xml',
