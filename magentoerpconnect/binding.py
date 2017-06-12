@@ -25,10 +25,11 @@ class MagentoBinding(models.AbstractModel):
         ondelete='restrict',
     )
     # fields.Char because 0 is a valid Magento ID
-    magento_id = fields.Char(string='ID on Magento')
+    # TODO: migration from 'external_id'
+    external_id = fields.Char(string='ID on Magento')
 
     _sql_constraints = [
-        ('magento_uniq', 'unique(backend_id, magento_id)',
+        ('magento_uniq', 'unique(backend_id, external_id)',
          'A binding already exists with the same Magento ID.'),
     ]
 

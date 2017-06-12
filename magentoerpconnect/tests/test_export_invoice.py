@@ -74,7 +74,7 @@ class TestExportInvoice(common.TransactionCase):
         self.stores = self.backend.mapped('website_ids.store_ids')
         sales = self.mag_sale_model.search(
             [('backend_id', '=', backend.id),
-             ('magento_id', '=', '900000691')])
+             ('external_id', '=', '900000691')])
         self.assertEqual(len(sales), 1)
         self.mag_sale = sales
         # ignore exceptions on the sale order
@@ -228,4 +228,4 @@ class TestExportInvoice(common.TransactionCase):
 
         self.assertEquals(len(self.invoice.magento_bind_ids), 1)
         binding = self.invoice.magento_bind_ids
-        self.assertEquals(binding.magento_id, '987654321')
+        self.assertEquals(binding.external_id, '987654321')

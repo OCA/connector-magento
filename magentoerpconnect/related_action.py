@@ -22,18 +22,18 @@ unwrap_binding = functools.partial(related_action.unwrap_binding,
                                    binder_class=MagentoBinder)
 
 
-def link(session, job, backend_id_pos=2, magento_id_pos=3):
+def link(session, job, backend_id_pos=2, external_id_pos=3):
     """ Open a Magento URL on the admin page to view/edit the record
     related to the job.
     """
     binding_model = job.args[0]
     # shift one to the left because session is not in job.args
     backend_id = job.args[backend_id_pos - 1]
-    magento_id = job.args[magento_id_pos - 1]
+    external_id = job.args[external_id_pos - 1]
     env = get_environment(session, binding_model, backend_id)
     adapter = env.get_connector_unit(GenericAdapter)
     try:
-        url = adapter.admin_url(magento_id)
+        url = adapter.admin_url(external_id)
     except ValueError:
         raise exceptions.Warning(
             _('No admin URL configured on the backend or '

@@ -73,8 +73,8 @@ class PartnerCategoryImportMapper(Component):
     ]
 
     @mapping
-    def magento_id(self, record):
-        return {'magento_id': record['customer_group_id']}
+    def external_id(self, record):
+        return {'external_id': record['customer_group_id']}
 
     @mapping
     def backend_id(self, record):

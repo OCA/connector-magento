@@ -171,7 +171,7 @@ class MagentoHelper(object):
         self.model = registry(model_name)
 
     def get_next_id(self):
-        self.cr.execute("SELECT max(magento_id::int) FROM %s " %
+        self.cr.execute("SELECT max(external_id::int) FROM %s " %
                         self.model._table)
         result = self.cr.fetchone()
         if result:

@@ -73,27 +73,27 @@ class StockPickingAdapter(GenericAdapter):
         return self._call('%s.create' % self._magento_model,
                           [order_id, items, comment, email, include_comment])
 
-    def add_tracking_number(self, magento_id, carrier_code,
+    def add_tracking_number(self, external_id, carrier_code,
                             tracking_title, tracking_number):
         """ Add new tracking number.
 
-        :param magento_id: shipment increment id
+        :param external_id: shipment increment id
         :param carrier_code: code of the carrier on Magento
         :param tracking_title: title displayed on Magento for the tracking
         :param tracking_number: tracking number
         """
         return self._call('%s.addTrack' % self._magento_model,
-                          [magento_id, carrier_code,
+                          [external_id, carrier_code,
                            tracking_title, tracking_number])
 
-    def get_carriers(self, magento_id):
+    def get_carriers(self, external_id):
         """ Get the list of carrier codes allowed for the shipping.
 
-        :param magento_id: order increment id
+        :param external_id: order increment id
         :rtype: list
         """
         return self._call('%s.getCarriers' % self._magento_model,
-                          [magento_id])
+                          [external_id])
 
 
 @magento
@@ -132,7 +132,7 @@ class MagentoPickingExporter(Exporter):
             )
             if not magento_sale_line:
                 continue
-            item_id = magento_sale_line.magento_id
+            item_id = magento_sale_line.external_id
             item_qty.setdefault(item_id, 0)
             item_qty[item_id] += line.product_qty
         return item_qty
@@ -153,7 +153,7 @@ class MagentoPickingExporter(Exporter):
         Export the picking to Magento
         """
         picking = self.model.browse(binding_id)
-        if picking.magento_id:
+        if picking.external_id:
             return _('Already exported')
         picking_method = picking.picking_method
         if picking_method == 'complete':
@@ -170,7 +170,7 @@ class MagentoPickingExporter(Exporter):
                              "values are 'partial' or 'complete', "
                              "found: %s" % picking_method)
         try:
-            magento_id = self.backend_adapter.create(*args)
+            external_id = self.backend_adapter.create(*args)
         except xmlrpclib.Fault as err:
             # When the shipping is already created on Magento, it returns:
             # <Fault 102: u"Impossible de faire
@@ -181,7 +181,7 @@ class MagentoPickingExporter(Exporter):
             else:
                 raise
         else:
-            self.binder.bind(magento_id, binding_id)
+            self.binder.bind(external_id, binding_id)
             # ensure that we store the external ID
             self.session.commit()
 

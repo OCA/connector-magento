@@ -104,7 +104,7 @@ class TestImportMagento(SetUpMagentoSynchronized):
 
         product_model = self.env['magento.product.product']
         product = product_model.search([('backend_id', '=', backend_id),
-                                        ('magento_id', '=', '16')])
+                                        ('external_id', '=', '16')])
         self.assertEqual(len(product), 1)
 
     def test_import_product_category_missing(self):
@@ -118,7 +118,7 @@ class TestImportMagento(SetUpMagentoSynchronized):
 
         product_model = self.env['magento.product.product']
         product = product_model.search([('backend_id', '=', backend_id),
-                                        ('magento_id', '=', '25')])
+                                        ('external_id', '=', '25')])
         self.assertEqual(len(product), 1)
 
     def test_import_product_configurable(self):
@@ -132,7 +132,7 @@ class TestImportMagento(SetUpMagentoSynchronized):
 
         product_model = self.env['magento.product.product']
         products = product_model.search([('backend_id', '=', backend_id),
-                                         ('magento_id', '=', '126')])
+                                         ('external_id', '=', '126')])
         self.assertEqual(len(products), 0)
 
     def test_import_product_bundle(self):
@@ -163,7 +163,7 @@ class TestImportMagento(SetUpMagentoSynchronized):
 
         product_model = self.env['magento.product.product']
         product = product_model.search([('backend_id', '=', backend_id),
-                                        ('magento_id', '=', '144')])
+                                        ('external_id', '=', '144')])
         self.assertEqual(product.type, 'service')
 
     def test_import_sale_order(self):
@@ -176,7 +176,7 @@ class TestImportMagento(SetUpMagentoSynchronized):
                               backend_id, 900000691)
         order_model = self.env['magento.sale.order']
         order = order_model.search([('backend_id', '=', backend_id),
-                                    ('magento_id', '=', '900000691')])
+                                    ('external_id', '=', '900000691')])
         self.assertEqual(len(order), 1)
         self.assertEqual(order.payment_term, self.payment_term,
                          "If the payment term is empty, the onchanges have not"
@@ -192,7 +192,7 @@ class TestImportMagento(SetUpMagentoSynchronized):
                               backend_id, 900000692)
         order_model = self.env['magento.sale.order']
         order = order_model.search([('backend_id', '=', backend_id),
-                                    ('magento_id', '=', '900000692')])
+                                    ('external_id', '=', '900000692')])
         self.assertEqual(len(order), 1)
 
     def test_import_sale_order_with_prefix(self):
@@ -206,7 +206,7 @@ class TestImportMagento(SetUpMagentoSynchronized):
                               backend.id, 900000693)
         order_model = self.env['magento.sale.order']
         order = order_model.search([('backend_id', '=', backend.id),
-                                    ('magento_id', '=', '900000693')])
+                                    ('external_id', '=', '900000693')])
         self.assertEqual(len(order), 1)
         self.assertEqual(order.name, 'EC900000693')
 
@@ -220,7 +220,7 @@ class TestImportMagento(SetUpMagentoSynchronized):
                               backend_id, 900000694)
         mag_order_model = self.env['magento.sale.order']
         mag_order = mag_order_model.search([('backend_id', '=', backend_id),
-                                            ('magento_id', '=', '900000694')])
+                                            ('external_id', '=', '900000694')])
         self.assertEqual(len(mag_order), 1)
         mag_order_line_model = self.env['magento.sale.order.line']
         mag_order_line = mag_order_line_model.search(
@@ -236,7 +236,7 @@ class TestImportMagento(SetUpMagentoSynchronized):
         backend_id = self.backend_id
         storeview_model = self.env['magento.storeview']
         storeview = storeview_model.search([('backend_id', '=', backend_id),
-                                            ('magento_id', '=', '1')])
+                                            ('external_id', '=', '1')])
         storeview.write({'catalog_price_tax_included': True})
         with mock_api(magento_base_responses):
             with mock_urlopen_image():
@@ -245,7 +245,7 @@ class TestImportMagento(SetUpMagentoSynchronized):
                               backend_id, 900000695)
         mag_order_model = self.env['magento.sale.order']
         mag_order = mag_order_model.search([('backend_id', '=', backend_id),
-                                            ('magento_id', '=', '900000695')])
+                                            ('external_id', '=', '900000695')])
         self.assertEqual(len(mag_order), 1)
         order = mag_order.openerp_id
         amount_total = order.amount_total
@@ -258,7 +258,7 @@ class TestImportMagento(SetUpMagentoSynchronized):
         backend_id = self.backend_id
         storeview_model = self.env['magento.storeview']
         storeview = storeview_model.search([('backend_id', '=', backend_id),
-                                            ('magento_id', '=', '2')])
+                                            ('external_id', '=', '2')])
         storeview.write({'catalog_price_tax_included': True})
         with mock_api(magento_base_responses):
             with mock_urlopen_image():
@@ -267,7 +267,7 @@ class TestImportMagento(SetUpMagentoSynchronized):
                               backend_id, 900000696)
         mag_order_model = self.env['magento.sale.order']
         mag_order = mag_order_model.search([('backend_id', '=', backend_id),
-                                            ('magento_id', '=', '900000696')])
+                                            ('external_id', '=', '900000696')])
         self.assertEqual(len(mag_order), 1)
         order = mag_order.openerp_id
         self.assertAlmostEqual(order.amount_total, 36.9500)

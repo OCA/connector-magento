@@ -35,7 +35,7 @@
                 <group>
                     <field name="website_id"/>
                     <field name="backend_id"/>
-                    <field name="magento_id"/>
+                    <field name="external_id"/>
                     <field name="created_at"/>
                     <field name="updated_at"/>
                     <field name="group_id"/>
@@ -70,7 +70,7 @@
                     <field name="website_id"/>
                     <field name="backend_id"/>
                     <field name="magento_partner_id"/>
-                    <field name="magento_id"/>
+                    <field name="external_id"/>
                     <field name="created_at"/>
                     <field name="updated_at"/>
                     <field name="is_default_billing"/>
@@ -101,7 +101,7 @@
                 <field name="magento_bind_ids">
                     <form string="Magento">
                         <field name="backend_id"/>
-                        <field name="magento_id"/>
+                        <field name="external_id"/>
                     </form>
                     <tree string="Magento">
                         <field name="backend_id"/>

@@ -49,7 +49,7 @@ class TestSaleOrder(SetUpMagentoSynchronized):
         MagentoOrder = self.env['magento.sale.order']
         binding = MagentoOrder.search(
             [('backend_id', '=', backend_id),
-             ('magento_id', '=', str(increment_id))]
+             ('external_id', '=', str(increment_id))]
         )
         self.assertEqual(len(binding), 1)
         return binding
@@ -159,9 +159,9 @@ class TestSaleOrder(SetUpMagentoSynchronized):
             # call 1: sales_order.info to read the status
             # call 2: sales_order.addComment to add a status comment
             self.assertEqual(len(calls_done), 2)
-            method, (magento_id, state) = calls_done[1]
+            method, (external_id, state) = calls_done[1]
             self.assertEqual(method, 'sales_order.addComment')
-            self.assertEqual(magento_id, binding.magento_id)
+            self.assertEqual(external_id, binding.external_id)
             self.assertEqual(state, 'canceled')
 
     def test_copy_quotation_delay_export_state(self):
@@ -228,9 +228,9 @@ class TestSaleOrder(SetUpMagentoSynchronized):
             # call 1: sales_order.info to read the status
             # call 2: sales_order.addComment to add a status comment
             self.assertEqual(len(calls_done), 2)
-            method, (magento_id, state) = calls_done[1]
+            method, (external_id, state) = calls_done[1]
             self.assertEqual(method, 'sales_order.addComment')
-            self.assertEqual(magento_id, binding.magento_id)
+            self.assertEqual(external_id, binding.external_id)
             self.assertEqual(state, 'pending')
 
     def test_import_edited(self):
@@ -244,7 +244,7 @@ class TestSaleOrder(SetUpMagentoSynchronized):
         """ Check if storeview options are propagated """
         storeview = self.env['magento.storeview'].search([
             ('backend_id', '=', self.backend_id),
-            ('magento_id', '=', '1')
+            ('external_id', '=', '1')
         ])
         team = self.env['crm.team'].create({'name': 'Magento Team'})
         storeview.team_id = team
@@ -256,7 +256,7 @@ class TestSaleOrder(SetUpMagentoSynchronized):
                                           responses=[magento_base_responses,
                                                      guest_order_responses])
         partner_binding = binding.partner_id.magento_bind_ids
-        self.assertEqual(partner_binding.magento_id, 'guestorder:900000700')
+        self.assertEqual(partner_binding.external_id, 'guestorder:900000700')
         self.assertTrue(partner_binding.guest_customer)
 
     def test_import_carrier_product(self):

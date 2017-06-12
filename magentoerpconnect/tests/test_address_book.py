@@ -67,7 +67,7 @@ class TestImportAddressBook(common.TransactionCase):
         with mock_api(no_address):
             import_record(self.session, 'magento.res.partner',
                           self.backend_id, '9999253')
-        partner = self.model.search([('magento_id', '=', '9999253'),
+        partner = self.model.search([('external_id', '=', '9999253'),
                                      ('backend_id', '=', self.backend_id)])
         self.assertEqual(len(partner), 1)
         self.assertEqual(partner.name, 'Benjamin Le Goff')
@@ -79,7 +79,7 @@ class TestImportAddressBook(common.TransactionCase):
         with mock_api(individual_1_address):
             import_record(self.session, 'magento.res.partner',
                           self.backend_id, '9999254')
-        partner = self.model.search([('magento_id', '=', '9999254'),
+        partner = self.model.search([('external_id', '=', '9999254'),
                                      ('backend_id', '=', self.backend_id)])
         self.assertEqual(len(partner), 1)
         # Name of the billing address
@@ -90,7 +90,7 @@ class TestImportAddressBook(common.TransactionCase):
         self.assertEqual(len(partner.magento_bind_ids), 1)
         self.assertEqual(len(partner.magento_address_bind_ids), 1)
         address_bind = partner.magento_address_bind_ids[0]
-        self.assertEqual(address_bind.magento_id, '9999253',
+        self.assertEqual(address_bind.external_id, '9999253',
                          msg="The merged address should be the "
                              "billing address")
 
@@ -99,7 +99,7 @@ class TestImportAddressBook(common.TransactionCase):
         with mock_api(individual_2_addresses):
             import_record(self.session, 'magento.res.partner',
                           self.backend_id, '9999255')
-        partner = self.model.search([('magento_id', '=', '9999255'),
+        partner = self.model.search([('external_id', '=', '9999255'),
                                      ('backend_id', '=', self.backend_id)])
         self.assertEqual(len(partner), 1)
         # Name of the billing address
@@ -111,7 +111,7 @@ class TestImportAddressBook(common.TransactionCase):
         self.assertEqual(len(partner.magento_bind_ids), 1)
         self.assertEqual(len(partner.magento_address_bind_ids), 1)
         address_bind = partner.magento_address_bind_ids[0]
-        self.assertEqual(address_bind.magento_id, '9999254',
+        self.assertEqual(address_bind.external_id, '9999254',
                          msg="The merged address should be the "
                              "billing address")
         self.assertEqual(partner.child_ids[0].type, 'delivery',
@@ -123,7 +123,7 @@ class TestImportAddressBook(common.TransactionCase):
         with mock_api(company_1_address):
             import_record(self.session, 'magento.res.partner',
                           self.backend_id, '9999256')
-        partner = self.model.search([('magento_id', '=', '9999256'),
+        partner = self.model.search([('external_id', '=', '9999256'),
                                      ('backend_id', '=', self.backend_id)])
         self.assertEqual(len(partner), 1)
         # Company of the billing address
@@ -142,7 +142,7 @@ class TestImportAddressBook(common.TransactionCase):
         with mock_api(company_2_addresses):
             import_record(self.session, 'magento.res.partner',
                           self.backend_id, '9999257')
-        partner = self.model.search([('magento_id', '=', '9999257'),
+        partner = self.model.search([('external_id', '=', '9999257'),
                                      ('backend_id', '=', self.backend_id)])
         self.assertEqual(len(partner), 1)
         # Company of the billing address
@@ -153,9 +153,9 @@ class TestImportAddressBook(common.TransactionCase):
         self.assertEqual(len(partner.magento_bind_ids), 1)
         self.assertEqual(len(partner.magento_address_bind_ids), 0)
 
-        def get_address(magento_id):
+        def get_address(external_id):
             address = self.address_model.search(
-                [('magento_id', '=', magento_id),
+                [('external_id', '=', external_id),
                  ('backend_id', '=', self.backend_id)])
             self.assertEqual(len(address), 1)
             return address

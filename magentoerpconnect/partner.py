@@ -329,7 +329,7 @@ class PartnerImporter(Component):
     def _after_import(self, partner_binding):
         """ Import the addresses """
         book = self.unit_for(PartnerAddressBook, model='magento.address')
-        book.import_addresses(self.magento_id, partner_binding.id)
+        book.import_addresses(self.external_id, partner_binding.id)
 
 
 AddressInfos = namedtuple('AddressInfos', ['magento_record',
@@ -564,17 +564,17 @@ class AddressImporter(Component):
     _collection = 'magento.backend'
     _apply_on = 'magento.address'
 
-    def run(self, magento_id, address_infos=None, force=False):
+    def run(self, external_id, address_infos=None, force=False):
         """ Run the synchronization """
         if address_infos is None:
             # only possible for updates
             self.address_infos = AddressInfos(None, None, None)
         else:
             self.address_infos = address_infos
-        return super(AddressImporter, self).run(magento_id, force=force)
+        return super(AddressImporter, self).run(external_id, force=force)
 
     def _get_magento_data(self):
-        """ Return the raw Magento data for ``self.magento_id`` """
+        """ Return the raw Magento data for ``self.external_id`` """
         # we already read the data from the Partner Importer
         if self.address_infos.magento_record:
             return self.address_infos.magento_record

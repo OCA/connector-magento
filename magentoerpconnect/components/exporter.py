@@ -44,7 +44,7 @@ class MagentoBaseExporter(Component):
     def __init__(self, working_context):
         super(MagentoBaseExporter, self).__init__(working_context)
         self.binding = None
-        self.magento_id = None
+        self.external_id = None
 
     def _delay_import(self):
         """ Schedule an import of the record.
@@ -54,10 +54,10 @@ class MagentoBaseExporter(Component):
         """
         # force is True because the sync_date will be more recent
         # so the import would be skipped
-        assert self.magento_id
+        assert self.external_id
         # TODO
         # import_record.delay(self.session, self.model._name,
-        #                     self.backend_record.id, self.magento_id,
+        #                     self.backend_record.id, self.external_id,
         #                     force=True)
 
     def _should_import(self):
@@ -67,12 +67,12 @@ class MagentoBaseExporter(Component):
         to not miss changes done in Magento.
         """
         assert self.binding
-        if not self.magento_id:
+        if not self.external_id:
             return False
         sync = self.binding.sync_date
         if not sync:
             return True
-        record = self.backend_adapter.read(self.magento_id,
+        record = self.backend_adapter.read(self.external_id,
                                            attributes=['updated_at'])
         if not record['updated_at']:
             # in rare case it can be empty, in doubt, import it
@@ -89,18 +89,18 @@ class MagentoBaseExporter(Component):
         """
         self.binding = binding
 
-        self.magento_id = self.binder.to_backend(self.binding.id)
+        self.external_id = self.binder.to_backend(self.binding.id)
         try:
             should_import = self._should_import()
         except IDMissingInBackend:
-            self.magento_id = None
+            self.external_id = None
             should_import = False
         if should_import:
             self._delay_import()
 
         result = self._run(*args, **kwargs)
 
-        self.binder.bind(self.magento_id, self.binding)
+        self.binder.bind(self.external_id, self.binding)
         # Commit so we keep the external ID when there are several
         # exports (due to dependencies) and one of them fails.
         # The commit will also release the lock acquired on the binding
@@ -350,16 +350,16 @@ class MagentoExporter(Component):
 
     def _update(self, data):
         """ Update an Magento record """
-        assert self.magento_id
+        assert self.external_id
         # special check on data before export
         self._validate_update_data(data)
-        self.backend_adapter.write(self.magento_id, data)
+        self.backend_adapter.write(self.external_id, data)
 
     def _run(self, fields=None):
         """ Flow of the synchronization, implemented in inherited classes"""
         assert self.binding
 
-        if not self.magento_id:
+        if not self.external_id:
             fields = None  # should be created with all the fields
 
         if self._has_to_skip():
@@ -374,7 +374,7 @@ class MagentoExporter(Component):
 
         map_record = self._map_data()
 
-        if self.magento_id:
+        if self.external_id:
             record = self._update_data(map_record, fields=fields)
             if not record:
                 return _('Nothing to export.')
@@ -383,8 +383,8 @@ class MagentoExporter(Component):
             record = self._create_data(map_record, fields=fields)
             if not record:
                 return _('Nothing to export.')
-            self.magento_id = self._create(record)
-        return _('Record exported with ID %s on Magento.') % self.magento_id
+            self.external_id = self._create(record)
+        return _('Record exported with ID %s on Magento.') % self.external_id
 
 
 # TODO

@@ -31,12 +31,12 @@ class MagentoImporter(Component):
 
     def __init__(self, work_context):
         super(MagentoImporter, self).__init__(work_context)
-        self.magento_id = None
+        self.external_id = None
         self.magento_record = None
 
     def _get_magento_data(self):
-        """ Return the raw Magento data for ``self.magento_id`` """
-        return self.backend_adapter.read(self.magento_id)
+        """ Return the raw Magento data for ``self.external_id`` """
+        return self.backend_adapter.read(self.external_id)
 
     def _before_import(self):
         """ Hook called before the import, when we have the Magento
@@ -64,14 +64,14 @@ class MagentoImporter(Component):
         # miss changes done in Magento
         return magento_date < sync_date
 
-    def _import_dependency(self, magento_id, binding_model,
+    def _import_dependency(self, external_id, binding_model,
                            importer=None, always=False):
         """ Import a dependency.
 
         The importer class is a class or subclass of
         :class:`MagentoImporter`. A specific class can be defined.
 
-        :param magento_id: id of the related binding to import
+        :param external_id: id of the related binding to import
         :param binding_model: name of the binding model for the relation
         :type binding_model: str | unicode
         :param importer_component: component to use for import
@@ -84,14 +84,14 @@ class MagentoImporter(Component):
                        it does not yet exist.
         :type always: boolean
         """
-        if not magento_id:
+        if not external_id:
             return
         binder = self.binder_for(binding_model)
-        if always or binder.to_openerp(magento_id) is None:
+        if always or binder.to_openerp(external_id) is None:
             if importer is None:
                 importer = self.components(usage='importer',
                                            model_name=binding_model)
-            importer.run(magento_id)
+            importer.run(external_id)
 
     def _import_dependencies(self):
         """ Import the dependencies for the record
@@ -133,7 +133,7 @@ class MagentoImporter(Component):
         return
 
     def _get_binding(self):
-        return self.binder.to_internal(self.magento_id)
+        return self.binder.to_internal(self.external_id)
 
     def _create_data(self, map_record, **kwargs):
         return map_record.values(for_create=True, **kwargs)
@@ -144,7 +144,7 @@ class MagentoImporter(Component):
         self._validate_data(data)
         model = self.model.with_context(connector_no_export=True)
         binding = model.create(data)
-        _logger.debug('%d created from magento %s', binding, self.magento_id)
+        _logger.debug('%d created from magento %s', binding, self.external_id)
         return binding
 
     def _update_data(self, map_record, **kwargs):
@@ -155,24 +155,24 @@ class MagentoImporter(Component):
         # special check on data before import
         self._validate_data(data)
         binding.with_context(connector_no_export=True).write(data)
-        _logger.debug('%d updated from magento %s', binding, self.magento_id)
+        _logger.debug('%d updated from magento %s', binding, self.external_id)
         return
 
     def _after_import(self, binding):
         """ Hook called at the end of the import """
         return
 
-    def run(self, magento_id, force=False):
+    def run(self, external_id, force=False):
         """ Run the synchronization
 
-        :param magento_id: identifier of the record on Magento
+        :param external_id: identifier of the record on Magento
         """
-        self.magento_id = magento_id
+        self.external_id = external_id
         lock_name = 'import({}, {}, {}, {})'.format(
             self.backend_record._name,
             self.backend_record.id,
             self.model._name,
-            magento_id,
+            external_id,
         )
 
         try:
@@ -207,7 +207,7 @@ class MagentoImporter(Component):
             record = self._create_data(map_record)
             binding = self._create(record)
 
-        self.binder.bind(self.magento_id, binding)
+        self.binder.bind(self.external_id, binding)
 
         self._after_import(binding)
 
@@ -227,7 +227,7 @@ class BatchImporter(Component):
         for record_id in record_ids:
             self._import_record(record_id)
 
-    def _import_record(self, record_id):
+    def _import_record(self, external_id):
         """ Import a record directly or delay the import of the record.
 
         Method to implement in sub-classes.
@@ -241,12 +241,13 @@ class DirectBatchImporter(Component):
     _name = 'magento.direct.batch.importer'
     _inherit = 'magento.batch.importer'
 
-    def _import_record(self, record_id):
+    def _import_record(self, external_id):
         """ Import the record directly """
         # TODO
         # import_record(self.model._name,
         #               self.backend_record.id,
         #               record_id)
+        self.model.import_record(self.backend_record, external_id)
 
 
 DirectBatchImport = DirectBatchImporter  # deprecated
@@ -258,7 +259,7 @@ class DelayedBatchImporter(Component):
     _name = 'magento.delayed.batch.importer'
     _inherit = 'magento.batch.importer'
 
-    def _import_record(self, record_id, **kwargs):
+    def _import_record(self, external_id, **kwargs):
         """ Delay the import of the records"""
         # TODO
         # import_record.delay(self.session,
@@ -295,11 +296,11 @@ class TranslationImporter(Component):
                  ]
 
     def _get_magento_data(self, storeview_id=None):
-        """ Return the raw Magento data for ``self.magento_id`` """
-        return self.backend_adapter.read(self.magento_id, storeview_id)
+        """ Return the raw Magento data for ``self.external_id`` """
+        return self.backend_adapter.read(self.external_id, storeview_id)
 
-    def run(self, magento_id, binding_id, mapper=None):
-        self.magento_id = magento_id
+    def run(self, external_id, binding_id, mapper=None):
+        self.external_id = external_id
         storeviews = self.env['magento.storeview'].search(
             [('backend_id', '=', self.backend_record.id)]
         )
@@ -319,7 +320,7 @@ class TranslationImporter(Component):
 
         binding = self.model.browse(binding_id)
         for storeview in lang_storeviews:
-            lang_record = self._get_magento_data(storeview.magento_id)
+            lang_record = self._get_magento_data(storeview.external_id)
             map_record = mapper.map_record(lang_record)
             record = map_record.values()
 
@@ -353,8 +354,8 @@ class AddCheckpoint(Component):
 
 # @job(default_channel='root.magento')
 # @related_action(action=link)
-# def import_record(session, model_name, backend_id, magento_id, force=False):
+# def import_record(session, model_name, backend_id, external_id, force=False):
 #     """ Import a record from Magento """
 #     env = get_environment(session, model_name, backend_id)
 #     importer = env.get_connector_unit(MagentoImporter)
-#     importer.run(magento_id, force=force)
+#     importer.run(external_id, force=force)

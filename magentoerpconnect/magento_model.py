@@ -424,7 +424,7 @@ class MagentoWebsite(models.Model):
                 from_date = None
             self.env['magento.res.partner'].with_delay().import_batch(
                 backend,
-                filters={'magento_website_id': website.magento_id,
+                filters={'magento_website_id': website.external_id,
                          'from_date': from_date,
                          'to_date': import_start_time}
             )
@@ -556,7 +556,7 @@ class MagentoStoreview(models.Model):
                 session,
                 'magento.sale.order',
                 backend_id,
-                {'magento_storeview_id': storeview.magento_id,
+                {'magento_storeview_id': storeview.external_id,
                  'from_date': from_date,
                  'to_date': import_start_time},
                 priority=1)  # executed as soon as possible

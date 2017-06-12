@@ -100,10 +100,10 @@ class MagentoInvoiceExporter(Exporter):
     """ Export invoices to Magento """
     _model_name = ['magento.account.invoice']
 
-    def _export_invoice(self, magento_id, lines_info, mail_notification):
+    def _export_invoice(self, external_id, lines_info, mail_notification):
         if not lines_info:  # invoice without any line for the sale order
             return
-        return self.backend_adapter.create(magento_id,
+        return self.backend_adapter.create(external_id,
                                            lines_info,
                                            _("Invoice Created"),
                                            mail_notification,
@@ -134,7 +134,7 @@ class MagentoInvoiceExporter(Exporter):
             if order_line is None:
                 continue
 
-            item_id = order_line.magento_id
+            item_id = order_line.external_id
             item_qty.setdefault(item_id, 0)
             item_qty[item_id] += line.quantity
         return item_qty
@@ -148,9 +148,9 @@ class MagentoInvoiceExporter(Exporter):
         mail_notification = magento_store.send_invoice_paid_mail
 
         lines_info = self._get_lines_info(invoice)
-        magento_id = None
+        external_id = None
         try:
-            magento_id = self._export_invoice(magento_order.magento_id,
+            external_id = self._export_invoice(magento_order.external_id,
                                               lines_info,
                                               mail_notification)
         except xmlrpclib.Fault as err:
@@ -161,9 +161,9 @@ class MagentoInvoiceExporter(Exporter):
                 _logger.debug('Invoice already exists on Magento for '
                               'sale order with magento id %s, trying to find '
                               'the invoice id.',
-                              magento_order.magento_id)
-                magento_id = self._get_existing_invoice(magento_order)
-                if magento_id is None:
+                              magento_order.external_id)
+                external_id = self._get_existing_invoice(magento_order)
+                if external_id is None:
                     # In that case, we let the exception bubble up so
                     # the user is informed of the 102 error.
                     # We couldn't find the invoice supposedly existing
@@ -173,14 +173,14 @@ class MagentoInvoiceExporter(Exporter):
                 raise
         # When the invoice already exists on Magento, it may return
         # a 102 error (handled above) or return silently without ID
-        if not magento_id:
+        if not external_id:
             # If Magento returned no ID, try to find the Magento
             # invoice, but if we don't find it, let consider the job
             # as done, because Magento did not raised an error
-            magento_id = self._get_existing_invoice(magento_order)
+            external_id = self._get_existing_invoice(magento_order)
 
-        if magento_id:
-            self.binder.bind(magento_id, binding_id)
+        if external_id:
+            self.binder.bind(external_id, binding_id)
 
     def _get_existing_invoice(self, magento_order):
         invoices = self.backend_adapter.search_read(

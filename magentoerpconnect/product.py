@@ -284,7 +284,7 @@ class CatalogImageImporter(Importer):
                    ]
 
     def _get_images(self, storeview_id=None):
-        return self.backend_adapter.get_images(self.magento_id, storeview_id)
+        return self.backend_adapter.get_images(self.external_id, storeview_id)
 
     def _sort_images(self, images):
         """ Returns a list of images sorted by their priority.
@@ -337,8 +337,8 @@ class CatalogImageImporter(Importer):
         binding = model.browse(binding_id)
         binding.write({'image': base64.b64encode(binary)})
 
-    def run(self, magento_id, binding_id):
-        self.magento_id = magento_id
+    def run(self, external_id, binding_id):
+        self.external_id = external_id
         images = self._get_images()
         images = self._sort_images(images)
         binary = None
@@ -479,8 +479,8 @@ class ProductImportMapper(ImportMapper):
         return result
 
     @mapping
-    def magento_id(self, record):
-        return {'magento_id': record['product_id']}
+    def external_id(self, record):
+        return {'external_id': record['product_id']}
 
     @mapping
     def backend_id(self, record):
@@ -566,10 +566,10 @@ class ProductImporter(MagentoImporter):
     def _after_import(self, binding):
         """ Hook called at the end of the import """
         translation_importer = self.unit_for(TranslationImporter)
-        translation_importer.run(self.magento_id, binding.id,
+        translation_importer.run(self.external_id, binding.id,
                                  mapper_class=ProductImportMapper)
         image_importer = self.unit_for(CatalogImageImporter)
-        image_importer.run(self.magento_id, binding.id)
+        image_importer.run(self.external_id, binding.id)
 
         if self.magento_record['type_id'] == 'bundle':
             bundle_importer = self.unit_for(BundleImporter)
@@ -640,9 +640,9 @@ class ProductInventoryExporter(Exporter):
     def run(self, binding_id, fields):
         """ Export the product inventory to Magento """
         product = self.model.browse(binding_id)
-        magento_id = self.binder.to_backend(product.id)
+        external_id = self.binder.to_backend(product.id)
         data = self._get_data(product, fields)
-        self.backend_adapter.update_inventory(magento_id, data)
+        self.backend_adapter.update_inventory(external_id, data)
 
 
 ProductInventoryExport = ProductInventoryExporter  # deprecated

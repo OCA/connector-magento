@@ -43,7 +43,7 @@ def delay_unlink(session, model_name, record_id):
     record = session.env[model_name].browse(record_id)
     env = get_environment(session, model_name, record.backend_id.id)
     binder = env.get_connector_unit(Binder)
-    magento_id = binder.to_backend(record_id)
-    if magento_id:
+    external_id = binder.to_backend(record_id)
+    if external_id:
         export_delete_record.delay(session, model_name,
-                                   record.backend_id.id, magento_id)
+                                   record.backend_id.id, external_id)

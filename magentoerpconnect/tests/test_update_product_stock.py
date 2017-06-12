@@ -50,7 +50,7 @@ class TestUpdateStockQty(SetUpMagentoSynchronized):
         product_model = self.env['magento.product.product']
         self.binding_product = product_model.search(
             [('backend_id', '=', self.backend_id),
-             ('magento_id', '=', '16')])
+             ('external_id', '=', '16')])
         self.assertEqual(len(self.binding_product), 1)
 
     def test_compute_new_qty(self):

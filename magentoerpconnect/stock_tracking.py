@@ -34,8 +34,8 @@ class MagentoTrackingExporter(Exporter):
             raise FailedJobError("Wrong value for the Magento carrier code "
                                  "defined in the picking.")
 
-    def _check_allowed_carrier(self, picking, magento_id):
-        allowed_carriers = self.backend_adapter.get_carriers(magento_id)
+    def _check_allowed_carrier(self, picking, external_id):
+        allowed_carriers = self.backend_adapter.get_carriers(external_id)
         carrier = picking.carrier_id
         if carrier.magento_carrier_code not in allowed_carriers:
             raise FailedJobError("The carrier %(name)s does not accept "
@@ -74,22 +74,22 @@ class MagentoTrackingExporter(Exporter):
                                   picking.name)
 
         binder = self.binder_for()
-        magento_id = binder.to_backend(binding_id)
-        if not magento_id:
+        external_id = binder.to_backend(binding_id)
+        if not external_id:
             # avoid circular reference
             from .stock_picking import MagentoPickingExport
             picking_exporter = self.unit_for(MagentoPickingExport)
             picking_exporter.run(binding_id)
-            magento_id = binder.to_backend(binding_id)
-        if not magento_id:
+            external_id = binder.to_backend(binding_id)
+        if not external_id:
             return FailedJobError("The delivery order %s has no Magento ID, "
                                   "can't export the tracking number." %
                                   picking.name)
 
         self._validate(picking)
-        self._check_allowed_carrier(picking, sale_binding_id.magento_id)
+        self._check_allowed_carrier(picking, sale_binding_id.external_id)
         tracking_args = self._get_tracking_args(picking)
-        self.backend_adapter.add_tracking_number(magento_id, *tracking_args)
+        self.backend_adapter.add_tracking_number(external_id, *tracking_args)
 
 
 MagentoTrackingExport = MagentoTrackingExporter  # deprecated

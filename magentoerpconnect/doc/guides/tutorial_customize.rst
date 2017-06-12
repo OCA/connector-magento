@@ -269,7 +269,7 @@ Example with an excerpt of the fields for ``magento.res.partner``:
   Instance), for the partner this is a ``related`` because we already
   have a link to the website, itself associated to a ``magento.backend``.
 * ``website_id``: ``Many2one`` to the ``magento.website`` model
-* ``magento_id``: the ID of the customer on Magento
+* ``external_id``: the ID of the customer on Magento
 * ``group_id``: ``Many2one`` to the ``magento.res.partner.category``,
   itself a Magento model for ``res.partner.category`` (Customer Groups)
 * ``created_at``: created_at field from Magento

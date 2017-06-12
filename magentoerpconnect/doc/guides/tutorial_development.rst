@@ -294,11 +294,11 @@ on them to understand what they do::
 
 
     @connector.job
-    def import_record(session, model_name, backend_id, magento_id):
+    def import_record(session, model_name, backend_id, external_id):
         """ Import a record from Magento """
         env = _get_environment(session, model_name, backend_id)
         importer = env.get_connector_unit(MagentoImporter)
-        importer.run(magento_id)
+        importer.run(external_id)
 
 Observations:
 
@@ -360,8 +360,8 @@ The mapper for the customer groups is as follows::
                   ]
 
         @mapping
-        def magento_id(self, record):
-            return {'magento_id': record['customer_group_id']}
+        def external_id(self, record):
+            return {'external_id': record['customer_group_id']}
 
         @mapping
         def backend_id(self, record):

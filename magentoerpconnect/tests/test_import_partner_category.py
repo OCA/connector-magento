@@ -36,7 +36,7 @@ class TestPartnerCategory(SetUpMagentoSynchronized):
 
         binding_model = self.env['magento.res.partner.category']
         category = binding_model.search([('backend_id', '=', backend_id),
-                                         ('magento_id', '=', '2')])
+                                         ('external_id', '=', '2')])
         self.assertEqual(len(category), 1)
         self.assertEqual(category.name, 'Wholesale')
         self.assertEqual(category.tax_class_id, 3)
@@ -54,7 +54,7 @@ class TestPartnerCategory(SetUpMagentoSynchronized):
                           backend_id, 2)
 
         category = binding_model.search([('backend_id', '=', backend_id),
-                                         ('magento_id', '=', '2')])
+                                         ('external_id', '=', '2')])
         self.assertEqual(len(category), 1)
         self.assertEqual(category.openerp_id, existing_category)
         self.assertEqual(category.name, 'Wholesale')

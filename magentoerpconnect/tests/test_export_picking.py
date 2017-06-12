@@ -44,7 +44,7 @@ class TestExportPicking(SetUpMagentoSynchronized):
                               self.backend_id, 900000691)
         self.order_binding = binding_model.search(
             [('backend_id', '=', self.backend_id),
-             ('magento_id', '=', '900000691'),
+             ('external_id', '=', '900000691'),
              ]
         )
         self.assertEquals(len(self.order_binding), 1)
@@ -93,7 +93,7 @@ class TestExportPicking(SetUpMagentoSynchronized):
         # Check that we have received and bound the magento ID
         self.assertEquals(len(self.picking.magento_bind_ids), 1)
         binding = self.picking.magento_bind_ids
-        self.assertEquals(binding.magento_id, '987654321')
+        self.assertEquals(binding.external_id, '987654321')
 
     def test_export_partial_picking(self):
         """ Exporting a partial picking """
@@ -139,7 +139,7 @@ class TestExportPicking(SetUpMagentoSynchronized):
         # Check that we have received and bound the magento ID
         self.assertEquals(len(self.picking.magento_bind_ids), 1)
         binding = self.picking.magento_bind_ids
-        self.assertEquals(binding.magento_id, '987654321')
+        self.assertEquals(binding.external_id, '987654321')
 
         response = {
             'sales_order_shipment.create': 987654322,
@@ -171,7 +171,7 @@ class TestExportPicking(SetUpMagentoSynchronized):
             self.assertTrue(include_comment)
 
         self.assertEquals(len(backorder.magento_bind_ids), 1)
-        self.assertEquals(backorder.magento_bind_ids.magento_id, '987654322')
+        self.assertEquals(backorder.magento_bind_ids.external_id, '987654322')
 
     def test_export_tracking_after_done(self):
         """ A tracking number is exported after the picking is done """

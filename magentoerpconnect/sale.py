@@ -133,7 +133,7 @@ class SaleOrder(models.Model):
                         # it won't be exported
                         allowed_states=['cancel'],
                         description="Cancel sales order %s" %
-                                    binding.magento_id)
+                                    binding.external_id)
         return super(SaleOrder, self).write(vals)
 
     @api.multi
@@ -155,7 +155,7 @@ class SaleOrder(models.Model):
                 session,
                 'magento.sale.order',
                 binding.id,
-                description="Reopen sales order %s" % binding.magento_id)
+                description="Reopen sales order %s" % binding.external_id)
         return result
 
 
@@ -425,7 +425,7 @@ class SaleOrderMoveComment(ConnectorUnit):
 class SaleOrderImportMapper(ImportMapper):
     _model_name = 'magento.sale.order'
 
-    direct = [('increment_id', 'magento_id'),
+    direct = [('increment_id', 'external_id'),
               ('order_id', 'magento_order_id'),
               ('grand_total', 'total_amount'),
               ('tax_amount', 'total_amount_tax'),
@@ -613,7 +613,7 @@ class SaleOrderImporter(MagentoImporter):
 
         :returns: None | str | unicode
         """
-        if self.binder.to_openerp(self.magento_id):
+        if self.binder.to_openerp(self.external_id):
             return _('Already imported')
 
     def _clean_magento_items(self, resource):
@@ -734,14 +734,14 @@ class SaleOrderImporter(MagentoImporter):
         return storeview_binder.to_openerp(record['store_id'], browse=True)
 
     def _get_magento_data(self):
-        """ Return the raw Magento data for ``self.magento_id`` """
+        """ Return the raw Magento data for ``self.external_id`` """
         record = super(SaleOrderImporter, self)._get_magento_data()
         # sometimes we don't have website_id...
         # we fix the record!
         if not record.get('website_id'):
             storeview = self._get_storeview(record)
             # deduce it from the storeview
-            record['website_id'] = storeview.store_id.website_id.magento_id
+            record['website_id'] = storeview.store_id.website_id.external_id
         # sometimes we need to clean magento items (ex : configurable
         # product in a sale)
         record = self._clean_magento_items(record)
@@ -769,10 +769,10 @@ class SaleOrderImporter(MagentoImporter):
             # if we have found one, we "fix" the record with the magento
             # customer id
             if partner:
-                magento = partner.magento_id
+                magento = partner.external_id
                 # If there are multiple orders with "customer_id is
                 # null" and "customer_is_guest = 0" which share the same
-                # customer_email, then we may get a magento_id that is a
+                # customer_email, then we may get a external_id that is a
                 # marker 'guestorder:...' for a guest order (which is
                 # set below).  This causes a problem with
                 # "importer.run..." below where the id is cast to int.
@@ -958,7 +958,7 @@ class SaleOrderLineImportMapper(ImportMapper):
     direct = [('qty_ordered', 'product_uom_qty'),
               ('qty_ordered', 'product_qty'),
               ('name', 'name'),
-              ('item_id', 'magento_id'),
+              ('item_id', 'external_id'),
               ]
 
     @mapping
@@ -1073,18 +1073,18 @@ class StateExporter(Exporter):
         state = binding.state
         if allowed_states and state not in allowed_states:
             return _('State %s is not exported.') % state
-        magento_id = self.binder.to_backend(binding.id)
-        if not magento_id:
+        external_id = self.binder.to_backend(binding.id)
+        if not external_id:
             return _('Sale is not linked with a Magento sales order')
         magento_state = ORDER_STATUS_MAPPING[state]
-        record = self.backend_adapter.read(magento_id)
+        record = self.backend_adapter.read(external_id)
         if record['status'] == magento_state:
             return _('Magento sales order is already '
                      'in state %s') % magento_state
-        self.backend_adapter.add_comment(magento_id, magento_state,
+        self.backend_adapter.add_comment(external_id, magento_state,
                                          comment=comment,
                                          notify=notify)
-        self.binder.bind(magento_id, binding_id)
+        self.binder.bind(external_id, binding_id)
 
 
 @job(default_channel='root.magento')

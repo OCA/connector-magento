@@ -153,10 +153,10 @@ class ProductCategoryBatchImporter(DelayedBatchImporter):
     """
     _model_name = ['magento.product.category']
 
-    def _import_record(self, magento_id, priority=None):
+    def _import_record(self, external_id, priority=None):
         """ Delay a job for the import """
         super(ProductCategoryBatchImporter, self)._import_record(
-            magento_id, priority=priority)
+            external_id, priority=priority)
 
     def run(self, filters=None):
         """ Run the synchronization """
@@ -212,7 +212,7 @@ class ProductCategoryImporter(MagentoImporter):
     def _after_import(self, binding):
         """ Hook called at the end of the import """
         translation_importer = self.unit_for(TranslationImporter)
-        translation_importer.run(self.magento_id, binding.id)
+        translation_importer.run(self.external_id, binding.id)
 
 
 ProductCategoryImport = ProductCategoryImporter  # deprecated
@@ -234,8 +234,8 @@ class ProductCategoryImportMapper(ImportMapper):
             return {'name': record['name']}
 
     @mapping
-    def magento_id(self, record):
-        return {'magento_id': record['category_id']}
+    def external_id(self, record):
+        return {'external_id': record['category_id']}
 
     @mapping
     def backend_id(self, record):
