@@ -88,7 +88,7 @@ class MagentoImporter(Component):
         if not external_id:
             return
         binder = self.binder_for(binding_model)
-        if always or binder.to_openerp(external_id) is None:
+        if always or binder.to_internal(external_id) is None:
             if importer is None:
                 importer = self.components(usage='importer',
                                            model_name=binding_model)

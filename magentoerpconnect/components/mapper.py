@@ -11,14 +11,16 @@ class MagentoImportMapper(Component):
     __metaclass__ = MetaMapper
 
     _name = 'magento.import.mapper'
-    _inherit = ['base.import.mapper', 'base.magento.connector']
+    _inherit = ['base.magento.connector', 'base.import.mapper']
+    _usage = 'import.mapper'
 
 
 class MagentoExportMapper(Component):
     __metaclass__ = MetaMapper
 
     _name = 'magento.export.mapper'
-    _inherit = ['base.export.mapper', 'base.magento.connector']
+    _inherit = ['base.magento.connector', 'base.export.mapper']
+    _usage = 'export.mapper'
 
 
 def normalize_datetime(field):

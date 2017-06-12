@@ -11,7 +11,11 @@ from odoo.addons.queue_job.job import job
 from odoo.addons.component.core import Component
 
 from odoo.addons.connector.exception import MappingError, IDMissingInBackend
-from odoo.addons.connector.components.mapper import mapping, only_create
+from odoo.addons.connector.components.mapper import (
+    mapping,
+    only_create,
+    MetaMapper,
+)
 from .components.backend_adapter import MAGENTO_DATETIME_FORMAT
 from .components.mapper import normalize_datetime
 
@@ -36,8 +40,9 @@ class ResPartner(models.Model):
 
     @api.model
     def _address_fields(self):
-        """ Returns the list of address fields that are synced from the parent
-        when the `use_parent_address` flag is set.
+        """ Returns the list of address fields that are synced from the
+        parent.
+
         """
         fields = super(ResPartner, self)._address_fields()
         fields.append('company')
@@ -217,6 +222,7 @@ class PartnerBatchImporter(Component):
 
 
 class PartnerImportMapper(Component):
+    __metaclass__ = MetaMapper
 
     _name = 'magento.partner.import.mapper'
     _inherit = 'magento.import.mapper'
@@ -315,8 +321,8 @@ class PartnerImportMapper(Component):
 
 
 class PartnerImporter(Component):
-    _name = 'magento.partner.import.mapper'
-    _inherit = 'magento.import.mapper'
+    _name = 'magento.partner.importer'
+    _inherit = 'magento.importer'
     _collection = 'magento.backend'
     _apply_on = 'magento.res.partner'
 
@@ -328,7 +334,8 @@ class PartnerImporter(Component):
 
     def _after_import(self, partner_binding):
         """ Import the addresses """
-        book = self.unit_for(PartnerAddressBook, model='magento.address')
+        book = self.components(usage='address.book',
+                               model_name='magento.address')
         book.import_addresses(self.external_id, partner_binding.id)
 
 
@@ -365,15 +372,16 @@ class PartnerAddressBook(Component):
         https://bugs.launchpad.net/openerp-connector/+bug/1193281
     """
     _name = 'magento.address.book'
-    _inherit = 'magento.import.mapper'
+    _inherit = 'base.magento.connector'
     _collection = 'magento.backend'
     _apply_on = 'magento.address'
+    _usage = 'address.book'
 
     def import_addresses(self, magento_partner_id, partner_binding_id):
         addresses = self._get_address_infos(magento_partner_id,
                                             partner_binding_id)
         for address_id, infos in addresses:
-            importer = self.components(usage='importer')
+            importer = self.components(usage='record.importer')
             importer.run(address_id, address_infos=infos)
 
     def _get_address_infos(self, magento_partner_id, partner_binding_id):
@@ -421,6 +429,8 @@ class BaseAddressImportMapper(Component):
     """ Defines the base mappings for the imports
     in ``res.partner`` (state, country, ...)
     """
+    __metaclass__ = MetaMapper
+
     _name = 'magento.base.address.import.mapper'
     _inherit = 'magento.import.mapper'
 
@@ -516,6 +526,8 @@ class CompanyImportMapper(Component):
     effect here because the mapper is always called
     for updates.
     """
+    __metaclass__ = MetaMapper
+
     _name = 'magento.company.import.mapper'
     _inherit = 'magento.base.address.import.mapper'
     _collection = 'magento.backend'
@@ -587,7 +599,7 @@ class AddressImporter(Component):
         assert partner_binding_id, ("AdressInfos are required for creation of "
                                     "a new address.")
         binder = self.binder_for('magento.res.partner')
-        partner = binder.unwrap_binding(partner_binding_id, browse=True)
+        partner = binder.unwrap_binding(partner_binding_id)
         if self.address_infos.merge:
             # it won't be imported as an independent address,
             # but will be linked with the main res.partner
@@ -605,6 +617,7 @@ class AddressImporter(Component):
 
 
 class AddressImportMapper(Component):
+    __metaclass__ = MetaMapper
 
     _name = 'magento.address.import.mapper'
     _inherit = 'magento.base.address.import.mapper'
@@ -632,15 +645,11 @@ class AddressImportMapper(Component):
         return {'name': ' '.join(parts)}
 
     @mapping
-    def use_parent_address(self, record):
-        return {'use_parent_address': False}
-
-    @mapping
     def type(self, record):
         if record.get('is_default_billing'):
             address_type = 'invoice'
         elif record.get('is_default_shipping'):
             address_type = 'delivery'
         else:
-            address_type = 'contact'
+            address_type = 'other'
         return {'type': address_type}
