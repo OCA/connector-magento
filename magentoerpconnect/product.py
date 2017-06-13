@@ -185,7 +185,6 @@ class ProductProduct(models.Model):
 class ProductProductAdapter(Component):
     _name = 'magento.product.product.adapter'
     _inherit = 'magento.adapter'
-    _collection = 'magento.backend'
     _apply_on = 'magento.product.product'
 
     _magento_model = 'catalog_product'
@@ -258,7 +257,6 @@ class ProductBatchImporter(Component):
     """
     _name = 'magento.product.product.batch.importer'
     _inherit = 'magento.delayed.batch.importer'
-    _collection = 'magento.backend'
     _apply_on = ['magento.product.product']
 
     def run(self, filters=None):
@@ -282,7 +280,6 @@ class CatalogImageImporter(Component):
     """
     _name = 'magento.product.image.importer'
     _inherit = 'magento.importer'
-    _collection = 'magento.backend'
     _apply_on = ['magento.product.product']
     _usage = 'product.image.importer'
 
@@ -389,7 +386,6 @@ class BundleImporter(Component):
     """
     _name = 'magento.product.bundle.importer'
     _inherit = 'magento.importer'
-    _collection = 'magento.backend'
     _apply_on = ['magento.product.product']
     _usage = 'product.bundle.importer'
 
@@ -405,7 +401,6 @@ class ProductImportMapper(Component):
 
     _name = 'magento.product.product.import.mapper'
     _inherit = 'magento.import.mapper'
-    _collection = 'magento.backend'
     _apply_on = ['magento.product.product']
 
     # TODO :     categ, special_price => minimal_price
@@ -486,7 +481,6 @@ class ProductImportMapper(Component):
 class ProductImporter(Component):
     _name = 'magento.product.product.importer'
     _inherit = 'magento.importer'
-    _collection = 'magento.backend'
     _apply_on = ['magento.product.product']
 
     def _import_bundle_dependencies(self):
@@ -555,7 +549,7 @@ class ProductImporter(Component):
     def _after_import(self, binding):
         """ Hook called at the end of the import """
         translation_importer = self.components(
-            usage='translation.importer'
+            usage='translation.importer',
         )
         translation_importer.run(
             self.external_id,
@@ -573,7 +567,6 @@ class ProductImporter(Component):
 class ProductInventoryExporter(Component):
     _name = 'magento.product.product.exporter'
     _inherit = 'magento.exporter'
-    _collection = 'magento.backend'
     _apply_on = ['magento.product.product']
     _usage = 'product.inventory.exporter'
 

@@ -8,7 +8,7 @@ import xmlrpclib
 from collections import namedtuple
 from odoo import models, fields, api
 from odoo.addons.queue_job.job import job
-from odoo.addons.component.core import Component
+from odoo.addons.component.core import AbstractComponent, Component
 
 from odoo.addons.connector.exception import MappingError, IDMissingInBackend
 from odoo.addons.connector.components.mapper import (
@@ -152,7 +152,6 @@ class PartnerAdapter(Component):
 
     _name = 'magento.partner.adapter'
     _inherit = 'magento.adapter'
-    _collection = 'magento.backend'
     _apply_on = 'magento.res.partner'
 
     _magento_model = 'customer'
@@ -202,7 +201,6 @@ class PartnerBatchImporter(Component):
     """
     _name = 'magento.partner.batch.importer'
     _inherit = 'magento.delayed.batch.importer'
-    _collection = 'magento.backend'
     _apply_on = 'magento.res.partner'
 
     def run(self, filters=None):
@@ -226,7 +224,6 @@ class PartnerImportMapper(Component):
 
     _name = 'magento.partner.import.mapper'
     _inherit = 'magento.import.mapper'
-    _collection = 'magento.backend'
     _apply_on = 'magento.res.partner'
 
     direct = [
@@ -322,7 +319,6 @@ class PartnerImportMapper(Component):
 class PartnerImporter(Component):
     _name = 'magento.partner.importer'
     _inherit = 'magento.importer'
-    _collection = 'magento.backend'
     _apply_on = 'magento.res.partner'
 
     def _import_dependencies(self):
@@ -372,7 +368,6 @@ class PartnerAddressBook(Component):
     """
     _name = 'magento.address.book'
     _inherit = 'base.magento.connector'
-    _collection = 'magento.backend'
     _apply_on = 'magento.address'
     _usage = 'address.book'
 
@@ -424,7 +419,7 @@ class PartnerAddressBook(Component):
             yield address_id, address_infos
 
 
-class BaseAddressImportMapper(Component):
+class BaseAddressImportMapper(AbstractComponent):
     """ Defines the base mappings for the imports
     in ``res.partner`` (state, country, ...)
     """
@@ -529,7 +524,6 @@ class CompanyImportMapper(Component):
 
     _name = 'magento.company.import.mapper'
     _inherit = 'magento.base.address.import.mapper'
-    _collection = 'magento.backend'
     _apply_on = 'magento.res.partner'
     _usage = 'company.import.mapper'
 
@@ -547,7 +541,6 @@ class AddressAdapter(Component):
 
     _name = 'magento.address.adapter'
     _inherit = 'magento.adapter'
-    _collection = 'magento.backend'
     _apply_on = 'magento.address'
 
     _magento_model = 'customer_address'
@@ -572,7 +565,6 @@ class AddressImporter(Component):
 
     _name = 'magento.address.importer'
     _inherit = 'magento.importer'
-    _collection = 'magento.backend'
     _apply_on = 'magento.address'
 
     def run(self, external_id, address_infos=None, force=False):
@@ -620,7 +612,6 @@ class AddressImportMapper(Component):
 
     _name = 'magento.address.import.mapper'
     _inherit = 'magento.base.address.import.mapper'
-    _collection = 'magento.backend'
     _apply_on = 'magento.address'
 
     @property

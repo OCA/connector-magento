@@ -3,11 +3,11 @@
 # © 2016 Sodexis
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo.addons.component.core import Component
+from odoo.addons.component.core import AbstractComponent
 from odoo.addons.connector.components.mapper import MetaMapper
 
 
-class MagentoImportMapper(Component):
+class MagentoImportMapper(AbstractComponent):
     __metaclass__ = MetaMapper
 
     _name = 'magento.import.mapper'
@@ -15,7 +15,7 @@ class MagentoImportMapper(Component):
     _usage = 'import.mapper'
 
 
-class MagentoExportMapper(Component):
+class MagentoExportMapper(AbstractComponent):
     __metaclass__ = MetaMapper
 
     _name = 'magento.export.mapper'

@@ -7,8 +7,7 @@ from odoo.addons.component.core import Component
 
 
 class MagentoModelBinder(Component):
-    """
-    Bindings are done directly on the binding model.
+    """ Bind records and give odoo/magento ids correspondence
 
     Binding models are models called ``magento.{normal_model}``,
     like ``magento.res.partner`` or ``magento.product.product``.
@@ -18,7 +17,6 @@ class MagentoModelBinder(Component):
     """
     _name = 'magento.binder'
     _inherit = ['base.binder', 'base.magento.connector']
-    _collection = 'magento.backend'
     _apply_on = [
         'magento.website',
         'magento.store',

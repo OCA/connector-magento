@@ -7,7 +7,7 @@ import logging
 import xmlrpclib
 
 import magento as magentolib
-from odoo.addons.component.core import Component
+from odoo.addons.component.core import AbstractComponent
 from odoo.addons.queue_job.exception import RetryableJobError
 from odoo.addons.connector.exception import NetworkRetryableError
 from datetime import datetime
@@ -85,7 +85,7 @@ class MagentoLocation(object):
         return location
 
 
-class MagentoCRUDAdapter(Component):
+class MagentoCRUDAdapter(AbstractComponent):
     """ External Records Adapter for Magento """
 
     _name = 'magento.crud.adapter'
@@ -178,7 +178,7 @@ class MagentoCRUDAdapter(Component):
                 raise
 
 
-class GenericAdapter(Component):
+class GenericAdapter(AbstractComponent):
 
     _name = 'magento.adapter'
     _inherit = 'magento.crud.adapter'

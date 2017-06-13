@@ -578,7 +578,6 @@ class MagentoStoreview(models.Model):
 class WebsiteAdapter(Component):
     _name = 'magento.website.adapter'
     _inherit = 'magento.adapter'
-    _collection = 'magento.backend'
     _apply_on = 'magento.website'
 
     _magento_model = 'ol_websites'
@@ -588,7 +587,6 @@ class WebsiteAdapter(Component):
 class StoreAdapter(Component):
     _name = 'magento.store.adapter'
     _inherit = 'magento.adapter'
-    _collection = 'magento.backend'
     _apply_on = 'magento.store'
 
     _magento_model = 'ol_groups'
@@ -598,7 +596,6 @@ class StoreAdapter(Component):
 class StoreviewAdapter(Component):
     _name = 'magento.storeview.adapter'
     _inherit = 'magento.adapter'
-    _collection = 'magento.backend'
     _apply_on = 'magento.storeview'
 
     _magento_model = 'ol_storeviews'
@@ -617,7 +614,6 @@ class MetadataBatchImporter(Component):
 
     _name = 'magento.metadata.batch.importer'
     _inherit = 'magento.direct.batch.importer'
-    _collection = 'magento.backend'
     _apply_on = [
         'magento.website',
         'magento.store',
@@ -630,7 +626,6 @@ class WebsiteImportMapper(Component):
 
     _name = 'magento.website.mapper'
     _inherit = 'magento.import.mapper'
-    _collection = 'magento.backend'
     _apply_on = 'magento.website'
 
     direct = [('code', 'code'),
@@ -653,7 +648,6 @@ class StoreImportMapper(Component):
 
     _name = 'magento.store.mapper'
     _inherit = 'magento.import.mapper'
-    _collection = 'magento.backend'
     _apply_on = 'magento.store'
 
     direct = [('name', 'name')]
@@ -670,7 +664,6 @@ class StoreviewImportMapper(Component):
 
     _name = 'magento.storeview.mapper'
     _inherit = 'magento.import.mapper'
-    _collection = 'magento.backend'
     _apply_on = 'magento.storeview'
 
     direct = [
@@ -692,7 +685,6 @@ class StoreImporter(Component):
 
     _name = 'magento.store.importer'
     _inherit = 'magento.importer'
-    _collection = 'magento.backend'
     _apply_on = 'magento.store'
 
     def _create(self, data):
@@ -706,7 +698,6 @@ class StoreviewImporter(Component):
 
     _name = 'magento.storeview.importer'
     _inherit = 'magento.importer'
-    _collection = 'magento.backend'
     _apply_on = 'magento.storeview'
 
     def _create(self, data):

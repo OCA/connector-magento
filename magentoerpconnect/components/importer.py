@@ -17,13 +17,13 @@ are already bound, to update the last sync date.
 
 import logging
 from odoo import fields, _
-from odoo.addons.component.core import Component
+from odoo.addons.component.core import AbstractComponent, Component
 from openerp.addons.connector.exception import IDMissingInBackend
 
 _logger = logging.getLogger(__name__)
 
 
-class MagentoImporter(Component):
+class MagentoImporter(AbstractComponent):
     """ Base importer for Magento """
 
     _name = 'magento.importer'
@@ -213,7 +213,7 @@ class MagentoImporter(Component):
         self._after_import(binding)
 
 
-class BatchImporter(Component):
+class BatchImporter(AbstractComponent):
     """ The role of a BatchImporter is to search for a list of
     items to import, then it can either import them directly or delay
     the import of each item separately.
@@ -237,7 +237,7 @@ class BatchImporter(Component):
         raise NotImplementedError
 
 
-class DirectBatchImporter(Component):
+class DirectBatchImporter(AbstractComponent):
     """ Import the records directly, without delaying the jobs. """
 
     _name = 'magento.direct.batch.importer'
@@ -248,10 +248,7 @@ class DirectBatchImporter(Component):
         self.model.import_record(self.backend_record, external_id)
 
 
-DirectBatchImport = DirectBatchImporter  # deprecated
-
-
-class DelayedBatchImporter(Component):
+class DelayedBatchImporter(AbstractComponent):
     """ Delay import of the records """
 
     _name = 'magento.delayed.batch.importer'
@@ -268,7 +265,6 @@ class SimpleRecordImporter(Component):
 
     _name = 'magento.simple.record.importer'
     _inherit = 'magento.importer'
-    _collection = 'magento.backend'
     _apply_on = [
         'magento.website',
         'magento.res.partner.category',
@@ -284,11 +280,7 @@ class TranslationImporter(Component):
 
     _name = 'magento.translation.importer'
     _inherit = 'magento.importer'
-    _collection = 'magento.backend'
     _usage = 'translation.importer'
-    _apply_on = ['magento.product.category',
-                 'magento.product.product',
-                 ]
 
     def _get_magento_data(self, storeview_id=None):
         """ Return the raw Magento data for ``self.external_id`` """
@@ -325,18 +317,6 @@ class TranslationImporter(Component):
 
             binding.with_context(connector_no_export=True,
                                  lang=storeview.lang_id.code).write(data)
-
-
-class AddCheckpoint(Component):
-    """ Add a connector.checkpoint """
-
-    _name = 'magento.add.checkpoint'
-    _inherit = 'base.magento.connector'
-    _collection = 'magento.backend'
-    _usage = 'add.checkpoint'
-
-    def run(self, binding):
-        binding.backend_id.add_checkpoint(binding)
 
 
 # TODO

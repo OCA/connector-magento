@@ -55,7 +55,6 @@ class ProductCategory(models.Model):
 class ProductCategoryAdapter(Component):
     _name = 'magento.product.category.adapter'
     _inherit = 'magento.adapter'
-    _collection = 'magento.backend'
     _apply_on = 'magento.product.category'
 
     _magento_model = 'catalog_category'
@@ -149,7 +148,6 @@ class ProductCategoryBatchImporter(Component):
     """
     _name = 'magento.product.category.batch.importer'
     _inherit = 'magento.delayed.batch.importer'
-    _collection = 'magento.backend'
     _apply_on = ['magento.product.category']
 
     def _import_record(self, external_id, job_options=None):
@@ -190,7 +188,6 @@ class ProductCategoryBatchImporter(Component):
 class ProductCategoryImporter(Component):
     _name = 'magento.product.category.importer'
     _inherit = 'magento.importer'
-    _collection = 'magento.backend'
     _apply_on = ['magento.product.category']
 
     def _import_dependencies(self):
@@ -216,7 +213,6 @@ class ProductCategoryImportMapper(Component):
 
     _name = 'magento.product.category.import.mapper'
     _inherit = 'magento.import.mapper'
-    _collection = 'magento.backend'
     _apply_on = 'magento.product.category'
 
     direct = [

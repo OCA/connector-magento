@@ -12,7 +12,7 @@ import psycopg2
 
 import odoo
 from odoo import _
-from odoo.addons.component.core import Component
+from odoo.addons.component.core import AbstractComponent
 from odoo.addons.connector.exception import (IDMissingInBackend,
                                              RetryableJobError)
 # from .import_synchronizer import import_record
@@ -35,7 +35,7 @@ In addition to its export job, an exporter has to:
 """
 
 
-class MagentoBaseExporter(Component):
+class MagentoBaseExporter(AbstractComponent):
     """ Base exporter for Magento """
 
     _name = 'magento.base.exporter'
@@ -121,7 +121,7 @@ class MagentoBaseExporter(Component):
         pass
 
 
-class MagentoExporter(Component):
+class MagentoExporter(AbstractComponent):
     """ A common flow for the exports to Magento """
 
     _name = 'magento.exporter'

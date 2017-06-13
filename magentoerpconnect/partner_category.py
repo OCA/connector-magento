@@ -40,7 +40,6 @@ class PartnerCategoryAdapter(Component):
 
     _name = 'magento.partner.category.adapter'
     _inherit = 'magento.adapter'
-    _collection = 'magento.backend'
     _apply_on = 'magento.res.partner.category'
 
     _magento_model = 'ol_customer_groups'
@@ -61,7 +60,6 @@ class PartnerCategoryBatchImporter(Component):
     """ Delay import of the records """
     _name = 'magento.partner.category.batch.importer'
     _inherit = 'magento.delayed.batch.importer'
-    _collection = 'magento.backend'
     _apply_on = 'magento.res.partner.category'
 
 
@@ -70,7 +68,6 @@ class PartnerCategoryImportMapper(Component):
 
     _name = 'magento.partner.category.import.mapper'
     _inherit = 'magento.import.mapper'
-    _collection = 'magento.backend'
     _apply_on = 'magento.res.partner.category'
 
     direct = [
