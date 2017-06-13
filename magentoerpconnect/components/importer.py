@@ -18,7 +18,7 @@ are already bound, to update the last sync date.
 import logging
 from odoo import fields, _
 from odoo.addons.component.core import AbstractComponent, Component
-from openerp.addons.connector.exception import IDMissingInBackend
+from odoo.addons.connector.exception import IDMissingInBackend, NothingToDoJob
 
 _logger = logging.getLogger(__name__)
 
@@ -92,7 +92,13 @@ class MagentoImporter(AbstractComponent):
             if importer is None:
                 importer = self.components(usage='record.importer',
                                            model_name=binding_model)
-            importer.run(external_id)
+            try:
+                importer.run(external_id)
+            except NothingToDoJob:
+                _logger.info(
+                    'Dependency import of %s(%s) has been ignored.',
+                    binding_model._name, external_id
+                )
 
     def _import_dependencies(self):
         """ Import the dependencies for the record
