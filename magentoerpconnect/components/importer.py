@@ -312,6 +312,8 @@ class TranslationImporter(Component):
 
         if mapper is None:
             mapper = self.mapper
+        else:
+            mapper = self.component_by_name(mapper)
 
         for storeview in lang_storeviews:
             lang_record = self._get_magento_data(storeview.external_id)

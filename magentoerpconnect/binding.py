@@ -46,7 +46,7 @@ class MagentoBinding(models.AbstractModel):
     @job(default_channel='root.magento')
     @api.model
     def import_record(self, backend, magento_id, force=False):
-        """ Prepare the import of records modified on Magento """
+        """ Import a Magento record """
         work = backend.work_on(self._name)
         importer = work.components(usage='record.importer')
         return importer.run(magento_id, force=force)

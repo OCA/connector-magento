@@ -8,32 +8,23 @@ import urllib2
 import base64
 import xmlrpclib
 import sys
+
 from collections import defaultdict
-from openerp import models, fields, api, _
-from openerp.addons.connector.queue.job import job, related_action
-from openerp.addons.connector.event import on_record_write
-from openerp.addons.connector.unit.synchronizer import (Importer,
-                                                        Exporter,
-                                                        )
-from openerp.addons.connector.exception import (MappingError,
-                                                InvalidDataError,
-                                                IDMissingInBackend
-                                                )
-from openerp.addons.connector.unit.mapper import (mapping,
-                                                  ImportMapper,
-                                                  )
-from .unit.backend_adapter import (GenericAdapter,
-                                   MAGENTO_DATETIME_FORMAT,
-                                   )
+
+from odoo import models, fields, api, _
+from odoo.addons.connector.event import on_record_write
+from odoo.addons.connector.exception import (MappingError,
+                                             InvalidDataError,
+                                             IDMissingInBackend
+                                             )
+from odoo.addons.connector.components.mapper import (
+    mapping,
+    MetaMapper,
+)
+from odoo.addons.component.core import Component
+from odoo.addons.queue_job.job import job
+from .unit.backend_adapter import MAGENTO_DATETIME_FORMAT
 from .unit.mapper import normalize_datetime
-from .unit.import_synchronizer import (DelayedBatchImporter,
-                                       MagentoImporter,
-                                       TranslationImporter,
-                                       AddCheckpoint,
-                                       )
-from .connector import get_environment
-from .backend import magento
-from .related_action import unwrap_binding
 
 _logger = logging.getLogger(__name__)
 
@@ -46,7 +37,7 @@ def chunks(items, length):
 class MagentoProductProduct(models.Model):
     _name = 'magento.product.product'
     _inherit = 'magento.binding'
-    _inherits = {'product.product': 'openerp_id'}
+    _inherits = {'product.product': 'odoo_id'}
     _description = 'Magento Product'
 
     @api.model
@@ -61,10 +52,10 @@ class MagentoProductProduct(models.Model):
             # ('bundle', 'Bundle Product'),
         ]
 
-    openerp_id = fields.Many2one(comodel_name='product.product',
-                                 string='Product',
-                                 required=True,
-                                 ondelete='restrict')
+    odoo_id = fields.Many2one(comodel_name='product.product',
+                              string='Product',
+                              required=True,
+                              ondelete='restrict')
     # XXX website_ids can be computed from categories
     website_ids = fields.Many2many(comodel_name='magento.website',
                                    string='Websites',
@@ -104,6 +95,15 @@ class MagentoProductProduct(models.Model):
     )
 
     RECOMPUTE_QTY_STEP = 1000  # products at a time
+
+    @job(default_channel='root.magento')
+    @api.multi
+    def export_inventory(self, fields=None):
+        """ Export the inventory configuration and quantity of a product. """
+        self.ensure_one()
+        work = self.backend_id.work_on(self._name)
+        exporter = work.components(usage='product.inventory.exporter')
+        return exporter.run(self, fields)
 
     @api.multi
     def recompute_magento_qty(self):
@@ -177,14 +177,17 @@ class ProductProduct(models.Model):
 
     magento_bind_ids = fields.One2many(
         comodel_name='magento.product.product',
-        inverse_name='openerp_id',
+        inverse_name='odoo_id',
         string='Magento Bindings',
     )
 
 
-@magento
-class ProductProductAdapter(GenericAdapter):
-    _model_name = 'magento.product.product'
+class ProductProductAdapter(Component):
+    _name = 'magento.product.product.adapter'
+    _inherit = 'magento.adapter'
+    _collection = 'magento.backend'
+    _apply_on = 'magento.product.product'
+
     _magento_model = 'catalog_product'
     _admin_path = '/{model}/edit/id/{id}'
 
@@ -247,41 +250,41 @@ class ProductProductAdapter(GenericAdapter):
                           [int(id), data])
 
 
-@magento
-class ProductBatchImporter(DelayedBatchImporter):
+class ProductBatchImporter(Component):
     """ Import the Magento Products.
 
     For every product category in the list, a delayed job is created.
     Import from a date
     """
-    _model_name = ['magento.product.product']
+    _name = 'magento.product.product.batch.importer'
+    _inherit = 'magento.delayed.batch.importer'
+    _collection = 'magento.backend'
+    _apply_on = ['magento.product.product']
 
     def run(self, filters=None):
         """ Run the synchronization """
         from_date = filters.pop('from_date', None)
         to_date = filters.pop('to_date', None)
-        record_ids = self.backend_adapter.search(filters,
-                                                 from_date=from_date,
-                                                 to_date=to_date)
+        external_ids = self.backend_adapter.search(filters,
+                                                   from_date=from_date,
+                                                   to_date=to_date)
         _logger.info('search for magento products %s returned %s',
-                     filters, record_ids)
-        for record_id in record_ids:
-            self._import_record(record_id)
+                     filters, external_ids)
+        for external_id in external_ids:
+            self._import_record(external_id)
 
 
-ProductBatchImport = ProductBatchImporter  # deprecated
-
-
-@magento
-class CatalogImageImporter(Importer):
+class CatalogImageImporter(Component):
     """ Import images for a record.
 
     Usually called from importers, in ``_after_import``.
     For instance from the products importer.
     """
-
-    _model_name = ['magento.product.product',
-                   ]
+    _name = 'magento.product.image.importer'
+    _inherit = 'magento.importer'
+    _collection = 'magento.backend'
+    _apply_on = ['magento.product.product']
+    _usage = 'product.image.importer'
 
     def _get_images(self, storeview_id=None):
         return self.backend_adapter.get_images(self.external_id, storeview_id)
@@ -332,12 +335,11 @@ class CatalogImageImporter(Importer):
         else:
             return binary.read()
 
-    def _write_image_data(self, binding_id, binary, image_data):
-        model = self.model.with_context(connector_no_export=True)
-        binding = model.browse(binding_id)
+    def _write_image_data(self, binding, binary, image_data):
+        binding = binding.with_context(connector_no_export=True)
         binding.write({'image': base64.b64encode(binary)})
 
-    def run(self, external_id, binding_id):
+    def run(self, external_id, binding):
         self.external_id = external_id
         images = self._get_images()
         images = self._sort_images(images)
@@ -348,11 +350,11 @@ class CatalogImageImporter(Importer):
             binary = self._get_binary_image(image_data)
         if not binary:
             return
-        self._write_image_data(binding_id, binary, image_data)
+        self._write_image_data(binding, binary, image_data)
 
 
-@magento
-class BundleImporter(Importer):
+# TODO: not needed, use inheritance
+class BundleImporter(Component):
     """ Can be inherited to change the way the bundle products are
     imported.
 
@@ -367,48 +369,45 @@ class BundleImporter(Importer):
     An additional module that implements the import should be installed.
 
     If you want to create a custom importer for the bundles, you have to
-    declare the ConnectorUnit on your backend::
+    inherit the Component::
 
-        @magento_custom
-        class XBundleImporter(BundleImporter):
-            _model_name = 'magento.product.product'
-
-            # implement import_bundle
-
-    If you want to create a generic module that import bundles, you have
-    to replace the current ConnectorUnit::
-
-        @magento(replacing=BundleImporter)
-        class XBundleImporter(BundleImporter):
-            _model_name = 'magento.product.product'
-
-            # implement import_bundle
+        class BundleImporter(Component):
+            _inherit = 'magento.product.bundle.importer'
 
     And to add the bundle type in the supported product types::
 
-        class magento_product_product(orm.Model):
+        class MagentoProductProduct(models.Model):
             _inherit = 'magento.product.product'
 
-            def product_type_get(self, cr, uid, context=None):
-                types = super(magento_product_product, self).product_type_get(
-                    cr, uid, context=context)
+            @api.model
+            def product_type_get(self):
+                types = super(MagentoProductProduct, self).product_type_get()
                 if 'bundle' not in [item[0] for item in types]:
                     types.append(('bundle', 'Bundle'))
                 return types
 
     """
-    _model_name = 'magento.product.product'
+    _name = 'magento.product.bundle.importer'
+    _inherit = 'magento.importer'
+    _collection = 'magento.backend'
+    _apply_on = ['magento.product.product']
+    _usage = 'product.bundle.importer'
 
-    def run(self, binding_id, magento_record):
+    def run(self, binding, magento_record):
         """ Import the bundle information about a product.
 
         :param magento_record: product information from Magento
         """
 
 
-@magento
-class ProductImportMapper(ImportMapper):
-    _model_name = 'magento.product.product'
+class ProductImportMapper(Component):
+    __metaclass__ = MetaMapper
+
+    _name = 'magento.product.product.import.mapper'
+    _inherit = 'magento.import.mapper'
+    _collection = 'magento.backend'
+    _apply_on = ['magento.product.product']
+
     # TODO :     categ, special_price => minimal_price
     direct = [('name', 'name'),
               ('description', 'description'),
@@ -423,13 +422,14 @@ class ProductImportMapper(ImportMapper):
 
     @mapping
     def is_active(self, record):
-        mapper = self.unit_for(IsActiveProductImportMapper)
-        return mapper.map_record(record).values(**self.options)
+        """Check if the product is active in Magento
+        and set active flag in OpenERP
+        status == 1 in Magento means active"""
+        return {'active': (record.get('status') == '1')}
 
     @mapping
     def price(self, record):
-        mapper = self.unit_for(PriceProductImportMapper)
-        return mapper.map_record(record).values(**self.options)
+        return {'list_price': record.get('price', 0.0)}
 
     @mapping
     def type(self, record):
@@ -444,8 +444,8 @@ class ProductImportMapper(ImportMapper):
         website_ids = []
         binder = self.binder_for('magento.website')
         for mag_website_id in record['websites']:
-            website_id = binder.to_openerp(mag_website_id)
-            website_ids.append((4, website_id))
+            website_binding = binder.to_internal(mag_website_id)
+            website_ids.append((4, website_binding.id))
         return {'website_ids': website_ids}
 
     @mapping
@@ -457,13 +457,13 @@ class ProductImportMapper(ImportMapper):
         main_categ_id = None
 
         for mag_category_id in mag_categories:
-            cat_id = binder.to_openerp(mag_category_id, unwrap=True)
-            if cat_id is None:
+            cat = binder.to_internal(mag_category_id, unwrap=True)
+            if not cat:
                 raise MappingError("The product category with "
                                    "magento id %s is not imported." %
                                    mag_category_id)
 
-            category_ids.append(cat_id)
+            category_ids.append(cat.id)
 
         if category_ids:
             main_categ_id = category_ids.pop(0)
@@ -479,25 +479,15 @@ class ProductImportMapper(ImportMapper):
         return result
 
     @mapping
-    def external_id(self, record):
-        return {'external_id': record['product_id']}
-
-    @mapping
     def backend_id(self, record):
         return {'backend_id': self.backend_record.id}
 
-    @mapping
-    def bundle_mapping(self, record):
-        if record['type_id'] == 'bundle':
-            bundle_mapper = self.unit_for(BundleProductImportMapper)
-            return bundle_mapper.map_record(record).values(**self.options)
 
-
-@magento
-class ProductImporter(MagentoImporter):
-    _model_name = ['magento.product.product']
-
-    _base_mapper = ProductImportMapper
+class ProductImporter(Component):
+    _name = 'magento.product.product.importer'
+    _inherit = 'magento.importer'
+    _collection = 'magento.backend'
+    _apply_on = ['magento.product.product']
 
     def _import_bundle_dependencies(self):
         """ Import the dependencies for a Bundle """
@@ -543,7 +533,7 @@ class ProductImporter(MagentoImporter):
         :returns: None | str | unicode
         """
         if self.magento_record['type_id'] == 'configurable':
-            return _('The configurable product is not imported in OpenERP, '
+            return _('The configurable product is not imported in Odoo, '
                      'because only the simple products are used in the sales '
                      'orders.')
 
@@ -558,56 +548,34 @@ class ProductImporter(MagentoImporter):
         self._validate_product_type(data)
 
     def _create(self, data):
-        openerp_binding = super(ProductImporter, self)._create(data)
-        checkpoint = self.unit_for(AddCheckpoint)
-        checkpoint.run(openerp_binding.id)
-        return openerp_binding
+        binding = super(ProductImporter, self)._create(data)
+        self.backend_record.add_checkpoint(binding)
+        return binding
 
     def _after_import(self, binding):
         """ Hook called at the end of the import """
-        translation_importer = self.unit_for(TranslationImporter)
-        translation_importer.run(self.external_id, binding.id,
-                                 mapper_class=ProductImportMapper)
-        image_importer = self.unit_for(CatalogImageImporter)
-        image_importer.run(self.external_id, binding.id)
+        translation_importer = self.components(
+            usage='translation.importer'
+        )
+        translation_importer.run(
+            self.external_id,
+            binding,
+            mapper='magento.product.product.import.mapper'
+        )
+        image_importer = self.components(usage='product.image.importer')
+        image_importer.run(self.external_id, binding)
 
         if self.magento_record['type_id'] == 'bundle':
-            bundle_importer = self.unit_for(BundleImporter)
-            bundle_importer.run(binding.id, self.magento_record)
+            bundle_importer = self.components(usage='product.bundle.importer')
+            bundle_importer.run(binding, self.magento_record)
 
 
-ProductImport = ProductImporter  # deprecated
-
-
-@magento
-class PriceProductImportMapper(ImportMapper):
-    _model_name = 'magento.product.product'
-
-    @mapping
-    def price(self, record):
-        return {'list_price': record.get('price', 0.0)}
-
-
-@magento
-class IsActiveProductImportMapper(ImportMapper):
-    _model_name = 'magento.product.product'
-
-    @mapping
-    def is_active(self, record):
-        """Check if the product is active in Magento
-        and set active flag in OpenERP
-        status == 1 in Magento means active"""
-        return {'active': (record.get('status') == '1')}
-
-
-@magento
-class BundleProductImportMapper(ImportMapper):
-    _model_name = 'magento.product.product'
-
-
-@magento
-class ProductInventoryExporter(Exporter):
-    _model_name = ['magento.product.product']
+class ProductInventoryExporter(Component):
+    _name = 'magento.product.product.exporter'
+    _inherit = 'magento.exporter'
+    _collection = 'magento.backend'
+    _apply_on = ['magento.product.product']
+    _usage = 'product.inventory.exporter'
 
     _map_backorders = {'use_default': 0,
                        'no': 0,
@@ -615,37 +583,33 @@ class ProductInventoryExporter(Exporter):
                        'yes-and-notification': 2,
                        }
 
-    def _get_data(self, product, fields):
+    def _get_data(self, binding, fields):
         result = {}
         if 'magento_qty' in fields:
             result.update({
-                'qty': product.magento_qty,
+                'qty': binding.magento_qty,
                 # put the stock availability to "out of stock"
-                'is_in_stock': int(product.magento_qty > 0)
+                'is_in_stock': int(binding.magento_qty > 0)
             })
         if 'manage_stock' in fields:
-            manage = product.manage_stock
+            manage = binding.manage_stock
             result.update({
                 'manage_stock': int(manage == 'yes'),
                 'use_config_manage_stock': int(manage == 'use_default'),
             })
         if 'backorders' in fields:
-            backorders = product.backorders
+            backorders = binding.backorders
             result.update({
                 'backorders': self._map_backorders[backorders],
                 'use_config_backorders': int(backorders == 'use_default'),
             })
         return result
 
-    def run(self, binding_id, fields):
+    def run(self, binding, fields):
         """ Export the product inventory to Magento """
-        product = self.model.browse(binding_id)
-        external_id = self.binder.to_backend(product.id)
-        data = self._get_data(product, fields)
+        external_id = self.binder.to_external(binding)
+        data = self._get_data(binding, fields)
         self.backend_adapter.update_inventory(external_id, data)
-
-
-ProductInventoryExport = ProductInventoryExporter  # deprecated
 
 
 # fields which should not trigger an export of the products
@@ -656,25 +620,15 @@ INVENTORY_FIELDS = ('manage_stock',
                     )
 
 
-@on_record_write(model_names='magento.product.product')
-def magento_product_modified(session, model_name, record_id, vals):
-    if session.context.get('connector_no_export'):
+@on_record_write(model_names=['magento.product.product'])
+def magento_product_modified(env, model_name, record_id, vals):
+    if env.context.get('connector_no_export'):
         return
-    if session.env[model_name].browse(record_id).no_stock_sync:
+    binding = env[model_name].browse(record_id)
+    if binding.no_stock_sync:
         return
     inventory_fields = list(set(vals).intersection(INVENTORY_FIELDS))
     if inventory_fields:
-        export_product_inventory.delay(session, model_name,
-                                       record_id, fields=inventory_fields,
-                                       priority=20)
-
-
-@job(default_channel='root.magento')
-@related_action(action=unwrap_binding)
-def export_product_inventory(session, model_name, record_id, fields=None):
-    """ Export the inventory configuration and quantity of a product. """
-    product = session.env[model_name].browse(record_id)
-    backend_id = product.backend_id.id
-    env = get_environment(session, model_name, backend_id)
-    inventory_exporter = env.get_connector_unit(ProductInventoryExporter)
-    return inventory_exporter.run(record_id, fields)
+        binding.with_delay(priority=20).export_inventory(
+            fields=inventory_fields
+        )

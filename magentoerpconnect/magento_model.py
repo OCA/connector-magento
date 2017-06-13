@@ -697,8 +697,7 @@ class StoreImporter(Component):
 
     def _create(self, data):
         binding = super(StoreImporter, self)._create(data)
-        checkpoint = self.components(usage='add.checkpoint')
-        checkpoint.run(binding)
+        self.backend_record.add_checkpoint(binding)
         return binding
 
 
@@ -712,6 +711,5 @@ class StoreviewImporter(Component):
 
     def _create(self, data):
         binding = super(StoreviewImporter, self)._create(data)
-        checkpoint = self.components(usage='add.checkpoint')
-        checkpoint.run(binding)
+        self.backend_record.add_checkpoint(binding)
         return binding
