@@ -1,69 +1,44 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    Author: Guewen Baconnier
-#    Copyright 2013 Camptocamp SA
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Copyright 2013-2017 Camptocamp SA
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
-from openerp.addons.connector.unit.mapper import (mapping,
-                                                  changed_by,
-                                                  ExportMapper)
-from openerp.addons.connector.exception import InvalidDataError
-from openerp.addons.magentoerpconnect.unit.delete_synchronizer import (
-    MagentoDeleteSynchronizer
-)
-from openerp.addons.magentoerpconnect.unit.export_synchronizer import (
-    MagentoExporter
-)
-from openerp.addons.magentoerpconnect.backend import magento
+from odoo.addons.connector.unit.mapper import mapping, changed_by
+from odoo.addons.connector.exception import InvalidDataError
+from odoo.addons.component.core import Component
 
 
-@magento
-class PartnerDeleteSynchronizer(MagentoDeleteSynchronizer):
+class PartnerDeleter(Component):
     """ Partner deleter for Magento """
-    _model_name = ['magento.res.partner',
-                   'magento.address']
+    _name = 'magento.partner.exporter.deleter'
+    _inherit = 'magento.exporter.deleter'
+    _apply_on = ['magento.res.partner', 'magento.address']
 
 
-@magento
-class PartnerExport(MagentoExporter):
-    _model_name = ['magento.res.partner']
+class PartnerExport(Component):
+    _name = 'magento.partner.exporter'
+    _inherit = 'magento.exporter'
+    _apply_on = ['magento.res.partner']
 
     def _after_export(self):
         # Condition on street field because we consider that if street
         # is false, there is no address to export on this partner.
-        if (not self.binding_record.magento_address_bind_ids and
-                not self.binding_record.consider_as_company and
-                self.binding_record.street):
+        if (not self.binding.magento_address_bind_ids and
+                not self.binding.consider_as_company and
+                self.binding.street):
             extra_vals = {
                 'is_default_billing': True,
-                'magento_partner_id': self.binding_id,
+                'magento_partner_id': self.binding.id,
             }
-            if not self.binding_record.child_ids:
+            if not self.binding.child_ids:
                 extra_vals['is_default_shipping'] = True
-            self._export_dependency(self.binding_record.openerp_id,
+            self._export_dependency(self.binding.odoo_id,
                                     'magento.address',
-                                    exporter_class=AddressExport,
                                     binding_field='magento_address_bind_ids',
                                     binding_extra_vals=extra_vals)
 
-        for child in self.binding_record.child_ids:
+        for child in self.binding.child_ids:
             child_extra_vals = {
-                'magento_partner_id': self.binding_id,
+                'magento_partner_id': self.binding.id,
             }
             if not child.magento_address_bind_ids:
                 if child.type == 'invoice':
@@ -72,7 +47,6 @@ class PartnerExport(MagentoExporter):
                     child_extra_vals['is_default_shipping'] = True
                 self._export_dependency(
                     child, 'magento.address',
-                    exporter_class=AddressExport,
                     binding_field='magento_address_bind_ids',
                     binding_extra_vals=child_extra_vals)
 
@@ -90,16 +64,16 @@ class PartnerExport(MagentoExporter):
         return
 
 
-@magento
-class AddressExport(MagentoExporter):
-    _model_name = ['magento.address']
+class AddressExport(Component):
+    _name = 'magento.address.exporter'
+    _inherit = 'magento.exporter'
+    _apply_on = ['magento.address']
 
     def _export_dependencies(self):
         """ Export the dependencies for the record"""
-        relation = (self.binding_record.parent_id or
-                    self.binding_record.openerp_id)
-        self._export_dependency(relation, 'magento.res.partner',
-                                exporter_class=PartnerExport)
+        relation = (self.binding.parent_id or
+                    self.binding.odoo_id)
+        self._export_dependency(relation, 'magento.res.partner')
 
     def _validate_create_data(self, data):
         """ Check if the values to import are correct
@@ -128,14 +102,13 @@ class AddressExport(MagentoExporter):
         return self.backend_adapter.create(customer_id, data)
 
 
-@magento
-class PartnerExportMapper(ExportMapper):
-    _model_name = 'magento.res.partner'
+class PartnerExportMapper(Component):
+    _name = 'magento.partner.export.mapper'
+    _inherit = 'magento.export.mapper'
+    _apply_on = ['magento.res.partner']
 
     direct = [
         ('birthday', 'dob'),
-        ('created_at', 'created_at'),
-        ('updated_at', 'updated_at'),
         ('taxvat', 'taxvat'),
         ('group_id', 'group_id'),
         ('website_id', 'website_id'),
@@ -147,23 +120,27 @@ class PartnerExportMapper(ExportMapper):
         email = record.emailid or record.email
         return {'email': email}
 
-    @changed_by('name')
+    @changed_by('name', 'firstname', 'lastname')
     @mapping
     def names(self, record):
-        # FIXME base_surname needed
-        if ' ' in record.name:
-            parts = record.name.split()
-            firstname = parts[0]
-            lastname = ' '.join(parts[1:])
+        if 'firstname' in record._fields:
+            firstname = record.firstname
+            lastname = record.lastname
         else:
-            lastname = record.name
-            firstname = '-'
+            if ' ' in record.name:
+                parts = record.name.split()
+                firstname = parts[0]
+                lastname = ' '.join(parts[1:])
+            else:
+                lastname = record.name
+                firstname = '-'
         return {'firstname': firstname, 'lastname': lastname}
 
 
-@magento
-class PartnerAddressExportMapper(ExportMapper):
-    _model_name = 'magento.address'
+class PartnerAddressExportMapper(Component):
+    _name = 'magento.address.export.mapper'
+    _inherit = 'magento.export.mapper'
+    _apply_on = ['magento.address']
 
     direct = [('zip', 'postcode'),
               ('city', 'city'),
@@ -175,24 +152,29 @@ class PartnerAddressExportMapper(ExportMapper):
     @changed_by('parent_id', 'openerp_id')
     @mapping
     def partner(self, record):
-        binder = self.get_binder_for_model('magento.res.partner')
+        binder = self.binder_for('magento.res.partner')
         if record.parent_id:
-            erp_partner_id = record.parent_id.id
+            erp_partner = record.parent_id
         else:
-            erp_partner_id = record.openerp_id.id
-        mag_partner_id = binder.to_backend(erp_partner_id, wrap=True)
+            erp_partner = record.odoo_id
+        mag_partner_id = binder.to_external(erp_partner, wrap=True)
         return {'customer_id': mag_partner_id}
 
-    @changed_by('name')
+    @changed_by('name', 'firstname', 'lastname')
     @mapping
     def names(self, record):
-        if ' ' in record.name:
-            parts = record.name.split()
-            firstname = parts[0]
-            lastname = ' '.join(parts[1:])
+        if 'firstname' in record._fields:
+            firstname = record.firstname or record.parent_id.firstname
+            lastname = record.lastname or record.parent_id.lastname
         else:
-            lastname = record.name
-            firstname = '-'
+            name = record.name or record.parent_id.name
+            if ' ' in name:
+                parts = name.split()
+                firstname = parts[0]
+                lastname = ' '.join(parts[1:])
+            else:
+                lastname = name
+                firstname = '-'
         return {'firstname': firstname, 'lastname': lastname}
 
     @changed_by('phone', 'mobile')

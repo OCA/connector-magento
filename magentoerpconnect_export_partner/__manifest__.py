@@ -20,7 +20,7 @@
 ##############################################################################
 
 {'name': 'Magento Connector - Export Partners (Experimental)',
- 'version': '2.0.0',
+ 'version': '10.0.2.0.0',
  'category': 'Connector',
  'depends': ['magentoerpconnect',
              ],
@@ -41,6 +41,6 @@ customer accounts.
  'demo': [],
  'data': ['partner_view.xml',
           ],
- 'installable': False,
+ 'installable': True,
  'application': False,
  }
