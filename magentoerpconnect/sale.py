@@ -5,62 +5,35 @@
 
 import logging
 import xmlrpclib
-from datetime import datetime, timedelta
-import openerp.addons.decimal_precision as dp
-from openerp import models, fields, api, _
-from openerp.addons.connector.connector import ConnectorUnit
-from openerp.addons.connector.session import ConnectorSession
-from openerp.addons.connector.exception import (NothingToDoJob,
-                                                FailedJobError,
-                                                IDMissingInBackend)
-from openerp.addons.connector.queue.job import job
-from openerp.addons.connector.unit.synchronizer import Exporter
-from openerp.addons.connector.unit.mapper import (mapping,
-                                                  ImportMapper
-                                                  )
-from openerp.addons.connector_ecommerce.unit.sale_order_onchange import (
-    SaleOrderOnChange)
 
-from openerp.addons.connector_ecommerce.unit.line_builder import (
-    ShippingLineBuilder,
-    CashOnDeliveryLineBuilder,
-    GiftOrderLineBuilder)
-from .unit.backend_adapter import (GenericAdapter,
-                                   MAGENTO_DATETIME_FORMAT,
-                                   )
-from .unit.import_synchronizer import (DelayedBatchImporter,
-                                       MagentoImporter,
-                                       )
-from .unit.mapper import normalize_datetime
+from datetime import datetime, timedelta
+
+import odoo.addons.decimal_precision as dp
+
+from odoo import models, fields, api, _
+from odoo.addons.connector.exception import IDMissingInBackend
+from odoo.addons.queue_job.job import job
+from odoo.addons.queue_job.exception import NothingToDoJob, FailedJobError
+from odoo.addons.connector.components.mapper import mapping
+from odoo.addons.component.core import Component
+
+from .components.backend_adapter import MAGENTO_DATETIME_FORMAT
+from .components.mapper import normalize_datetime
 from .exception import OrderImportRuleRetry
-from .backend import magento
-from .connector import get_environment
-from .partner import PartnerImportMapper
 
 _logger = logging.getLogger(__name__)
-
-ORDER_STATUS_MAPPING = {  # used in magentoerpconnect_order_comment
-    'draft': 'pending',
-    'manual': 'processing',
-    'progress': 'processing',
-    'shipping_except': 'processing',
-    'invoice_except': 'processing',
-    'done': 'complete',
-    'cancel': 'canceled',
-    'waiting_date': 'holded'
-}
 
 
 class MagentoSaleOrder(models.Model):
     _name = 'magento.sale.order'
     _inherit = 'magento.binding'
     _description = 'Magento Sale Order'
-    _inherits = {'sale.order': 'openerp_id'}
+    _inherits = {'sale.order': 'odoo_id'}
 
-    openerp_id = fields.Many2one(comodel_name='sale.order',
-                                 string='Sale Order',
-                                 required=True,
-                                 ondelete='cascade')
+    odoo_id = fields.Many2one(comodel_name='sale.order',
+                              string='Sale Order',
+                              required=True,
+                              ondelete='cascade')
     magento_order_line_ids = fields.One2many(
         comodel_name='magento.sale.order.line',
         inverse_name='magento_order_id',
@@ -86,13 +59,33 @@ class MagentoSaleOrder(models.Model):
                                string='Storeview',
                                readonly=True)
 
+    @job(default_channel='root.magento')
+    @api.multi
+    def export_state_change(self, allowed_states=None,
+                            comment=None, notify=None):
+        """ Change state of a sales order on Magento """
+        self.ensure_one()
+        work = self.backend_id.work_on(self._name)
+        exporter = work.components(usage='sale.state.exporter')
+        return exporter.run(self, allowed_states=allowed_states,
+                            comment=comment, notify=notify)
+
+    @job(default_channel='root.magento')
+    @api.model
+    def import_batch(self, backend, filters=None):
+        """ Prepare the import of Sales Orders from Magento """
+        assert 'magento_storeview_id' in filters, ('Missing information about '
+                                                   'Magento Storeview')
+        _super = super(MagentoSaleOrder, self)
+        return _super.import_batch(backend, filters=filters)
+
 
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
     magento_bind_ids = fields.One2many(
         comodel_name='magento.sale.order',
-        inverse_name='openerp_id',
+        inverse_name='odoo_id',
         string="Magento Bindings",
     )
 
@@ -108,54 +101,54 @@ class SaleOrder(models.Model):
         for order in self:
             if not order.magento_bind_ids:
                 continue
-            # assume we only have 1 SO in OpenERP for 1 SO in Magento
+            # assume we only have 1 SO in Odoo for 1 SO in Magento
+            assert len(order.magento_bind_ids) == 1
             magento_order = order.magento_bind_ids[0]
             if magento_order.magento_parent_id:
-                self.parent_id = magento_order.magento_parent_id.openerp_id
+                self.parent_id = magento_order.magento_parent_id.odoo_id
+
+    def _magento_cancel(self):
+        """ Cancel sales order on Magento
+
+        Do not export the other state changes, Magento handles them itself
+        when it receives shipments and invoices.
+        """
+        for order in self:
+            old_state = order.state
+            if old_state == 'cancel':
+                continue  # skip if already canceled
+            for binding in order.magento_bind_ids:
+                job_descr = _("Cancel sales order %s") % (binding.external_id,)
+                binding.with_delay(
+                    description=job_descr
+                ).export_state_change(allowed_states=['cancel'])
 
     @api.multi
     def write(self, vals):
-        # cancel sales order on Magento (do not export the other
-        # state changes, Magento handles them itself)
         if vals.get('state') == 'cancel':
-            session = ConnectorSession(self.env.cr, self.env.uid,
-                                       context=self.env.context)
-            for order in self:
-                old_state = order.state
-                if old_state == 'cancel':
-                    continue  # skip if already canceled
-                for binding in order.magento_bind_ids:
-                    export_state_change.delay(
-                        session,
-                        'magento.sale.order',
-                        binding.id,
-                        # so if the state changes afterwards,
-                        # it won't be exported
-                        allowed_states=['cancel'],
-                        description="Cancel sales order %s" %
-                                    binding.external_id)
+            self._magento_cancel()
         return super(SaleOrder, self).write(vals)
+
+    def _magento_link_binding_of_copy(self, new_id):
+        # link binding of the canceled order to the new order, so the
+        # operations done on the new order will be sync'ed with Magento
+        binding_model = self.env['magento.sale.order']
+        bindings = binding_model.search([('odoo_id', '=', self.id)])
+        bindings.write({'odoo_id': new_id})
+
+        for binding in bindings:
+            # the sales' status on Magento is likely 'canceled'
+            # so we will export the new status (pending, processing, ...)
+            job_descr = _("Reopen sales order %s") % (binding.external_id,)
+            binding.with_delay(
+                description=job_descr
+            ).export_state_change()
 
     @api.multi
     def copy_quotation(self):
         self_copy = self.with_context(__copy_from_quotation=True)
         result = super(SaleOrder, self_copy).copy_quotation()
-        # link binding of the canceled order to the new order, so the
-        # operations done on the new order will be sync'ed with Magento
-        new_id = result['res_id']
-        binding_model = self.env['magento.sale.order']
-        bindings = binding_model.search([('openerp_id', '=', self.id)])
-        bindings.write({'openerp_id': new_id})
-        session = ConnectorSession(self.env.cr, self.env.uid,
-                                   context=self.env.context)
-        for binding in bindings:
-            # the sales' status on Magento is likely 'canceled'
-            # so we will export the new status (pending, processing, ...)
-            export_state_change.delay(
-                session,
-                'magento.sale.order',
-                binding.id,
-                description="Reopen sales order %s" % binding.external_id)
+        self._magento_link_binding_of_copy(result['res_id'])
         return result
 
 
@@ -163,17 +156,17 @@ class MagentoSaleOrderLine(models.Model):
     _name = 'magento.sale.order.line'
     _inherit = 'magento.binding'
     _description = 'Magento Sale Order Line'
-    _inherits = {'sale.order.line': 'openerp_id'}
+    _inherits = {'sale.order.line': 'odoo_id'}
 
     magento_order_id = fields.Many2one(comodel_name='magento.sale.order',
                                        string='Magento Sale Order',
                                        required=True,
                                        ondelete='cascade',
                                        select=True)
-    openerp_id = fields.Many2one(comodel_name='sale.order.line',
-                                 string='Sale Order Line',
-                                 required=True,
-                                 ondelete='cascade')
+    odoo_id = fields.Many2one(comodel_name='sale.order.line',
+                              string='Sale Order Line',
+                              required=True,
+                              ondelete='cascade')
     backend_id = fields.Many2one(
         related='magento_order_id.backend_id',
         string='Magento Backend',
@@ -190,7 +183,7 @@ class MagentoSaleOrderLine(models.Model):
     def create(self, vals):
         magento_order_id = vals['magento_order_id']
         binding = self.env['magento.sale.order'].browse(magento_order_id)
-        vals['order_id'] = binding.openerp_id.id
+        vals['order_id'] = binding.odoo_id.id
         binding = super(MagentoSaleOrderLine, self).create(vals)
         # FIXME triggers function field
         # The amounts (amount_total, ...) computed fields on 'sale.order' are
@@ -198,8 +191,8 @@ class MagentoSaleOrderLine(models.Model):
         # It might be a v8 regression, because they were triggered in
         # v7. Before getting a better correction, force the computation
         # by writing again on the line.
-        line = binding.openerp_id
-        line.write({'price_unit': line.price_unit})
+        # line = binding.odoo_id
+        # line.write({'price_unit': line.price_unit})
         return binding
 
 
@@ -208,7 +201,7 @@ class SaleOrderLine(models.Model):
 
     magento_bind_ids = fields.One2many(
         comodel_name='magento.sale.order.line',
-        inverse_name='openerp_id',
+        inverse_name='odoo_id',
         string="Magento Bindings",
     )
 
@@ -226,21 +219,15 @@ class SaleOrderLine(models.Model):
             # lines, happens when we are using the 'New Copy of
             # Quotation' button on a canceled sales order
             binding_model = self.env['magento.sale.order.line']
-            bindings = binding_model.search([('openerp_id', '=', old_line_id)])
+            bindings = binding_model.search([('odoo_id', '=', old_line_id)])
             if bindings:
-                bindings.write({'openerp_id': new_line.id})
+                bindings.write({'odoo_id': new_line.id})
         return new_line
 
-    # XXX we can't use the new API on copy_data or we get an error:
-    # 'setdefault' not supported on frozendict
-    def copy_data(self, cr, uid, id, default=None, context=None):
-        if context is None:
-            context = {}
-
-        data = super(SaleOrderLine, self).copy_data(cr, uid, id,
-                                                    default=default,
-                                                    context=context)
-        if context.get('__copy_from_quotation'):
+    @api.multi
+    def copy_data(self, default=None):
+        data = super(SaleOrderLine, self).copy_data(default=default)
+        if self.env.context.get('__copy_from_quotation'):
             # copy_data is called by `copy` of the sale.order which
             # builds a dict for the full new sale order, so we lose the
             # association between the old and the new line.
@@ -252,9 +239,11 @@ class SaleOrderLine(models.Model):
         return data
 
 
-@magento
-class SaleOrderAdapter(GenericAdapter):
-    _model_name = 'magento.sale.order'
+class SaleOrderAdapter(Component):
+    _name = 'magento.sale.order.adapter'
+    _inherit = 'magento.adapter'
+    _apply_on = 'magento.sale.order'
+
     _magento_model = 'sales_order'
     _admin_path = '{model}/view/order_id/{id}'
 
@@ -311,14 +300,18 @@ class SaleOrderAdapter(GenericAdapter):
                           [id, status, comment, notify])
 
 
-@magento
-class SaleOrderBatchImport(DelayedBatchImporter):
-    _model_name = ['magento.sale.order']
+class SaleOrderBatchImporter(Component):
+    _name = 'magento.sale.order.batch.importer'
+    _inherit = 'magento.delayed.batch.importer'
+    _apply_on = 'magento.sale.order'
 
-    def _import_record(self, record_id, **kwargs):
-        """ Import the record directly """
-        return super(SaleOrderBatchImport, self)._import_record(
-            record_id, max_retries=0, priority=5)
+    def _import_record(self, external_id, job_options=None, **kwargs):
+        job_options = {
+            'max_retries': 0,
+            'priority': 5,
+        }
+        return super(SaleOrderBatchImporter, self)._import_record(
+            external_id, job_options=job_options)
 
     def run(self, filters=None):
         """ Run the synchronization """
@@ -328,20 +321,22 @@ class SaleOrderBatchImport(DelayedBatchImporter):
         from_date = filters.pop('from_date', None)
         to_date = filters.pop('to_date', None)
         magento_storeview_ids = [filters.pop('magento_storeview_id')]
-        record_ids = self.backend_adapter.search(
+        external_ids = self.backend_adapter.search(
             filters,
             from_date=from_date,
             to_date=to_date,
             magento_storeview_ids=magento_storeview_ids)
         _logger.info('search for magento saleorders %s returned %s',
-                     filters, record_ids)
-        for record_id in record_ids:
-            self._import_record(record_id)
+                     filters, external_ids)
+        for external_id in external_ids:
+            self._import_record(external_id)
 
 
-@magento
-class SaleImportRule(ConnectorUnit):
-    _model_name = ['magento.sale.order']
+class SaleImportRule(Component):
+    _name = 'magento.sale.import.rule'
+    _inherit = 'base.magento.connector'
+    _apply_on = 'magento.sale.order'
+    _usage = 'sale.import.rule'
 
     def _rule_always(self, record, method):
         """ Always import the order """
@@ -413,17 +408,11 @@ class SaleImportRule(ConnectorUnit):
         self._rules[method.import_rule](self, record, method)
 
 
-@magento
-class SaleOrderMoveComment(ConnectorUnit):
-    _model_name = ['magento.sale.order']
+class SaleOrderImportMapper(Component):
 
-    def move(self, binding):
-        pass
-
-
-@magento
-class SaleOrderImportMapper(ImportMapper):
-    _model_name = 'magento.sale.order'
+    _name = 'magento.sale.order.mapper'
+    _inherit = 'magento.import.mapper'
+    _apply_on = 'magento.sale.order'
 
     direct = [('increment_id', 'external_id'),
               ('order_id', 'magento_order_id'),
@@ -442,7 +431,7 @@ class SaleOrderImportMapper(ImportMapper):
         amount_excl = float(record.get('shipping_amount') or 0.0)
         if not (amount_incl or amount_excl):
             return values
-        line_builder = self.unit_for(MagentoShippingLineBuilder)
+        line_builder = self.components(usage='order.line.builder.shipping')
         if self.options.tax_include:
             discount = float(record.get('shipping_discount_amount') or 0.0)
             line_builder.price_unit = (amount_incl - discount)
@@ -463,7 +452,7 @@ class SaleOrderImportMapper(ImportMapper):
         amount_incl = float(record.get('cod_tax_amount') or 0.0)
         if not (amount_excl or amount_incl):
             return values
-        line_builder = self.unit_for(MagentoCashOnDeliveryLineBuilder)
+        line_builder = self.components(usage='order.line.builder.cod')
         tax_include = self.options.tax_include
         line_builder.price_unit = amount_incl if tax_include else amount_excl
         line = (0, 0, line_builder.get_line())
@@ -478,7 +467,7 @@ class SaleOrderImportMapper(ImportMapper):
         if not record.get('gift_cert_amount'):
             return values
         amount = float(record['gift_cert_amount'])
-        line_builder = self.unit_for(MagentoGiftOrderLineBuilder)
+        line_builder = self.components(usage='order.line.builder.gift')
         line_builder.price_unit = amount
         if 'gift_cert_code' in record:
             line_builder.gift_code = record['gift_cert_code']
@@ -496,7 +485,9 @@ class SaleOrderImportMapper(ImportMapper):
             'partner_invoice_id': self.options.partner_invoice_id,
             'partner_shipping_id': self.options.partner_shipping_id,
         })
-        onchange = self.unit_for(SaleOrderOnChange)
+        onchange = self.components(
+            usage='ecommerce.onchange.manager.sale.order'
+        )
         return onchange.play(values, values['magento_order_line_ids'])
 
     @mapping
@@ -510,11 +501,11 @@ class SaleOrderImportMapper(ImportMapper):
     @mapping
     def customer_id(self, record):
         binder = self.binder_for('magento.res.partner')
-        partner_id = binder.to_openerp(record['customer_id'], unwrap=True)
-        assert partner_id is not None, (
+        partner = binder.to_internal(record['customer_id'], unwrap=True)
+        assert partner, (
             "customer_id %s should have been imported in "
             "SaleOrderImporter._import_dependencies" % record['customer_id'])
-        return {'partner_id': partner_id}
+        return {'partner_id': partner.id}
 
     @mapping
     def payment(self, record):
@@ -541,6 +532,7 @@ class SaleOrderImportMapper(ImportMapper):
         if carrier:
             result = {'carrier_id': carrier.id}
         else:
+            # FIXME: a mapper should not have any side effects
             fake_partner = self.env['res.partner'].search([], limit=1)
             product = self.env.ref(
                 'connector_ecommerce.product_product_shipping')
@@ -583,23 +575,11 @@ class SaleOrderImportMapper(ImportMapper):
         for the salespersons (access rules)"""
         return {'user_id': False}
 
-    @mapping
-    def sale_order_comment(self, record):
-        comment_mapper = self.unit_for(SaleOrderCommentImportMapper)
-        map_record = comment_mapper.map_record(record)
-        return map_record.values(**self.options)
 
-    @mapping
-    def pricelist_id(self, record):
-        pricelist_mapper = self.unit_for(PricelistSaleOrderImportMapper)
-        return pricelist_mapper.map_record(record).values(**self.options)
-
-
-@magento
-class SaleOrderImporter(MagentoImporter):
-    _model_name = ['magento.sale.order']
-
-    _base_mapper = SaleOrderImportMapper
+class SaleOrderImporter(Component):
+    _name = 'magento.sale.order.importer'
+    _inherit = 'magento.importer'
+    _apply_on = 'magento.sale.order'
 
     def _must_skip(self):
         """ Hook called right after we read the data from the backend.
@@ -613,7 +593,7 @@ class SaleOrderImporter(MagentoImporter):
 
         :returns: None | str | unicode
         """
-        if self.binder.to_openerp(self.external_id):
+        if self.binder.to_internal(self.external_id):
             return _('Already imported')
 
     def _clean_magento_items(self, resource):
@@ -678,14 +658,10 @@ class SaleOrderImporter(MagentoImporter):
         return top_item
 
     def _import_customer_group(self, group_id):
-        binder = self.binder_for('magento.res.partner.category')
-        if binder.to_openerp(group_id) is None:
-            importer = self.unit_for(MagentoImporter,
-                                     model='magento.res.partner.category')
-            importer.run(group_id)
+        self._import_dependency(group_id, 'magento.res.partner.category')
 
     def _before_import(self):
-        rules = self.unit_for(SaleImportRule)
+        rules = self.components(usage='sale.import.rule')
         rules.check(self.magento_record)
 
     def _link_parent_orders(self, binding):
@@ -708,7 +684,7 @@ class SaleOrderImporter(MagentoImporter):
             parent_id = self.backend_adapter.get_parent(parent_id)
         current_binding = binding
         for parent_id in all_parent_ids:
-            parent_binding = self.binder.to_openerp(parent_id, browse=True)
+            parent_binding = self.binder.to_internal(parent_id)
             if not parent_binding:
                 # may happen if several sales orders have been
                 # edited / canceled but not all have been imported
@@ -722,16 +698,13 @@ class SaleOrderImporter(MagentoImporter):
 
     def _after_import(self, binding):
         self._link_parent_orders(binding)
-        if binding.magento_parent_id:
-            move_comment = self.unit_for(SaleOrderMoveComment)
-            move_comment.move(binding)
 
     def _get_storeview(self, record):
         """ Return the tax inclusion setting for the appropriate storeview """
         storeview_binder = self.binder_for('magento.storeview')
         # we find storeview_id in store_id!
         # (http://www.magentocommerce.com/bug-tracking/issue?issue=15886)
-        return storeview_binder.to_openerp(record['store_id'], browse=True)
+        return storeview_binder.to_internal(record['store_id'])
 
     def _get_magento_data(self):
         """ Return the raw Magento data for ``self.external_id`` """
@@ -758,12 +731,12 @@ class SaleOrderImporter(MagentoImporter):
         # common)
         if (is_guest_order or not record.get('customer_id')):
             website_binder = self.binder_for('magento.website')
-            oe_website_id = website_binder.to_openerp(record['website_id'])
+            website_binding = website_binder.to_internal(record['website_id'])
 
             # search an existing partner with the same email
             partner = self.env['magento.res.partner'].search(
                 [('emailid', '=', record['customer_email']),
-                 ('website_id', '=', oe_website_id)],
+                 ('website_id', '=', website_binding.id)],
                 limit=1)
 
             # if we have found one, we "fix" the record with the magento
@@ -819,24 +792,22 @@ class SaleOrderImporter(MagentoImporter):
                 'dob': record.get('customer_dob'),
                 'website_id': record.get('website_id'),
             }
-            mapper = self.unit_for(PartnerImportMapper,
-                                   model='magento.res.partner')
+            mapper = self.components(usage='import.mapper',
+                                     model_name='magento.res.partner')
             map_record = mapper.map_record(customer_record)
             map_record.update(guest_customer=True)
             partner_binding = self.env['magento.res.partner'].create(
                 map_record.values(for_create=True))
-            partner_binder.bind(guest_customer_id,
-                                partner_binding)
+            partner_binder.bind(guest_customer_id, partner_binding)
         else:
 
             # we always update the customer when importing an order
-            importer = self.unit_for(MagentoImporter,
-                                     model='magento.res.partner')
+            importer = self.components(usage='record.importer',
+                                       model_name='magento.res.partner')
             importer.run(record['customer_id'])
-            partner_binding = partner_binder.to_openerp(record['customer_id'],
-                                                        browse=True)
+            partner_binding = partner_binder.to_internal(record['customer_id'])
 
-        partner = partner_binding.openerp_id
+        partner = partner_binding.odoo_id
 
         # Import of addresses. We just can't rely on the
         # ``customer_address_id`` field given by Magento, because it is
@@ -858,7 +829,8 @@ class SaleOrderImporter(MagentoImporter):
                               'active': False,
                               'is_magento_order_address': True}
 
-        addr_mapper = self.unit_for(ImportMapper, model='magento.address')
+        addr_mapper = self.components(usage='import.mapper',
+                                      model_name='magento.address')
 
         def create_address(address_record):
             map_record = addr_mapper.map_record(address_record)
@@ -866,7 +838,7 @@ class SaleOrderImporter(MagentoImporter):
             address_bind = self.env['magento.address'].create(
                 map_record.values(for_create=True,
                                   parent_partner=partner))
-            return address_bind.openerp_id.id
+            return address_bind.odoo_id.id
 
         billing_id = create_address(record['billing_address'])
 
@@ -925,35 +897,11 @@ class SaleOrderImporter(MagentoImporter):
                                         'magento.product.product')
 
 
-SaleOrderImport = SaleOrderImporter  # deprecated
+class SaleOrderLineImportMapper(Component):
 
-
-@magento
-class PricelistSaleOrderImportMapper(ImportMapper):
-    """ Mapper for importing the sales order pricelist
-
-    Does nothing by default. Replaced in magentoerpconnect_pricing.
-    """
-    _model_name = 'magento.sale.order'
-
-
-@magento
-class SaleOrderCommentImportMapper(ImportMapper):
-    """ Mapper for importing comments of sales orders.
-
-    Does nothing in the base addons.
-    """
-    _model_name = 'magento.sale.order'
-
-
-@magento
-class MagentoSaleOrderOnChange(SaleOrderOnChange):
-    _model_name = 'magento.sale.order'
-
-
-@magento
-class SaleOrderLineImportMapper(ImportMapper):
-    _model_name = 'magento.sale.order.line'
+    _name = 'magento.sale.order.line.mapper'
+    _inherit = 'magento.import.mapper'
+    _apply_on = 'magento.sale.order.line'
 
     direct = [('qty_ordered', 'product_uom_qty'),
               ('qty_ordered', 'product_qty'),
@@ -977,11 +925,11 @@ class SaleOrderLineImportMapper(ImportMapper):
     @mapping
     def product_id(self, record):
         binder = self.binder_for('magento.product.product')
-        product_id = binder.to_openerp(record['product_id'], unwrap=True)
-        assert product_id is not None, (
+        product = binder.to_internal(record['product_id'], unwrap=True)
+        assert product, (
             "product_id %s should have been imported in "
             "SaleOrderImporter._import_dependencies" % record['product_id'])
-        return {'product_id': product_id}
+        return {'product_id': product.id}
 
     @mapping
     def product_options(self, record):
@@ -1015,38 +963,24 @@ class SaleOrderLineImportMapper(ImportMapper):
         return result
 
 
-@magento
-class MagentoShippingLineBuilder(ShippingLineBuilder):
-    _model_name = 'magento.sale.order'
+class StateExporter(Component):
+    _name = 'magento.sale.state.exporter'
+    _inherit = 'base.exporter'
+    _usage = 'sale.state.exporter'
+    _apply_on = 'magento.sale.order'
 
+    ORDER_STATUS_MAPPING = {  # used in magentoerpconnect_order_comment
+        'draft': 'pending',
+        'manual': 'processing',
+        'progress': 'processing',
+        'shipping_except': 'processing',
+        'invoice_except': 'processing',
+        'done': 'complete',
+        'cancel': 'canceled',
+        'waiting_date': 'holded'
+    }
 
-@magento
-class MagentoCashOnDeliveryLineBuilder(CashOnDeliveryLineBuilder):
-    _model_name = 'magento.sale.order'
-
-
-@magento
-class MagentoGiftOrderLineBuilder(GiftOrderLineBuilder):
-    _model_name = 'magento.sale.order'
-
-
-@job(default_channel='root.magento')
-def sale_order_import_batch(session, model_name, backend_id, filters=None):
-    """ Prepare a batch import of records from Magento """
-    if filters is None:
-        filters = {}
-    assert 'magento_storeview_id' in filters, ('Missing information about '
-                                               'Magento Storeview')
-    env = get_environment(session, model_name, backend_id)
-    importer = env.get_connector_unit(SaleOrderBatchImport)
-    importer.run(filters)
-
-
-@magento
-class StateExporter(Exporter):
-    _model_name = 'magento.sale.order'
-
-    def run(self, binding_id, allowed_states=None, comment=None, notify=False):
+    def run(self, binding, allowed_states=None, comment=None, notify=False):
         """ Change the status of the sales order on Magento.
 
         It adds a comment on Magento with a status.
@@ -1061,22 +995,21 @@ class StateExporter(Exporter):
         able to change the status again and to create shipments and invoices
         because the state is still ``new`` or ``processing``.
 
-        :param binding_id: ID of the binding record of the sales order
-        :param allowed_states: list of OpenERP states that are allowed
+        :param binding: the binding record of the sales order
+        :param allowed_states: list of Odoo states that are allowed
                                for export. If empty, it will export any
                                state.
         :param comment: Comment to display on Magento for the state change
         :param notify: When True, Magento will send an email with the
                        comment
         """
-        binding = self.model.browse(binding_id)
         state = binding.state
         if allowed_states and state not in allowed_states:
             return _('State %s is not exported.') % state
-        external_id = self.binder.to_backend(binding.id)
+        external_id = self.binder.to_external(binding)
         if not external_id:
             return _('Sale is not linked with a Magento sales order')
-        magento_state = ORDER_STATUS_MAPPING[state]
+        magento_state = self.ORDER_STATUS_MAPPING[state]
         record = self.backend_adapter.read(external_id)
         if record['status'] == magento_state:
             return _('Magento sales order is already '
@@ -1084,16 +1017,3 @@ class StateExporter(Exporter):
         self.backend_adapter.add_comment(external_id, magento_state,
                                          comment=comment,
                                          notify=notify)
-        self.binder.bind(external_id, binding_id)
-
-
-@job(default_channel='root.magento')
-def export_state_change(session, model_name, binding_id, allowed_states=None,
-                        comment=None, notify=None):
-    """ Change state of a sales order on Magento """
-    binding = session.env[model_name].browse(binding_id)
-    backend_id = binding.backend_id.id
-    env = get_environment(session, model_name, backend_id)
-    exporter = env.get_connector_unit(StateExporter)
-    return exporter.run(binding_id, allowed_states=allowed_states,
-                        comment=comment, notify=notify)

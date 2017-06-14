@@ -536,8 +536,6 @@ class MagentoStoreview(models.Model):
 
     @api.multi
     def import_sale_orders(self):
-        session = ConnectorSession(self.env.cr, self.env.uid,
-                                   context=self.env.context)
         import_start_time = datetime.now()
         for storeview in self:
             if storeview.no_sales_order_sync:
@@ -545,20 +543,19 @@ class MagentoStoreview(models.Model):
                               "but is configured not to import the "
                               "sales orders", storeview.name)
                 continue
-            backend_id = storeview.backend_id.id
+            backend = storeview.backend_id
             if storeview.import_orders_from_date:
                 from_string = fields.Datetime.from_string
                 from_date = from_string(storeview.import_orders_from_date)
             else:
                 from_date = None
-            sale_order_import_batch.delay(
-                session,
-                'magento.sale.order',
-                backend_id,
-                {'magento_storeview_id': storeview.external_id,
-                 'from_date': from_date,
-                 'to_date': import_start_time},
-                priority=1)  # executed as soon as possible
+            delayable = self.env['magento.sale.order'].with_delay(priority=1)
+            filters = {
+                'magento_storeview_id': storeview.external_id,
+                'from_date': from_date,
+                'to_date': import_start_time,
+            }
+            delayable.import_batch(backend, filters=filters)
         # Records from Magento are imported based on their `created_at`
         # date.  This date is set on Magento at the beginning of a
         # transaction, so if the import is run between the beginning and

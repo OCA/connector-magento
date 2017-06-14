@@ -18,7 +18,8 @@ are already bound, to update the last sync date.
 import logging
 from odoo import fields, _
 from odoo.addons.component.core import AbstractComponent, Component
-from odoo.addons.connector.exception import IDMissingInBackend, NothingToDoJob
+from odoo.addons.connector.exception import IDMissingInBackend
+from odoo.addons.queue_job.exception import NothingToDoJob
 
 _logger = logging.getLogger(__name__)
 
