@@ -17,10 +17,7 @@ from odoo.addons.connector.exception import (MappingError,
                                              InvalidDataError,
                                              IDMissingInBackend
                                              )
-from odoo.addons.connector.components.mapper import (
-    mapping,
-    MetaMapper,
-)
+from odoo.addons.connector.components.mapper import mapping
 from odoo.addons.component.core import Component
 from odoo.addons.queue_job.job import job
 from .unit.backend_adapter import MAGENTO_DATETIME_FORMAT
@@ -397,8 +394,6 @@ class BundleImporter(Component):
 
 
 class ProductImportMapper(Component):
-    __metaclass__ = MetaMapper
-
     _name = 'magento.product.product.import.mapper'
     _inherit = 'magento.import.mapper'
     _apply_on = ['magento.product.product']

@@ -6,10 +6,7 @@
 import logging
 import xmlrpclib
 from odoo import models, fields
-from odoo.addons.connector.components.mapper import (
-    mapping,
-    MetaMapper,
-)
+from odoo.addons.connector.components.mapper import mapping
 from odoo.addons.connector.exception import (IDMissingInBackend,
                                              MappingError,
                                              )
@@ -209,8 +206,6 @@ class ProductCategoryImporter(Component):
 
 
 class ProductCategoryImportMapper(Component):
-    __metaclass__ = MetaMapper
-
     _name = 'magento.product.category.import.mapper'
     _inherit = 'magento.import.mapper'
     _apply_on = 'magento.product.category'

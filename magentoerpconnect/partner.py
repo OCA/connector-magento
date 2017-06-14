@@ -11,11 +11,7 @@ from odoo.addons.queue_job.job import job
 from odoo.addons.component.core import AbstractComponent, Component
 
 from odoo.addons.connector.exception import MappingError, IDMissingInBackend
-from odoo.addons.connector.components.mapper import (
-    mapping,
-    only_create,
-    MetaMapper,
-)
+from odoo.addons.connector.components.mapper import mapping, only_create
 from .components.backend_adapter import MAGENTO_DATETIME_FORMAT
 from .components.mapper import normalize_datetime
 
@@ -220,8 +216,6 @@ class PartnerBatchImporter(Component):
 
 
 class PartnerImportMapper(Component):
-    __metaclass__ = MetaMapper
-
     _name = 'magento.partner.import.mapper'
     _inherit = 'magento.import.mapper'
     _apply_on = 'magento.res.partner'
@@ -423,7 +417,6 @@ class BaseAddressImportMapper(AbstractComponent):
     """ Defines the base mappings for the imports
     in ``res.partner`` (state, country, ...)
     """
-    __metaclass__ = MetaMapper
 
     _name = 'magento.base.address.import.mapper'
     _inherit = 'magento.import.mapper'
@@ -520,7 +513,6 @@ class CompanyImportMapper(Component):
     effect here because the mapper is always called
     for updates.
     """
-    __metaclass__ = MetaMapper
 
     _name = 'magento.company.import.mapper'
     _inherit = 'magento.base.address.import.mapper'
@@ -608,7 +600,6 @@ class AddressImporter(Component):
 
 
 class AddressImportMapper(Component):
-    __metaclass__ = MetaMapper
 
     _name = 'magento.address.import.mapper'
     _inherit = 'magento.base.address.import.mapper'

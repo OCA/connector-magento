@@ -3,11 +3,10 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
 from odoo.addons.component.core import Component
-from odoo.addons.connector.components.mapper import mapping, MetaMapper
+from odoo.addons.connector.components.mapper import mapping
 
 
 class PartnerImportMapper(Component):
-    __metaclass__ = MetaMapper
     _inherit = 'magento.partner.import.mapper'
 
     @mapping
@@ -20,7 +19,6 @@ class PartnerImportMapper(Component):
 
 
 class AddressImportMapper(Component):
-    __metaclass__ = MetaMapper
     _inherit = 'magento.address.import.mapper'
 
     @mapping

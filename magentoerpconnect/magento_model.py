@@ -9,7 +9,7 @@ from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 from odoo.addons.component.core import Component
 
-from odoo.addons.connector.components.mapper import mapping, MetaMapper
+from odoo.addons.connector.components.mapper import mapping
 from odoo.addons.connector.checkpoint import checkpoint
 
 _logger = logging.getLogger(__name__)
@@ -622,8 +622,6 @@ class MetadataBatchImporter(Component):
 
 
 class WebsiteImportMapper(Component):
-    __metaclass__ = MetaMapper
-
     _name = 'magento.website.mapper'
     _inherit = 'magento.import.mapper'
     _apply_on = 'magento.website'
@@ -644,8 +642,6 @@ class WebsiteImportMapper(Component):
 
 
 class StoreImportMapper(Component):
-    __metaclass__ = MetaMapper
-
     _name = 'magento.store.mapper'
     _inherit = 'magento.import.mapper'
     _apply_on = 'magento.store'
@@ -660,8 +656,6 @@ class StoreImportMapper(Component):
 
 
 class StoreviewImportMapper(Component):
-    __metaclass__ = MetaMapper
-
     _name = 'magento.storeview.mapper'
     _inherit = 'magento.import.mapper'
     _apply_on = 'magento.storeview'
