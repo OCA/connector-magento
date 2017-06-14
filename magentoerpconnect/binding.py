@@ -34,6 +34,7 @@ class MagentoBinding(models.AbstractModel):
     ]
 
     @job(default_channel='root.magento')
+    @related_action(action='related_action_magento_link')
     @api.model
     def import_batch(self, backend, filters=None):
         """ Prepare the import of records modified on Magento """
@@ -44,12 +45,13 @@ class MagentoBinding(models.AbstractModel):
         return importer.run(filters=filters)
 
     @job(default_channel='root.magento')
+    @related_action(action='related_action_magento_link')
     @api.model
-    def import_record(self, backend, magento_id, force=False):
+    def import_record(self, backend, external_id, force=False):
         """ Import a Magento record """
         work = backend.work_on(self._name)
         importer = work.components(usage='record.importer')
-        return importer.run(magento_id, force=force)
+        return importer.run(external_id, force=force)
 
     @job(default_channel='root.magento')
     @related_action(action='related_action_unwrap_binding')
@@ -62,6 +64,7 @@ class MagentoBinding(models.AbstractModel):
         return exporter.run(self, fields)
 
     @job(default_channel='root.magento')
+    @related_action(action='related_action_magento_link')
     def export_delete_record(self, backend, external_id):
         """ Delete a record on Magento """
         work = backend.work_on(self._name)

@@ -21,3 +21,4 @@ from . import stock_tracking
 from . import account_payment_mode
 
 from . import consumer
+from . import models
