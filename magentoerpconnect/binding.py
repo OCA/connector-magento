@@ -3,7 +3,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo import api, models, fields
-from odoo.addons.queue_job.job import job
+from odoo.addons.queue_job.job import job, related_action
 
 
 class MagentoBinding(models.AbstractModel):
@@ -50,3 +50,13 @@ class MagentoBinding(models.AbstractModel):
         work = backend.work_on(self._name)
         importer = work.components(usage='record.importer')
         return importer.run(magento_id, force=force)
+
+    @job(default_channel='root.magento')
+    @related_action(action='related_action_unwrap_binding')
+    @api.multi
+    def export_record(self, fields=None):
+        """ Export a record on Magento """
+        self.ensure_one()
+        work = self.backend_id.work_on(self._name)
+        exporter = work.components(usage='record.exporter')
+        return exporter.run(self, fields)
