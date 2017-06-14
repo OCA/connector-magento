@@ -13,22 +13,22 @@
 "access_magento_sale_order","magento_sale_order connector manager","model_magento_sale_order","connector.group_connector_manager",1,1,1,1
 "access_magento_sale_order_line","magento_sale_order_line connector manager","model_magento_sale_order_line","connector.group_connector_manager",1,1,1,1
 "access_magento_stock_picking_out","magento_stock_picking connector manager","model_magento_stock_picking","connector.group_connector_manager",1,1,1,1
-"access_magento_backend_user","magento_backend user","model_magento_backend","base.group_sale_salesman",1,0,0,0
-"access_magento_backend_sale_manager","magento_backend manager","model_magento_backend","base.group_sale_manager",1,0,0,0
-"access_magento_product_product_user","magento_product_product user","model_magento_product_product","base.group_sale_salesman",1,0,0,0
-"access_magento_product_product_sale_manager","magento_product_product sale manager","model_magento_product_product","base.group_sale_manager",1,1,1,1
-"access_magento_store_user","magento_store user","model_magento_store","base.group_sale_salesman",1,0,0,0
-"access_magento_store_sale_manager","magento_store sale manager","model_magento_store","base.group_sale_manager",1,0,0,0
-"access_magento_storeview_user","magento_storeview user","model_magento_storeview","base.group_sale_salesman",1,0,0,0
-"access_magento_storeview_sale_manager","magento_storeview sale manager","model_magento_storeview","base.group_sale_manager",1,0,0,0
-"access_magento_website_user","magento_website user","model_magento_website","base.group_sale_salesman",1,0,0,0
-"access_magento_website_sale_manager","magento_website sale manager","model_magento_website","base.group_sale_manager",1,0,0,0
-"access_magento_sale_order_sale_salesman","magento_sale_order","model_magento_sale_order","base.group_sale_salesman",1,1,1,1
-"access_magento_sale_order_sale_manager","magento_sale_order","model_magento_sale_order","base.group_sale_manager",1,1,1,1
-"access_magento_sale_order_line_sale_salesman","magento_sale_order_line","model_magento_sale_order_line","base.group_sale_salesman",1,1,1,1
-"access_magento_sale_order_line_sale_manager","magento_sale_order_line","model_magento_sale_order_line","base.group_sale_manager",1,1,1,1
+"access_magento_backend_user","magento_backend user","model_magento_backend","sales_team.group_sale_salesman",1,0,0,0
+"access_magento_backend_sale_manager","magento_backend manager","model_magento_backend","sales_team.group_sale_manager",1,0,0,0
+"access_magento_product_product_user","magento_product_product user","model_magento_product_product","sales_team.group_sale_salesman",1,0,0,0
+"access_magento_product_product_sale_manager","magento_product_product sale manager","model_magento_product_product","sales_team.group_sale_manager",1,1,1,1
+"access_magento_store_user","magento_store user","model_magento_store","sales_team.group_sale_salesman",1,0,0,0
+"access_magento_store_sale_manager","magento_store sale manager","model_magento_store","sales_team.group_sale_manager",1,0,0,0
+"access_magento_storeview_user","magento_storeview user","model_magento_storeview","sales_team.group_sale_salesman",1,0,0,0
+"access_magento_storeview_sale_manager","magento_storeview sale manager","model_magento_storeview","sales_team.group_sale_manager",1,0,0,0
+"access_magento_website_user","magento_website user","model_magento_website","sales_team.group_sale_salesman",1,0,0,0
+"access_magento_website_sale_manager","magento_website sale manager","model_magento_website","sales_team.group_sale_manager",1,0,0,0
+"access_magento_sale_order_sale_salesman","magento_sale_order","model_magento_sale_order","sales_team.group_sale_salesman",1,1,1,1
+"access_magento_sale_order_sale_manager","magento_sale_order","model_magento_sale_order","sales_team.group_sale_manager",1,1,1,1
+"access_magento_sale_order_line_sale_salesman","magento_sale_order_line","model_magento_sale_order_line","sales_team.group_sale_salesman",1,1,1,1
+"access_magento_sale_order_line_sale_manager","magento_sale_order_line","model_magento_sale_order_line","sales_team.group_sale_manager",1,1,1,1
 "access_magento_invoice_user","magento_account.invoice","model_magento_account_invoice","account.group_account_invoice",1,1,1,1
-"access_product_category_sale_manager","magento_product.category salemanager","model_magento_product_category","base.group_sale_manager",1,1,1,1
+"access_product_category_sale_manager","magento_product.category salemanager","model_magento_product_category","sales_team.group_sale_manager",1,1,1,1
 "access_product_category_user","magento_product.category.user","model_magento_product_category","base.group_user",1,0,0,0
 "access_res_partner_group_user","magento_res_partner group_user","model_magento_res_partner","base.group_user",1,0,0,0
 "access_res_partner_category_group_user","magento_res_partner_category group_user","model_magento_res_partner_category","base.group_user",1,0,0,0

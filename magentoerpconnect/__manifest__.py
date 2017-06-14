@@ -26,7 +26,7 @@
             'images/magentoerpconnect.png',
             ],
  'data': ['data/magentoerpconnect_data.xml',
-          # 'security/ir.model.access.csv',
+          'security/ir.model.access.csv',
           # 'views/setting_view.xml',
           'views/magento_model_view.xml',
           'views/product_view.xml',
