@@ -19,7 +19,7 @@ from odoo.addons.connector.exception import (MappingError,
                                              )
 from odoo.addons.connector.components.mapper import mapping
 from odoo.addons.component.core import Component
-from odoo.addons.queue_job.job import job
+from odoo.addons.queue_job.job import job, related_action
 from .unit.backend_adapter import MAGENTO_DATETIME_FORMAT
 from .unit.mapper import normalize_datetime
 
@@ -94,6 +94,7 @@ class MagentoProductProduct(models.Model):
     RECOMPUTE_QTY_STEP = 1000  # products at a time
 
     @job(default_channel='root.magento')
+    @related_action(action='related_action_unwrap_binding')
     @api.multi
     def export_inventory(self, fields=None):
         """ Export the inventory configuration and quantity of a product. """
