@@ -11,7 +11,7 @@ from odoo.addons.connector.exception import (IDMissingInBackend,
                                              MappingError,
                                              )
 from odoo.addons.component.core import Component
-from .unit.backend_adapter import MAGENTO_DATETIME_FORMAT
+from .components.backend_adapter import MAGENTO_DATETIME_FORMAT
 
 _logger = logging.getLogger(__name__)
 

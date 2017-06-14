@@ -111,7 +111,7 @@ class MagentoImporter(AbstractComponent):
 
     def _map_data(self):
         """ Returns an instance of
-        :py:class:`~openerp.addons.connector.unit.mapper.MapRecord`
+        :py:class:`~odoo.addons.connector.components.mapper.MapRecord`
 
         """
         return self.mapper.map_record(self.magento_record)
@@ -324,21 +324,3 @@ class TranslationImporter(Component):
 
             binding.with_context(connector_no_export=True,
                                  lang=storeview.lang_id.code).write(data)
-
-
-# TODO
-# @job(default_channel='root.magento')
-# def import_batch(session, model_name, backend_id, filters=None):
-#     """ Prepare a batch import of records from Magento """
-#     env = get_environment(session, model_name, backend_id)
-#     importer = env.get_connector_unit(BatchImporter)
-#     importer.run(filters=filters)
-
-
-# @job(default_channel='root.magento')
-# @related_action(action=link)
-# def import_record(session, model_name, backend_id, external_id, force=False):
-#     """ Import a record from Magento """
-#     env = get_environment(session, model_name, backend_id)
-#     importer = env.get_connector_unit(MagentoImporter)
-#     importer.run(external_id, force=force)

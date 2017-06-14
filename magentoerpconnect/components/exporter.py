@@ -294,7 +294,7 @@ class MagentoExporter(AbstractComponent):
 
     def _map_data(self):
         """ Returns an instance of
-        :py:class:`~openerp.addons.connector.unit.mapper.MapRecord`
+        :py:class:`~odoo.addons.connector.components.mapper.MapRecord`
 
         """
         return self.mapper.map_record(self.binding)

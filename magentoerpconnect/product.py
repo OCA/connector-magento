@@ -20,8 +20,8 @@ from odoo.addons.connector.exception import (MappingError,
 from odoo.addons.connector.components.mapper import mapping
 from odoo.addons.component.core import Component
 from odoo.addons.queue_job.job import job, related_action
-from .unit.backend_adapter import MAGENTO_DATETIME_FORMAT
-from .unit.mapper import normalize_datetime
+from .components.backend_adapter import MAGENTO_DATETIME_FORMAT
+from .components.mapper import normalize_datetime
 
 _logger = logging.getLogger(__name__)
 
