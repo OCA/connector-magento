@@ -14,7 +14,7 @@ from datetime import datetime
 _logger = logging.getLogger(__name__)
 
 
-MAGENTO_DATETIME_FORMAT = '%Y/%m/%d %H:%M:%S'
+MAGENTO_DATETIME_FORMAT = '%Y-%m-%d %H:%M:%S'
 
 
 recorder = {}
