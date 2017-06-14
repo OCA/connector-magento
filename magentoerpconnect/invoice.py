@@ -5,19 +5,15 @@
 
 import logging
 import xmlrpclib
-from openerp import models, fields, _
-from openerp.addons.connector.queue.job import job, related_action
-from openerp.addons.connector.unit.synchronizer import Exporter
-from openerp.addons.connector.event import on_record_create
-from openerp.addons.connector_ecommerce.models.event import (
+from odoo import api, models, fields, _
+from odoo.addons.component.core import Component
+from odoo.addons.queue_job.job import job, related_action
+from odoo.addons.connector.event import on_record_create
+from odoo.addons.connector_ecommerce.models.event import (
     on_invoice_paid,
     on_invoice_validated
 )
-from openerp.addons.connector.exception import IDMissingInBackend
-from .unit.backend_adapter import GenericAdapter
-from .connector import get_environment
-from .backend import magento
-from .related_action import unwrap_binding
+from odoo.addons.connector.exception import IDMissingInBackend
 
 _logger = logging.getLogger(__name__)
 
@@ -26,21 +22,31 @@ class MagentoAccountInvoice(models.Model):
     """ Binding Model for the Magento Invoice """
     _name = 'magento.account.invoice'
     _inherit = 'magento.binding'
-    _inherits = {'account.invoice': 'openerp_id'}
+    _inherits = {'account.invoice': 'odoo_id'}
     _description = 'Magento Invoice'
 
-    openerp_id = fields.Many2one(comodel_name='account.invoice',
-                                 string='Invoice',
-                                 required=True,
-                                 ondelete='cascade')
+    odoo_id = fields.Many2one(comodel_name='account.invoice',
+                              string='Invoice',
+                              required=True,
+                              ondelete='cascade')
     magento_order_id = fields.Many2one(comodel_name='magento.sale.order',
                                        string='Magento Sale Order',
                                        ondelete='set null')
 
     _sql_constraints = [
-        ('openerp_uniq', 'unique(backend_id, openerp_id)',
+        ('odoo_uniq', 'unique(backend_id, odoo_id)',
          'A Magento binding for this invoice already exists.'),
     ]
+
+    @job(default_channel='root.magento')
+    @related_action(action='related_action_unwrap_binding')
+    @api.multi
+    def export_invoice(self):
+        """ Export a validated or paid invoice. """
+        self.ensure_one()
+        work = self.backend_id.work_on(self._name)
+        exporter = work.components(usage='record.exporter')
+        return exporter.run(self)
 
 
 class AccountInvoice(models.Model):
@@ -51,15 +57,18 @@ class AccountInvoice(models.Model):
 
     magento_bind_ids = fields.One2many(
         comodel_name='magento.account.invoice',
-        inverse_name='openerp_id',
+        inverse_name='odoo_id',
         string='Magento Bindings',
     )
 
 
-@magento
-class AccountInvoiceAdapter(GenericAdapter):
+class AccountInvoiceAdapter(Component):
     """ Backend Adapter for the Magento Invoice """
-    _model_name = 'magento.account.invoice'
+
+    _name = 'magento.invoice.adapter'
+    _inherit = 'magento.adapter'
+    _apply_on = 'magento.account.invoice'
+
     _magento_model = 'sales_order_invoice'
     _admin_path = 'sales_invoice/view/invoice_id/{id}'
 
@@ -95,10 +104,11 @@ class AccountInvoiceAdapter(GenericAdapter):
         return super(AccountInvoiceAdapter, self).search_read(filters=filters)
 
 
-@magento
-class MagentoInvoiceExporter(Exporter):
+class MagentoInvoiceExporter(Component):
     """ Export invoices to Magento """
-    _model_name = ['magento.account.invoice']
+    _name = 'magento.account.invoice.exporter'
+    _inherit = 'magento.exporter'
+    _apply_on = ['magento.account.invoice']
 
     def _export_invoice(self, external_id, lines_info, mail_notification):
         if not lines_info:  # invoice without any line for the sale order
@@ -123,7 +133,7 @@ class MagentoInvoiceExporter(Exporter):
         # get product and quantities to invoice
         # if no magento id found, do not export it
         order = invoice.magento_order_id
-        for line in invoice.invoice_line:
+        for line in invoice.invoice_line_ids:
             product = line.product_id
             # find the order line with the same product
             # and get the magento item_id (id of the line)
@@ -139,24 +149,23 @@ class MagentoInvoiceExporter(Exporter):
             item_qty[item_id] += line.quantity
         return item_qty
 
-    def run(self, binding_id):
+    def run(self, binding):
         """ Run the job to export the validated/paid invoice """
-        invoice = self.model.browse(binding_id)
 
-        magento_order = invoice.magento_order_id
+        magento_order = binding.magento_order_id
         magento_store = magento_order.store_id
         mail_notification = magento_store.send_invoice_paid_mail
 
-        lines_info = self._get_lines_info(invoice)
+        lines_info = self._get_lines_info(binding)
         external_id = None
         try:
             external_id = self._export_invoice(magento_order.external_id,
-                                              lines_info,
-                                              mail_notification)
+                                               lines_info,
+                                               mail_notification)
         except xmlrpclib.Fault as err:
             # When the invoice is already created on Magento, it returns:
             # <Fault 102: 'Cannot do invoice for order.'>
-            # We'll search the Magento invoice ID to store it in OpenERP
+            # We'll search the Magento invoice ID to store it in Odoo
             if err.faultCode == 102:
                 _logger.debug('Invoice already exists on Magento for '
                               'sale order with magento id %s, trying to find '
@@ -180,7 +189,7 @@ class MagentoInvoiceExporter(Exporter):
             external_id = self._get_existing_invoice(magento_order)
 
         if external_id:
-            self.binder.bind(external_id, binding_id)
+            self.binder.bind(external_id, binding.id)
 
     def _get_existing_invoice(self, magento_order):
         invoices = self.backend_adapter.search_read(
@@ -192,20 +201,18 @@ class MagentoInvoiceExporter(Exporter):
         return invoices[0]['increment_id']
 
 
-MagentoInvoiceSynchronizer = MagentoInvoiceExporter  # deprecated
-
-
 @on_invoice_validated
 @on_invoice_paid
-def invoice_create_bindings(session, model_name, record_id):
+def invoice_create_bindings(env, model_name, record_id):
     """
     Create a ``magento.account.invoice`` record. This record will then
     be exported to Magento.
     """
-    invoice = session.env[model_name].browse(record_id)
+    invoice = env[model_name].browse(record_id)
     # find the magento store to retrieve the backend
     # we use the shop as many sale orders can be related to an invoice
-    for sale in invoice.sale_ids:
+    sales = invoice.mapped('invoice_line_ids.sale_line_ids.order_id')
+    for sale in sales:
         for magento_sale in sale.magento_bind_ids:
             binding_exists = False
             for mag_inv in invoice.magento_bind_ids:
@@ -224,35 +231,15 @@ def invoice_create_bindings(session, model_name, record_id):
                 create_invoice = magento_store.create_invoice_on
 
             if create_invoice == invoice.state:
-                session.env['magento.account.invoice'].create({
+                env['magento.account.invoice'].create({
                     'backend_id': magento_sale.backend_id.id,
-                    'openerp_id': invoice.id,
+                    'odoo_id': invoice.id,
                     'magento_order_id': magento_sale.id})
 
 
 @on_record_create(model_names='magento.account.invoice')
-def delay_export_account_invoice(session, model_name, record_id, vals):
+def delay_export_account_invoice(env, model_name, record_id, vals):
     """
     Delay the job to export the magento invoice.
     """
-    export_invoice.delay(session, model_name, record_id)
-
-
-@job(default_channel='root.magento')
-@related_action(action=unwrap_binding)
-def export_invoice_paid(session, model_name, record_id):
-    """ Deprecated in 2.1.0.dev0. """
-    _logger.warning('Deprecated: the export_invoice_paid() job is deprecated '
-                    'in favor of export_invoice()')
-    return export_invoice(session, model_name, record_id)
-
-
-@job(default_channel='root.magento')
-@related_action(action=unwrap_binding)
-def export_invoice(session, model_name, record_id):
-    """ Export a validated or paid invoice. """
-    invoice = session.env[model_name].browse(record_id)
-    backend_id = invoice.backend_id.id
-    env = get_environment(session, model_name, backend_id)
-    invoice_exporter = env.get_connector_unit(MagentoInvoiceExporter)
-    return invoice_exporter.run(record_id)
+    env[model_name].browse(record_id).with_delay().export_invoice()

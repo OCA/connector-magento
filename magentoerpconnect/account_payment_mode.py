@@ -3,7 +3,7 @@
 # © 2016 Sodexis
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from openerp import models, fields
+from odoo import models, fields
 
 
 class AccountPaymentMode(models.Model):
@@ -14,7 +14,7 @@ class AccountPaymentMode(models.Model):
                    ('paid', 'Paid')],
         string='Create invoice on action',
         help="Should the invoice be created in Magento "
-             "when it is validated or when it is paid in OpenERP?\n"
+             "when it is validated or when it is paid in Odoo?\n"
              "If nothing is set, the option falls back to the same option "
              "on the Magento store related to the sales order.",
     )
