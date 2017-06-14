@@ -60,3 +60,10 @@ class MagentoBinding(models.AbstractModel):
         work = self.backend_id.work_on(self._name)
         exporter = work.components(usage='record.exporter')
         return exporter.run(self, fields)
+
+    @job(default_channel='root.magento')
+    def export_delete_record(self, backend, external_id):
+        """ Delete a record on Magento """
+        work = backend.work_on(self._name)
+        deleter = work.components(usage='record.exporter.deleter')
+        return deleter.run(external_id)
