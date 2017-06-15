@@ -45,7 +45,7 @@ class MagentoAccountInvoice(models.Model):
         """ Export a validated or paid invoice. """
         self.ensure_one()
         work = self.backend_id.work_on(self._name)
-        exporter = work.components(usage='record.exporter')
+        exporter = work.component(usage='record.exporter')
         return exporter.run(self)
 
 

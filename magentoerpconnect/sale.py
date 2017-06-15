@@ -66,7 +66,7 @@ class MagentoSaleOrder(models.Model):
         """ Change state of a sales order on Magento """
         self.ensure_one()
         work = self.backend_id.work_on(self._name)
-        exporter = work.components(usage='sale.state.exporter')
+        exporter = work.component(usage='sale.state.exporter')
         return exporter.run(self, allowed_states=allowed_states,
                             comment=comment, notify=notify)
 
@@ -431,7 +431,7 @@ class SaleOrderImportMapper(Component):
         amount_excl = float(record.get('shipping_amount') or 0.0)
         if not (amount_incl or amount_excl):
             return values
-        line_builder = self.components(usage='order.line.builder.shipping')
+        line_builder = self.component(usage='order.line.builder.shipping')
         if self.options.tax_include:
             discount = float(record.get('shipping_discount_amount') or 0.0)
             line_builder.price_unit = (amount_incl - discount)
@@ -452,7 +452,7 @@ class SaleOrderImportMapper(Component):
         amount_incl = float(record.get('cod_tax_amount') or 0.0)
         if not (amount_excl or amount_incl):
             return values
-        line_builder = self.components(usage='order.line.builder.cod')
+        line_builder = self.component(usage='order.line.builder.cod')
         tax_include = self.options.tax_include
         line_builder.price_unit = amount_incl if tax_include else amount_excl
         line = (0, 0, line_builder.get_line())
@@ -467,7 +467,7 @@ class SaleOrderImportMapper(Component):
         if not record.get('gift_cert_amount'):
             return values
         amount = float(record['gift_cert_amount'])
-        line_builder = self.components(usage='order.line.builder.gift')
+        line_builder = self.component(usage='order.line.builder.gift')
         line_builder.price_unit = amount
         if 'gift_cert_code' in record:
             line_builder.gift_code = record['gift_cert_code']
@@ -485,7 +485,7 @@ class SaleOrderImportMapper(Component):
             'partner_invoice_id': self.options.partner_invoice_id,
             'partner_shipping_id': self.options.partner_shipping_id,
         })
-        onchange = self.components(
+        onchange = self.component(
             usage='ecommerce.onchange.manager.sale.order'
         )
         return onchange.play(values, values['magento_order_line_ids'])
@@ -661,7 +661,7 @@ class SaleOrderImporter(Component):
         self._import_dependency(group_id, 'magento.res.partner.category')
 
     def _before_import(self):
-        rules = self.components(usage='sale.import.rule')
+        rules = self.component(usage='sale.import.rule')
         rules.check(self.magento_record)
 
     def _link_parent_orders(self, binding):
@@ -792,8 +792,8 @@ class SaleOrderImporter(Component):
                 'dob': record.get('customer_dob'),
                 'website_id': record.get('website_id'),
             }
-            mapper = self.components(usage='import.mapper',
-                                     model_name='magento.res.partner')
+            mapper = self.component(usage='import.mapper',
+                                    model_name='magento.res.partner')
             map_record = mapper.map_record(customer_record)
             map_record.update(guest_customer=True)
             partner_binding = self.env['magento.res.partner'].create(
@@ -802,8 +802,8 @@ class SaleOrderImporter(Component):
         else:
 
             # we always update the customer when importing an order
-            importer = self.components(usage='record.importer',
-                                       model_name='magento.res.partner')
+            importer = self.component(usage='record.importer',
+                                      model_name='magento.res.partner')
             importer.run(record['customer_id'])
             partner_binding = partner_binder.to_internal(record['customer_id'])
 
@@ -829,8 +829,8 @@ class SaleOrderImporter(Component):
                               'active': False,
                               'is_magento_order_address': True}
 
-        addr_mapper = self.components(usage='import.mapper',
-                                      model_name='magento.address')
+        addr_mapper = self.component(usage='import.mapper',
+                                     model_name='magento.address')
 
         def create_address(address_record):
             map_record = addr_mapper.map_record(address_record)

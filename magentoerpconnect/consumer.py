@@ -36,7 +36,7 @@ def delay_unlink(env, model_name, record_id):
     Called on binding records."""
     record = env[model_name].browse(record_id)
     work = record.backend_id.work_on(model_name)
-    binder = work.components(usage='binder')
+    binder = work.component(usage='binder')
     external_id = binder.to_external(record_id)
     if external_id:
         binding = env[model_name].browse(record_id)

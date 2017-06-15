@@ -100,7 +100,7 @@ class MagentoProductProduct(models.Model):
         """ Export the inventory configuration and quantity of a product. """
         self.ensure_one()
         work = self.backend_id.work_on(self._name)
-        exporter = work.components(usage='product.inventory.exporter')
+        exporter = work.component(usage='product.inventory.exporter')
         return exporter.run(self, fields)
 
     @api.multi
@@ -544,7 +544,7 @@ class ProductImporter(Component):
 
     def _after_import(self, binding):
         """ Hook called at the end of the import """
-        translation_importer = self.components(
+        translation_importer = self.component(
             usage='translation.importer',
         )
         translation_importer.run(
@@ -552,11 +552,11 @@ class ProductImporter(Component):
             binding,
             mapper='magento.product.product.import.mapper'
         )
-        image_importer = self.components(usage='product.image.importer')
+        image_importer = self.component(usage='product.image.importer')
         image_importer.run(self.external_id, binding)
 
         if self.magento_record['type_id'] == 'bundle':
-            bundle_importer = self.components(usage='product.bundle.importer')
+            bundle_importer = self.component(usage='product.bundle.importer')
             bundle_importer.run(binding, self.magento_record)
 
 

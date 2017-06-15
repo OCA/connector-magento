@@ -41,7 +41,7 @@ class MagentoBinding(models.AbstractModel):
         if filters is None:
             filters = {}
         work = backend.work_on(self._name)
-        importer = work.components(usage='batch.importer')
+        importer = work.component(usage='batch.importer')
         return importer.run(filters=filters)
 
     @job(default_channel='root.magento')
@@ -50,7 +50,7 @@ class MagentoBinding(models.AbstractModel):
     def import_record(self, backend, external_id, force=False):
         """ Import a Magento record """
         work = backend.work_on(self._name)
-        importer = work.components(usage='record.importer')
+        importer = work.component(usage='record.importer')
         return importer.run(external_id, force=force)
 
     @job(default_channel='root.magento')
@@ -60,7 +60,7 @@ class MagentoBinding(models.AbstractModel):
         """ Export a record on Magento """
         self.ensure_one()
         work = self.backend_id.work_on(self._name)
-        exporter = work.components(usage='record.exporter')
+        exporter = work.component(usage='record.exporter')
         return exporter.run(self, fields)
 
     @job(default_channel='root.magento')
@@ -68,5 +68,5 @@ class MagentoBinding(models.AbstractModel):
     def export_delete_record(self, backend, external_id):
         """ Delete a record on Magento """
         work = backend.work_on(self._name)
-        deleter = work.components(usage='record.exporter.deleter')
+        deleter = work.component(usage='record.exporter.deleter')
         return deleter.run(external_id)

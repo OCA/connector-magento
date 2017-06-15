@@ -91,8 +91,8 @@ class MagentoImporter(AbstractComponent):
         binder = self.binder_for(binding_model)
         if always or not binder.to_internal(external_id):
             if importer is None:
-                importer = self.components(usage='record.importer',
-                                           model_name=binding_model)
+                importer = self.component(usage='record.importer',
+                                          model_name=binding_model)
             try:
                 importer.run(external_id)
             except NothingToDoJob:

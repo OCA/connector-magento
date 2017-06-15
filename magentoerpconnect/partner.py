@@ -323,8 +323,8 @@ class PartnerImporter(Component):
 
     def _after_import(self, partner_binding):
         """ Import the addresses """
-        book = self.components(usage='address.book',
-                               model_name='magento.address')
+        book = self.component(usage='address.book',
+                              model_name='magento.address')
         book.import_addresses(self.external_id, partner_binding.id)
 
 
@@ -369,11 +369,11 @@ class PartnerAddressBook(Component):
         addresses = self._get_address_infos(magento_partner_id,
                                             partner_binding_id)
         for address_id, infos in addresses:
-            importer = self.components(usage='record.importer')
+            importer = self.component(usage='record.importer')
             importer.run(address_id, address_infos=infos)
 
     def _get_address_infos(self, magento_partner_id, partner_binding_id):
-        adapter = self.components(usage='backend.adapter')
+        adapter = self.component(usage='backend.adapter')
         mag_address_ids = adapter.search({'customer_id':
                                           {'eq': magento_partner_id}})
         if not mag_address_ids:
@@ -392,7 +392,7 @@ class PartnerAddressBook(Component):
                     # with the partner.
                     # Copy the billing address on the company
                     # and use the name of the company for the name
-                    company_mapper = self.components(
+                    company_mapper = self.component(
                         usage='company.import.mapper',
                         model_name='magento.res.partner'
                     )

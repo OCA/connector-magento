@@ -282,8 +282,8 @@ class MagentoExporter(AbstractComponent):
             binding = relation
 
         if not rel_binder.to_external(binding):
-            exporter = self.components(usage=component_usage,
-                                       model_name=binding_model)
+            exporter = self.component(usage=component_usage,
+                                      model_name=binding_model)
             exporter.run(binding)
 
     def _export_dependencies(self):

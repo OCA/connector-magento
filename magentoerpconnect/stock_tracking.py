@@ -74,7 +74,7 @@ class MagentoTrackingExporter(Component):
         binder = self.binder_for()
         external_id = binder.to_external(binding)
         if not external_id:
-            picking_exporter = self.components(usage='record.exporter')
+            picking_exporter = self.component(usage='record.exporter')
             picking_exporter.run(binding)
             external_id = binder.to_external(binding)
         if not external_id:

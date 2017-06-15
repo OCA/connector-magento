@@ -201,7 +201,7 @@ class ProductCategoryImporter(Component):
 
     def _after_import(self, binding):
         """ Hook called at the end of the import """
-        translation_importer = self.components(usage='translation.importer')
+        translation_importer = self.component(usage='translation.importer')
         translation_importer.run(self.external_id, binding)
 
 

@@ -19,7 +19,7 @@ class QueueJob(models.Model):
         backend = self.args[backend_id_pos]
         external_id = self.args[external_id_pos]
         work = backend.work_on(model_name)
-        adapter = work.components(usage='backend.adapter')
+        adapter = work.component(usage='backend.adapter')
         try:
             url = adapter.admin_url(external_id)
         except ValueError:

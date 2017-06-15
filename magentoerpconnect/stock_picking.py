@@ -42,7 +42,7 @@ class MagentoStockPicking(models.Model):
         """ Export the tracking number of a delivery order. """
         self.ensure_one()
         work = self.backend_id.work_on(self._name)
-        exporter = work.components(usage='tracking.exporter')
+        exporter = work.component(usage='tracking.exporter')
         return exporter.run(self)
 
     @job(default_channel='root.magento')
@@ -56,7 +56,7 @@ class MagentoStockPicking(models.Model):
         # is True when the job is created.
         self.ensure_one()
         work = self.backend_id.work_on(self._name)
-        exporter = work.components(usage='record.exporter')
+        exporter = work.component(usage='record.exporter')
         res = exporter.run(self)
         if with_tracking and self.carrier_tracking_ref:
             self.with_delay().export_tracking_number()
