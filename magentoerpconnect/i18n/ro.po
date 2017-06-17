@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (7.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-18 01:21+0000\n"
+"POT-Creation-Date: 2017-06-03 00:58+0000\n"
 "PO-Revision-Date: 2015-07-08 12:13+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: Romanian (http://www.transifex.com/oca/OCA-connector-magento-7-0/language/ro/)\n"
@@ -263,7 +263,7 @@ msgstr "Partener"
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_sale_order
 msgid "Sales Order"
-msgstr ""
+msgstr "Comandă vânzare"
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_stock_picking_out
@@ -273,7 +273,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_sale_order_line
 msgid "Sales Order Line"
-msgstr ""
+msgstr "Linie comandă vânzare"
 
 #. module: magentoerpconnect
 #: field:magento.storeview,no_sales_order_sync:0
