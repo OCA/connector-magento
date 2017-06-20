@@ -1,0 +1,19 @@
+<?xml version ="1.0" encoding="utf-8"?>
+
+<odoo>
+
+    <record id="account_payment_mode_form_inherit" model="ir.ui.view">
+      <field name="model">account.payment.mode</field>
+      <field name="inherit_id" ref="connector_ecommerce.account_payment_mode_form_inherit"/>
+      <field name="arch" type="xml">
+
+        <group name="import_rule" position="after">
+          <group name="magento" string="Magento">
+            <field name="create_invoice_on" string="Create invoice on"/>
+          </group>
+        </group>
+
+      </field>
+    </record>
+
+</odoo>
