@@ -18,15 +18,15 @@ class QueueJob(models.Model):
         model_name = self.model_name
         backend = self.args[backend_id_pos]
         external_id = self.args[external_id_pos]
-        work = backend.work_on(model_name)
-        adapter = work.component(usage='backend.adapter')
-        try:
-            url = adapter.admin_url(external_id)
-        except ValueError:
-            raise exceptions.UserError(
-                _('No admin URL configured on the backend or '
-                  'no admin path is defined for this record.')
-            )
+        with backend.work_on(model_name) as work:
+            adapter = work.component(usage='backend.adapter')
+            try:
+                url = adapter.admin_url(external_id)
+            except ValueError:
+                raise exceptions.UserError(
+                    _('No admin URL configured on the backend or '
+                      'no admin path is defined for this record.')
+                )
 
         action = {
             'type': 'ir.actions.act_url',

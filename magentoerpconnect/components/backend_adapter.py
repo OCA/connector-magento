@@ -85,26 +85,84 @@ class MagentoLocation(object):
         return location
 
 
+class MagentoAPI(object):
+
+    def __init__(self, location):
+        """
+        :param location: Magento location
+        :type location: :class:`MagentoLocation`
+        """
+        self._location = location
+        self._api = None
+
+    @property
+    def api(self):
+        if self._api is None:
+            custom_url = self._location.use_custom_api_path
+            api = magentolib.API(
+                self._location.location,
+                self._location.username,
+                self._location.password,
+                full_url=custom_url
+            )
+            api.__enter__()
+            self._api = api
+        return self._api
+
+    def __enter__(self):
+        # we do nothing, api is lazy
+        return self
+
+    def __exit__(self, type, value, traceback):
+        if self._api is not None:
+            self._api.__exit__(type, value, traceback)
+
+    def call(self, method, arguments):
+        try:
+            # When Magento is installed on PHP 5.4+, the API
+            # may return garble data if the arguments contain
+            # trailing None.
+            if isinstance(arguments, list):
+                while arguments and arguments[-1] is None:
+                    arguments.pop()
+            start = datetime.now()
+            try:
+                result = self.api.call(method, arguments)
+            except:
+                _logger.error("api.call('%s', %s) failed", method, arguments)
+                raise
+            else:
+                _logger.debug("api.call('%s', %s) returned %s in %s seconds",
+                              method, arguments, result,
+                              (datetime.now() - start).seconds)
+            # Uncomment to record requests/responses in ``recorder``
+            # record(method, arguments, result)
+            return result
+        except (socket.gaierror, socket.error, socket.timeout) as err:
+            raise NetworkRetryableError(
+                'A network error caused the failure of the job: '
+                '%s' % err)
+        except xmlrpclib.ProtocolError as err:
+            if err.errcode in [502,   # Bad gateway
+                               503,   # Service unavailable
+                               504]:  # Gateway timeout
+                raise RetryableJobError(
+                    'A protocol error caused the failure of the job:\n'
+                    'URL: %s\n'
+                    'HTTP/HTTPS headers: %s\n'
+                    'Error code: %d\n'
+                    'Error message: %s\n' %
+                    (err.url, err.headers, err.errcode, err.errmsg))
+            else:
+                raise
+
+
 class MagentoCRUDAdapter(AbstractComponent):
     """ External Records Adapter for Magento """
 
     _name = 'magento.crud.adapter'
     _inherit = ['base.backend.adapter', 'base.magento.connector']
     _usage = 'backend.adapter'
-
-    def __init__(self, work_context):
-        super(MagentoCRUDAdapter, self).__init__(work_context)
-        backend = self.backend_record
-        magento = MagentoLocation(
-            backend.location,
-            backend.username,
-            backend.password,
-            use_custom_api_path=backend.use_custom_api_path)
-        if backend.use_auth_basic:
-            magento.use_auth_basic = True
-            magento.auth_basic_username = backend.auth_basic_username
-            magento.auth_basic_password = backend.auth_basic_password
-        self.magento = magento
 
     def search(self, filters=None):
         """ Search records according to some criterias
@@ -134,48 +192,14 @@ class MagentoCRUDAdapter(AbstractComponent):
 
     def _call(self, method, arguments):
         try:
-            custom_url = self.magento.use_custom_api_path
-            _logger.debug("Start calling Magento api %s", method)
-            with magentolib.API(self.magento.location,
-                                self.magento.username,
-                                self.magento.password,
-                                full_url=custom_url) as api:
-                # When Magento is installed on PHP 5.4+, the API
-                # may return garble data if the arguments contain
-                # trailing None.
-                if isinstance(arguments, list):
-                    while arguments and arguments[-1] is None:
-                        arguments.pop()
-                start = datetime.now()
-                try:
-                    result = api.call(method, arguments)
-                except:
-                    _logger.error("api.call(%s, %s) failed", method, arguments)
-                    raise
-                else:
-                    _logger.debug("api.call(%s, %s) returned %s in %s seconds",
-                                  method, arguments, result,
-                                  (datetime.now() - start).seconds)
-                # Uncomment to record requests/responses in ``recorder``
-                # record(method, arguments, result)
-                return result
-        except (socket.gaierror, socket.error, socket.timeout) as err:
-            raise NetworkRetryableError(
-                'A network error caused the failure of the job: '
-                '%s' % err)
-        except xmlrpclib.ProtocolError as err:
-            if err.errcode in [502,   # Bad gateway
-                               503,   # Service unavailable
-                               504]:  # Gateway timeout
-                raise RetryableJobError(
-                    'A protocol error caused the failure of the job:\n'
-                    'URL: %s\n'
-                    'HTTP/HTTPS headers: %s\n'
-                    'Error code: %d\n'
-                    'Error message: %s\n' %
-                    (err.url, err.headers, err.errcode, err.errmsg))
-            else:
-                raise
+            magento_api = getattr(self.work, 'magento_api')
+        except AttributeError:
+            raise AttributeError(
+                'You must provide a magento_api attribute with a '
+                'MagentoAPI instance to be able to use the '
+                'Backend Adapter.'
+            )
+        return magento_api.call(method, arguments)
 
 
 class GenericAdapter(AbstractComponent):

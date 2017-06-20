@@ -99,9 +99,9 @@ class MagentoProductProduct(models.Model):
     def export_inventory(self, fields=None):
         """ Export the inventory configuration and quantity of a product. """
         self.ensure_one()
-        work = self.backend_id.work_on(self._name)
-        exporter = work.component(usage='product.inventory.exporter')
-        return exporter.run(self, fields)
+        with self.backend_id.work_on(self._name) as work:
+            exporter = work.component(usage='product.inventory.exporter')
+            return exporter.run(self, fields)
 
     @api.multi
     def recompute_magento_qty(self):

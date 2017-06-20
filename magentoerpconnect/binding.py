@@ -40,18 +40,18 @@ class MagentoBinding(models.AbstractModel):
         """ Prepare the import of records modified on Magento """
         if filters is None:
             filters = {}
-        work = backend.work_on(self._name)
-        importer = work.component(usage='batch.importer')
-        return importer.run(filters=filters)
+        with backend.work_on(self._name) as work:
+            importer = work.component(usage='batch.importer')
+            return importer.run(filters=filters)
 
     @job(default_channel='root.magento')
     @related_action(action='related_action_magento_link')
     @api.model
     def import_record(self, backend, external_id, force=False):
         """ Import a Magento record """
-        work = backend.work_on(self._name)
-        importer = work.component(usage='record.importer')
-        return importer.run(external_id, force=force)
+        with backend.work_on(self._name) as work:
+            importer = work.component(usage='record.importer')
+            return importer.run(external_id, force=force)
 
     @job(default_channel='root.magento')
     @related_action(action='related_action_unwrap_binding')
@@ -59,14 +59,14 @@ class MagentoBinding(models.AbstractModel):
     def export_record(self, fields=None):
         """ Export a record on Magento """
         self.ensure_one()
-        work = self.backend_id.work_on(self._name)
-        exporter = work.component(usage='record.exporter')
-        return exporter.run(self, fields)
+        with self.backend_id.work_on(self._name) as work:
+            exporter = work.component(usage='record.exporter')
+            return exporter.run(self, fields)
 
     @job(default_channel='root.magento')
     @related_action(action='related_action_magento_link')
     def export_delete_record(self, backend, external_id):
         """ Delete a record on Magento """
-        work = backend.work_on(self._name)
-        deleter = work.component(usage='record.exporter.deleter')
-        return deleter.run(external_id)
+        with backend.work_on(self._name) as work:
+            deleter = work.component(usage='record.exporter.deleter')
+            return deleter.run(external_id)

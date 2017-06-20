@@ -4,6 +4,9 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 import logging
+
+from contextlib import contextmanager
+
 from datetime import datetime, timedelta
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
@@ -11,6 +14,7 @@ from odoo.addons.component.core import Component
 
 from odoo.addons.connector.components.mapper import mapping
 from odoo.addons.connector.checkpoint import checkpoint
+from .components.backend_adapter import  MagentoLocation, MagentoAPI
 
 _logger = logging.getLogger(__name__)
 
@@ -173,13 +177,27 @@ class MagentoBackend(models.Model):
                 backend.synchronize_metadata()
         return True
 
+    @contextmanager
     @api.multi
     def work_on(self, model_name, **kwargs):
         self.ensure_one()
         lang = self.default_lang_id
         if lang.code != self.env.context.get('lang'):
             self = self.with_context(lang=lang.code)
-        return super(MagentoBackend, self).work_on(model_name, **kwargs)
+        magento_location = MagentoLocation(
+            self.location,
+            self.username,
+            self.password,
+            use_custom_api_path=self.use_custom_api_path
+        )
+        # We create a Magento Client API here, so we can create the
+        # client once (lazily on the first use) and propagate it
+        # through all the sync session, instead of recreating a client
+        # in each backend adapter usage.
+        with MagentoAPI(magento_location) as magento_api:
+            _super = super(MagentoBackend, self)
+            # from the components we'll be able to do: self.work.magento_api
+            yield _super.work_on(model_name, magento_api=magento_api, **kwargs)
 
     @api.multi
     def add_checkpoint(self, record):

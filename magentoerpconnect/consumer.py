@@ -35,10 +35,10 @@ def delay_unlink(env, model_name, record_id):
 
     Called on binding records."""
     record = env[model_name].browse(record_id)
-    work = record.backend_id.work_on(model_name)
-    binder = work.component(usage='binder')
-    external_id = binder.to_external(record_id)
-    if external_id:
-        binding = env[model_name].browse(record_id)
-        binding.with_delay().export_delete_record(record.backend_id,
-                                                  external_id)
+    with record.backend_id.work_on(model_name) as work:
+        binder = work.component(usage='binder')
+        external_id = binder.to_external(record_id)
+        if external_id:
+            binding = env[model_name].browse(record_id)
+            binding.with_delay().export_delete_record(record.backend_id,
+                                                      external_id)

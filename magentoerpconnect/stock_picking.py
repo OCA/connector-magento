@@ -39,9 +39,9 @@ class MagentoStockPicking(models.Model):
     def export_tracking_number(self):
         """ Export the tracking number of a delivery order. """
         self.ensure_one()
-        work = self.backend_id.work_on(self._name)
-        exporter = work.component(usage='tracking.exporter')
-        return exporter.run(self)
+        with self.backend_id.work_on(self._name) as work:
+            exporter = work.component(usage='tracking.exporter')
+            return exporter.run(self)
 
     @job(default_channel='root.magento')
     @related_action(action='related_action_unwrap_binding')
@@ -53,12 +53,12 @@ class MagentoStockPicking(models.Model):
         # it should be called with True only if the carrier_tracking_ref
         # is True when the job is created.
         self.ensure_one()
-        work = self.backend_id.work_on(self._name)
-        exporter = work.component(usage='record.exporter')
-        res = exporter.run(self)
-        if with_tracking and self.carrier_tracking_ref:
-            self.with_delay().export_tracking_number()
-        return res
+        with self.backend_id.work_on(self._name) as work:
+            exporter = work.component(usage='record.exporter')
+            res = exporter.run(self)
+            if with_tracking and self.carrier_tracking_ref:
+                self.with_delay().export_tracking_number()
+            return res
 
 
 class StockPicking(models.Model):

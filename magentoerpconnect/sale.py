@@ -65,10 +65,10 @@ class MagentoSaleOrder(models.Model):
                             comment=None, notify=None):
         """ Change state of a sales order on Magento """
         self.ensure_one()
-        work = self.backend_id.work_on(self._name)
-        exporter = work.component(usage='sale.state.exporter')
-        return exporter.run(self, allowed_states=allowed_states,
-                            comment=comment, notify=notify)
+        with self.backend_id.work_on(self._name) as work:
+            exporter = work.component(usage='sale.state.exporter')
+            return exporter.run(self, allowed_states=allowed_states,
+                                comment=comment, notify=notify)
 
     @job(default_channel='root.magento')
     @api.model
