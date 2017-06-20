@@ -8,11 +8,6 @@ import xmlrpclib
 from odoo import api, models, fields, _
 from odoo.addons.component.core import Component
 from odoo.addons.queue_job.job import job, related_action
-from odoo.addons.connector.event import on_record_create
-from odoo.addons.connector_ecommerce.models.event import (
-    on_invoice_paid,
-    on_invoice_validated
-)
 from odoo.addons.connector.exception import IDMissingInBackend
 
 _logger = logging.getLogger(__name__)
@@ -201,45 +196,54 @@ class MagentoInvoiceExporter(Component):
         return invoices[0]['increment_id']
 
 
-@on_invoice_validated
-@on_invoice_paid
-def invoice_create_bindings(env, model_name, record_id):
-    """
-    Create a ``magento.account.invoice`` record. This record will then
-    be exported to Magento.
-    """
-    invoice = env[model_name].browse(record_id)
-    # find the magento store to retrieve the backend
-    # we use the shop as many sale orders can be related to an invoice
-    sales = invoice.mapped('invoice_line_ids.sale_line_ids.order_id')
-    for sale in sales:
-        for magento_sale in sale.magento_bind_ids:
-            binding_exists = False
-            for mag_inv in invoice.magento_bind_ids:
-                if mag_inv.backend_id.id == magento_sale.backend_id.id:
-                    binding_exists = True
-                    break
-            if binding_exists:
-                continue
-            # Check if invoice state matches configuration setting
-            # for when to export an invoice
-            magento_store = magento_sale.store_id
-            payment_method = sale.payment_mode_id
-            if payment_method and payment_method.create_invoice_on:
-                create_invoice = payment_method.create_invoice_on
-            else:
-                create_invoice = magento_store.create_invoice_on
+class MagentoBindingInvoiceListener(Component):
+    _name = 'magento.binding.account.invoice.listener'
+    _inherit = 'base.event.listener'
+    _apply_on = ['magento.account.invoice']
 
-            if create_invoice == invoice.state:
-                env['magento.account.invoice'].create({
-                    'backend_id': magento_sale.backend_id.id,
-                    'odoo_id': invoice.id,
-                    'magento_order_id': magento_sale.id})
+    def on_record_create(self, record, fields=None):
+        record.with_delay().export_invoice()
 
 
-@on_record_create(model_names='magento.account.invoice')
-def delay_export_account_invoice(env, model_name, record_id, vals):
-    """
-    Delay the job to export the magento invoice.
-    """
-    env[model_name].browse(record_id).with_delay().export_invoice()
+class MagentoInvoiceListener(Component):
+    _name = 'magento.account.invoice.listener'
+    _inherit = 'base.event.listener'
+    _apply_on = ['account.invoice']
+
+    def on_invoice_paid(self, record):
+        self.invoice_create_bindings(record)
+
+    def on_invoice_validated(self, record):
+        self.invoice_create_bindings(record)
+
+    def invoice_create_bindings(self, invoice):
+        """
+        Create a ``magento.account.invoice`` record. This record will then
+        be exported to Magento.
+        """
+        # find the magento store to retrieve the backend
+        # we use the shop as many sale orders can be related to an invoice
+        sales = invoice.mapped('invoice_line_ids.sale_line_ids.order_id')
+        for sale in sales:
+            for magento_sale in sale.magento_bind_ids:
+                binding_exists = False
+                for mag_inv in invoice.magento_bind_ids:
+                    if mag_inv.backend_id.id == magento_sale.backend_id.id:
+                        binding_exists = True
+                        break
+                if binding_exists:
+                    continue
+                # Check if invoice state matches configuration setting
+                # for when to export an invoice
+                magento_store = magento_sale.store_id
+                payment_method = sale.payment_mode_id
+                if payment_method and payment_method.create_invoice_on:
+                    create_invoice = payment_method.create_invoice_on
+                else:
+                    create_invoice = magento_store.create_invoice_on
+
+                if create_invoice == invoice.state:
+                    self.env['magento.account.invoice'].create({
+                        'backend_id': magento_sale.backend_id.id,
+                        'odoo_id': invoice.id,
+                        'magento_order_id': magento_sale.id})

@@ -7,9 +7,6 @@ import logging
 from odoo import _
 from odoo.addons.queue_job.exception import FailedJobError
 from odoo.addons.component.core import Component
-from odoo.addons.connector_ecommerce.models.event import (
-    on_tracking_number_added,
-)
 
 _logger = logging.getLogger(__name__)
 
@@ -86,16 +83,3 @@ class MagentoTrackingExporter(Component):
         self._check_allowed_carrier(binding, sale_binding_id.external_id)
         tracking_args = self._get_tracking_args(binding)
         self.backend_adapter.add_tracking_number(external_id, *tracking_args)
-
-
-@on_tracking_number_added
-def delay_export_tracking_number(env, model_name, record_id):
-    """
-    Call a job to export the tracking number to a existing picking that
-    must be in done state.
-    """
-    picking = env['stock.picking'].browse(record_id)
-    for binding in picking.magento_bind_ids:
-        # Set the priority to 20 to have more chance that it would be
-        # executed after the picking creation
-        binding.with_delay(priority=20).export_tracking()

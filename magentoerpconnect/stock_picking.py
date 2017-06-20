@@ -8,10 +8,8 @@ import xmlrpclib
 import odoo
 from odoo import _, api, models, fields
 from odoo.addons.queue_job.job import job, related_action
-from odoo.addons.connector.event import on_record_create
 from odoo.addons.queue_job.exception import NothingToDoJob
 from odoo.addons.connector.exception import IDMissingInBackend
-from odoo.addons.connector_ecommerce.models.event import on_picking_out_done
 from odoo.addons.component.core import Component
 
 _logger = logging.getLogger(__name__)
@@ -209,37 +207,49 @@ class MagentoPickingExporter(Component):
                 self.env.cr.commit()
 
 
-@on_picking_out_done
-def picking_out_done(env, model_name, record_id, picking_method):
-    """
-    Create a ``magento.stock.picking`` record. This record will then
-    be exported to Magento.
+class MagentoBindingStockPickingListener(Component):
+    _name = 'magento.binding.stock.picking.listener'
+    _inherit = 'base.event.listener'
+    _apply_on = ['magento.stock.picking']
 
-    :param picking_method: picking_method, can be 'complete' or 'partial'
-    :type picking_method: str
-    """
-    picking = env[model_name].browse(record_id)
-    sale = picking.sale_id
-    if not sale:
-        return
-    for magento_sale in sale.magento_bind_ids:
-        env['magento.stock.picking'].create({
-            'backend_id': magento_sale.backend_id.id,
-            'odoo_id': picking.id,
-            'magento_order_id': magento_sale.id,
-            'picking_method': picking_method})
+    def on_record_create(self, record, fields=None):
+        # tracking number is sent when:
+        # * the picking is exported and the tracking number was already
+        #   there before the picking was done OR
+        # * the tracking number is added after the picking is done
+        # We have to keep the initial state of whether we had an
+        # tracking number in the job kwargs, because if we read the
+        # picking at the time of execution of the job, a tracking could
+        # have been added and it would be exported twice.
+        with_tracking = bool(record.carrier_tracking_ref)
+        record.with_delay().export_picking_done(with_tracking=with_tracking)
 
 
-@on_record_create(model_names='magento.stock.picking')
-def delay_export_picking_out(env, model_name, record_id, vals):
-    binding = env[model_name].browse(record_id)
-    # tracking number is sent when:
-    # * the picking is exported and the tracking number was already
-    #   there before the picking was done OR
-    # * the tracking number is added after the picking is done
-    # We have to keep the initial state of whether we had an
-    # tracking number in the job kwargs, because if we read the
-    # picking at the time of execution of the job, a tracking could
-    # have been added and it would be exported twice.
-    with_tracking = bool(binding.carrier_tracking_ref)
-    binding.with_delay().export_picking_done(with_tracking=with_tracking)
+class MagentoStockPickingListener(Component):
+    _name = 'magento.stock.picking.listener'
+    _inherit = 'base.event.listener'
+    _apply_on = ['stock.picking']
+
+    def on_tracking_number_added(self, record):
+        for binding in record.magento_bind_ids:
+            # Set the priority to 20 to have more chance that it would be
+            # executed after the picking creation
+            binding.with_delay(priority=20).export_tracking()
+
+    def on_picking_out_done(self, record, picking_method):
+        """
+        Create a ``magento.stock.picking`` record. This record will then
+        be exported to Magento.
+
+        :param picking_method: picking_method, can be 'complete' or 'partial'
+        :type picking_method: str
+        """
+        sale = record.sale_id
+        if not sale:
+            return
+        for magento_sale in sale.magento_bind_ids:
+            self.env['magento.stock.picking'].create({
+                'backend_id': magento_sale.backend_id.id,
+                'odoo_id': record.id,
+                'magento_order_id': magento_sale.id,
+                'picking_method': picking_method})
