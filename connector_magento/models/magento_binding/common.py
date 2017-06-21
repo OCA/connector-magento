@@ -25,7 +25,6 @@ class MagentoBinding(models.AbstractModel):
         ondelete='restrict',
     )
     # fields.Char because 0 is a valid Magento ID
-    # TODO: migration from 'external_id'
     external_id = fields.Char(string='ID on Magento')
 
     _sql_constraints = [
