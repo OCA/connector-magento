@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# © 2013 Guewen Baconnier,Camptocamp SA,Akretion
+# Copyright 2013-2017 Camptocamp SA
 # © 2016 Sodexis
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
