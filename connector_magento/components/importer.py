@@ -273,7 +273,6 @@ class SimpleRecordImporter(Component):
     _name = 'magento.simple.record.importer'
     _inherit = 'magento.importer'
     _apply_on = [
-        'magento.website',
         'magento.res.partner.category',
     ]
 
