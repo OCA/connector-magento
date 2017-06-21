@@ -5,6 +5,8 @@
         <field name="name">product.category.form.magento</field>
         <field name="model">product.category</field>
         <field name="inherit_id" ref="product.product_category_form_view"/>
+        <field name="groups_id"
+               eval="[(4, ref('connector.group_connector_manager'))]"/>
         <field name="arch" type="xml">
             <xpath expr="//group[last()]" position="after">
                 <group name="magento" string="Magento Bindings">
