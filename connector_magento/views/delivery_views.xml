@@ -6,10 +6,14 @@
         <field name="model">delivery.carrier</field>
         <field name="inherit_id" ref="delivery.view_delivery_carrier_form" />
         <field name="arch" type="xml">
-            <xpath expr="//group[@name='company']" position="inside">
-                <field name="magento_code"/>
-                <field name="magento_tracking_title"/>
-                <field name="magento_export_tracking"/>
+            <xpath expr="//notebook" position="inside">
+                <page string="Magento" name="magento">
+                    <group name="magento_info">
+                        <field name="magento_code"/>
+                        <field name="magento_tracking_title"/>
+                        <field name="magento_export_tracking"/>
+                    </group>
+                </page>
             </xpath>
         </field>
     </record>
