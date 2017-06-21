@@ -7,14 +7,7 @@ from odoo.addons.connector.exception import InvalidDataError
 from odoo.addons.component.core import Component
 
 
-class PartnerDeleter(Component):
-    """ Partner deleter for Magento """
-    _name = 'magento.partner.exporter.deleter'
-    _inherit = 'magento.exporter.deleter'
-    _apply_on = ['magento.res.partner', 'magento.address']
-
-
-class PartnerExport(Component):
+class PartnerExporter(Component):
     _name = 'magento.partner.exporter'
     _inherit = 'magento.exporter'
     _apply_on = ['magento.res.partner']
@@ -64,7 +57,7 @@ class PartnerExport(Component):
         return
 
 
-class AddressExport(Component):
+class AddressExporter(Component):
     _name = 'magento.address.exporter'
     _inherit = 'magento.exporter'
     _apply_on = ['magento.address']
@@ -91,7 +84,7 @@ class AddressExport(Component):
         if missing_fields:
             raise InvalidDataError("The address does not contain one or "
                                    "several mandatory fields for "
-                                   "Magento : %s" %
+                                   "Magento: %s" %
                                    missing_fields)
 
     def _create(self, data):

@@ -22,24 +22,14 @@
 {'name': 'Magento Connector - Export Partners (Experimental)',
  'version': '10.0.2.0.0',
  'category': 'Connector',
- 'depends': ['magentoerpconnect',
+ 'depends': ['connector_magento',
              ],
  'author': "Camptocamp,Akretion,Odoo Community Association (OCA)",
  'license': 'AGPL-3',
  'website': 'http://www.odoo-magento-connector.com',
- 'description': """
-Magento Connector - Export Partners
-===================================
-
-Extension for **Magento Connector**, export the partners to Magento.
-
-This module is considered as experimental, the creation of the partners
-is not guaranted to work correctly.  No password are defined on the
-customer accounts.
-""",
  'images': [],
  'demo': [],
- 'data': ['partner_view.xml',
+ 'data': ['views/partner_views.xml',
           ],
  'installable': True,
  'application': False,
