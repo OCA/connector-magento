@@ -11,7 +11,7 @@ Glue module between Magento Connector and Partner first name / last name.
 Installation
 ============
 
-This module is automatically installed when ``magentoerpconnect`` and
+This module is automatically installed when ``connector_magento`` and
 ``partner_firstname`` are installed.
 
 Bug Tracker

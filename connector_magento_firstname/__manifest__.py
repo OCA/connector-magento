@@ -7,7 +7,7 @@
  'author': 'Camptocamp,Odoo Community Association (OCA)',
  'license': 'AGPL-3',
  'category': 'Hidden',
- 'depends': ['magentoerpconnect',
+ 'depends': ['connector_magento',
              'partner_firstname',
              ],
  'website': 'https://www.camptocamp.com',
