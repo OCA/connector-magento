@@ -195,7 +195,9 @@ class MagentoBackend(models.Model):
         with MagentoAPI(magento_location) as magento_api:
             _super = super(MagentoBackend, self)
             # from the components we'll be able to do: self.work.magento_api
-            yield _super.work_on(model_name, magento_api=magento_api, **kwargs)
+            with _super.work_on(
+                    model_name, magento_api=magento_api, **kwargs) as work:
+                yield work
 
     @api.multi
     def add_checkpoint(self, record):
