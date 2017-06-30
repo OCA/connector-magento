@@ -1,0 +1,205 @@
+interactions:
+- request:
+    body: !!python/unicode '<?xml version=''1.0''?>
+
+      <methodCall>
+
+      <methodName>login</methodName>
+
+      <params>
+
+      <param>
+
+      <value><string>odoo</string></value>
+
+      </param>
+
+      <param>
+
+      <value><string>odoo42</string></value>
+
+      </param>
+
+      </params>
+
+      </methodCall>
+
+      '
+    headers:
+      Accept-Encoding: [gzip]
+      Content-Length: ['209']
+      Content-Type: [text/xml]
+      User-Agent: [xmlrpclib.py/1.0.1 (by www.pythonware.com)]
+    method: POST
+    uri: http://magento/index.php/api/xmlrpc
+  response:
+    body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8"?>
+
+        <methodResponse><params><param><value><string>73ae35c8599ce4e6cea0df610d03aabd</string></value></param></params></methodResponse>'}
+    headers:
+      cache-control: ['no-store, no-cache, must-revalidate, post-check=0, pre-check=0']
+      connection: [keep-alive]
+      content-type: [text/xml; charset=UTF-8]
+      date: ['Fri, 30 Jun 2017 14:48:44 GMT']
+      expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      pragma: [no-cache]
+      server: [nginx/1.10.2]
+      set-cookie: ['PHPSESSID=f61obeg5ihsl9s2opebfdsfcm4; expires=Fri, 30-Jun-2017
+          15:48:44 GMT; path=/; domain=magento; HttpOnly']
+      x-powered-by: [PHP/5.3.3]
+    status: {code: 200, message: OK}
+- request:
+    body: !!python/unicode '<?xml version=''1.0''?>
+
+      <methodCall>
+
+      <methodName>call</methodName>
+
+      <params>
+
+      <param>
+
+      <value><string>73ae35c8599ce4e6cea0df610d03aabd</string></value>
+
+      </param>
+
+      <param>
+
+      <value><string>oerp_cataloginventory_stock_item.update</string></value>
+
+      </param>
+
+      <param>
+
+      <value><array><data>
+
+      <value><int>879</int></value>
+
+      <value><struct>
+
+      <member>
+
+      <name>use_config_manage_stock</name>
+
+      <value><int>0</int></value>
+
+      </member>
+
+      <member>
+
+      <name>backorders</name>
+
+      <value><int>2</int></value>
+
+      </member>
+
+      <member>
+
+      <name>is_in_stock</name>
+
+      <value><int>1</int></value>
+
+      </member>
+
+      <member>
+
+      <name>use_config_backorders</name>
+
+      <value><int>0</int></value>
+
+      </member>
+
+      <member>
+
+      <name>manage_stock</name>
+
+      <value><int>1</int></value>
+
+      </member>
+
+      <member>
+
+      <name>qty</name>
+
+      <value><double>333.0</double></value>
+
+      </member>
+
+      </struct></value>
+
+      </data></array></value>
+
+      </param>
+
+      </params>
+
+      </methodCall>
+
+      '
+    headers:
+      Accept-Encoding: [gzip]
+      Content-Length: ['851']
+      Content-Type: [text/xml]
+      User-Agent: [xmlrpclib.py/1.0.1 (by www.pythonware.com)]
+    method: POST
+    uri: http://magento/index.php/api/xmlrpc
+  response:
+    body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8"?>
+
+        <methodResponse><params><param><value><boolean>1</boolean></value></param></params></methodResponse>'}
+    headers:
+      cache-control: ['no-store, no-cache, must-revalidate, post-check=0, pre-check=0']
+      connection: [keep-alive]
+      content-type: [text/xml; charset=UTF-8]
+      date: ['Fri, 30 Jun 2017 14:48:44 GMT']
+      expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      pragma: [no-cache]
+      server: [nginx/1.10.2]
+      set-cookie: ['PHPSESSID=gohj6c6uo0pn3p6p7bflim1gn1; expires=Fri, 30-Jun-2017
+          15:48:44 GMT; path=/; domain=magento; HttpOnly']
+      x-powered-by: [PHP/5.3.3]
+    status: {code: 200, message: OK}
+- request:
+    body: !!python/unicode '<?xml version=''1.0''?>
+
+      <methodCall>
+
+      <methodName>endSession</methodName>
+
+      <params>
+
+      <param>
+
+      <value><string>73ae35c8599ce4e6cea0df610d03aabd</string></value>
+
+      </param>
+
+      </params>
+
+      </methodCall>
+
+      '
+    headers:
+      Accept-Encoding: [gzip]
+      Content-Length: ['186']
+      Content-Type: [text/xml]
+      User-Agent: [xmlrpclib.py/1.0.1 (by www.pythonware.com)]
+    method: POST
+    uri: http://magento/index.php/api/xmlrpc
+  response:
+    body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8"?>
+
+        <methodResponse><params><param><value><boolean>1</boolean></value></param></params></methodResponse>'}
+    headers:
+      cache-control: ['no-store, no-cache, must-revalidate, post-check=0, pre-check=0']
+      connection: [keep-alive]
+      content-type: [text/xml; charset=UTF-8]
+      date: ['Fri, 30 Jun 2017 14:48:44 GMT']
+      expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      pragma: [no-cache]
+      server: [nginx/1.10.2]
+      set-cookie: ['PHPSESSID=9dl679v3k76lj04iufnm6hh641; expires=Fri, 30-Jun-2017
+          15:48:44 GMT; path=/; domain=magento; HttpOnly']
+      x-powered-by: [PHP/5.3.3]
+    status: {code: 200, message: OK}
+version: 1
