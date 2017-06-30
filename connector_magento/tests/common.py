@@ -1,145 +1,32 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    Author: Guewen Baconnier
-#    Copyright 2013 Camptocamp SA
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Copyright 2013-2017 Camptocamp SA
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
 """
 Helpers usable in the tests
 """
 
-import importlib
+import xmlrpclib
+import logging
+
 import mock
+import odoo
+
+from os.path import dirname, join
 from contextlib import contextmanager
-import openerp.tests.common as common
-from openerp.addons.connector.session import ConnectorSession
-from openerp.addons.connector_magento.unit.import_synchronizer import (
-    import_batch,
+from odoo import models
+from odoo.addons.component.tests.common import SavepointComponentCase
+
+from vcr import VCR
+
+logging.getLogger("vcr").setLevel(logging.WARNING)
+
+recorder = VCR(
+    record_mode='once',
+    cassette_library_dir=join(dirname(__file__), 'fixtures/cassettes'),
+    path_transformer=VCR.ensure_suffix('.yaml'),
+    filter_headers=['Authorization'],
 )
-from openerp.addons.connector_magento.unit.backend_adapter import call_to_key
-from .data_base import magento_base_responses
-
-
-class TestResponder(object):
-    """ Used to simulate the calls to Magento.
-
-    For a call (request) to Magento, returns a stored
-    response.
-    """
-
-    def __init__(self, responses, key_func=None):
-        """
-        The responses are stored in dict instances.
-        The keys are normalized using the ``call_to_key``
-        function which transform the request calls in a
-        hashable form.
-
-        :param responses: responses returned by Magento
-        :param call_to_key: function to build the key
-            from the method and arguments
-        :type responses: dict
-        """
-        self._responses = responses
-        self._calls = []
-        self.call_to_key = key_func or call_to_key
-
-    def __call__(self, method, arguments):
-        self._calls.append((method, arguments))
-        key = self.call_to_key(method, arguments)
-        assert key in self._responses, (
-            "%s not found in magento responses" % str(key))
-        if hasattr(self._responses[key], '__call__'):
-            return self._responses[key]()
-        else:
-            return self._responses[key]
-
-
-@contextmanager
-def mock_job_delay_to_direct(job_path):
-    """ Replace the .delay() of a job by a direct call
-
-    job_path is the python path, such as::
-
-      openerp.addons.connector_magento.stock_picking.export_picking_done
-
-    """
-    job_module, job_name = job_path.rsplit('.', 1)
-    module = importlib.import_module(job_module)
-    job_func = getattr(module, job_name, None)
-    assert job_func, "The function %s must exist in %s" % (job_name,
-                                                           job_module)
-
-    def clean_args_for_func(*args, **kwargs):
-        # remove the special args reseved to .delay()
-        kwargs.pop('priority', None)
-        kwargs.pop('eta', None)
-        kwargs.pop('model_name', None)
-        kwargs.pop('max_retries', None)
-        kwargs.pop('description', None)
-        job_func(*args, **kwargs)
-
-    with mock.patch(job_path) as patched_job:
-        # call the direct export instead of 'delay()'
-        patched_job.delay.side_effect = clean_args_for_func
-        yield patched_job
-
-
-class ChainMap(dict):
-
-    def __init__(self, *maps):
-        self._maps = maps
-
-    def __getitem__(self, key):
-        for mapping in self._maps:
-            try:
-                return mapping[key]
-            except KeyError:
-                pass
-        raise KeyError(key)
-
-    def __contains__(self, key):
-        try:
-            self[key]
-        except KeyError:
-            return False
-        else:
-            return True
-
-
-@contextmanager
-def mock_api(responses, key_func=None):
-    """
-    The responses argument is a dict with the methods and arguments as keys
-    and the responses as values. It can also be a list of such dicts.
-    When it is a list, the key is searched in the firsts dicts first.
-
-    :param responses: responses returned by Magento
-    :type responses: dict
-    """
-    if isinstance(responses, (list, tuple)):
-        responses = ChainMap(*responses)
-    get_magento_response = TestResponder(responses, key_func=key_func)
-    with mock.patch('magento.API') as API:
-        api_mock = mock.MagicMock(name='magento.api')
-        API.return_value = api_mock
-        api_mock.__enter__.return_value = api_mock
-        api_mock.call.side_effect = get_magento_response
-        yield get_magento_response._calls
 
 
 class MockResponseImage(object):
@@ -180,51 +67,194 @@ class MagentoHelper(object):
             return 1
 
 
-class SetUpMagentoBase(common.TransactionCase):
+class MagentoTestCase(SavepointComponentCase):
     """ Base class - Test the imports from a Magento Mock.
 
     The data returned by Magento are those created for the
-    demo version of Magento on a standard 1.7 version.
+    demo version of Magento on a standard 1.9 version.
     """
 
     def setUp(self):
-        super(SetUpMagentoBase, self).setUp()
+        super(MagentoTestCase, self).setUp()
+        # disable commits when run from pytest/nosetest
+        odoo.tools.config['test_enable'] = True
+
         self.backend_model = self.env['magento.backend']
-        self.session = ConnectorSession(self.env.cr, self.env.uid,
-                                        context=self.env.context)
         warehouse = self.env.ref('stock.warehouse0')
         self.backend = self.backend_model.create(
             {'name': 'Test Magento',
              'version': '1.7',
-             'location': 'http://anyurl',
-             'username': 'guewen',
+             'location': 'http://magento',
+             'username': 'odoo',
              'warehouse_id': warehouse.id,
-             'password': '42'}
+             'password': 'odoo42'}
         )
-        self.backend_id = self.backend.id
         # payment method needed to import a sale order
-        workflow = self.env.ref(
+        self.workflow = self.env.ref(
             'sale_automatic_workflow.manual_validation')
-        journal = self.env.ref('account.check_journal')
-        self.payment_term = self.env.ref('account.'
-                                         'account_payment_term_advance')
-        self.env['payment.method'].create(
-            {'name': 'checkmo',
-             'workflow_process_id': workflow.id,
-             'import_rule': 'always',
-             'days_before_cancel': 0,
-             'payment_term_id': self.payment_term.id,
-             'journal_id': journal.id})
+        self.journal = self.env['account.journal'].create(
+            {'name': 'Check', 'type': 'cash', 'code': 'Check'}
+        )
+        payment_method = self.env.ref(
+            'account.account_payment_method_manual_in'
+        )
+        for name in ['checkmo', 'ccsave', 'cashondelivery']:
+            self.env['account.payment.mode'].create(
+                {'name': name,
+                 'workflow_process_id': self.workflow.id,
+                 'import_rule': 'always',
+                 'days_before_cancel': 0,
+                 'bank_account_link': 'fixed',
+                 'payment_method_id': payment_method.id,
+                 'fixed_journal_id': self.journal.id})
 
     def get_magento_helper(self, model_name):
         return MagentoHelper(self.cr, self.registry, model_name)
 
+    def create_binding_no_export(self, model_name, odoo_id, external_id=None,
+                                 **cols):
+        if isinstance(odoo_id, models.BaseModel):
+            odoo_id = odoo_id.id
+        values = {
+            'backend_id': self.backend.id,
+            'odoo_id': odoo_id,
+            'external_id': external_id,
+        }
+        if cols:
+            values.update(cols)
+        return self.env[model_name].with_context(
+            connector_no_export=True
+        ).create(values)
 
-class SetUpMagentoSynchronized(SetUpMagentoBase):
+    @contextmanager
+    def mock_with_delay(self):
+        with mock.patch('odoo.addons.queue_job.models.base.DelayableRecordset',
+                        name='DelayableRecordset', spec=True
+                        ) as delayable_cls:
+            # prepare the mocks
+            delayable = mock.MagicMock(name='DelayableBinding')
+            delayable_cls.return_value = delayable
+            yield delayable_cls, delayable
+
+    def parse_cassette_request(self, body):
+        args, __ = xmlrpclib.loads(body)
+        # the first argument is a hash, we don't mind
+        return args[1:]
+
+    def _import_record(self, model_name, magento_id, cassette=True):
+        assert model_name.startswith('magento.')
+        table_name = model_name.replace('.', '_')
+        # strip 'magento_' from the model_name to shorted the filename
+        filename = 'import_%s_%s' % (table_name[8:], str(magento_id))
+
+        def run_import():
+            with mock_urlopen_image():
+                self.env[model_name].import_record(self.backend, magento_id)
+
+        if cassette:
+            with recorder.use_cassette(filename):
+                run_import()
+        else:
+            run_import()
+
+        binding = self.env[model_name].search(
+            [('backend_id', '=', self.backend.id),
+             ('external_id', '=', str(magento_id))]
+        )
+        self.assertEqual(len(binding), 1)
+        return binding
+
+    def assert_records(self, expected_records, records):
+        """ Assert that a recordset matches with expected values.
+
+        The expected records are a list of nametuple, the fields of the
+        namedtuple must have the same name than the recordset's fields.
+
+        The expected values are compared to the recordset and records that
+        differ from the expected ones are show as ``-`` (missing) or ``+``
+        (extra) lines.
+
+        Example::
+
+            ExpectedShop = namedtuple('ExpectedShop',
+                                      'name company_id')
+            expected = [
+                ExpectedShop(
+                    name='MyShop1',
+                    company_id=self.company_ch
+                ),
+                ExpectedShop(
+                    name='MyShop2',
+                    company_id=self.company_ch
+                ),
+            ]
+            self.assert_records(expected, shops)
+
+        Possible output:
+
+         - foo.shop(name: MyShop1, company_id: res.company(2,))
+         - foo.shop(name: MyShop2, company_id: res.company(1,))
+         + foo.shop(name: MyShop3, company_id: res.company(1,))
+
+        :param expected_records: list of namedtuple with matching values
+                                 for the records
+        :param records: the recordset to check
+        :raises: AssertionError if the values do not match
+        """
+        model_name = records._name
+        records = list(records)
+        assert len(expected_records) > 0, "must have > 0 expected record"
+        fields = expected_records[0]._fields
+        not_found = []
+        equals = []
+        for expected in expected_records:
+            for record in records:
+                for field, value in expected._asdict().iteritems():
+                    if not getattr(record, field) == value:
+                        break
+                else:
+                    records.remove(record)
+                    equals.append(record)
+                    break
+            else:
+                not_found.append(expected)
+        message = []
+        for record in equals:
+            # same records
+            message.append(
+                u' ✓ {}({})'.format(
+                    model_name,
+                    u', '.join(u'%s: %s' % (field, getattr(record, field)) for
+                               field in fields)
+                )
+            )
+        for expected in not_found:
+            # missing records
+            message.append(
+                u' - {}({})'.format(
+                    model_name,
+                    u', '.join(u'%s: %s' % (k, v) for
+                               k, v in expected._asdict().iteritems())
+                )
+            )
+        for record in records:
+            # extra records
+            message.append(
+                u' + {}({})'.format(
+                    model_name,
+                    u', '.join(u'%s: %s' % (field, getattr(record, field)) for
+                               field in fields)
+                )
+            )
+        if not_found or records:
+            raise AssertionError(u'Records do not match:\n\n{}'.format(
+                '\n'.join(message)
+            ))
+
+
+class MagentoSyncTestCase(MagentoTestCase):
 
     def setUp(self):
-        super(SetUpMagentoSynchronized, self).setUp()
-        with mock_api(magento_base_responses):
-            import_batch(self.session, 'magento.website', self.backend_id)
-            import_batch(self.session, 'magento.store', self.backend_id)
-            import_batch(self.session, 'magento.storeview', self.backend_id)
+        super(MagentoSyncTestCase, self).setUp()
+        with recorder.use_cassette('metadata'):
+            self.backend.synchronize_metadata()

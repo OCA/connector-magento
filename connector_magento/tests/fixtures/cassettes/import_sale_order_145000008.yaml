@@ -1,0 +1,719 @@
+interactions:
+- request:
+    body: !!python/unicode '<?xml version=''1.0''?>
+
+      <methodCall>
+
+      <methodName>login</methodName>
+
+      <params>
+
+      <param>
+
+      <value><string>odoo</string></value>
+
+      </param>
+
+      <param>
+
+      <value><string>odoo42</string></value>
+
+      </param>
+
+      </params>
+
+      </methodCall>
+
+      '
+    headers:
+      Accept-Encoding: [gzip]
+      Content-Length: ['209']
+      Content-Type: [text/xml]
+      User-Agent: [xmlrpclib.py/1.0.1 (by www.pythonware.com)]
+    method: POST
+    uri: http://magento/index.php/api/xmlrpc
+  response:
+    body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8"?>
+
+        <methodResponse><params><param><value><string>e69985588c1e8f41340c14f52d84eb1b</string></value></param></params></methodResponse>'}
+    headers:
+      cache-control: ['no-store, no-cache, must-revalidate, post-check=0, pre-check=0']
+      connection: [keep-alive]
+      content-type: [text/xml; charset=UTF-8]
+      date: ['Fri, 30 Jun 2017 12:49:11 GMT']
+      expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      pragma: [no-cache]
+      server: [nginx/1.10.2]
+      set-cookie: ['PHPSESSID=mge0r50gtlmk8ap7qbhdfbab51; expires=Fri, 30-Jun-2017
+          13:49:11 GMT; path=/; domain=magento; HttpOnly']
+      x-powered-by: [PHP/5.3.3]
+    status: {code: 200, message: OK}
+- request:
+    body: !!python/unicode '<?xml version=''1.0''?>
+
+      <methodCall>
+
+      <methodName>call</methodName>
+
+      <params>
+
+      <param>
+
+      <value><string>e69985588c1e8f41340c14f52d84eb1b</string></value>
+
+      </param>
+
+      <param>
+
+      <value><string>sales_order.info</string></value>
+
+      </param>
+
+      <param>
+
+      <value><array><data>
+
+      <value><int>145000008</int></value>
+
+      </data></array></value>
+
+      </param>
+
+      </params>
+
+      </methodCall>
+
+      '
+    headers:
+      Accept-Encoding: [gzip]
+      Content-Length: ['344']
+      Content-Type: [text/xml]
+      User-Agent: [xmlrpclib.py/1.0.1 (by www.pythonware.com)]
+    method: POST
+    uri: http://magento/index.php/api/xmlrpc
+  response:
+    body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8"?>
+
+        <methodResponse><params><param><value><struct><member><name>state</name><value><string>new</string></value></member><member><name>status</name><value><string>pending</string></value></member><member><name>coupon_code</name><value><nil/></value></member><member><name>protect_code</name><value><string>3b4248</string></value></member><member><name>shipping_description</name><value><string>Free
+        Shipping - Free</string></value></member><member><name>is_virtual</name><value><string>0</string></value></member><member><name>store_id</name><value><string>1</string></value></member><member><name>customer_id</name><value><nil/></value></member><member><name>base_discount_amount</name><value><string>0.0000</string></value></member><member><name>base_discount_canceled</name><value><nil/></value></member><member><name>base_discount_invoiced</name><value><nil/></value></member><member><name>base_discount_refunded</name><value><nil/></value></member><member><name>base_grand_total</name><value><string>243.5600</string></value></member><member><name>base_shipping_amount</name><value><string>0.0000</string></value></member><member><name>base_shipping_canceled</name><value><nil/></value></member><member><name>base_shipping_invoiced</name><value><nil/></value></member><member><name>base_shipping_refunded</name><value><nil/></value></member><member><name>base_shipping_tax_amount</name><value><string>0.0000</string></value></member><member><name>base_shipping_tax_refunded</name><value><nil/></value></member><member><name>base_subtotal</name><value><string>225.0000</string></value></member><member><name>base_subtotal_canceled</name><value><nil/></value></member><member><name>base_subtotal_invoiced</name><value><nil/></value></member><member><name>base_subtotal_refunded</name><value><nil/></value></member><member><name>base_tax_amount</name><value><string>18.5600</string></value></member><member><name>base_tax_canceled</name><value><nil/></value></member><member><name>base_tax_invoiced</name><value><nil/></value></member><member><name>base_tax_refunded</name><value><nil/></value></member><member><name>base_to_global_rate</name><value><string>1.0000</string></value></member><member><name>base_to_order_rate</name><value><string>1.0000</string></value></member><member><name>base_total_canceled</name><value><nil/></value></member><member><name>base_total_invoiced</name><value><nil/></value></member><member><name>base_total_invoiced_cost</name><value><nil/></value></member><member><name>base_total_offline_refunded</name><value><nil/></value></member><member><name>base_total_online_refunded</name><value><nil/></value></member><member><name>base_total_paid</name><value><nil/></value></member><member><name>base_total_qty_ordered</name><value><nil/></value></member><member><name>base_total_refunded</name><value><nil/></value></member><member><name>discount_amount</name><value><string>0.0000</string></value></member><member><name>discount_canceled</name><value><nil/></value></member><member><name>discount_invoiced</name><value><nil/></value></member><member><name>discount_refunded</name><value><nil/></value></member><member><name>grand_total</name><value><string>243.5600</string></value></member><member><name>shipping_amount</name><value><string>0.0000</string></value></member><member><name>shipping_canceled</name><value><nil/></value></member><member><name>shipping_invoiced</name><value><nil/></value></member><member><name>shipping_refunded</name><value><nil/></value></member><member><name>shipping_tax_amount</name><value><string>0.0000</string></value></member><member><name>shipping_tax_refunded</name><value><nil/></value></member><member><name>store_to_base_rate</name><value><string>1.0000</string></value></member><member><name>store_to_order_rate</name><value><string>1.0000</string></value></member><member><name>subtotal</name><value><string>225.0000</string></value></member><member><name>subtotal_canceled</name><value><nil/></value></member><member><name>subtotal_invoiced</name><value><nil/></value></member><member><name>subtotal_refunded</name><value><nil/></value></member><member><name>tax_amount</name><value><string>18.5600</string></value></member><member><name>tax_canceled</name><value><nil/></value></member><member><name>tax_invoiced</name><value><nil/></value></member><member><name>tax_refunded</name><value><nil/></value></member><member><name>total_canceled</name><value><nil/></value></member><member><name>total_invoiced</name><value><nil/></value></member><member><name>total_offline_refunded</name><value><nil/></value></member><member><name>total_online_refunded</name><value><nil/></value></member><member><name>total_paid</name><value><nil/></value></member><member><name>total_qty_ordered</name><value><string>1.0000</string></value></member><member><name>total_refunded</name><value><nil/></value></member><member><name>can_ship_partially</name><value><nil/></value></member><member><name>can_ship_partially_item</name><value><nil/></value></member><member><name>customer_is_guest</name><value><string>1</string></value></member><member><name>customer_note_notify</name><value><string>1</string></value></member><member><name>billing_address_id</name><value><string>384</string></value></member><member><name>customer_group_id</name><value><string>0</string></value></member><member><name>edit_increment</name><value><nil/></value></member><member><name>email_sent</name><value><nil/></value></member><member><name>forced_shipment_with_invoice</name><value><nil/></value></member><member><name>payment_auth_expiration</name><value><nil/></value></member><member><name>quote_address_id</name><value><nil/></value></member><member><name>quote_id</name><value><string>682</string></value></member><member><name>shipping_address_id</name><value><string>385</string></value></member><member><name>adjustment_negative</name><value><nil/></value></member><member><name>adjustment_positive</name><value><nil/></value></member><member><name>base_adjustment_negative</name><value><nil/></value></member><member><name>base_adjustment_positive</name><value><nil/></value></member><member><name>base_shipping_discount_amount</name><value><string>0.0000</string></value></member><member><name>base_subtotal_incl_tax</name><value><string>243.5600</string></value></member><member><name>base_total_due</name><value><nil/></value></member><member><name>payment_authorization_amount</name><value><nil/></value></member><member><name>shipping_discount_amount</name><value><string>0.0000</string></value></member><member><name>subtotal_incl_tax</name><value><string>243.5600</string></value></member><member><name>total_due</name><value><nil/></value></member><member><name>weight</name><value><string>1.0000</string></value></member><member><name>customer_dob</name><value><nil/></value></member><member><name>increment_id</name><value><string>145000008</string></value></member><member><name>applied_rule_ids</name><value><nil/></value></member><member><name>base_currency_code</name><value><string>EUR</string></value></member><member><name>customer_email</name><value><string>bill@example.com</string></value></member><member><name>customer_firstname</name><value><string>Bill</string></value></member><member><name>customer_lastname</name><value><string>Boquey</string></value></member><member><name>customer_middlename</name><value><nil/></value></member><member><name>customer_prefix</name><value><nil/></value></member><member><name>customer_suffix</name><value><nil/></value></member><member><name>customer_taxvat</name><value><nil/></value></member><member><name>discount_description</name><value><nil/></value></member><member><name>ext_customer_id</name><value><nil/></value></member><member><name>ext_order_id</name><value><nil/></value></member><member><name>global_currency_code</name><value><string>EUR</string></value></member><member><name>hold_before_state</name><value><nil/></value></member><member><name>hold_before_status</name><value><nil/></value></member><member><name>order_currency_code</name><value><string>EUR</string></value></member><member><name>original_increment_id</name><value><nil/></value></member><member><name>relation_child_id</name><value><nil/></value></member><member><name>relation_child_real_id</name><value><nil/></value></member><member><name>relation_parent_id</name><value><nil/></value></member><member><name>relation_parent_real_id</name><value><nil/></value></member><member><name>remote_ip</name><value><string>172.23.0.1</string></value></member><member><name>shipping_method</name><value><string>freeshipping_freeshipping</string></value></member><member><name>store_currency_code</name><value><string>EUR</string></value></member><member><name>store_name</name><value><string>Main
+        Website
+
+        Madison Island
+
+        English</string></value></member><member><name>x_forwarded_for</name><value><nil/></value></member><member><name>customer_note</name><value><nil/></value></member><member><name>created_at</name><value><string>2017-06-30
+        12:48:31</string></value></member><member><name>updated_at</name><value><string>2017-06-30
+        12:48:31</string></value></member><member><name>total_item_count</name><value><string>1</string></value></member><member><name>customer_gender</name><value><nil/></value></member><member><name>hidden_tax_amount</name><value><string>0.0000</string></value></member><member><name>base_hidden_tax_amount</name><value><string>0.0000</string></value></member><member><name>shipping_hidden_tax_amount</name><value><string>0.0000</string></value></member><member><name>base_shipping_hidden_tax_amnt</name><value><string>0.0000</string></value></member><member><name>hidden_tax_invoiced</name><value><nil/></value></member><member><name>base_hidden_tax_invoiced</name><value><nil/></value></member><member><name>hidden_tax_refunded</name><value><nil/></value></member><member><name>base_hidden_tax_refunded</name><value><nil/></value></member><member><name>shipping_incl_tax</name><value><string>0.0000</string></value></member><member><name>base_shipping_incl_tax</name><value><string>0.0000</string></value></member><member><name>coupon_rule_name</name><value><nil/></value></member><member><name>paypal_ipn_customer_notified</name><value><string>0</string></value></member><member><name>gift_message_id</name><value><nil/></value></member><member><name>base_customer_balance_amount</name><value><nil/></value></member><member><name>customer_balance_amount</name><value><nil/></value></member><member><name>base_customer_balance_invoiced</name><value><nil/></value></member><member><name>customer_balance_invoiced</name><value><nil/></value></member><member><name>base_customer_balance_refunded</name><value><nil/></value></member><member><name>customer_balance_refunded</name><value><nil/></value></member><member><name>bs_customer_bal_total_refunded</name><value><nil/></value></member><member><name>customer_bal_total_refunded</name><value><nil/></value></member><member><name>gift_cards</name><value><nil/></value></member><member><name>base_gift_cards_amount</name><value><nil/></value></member><member><name>gift_cards_amount</name><value><nil/></value></member><member><name>base_gift_cards_invoiced</name><value><nil/></value></member><member><name>gift_cards_invoiced</name><value><nil/></value></member><member><name>base_gift_cards_refunded</name><value><nil/></value></member><member><name>gift_cards_refunded</name><value><nil/></value></member><member><name>gw_id</name><value><nil/></value></member><member><name>gw_allow_gift_receipt</name><value><nil/></value></member><member><name>gw_add_card</name><value><nil/></value></member><member><name>gw_base_price</name><value><nil/></value></member><member><name>gw_price</name><value><nil/></value></member><member><name>gw_items_base_price</name><value><nil/></value></member><member><name>gw_items_price</name><value><nil/></value></member><member><name>gw_card_base_price</name><value><nil/></value></member><member><name>gw_card_price</name><value><nil/></value></member><member><name>gw_base_tax_amount</name><value><nil/></value></member><member><name>gw_tax_amount</name><value><nil/></value></member><member><name>gw_items_base_tax_amount</name><value><nil/></value></member><member><name>gw_items_tax_amount</name><value><nil/></value></member><member><name>gw_card_base_tax_amount</name><value><nil/></value></member><member><name>gw_card_tax_amount</name><value><nil/></value></member><member><name>gw_base_price_invoiced</name><value><nil/></value></member><member><name>gw_price_invoiced</name><value><nil/></value></member><member><name>gw_items_base_price_invoiced</name><value><nil/></value></member><member><name>gw_items_price_invoiced</name><value><nil/></value></member><member><name>gw_card_base_price_invoiced</name><value><nil/></value></member><member><name>gw_card_price_invoiced</name><value><nil/></value></member><member><name>gw_base_tax_amount_invoiced</name><value><nil/></value></member><member><name>gw_tax_amount_invoiced</name><value><nil/></value></member><member><name>gw_items_base_tax_invoiced</name><value><nil/></value></member><member><name>gw_items_tax_invoiced</name><value><nil/></value></member><member><name>gw_card_base_tax_invoiced</name><value><nil/></value></member><member><name>gw_card_tax_invoiced</name><value><nil/></value></member><member><name>gw_base_price_refunded</name><value><nil/></value></member><member><name>gw_price_refunded</name><value><nil/></value></member><member><name>gw_items_base_price_refunded</name><value><nil/></value></member><member><name>gw_items_price_refunded</name><value><nil/></value></member><member><name>gw_card_base_price_refunded</name><value><nil/></value></member><member><name>gw_card_price_refunded</name><value><nil/></value></member><member><name>gw_base_tax_amount_refunded</name><value><nil/></value></member><member><name>gw_tax_amount_refunded</name><value><nil/></value></member><member><name>gw_items_base_tax_refunded</name><value><nil/></value></member><member><name>gw_items_tax_refunded</name><value><nil/></value></member><member><name>gw_card_base_tax_refunded</name><value><nil/></value></member><member><name>gw_card_tax_refunded</name><value><nil/></value></member><member><name>reward_points_balance</name><value><nil/></value></member><member><name>base_reward_currency_amount</name><value><nil/></value></member><member><name>reward_currency_amount</name><value><nil/></value></member><member><name>base_rwrd_crrncy_amt_invoiced</name><value><nil/></value></member><member><name>rwrd_currency_amount_invoiced</name><value><nil/></value></member><member><name>base_rwrd_crrncy_amnt_refnded</name><value><nil/></value></member><member><name>rwrd_crrncy_amnt_refunded</name><value><nil/></value></member><member><name>reward_points_balance_refund</name><value><nil/></value></member><member><name>reward_points_balance_refunded</name><value><nil/></value></member><member><name>reward_salesrule_points</name><value><nil/></value></member><member><name>imported</name><value><string>0</string></value></member><member><name>payment_authorization_expiration</name><value><nil/></value></member><member><name>forced_do_shipment_with_invoice</name><value><nil/></value></member><member><name>base_shipping_hidden_tax_amount</name><value><string>0.0000</string></value></member><member><name>order_id</name><value><string>197</string></value></member><member><name>shipping_address</name><value><struct><member><name>parent_id</name><value><string>197</string></value></member><member><name>customer_address_id</name><value><nil/></value></member><member><name>quote_address_id</name><value><nil/></value></member><member><name>region_id</name><value><string>49</string></value></member><member><name>customer_id</name><value><nil/></value></member><member><name>fax</name><value><nil/></value></member><member><name>region</name><value><string>Oregon</string></value></member><member><name>postcode</name><value><string>11111</string></value></member><member><name>lastname</name><value><string>Boquey</string></value></member><member><name>street</name><value><string>Here</string></value></member><member><name>city</name><value><string>There</string></value></member><member><name>email</name><value><string>bill@example.com</string></value></member><member><name>telephone</name><value><string>000000000000</string></value></member><member><name>country_id</name><value><string>US</string></value></member><member><name>firstname</name><value><string>Bill</string></value></member><member><name>address_type</name><value><string>shipping</string></value></member><member><name>prefix</name><value><nil/></value></member><member><name>middlename</name><value><nil/></value></member><member><name>suffix</name><value><nil/></value></member><member><name>company</name><value><nil/></value></member><member><name>vat_id</name><value><nil/></value></member><member><name>vat_is_valid</name><value><nil/></value></member><member><name>vat_request_id</name><value><nil/></value></member><member><name>vat_request_date</name><value><nil/></value></member><member><name>vat_request_success</name><value><nil/></value></member><member><name>giftregistry_item_id</name><value><nil/></value></member><member><name>address_id</name><value><string>385</string></value></member></struct></value></member><member><name>billing_address</name><value><struct><member><name>parent_id</name><value><string>197</string></value></member><member><name>customer_address_id</name><value><nil/></value></member><member><name>quote_address_id</name><value><nil/></value></member><member><name>region_id</name><value><string>49</string></value></member><member><name>customer_id</name><value><nil/></value></member><member><name>fax</name><value><nil/></value></member><member><name>region</name><value><string>Oregon</string></value></member><member><name>postcode</name><value><string>11111</string></value></member><member><name>lastname</name><value><string>Boquey</string></value></member><member><name>street</name><value><string>Here</string></value></member><member><name>city</name><value><string>There</string></value></member><member><name>email</name><value><string>bill@example.com</string></value></member><member><name>telephone</name><value><string>000000000000</string></value></member><member><name>country_id</name><value><string>US</string></value></member><member><name>firstname</name><value><string>Bill</string></value></member><member><name>address_type</name><value><string>billing</string></value></member><member><name>prefix</name><value><nil/></value></member><member><name>middlename</name><value><nil/></value></member><member><name>suffix</name><value><nil/></value></member><member><name>company</name><value><nil/></value></member><member><name>vat_id</name><value><nil/></value></member><member><name>vat_is_valid</name><value><nil/></value></member><member><name>vat_request_id</name><value><nil/></value></member><member><name>vat_request_date</name><value><nil/></value></member><member><name>vat_request_success</name><value><nil/></value></member><member><name>giftregistry_item_id</name><value><nil/></value></member><member><name>address_id</name><value><string>384</string></value></member></struct></value></member><member><name>items</name><value><array><data><value><struct><member><name>item_id</name><value><string>598</string></value></member><member><name>order_id</name><value><string>197</string></value></member><member><name>parent_item_id</name><value><nil/></value></member><member><name>quote_item_id</name><value><string>2477</string></value></member><member><name>store_id</name><value><string>1</string></value></member><member><name>created_at</name><value><string>2017-06-30
+        12:48:31</string></value></member><member><name>updated_at</name><value><string>2017-06-30
+        12:48:31</string></value></member><member><name>product_id</name><value><string>338</string></value></member><member><name>product_type</name><value><string>simple</string></value></member><member><name>product_options</name><value><string>a:1:{s:15:&quot;info_buyRequest&quot;;a:5:{s:4:&quot;uenc&quot;;s:100:&quot;aHR0cDovL21hZ2VudG8vYWNjZXNzb3JpZXMvZXlld2Vhci9qYWNraWUtby1yb3VuZC1zdW5nbGFzc2VzLmh0bWw_X19fU0lEPVU,&quot;;s:7:&quot;product&quot;;s:3:&quot;338&quot;;s:8:&quot;form_key&quot;;s:16:&quot;HK2vdBQKs7qgIM8F&quot;;s:15:&quot;related_product&quot;;s:0:&quot;&quot;;s:3:&quot;qty&quot;;s:1:&quot;1&quot;;}}</string></value></member><member><name>weight</name><value><string>1.0000</string></value></member><member><name>is_virtual</name><value><string>0</string></value></member><member><name>sku</name><value><string>ace001</string></value></member><member><name>name</name><value><string>Jackie
+        O Round Sunglasses</string></value></member><member><name>description</name><value><nil/></value></member><member><name>applied_rule_ids</name><value><nil/></value></member><member><name>additional_data</name><value><nil/></value></member><member><name>free_shipping</name><value><string>0</string></value></member><member><name>is_qty_decimal</name><value><string>0</string></value></member><member><name>no_discount</name><value><string>0</string></value></member><member><name>qty_backordered</name><value><nil/></value></member><member><name>qty_canceled</name><value><string>0.0000</string></value></member><member><name>qty_invoiced</name><value><string>0.0000</string></value></member><member><name>qty_ordered</name><value><string>1.0000</string></value></member><member><name>qty_refunded</name><value><string>0.0000</string></value></member><member><name>qty_shipped</name><value><string>0.0000</string></value></member><member><name>base_cost</name><value><nil/></value></member><member><name>price</name><value><string>225.0000</string></value></member><member><name>base_price</name><value><string>225.0000</string></value></member><member><name>original_price</name><value><string>225.0000</string></value></member><member><name>base_original_price</name><value><string>225.0000</string></value></member><member><name>tax_percent</name><value><string>8.2500</string></value></member><member><name>tax_amount</name><value><string>18.5600</string></value></member><member><name>base_tax_amount</name><value><string>18.5600</string></value></member><member><name>tax_invoiced</name><value><string>0.0000</string></value></member><member><name>base_tax_invoiced</name><value><string>0.0000</string></value></member><member><name>discount_percent</name><value><string>0.0000</string></value></member><member><name>discount_amount</name><value><string>0.0000</string></value></member><member><name>base_discount_amount</name><value><string>0.0000</string></value></member><member><name>discount_invoiced</name><value><string>0.0000</string></value></member><member><name>base_discount_invoiced</name><value><string>0.0000</string></value></member><member><name>amount_refunded</name><value><string>0.0000</string></value></member><member><name>base_amount_refunded</name><value><string>0.0000</string></value></member><member><name>row_total</name><value><string>225.0000</string></value></member><member><name>base_row_total</name><value><string>225.0000</string></value></member><member><name>row_invoiced</name><value><string>0.0000</string></value></member><member><name>base_row_invoiced</name><value><string>0.0000</string></value></member><member><name>row_weight</name><value><string>1.0000</string></value></member><member><name>base_tax_before_discount</name><value><nil/></value></member><member><name>tax_before_discount</name><value><nil/></value></member><member><name>ext_order_item_id</name><value><nil/></value></member><member><name>locked_do_invoice</name><value><nil/></value></member><member><name>locked_do_ship</name><value><nil/></value></member><member><name>price_incl_tax</name><value><string>243.5600</string></value></member><member><name>base_price_incl_tax</name><value><string>243.5600</string></value></member><member><name>row_total_incl_tax</name><value><string>243.5600</string></value></member><member><name>base_row_total_incl_tax</name><value><string>243.5600</string></value></member><member><name>hidden_tax_amount</name><value><string>0.0000</string></value></member><member><name>base_hidden_tax_amount</name><value><string>0.0000</string></value></member><member><name>hidden_tax_invoiced</name><value><nil/></value></member><member><name>base_hidden_tax_invoiced</name><value><nil/></value></member><member><name>hidden_tax_refunded</name><value><nil/></value></member><member><name>base_hidden_tax_refunded</name><value><nil/></value></member><member><name>is_nominal</name><value><string>0</string></value></member><member><name>tax_canceled</name><value><nil/></value></member><member><name>hidden_tax_canceled</name><value><nil/></value></member><member><name>tax_refunded</name><value><nil/></value></member><member><name>base_tax_refunded</name><value><nil/></value></member><member><name>discount_refunded</name><value><nil/></value></member><member><name>base_discount_refunded</name><value><nil/></value></member><member><name>gift_message_id</name><value><nil/></value></member><member><name>gift_message_available</name><value><string>1</string></value></member><member><name>base_weee_tax_applied_amount</name><value><string>0.0000</string></value></member><member><name>base_weee_tax_applied_row_amnt</name><value><string>0.0000</string></value></member><member><name>base_weee_tax_applied_row_amount</name><value><string>0.0000</string></value></member><member><name>weee_tax_applied_amount</name><value><string>0.0000</string></value></member><member><name>weee_tax_applied_row_amount</name><value><string>0.0000</string></value></member><member><name>weee_tax_applied</name><value><string>a:0:{}</string></value></member><member><name>weee_tax_disposition</name><value><string>0.0000</string></value></member><member><name>weee_tax_row_disposition</name><value><string>0.0000</string></value></member><member><name>base_weee_tax_disposition</name><value><string>0.0000</string></value></member><member><name>base_weee_tax_row_disposition</name><value><string>0.0000</string></value></member><member><name>event_id</name><value><nil/></value></member><member><name>giftregistry_item_id</name><value><nil/></value></member><member><name>gw_id</name><value><nil/></value></member><member><name>gw_base_price</name><value><nil/></value></member><member><name>gw_price</name><value><nil/></value></member><member><name>gw_base_tax_amount</name><value><nil/></value></member><member><name>gw_tax_amount</name><value><nil/></value></member><member><name>gw_base_price_invoiced</name><value><nil/></value></member><member><name>gw_price_invoiced</name><value><nil/></value></member><member><name>gw_base_tax_amount_invoiced</name><value><nil/></value></member><member><name>gw_tax_amount_invoiced</name><value><nil/></value></member><member><name>gw_base_price_refunded</name><value><nil/></value></member><member><name>gw_price_refunded</name><value><nil/></value></member><member><name>gw_base_tax_amount_refunded</name><value><nil/></value></member><member><name>gw_tax_amount_refunded</name><value><nil/></value></member><member><name>qty_returned</name><value><string>0.0000</string></value></member></struct></value></data></array></value></member><member><name>payment</name><value><struct><member><name>parent_id</name><value><string>197</string></value></member><member><name>base_shipping_captured</name><value><nil/></value></member><member><name>shipping_captured</name><value><nil/></value></member><member><name>amount_refunded</name><value><nil/></value></member><member><name>base_amount_paid</name><value><nil/></value></member><member><name>amount_canceled</name><value><nil/></value></member><member><name>base_amount_authorized</name><value><nil/></value></member><member><name>base_amount_paid_online</name><value><nil/></value></member><member><name>base_amount_refunded_online</name><value><nil/></value></member><member><name>base_shipping_amount</name><value><string>0.0000</string></value></member><member><name>shipping_amount</name><value><string>0.0000</string></value></member><member><name>amount_paid</name><value><nil/></value></member><member><name>amount_authorized</name><value><nil/></value></member><member><name>base_amount_ordered</name><value><string>243.5600</string></value></member><member><name>base_shipping_refunded</name><value><nil/></value></member><member><name>shipping_refunded</name><value><nil/></value></member><member><name>base_amount_refunded</name><value><nil/></value></member><member><name>amount_ordered</name><value><string>243.5600</string></value></member><member><name>base_amount_canceled</name><value><nil/></value></member><member><name>quote_payment_id</name><value><nil/></value></member><member><name>additional_data</name><value><nil/></value></member><member><name>cc_exp_month</name><value><string>0</string></value></member><member><name>cc_ss_start_year</name><value><string>0</string></value></member><member><name>echeck_bank_name</name><value><nil/></value></member><member><name>method</name><value><string>cashondelivery</string></value></member><member><name>cc_debug_request_body</name><value><nil/></value></member><member><name>cc_secure_verify</name><value><nil/></value></member><member><name>protection_eligibility</name><value><nil/></value></member><member><name>cc_approval</name><value><nil/></value></member><member><name>cc_last4</name><value><nil/></value></member><member><name>cc_status_description</name><value><nil/></value></member><member><name>echeck_type</name><value><nil/></value></member><member><name>cc_debug_response_serialized</name><value><nil/></value></member><member><name>cc_ss_start_month</name><value><string>0</string></value></member><member><name>echeck_account_type</name><value><nil/></value></member><member><name>last_trans_id</name><value><nil/></value></member><member><name>cc_cid_status</name><value><nil/></value></member><member><name>cc_owner</name><value><nil/></value></member><member><name>cc_type</name><value><nil/></value></member><member><name>po_number</name><value><nil/></value></member><member><name>cc_exp_year</name><value><string>0</string></value></member><member><name>cc_status</name><value><nil/></value></member><member><name>echeck_routing_number</name><value><nil/></value></member><member><name>account_status</name><value><nil/></value></member><member><name>anet_trans_method</name><value><nil/></value></member><member><name>cc_debug_response_body</name><value><nil/></value></member><member><name>cc_ss_issue</name><value><nil/></value></member><member><name>echeck_account_name</name><value><nil/></value></member><member><name>cc_avs_status</name><value><nil/></value></member><member><name>cc_number_enc</name><value><nil/></value></member><member><name>cc_trans_id</name><value><nil/></value></member><member><name>paybox_request_number</name><value><nil/></value></member><member><name>address_status</name><value><nil/></value></member><member><name>additional_information</name><value><array><data/></array></value></member><member><name>cybersource_token</name><value><nil/></value></member><member><name>flo2cash_account_id</name><value><nil/></value></member><member><name>ideal_issuer_id</name><value><nil/></value></member><member><name>ideal_issuer_title</name><value><nil/></value></member><member><name>ideal_transaction_checked</name><value><nil/></value></member><member><name>paybox_question_number</name><value><nil/></value></member><member><name>payment_id</name><value><string>196</string></value></member></struct></value></member><member><name>status_history</name><value><array><data><value><struct><member><name>parent_id</name><value><string>197</string></value></member><member><name>is_customer_notified</name><value><string>1</string></value></member><member><name>is_visible_on_front</name><value><string>0</string></value></member><member><name>comment</name><value><nil/></value></member><member><name>status</name><value><string>pending</string></value></member><member><name>created_at</name><value><string>2017-06-30
+        12:48:31</string></value></member><member><name>entity_name</name><value><string>order</string></value></member><member><name>store_id</name><value><string>1</string></value></member></struct></value></data></array></value></member></struct></value></param></params></methodResponse>'}
+    headers:
+      cache-control: ['no-store, no-cache, must-revalidate, post-check=0, pre-check=0']
+      connection: [keep-alive]
+      content-type: [text/xml; charset=UTF-8]
+      date: ['Fri, 30 Jun 2017 12:49:11 GMT']
+      expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      pragma: [no-cache]
+      server: [nginx/1.10.2]
+      set-cookie: ['PHPSESSID=1qa5q3eltadrf02jkbkcj4bun6; expires=Fri, 30-Jun-2017
+          13:49:11 GMT; path=/; domain=magento; HttpOnly']
+      x-powered-by: [PHP/5.3.3]
+    status: {code: 200, message: OK}
+- request:
+    body: !!python/unicode '<?xml version=''1.0''?>
+
+      <methodCall>
+
+      <methodName>call</methodName>
+
+      <params>
+
+      <param>
+
+      <value><string>e69985588c1e8f41340c14f52d84eb1b</string></value>
+
+      </param>
+
+      <param>
+
+      <value><string>ol_customer_groups.info</string></value>
+
+      </param>
+
+      <param>
+
+      <value><array><data>
+
+      <value><int>0</int></value>
+
+      </data></array></value>
+
+      </param>
+
+      </params>
+
+      </methodCall>
+
+      '
+    headers:
+      Accept-Encoding: [gzip]
+      Content-Length: ['343']
+      Content-Type: [text/xml]
+      User-Agent: [xmlrpclib.py/1.0.1 (by www.pythonware.com)]
+    method: POST
+    uri: http://magento/index.php/api/xmlrpc
+  response:
+    body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8"?>
+
+        <methodResponse><params><param><value><struct><member><name>customer_group_id</name><value><string>0</string></value></member><member><name>customer_group_code</name><value><string>NOT
+        LOGGED IN</string></value></member><member><name>tax_class_id</name><value><string>10</string></value></member></struct></value></param></params></methodResponse>'}
+    headers:
+      cache-control: ['no-store, no-cache, must-revalidate, post-check=0, pre-check=0']
+      connection: [keep-alive]
+      content-type: [text/xml; charset=UTF-8]
+      date: ['Fri, 30 Jun 2017 12:49:12 GMT']
+      expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      pragma: [no-cache]
+      server: [nginx/1.10.2]
+      set-cookie: ['PHPSESSID=jbprolv8f615bu6v2o3cack096; expires=Fri, 30-Jun-2017
+          13:49:12 GMT; path=/; domain=magento; HttpOnly']
+      x-powered-by: [PHP/5.3.3]
+    status: {code: 200, message: OK}
+- request:
+    body: !!python/unicode '<?xml version=''1.0''?>
+
+      <methodCall>
+
+      <methodName>call</methodName>
+
+      <params>
+
+      <param>
+
+      <value><string>e69985588c1e8f41340c14f52d84eb1b</string></value>
+
+      </param>
+
+      <param>
+
+      <value><string>ol_catalog_product.info</string></value>
+
+      </param>
+
+      <param>
+
+      <value><array><data>
+
+      <value><int>338</int></value>
+
+      <value><nil/></value><value><nil/></value><value><string>id</string></value>
+
+      </data></array></value>
+
+      </param>
+
+      </params>
+
+      </methodCall>
+
+      '
+    headers:
+      Accept-Encoding: [gzip]
+      Content-Length: ['422']
+      Content-Type: [text/xml]
+      User-Agent: [xmlrpclib.py/1.0.1 (by www.pythonware.com)]
+    method: POST
+    uri: http://magento/index.php/api/xmlrpc
+  response:
+    body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8"?>
+
+        <methodResponse><params><param><value><struct><member><name>product_id</name><value><string>338</string></value></member><member><name>sku</name><value><string>ace001</string></value></member><member><name>set</name><value><string>11</string></value></member><member><name>type</name><value><string>simple</string></value></member><member><name>categories</name><value><array><data><value><string>18</string></value><value><string>28</string></value></data></array></value></member><member><name>websites</name><value><array><data><value><string>1</string></value></data></array></value></member><member><name>type_id</name><value><string>simple</string></value></member><member><name>name</name><value><string>Jackie
+        O Round Sunglasses</string></value></member><member><name>description</name><value><string>Acetate
+        frame. Polycarbonate lenses.</string></value></member><member><name>short_description</name><value><string>These
+        distinct, feminine frames balance a classic Jackie-O styling with a modern
+        look. </string></value></member><member><name>weight</name><value><string>1.0000</string></value></member><member><name>news_from_date</name><value><nil/></value></member><member><name>old_id</name><value><nil/></value></member><member><name>news_to_date</name><value><nil/></value></member><member><name>status</name><value><string>1</string></value></member><member><name>url_key</name><value><string>jackie-o-round-sunglasses</string></value></member><member><name>visibility</name><value><string>4</string></value></member><member><name>country_of_manufacture</name><value><nil/></value></member><member><name>url_path</name><value><string>jackie-o-round-sunglasses.html</string></value></member><member><name>category_ids</name><value><array><data><value><string>18</string></value><value><string>28</string></value></data></array></value></member><member><name>required_options</name><value><string>0</string></value></member><member><name>has_options</name><value><string>0</string></value></member><member><name>image_label</name><value><nil/></value></member><member><name>small_image_label</name><value><nil/></value></member><member><name>thumbnail_label</name><value><nil/></value></member><member><name>created_at</name><value><string>2013-03-05T06:48:17+01:00</string></value></member><member><name>updated_at</name><value><string>2013-03-20
+        16:45:30</string></value></member><member><name>price</name><value><string>295.0000</string></value></member><member><name>group_price</name><value><array><data/></array></value></member><member><name>special_price</name><value><string>225.0000</string></value></member><member><name>special_from_date</name><value><string>2013-03-05
+        00:00:00</string></value></member><member><name>minimal_price</name><value><nil/></value></member><member><name>special_to_date</name><value><nil/></value></member><member><name>tier_price</name><value><array><data/></array></value></member><member><name>msrp_enabled</name><value><string>2</string></value></member><member><name>msrp_display_actual_price_type</name><value><string>4</string></value></member><member><name>msrp</name><value><nil/></value></member><member><name>tax_class_id</name><value><string>2</string></value></member><member><name>meta_title</name><value><nil/></value></member><member><name>meta_keyword</name><value><nil/></value></member><member><name>meta_description</name><value><nil/></value></member><member><name>is_recurring</name><value><string>0</string></value></member><member><name>recurring_profile</name><value><nil/></value></member><member><name>custom_design</name><value><nil/></value></member><member><name>custom_design_from</name><value><nil/></value></member><member><name>custom_design_to</name><value><nil/></value></member><member><name>custom_layout_update</name><value><nil/></value></member><member><name>page_layout</name><value><string>one_column</string></value></member><member><name>options_container</name><value><string>container1</string></value></member><member><name>gift_message_available</name><value><nil/></value></member><member><name>gift_wrapping_available</name><value><nil/></value></member><member><name>gift_wrapping_price</name><value><nil/></value></member><member><name>color</name><value><string>28</string></value></member><member><name>gender</name><value><string>94</string></value></member><member><name>material</name><value><string>130</string></value></member><member><name>luggage_size</name><value><nil/></value></member><member><name>luggage_travel_style</name><value><nil/></value></member><member><name>bag_luggage_type</name><value><nil/></value></member><member><name>accessories_size</name><value><nil/></value></member><member><name>accessories_type</name><value><string>Eyewear</string></value></member><member><name>luggage_style</name><value><nil/></value></member></struct></value></param></params></methodResponse>'}
+    headers:
+      cache-control: ['no-store, no-cache, must-revalidate, post-check=0, pre-check=0']
+      connection: [keep-alive]
+      content-type: [text/xml; charset=UTF-8]
+      date: ['Fri, 30 Jun 2017 12:49:12 GMT']
+      expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      pragma: [no-cache]
+      server: [nginx/1.10.2]
+      set-cookie: ['PHPSESSID=llk072a2se7euqh8lpgt82lfc3; expires=Fri, 30-Jun-2017
+          13:49:12 GMT; path=/; domain=magento; HttpOnly']
+      x-powered-by: [PHP/5.3.3]
+    status: {code: 200, message: OK}
+- request:
+    body: !!python/unicode '<?xml version=''1.0''?>
+
+      <methodCall>
+
+      <methodName>call</methodName>
+
+      <params>
+
+      <param>
+
+      <value><string>e69985588c1e8f41340c14f52d84eb1b</string></value>
+
+      </param>
+
+      <param>
+
+      <value><string>catalog_category.info</string></value>
+
+      </param>
+
+      <param>
+
+      <value><array><data>
+
+      <value><int>18</int></value>
+
+      </data></array></value>
+
+      </param>
+
+      </params>
+
+      </methodCall>
+
+      '
+    headers:
+      Accept-Encoding: [gzip]
+      Content-Length: ['342']
+      Content-Type: [text/xml]
+      User-Agent: [xmlrpclib.py/1.0.1 (by www.pythonware.com)]
+    method: POST
+    uri: http://magento/index.php/api/xmlrpc
+  response:
+    body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8"?>
+
+        <methodResponse><params><param><value><struct><member><name>category_id</name><value><string>18</string></value></member><member><name>is_active</name><value><string>1</string></value></member><member><name>position</name><value><string>1</string></value></member><member><name>level</name><value><string>3</string></value></member><member><name>parent_id</name><value><int>6</int></value></member><member><name>increment_id</name><value><nil/></value></member><member><name>created_at</name><value><string>2013-01-25T12:04:27+01:00</string></value></member><member><name>updated_at</name><value><string>2013-03-05
+        07:16:27</string></value></member><member><name>name</name><value><string>Eyewear</string></value></member><member><name>url_key</name><value><string>eyewear</string></value></member><member><name>thumbnail</name><value><nil/></value></member><member><name>description</name><value><nil/></value></member><member><name>image</name><value><string>plp-eye.jpg</string></value></member><member><name>meta_title</name><value><nil/></value></member><member><name>meta_keywords</name><value><nil/></value></member><member><name>meta_description</name><value><nil/></value></member><member><name>include_in_menu</name><value><string>1</string></value></member><member><name>path</name><value><string>1/2/6/18</string></value></member><member><name>all_children</name><value><string>18</string></value></member><member><name>path_in_store</name><value><nil/></value></member><member><name>children</name><value><string></string></value></member><member><name>url_path</name><value><string>accessories/eyewear.html</string></value></member><member><name>children_count</name><value><string>0</string></value></member><member><name>display_mode</name><value><string>PRODUCTS</string></value></member><member><name>landing_page</name><value><nil/></value></member><member><name>is_anchor</name><value><string>1</string></value></member><member><name>available_sort_by</name><value><nil/></value></member><member><name>default_sort_by</name><value><nil/></value></member><member><name>filter_price_range</name><value><nil/></value></member><member><name>custom_use_parent_settings</name><value><string>0</string></value></member><member><name>custom_apply_to_products</name><value><string>0</string></value></member><member><name>custom_design</name><value><nil/></value></member><member><name>custom_design_from</name><value><nil/></value></member><member><name>custom_design_to</name><value><nil/></value></member><member><name>page_layout</name><value><string>three_columns</string></value></member><member><name>custom_layout_update</name><value><nil/></value></member></struct></value></param></params></methodResponse>'}
+    headers:
+      cache-control: ['no-store, no-cache, must-revalidate, post-check=0, pre-check=0']
+      connection: [keep-alive]
+      content-type: [text/xml; charset=UTF-8]
+      date: ['Fri, 30 Jun 2017 12:49:12 GMT']
+      expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      pragma: [no-cache]
+      server: [nginx/1.10.2]
+      set-cookie: ['PHPSESSID=ea46lanl44ntp1cjo51cc3u3q2; expires=Fri, 30-Jun-2017
+          13:49:12 GMT; path=/; domain=magento; HttpOnly']
+      x-powered-by: [PHP/5.3.3]
+    status: {code: 200, message: OK}
+- request:
+    body: !!python/unicode '<?xml version=''1.0''?>
+
+      <methodCall>
+
+      <methodName>call</methodName>
+
+      <params>
+
+      <param>
+
+      <value><string>e69985588c1e8f41340c14f52d84eb1b</string></value>
+
+      </param>
+
+      <param>
+
+      <value><string>catalog_category.info</string></value>
+
+      </param>
+
+      <param>
+
+      <value><array><data>
+
+      <value><int>6</int></value>
+
+      </data></array></value>
+
+      </param>
+
+      </params>
+
+      </methodCall>
+
+      '
+    headers:
+      Accept-Encoding: [gzip]
+      Content-Length: ['341']
+      Content-Type: [text/xml]
+      User-Agent: [xmlrpclib.py/1.0.1 (by www.pythonware.com)]
+    method: POST
+    uri: http://magento/index.php/api/xmlrpc
+  response:
+    body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8"?>
+
+        <methodResponse><params><param><value><struct><member><name>category_id</name><value><string>6</string></value></member><member><name>is_active</name><value><string>1</string></value></member><member><name>position</name><value><string>4</string></value></member><member><name>level</name><value><string>2</string></value></member><member><name>parent_id</name><value><int>2</int></value></member><member><name>increment_id</name><value><nil/></value></member><member><name>created_at</name><value><string>2013-01-25T11:47:41+01:00</string></value></member><member><name>updated_at</name><value><string>2013-12-25
+        12:28:34</string></value></member><member><name>name</name><value><string>Accessories</string></value></member><member><name>url_key</name><value><string>accessories</string></value></member><member><name>thumbnail</name><value><nil/></value></member><member><name>description</name><value><nil/></value></member><member><name>image</name><value><nil/></value></member><member><name>meta_title</name><value><nil/></value></member><member><name>meta_keywords</name><value><nil/></value></member><member><name>meta_description</name><value><nil/></value></member><member><name>include_in_menu</name><value><string>1</string></value></member><member><name>path</name><value><string>1/2/6</string></value></member><member><name>all_children</name><value><string>6,18,19,20,21</string></value></member><member><name>path_in_store</name><value><nil/></value></member><member><name>children</name><value><string>18,19,20,21</string></value></member><member><name>url_path</name><value><string>accessories.html</string></value></member><member><name>children_count</name><value><string>4</string></value></member><member><name>display_mode</name><value><string>PAGE</string></value></member><member><name>landing_page</name><value><string>17</string></value></member><member><name>is_anchor</name><value><string>1</string></value></member><member><name>available_sort_by</name><value><nil/></value></member><member><name>default_sort_by</name><value><nil/></value></member><member><name>filter_price_range</name><value><nil/></value></member><member><name>custom_use_parent_settings</name><value><string>0</string></value></member><member><name>custom_apply_to_products</name><value><string>0</string></value></member><member><name>custom_design</name><value><nil/></value></member><member><name>custom_design_from</name><value><nil/></value></member><member><name>custom_design_to</name><value><nil/></value></member><member><name>page_layout</name><value><string>one_column</string></value></member><member><name>custom_layout_update</name><value><nil/></value></member></struct></value></param></params></methodResponse>'}
+    headers:
+      cache-control: ['no-store, no-cache, must-revalidate, post-check=0, pre-check=0']
+      connection: [keep-alive]
+      content-type: [text/xml; charset=UTF-8]
+      date: ['Fri, 30 Jun 2017 12:49:13 GMT']
+      expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      pragma: [no-cache]
+      server: [nginx/1.10.2]
+      set-cookie: ['PHPSESSID=mb37qc7gerd3scsnnjcdcbnle5; expires=Fri, 30-Jun-2017
+          13:49:12 GMT; path=/; domain=magento; HttpOnly']
+      x-powered-by: [PHP/5.3.3]
+    status: {code: 200, message: OK}
+- request:
+    body: !!python/unicode '<?xml version=''1.0''?>
+
+      <methodCall>
+
+      <methodName>call</methodName>
+
+      <params>
+
+      <param>
+
+      <value><string>e69985588c1e8f41340c14f52d84eb1b</string></value>
+
+      </param>
+
+      <param>
+
+      <value><string>catalog_category.info</string></value>
+
+      </param>
+
+      <param>
+
+      <value><array><data>
+
+      <value><int>2</int></value>
+
+      </data></array></value>
+
+      </param>
+
+      </params>
+
+      </methodCall>
+
+      '
+    headers:
+      Accept-Encoding: [gzip]
+      Content-Length: ['341']
+      Content-Type: [text/xml]
+      User-Agent: [xmlrpclib.py/1.0.1 (by www.pythonware.com)]
+    method: POST
+    uri: http://magento/index.php/api/xmlrpc
+  response:
+    body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8"?>
+
+        <methodResponse><params><param><value><struct><member><name>category_id</name><value><string>2</string></value></member><member><name>is_active</name><value><string>1</string></value></member><member><name>position</name><value><string>1</string></value></member><member><name>level</name><value><string>1</string></value></member><member><name>parent_id</name><value><int>1</int></value></member><member><name>increment_id</name><value><nil/></value></member><member><name>created_at</name><value><string>2013-01-14T11:12:53+01:00</string></value></member><member><name>updated_at</name><value><string>2013-05-15
+        22:43:57</string></value></member><member><name>name</name><value><string>Default
+        Category</string></value></member><member><name>url_key</name><value><nil/></value></member><member><name>thumbnail</name><value><nil/></value></member><member><name>description</name><value><nil/></value></member><member><name>image</name><value><nil/></value></member><member><name>meta_title</name><value><nil/></value></member><member><name>meta_keywords</name><value><nil/></value></member><member><name>meta_description</name><value><nil/></value></member><member><name>include_in_menu</name><value><string>1</string></value></member><member><name>path</name><value><string>1/2</string></value></member><member><name>all_children</name><value><string>2,4,10,11,12,13,5,14,15,16,17,40,6,18,19,20,21,7,22,23,24,25,8,26,27,28,29,9</string></value></member><member><name>path_in_store</name><value><nil/></value></member><member><name>children</name><value><string>4,5,6,7,8,9</string></value></member><member><name>url_path</name><value><nil/></value></member><member><name>children_count</name><value><string>27</string></value></member><member><name>display_mode</name><value><string>PRODUCTS_AND_PAGE</string></value></member><member><name>landing_page</name><value><string>19</string></value></member><member><name>is_anchor</name><value><string>0</string></value></member><member><name>available_sort_by</name><value><nil/></value></member><member><name>default_sort_by</name><value><nil/></value></member><member><name>filter_price_range</name><value><nil/></value></member><member><name>custom_use_parent_settings</name><value><nil/></value></member><member><name>custom_apply_to_products</name><value><string>0</string></value></member><member><name>custom_design</name><value><nil/></value></member><member><name>custom_design_from</name><value><nil/></value></member><member><name>custom_design_to</name><value><nil/></value></member><member><name>page_layout</name><value><nil/></value></member><member><name>custom_layout_update</name><value><nil/></value></member></struct></value></param></params></methodResponse>'}
+    headers:
+      cache-control: ['no-store, no-cache, must-revalidate, post-check=0, pre-check=0']
+      connection: [keep-alive]
+      content-type: [text/xml; charset=UTF-8]
+      date: ['Fri, 30 Jun 2017 12:49:13 GMT']
+      expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      pragma: [no-cache]
+      server: [nginx/1.10.2]
+      set-cookie: ['PHPSESSID=9gkvmao14g5l1nq42ofkit8am2; expires=Fri, 30-Jun-2017
+          13:49:13 GMT; path=/; domain=magento; HttpOnly']
+      x-powered-by: [PHP/5.3.3]
+    status: {code: 200, message: OK}
+- request:
+    body: !!python/unicode '<?xml version=''1.0''?>
+
+      <methodCall>
+
+      <methodName>call</methodName>
+
+      <params>
+
+      <param>
+
+      <value><string>e69985588c1e8f41340c14f52d84eb1b</string></value>
+
+      </param>
+
+      <param>
+
+      <value><string>catalog_category.info</string></value>
+
+      </param>
+
+      <param>
+
+      <value><array><data>
+
+      <value><int>1</int></value>
+
+      </data></array></value>
+
+      </param>
+
+      </params>
+
+      </methodCall>
+
+      '
+    headers:
+      Accept-Encoding: [gzip]
+      Content-Length: ['341']
+      Content-Type: [text/xml]
+      User-Agent: [xmlrpclib.py/1.0.1 (by www.pythonware.com)]
+    method: POST
+    uri: http://magento/index.php/api/xmlrpc
+  response:
+    body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8"?>
+
+        <methodResponse><params><param><value><struct><member><name>category_id</name><value><string>1</string></value></member><member><name>is_active</name><value><nil/></value></member><member><name>position</name><value><string>0</string></value></member><member><name>level</name><value><string>0</string></value></member><member><name>parent_id</name><value><int>0</int></value></member><member><name>increment_id</name><value><nil/></value></member><member><name>updated_at</name><value><string>2013-01-14
+        10:12:53</string></value></member><member><name>created_at</name><value><string>2013-01-14T11:12:53+01:00</string></value></member><member><name>name</name><value><string>Root
+        Catalog</string></value></member><member><name>url_key</name><value><nil/></value></member><member><name>thumbnail</name><value><nil/></value></member><member><name>description</name><value><nil/></value></member><member><name>image</name><value><nil/></value></member><member><name>meta_title</name><value><nil/></value></member><member><name>meta_keywords</name><value><nil/></value></member><member><name>meta_description</name><value><nil/></value></member><member><name>include_in_menu</name><value><string>1</string></value></member><member><name>path</name><value><string>1</string></value></member><member><name>all_children</name><value><string>1,2,4,10,11,12,13,5,14,15,16,17,40,6,18,19,20,21,7,22,23,24,25,8,26,27,28,29,9</string></value></member><member><name>path_in_store</name><value><nil/></value></member><member><name>children</name><value><string>2</string></value></member><member><name>url_path</name><value><nil/></value></member><member><name>children_count</name><value><string>28</string></value></member><member><name>display_mode</name><value><nil/></value></member><member><name>landing_page</name><value><nil/></value></member><member><name>is_anchor</name><value><nil/></value></member><member><name>available_sort_by</name><value><nil/></value></member><member><name>default_sort_by</name><value><nil/></value></member><member><name>filter_price_range</name><value><nil/></value></member><member><name>custom_use_parent_settings</name><value><nil/></value></member><member><name>custom_apply_to_products</name><value><nil/></value></member><member><name>custom_design</name><value><nil/></value></member><member><name>custom_design_from</name><value><nil/></value></member><member><name>custom_design_to</name><value><nil/></value></member><member><name>page_layout</name><value><nil/></value></member><member><name>custom_layout_update</name><value><nil/></value></member></struct></value></param></params></methodResponse>'}
+    headers:
+      cache-control: ['no-store, no-cache, must-revalidate, post-check=0, pre-check=0']
+      connection: [keep-alive]
+      content-type: [text/xml; charset=UTF-8]
+      date: ['Fri, 30 Jun 2017 12:49:13 GMT']
+      expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      pragma: [no-cache]
+      server: [nginx/1.10.2]
+      set-cookie: ['PHPSESSID=cs99s2v9kvc78ino9l3ge5u9j6; expires=Fri, 30-Jun-2017
+          13:49:13 GMT; path=/; domain=magento; HttpOnly']
+      x-powered-by: [PHP/5.3.3]
+    status: {code: 200, message: OK}
+- request:
+    body: !!python/unicode '<?xml version=''1.0''?>
+
+      <methodCall>
+
+      <methodName>call</methodName>
+
+      <params>
+
+      <param>
+
+      <value><string>e69985588c1e8f41340c14f52d84eb1b</string></value>
+
+      </param>
+
+      <param>
+
+      <value><string>catalog_category.info</string></value>
+
+      </param>
+
+      <param>
+
+      <value><array><data>
+
+      <value><int>28</int></value>
+
+      </data></array></value>
+
+      </param>
+
+      </params>
+
+      </methodCall>
+
+      '
+    headers:
+      Accept-Encoding: [gzip]
+      Content-Length: ['342']
+      Content-Type: [text/xml]
+      User-Agent: [xmlrpclib.py/1.0.1 (by www.pythonware.com)]
+    method: POST
+    uri: http://magento/index.php/api/xmlrpc
+  response:
+    body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8"?>
+
+        <methodResponse><params><param><value><struct><member><name>category_id</name><value><string>28</string></value></member><member><name>is_active</name><value><string>1</string></value></member><member><name>position</name><value><string>3</string></value></member><member><name>level</name><value><string>3</string></value></member><member><name>parent_id</name><value><int>8</int></value></member><member><name>increment_id</name><value><nil/></value></member><member><name>created_at</name><value><string>2013-01-25T12:11:31+01:00</string></value></member><member><name>updated_at</name><value><string>2013-05-06
+        04:17:24</string></value></member><member><name>name</name><value><string>Accessories</string></value></member><member><name>url_key</name><value><string>accessories</string></value></member><member><name>thumbnail</name><value><nil/></value></member><member><name>description</name><value><nil/></value></member><member><name>image</name><value><nil/></value></member><member><name>meta_title</name><value><nil/></value></member><member><name>meta_keywords</name><value><nil/></value></member><member><name>meta_description</name><value><nil/></value></member><member><name>include_in_menu</name><value><string>1</string></value></member><member><name>path</name><value><string>1/2/8/28</string></value></member><member><name>all_children</name><value><string>28</string></value></member><member><name>path_in_store</name><value><nil/></value></member><member><name>children</name><value><string></string></value></member><member><name>url_path</name><value><string>sale/accessories.html</string></value></member><member><name>children_count</name><value><string>0</string></value></member><member><name>display_mode</name><value><string>PRODUCTS</string></value></member><member><name>landing_page</name><value><nil/></value></member><member><name>is_anchor</name><value><string>1</string></value></member><member><name>available_sort_by</name><value><nil/></value></member><member><name>default_sort_by</name><value><nil/></value></member><member><name>filter_price_range</name><value><nil/></value></member><member><name>custom_use_parent_settings</name><value><string>0</string></value></member><member><name>custom_apply_to_products</name><value><string>0</string></value></member><member><name>custom_design</name><value><nil/></value></member><member><name>custom_design_from</name><value><nil/></value></member><member><name>custom_design_to</name><value><nil/></value></member><member><name>page_layout</name><value><string>three_columns</string></value></member><member><name>custom_layout_update</name><value><nil/></value></member></struct></value></param></params></methodResponse>'}
+    headers:
+      cache-control: ['no-store, no-cache, must-revalidate, post-check=0, pre-check=0']
+      connection: [keep-alive]
+      content-type: [text/xml; charset=UTF-8]
+      date: ['Fri, 30 Jun 2017 12:49:13 GMT']
+      expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      pragma: [no-cache]
+      server: [nginx/1.10.2]
+      set-cookie: ['PHPSESSID=4h9h06jpdsa3oqkrbdrpptmkj6; expires=Fri, 30-Jun-2017
+          13:49:13 GMT; path=/; domain=magento; HttpOnly']
+      x-powered-by: [PHP/5.3.3]
+    status: {code: 200, message: OK}
+- request:
+    body: !!python/unicode '<?xml version=''1.0''?>
+
+      <methodCall>
+
+      <methodName>call</methodName>
+
+      <params>
+
+      <param>
+
+      <value><string>e69985588c1e8f41340c14f52d84eb1b</string></value>
+
+      </param>
+
+      <param>
+
+      <value><string>catalog_category.info</string></value>
+
+      </param>
+
+      <param>
+
+      <value><array><data>
+
+      <value><int>8</int></value>
+
+      </data></array></value>
+
+      </param>
+
+      </params>
+
+      </methodCall>
+
+      '
+    headers:
+      Accept-Encoding: [gzip]
+      Content-Length: ['341']
+      Content-Type: [text/xml]
+      User-Agent: [xmlrpclib.py/1.0.1 (by www.pythonware.com)]
+    method: POST
+    uri: http://magento/index.php/api/xmlrpc
+  response:
+    body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8"?>
+
+        <methodResponse><params><param><value><struct><member><name>category_id</name><value><string>8</string></value></member><member><name>is_active</name><value><string>1</string></value></member><member><name>position</name><value><string>6</string></value></member><member><name>level</name><value><string>2</string></value></member><member><name>parent_id</name><value><int>2</int></value></member><member><name>increment_id</name><value><nil/></value></member><member><name>created_at</name><value><string>2013-01-25T11:49:50+01:00</string></value></member><member><name>updated_at</name><value><string>2013-05-15
+        22:49:33</string></value></member><member><name>name</name><value><string>Sale</string></value></member><member><name>url_key</name><value><string>sale</string></value></member><member><name>thumbnail</name><value><nil/></value></member><member><name>description</name><value><nil/></value></member><member><name>image</name><value><nil/></value></member><member><name>meta_title</name><value><nil/></value></member><member><name>meta_keywords</name><value><nil/></value></member><member><name>meta_description</name><value><nil/></value></member><member><name>include_in_menu</name><value><string>1</string></value></member><member><name>path</name><value><string>1/2/8</string></value></member><member><name>all_children</name><value><string>8,26,27,28,29</string></value></member><member><name>path_in_store</name><value><nil/></value></member><member><name>children</name><value><string>26,27,28,29</string></value></member><member><name>url_path</name><value><string>sale.html</string></value></member><member><name>children_count</name><value><string>4</string></value></member><member><name>display_mode</name><value><string>PRODUCTS</string></value></member><member><name>landing_page</name><value><nil/></value></member><member><name>is_anchor</name><value><string>1</string></value></member><member><name>available_sort_by</name><value><nil/></value></member><member><name>default_sort_by</name><value><nil/></value></member><member><name>filter_price_range</name><value><nil/></value></member><member><name>custom_use_parent_settings</name><value><string>0</string></value></member><member><name>custom_apply_to_products</name><value><string>0</string></value></member><member><name>custom_design</name><value><nil/></value></member><member><name>custom_design_from</name><value><nil/></value></member><member><name>custom_design_to</name><value><nil/></value></member><member><name>page_layout</name><value><string>three_columns</string></value></member><member><name>custom_layout_update</name><value><string>&lt;reference&gt;&#13;
+
+        &lt;remove name=&quot;right.poll&quot;/&gt;&#13;
+
+        &lt;/reference&gt;</string></value></member></struct></value></param></params></methodResponse>'}
+    headers:
+      cache-control: ['no-store, no-cache, must-revalidate, post-check=0, pre-check=0']
+      connection: [keep-alive]
+      content-type: [text/xml; charset=UTF-8]
+      date: ['Fri, 30 Jun 2017 12:49:14 GMT']
+      expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      pragma: [no-cache]
+      server: [nginx/1.10.2]
+      set-cookie: ['PHPSESSID=tnd2934e94138801ohpktogjc3; expires=Fri, 30-Jun-2017
+          13:49:13 GMT; path=/; domain=magento; HttpOnly']
+      x-powered-by: [PHP/5.3.3]
+    status: {code: 200, message: OK}
+- request:
+    body: !!python/unicode '<?xml version=''1.0''?>
+
+      <methodCall>
+
+      <methodName>call</methodName>
+
+      <params>
+
+      <param>
+
+      <value><string>e69985588c1e8f41340c14f52d84eb1b</string></value>
+
+      </param>
+
+      <param>
+
+      <value><string>product_media.list</string></value>
+
+      </param>
+
+      <param>
+
+      <value><array><data>
+
+      <value><int>338</int></value>
+
+      <value><nil/></value><value><string>id</string></value>
+
+      </data></array></value>
+
+      </param>
+
+      </params>
+
+      </methodCall>
+
+      '
+    headers:
+      Accept-Encoding: [gzip]
+      Content-Length: ['396']
+      Content-Type: [text/xml]
+      User-Agent: [xmlrpclib.py/1.0.1 (by www.pythonware.com)]
+    method: POST
+    uri: http://magento/index.php/api/xmlrpc
+  response:
+    body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8"?>
+
+        <methodResponse><params><param><value><array><data><value><struct><member><name>file</name><value><string>/a/c/ace001_1.jpg</string></value></member><member><name>label</name><value><string></string></value></member><member><name>position</name><value><string>1</string></value></member><member><name>exclude</name><value><string>1</string></value></member><member><name>url</name><value><string>http://magento/media/catalog/product/a/c/ace001_1.jpg</string></value></member><member><name>types</name><value><array><data><value><string>image</string></value><value><string>small_image</string></value><value><string>thumbnail</string></value></data></array></value></member></struct></value></data></array></value></param></params></methodResponse>'}
+    headers:
+      cache-control: ['no-store, no-cache, must-revalidate, post-check=0, pre-check=0']
+      connection: [keep-alive]
+      content-type: [text/xml; charset=UTF-8]
+      date: ['Fri, 30 Jun 2017 12:49:14 GMT']
+      expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      pragma: [no-cache]
+      server: [nginx/1.10.2]
+      set-cookie: ['PHPSESSID=jab7ra8pas4q6go52993eilgj4; expires=Fri, 30-Jun-2017
+          13:49:14 GMT; path=/; domain=magento; HttpOnly']
+      x-powered-by: [PHP/5.3.3]
+    status: {code: 200, message: OK}
+- request:
+    body: !!python/unicode '<?xml version=''1.0''?>
+
+      <methodCall>
+
+      <methodName>endSession</methodName>
+
+      <params>
+
+      <param>
+
+      <value><string>e69985588c1e8f41340c14f52d84eb1b</string></value>
+
+      </param>
+
+      </params>
+
+      </methodCall>
+
+      '
+    headers:
+      Accept-Encoding: [gzip]
+      Content-Length: ['186']
+      Content-Type: [text/xml]
+      User-Agent: [xmlrpclib.py/1.0.1 (by www.pythonware.com)]
+    method: POST
+    uri: http://magento/index.php/api/xmlrpc
+  response:
+    body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8"?>
+
+        <methodResponse><params><param><value><boolean>1</boolean></value></param></params></methodResponse>'}
+    headers:
+      cache-control: ['no-store, no-cache, must-revalidate, post-check=0, pre-check=0']
+      connection: [keep-alive]
+      content-type: [text/xml; charset=UTF-8]
+      date: ['Fri, 30 Jun 2017 12:49:15 GMT']
+      expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      pragma: [no-cache]
+      server: [nginx/1.10.2]
+      set-cookie: ['PHPSESSID=1nlaqg5enbpbdn3tt558j5jb01; expires=Fri, 30-Jun-2017
+          13:49:15 GMT; path=/; domain=magento; HttpOnly']
+      x-powered-by: [PHP/5.3.3]
+    status: {code: 200, message: OK}
+version: 1
