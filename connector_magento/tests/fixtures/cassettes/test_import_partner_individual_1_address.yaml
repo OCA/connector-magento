@@ -1,0 +1,299 @@
+interactions:
+- request:
+    body: !!python/unicode '<?xml version=''1.0''?>
+
+      <methodCall>
+
+      <methodName>login</methodName>
+
+      <params>
+
+      <param>
+
+      <value><string>odoo</string></value>
+
+      </param>
+
+      <param>
+
+      <value><string>odoo42</string></value>
+
+      </param>
+
+      </params>
+
+      </methodCall>
+
+      '
+    headers:
+      Accept-Encoding: [gzip]
+      Content-Length: ['209']
+      Content-Type: [text/xml]
+      User-Agent: [xmlrpclib.py/1.0.1 (by www.pythonware.com)]
+    method: POST
+    uri: http://magento/index.php/api/xmlrpc
+  response:
+    body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8"?>
+
+        <methodResponse><params><param><value><string>6182b5cd383ebb2e8ee1ba951465b614</string></value></param></params></methodResponse>'}
+    headers:
+      cache-control: ['no-store, no-cache, must-revalidate, post-check=0, pre-check=0']
+      connection: [keep-alive]
+      content-type: [text/xml; charset=UTF-8]
+      date: ['Tue, 27 Jun 2017 15:15:49 GMT']
+      expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      pragma: [no-cache]
+      server: [nginx/1.10.2]
+      set-cookie: ['PHPSESSID=15gho1rd96eh0tsvek1173fkj4; expires=Tue, 27-Jun-2017
+          16:15:49 GMT; path=/; domain=magento; HttpOnly']
+      x-powered-by: [PHP/5.3.3]
+    status: {code: 200, message: OK}
+- request:
+    body: !!python/unicode '<?xml version=''1.0''?>
+
+      <methodCall>
+
+      <methodName>call</methodName>
+
+      <params>
+
+      <param>
+
+      <value><string>6182b5cd383ebb2e8ee1ba951465b614</string></value>
+
+      </param>
+
+      <param>
+
+      <value><string>customer.info</string></value>
+
+      </param>
+
+      <param>
+
+      <value><array><data>
+
+      <value><int>136</int></value>
+
+      </data></array></value>
+
+      </param>
+
+      </params>
+
+      </methodCall>
+
+      '
+    headers:
+      Accept-Encoding: [gzip]
+      Content-Length: ['335']
+      Content-Type: [text/xml]
+      User-Agent: [xmlrpclib.py/1.0.1 (by www.pythonware.com)]
+    method: POST
+    uri: http://magento/index.php/api/xmlrpc
+  response:
+    body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8"?>
+
+        <methodResponse><params><param><value><struct><member><name>customer_id</name><value><string>136</string></value></member><member><name>created_at</name><value><string>2013-05-16T06:20:45+02:00</string></value></member><member><name>updated_at</name><value><string>2014-05-03
+        21:36:47</string></value></member><member><name>increment_id</name><value><nil/></value></member><member><name>store_id</name><value><string>0</string></value></member><member><name>website_id</name><value><string>1</string></value></member><member><name>confirmation</name><value><nil/></value></member><member><name>created_in</name><value><string>Admin</string></value></member><member><name>default_billing</name><value><string>92</string></value></member><member><name>default_shipping</name><value><string>92</string></value></member><member><name>disable_auto_group_change</name><value><string>0</string></value></member><member><name>dob</name><value><nil/></value></member><member><name>email</name><value><string>janedoe@example.com</string></value></member><member><name>firstname</name><value><string>Jane</string></value></member><member><name>gender</name><value><nil/></value></member><member><name>group_id</name><value><string>1</string></value></member><member><name>lastname</name><value><string>Doe</string></value></member><member><name>middlename</name><value><nil/></value></member><member><name>password_hash</name><value><string>80f8bdf79491b99b8180a4e746046ea5:8huK4jwUrBIwUTnw3LuWKT9MzAQghb5z</string></value></member><member><name>prefix</name><value><nil/></value></member><member><name>reward_update_notification</name><value><string>1</string></value></member><member><name>reward_warning_notification</name><value><string>1</string></value></member><member><name>rp_token</name><value><nil/></value></member><member><name>rp_token_created_at</name><value><nil/></value></member><member><name>suffix</name><value><nil/></value></member><member><name>taxvat</name><value><nil/></value></member></struct></value></param></params></methodResponse>'}
+    headers:
+      cache-control: ['no-store, no-cache, must-revalidate, post-check=0, pre-check=0']
+      connection: [keep-alive]
+      content-type: [text/xml; charset=UTF-8]
+      date: ['Tue, 27 Jun 2017 15:15:49 GMT']
+      expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      pragma: [no-cache]
+      server: [nginx/1.10.2]
+      set-cookie: ['PHPSESSID=triin6q745albcp7fh5nlvo651; expires=Tue, 27-Jun-2017
+          16:15:49 GMT; path=/; domain=magento; HttpOnly']
+      x-powered-by: [PHP/5.3.3]
+    status: {code: 200, message: OK}
+- request:
+    body: !!python/unicode '<?xml version=''1.0''?>
+
+      <methodCall>
+
+      <methodName>call</methodName>
+
+      <params>
+
+      <param>
+
+      <value><string>6182b5cd383ebb2e8ee1ba951465b614</string></value>
+
+      </param>
+
+      <param>
+
+      <value><string>customer_address.list</string></value>
+
+      </param>
+
+      <param>
+
+      <value><array><data>
+
+      <value><struct>
+
+      <member>
+
+      <name>customer_id</name>
+
+      <value><struct>
+
+      <member>
+
+      <name>eq</name>
+
+      <value><string>136</string></value>
+
+      </member>
+
+      </struct></value>
+
+      </member>
+
+      </struct></value>
+
+      </data></array></value>
+
+      </param>
+
+      </params>
+
+      </methodCall>
+
+      '
+    headers:
+      Accept-Encoding: [gzip]
+      Content-Length: ['496']
+      Content-Type: [text/xml]
+      User-Agent: [xmlrpclib.py/1.0.1 (by www.pythonware.com)]
+    method: POST
+    uri: http://magento/index.php/api/xmlrpc
+  response:
+    body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8"?>
+
+        <methodResponse><params><param><value><array><data><value><struct><member><name>customer_address_id</name><value><string>92</string></value></member><member><name>created_at</name><value><string>2013-05-17
+        01:20:45</string></value></member><member><name>updated_at</name><value><string>2014-05-03
+        21:36:47</string></value></member><member><name>city</name><value><string>Culver
+        City</string></value></member><member><name>country_id</name><value><string>US</string></value></member><member><name>firstname</name><value><string>Jane</string></value></member><member><name>lastname</name><value><string>Doe</string></value></member><member><name>postcode</name><value><string>90232</string></value></member><member><name>region</name><value><string>California</string></value></member><member><name>region_id</name><value><string>12</string></value></member><member><name>street</name><value><string>10441
+        Jefferson Blvd, Suite 200</string></value></member><member><name>telephone</name><value><string>888-888-8888</string></value></member><member><name>is_default_billing</name><value><boolean>1</boolean></value></member><member><name>is_default_shipping</name><value><boolean>1</boolean></value></member></struct></value></data></array></value></param></params></methodResponse>'}
+    headers:
+      cache-control: ['no-store, no-cache, must-revalidate, post-check=0, pre-check=0']
+      connection: [keep-alive]
+      content-type: [text/xml; charset=UTF-8]
+      date: ['Tue, 27 Jun 2017 15:15:49 GMT']
+      expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      pragma: [no-cache]
+      server: [nginx/1.10.2]
+      set-cookie: ['PHPSESSID=k6kiuor3q8mr0m3ducr34mear4; expires=Tue, 27-Jun-2017
+          16:15:49 GMT; path=/; domain=magento; HttpOnly']
+      x-powered-by: [PHP/5.3.3]
+    status: {code: 200, message: OK}
+- request:
+    body: !!python/unicode '<?xml version=''1.0''?>
+
+      <methodCall>
+
+      <methodName>call</methodName>
+
+      <params>
+
+      <param>
+
+      <value><string>6182b5cd383ebb2e8ee1ba951465b614</string></value>
+
+      </param>
+
+      <param>
+
+      <value><string>customer_address.info</string></value>
+
+      </param>
+
+      <param>
+
+      <value><array><data>
+
+      <value><int>92</int></value>
+
+      </data></array></value>
+
+      </param>
+
+      </params>
+
+      </methodCall>
+
+      '
+    headers:
+      Accept-Encoding: [gzip]
+      Content-Length: ['342']
+      Content-Type: [text/xml]
+      User-Agent: [xmlrpclib.py/1.0.1 (by www.pythonware.com)]
+    method: POST
+    uri: http://magento/index.php/api/xmlrpc
+  response:
+    body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8"?>
+
+        <methodResponse><params><param><value><struct><member><name>customer_address_id</name><value><string>92</string></value></member><member><name>created_at</name><value><string>2013-05-17T03:20:45+02:00</string></value></member><member><name>updated_at</name><value><string>2014-05-03
+        21:36:47</string></value></member><member><name>increment_id</name><value><nil/></value></member><member><name>city</name><value><string>Culver
+        City</string></value></member><member><name>company</name><value><nil/></value></member><member><name>country_id</name><value><string>US</string></value></member><member><name>fax</name><value><nil/></value></member><member><name>firstname</name><value><string>Jane</string></value></member><member><name>lastname</name><value><string>Doe</string></value></member><member><name>middlename</name><value><nil/></value></member><member><name>postcode</name><value><string>90232</string></value></member><member><name>prefix</name><value><nil/></value></member><member><name>region</name><value><string>California</string></value></member><member><name>region_id</name><value><string>12</string></value></member><member><name>street</name><value><string>10441
+        Jefferson Blvd, Suite 200</string></value></member><member><name>suffix</name><value><nil/></value></member><member><name>telephone</name><value><string>888-888-8888</string></value></member><member><name>vat_id</name><value><nil/></value></member><member><name>vat_is_valid</name><value><nil/></value></member><member><name>vat_request_date</name><value><nil/></value></member><member><name>vat_request_id</name><value><nil/></value></member><member><name>vat_request_success</name><value><nil/></value></member><member><name>is_default_billing</name><value><boolean>1</boolean></value></member><member><name>is_default_shipping</name><value><boolean>1</boolean></value></member></struct></value></param></params></methodResponse>'}
+    headers:
+      cache-control: ['no-store, no-cache, must-revalidate, post-check=0, pre-check=0']
+      connection: [keep-alive]
+      content-type: [text/xml; charset=UTF-8]
+      date: ['Tue, 27 Jun 2017 15:15:49 GMT']
+      expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      pragma: [no-cache]
+      server: [nginx/1.10.2]
+      set-cookie: ['PHPSESSID=oisutchskul73hoj1er0805h22; expires=Tue, 27-Jun-2017
+          16:15:49 GMT; path=/; domain=magento; HttpOnly']
+      x-powered-by: [PHP/5.3.3]
+    status: {code: 200, message: OK}
+- request:
+    body: !!python/unicode '<?xml version=''1.0''?>
+
+      <methodCall>
+
+      <methodName>endSession</methodName>
+
+      <params>
+
+      <param>
+
+      <value><string>6182b5cd383ebb2e8ee1ba951465b614</string></value>
+
+      </param>
+
+      </params>
+
+      </methodCall>
+
+      '
+    headers:
+      Accept-Encoding: [gzip]
+      Content-Length: ['186']
+      Content-Type: [text/xml]
+      User-Agent: [xmlrpclib.py/1.0.1 (by www.pythonware.com)]
+    method: POST
+    uri: http://magento/index.php/api/xmlrpc
+  response:
+    body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8"?>
+
+        <methodResponse><params><param><value><boolean>1</boolean></value></param></params></methodResponse>'}
+    headers:
+      cache-control: ['no-store, no-cache, must-revalidate, post-check=0, pre-check=0']
+      connection: [keep-alive]
+      content-type: [text/xml; charset=UTF-8]
+      date: ['Tue, 27 Jun 2017 15:15:49 GMT']
+      expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      pragma: [no-cache]
+      server: [nginx/1.10.2]
+      set-cookie: ['PHPSESSID=42v02vkk3ns32bvv3qlnjo7pp4; expires=Tue, 27-Jun-2017
+          16:15:49 GMT; path=/; domain=magento; HttpOnly']
+      x-powered-by: [PHP/5.3.3]
+    status: {code: 200, message: OK}
+version: 1

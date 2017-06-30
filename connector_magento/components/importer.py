@@ -179,7 +179,7 @@ class MagentoImporter(AbstractComponent):
         lock_name = 'import({}, {}, {}, {})'.format(
             self.backend_record._name,
             self.backend_record.id,
-            self.model._name,
+            self.work.model_name,
             external_id,
         )
 
