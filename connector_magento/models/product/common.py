@@ -11,6 +11,7 @@ from collections import defaultdict
 from odoo import models, fields, api
 from odoo.addons.connector.exception import IDMissingInBackend
 from odoo.addons.component.core import Component
+from odoo.addons.component_event import skip_if
 from odoo.addons.queue_job.job import job, related_action
 from ...components.backend_adapter import MAGENTO_DATETIME_FORMAT
 
@@ -240,7 +241,7 @@ class ProductProductAdapter(Component):
 
 class MagentoBindingProductListener(Component):
     _name = 'magento.binding.product.product.listener'
-    _inherit = 'base.event.listener'
+    _inherit = 'base.connector.listener'
     _apply_on = ['magento.product.product']
 
     # fields which should not trigger an export of the products
@@ -250,9 +251,8 @@ class MagentoBindingProductListener(Component):
                         'magento_qty',
                         )
 
+    @skip_if(lambda self, record, **kwargs: self.no_connector_export(record))
     def on_record_write(self, record, fields=None):
-        if self.env.context.get('connector_no_export'):
-            return
         if record.no_stock_sync:
             return
         inventory_fields = list(

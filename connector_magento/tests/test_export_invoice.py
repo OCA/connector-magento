@@ -1,231 +1,171 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    Author: Guewen Baconnier
-#    Copyright 2013 Camptocamp SA
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Copyright 2013-2017 Camptocamp SA
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
-import mock
-
-import openerp.tests.common as common
-from openerp import _
-from openerp.addons.connector.session import ConnectorSession
-from openerp.addons.connector_magento.unit.import_synchronizer import (
-    import_batch,
-    import_record)
-from .common import (mock_api,
-                     mock_job_delay_to_direct,
-                     mock_urlopen_image)
-from .data_base import magento_base_responses
+from .common import MagentoSyncTestCase, recorder
 
 
-class TestExportInvoice(common.TransactionCase):
+class TestExportInvoice(MagentoSyncTestCase):
     """ Test the export of an invoice to Magento """
 
     def setUp(self):
         super(TestExportInvoice, self).setUp()
-        backend_model = self.env['magento.backend']
-        self.mag_sale_model = self.env['magento.sale.order']
-        self.session = ConnectorSession(self.env.cr, self.env.uid,
-                                        context=self.env.context)
-        warehouse = self.env.ref('stock.warehouse0')
-        self.backend = backend = backend_model.create(
-            {'name': 'Test Magento',
-             'version': '1.7',
-             'location': 'http://anyurl',
-             'username': 'guewen',
-             'warehouse_id': warehouse.id,
-             'password': '42'})
-        # payment method needed to import a sale order
-        workflow = self.env.ref('sale_automatic_workflow.manual_validation')
-        journal = self.env.ref('account.check_journal')
-        self.payment_method = self.env['payment.method'].create(
-            {'name': 'checkmo',
-             'create_invoice_on': False,
-             'workflow_process_id': workflow.id,
-             'import_rule': 'always',
-             'journal_id': journal.id})
-        self.journal = self.env.ref('account.bank_journal')
-        self.pay_account = self.env.ref('account.cash')
-        self.period = self.env.ref('account.period_10')
-        # import the base informations
-        with mock_api(magento_base_responses):
-            import_batch(self.session, 'magento.website', backend.id)
-            import_batch(self.session, 'magento.store', backend.id)
-            import_batch(self.session, 'magento.storeview', backend.id)
-            with mock_urlopen_image():
-                import_record(self.session,
-                              'magento.sale.order',
-                              backend.id, 900000691)
+        self.sale_binding_model = self.env['magento.sale.order']
+        self.payment_mode = self.env['account.payment.mode'].search(
+            [('name', '=', 'checkmo')],
+            limit=1,
+        )
+        self.pay_account = self.env['account.account'].search(
+            [('code', '=', '101501')],
+            limit=1,
+        )
+        self.order_binding = self._import_record(
+            'magento.sale.order', '145000008'
+        )
+        self.order_binding.payment_mode_id = self.payment_mode
         self.stores = self.backend.mapped('website_ids.store_ids')
-        sales = self.mag_sale_model.search(
-            [('backend_id', '=', backend.id),
-             ('external_id', '=', '900000691')])
-        self.assertEqual(len(sales), 1)
-        self.mag_sale = sales
         # ignore exceptions on the sale order
-        self.mag_sale.ignore_exceptions = True
-        self.mag_sale.openerp_id.action_button_confirm()
-        sale = self.mag_sale.openerp_id
-        invoice_id = sale.action_invoice_create()
-        assert invoice_id
+        self.order_binding.ignore_exception = True
+        self.order_binding.odoo_id.action_confirm()
+        invoice_ids = self.order_binding.odoo_id.action_invoice_create()
+        assert invoice_ids
         self.invoice_model = self.env['account.invoice']
-        self.invoice = self.invoice_model.browse(invoice_id)
+        self.invoice = self.invoice_model.browse(invoice_ids)
 
-    def test_export_invoice_on_validate(self):
-        """ Exporting an invoice: when it is validated """
+    def test_export_invoice_on_validate_trigger(self):
+        """ Trigger export of an invoice: when it is validated """
         # we setup the stores so they export the invoices as soon
         # as they are validated (open)
         self.stores.write({'create_invoice_on': 'open'})
-        # this is the consumer called when a 'magento.account.invoice'
-        # is created, it delay a job to export the invoice
-        patched = 'openerp.addons.connector_magento.invoice.export_invoice'
-        # mock.patch prevents to create the job
-        with mock.patch(patched) as export_invoice:
+        # prevent to create the job
+        with self.mock_with_delay() as (delayable_cls, delayable):
             self._invoice_open()
+            self.assertEqual(self.invoice.state, 'open')
+
             self.assertEquals(len(self.invoice.magento_bind_ids), 1)
-            export_invoice.delay.assert_called_with(
-                mock.ANY,
-                'magento.account.invoice',
-                self.invoice.magento_bind_ids[0].id)
+
+            self.assertEqual(1, delayable_cls.call_count)
+            delay_args, delay_kwargs = delayable_cls.call_args
+            self.assertEqual((self.invoice.magento_bind_ids,), delay_args)
+
+            delayable.export_record.assert_called_with()
 
         # pay and verify it is NOT called
-        # mock.patch prevents to create the job
-        with mock.patch(patched) as export_invoice:
+        with self.mock_with_delay() as (delayable_cls, delayable):
             self._pay_and_reconcile()
             self.assertEqual(self.invoice.state, 'paid')
-            self.assertFalse(export_invoice.delay.called)
+            self.assertEqual(0, delayable_cls.call_count)
 
-    def test_export_invoice_on_paid(self):
-        """ Exporting an invoice: when it is paid """
+    def test_export_invoice_on_paid_trigger(self):
+        """ Trigger export of an invoice: when it is paid """
         # we setup the stores so they export the invoices as soon
         # as they are validated (open)
         self.stores.write({'create_invoice_on': 'paid'})
-        # this is the consumer called when a 'magento.account.invoice'
-        # is created, it delay a job to export the invoice
-        patched = 'openerp.addons.connector_magento.invoice.export_invoice'
-        # mock.patch prevents to create the job
-        with mock.patch(patched) as export_invoice:
+        # prevent to create the job
+        with self.mock_with_delay() as (delayable_cls, delayable):
             self._invoice_open()
-            self.assertFalse(export_invoice.delay.called)
+            self.assertEqual(self.invoice.state, 'open')
+
+            self.assertEqual(0, delayable_cls.call_count)
 
         # pay and verify it is NOT called
-        # mock.patch prevents to create the job
-        with mock.patch(patched) as export_invoice:
+        with self.mock_with_delay() as (delayable_cls, delayable):
             self._pay_and_reconcile()
+
             self.assertEqual(self.invoice.state, 'paid')
             self.assertEquals(len(self.invoice.magento_bind_ids), 1)
-            export_invoice.delay.assert_called_with(
-                mock.ANY, 'magento.account.invoice',
-                self.invoice.magento_bind_ids[0].id)
 
-    def test_export_invoice_on_payment_method_validate(self):
-        """ Exporting an invoice: when it is validated with payment method """
+            self.assertEqual(1, delayable_cls.call_count)
+
+            delay_args, delay_kwargs = delayable_cls.call_args
+            self.assertEqual((self.invoice.magento_bind_ids,), delay_args)
+
+            delayable.export_record.assert_called_with()
+
+    def test_export_invoice_on_payment_mode_validate_trigger(self):
+        """ Exporting an invoice: when it is validated with payment mode """
         # we setup the stores so they export the invoices as soon
         # as they are validated (open)
-        self.payment_method.write({'create_invoice_on': 'open'})
+        self.payment_mode.write({'create_invoice_on': 'open'})
         # ensure we use the option of the payment method, not store
         self.stores.write({'create_invoice_on': 'paid'})
-        # this is the consumer called when a 'magento.account.invoice'
-        # is created, it delay a job to export the invoice
-        patched = 'openerp.addons.connector_magento.invoice.export_invoice'
-        # mock.patch prevents to create the job
-        with mock.patch(patched) as export_invoice:
+        with self.mock_with_delay() as (delayable_cls, delayable):
             self._invoice_open()
+            self.assertEqual(self.invoice.state, 'open')
 
             self.assertEquals(len(self.invoice.magento_bind_ids), 1)
-            export_invoice.delay.assert_called_with(
-                mock.ANY, 'magento.account.invoice',
-                self.invoice.magento_bind_ids[0].id)
+
+            self.assertEqual(1, delayable_cls.call_count)
+            delay_args, delay_kwargs = delayable_cls.call_args
+            self.assertEqual((self.invoice.magento_bind_ids,), delay_args)
+
+            delayable.export_record.assert_called_with()
 
         # pay and verify it is NOT called
-        # mock.patch prevents to create the job
-        with mock.patch(patched) as export_invoice:
+        with self.mock_with_delay() as (delayable_cls, delayable):
             self._pay_and_reconcile()
             self.assertEqual(self.invoice.state, 'paid')
-            self.assertFalse(export_invoice.delay.called)
+            self.assertEqual(0, delayable_cls.call_count)
 
-    def test_export_invoice_on_payment_method_paid(self):
+    def test_export_invoice_on_payment_mode_paid_trigger(self):
         """ Exporting an invoice: when it is paid on payment method """
         # we setup the stores so they export the invoices as soon
         # as they are validated (open)
-        self.payment_method.write({'create_invoice_on': 'paid'})
+        self.payment_mode.write({'create_invoice_on': 'paid'})
         # ensure we use the option of the payment method, not store
         self.stores.write({'create_invoice_on': 'open'})
-        # this is the consumer called when a 'magento.account.invoice'
-        # is created, it delay a job to export the invoice
-        patched = 'openerp.addons.connector_magento.invoice.export_invoice'
-        # mock.patch prevents to create the job
-        with mock.patch(patched) as export_invoice:
+        with self.mock_with_delay() as (delayable_cls, delayable):
             self._invoice_open()
-            self.assertFalse(export_invoice.delay.called)
+            self.assertEqual(self.invoice.state, 'open')
+            self.assertEqual(0, delayable_cls.call_count)
 
         # pay and verify it is NOT called
-        # mock.patch prevents to create the job
-        with mock.patch(patched) as export_invoice:
+        with self.mock_with_delay() as (delayable_cls, delayable):
             self._pay_and_reconcile()
             self.assertEqual(self.invoice.state, 'paid')
+
             self.assertEquals(len(self.invoice.magento_bind_ids), 1)
-            export_invoice.delay.assert_called_with(
-                mock.ANY, 'magento.account.invoice',
-                self.invoice.magento_bind_ids[0].id)
+
+            self.assertEqual(1, delayable_cls.call_count)
+
+            delay_args, delay_kwargs = delayable_cls.call_args
+            self.assertEqual((self.invoice.magento_bind_ids,), delay_args)
+
+            delayable.export_record.assert_called_with()
 
     def _invoice_open(self):
-        self.invoice.signal_workflow('invoice_open')
+        self.invoice.action_invoice_open()
 
     def _pay_and_reconcile(self):
         self.invoice.pay_and_reconcile(
+            self.journal,
             pay_amount=self.invoice.amount_total,
-            pay_account_id=self.pay_account.id,
-            period_id=self.period.id,
-            pay_journal_id=self.journal.id,
-            writeoff_acc_id=self.pay_account.id,
-            writeoff_period_id=self.period.id,
-            writeoff_journal_id=self.journal.id,
-            name="Payment for tests of invoice's exports")
+            writeoff_acc=self.pay_account,
+        )
 
-    def test_export_invoice_api(self):
+    def test_export_invoice_job(self):
         """ Exporting an invoice: call towards the Magento API """
-        job_path = ('openerp.addons.connector_magento.'
-                    'invoice.export_invoice')
-        response = {
-            'sales_order_invoice.create': 987654321,
-        }
         # we setup the payment method so it exports the invoices as soon
         # as they are validated (open)
-        self.payment_method.write({'create_invoice_on': 'open'})
+        self.payment_mode.write({'create_invoice_on': 'open'})
         self.stores.write({'send_invoice_paid_mail': True})
 
-        with mock_job_delay_to_direct(job_path), \
-                mock_api(response, key_func=lambda m, a: m) as calls_done:
+        with self.mock_with_delay():
             self._invoice_open()
 
-            # Here we check what call with which args has been done by the
-            # BackendAdapter towards Magento to create the invoice
-            self.assertEqual(len(calls_done), 1)
-            method, (mag_order_id, items,
-                     comment, email, include_comment) = calls_done[0]
-            self.assertEqual(method, 'sales_order_invoice.create')
-            self.assertEqual(mag_order_id, '900000691')
-            self.assertEqual(items, {'1713': 1.0, '1714': 1.0})
-            self.assertEqual(comment, _("Invoice Created"))
-            self.assertEqual(email, True)
-            self.assertFalse(include_comment)
+        invoice_binding = self.invoice.magento_bind_ids
+        self.assertEquals(len(invoice_binding), 1)
 
-        self.assertEquals(len(self.invoice.magento_bind_ids), 1)
-        binding = self.invoice.magento_bind_ids
-        self.assertEquals(binding.external_id, '987654321')
+        with recorder.use_cassette(
+                'test_export_invoice') as cassette:
+
+            invoice_binding.export_record()
+
+        # 1. login, 2. sales_order_invoice.create, 3. endSession
+        self.assertEqual(3, len(cassette.requests))
+
+        self.assertEqual(
+            ('sales_order_invoice.create',
+                ['145000008', {'598': 1.0}, 'Invoice Created', True, False]),
+            self.parse_cassette_request(cassette.requests[1].body)
+        )

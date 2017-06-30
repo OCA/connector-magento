@@ -202,48 +202,14 @@ Every new feature in the connector should have tests. We use exclusively the
 
 The tests are located in ``connector_magento/tests``.
 
-The tests run without any connection to Magento. They mock the API.  In order
-to test the connector with representative data, we record real
-responses/requests, then use them in the tests. The reference data we use are
-those of the Magento demo, which are automatically installed when you install
-Magento using theses instructions: `Magento on Docker`_.
+The tests run without any connection to Magento. They use `vcr.py
+<https://vcrpy.readthedocs.io/en/latest/>`_ in order to record real requests
+made towards the Magento API.  The first time a test is run, vrcpy runs the
+request on a real Magento, the next times the test is run, it uses the
+registered data.
+The reference data we use are those of the Magento demo data.
 
-Thus, in the ``tests`` folder, you will find files with only data, and the
-others with the tests.
 
-In order to record data, you can proceed as follows:
-
-In ``connector_magento/unit/backend_adapter.py`` at lines 130,130:
-
-.. code-block:: python
-   :emphasize-lines: 7,8
-
-    def _call(self, method, arguments):
-        try:
-            with magentolib.API(self.magento.location,
-                                self.magento.username,
-                                self.magento.password) as api:
-                result = api.call(method, arguments)
-                # Uncomment to record requests/responses in ``recorder``
-                # record(method, arguments, result)
-                _logger.debug("api.call(%s, %s) returned %s",
-                              method, arguments, result)
-                return result
-
-Uncomment the line doing a call to :py:func:`~openerp.addons.connector_magento.unit.backend_adapter.record()`.
-Then, as soon as you will start the server, all the requests and responses
-will be stored in global dict. Once you have recorded some exchanges, you can
-output them using a tool such as `ERPpeek`_ and by calling the method
-:py:class:`~openerp.addons.connector_magento.magento_model.magento_backend.output_recorder`:
-
-.. code-block:: python
-
-    client.MagentoBackend.get(1).output_recorder([])
-
-A path is returned with the location of the file.
-
-When you want to use a set of test data in a test, just use
-:py:func:`~openerp.addons.connector_magento.tests.common.mock_api()`:
 
 .. code-block:: python
 
@@ -253,15 +219,19 @@ When you want to use a set of test data in a test, just use
     <...>
     def test_new(self):
         <...>
-        with mock_api(new_set_of_data):
+        with recorder.use_cassette(
+                'test_export_xxx') as cassette:
             # do what the test needs, such as, for instance:
-            import_batch(self.session, 'magento.website', backend_id)
+            binding.export_record()
+            # all http calls are recorded in 'cassette'
+            # we can now check many things in the cassette itself
+            self.assertEqual(1, len(cassette.requests))
 
 See how to `Run the tests`_
 
 Useful links:
 
-* unittest documentation: http://docs.python.org/dev/library/unittest.html
-* Odoo's documentation on tests: https://doc.openerp.com/trunk/server/05_test_framework/
-
-.. _`ERPpeek`: https://erppeek.readthedocs.org/en/latest/
+* unittest documentation: https://docs.python.org/2/library/unittest.html
+* Odoo's documentation on tests: https://www.odoo.com/documentation/10.0/reference/testing.html
+* vcr.py documentation: https://vcrpy.readthedocs.io/en/latest/
+* pytest odoo plugin: https://pypi.python.org/pypi/pytest-odoo
