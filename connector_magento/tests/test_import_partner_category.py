@@ -1,46 +1,28 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    Author: Guewen Baconnier
-#    Copyright 2015 Camptocamp SA
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Copyright 2015-2017 Camptocamp SA
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
-from openerp.addons.connector_magento.unit.import_synchronizer import (
-    import_record)
-from .common import mock_api, SetUpMagentoSynchronized
-from .data_base import magento_base_responses
+from .common import MagentoSyncTestCase, recorder
 
 
-class TestPartnerCategory(SetUpMagentoSynchronized):
+class TestImportPartnerCategory(MagentoSyncTestCase):
 
+    @recorder.use_cassette
     def test_import_partner_category(self):
         """ Import of a partner category """
-        backend_id = self.backend_id
-        with mock_api(magento_base_responses):
-            import_record(self.session, 'magento.res.partner.category',
-                          backend_id, 2)
+        self.env['magento.res.partner.category'].import_record(
+            self.backend, 2
+        )
 
+        backend_id = self.backend.id
         binding_model = self.env['magento.res.partner.category']
         category = binding_model.search([('backend_id', '=', backend_id),
                                          ('external_id', '=', '2')])
         self.assertEqual(len(category), 1)
         self.assertEqual(category.name, 'Wholesale')
-        self.assertEqual(category.tax_class_id, 3)
+        self.assertEqual(category.tax_class_id, 5)
 
+    @recorder.use_cassette
     def test_import_existing_partner_category(self):
         """ Bind of an existing category with same name"""
         binding_model = self.env['magento.res.partner.category']
@@ -48,14 +30,14 @@ class TestPartnerCategory(SetUpMagentoSynchronized):
 
         existing_category = category_model.create({'name': 'Wholesale'})
 
-        backend_id = self.backend_id
-        with mock_api(magento_base_responses):
-            import_record(self.session, 'magento.res.partner.category',
-                          backend_id, 2)
+        self.env['magento.res.partner.category'].import_record(
+            self.backend, 2
+        )
 
+        backend_id = self.backend.id
         category = binding_model.search([('backend_id', '=', backend_id),
                                          ('external_id', '=', '2')])
         self.assertEqual(len(category), 1)
-        self.assertEqual(category.openerp_id, existing_category)
+        self.assertEqual(category.odoo_id, existing_category)
         self.assertEqual(category.name, 'Wholesale')
-        self.assertEqual(category.tax_class_id, 3)
+        self.assertEqual(category.tax_class_id, 5)

@@ -276,7 +276,7 @@ class SaleOrderImportMapper(Component):
     def fiscal_position(self, record):
         fiscal_position = self.options.storeview.fiscal_position_id
         if fiscal_position:
-            return {'fiscal_position': fiscal_position.id}
+            return {'fiscal_position_id': fiscal_position.id}
 
     # partner_id, partner_invoice_id, partner_shipping_id
     # are done in the importer

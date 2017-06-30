@@ -36,7 +36,7 @@ class MagentoAccountInvoice(models.Model):
     @job(default_channel='root.magento')
     @related_action(action='related_action_unwrap_binding')
     @api.multi
-    def export_invoice(self):
+    def export_record(self):
         """ Export a validated or paid invoice. """
         self.ensure_one()
         with self.backend_id.work_on(self._name) as work:
@@ -105,7 +105,7 @@ class MagentoBindingInvoiceListener(Component):
     _apply_on = ['magento.account.invoice']
 
     def on_record_create(self, record, fields=None):
-        record.with_delay().export_invoice()
+        record.with_delay().export_record()
 
 
 class MagentoInvoiceListener(Component):
@@ -139,9 +139,9 @@ class MagentoInvoiceListener(Component):
                 # Check if invoice state matches configuration setting
                 # for when to export an invoice
                 magento_store = magento_sale.store_id
-                payment_method = sale.payment_mode_id
-                if payment_method and payment_method.create_invoice_on:
-                    create_invoice = payment_method.create_invoice_on
+                payment_mode = sale.payment_mode_id
+                if payment_mode and payment_mode.create_invoice_on:
+                    create_invoice = payment_mode.create_invoice_on
                 else:
                     create_invoice = magento_store.create_invoice_on
 

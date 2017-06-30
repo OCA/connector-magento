@@ -143,7 +143,7 @@ class MagentoStockPickingListener(Component):
         for binding in record.magento_bind_ids:
             # Set the priority to 20 to have more chance that it would be
             # executed after the picking creation
-            binding.with_delay(priority=20).export_tracking()
+            binding.with_delay(priority=20).export_tracking_number()
 
     def on_picking_out_done(self, record, picking_method):
         """

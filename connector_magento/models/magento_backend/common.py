@@ -338,22 +338,6 @@ class MagentoBackend(models.Model):
     def _scheduler_update_product_stock_qty(self, domain=None):
         self._magento_backend('update_product_stock_qty', domain=domain)
 
-    @api.multi
-    def output_recorder(self):
-        """ Utility method to output a file containing all the recorded
-        requests / responses with Magento.  Used to generate test data.
-        Should be called with ``erppeek`` for instance.
-        """
-        from .unit.backend_adapter import output_recorder
-        import os
-        import tempfile
-        fmt = '%Y-%m-%d-%H-%M-%S'
-        timestamp = datetime.now().strftime(fmt)
-        filename = 'output_%s_%s' % (self.env.cr.dbname, timestamp)
-        path = os.path.join(tempfile.gettempdir(), filename)
-        output_recorder(path)
-        return path
-
 
 class MagentoConfigSpecializer(models.AbstractModel):
     _name = 'magento.config.specializer'

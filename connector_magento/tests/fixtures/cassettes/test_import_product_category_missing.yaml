@@ -1,0 +1,465 @@
+interactions:
+- request:
+    body: !!python/unicode '<?xml version=''1.0''?>
+
+      <methodCall>
+
+      <methodName>login</methodName>
+
+      <params>
+
+      <param>
+
+      <value><string>odoo</string></value>
+
+      </param>
+
+      <param>
+
+      <value><string>odoo42</string></value>
+
+      </param>
+
+      </params>
+
+      </methodCall>
+
+      '
+    headers:
+      Accept-Encoding: [gzip]
+      Content-Length: ['209']
+      Content-Type: [text/xml]
+      User-Agent: [xmlrpclib.py/1.0.1 (by www.pythonware.com)]
+    method: POST
+    uri: http://magento/index.php/api/xmlrpc
+  response:
+    body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8"?>
+
+        <methodResponse><params><param><value><string>557567b0d37d7436eb27f741db46fde8</string></value></param></params></methodResponse>'}
+    headers:
+      cache-control: ['no-store, no-cache, must-revalidate, post-check=0, pre-check=0']
+      connection: [keep-alive]
+      content-type: [text/xml; charset=UTF-8]
+      date: ['Wed, 28 Jun 2017 15:28:31 GMT']
+      expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      pragma: [no-cache]
+      server: [nginx/1.10.2]
+      set-cookie: ['PHPSESSID=bl0udj8i4u2e6n9n1qp7ok03j7; expires=Wed, 28-Jun-2017
+          16:28:31 GMT; path=/; domain=magento; HttpOnly']
+      x-powered-by: [PHP/5.3.3]
+    status: {code: 200, message: OK}
+- request:
+    body: !!python/unicode '<?xml version=''1.0''?>
+
+      <methodCall>
+
+      <methodName>call</methodName>
+
+      <params>
+
+      <param>
+
+      <value><string>557567b0d37d7436eb27f741db46fde8</string></value>
+
+      </param>
+
+      <param>
+
+      <value><string>ol_catalog_product.info</string></value>
+
+      </param>
+
+      <param>
+
+      <value><array><data>
+
+      <value><int>382</int></value>
+
+      <value><nil/></value><value><nil/></value><value><string>id</string></value>
+
+      </data></array></value>
+
+      </param>
+
+      </params>
+
+      </methodCall>
+
+      '
+    headers:
+      Accept-Encoding: [gzip]
+      Content-Length: ['422']
+      Content-Type: [text/xml]
+      User-Agent: [xmlrpclib.py/1.0.1 (by www.pythonware.com)]
+    method: POST
+    uri: http://magento/index.php/api/xmlrpc
+  response:
+    body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8"?>
+
+        <methodResponse><params><param><value><struct><member><name>product_id</name><value><string>382</string></value></member><member><name>sku</name><value><string>hdb006</string></value></member><member><name>set</name><value><string>16</string></value></member><member><name>type</name><value><string>simple</string></value></member><member><name>categories</name><value><array><data><value><string>23</string></value></data></array></value></member><member><name>websites</name><value><array><data><value><string>1</string></value></data></array></value></member><member><name>type_id</name><value><string>simple</string></value></member><member><name>name</name><value><string>Shay
+        Printed Pillow</string></value></member><member><name>description</name><value><string>20&quot;
+        x 20&quot;. Printed polyester. Hidden zipper closure. Interior pillow included.
+        100% polyester fill. Spot clean. Imported.</string></value></member><member><name>short_description</name><value><string>A
+        distinctive printed pillow that fills any room with classic appeal.</string></value></member><member><name>weight</name><value><string>1.0000</string></value></member><member><name>news_from_date</name><value><nil/></value></member><member><name>old_id</name><value><nil/></value></member><member><name>news_to_date</name><value><nil/></value></member><member><name>status</name><value><string>1</string></value></member><member><name>url_key</name><value><string>shay-printed-pillow</string></value></member><member><name>visibility</name><value><string>4</string></value></member><member><name>country_of_manufacture</name><value><nil/></value></member><member><name>url_path</name><value><string>shay-printed-pillow.html</string></value></member><member><name>category_ids</name><value><array><data><value><string>23</string></value></data></array></value></member><member><name>required_options</name><value><string>0</string></value></member><member><name>has_options</name><value><string>0</string></value></member><member><name>image_label</name><value><nil/></value></member><member><name>small_image_label</name><value><nil/></value></member><member><name>thumbnail_label</name><value><nil/></value></member><member><name>created_at</name><value><string>2013-03-05T06:48:19+01:00</string></value></member><member><name>updated_at</name><value><string>2013-03-20
+        18:18:01</string></value></member><member><name>price</name><value><string>210.0000</string></value></member><member><name>group_price</name><value><array><data/></array></value></member><member><name>special_price</name><value><nil/></value></member><member><name>special_from_date</name><value><nil/></value></member><member><name>minimal_price</name><value><nil/></value></member><member><name>special_to_date</name><value><nil/></value></member><member><name>tier_price</name><value><array><data/></array></value></member><member><name>msrp_enabled</name><value><string>2</string></value></member><member><name>msrp_display_actual_price_type</name><value><string>4</string></value></member><member><name>msrp</name><value><nil/></value></member><member><name>tax_class_id</name><value><string>2</string></value></member><member><name>meta_title</name><value><nil/></value></member><member><name>meta_keyword</name><value><nil/></value></member><member><name>meta_description</name><value><nil/></value></member><member><name>is_recurring</name><value><string>0</string></value></member><member><name>recurring_profile</name><value><nil/></value></member><member><name>custom_design</name><value><nil/></value></member><member><name>custom_design_from</name><value><nil/></value></member><member><name>custom_design_to</name><value><nil/></value></member><member><name>custom_layout_update</name><value><nil/></value></member><member><name>page_layout</name><value><string>one_column</string></value></member><member><name>options_container</name><value><string>container1</string></value></member><member><name>gift_message_available</name><value><nil/></value></member><member><name>gift_wrapping_available</name><value><nil/></value></member><member><name>gift_wrapping_price</name><value><nil/></value></member><member><name>homeware_style</name><value><string>120</string></value></member><member><name>material</name><value><string>130</string></value></member><member><name>bed_bath_type</name><value><string>184</string></value></member><member><name>decor_type</name><value><string>217</string></value></member><member><name>home_decor_type</name><value><string>191</string></value></member><member><name>color</name><value><string>13</string></value></member><member><name>bedding_pattern</name><value><string>Print</string></value></member></struct></value></param></params></methodResponse>'}
+    headers:
+      cache-control: ['no-store, no-cache, must-revalidate, post-check=0, pre-check=0']
+      connection: [keep-alive]
+      content-type: [text/xml; charset=UTF-8]
+      date: ['Wed, 28 Jun 2017 15:28:31 GMT']
+      expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      pragma: [no-cache]
+      server: [nginx/1.10.2]
+      set-cookie: ['PHPSESSID=204sco5kcjtrbvot9rbbtadds4; expires=Wed, 28-Jun-2017
+          16:28:31 GMT; path=/; domain=magento; HttpOnly']
+      x-powered-by: [PHP/5.3.3]
+    status: {code: 200, message: OK}
+- request:
+    body: !!python/unicode '<?xml version=''1.0''?>
+
+      <methodCall>
+
+      <methodName>call</methodName>
+
+      <params>
+
+      <param>
+
+      <value><string>557567b0d37d7436eb27f741db46fde8</string></value>
+
+      </param>
+
+      <param>
+
+      <value><string>catalog_category.info</string></value>
+
+      </param>
+
+      <param>
+
+      <value><array><data>
+
+      <value><int>23</int></value>
+
+      </data></array></value>
+
+      </param>
+
+      </params>
+
+      </methodCall>
+
+      '
+    headers:
+      Accept-Encoding: [gzip]
+      Content-Length: ['342']
+      Content-Type: [text/xml]
+      User-Agent: [xmlrpclib.py/1.0.1 (by www.pythonware.com)]
+    method: POST
+    uri: http://magento/index.php/api/xmlrpc
+  response:
+    body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8"?>
+
+        <methodResponse><params><param><value><struct><member><name>category_id</name><value><string>23</string></value></member><member><name>is_active</name><value><string>1</string></value></member><member><name>position</name><value><string>2</string></value></member><member><name>level</name><value><string>3</string></value></member><member><name>parent_id</name><value><int>7</int></value></member><member><name>increment_id</name><value><nil/></value></member><member><name>created_at</name><value><string>2013-01-25T12:08:31+01:00</string></value></member><member><name>updated_at</name><value><string>2013-03-05
+        07:17:38</string></value></member><member><name>name</name><value><string>Bed
+        &amp; Bath</string></value></member><member><name>url_key</name><value><string>bed-bath</string></value></member><member><name>thumbnail</name><value><nil/></value></member><member><name>description</name><value><nil/></value></member><member><name>image</name><value><nil/></value></member><member><name>meta_title</name><value><nil/></value></member><member><name>meta_keywords</name><value><nil/></value></member><member><name>meta_description</name><value><nil/></value></member><member><name>include_in_menu</name><value><string>1</string></value></member><member><name>path</name><value><string>1/2/7/23</string></value></member><member><name>all_children</name><value><string>23</string></value></member><member><name>path_in_store</name><value><nil/></value></member><member><name>children</name><value><string></string></value></member><member><name>url_path</name><value><string>home-decor/bed-bath.html</string></value></member><member><name>children_count</name><value><string>0</string></value></member><member><name>display_mode</name><value><string>PRODUCTS</string></value></member><member><name>landing_page</name><value><nil/></value></member><member><name>is_anchor</name><value><string>1</string></value></member><member><name>available_sort_by</name><value><nil/></value></member><member><name>default_sort_by</name><value><nil/></value></member><member><name>filter_price_range</name><value><nil/></value></member><member><name>custom_use_parent_settings</name><value><string>0</string></value></member><member><name>custom_apply_to_products</name><value><string>0</string></value></member><member><name>custom_design</name><value><nil/></value></member><member><name>custom_design_from</name><value><nil/></value></member><member><name>custom_design_to</name><value><nil/></value></member><member><name>page_layout</name><value><string>three_columns</string></value></member><member><name>custom_layout_update</name><value><nil/></value></member></struct></value></param></params></methodResponse>'}
+    headers:
+      cache-control: ['no-store, no-cache, must-revalidate, post-check=0, pre-check=0']
+      connection: [keep-alive]
+      content-type: [text/xml; charset=UTF-8]
+      date: ['Wed, 28 Jun 2017 15:28:31 GMT']
+      expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      pragma: [no-cache]
+      server: [nginx/1.10.2]
+      set-cookie: ['PHPSESSID=ecrlbdndat8ckrg3veaqts44t3; expires=Wed, 28-Jun-2017
+          16:28:31 GMT; path=/; domain=magento; HttpOnly']
+      x-powered-by: [PHP/5.3.3]
+    status: {code: 200, message: OK}
+- request:
+    body: !!python/unicode '<?xml version=''1.0''?>
+
+      <methodCall>
+
+      <methodName>call</methodName>
+
+      <params>
+
+      <param>
+
+      <value><string>557567b0d37d7436eb27f741db46fde8</string></value>
+
+      </param>
+
+      <param>
+
+      <value><string>catalog_category.info</string></value>
+
+      </param>
+
+      <param>
+
+      <value><array><data>
+
+      <value><int>7</int></value>
+
+      </data></array></value>
+
+      </param>
+
+      </params>
+
+      </methodCall>
+
+      '
+    headers:
+      Accept-Encoding: [gzip]
+      Content-Length: ['341']
+      Content-Type: [text/xml]
+      User-Agent: [xmlrpclib.py/1.0.1 (by www.pythonware.com)]
+    method: POST
+    uri: http://magento/index.php/api/xmlrpc
+  response:
+    body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8"?>
+
+        <methodResponse><params><param><value><struct><member><name>category_id</name><value><string>7</string></value></member><member><name>is_active</name><value><string>1</string></value></member><member><name>position</name><value><string>5</string></value></member><member><name>level</name><value><string>2</string></value></member><member><name>parent_id</name><value><int>2</int></value></member><member><name>increment_id</name><value><nil/></value></member><member><name>created_at</name><value><string>2013-01-25T11:49:05+01:00</string></value></member><member><name>updated_at</name><value><string>2013-05-08
+        05:26:34</string></value></member><member><name>name</name><value><string>Home
+        &amp; Decor</string></value></member><member><name>url_key</name><value><string>home-decor</string></value></member><member><name>thumbnail</name><value><nil/></value></member><member><name>description</name><value><nil/></value></member><member><name>image</name><value><nil/></value></member><member><name>meta_title</name><value><nil/></value></member><member><name>meta_keywords</name><value><nil/></value></member><member><name>meta_description</name><value><nil/></value></member><member><name>include_in_menu</name><value><string>1</string></value></member><member><name>path</name><value><string>1/2/7</string></value></member><member><name>all_children</name><value><string>7,22,23,24,25</string></value></member><member><name>path_in_store</name><value><nil/></value></member><member><name>children</name><value><string>22,23,24,25</string></value></member><member><name>url_path</name><value><string>home-decor.html</string></value></member><member><name>children_count</name><value><string>4</string></value></member><member><name>display_mode</name><value><string>PAGE</string></value></member><member><name>landing_page</name><value><string>21</string></value></member><member><name>is_anchor</name><value><string>1</string></value></member><member><name>available_sort_by</name><value><nil/></value></member><member><name>default_sort_by</name><value><nil/></value></member><member><name>filter_price_range</name><value><nil/></value></member><member><name>custom_use_parent_settings</name><value><string>0</string></value></member><member><name>custom_apply_to_products</name><value><string>0</string></value></member><member><name>custom_design</name><value><nil/></value></member><member><name>custom_design_from</name><value><nil/></value></member><member><name>custom_design_to</name><value><nil/></value></member><member><name>page_layout</name><value><string>one_column</string></value></member><member><name>custom_layout_update</name><value><nil/></value></member></struct></value></param></params></methodResponse>'}
+    headers:
+      cache-control: ['no-store, no-cache, must-revalidate, post-check=0, pre-check=0']
+      connection: [keep-alive]
+      content-type: [text/xml; charset=UTF-8]
+      date: ['Wed, 28 Jun 2017 15:28:31 GMT']
+      expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      pragma: [no-cache]
+      server: [nginx/1.10.2]
+      set-cookie: ['PHPSESSID=klh4ugh75altccn6hv4b27a142; expires=Wed, 28-Jun-2017
+          16:28:31 GMT; path=/; domain=magento; HttpOnly']
+      x-powered-by: [PHP/5.3.3]
+    status: {code: 200, message: OK}
+- request:
+    body: !!python/unicode '<?xml version=''1.0''?>
+
+      <methodCall>
+
+      <methodName>call</methodName>
+
+      <params>
+
+      <param>
+
+      <value><string>557567b0d37d7436eb27f741db46fde8</string></value>
+
+      </param>
+
+      <param>
+
+      <value><string>catalog_category.info</string></value>
+
+      </param>
+
+      <param>
+
+      <value><array><data>
+
+      <value><int>2</int></value>
+
+      </data></array></value>
+
+      </param>
+
+      </params>
+
+      </methodCall>
+
+      '
+    headers:
+      Accept-Encoding: [gzip]
+      Content-Length: ['341']
+      Content-Type: [text/xml]
+      User-Agent: [xmlrpclib.py/1.0.1 (by www.pythonware.com)]
+    method: POST
+    uri: http://magento/index.php/api/xmlrpc
+  response:
+    body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8"?>
+
+        <methodResponse><params><param><value><struct><member><name>category_id</name><value><string>2</string></value></member><member><name>is_active</name><value><string>1</string></value></member><member><name>position</name><value><string>1</string></value></member><member><name>level</name><value><string>1</string></value></member><member><name>parent_id</name><value><int>1</int></value></member><member><name>increment_id</name><value><nil/></value></member><member><name>created_at</name><value><string>2013-01-14T11:12:53+01:00</string></value></member><member><name>updated_at</name><value><string>2013-05-15
+        22:43:57</string></value></member><member><name>name</name><value><string>Default
+        Category</string></value></member><member><name>url_key</name><value><nil/></value></member><member><name>thumbnail</name><value><nil/></value></member><member><name>description</name><value><nil/></value></member><member><name>image</name><value><nil/></value></member><member><name>meta_title</name><value><nil/></value></member><member><name>meta_keywords</name><value><nil/></value></member><member><name>meta_description</name><value><nil/></value></member><member><name>include_in_menu</name><value><string>1</string></value></member><member><name>path</name><value><string>1/2</string></value></member><member><name>all_children</name><value><string>2,4,10,11,12,13,5,14,15,16,17,40,6,18,19,20,21,7,22,23,24,25,8,26,27,28,29,9</string></value></member><member><name>path_in_store</name><value><nil/></value></member><member><name>children</name><value><string>4,5,6,7,8,9</string></value></member><member><name>url_path</name><value><nil/></value></member><member><name>children_count</name><value><string>27</string></value></member><member><name>display_mode</name><value><string>PRODUCTS_AND_PAGE</string></value></member><member><name>landing_page</name><value><string>19</string></value></member><member><name>is_anchor</name><value><string>0</string></value></member><member><name>available_sort_by</name><value><nil/></value></member><member><name>default_sort_by</name><value><nil/></value></member><member><name>filter_price_range</name><value><nil/></value></member><member><name>custom_use_parent_settings</name><value><nil/></value></member><member><name>custom_apply_to_products</name><value><string>0</string></value></member><member><name>custom_design</name><value><nil/></value></member><member><name>custom_design_from</name><value><nil/></value></member><member><name>custom_design_to</name><value><nil/></value></member><member><name>page_layout</name><value><nil/></value></member><member><name>custom_layout_update</name><value><nil/></value></member></struct></value></param></params></methodResponse>'}
+    headers:
+      cache-control: ['no-store, no-cache, must-revalidate, post-check=0, pre-check=0']
+      connection: [keep-alive]
+      content-type: [text/xml; charset=UTF-8]
+      date: ['Wed, 28 Jun 2017 15:28:32 GMT']
+      expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      pragma: [no-cache]
+      server: [nginx/1.10.2]
+      set-cookie: ['PHPSESSID=s0qtf18one8r5n3715nhgpa1o2; expires=Wed, 28-Jun-2017
+          16:28:31 GMT; path=/; domain=magento; HttpOnly']
+      x-powered-by: [PHP/5.3.3]
+    status: {code: 200, message: OK}
+- request:
+    body: !!python/unicode '<?xml version=''1.0''?>
+
+      <methodCall>
+
+      <methodName>call</methodName>
+
+      <params>
+
+      <param>
+
+      <value><string>557567b0d37d7436eb27f741db46fde8</string></value>
+
+      </param>
+
+      <param>
+
+      <value><string>catalog_category.info</string></value>
+
+      </param>
+
+      <param>
+
+      <value><array><data>
+
+      <value><int>1</int></value>
+
+      </data></array></value>
+
+      </param>
+
+      </params>
+
+      </methodCall>
+
+      '
+    headers:
+      Accept-Encoding: [gzip]
+      Content-Length: ['341']
+      Content-Type: [text/xml]
+      User-Agent: [xmlrpclib.py/1.0.1 (by www.pythonware.com)]
+    method: POST
+    uri: http://magento/index.php/api/xmlrpc
+  response:
+    body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8"?>
+
+        <methodResponse><params><param><value><struct><member><name>category_id</name><value><string>1</string></value></member><member><name>is_active</name><value><nil/></value></member><member><name>position</name><value><string>0</string></value></member><member><name>level</name><value><string>0</string></value></member><member><name>parent_id</name><value><int>0</int></value></member><member><name>increment_id</name><value><nil/></value></member><member><name>updated_at</name><value><string>2013-01-14
+        10:12:53</string></value></member><member><name>created_at</name><value><string>2013-01-14T11:12:53+01:00</string></value></member><member><name>name</name><value><string>Root
+        Catalog</string></value></member><member><name>url_key</name><value><nil/></value></member><member><name>thumbnail</name><value><nil/></value></member><member><name>description</name><value><nil/></value></member><member><name>image</name><value><nil/></value></member><member><name>meta_title</name><value><nil/></value></member><member><name>meta_keywords</name><value><nil/></value></member><member><name>meta_description</name><value><nil/></value></member><member><name>include_in_menu</name><value><string>1</string></value></member><member><name>path</name><value><string>1</string></value></member><member><name>all_children</name><value><string>1,2,4,10,11,12,13,5,14,15,16,17,40,6,18,19,20,21,7,22,23,24,25,8,26,27,28,29,9</string></value></member><member><name>path_in_store</name><value><nil/></value></member><member><name>children</name><value><string>2</string></value></member><member><name>url_path</name><value><nil/></value></member><member><name>children_count</name><value><string>28</string></value></member><member><name>display_mode</name><value><nil/></value></member><member><name>landing_page</name><value><nil/></value></member><member><name>is_anchor</name><value><nil/></value></member><member><name>available_sort_by</name><value><nil/></value></member><member><name>default_sort_by</name><value><nil/></value></member><member><name>filter_price_range</name><value><nil/></value></member><member><name>custom_use_parent_settings</name><value><nil/></value></member><member><name>custom_apply_to_products</name><value><nil/></value></member><member><name>custom_design</name><value><nil/></value></member><member><name>custom_design_from</name><value><nil/></value></member><member><name>custom_design_to</name><value><nil/></value></member><member><name>page_layout</name><value><nil/></value></member><member><name>custom_layout_update</name><value><nil/></value></member></struct></value></param></params></methodResponse>'}
+    headers:
+      cache-control: ['no-store, no-cache, must-revalidate, post-check=0, pre-check=0']
+      connection: [keep-alive]
+      content-type: [text/xml; charset=UTF-8]
+      date: ['Wed, 28 Jun 2017 15:28:32 GMT']
+      expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      pragma: [no-cache]
+      server: [nginx/1.10.2]
+      set-cookie: ['PHPSESSID=goj4tp90c2lv3e3o8i0q8v8sl5; expires=Wed, 28-Jun-2017
+          16:28:32 GMT; path=/; domain=magento; HttpOnly']
+      x-powered-by: [PHP/5.3.3]
+    status: {code: 200, message: OK}
+- request:
+    body: !!python/unicode '<?xml version=''1.0''?>
+
+      <methodCall>
+
+      <methodName>call</methodName>
+
+      <params>
+
+      <param>
+
+      <value><string>557567b0d37d7436eb27f741db46fde8</string></value>
+
+      </param>
+
+      <param>
+
+      <value><string>product_media.list</string></value>
+
+      </param>
+
+      <param>
+
+      <value><array><data>
+
+      <value><int>382</int></value>
+
+      <value><nil/></value><value><string>id</string></value>
+
+      </data></array></value>
+
+      </param>
+
+      </params>
+
+      </methodCall>
+
+      '
+    headers:
+      Accept-Encoding: [gzip]
+      Content-Length: ['396']
+      Content-Type: [text/xml]
+      User-Agent: [xmlrpclib.py/1.0.1 (by www.pythonware.com)]
+    method: POST
+    uri: http://magento/index.php/api/xmlrpc
+  response:
+    body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8"?>
+
+        <methodResponse><params><param><value><array><data><value><struct><member><name>file</name><value><string>/h/d/hdb006_1.jpg</string></value></member><member><name>label</name><value><string></string></value></member><member><name>position</name><value><string>1</string></value></member><member><name>exclude</name><value><string>1</string></value></member><member><name>url</name><value><string>http://magento/media/catalog/product/h/d/hdb006_1.jpg</string></value></member><member><name>types</name><value><array><data><value><string>image</string></value><value><string>small_image</string></value><value><string>thumbnail</string></value></data></array></value></member></struct></value></data></array></value></param></params></methodResponse>'}
+    headers:
+      cache-control: ['no-store, no-cache, must-revalidate, post-check=0, pre-check=0']
+      connection: [keep-alive]
+      content-type: [text/xml; charset=UTF-8]
+      date: ['Wed, 28 Jun 2017 15:28:33 GMT']
+      expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      pragma: [no-cache]
+      server: [nginx/1.10.2]
+      set-cookie: ['PHPSESSID=p1vh7c4fgjhd4836hp4lkin9m2; expires=Wed, 28-Jun-2017
+          16:28:33 GMT; path=/; domain=magento; HttpOnly']
+      x-powered-by: [PHP/5.3.3]
+    status: {code: 200, message: OK}
+- request:
+    body: !!python/unicode '<?xml version=''1.0''?>
+
+      <methodCall>
+
+      <methodName>endSession</methodName>
+
+      <params>
+
+      <param>
+
+      <value><string>557567b0d37d7436eb27f741db46fde8</string></value>
+
+      </param>
+
+      </params>
+
+      </methodCall>
+
+      '
+    headers:
+      Accept-Encoding: [gzip]
+      Content-Length: ['186']
+      Content-Type: [text/xml]
+      User-Agent: [xmlrpclib.py/1.0.1 (by www.pythonware.com)]
+    method: POST
+    uri: http://magento/index.php/api/xmlrpc
+  response:
+    body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8"?>
+
+        <methodResponse><params><param><value><boolean>1</boolean></value></param></params></methodResponse>'}
+    headers:
+      cache-control: ['no-store, no-cache, must-revalidate, post-check=0, pre-check=0']
+      connection: [keep-alive]
+      content-type: [text/xml; charset=UTF-8]
+      date: ['Wed, 28 Jun 2017 15:28:33 GMT']
+      expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      pragma: [no-cache]
+      server: [nginx/1.10.2]
+      set-cookie: ['PHPSESSID=juakjv0pe8om91ufi4td386h82; expires=Wed, 28-Jun-2017
+          16:28:33 GMT; path=/; domain=magento; HttpOnly']
+      x-powered-by: [PHP/5.3.3]
+    status: {code: 200, message: OK}
+version: 1

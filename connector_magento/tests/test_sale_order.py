@@ -1,277 +1,124 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    Author: Guewen Baconnier
-#    Copyright 2014 Camptocamp SA
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Copyright 2014-2017 Camptocamp SA
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
-import mock
-from openerp.addons.connector_magento.unit.import_synchronizer import (
-    import_record)
-import openerp.tests.common as common
-from .common import (mock_api,
-                     mock_urlopen_image,
-                     SetUpMagentoSynchronized,
-                     )
-from .data_base import magento_base_responses
-from .data_guest_order import guest_order_responses
-from ..sale import export_state_change
+from collections import namedtuple
+from .common import MagentoSyncTestCase, recorder
 
-DB = common.DB
-ADMIN_USER_ID = common.ADMIN_USER_ID
+ExpectedOrderLine = namedtuple(
+    'ExpectedOrderLine',
+    'product_id name price_unit product_uom_qty'
+)
 
 
-class TestSaleOrder(SetUpMagentoSynchronized):
+class TestSaleOrder(MagentoSyncTestCase):
 
-    def _import_sale_order(self, increment_id, responses=None):
-        if responses is None:
-            responses = magento_base_responses
-        backend_id = self.backend_id
-        with mock_api(responses):
-            with mock_urlopen_image():
-                import_record(self.session,
-                              'magento.sale.order',
-                              backend_id, increment_id)
-        MagentoOrder = self.env['magento.sale.order']
-        binding = MagentoOrder.search(
-            [('backend_id', '=', backend_id),
-             ('external_id', '=', str(increment_id))]
+    def setUp(self):
+        super(TestSaleOrder, self).setUp()
+
+    def _import_sale_order(self, increment_id, cassette=True):
+        return self._import_record('magento.sale.order',
+                                   increment_id, cassette=cassette)
+
+    def test_import_sale_order(self):
+        """ Import sale order: check """
+        binding = self._import_sale_order(100000201)
+        self.assertEqual(binding.workflow_process_id, self.workflow,
+                         "If the automatic workflow is empty, the "
+                         "onchanges have not been applied.")
+
+    def test_import_sale_order_with_prefix(self):
+        """ Import sale order with prefix """
+        self.backend.write({'sale_prefix': 'EC'})
+        binding = self._import_sale_order(100000201)
+        self.assertEqual(binding.name, 'EC100000201')
+
+    def test_import_sale_order_with_configurable(self):
+        """ Import sale order with configurable product """
+        binding = self._import_sale_order(100000201)
+
+        prod1 = self.env['magento.product.product'].search(
+            [('external_id', '=', 512), ('backend_id', '=', self.backend.id)]
         )
-        self.assertEqual(len(binding), 1)
-        return binding
+        prod2 = self.env['magento.product.product'].search(
+            [('external_id', '=', 302), ('backend_id', '=', self.backend.id)]
+        )
+        ship = self.env['product.product'].search([('name', '=', 'ups_GND')])
 
-    def test_import_options(self):
-        """Test import options such as the account_analytic_account and
-        the fiscal_position that can be specified at different level of the
-        backend models (backend, wesite, store and storeview)
-        """
-        binding = self._import_sale_order(900000691)
-        self.assertFalse(binding.project_id)
-        self.assertFalse(binding.fiscal_position)
-        # keep a reference to backend models the website
-        storeview_id = binding.storeview_id
-        store_id = storeview_id.store_id
-        website_id = store_id.website_id
-        binding.openerp_id.unlink()
-        binding.unlink()
-        # define options at the backend level
-        fp1 = self.env['account.fiscal.position'].create({'name': "fp1"})
-        account_analytic_id = self.env['account.analytic.account'].create(
-            {'name': 'aaa1'})
-        self.backend.account_analytic_id = account_analytic_id
-        self.backend.fiscal_position_id = fp1.id
-        binding = self._import_sale_order(900000691)
-        self.assertEquals(binding.project_id, account_analytic_id)
-        self.assertEquals(binding.fiscal_position, fp1)
-        binding.openerp_id.unlink()
-        binding.unlink()
-        # define options at the website level
-        account_analytic_id = self.env['account.analytic.account'].create(
-            {'name': 'aaa2'})
-        fp2 = self.env['account.fiscal.position'].create({'name': "fp2"})
-        website_id.specific_account_analytic_id = account_analytic_id
-        website_id.specific_fiscal_position_id = fp2.id
-        binding = self._import_sale_order(900000691)
-        self.assertEquals(binding.project_id, account_analytic_id)
-        self.assertEquals(binding.fiscal_position, fp2)
-        binding.openerp_id.unlink()
-        binding.unlink()
-        # define options at the store level
-        account_analytic_id = self.env['account.analytic.account'].create(
-            {'name': 'aaa3'})
-        fp3 = self.env['account.fiscal.position'].create({'name': "fp3"})
-        store_id.specific_account_analytic_id = account_analytic_id
-        store_id.specific_fiscal_position_id = fp3.id
-        binding = self._import_sale_order(900000691)
-        self.assertEquals(binding.project_id, account_analytic_id)
-        self.assertEquals(binding.fiscal_position, fp3)
-        binding.openerp_id.unlink()
-        binding.unlink()
-        # define options at the storeview level
-        account_analytic_id = self.env['account.analytic.account'].create(
-            {'name': 'aaa4'})
-        fp4 = self.env['account.fiscal.position'].create({'name': "fp4"})
-        storeview_id.specific_account_analytic_id = account_analytic_id
-        storeview_id.specific_fiscal_position_id = fp4.id
-        binding = self._import_sale_order(900000691)
-        self.assertEquals(binding.project_id, account_analytic_id)
-        self.assertEquals(binding.fiscal_position, fp4)
+        expected = [
+            ExpectedOrderLine(
+                product_id=prod1.odoo_id,
+                name='Tori Tank',
+                price_unit=60.,
+                product_uom_qty=2.,
+            ),
+            ExpectedOrderLine(
+                product_id=prod2.odoo_id,
+                name='Racer Back Maxi Dress',
+                price_unit=224.,
+                product_uom_qty=1.,
+            ),
+            ExpectedOrderLine(
+                product_id=ship,
+                name='ups_GND',
+                price_unit=12.31,
+                product_uom_qty=1.,
+            ),
+        ]
 
-    def test_copy_quotation(self):
+        self.assert_records(expected, binding.order_line)
+
+    def test_import_sale_order_copy_quotation(self):
         """ Copy a sales order with copy_quotation move bindings """
-        binding = self._import_sale_order(900000691)
-        order = binding.openerp_id
-        action = order.copy_quotation()
-        new_id = action['res_id']
+        binding = self._import_sale_order(100000201)
+        order = binding.odoo_id
+        order.action_cancel()
+        new = order.copy()
         self.assertFalse(order.magento_bind_ids)
-        self.assertEqual(binding.openerp_id.id, new_id)
+        self.assertEqual(binding.odoo_id, new)
         for mag_line in binding.magento_order_line_ids:
-            self.assertEqual(mag_line.order_id.id, new_id)
+            self.assertEqual(mag_line.order_id, new)
 
-    def test_cancel_delay_job(self):
-        """ Cancel an order, delay a cancel job """
-        binding = self._import_sale_order(900000691)
-        order = binding.openerp_id
-        patched = 'openerp.addons.connector_magento.sale.export_state_change'
-        # patch the job so it won't be created and we will be able
-        # to check if it is called
-        with mock.patch(patched) as mock_export_state_change:
-            order.action_cancel()
-            called = mock_export_state_change.delay
-            called.assert_called_with(mock.ANY,
-                                      'magento.sale.order',
-                                      binding.id,
-                                      allowed_states=['cancel'],
-                                      description=mock.ANY)
-
-    def test_cancel_export(self):
-        """ Export the cancel state """
-        binding = self._import_sale_order(900000691)
-        order = binding.openerp_id
-        # patch the job so it won't be created
-        patched = 'openerp.addons.connector_magento.sale.export_state_change'
-        with mock.patch(patched):
-            order.action_cancel()
-        response = {
-            'sales_order.info': {'status': 'new'},
-            'sales_order.addComment': True,
-        }
-        with mock_api(response,
-                      key_func=lambda method, args: method) as calls_done:
-            # call the job synchronously, so we check the calls
-            export_state_change(self.session, 'magento.sale.order',
-                                binding.id, allowed_states=['cancel'])
-
-            # call 1: sales_order.info to read the status
-            # call 2: sales_order.addComment to add a status comment
-            self.assertEqual(len(calls_done), 2)
-            method, (external_id, state) = calls_done[1]
-            self.assertEqual(method, 'sales_order.addComment')
-            self.assertEqual(external_id, binding.external_id)
-            self.assertEqual(state, 'canceled')
-
-    def test_copy_quotation_delay_export_state(self):
-        """ Delay a state export on new copy from canceled order """
-        binding = self._import_sale_order(900000691)
-        order = binding.openerp_id
-
-        # cancel the order
-        patched = 'openerp.addons.connector_magento.sale.export_state_change'
-        with mock.patch(patched):
-            # cancel the sales order, a job exporting the cancel status
-            # to Magento is normally created (muted here)
-            order.action_cancel()
-
-        SaleOrder = self.registry('sale.order')
-        patched = 'openerp.addons.connector_magento.sale.export_state_change'
-        with mock.patch(patched) as mock_export_state_change:
-            # create a copy of quotation, the new order should be linked to
-            # the Magento sales order
-            action = SaleOrder.copy_quotation(self.cr, self.uid, [order.id])
-            new_id = action['res_id']
-            binding.refresh()
-            order = binding.openerp_id
-            self.assertEqual(order.id, new_id)
-
-            called = mock_export_state_change.delay
-            called.assert_called_with(mock.ANY,
-                                      'magento.sale.order',
-                                      binding.id,
-                                      description=mock.ANY)
-
-    def test_copy_quotation_export_state(self):
-        """ Export a new state on new copy from canceled order """
-        binding = self._import_sale_order(900000691)
-        order = binding.openerp_id
-        SaleOrder = self.registry('sale.order')
-
-        # cancel the order
-        patched = 'openerp.addons.connector_magento.sale.export_state_change'
-        with mock.patch(patched):
-            # cancel the sales order, a job exporting the cancel status
-            # to Magento is normally created (muted here)
-            order.action_cancel()
-
-            # create a copy of quotation, the new order should be linked to
-            # the Magento sales order
-            action = SaleOrder.copy_quotation(self.cr, self.uid, [order.id])
-            new_id = action['res_id']
-            binding.refresh()
-            order = binding.openerp_id
-            self.assertEqual(order.id, new_id)
-
-        # we will check if the correct messages are sent to Magento
-        response = {
-            'sales_order.info': {'status': 'canceled'},
-            'sales_order.addComment': True,
-        }
-        with mock_api(response,
-                      key_func=lambda method, args: method) as calls_done:
-            # call the job synchronously, so we check the calls
-            export_state_change(self.session, 'magento.sale.order',
-                                binding.id)
-
-            # call 1: sales_order.info to read the status
-            # call 2: sales_order.addComment to add a status comment
-            self.assertEqual(len(calls_done), 2)
-            method, (external_id, state) = calls_done[1]
-            self.assertEqual(method, 'sales_order.addComment')
-            self.assertEqual(external_id, binding.external_id)
-            self.assertEqual(state, 'pending')
-
-    def test_import_edited(self):
+    def test_import_sale_order_edited(self):
         """ Import of an edited sale order links to its parent """
-        binding = self._import_sale_order(900000691)
-        new_binding = self._import_sale_order('900000691-1')
+        with recorder.use_cassette('import_sale_order_edited_1'):
+            binding = self._import_sale_order(100000200, cassette=False)
+        with recorder.use_cassette('import_sale_order_edited_2'):
+            new_binding = self._import_sale_order('100000200-1',
+                                                  cassette=False)
         self.assertEqual(new_binding.magento_parent_id, binding)
         self.assertTrue(binding.canceled_in_backend)
 
-    def test_import_storeview_options(self):
+    def test_import_sale_order_storeview_options(self):
         """ Check if storeview options are propagated """
         storeview = self.env['magento.storeview'].search([
-            ('backend_id', '=', self.backend_id),
+            ('backend_id', '=', self.backend.id),
             ('external_id', '=', '1')
         ])
         team = self.env['crm.team'].create({'name': 'Magento Team'})
         storeview.team_id = team
-        binding = self._import_sale_order(900000691)
+        binding = self._import_sale_order(100000201)
         self.assertEqual(binding.team_id, team)
 
-    def test_import_guest_order(self):
-        binding = self._import_sale_order(900000700,
-                                          responses=[magento_base_responses,
-                                                     guest_order_responses])
+    def test_import_sale_order_guest(self):
+        binding = self._import_sale_order(145000008)
         partner_binding = binding.partner_id.magento_bind_ids
-        self.assertEqual(partner_binding.external_id, 'guestorder:900000700')
+        self.assertEqual(partner_binding.external_id, 'guestorder:145000008')
         self.assertTrue(partner_binding.guest_customer)
 
-    def test_import_carrier_product(self):
+    def test_import_sale_order_carrier_product(self):
         """ Product of a carrier is used in the sale line """
         product = self.env['product.product'].create({
             'name': 'Carrier Product',
         })
         self.env['delivery.carrier'].create({
-            'name': 'Flatrate',
+            'name': 'ups_GND',
             'partner_id': self.env.ref('base.main_partner').id,
             'product_id': product.id,
-            'magento_code': 'flatrate_flatrate',
-            'magento_carrier_code': 'flatrate_flatrate',
+            'magento_code': 'ups_GND',
+            'magento_carrier_code': 'ups_GND',
         })
-        binding = self._import_sale_order(900000691)
+        binding = self._import_sale_order(100000201)
         # check if we have a line with the carrier product,
         # which is the shipping line
         shipping_line = False
@@ -285,3 +132,154 @@ class TestSaleOrder(SetUpMagentoSynchronized):
                                                     line.product_id.name)
                                        for line
                                        in binding.order_line),))
+
+    def test_import_sale_order_options(self):
+        """Test import options such as the account_analytic_account and
+        the fiscal_position that can be specified at different level of the
+        backend models (backend, wesite, store and storeview)
+        """
+        binding = self._import_sale_order(100000201)
+        self.assertFalse(binding.project_id)
+        self.assertFalse(binding.fiscal_position_id)
+        # keep a reference to backend models the website
+        storeview_id = binding.storeview_id
+        store_id = storeview_id.store_id
+        website_id = store_id.website_id
+        binding.odoo_id.unlink()
+        binding.unlink()
+        # define options at the backend level
+        fp1 = self.env['account.fiscal.position'].create({'name': "fp1"})
+        account_analytic_id = self.env['account.analytic.account'].create(
+            {'name': 'aaa1'})
+        self.backend.account_analytic_id = account_analytic_id
+        self.backend.fiscal_position_id = fp1.id
+        binding = self._import_sale_order(100000201)
+        self.assertEquals(binding.project_id, account_analytic_id)
+        self.assertEquals(binding.fiscal_position_id, fp1)
+        binding.odoo_id.unlink()
+        binding.unlink()
+        # define options at the website level
+        account_analytic_id = self.env['account.analytic.account'].create(
+            {'name': 'aaa2'})
+        fp2 = self.env['account.fiscal.position'].create({'name': "fp2"})
+        website_id.specific_account_analytic_id = account_analytic_id
+        website_id.specific_fiscal_position_id = fp2.id
+        binding = self._import_sale_order(100000201)
+        self.assertEquals(binding.project_id, account_analytic_id)
+        self.assertEquals(binding.fiscal_position_id, fp2)
+        binding.odoo_id.unlink()
+        binding.unlink()
+        # define options at the store level
+        account_analytic_id = self.env['account.analytic.account'].create(
+            {'name': 'aaa3'})
+        fp3 = self.env['account.fiscal.position'].create({'name': "fp3"})
+        store_id.specific_account_analytic_id = account_analytic_id
+        store_id.specific_fiscal_position_id = fp3.id
+        binding = self._import_sale_order(100000201)
+        self.assertEquals(binding.project_id, account_analytic_id)
+        self.assertEquals(binding.fiscal_position_id, fp3)
+        binding.odoo_id.unlink()
+        binding.unlink()
+        # define options at the storeview level
+        account_analytic_id = self.env['account.analytic.account'].create(
+            {'name': 'aaa4'})
+        fp4 = self.env['account.fiscal.position'].create({'name': "fp4"})
+        storeview_id.specific_account_analytic_id = account_analytic_id
+        storeview_id.specific_fiscal_position_id = fp4.id
+        binding = self._import_sale_order(100000201)
+        self.assertEquals(binding.project_id, account_analytic_id)
+        self.assertEquals(binding.fiscal_position_id, fp4)
+
+    def test_sale_order_cancel_delay_job(self):
+        """ Cancel an order, delay a cancel job """
+        binding = self._import_sale_order(100000201)
+        with self.mock_with_delay() as (delayable_cls, delayable):
+            order = binding.odoo_id
+
+            order.action_cancel()
+            self.assertEqual(1, delayable_cls.call_count)
+            delay_args, __ = delayable_cls.call_args
+            self.assertEqual(binding, delay_args[0])
+
+            delayable.export_state_change.assert_called_with(
+                allowed_states=['cancel'],
+            )
+
+    def test_cancel_export(self):
+        """ Export the cancel state """
+        binding = self._import_sale_order(100000201)
+        with self.mock_with_delay():
+            order = binding.odoo_id
+            order.action_cancel()
+
+        with recorder.use_cassette(
+                'test_sale_order_cancel_export') as cassette:
+
+            # call the job synchronously, so we check the calls
+            binding.export_state_change(allowed_states=['cancel'])
+            # 1. login, 2. sales_order.info,
+            # 3. sales_order.addComment, 4. endSession
+            self.assertEqual(4, len(cassette.requests))
+
+            self.assertEqual(
+                ('sales_order.info', ['100000201']),
+                self.parse_cassette_request(cassette.requests[1].body)
+            )
+            self.assertEqual(
+                ('sales_order.addComment', ['100000201', 'canceled']),
+                self.parse_cassette_request(cassette.requests[2].body)
+            )
+
+    def test_copy_quotation_delay_export_state(self):
+        """ Delay a state export on new copy from canceled order """
+        with recorder.use_cassette('import_sale_order_edited_1'):
+            binding = self._import_sale_order(100000200, cassette=False)
+
+        order = binding.odoo_id
+
+        # cancel the order
+        with self.mock_with_delay():
+            order = binding.odoo_id
+            order.action_cancel()
+
+        with self.mock_with_delay() as (delayable_cls, delayable):
+            # create a copy of quotation, the new order should be linked to
+            # the Magento sales order
+            new = order.copy()
+            order = binding.odoo_id
+            self.assertEqual(order, new)
+
+            self.assertEqual(1, delayable_cls.call_count)
+            delay_args, __ = delayable_cls.call_args
+            self.assertEqual(binding, delay_args[0])
+
+            self.assertTrue(delayable.export_state_change.called)
+
+    def test_copy_quotation_export_state(self):
+        """ Export a new state on new copy from canceled order """
+        with recorder.use_cassette('import_sale_order_edited_1'):
+            binding = self._import_sale_order(100000200, cassette=False)
+
+        # cancel the order
+        with self.mock_with_delay():
+            order = binding.odoo_id
+            order.action_cancel()
+            order = order.copy()
+
+        with recorder.use_cassette(
+                'test_sale_order_reopen_export') as cassette:
+
+            # call the job synchronously, so we check the calls
+            binding.export_state_change()
+            # 1. login, 2. sales_order.info,
+            # 3. sales_order.addComment, 4. endSession
+            self.assertEqual(4, len(cassette.requests))
+
+            self.assertEqual(
+                ('sales_order.info', ['100000200']),
+                self.parse_cassette_request(cassette.requests[1].body)
+            )
+            self.assertEqual(
+                ('sales_order.addComment', ['100000200', 'pending']),
+                self.parse_cassette_request(cassette.requests[2].body)
+            )

@@ -123,12 +123,14 @@ class SaleOrder(models.Model):
             self._magento_cancel()
         return super(SaleOrder, self).write(vals)
 
-    def _magento_link_binding_of_copy(self, new_id):
+    def _magento_link_binding_of_copy(self, new):
         # link binding of the canceled order to the new order, so the
         # operations done on the new order will be sync'ed with Magento
+        if self.state != 'cancel':
+            return
         binding_model = self.env['magento.sale.order']
         bindings = binding_model.search([('odoo_id', '=', self.id)])
-        bindings.write({'odoo_id': new_id})
+        bindings.write({'odoo_id': new.id})
 
         for binding in bindings:
             # the sales' status on Magento is likely 'canceled'
@@ -139,11 +141,11 @@ class SaleOrder(models.Model):
             ).export_state_change()
 
     @api.multi
-    def copy_quotation(self):
+    def copy(self, default=None):
         self_copy = self.with_context(__copy_from_quotation=True)
-        result = super(SaleOrder, self_copy).copy_quotation()
-        self._magento_link_binding_of_copy(result['res_id'])
-        return result
+        new = super(SaleOrder, self_copy).copy(default=default)
+        self_copy._magento_link_binding_of_copy(new)
+        return new
 
 
 class MagentoSaleOrderLine(models.Model):
@@ -220,7 +222,7 @@ class SaleOrderLine(models.Model):
 
     @api.multi
     def copy_data(self, default=None):
-        data = super(SaleOrderLine, self).copy_data(default=default)
+        data = super(SaleOrderLine, self).copy_data(default=default)[0]
         if self.env.context.get('__copy_from_quotation'):
             # copy_data is called by `copy` of the sale.order which
             # builds a dict for the full new sale order, so we lose the
@@ -229,8 +231,8 @@ class SaleOrderLine(models.Model):
             # to `create`, from there, we'll be able to update the
             # Magento bindings, modifying the relation from the old to
             # the new line.
-            data['__copy_from_line_id'] = id
-        return data
+            data['__copy_from_line_id'] = self.id
+        return [data]
 
 
 class SaleOrderAdapter(Component):
