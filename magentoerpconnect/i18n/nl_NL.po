@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-04 01:41+0000\n"
-"PO-Revision-Date: 2017-03-06 09:09+0000\n"
+"POT-Creation-Date: 2017-06-24 01:32+0000\n"
+"PO-Revision-Date: 2017-06-30 08:53+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: Dutch (Netherlands) (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/nl_NL/)\n"
 "MIME-Version: 1.0\n"
@@ -897,7 +897,7 @@ msgstr ""
 #: field:magento.store,display_name:0 field:magento.storeview,display_name:0
 #: field:magento.website,display_name:0
 msgid "Display Name"
-msgstr ""
+msgstr "Weergavenaam"
 
 #. module: magentoerpconnect
 #: selection:magento.product.product,manage_stock:0
@@ -1143,7 +1143,7 @@ msgstr ""
 #: field:magento.store,id:0 field:magento.storeview,id:0
 #: field:magento.website,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,magento_id:0
@@ -1619,7 +1619,7 @@ msgstr ""
 #: field:magento.store,__last_update:0 field:magento.storeview,__last_update:0
 #: field:magento.website,__last_update:0
 msgid "Last Modified on"
-msgstr ""
+msgstr "Laatst gewijzigd op"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,write_uid:0 field:magento.address,write_uid:0
