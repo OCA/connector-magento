@@ -6,12 +6,17 @@ import socket
 import logging
 import xmlrpclib
 
-import magento as magentolib
 from odoo.addons.component.core import AbstractComponent
 from odoo.addons.queue_job.exception import RetryableJobError
 from odoo.addons.connector.exception import NetworkRetryableError
 from datetime import datetime
+
 _logger = logging.getLogger(__name__)
+
+try:
+    import magento as magentolib
+except ImportError:
+    _logger.debug("Cannot import 'magento'")
 
 
 MAGENTO_DATETIME_FORMAT = '%Y-%m-%d %H:%M:%S'

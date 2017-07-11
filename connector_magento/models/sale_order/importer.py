@@ -145,9 +145,9 @@ class SaleOrderImportMapper(Component):
         record = map_record.source
         amount_incl = float(record.get('base_shipping_incl_tax') or 0.0)
         amount_excl = float(record.get('shipping_amount') or 0.0)
-        if not (amount_incl or amount_excl):
-            return values
         line_builder = self.component(usage='order.line.builder.shipping')
+        # add even if the price is 0, otherwise odoo will add a shipping
+        # line in the order when we ship the picking
         if self.options.tax_include:
             discount = float(record.get('shipping_discount_amount') or 0.0)
             line_builder.price_unit = (amount_incl - discount)
@@ -249,11 +249,9 @@ class SaleOrderImportMapper(Component):
             result = {'carrier_id': carrier.id}
         else:
             # FIXME: a mapper should not have any side effects
-            fake_partner = self.env['res.partner'].search([], limit=1)
             product = self.env.ref(
                 'connector_ecommerce.product_product_shipping')
             carrier = self.env['delivery.carrier'].create({
-                'partner_id': fake_partner.id,
                 'product_id': product.id,
                 'name': ifield,
                 'magento_code': ifield})
