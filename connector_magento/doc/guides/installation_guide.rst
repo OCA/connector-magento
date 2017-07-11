@@ -12,8 +12,8 @@ Installation
 
 The installation steps assume that you already have a functioning Odoo server.
 
-If you are a developer, you may want to install the Connector using our
-buildout configuration, head over :ref:`installation-with-buildout`.
+If you are looking for a development environment, you may want to install the Connector using our
+Docker workspace, head over :ref:`installation-dev-env`.
 
 For the manual installation, just stay there.
 
@@ -28,12 +28,14 @@ Odoo
 
 Clone the repositories below in the path where you chosed to store the addons::
 
-    $ git clone git@github.com:OCA/connector.git -b 8.0
-    $ git clone git@github.com:OCA/connector-ecommerce.git -b 8.0
-    $ git clone git@github.com:OCA/connector-magento.git -b 8.0
-    $ git clone git@github.com:OCA/e-commerce.git -b 8.0
-    $ git clone git@github.com:OCA/product-attribute.git -b 8.0
-    $ git clone git@github.com:OCA/sale-workflow.git -b 8.0
+    $ git clone git@github.com:OCA/queue.git -b 10.0
+    $ git clone git@github.com:OCA/connector.git -b 10.0
+    $ git clone git@github.com:OCA/connector-ecommerce.git -b 10.0
+    $ git clone git@github.com:OCA/connector-magento.git -b 10.0
+    $ git clone git@github.com:OCA/sale-workflow.git -b 10.0
+    $ git clone git@github.com:OCA/partner-contact.git -b 10.0
+    $ git clone git@github.com:OCA/bank-payment.git -b 10.0
+    $ git clone git@github.com:OCA/server-tools.git -b 10.0
 
 .. important:: Keep the git branches entire. Do not copy-paste the modules
                in another directory.
@@ -43,10 +45,10 @@ line or adding them in the Odoo server configuration file.
 
 Example using the command line argument::
 
-    $ /path/to/openerp-server --addons-path /path/to/connector,/path/to/connector-ecommerce,/path/to/connector-magento,/path/to/e-commerce,/path/to/product-attribute,/path/to/sale-workflow
+    $ /path/to/odoo --addons-path /path/to/queue,/path/to/connector,/path/to/connector-ecommerce,/path/to/connector-magento,/path/to/e-commerce,/path/to/sale-workflow,/path/to/partner-contact,/path/to/bank-payment,/path/to/server-tools
 
 You also need to install the ``magento`` Python package.
-So install it with either pip or either easy_install::
+So install it with either pip or either easy_install (ideally in a virtualenv)::
 
     $ pip install magento
 
@@ -94,10 +96,10 @@ Configuring the Magento web-services
 
 1. In the Magento admin panel, go to `System > Web-Services >
    SOAP/XML-RPC - Roles`.
-#. Create a new role named `openerp` with access to `All` resources.
+#. Create a new role named `odoo` with access to `All` resources.
 #. In `System > Web-Services > SOAP/XML-RPC - Users`, create a new user
-   named as you want, for instance `openerp_connect`, and an API key.
-   In `User Role`, choose the `openerp` role.
+   named as you want, for instance `odoo_connector`, and an API key.
+   In `User Role`, choose the `odoo` role.
 
 
 **********************
@@ -119,15 +121,13 @@ Once the addon is installed, you may want to:
 
 #. Configure: :ref:`configure-emails`
 
-#. Configure: :ref:`configure-payment-methods`
+#. Configure: :ref:`configure-payment-modes`
 
 #. Configure: :ref:`configure-automatic-workflows`
 
 #. Configure: :ref:`configure-shipping-methods`
 
 #. Configure: :ref:`configure-warehouses`
-
-#. Configure: :ref:`configure-pricing`
 
 On the backend,
 
