@@ -7,7 +7,7 @@ from odoo.addons.queue_job.job import job, related_action
 
 
 class MagentoBinding(models.AbstractModel):
-    """ Abstract Model for the Bindigs.
+    """ Abstract Model for the Bindings.
 
     All the models used as bindings between Magento and Odoo
     (``magento.res.partner``, ``magento.product.product``, ...) should
