@@ -23,17 +23,13 @@ class ResPartner(models.Model):
 
     gender = fields.Selection(selection=[('male', 'Male'),
                                          ('female', 'Female'),
-                                         ('other', 'Other'),
-                                         ('private', 'Prefer not to say'),
                                          ],
                               string='Gender')
 
 
 # Pretend that Magento has the following IDs for the gender attribute
 MAGENTO_GENDER = {'123': 'male',
-                  '124': 'female',
-                  '125': 'other',
-                  '126': 'private'}
+                  '124': 'female'}
 
 
 class PartnerImportMapper(Component):

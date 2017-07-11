@@ -5,11 +5,11 @@
 {'name': 'Magento Connector Customization Example',
  'version': '10.0.1.0.0',
  'category': 'Connector',
- 'depends': ['magentoerpconnect',
+ 'depends': ['connector_magento',
              ],
  'author': "Camptocamp,Odoo Community Association (OCA)",
  'license': 'AGPL-3',
  'data': [],
- 'installable': False,
+ 'installable': True,
  'application': False,
  }

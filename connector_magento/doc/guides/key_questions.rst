@@ -30,8 +30,8 @@ a checklist for your implementation.
 Sale workflows
 **************
 
-Payment methods
-===============
+Payment Modes
+=============
 
 Are you going to use 'manual' payment types like check or invoices?
 
@@ -39,12 +39,12 @@ Are you going to use 'automatic' payment types like bankcard, paypal,
 ...?
 
 Each method needs to be configured, follows:
-:ref:`configure-payment-methods`.
+:ref:`configure-payment-modes`.
 
 Automatic workflows
 ===================
 
-For each `Payment methods`_,
+For each `Payment Modes`_,
 you will want to configure a different workflow,
 for instance,
 the sales orders of an automatic payment is automatically confirmed.
