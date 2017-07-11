@@ -19,7 +19,7 @@ class MagentoBackend(models.Model):
     _inherit = 'magento.backend'
 
     @property
-    def _server_env_fields(self)
+    def _server_env_fields(self):
         return ('location', 'username', 'password')
 
     @api.multi
