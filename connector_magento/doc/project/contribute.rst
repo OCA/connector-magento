@@ -4,121 +4,36 @@
 Developer's guide
 #################
 
-.. contents:: Sections:
-   :local:
-   :backlinks: top
+.. _installation-dev-env:
 
-.. _installation-with-buildout:
+***************
+Dev Environment
+***************
 
-********************************************
-Connector with batteries included (buildout)
-********************************************
-
-Installing the buildout
-=======================
+Installing the dev environment with Docker
+==========================================
 
 When you want to install the Magento connector, you can either install it manually
-using the :ref:`installation-guide` or either using our automated Buildout_ config.
+using the :ref:`installation-guide` or either using our Docker config.
 The manual installation is recommended if you need to add it on an existing
 installation or if you want to control your environment in your own manner.
 
-The Buildout_ config is an all-in-one package which installs Odoo, the
-connector and provides many facilities for the developers,
-it is based on the `Anybox Buildout Recipe`_.
+The Docker config is an all-in-one package which installs Odoo, the
+connector, Magento and provides niceties for the developers.
+
 It includes developer tools such as:
 
 * Run the tests on the connector / Magento connector
 * Build the connector / Magento connector documentation
 * Launch the Jobs Workers (for multiprocessing)
 
-So we highly recommend to use this configuration for development.
-
-Here are the configuration files https://github.com/guewen/odoo-connector-magento-buildout.
+The dev environment is on: https://github.com/guewen/odoo-magento-connector-workspace
 
 Clone the repo::
 
-    $ git clone https://github.com/guewen/odoo-connector-magento-buildout.git -b 8.0 odoo-connector-magento
+    $ git clone https://github.com/guewen/odoo-magento-connector-workspace/ -b 10.0
 
-and follow the installation steps.
-
-.. warning:: System dependencies to build the eggs: libxml2-dev libxslt1-dev
-             that you need to install with apt-get, yum, ...
-             You can also use http://pythonhosted.org/anybox.recipe.openerp/first_steps.html#installing-build-dependencies
-
-Head over the next sections to discover the included tools
-
-.. _Buildout: http://www.buildout.org
-.. _`Anybox Buildout Recipe`: https://pypi.python.org/pypi/anybox.recipe.openerp
-
-Start Odoo
-==========
-
-All the commands are launched from the root directory of the buildout.
-
-In standalone mode (jobs will be threaded)::
-
-    $ bin/start_openerp
-
-With workers (multiprocessing), you need to start dedicated Connector Workers for the jobs::
-
-    $ bin/start_openerp --workers=4
-    $ bin/start_connector_worker --workers=2
-
-Start with Supervisord
-======================
-
-To start the supervisord daemon, run::
-
-    $ bin/supervisord
-
-The default configuration starts Odoo with 4 workers and 2 Connector
-workers. This can be changed in the buildout.cfg file in the ``supervisor`` section.
-
-The services can be managed on::
-
-    $ bin/supervisorctl
-
-Run the tests
-=============
-
-The Magento Connector and the Connector framework do not use YAML tests, but only
-``unittest2`` tests. The following command lines will run them::
-
-    $ bin/runtests --database db-name -u connector
-    $ bin/runtests --database db-name -u connector_magento
-
-Use the help arguments for more information about the options::
-
-    $ bin/runtests --help
-    $ bin/runtests --help-oe
-
-Build the documentation
-=======================
-
-The documentation uses Sphinx_, use the following lines to build them in HTML::
-
-    $ bin/sphinxbuilder_connector
-    $ bin/sphinxbuilder_connector_magento
-
-They will be built in the ``docs`` directory at the root of the buildout.
-
-.. _Sphinx: http://www.sphinx-doc.org
-
-*****************
-Magento on Docker
-*****************
-
-If you want to develop a generic feature on the Magento Connector, we
-recommend to use the `Magento - Odoo Connector docker image`_.  It
-installs Magento 1.7 with the sample database and the Magento (PHP) part
-of the Connector.
-
-The project's page on Github describe the installation process, just
-follow them.
-
-We also use this image as a reference for the data of the tests.
-
-.. _`Magento - Odoo Connector docker image`: https://github.com/guewen/docker-magento
+and follow the installation steps described in the README of the project..
 
 ***********
 How to help
@@ -167,7 +82,7 @@ The PR process is the following:
 
 1. Fork the project on https://github.com/OCA/connector-magento
 #. Work on your branch, develop a feature or fix a bug. Please include a test (`Writing tests`_).
-#. Ensure that the tests are green (`Run the tests`_)
+#. Ensure that the tests are green
 #. Ensure that pep8 is repected
 #. Open a Pull Request on GitHub
 #. Travis will automatically test pep8 and launch the tests. If Travis fails,
@@ -185,8 +100,6 @@ point to contribute. The documentation is located in the Magento connector's
 project, so you will need to clone the repository, working on the documentation and
 follow the instructions in the section `Submit Pull Requests for features or
 fixes`_ to propose your changes.
-
-You will also need to read this section: `Build the documentation`_.
 
 Translations
 ============
@@ -226,8 +139,6 @@ The reference data we use are those of the Magento demo data.
             # all http calls are recorded in 'cassette'
             # we can now check many things in the cassette itself
             self.assertEqual(1, len(cassette.requests))
-
-See how to `Run the tests`_
 
 Useful links:
 
