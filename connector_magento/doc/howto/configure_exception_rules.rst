@@ -6,7 +6,7 @@ Howto: configure exception rules
 ################################
 
 Find the configuration in the menu
-`Sales > Configuration > Sales > Exception Rules`.
+`Sales > Configuration > Miscellaneous > Exception Rules`.
 
 
 .. todo:: document the configuration
