@@ -13,6 +13,7 @@ class MetadataBatchImporter(Component):
     They are imported directly because this is a rare and fast operation,
     and we don't really bother if it blocks the UI during this time.
     (that's also a mean to rapidly check the connectivity with Magento).
+
     """
 
     _name = 'magento.metadata.batch.importer'

@@ -1,9 +1,9 @@
 .. _configure-taxes:
 
 
-########################
+######################
 How to configure taxes
-########################
+######################
 
 The connector imports products prices and sale order
 line unit prices with taxes excluded by default.

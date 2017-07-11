@@ -22,7 +22,8 @@ class ProductCategoryBatchImporter(Component):
     def _import_record(self, external_id, job_options=None):
         """ Delay a job for the import """
         super(ProductCategoryBatchImporter, self)._import_record(
-                external_id, job_options=job_options)
+            external_id, job_options=job_options
+        )
 
     def run(self, filters=None):
         """ Run the synchronization """

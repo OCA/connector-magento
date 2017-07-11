@@ -10,13 +10,16 @@ connector in your own Odoo module. It assumes that you already have
 some knowledge in the Odoo development. You can still refer to the
 `official Odoo documentation`_.
 
+Reading the `Connector Framework`_ documentation is also a good idea.
+
 
 .. contents:: Sections:
    :local:
    :backlinks: top
 
 
-.. _official Odoo documentation: https://www.odoo.com/documentation/8.0/
+.. _official Odoo documentation: https://www.odoo.com/documentation/10.0/
+.. _Connector Framework: http://www.odoo-connector.com
 
 ***************************************
 Bootstrap your own customization module
@@ -25,39 +28,22 @@ Bootstrap your own customization module
 You should never make changes in the official modules, instead, you need
 to create your own module and apply your personalizations from there.
 
-As an example, throughout this tutorial, we'll create our own
-customization module, we'll name it, in a very original manner,
-``customize_example``. The final example module can be found in the root
-of the ``connector-magento`` repository.
+As an example, throughout this tutorial, we'll create our own customization
+module, we'll name it, in a very original manner,
+``connector_magento_customize_example``. The final example module can be found
+in the root of the ``connector-magento`` repository.
 
 Common Odoo files
 =================
 
 A ``connector_magento`` customization module is like any Odoo module,
 so you will first need to create the **manifest**
-``customize_example/__openerp__.py``:
+``connector_magento_customize_example/__manifest__.py``:
 
-.. code-block:: python
-   :emphasize-lines: 4,5
-
-    # -*- coding: utf-8 -*-
-    {'name': 'Magento Connector Customization',
-     'version': '1.0.0',
-     'category': 'Connector',
-     'depends': ['connector_magento',
-                 ],
-     'author': 'Myself',
-     'license': 'AGPL-3',
-     'description': """
-    Magento Connector Customization
-    ===============================
-
-    Explain what this module changes.
-    """,
-     'data': [],
-     'installable': True,
-     'application': False,
-    }
+.. literalinclude:: ../../../connector_magento_customize_example/__manifest__.py
+   :language: python
+   :lines: 5-15
+   :emphasize-lines: 3-4
 
 Nothing special but 2 things to note:
 
@@ -67,96 +53,9 @@ Nothing special but 2 things to note:
 Of course, you also need to create the ``__init__.py`` file where you will
 put the imports of your python modules.
 
-Install the module in the connector
-===================================
-
-Each new module needs to be plugged in the connector's framework.
-That's just a matter of following a convention and creating
-``connector.py`` in which you will call the
-``install_in_connector`` function::
-
-    from openerp.addons.connector.connector import install_in_connector
-
-
-    install_in_connector()
-
-.. warning:: If you miss this line of code, your custom ConnectorUnit
-             classes won't be used.
-
-
-Create your custom Backend
-==========================
-
-The connector can support the synchronization with various Magento
-versions.
-
-Actually the supported versions are referenced in
-``connector_magento/backend.py``::
-
-    import openerp.addons.connector.backend as backend
-
-    magento = backend.Backend('magento')
-    magento1700 = backend.Backend(parent=magento, version='1.7')
-
-In the connector, we are able to link pieces of code to a specific
-version of Magento. If I link a piece of code to ``magento1700``, it
-will be executed only if my Magento's version is actually Magento 1.7.
-
-``magento`` is the parent of ``magento1700``. When the latter has no
-specific piece of code, it will execute the former's one.
-
-As you want to change parts of code specifically to **your version** of
-Magento, you need to:
-
-* create your own backend version
-* link your custom parts of code with your own backend version (we'll
-  cover this later)
-
-Let's create our own backend, in ``customize_example/backend.py``::
-
-    # -*- coding: utf-8 -*-
-    import openerp.addons.connector.backend as backend
-    import openerp.addons.connector_magento.backend as magento_backend
-
-    magento_myversion = backend.Backend(parent=magento_backend.magento1700,
-                                        version='1.7-myversion')
-
-And in ``customize_example/magento_model.py``::
-
-    # -*- coding: utf-8 -*-
-    from openerp import models, api
-
-
-    class MagentoBackend(models.Model):
-        _inherit = 'magento.backend'
-
-        @api.model
-        def select_versions(self):
-            """ Available versions in the backend.
-
-            Can be inherited to add custom versions.
-            """
-            versions = super(MagentoBackend, self).select_versions()
-            versions.append(('1.7-myversion', '1.7 - My Version'))
-            return versions
-
-Things to note:
-
-* The ``parent`` argument of my version is the 1.7 version. You have to
-  set the correct parent according to your Magento version. If your
-  Magento version does not exist, take the nearest version.
-* the version should be the same in the ``backend.Backend`` and the
-  model.
-* We add the version in the model ``magento.backend`` so we'll be able to
-  select it from the Odoo front-end.
-* Do not forget to add the new python modules in ``__init__.py``.
 
 Use it in Odoo
 ==============
-
-Great, you now have the minimal stuff required to customize your
-connector. When you create your backend in Odoo (menu ``Connectors >
-Magento > Backends``), you have now to select **1.7 - My Version**.
 
 In the next chapter, we'll cover the most common personalization:
 `Add mappings of fields`_.
@@ -182,12 +81,8 @@ We'll see how to map new fields on the imports.
 A bit of theory
 ===============
 
-The mappings of the fields are defined in subclasses of
-:py:class:`connector.unit.mapper.ImportMapper` or
-:py:class:`connector.unit.mapper.ExportMapper`, respectively
-for the imports and the exports.
-
-See the documentation about :py:class:`~connector.unit.mapper.Mapper`.
+The mappings of the fields are defined in "Mappers" components whcih class is
+:py:class:`~connector.unit.mapper.Mapper`.
 
 .. note:: The connector almost never works with the Odoo Models
           directly. Instead, it works with its own models, which
@@ -199,25 +94,30 @@ See the documentation about :py:class:`~connector.unit.mapper.Mapper`.
           More details in `Magento Models`_.
 
 When you need to change the mappings, you'll need to dive in the
-``connector_magento``'s code and locate the class which does this job for
+``connector_magento``'s code and locate the component which does this job for
 your model. You won't change anything in this class, but you'll extend
 it so you need to have a look on it.  For example, the mapping for
 ``magento.res.partner`` in ``connector_magento`` is the following
-(excerpt)::
+(excerpt):
 
-  @magento
-  class PartnerImportMapper(ImportMapper):
-      _model_name = 'magento.res.partner'
+.. code-block:: python
 
-      direct = [('email', 'email'),
-                ('dob', 'birthday'),
-                ('created_at', 'created_at'),
-                ('updated_at', 'updated_at'),
-                ('email', 'emailid'),
-                ('taxvat', 'taxvat'),
-                ('group_id', 'group_id'),
-                ]
+  class PartnerImportMapper(Component):
+      _name = 'magento.partner.import.mapper'
+      _inherit = 'magento.import.mapper'
+      _apply_on = 'magento.res.partner'
 
+      direct = [
+          ('email', 'email'),
+          ('dob', 'birthday'),
+          (normalize_datetime('created_at'), 'created_at'),
+          (normalize_datetime('updated_at'), 'updated_at'),
+          ('email', 'emailid'),
+          ('taxvat', 'taxvat'),
+          ('group_id', 'group_id'),
+      ]
+
+      @only_create
       @mapping
       def is_company(self, record):
           # partners are companies so we can bind
@@ -231,8 +131,6 @@ it so you need to have a look on it.  For example, the mapping for
                                      record['lastname']) if part]
           return {'name': ' '.join(parts)}
 
-      [...snip...]
-
 Here we can see 2 types of mappings:
 
 * ``direct`` mappings, a field in Magento is directly written in the
@@ -244,7 +142,7 @@ Here we can see 2 types of mappings:
   values. A ``None`` return value will be ignored.
 * the ``record`` argument receives the Magento record.
 
-.. note:: This is not covered here, but for the ``ExportMapper``, an
+.. note:: This is not covered here, but for the export mapppers, an
           additional decorator ``@changed_by()`` is used to filter the
           mappings to apply according to the fields modified in Odoo.
 
@@ -264,7 +162,7 @@ which are peculiar to Magento.
 
 Example with an excerpt of the fields for ``magento.res.partner``:
 
-* ``openerp_id``: ``Many2one`` to the ``res.partner`` (``_inherits``)
+* ``odoo_id``: ``Many2one`` to the ``res.partner`` (``_inherits``)
 * ``backend_id``: ``Many2one`` to the ``magento.backend`` model (Magento
   Instance), for the partner this is a ``related`` because we already
   have a link to the website, itself associated to a ``magento.backend``.
@@ -303,38 +201,24 @@ I add it on ``magento.res.partner`` because it doesn't make sense on
 ``res.partner``.
 
 For this field, the Magento API returns a string. I add it in
-``customize_example/partner.py`` (I willingly skip the part 'add them in
-the views')::
-
-  # -*- coding: utf-8 -*-
-  from openerp import models, fields
-
-  class MagentoResPartner(models.Model):
-      _inherit = 'magento.res.partner'
-
-      created_in = fields.Char(string='Created In', readonly=True)
+``connector_magento_customize_example/models/partner.py`` (I willingly skip the
+part 'add them in the views'):
 
 
-In the same file, I add the import of the Magento Backend to use and the
-current mapper::
+.. literalinclude:: ../../../connector_magento_customize_example/models/partner.py
+   :language: python
+   :lines: 7,14-18
 
-  from openerp.addons.connector_magento.partner import PartnerImportMapper
-  from .backend import magento_myversion
 
-And I extend the partner's mapper, decorated with
-``@magento_myversion``::
+And I extend the partner's mapper:
 
-  @magento_myversion
-  class MyPartnerImportMapper(PartnerImportMapper):
-      _model_name = 'magento.res.partner'
+.. literalinclude:: ../../../connector_magento_customize_example/models/partner.py
+   :language: python
+   :lines: 8,34-41
 
-      direct = PartnerImportMapper.direct + [('created_in', 'created_in')]
 
 And that's it! The field will be imported along with the other fields.
 
-.. attention:: Verify that you have selected the right version when you
-               have created your backend in ``Connectors > Magento > Backends``
-               otherwise your code will not be used.
 
 Example 2.
 ----------
@@ -349,44 +233,36 @@ This time, I will create the field in ``res.partner``, because the value
 will likely be the same even if we have many ``magento.res.partner`` and
 this information can be useful at this level.
 
-In ``customize_example/partner.py``, I write::
+.. literalinclude:: ../../../connector_magento_customize_example/models/partner.py
+   :language: python
+   :lines: 7,20-29
 
-  # -*- coding: utf-8 -*-
-  from openerp import models, fields
-
-  class ResPartner(models.Model):
-      _inherit = 'res.partner'
-
-      gender = fields.Selection(selection=[('male', 'Male'),
-                                           ('female', 'Female')],
-                                string='Gender')
-
-The same imports than in the `Example 1.`_ are needed, but we need to
-import ``mapping`` too::
-
-  from openerp.addons.connector.unit.mapper import mapping
-  from openerp.addons.connector_magento.partner import PartnerImportMapper
-  from .backend import magento_myversion
 
 This is not a `direct` mapping, I will use a method to define the
-``gender`` value::
+``gender`` value:
 
-  MAGENTO_GENDER = {'123': 'male',
-                    '124': 'female'}
-
-  @magento_myversion
-  class MyPartnerImportMapper(PartnerImportMapper):
-      _model_name = 'magento.res.partner'
-
-      @mapping
-      def gender(self, record):
-          gender = MAGENTO_GENDER.get(record.get('gender'))
-          return {'gender': gender}
+.. literalinclude:: ../../../connector_magento_customize_example/models/partner.py
+   :language: python
+   :lines: 8,9,34-36,42-46
 
 The ``gender`` field will now be imported.
 
+********************
+Customizing importer
+********************
+
+Let's say we want to plug something at the end of the partner importer.
+
+We can do that with an inherit:
+
+.. literalinclude:: ../../../connector_magento_customize_example/models/partner.py
+   :language: python
+   :lines: 8,48-54
+
+
+********
 And now?
-========
+********
 
 With theses principles, you should now be able to extend the original
 mappings and add your own ones. This is applicable for the customers but

@@ -6,7 +6,7 @@ Howto: configure automatic workflows
 ####################################
 
 Find the configuration in the menu
-`Sales > Configuration > Sales > Automatic Workflow`.
+`Sales > Configuration > Miscellaneous > Automatic Workflow`.
 
 
 .. todo:: document the configuration

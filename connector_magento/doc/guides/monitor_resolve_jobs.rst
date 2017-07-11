@@ -5,7 +5,7 @@
 Monitor and resolve jobs
 ########################
 
-Jobs are located in ``Connector > Queue > Jobs``.
+Jobs are located in ``Queue > Jobs``.
 
 A job is a unit of work for a single synchronization action.
 Jobs are executed by the 'Workers'.
@@ -17,24 +17,11 @@ Q&A
 My jobs are not executed, why?
 ==============================
 
-The first thing to note is that the jobs are enqueued all the minutes.
-Their execution is not immediate.
-
-If you see no jobs executed in more than 1 minute, possibilities are:
-
-1. Jobs are assigned to a worker which died. A worker
-   can die when Odoo reloads his modules registry (after a module
-   upgrade for instance). The dead workers are cleaned after 5 minutes,
-   then the jobs are enqueued in a new one.
 
 #. The jobs all have an ``eta`` (estimated time of arrival), so they
    will be executed later.
 
-#. The scheduler action is not running, check in ``Settings > Scheduler
-   > Scheduled Actions`` if the action ``Enqueue Jobs`` is active.
-
-#. Odoo is running in multiprocess and it doesn't have a Cron Worker
-   process running (when using Gunicorn).
+#. The :ref:`Job runner <connector:jobrunner>` is not started or configured properly
 
 
 A job is in state 'Failed', what should I do?
@@ -65,19 +52,3 @@ and will be restarted on the start of the Odoo server.
 
 Note that the actions performed on Magento by a job could of course not
 be reverted, so they will be done 2 times.
-
-
-Why do I have a couple of Workers?
-==================================
-
-When Odoo is running in standalone (one process),
-you'll always have 1 Jobs Worker.
-When Odoo is running in multiprocess,
-you'll have 1 Jobs Worker for each Odoo worker.
-
-.. note:: To benefits of multiple workers, you need to:
-
-          * have multiple Cron Workers (using the ``--max-cron-threads``
-            option).
-          * Copy the Scheduled Actions ``Enqueue Jobs`` as many times as
-            you have Cron Workers.

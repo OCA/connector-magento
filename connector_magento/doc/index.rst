@@ -7,14 +7,12 @@
 Odoo Magento Connector
 ######################
 
-*Odoo Magento Connector* (also known as *MagentoERPconnect*) is a
-bi-directional connector, 100% compatible with the last `Odoo`_ 8.0 and
-latest `Magento`_ versions.
+*Odoo Magento Connector* connects Odoo to Magento, 100% compatible with the
+last `Odoo`_ 10.0 and latest `Magento`_ versions.
 
-Based on the `Odoo Connector`_ framework, this new release of
-MagentoERPconnect has been initiated by `Camptocamp`_ and is mainly
-developed and maintained by `Camptocamp`_ and `Akretion`_ with several other
-:ref:`contributors`.
+Based on the `Odoo Connector`_ framework, this implementation has been
+initiated by `Camptocamp`_ and is mainly developed and maintained by
+`Camptocamp`_, `Acsone`_, `Akretion`_ with several other :ref:`contributors`.
 
 *Subscribe to the* `project's mailing list (name: Connectors)`_
 
@@ -33,7 +31,7 @@ Core Features
 * **Built on top of the** `Odoo Connector`_ **framework with a strong and
   efficient core**: it can then be extended or modified easily from
   separate addons
-* **Payment workflow automation**: depending on the mean of payment (credit
+* **Payment workflow automation**: depending on the mode of payment (credit
   card, wire transfer), possibility to automate workflows in
   Odoo (automatic order validation, automatic invoice validation…).
   For instance, a sales order paid by credit card will automatically
@@ -42,9 +40,10 @@ Core Features
   than 10'000 sales orders** from Magento to Odoo!
 
 .. _`Odoo Connector`: http://www.odoo-connector.com
-.. _Camptocamp: http://www.camptocamp.com
+.. _Camptocamp: https://www.camptocamp.com
 .. _Odoo: http://www.odoo.com
-.. _Magento: http://www.magento.com
+.. _Magento: https://www.magento.com
+.. _Acsone: https://acsone.eu
 .. _Akretion: http://www.akretion.com
 .. _`source code is available on GitHub`: https://github.com/OCA/connector-magento
 .. _`AGPL version 3`: http://www.gnu.org/licenses/agpl-3.0.html
@@ -98,8 +97,7 @@ Be efficient using and configuring the connector.
 
    howto/configure_translations
    howto/configure_warehouse
-   howto/configure_pricing
-   howto/configure_payment_methods
+   howto/configure_payment_modes
    howto/configure_automatic_workflows
    howto/configure_exception_rules
    howto/configure_shipping_methods
@@ -132,43 +130,18 @@ Tutorials
 .. toctree::
    :maxdepth: 2
 
-   guides/tutorial_development
    guides/tutorial_customize
 
 
 API
 ===
 
-General API
------------
-
 .. toctree::
    :maxdepth: 2
 
-   api/api_connector.rst
-   api/api_consumer.rst
-   api/api_backend.rst
-   api/api_binder.rst
-   api/api_synchronizer.rst
-   api/api_backend_adapter.rst
+   api/api_components.rst
+   api/api_models.rst
    api/api_exception.rst
-
-Models API
-----------
-
-.. toctree::
-   :maxdepth: 2
-
-   api/api_delivery.rst
-   api/api_invoice.rst
-   api/api_magento_model.rst
-   api/api_partner.rst
-   api/api_partner_category.rst
-   api/api_product.rst
-   api/api_product_category.rst
-   api/api_sale.rst
-   api/api_stock_picking.rst
-   api/api_stock_tracking.rst
 
 
 *******
@@ -180,7 +153,6 @@ Project
 
    project/roadmap
    project/contributors
-   project/changes
 
 ******************
 Indices and tables

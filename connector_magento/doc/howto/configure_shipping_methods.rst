@@ -6,7 +6,7 @@ How to configure shipping methods
 #################################
 
 Find the configuration in the menu
-`Warehouse > Configuration > Delivery Methods`.
+`Inventory > Configuration > Delivery > Delivery Methods`.
 
 For each shipping method in Magento,
 you need to create a delivery method in Odoo.
