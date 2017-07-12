@@ -157,6 +157,12 @@ class MagentoBackend(models.Model):
         'The value can also be specified on website or the store or the '
         'store view.'
     )
+    is_multi_company = fields.Boolean(
+        string='Is Backend Multi-Company',
+        help="If this flag is set, it is possible to choose warehouse at each "
+        "level. "
+        "When import partner, ignore company_id if this flag is set.",
+    )
 
     _sql_constraints = [
         ('sale_prefix_uniq', 'unique(sale_prefix)',
@@ -188,6 +194,10 @@ class MagentoBackend(models.Model):
             self.password,
             use_custom_api_path=self.use_custom_api_path
         )
+        if self.use_auth_basic:
+            magento_location.use_auth_basic = True
+            magento_location.auth_basic_username = self.auth_basic_username
+            magento_location.auth_basic_password = self.auth_basic_password
         # We create a Magento Client API here, so we can create the
         # client once (lazily on the first use) and propagate it
         # through all the sync session, instead of recreating a client
@@ -357,31 +367,51 @@ class MagentoConfigSpecializer(models.AbstractModel):
         'The value can also be specified on website or the store or the '
         'store view.'
     )
+    specific_warehouse_id = fields.Many2one(
+        comodel_name='stock.warehouse',
+        string='Specific warehouse',
+        help='If specified, this warehouse will be used to load fill the '
+        'field warehouse (and company) on the sale order created by the '
+        'connector.'
+        'The value can also be specified on website or the store or the '
+        'store view.'
+    )
     account_analytic_id = fields.Many2one(
         comodel_name='account.analytic.account',
         string='Analytic account',
-        compute='_get_account_analytic_id',
+        compute='_compute_account_analytic_id',
     )
     fiscal_position_id = fields.Many2one(
         comodel_name='account.fiscal.position',
         string='Fiscal position',
-        compute='_get_fiscal_position_id',
+        compute='_compute_fiscal_position_id',
     )
+    warehouse_id = fields.Many2one(
+        comodel_name='stock.warehouse',
+        string='warehouse',
+        compute='_compute_warehouse_id')
 
     @property
     def _parent(self):
         return getattr(self, self._parent_name)
 
     @api.multi
-    def _get_account_analytic_id(self):
+    def _compute_account_analytic_id(self):
         for this in self:
             this.account_analytic_id = (
                 this.specific_account_analytic_id or
                 this._parent.account_analytic_id)
 
     @api.multi
-    def _get_fiscal_position_id(self):
+    def _compute_fiscal_position_id(self):
         for this in self:
             this.fiscal_position_id = (
                 this.specific_fiscal_position_id or
                 this._parent.fiscal_position_id)
+
+    @api.multi
+    def _compute_warehouse_id(self):
+        for this in self:
+            this.warehouse_id = (
+                this.specific_warehouse_id or
+                this._parent.warehouse_id)

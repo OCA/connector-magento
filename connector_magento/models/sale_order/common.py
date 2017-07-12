@@ -35,11 +35,11 @@ class MagentoSaleOrder(models.Model):
     )
     total_amount = fields.Float(
         string='Total amount',
-        digits_compute=dp.get_precision('Account')
+        digits=dp.get_precision('Account')
     )
     total_amount_tax = fields.Float(
         string='Total amount w. tax',
-        digits_compute=dp.get_precision('Account')
+        digits=dp.get_precision('Account')
     )
     magento_order_id = fields.Integer(string='Magento Order ID',
                                       help="'order_id' field in Magento")
@@ -83,7 +83,6 @@ class SaleOrder(models.Model):
         string="Magento Bindings",
     )
 
-    @api.one
     @api.depends('magento_bind_ids', 'magento_bind_ids.magento_parent_id')
     def get_parent_id(self):
         """ Return the parent order.
@@ -158,7 +157,7 @@ class MagentoSaleOrderLine(models.Model):
                                        string='Magento Sale Order',
                                        required=True,
                                        ondelete='cascade',
-                                       select=True)
+                                       index=True)
     odoo_id = fields.Many2one(comodel_name='sale.order.line',
                               string='Sale Order Line',
                               required=True,
@@ -172,7 +171,7 @@ class MagentoSaleOrderLine(models.Model):
         required=False,
     )
     tax_rate = fields.Float(string='Tax Rate',
-                            digits_compute=dp.get_precision('Account'))
+                            digits=dp.get_precision('Account'))
     notes = fields.Char()
 
     @api.model
