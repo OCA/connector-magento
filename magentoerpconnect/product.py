@@ -362,7 +362,7 @@ class CatalogImageImporter(ImportSynchronizer):
             request = urllib2.Request(url)
             if self.backend_record.auth_basic_username \
                     and self.backend_record.auth_basic_password:
-                base64string = base64.encodestring(
+                base64string = base64.b64encode(
                     '%s:%s' % (self.backend_record.auth_basic_username,
                                self.backend_record.auth_basic_password))
                 request.add_header("Authorization", "Basic %s" % base64string)
