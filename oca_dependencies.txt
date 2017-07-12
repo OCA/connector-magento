@@ -5,3 +5,4 @@ product-attribute
 sale-workflow
 server-tools
 bank-payment
+partner-contact
