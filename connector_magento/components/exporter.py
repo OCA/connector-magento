@@ -104,7 +104,7 @@ class MagentoBaseExporter(AbstractComponent):
         # The commit will also release the lock acquired on the binding
         # record
         if not odoo.tools.config['test_enable']:
-            self.env.cr.commit()
+            self.env.cr.commit()  # noqa
 
         self._after_export()
         return result
@@ -274,7 +274,7 @@ class MagentoExporter(AbstractComponent):
                     # the same binding. It will be caught and
                     # raise a RetryableJobError.
                     if not odoo.tools.config['test_enable']:
-                        self.env.cr.commit()
+                        self.env.cr.commit()  # noqa
         else:
             # If magento_bind_ids does not exist we are typically in a
             # "direct" binding (the binding record is the same record).

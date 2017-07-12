@@ -96,4 +96,4 @@ class MagentoPickingExporter(Component):
             self.binder.bind(external_id, binding)
             # ensure that we store the external ID
             if not odoo.tools.config['test_enable']:
-                self.env.cr.commit()
+                self.env.cr.commit()  # noqa
