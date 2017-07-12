@@ -375,38 +375,38 @@ class MagentoConfigSpecializer(models.AbstractModel):
     account_analytic_id = fields.Many2one(
         comodel_name='account.analytic.account',
         string='Analytic account',
-        compute='_get_account_analytic_id',
+        compute='_compute_account_analytic_id',
     )
     fiscal_position_id = fields.Many2one(
         comodel_name='account.fiscal.position',
         string='Fiscal position',
-        compute='_get_fiscal_position_id',
+        compute='_compute_fiscal_position_id',
     )
     warehouse_id = fields.Many2one(
         comodel_name='stock.warehouse',
         string='warehouse',
-        compute='_get_warehouse_id')
+        compute='_compute_warehouse_id')
 
     @property
     def _parent(self):
         return getattr(self, self._parent_name)
 
     @api.multi
-    def _get_account_analytic_id(self):
+    def _compute_account_analytic_id(self):
         for this in self:
             this.account_analytic_id = (
                 this.specific_account_analytic_id or
                 this._parent.account_analytic_id)
 
     @api.multi
-    def _get_fiscal_position_id(self):
+    def _compute_fiscal_position_id(self):
         for this in self:
             this.fiscal_position_id = (
                 this.specific_fiscal_position_id or
                 this._parent.fiscal_position_id)
 
     @api.multi
-    def _get_warehouse_id(self):
+    def _compute_warehouse_id(self):
         for this in self:
             this.warehouse_id = (
                 this.specific_warehouse_id or
