@@ -51,6 +51,7 @@ class MagentoStoreview(models.Model):
              'but its sales orders should not be imported.',
     )
     catalog_price_tax_included = fields.Boolean(string='Prices include tax')
+    is_multi_company = fields.Boolean(related="backend_id.is_multi_company")
 
     @api.multi
     def import_sale_orders(self):
@@ -61,13 +62,23 @@ class MagentoStoreview(models.Model):
                               "but is configured not to import the "
                               "sales orders", storeview.name)
                 continue
+
+            user = storeview.sudo().warehouse_id.company_id.user_tech_id
+            if not user:
+                user = self.env['res.users'].browse(self.env.uid)
+
+            sale_binding_model = self.env['magento.sale.order']
+            if user != self.env.user:
+                sale_binding_model = sale_binding_model.sudo(user)
+
             backend = storeview.backend_id
             if storeview.import_orders_from_date:
                 from_string = fields.Datetime.from_string
                 from_date = from_string(storeview.import_orders_from_date)
             else:
                 from_date = None
-            delayable = self.env['magento.sale.order'].with_delay(priority=1)
+
+            delayable = sale_binding_model.with_delay(priority=1)
             filters = {
                 'magento_storeview_id': storeview.external_id,
                 'from_date': from_date,

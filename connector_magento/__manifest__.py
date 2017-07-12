@@ -7,6 +7,7 @@
  'version': '10.0.1.0.0',
  'category': 'Connector',
  'depends': ['account',
+             'base_technical_user',
              'product',
              'delivery',
              'sale_stock',

@@ -53,6 +53,8 @@ class TestImportPartner(MagentoSyncTestCase):
         self.assertEqual(address_bind.external_id, '92',
                          msg="The merged address should be the "
                              "billing address")
+        self.assertEqual(partner.company_id.id,
+                         self.backend.warehouse_id.company_id.id)
 
     @recorder.use_cassette
     def test_import_partner_individual_2_addresses(self):
@@ -81,6 +83,10 @@ class TestImportPartner(MagentoSyncTestCase):
         self.assertEqual(partner.child_ids[0].type, 'delivery',
                          msg="The shipping address should be of "
                              "type 'delivery'")
+        self.assertEqual(partner.company_id.id,
+                         self.backend.company_id.id)
+        self.assertEqual(partner.child_ids[0].company_id.id,
+                         self.backend.company_id.id)
 
     @recorder.use_cassette
     def test_import_partner_company_1_address(self):
@@ -141,3 +147,30 @@ class TestImportPartner(MagentoSyncTestCase):
         self.assertEqual(address.type, 'delivery',
                          msg="The shipping address should be of "
                              "type 'delivery'")
+
+    @recorder.use_cassette('test_import_partner_individual_2_addresses')
+    def test_import_partner_individual_2_addresses_multi_company(self):
+        """Import an invidual on multi backend company"""
+        self.backend.is_multi_company = True
+        self.env['magento.res.partner'].import_record(self.backend, '65')
+
+        partner = self.model.search([('external_id', '=', '65'),
+                                     ('backend_id', '=', self.backend.id)])
+        self.assertEqual(len(partner), 1)
+        # Name of the billing address
+        self.assertEqual(partner.name, u'Tay Ray')
+        self.assertEqual(partner.type, 'contact')
+        # billing address merged with the partner,
+        # second address as a contact
+        self.assertEqual(len(partner.child_ids), 1)
+        self.assertEqual(len(partner.magento_bind_ids), 1)
+        self.assertEqual(len(partner.magento_address_bind_ids), 1)
+        address_bind = partner.magento_address_bind_ids[0]
+        self.assertEqual(address_bind.external_id, '35',
+                         msg="The merged address should be the "
+                             "billing address")
+        self.assertEqual(partner.child_ids[0].type, 'delivery',
+                         msg="The shipping address should be of "
+                             "type 'delivery'")
+        self.assertFalse(partner.company_id.id)
+        self.assertFalse(partner.child_ids[0].company_id.id)

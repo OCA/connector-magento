@@ -131,7 +131,11 @@ class MagentoProductProduct(models.Model):
         else:
             stock_field = 'virtual_available'
 
-        location = backend.warehouse_id.lot_stock_id
+        location = self.env['stock.location']
+        if self.env.context.get('location'):
+            location = location.browse(self.env.context['location'])
+        else:
+            location = backend.warehouse_id.lot_stock_id
 
         product_fields = ['magento_qty', stock_field]
         if read_fields:

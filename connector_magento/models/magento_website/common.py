@@ -35,6 +35,7 @@ class MagentoWebsite(models.Model):
         string='Magento Products',
         readonly=True,
     )
+    is_multi_company = fields.Boolean(related="backend_id.is_multi_company")
 
     @api.multi
     def import_partners(self):
