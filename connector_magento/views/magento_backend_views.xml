@@ -131,6 +131,7 @@
                                     domain="[('model', 'in', ['product.product', 'product.template']), ('ttype', '=', 'float')]"/>
                                 <field name="account_analytic_id" groups="sale.group_analytic_accounting" />
                                 <field name="fiscal_position_id"/>
+                                <field name="is_multi_company"/>
                             </group>
                         </page>
 
@@ -187,6 +188,9 @@
                         <field name="specific_account_analytic_id" groups="sale.group_analytic_accounting" class="oe_edit_only" />
                         <field name="fiscal_position_id" class="oe_read_only"/>
                         <field name="specific_fiscal_position_id" class="oe_edit_only" />
+                        <field name="is_multi_company" invisible="1"/>
+                        <field name="warehouse_id" class="oe_read_only" attrs="{'invisible': [('is_multi_company', '=', False)]}"/>
+                        <field name="specific_warehouse_id" class="oe_edit_only" attrs="{'invisible': [('is_multi_company', '=', False)]}"/>
                     </group>
                     <notebook>
                         <page name="import" string="Imports">
@@ -257,6 +261,9 @@
                         <field name="specific_account_analytic_id" groups="sale.group_analytic_accounting" class="oe_edit_only" />
                         <field name="fiscal_position_id" class="oe_read_only"/>
                         <field name="specific_fiscal_position_id" class="oe_edit_only" />
+                        <field name="is_multi_company" invisible="1"/>
+                        <field name="warehouse_id" class="oe_read_only" attrs="{'invisible': [('is_multi_company', '=', False)]}"/>
+                        <field name="specific_warehouse_id" class="oe_edit_only" attrs="{'invisible': [('is_multi_company', '=', False)]}"/>
                         <field name="send_picking_done_mail"/>
                         <field name="send_invoice_paid_mail"/>
                         <field name="create_invoice_on"/>
@@ -317,6 +324,9 @@
                         <field name="specific_account_analytic_id" groups="sale.group_analytic_accounting" class="oe_edit_only" />
                         <field name="fiscal_position_id" class="oe_read_only"/>
                         <field name="specific_fiscal_position_id" class="oe_edit_only" />
+                        <field name="is_multi_company" invisible="1"/>
+                        <field name="warehouse_id" class="oe_read_only" attrs="{'invisible': [('is_multi_company', '=', False)]}"/>
+                        <field name="specific_warehouse_id" class="oe_edit_only" attrs="{'invisible': [('is_multi_company', '=', False)]}"/>
                         <field name="team_id" options="{'no_create': True}" groups="base.group_multi_salesteams"/>
                         <field name="lang_id" widget="selection"/>
                         <field name="catalog_price_tax_included"/>
