@@ -34,6 +34,7 @@ Clone the repositories below in the path where you chosed to store the addons::
     $ git clone git@github.com:OCA/connector-magento.git -b 10.0
     $ git clone git@github.com:OCA/sale-workflow.git -b 10.0
     $ git clone git@github.com:OCA/partner-contact.git -b 10.0
+    $ git clone git@github.com:OCA/product-attribute.git -b 10.0
     $ git clone git@github.com:OCA/bank-payment.git -b 10.0
     $ git clone git@github.com:OCA/server-tools.git -b 10.0
 
@@ -45,7 +46,7 @@ line or adding them in the Odoo server configuration file.
 
 Example using the command line argument::
 
-    $ /path/to/odoo --addons-path /path/to/queue,/path/to/connector,/path/to/connector-ecommerce,/path/to/connector-magento,/path/to/e-commerce,/path/to/sale-workflow,/path/to/partner-contact,/path/to/bank-payment,/path/to/server-tools
+    $ /path/to/odoo --addons-path /path/to/queue,/path/to/connector,/path/to/connector-ecommerce,/path/to/connector-magento,/path/to/e-commerce,/path/to/sale-workflow,/path/to/partner-contact,/path/to/product-attribute,/path/to/bank-payment,/path/to/server-tools
 
 You also need to install the ``magento`` Python package.
 So install it with either pip or either easy_install (ideally in a virtualenv)::
