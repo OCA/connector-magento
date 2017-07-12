@@ -58,9 +58,7 @@ Images
 Contributors
 ------------
 
-See `contributors' list`_
-
-
+* Guewen Baconnier <guewen.baconnier@camptocamp.com>
 
 Maintainer
 ----------

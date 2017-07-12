@@ -67,8 +67,6 @@ Technical points:
 
 .. _connector: https://github.com/OCA/connector
 .. _connector_ecommerce: https://github.com/OCA/connector-ecommerce
-.. _Camptocamp: http://www.camptocamp.com
-.. _Akretion: http://www.akretion.com
 .. _`source is on GitHub`: https://github.com/OCA/connector-magento
 
 Installation
