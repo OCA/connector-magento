@@ -58,6 +58,7 @@ class MagentoStore(models.Model):
              "payment method is not giving an option for this by "
              "itself. (See Payment Methods)",
     )
+    is_multi_company = fields.Boolean(related="backend_id.is_multi_company")
 
 
 class StoreAdapter(Component):
