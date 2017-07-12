@@ -10,6 +10,7 @@
              'product',
              'delivery',
              'sale_stock',
+             'product_multi_category',
              'connector_ecommerce',
              ],
  'external_dependencies': {
