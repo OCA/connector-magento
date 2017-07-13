@@ -157,7 +157,7 @@ class MagentoSaleOrderLine(models.Model):
                                        string='Magento Sale Order',
                                        required=True,
                                        ondelete='cascade',
-                                       select=True)
+                                       index=True)
     odoo_id = fields.Many2one(comodel_name='sale.order.line',
                               string='Sale Order Line',
                               required=True,
