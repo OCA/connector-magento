@@ -24,8 +24,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-05-01 16:27+0000\n"
-"PO-Revision-Date: 2017-05-05 21:20+0000\n"
+"POT-Creation-Date: 2017-07-08 01:16+0000\n"
+"PO-Revision-Date: 2017-07-12 16:19+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: French (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -2872,7 +2872,7 @@ msgstr "Tri"
 #: field:magento.account.invoice,origin:0 field:magento.sale.order,origin:0
 #: field:magento.stock.picking,origin:0
 msgid "Source Document"
-msgstr ""
+msgstr "Document d'origine"
 
 #. module: magentoerpconnect
 #: field:magento.config.specializer,specific_account_analytic_id:0
