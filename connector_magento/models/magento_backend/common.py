@@ -194,6 +194,10 @@ class MagentoBackend(models.Model):
             self.password,
             use_custom_api_path=self.use_custom_api_path
         )
+        if self.use_auth_basic:
+            magento_location.use_auth_basic = True
+            magento_location.auth_basic_username = self.auth_basic_username
+            magento_location.auth_basic_password = self.auth_basic_password
         # We create a Magento Client API here, so we can create the
         # client once (lazily on the first use) and propagate it
         # through all the sync session, instead of recreating a client
