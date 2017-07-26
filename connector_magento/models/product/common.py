@@ -108,12 +108,13 @@ class MagentoProductProduct(models.Model):
         informations for each product.
         """
         # group products by backend
-        backends = defaultdict(self.browse)
+        backends = defaultdict(set)
         for product in self:
-            backends[product.backend_id] |= product
+            backends[product.backend_id].add(product.id)
 
-        for backend, products in backends.iteritems():
-            self._recompute_magento_qty_backend(backend, products)
+        for backend, product_ids in backends.iteritems():
+            self._recompute_magento_qty_backend(backend,
+                                                self.browse(product_ids))
         return True
 
     @api.multi
