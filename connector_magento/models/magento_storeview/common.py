@@ -71,7 +71,7 @@ class MagentoStoreview(models.Model):
             if user != self.env.user:
                 sale_binding_model = sale_binding_model.sudo(user)
 
-            backend = storeview.backend_id
+            backend = storeview.sudo(user).backend_id
             if storeview.import_orders_from_date:
                 from_string = fields.Datetime.from_string
                 from_date = from_string(storeview.import_orders_from_date)
