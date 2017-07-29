@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-28 02:04+0000\n"
-"PO-Revision-Date: 2017-04-25 10:42+0000\n"
+"POT-Creation-Date: 2017-07-15 01:16+0000\n"
+"PO-Revision-Date: 2017-07-24 07:44+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: Spanish (Spain) (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/es_ES/)\n"
 "MIME-Version: 1.0\n"
@@ -2436,7 +2436,7 @@ msgstr ""
 #: model:ir.model,name:magentoerpconnect.model_product_category
 #: field:magento.product.category,openerp_id:0
 msgid "Product Category"
-msgstr ""
+msgstr "Categoría de producto"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,product_manager:0
@@ -2727,7 +2727,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: help:magento.product.product,categ_id:0
 msgid "Select category for the current product"
-msgstr ""
+msgstr "Seleccionar categoría para el producto actual"
 
 #. module: magentoerpconnect
 #: help:magento.address,use_parent_address:0
@@ -3665,7 +3665,7 @@ msgstr ""
 #: field:magento.product.product,warehouse_id:0
 #: field:magento.sale.order,warehouse_id:0
 msgid "Warehouse"
-msgstr ""
+msgstr "Almacén"
 
 #. module: magentoerpconnect
 #: help:magento.backend,warehouse_id:0

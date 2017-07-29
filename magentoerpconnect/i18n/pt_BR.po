@@ -17,8 +17,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-06-10 03:15+0000\n"
-"PO-Revision-Date: 2017-06-14 00:21+0000\n"
+"POT-Creation-Date: 2017-07-15 01:16+0000\n"
+"PO-Revision-Date: 2017-07-24 17:06+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/pt_BR/)\n"
 "MIME-Version: 1.0\n"
@@ -2311,7 +2311,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_stock_picking
 msgid "Picking List"
-msgstr ""
+msgstr "Lista de separação"
 
 #. module: magentoerpconnect
 #: field:magento.stock.picking,picking_method:0
