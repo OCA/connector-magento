@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (7.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-18 01:21+0000\n"
+"POT-Creation-Date: 2017-07-12 12:33+0000\n"
 "PO-Revision-Date: 2015-07-08 12:13+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: Spanish (Spain) (http://www.transifex.com/oca/OCA-connector-magento-7-0/language/es_ES/)\n"
@@ -364,7 +364,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.backend,warehouse_id:0
 msgid "Warehouse"
-msgstr ""
+msgstr "Almacén"
 
 #. module: magentoerpconnect
 #: field:magento.storeview,catalog_price_tax_included:0
@@ -396,7 +396,7 @@ msgstr ""
 #: model:ir.model,name:magentoerpconnect.model_product_category
 #: field:magento.product.category,openerp_id:0
 msgid "Product Category"
-msgstr ""
+msgstr "Categoría de producto"
 
 #. module: magentoerpconnect
 #: view:magento.storeview:0
