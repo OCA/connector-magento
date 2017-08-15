@@ -416,6 +416,12 @@ class SaleOrderImporter(Component):
                 parent_binding.write({'canceled_in_backend': True})
             current_binding = parent_binding
 
+    def _create(self, data):
+        binding = super(SaleOrderImporter, self)._create(data)
+        if binding.fiscal_position_id:
+            binding.odoo_id._compute_tax_id()
+        return binding
+
     def _after_import(self, binding):
         self._link_parent_orders(binding)
 
