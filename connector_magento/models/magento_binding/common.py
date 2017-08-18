@@ -33,7 +33,6 @@ class MagentoBinding(models.AbstractModel):
     ]
 
     @job(default_channel='root.magento')
-    @related_action(action='related_action_magento_link')
     @api.model
     def import_batch(self, backend, filters=None):
         """ Prepare the import of records modified on Magento """
