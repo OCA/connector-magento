@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (7.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-18 01:21+0000\n"
+"POT-Creation-Date: 2017-08-05 01:10+0000\n"
 "PO-Revision-Date: 2015-07-08 12:13+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: Croatian (Croatia) (http://www.transifex.com/oca/OCA-connector-magento-7-0/language/hr_HR/)\n"
@@ -1096,7 +1096,7 @@ msgstr ""
 #: field:magento.backend,name:0 field:magento.storeview,name:0
 #: field:magento.website,name:0
 msgid "Name"
-msgstr ""
+msgstr "Naziv"
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_magento_website
