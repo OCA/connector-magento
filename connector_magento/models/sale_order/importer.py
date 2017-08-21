@@ -182,6 +182,8 @@ class SaleOrderImportMapper(Component):
         if not record.get('gift_cert_amount'):
             return values
         amount = float(record['gift_cert_amount'])
+        if amount == 0.0:
+            return values
         line_builder = self.component(usage='order.line.builder.gift')
         line_builder.price_unit = amount
         if 'gift_cert_code' in record:
@@ -196,6 +198,8 @@ class SaleOrderImportMapper(Component):
         if not record.get('gift_cards_amount'):
             return values
         amount = float(record['gift_cards_amount'])
+        if amount == 0.0:
+            return values
         line_builder = self.component(usage='order.line.builder.gift')
         line_builder.price_unit = amount
         if 'gift_cards' in record:
