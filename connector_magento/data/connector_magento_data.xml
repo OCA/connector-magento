@@ -118,5 +118,23 @@ if sale.magento_bind_ids and abs(sale.amount_tax - sale.magento_bind_ids[0].tota
             <field name="active" eval="True"/>
         </record>
 
+        <record id="product_product_store_credit" model="product.product">
+            <field name="default_code">MAGENTO STORE CREDIT</field>
+            <field name="list_price">0.0</field>
+            <field name="standard_price">0.0</field>
+            <field name="type">service</field>
+            <field name="name">Magento Store Credit</field>
+            <field name="categ_id" ref="connector_ecommerce.product_categ_services" />
+        </record>
+
+        <record id="product_product_rewards" model="product.product">
+            <field name="default_code">MAGENTO REWARDS</field>
+            <field name="list_price">0.0</field>
+            <field name="standard_price">0.0</field>
+            <field name="type">service</field>
+            <field name="name">Magento Rewards</field>
+            <field name="categ_id" ref="connector_ecommerce.product_categ_services" />
+        </record>
+
     </data>
 </odoo>

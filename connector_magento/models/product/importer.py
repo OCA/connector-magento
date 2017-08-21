@@ -196,7 +196,7 @@ class ProductImportMapper(Component):
     def type(self, record):
         if record['type_id'] == 'simple':
             return {'type': 'product'}
-        elif record['type_id'] in ('virtual', 'downloadable'):
+        elif record['type_id'] in ('virtual', 'downloadable', 'giftcard'):
             return {'type': 'service'}
         return
 
