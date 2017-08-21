@@ -4,6 +4,7 @@
 
 import logging
 
+from re import search as re_search
 from datetime import datetime, timedelta
 
 from odoo import _
@@ -177,16 +178,63 @@ class SaleOrderImportMapper(Component):
 
     def _add_gift_certificate_line(self, map_record, values):
         record = map_record.source
-        if 'gift_cert_amount' not in record:
-            return values
-        # if gift_cert_amount is zero
+        # if gift_cert_amount is zero or doesn't exist
         if not record.get('gift_cert_amount'):
             return values
         amount = float(record['gift_cert_amount'])
+        if amount == 0.0:
+            return values
         line_builder = self.component(usage='order.line.builder.gift')
         line_builder.price_unit = amount
         if 'gift_cert_code' in record:
             line_builder.gift_code = record['gift_cert_code']
+        line = (0, 0, line_builder.get_line())
+        values['order_line'].append(line)
+        return values
+
+    def _add_gift_cards_line(self, map_record, values):
+        record = map_record.source
+        # if gift_cards_amount is zero or doesn't exist
+        if not record.get('gift_cards_amount'):
+            return values
+        amount = float(record['gift_cards_amount'])
+        if amount == 0.0:
+            return values
+        line_builder = self.component(usage='order.line.builder.gift')
+        line_builder.price_unit = amount
+        if 'gift_cards' in record:
+            gift_code = ''
+            gift_cards_serialized = record.get('gift_cards')
+            codes = re_search(r's:1:"c";s:\d+:"(.*?)"', gift_cards_serialized)
+            if codes:
+                gift_code = ', '.join(codes.groups())
+            line_builder.gift_code = gift_code
+        line = (0, 0, line_builder.get_line())
+        values['order_line'].append(line)
+        return values
+
+    def _add_store_credit_line(self, map_record, values):
+        record = map_record.source
+        if not record.get('customer_balance_amount'):
+            return values
+        amount = float(record['customer_balance_amount'])
+        if amount == 0.0:
+            return values
+        line_builder = self.component(usage='order.line.builder.magento.store_credit')
+        line_builder.price_unit = amount
+        line = (0, 0, line_builder.get_line())
+        values['order_line'].append(line)
+        return values
+
+    def _add_rewards_line(self, map_record, values):
+        record = map_record.source
+        if not record.get('reward_currency_amount'):
+            return values
+        amount = float(record['reward_currency_amount'])
+        if amount == 0.0:
+            return values
+        line_builder = self.component(usage='order.line.builder.magento.rewards')
+        line_builder.price_unit = amount
         line = (0, 0, line_builder.get_line())
         values['order_line'].append(line)
         return values
@@ -196,6 +244,9 @@ class SaleOrderImportMapper(Component):
         values = self._add_shipping_line(map_record, values)
         values = self._add_cash_on_delivery_line(map_record, values)
         values = self._add_gift_certificate_line(map_record, values)
+        values = self._add_gift_cards_line(map_record, values)
+        values = self._add_store_credit_line(map_record, values)
+        values = self._add_rewards_line(map_record, values)
         values.update({
             'partner_id': self.options.partner_id,
             'partner_invoice_id': self.options.partner_invoice_id,

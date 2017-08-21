@@ -36,6 +36,7 @@ class MagentoProductProduct(models.Model):
             ('configurable', 'Configurable Product'),
             ('virtual', 'Virtual Product'),
             ('downloadable', 'Downloadable Product'),
+            ('giftcard', 'Giftcard')
             # XXX activate when supported
             # ('grouped', 'Grouped Product'),
             # ('bundle', 'Bundle Product'),
