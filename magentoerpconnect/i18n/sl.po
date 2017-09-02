@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (7.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-07-12 12:33+0000\n"
+"POT-Creation-Date: 2017-08-19 01:24+0000\n"
 "PO-Revision-Date: 2015-07-08 12:13+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: Slovenian (http://www.transifex.com/oca/OCA-connector-magento-7-0/language/sl/)\n"
@@ -50,7 +50,7 @@ msgstr ""
 #: selection:magento.store,create_invoice_on:0
 #: selection:payment.method,create_invoice_on:0
 msgid "Validate"
-msgstr ""
+msgstr "Overi"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,sync_date:0 field:magento.address,sync_date:0
@@ -812,7 +812,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.storeview,lang_id:0
 msgid "Language"
-msgstr ""
+msgstr "Jezik"
 
 #. module: magentoerpconnect
 #: field:magento.address,created_at:0

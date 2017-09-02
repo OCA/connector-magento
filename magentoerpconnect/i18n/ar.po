@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (7.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-18 01:21+0000\n"
+"POT-Creation-Date: 2017-08-19 01:24+0000\n"
 "PO-Revision-Date: 2015-07-08 12:13+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: Arabic (http://www.transifex.com/oca/OCA-connector-magento-7-0/language/ar/)\n"
@@ -170,7 +170,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.sale.order.line,notes:0
 msgid "Notes"
-msgstr ""
+msgstr "الملاحظات"
 
 #. module: magentoerpconnect
 #: sql_constraint:magento.backend:0
