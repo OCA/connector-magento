@@ -24,8 +24,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-07-29 01:22+0000\n"
-"PO-Revision-Date: 2017-08-11 11:56+0000\n"
+"POT-Creation-Date: 2017-08-19 01:27+0000\n"
+"PO-Revision-Date: 2017-08-28 12:31+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: French (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -2678,7 +2678,7 @@ msgstr "Préfixe de vente"
 #. module: magentoerpconnect
 #: field:magento.product.product,list_price:0
 msgid "Sale Price"
-msgstr ""
+msgstr "Prix de vente"
 
 #. module: magentoerpconnect
 #: field:magento.address,property_product_pricelist:0
@@ -3453,7 +3453,7 @@ msgstr "Le montant total diffère de Magento"
 #: field:magento.address,total_invoiced:0
 #: field:magento.res.partner,total_invoiced:0
 msgid "Total Invoiced"
-msgstr ""
+msgstr "Total facturé"
 
 #. module: magentoerpconnect
 #: field:magento.address,debit:0 field:magento.res.partner,debit:0

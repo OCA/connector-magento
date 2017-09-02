@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-06-24 01:32+0000\n"
-"PO-Revision-Date: 2017-06-30 08:53+0000\n"
+"POT-Creation-Date: 2017-08-19 01:27+0000\n"
+"PO-Revision-Date: 2017-08-29 08:01+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: Dutch (Netherlands) (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/nl_NL/)\n"
 "MIME-Version: 1.0\n"
@@ -657,7 +657,7 @@ msgstr ""
 #: field:magento.stock.picking,create_uid:0 field:magento.store,create_uid:0
 #: field:magento.storeview,create_uid:0 field:magento.website,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Aangemaakt door"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,create_date:0
@@ -671,7 +671,7 @@ msgstr ""
 #: field:magento.stock.picking,create_date:0 field:magento.store,create_date:0
 #: field:magento.storeview,create_date:0 field:magento.website,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Aangemaakt op"
 
 #. module: magentoerpconnect
 #: field:magento.stock.picking,date:0
@@ -870,7 +870,7 @@ msgstr ""
 #: field:magento.product.product,description:0
 #: field:magento.sale.order.line,name:0
 msgid "Description"
-msgstr ""
+msgstr "Omschrijving"
 
 #. module: magentoerpconnect
 #: field:magento.stock.picking,location_dest_id:0
@@ -1442,7 +1442,7 @@ msgstr ""
 #: model:ir.model,name:magentoerpconnect.model_account_invoice
 #: field:magento.account.invoice,openerp_id:0
 msgid "Invoice"
-msgstr ""
+msgstr "Factuur"
 
 #. module: magentoerpconnect
 #: field:magento.sale.order,partner_invoice_id:0
@@ -1633,7 +1633,7 @@ msgstr "Laatst gewijzigd op"
 #: field:magento.stock.picking,write_uid:0 field:magento.store,write_uid:0
 #: field:magento.storeview,write_uid:0 field:magento.website,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Laatst bijgewerkt door"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,write_date:0
@@ -1647,7 +1647,7 @@ msgstr ""
 #: field:magento.stock.picking,write_date:0 field:magento.store,write_date:0
 #: field:magento.storeview,write_date:0 field:magento.website,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Laatst bijgewerkt op"
 
 #. module: magentoerpconnect
 #: help:magento.product.product,magento_qty:0
@@ -2264,7 +2264,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.sale.order,payment_term:0
 msgid "Payment Term"
-msgstr ""
+msgstr "Betalingsconditie"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,payment_term:0
@@ -2274,7 +2274,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.account.invoice,payment_ids:0
 msgid "Payments"
-msgstr ""
+msgstr "Betalingen"
 
 #. module: magentoerpconnect
 #: field:magento.sale.order,payment_ids:0
@@ -2564,7 +2564,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.stock.picking,name:0
 msgid "Reference"
-msgstr ""
+msgstr "Referentie"
 
 #. module: magentoerpconnect
 #: help:magento.stock.picking,origin:0
@@ -2686,12 +2686,12 @@ msgstr ""
 #: field:magento.address,sale_order_ids:0
 #: field:magento.res.partner,sale_order_ids:0
 msgid "Sales Order"
-msgstr ""
+msgstr "Verkooporder"
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_sale_order_line
 msgid "Sales Order Line"
-msgstr ""
+msgstr "Verkooporderregel"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,section_id:0
@@ -2997,7 +2997,7 @@ msgstr ""
 #: field:magento.address,supplier:0 field:magento.product.product,seller_ids:0
 #: field:magento.res.partner,supplier:0
 msgid "Supplier"
-msgstr ""
+msgstr "Leverancier"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,supplier_invoice_number:0

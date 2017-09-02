@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-07-29 01:22+0000\n"
-"PO-Revision-Date: 2017-08-03 13:36+0000\n"
+"POT-Creation-Date: 2017-08-19 01:27+0000\n"
+"PO-Revision-Date: 2017-08-21 07:24+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: Portuguese (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/pt/)\n"
 "MIME-Version: 1.0\n"
@@ -1570,7 +1570,7 @@ msgstr "Diário"
 #: field:magento.account.invoice,move_id:0
 #: field:magento.account.invoice,move_name:0
 msgid "Journal Entry"
-msgstr ""
+msgstr "Mov. de Diário"
 
 #. module: magentoerpconnect
 #: field:magento.address,journal_item_count:0
@@ -1592,7 +1592,7 @@ msgstr ""
 #: field:magento.address,lang:0 field:magento.res.partner,lang:0
 #: field:magento.storeview,lang_id:0
 msgid "Language"
-msgstr ""
+msgstr "Linguagem"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,message_last_post:0
@@ -2086,7 +2086,7 @@ msgstr ""
 #: field:magento.address,comment:0 field:magento.res.partner,comment:0
 #: field:magento.sale.order.line,notes:0 field:magento.stock.picking,note:0
 msgid "Notes"
-msgstr ""
+msgstr "Notas"
 
 #. module: magentoerpconnect
 #: code:addons/magentoerpconnect/unit/export_synchronizer.py:407
@@ -3087,7 +3087,7 @@ msgstr ""
 #: field:magento.sale.order,amount_tax:0
 #: field:magento.sale.order.line,tax_id:0
 msgid "Taxes"
-msgstr ""
+msgstr "Impostos"
 
 #. module: magentoerpconnect
 #: help:magento.stock.picking,picking_type_code:0

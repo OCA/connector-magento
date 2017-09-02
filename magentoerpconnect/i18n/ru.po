@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-05-06 00:32+0000\n"
-"PO-Revision-Date: 2017-05-11 14:11+0000\n"
+"POT-Creation-Date: 2017-08-19 01:27+0000\n"
+"PO-Revision-Date: 2017-08-21 07:18+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: Russian (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -196,7 +196,7 @@ msgstr ""
 #: field:magento.res.partner,active:0
 #: field:magento.res.partner.category,active:0
 msgid "Active"
-msgstr ""
+msgstr "Активное"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,comment:0
@@ -2086,7 +2086,7 @@ msgstr ""
 #: field:magento.address,comment:0 field:magento.res.partner,comment:0
 #: field:magento.sale.order.line,notes:0 field:magento.stock.picking,note:0
 msgid "Notes"
-msgstr ""
+msgstr "Примечания"
 
 #. module: magentoerpconnect
 #: code:addons/magentoerpconnect/unit/export_synchronizer.py:407

@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-07-29 01:22+0000\n"
-"PO-Revision-Date: 2017-08-11 11:59+0000\n"
+"POT-Creation-Date: 2017-08-19 01:27+0000\n"
+"PO-Revision-Date: 2017-08-28 12:31+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -2086,7 +2086,7 @@ msgstr ""
 #: field:magento.address,comment:0 field:magento.res.partner,comment:0
 #: field:magento.sale.order.line,notes:0 field:magento.stock.picking,note:0
 msgid "Notes"
-msgstr ""
+msgstr "备注"
 
 #. module: magentoerpconnect
 #: code:addons/magentoerpconnect/unit/export_synchronizer.py:407
@@ -2447,7 +2447,7 @@ msgstr ""
 #: field:magento.product.product,product_tmpl_id:0
 #: field:magento.sale.order.line,product_tmpl_id:0
 msgid "Product Template"
-msgstr ""
+msgstr "产品模板"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,type:0

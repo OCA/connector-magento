@@ -17,8 +17,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-07-29 01:22+0000\n"
-"PO-Revision-Date: 2017-08-11 19:01+0000\n"
+"POT-Creation-Date: 2017-08-19 01:27+0000\n"
+"PO-Revision-Date: 2017-08-28 12:31+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: Italian (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/it/)\n"
 "MIME-Version: 1.0\n"
@@ -187,7 +187,7 @@ msgstr "API"
 #. module: magentoerpconnect
 #: field:magento.account.invoice,account_id:0
 msgid "Account"
-msgstr ""
+msgstr "Conto"
 
 #. module: magentoerpconnect
 #: field:magento.address,property_account_payable:0
@@ -703,7 +703,7 @@ msgstr ""
 #: field:magento.account.invoice,currency_id:0
 #: field:magento.sale.order,currency_id:0
 msgid "Currency"
-msgstr ""
+msgstr "Valuta"
 
 #. module: magentoerpconnect
 #: help:magento.product.product,qty_available:0

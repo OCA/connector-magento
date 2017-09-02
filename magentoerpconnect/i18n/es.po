@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-07-01 01:51+0000\n"
-"PO-Revision-Date: 2017-07-04 10:14+0000\n"
+"POT-Creation-Date: 2017-08-19 01:27+0000\n"
+"PO-Revision-Date: 2017-08-28 14:46+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: Spanish (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/es/)\n"
 "MIME-Version: 1.0\n"
@@ -1578,7 +1578,7 @@ msgstr "Diario"
 #: field:magento.account.invoice,move_id:0
 #: field:magento.account.invoice,move_name:0
 msgid "Journal Entry"
-msgstr ""
+msgstr "Asiento contable"
 
 #. module: magentoerpconnect
 #: field:magento.address,journal_item_count:0

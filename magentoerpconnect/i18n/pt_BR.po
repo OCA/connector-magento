@@ -17,8 +17,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-07-15 01:16+0000\n"
-"PO-Revision-Date: 2017-07-24 17:06+0000\n"
+"POT-Creation-Date: 2017-08-19 01:27+0000\n"
+"PO-Revision-Date: 2017-08-28 14:46+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/pt_BR/)\n"
 "MIME-Version: 1.0\n"
@@ -187,7 +187,7 @@ msgstr "API"
 #. module: magentoerpconnect
 #: field:magento.account.invoice,account_id:0
 msgid "Account"
-msgstr ""
+msgstr "Conta"
 
 #. module: magentoerpconnect
 #: field:magento.address,property_account_payable:0
@@ -2096,7 +2096,7 @@ msgstr ""
 #: field:magento.address,comment:0 field:magento.res.partner,comment:0
 #: field:magento.sale.order.line,notes:0 field:magento.stock.picking,note:0
 msgid "Notes"
-msgstr ""
+msgstr "Notas"
 
 #. module: magentoerpconnect
 #: code:addons/magentoerpconnect/unit/export_synchronizer.py:407
@@ -2457,7 +2457,7 @@ msgstr ""
 #: field:magento.product.product,product_tmpl_id:0
 #: field:magento.sale.order.line,product_tmpl_id:0
 msgid "Product Template"
-msgstr ""
+msgstr "Modelo Produto"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,type:0
