@@ -213,12 +213,40 @@ class SaleOrderImportMapper(Component):
         values['order_line'].append(line)
         return values
 
+    def _add_store_credit_line(self, map_record, values):
+        record = map_record.source
+        if not record.get('customer_balance_amount'):
+            return values
+        amount = float(record['customer_balance_amount'])
+        if amount == 0.0:
+            return values
+        line_builder = self.component(usage='order.line.builder.magento.store_credit')
+        line_builder.price_unit = amount
+        line = (0, 0, line_builder.get_line())
+        values['order_line'].append(line)
+        return values
+
+    def _add_rewards_line(self, map_record, values):
+        record = map_record.source
+        if not record.get('reward_currency_amount'):
+            return values
+        amount = float(record['reward_currency_amount'])
+        if amount == 0.0:
+            return values
+        line_builder = self.component(usage='order.line.builder.magento.rewards')
+        line_builder.price_unit = amount
+        line = (0, 0, line_builder.get_line())
+        values['order_line'].append(line)
+        return values
+
     def finalize(self, map_record, values):
         values.setdefault('order_line', [])
         values = self._add_shipping_line(map_record, values)
         values = self._add_cash_on_delivery_line(map_record, values)
         values = self._add_gift_certificate_line(map_record, values)
         values = self._add_gift_cards_line(map_record, values)
+        values = self._add_store_credit_line(map_record, values)
+        values = self._add_rewards_line(map_record, values)
         values.update({
             'partner_id': self.options.partner_id,
             'partner_invoice_id': self.options.partner_invoice_id,
