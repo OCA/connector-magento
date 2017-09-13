@@ -2,11 +2,11 @@
 # Copyright (c) 2015 ACSONE SA/NV (<http://acsone.eu>)
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from openerp import models, fields
+from odoo import models, fields
 
 
-class PaymentMethod(models.Model):
-    _inherit = 'payment.method'
+class AccountPaymentMode(models.Model):
+    _inherit = 'account.payment.mode'
 
     transaction_id_path = fields.Char(
         help=('Path to the value into the informations provided by Magento '

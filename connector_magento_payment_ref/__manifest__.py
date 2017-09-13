@@ -7,16 +7,19 @@
         Map the payment identifier in your sale order""",
     'author': 'ACSONE SA/NV,'
               'Odoo Community Association (OCA)',
-    'website': "http://acsone.eu",
+    'website': 'https://github.com/OCA/connector-magento',
     'category': 'Connector',
-    'version': '8.0.1.0.0',
+    'version': '10.0.1.0.0',
     'license': 'AGPL-3',
     'depends': [
-        'magentoerpconnect',
-        'sale_payment_method',
+        'component',
+        'connector',
+        'connector_magento',
+        'account_payment_mode',
         'base_transaction_id',
+        'sale_automatic_workflow_payment_ref',
     ],
     'data': [
-        'views/payment_method_view.xml',
+        'views/account_payment_mode.xml',
     ],
 }
