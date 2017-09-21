@@ -182,7 +182,7 @@ class TestUpdateStockQty(MagentoSyncTestCase):
                 self.parse_cassette_request(cassette.requests[1].body)
             )
 
-    def test_compute_new_qty(self):
+    def test_compute_new_qty_with_location(self):
         product = self.binding_product.odoo_id
         binding = self.binding_product
         # start with 0
@@ -190,6 +190,7 @@ class TestUpdateStockQty(MagentoSyncTestCase):
         self.assertEqual(binding.magento_qty, 0.0)
 
         my_location_id = self.env.ref("stock.stock_location_components").id
+        binding = binding.with_context(location=my_location_id)
 
         # change to 30
         self._product_change_qty(product, 30)
