@@ -74,7 +74,7 @@ class MagentoBaseExporter(AbstractComponent):
                                            attributes=['updated_at'])
         if not record['updated_at']:
             # in rare case it can be empty, in doubt, import it
-            return False
+            return True
         sync_date = odoo.fields.Datetime.from_string(sync)
         magento_date = datetime.strptime(record['updated_at'],
                                          MAGENTO_DATETIME_FORMAT)
