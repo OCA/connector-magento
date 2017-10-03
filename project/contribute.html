@@ -25,7 +25,7 @@
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Tutorial: development" href="../guides/tutorial_development.html" />
+    <link rel="next" title="Tutorial: customize the connector" href="../guides/tutorial_customize.html" />
     <link rel="prev" title="FAQ" href="../howto/faq.html" />
 
 <meta charset='utf-8'>
@@ -93,12 +93,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../howto/configure_translations.html">How to configure translations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../howto/configure_warehouse.html">How to configure warehouses</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../howto/configure_pricing.html">How to configure pricing</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../howto/configure_pricing.html#prices-are-shared-accross-websites">Prices are shared accross websites</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../howto/configure_pricing.html#prices-are-different-accross-websites">Prices are different accross websites</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../howto/configure_payment_methods.html">Howto: configure payment methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../howto/configure_payment_modes.html">Howto: configure payment modes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../howto/configure_automatic_workflows.html">Howto: configure automatic workflows</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../howto/configure_exception_rules.html">Howto: configure exception rules</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../howto/configure_shipping_methods.html">How to configure shipping methods</a></li>
@@ -123,50 +118,32 @@
 </ul>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Developer’s guide</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#connector-with-batteries-included-buildout">Connector with batteries included (buildout)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#magento-on-docker">Magento on Docker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dev-environment">Dev Environment</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#how-to-help">How to help</a></li>
 </ul>
 </li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../guides/tutorial_development.html">Tutorial: development</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../guides/tutorial_development.html#run-a-function-on-an-event">Run a function on an Event</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../guides/tutorial_development.html#find-the-connector-unit-for-a-model">Find the ‘connector unit’ for a model</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../guides/tutorial_development.html#create-an-import">Create an import</a></li>
-</ul>
-</li>
 <li class="toctree-l1"><a class="reference internal" href="../guides/tutorial_customize.html">Tutorial: customize the connector</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../guides/tutorial_customize.html#bootstrap-your-own-customization-module">Bootstrap your own customization module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../guides/tutorial_customize.html#add-mappings-of-fields">Add mappings of fields</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../guides/tutorial_customize.html#customizing-importer">Customizing importer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../guides/tutorial_customize.html#and-now">And now?</a></li>
 </ul>
 </li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../api/api_connector.html">Connector</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../api/api_consumer.html">Consumers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../api/api_backend.html">Backend</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../api/api_binder.html">Binders</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../api/api_synchronizer.html">Synchronizers</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../api/api_synchronizer.html#module-openerp.addons.magentoerpconnect.unit.import_synchronizer">Import</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/api_synchronizer.html#module-openerp.addons.magentoerpconnect.unit.export_synchronizer">Export</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/api_synchronizer.html#module-openerp.addons.magentoerpconnect.unit.delete_synchronizer">Delete</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/api_components.html">Components</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../api/api_components.html#module-odoo.addons.connector_magento.components.core">Core Component</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/api_components.html#magento-components">Magento Components</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../api/api_backend_adapter.html">Backend Adapters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/api_models.html">Models</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../api/api_models.html#base-models">Base Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/api_models.html#synchronized-models">Synchronized Models</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../api/api_exception.html">Exceptions</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../api/api_delivery.html">Delivery</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../api/api_invoice.html">Invoice</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../api/api_magento_model.html">Magento Models</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../api/api_partner.html">Partner</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../api/api_partner_category.html">Partner Category</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../api/api_product.html">Product</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../api/api_product_category.html">Product Category</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../api/api_sale.html">Sale</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../api/api_stock_picking.html">Stock Picking</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../api/api_stock_tracking.html">Stock Tracking</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="roadmap.html">Roadmap</a><ul>
@@ -175,20 +152,6 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="contributors.html">Contributors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contributors.html#financial-contributors">Financial Contributors</a></li>
-<li class="toctree-l1"><a class="reference internal" href="changes.html">Changes</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="changes.html#id2">3.0.0 (2015-06-02)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changes.html#id3">2.5.0 (2015-01-06)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changes.html#id4">2.4.2 (2014-06-16)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changes.html#id5">2.4.1 (2014-06-10)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changes.html#id6">2.4.0 (2014-05-26)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changes.html#id7">2.3.1 (2014-01-23)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changes.html#warning-api-changes">2.3.0 (2014-01-15 warning: API changes)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changes.html#id8">2.2.1 (2013.11.22)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changes.html#public-release-2013-11-06">2.2.0 (public release - 2013.11.06)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changes.html#id9">2.1.0 (2013.08.05)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changes.html#id10">2.0.0</a></li>
-</ul>
-</li>
 </ul>
 </ul>
 </li>
@@ -203,15 +166,10 @@
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
 <li><a class="reference internal" href="#">Developer’s guide</a><ul>
-<li><a class="reference internal" href="#connector-with-batteries-included-buildout">Connector with batteries included (buildout)</a><ul>
-<li><a class="reference internal" href="#installing-the-buildout">Installing the buildout</a></li>
-<li><a class="reference internal" href="#start-odoo">Start Odoo</a></li>
-<li><a class="reference internal" href="#start-with-supervisord">Start with Supervisord</a></li>
-<li><a class="reference internal" href="#run-the-tests">Run the tests</a></li>
-<li><a class="reference internal" href="#build-the-documentation">Build the documentation</a></li>
+<li><a class="reference internal" href="#dev-environment">Dev Environment</a><ul>
+<li><a class="reference internal" href="#installing-the-dev-environment-with-docker">Installing the dev environment with Docker</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#magento-on-docker">Magento on Docker</a></li>
 <li><a class="reference internal" href="#how-to-help">How to help</a><ul>
 <li><a class="reference internal" href="#mailing-list">Mailing list</a></li>
 <li><a class="reference internal" href="#file-an-issue">File an Issue</a></li>
@@ -236,7 +194,7 @@
     </a>
   </li>
   <li>
-    <a href="../guides/tutorial_development.html" title="Next Chapter: Tutorial: development"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">Tutorial: develo... &raquo;</span>
+    <a href="../guides/tutorial_customize.html" title="Next Chapter: Tutorial: customize the connector"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">Tutorial: cus... &raquo;</span>
     </a>
   </li>
               
@@ -266,130 +224,39 @@
       
   <div class="section" id="developer-s-guide">
 <span id="contribute"></span><h1>Developer’s guide<a class="headerlink" href="#developer-s-guide" title="Permalink to this headline">¶</a></h1>
-<div class="contents local topic" id="sections">
-<p class="topic-title first">Sections:</p>
-<ul class="simple">
-<li><a class="reference internal" href="#connector-with-batteries-included-buildout" id="id1">Connector with batteries included (buildout)</a><ul>
-<li><a class="reference internal" href="#installing-the-buildout" id="id2">Installing the buildout</a></li>
-<li><a class="reference internal" href="#start-odoo" id="id3">Start Odoo</a></li>
-<li><a class="reference internal" href="#start-with-supervisord" id="id4">Start with Supervisord</a></li>
-<li><a class="reference internal" href="#run-the-tests" id="id5">Run the tests</a></li>
-<li><a class="reference internal" href="#build-the-documentation" id="id6">Build the documentation</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#magento-on-docker" id="id7">Magento on Docker</a></li>
-<li><a class="reference internal" href="#how-to-help" id="id8">How to help</a><ul>
-<li><a class="reference internal" href="#mailing-list" id="id9">Mailing list</a></li>
-<li><a class="reference internal" href="#file-an-issue" id="id10">File an Issue</a></li>
-<li><a class="reference internal" href="#submit-pull-requests-for-features-or-fixes" id="id11">Submit Pull Requests for features or fixes</a></li>
-<li><a class="reference internal" href="#improve-the-documentation" id="id12">Improve the documentation</a></li>
-<li><a class="reference internal" href="#translations" id="id13">Translations</a></li>
-<li><a class="reference internal" href="#writing-tests" id="id14">Writing tests</a></li>
-</ul>
-</li>
-</ul>
-</div>
-<div class="section" id="connector-with-batteries-included-buildout">
-<span id="installation-with-buildout"></span><h2><a class="toc-backref" href="#sections">Connector with batteries included (buildout)</a><a class="headerlink" href="#connector-with-batteries-included-buildout" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="installing-the-buildout">
-<h3><a class="toc-backref" href="#sections">Installing the buildout</a><a class="headerlink" href="#installing-the-buildout" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="dev-environment">
+<span id="installation-dev-env"></span><h2>Dev Environment<a class="headerlink" href="#dev-environment" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="installing-the-dev-environment-with-docker">
+<h3>Installing the dev environment with Docker<a class="headerlink" href="#installing-the-dev-environment-with-docker" title="Permalink to this headline">¶</a></h3>
 <p>When you want to install the Magento connector, you can either install it manually
-using the <a class="reference internal" href="../guides/installation_guide.html#installation-guide"><span class="std std-ref">Installation Guide</span></a> or either using our automated <a class="reference external" href="http://www.buildout.org">Buildout</a> config.
+using the <a class="reference internal" href="../guides/installation_guide.html#installation-guide"><span class="std std-ref">Installation Guide</span></a> or either using our Docker config.
 The manual installation is recommended if you need to add it on an existing
 installation or if you want to control your environment in your own manner.</p>
-<p>The <a class="reference external" href="http://www.buildout.org">Buildout</a> config is an all-in-one package which installs Odoo, the
-connector and provides many facilities for the developers,
-it is based on the <a class="reference external" href="https://pypi.python.org/pypi/anybox.recipe.openerp">Anybox Buildout Recipe</a>.
-It includes developer tools such as:</p>
+<p>The Docker config is an all-in-one package which installs Odoo, the
+connector, Magento and provides niceties for the developers.</p>
+<p>It includes developer tools such as:</p>
 <ul class="simple">
 <li>Run the tests on the connector / Magento connector</li>
 <li>Build the connector / Magento connector documentation</li>
 <li>Launch the Jobs Workers (for multiprocessing)</li>
 </ul>
-<p>So we highly recommend to use this configuration for development.</p>
-<p>Here are the configuration files <a class="reference external" href="https://github.com/guewen/odoo-connector-magento-buildout">https://github.com/guewen/odoo-connector-magento-buildout</a>.</p>
+<p>The dev environment is on: <a class="reference external" href="https://github.com/guewen/odoo-magento-connector-workspace">https://github.com/guewen/odoo-magento-connector-workspace</a></p>
 <p>Clone the repo:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span>$ git clone https://github.com/guewen/odoo-connector-magento-buildout.git -b 8.0 odoo-connector-magento
+<div class="highlight-default"><div class="highlight"><pre><span></span>$ git clone https://github.com/guewen/odoo-magento-connector-workspace/ -b 10.0
 </pre></div>
 </div>
-<p>and follow the installation steps.</p>
-<div class="admonition warning">
-<p class="first admonition-title">Warning</p>
-<p class="last">System dependencies to build the eggs: libxml2-dev libxslt1-dev
-that you need to install with apt-get, yum, …
-You can also use <a class="reference external" href="http://pythonhosted.org/anybox.recipe.openerp/first_steps.html#installing-build-dependencies">http://pythonhosted.org/anybox.recipe.openerp/first_steps.html#installing-build-dependencies</a></p>
+<p>and follow the installation steps described in the README of the project..</p>
 </div>
-<p>Head over the next sections to discover the included tools</p>
-</div>
-<div class="section" id="start-odoo">
-<h3><a class="toc-backref" href="#sections">Start Odoo</a><a class="headerlink" href="#start-odoo" title="Permalink to this headline">¶</a></h3>
-<p>All the commands are launched from the root directory of the buildout.</p>
-<p>In standalone mode (jobs will be threaded):</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span>$ bin/start_openerp
-</pre></div>
-</div>
-<p>With workers (multiprocessing), you need to start dedicated Connector Workers for the jobs:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span>$ bin/start_openerp --workers=4
-$ bin/start_connector_worker --workers=2
-</pre></div>
-</div>
-</div>
-<div class="section" id="start-with-supervisord">
-<h3><a class="toc-backref" href="#sections">Start with Supervisord</a><a class="headerlink" href="#start-with-supervisord" title="Permalink to this headline">¶</a></h3>
-<p>To start the supervisord daemon, run:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span>$ bin/supervisord
-</pre></div>
-</div>
-<p>The default configuration starts Odoo with 4 workers and 2 Connector
-workers. This can be changed in the buildout.cfg file in the <code class="docutils literal"><span class="pre">supervisor</span></code> section.</p>
-<p>The services can be managed on:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span>$ bin/supervisorctl
-</pre></div>
-</div>
-</div>
-<div class="section" id="run-the-tests">
-<h3><a class="toc-backref" href="#sections">Run the tests</a><a class="headerlink" href="#run-the-tests" title="Permalink to this headline">¶</a></h3>
-<p>The Magento Connector and the Connector framework do not use YAML tests, but only
-<code class="docutils literal"><span class="pre">unittest2</span></code> tests. The following command lines will run them:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span>$ bin/runtests --database db-name -u connector
-$ bin/runtests --database db-name -u magentoerpconnect
-</pre></div>
-</div>
-<p>Use the help arguments for more information about the options:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span>$ bin/runtests --help
-$ bin/runtests --help-oe
-</pre></div>
-</div>
-</div>
-<div class="section" id="build-the-documentation">
-<h3><a class="toc-backref" href="#sections">Build the documentation</a><a class="headerlink" href="#build-the-documentation" title="Permalink to this headline">¶</a></h3>
-<p>The documentation uses <a class="reference external" href="http://www.sphinx-doc.org">Sphinx</a>, use the following lines to build them in HTML:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span>$ bin/sphinxbuilder_connector
-$ bin/sphinxbuilder_connector_magento
-</pre></div>
-</div>
-<p>They will be built in the <code class="docutils literal"><span class="pre">docs</span></code> directory at the root of the buildout.</p>
-</div>
-</div>
-<div class="section" id="magento-on-docker">
-<h2><a class="toc-backref" href="#sections">Magento on Docker</a><a class="headerlink" href="#magento-on-docker" title="Permalink to this headline">¶</a></h2>
-<p>If you want to develop a generic feature on the Magento Connector, we
-recommend to use the <a class="reference external" href="https://github.com/guewen/docker-magento">Magento - Odoo Connector docker image</a>.  It
-installs Magento 1.7 with the sample database and the Magento (PHP) part
-of the Connector.</p>
-<p>The project’s page on Github describe the installation process, just
-follow them.</p>
-<p>We also use this image as a reference for the data of the tests.</p>
 </div>
 <div class="section" id="how-to-help">
-<h2><a class="toc-backref" href="#sections">How to help</a><a class="headerlink" href="#how-to-help" title="Permalink to this headline">¶</a></h2>
+<h2>How to help<a class="headerlink" href="#how-to-help" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="mailing-list">
-<h3><a class="toc-backref" href="#sections">Mailing list</a><a class="headerlink" href="#mailing-list" title="Permalink to this headline">¶</a></h3>
+<h3>Mailing list<a class="headerlink" href="#mailing-list" title="Permalink to this headline">¶</a></h3>
 <p>The main channel for the discussion is the mailing list, you are invited to
 subscribe on the list named ‘Connectors’ on: <a class="reference external" href="https://odoo-community.org/groups">https://odoo-community.org/groups</a></p>
 </div>
 <div class="section" id="file-an-issue">
-<h3><a class="toc-backref" href="#sections">File an Issue</a><a class="headerlink" href="#file-an-issue" title="Permalink to this headline">¶</a></h3>
+<h3>File an Issue<a class="headerlink" href="#file-an-issue" title="Permalink to this headline">¶</a></h3>
 <p>When you encounter an issue or think there is a bug, you can file a bug on the
 project: <a class="reference external" href="https://github.com/OCA/connector-magento/issues">https://github.com/OCA/connector-magento/issues</a></p>
 <p>The connector uses several community modules, located in different projects
@@ -414,13 +281,13 @@ few lines before the beginning of the crash report in the log)</li>
 </ul>
 </div>
 <div class="section" id="submit-pull-requests-for-features-or-fixes">
-<h3><a class="toc-backref" href="#sections">Submit Pull Requests for features or fixes</a><a class="headerlink" href="#submit-pull-requests-for-features-or-fixes" title="Permalink to this headline">¶</a></h3>
+<h3>Submit Pull Requests for features or fixes<a class="headerlink" href="#submit-pull-requests-for-features-or-fixes" title="Permalink to this headline">¶</a></h3>
 <p>Merge proposals are much appreciated and we’ll take care to review them properly.</p>
 <p>The PR process is the following:</p>
 <ol class="arabic simple">
 <li>Fork the project on <a class="reference external" href="https://github.com/OCA/connector-magento">https://github.com/OCA/connector-magento</a></li>
 <li>Work on your branch, develop a feature or fix a bug. Please include a test (<a class="reference internal" href="#writing-tests">Writing tests</a>).</li>
-<li>Ensure that the tests are green (<a class="reference internal" href="#run-the-tests">Run the tests</a>)</li>
+<li>Ensure that the tests are green</li>
 <li>Ensure that pep8 is repected</li>
 <li>Open a Pull Request on GitHub</li>
 <li>Travis will automatically test pep8 and launch the tests. If Travis fails,
@@ -433,73 +300,49 @@ if necessary.</p>
 </div>
 </div>
 <div class="section" id="improve-the-documentation">
-<h3><a class="toc-backref" href="#sections">Improve the documentation</a><a class="headerlink" href="#improve-the-documentation" title="Permalink to this headline">¶</a></h3>
+<h3>Improve the documentation<a class="headerlink" href="#improve-the-documentation" title="Permalink to this headline">¶</a></h3>
 <p>Helping on the documentation is extremely valuable and is an easy starting
 point to contribute. The documentation is located in the Magento connector’s
 project, so you will need to clone the repository, working on the documentation and
 follow the instructions in the section <a class="reference internal" href="#submit-pull-requests-for-features-or-fixes">Submit Pull Requests for features or
 fixes</a> to propose your changes.</p>
-<p>You will also need to read this section: <a class="reference internal" href="#build-the-documentation">Build the documentation</a>.</p>
 </div>
 <div class="section" id="translations">
-<h3><a class="toc-backref" href="#sections">Translations</a><a class="headerlink" href="#translations" title="Permalink to this headline">¶</a></h3>
+<h3>Translations<a class="headerlink" href="#translations" title="Permalink to this headline">¶</a></h3>
 <p>Currently the translations should be done directly in the <code class="docutils literal"><span class="pre">.po</span></code> files, follow
 the <a class="reference internal" href="#submit-pull-requests-for-features-or-fixes">Submit Pull Requests for features or fixes</a> instructions.</p>
 </div>
 <div class="section" id="writing-tests">
-<h3><a class="toc-backref" href="#sections">Writing tests</a><a class="headerlink" href="#writing-tests" title="Permalink to this headline">¶</a></h3>
+<h3>Writing tests<a class="headerlink" href="#writing-tests" title="Permalink to this headline">¶</a></h3>
 <p>Every new feature in the connector should have tests. We use exclusively the
 <code class="docutils literal"><span class="pre">unittest2</span></code> tests with the Odoo extensions.</p>
-<p>The tests are located in <code class="docutils literal"><span class="pre">magentoerpconnect/tests</span></code>.</p>
-<p>The tests run without any connection to Magento. They mock the API.  In order
-to test the connector with representative data, we record real
-responses/requests, then use them in the tests. The reference data we use are
-those of the Magento demo, which are automatically installed when you install
-Magento using theses instructions: <a class="reference internal" href="#magento-on-docker">Magento on Docker</a>.</p>
-<p>Thus, in the <code class="docutils literal"><span class="pre">tests</span></code> folder, you will find files with only data, and the
-others with the tests.</p>
-<p>In order to record data, you can proceed as follows:</p>
-<p>In <code class="docutils literal"><span class="pre">magentoerpconnect/unit/backend_adapter.py</span></code> at lines 130,130:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span> <span class="k">def</span> <span class="nf">_call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">arguments</span><span class="p">):</span>
-     <span class="k">try</span><span class="p">:</span>
-         <span class="k">with</span> <span class="n">magentolib</span><span class="o">.</span><span class="n">API</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">magento</span><span class="o">.</span><span class="n">location</span><span class="p">,</span>
-                             <span class="bp">self</span><span class="o">.</span><span class="n">magento</span><span class="o">.</span><span class="n">username</span><span class="p">,</span>
-                             <span class="bp">self</span><span class="o">.</span><span class="n">magento</span><span class="o">.</span><span class="n">password</span><span class="p">)</span> <span class="k">as</span> <span class="n">api</span><span class="p">:</span>
-             <span class="n">result</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="n">arguments</span><span class="p">)</span>
-<span class="hll">             <span class="c1"># Uncomment to record requests/responses in ``recorder``</span>
-</span><span class="hll">             <span class="c1"># record(method, arguments, result)</span>
-</span>             <span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;api.call(</span><span class="si">%s</span><span class="s2">, </span><span class="si">%s</span><span class="s2">) returned </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
-                           <span class="n">method</span><span class="p">,</span> <span class="n">arguments</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
-             <span class="k">return</span> <span class="n">result</span>
-</pre></div>
-</div>
-<p>Uncomment the line doing a call to <a class="reference internal" href="../api/api_backend_adapter.html#openerp.addons.magentoerpconnect.unit.backend_adapter.record" title="openerp.addons.magentoerpconnect.unit.backend_adapter.record"><code class="xref py py-func docutils literal"><span class="pre">record()</span></code></a>.
-Then, as soon as you will start the server, all the requests and responses
-will be stored in global dict. Once you have recorded some exchanges, you can
-output them using a tool such as <a class="reference external" href="https://erppeek.readthedocs.org/en/latest/">ERPpeek</a> and by calling the method
-<code class="xref py py-class docutils literal"><span class="pre">output_recorder</span></code>:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">MagentoBackend</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">output_recorder</span><span class="p">([])</span>
-</pre></div>
-</div>
-<p>A path is returned with the location of the file.</p>
-<p>When you want to use a set of test data in a test, just use
-<code class="xref py py-func docutils literal"><span class="pre">mock_api()</span></code>:</p>
+<p>The tests are located in <code class="docutils literal"><span class="pre">connector_magento/tests</span></code>.</p>
+<p>The tests run without any connection to Magento. They use <a class="reference external" href="https://vcrpy.readthedocs.io/en/latest/">vcr.py</a> in order to record real requests
+made towards the Magento API.  The first time a test is run, vrcpy runs the
+request on a real Magento, the next times the test is run, it uses the
+registered data.
+The reference data we use are those of the Magento demo data.</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">.common</span> <span class="kn">import</span> <span class="n">mock_api</span><span class="p">,</span>
 <span class="kn">from</span> <span class="nn">.a_data_module</span> <span class="kn">import</span> <span class="n">new_set_of_data</span>
 
 <span class="o">&lt;...&gt;</span>
 <span class="k">def</span> <span class="nf">test_new</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="o">&lt;...&gt;</span>
-    <span class="k">with</span> <span class="n">mock_api</span><span class="p">(</span><span class="n">new_set_of_data</span><span class="p">):</span>
+    <span class="k">with</span> <span class="n">recorder</span><span class="o">.</span><span class="n">use_cassette</span><span class="p">(</span>
+            <span class="s1">&#39;test_export_xxx&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">cassette</span><span class="p">:</span>
         <span class="c1"># do what the test needs, such as, for instance:</span>
-        <span class="n">import_batch</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="s1">&#39;magento.website&#39;</span><span class="p">,</span> <span class="n">backend_id</span><span class="p">)</span>
+        <span class="n">binding</span><span class="o">.</span><span class="n">export_record</span><span class="p">()</span>
+        <span class="c1"># all http calls are recorded in &#39;cassette&#39;</span>
+        <span class="c1"># we can now check many things in the cassette itself</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">cassette</span><span class="o">.</span><span class="n">requests</span><span class="p">))</span>
 </pre></div>
 </div>
-<p>See how to <a class="reference internal" href="#run-the-tests">Run the tests</a></p>
 <p>Useful links:</p>
 <ul class="simple">
-<li>unittest documentation: <a class="reference external" href="http://docs.python.org/dev/library/unittest.html">http://docs.python.org/dev/library/unittest.html</a></li>
-<li>Odoo’s documentation on tests: <a class="reference external" href="https://doc.openerp.com/trunk/server/05_test_framework/">https://doc.openerp.com/trunk/server/05_test_framework/</a></li>
+<li>unittest documentation: <a class="reference external" href="https://docs.python.org/2/library/unittest.html">https://docs.python.org/2/library/unittest.html</a></li>
+<li>Odoo’s documentation on tests: <a class="reference external" href="https://www.odoo.com/documentation/10.0/reference/testing.html">https://www.odoo.com/documentation/10.0/reference/testing.html</a></li>
+<li>vcr.py documentation: <a class="reference external" href="https://vcrpy.readthedocs.io/en/latest/">https://vcrpy.readthedocs.io/en/latest/</a></li>
+<li>pytest odoo plugin: <a class="reference external" href="https://pypi.python.org/pypi/pytest-odoo">https://pypi.python.org/pypi/pytest-odoo</a></li>
 </ul>
 </div>
 </div>
@@ -525,7 +368,7 @@ output them using a tool such as <a class="reference external" href="https://erp
     </p>
     <p>
         &copy; Copyright 2013-2015, Odoo Community Association (OCA).<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.4.<br/>
     </p>
   </div>
 </footer>

@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>odoo.addons.connector_magento.components.importer &#8212; Odoo Magento Connector  documentation</title>
+    <link rel="stylesheet" href="../../../../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../../../../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../../../../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../../../../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-7628916-4', 'odoo-magento-connector.com');
+  ga('send', 'pageview');
+
+</script>
+
+  </head>
+  <body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../../../index.html">
+          Odoo Magento Connector</a>
+        <span class="navbar-text navbar-version pull-left"><b></b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../guides/installation_guide.html">Installation Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../guides/installation_guide.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../guides/installation_guide.html#after-the-installation">After the installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../guides/installation_guide.html#on-a-daily-basis">On a daily basis</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../guides/key_questions.html">Key questions when connecting Odoo with Magento</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../guides/key_questions.html#sale-workflows">Sale workflows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../guides/key_questions.html#catalog">Catalog</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../guides/key_questions.html#pricing">Pricing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../guides/key_questions.html#accounting">Accounting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../guides/key_questions.html#stock-availability-deliveries">Stock, availability, deliveries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../guides/key_questions.html#technical">Technical</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../howto/configure_translations.html">How to configure translations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../howto/configure_warehouse.html">How to configure warehouses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../howto/configure_payment_modes.html">Howto: configure payment modes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../howto/configure_automatic_workflows.html">Howto: configure automatic workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../howto/configure_exception_rules.html">Howto: configure exception rules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../howto/configure_shipping_methods.html">How to configure shipping methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../howto/configure_emails.html">How to configure emails</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../howto/configure_schedulers.html">How to configure schedulers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../howto/configure_taxes.html">How to configure taxes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../guides/connector_checkpoint.html">Check the connector checkpoint</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../guides/monitor_resolve_jobs.html">Monitor and resolve jobs</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../guides/monitor_resolve_jobs.html#q-a">Q&amp;A</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../howto/modify_an_order.html">How to cancel / modify a sale order</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../howto/modify_an_order.html#handle-a-sale-order-cancelled-on-magento">Handle a sale order cancelled on Magento</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../howto/modify_an_order.html#modify-a-sale-order">Modify a sale order</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../howto/faq.html">FAQ</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../howto/faq.html#how-do-i">How do I…</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../howto/faq.html#why">Why…</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../project/contribute.html">Developer’s guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../project/contribute.html#dev-environment">Dev Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../project/contribute.html#how-to-help">How to help</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../guides/tutorial_customize.html">Tutorial: customize the connector</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../guides/tutorial_customize.html#bootstrap-your-own-customization-module">Bootstrap your own customization module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../guides/tutorial_customize.html#add-mappings-of-fields">Add mappings of fields</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../guides/tutorial_customize.html#customizing-importer">Customizing importer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../guides/tutorial_customize.html#and-now">And now?</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../api/api_components.html">Components</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../api/api_components.html#module-odoo.addons.connector_magento.components.core">Core Component</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../api/api_components.html#magento-components">Magento Components</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../api/api_models.html">Models</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../api/api_models.html#base-models">Base Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../api/api_models.html#synchronized-models">Synchronized Models</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../api/api_exception.html">Exceptions</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../project/roadmap.html">Roadmap</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../project/roadmap.html#catalog">Catalog</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../project/contributors.html">Contributors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../project/contributors.html#financial-contributors">Financial Contributors</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <h1>Source code for odoo.addons.connector_magento.components.importer</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1"># © 2013 Guewen Baconnier,Camptocamp SA,Akretion</span>
+<span class="c1"># © 2016 Sodexis</span>
+<span class="c1"># License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">Importers for Magento.</span>
+
+<span class="sd">An import can be skipped if the last sync date is more recent than</span>
+<span class="sd">the last update in Magento.</span>
+
+<span class="sd">They should call the ``bind`` method if the binder even if the records</span>
+<span class="sd">are already bound, to update the last sync date.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">odoo</span> <span class="k">import</span> <span class="n">fields</span><span class="p">,</span> <span class="n">_</span>
+<span class="kn">from</span> <span class="nn">odoo.addons.component.core</span> <span class="k">import</span> <span class="n">AbstractComponent</span><span class="p">,</span> <span class="n">Component</span>
+<span class="kn">from</span> <span class="nn">odoo.addons.connector.exception</span> <span class="k">import</span> <span class="n">IDMissingInBackend</span>
+<span class="kn">from</span> <span class="nn">odoo.addons.queue_job.exception</span> <span class="k">import</span> <span class="n">NothingToDoJob</span>
+
+<span class="n">_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="MagentoImporter"><a class="viewcode-back" href="../../../../../api/api_components.html#odoo.addons.connector_magento.components.importer.MagentoImporter">[docs]</a><span class="k">class</span> <span class="nc">MagentoImporter</span><span class="p">(</span><span class="n">AbstractComponent</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Base importer for Magento &quot;&quot;&quot;</span>
+
+    <span class="n">_name</span> <span class="o">=</span> <span class="s1">&#39;magento.importer&#39;</span>
+    <span class="n">_inherit</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;base.importer&#39;</span><span class="p">,</span> <span class="s1">&#39;base.magento.connector&#39;</span><span class="p">]</span>
+    <span class="n">_usage</span> <span class="o">=</span> <span class="s1">&#39;record.importer&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">work_context</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">MagentoImporter</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">work_context</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">external_id</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">magento_record</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="MagentoImporter._get_magento_data"><a class="viewcode-back" href="../../../../../api/api_components.html#odoo.addons.connector_magento.components.importer.MagentoImporter._get_magento_data">[docs]</a>    <span class="k">def</span> <span class="nf">_get_magento_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Return the raw Magento data for ``self.external_id`` &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend_adapter</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">external_id</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MagentoImporter._before_import"><a class="viewcode-back" href="../../../../../api/api_components.html#odoo.addons.connector_magento.components.importer.MagentoImporter._before_import">[docs]</a>    <span class="k">def</span> <span class="nf">_before_import</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Hook called before the import, when we have the Magento</span>
+<span class="sd">        data&quot;&quot;&quot;</span></div>
+
+<div class="viewcode-block" id="MagentoImporter._is_uptodate"><a class="viewcode-back" href="../../../../../api/api_components.html#odoo.addons.connector_magento.components.importer.MagentoImporter._is_uptodate">[docs]</a>    <span class="k">def</span> <span class="nf">_is_uptodate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">binding</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return True if the import should be skipped because</span>
+<span class="sd">        it is already up-to-date in OpenERP&quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">magento_record</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">magento_record</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;updated_at&#39;</span><span class="p">):</span>
+            <span class="k">return</span>  <span class="c1"># no update date on Magento, always import it.</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">binding</span><span class="p">:</span>
+            <span class="k">return</span>  <span class="c1"># it does not exist so it should not be skipped</span>
+        <span class="n">sync</span> <span class="o">=</span> <span class="n">binding</span><span class="o">.</span><span class="n">sync_date</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">sync</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="n">from_string</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Datetime</span><span class="o">.</span><span class="n">from_string</span>
+        <span class="n">sync_date</span> <span class="o">=</span> <span class="n">from_string</span><span class="p">(</span><span class="n">sync</span><span class="p">)</span>
+        <span class="n">magento_date</span> <span class="o">=</span> <span class="n">from_string</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">magento_record</span><span class="p">[</span><span class="s1">&#39;updated_at&#39;</span><span class="p">])</span>
+        <span class="c1"># if the last synchronization date is greater than the last</span>
+        <span class="c1"># update in magento, we skip the import.</span>
+        <span class="c1"># Important: at the beginning of the exporters flows, we have to</span>
+        <span class="c1"># check if the magento_date is more recent than the sync_date</span>
+        <span class="c1"># and if so, schedule a new import. If we don&#39;t do that, we&#39;ll</span>
+        <span class="c1"># miss changes done in Magento</span>
+        <span class="k">return</span> <span class="n">magento_date</span> <span class="o">&lt;</span> <span class="n">sync_date</span></div>
+
+<div class="viewcode-block" id="MagentoImporter._import_dependency"><a class="viewcode-back" href="../../../../../api/api_components.html#odoo.addons.connector_magento.components.importer.MagentoImporter._import_dependency">[docs]</a>    <span class="k">def</span> <span class="nf">_import_dependency</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">external_id</span><span class="p">,</span> <span class="n">binding_model</span><span class="p">,</span>
+                           <span class="n">importer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">always</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Import a dependency.</span>
+
+<span class="sd">        The importer class is a class or subclass of</span>
+<span class="sd">        :class:`MagentoImporter`. A specific class can be defined.</span>
+
+<span class="sd">        :param external_id: id of the related binding to import</span>
+<span class="sd">        :param binding_model: name of the binding model for the relation</span>
+<span class="sd">        :type binding_model: str | unicode</span>
+<span class="sd">        :param importer_component: component to use for import</span>
+<span class="sd">                                   By default: &#39;importer&#39;</span>
+<span class="sd">        :type importer_component: Component</span>
+<span class="sd">        :param always: if True, the record is updated even if it already</span>
+<span class="sd">                       exists, note that it is still skipped if it has</span>
+<span class="sd">                       not been modified on Magento since the last</span>
+<span class="sd">                       update. When False, it will import it only when</span>
+<span class="sd">                       it does not yet exist.</span>
+<span class="sd">        :type always: boolean</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">external_id</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="n">binder</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">binder_for</span><span class="p">(</span><span class="n">binding_model</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">always</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">binder</span><span class="o">.</span><span class="n">to_internal</span><span class="p">(</span><span class="n">external_id</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">importer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">importer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">component</span><span class="p">(</span><span class="n">usage</span><span class="o">=</span><span class="s1">&#39;record.importer&#39;</span><span class="p">,</span>
+                                          <span class="n">model_name</span><span class="o">=</span><span class="n">binding_model</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">importer</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">external_id</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">NothingToDoJob</span><span class="p">:</span>
+                <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                    <span class="s1">&#39;Dependency import of </span><span class="si">%s</span><span class="s1">(</span><span class="si">%s</span><span class="s1">) has been ignored.&#39;</span><span class="p">,</span>
+                    <span class="n">binding_model</span><span class="o">.</span><span class="n">_name</span><span class="p">,</span> <span class="n">external_id</span>
+                <span class="p">)</span></div>
+
+<div class="viewcode-block" id="MagentoImporter._import_dependencies"><a class="viewcode-back" href="../../../../../api/api_components.html#odoo.addons.connector_magento.components.importer.MagentoImporter._import_dependencies">[docs]</a>    <span class="k">def</span> <span class="nf">_import_dependencies</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Import the dependencies for the record</span>
+
+<span class="sd">        Import of dependencies can be done manually or by calling</span>
+<span class="sd">        :meth:`_import_dependency` for each dependency.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span></div>
+
+<div class="viewcode-block" id="MagentoImporter._map_data"><a class="viewcode-back" href="../../../../../api/api_components.html#odoo.addons.connector_magento.components.importer.MagentoImporter._map_data">[docs]</a>    <span class="k">def</span> <span class="nf">_map_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns an instance of</span>
+<span class="sd">        :py:class:`~odoo.addons.connector.components.mapper.MapRecord`</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">mapper</span><span class="o">.</span><span class="n">map_record</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">magento_record</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MagentoImporter._validate_data"><a class="viewcode-back" href="../../../../../api/api_components.html#odoo.addons.connector_magento.components.importer.MagentoImporter._validate_data">[docs]</a>    <span class="k">def</span> <span class="nf">_validate_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Check if the values to import are correct</span>
+
+<span class="sd">        Pro-actively check before the ``_create`` or</span>
+<span class="sd">        ``_update`` if some fields are missing or invalid.</span>
+
+<span class="sd">        Raise `InvalidDataError`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span></div>
+
+<div class="viewcode-block" id="MagentoImporter._must_skip"><a class="viewcode-back" href="../../../../../api/api_components.html#odoo.addons.connector_magento.components.importer.MagentoImporter._must_skip">[docs]</a>    <span class="k">def</span> <span class="nf">_must_skip</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Hook called right after we read the data from the backend.</span>
+
+<span class="sd">        If the method returns a message giving a reason for the</span>
+<span class="sd">        skipping, the import will be interrupted and the message</span>
+<span class="sd">        recorded in the job (if the import is called directly by the</span>
+<span class="sd">        job, not by dependencies).</span>
+
+<span class="sd">        If it returns None, the import will continue normally.</span>
+
+<span class="sd">        :returns: None | str | unicode</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span></div>
+
+<div class="viewcode-block" id="MagentoImporter._get_binding"><a class="viewcode-back" href="../../../../../api/api_components.html#odoo.addons.connector_magento.components.importer.MagentoImporter._get_binding">[docs]</a>    <span class="k">def</span> <span class="nf">_get_binding</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">binder</span><span class="o">.</span><span class="n">to_internal</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">external_id</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MagentoImporter._create_data"><a class="viewcode-back" href="../../../../../api/api_components.html#odoo.addons.connector_magento.components.importer.MagentoImporter._create_data">[docs]</a>    <span class="k">def</span> <span class="nf">_create_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">map_record</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">map_record</span><span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="n">for_create</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MagentoImporter._create"><a class="viewcode-back" href="../../../../../api/api_components.html#odoo.addons.connector_magento.components.importer.MagentoImporter._create">[docs]</a>    <span class="k">def</span> <span class="nf">_create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Create the OpenERP record &quot;&quot;&quot;</span>
+        <span class="c1"># special check on data before import</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_validate_data</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">with_context</span><span class="p">(</span><span class="n">connector_no_export</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">binding</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%d</span><span class="s1"> created from magento </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">binding</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">external_id</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">binding</span></div>
+
+<div class="viewcode-block" id="MagentoImporter._update_data"><a class="viewcode-back" href="../../../../../api/api_components.html#odoo.addons.connector_magento.components.importer.MagentoImporter._update_data">[docs]</a>    <span class="k">def</span> <span class="nf">_update_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">map_record</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">map_record</span><span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MagentoImporter._update"><a class="viewcode-back" href="../../../../../api/api_components.html#odoo.addons.connector_magento.components.importer.MagentoImporter._update">[docs]</a>    <span class="k">def</span> <span class="nf">_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">binding</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Update an OpenERP record &quot;&quot;&quot;</span>
+        <span class="c1"># special check on data before import</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_validate_data</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">binding</span><span class="o">.</span><span class="n">with_context</span><span class="p">(</span><span class="n">connector_no_export</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%d</span><span class="s1"> updated from magento </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">binding</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">external_id</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+<div class="viewcode-block" id="MagentoImporter._after_import"><a class="viewcode-back" href="../../../../../api/api_components.html#odoo.addons.connector_magento.components.importer.MagentoImporter._after_import">[docs]</a>    <span class="k">def</span> <span class="nf">_after_import</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">binding</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Hook called at the end of the import &quot;&quot;&quot;</span>
+        <span class="k">return</span></div>
+
+<div class="viewcode-block" id="MagentoImporter.run"><a class="viewcode-back" href="../../../../../api/api_components.html#odoo.addons.connector_magento.components.importer.MagentoImporter.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">external_id</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Run the synchronization</span>
+
+<span class="sd">        :param external_id: identifier of the record on Magento</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">external_id</span> <span class="o">=</span> <span class="n">external_id</span>
+        <span class="n">lock_name</span> <span class="o">=</span> <span class="s1">&#39;import(</span><span class="si">{}</span><span class="s1">, </span><span class="si">{}</span><span class="s1">, </span><span class="si">{}</span><span class="s1">, </span><span class="si">{}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">backend_record</span><span class="o">.</span><span class="n">_name</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">backend_record</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">work</span><span class="o">.</span><span class="n">model_name</span><span class="p">,</span>
+            <span class="n">external_id</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">magento_record</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_magento_data</span><span class="p">()</span>
+        <span class="k">except</span> <span class="n">IDMissingInBackend</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">_</span><span class="p">(</span><span class="s1">&#39;Record does no longer exist in Magento&#39;</span><span class="p">)</span>
+
+        <span class="n">skip</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_must_skip</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">skip</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">skip</span>
+
+        <span class="n">binding</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_binding</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">force</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_uptodate</span><span class="p">(</span><span class="n">binding</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">_</span><span class="p">(</span><span class="s1">&#39;Already up-to-date.&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Keep a lock on this import until the transaction is committed</span>
+        <span class="c1"># The lock is kept since we have detected that the informations</span>
+        <span class="c1"># will be updated into Odoo</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">advisory_lock_or_retry</span><span class="p">(</span><span class="n">lock_name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_before_import</span><span class="p">()</span>
+
+        <span class="c1"># import the missing linked resources</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_import_dependencies</span><span class="p">()</span>
+
+        <span class="n">map_record</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_map_data</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">binding</span><span class="p">:</span>
+            <span class="n">record</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_update_data</span><span class="p">(</span><span class="n">map_record</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_update</span><span class="p">(</span><span class="n">binding</span><span class="p">,</span> <span class="n">record</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">record</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_data</span><span class="p">(</span><span class="n">map_record</span><span class="p">)</span>
+            <span class="n">binding</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">binder</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">external_id</span><span class="p">,</span> <span class="n">binding</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_after_import</span><span class="p">(</span><span class="n">binding</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="BatchImporter"><a class="viewcode-back" href="../../../../../api/api_components.html#odoo.addons.connector_magento.components.importer.BatchImporter">[docs]</a><span class="k">class</span> <span class="nc">BatchImporter</span><span class="p">(</span><span class="n">AbstractComponent</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; The role of a BatchImporter is to search for a list of</span>
+<span class="sd">    items to import, then it can either import them directly or delay</span>
+<span class="sd">    the import of each item separately.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">_name</span> <span class="o">=</span> <span class="s1">&#39;magento.batch.importer&#39;</span>
+    <span class="n">_inherit</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;base.importer&#39;</span><span class="p">,</span> <span class="s1">&#39;base.magento.connector&#39;</span><span class="p">]</span>
+    <span class="n">_usage</span> <span class="o">=</span> <span class="s1">&#39;batch.importer&#39;</span>
+
+<div class="viewcode-block" id="BatchImporter.run"><a class="viewcode-back" href="../../../../../api/api_components.html#odoo.addons.connector_magento.components.importer.BatchImporter.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filters</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Run the synchronization &quot;&quot;&quot;</span>
+        <span class="n">record_ids</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend_adapter</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">filters</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">record_id</span> <span class="ow">in</span> <span class="n">record_ids</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_import_record</span><span class="p">(</span><span class="n">record_id</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BatchImporter._import_record"><a class="viewcode-back" href="../../../../../api/api_components.html#odoo.addons.connector_magento.components.importer.BatchImporter._import_record">[docs]</a>    <span class="k">def</span> <span class="nf">_import_record</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">external_id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Import a record directly or delay the import of the record.</span>
+
+<span class="sd">        Method to implement in sub-classes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div></div>
+
+
+<div class="viewcode-block" id="DirectBatchImporter"><a class="viewcode-back" href="../../../../../api/api_components.html#odoo.addons.connector_magento.components.importer.DirectBatchImporter">[docs]</a><span class="k">class</span> <span class="nc">DirectBatchImporter</span><span class="p">(</span><span class="n">AbstractComponent</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Import the records directly, without delaying the jobs. &quot;&quot;&quot;</span>
+
+    <span class="n">_name</span> <span class="o">=</span> <span class="s1">&#39;magento.direct.batch.importer&#39;</span>
+    <span class="n">_inherit</span> <span class="o">=</span> <span class="s1">&#39;magento.batch.importer&#39;</span>
+
+<div class="viewcode-block" id="DirectBatchImporter._import_record"><a class="viewcode-back" href="../../../../../api/api_components.html#odoo.addons.connector_magento.components.importer.DirectBatchImporter._import_record">[docs]</a>    <span class="k">def</span> <span class="nf">_import_record</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">external_id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Import the record directly &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">import_record</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">backend_record</span><span class="p">,</span> <span class="n">external_id</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="DelayedBatchImporter"><a class="viewcode-back" href="../../../../../api/api_components.html#odoo.addons.connector_magento.components.importer.DelayedBatchImporter">[docs]</a><span class="k">class</span> <span class="nc">DelayedBatchImporter</span><span class="p">(</span><span class="n">AbstractComponent</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Delay import of the records &quot;&quot;&quot;</span>
+
+    <span class="n">_name</span> <span class="o">=</span> <span class="s1">&#39;magento.delayed.batch.importer&#39;</span>
+    <span class="n">_inherit</span> <span class="o">=</span> <span class="s1">&#39;magento.batch.importer&#39;</span>
+
+<div class="viewcode-block" id="DelayedBatchImporter._import_record"><a class="viewcode-back" href="../../../../../api/api_components.html#odoo.addons.connector_magento.components.importer.DelayedBatchImporter._import_record">[docs]</a>    <span class="k">def</span> <span class="nf">_import_record</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">external_id</span><span class="p">,</span> <span class="n">job_options</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Delay the import of the records&quot;&quot;&quot;</span>
+        <span class="n">delayable</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">with_delay</span><span class="p">(</span><span class="o">**</span><span class="n">job_options</span> <span class="ow">or</span> <span class="p">{})</span>
+        <span class="n">delayable</span><span class="o">.</span><span class="n">import_record</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">backend_record</span><span class="p">,</span> <span class="n">external_id</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="SimpleRecordImporter"><a class="viewcode-back" href="../../../../../api/api_components.html#odoo.addons.connector_magento.components.importer.SimpleRecordImporter">[docs]</a><span class="k">class</span> <span class="nc">SimpleRecordImporter</span><span class="p">(</span><span class="n">Component</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Import one Magento Website &quot;&quot;&quot;</span>
+
+    <span class="n">_name</span> <span class="o">=</span> <span class="s1">&#39;magento.simple.record.importer&#39;</span>
+    <span class="n">_inherit</span> <span class="o">=</span> <span class="s1">&#39;magento.importer&#39;</span>
+    <span class="n">_apply_on</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s1">&#39;magento.res.partner.category&#39;</span><span class="p">,</span>
+    <span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="TranslationImporter"><a class="viewcode-back" href="../../../../../api/api_components.html#odoo.addons.connector_magento.components.importer.TranslationImporter">[docs]</a><span class="k">class</span> <span class="nc">TranslationImporter</span><span class="p">(</span><span class="n">Component</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Import translations for a record.</span>
+
+<span class="sd">    Usually called from importers, in ``_after_import``.</span>
+<span class="sd">    For instance from the products and products&#39; categories importers.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">_name</span> <span class="o">=</span> <span class="s1">&#39;magento.translation.importer&#39;</span>
+    <span class="n">_inherit</span> <span class="o">=</span> <span class="s1">&#39;magento.importer&#39;</span>
+    <span class="n">_usage</span> <span class="o">=</span> <span class="s1">&#39;translation.importer&#39;</span>
+
+<div class="viewcode-block" id="TranslationImporter._get_magento_data"><a class="viewcode-back" href="../../../../../api/api_components.html#odoo.addons.connector_magento.components.importer.TranslationImporter._get_magento_data">[docs]</a>    <span class="k">def</span> <span class="nf">_get_magento_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">storeview_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Return the raw Magento data for ``self.external_id`` &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend_adapter</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">external_id</span><span class="p">,</span> <span class="n">storeview_id</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TranslationImporter.run"><a class="viewcode-back" href="../../../../../api/api_components.html#odoo.addons.connector_magento.components.importer.TranslationImporter.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">external_id</span><span class="p">,</span> <span class="n">binding</span><span class="p">,</span> <span class="n">mapper</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">external_id</span> <span class="o">=</span> <span class="n">external_id</span>
+        <span class="n">storeviews</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">[</span><span class="s1">&#39;magento.storeview&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">search</span><span class="p">(</span>
+            <span class="p">[(</span><span class="s1">&#39;backend_id&#39;</span><span class="p">,</span> <span class="s1">&#39;=&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend_record</span><span class="o">.</span><span class="n">id</span><span class="p">)]</span>
+        <span class="p">)</span>
+        <span class="n">default_lang</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend_record</span><span class="o">.</span><span class="n">default_lang_id</span>
+        <span class="n">lang_storeviews</span> <span class="o">=</span> <span class="p">[</span><span class="n">sv</span> <span class="k">for</span> <span class="n">sv</span> <span class="ow">in</span> <span class="n">storeviews</span>
+                           <span class="k">if</span> <span class="n">sv</span><span class="o">.</span><span class="n">lang_id</span> <span class="ow">and</span> <span class="n">sv</span><span class="o">.</span><span class="n">lang_id</span> <span class="o">!=</span> <span class="n">default_lang</span><span class="p">]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">lang_storeviews</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="c1"># find the translatable fields of the model</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">fields_get</span><span class="p">()</span>
+        <span class="n">translatable_fields</span> <span class="o">=</span> <span class="p">[</span><span class="n">field</span> <span class="k">for</span> <span class="n">field</span><span class="p">,</span> <span class="n">attrs</span> <span class="ow">in</span> <span class="n">fields</span><span class="o">.</span><span class="n">iteritems</span><span class="p">()</span>
+                               <span class="k">if</span> <span class="n">attrs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;translate&#39;</span><span class="p">)]</span>
+
+        <span class="k">if</span> <span class="n">mapper</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">mapper</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mapper</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">mapper</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">component_by_name</span><span class="p">(</span><span class="n">mapper</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">storeview</span> <span class="ow">in</span> <span class="n">lang_storeviews</span><span class="p">:</span>
+            <span class="n">lang_record</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_magento_data</span><span class="p">(</span><span class="n">storeview</span><span class="o">.</span><span class="n">external_id</span><span class="p">)</span>
+            <span class="n">map_record</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="n">map_record</span><span class="p">(</span><span class="n">lang_record</span><span class="p">)</span>
+            <span class="n">record</span> <span class="o">=</span> <span class="n">map_record</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+
+            <span class="n">data</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">((</span><span class="n">field</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">field</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">record</span><span class="o">.</span><span class="n">iteritems</span><span class="p">()</span>
+                        <span class="k">if</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">translatable_fields</span><span class="p">)</span>
+
+            <span class="n">binding</span><span class="o">.</span><span class="n">with_context</span><span class="p">(</span><span class="n">connector_no_export</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                 <span class="n">lang</span><span class="o">=</span><span class="n">storeview</span><span class="o">.</span><span class="n">lang_id</span><span class="o">.</span><span class="n">code</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div></div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+      
+    </p>
+    <p>
+        &copy; Copyright 2013-2015, Odoo Community Association (OCA).<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.4.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>
