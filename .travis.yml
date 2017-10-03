@@ -41,8 +41,11 @@ install:
   - travis_install_nightly
   - pip install magento
   - pip install beautifulsoup4
-  - pip install sphinx sphinx_bootstrap_theme sphinx-intl odoo-sphinx-autodoc
+  - pip install sphinx sphinx_bootstrap_theme sphinx-intl
+    # install from sources because it includes a fix for Odoo 10.0 not released yet
+  - pip install git+https://github.com/OCA/odoo-sphinx-autodoc.git
   - printf '[options]\n\nrunning_env = dev' > ${HOME}/.openerp_serverrc
+  - if [ "$LINT_CHECK" != "1" ] ; then ln -s ${HOME}/dependencies/server-tools/server_environment_files_sample ${HOME}/dependencies/server-tools/server_environment_files; fi
 
 script:
   - if [ "$DOCS" != "1" ] ; then travis_run_tests; fi
