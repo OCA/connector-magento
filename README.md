@@ -16,18 +16,25 @@ http://www.odoo-connector.com
 
 [//]: # (addons)
 
+Available addons
+----------------
+addon | version | summary
+--- | --- | ---
+[connector_magento](connector_magento/) | 10.0.1.0.0 | Magento Connector
+[connector_magento_customize_example](connector_magento_customize_example/) | 10.0.1.0.0 | Magento Connector Customization Example
+[connector_magento_firstname](connector_magento_firstname/) | 10.0.1.0.0 | Magento Connector - Partner first name and last name
+[server_env_connector_magento](server_env_connector_magento/) | 10.0.1.0.0 | Magento Connector - Server Environment Configuration
+
+
 Unported addons
 ---------------
 addon | version | summary
 --- | --- | ---
-[customize_example](customize_example/) | 8.0.1.0.0 (unported) | Magento Connector Customization Example
-[magentoerpconnect](magentoerpconnect/) | 8.0.3.0.0 (unported) | Magento Connector
+[connector_magento_export_partner](connector_magento_export_partner/) | 10.0.2.0.0 (unported) | Magento Connector - Export Partners (Experimental)
 [magentoerpconnect_catalog](magentoerpconnect_catalog/) | 2.0.0 (unported) | Magento Connector - Catalog
-[magentoerpconnect_export_partner](magentoerpconnect_export_partner/) | 2.0.0 (unported) | Magento Connector - Export Partners (Experimental)
 [magentoerpconnect_options_active](magentoerpconnect_options_active/) | 1.0.0 (unported) | Magento Connector Option Active Products
 [magentoerpconnect_order_comment](magentoerpconnect_order_comment/) | 0.1 (unported) | Magento Connector - Order comment
 [magentoerpconnect_pricing](magentoerpconnect_pricing/) | 2.0.0 (unported) | Magento Connector - Pricing
-[server_env_magentoerpconnect](server_env_magentoerpconnect/) | 1.0 (unported) | Server environment for Magento Connector
 
 [//]: # (end addons)
 
