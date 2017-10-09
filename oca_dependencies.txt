@@ -1,4 +1,5 @@
-connector
+# Only for testing the PR
+connector https://github.com/akretion/connector.git 10-generic-exporter
 connector-ecommerce
 e-commerce
 product-attribute
