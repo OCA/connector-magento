@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_magento_backend_form" model="ir.ui.view">
+        <field name="model">magento.backend</field>
+        <field name="inherit_id" ref="connector_magento.view_magento_backend_form"></field>
+        <field name="arch" type="xml">
+          <xpath expr="//page[@name='import']/group[4]" position="after">
+              <group>
+                <div>
+                   <label string="Import configurables since" class="oe_inline"/>
+                   <field name="import_configurables_from_date"
+                          class="oe_inline"
+                          nolabel="1"/>
+               </div>
+                <button name="import_product_configurable"
+                        type="object"
+                        class="oe_highlight"
+                        string="Import in background"/>
+              </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>
