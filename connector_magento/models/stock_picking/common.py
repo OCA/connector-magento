@@ -145,6 +145,9 @@ class MagentoStockPickingListener(Component):
             # executed after the picking creation
             binding.with_delay(priority=20).export_tracking_number()
 
+    def on_picking_dropship_done(self, record, picking_method):
+        return self.on_picking_out_done(record, picking_method)
+
     def on_picking_out_done(self, record, picking_method):
         """
         Create a ``magento.stock.picking`` record. This record will then
