@@ -4,21 +4,7 @@
 
 from odoo import models, fields, api
 
-from odoo.addons.queue_job.job import job
 from odoo.addons.component.core import Component
-
-
-class ProductTemplate(models.Model):
-    _inherit = 'product.template'
-
-    @api.multi
-    @job
-    def delayable_unlink(self):
-        """
-            Allows to delay an unlink job.
-            This is used to delete the orphaned product templates
-        """
-        self.unlink()
 
 
 class MagentoBackend(models.Model):
@@ -67,4 +53,5 @@ class MagentoConfigurableModelBinder(Component):
         'magento.product.attribute',
         'magento.product.attribute.value',
         'magento.product.attribute.line',
+        'magento.product.attribute.price',
     ]

@@ -4,21 +4,21 @@
 
 from odoo.addons.component.core import Component
 from odoo.addons.connector.components.mapper import mapping
-from odoo.addons.connector.exception import MappingError
 
 
 class ProductAttributeValueBatchImporter(Component):
     """ Import the Magento Product Attributes.
     """
     _name = 'magento.product.attribute.value.batch.importer'
-    _inherit = 'magento.delayed.batch.importer'
+    _inherit = 'magento.direct.batch.importer'
     _apply_on = ['magento.product.attribute.value']
 
     def run(self, filters=None):
         """ Run the synchronization """
         for value in filters['values']:
-            value['attribute_id'] = filters['attribute_id']
-            self._import_record(value, job_options={'priority': 99})
+            value['magento_attribute'] = filters['magento_attribute']
+            value['product_id'] = filters['product_id']
+            self._import_record(value)
 
 
 class ProductAttributeValueImporter(Component):
@@ -31,6 +31,16 @@ class ProductAttributeValueImporter(Component):
         In this case, the magento_record contains all the data to insert
         """
         return self.magento_record
+
+    def _after_import(self, binding):
+        self.env['magento.product.attribute.price'].import_batch(
+            self.backend_record,
+            {
+                'price': self.magento_record,
+                'magento_value': binding,
+                'product_id': self.magento_record['product_id']
+            }
+        )
 
     def run(self, magento_record, force=False):
         self.magento_record = magento_record
@@ -57,18 +67,10 @@ class ProductAttributeValueImportMapper(Component):
 
     @mapping
     def attribute_id(self, record):
-        if not record.get('attribute_id'):
+        if not record.get('magento_attribute'):
             return
-        binder = self.binder_for('magento.product.attribute')
-        attribute_binding = binder.to_internal(record['attribute_id'])
 
-        if not attribute_binding:
-            raise MappingError("The product attribute with "
-                               "magento id %s is not imported." %
-                               record['attribute_id'])
-
-        parent = attribute_binding.odoo_id
         return {
-            'attribute_id': parent.id,
-            'magento_attribute_id': attribute_binding.id,
+            'attribute_id': record.get('magento_attribute').odoo_id.id,
+            'magento_attribute_id': record.get('magento_attribute').id,
             }
