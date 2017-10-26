@@ -11,7 +11,7 @@ class ProductAttributeLineBatchImporter(Component):
     """ Import the Magento Product Attribute Lines.
     """
     _name = 'magento.product.attribute.line.batch.importer'
-    _inherit = 'magento.delayed.batch.importer'
+    _inherit = 'magento.direct.batch.importer'
     _apply_on = ['magento.product.attribute.line']
 
     def _write_product(self, magento_product, tmpl_id, value_ids):
@@ -42,7 +42,10 @@ class ProductAttributeLineBatchImporter(Component):
             value,
             record
         )
-        self._import_record(line, job_options={'priority': 100})
+        self._import_record(line)
+        self.env['product.template'].search([
+            ('product_variant_ids', '=', False)
+        ]).unlink()
 
     def run(self, filters=None):
         """ Run the synchronization """
@@ -106,9 +109,6 @@ class ProductAttributeLineImporter(Component):
             magento_record['external_id'],
             force,
             )
-        self.env['product.template'].search([
-            ('product_variant_ids', '=', False)
-        ]).with_delay(priority=101, eta=60).delayable_unlink()
 
 
 class ProductAttributeLineImportMapper(Component):

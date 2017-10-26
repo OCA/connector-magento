@@ -10,7 +10,7 @@ class ProductAttributeBatchImporter(Component):
     """ Import the Magento Product Attributes.
     """
     _name = 'magento.product.attribute.batch.importer'
-    _inherit = 'magento.delayed.batch.importer'
+    _inherit = 'magento.direct.batch.importer'
     _apply_on = ['magento.product.attribute']
 
     def run(self, filters=None):
@@ -19,7 +19,7 @@ class ProductAttributeBatchImporter(Component):
         updated_attributes = self.backend_adapter.list_attributes(
             record.default_code)
         for attribute in updated_attributes:
-            self._import_record(attribute, job_options={'priority': 98})
+            self._import_record(attribute)
 
 
 class ProductAttributeImporter(Component):
@@ -40,7 +40,8 @@ class ProductAttributeImporter(Component):
             self.backend_record,
             {
                 'values': self.magento_record['values'],
-                'attribute_id': self.magento_record['attribute_id'],
+                'magento_attribute': binding,
+                'product_id': self.magento_record['product_id'],
             }
         )
 

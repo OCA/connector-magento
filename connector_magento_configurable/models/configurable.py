@@ -5,6 +5,7 @@
 import logging
 
 from odoo import models
+from odoo import tools
 
 from odoo.addons.component.core import Component
 
@@ -23,11 +24,13 @@ class ConfigurableBatchImporter(Component):
 
     def run(self, filters=None):
         """ Run the synchronization """
-        # from_date = filters.pop('from_date', None)
+        from_date = filters.pop('from_date', None)
         # to_date = filters.pop('to_date', None)
-        internal_ids = self.env['magento.product.product'].search(
-            [('product_type', '=', 'configurable')]
-        )
+        internal_ids = self.env['magento.product.product'].search([
+            ('product_type', '=', 'configurable'),
+            ('write_date', '>', from_date.strftime(
+                tools.misc.DEFAULT_SERVER_DATETIME_FORMAT)),
+        ])
         _logger.info('search for configurable products %s returned %s',
                      filters, internal_ids)
         for internal_id in internal_ids:
