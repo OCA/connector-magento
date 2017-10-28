@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (7.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-07-12 12:33+0000\n"
-"PO-Revision-Date: 2017-07-24 17:06+0000\n"
+"POT-Creation-Date: 2017-09-02 03:19+0000\n"
+"PO-Revision-Date: 2017-10-27 11:29+0000\n"
 "Last-Translator: Armando Vulcano Junior <vulcano@uol.com.br>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/oca/OCA-connector-magento-7-0/language/pt_BR/)\n"
 "MIME-Version: 1.0\n"
@@ -742,7 +742,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.backend,auth_basic_password:0
 msgid "Basic Auth. Password"
-msgstr ""
+msgstr "Autenticação Básica. Senha"
 
 #. module: magentoerpconnect
 #: selection:magento.store,create_invoice_on:0
@@ -872,7 +872,7 @@ msgstr "Informações"
 #. module: magentoerpconnect
 #: field:magento.backend,auth_basic_username:0
 msgid "Basic Auth. Username"
-msgstr ""
+msgstr "Autenticação Básica. Username"
 
 #. module: magentoerpconnect
 #: field:magento.storeview,code:0 field:magento.website,code:0
@@ -980,7 +980,7 @@ msgstr ""
 #: model:ir.model,name:magentoerpconnect.model_magento_res_partner
 #: field:magento.address,magento_partner_id:0 view:magento.res.partner:0
 msgid "Magento Partner"
-msgstr ""
+msgstr "Parceiro Magento"
 
 #. module: magentoerpconnect
 #: sql_constraint:magento.storeview:0

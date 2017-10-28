@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (7.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-18 01:21+0000\n"
+"POT-Creation-Date: 2017-09-02 03:19+0000\n"
 "PO-Revision-Date: 2015-07-08 12:13+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: Slovak (http://www.transifex.com/oca/OCA-connector-magento-7-0/language/sk/)\n"
@@ -263,7 +263,7 @@ msgstr "Partner"
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_sale_order
 msgid "Sales Order"
-msgstr ""
+msgstr "Objednávka predaja"
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_stock_picking_out
@@ -273,7 +273,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_sale_order_line
 msgid "Sales Order Line"
-msgstr ""
+msgstr "Položky objednávky"
 
 #. module: magentoerpconnect
 #: field:magento.storeview,no_sales_order_sync:0
@@ -364,7 +364,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.backend,warehouse_id:0
 msgid "Warehouse"
-msgstr ""
+msgstr "Sklad"
 
 #. module: magentoerpconnect
 #: field:magento.storeview,catalog_price_tax_included:0
@@ -396,7 +396,7 @@ msgstr ""
 #: model:ir.model,name:magentoerpconnect.model_product_category
 #: field:magento.product.category,openerp_id:0
 msgid "Product Category"
-msgstr ""
+msgstr "Kategória produktu"
 
 #. module: magentoerpconnect
 #: view:magento.storeview:0
@@ -1119,7 +1119,7 @@ msgstr ""
 #: model:ir.model,name:magentoerpconnect.model_product_product
 #: field:magento.product.product,openerp_id:0
 msgid "Product"
-msgstr ""
+msgstr "Produkt"
 
 #. module: magentoerpconnect
 #: view:magento.backend:0

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (7.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-19 01:24+0000\n"
+"POT-Creation-Date: 2017-09-02 03:19+0000\n"
 "PO-Revision-Date: 2015-07-08 12:13+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: Dutch (Netherlands) (http://www.transifex.com/oca/OCA-connector-magento-7-0/language/nl_NL/)\n"
@@ -349,7 +349,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.backend,location:0
 msgid "Location"
-msgstr ""
+msgstr "Locatie"
 
 #. module: magentoerpconnect
 #: view:magento.backend:0
@@ -1096,7 +1096,7 @@ msgstr ""
 #: field:magento.backend,name:0 field:magento.storeview,name:0
 #: field:magento.website,name:0
 msgid "Name"
-msgstr ""
+msgstr "Naam"
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_magento_website
