@@ -94,7 +94,12 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="howto/configure_translations.html">How to configure translations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="howto/configure_warehouse.html">How to configure warehouses</a></li>
-<li class="toctree-l1"><a class="reference internal" href="howto/configure_payment_modes.html">Howto: configure payment modes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="howto/configure_pricing.html">How to configure pricing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="howto/configure_pricing.html#prices-are-shared-accross-websites">Prices are shared accross websites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="howto/configure_pricing.html#prices-are-different-accross-websites">Prices are different accross websites</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="howto/configure_payment_methods.html">Howto: configure payment methods</a></li>
 <li class="toctree-l1"><a class="reference internal" href="howto/configure_automatic_workflows.html">Howto: configure automatic workflows</a></li>
 <li class="toctree-l1"><a class="reference internal" href="howto/configure_exception_rules.html">Howto: configure exception rules</a></li>
 <li class="toctree-l1"><a class="reference internal" href="howto/configure_shipping_methods.html">How to configure shipping methods</a></li>
@@ -119,32 +124,50 @@
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="project/contribute.html">Developer’s guide</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="project/contribute.html#dev-environment">Dev Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="project/contribute.html#connector-with-batteries-included-buildout">Connector with batteries included (buildout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="project/contribute.html#magento-on-docker">Magento on Docker</a></li>
 <li class="toctree-l2"><a class="reference internal" href="project/contribute.html#how-to-help">How to help</a></li>
 </ul>
 </li>
 </ul>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="guides/tutorial_development.html">Tutorial: development</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="guides/tutorial_development.html#run-a-function-on-an-event">Run a function on an Event</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/tutorial_development.html#find-the-connector-unit-for-a-model">Find the ‘connector unit’ for a model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/tutorial_development.html#create-an-import">Create an import</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="guides/tutorial_customize.html">Tutorial: customize the connector</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="guides/tutorial_customize.html#bootstrap-your-own-customization-module">Bootstrap your own customization module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="guides/tutorial_customize.html#add-mappings-of-fields">Add mappings of fields</a></li>
-<li class="toctree-l2"><a class="reference internal" href="guides/tutorial_customize.html#customizing-importer">Customizing importer</a></li>
-<li class="toctree-l2"><a class="reference internal" href="guides/tutorial_customize.html#and-now">And now?</a></li>
 </ul>
 </li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="api/api_components.html">Components</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="api/api_components.html#module-odoo.addons.connector_magento.components.core">Core Component</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/api_components.html#magento-components">Magento Components</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/api_connector.html">Connector</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/api_consumer.html">Consumers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/api_backend.html">Backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/api_binder.html">Binders</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/api_synchronizer.html">Synchronizers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/api_synchronizer.html#module-openerp.addons.magentoerpconnect.unit.import_synchronizer">Import</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/api_synchronizer.html#module-openerp.addons.magentoerpconnect.unit.export_synchronizer">Export</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/api_synchronizer.html#module-openerp.addons.magentoerpconnect.unit.delete_synchronizer">Delete</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="api/api_models.html">Models</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="api/api_models.html#base-models">Base Models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/api_models.html#synchronized-models">Synchronized Models</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="api/api_backend_adapter.html">Backend Adapters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api/api_exception.html">Exceptions</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/api_delivery.html">Delivery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/api_invoice.html">Invoice</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/api_magento_model.html">Magento Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/api_partner.html">Partner</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/api_partner_category.html">Partner Category</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/api_product.html">Product</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/api_product_category.html">Product Category</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/api_sale.html">Sale</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/api_stock_picking.html">Stock Picking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/api_stock_tracking.html">Stock Tracking</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="project/roadmap.html">Roadmap</a><ul>
@@ -153,6 +176,20 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="project/contributors.html">Contributors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="project/contributors.html#financial-contributors">Financial Contributors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="project/changes.html">Changes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="project/changes.html#id2">3.0.0 (2015-06-02)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="project/changes.html#id3">2.5.0 (2015-01-06)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="project/changes.html#id4">2.4.2 (2014-06-16)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="project/changes.html#id5">2.4.1 (2014-06-10)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="project/changes.html#id6">2.4.0 (2014-05-26)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="project/changes.html#id7">2.3.1 (2014-01-23)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="project/changes.html#warning-api-changes">2.3.0 (2014-01-15 warning: API changes)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="project/changes.html#id8">2.2.1 (2013.11.22)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="project/changes.html#public-release-2013-11-06">2.2.0 (public release - 2013.11.06)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="project/changes.html#id9">2.1.0 (2013.08.05)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="project/changes.html#id10">2.0.0</a></li>
+</ul>
+</li>
 </ul>
 </ul>
 </li>
@@ -212,182 +249,102 @@
        <td><img src="_static/minus.png" class="toggler"
               id="toggle-1" style="display: none" alt="-" /></td>
        <td>
-       <code class="xref">odoo</code></td><td>
+       <code class="xref">openerp</code></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
        <td></td>
        <td>&#160;&#160;&#160;
-       <a href="api/api_components.html#module-odoo.addons.connector_magento.components.backend_adapter"><code class="xref">odoo.addons.connector_magento.components.backend_adapter</code></a></td><td>
+       <a href="api/api_backend.html#module-openerp.addons.magentoerpconnect.backend"><code class="xref">openerp.addons.magentoerpconnect.backend</code></a></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
        <td></td>
        <td>&#160;&#160;&#160;
-       <a href="api/api_components.html#module-odoo.addons.connector_magento.components.binder"><code class="xref">odoo.addons.connector_magento.components.binder</code></a></td><td>
+       <a href="api/api_connector.html#module-openerp.addons.magentoerpconnect.connector"><code class="xref">openerp.addons.magentoerpconnect.connector</code></a></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
        <td></td>
        <td>&#160;&#160;&#160;
-       <a href="api/api_components.html#module-odoo.addons.connector_magento.components.core"><code class="xref">odoo.addons.connector_magento.components.core</code></a></td><td>
+       <a href="api/api_consumer.html#module-openerp.addons.magentoerpconnect.consumer"><code class="xref">openerp.addons.magentoerpconnect.consumer</code></a></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
        <td></td>
        <td>&#160;&#160;&#160;
-       <a href="api/api_components.html#module-odoo.addons.connector_magento.components.deleter"><code class="xref">odoo.addons.connector_magento.components.deleter</code></a></td><td>
+       <a href="api/api_delivery.html#module-openerp.addons.magentoerpconnect.delivery"><code class="xref">openerp.addons.magentoerpconnect.delivery</code></a></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
        <td></td>
        <td>&#160;&#160;&#160;
-       <a href="api/api_components.html#module-odoo.addons.connector_magento.components.exporter"><code class="xref">odoo.addons.connector_magento.components.exporter</code></a></td><td>
+       <a href="api/api_exception.html#module-openerp.addons.magentoerpconnect.exception"><code class="xref">openerp.addons.magentoerpconnect.exception</code></a></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
        <td></td>
        <td>&#160;&#160;&#160;
-       <a href="api/api_components.html#module-odoo.addons.connector_magento.components.importer"><code class="xref">odoo.addons.connector_magento.components.importer</code></a></td><td>
+       <a href="api/api_invoice.html#module-openerp.addons.magentoerpconnect.invoice"><code class="xref">openerp.addons.magentoerpconnect.invoice</code></a></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
        <td></td>
        <td>&#160;&#160;&#160;
-       <a href="api/api_components.html#module-odoo.addons.connector_magento.components.mapper"><code class="xref">odoo.addons.connector_magento.components.mapper</code></a></td><td>
+       <a href="api/api_magento_model.html#module-openerp.addons.magentoerpconnect.magento_model"><code class="xref">openerp.addons.magentoerpconnect.magento_model</code></a></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
        <td></td>
        <td>&#160;&#160;&#160;
-       <a href="api/api_exception.html#module-odoo.addons.connector_magento.exception"><code class="xref">odoo.addons.connector_magento.exception</code></a></td><td>
+       <a href="api/api_partner.html#module-openerp.addons.magentoerpconnect.partner"><code class="xref">openerp.addons.magentoerpconnect.partner</code></a></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
        <td></td>
        <td>&#160;&#160;&#160;
-       <a href="api/api_models.html#module-odoo.addons.connector_magento.models.account_invoice.common"><code class="xref">odoo.addons.connector_magento.models.account_invoice.common</code></a></td><td>
+       <a href="api/api_partner_category.html#module-openerp.addons.magentoerpconnect.partner_category"><code class="xref">openerp.addons.magentoerpconnect.partner_category</code></a></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
        <td></td>
        <td>&#160;&#160;&#160;
-       <a href="api/api_models.html#module-odoo.addons.connector_magento.models.account_invoice.exporter"><code class="xref">odoo.addons.connector_magento.models.account_invoice.exporter</code></a></td><td>
+       <a href="api/api_product.html#module-openerp.addons.magentoerpconnect.product"><code class="xref">openerp.addons.magentoerpconnect.product</code></a></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
        <td></td>
        <td>&#160;&#160;&#160;
-       <a href="api/api_models.html#module-odoo.addons.connector_magento.models.account_payment_mode.common"><code class="xref">odoo.addons.connector_magento.models.account_payment_mode.common</code></a></td><td>
+       <a href="api/api_product_category.html#module-openerp.addons.magentoerpconnect.product_category"><code class="xref">openerp.addons.magentoerpconnect.product_category</code></a></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
        <td></td>
        <td>&#160;&#160;&#160;
-       <a href="api/api_models.html#module-odoo.addons.connector_magento.models.delivery.common"><code class="xref">odoo.addons.connector_magento.models.delivery.common</code></a></td><td>
+       <a href="api/api_sale.html#module-openerp.addons.magentoerpconnect.sale"><code class="xref">openerp.addons.magentoerpconnect.sale</code></a></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
        <td></td>
        <td>&#160;&#160;&#160;
-       <a href="api/api_models.html#module-odoo.addons.connector_magento.models.magento_backend.common"><code class="xref">odoo.addons.connector_magento.models.magento_backend.common</code></a></td><td>
+       <a href="api/api_stock_picking.html#module-openerp.addons.magentoerpconnect.stock_picking"><code class="xref">openerp.addons.magentoerpconnect.stock_picking</code></a></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
        <td></td>
        <td>&#160;&#160;&#160;
-       <a href="api/api_models.html#module-odoo.addons.connector_magento.models.magento_backend.importer"><code class="xref">odoo.addons.connector_magento.models.magento_backend.importer</code></a></td><td>
+       <a href="api/api_stock_tracking.html#module-openerp.addons.magentoerpconnect.stock_tracking"><code class="xref">openerp.addons.magentoerpconnect.stock_tracking</code></a></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
        <td></td>
        <td>&#160;&#160;&#160;
-       <a href="api/api_models.html#module-odoo.addons.connector_magento.models.magento_binding.common"><code class="xref">odoo.addons.connector_magento.models.magento_binding.common</code></a></td><td>
+       <a href="api/api_backend_adapter.html#module-openerp.addons.magentoerpconnect.unit.backend_adapter"><code class="xref">openerp.addons.magentoerpconnect.unit.backend_adapter</code></a></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
        <td></td>
        <td>&#160;&#160;&#160;
-       <a href="api/api_models.html#module-odoo.addons.connector_magento.models.magento_store.common"><code class="xref">odoo.addons.connector_magento.models.magento_store.common</code></a></td><td>
+       <a href="api/api_binder.html#module-openerp.addons.magentoerpconnect.unit.binder"><code class="xref">openerp.addons.magentoerpconnect.unit.binder</code></a></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
        <td></td>
        <td>&#160;&#160;&#160;
-       <a href="api/api_models.html#module-odoo.addons.connector_magento.models.magento_store.importer"><code class="xref">odoo.addons.connector_magento.models.magento_store.importer</code></a></td><td>
+       <a href="api/api_synchronizer.html#module-openerp.addons.magentoerpconnect.unit.delete_synchronizer"><code class="xref">openerp.addons.magentoerpconnect.unit.delete_synchronizer</code></a></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
        <td></td>
        <td>&#160;&#160;&#160;
-       <a href="api/api_models.html#module-odoo.addons.connector_magento.models.magento_storeview.common"><code class="xref">odoo.addons.connector_magento.models.magento_storeview.common</code></a></td><td>
+       <a href="api/api_synchronizer.html#module-openerp.addons.magentoerpconnect.unit.export_synchronizer"><code class="xref">openerp.addons.magentoerpconnect.unit.export_synchronizer</code></a></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
        <td></td>
        <td>&#160;&#160;&#160;
-       <a href="api/api_models.html#module-odoo.addons.connector_magento.models.magento_storeview.importer"><code class="xref">odoo.addons.connector_magento.models.magento_storeview.importer</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="api/api_models.html#module-odoo.addons.connector_magento.models.magento_website.common"><code class="xref">odoo.addons.connector_magento.models.magento_website.common</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="api/api_models.html#module-odoo.addons.connector_magento.models.magento_website.importer"><code class="xref">odoo.addons.connector_magento.models.magento_website.importer</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="api/api_models.html#module-odoo.addons.connector_magento.models.partner.common"><code class="xref">odoo.addons.connector_magento.models.partner.common</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="api/api_models.html#module-odoo.addons.connector_magento.models.partner.importer"><code class="xref">odoo.addons.connector_magento.models.partner.importer</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="api/api_models.html#module-odoo.addons.connector_magento.models.partner_category.common"><code class="xref">odoo.addons.connector_magento.models.partner_category.common</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="api/api_models.html#module-odoo.addons.connector_magento.models.partner_category.importer"><code class="xref">odoo.addons.connector_magento.models.partner_category.importer</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="api/api_models.html#module-odoo.addons.connector_magento.models.product.common"><code class="xref">odoo.addons.connector_magento.models.product.common</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="api/api_models.html#module-odoo.addons.connector_magento.models.product.importer"><code class="xref">odoo.addons.connector_magento.models.product.importer</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="api/api_models.html#module-odoo.addons.connector_magento.models.product_category.common"><code class="xref">odoo.addons.connector_magento.models.product_category.common</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="api/api_models.html#module-odoo.addons.connector_magento.models.product_category.importer"><code class="xref">odoo.addons.connector_magento.models.product_category.importer</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="api/api_models.html#module-odoo.addons.connector_magento.models.queue_job.common"><code class="xref">odoo.addons.connector_magento.models.queue_job.common</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="api/api_models.html#module-odoo.addons.connector_magento.models.sale_order.common"><code class="xref">odoo.addons.connector_magento.models.sale_order.common</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="api/api_models.html#module-odoo.addons.connector_magento.models.sale_order.exporter"><code class="xref">odoo.addons.connector_magento.models.sale_order.exporter</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="api/api_models.html#module-odoo.addons.connector_magento.models.sale_order.importer"><code class="xref">odoo.addons.connector_magento.models.sale_order.importer</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="api/api_models.html#module-odoo.addons.connector_magento.models.stock_picking.common"><code class="xref">odoo.addons.connector_magento.models.stock_picking.common</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="api/api_models.html#module-odoo.addons.connector_magento.models.stock_picking.exporter"><code class="xref">odoo.addons.connector_magento.models.stock_picking.exporter</code></a></td><td>
+       <a href="api/api_synchronizer.html#module-openerp.addons.magentoerpconnect.unit.import_synchronizer"><code class="xref">openerp.addons.magentoerpconnect.unit.import_synchronizer</code></a></td><td>
        <em></em></td></tr>
    </table>
 
@@ -407,7 +364,7 @@
     </p>
     <p>
         &copy; Copyright 2013-2015, Odoo Community Association (OCA).<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.4.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.5.<br/>
     </p>
   </div>
 </footer>

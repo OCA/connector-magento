@@ -4,11 +4,11 @@
 How to configure schedulers
 ###########################
 
-Once your configuration has been set,
+Once your configuration is fine,
 you will want to automate the import
-of the products, sales orders, stock quantities and so on.
+of the products, sales orders, ...
 
-Go to `Settings > Technical > Automation > Scheduled Actions`.
+Go to `Settings > Technical > Scheduler > Scheduled Actions`.
 
 Activate the wanted schedulers:
 

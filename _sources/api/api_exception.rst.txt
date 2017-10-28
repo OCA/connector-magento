@@ -1,10 +1,9 @@
-.. _api-exception:
-
-##########
 Exceptions
-##########
+==========
 
-.. automodule:: odoo.addons.connector_magento.exception
+.. automodule:: openerp.addons.magentoerpconnect.exception
    :members:
    :undoc-members:
    :show-inheritance:
+
+
