@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-28 02:04+0000\n"
-"PO-Revision-Date: 2017-04-25 10:42+0000\n"
+"POT-Creation-Date: 2017-09-02 03:33+0000\n"
+"PO-Revision-Date: 2017-10-16 18:32+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: Slovak (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/sk/)\n"
 "MIME-Version: 1.0\n"
@@ -833,7 +833,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.product.product,delivery_count:0
 msgid "Delivery"
-msgstr ""
+msgstr "Dodávka"
 
 #. module: magentoerpconnect
 #: field:magento.sale.order,partner_shipping_id:0
@@ -2420,7 +2420,7 @@ msgstr ""
 #: field:magento.sale.order.line,product_id:0
 #: field:magento.stock.picking,product_id:0
 msgid "Product"
-msgstr ""
+msgstr "Produkt"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,attribute_line_ids:0
@@ -2436,7 +2436,7 @@ msgstr ""
 #: model:ir.model,name:magentoerpconnect.model_product_category
 #: field:magento.product.category,openerp_id:0
 msgid "Product Category"
-msgstr ""
+msgstr "Kategória produktu"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,product_manager:0
@@ -2686,12 +2686,12 @@ msgstr ""
 #: field:magento.address,sale_order_ids:0
 #: field:magento.res.partner,sale_order_ids:0
 msgid "Sales Order"
-msgstr ""
+msgstr "Objednávka predaja"
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_sale_order_line
 msgid "Sales Order Line"
-msgstr ""
+msgstr "Položky objednávky"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,section_id:0
@@ -2896,7 +2896,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.address,state_id:0 field:magento.res.partner,state_id:0
 msgid "State"
-msgstr ""
+msgstr "Stav"
 
 #. module: magentoerpconnect
 #: code:addons/magentoerpconnect/sale.py:1098
@@ -3522,7 +3522,7 @@ msgstr ""
 #: field:magento.product.product,uom_id:0
 #: field:magento.stock.picking,weight_uom_id:0
 msgid "Unit of Measure"
-msgstr ""
+msgstr "Merná jednotka"
 
 #. module: magentoerpconnect
 #: field:magento.sale.order.line,product_uom:0
@@ -3665,7 +3665,7 @@ msgstr ""
 #: field:magento.product.product,warehouse_id:0
 #: field:magento.sale.order,warehouse_id:0
 msgid "Warehouse"
-msgstr ""
+msgstr "Sklad"
 
 #. module: magentoerpconnect
 #: help:magento.backend,warehouse_id:0
