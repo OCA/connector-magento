@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-19 01:27+0000\n"
-"PO-Revision-Date: 2017-08-21 08:01+0000\n"
+"POT-Creation-Date: 2017-10-28 02:46+0000\n"
+"PO-Revision-Date: 2017-11-03 12:16+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: Indonesian (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/id/)\n"
 "MIME-Version: 1.0\n"
@@ -201,7 +201,7 @@ msgstr "Aktif"
 #. module: magentoerpconnect
 #: field:magento.account.invoice,comment:0
 msgid "Additional Information"
-msgstr ""
+msgstr "informasi tambahan"
 
 #. module: magentoerpconnect
 #: field:magento.address,type:0 field:magento.res.partner,type:0
@@ -491,7 +491,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.storeview,code:0 field:magento.website,code:0
 msgid "Code"
-msgstr ""
+msgstr "Kode"
 
 #. module: magentoerpconnect
 #: help:magento.product.product,uos_coeff:0
@@ -1131,7 +1131,7 @@ msgstr ""
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
+msgstr "Memegang ringkasan Chatter (jumlah pesan, ...). Ringkasan ini langsung dalam format html agar bisa dimasukkan dalam pandangan kanban."
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,id:0 field:magento.address,id:0
@@ -1522,7 +1522,7 @@ msgstr ""
 #: field:magento.sale.order,message_is_follower:0
 #: field:magento.stock.picking,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "Ini Adalah Pengikut"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,is_product_variant:0
@@ -2098,7 +2098,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.account.invoice,number:0
 msgid "Number"
-msgstr ""
+msgstr "Nomer"
 
 #. module: magentoerpconnect
 #: field:magento.sale.order.line,number_packages:0
@@ -2760,7 +2760,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.account.invoice,sent:0
 msgid "Sent"
-msgstr ""
+msgstr "Kirim"
 
 #. module: magentoerpconnect
 #: field:magento.product.category,sequence:0
@@ -2896,7 +2896,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.address,state_id:0 field:magento.res.partner,state_id:0
 msgid "State"
-msgstr ""
+msgstr "Bagian"
 
 #. module: magentoerpconnect
 #: code:addons/magentoerpconnect/sale.py:1098
@@ -2991,7 +2991,7 @@ msgstr ""
 #: field:magento.sale.order,message_summary:0
 #: field:magento.stock.picking,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Ringkasan"
 
 #. module: magentoerpconnect
 #: field:magento.address,supplier:0 field:magento.product.product,seller_ids:0
@@ -3709,7 +3709,7 @@ msgstr ""
 #: field:magento.sale.order.line,th_weight:0
 #: field:magento.stock.picking,weight:0
 msgid "Weight"
-msgstr ""
+msgstr "Berat"
 
 #. module: magentoerpconnect
 #: help:magento.product.category,property_stock_account_input_categ:0
