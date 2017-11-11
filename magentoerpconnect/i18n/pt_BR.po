@@ -17,8 +17,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-02 03:33+0000\n"
-"PO-Revision-Date: 2017-10-27 11:29+0000\n"
+"POT-Creation-Date: 2017-11-04 02:36+0000\n"
+"PO-Revision-Date: 2017-11-07 22:30+0000\n"
 "Last-Translator: Gustavo Lepri <gustavolepri@gmail.com>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/pt_BR/)\n"
 "MIME-Version: 1.0\n"
@@ -2036,7 +2036,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.address,mobile:0 field:magento.res.partner,mobile:0
 msgid "Mobile"
-msgstr ""
+msgstr "Móvel"
 
 #. module: magentoerpconnect
 #: field:magento.address,name:0 field:magento.backend,name:0
