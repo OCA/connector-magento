@@ -47,11 +47,17 @@ class ProductAttributeLineBatchImporter(Component):
             ('product_variant_ids', '=', False)
         ]).unlink()
 
+    def get_updated_variants(self, record):
+        """
+            allows to easily override the field used (eg. external_id
+            instead of defaul_code)
+        """
+        return self.backend_adapter.list_variants(record.external_id)
+
     def run(self, filters=None):
         """ Run the synchronization """
         record = filters['record']
-        updated_variants = self.backend_adapter.list_variants(
-            record.default_code)
+        updated_variants = self.get_updated_variants(record)
         available_attributes = self.env[
             'magento.product.attribute'].search_read([], [
                 'name',

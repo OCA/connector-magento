@@ -3,9 +3,8 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 import logging
-import xmlrpclib
+
 from odoo import models, fields
-from odoo.addons.connector.exception import IDMissingInBackend
 from odoo.addons.component.core import Component
 
 _logger = logging.getLogger(__name__)
@@ -41,19 +40,6 @@ class ProductAttributeLineAdapter(Component):
 
     _magento_model = 'ol_catalog_product_link'
     _admin_path = '/{model}/index/'
-
-    def _call(self, method, arguments):
-        try:
-            return super(ProductAttributeLineAdapter, self)._call(
-                method,
-                arguments)
-        except xmlrpclib.Fault as err:
-            # 101 is the error in the Magento API
-            # when the attribute does not exist
-            if err.faultCode == 101:
-                raise IDMissingInBackend
-            else:
-                raise
 
     def list_variants(self, sku, storeview_id=None, attributes=None):
         """ Returns the information of a record

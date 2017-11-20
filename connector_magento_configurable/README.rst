@@ -7,10 +7,12 @@ Magento Connector - Configurable Product
 ====================================================
 
 This modules aims to create configurable products as Product templates and
-linked ProductProduct and not flat ProductProduct
+linked ProductProduct and not flat ProductProduct only
 
 Installation
 ============
+You need to have the connector_magento module installed to install this module.
+see : http://odoo-magento-connector.com/guides/installation_guide.html 
 
 Bug Tracker
 ===========
@@ -30,8 +32,19 @@ Images
 
 Contributors
 ------------
-
+Pierrick Brun at Akretion
 
 Maintainer
 ----------
 
+.. image:: https://odoo-community.org/logo.png
+   :alt: Odoo Community Association
+   :target: https://odoo-community.org
+
+This module is maintained by the OCA.
+
+OCA, or the Odoo Community Association, is a nonprofit organization whose
+mission is to support the collaborative development of Odoo features and
+promote its widespread use.
+
+To contribute to this module, please visit https://odoo-community.org.
