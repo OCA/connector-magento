@@ -13,11 +13,17 @@ class ProductAttributeBatchImporter(Component):
     _inherit = 'magento.direct.batch.importer'
     _apply_on = ['magento.product.attribute']
 
+    def get_updated_attributes(self, record):
+        """
+            allows to easily override the field used (eg. external_id
+            instead of defaul_code)
+        """
+        return self.backend_adapter.list_attributes(record.external_id)
+
     def run(self, filters=None):
         """ Run the synchronization """
         record = filters['record']
-        updated_attributes = self.backend_adapter.list_attributes(
-            record.default_code)
+        updated_attributes = self.get_updated_attributes(record)
         for attribute in updated_attributes:
             self._import_record(attribute)
 
