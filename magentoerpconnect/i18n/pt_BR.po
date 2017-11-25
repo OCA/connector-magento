@@ -17,8 +17,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-04 02:36+0000\n"
-"PO-Revision-Date: 2017-11-07 22:30+0000\n"
+"POT-Creation-Date: 2017-11-18 02:19+0000\n"
+"PO-Revision-Date: 2017-11-23 23:28+0000\n"
 "Last-Translator: Gustavo Lepri <gustavolepri@gmail.com>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/pt_BR/)\n"
 "MIME-Version: 1.0\n"
@@ -2248,7 +2248,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.res.partner.category,partner_ids:0
 msgid "Partners"
-msgstr ""
+msgstr "Parceiros"
 
 #. module: magentoerpconnect
 #: field:magento.backend,password:0
@@ -2446,7 +2446,7 @@ msgstr ""
 #: model:ir.model,name:magentoerpconnect.model_product_category
 #: field:magento.product.category,openerp_id:0
 msgid "Product Category"
-msgstr ""
+msgstr "Categoria do produto"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,product_manager:0

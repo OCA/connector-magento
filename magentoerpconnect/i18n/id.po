@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-11 02:19+0000\n"
-"PO-Revision-Date: 2017-11-17 09:19+0000\n"
+"POT-Creation-Date: 2017-11-18 02:19+0000\n"
+"PO-Revision-Date: 2017-11-23 23:25+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: Indonesian (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/id/)\n"
 "MIME-Version: 1.0\n"
@@ -1576,12 +1576,12 @@ msgstr ""
 #: field:magento.address,journal_item_count:0
 #: field:magento.res.partner,journal_item_count:0
 msgid "Journal Items"
-msgstr ""
+msgstr "Journal Items"
 
 #. module: magentoerpconnect
 #: help:magento.account.invoice,date_invoice:0
 msgid "Keep empty to use the current date"
-msgstr ""
+msgstr "Biarkan kosong untuk menggunakan tanggal sekarang"
 
 #. module: magentoerpconnect
 #: help:magento.account.invoice,period_id:0
@@ -2223,7 +2223,7 @@ msgstr ""
 #: field:magento.address,openerp_id:0 field:magento.res.partner,openerp_id:0
 #: field:magento.stock.picking,partner_id:0
 msgid "Partner"
-msgstr ""
+msgstr "Mitra"
 
 #. module: magentoerpconnect
 #: field:magento.res.partner.category,openerp_id:0
@@ -2269,12 +2269,12 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.account.invoice,payment_term:0
 msgid "Payment Terms"
-msgstr ""
+msgstr "Termin Pembayaran"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,payment_ids:0
 msgid "Payments"
-msgstr ""
+msgstr "Pembayaran"
 
 #. module: magentoerpconnect
 #: field:magento.sale.order,payment_ids:0
@@ -2579,7 +2579,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: help:magento.account.invoice,origin:0
 msgid "Reference of the document that produced this invoice."
-msgstr ""
+msgstr "Referensi dokumen yang dihasilkan faktur ini."
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,name:0
@@ -2705,7 +2705,7 @@ msgstr ""
 #: field:magento.res.partner,user_id:0 field:magento.sale.order,user_id:0
 #: field:magento.sale.order.line,salesman_id:0
 msgid "Salesperson"
-msgstr ""
+msgstr "Pramuniaga"
 
 #. module: magentoerpconnect
 #: field:magento.stock.picking,min_date:0
