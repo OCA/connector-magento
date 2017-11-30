@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>odoo.addons.connector_magento.models.product.importer &#8212; Odoo Magento Connector  documentation</title>
+    <link rel="stylesheet" href="../../../../../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../../../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../../../../../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../../../../../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../../../../../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../../search.html" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-7628916-4', 'odoo-magento-connector.com');
+  ga('send', 'pageview');
+
+</script>
+
+  </head>
+  <body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../../../../index.html">
+          Odoo Magento Connector</a>
+        <span class="navbar-text navbar-version pull-left"><b></b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../../../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../guides/installation_guide.html">Installation Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../guides/installation_guide.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../guides/installation_guide.html#after-the-installation">After the installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../guides/installation_guide.html#on-a-daily-basis">On a daily basis</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../guides/key_questions.html">Key questions when connecting Odoo with Magento</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../guides/key_questions.html#sale-workflows">Sale workflows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../guides/key_questions.html#catalog">Catalog</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../guides/key_questions.html#pricing">Pricing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../guides/key_questions.html#accounting">Accounting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../guides/key_questions.html#stock-availability-deliveries">Stock, availability, deliveries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../guides/key_questions.html#technical">Technical</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../howto/configure_translations.html">How to configure translations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../howto/configure_warehouse.html">How to configure warehouses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../howto/configure_payment_modes.html">Howto: configure payment modes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../howto/configure_automatic_workflows.html">Howto: configure automatic workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../howto/configure_exception_rules.html">Howto: configure exception rules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../howto/configure_shipping_methods.html">How to configure shipping methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../howto/configure_emails.html">How to configure emails</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../howto/configure_schedulers.html">How to configure schedulers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../howto/configure_taxes.html">How to configure taxes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../guides/connector_checkpoint.html">Check the connector checkpoint</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../guides/monitor_resolve_jobs.html">Monitor and resolve jobs</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../guides/monitor_resolve_jobs.html#q-a">Q&amp;A</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../howto/modify_an_order.html">How to cancel / modify a sale order</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../howto/modify_an_order.html#handle-a-sale-order-cancelled-on-magento">Handle a sale order cancelled on Magento</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../howto/modify_an_order.html#modify-a-sale-order">Modify a sale order</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../howto/faq.html">FAQ</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../howto/faq.html#how-do-i">How do I…</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../howto/faq.html#why">Why…</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../project/contribute.html">Developer’s guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../project/contribute.html#dev-environment">Dev Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../project/contribute.html#how-to-help">How to help</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../guides/tutorial_customize.html">Tutorial: customize the connector</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../guides/tutorial_customize.html#bootstrap-your-own-customization-module">Bootstrap your own customization module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../guides/tutorial_customize.html#add-mappings-of-fields">Add mappings of fields</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../guides/tutorial_customize.html#customizing-importer">Customizing importer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../guides/tutorial_customize.html#and-now">And now?</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../api/api_components.html">Components</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../api/api_components.html#module-odoo.addons.connector_magento.components.core">Core Component</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../api/api_components.html#magento-components">Magento Components</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../api/api_models.html">Models</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../api/api_models.html#base-models">Base Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../api/api_models.html#synchronized-models">Synchronized Models</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../api/api_exception.html">Exceptions</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../project/roadmap.html">Roadmap</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../project/roadmap.html#catalog">Catalog</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../project/contributors.html">Contributors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../project/contributors.html#financial-contributors">Financial Contributors</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <h1>Source code for odoo.addons.connector_magento.models.product.importer</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1"># Copyright 2013-2017 Camptocamp SA</span>
+<span class="c1"># © 2016 Sodexis</span>
+<span class="c1"># License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">urllib2</span>
+<span class="kn">import</span> <span class="nn">base64</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="kn">from</span> <span class="nn">odoo</span> <span class="k">import</span> <span class="n">_</span>
+<span class="kn">from</span> <span class="nn">odoo.addons.component.core</span> <span class="k">import</span> <span class="n">Component</span>
+<span class="kn">from</span> <span class="nn">odoo.addons.connector.components.mapper</span> <span class="k">import</span> <span class="n">mapping</span>
+<span class="kn">from</span> <span class="nn">odoo.addons.connector.exception</span> <span class="k">import</span> <span class="n">MappingError</span><span class="p">,</span> <span class="n">InvalidDataError</span>
+<span class="kn">from</span> <span class="nn">...components.mapper</span> <span class="k">import</span> <span class="n">normalize_datetime</span>
+
+<span class="n">_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="ProductBatchImporter"><a class="viewcode-back" href="../../../../../../api/api_models.html#odoo.addons.connector_magento.models.product.importer.ProductBatchImporter">[docs]</a><span class="k">class</span> <span class="nc">ProductBatchImporter</span><span class="p">(</span><span class="n">Component</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Import the Magento Products.</span>
+
+<span class="sd">    For every product category in the list, a delayed job is created.</span>
+<span class="sd">    Import from a date</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_name</span> <span class="o">=</span> <span class="s1">&#39;magento.product.product.batch.importer&#39;</span>
+    <span class="n">_inherit</span> <span class="o">=</span> <span class="s1">&#39;magento.delayed.batch.importer&#39;</span>
+    <span class="n">_apply_on</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;magento.product.product&#39;</span><span class="p">]</span>
+
+<div class="viewcode-block" id="ProductBatchImporter.run"><a class="viewcode-back" href="../../../../../../api/api_models.html#odoo.addons.connector_magento.models.product.importer.ProductBatchImporter.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filters</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Run the synchronization &quot;&quot;&quot;</span>
+        <span class="n">from_date</span> <span class="o">=</span> <span class="n">filters</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;from_date&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">to_date</span> <span class="o">=</span> <span class="n">filters</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;to_date&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">external_ids</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend_adapter</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">filters</span><span class="p">,</span>
+                                                   <span class="n">from_date</span><span class="o">=</span><span class="n">from_date</span><span class="p">,</span>
+                                                   <span class="n">to_date</span><span class="o">=</span><span class="n">to_date</span><span class="p">)</span>
+        <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;search for magento products </span><span class="si">%s</span><span class="s1"> returned </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span>
+                     <span class="n">filters</span><span class="p">,</span> <span class="n">external_ids</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">external_id</span> <span class="ow">in</span> <span class="n">external_ids</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_import_record</span><span class="p">(</span><span class="n">external_id</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="CatalogImageImporter"><a class="viewcode-back" href="../../../../../../api/api_models.html#odoo.addons.connector_magento.models.product.importer.CatalogImageImporter">[docs]</a><span class="k">class</span> <span class="nc">CatalogImageImporter</span><span class="p">(</span><span class="n">Component</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Import images for a record.</span>
+
+<span class="sd">    Usually called from importers, in ``_after_import``.</span>
+<span class="sd">    For instance from the products importer.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_name</span> <span class="o">=</span> <span class="s1">&#39;magento.product.image.importer&#39;</span>
+    <span class="n">_inherit</span> <span class="o">=</span> <span class="s1">&#39;magento.importer&#39;</span>
+    <span class="n">_apply_on</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;magento.product.product&#39;</span><span class="p">]</span>
+    <span class="n">_usage</span> <span class="o">=</span> <span class="s1">&#39;product.image.importer&#39;</span>
+
+<div class="viewcode-block" id="CatalogImageImporter._get_images"><a class="viewcode-back" href="../../../../../../api/api_models.html#odoo.addons.connector_magento.models.product.importer.CatalogImageImporter._get_images">[docs]</a>    <span class="k">def</span> <span class="nf">_get_images</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">storeview_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend_adapter</span><span class="o">.</span><span class="n">get_images</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">external_id</span><span class="p">,</span> <span class="n">storeview_id</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="CatalogImageImporter._sort_images"><a class="viewcode-back" href="../../../../../../api/api_models.html#odoo.addons.connector_magento.models.product.importer.CatalogImageImporter._sort_images">[docs]</a>    <span class="k">def</span> <span class="nf">_sort_images</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">images</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns a list of images sorted by their priority.</span>
+<span class="sd">        An image with the &#39;image&#39; type is the the primary one.</span>
+<span class="sd">        The other images are sorted by their position.</span>
+
+<span class="sd">        The returned list is reversed, the items at the end</span>
+<span class="sd">        of the list have the higher priority.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">images</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{}</span>
+        <span class="c1"># place the images where the type is &#39;image&#39; first then</span>
+        <span class="c1"># sort them by the reverse priority (last item of the list has</span>
+        <span class="c1"># the the higher priority)</span>
+
+        <span class="k">def</span> <span class="nf">priority</span><span class="p">(</span><span class="n">image</span><span class="p">):</span>
+            <span class="n">primary</span> <span class="o">=</span> <span class="s1">&#39;image&#39;</span> <span class="ow">in</span> <span class="n">image</span><span class="p">[</span><span class="s1">&#39;types&#39;</span><span class="p">]</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">position</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">image</span><span class="p">[</span><span class="s1">&#39;position&#39;</span><span class="p">])</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="n">position</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">maxsize</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">primary</span><span class="p">,</span> <span class="o">-</span><span class="n">position</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">images</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">priority</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="CatalogImageImporter._get_binary_image"><a class="viewcode-back" href="../../../../../../api/api_models.html#odoo.addons.connector_magento.models.product.importer.CatalogImageImporter._get_binary_image">[docs]</a>    <span class="k">def</span> <span class="nf">_get_binary_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image_data</span><span class="p">):</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">image_data</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf8&#39;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">request</span> <span class="o">=</span> <span class="n">urllib2</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend_record</span><span class="o">.</span><span class="n">auth_basic_username</span> \
+                    <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend_record</span><span class="o">.</span><span class="n">auth_basic_password</span><span class="p">:</span>
+                <span class="n">base64string</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span>
+                    <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">:</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">backend_record</span><span class="o">.</span><span class="n">auth_basic_username</span><span class="p">,</span>
+                               <span class="bp">self</span><span class="o">.</span><span class="n">backend_record</span><span class="o">.</span><span class="n">auth_basic_password</span><span class="p">))</span>
+                <span class="n">request</span><span class="o">.</span><span class="n">add_header</span><span class="p">(</span><span class="s2">&quot;Authorization&quot;</span><span class="p">,</span> <span class="s2">&quot;Basic </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">base64string</span><span class="p">)</span>
+            <span class="n">binary</span> <span class="o">=</span> <span class="n">urllib2</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">urllib2</span><span class="o">.</span><span class="n">HTTPError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">err</span><span class="o">.</span><span class="n">code</span> <span class="o">==</span> <span class="mi">404</span><span class="p">:</span>
+                <span class="c1"># the image is just missing, we skip it</span>
+                <span class="k">return</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># we don&#39;t know why we couldn&#39;t download the image</span>
+                <span class="c1"># so we propagate the error, the import will fail</span>
+                <span class="c1"># and we have to check why it couldn&#39;t be accessed</span>
+                <span class="k">raise</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">binary</span><span class="o">.</span><span class="n">read</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="CatalogImageImporter._write_image_data"><a class="viewcode-back" href="../../../../../../api/api_models.html#odoo.addons.connector_magento.models.product.importer.CatalogImageImporter._write_image_data">[docs]</a>    <span class="k">def</span> <span class="nf">_write_image_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">binding</span><span class="p">,</span> <span class="n">binary</span><span class="p">,</span> <span class="n">image_data</span><span class="p">):</span>
+        <span class="n">binding</span> <span class="o">=</span> <span class="n">binding</span><span class="o">.</span><span class="n">with_context</span><span class="p">(</span><span class="n">connector_no_export</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">binding</span><span class="o">.</span><span class="n">write</span><span class="p">({</span><span class="s1">&#39;image&#39;</span><span class="p">:</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">binary</span><span class="p">)})</span></div>
+
+<div class="viewcode-block" id="CatalogImageImporter.run"><a class="viewcode-back" href="../../../../../../api/api_models.html#odoo.addons.connector_magento.models.product.importer.CatalogImageImporter.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">external_id</span><span class="p">,</span> <span class="n">binding</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">external_id</span> <span class="o">=</span> <span class="n">external_id</span>
+        <span class="n">images</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_images</span><span class="p">()</span>
+        <span class="n">images</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sort_images</span><span class="p">(</span><span class="n">images</span><span class="p">)</span>
+        <span class="n">binary</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">image_data</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">while</span> <span class="ow">not</span> <span class="n">binary</span> <span class="ow">and</span> <span class="n">images</span><span class="p">:</span>
+            <span class="n">image_data</span> <span class="o">=</span> <span class="n">images</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+            <span class="n">binary</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_binary_image</span><span class="p">(</span><span class="n">image_data</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">binary</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_write_image_data</span><span class="p">(</span><span class="n">binding</span><span class="p">,</span> <span class="n">binary</span><span class="p">,</span> <span class="n">image_data</span><span class="p">)</span></div></div>
+
+
+<span class="c1"># TODO: not needed, use inheritance</span>
+<div class="viewcode-block" id="BundleImporter"><a class="viewcode-back" href="../../../../../../api/api_models.html#odoo.addons.connector_magento.models.product.importer.BundleImporter">[docs]</a><span class="k">class</span> <span class="nc">BundleImporter</span><span class="p">(</span><span class="n">Component</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Can be inherited to change the way the bundle products are</span>
+<span class="sd">    imported.</span>
+
+<span class="sd">    Called at the end of the import of a product.</span>
+
+<span class="sd">    Example of action when importing a bundle product:</span>
+<span class="sd">        - Create a bill of material</span>
+<span class="sd">        - Import the structure of the bundle in new objects</span>
+
+<span class="sd">    By default, the bundle products are not imported: the jobs</span>
+<span class="sd">    are set as failed, because there is no known way to import them.</span>
+<span class="sd">    An additional module that implements the import should be installed.</span>
+
+<span class="sd">    If you want to create a custom importer for the bundles, you have to</span>
+<span class="sd">    inherit the Component::</span>
+
+<span class="sd">        class BundleImporter(Component):</span>
+<span class="sd">            _inherit = &#39;magento.product.bundle.importer&#39;</span>
+
+<span class="sd">    And to add the bundle type in the supported product types::</span>
+
+<span class="sd">        class MagentoProductProduct(models.Model):</span>
+<span class="sd">            _inherit = &#39;magento.product.product&#39;</span>
+
+<span class="sd">            @api.model</span>
+<span class="sd">            def product_type_get(self):</span>
+<span class="sd">                types = super(MagentoProductProduct, self).product_type_get()</span>
+<span class="sd">                if &#39;bundle&#39; not in [item[0] for item in types]:</span>
+<span class="sd">                    types.append((&#39;bundle&#39;, &#39;Bundle&#39;))</span>
+<span class="sd">                return types</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_name</span> <span class="o">=</span> <span class="s1">&#39;magento.product.bundle.importer&#39;</span>
+    <span class="n">_inherit</span> <span class="o">=</span> <span class="s1">&#39;magento.importer&#39;</span>
+    <span class="n">_apply_on</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;magento.product.product&#39;</span><span class="p">]</span>
+    <span class="n">_usage</span> <span class="o">=</span> <span class="s1">&#39;product.bundle.importer&#39;</span>
+
+<div class="viewcode-block" id="BundleImporter.run"><a class="viewcode-back" href="../../../../../../api/api_models.html#odoo.addons.connector_magento.models.product.importer.BundleImporter.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">binding</span><span class="p">,</span> <span class="n">magento_record</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Import the bundle information about a product.</span>
+
+<span class="sd">        :param magento_record: product information from Magento</span>
+<span class="sd">        &quot;&quot;&quot;</span></div></div>
+
+
+<div class="viewcode-block" id="ProductImportMapper"><a class="viewcode-back" href="../../../../../../api/api_models.html#odoo.addons.connector_magento.models.product.importer.ProductImportMapper">[docs]</a><span class="k">class</span> <span class="nc">ProductImportMapper</span><span class="p">(</span><span class="n">Component</span><span class="p">):</span>
+    <span class="n">_name</span> <span class="o">=</span> <span class="s1">&#39;magento.product.product.import.mapper&#39;</span>
+    <span class="n">_inherit</span> <span class="o">=</span> <span class="s1">&#39;magento.import.mapper&#39;</span>
+    <span class="n">_apply_on</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;magento.product.product&#39;</span><span class="p">]</span>
+
+    <span class="c1"># TODO :     categ, special_price =&gt; minimal_price</span>
+    <span class="n">direct</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">),</span>
+              <span class="p">(</span><span class="s1">&#39;description&#39;</span><span class="p">,</span> <span class="s1">&#39;description&#39;</span><span class="p">),</span>
+              <span class="p">(</span><span class="s1">&#39;weight&#39;</span><span class="p">,</span> <span class="s1">&#39;weight&#39;</span><span class="p">),</span>
+              <span class="p">(</span><span class="s1">&#39;cost&#39;</span><span class="p">,</span> <span class="s1">&#39;standard_price&#39;</span><span class="p">),</span>
+              <span class="p">(</span><span class="s1">&#39;short_description&#39;</span><span class="p">,</span> <span class="s1">&#39;description_sale&#39;</span><span class="p">),</span>
+              <span class="p">(</span><span class="s1">&#39;sku&#39;</span><span class="p">,</span> <span class="s1">&#39;default_code&#39;</span><span class="p">),</span>
+              <span class="p">(</span><span class="s1">&#39;type_id&#39;</span><span class="p">,</span> <span class="s1">&#39;product_type&#39;</span><span class="p">),</span>
+              <span class="p">(</span><span class="n">normalize_datetime</span><span class="p">(</span><span class="s1">&#39;created_at&#39;</span><span class="p">),</span> <span class="s1">&#39;created_at&#39;</span><span class="p">),</span>
+              <span class="p">(</span><span class="n">normalize_datetime</span><span class="p">(</span><span class="s1">&#39;updated_at&#39;</span><span class="p">),</span> <span class="s1">&#39;updated_at&#39;</span><span class="p">),</span>
+              <span class="p">]</span>
+
+<div class="viewcode-block" id="ProductImportMapper.is_active"><a class="viewcode-back" href="../../../../../../api/api_models.html#odoo.addons.connector_magento.models.product.importer.ProductImportMapper.is_active">[docs]</a>    <span class="nd">@mapping</span>
+    <span class="k">def</span> <span class="nf">is_active</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Check if the product is active in Magento</span>
+<span class="sd">        and set active flag in OpenERP</span>
+<span class="sd">        status == 1 in Magento means active&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;active&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">record</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;status&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;1&#39;</span><span class="p">)}</span></div>
+
+<div class="viewcode-block" id="ProductImportMapper.price"><a class="viewcode-back" href="../../../../../../api/api_models.html#odoo.addons.connector_magento.models.product.importer.ProductImportMapper.price">[docs]</a>    <span class="nd">@mapping</span>
+    <span class="k">def</span> <span class="nf">price</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;list_price&#39;</span><span class="p">:</span> <span class="n">record</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;price&#39;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)}</span></div>
+
+<div class="viewcode-block" id="ProductImportMapper.type"><a class="viewcode-back" href="../../../../../../api/api_models.html#odoo.addons.connector_magento.models.product.importer.ProductImportMapper.type">[docs]</a>    <span class="nd">@mapping</span>
+    <span class="k">def</span> <span class="nf">type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">record</span><span class="p">[</span><span class="s1">&#39;type_id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;simple&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;product&#39;</span><span class="p">}</span>
+        <span class="k">elif</span> <span class="n">record</span><span class="p">[</span><span class="s1">&#39;type_id&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;virtual&#39;</span><span class="p">,</span> <span class="s1">&#39;downloadable&#39;</span><span class="p">,</span> <span class="s1">&#39;giftcard&#39;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;service&#39;</span><span class="p">}</span>
+        <span class="k">return</span></div>
+
+<div class="viewcode-block" id="ProductImportMapper.website_ids"><a class="viewcode-back" href="../../../../../../api/api_models.html#odoo.addons.connector_magento.models.product.importer.ProductImportMapper.website_ids">[docs]</a>    <span class="nd">@mapping</span>
+    <span class="k">def</span> <span class="nf">website_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
+        <span class="n">website_ids</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">binder</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">binder_for</span><span class="p">(</span><span class="s1">&#39;magento.website&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">mag_website_id</span> <span class="ow">in</span> <span class="n">record</span><span class="p">[</span><span class="s1">&#39;websites&#39;</span><span class="p">]:</span>
+            <span class="n">website_binding</span> <span class="o">=</span> <span class="n">binder</span><span class="o">.</span><span class="n">to_internal</span><span class="p">(</span><span class="n">mag_website_id</span><span class="p">)</span>
+            <span class="n">website_ids</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="mi">4</span><span class="p">,</span> <span class="n">website_binding</span><span class="o">.</span><span class="n">id</span><span class="p">))</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;website_ids&#39;</span><span class="p">:</span> <span class="n">website_ids</span><span class="p">}</span></div>
+
+<div class="viewcode-block" id="ProductImportMapper.categories"><a class="viewcode-back" href="../../../../../../api/api_models.html#odoo.addons.connector_magento.models.product.importer.ProductImportMapper.categories">[docs]</a>    <span class="nd">@mapping</span>
+    <span class="k">def</span> <span class="nf">categories</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
+        <span class="n">mag_categories</span> <span class="o">=</span> <span class="n">record</span><span class="p">[</span><span class="s1">&#39;categories&#39;</span><span class="p">]</span>
+        <span class="n">binder</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">binder_for</span><span class="p">(</span><span class="s1">&#39;magento.product.category&#39;</span><span class="p">)</span>
+
+        <span class="n">category_ids</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">main_categ_id</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">for</span> <span class="n">mag_category_id</span> <span class="ow">in</span> <span class="n">mag_categories</span><span class="p">:</span>
+            <span class="n">cat</span> <span class="o">=</span> <span class="n">binder</span><span class="o">.</span><span class="n">to_internal</span><span class="p">(</span><span class="n">mag_category_id</span><span class="p">,</span> <span class="n">unwrap</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">cat</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">MappingError</span><span class="p">(</span><span class="s2">&quot;The product category with &quot;</span>
+                                   <span class="s2">&quot;magento id </span><span class="si">%s</span><span class="s2"> is not imported.&quot;</span> <span class="o">%</span>
+                                   <span class="n">mag_category_id</span><span class="p">)</span>
+
+            <span class="n">category_ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cat</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">category_ids</span><span class="p">:</span>
+            <span class="n">main_categ_id</span> <span class="o">=</span> <span class="n">category_ids</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">main_categ_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">default_categ</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend_record</span><span class="o">.</span><span class="n">default_category_id</span>
+            <span class="k">if</span> <span class="n">default_categ</span><span class="p">:</span>
+                <span class="n">main_categ_id</span> <span class="o">=</span> <span class="n">default_categ</span><span class="o">.</span><span class="n">id</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;categ_ids&#39;</span><span class="p">:</span> <span class="p">[(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">category_ids</span><span class="p">)]}</span>
+        <span class="k">if</span> <span class="n">main_categ_id</span><span class="p">:</span>  <span class="c1"># OpenERP assign &#39;All Products&#39; if not specified</span>
+            <span class="n">result</span><span class="p">[</span><span class="s1">&#39;categ_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">main_categ_id</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+
+<div class="viewcode-block" id="ProductImportMapper.backend_id"><a class="viewcode-back" href="../../../../../../api/api_models.html#odoo.addons.connector_magento.models.product.importer.ProductImportMapper.backend_id">[docs]</a>    <span class="nd">@mapping</span>
+    <span class="k">def</span> <span class="nf">backend_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;backend_id&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend_record</span><span class="o">.</span><span class="n">id</span><span class="p">}</span></div></div>
+
+
+<div class="viewcode-block" id="ProductImporter"><a class="viewcode-back" href="../../../../../../api/api_models.html#odoo.addons.connector_magento.models.product.importer.ProductImporter">[docs]</a><span class="k">class</span> <span class="nc">ProductImporter</span><span class="p">(</span><span class="n">Component</span><span class="p">):</span>
+    <span class="n">_name</span> <span class="o">=</span> <span class="s1">&#39;magento.product.product.importer&#39;</span>
+    <span class="n">_inherit</span> <span class="o">=</span> <span class="s1">&#39;magento.importer&#39;</span>
+    <span class="n">_apply_on</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;magento.product.product&#39;</span><span class="p">]</span>
+
+<div class="viewcode-block" id="ProductImporter._import_bundle_dependencies"><a class="viewcode-back" href="../../../../../../api/api_models.html#odoo.addons.connector_magento.models.product.importer.ProductImporter._import_bundle_dependencies">[docs]</a>    <span class="k">def</span> <span class="nf">_import_bundle_dependencies</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Import the dependencies for a Bundle &quot;&quot;&quot;</span>
+        <span class="n">bundle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">magento_record</span><span class="p">[</span><span class="s1">&#39;_bundle_data&#39;</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">option</span> <span class="ow">in</span> <span class="n">bundle</span><span class="p">[</span><span class="s1">&#39;options&#39;</span><span class="p">]:</span>
+            <span class="k">for</span> <span class="n">selection</span> <span class="ow">in</span> <span class="n">option</span><span class="p">[</span><span class="s1">&#39;selections&#39;</span><span class="p">]:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_import_dependency</span><span class="p">(</span><span class="n">selection</span><span class="p">[</span><span class="s1">&#39;product_id&#39;</span><span class="p">],</span>
+                                        <span class="s1">&#39;magento.product.product&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ProductImporter._import_dependencies"><a class="viewcode-back" href="../../../../../../api/api_models.html#odoo.addons.connector_magento.models.product.importer.ProductImporter._import_dependencies">[docs]</a>    <span class="k">def</span> <span class="nf">_import_dependencies</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Import the dependencies for the record&quot;&quot;&quot;</span>
+        <span class="n">record</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">magento_record</span>
+        <span class="c1"># import related categories</span>
+        <span class="k">for</span> <span class="n">mag_category_id</span> <span class="ow">in</span> <span class="n">record</span><span class="p">[</span><span class="s1">&#39;categories&#39;</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_import_dependency</span><span class="p">(</span><span class="n">mag_category_id</span><span class="p">,</span>
+                                    <span class="s1">&#39;magento.product.category&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">record</span><span class="p">[</span><span class="s1">&#39;type_id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;bundle&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_import_bundle_dependencies</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="ProductImporter._validate_product_type"><a class="viewcode-back" href="../../../../../../api/api_models.html#odoo.addons.connector_magento.models.product.importer.ProductImporter._validate_product_type">[docs]</a>    <span class="k">def</span> <span class="nf">_validate_product_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Check if the product type is in the selection (so we can</span>
+<span class="sd">        prevent the `except_orm` and display a better error message).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">product_type</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;product_type&#39;</span><span class="p">]</span>
+        <span class="n">product_model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">[</span><span class="s1">&#39;magento.product.product&#39;</span><span class="p">]</span>
+        <span class="n">types</span> <span class="o">=</span> <span class="n">product_model</span><span class="o">.</span><span class="n">product_type_get</span><span class="p">()</span>
+        <span class="n">available_types</span> <span class="o">=</span> <span class="p">[</span><span class="n">typ</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">typ</span> <span class="ow">in</span> <span class="n">types</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">product_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">available_types</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">InvalidDataError</span><span class="p">(</span><span class="s2">&quot;The product type &#39;</span><span class="si">%s</span><span class="s2">&#39; is not &quot;</span>
+                                   <span class="s2">&quot;yet supported in the connector.&quot;</span> <span class="o">%</span>
+                                   <span class="n">product_type</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ProductImporter._must_skip"><a class="viewcode-back" href="../../../../../../api/api_models.html#odoo.addons.connector_magento.models.product.importer.ProductImporter._must_skip">[docs]</a>    <span class="k">def</span> <span class="nf">_must_skip</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Hook called right after we read the data from the backend.</span>
+
+<span class="sd">        If the method returns a message giving a reason for the</span>
+<span class="sd">        skipping, the import will be interrupted and the message</span>
+<span class="sd">        recorded in the job (if the import is called directly by the</span>
+<span class="sd">        job, not by dependencies).</span>
+
+<span class="sd">        If it returns None, the import will continue normally.</span>
+
+<span class="sd">        :returns: None | str | unicode</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">magento_record</span><span class="p">[</span><span class="s1">&#39;type_id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;configurable&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">_</span><span class="p">(</span><span class="s1">&#39;The configurable product is not imported in Odoo, &#39;</span>
+                     <span class="s1">&#39;because only the simple products are used in the sales &#39;</span>
+                     <span class="s1">&#39;orders.&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ProductImporter._validate_data"><a class="viewcode-back" href="../../../../../../api/api_models.html#odoo.addons.connector_magento.models.product.importer.ProductImporter._validate_data">[docs]</a>    <span class="k">def</span> <span class="nf">_validate_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Check if the values to import are correct</span>
+
+<span class="sd">        Pro-actively check before the ``_create`` or</span>
+<span class="sd">        ``_update`` if some fields are missing or invalid</span>
+
+<span class="sd">        Raise `InvalidDataError`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_validate_product_type</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ProductImporter._create"><a class="viewcode-back" href="../../../../../../api/api_models.html#odoo.addons.connector_magento.models.product.importer.ProductImporter._create">[docs]</a>    <span class="k">def</span> <span class="nf">_create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="n">binding</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">ProductImporter</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">_create</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">backend_record</span><span class="o">.</span><span class="n">add_checkpoint</span><span class="p">(</span><span class="n">binding</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">binding</span></div>
+
+<div class="viewcode-block" id="ProductImporter._after_import"><a class="viewcode-back" href="../../../../../../api/api_models.html#odoo.addons.connector_magento.models.product.importer.ProductImporter._after_import">[docs]</a>    <span class="k">def</span> <span class="nf">_after_import</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">binding</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Hook called at the end of the import &quot;&quot;&quot;</span>
+        <span class="n">translation_importer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">component</span><span class="p">(</span>
+            <span class="n">usage</span><span class="o">=</span><span class="s1">&#39;translation.importer&#39;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">translation_importer</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">external_id</span><span class="p">,</span>
+            <span class="n">binding</span><span class="p">,</span>
+            <span class="n">mapper</span><span class="o">=</span><span class="s1">&#39;magento.product.product.import.mapper&#39;</span>
+        <span class="p">)</span>
+        <span class="n">image_importer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">component</span><span class="p">(</span><span class="n">usage</span><span class="o">=</span><span class="s1">&#39;product.image.importer&#39;</span><span class="p">)</span>
+        <span class="n">image_importer</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">external_id</span><span class="p">,</span> <span class="n">binding</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">magento_record</span><span class="p">[</span><span class="s1">&#39;type_id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;bundle&#39;</span><span class="p">:</span>
+            <span class="n">bundle_importer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">component</span><span class="p">(</span><span class="n">usage</span><span class="o">=</span><span class="s1">&#39;product.bundle.importer&#39;</span><span class="p">)</span>
+            <span class="n">bundle_importer</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">binding</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">magento_record</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="ProductInventoryExporter"><a class="viewcode-back" href="../../../../../../api/api_models.html#odoo.addons.connector_magento.models.product.importer.ProductInventoryExporter">[docs]</a><span class="k">class</span> <span class="nc">ProductInventoryExporter</span><span class="p">(</span><span class="n">Component</span><span class="p">):</span>
+    <span class="n">_name</span> <span class="o">=</span> <span class="s1">&#39;magento.product.product.exporter&#39;</span>
+    <span class="n">_inherit</span> <span class="o">=</span> <span class="s1">&#39;magento.exporter&#39;</span>
+    <span class="n">_apply_on</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;magento.product.product&#39;</span><span class="p">]</span>
+    <span class="n">_usage</span> <span class="o">=</span> <span class="s1">&#39;product.inventory.exporter&#39;</span>
+
+    <span class="n">_map_backorders</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;use_default&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                       <span class="s1">&#39;no&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                       <span class="s1">&#39;yes&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                       <span class="s1">&#39;yes-and-notification&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+                       <span class="p">}</span>
+
+<div class="viewcode-block" id="ProductInventoryExporter._get_data"><a class="viewcode-back" href="../../../../../../api/api_models.html#odoo.addons.connector_magento.models.product.importer.ProductInventoryExporter._get_data">[docs]</a>    <span class="k">def</span> <span class="nf">_get_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">binding</span><span class="p">,</span> <span class="n">fields</span><span class="p">):</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="s1">&#39;magento_qty&#39;</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
+                <span class="s1">&#39;qty&#39;</span><span class="p">:</span> <span class="n">binding</span><span class="o">.</span><span class="n">magento_qty</span><span class="p">,</span>
+                <span class="c1"># put the stock availability to &quot;out of stock&quot;</span>
+                <span class="s1">&#39;is_in_stock&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">binding</span><span class="o">.</span><span class="n">magento_qty</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="p">})</span>
+        <span class="k">if</span> <span class="s1">&#39;manage_stock&#39;</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
+            <span class="n">manage</span> <span class="o">=</span> <span class="n">binding</span><span class="o">.</span><span class="n">manage_stock</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
+                <span class="s1">&#39;manage_stock&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">manage</span> <span class="o">==</span> <span class="s1">&#39;yes&#39;</span><span class="p">),</span>
+                <span class="s1">&#39;use_config_manage_stock&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">manage</span> <span class="o">==</span> <span class="s1">&#39;use_default&#39;</span><span class="p">),</span>
+            <span class="p">})</span>
+        <span class="k">if</span> <span class="s1">&#39;backorders&#39;</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
+            <span class="n">backorders</span> <span class="o">=</span> <span class="n">binding</span><span class="o">.</span><span class="n">backorders</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
+                <span class="s1">&#39;backorders&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_map_backorders</span><span class="p">[</span><span class="n">backorders</span><span class="p">],</span>
+                <span class="s1">&#39;use_config_backorders&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">backorders</span> <span class="o">==</span> <span class="s1">&#39;use_default&#39;</span><span class="p">),</span>
+            <span class="p">})</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+
+<div class="viewcode-block" id="ProductInventoryExporter.run"><a class="viewcode-back" href="../../../../../../api/api_models.html#odoo.addons.connector_magento.models.product.importer.ProductInventoryExporter.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">binding</span><span class="p">,</span> <span class="n">fields</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Export the product inventory to Magento &quot;&quot;&quot;</span>
+        <span class="n">external_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">binder</span><span class="o">.</span><span class="n">to_external</span><span class="p">(</span><span class="n">binding</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_data</span><span class="p">(</span><span class="n">binding</span><span class="p">,</span> <span class="n">fields</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">backend_adapter</span><span class="o">.</span><span class="n">update_inventory</span><span class="p">(</span><span class="n">external_id</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></div></div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+      
+    </p>
+    <p>
+        &copy; Copyright 2013-2015, Odoo Community Association (OCA).<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.5.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>
