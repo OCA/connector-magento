@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (7.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-31 15:18+0000\n"
+"POT-Creation-Date: 2017-11-25 02:48+0000\n"
 "PO-Revision-Date: 2015-07-08 12:13+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: Dutch (http://www.transifex.com/oca/OCA-connector-magento-7-0/language/nl/)\n"
@@ -20,7 +20,7 @@ msgstr ""
 #. module: customize_example
 #: field:res.partner,gender:0
 msgid "Gender"
-msgstr ""
+msgstr "Sexe"
 
 #. module: customize_example
 #: model:ir.model,name:customize_example.model_magento_backend
@@ -30,7 +30,7 @@ msgstr "Magento backend"
 #. module: customize_example
 #: selection:res.partner,gender:0
 msgid "Female"
-msgstr ""
+msgstr "Vrouw"
 
 #. module: customize_example
 #: model:ir.model,name:customize_example.model_customize_example_installed
@@ -50,7 +50,7 @@ msgstr "Magento relatie"
 #. module: customize_example
 #: selection:res.partner,gender:0
 msgid "Male"
-msgstr ""
+msgstr "Man"
 
 #. module: customize_example
 #: field:magento.res.partner,created_in:0
