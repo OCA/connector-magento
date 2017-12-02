@@ -3,29 +3,19 @@
 # * magentoerpconnect
 # 
 # Translators:
-# Antonio Trueba, 2016
-# Bole <bole@dajmi5.com>, 2015
-# Bole <bole@dajmi5.com>, 2015
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012,2014
-# Gustavo Lepri <gustavolepri@gmail.com>, 2015,2017
-# Hotellook, 2014
-# Matjaž Mozetič <m.mozetic@matmoz.si>, 2015
-# Paulo Ricardo <ti@shoppingescritorio.com.br>, 2016
-# Rudolf Schnapka <rs@techno-flex.de>, 2015-2016
-# Thomas A. Jaeger, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-11-25 02:52+0000\n"
-"PO-Revision-Date: 2017-11-30 01:12+0000\n"
-"Last-Translator: Gustavo Lepri <gustavolepri@gmail.com>\n"
-"Language-Team: Portuguese (Brazil) (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/pt_BR/)\n"
+"PO-Revision-Date: 2017-11-26 10:00+0000\n"
+"Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
+"Language-Team: Romanian (Romania) (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/ro_RO/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: pt_BR\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Language: ro_RO\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
 
 #. module: magentoerpconnect
 #: help:magento.stock.picking,state:0
@@ -75,12 +65,12 @@ msgstr ""
 #. module: magentoerpconnect
 #: help:magento.sale.order,magento_order_id:0
 msgid "'order_id' field in Magento"
-msgstr "Campo 'order_id' no Magento"
+msgstr ""
 
 #. module: magentoerpconnect
 #: view:magento.product.product:magentoerpconnect.view_magento_product_form
 msgid "(recompute)"
-msgstr "(recalcular)"
+msgstr ""
 
 #. module: magentoerpconnect
 #: help:magento.sale.order.line,state:0
@@ -95,12 +85,12 @@ msgstr ""
 #. module: magentoerpconnect
 #: sql_constraint:magento.account.invoice:0
 msgid "A Magento binding for this invoice already exists."
-msgstr "Já existe uma ligação Magento para essa fatura."
+msgstr ""
 
 #. module: magentoerpconnect
 #: sql_constraint:magento.backend:0
 msgid "A backend with the same sale prefix already exists"
-msgstr "Um backend com o mesmo prefixo de venda já existe"
+msgstr ""
 
 #. module: magentoerpconnect
 #: sql_constraint:magento.account.invoice:0 sql_constraint:magento.address:0
@@ -113,7 +103,7 @@ msgstr "Um backend com o mesmo prefixo de venda já existe"
 #: sql_constraint:magento.stock.picking:0 sql_constraint:magento.store:0
 #: sql_constraint:magento.storeview:0 sql_constraint:magento.website:0
 msgid "A binding already exists with the same Magento ID."
-msgstr "Já existe uma ligação com o mesmo Magento ID."
+msgstr ""
 
 #. module: magentoerpconnect
 #: help:magento.product.category,type:0
@@ -158,7 +148,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: sql_constraint:magento.address:0
 msgid "A partner address can only have one binding by backend."
-msgstr "Um endereço de parceiro pode ter apenas uma ligação por backend."
+msgstr ""
 
 #. module: magentoerpconnect
 #: help:magento.sale.order.line,address_allotment_id:0
@@ -182,46 +172,46 @@ msgstr ""
 #. module: magentoerpconnect
 #: view:magento.backend:magentoerpconnect.view_magento_backend_form
 msgid "API"
-msgstr "API"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,account_id:0
 msgid "Account"
-msgstr "Conta"
+msgstr "cont"
 
 #. module: magentoerpconnect
 #: field:magento.address,property_account_payable:0
 #: field:magento.res.partner,property_account_payable:0
 msgid "Account Payable"
-msgstr "Conta de Pagamento"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.address,property_account_receivable:0
 #: field:magento.res.partner,property_account_receivable:0
 msgid "Account Receivable"
-msgstr "Conta de Recebimento"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.address,active:0 field:magento.product.product,active:0
 #: field:magento.res.partner,active:0
 #: field:magento.res.partner.category,active:0
 msgid "Active"
-msgstr "Ativo"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,comment:0
 msgid "Additional Information"
-msgstr "Informação Adicional"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.address,type:0 field:magento.res.partner,type:0
 msgid "Address Type"
-msgstr "Tipo do Endereço"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.address,is_magento_order_address:0
 msgid "Address from a Magento Order"
-msgstr "Endereço de uma Ordem do Magento"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.backend,admin_location:0
@@ -231,35 +221,35 @@ msgstr ""
 #. module: magentoerpconnect
 #: view:magento.backend:magentoerpconnect.view_magento_backend_form
 msgid "Advanced Configuration"
-msgstr "Configurações Avançadas"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.sale.order.line,address_allotment_id:0
 msgid "Allotment Partner"
-msgstr "Parceiro de Alocação"
+msgstr ""
 
 #. module: magentoerpconnect
 #: code:addons/magentoerpconnect/stock_picking.py:173
 #, python-format
 msgid "Already exported"
-msgstr "Já exportado"
+msgstr ""
 
 #. module: magentoerpconnect
 #: code:addons/magentoerpconnect/sale.py:631
 #, python-format
 msgid "Already imported"
-msgstr "Já importado"
+msgstr ""
 
 #. module: magentoerpconnect
 #: code:addons/magentoerpconnect/unit/import_synchronizer.py:215
 #, python-format
 msgid "Already up-to-date."
-msgstr "Já atualizado."
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.sale.order,amount_paid:0
 msgid "Amount Paid"
-msgstr "Quantidade Paga"
+msgstr ""
 
 #. module: magentoerpconnect
 #: help:magento.res.partner,consider_as_company:0
@@ -275,17 +265,17 @@ msgstr ""
 #: field:magento.storeview,account_analytic_id:0
 #: field:magento.website,account_analytic_id:0
 msgid "Analytic account"
-msgstr "Conta Analítica"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.product.product,attribute_value_ids:0
 msgid "Attributes"
-msgstr "Atributos"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.sale.order,workflow_process_id:0
 msgid "Automatic Workflow"
-msgstr "Workflow Automático"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.stock.picking,backorder_id:0
@@ -295,18 +285,18 @@ msgstr ""
 #. module: magentoerpconnect
 #: model:ir.ui.menu,name:magentoerpconnect.menu_magento_backend
 msgid "Backends"
-msgstr "Backends"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,residual:0
 #: field:magento.sale.order,residual:0
 msgid "Balance"
-msgstr "Balanço"
+msgstr "Balanta"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,partner_bank_id:0
 msgid "Bank Account"
-msgstr "Conta Bancária"
+msgstr ""
 
 #. module: magentoerpconnect
 #: help:magento.account.invoice,partner_bank_id:0
@@ -319,7 +309,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.address,bank_ids:0 field:magento.res.partner,bank_ids:0
 msgid "Banks"
-msgstr "Bancos"
+msgstr ""
 
 #. module: magentoerpconnect
 #: help:magento.product.product,list_price:0
@@ -331,12 +321,12 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.backend,auth_basic_password:0
 msgid "Basic Auth. Password"
-msgstr "Autenticação Básica. Senha"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.backend,auth_basic_username:0
 msgid "Basic Auth. Username"
-msgstr "Autenticação Básica. Username"
+msgstr ""
 
 #. module: magentoerpconnect
 #: help:magento.backend,auth_basic_password:0
@@ -356,13 +346,13 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.address,birthdate:0 field:magento.res.partner,birthdate:0
 msgid "Birthdate"
-msgstr "Data de Nascimento"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.address,birthday:0 field:magento.res.partner,birthday:0
 #: field:res.partner,birthday:0
 msgid "Birthday"
-msgstr "Aniversário"
+msgstr ""
 
 #. module: magentoerpconnect
 #: view:magento.backend:magentoerpconnect.view_magento_backend_form
@@ -379,17 +369,17 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.product.product,rental:0
 msgid "Can be Rent"
-msgstr "Pode ser Alugado"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.product.product,sale_ok:0
 msgid "Can be Sold"
-msgstr "Pode ser Vendido"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.sale.order,canceled_in_backend:0
 msgid "Canceled in backend"
-msgstr "Cancelado no backend"
+msgstr ""
 
 #. module: magentoerpconnect
 #: code:addons/magentoerpconnect/stock_picking.py:180
@@ -408,7 +398,7 @@ msgstr ""
 #: model:ir.model,name:magentoerpconnect.model_delivery_carrier
 #: field:magento.stock.picking,carrier_id:0
 msgid "Carrier"
-msgstr "Transportador"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.stock.picking,carrier_tracking_ref:0
@@ -423,12 +413,12 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.res.partner.category,name:0
 msgid "Category Name"
-msgstr "Nome da Categoria"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.product.category,type:0
 msgid "Category Type"
-msgstr "Tipo da Categoria"
+msgstr ""
 
 #. module: magentoerpconnect
 #: help:magento.address,is_company:0 help:magento.res.partner,is_company:0
@@ -484,7 +474,7 @@ msgstr ""
 #: field:magento.product.category,child_id:0
 #: field:magento.res.partner.category,child_ids:0
 msgid "Child Categories"
-msgstr "Categorias Filhas"
+msgstr ""
 
 #. module: magentoerpconnect
 #: help:magento.backend,product_stock_field_id:0
@@ -496,12 +486,12 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.address,city:0 field:magento.res.partner,city:0
 msgid "City"
-msgstr "Cidade"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.storeview,code:0 field:magento.website,code:0
 msgid "Code"
-msgstr "Código"
+msgstr ""
 
 #. module: magentoerpconnect
 #: help:magento.product.product,uos_coeff:0
@@ -540,18 +530,18 @@ msgstr ""
 #: view:res.partner:magentoerpconnect.view_partner_form
 #: field:res.partner,company:0
 msgid "Company"
-msgstr "Empresa"
+msgstr ""
 
 #. module: magentoerpconnect
 #: selection:magento.stock.picking,picking_method:0
 msgid "Complete"
-msgstr "Completo"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.address,contact_address:0
 #: field:magento.res.partner,contact_address:0
 msgid "Complete Address"
-msgstr "Endereço Completo"
+msgstr ""
 
 #. module: magentoerpconnect
 #: help:magento.sale.order,carrier_id:0
@@ -653,7 +643,7 @@ msgstr ""
 #: field:magento.product.product,created_at:0
 #: field:magento.res.partner,created_at:0
 msgid "Created At (on Magento)"
-msgstr "Criado em (no Magento)"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,create_uid:0
@@ -667,7 +657,7 @@ msgstr "Criado em (no Magento)"
 #: field:magento.stock.picking,create_uid:0 field:magento.store,create_uid:0
 #: field:magento.storeview,create_uid:0 field:magento.website,create_uid:0
 msgid "Created by"
-msgstr "Criado por"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,create_date:0
@@ -681,12 +671,12 @@ msgstr "Criado por"
 #: field:magento.stock.picking,create_date:0 field:magento.store,create_date:0
 #: field:magento.storeview,create_date:0 field:magento.website,create_date:0
 msgid "Created on"
-msgstr "Criado em"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.stock.picking,date:0
 msgid "Creation Date"
-msgstr "Data da criação"
+msgstr ""
 
 #. module: magentoerpconnect
 #: help:magento.stock.picking,date:0
@@ -725,7 +715,7 @@ msgstr ""
 #: field:magento.sale.order,partner_id:0
 #: field:magento.sale.order.line,order_partner_id:0
 msgid "Customer"
-msgstr "Cliente"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.product.product,sale_delay:0
@@ -758,7 +748,7 @@ msgstr ""
 #: field:magento.address,date:0 field:magento.res.partner,date:0
 #: field:magento.sale.order,date_order:0
 msgid "Date"
-msgstr "Data"
+msgstr ""
 
 #. module: magentoerpconnect
 #: help:magento.stock.picking,date_done:0
@@ -778,7 +768,7 @@ msgstr ""
 #: help:magento.sale.order,message_last_post:0
 #: help:magento.stock.picking,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr "Data da última mensagem postada no registro"
+msgstr ""
 
 #. module: magentoerpconnect
 #: help:magento.sale.order,date_confirm:0
@@ -806,7 +796,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.backend,default_lang_id:0
 msgid "Default Language"
-msgstr "Idioma padrão"
+msgstr ""
 
 #. module: magentoerpconnect
 #: help:magento.stock.picking,owner_id:0
@@ -880,7 +870,7 @@ msgstr ""
 #: field:magento.product.product,description:0
 #: field:magento.sale.order.line,name:0
 msgid "Description"
-msgstr "Descrição"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.stock.picking,location_dest_id:0
@@ -907,7 +897,7 @@ msgstr ""
 #: field:magento.store,display_name:0 field:magento.storeview,display_name:0
 #: field:magento.website,display_name:0
 msgid "Display Name"
-msgstr "Nome para Mostrar"
+msgstr ""
 
 #. module: magentoerpconnect
 #: selection:magento.product.product,manage_stock:0
@@ -931,12 +921,12 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.account.invoice,date_due:0
 msgid "Due Date"
-msgstr "Data de Vencimento"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.res.partner,emailid:0
 msgid "E-mail address"
-msgstr "Endereço de e-mail"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.address,ean13:0 field:magento.res.partner,ean13:0
@@ -951,7 +941,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.address,email:0 field:magento.res.partner,email:0
 msgid "Email"
-msgstr "E-mail"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.address,employee:0 field:magento.res.partner,employee:0
@@ -961,7 +951,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.storeview,enabled:0
 msgid "Enabled"
-msgstr "Habilitado"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,move_lines:0
@@ -992,7 +982,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: view:connector.config.settings:magentoerpconnect.view_magento_config_settings
 msgid "Extensions"
-msgstr "Extensões"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.address,fax:0 field:magento.res.partner,fax:0
@@ -1005,7 +995,7 @@ msgstr ""
 #: field:magento.res.partner,property_account_position:0
 #: field:magento.sale.order,fiscal_position:0
 msgid "Fiscal Position"
-msgstr "Posição Fiscal"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.backend,fiscal_position_id:0
@@ -1024,7 +1014,7 @@ msgstr ""
 #: field:magento.sale.order,message_follower_ids:0
 #: field:magento.stock.picking,message_follower_ids:0
 msgid "Followers"
-msgstr "Seguidores"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,period_id:0
@@ -1153,7 +1143,7 @@ msgstr ""
 #: field:magento.store,id:0 field:magento.storeview,id:0
 #: field:magento.website,id:0
 msgid "ID"
-msgstr "ID"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,magento_id:0
@@ -1167,7 +1157,7 @@ msgstr "ID"
 #: field:magento.stock.picking,magento_id:0 field:magento.store,magento_id:0
 #: field:magento.storeview,magento_id:0 field:magento.website,magento_id:0
 msgid "ID on Magento"
-msgstr "ID no Magento"
+msgstr ""
 
 #. module: magentoerpconnect
 #: help:magento.backend,default_category_id:0
@@ -1191,7 +1181,7 @@ msgstr ""
 #: help:magento.sale.order,message_unread:0
 #: help:magento.stock.picking,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr "Se marcado novas mensagens requerem sua atenção."
+msgstr ""
 
 #. module: magentoerpconnect
 #: help:magento.address,opt_out:0 help:magento.res.partner,opt_out:0
@@ -1452,7 +1442,7 @@ msgstr ""
 #: model:ir.model,name:magentoerpconnect.model_account_invoice
 #: field:magento.account.invoice,openerp_id:0
 msgid "Invoice"
-msgstr "Fatura"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.sale.order,partner_invoice_id:0
@@ -1474,7 +1464,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.account.invoice,date_invoice:0
 msgid "Invoice Date"
-msgstr "Data fatura"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,invoice_line:0
@@ -1574,7 +1564,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.account.invoice,journal_id:0
 msgid "Journal"
-msgstr "Diário"
+msgstr "jurnal"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,move_id:0
@@ -1586,7 +1576,7 @@ msgstr ""
 #: field:magento.address,journal_item_count:0
 #: field:magento.res.partner,journal_item_count:0
 msgid "Journal Items"
-msgstr ""
+msgstr "Articole Jurnal"
 
 #. module: magentoerpconnect
 #: help:magento.account.invoice,date_invoice:0
@@ -1612,7 +1602,7 @@ msgstr ""
 #: field:magento.sale.order,message_last_post:0
 #: field:magento.stock.picking,message_last_post:0
 msgid "Last Message Date"
-msgstr "Última data de mensagem"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,__last_update:0
@@ -1629,7 +1619,7 @@ msgstr "Última data de mensagem"
 #: field:magento.store,__last_update:0 field:magento.storeview,__last_update:0
 #: field:magento.website,__last_update:0
 msgid "Last Modified on"
-msgstr "Última atualização em"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,write_uid:0 field:magento.address,write_uid:0
@@ -1643,7 +1633,7 @@ msgstr "Última atualização em"
 #: field:magento.stock.picking,write_uid:0 field:magento.store,write_uid:0
 #: field:magento.storeview,write_uid:0 field:magento.website,write_uid:0
 msgid "Last Updated by"
-msgstr "Última atualização por"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,write_date:0
@@ -1657,7 +1647,7 @@ msgstr "Última atualização por"
 #: field:magento.stock.picking,write_date:0 field:magento.store,write_date:0
 #: field:magento.storeview,write_date:0 field:magento.website,write_date:0
 msgid "Last Updated on"
-msgstr "Última atualização em"
+msgstr ""
 
 #. module: magentoerpconnect
 #: help:magento.product.product,magento_qty:0
@@ -1704,7 +1694,7 @@ msgstr ""
 #: field:magento.product.product,location_id:0
 #: field:magento.stock.picking,location_id:0
 msgid "Location"
-msgstr "Location"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.product.product,packaging_ids:0
@@ -1749,7 +1739,7 @@ msgstr ""
 #: field:magento.stock.picking,backend_id:0 field:magento.store,backend_id:0
 #: field:magento.storeview,backend_id:0 field:magento.website,backend_id:0
 msgid "Magento Backend"
-msgstr "Magento Backend"
+msgstr ""
 
 #. module: magentoerpconnect
 #: model:ir.actions.act_window,name:magentoerpconnect.action_magento_backend
@@ -1848,7 +1838,7 @@ msgstr ""
 #: view:magento.res.partner:magentoerpconnect.view_magento_res_partner_form
 #: view:magento.res.partner:magentoerpconnect.view_magento_res_partner_tree
 msgid "Magento Partner"
-msgstr "Parceiro Magento"
+msgstr ""
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_magento_product_product
@@ -1930,7 +1920,7 @@ msgstr ""
 #: view:magento.website:magentoerpconnect.view_magento_website_form
 #: view:magento.website:magentoerpconnect.view_magento_website_tree
 msgid "Magento Website"
-msgstr "Magento Website"
+msgstr ""
 
 #. module: magentoerpconnect
 #: model:ir.actions.act_window,name:magentoerpconnect.action_magento_website
@@ -2016,7 +2006,7 @@ msgstr ""
 #: field:magento.sale.order,message_ids:0
 #: field:magento.stock.picking,message_ids:0
 msgid "Messages"
-msgstr "Mensagens"
+msgstr ""
 
 #. module: magentoerpconnect
 #: help:magento.account.invoice,message_ids:0
@@ -2036,7 +2026,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.address,mobile:0 field:magento.res.partner,mobile:0
 msgid "Mobile"
-msgstr "Móvel"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.address,name:0 field:magento.backend,name:0
@@ -2045,7 +2035,7 @@ msgstr "Móvel"
 #: field:magento.res.partner,name:0 field:magento.store,name:0
 #: field:magento.storeview,name:0 field:magento.website,name:0
 msgid "Name"
-msgstr "Nome"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.sale.order,need_cancel:0
@@ -2096,7 +2086,7 @@ msgstr ""
 #: field:magento.address,comment:0 field:magento.res.partner,comment:0
 #: field:magento.sale.order.line,notes:0 field:magento.stock.picking,note:0
 msgid "Notes"
-msgstr "Notas"
+msgstr ""
 
 #. module: magentoerpconnect
 #: code:addons/magentoerpconnect/unit/export_synchronizer.py:407
@@ -2233,7 +2223,7 @@ msgstr ""
 #: field:magento.address,openerp_id:0 field:magento.res.partner,openerp_id:0
 #: field:magento.stock.picking,partner_id:0
 msgid "Partner"
-msgstr "Parceiro"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.res.partner.category,openerp_id:0
@@ -2248,12 +2238,12 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.res.partner.category,partner_ids:0
 msgid "Partners"
-msgstr "Parceiros"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.backend,password:0
 msgid "Password"
-msgstr "Senha"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.address,debit_limit:0 field:magento.res.partner,debit_limit:0
@@ -2300,7 +2290,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.address,phone:0 field:magento.res.partner,phone:0
 msgid "Phone"
-msgstr "Telefone"
+msgstr ""
 
 #. module: magentoerpconnect
 #: help:magento.sale.order,picking_policy:0
@@ -2311,7 +2301,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_stock_picking
 msgid "Picking List"
-msgstr "Lista de separação"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.stock.picking,picking_method:0
@@ -2361,7 +2351,7 @@ msgstr ""
 #: field:magento.product.product,pricelist_id:0
 #: field:magento.sale.order,pricelist_id:0
 msgid "Pricelist"
-msgstr "Lista de Preço"
+msgstr ""
 
 #. module: magentoerpconnect
 #: help:magento.sale.order,pricelist_id:0
@@ -2394,7 +2384,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.stock.picking,priority:0
 msgid "Priority"
-msgstr "Prioridade"
+msgstr ""
 
 #. module: magentoerpconnect
 #: help:magento.stock.picking,priority:0
@@ -2430,7 +2420,7 @@ msgstr ""
 #: field:magento.sale.order.line,product_id:0
 #: field:magento.stock.picking,product_id:0
 msgid "Product"
-msgstr "Produto"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.product.product,attribute_line_ids:0
@@ -2446,7 +2436,7 @@ msgstr ""
 #: model:ir.model,name:magentoerpconnect.model_product_category
 #: field:magento.product.category,openerp_id:0
 msgid "Product Category"
-msgstr "Categoria do produto"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.product.product,product_manager:0
@@ -2457,7 +2447,7 @@ msgstr ""
 #: field:magento.product.product,product_tmpl_id:0
 #: field:magento.sale.order.line,product_tmpl_id:0
 msgid "Product Template"
-msgstr "Modelo Produto"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.product.product,type:0
@@ -2477,7 +2467,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.product.product,product_variant_ids:0
 msgid "Products"
-msgstr "Produtos"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.product.product,lst_price:0
@@ -2502,7 +2492,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.sale.order.line,product_uom_qty:0
 msgid "Quantity"
-msgstr "Quantidade"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.sale.order.line,product_uos_qty:0
@@ -2574,7 +2564,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.stock.picking,name:0
 msgid "Reference"
-msgstr "Referencia"
+msgstr ""
 
 #. module: magentoerpconnect
 #: help:magento.stock.picking,origin:0
@@ -2696,26 +2686,26 @@ msgstr ""
 #: field:magento.address,sale_order_ids:0
 #: field:magento.res.partner,sale_order_ids:0
 msgid "Sales Order"
-msgstr "Pedido de Venda"
+msgstr ""
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Linha pedido de venda"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,section_id:0
 #: field:magento.address,section_id:0 field:magento.res.partner,section_id:0
 #: field:magento.sale.order,section_id:0 field:magento.storeview,section_id:0
 msgid "Sales Team"
-msgstr "Equipe de Vendas"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,user_id:0 field:magento.address,user_id:0
 #: field:magento.res.partner,user_id:0 field:magento.sale.order,user_id:0
 #: field:magento.sale.order.line,salesman_id:0
 msgid "Salesperson"
-msgstr "Vendedor"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.stock.picking,min_date:0
@@ -2776,7 +2766,7 @@ msgstr ""
 #: field:magento.product.category,sequence:0
 #: field:magento.sale.order.line,sequence:0
 msgid "Sequence"
-msgstr "Sequência"
+msgstr ""
 
 #. module: magentoerpconnect
 #: help:magento.product.category,removal_strategy_id:0
@@ -2906,7 +2896,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.address,state_id:0 field:magento.res.partner,state_id:0
 msgid "State"
-msgstr "Estado"
+msgstr ""
 
 #. module: magentoerpconnect
 #: code:addons/magentoerpconnect/sale.py:1098
@@ -2919,7 +2909,7 @@ msgstr ""
 #: field:magento.sale.order,state:0 field:magento.sale.order.line,state:0
 #: field:magento.stock.picking,state:0
 msgid "Status"
-msgstr "Status"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.backend,product_stock_field_id:0
@@ -3007,7 +2997,7 @@ msgstr ""
 #: field:magento.address,supplier:0 field:magento.product.product,seller_ids:0
 #: field:magento.res.partner,supplier:0
 msgid "Supplier"
-msgstr "Fornecedor"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,supplier_invoice_number:0
@@ -3059,7 +3049,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.account.invoice,amount_tax:0
 msgid "Tax"
-msgstr "Imposto"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.res.partner.category,tax_class_id:0
@@ -3435,12 +3425,12 @@ msgstr ""
 #: field:magento.account.invoice,amount_total:0
 #: field:magento.sale.order,amount_total:0
 msgid "Total"
-msgstr "Total"
+msgstr ""
 
 #. module: magentoerpconnect
 #: model:sale.exception,name:magentoerpconnect.excep_wrong_total_amount
 msgid "Total Amount differs from Magento"
-msgstr "Valor total é diferente do Magento"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.address,total_invoiced:0
@@ -3461,12 +3451,12 @@ msgstr ""
 #. module: magentoerpconnect
 #: model:sale.exception,name:magentoerpconnect.excep_wrong_total_amount_tax
 msgid "Total Tax Amount differs from Magento"
-msgstr "Valor total do imposto é diferente do Magento"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.sale.order,total_amount:0
 msgid "Total amount"
-msgstr "Valor Total"
+msgstr ""
 
 #. module: magentoerpconnect
 #: help:magento.address,credit:0 help:magento.res.partner,credit:0
@@ -3476,7 +3466,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.sale.order,total_amount_tax:0
 msgid "Total amount w. tax"
-msgstr "Valor total imposto"
+msgstr ""
 
 #. module: magentoerpconnect
 #: help:magento.address,debit:0 help:magento.res.partner,debit:0
@@ -3508,13 +3498,13 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.account.invoice,type:0
 msgid "Type"
-msgstr "Tipo"
+msgstr ""
 
 #. module: magentoerpconnect
 #: code:addons/magentoerpconnect/magento_model.py:648
 #, python-format
 msgid "Undefined"
-msgstr "Indefinido"
+msgstr ""
 
 #. module: magentoerpconnect
 #: help:magento.account.invoice,internal_number:0
@@ -3532,7 +3522,7 @@ msgstr ""
 #: field:magento.product.product,uom_id:0
 #: field:magento.stock.picking,weight_uom_id:0
 msgid "Unit of Measure"
-msgstr "Unidade de medida"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.sale.order.line,product_uom:0
@@ -3562,7 +3552,7 @@ msgstr ""
 #: field:magento.sale.order,message_unread:0
 #: field:magento.stock.picking,message_unread:0
 msgid "Unread Messages"
-msgstr "Mensagens não lidas"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.sale.order,amount_untaxed:0
@@ -3572,19 +3562,19 @@ msgstr ""
 #. module: magentoerpconnect
 #: view:magento.backend:magentoerpconnect.view_magento_backend_form
 msgid "Update"
-msgstr "Atualizar"
+msgstr ""
 
 #. module: magentoerpconnect
 #: view:magento.backend:magentoerpconnect.view_magento_backend_form
 msgid "Update all the products stock quantities"
-msgstr "Atualizar a quantidade de estoque de todos os produtos"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.address,updated_at:0
 #: field:magento.product.product,updated_at:0
 #: field:magento.res.partner,updated_at:0
 msgid "Updated At (on Magento)"
-msgstr "Atualizado em (no Magento)"
+msgstr ""
 
 #. module: magentoerpconnect
 #: help:magento.backend,location:0
@@ -3601,12 +3591,12 @@ msgstr ""
 #: selection:magento.product.product,backorders:0
 #: selection:magento.product.product,manage_stock:0
 msgid "Use Default Config"
-msgstr "Usar Configurações Padrão"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.backend,use_auth_basic:0
 msgid "Use HTTP Auth Basic"
-msgstr "Usar Autenticação Básica HTTP"
+msgstr ""
 
 #. module: magentoerpconnect
 #: help:magento.backend,use_auth_basic:0
@@ -3614,7 +3604,7 @@ msgid ""
 "Use a Basic Access Authentication for the API. The Magento server could be "
 "configured to restrict access using a HTTP authentication based on a "
 "username and a password."
-msgstr "Use uma autenticação de acesso básico para o API. O servidor Magento pode ser configurado para restringir o acesso usando a autenticação HTTP baseado em um nome de usuário e uma senha."
+msgstr ""
 
 #. module: magentoerpconnect
 #: help:magento.address,type:0 help:magento.res.partner,type:0
@@ -3626,12 +3616,12 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.backend,username:0
 msgid "Username"
-msgstr "Usuário"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.address,user_ids:0 field:magento.res.partner,user_ids:0
 msgid "Users"
-msgstr "Usuários"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.address,vat_subjected:0
@@ -3643,7 +3633,7 @@ msgstr ""
 #: selection:magento.store,create_invoice_on:0
 #: selection:payment.method,create_invoice_on:0
 msgid "Validate"
-msgstr "Validar"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.product.product,price_extra:0
@@ -3663,7 +3653,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.backend,version:0
 msgid "Version"
-msgstr "Versão"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.product.product,volume:0 field:magento.stock.picking,volume:0
@@ -3675,12 +3665,12 @@ msgstr ""
 #: field:magento.product.product,warehouse_id:0
 #: field:magento.sale.order,warehouse_id:0
 msgid "Warehouse"
-msgstr "Armazém"
+msgstr ""
 
 #. module: magentoerpconnect
 #: help:magento.backend,warehouse_id:0
 msgid "Warehouse used to compute the stock quantities."
-msgstr "Armazém usado para calcular as quantidades de estoque."
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.product.product,warranty:0
@@ -3701,7 +3691,7 @@ msgstr ""
 #: field:magento.address,website:0 field:magento.backend,website_ids:0
 #: field:magento.res.partner,website:0
 msgid "Website"
-msgstr "Website"
+msgstr ""
 
 #. module: magentoerpconnect
 #: help:magento.address,website:0 help:magento.res.partner,website:0
@@ -3713,7 +3703,7 @@ msgstr ""
 #: view:magento.backend:magentoerpconnect.view_magento_backend_form
 #: field:magento.product.product,website_ids:0
 msgid "Websites"
-msgstr "Websites"
+msgstr ""
 
 #. module: magentoerpconnect
 #: field:magento.sale.order.line,th_weight:0
@@ -3783,22 +3773,22 @@ msgstr ""
 msgid ""
 "do not consider non-imported sale orders before this date. Leave empty to "
 "import all sale orders"
-msgstr "Não considerar ordens de vendas não importadas antes desta data. Deixe em branco para importar todas as ordens de venda"
+msgstr ""
 
 #. module: magentoerpconnect
 #: view:magento.backend:magentoerpconnect.view_magento_backend_form
 msgid "e.g. http://my.magento.com"
-msgstr "ex: http://meu.magento.com.br"
+msgstr ""
 
 #. module: magentoerpconnect
 #: view:magento.backend:magentoerpconnect.view_magento_backend_form
 msgid "e.g. http://my.magento.com/admin"
-msgstr "ex: http://meu.magento.com.br/admin"
+msgstr ""
 
 #. module: magentoerpconnect
 #: view:magento.backend:magentoerpconnect.view_magento_backend_form
 msgid "mag-"
-msgstr "mag-"
+msgstr ""
 
 #. module: magentoerpconnect
 #: help:magento.stock.picking,pack_operation_exist:0

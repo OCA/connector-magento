@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-02 03:33+0000\n"
-"PO-Revision-Date: 2017-09-22 11:33+0000\n"
+"POT-Creation-Date: 2017-11-25 02:52+0000\n"
+"PO-Revision-Date: 2017-11-30 19:09+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: Dutch (Netherlands) (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/nl_NL/)\n"
 "MIME-Version: 1.0\n"
@@ -196,7 +196,7 @@ msgstr ""
 #: field:magento.res.partner,active:0
 #: field:magento.res.partner.category,active:0
 msgid "Active"
-msgstr ""
+msgstr "Actief"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,comment:0
@@ -946,7 +946,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.address,employee:0 field:magento.res.partner,employee:0
 msgid "Employee"
-msgstr ""
+msgstr "Werknemer"
 
 #. module: magentoerpconnect
 #: field:magento.storeview,enabled:0
