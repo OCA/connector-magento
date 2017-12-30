@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-18 02:19+0000\n"
-"PO-Revision-Date: 2017-11-23 23:26+0000\n"
+"POT-Creation-Date: 2017-12-02 02:57+0000\n"
+"PO-Revision-Date: 2017-12-22 09:49+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: Spanish (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/es/)\n"
 "MIME-Version: 1.0\n"
@@ -1077,7 +1077,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.res.partner.category,complete_name:0
 msgid "Full Name"
-msgstr ""
+msgstr "Nombre completo"
 
 #. module: magentoerpconnect
 #: help:magento.product.product,packaging_ids:0
