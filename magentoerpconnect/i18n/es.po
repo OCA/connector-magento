@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-02 02:57+0000\n"
-"PO-Revision-Date: 2017-12-22 09:49+0000\n"
+"POT-Creation-Date: 2017-12-30 02:39+0000\n"
+"PO-Revision-Date: 2018-01-05 09:08+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: Spanish (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/es/)\n"
 "MIME-Version: 1.0\n"
@@ -711,7 +711,7 @@ msgid ""
 "In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
 "stored in the Stock Location of the Warehouse of this Shop, or any of its children.\n"
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
-msgstr ""
+msgstr "Cantidad actual de los productos.\nEn un contexto de una sola ubicación de existencias, esto incluye los bienes almacenados en esta ubicación, o cualquiera de sus hijas.\nEn un contexto de un solo almacén, esto incluye los bienes almacenados en la ubicación de existencias de ese almacén, o cualquiera de sus hijas.\nEn cualquier otro caso, esto incluye los bienes almacenados en cualquier ubicación de existencias de tipo 'Interna'."
 
 #. module: magentoerpconnect
 #: field:magento.backend,use_custom_api_path:0
@@ -2510,7 +2510,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.product.product,qty_available:0
 msgid "Quantity On Hand"
-msgstr ""
+msgstr "Stock real"
 
 #. module: magentoerpconnect
 #: help:magento.product.product,incoming_qty:0
