@@ -5,6 +5,7 @@
 from odoo import models, fields, api
 
 from odoo.addons.component.core import Component
+from odoo.addons.connector.components.mapper import mapping
 
 
 class MagentoBackend(models.Model):
@@ -38,11 +39,23 @@ class ProductImporter(Component):
             return res
 
 
+class ProductImportMapper(Component):
+    _inherit = 'magento.product.product.import.mapper'
+
+    @mapping
+    def magento_is_configurable(self, record):
+        return {'magento_is_configurable': record['type_id'] == 'configurable'}
+
+
 class MagentoProductProduct(models.Model):
     _inherit = 'magento.product.product'
 
     transformed_at = fields.Date(
         'Transformed At (from simple to templated product)'
+    )
+
+    magento_is_configurable = fields.Boolean(
+        'True if the product is a configurable (the parent)'
     )
 
 
