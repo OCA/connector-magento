@@ -21,13 +21,19 @@ class ConfigurableBatchImporter(Component):
     _inherit = 'magento.delayed.batch.importer'
     _apply_on = ['magento.product.configurable']
 
+    def search_active_only(self):
+        """ Allows to be easily overriden"""
+        return True
+
     def run(self, filters=None):
         """ Run the synchronization """
         from_date = filters.pop('from_date', None)
         criterias = [('product_type', '=', 'configurable')]
         if from_date:
             criterias.append(('write_date', '>', fields.DateTime.to_string()))
-        configurables = self.env['magento.product.product'].search(criterias)
+        configurables = self.env['magento.product.product'].with_context(
+            active_test=self.search_active_only()
+            ).search(criterias)
         _logger.info('search for configurable products %s returned %s',
                      filters, configurables)
         for configurable in configurables:
