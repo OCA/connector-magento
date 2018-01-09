@@ -3,7 +3,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
 from odoo.addons.component.core import Component
-from odoo.addons.connector.components.mapper import mapping
+from odoo.addons.connector.components.mapper import mapping, only_create
 
 
 class ProductAttributeBatchImporter(Component):
@@ -73,3 +73,15 @@ class ProductAttributeImportMapper(Component):
     @mapping
     def backend_id(self, record):
         return {'backend_id': self.backend_record.id}
+
+    @only_create
+    @mapping
+    def odoo_id(self, record):
+        """ Will bind the attribute on a existing attribute
+        with the same name """
+        attribute = self.env['product.attribute'].search(
+            [('name', '=', record['name'])],
+            limit=1,
+        )
+        if attribute:
+            return {'odoo_id': attribute.id}

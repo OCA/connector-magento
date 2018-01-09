@@ -14,6 +14,10 @@ class ProductAttributeLineBatchImporter(Component):
     _inherit = 'magento.direct.batch.importer'
     _apply_on = ['magento.product.attribute.line']
 
+    def attribute_code_field(self):
+        """ allows to override the field where the attribute_code is stored"""
+        return 'name'
+
     def _write_product(self, magento_product, tmpl_id, value_ids):
         magento_product.write(
             {'product_tmpl_id': tmpl_id,
@@ -28,7 +32,7 @@ class ProductAttributeLineBatchImporter(Component):
         line['attribute_id'] = attribute['odoo_id'][0]
         line['value_ids'] = [(4, value.odoo_id.id)]
         line['template_id'] = magento_product.odoo_id.product_tmpl_id.id
-        line['attribute_name'] = attribute['name']
+        line['attribute_name'] = attribute[self.attribute_code_field()]
         line['external_id'] = str(line['template_id'])
         line['external_id'] += '_'
         line['external_id'] += line['attribute_name']
@@ -60,7 +64,7 @@ class ProductAttributeLineBatchImporter(Component):
         updated_variants = self.get_updated_variants(record)
         available_attributes = self.env[
             'magento.product.attribute'].search_read([], [
-                'name',
+                self.attribute_code_field(),
                 'odoo_id',
             ])
         value_binder = self.binder_for('magento.product.attribute.value')
@@ -74,13 +78,16 @@ class ProductAttributeLineBatchImporter(Component):
                                    variant['entity_id'])
             attribute_value_ids = []
             for attribute in available_attributes:
-                if variant.get(attribute['name']):
+                if variant.get(attribute[self.attribute_code_field()]):
                     value = value_binder.to_internal(
-                        variant[attribute['name']], unwrap=False)
+                        variant[attribute[self.attribute_code_field()]],
+                        unwrap=False)
                     if not value:
                         raise MappingError("The product attribute value with "
                                            "magento id %s is not imported." %
-                                           variant[attribute['name']])
+                                           variant[attribute[
+                                               self.attribute_code_field()
+                                               ]])
                     self._import_magento_product_attribute_line(
                         record,
                         variant,
