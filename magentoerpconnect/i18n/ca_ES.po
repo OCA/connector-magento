@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (7.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-18 01:21+0000\n"
+"POT-Creation-Date: 2017-12-02 02:50+0000\n"
 "PO-Revision-Date: 2015-07-08 12:13+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: Catalan (Spain) (http://www.transifex.com/oca/OCA-connector-magento-7-0/language/ca_ES/)\n"
@@ -170,7 +170,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.sale.order.line,notes:0
 msgid "Notes"
-msgstr ""
+msgstr "Notes"
 
 #. module: magentoerpconnect
 #: sql_constraint:magento.backend:0
@@ -876,7 +876,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.storeview,code:0 field:magento.website,code:0
 msgid "Code"
-msgstr ""
+msgstr "Codi"
 
 #. module: magentoerpconnect
 #: field:magento.sale.order.line,tax_rate:0
@@ -906,7 +906,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.backend,version:0
 msgid "Version"
-msgstr ""
+msgstr "Versió"
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_account_invoice
@@ -1016,7 +1016,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.product.category,description:0
 msgid "Description"
-msgstr ""
+msgstr "Descripció"
 
 #. module: magentoerpconnect
 #: selection:magento.product.product,backorders:0
@@ -1096,7 +1096,7 @@ msgstr ""
 #: field:magento.backend,name:0 field:magento.storeview,name:0
 #: field:magento.website,name:0
 msgid "Name"
-msgstr ""
+msgstr "Nom"
 
 #. module: magentoerpconnect
 #: model:ir.model,name:magentoerpconnect.model_magento_website
