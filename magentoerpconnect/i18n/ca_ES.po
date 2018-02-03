@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-19 01:27+0000\n"
-"PO-Revision-Date: 2017-08-21 07:26+0000\n"
+"POT-Creation-Date: 2018-01-06 02:59+0000\n"
+"PO-Revision-Date: 2018-02-02 14:11+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: Catalan (Spain) (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/ca_ES/)\n"
 "MIME-Version: 1.0\n"
@@ -491,7 +491,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.storeview,code:0 field:magento.website,code:0
 msgid "Code"
-msgstr ""
+msgstr "Codi"
 
 #. module: magentoerpconnect
 #: help:magento.product.product,uos_coeff:0
@@ -657,7 +657,7 @@ msgstr ""
 #: field:magento.stock.picking,create_uid:0 field:magento.store,create_uid:0
 #: field:magento.storeview,create_uid:0 field:magento.website,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Creat per"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,create_date:0
@@ -671,12 +671,12 @@ msgstr ""
 #: field:magento.stock.picking,create_date:0 field:magento.store,create_date:0
 #: field:magento.storeview,create_date:0 field:magento.website,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Creat a"
 
 #. module: magentoerpconnect
 #: field:magento.stock.picking,date:0
 msgid "Creation Date"
-msgstr ""
+msgstr "Data de creació"
 
 #. module: magentoerpconnect
 #: help:magento.stock.picking,date:0
@@ -870,7 +870,7 @@ msgstr ""
 #: field:magento.product.product,description:0
 #: field:magento.sale.order.line,name:0
 msgid "Description"
-msgstr ""
+msgstr "Descripció"
 
 #. module: magentoerpconnect
 #: field:magento.stock.picking,location_dest_id:0
@@ -897,7 +897,7 @@ msgstr ""
 #: field:magento.store,display_name:0 field:magento.storeview,display_name:0
 #: field:magento.website,display_name:0
 msgid "Display Name"
-msgstr ""
+msgstr "Nom visible"
 
 #. module: magentoerpconnect
 #: selection:magento.product.product,manage_stock:0
@@ -1619,7 +1619,7 @@ msgstr ""
 #: field:magento.store,__last_update:0 field:magento.storeview,__last_update:0
 #: field:magento.website,__last_update:0
 msgid "Last Modified on"
-msgstr ""
+msgstr "Darrera modificació en"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,write_uid:0 field:magento.address,write_uid:0
@@ -1633,7 +1633,7 @@ msgstr ""
 #: field:magento.stock.picking,write_uid:0 field:magento.store,write_uid:0
 #: field:magento.storeview,write_uid:0 field:magento.website,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Darrera actualització per"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,write_date:0
@@ -1647,7 +1647,7 @@ msgstr ""
 #: field:magento.stock.picking,write_date:0 field:magento.store,write_date:0
 #: field:magento.storeview,write_date:0 field:magento.website,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Darrera actualització el"
 
 #. module: magentoerpconnect
 #: help:magento.product.product,magento_qty:0
@@ -2035,7 +2035,7 @@ msgstr ""
 #: field:magento.res.partner,name:0 field:magento.store,name:0
 #: field:magento.storeview,name:0 field:magento.website,name:0
 msgid "Name"
-msgstr ""
+msgstr "Nom"
 
 #. module: magentoerpconnect
 #: field:magento.sale.order,need_cancel:0
@@ -2086,7 +2086,7 @@ msgstr ""
 #: field:magento.address,comment:0 field:magento.res.partner,comment:0
 #: field:magento.sale.order.line,notes:0 field:magento.stock.picking,note:0
 msgid "Notes"
-msgstr ""
+msgstr "Notes"
 
 #. module: magentoerpconnect
 #: code:addons/magentoerpconnect/unit/export_synchronizer.py:407
@@ -3498,7 +3498,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.account.invoice,type:0
 msgid "Type"
-msgstr ""
+msgstr "Tipus"
 
 #. module: magentoerpconnect
 #: code:addons/magentoerpconnect/magento_model.py:648
@@ -3653,7 +3653,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: field:magento.backend,version:0
 msgid "Version"
-msgstr ""
+msgstr "Versió"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,volume:0 field:magento.stock.picking,volume:0
