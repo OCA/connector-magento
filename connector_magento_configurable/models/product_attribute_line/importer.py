@@ -19,12 +19,11 @@ class ProductAttributeLineBatchImporter(Component):
         return 'name'
 
     def _write_product(self, magento_product, tmpl_id, value_ids):
+        old_tmpl_id = magento_product.product_tmpl_id.id
         magento_product.write(
             {'product_tmpl_id': tmpl_id,
              'attribute_value_ids': value_ids})
-        magento_product.odoo_id.write(
-            {'product_tmpl_id': tmpl_id,
-             'attribute_value_ids': value_ids})
+        self.env['product.template'].browse([old_tmpl_id]).unlink()
 
     def _get_magento_product_attribute_line(self,
                                             attribute, value, magento_product):
@@ -47,9 +46,6 @@ class ProductAttributeLineBatchImporter(Component):
             record
         )
         self._import_record(line)
-        self.env['product.template'].search([
-            ('product_variant_ids', '=', False)
-        ]).unlink()
 
     def get_updated_variants(self, record):
         """
