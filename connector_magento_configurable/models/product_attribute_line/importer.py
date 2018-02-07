@@ -38,7 +38,7 @@ class ProductAttributeLineBatchImporter(Component):
         return line
 
     def _import_magento_product_attribute_line(self,
-                                               record, variant,
+                                               record,
                                                attribute, value):
         line = self._get_magento_product_attribute_line(
             attribute,
@@ -86,7 +86,6 @@ class ProductAttributeLineBatchImporter(Component):
                                                ]])
                     self._import_magento_product_attribute_line(
                         record,
-                        variant,
                         attribute,
                         value,
                     )
