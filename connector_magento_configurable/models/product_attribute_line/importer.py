@@ -23,7 +23,9 @@ class ProductAttributeLineBatchImporter(Component):
         magento_product.write(
             {'product_tmpl_id': tmpl_id,
              'attribute_value_ids': value_ids})
-        self.env['product.template'].browse([old_tmpl_id]).unlink()
+        self.env['product.template'].search(
+            [('product_variant_ids', '=', None),
+             ('id', '=', old_tmpl_id)]).unlink()
 
     def _get_magento_product_attribute_line(self,
                                             attribute, value, magento_product):
