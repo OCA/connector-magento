@@ -131,6 +131,18 @@ class ProductAttributeLineImportMapper(Component):
     ]
 
     @mapping
+    def odoo_id(self, record):
+        """ Will bind the attribute on an existing line
+        with the same attribute and product template """
+        line = self.env['product.attribute.line'].search(
+            [('product_tmpl_id', '=', record['template_id']),
+             ('attribute_id', '=', record['attribute_id'])],
+            limit=1,
+        )
+        if line:
+            return {'odoo_id': line.id}
+
+    @mapping
     def product_tmpl_id(self, record):
         return {'product_tmpl_id': record['template_id']}
 
