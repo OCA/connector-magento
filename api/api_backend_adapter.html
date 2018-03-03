@@ -2,20 +2,12 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Backend Adapters &#8212; Odoo Magento Connector  documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../',
-        VERSION:     '',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
+    <script type="text/javascript" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
@@ -44,8 +36,7 @@
 
 </script>
 
-  </head>
-  <body>
+  </head><body>
 
   <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -242,14 +233,40 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-12 content">
+      <div class="col-md-3">
+        <div id="sidebar" class="bs-sidenav" role="complementary"><ul>
+<li><a class="reference internal" href="#">Backend Adapters</a></li>
+</ul>
+
+  <li>
+    <a href="api_synchronizer.html" title="Previous Chapter: Synchronizers"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; Synchronizers</span>
+    </a>
+  </li>
+  <li>
+    <a href="api_exception.html" title="Next Chapter: Exceptions"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">Exceptions &raquo;</span>
+    </a>
+  </li>
+<div id="sourcelink">
+  <a href="../_sources/api/api_backend_adapter.rst.txt"
+     rel="nofollow">Source</a>
+</div>
+<form action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+        </div>
+      </div>
+    <div class="col-md-9 content">
       
   <div class="section" id="module-openerp.addons.magentoerpconnect.unit.backend_adapter">
 <span id="backend-adapters"></span><h1>Backend Adapters<a class="headerlink" href="#module-openerp.addons.magentoerpconnect.unit.backend_adapter" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="openerp.addons.magentoerpconnect.unit.backend_adapter.GenericAdapter">
 <em class="property">class </em><code class="descclassname">openerp.addons.magentoerpconnect.unit.backend_adapter.</code><code class="descname">GenericAdapter</code><span class="sig-paren">(</span><em>connector_env</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/openerp/addons/magentoerpconnect/unit/backend_adapter.html#GenericAdapter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#openerp.addons.magentoerpconnect.unit.backend_adapter.GenericAdapter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#openerp.addons.magentoerpconnect.unit.backend_adapter.MagentoCRUDAdapter" title="openerp.addons.magentoerpconnect.unit.backend_adapter.MagentoCRUDAdapter"><code class="xref py py-class docutils literal"><span class="pre">openerp.addons.magentoerpconnect.unit.backend_adapter.MagentoCRUDAdapter</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#openerp.addons.magentoerpconnect.unit.backend_adapter.MagentoCRUDAdapter" title="openerp.addons.magentoerpconnect.unit.backend_adapter.MagentoCRUDAdapter"><code class="xref py py-class docutils literal notranslate"><span class="pre">openerp.addons.magentoerpconnect.unit.backend_adapter.MagentoCRUDAdapter</span></code></a></p>
 <dl class="method">
 <dt id="openerp.addons.magentoerpconnect.unit.backend_adapter.GenericAdapter.admin_url">
 <code class="descname">admin_url</code><span class="sig-paren">(</span><em>id</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/openerp/addons/magentoerpconnect/unit/backend_adapter.html#GenericAdapter.admin_url"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#openerp.addons.magentoerpconnect.unit.backend_adapter.GenericAdapter.admin_url" title="Permalink to this definition">¶</a></dt>
@@ -315,7 +332,7 @@ and returns their information</p>
 <dl class="class">
 <dt id="openerp.addons.magentoerpconnect.unit.backend_adapter.MagentoCRUDAdapter">
 <em class="property">class </em><code class="descclassname">openerp.addons.magentoerpconnect.unit.backend_adapter.</code><code class="descname">MagentoCRUDAdapter</code><span class="sig-paren">(</span><em>connector_env</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/openerp/addons/magentoerpconnect/unit/backend_adapter.html#MagentoCRUDAdapter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#openerp.addons.magentoerpconnect.unit.backend_adapter.MagentoCRUDAdapter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">openerp.addons.connector.unit.backend_adapter.CRUDAdapter</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">openerp.addons.connector.unit.backend_adapter.CRUDAdapter</span></code></p>
 <p>External Records Adapter for Magento</p>
 <dl class="method">
 <dt id="openerp.addons.magentoerpconnect.unit.backend_adapter.MagentoCRUDAdapter.create">
@@ -360,7 +377,7 @@ and returns their information</p>
 <dl class="class">
 <dt id="openerp.addons.magentoerpconnect.unit.backend_adapter.MagentoLocation">
 <em class="property">class </em><code class="descclassname">openerp.addons.magentoerpconnect.unit.backend_adapter.</code><code class="descname">MagentoLocation</code><span class="sig-paren">(</span><em>location</em>, <em>username</em>, <em>password</em>, <em>use_custom_api_path=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/openerp/addons/magentoerpconnect/unit/backend_adapter.html#MagentoLocation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#openerp.addons.magentoerpconnect.unit.backend_adapter.MagentoLocation" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2.7/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2.7/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <dl class="attribute">
 <dt id="openerp.addons.magentoerpconnect.unit.backend_adapter.MagentoLocation.location">
 <code class="descname">location</code><a class="headerlink" href="#openerp.addons.magentoerpconnect.unit.backend_adapter.MagentoLocation.location" title="Permalink to this definition">¶</a></dt>
@@ -386,7 +403,7 @@ so they can be hashable; they will be stored in a dict.</p>
 <code class="descclassname">openerp.addons.magentoerpconnect.unit.backend_adapter.</code><code class="descname">record</code><span class="sig-paren">(</span><em>method</em>, <em>arguments</em>, <em>result</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/openerp/addons/magentoerpconnect/unit/backend_adapter.html#record"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#openerp.addons.magentoerpconnect.unit.backend_adapter.record" title="Permalink to this definition">¶</a></dt>
 <dd><p>Utility function which can be used to record test data
 during synchronisations. Call it from MagentoCRUDAdapter._call</p>
-<p>Then <code class="docutils literal"><span class="pre">output_recorder</span></code> can be used to write the data recorded
+<p>Then <code class="docutils literal notranslate"><span class="pre">output_recorder</span></code> can be used to write the data recorded
 to a file.</p>
 </dd></dl>
 
@@ -412,7 +429,7 @@ to a file.</p>
     </p>
     <p>
         &copy; Copyright 2013-2015, Odoo Community Association (OCA).<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.1.<br/>
     </p>
   </div>
 </footer>

@@ -2,20 +2,12 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Binders &#8212; Odoo Magento Connector  documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../',
-        VERSION:     '',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
+    <script type="text/javascript" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
@@ -44,8 +36,7 @@
 
 </script>
 
-  </head>
-  <body>
+  </head><body>
 
   <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -242,25 +233,51 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-12 content">
+      <div class="col-md-3">
+        <div id="sidebar" class="bs-sidenav" role="complementary"><ul>
+<li><a class="reference internal" href="#">Binders</a></li>
+</ul>
+
+  <li>
+    <a href="api_backend.html" title="Previous Chapter: Backend"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; Backend</span>
+    </a>
+  </li>
+  <li>
+    <a href="api_synchronizer.html" title="Next Chapter: Synchronizers"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">Synchronizers &raquo;</span>
+    </a>
+  </li>
+<div id="sourcelink">
+  <a href="../_sources/api/api_binder.rst.txt"
+     rel="nofollow">Source</a>
+</div>
+<form action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+        </div>
+      </div>
+    <div class="col-md-9 content">
       
   <div class="section" id="module-openerp.addons.magentoerpconnect.unit.binder">
 <span id="binders"></span><h1>Binders<a class="headerlink" href="#module-openerp.addons.magentoerpconnect.unit.binder" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="openerp.addons.magentoerpconnect.unit.binder.MagentoBinder">
 <em class="property">class </em><code class="descclassname">openerp.addons.magentoerpconnect.unit.binder.</code><code class="descname">MagentoBinder</code><span class="sig-paren">(</span><em>connector_env</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/openerp/addons/magentoerpconnect/unit/binder.html#MagentoBinder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#openerp.addons.magentoerpconnect.unit.binder.MagentoBinder" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">openerp.addons.connector.connector.Binder</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">openerp.addons.connector.connector.Binder</span></code></p>
 <p>Generic Binder for Magento</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="openerp.addons.magentoerpconnect.unit.binder.MagentoModelBinder">
 <em class="property">class </em><code class="descclassname">openerp.addons.magentoerpconnect.unit.binder.</code><code class="descname">MagentoModelBinder</code><span class="sig-paren">(</span><em>connector_env</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/openerp/addons/magentoerpconnect/unit/binder.html#MagentoModelBinder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#openerp.addons.magentoerpconnect.unit.binder.MagentoModelBinder" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#openerp.addons.magentoerpconnect.unit.binder.MagentoBinder" title="openerp.addons.magentoerpconnect.unit.binder.MagentoBinder"><code class="xref py py-class docutils literal"><span class="pre">openerp.addons.magentoerpconnect.unit.binder.MagentoBinder</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#openerp.addons.magentoerpconnect.unit.binder.MagentoBinder" title="openerp.addons.magentoerpconnect.unit.binder.MagentoBinder"><code class="xref py py-class docutils literal notranslate"><span class="pre">openerp.addons.magentoerpconnect.unit.binder.MagentoBinder</span></code></a></p>
 <p>Bindings are done directly on the binding model.</p>
-<p>Binding models are models called <code class="docutils literal"><span class="pre">magento.{normal_model}</span></code>,
-like <code class="docutils literal"><span class="pre">magento.res.partner</span></code> or <code class="docutils literal"><span class="pre">magento.product.product</span></code>.
-They are <code class="docutils literal"><span class="pre">_inherits</span></code> of the normal models and contains
+<p>Binding models are models called <code class="docutils literal notranslate"><span class="pre">magento.{normal_model}</span></code>,
+like <code class="docutils literal notranslate"><span class="pre">magento.res.partner</span></code> or <code class="docutils literal notranslate"><span class="pre">magento.product.product</span></code>.
+They are <code class="docutils literal notranslate"><span class="pre">_inherits</span></code> of the normal models and contains
 the Magento ID, the ID of the Magento Backend and the additional
 fields belonging to the Magento instance.</p>
 <dl class="method">
@@ -338,8 +355,8 @@ or an empty recordset if no binding is found</p>
 <dt id="openerp.addons.magentoerpconnect.unit.binder.MagentoModelBinder.unwrap_binding">
 <code class="descname">unwrap_binding</code><span class="sig-paren">(</span><em>binding_id</em>, <em>browse=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/openerp/addons/magentoerpconnect/unit/binder.html#MagentoModelBinder.unwrap_binding"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#openerp.addons.magentoerpconnect.unit.binder.MagentoModelBinder.unwrap_binding" title="Permalink to this definition">¶</a></dt>
 <dd><p>For a binding record, gives the normal record.</p>
-<p>Example: when called with a <code class="docutils literal"><span class="pre">magento.product.product</span></code> id,
-it will return the corresponding <code class="docutils literal"><span class="pre">product.product</span></code> id.</p>
+<p>Example: when called with a <code class="docutils literal notranslate"><span class="pre">magento.product.product</span></code> id,
+it will return the corresponding <code class="docutils literal notranslate"><span class="pre">product.product</span></code> id.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -355,10 +372,10 @@ rather than an ID</td>
 <dt id="openerp.addons.magentoerpconnect.unit.binder.MagentoModelBinder.unwrap_model">
 <code class="descname">unwrap_model</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/openerp/addons/magentoerpconnect/unit/binder.html#MagentoModelBinder.unwrap_model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#openerp.addons.magentoerpconnect.unit.binder.MagentoModelBinder.unwrap_model" title="Permalink to this definition">¶</a></dt>
 <dd><p>For a binding model, gives the name of the normal model.</p>
-<p>Example: when called on a binder for <code class="docutils literal"><span class="pre">magento.product.product</span></code>,
-it will return <code class="docutils literal"><span class="pre">product.product</span></code>.</p>
-<p>This binder assumes that the normal model lays in <code class="docutils literal"><span class="pre">openerp_id</span></code> since
-this is the field we use in the <code class="docutils literal"><span class="pre">_inherits</span></code> bindings.</p>
+<p>Example: when called on a binder for <code class="docutils literal notranslate"><span class="pre">magento.product.product</span></code>,
+it will return <code class="docutils literal notranslate"><span class="pre">product.product</span></code>.</p>
+<p>This binder assumes that the normal model lays in <code class="docutils literal notranslate"><span class="pre">openerp_id</span></code> since
+this is the field we use in the <code class="docutils literal notranslate"><span class="pre">_inherits</span></code> bindings.</p>
 </dd></dl>
 
 </dd></dl>
@@ -385,7 +402,7 @@ this is the field we use in the <code class="docutils literal"><span class="pre"
     </p>
     <p>
         &copy; Copyright 2013-2015, Odoo Community Association (OCA).<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.1.<br/>
     </p>
   </div>
 </footer>

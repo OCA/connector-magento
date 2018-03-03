@@ -2,20 +2,12 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>openerp.addons.magentoerpconnect.unit.import_synchronizer &#8212; Odoo Magento Connector  documentation</title>
     <link rel="stylesheet" href="../../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../../../../../',
-        VERSION:     '',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
+    <script type="text/javascript" src="../../../../../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../../../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../../../_static/doctools.js"></script>
@@ -42,8 +34,7 @@
 
 </script>
 
-  </head>
-  <body>
+  </head><body>
 
   <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -229,7 +220,18 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-12 content">
+      <div class="col-md-3">
+        <div id="sidebar" class="bs-sidenav" role="complementary">
+<form action="../../../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+        </div>
+      </div>
+    <div class="col-md-9 content">
       
   <h1>Source code for openerp.addons.magentoerpconnect.unit.import_synchronizer</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
@@ -467,8 +469,8 @@
             <span class="n">binding</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">binder</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">magento_id</span><span class="p">,</span> <span class="n">binding</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">_after_import</span><span class="p">(</span><span class="n">binding</span><span class="p">)</span></div></div>
+</div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_after_import</span><span class="p">(</span><span class="n">binding</span><span class="p">)</span>
 
 
 <span class="n">MagentoImportSynchronizer</span> <span class="o">=</span> <span class="n">MagentoImporter</span>  <span class="c1"># deprecated</span>
@@ -483,15 +485,15 @@
 <div class="viewcode-block" id="BatchImporter.run"><a class="viewcode-back" href="../../../../../api/api_synchronizer.html#openerp.addons.magentoerpconnect.unit.import_synchronizer.BatchImporter.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filters</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Run the synchronization &quot;&quot;&quot;</span>
         <span class="n">record_ids</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend_adapter</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">filters</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">record_id</span> <span class="ow">in</span> <span class="n">record_ids</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_import_record</span><span class="p">(</span><span class="n">record_id</span><span class="p">)</span></div>
+        <span class="k">for</span> <span class="n">record_id</span> <span class="ow">in</span> <span class="n">record_ids</span><span class="p">:</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_import_record</span><span class="p">(</span><span class="n">record_id</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_import_record</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record_id</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Import a record directly or delay the import of the record.</span>
 
 <span class="sd">        Method to implement in sub-classes.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+<span class="sd">        &quot;&quot;&quot;</span></div>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
 
 
 <span class="n">BatchImportSynchronizer</span> <span class="o">=</span> <span class="n">BatchImporter</span>  <span class="c1"># deprecated</span>
@@ -505,8 +507,8 @@
         <span class="sd">&quot;&quot;&quot; Import the record directly &quot;&quot;&quot;</span>
         <span class="n">import_record</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="p">,</span>
                       <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">_name</span><span class="p">,</span>
-                      <span class="bp">self</span><span class="o">.</span><span class="n">backend_record</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-                      <span class="n">record_id</span><span class="p">)</span></div>
+                      <span class="bp">self</span><span class="o">.</span><span class="n">backend_record</span><span class="o">.</span><span class="n">id</span><span class="p">,</span></div>
+                      <span class="n">record_id</span><span class="p">)</span>
 
 
 <span class="n">DirectBatchImport</span> <span class="o">=</span> <span class="n">DirectBatchImporter</span>  <span class="c1"># deprecated</span>
@@ -521,8 +523,8 @@
         <span class="n">import_record</span><span class="o">.</span><span class="n">delay</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="p">,</span>
                             <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">_name</span><span class="p">,</span>
                             <span class="bp">self</span><span class="o">.</span><span class="n">backend_record</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-                            <span class="n">record_id</span><span class="p">,</span>
-                            <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+                            <span class="n">record_id</span><span class="p">,</span></div>
+                            <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
 
 <span class="n">DelayedBatchImport</span> <span class="o">=</span> <span class="n">DelayedBatchImporter</span>  <span class="c1"># deprecated</span>
@@ -533,8 +535,8 @@
     <span class="sd">&quot;&quot;&quot; Import one Magento Website &quot;&quot;&quot;</span>
     <span class="n">_model_name</span> <span class="o">=</span> <span class="p">[</span>
         <span class="s1">&#39;magento.website&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;magento.res.partner.category&#39;</span><span class="p">,</span>
-    <span class="p">]</span></div>
+        <span class="s1">&#39;magento.res.partner.category&#39;</span><span class="p">,</span></div>
+    <span class="p">]</span>
 
 
 <span class="n">SimpleRecordImport</span> <span class="o">=</span> <span class="n">SimpleRecordImporter</span>  <span class="c1"># deprecated</span>
@@ -586,8 +588,8 @@
             <span class="n">data</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">((</span><span class="n">field</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">field</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">record</span><span class="o">.</span><span class="n">iteritems</span><span class="p">()</span>
                         <span class="k">if</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">translatable_fields</span><span class="p">)</span>
 
-            <span class="n">binding</span><span class="o">.</span><span class="n">with_context</span><span class="p">(</span><span class="n">connector_no_export</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                                 <span class="n">lang</span><span class="o">=</span><span class="n">storeview</span><span class="o">.</span><span class="n">lang_id</span><span class="o">.</span><span class="n">code</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div></div>
+            <span class="n">binding</span><span class="o">.</span><span class="n">with_context</span><span class="p">(</span><span class="n">connector_no_export</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span></div></div>
+                                 <span class="n">lang</span><span class="o">=</span><span class="n">storeview</span><span class="o">.</span><span class="n">lang_id</span><span class="o">.</span><span class="n">code</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="AddCheckpoint"><a class="viewcode-back" href="../../../../../api/api_synchronizer.html#openerp.addons.magentoerpconnect.unit.import_synchronizer.AddCheckpoint">[docs]</a><span class="nd">@magento</span>
@@ -604,16 +606,16 @@
         <span class="n">record</span> <span class="o">=</span> <span class="n">binding</span><span class="o">.</span><span class="n">openerp_id</span>
         <span class="n">add_checkpoint</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="p">,</span>
                        <span class="n">record</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">_name</span><span class="p">,</span>
-                       <span class="n">record</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-                       <span class="bp">self</span><span class="o">.</span><span class="n">backend_record</span><span class="o">.</span><span class="n">id</span><span class="p">)</span></div></div>
+                       <span class="n">record</span><span class="o">.</span><span class="n">id</span><span class="p">,</span></div></div>
+                       <span class="bp">self</span><span class="o">.</span><span class="n">backend_record</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="import_batch"><a class="viewcode-back" href="../../../../../api/api_synchronizer.html#openerp.addons.magentoerpconnect.unit.import_synchronizer.import_batch">[docs]</a><span class="nd">@job</span><span class="p">(</span><span class="n">default_channel</span><span class="o">=</span><span class="s1">&#39;root.magento&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">import_batch</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">backend_id</span><span class="p">,</span> <span class="n">filters</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Prepare a batch import of records from Magento &quot;&quot;&quot;</span>
     <span class="n">env</span> <span class="o">=</span> <span class="n">get_environment</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">backend_id</span><span class="p">)</span>
-    <span class="n">importer</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">get_connector_unit</span><span class="p">(</span><span class="n">BatchImporter</span><span class="p">)</span>
-    <span class="n">importer</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">filters</span><span class="o">=</span><span class="n">filters</span><span class="p">)</span></div>
+    <span class="n">importer</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">get_connector_unit</span><span class="p">(</span><span class="n">BatchImporter</span><span class="p">)</span></div>
+    <span class="n">importer</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">filters</span><span class="o">=</span><span class="n">filters</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="import_record"><a class="viewcode-back" href="../../../../../api/api_synchronizer.html#openerp.addons.magentoerpconnect.unit.import_synchronizer.import_record">[docs]</a><span class="nd">@job</span><span class="p">(</span><span class="n">default_channel</span><span class="o">=</span><span class="s1">&#39;root.magento&#39;</span><span class="p">)</span>
@@ -621,8 +623,8 @@
 <span class="k">def</span> <span class="nf">import_record</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">backend_id</span><span class="p">,</span> <span class="n">magento_id</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Import a record from Magento &quot;&quot;&quot;</span>
     <span class="n">env</span> <span class="o">=</span> <span class="n">get_environment</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">backend_id</span><span class="p">)</span>
-    <span class="n">importer</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">get_connector_unit</span><span class="p">(</span><span class="n">MagentoImporter</span><span class="p">)</span>
-    <span class="n">importer</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">magento_id</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="n">force</span><span class="p">)</span></div>
+    <span class="n">importer</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">get_connector_unit</span><span class="p">(</span><span class="n">MagentoImporter</span><span class="p">)</span></div>
+    <span class="n">importer</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">magento_id</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="n">force</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -640,7 +642,7 @@
     </p>
     <p>
         &copy; Copyright 2013-2015, Odoo Community Association (OCA).<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.1.<br/>
     </p>
   </div>
 </footer>

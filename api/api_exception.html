@@ -2,20 +2,12 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Exceptions &#8212; Odoo Magento Connector  documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../',
-        VERSION:     '',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
+    <script type="text/javascript" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
@@ -44,8 +36,7 @@
 
 </script>
 
-  </head>
-  <body>
+  </head><body>
 
   <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -242,14 +233,40 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-12 content">
+      <div class="col-md-3">
+        <div id="sidebar" class="bs-sidenav" role="complementary"><ul>
+<li><a class="reference internal" href="#">Exceptions</a></li>
+</ul>
+
+  <li>
+    <a href="api_backend_adapter.html" title="Previous Chapter: Backend Adapters"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; Backend Adapters</span>
+    </a>
+  </li>
+  <li>
+    <a href="api_delivery.html" title="Next Chapter: Delivery"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">Delivery &raquo;</span>
+    </a>
+  </li>
+<div id="sourcelink">
+  <a href="../_sources/api/api_exception.rst.txt"
+     rel="nofollow">Source</a>
+</div>
+<form action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+        </div>
+      </div>
+    <div class="col-md-9 content">
       
   <div class="section" id="module-openerp.addons.magentoerpconnect.exception">
 <span id="exceptions"></span><h1>Exceptions<a class="headerlink" href="#module-openerp.addons.magentoerpconnect.exception" title="Permalink to this headline">¶</a></h1>
 <dl class="exception">
 <dt id="openerp.addons.magentoerpconnect.exception.OrderImportRuleRetry">
 <em class="property">exception </em><code class="descclassname">openerp.addons.magentoerpconnect.exception.</code><code class="descname">OrderImportRuleRetry</code><span class="sig-paren">(</span><em>msg</em>, <em>seconds=None</em>, <em>ignore_retry=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/openerp/addons/magentoerpconnect/exception.html#OrderImportRuleRetry"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#openerp.addons.magentoerpconnect.exception.OrderImportRuleRetry" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">openerp.addons.connector.exception.RetryableJobError</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">openerp.addons.connector.exception.RetryableJobError</span></code></p>
 <p>The sale order import will be retried later.</p>
 </dd></dl>
 
@@ -275,7 +292,7 @@
     </p>
     <p>
         &copy; Copyright 2013-2015, Odoo Community Association (OCA).<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.1.<br/>
     </p>
   </div>
 </footer>

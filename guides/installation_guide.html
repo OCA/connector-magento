@@ -2,20 +2,12 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Installation Guide &#8212; Odoo Magento Connector  documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../',
-        VERSION:     '',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
+    <script type="text/javascript" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
@@ -44,8 +36,7 @@
 
 </script>
 
-  </head>
-  <body>
+  </head><body>
 
   <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -253,7 +244,44 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-12 content">
+      <div class="col-md-3">
+        <div id="sidebar" class="bs-sidenav" role="complementary"><ul>
+<li><a class="reference internal" href="#">Installation Guide</a><ul>
+<li><a class="reference internal" href="#installation">Installation</a><ul>
+<li><a class="reference internal" href="#requirements-on-both-servers">Requirements on both servers</a></li>
+<li><a class="reference internal" href="#odoo">Odoo</a></li>
+<li><a class="reference internal" href="#magento">Magento</a></li>
+<li><a class="reference internal" href="#configuring-the-magento-web-services">Configuring the Magento web-services</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#after-the-installation">After the installation</a></li>
+<li><a class="reference internal" href="#on-a-daily-basis">On a daily basis</a></li>
+</ul>
+</li>
+</ul>
+
+  <li>
+    <a href="../index.html" title="Previous Chapter: Odoo Magento Connector"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; Odoo Magento Con...</span>
+    </a>
+  </li>
+  <li>
+    <a href="key_questions.html" title="Next Chapter: Key questions when connecting Odoo with Magento"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">Key questions wh... &raquo;</span>
+    </a>
+  </li>
+<div id="sourcelink">
+  <a href="../_sources/guides/installation_guide.rst.txt"
+     rel="nofollow">Source</a>
+</div>
+<form action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+        </div>
+      </div>
+    <div class="col-md-9 content">
       
   <div class="section" id="installation-guide">
 <span id="id1"></span><h1>Installation Guide<a class="headerlink" href="#installation-guide" title="Permalink to this headline">¶</a></h1>
@@ -265,13 +293,13 @@ buildout configuration, head over <a class="reference internal" href="../project
 <p>For the manual installation, just stay there.</p>
 <div class="section" id="requirements-on-both-servers">
 <h3>Requirements on both servers<a class="headerlink" href="#requirements-on-both-servers" title="Permalink to this headline">¶</a></h3>
-<p>The <code class="docutils literal"><span class="pre">ntp</span></code> package should be install on the servers hosting Magento and
+<p>The <code class="docutils literal notranslate"><span class="pre">ntp</span></code> package should be install on the servers hosting Magento and
 Odoo to ensure a correct synchronization between them</p>
 </div>
 <div class="section" id="odoo">
 <h3>Odoo<a class="headerlink" href="#odoo" title="Permalink to this headline">¶</a></h3>
 <p>Clone the repositories below in the path where you chosed to store the addons:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span>$ git clone git@github.com:OCA/connector.git -b 8.0
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ git clone git@github.com:OCA/connector.git -b 8.0
 $ git clone git@github.com:OCA/connector-ecommerce.git -b 8.0
 $ git clone git@github.com:OCA/connector-magento.git -b 8.0
 $ git clone git@github.com:OCA/e-commerce.git -b 8.0
@@ -287,12 +315,12 @@ in another directory.</p>
 <p>Add the branches in the addons path, either using the server command
 line or adding them in the Odoo server configuration file.</p>
 <p>Example using the command line argument:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span>$ /path/to/openerp-server --addons-path /path/to/connector,/path/to/connector-ecommerce,/path/to/connector-magento,/path/to/e-commerce,/path/to/product-attribute,/path/to/sale-workflow
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ /path/to/openerp-server --addons-path /path/to/connector,/path/to/connector-ecommerce,/path/to/connector-magento,/path/to/e-commerce,/path/to/product-attribute,/path/to/sale-workflow
 </pre></div>
 </div>
-<p>You also need to install the <code class="docutils literal"><span class="pre">magento</span></code> Python package.
+<p>You also need to install the <code class="docutils literal notranslate"><span class="pre">magento</span></code> Python package.
 So install it with either pip or either easy_install:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span>$ pip install magento
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ pip install magento
 
 $ easy_install magento
 </pre></div>
@@ -309,8 +337,8 @@ Modules List</cite>.</p>
 <p>For the time being, the Magento extension originally built by OpenLabs
 is still used  by the connector. But the version published on <cite>Magento
 Connect</cite> is outdated.</p>
-<p>Download the following <code class="docutils literal"><span class="pre">Bazaar</span></code> branch and install it in Magento:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span>$ bzr branch lp:magentoerpconnect/magento-module-oerp6.x-stable magento-module
+<p>Download the following <code class="docutils literal notranslate"><span class="pre">Bazaar</span></code> branch and install it in Magento:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ bzr branch lp:magentoerpconnect/magento-module-oerp6.x-stable magento-module
 </pre></div>
 </div>
 <p>In order to install it:</p>
@@ -406,7 +434,7 @@ of the new products, using the <a class="reference internal" href="connector_che
     </p>
     <p>
         &copy; Copyright 2013-2015, Odoo Community Association (OCA).<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.1.<br/>
     </p>
   </div>
 </footer>

@@ -2,20 +2,12 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Developer’s guide &#8212; Odoo Magento Connector  documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../',
-        VERSION:     '',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
+    <script type="text/javascript" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
@@ -44,8 +36,7 @@
 
 </script>
 
-  </head>
-  <body>
+  </head><body>
 
   <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -262,7 +253,53 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-12 content">
+      <div class="col-md-3">
+        <div id="sidebar" class="bs-sidenav" role="complementary"><ul>
+<li><a class="reference internal" href="#">Developer’s guide</a><ul>
+<li><a class="reference internal" href="#connector-with-batteries-included-buildout">Connector with batteries included (buildout)</a><ul>
+<li><a class="reference internal" href="#installing-the-buildout">Installing the buildout</a></li>
+<li><a class="reference internal" href="#start-odoo">Start Odoo</a></li>
+<li><a class="reference internal" href="#start-with-supervisord">Start with Supervisord</a></li>
+<li><a class="reference internal" href="#run-the-tests">Run the tests</a></li>
+<li><a class="reference internal" href="#build-the-documentation">Build the documentation</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#magento-on-docker">Magento on Docker</a></li>
+<li><a class="reference internal" href="#how-to-help">How to help</a><ul>
+<li><a class="reference internal" href="#mailing-list">Mailing list</a></li>
+<li><a class="reference internal" href="#file-an-issue">File an Issue</a></li>
+<li><a class="reference internal" href="#submit-pull-requests-for-features-or-fixes">Submit Pull Requests for features or fixes</a></li>
+<li><a class="reference internal" href="#improve-the-documentation">Improve the documentation</a></li>
+<li><a class="reference internal" href="#translations">Translations</a></li>
+<li><a class="reference internal" href="#writing-tests">Writing tests</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <li>
+    <a href="../howto/faq.html" title="Previous Chapter: FAQ"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; FAQ</span>
+    </a>
+  </li>
+  <li>
+    <a href="../guides/tutorial_development.html" title="Next Chapter: Tutorial: development"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">Tutorial: develo... &raquo;</span>
+    </a>
+  </li>
+<div id="sourcelink">
+  <a href="../_sources/project/contribute.rst.txt"
+     rel="nofollow">Source</a>
+</div>
+<form action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+        </div>
+      </div>
+    <div class="col-md-9 content">
       
   <div class="section" id="developer-s-guide">
 <span id="contribute"></span><h1>Developer’s guide<a class="headerlink" href="#developer-s-guide" title="Permalink to this headline">¶</a></h1>
@@ -309,7 +346,7 @@ It includes developer tools such as:</p>
 <p>So we highly recommend to use this configuration for development.</p>
 <p>Here are the configuration files <a class="reference external" href="https://github.com/guewen/odoo-connector-magento-buildout">https://github.com/guewen/odoo-connector-magento-buildout</a>.</p>
 <p>Clone the repo:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span>$ git clone https://github.com/guewen/odoo-connector-magento-buildout.git -b 8.0 odoo-connector-magento
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ git clone https://github.com/guewen/odoo-connector-magento-buildout.git -b 8.0 odoo-connector-magento
 </pre></div>
 </div>
 <p>and follow the installation steps.</p>
@@ -325,11 +362,11 @@ You can also use <a class="reference external" href="http://pythonhosted.org/any
 <h3><a class="toc-backref" href="#sections">Start Odoo</a><a class="headerlink" href="#start-odoo" title="Permalink to this headline">¶</a></h3>
 <p>All the commands are launched from the root directory of the buildout.</p>
 <p>In standalone mode (jobs will be threaded):</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span>$ bin/start_openerp
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ bin/start_openerp
 </pre></div>
 </div>
 <p>With workers (multiprocessing), you need to start dedicated Connector Workers for the jobs:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span>$ bin/start_openerp --workers=4
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ bin/start_openerp --workers=4
 $ bin/start_connector_worker --workers=2
 </pre></div>
 </div>
@@ -337,26 +374,26 @@ $ bin/start_connector_worker --workers=2
 <div class="section" id="start-with-supervisord">
 <h3><a class="toc-backref" href="#sections">Start with Supervisord</a><a class="headerlink" href="#start-with-supervisord" title="Permalink to this headline">¶</a></h3>
 <p>To start the supervisord daemon, run:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span>$ bin/supervisord
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ bin/supervisord
 </pre></div>
 </div>
 <p>The default configuration starts Odoo with 4 workers and 2 Connector
-workers. This can be changed in the buildout.cfg file in the <code class="docutils literal"><span class="pre">supervisor</span></code> section.</p>
+workers. This can be changed in the buildout.cfg file in the <code class="docutils literal notranslate"><span class="pre">supervisor</span></code> section.</p>
 <p>The services can be managed on:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span>$ bin/supervisorctl
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ bin/supervisorctl
 </pre></div>
 </div>
 </div>
 <div class="section" id="run-the-tests">
 <h3><a class="toc-backref" href="#sections">Run the tests</a><a class="headerlink" href="#run-the-tests" title="Permalink to this headline">¶</a></h3>
 <p>The Magento Connector and the Connector framework do not use YAML tests, but only
-<code class="docutils literal"><span class="pre">unittest2</span></code> tests. The following command lines will run them:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span>$ bin/runtests --database db-name -u connector
+<code class="docutils literal notranslate"><span class="pre">unittest2</span></code> tests. The following command lines will run them:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ bin/runtests --database db-name -u connector
 $ bin/runtests --database db-name -u magentoerpconnect
 </pre></div>
 </div>
 <p>Use the help arguments for more information about the options:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span>$ bin/runtests --help
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ bin/runtests --help
 $ bin/runtests --help-oe
 </pre></div>
 </div>
@@ -364,11 +401,11 @@ $ bin/runtests --help-oe
 <div class="section" id="build-the-documentation">
 <h3><a class="toc-backref" href="#sections">Build the documentation</a><a class="headerlink" href="#build-the-documentation" title="Permalink to this headline">¶</a></h3>
 <p>The documentation uses <a class="reference external" href="http://www.sphinx-doc.org">Sphinx</a>, use the following lines to build them in HTML:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span>$ bin/sphinxbuilder_connector
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ bin/sphinxbuilder_connector
 $ bin/sphinxbuilder_connector_magento
 </pre></div>
 </div>
-<p>They will be built in the <code class="docutils literal"><span class="pre">docs</span></code> directory at the root of the buildout.</p>
+<p>They will be built in the <code class="docutils literal notranslate"><span class="pre">docs</span></code> directory at the root of the buildout.</p>
 </div>
 </div>
 <div class="section" id="magento-on-docker">
@@ -393,7 +430,7 @@ subscribe on the list named ‘Connectors’ on: <a class="reference external" h
 <p>When you encounter an issue or think there is a bug, you can file a bug on the
 project: <a class="reference external" href="https://github.com/OCA/connector-magento/issues">https://github.com/OCA/connector-magento/issues</a></p>
 <p>The connector uses several community modules, located in different projects
-(<code class="docutils literal"><span class="pre">sale_automatic_workflow</span></code>, <code class="docutils literal"><span class="pre">sale_exceptions</span></code>, …). If you know which
+(<code class="docutils literal notranslate"><span class="pre">sale_automatic_workflow</span></code>, <code class="docutils literal notranslate"><span class="pre">sale_exceptions</span></code>, …). If you know which
 project is concerned, please report the bug directly on it, in case of doubt,
 report it on the Magento Connector project and the developers will eventually
 move it to the right project.</p>
@@ -403,7 +440,7 @@ it on this project instead: <a class="reference external" href="https://github.c
 <ul class="simple">
 <li>the reference of the branch of the connector that you are using, and if
 possible the revision numbers of that branch and the dependencies (you can
-use <code class="docutils literal"><span class="pre">git</span> <span class="pre">rev-parse</span> <span class="pre">HEAD</span></code> for that purpose)</li>
+use <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">rev-parse</span> <span class="pre">HEAD</span></code> for that purpose)</li>
 </ul>
 <p>It is very helpful if you can include:</p>
 <ul class="simple">
@@ -443,24 +480,24 @@ fixes</a> to propose your changes.</p>
 </div>
 <div class="section" id="translations">
 <h3><a class="toc-backref" href="#sections">Translations</a><a class="headerlink" href="#translations" title="Permalink to this headline">¶</a></h3>
-<p>Currently the translations should be done directly in the <code class="docutils literal"><span class="pre">.po</span></code> files, follow
+<p>Currently the translations should be done directly in the <code class="docutils literal notranslate"><span class="pre">.po</span></code> files, follow
 the <a class="reference internal" href="#submit-pull-requests-for-features-or-fixes">Submit Pull Requests for features or fixes</a> instructions.</p>
 </div>
 <div class="section" id="writing-tests">
 <h3><a class="toc-backref" href="#sections">Writing tests</a><a class="headerlink" href="#writing-tests" title="Permalink to this headline">¶</a></h3>
 <p>Every new feature in the connector should have tests. We use exclusively the
-<code class="docutils literal"><span class="pre">unittest2</span></code> tests with the Odoo extensions.</p>
-<p>The tests are located in <code class="docutils literal"><span class="pre">magentoerpconnect/tests</span></code>.</p>
+<code class="docutils literal notranslate"><span class="pre">unittest2</span></code> tests with the Odoo extensions.</p>
+<p>The tests are located in <code class="docutils literal notranslate"><span class="pre">magentoerpconnect/tests</span></code>.</p>
 <p>The tests run without any connection to Magento. They mock the API.  In order
 to test the connector with representative data, we record real
 responses/requests, then use them in the tests. The reference data we use are
 those of the Magento demo, which are automatically installed when you install
 Magento using theses instructions: <a class="reference internal" href="#magento-on-docker">Magento on Docker</a>.</p>
-<p>Thus, in the <code class="docutils literal"><span class="pre">tests</span></code> folder, you will find files with only data, and the
+<p>Thus, in the <code class="docutils literal notranslate"><span class="pre">tests</span></code> folder, you will find files with only data, and the
 others with the tests.</p>
 <p>In order to record data, you can proceed as follows:</p>
-<p>In <code class="docutils literal"><span class="pre">magentoerpconnect/unit/backend_adapter.py</span></code> at lines 130,130:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span> <span class="k">def</span> <span class="nf">_call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">arguments</span><span class="p">):</span>
+<p>In <code class="docutils literal notranslate"><span class="pre">magentoerpconnect/unit/backend_adapter.py</span></code> at lines 130,130:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span> <span class="k">def</span> <span class="nf">_call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">arguments</span><span class="p">):</span>
      <span class="k">try</span><span class="p">:</span>
          <span class="k">with</span> <span class="n">magentolib</span><span class="o">.</span><span class="n">API</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">magento</span><span class="o">.</span><span class="n">location</span><span class="p">,</span>
                              <span class="bp">self</span><span class="o">.</span><span class="n">magento</span><span class="o">.</span><span class="n">username</span><span class="p">,</span>
@@ -473,18 +510,18 @@ others with the tests.</p>
              <span class="k">return</span> <span class="n">result</span>
 </pre></div>
 </div>
-<p>Uncomment the line doing a call to <a class="reference internal" href="../api/api_backend_adapter.html#openerp.addons.magentoerpconnect.unit.backend_adapter.record" title="openerp.addons.magentoerpconnect.unit.backend_adapter.record"><code class="xref py py-func docutils literal"><span class="pre">record()</span></code></a>.
+<p>Uncomment the line doing a call to <a class="reference internal" href="../api/api_backend_adapter.html#openerp.addons.magentoerpconnect.unit.backend_adapter.record" title="openerp.addons.magentoerpconnect.unit.backend_adapter.record"><code class="xref py py-func docutils literal notranslate"><span class="pre">record()</span></code></a>.
 Then, as soon as you will start the server, all the requests and responses
 will be stored in global dict. Once you have recorded some exchanges, you can
 output them using a tool such as <a class="reference external" href="https://erppeek.readthedocs.org/en/latest/">ERPpeek</a> and by calling the method
-<code class="xref py py-class docutils literal"><span class="pre">output_recorder</span></code>:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">MagentoBackend</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">output_recorder</span><span class="p">([])</span>
+<code class="xref py py-class docutils literal notranslate"><span class="pre">output_recorder</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">MagentoBackend</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">output_recorder</span><span class="p">([])</span>
 </pre></div>
 </div>
 <p>A path is returned with the location of the file.</p>
 <p>When you want to use a set of test data in a test, just use
-<code class="xref py py-func docutils literal"><span class="pre">mock_api()</span></code>:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">.common</span> <span class="kn">import</span> <span class="n">mock_api</span><span class="p">,</span>
+<code class="xref py py-func docutils literal notranslate"><span class="pre">mock_api()</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">.common</span> <span class="kn">import</span> <span class="n">mock_api</span><span class="p">,</span>
 <span class="kn">from</span> <span class="nn">.a_data_module</span> <span class="kn">import</span> <span class="n">new_set_of_data</span>
 
 <span class="o">&lt;...&gt;</span>
@@ -525,7 +562,7 @@ output them using a tool such as <a class="reference external" href="https://erp
     </p>
     <p>
         &copy; Copyright 2013-2015, Odoo Community Association (OCA).<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.1.<br/>
     </p>
   </div>
 </footer>

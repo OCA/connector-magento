@@ -2,20 +2,12 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Monitor and resolve jobs &#8212; Odoo Magento Connector  documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../',
-        VERSION:     '',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
+    <script type="text/javascript" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
@@ -44,8 +36,7 @@
 
 </script>
 
-  </head>
-  <body>
+  </head><body>
 
   <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -251,11 +242,46 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-12 content">
+      <div class="col-md-3">
+        <div id="sidebar" class="bs-sidenav" role="complementary"><ul>
+<li><a class="reference internal" href="#">Monitor and resolve jobs</a><ul>
+<li><a class="reference internal" href="#q-a">Q&amp;A</a><ul>
+<li><a class="reference internal" href="#my-jobs-are-not-executed-why">My jobs are not executed, why?</a></li>
+<li><a class="reference internal" href="#a-job-is-in-state-failed-what-should-i-do">A job is in state ‘Failed’, what should I do?</a></li>
+<li><a class="reference internal" href="#what-happens-if-i-shutdown-the-server-when-jobs-are-processing">What happens if I shutdown the server when jobs are processing?</a></li>
+<li><a class="reference internal" href="#why-do-i-have-a-couple-of-workers">Why do I have a couple of Workers?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <li>
+    <a href="connector_checkpoint.html" title="Previous Chapter: Check the connector checkpoint"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; Check the connec...</span>
+    </a>
+  </li>
+  <li>
+    <a href="../howto/modify_an_order.html" title="Next Chapter: How to cancel / modify a sale order"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">How to cancel / ... &raquo;</span>
+    </a>
+  </li>
+<div id="sourcelink">
+  <a href="../_sources/guides/monitor_resolve_jobs.rst.txt"
+     rel="nofollow">Source</a>
+</div>
+<form action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+        </div>
+      </div>
+    <div class="col-md-9 content">
       
   <div class="section" id="monitor-and-resolve-jobs">
 <span id="monitor-resolve-jobs"></span><h1>Monitor and resolve jobs<a class="headerlink" href="#monitor-and-resolve-jobs" title="Permalink to this headline">¶</a></h1>
-<p>Jobs are located in <code class="docutils literal"><span class="pre">Connector</span> <span class="pre">&gt;</span> <span class="pre">Queue</span> <span class="pre">&gt;</span> <span class="pre">Jobs</span></code>.</p>
+<p>Jobs are located in <code class="docutils literal notranslate"><span class="pre">Connector</span> <span class="pre">&gt;</span> <span class="pre">Queue</span> <span class="pre">&gt;</span> <span class="pre">Jobs</span></code>.</p>
 <p>A job is a unit of work for a single synchronization action.
 Jobs are executed by the ‘Workers’.</p>
 <div class="section" id="q-a">
@@ -270,10 +296,10 @@ Their execution is not immediate.</p>
 can die when Odoo reloads his modules registry (after a module
 upgrade for instance). The dead workers are cleaned after 5 minutes,
 then the jobs are enqueued in a new one.</li>
-<li>The jobs all have an <code class="docutils literal"><span class="pre">eta</span></code> (estimated time of arrival), so they
+<li>The jobs all have an <code class="docutils literal notranslate"><span class="pre">eta</span></code> (estimated time of arrival), so they
 will be executed later.</li>
-<li>The scheduler action is not running, check in <code class="docutils literal"><span class="pre">Settings</span> <span class="pre">&gt;</span> <span class="pre">Scheduler</span>
-<span class="pre">&gt;</span> <span class="pre">Scheduled</span> <span class="pre">Actions</span></code> if the action <code class="docutils literal"><span class="pre">Enqueue</span> <span class="pre">Jobs</span></code> is active.</li>
+<li>The scheduler action is not running, check in <code class="docutils literal notranslate"><span class="pre">Settings</span> <span class="pre">&gt;</span> <span class="pre">Scheduler</span>
+<span class="pre">&gt;</span> <span class="pre">Scheduled</span> <span class="pre">Actions</span></code> if the action <code class="docutils literal notranslate"><span class="pre">Enqueue</span> <span class="pre">Jobs</span></code> is active.</li>
 <li>Odoo is running in multiprocess and it doesn’t have a Cron Worker
 process running (when using Gunicorn).</li>
 </ol>
@@ -288,10 +314,10 @@ is at the bottom of the error trace.
 Sometimes, it proposes a resolution action.
 Other times, you’ll have to dive deeper to find the cause of the issue.
 Anyway, once you think the issue should not happen anymore,
-you can retry the job by clicking on <code class="docutils literal"><span class="pre">Requeue</span></code>.</p>
+you can retry the job by clicking on <code class="docutils literal notranslate"><span class="pre">Requeue</span></code>.</p>
 <div class="admonition danger">
 <p class="first admonition-title">Danger</p>
-<p class="last">At any time, you can use the button <code class="docutils literal"><span class="pre">Set</span> <span class="pre">to</span> <span class="pre">'Done'</span></code>. This
+<p class="last">At any time, you can use the button <code class="docutils literal notranslate"><span class="pre">Set</span> <span class="pre">to</span> <span class="pre">'Done'</span></code>. This
 button will cancel the job. It should be used only if you
 really, really know what you are doing, because you may miss
 important synchronizations actions.</p>
@@ -314,9 +340,9 @@ you’ll have 1 Jobs Worker for each Odoo worker.</p>
 <p class="first admonition-title">Note</p>
 <p>To benefits of multiple workers, you need to:</p>
 <ul class="last simple">
-<li>have multiple Cron Workers (using the <code class="docutils literal"><span class="pre">--max-cron-threads</span></code>
+<li>have multiple Cron Workers (using the <code class="docutils literal notranslate"><span class="pre">--max-cron-threads</span></code>
 option).</li>
-<li>Copy the Scheduled Actions <code class="docutils literal"><span class="pre">Enqueue</span> <span class="pre">Jobs</span></code> as many times as
+<li>Copy the Scheduled Actions <code class="docutils literal notranslate"><span class="pre">Enqueue</span> <span class="pre">Jobs</span></code> as many times as
 you have Cron Workers.</li>
 </ul>
 </div>
@@ -344,7 +370,7 @@ you have Cron Workers.</li>
     </p>
     <p>
         &copy; Copyright 2013-2015, Odoo Community Association (OCA).<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.1.<br/>
     </p>
   </div>
 </footer>

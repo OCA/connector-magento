@@ -2,20 +2,12 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Sale &#8212; Odoo Magento Connector  documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../',
-        VERSION:     '',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
+    <script type="text/javascript" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
@@ -44,8 +36,7 @@
 
 </script>
 
-  </head>
-  <body>
+  </head><body>
 
   <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -242,26 +233,52 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-12 content">
+      <div class="col-md-3">
+        <div id="sidebar" class="bs-sidenav" role="complementary"><ul>
+<li><a class="reference internal" href="#">Sale</a></li>
+</ul>
+
+  <li>
+    <a href="api_product_category.html" title="Previous Chapter: Product Category"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; Product Category</span>
+    </a>
+  </li>
+  <li>
+    <a href="api_stock_picking.html" title="Next Chapter: Stock Picking"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">Stock Picking &raquo;</span>
+    </a>
+  </li>
+<div id="sourcelink">
+  <a href="../_sources/api/api_sale.rst.txt"
+     rel="nofollow">Source</a>
+</div>
+<form action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+        </div>
+      </div>
+    <div class="col-md-9 content">
       
   <div class="section" id="module-openerp.addons.magentoerpconnect.sale">
 <span id="sale"></span><h1>Sale<a class="headerlink" href="#module-openerp.addons.magentoerpconnect.sale" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="openerp.addons.magentoerpconnect.sale.MagentoCashOnDeliveryLineBuilder">
 <em class="property">class </em><code class="descclassname">openerp.addons.magentoerpconnect.sale.</code><code class="descname">MagentoCashOnDeliveryLineBuilder</code><span class="sig-paren">(</span><em>connector_env</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/openerp/addons/magentoerpconnect/sale.html#MagentoCashOnDeliveryLineBuilder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#openerp.addons.magentoerpconnect.sale.MagentoCashOnDeliveryLineBuilder" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">openerp.addons.connector_ecommerce.sale.CashOnDeliveryLineBuilder</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">openerp.addons.connector_ecommerce.sale.CashOnDeliveryLineBuilder</span></code></p>
 </dd></dl>
 
 <dl class="class">
 <dt id="openerp.addons.magentoerpconnect.sale.MagentoGiftOrderLineBuilder">
 <em class="property">class </em><code class="descclassname">openerp.addons.magentoerpconnect.sale.</code><code class="descname">MagentoGiftOrderLineBuilder</code><span class="sig-paren">(</span><em>connector_env</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/openerp/addons/magentoerpconnect/sale.html#MagentoGiftOrderLineBuilder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#openerp.addons.magentoerpconnect.sale.MagentoGiftOrderLineBuilder" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">openerp.addons.connector_ecommerce.sale.GiftOrderLineBuilder</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">openerp.addons.connector_ecommerce.sale.GiftOrderLineBuilder</span></code></p>
 </dd></dl>
 
 <dl class="class">
 <dt id="openerp.addons.magentoerpconnect.sale.MagentoSaleOrder">
 <em class="property">class </em><code class="descclassname">openerp.addons.magentoerpconnect.sale.</code><code class="descname">MagentoSaleOrder</code><span class="sig-paren">(</span><em>pool</em>, <em>cr</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/openerp/addons/magentoerpconnect/sale.html#MagentoSaleOrder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#openerp.addons.magentoerpconnect.sale.MagentoSaleOrder" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://www.odoo.com/documentation/8.0/reference/orm.html#openerp.models.Model" title="(in odoo v8.0)"><code class="xref py py-class docutils literal"><span class="pre">openerp.models.Model</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://www.odoo.com/documentation/8.0/reference/orm.html#openerp.models.Model" title="(in odoo v8.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">openerp.models.Model</span></code></a></p>
 <dl class="attribute">
 <dt id="openerp.addons.magentoerpconnect.sale.MagentoSaleOrder.magento_order_id">
 <code class="descname">magento_order_id</code><a class="headerlink" href="#openerp.addons.magentoerpconnect.sale.MagentoSaleOrder.magento_order_id" title="Permalink to this definition">¶</a></dt>
@@ -271,7 +288,7 @@
 <dt id="openerp.addons.magentoerpconnect.sale.MagentoSaleOrder.magento_order_line_ids">
 <code class="descname">magento_order_line_ids</code><a class="headerlink" href="#openerp.addons.magentoerpconnect.sale.MagentoSaleOrder.magento_order_line_ids" title="Permalink to this definition">¶</a></dt>
 <dd><p>One2many field; the value of such a field is the recordset of all the
-records in <code class="docutils literal"><span class="pre">comodel_name</span></code> such that the field <code class="docutils literal"><span class="pre">inverse_name</span></code> is equal to
+records in <code class="docutils literal notranslate"><span class="pre">comodel_name</span></code> such that the field <code class="docutils literal notranslate"><span class="pre">inverse_name</span></code> is equal to
 the current record.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -279,21 +296,21 @@ the current record.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>comodel_name</strong> – name of the target model (string)</li>
-<li><strong>inverse_name</strong> – name of the inverse <code class="docutils literal"><span class="pre">Many2one</span></code> field in
-<code class="docutils literal"><span class="pre">comodel_name</span></code> (string)</li>
+<li><strong>inverse_name</strong> – name of the inverse <code class="docutils literal notranslate"><span class="pre">Many2one</span></code> field in
+<code class="docutils literal notranslate"><span class="pre">comodel_name</span></code> (string)</li>
 <li><strong>domain</strong> – an optional domain to set on candidate values on the
 client side (domain or string)</li>
 <li><strong>context</strong> – an optional context to use on the client side when
 handling that field (dictionary)</li>
 <li><strong>auto_join</strong> – whether JOINs are generated upon search through that
-field (boolean, by default <code class="docutils literal"><span class="pre">False</span></code>)</li>
+field (boolean, by default <code class="docutils literal notranslate"><span class="pre">False</span></code>)</li>
 <li><strong>limit</strong> – optional limit to use upon read (integer)</li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
-<p>The attributes <code class="docutils literal"><span class="pre">comodel_name</span></code> and <code class="docutils literal"><span class="pre">inverse_name</span></code> are mandatory except in
+<p>The attributes <code class="docutils literal notranslate"><span class="pre">comodel_name</span></code> and <code class="docutils literal notranslate"><span class="pre">inverse_name</span></code> are mandatory except in
 the case of related fields or field extensions.</p>
 </dd></dl>
 
@@ -313,17 +330,17 @@ client side (domain or string)</li>
 <li><strong>context</strong> – an optional context to use on the client side when
 handling that field (dictionary)</li>
 <li><strong>ondelete</strong> – what to do when the referred record is deleted;
-possible values are: <code class="docutils literal"><span class="pre">'set</span> <span class="pre">null'</span></code>, <code class="docutils literal"><span class="pre">'restrict'</span></code>, <code class="docutils literal"><span class="pre">'cascade'</span></code></li>
+possible values are: <code class="docutils literal notranslate"><span class="pre">'set</span> <span class="pre">null'</span></code>, <code class="docutils literal notranslate"><span class="pre">'restrict'</span></code>, <code class="docutils literal notranslate"><span class="pre">'cascade'</span></code></li>
 <li><strong>auto_join</strong> – whether JOINs are generated upon search through that
-field (boolean, by default <code class="docutils literal"><span class="pre">False</span></code>)</li>
-<li><strong>delegate</strong> – set it to <code class="docutils literal"><span class="pre">True</span></code> to make fields of the target model
-accessible from the current model (corresponds to <code class="docutils literal"><span class="pre">_inherits</span></code>)</li>
+field (boolean, by default <code class="docutils literal notranslate"><span class="pre">False</span></code>)</li>
+<li><strong>delegate</strong> – set it to <code class="docutils literal notranslate"><span class="pre">True</span></code> to make fields of the target model
+accessible from the current model (corresponds to <code class="docutils literal notranslate"><span class="pre">_inherits</span></code>)</li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
-<p>The attribute <code class="docutils literal"><span class="pre">comodel_name</span></code> is mandatory except in the case of related
+<p>The attribute <code class="docutils literal notranslate"><span class="pre">comodel_name</span></code> is mandatory except in the case of related
 fields or field extensions.</p>
 </dd></dl>
 
@@ -343,17 +360,17 @@ client side (domain or string)</li>
 <li><strong>context</strong> – an optional context to use on the client side when
 handling that field (dictionary)</li>
 <li><strong>ondelete</strong> – what to do when the referred record is deleted;
-possible values are: <code class="docutils literal"><span class="pre">'set</span> <span class="pre">null'</span></code>, <code class="docutils literal"><span class="pre">'restrict'</span></code>, <code class="docutils literal"><span class="pre">'cascade'</span></code></li>
+possible values are: <code class="docutils literal notranslate"><span class="pre">'set</span> <span class="pre">null'</span></code>, <code class="docutils literal notranslate"><span class="pre">'restrict'</span></code>, <code class="docutils literal notranslate"><span class="pre">'cascade'</span></code></li>
 <li><strong>auto_join</strong> – whether JOINs are generated upon search through that
-field (boolean, by default <code class="docutils literal"><span class="pre">False</span></code>)</li>
-<li><strong>delegate</strong> – set it to <code class="docutils literal"><span class="pre">True</span></code> to make fields of the target model
-accessible from the current model (corresponds to <code class="docutils literal"><span class="pre">_inherits</span></code>)</li>
+field (boolean, by default <code class="docutils literal notranslate"><span class="pre">False</span></code>)</li>
+<li><strong>delegate</strong> – set it to <code class="docutils literal notranslate"><span class="pre">True</span></code> to make fields of the target model
+accessible from the current model (corresponds to <code class="docutils literal notranslate"><span class="pre">_inherits</span></code>)</li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
-<p>The attribute <code class="docutils literal"><span class="pre">comodel_name</span></code> is mandatory except in the case of related
+<p>The attribute <code class="docutils literal notranslate"><span class="pre">comodel_name</span></code> is mandatory except in the case of related
 fields or field extensions.</p>
 </dd></dl>
 
@@ -373,17 +390,17 @@ client side (domain or string)</li>
 <li><strong>context</strong> – an optional context to use on the client side when
 handling that field (dictionary)</li>
 <li><strong>ondelete</strong> – what to do when the referred record is deleted;
-possible values are: <code class="docutils literal"><span class="pre">'set</span> <span class="pre">null'</span></code>, <code class="docutils literal"><span class="pre">'restrict'</span></code>, <code class="docutils literal"><span class="pre">'cascade'</span></code></li>
+possible values are: <code class="docutils literal notranslate"><span class="pre">'set</span> <span class="pre">null'</span></code>, <code class="docutils literal notranslate"><span class="pre">'restrict'</span></code>, <code class="docutils literal notranslate"><span class="pre">'cascade'</span></code></li>
 <li><strong>auto_join</strong> – whether JOINs are generated upon search through that
-field (boolean, by default <code class="docutils literal"><span class="pre">False</span></code>)</li>
-<li><strong>delegate</strong> – set it to <code class="docutils literal"><span class="pre">True</span></code> to make fields of the target model
-accessible from the current model (corresponds to <code class="docutils literal"><span class="pre">_inherits</span></code>)</li>
+field (boolean, by default <code class="docutils literal notranslate"><span class="pre">False</span></code>)</li>
+<li><strong>delegate</strong> – set it to <code class="docutils literal notranslate"><span class="pre">True</span></code> to make fields of the target model
+accessible from the current model (corresponds to <code class="docutils literal notranslate"><span class="pre">_inherits</span></code>)</li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
-<p>The attribute <code class="docutils literal"><span class="pre">comodel_name</span></code> is mandatory except in the case of related
+<p>The attribute <code class="docutils literal notranslate"><span class="pre">comodel_name</span></code> is mandatory except in the case of related
 fields or field extensions.</p>
 </dd></dl>
 
@@ -403,17 +420,17 @@ client side (domain or string)</li>
 <li><strong>context</strong> – an optional context to use on the client side when
 handling that field (dictionary)</li>
 <li><strong>ondelete</strong> – what to do when the referred record is deleted;
-possible values are: <code class="docutils literal"><span class="pre">'set</span> <span class="pre">null'</span></code>, <code class="docutils literal"><span class="pre">'restrict'</span></code>, <code class="docutils literal"><span class="pre">'cascade'</span></code></li>
+possible values are: <code class="docutils literal notranslate"><span class="pre">'set</span> <span class="pre">null'</span></code>, <code class="docutils literal notranslate"><span class="pre">'restrict'</span></code>, <code class="docutils literal notranslate"><span class="pre">'cascade'</span></code></li>
 <li><strong>auto_join</strong> – whether JOINs are generated upon search through that
-field (boolean, by default <code class="docutils literal"><span class="pre">False</span></code>)</li>
-<li><strong>delegate</strong> – set it to <code class="docutils literal"><span class="pre">True</span></code> to make fields of the target model
-accessible from the current model (corresponds to <code class="docutils literal"><span class="pre">_inherits</span></code>)</li>
+field (boolean, by default <code class="docutils literal notranslate"><span class="pre">False</span></code>)</li>
+<li><strong>delegate</strong> – set it to <code class="docutils literal notranslate"><span class="pre">True</span></code> to make fields of the target model
+accessible from the current model (corresponds to <code class="docutils literal notranslate"><span class="pre">_inherits</span></code>)</li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
-<p>The attribute <code class="docutils literal"><span class="pre">comodel_name</span></code> is mandatory except in the case of related
+<p>The attribute <code class="docutils literal notranslate"><span class="pre">comodel_name</span></code> is mandatory except in the case of related
 fields or field extensions.</p>
 </dd></dl>
 
@@ -452,7 +469,7 @@ cursor and returning a pair (total, decimal)</td>
 <dl class="class">
 <dt id="openerp.addons.magentoerpconnect.sale.MagentoSaleOrderLine">
 <em class="property">class </em><code class="descclassname">openerp.addons.magentoerpconnect.sale.</code><code class="descname">MagentoSaleOrderLine</code><span class="sig-paren">(</span><em>pool</em>, <em>cr</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/openerp/addons/magentoerpconnect/sale.html#MagentoSaleOrderLine"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#openerp.addons.magentoerpconnect.sale.MagentoSaleOrderLine" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://www.odoo.com/documentation/8.0/reference/orm.html#openerp.models.Model" title="(in odoo v8.0)"><code class="xref py py-class docutils literal"><span class="pre">openerp.models.Model</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://www.odoo.com/documentation/8.0/reference/orm.html#openerp.models.Model" title="(in odoo v8.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">openerp.models.Model</span></code></a></p>
 <dl class="attribute">
 <dt id="openerp.addons.magentoerpconnect.sale.MagentoSaleOrderLine.backend_id">
 <code class="descname">backend_id</code><a class="headerlink" href="#openerp.addons.magentoerpconnect.sale.MagentoSaleOrderLine.backend_id" title="Permalink to this definition">¶</a></dt>
@@ -469,17 +486,17 @@ client side (domain or string)</li>
 <li><strong>context</strong> – an optional context to use on the client side when
 handling that field (dictionary)</li>
 <li><strong>ondelete</strong> – what to do when the referred record is deleted;
-possible values are: <code class="docutils literal"><span class="pre">'set</span> <span class="pre">null'</span></code>, <code class="docutils literal"><span class="pre">'restrict'</span></code>, <code class="docutils literal"><span class="pre">'cascade'</span></code></li>
+possible values are: <code class="docutils literal notranslate"><span class="pre">'set</span> <span class="pre">null'</span></code>, <code class="docutils literal notranslate"><span class="pre">'restrict'</span></code>, <code class="docutils literal notranslate"><span class="pre">'cascade'</span></code></li>
 <li><strong>auto_join</strong> – whether JOINs are generated upon search through that
-field (boolean, by default <code class="docutils literal"><span class="pre">False</span></code>)</li>
-<li><strong>delegate</strong> – set it to <code class="docutils literal"><span class="pre">True</span></code> to make fields of the target model
-accessible from the current model (corresponds to <code class="docutils literal"><span class="pre">_inherits</span></code>)</li>
+field (boolean, by default <code class="docutils literal notranslate"><span class="pre">False</span></code>)</li>
+<li><strong>delegate</strong> – set it to <code class="docutils literal notranslate"><span class="pre">True</span></code> to make fields of the target model
+accessible from the current model (corresponds to <code class="docutils literal notranslate"><span class="pre">_inherits</span></code>)</li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
-<p>The attribute <code class="docutils literal"><span class="pre">comodel_name</span></code> is mandatory except in the case of related
+<p>The attribute <code class="docutils literal notranslate"><span class="pre">comodel_name</span></code> is mandatory except in the case of related
 fields or field extensions.</p>
 </dd></dl>
 
@@ -504,17 +521,17 @@ client side (domain or string)</li>
 <li><strong>context</strong> – an optional context to use on the client side when
 handling that field (dictionary)</li>
 <li><strong>ondelete</strong> – what to do when the referred record is deleted;
-possible values are: <code class="docutils literal"><span class="pre">'set</span> <span class="pre">null'</span></code>, <code class="docutils literal"><span class="pre">'restrict'</span></code>, <code class="docutils literal"><span class="pre">'cascade'</span></code></li>
+possible values are: <code class="docutils literal notranslate"><span class="pre">'set</span> <span class="pre">null'</span></code>, <code class="docutils literal notranslate"><span class="pre">'restrict'</span></code>, <code class="docutils literal notranslate"><span class="pre">'cascade'</span></code></li>
 <li><strong>auto_join</strong> – whether JOINs are generated upon search through that
-field (boolean, by default <code class="docutils literal"><span class="pre">False</span></code>)</li>
-<li><strong>delegate</strong> – set it to <code class="docutils literal"><span class="pre">True</span></code> to make fields of the target model
-accessible from the current model (corresponds to <code class="docutils literal"><span class="pre">_inherits</span></code>)</li>
+field (boolean, by default <code class="docutils literal notranslate"><span class="pre">False</span></code>)</li>
+<li><strong>delegate</strong> – set it to <code class="docutils literal notranslate"><span class="pre">True</span></code> to make fields of the target model
+accessible from the current model (corresponds to <code class="docutils literal notranslate"><span class="pre">_inherits</span></code>)</li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
-<p>The attribute <code class="docutils literal"><span class="pre">comodel_name</span></code> is mandatory except in the case of related
+<p>The attribute <code class="docutils literal notranslate"><span class="pre">comodel_name</span></code> is mandatory except in the case of related
 fields or field extensions.</p>
 </dd></dl>
 
@@ -553,17 +570,17 @@ client side (domain or string)</li>
 <li><strong>context</strong> – an optional context to use on the client side when
 handling that field (dictionary)</li>
 <li><strong>ondelete</strong> – what to do when the referred record is deleted;
-possible values are: <code class="docutils literal"><span class="pre">'set</span> <span class="pre">null'</span></code>, <code class="docutils literal"><span class="pre">'restrict'</span></code>, <code class="docutils literal"><span class="pre">'cascade'</span></code></li>
+possible values are: <code class="docutils literal notranslate"><span class="pre">'set</span> <span class="pre">null'</span></code>, <code class="docutils literal notranslate"><span class="pre">'restrict'</span></code>, <code class="docutils literal notranslate"><span class="pre">'cascade'</span></code></li>
 <li><strong>auto_join</strong> – whether JOINs are generated upon search through that
-field (boolean, by default <code class="docutils literal"><span class="pre">False</span></code>)</li>
-<li><strong>delegate</strong> – set it to <code class="docutils literal"><span class="pre">True</span></code> to make fields of the target model
-accessible from the current model (corresponds to <code class="docutils literal"><span class="pre">_inherits</span></code>)</li>
+field (boolean, by default <code class="docutils literal notranslate"><span class="pre">False</span></code>)</li>
+<li><strong>delegate</strong> – set it to <code class="docutils literal notranslate"><span class="pre">True</span></code> to make fields of the target model
+accessible from the current model (corresponds to <code class="docutils literal notranslate"><span class="pre">_inherits</span></code>)</li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
-<p>The attribute <code class="docutils literal"><span class="pre">comodel_name</span></code> is mandatory except in the case of related
+<p>The attribute <code class="docutils literal notranslate"><span class="pre">comodel_name</span></code> is mandatory except in the case of related
 fields or field extensions.</p>
 </dd></dl>
 
@@ -587,19 +604,19 @@ cursor and returning a pair (total, decimal)</td>
 <dl class="class">
 <dt id="openerp.addons.magentoerpconnect.sale.MagentoSaleOrderOnChange">
 <em class="property">class </em><code class="descclassname">openerp.addons.magentoerpconnect.sale.</code><code class="descname">MagentoSaleOrderOnChange</code><span class="sig-paren">(</span><em>connector_env</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/openerp/addons/magentoerpconnect/sale.html#MagentoSaleOrderOnChange"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#openerp.addons.magentoerpconnect.sale.MagentoSaleOrderOnChange" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">openerp.addons.connector_ecommerce.unit.sale_order_onchange.SaleOrderOnChange</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">openerp.addons.connector_ecommerce.unit.sale_order_onchange.SaleOrderOnChange</span></code></p>
 </dd></dl>
 
 <dl class="class">
 <dt id="openerp.addons.magentoerpconnect.sale.MagentoShippingLineBuilder">
 <em class="property">class </em><code class="descclassname">openerp.addons.magentoerpconnect.sale.</code><code class="descname">MagentoShippingLineBuilder</code><span class="sig-paren">(</span><em>connector_env</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/openerp/addons/magentoerpconnect/sale.html#MagentoShippingLineBuilder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#openerp.addons.magentoerpconnect.sale.MagentoShippingLineBuilder" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">openerp.addons.connector_ecommerce.sale.ShippingLineBuilder</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">openerp.addons.connector_ecommerce.sale.ShippingLineBuilder</span></code></p>
 </dd></dl>
 
 <dl class="class">
 <dt id="openerp.addons.magentoerpconnect.sale.PricelistSaleOrderImportMapper">
 <em class="property">class </em><code class="descclassname">openerp.addons.magentoerpconnect.sale.</code><code class="descname">PricelistSaleOrderImportMapper</code><span class="sig-paren">(</span><em>connector_env</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/openerp/addons/magentoerpconnect/sale.html#PricelistSaleOrderImportMapper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#openerp.addons.magentoerpconnect.sale.PricelistSaleOrderImportMapper" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">openerp.addons.connector.unit.mapper.ImportMapper</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">openerp.addons.connector.unit.mapper.ImportMapper</span></code></p>
 <p>Mapper for importing the sales order pricelist</p>
 <p>Does nothing by default. Replaced in magentoerpconnect_pricing.</p>
 </dd></dl>
@@ -607,7 +624,7 @@ cursor and returning a pair (total, decimal)</td>
 <dl class="class">
 <dt id="openerp.addons.magentoerpconnect.sale.SaleImportRule">
 <em class="property">class </em><code class="descclassname">openerp.addons.magentoerpconnect.sale.</code><code class="descname">SaleImportRule</code><span class="sig-paren">(</span><em>connector_env</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/openerp/addons/magentoerpconnect/sale.html#SaleImportRule"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#openerp.addons.magentoerpconnect.sale.SaleImportRule" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">openerp.addons.connector.connector.ConnectorUnit</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">openerp.addons.connector.connector.ConnectorUnit</span></code></p>
 <dl class="method">
 <dt id="openerp.addons.magentoerpconnect.sale.SaleImportRule.check">
 <code class="descname">check</code><span class="sig-paren">(</span><em>record</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/openerp/addons/magentoerpconnect/sale.html#SaleImportRule.check"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#openerp.addons.magentoerpconnect.sale.SaleImportRule.check" title="Permalink to this definition">¶</a></dt>
@@ -631,7 +648,7 @@ and see if the choosed rule is fullfilled.</p>
 <dl class="class">
 <dt id="openerp.addons.magentoerpconnect.sale.SaleOrder">
 <em class="property">class </em><code class="descclassname">openerp.addons.magentoerpconnect.sale.</code><code class="descname">SaleOrder</code><span class="sig-paren">(</span><em>pool</em>, <em>cr</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/openerp/addons/magentoerpconnect/sale.html#SaleOrder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#openerp.addons.magentoerpconnect.sale.SaleOrder" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://www.odoo.com/documentation/8.0/reference/orm.html#openerp.models.Model" title="(in odoo v8.0)"><code class="xref py py-class docutils literal"><span class="pre">openerp.models.Model</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://www.odoo.com/documentation/8.0/reference/orm.html#openerp.models.Model" title="(in odoo v8.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">openerp.models.Model</span></code></a></p>
 <dl class="method">
 <dt id="openerp.addons.magentoerpconnect.sale.SaleOrder.copy_quotation">
 <code class="descname">copy_quotation</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/openerp/addons/magentoerpconnect/sale.html#SaleOrder.copy_quotation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#openerp.addons.magentoerpconnect.sale.SaleOrder.copy_quotation" title="Permalink to this definition">¶</a></dt>
@@ -649,7 +666,7 @@ in the binding, get it from there.</p>
 <dt id="openerp.addons.magentoerpconnect.sale.SaleOrder.magento_bind_ids">
 <code class="descname">magento_bind_ids</code><a class="headerlink" href="#openerp.addons.magentoerpconnect.sale.SaleOrder.magento_bind_ids" title="Permalink to this definition">¶</a></dt>
 <dd><p>One2many field; the value of such a field is the recordset of all the
-records in <code class="docutils literal"><span class="pre">comodel_name</span></code> such that the field <code class="docutils literal"><span class="pre">inverse_name</span></code> is equal to
+records in <code class="docutils literal notranslate"><span class="pre">comodel_name</span></code> such that the field <code class="docutils literal notranslate"><span class="pre">inverse_name</span></code> is equal to
 the current record.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -657,21 +674,21 @@ the current record.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>comodel_name</strong> – name of the target model (string)</li>
-<li><strong>inverse_name</strong> – name of the inverse <code class="docutils literal"><span class="pre">Many2one</span></code> field in
-<code class="docutils literal"><span class="pre">comodel_name</span></code> (string)</li>
+<li><strong>inverse_name</strong> – name of the inverse <code class="docutils literal notranslate"><span class="pre">Many2one</span></code> field in
+<code class="docutils literal notranslate"><span class="pre">comodel_name</span></code> (string)</li>
 <li><strong>domain</strong> – an optional domain to set on candidate values on the
 client side (domain or string)</li>
 <li><strong>context</strong> – an optional context to use on the client side when
 handling that field (dictionary)</li>
 <li><strong>auto_join</strong> – whether JOINs are generated upon search through that
-field (boolean, by default <code class="docutils literal"><span class="pre">False</span></code>)</li>
+field (boolean, by default <code class="docutils literal notranslate"><span class="pre">False</span></code>)</li>
 <li><strong>limit</strong> – optional limit to use upon read (integer)</li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
-<p>The attributes <code class="docutils literal"><span class="pre">comodel_name</span></code> and <code class="docutils literal"><span class="pre">inverse_name</span></code> are mandatory except in
+<p>The attributes <code class="docutils literal notranslate"><span class="pre">comodel_name</span></code> and <code class="docutils literal notranslate"><span class="pre">inverse_name</span></code> are mandatory except in
 the case of related fields or field extensions.</p>
 </dd></dl>
 
@@ -685,7 +702,7 @@ the case of related fields or field extensions.</p>
 <dl class="class">
 <dt id="openerp.addons.magentoerpconnect.sale.SaleOrderAdapter">
 <em class="property">class </em><code class="descclassname">openerp.addons.magentoerpconnect.sale.</code><code class="descname">SaleOrderAdapter</code><span class="sig-paren">(</span><em>connector_env</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/openerp/addons/magentoerpconnect/sale.html#SaleOrderAdapter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#openerp.addons.magentoerpconnect.sale.SaleOrderAdapter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="api_backend_adapter.html#openerp.addons.magentoerpconnect.unit.backend_adapter.GenericAdapter" title="openerp.addons.magentoerpconnect.unit.backend_adapter.GenericAdapter"><code class="xref py py-class docutils literal"><span class="pre">openerp.addons.magentoerpconnect.unit.backend_adapter.GenericAdapter</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="api_backend_adapter.html#openerp.addons.magentoerpconnect.unit.backend_adapter.GenericAdapter" title="openerp.addons.magentoerpconnect.unit.backend_adapter.GenericAdapter"><code class="xref py py-class docutils literal notranslate"><span class="pre">openerp.addons.magentoerpconnect.unit.backend_adapter.GenericAdapter</span></code></a></p>
 <dl class="method">
 <dt id="openerp.addons.magentoerpconnect.sale.SaleOrderAdapter.add_comment">
 <code class="descname">add_comment</code><span class="sig-paren">(</span><em>id</em>, <em>status</em>, <em>comment=None</em>, <em>notify=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/openerp/addons/magentoerpconnect/sale.html#SaleOrderAdapter.add_comment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#openerp.addons.magentoerpconnect.sale.SaleOrderAdapter.add_comment" title="Permalink to this definition">¶</a></dt>
@@ -730,7 +747,7 @@ and returns a list of ids</p>
 <dl class="class">
 <dt id="openerp.addons.magentoerpconnect.sale.SaleOrderBatchImport">
 <em class="property">class </em><code class="descclassname">openerp.addons.magentoerpconnect.sale.</code><code class="descname">SaleOrderBatchImport</code><span class="sig-paren">(</span><em>connector_env</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/openerp/addons/magentoerpconnect/sale.html#SaleOrderBatchImport"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#openerp.addons.magentoerpconnect.sale.SaleOrderBatchImport" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="api_synchronizer.html#openerp.addons.magentoerpconnect.unit.import_synchronizer.DelayedBatchImporter" title="openerp.addons.magentoerpconnect.unit.import_synchronizer.DelayedBatchImporter"><code class="xref py py-class docutils literal"><span class="pre">openerp.addons.magentoerpconnect.unit.import_synchronizer.DelayedBatchImporter</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="api_synchronizer.html#openerp.addons.magentoerpconnect.unit.import_synchronizer.DelayedBatchImporter" title="openerp.addons.magentoerpconnect.unit.import_synchronizer.DelayedBatchImporter"><code class="xref py py-class docutils literal notranslate"><span class="pre">openerp.addons.magentoerpconnect.unit.import_synchronizer.DelayedBatchImporter</span></code></a></p>
 <dl class="method">
 <dt id="openerp.addons.magentoerpconnect.sale.SaleOrderBatchImport.run">
 <code class="descname">run</code><span class="sig-paren">(</span><em>filters=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/openerp/addons/magentoerpconnect/sale.html#SaleOrderBatchImport.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#openerp.addons.magentoerpconnect.sale.SaleOrderBatchImport.run" title="Permalink to this definition">¶</a></dt>
@@ -742,7 +759,7 @@ and returns a list of ids</p>
 <dl class="class">
 <dt id="openerp.addons.magentoerpconnect.sale.SaleOrderCommentImportMapper">
 <em class="property">class </em><code class="descclassname">openerp.addons.magentoerpconnect.sale.</code><code class="descname">SaleOrderCommentImportMapper</code><span class="sig-paren">(</span><em>connector_env</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/openerp/addons/magentoerpconnect/sale.html#SaleOrderCommentImportMapper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#openerp.addons.magentoerpconnect.sale.SaleOrderCommentImportMapper" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">openerp.addons.connector.unit.mapper.ImportMapper</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">openerp.addons.connector.unit.mapper.ImportMapper</span></code></p>
 <p>Mapper for importing comments of sales orders.</p>
 <p>Does nothing in the base addons.</p>
 </dd></dl>
@@ -750,13 +767,13 @@ and returns a list of ids</p>
 <dl class="attribute">
 <dt id="openerp.addons.magentoerpconnect.sale.SaleOrderImport">
 <code class="descclassname">openerp.addons.magentoerpconnect.sale.</code><code class="descname">SaleOrderImport</code><a class="headerlink" href="#openerp.addons.magentoerpconnect.sale.SaleOrderImport" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <a class="reference internal" href="#openerp.addons.magentoerpconnect.sale.SaleOrderImporter" title="openerp.addons.magentoerpconnect.sale.SaleOrderImporter"><code class="xref py py-class docutils literal"><span class="pre">SaleOrderImporter</span></code></a></p>
+<dd><p>alias of <a class="reference internal" href="#openerp.addons.magentoerpconnect.sale.SaleOrderImporter" title="openerp.addons.magentoerpconnect.sale.SaleOrderImporter"><code class="xref py py-class docutils literal notranslate"><span class="pre">openerp.addons.magentoerpconnect.sale.SaleOrderImporter</span></code></a></p>
 </dd></dl>
 
 <dl class="class">
 <dt id="openerp.addons.magentoerpconnect.sale.SaleOrderImportMapper">
 <em class="property">class </em><code class="descclassname">openerp.addons.magentoerpconnect.sale.</code><code class="descname">SaleOrderImportMapper</code><span class="sig-paren">(</span><em>connector_env</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/openerp/addons/magentoerpconnect/sale.html#SaleOrderImportMapper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#openerp.addons.magentoerpconnect.sale.SaleOrderImportMapper" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">openerp.addons.connector.unit.mapper.ImportMapper</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">openerp.addons.connector.unit.mapper.ImportMapper</span></code></p>
 <dl class="method">
 <dt id="openerp.addons.magentoerpconnect.sale.SaleOrderImportMapper.backend_id">
 <code class="descname">backend_id</code><span class="sig-paren">(</span><em>record</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/openerp/addons/magentoerpconnect/sale.html#SaleOrderImportMapper.backend_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#openerp.addons.magentoerpconnect.sale.SaleOrderImportMapper.backend_id" title="Permalink to this definition">¶</a></dt>
@@ -780,7 +797,28 @@ and returns a list of ids</p>
 <dl class="method">
 <dt id="openerp.addons.magentoerpconnect.sale.SaleOrderImportMapper.finalize">
 <code class="descname">finalize</code><span class="sig-paren">(</span><em>map_record</em>, <em>values</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/openerp/addons/magentoerpconnect/sale.html#SaleOrderImportMapper.finalize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#openerp.addons.magentoerpconnect.sale.SaleOrderImportMapper.finalize" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Called at the end of the mapping.</p>
+<p>Can be used to modify the values before returning them, as the
+<code class="docutils literal notranslate"><span class="pre">on_change</span></code>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>map_record</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">MapRecord</span></code>) – source map_record</li>
+<li><strong>values</strong> – mapped values</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">mapped values</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/2.7/library/stdtypes.html#dict" title="(in Python v2.7)">dict</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="method">
 <dt id="openerp.addons.magentoerpconnect.sale.SaleOrderImportMapper.fiscal_position">
@@ -834,17 +872,36 @@ for the salespersons (access rules)</p>
 <dl class="class">
 <dt id="openerp.addons.magentoerpconnect.sale.SaleOrderImporter">
 <em class="property">class </em><code class="descclassname">openerp.addons.magentoerpconnect.sale.</code><code class="descname">SaleOrderImporter</code><span class="sig-paren">(</span><em>connector_env</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/openerp/addons/magentoerpconnect/sale.html#SaleOrderImporter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#openerp.addons.magentoerpconnect.sale.SaleOrderImporter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="api_synchronizer.html#openerp.addons.magentoerpconnect.unit.import_synchronizer.MagentoImporter" title="openerp.addons.magentoerpconnect.unit.import_synchronizer.MagentoImporter"><code class="xref py py-class docutils literal"><span class="pre">openerp.addons.magentoerpconnect.unit.import_synchronizer.MagentoImporter</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="api_synchronizer.html#openerp.addons.magentoerpconnect.unit.import_synchronizer.MagentoImporter" title="openerp.addons.magentoerpconnect.unit.import_synchronizer.MagentoImporter"><code class="xref py py-class docutils literal notranslate"><span class="pre">openerp.addons.magentoerpconnect.unit.import_synchronizer.MagentoImporter</span></code></a></p>
 </dd></dl>
 
 <dl class="class">
 <dt id="openerp.addons.magentoerpconnect.sale.SaleOrderLine">
 <em class="property">class </em><code class="descclassname">openerp.addons.magentoerpconnect.sale.</code><code class="descname">SaleOrderLine</code><span class="sig-paren">(</span><em>pool</em>, <em>cr</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/openerp/addons/magentoerpconnect/sale.html#SaleOrderLine"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#openerp.addons.magentoerpconnect.sale.SaleOrderLine" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://www.odoo.com/documentation/8.0/reference/orm.html#openerp.models.Model" title="(in odoo v8.0)"><code class="xref py py-class docutils literal"><span class="pre">openerp.models.Model</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://www.odoo.com/documentation/8.0/reference/orm.html#openerp.models.Model" title="(in odoo v8.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">openerp.models.Model</span></code></a></p>
 <dl class="method">
 <dt id="openerp.addons.magentoerpconnect.sale.SaleOrderLine.copy_data">
 <code class="descname">copy_data</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/openerp/addons/magentoerpconnect/sale.html#SaleOrderLine.copy_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#openerp.addons.magentoerpconnect.sale.SaleOrderLine.copy_data" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Copy given record’s data with all its fields values</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>cr</strong> – database cursor</li>
+<li><strong>uid</strong> – current user id</li>
+<li><strong>id</strong> – id of the record to copy</li>
+<li><strong>default</strong> (<em>dictionary</em>) – field values to override in the original values of the copied record</li>
+<li><strong>context</strong> (<em>dictionary</em>) – context arguments, like lang, time zone</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">dictionary containing all the field values</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="method">
 <dt id="openerp.addons.magentoerpconnect.sale.SaleOrderLine.create">
@@ -855,7 +912,7 @@ for the salespersons (access rules)</p>
 <dt id="openerp.addons.magentoerpconnect.sale.SaleOrderLine.magento_bind_ids">
 <code class="descname">magento_bind_ids</code><a class="headerlink" href="#openerp.addons.magentoerpconnect.sale.SaleOrderLine.magento_bind_ids" title="Permalink to this definition">¶</a></dt>
 <dd><p>One2many field; the value of such a field is the recordset of all the
-records in <code class="docutils literal"><span class="pre">comodel_name</span></code> such that the field <code class="docutils literal"><span class="pre">inverse_name</span></code> is equal to
+records in <code class="docutils literal notranslate"><span class="pre">comodel_name</span></code> such that the field <code class="docutils literal notranslate"><span class="pre">inverse_name</span></code> is equal to
 the current record.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -863,21 +920,21 @@ the current record.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>comodel_name</strong> – name of the target model (string)</li>
-<li><strong>inverse_name</strong> – name of the inverse <code class="docutils literal"><span class="pre">Many2one</span></code> field in
-<code class="docutils literal"><span class="pre">comodel_name</span></code> (string)</li>
+<li><strong>inverse_name</strong> – name of the inverse <code class="docutils literal notranslate"><span class="pre">Many2one</span></code> field in
+<code class="docutils literal notranslate"><span class="pre">comodel_name</span></code> (string)</li>
 <li><strong>domain</strong> – an optional domain to set on candidate values on the
 client side (domain or string)</li>
 <li><strong>context</strong> – an optional context to use on the client side when
 handling that field (dictionary)</li>
 <li><strong>auto_join</strong> – whether JOINs are generated upon search through that
-field (boolean, by default <code class="docutils literal"><span class="pre">False</span></code>)</li>
+field (boolean, by default <code class="docutils literal notranslate"><span class="pre">False</span></code>)</li>
 <li><strong>limit</strong> – optional limit to use upon read (integer)</li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
-<p>The attributes <code class="docutils literal"><span class="pre">comodel_name</span></code> and <code class="docutils literal"><span class="pre">inverse_name</span></code> are mandatory except in
+<p>The attributes <code class="docutils literal notranslate"><span class="pre">comodel_name</span></code> and <code class="docutils literal notranslate"><span class="pre">inverse_name</span></code> are mandatory except in
 the case of related fields or field extensions.</p>
 </dd></dl>
 
@@ -886,7 +943,7 @@ the case of related fields or field extensions.</p>
 <dl class="class">
 <dt id="openerp.addons.magentoerpconnect.sale.SaleOrderLineImportMapper">
 <em class="property">class </em><code class="descclassname">openerp.addons.magentoerpconnect.sale.</code><code class="descname">SaleOrderLineImportMapper</code><span class="sig-paren">(</span><em>connector_env</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/openerp/addons/magentoerpconnect/sale.html#SaleOrderLineImportMapper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#openerp.addons.magentoerpconnect.sale.SaleOrderLineImportMapper" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">openerp.addons.connector.unit.mapper.ImportMapper</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">openerp.addons.connector.unit.mapper.ImportMapper</span></code></p>
 <dl class="attribute">
 <dt id="openerp.addons.magentoerpconnect.sale.SaleOrderLineImportMapper.direct">
 <code class="descname">direct</code><em class="property"> = [('qty_ordered', 'product_uom_qty'), ('qty_ordered', 'product_uos_qty'), ('name', 'name'), ('item_id', 'magento_id')]</em><a class="headerlink" href="#openerp.addons.magentoerpconnect.sale.SaleOrderLineImportMapper.direct" title="Permalink to this definition">¶</a></dt>
@@ -917,7 +974,7 @@ the case of related fields or field extensions.</p>
 <dl class="class">
 <dt id="openerp.addons.magentoerpconnect.sale.SaleOrderMoveComment">
 <em class="property">class </em><code class="descclassname">openerp.addons.magentoerpconnect.sale.</code><code class="descname">SaleOrderMoveComment</code><span class="sig-paren">(</span><em>connector_env</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/openerp/addons/magentoerpconnect/sale.html#SaleOrderMoveComment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#openerp.addons.magentoerpconnect.sale.SaleOrderMoveComment" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">openerp.addons.connector.connector.ConnectorUnit</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">openerp.addons.connector.connector.ConnectorUnit</span></code></p>
 <dl class="method">
 <dt id="openerp.addons.magentoerpconnect.sale.SaleOrderMoveComment.move">
 <code class="descname">move</code><span class="sig-paren">(</span><em>binding</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/openerp/addons/magentoerpconnect/sale.html#SaleOrderMoveComment.move"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#openerp.addons.magentoerpconnect.sale.SaleOrderMoveComment.move" title="Permalink to this definition">¶</a></dt>
@@ -928,7 +985,7 @@ the case of related fields or field extensions.</p>
 <dl class="class">
 <dt id="openerp.addons.magentoerpconnect.sale.StateExporter">
 <em class="property">class </em><code class="descclassname">openerp.addons.magentoerpconnect.sale.</code><code class="descname">StateExporter</code><span class="sig-paren">(</span><em>connector_env</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/openerp/addons/magentoerpconnect/sale.html#StateExporter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#openerp.addons.magentoerpconnect.sale.StateExporter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">openerp.addons.connector.unit.synchronizer.Exporter</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">openerp.addons.connector.unit.synchronizer.Exporter</span></code></p>
 <dl class="method">
 <dt id="openerp.addons.magentoerpconnect.sale.StateExporter.run">
 <code class="descname">run</code><span class="sig-paren">(</span><em>binding_id</em>, <em>allowed_states=None</em>, <em>comment=None</em>, <em>notify=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/openerp/addons/magentoerpconnect/sale.html#StateExporter.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#openerp.addons.magentoerpconnect.sale.StateExporter.run" title="Permalink to this definition">¶</a></dt>
@@ -938,11 +995,11 @@ Sales orders on Magento have a state and a status.
 The state is related to the sale workflow, and the status can be
 modified liberaly.  We change only the status because Magento
 handle the state itself.</p>
-<p>When a sales order is modified, if we used the <code class="docutils literal"><span class="pre">sales_order.cancel</span></code>
+<p>When a sales order is modified, if we used the <code class="docutils literal notranslate"><span class="pre">sales_order.cancel</span></code>
 API method, we would not be able to revert the cancellation.  When
-we send <code class="docutils literal"><span class="pre">cancel</span></code> as a status change with a new comment, we are still
+we send <code class="docutils literal notranslate"><span class="pre">cancel</span></code> as a status change with a new comment, we are still
 able to change the status again and to create shipments and invoices
-because the state is still <code class="docutils literal"><span class="pre">new</span></code> or <code class="docutils literal"><span class="pre">processing</span></code>.</p>
+because the state is still <code class="docutils literal notranslate"><span class="pre">new</span></code> or <code class="docutils literal notranslate"><span class="pre">processing</span></code>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -998,7 +1055,7 @@ comment</li>
     </p>
     <p>
         &copy; Copyright 2013-2015, Odoo Community Association (OCA).<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.1.<br/>
     </p>
   </div>
 </footer>

@@ -2,20 +2,12 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Partner Category &#8212; Odoo Magento Connector  documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../',
-        VERSION:     '',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
+    <script type="text/javascript" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
@@ -44,8 +36,7 @@
 
 </script>
 
-  </head>
-  <body>
+  </head><body>
 
   <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -242,14 +233,40 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-12 content">
+      <div class="col-md-3">
+        <div id="sidebar" class="bs-sidenav" role="complementary"><ul>
+<li><a class="reference internal" href="#">Partner Category</a></li>
+</ul>
+
+  <li>
+    <a href="api_partner.html" title="Previous Chapter: Partner"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; Partner</span>
+    </a>
+  </li>
+  <li>
+    <a href="api_product.html" title="Next Chapter: Product"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">Product &raquo;</span>
+    </a>
+  </li>
+<div id="sourcelink">
+  <a href="../_sources/api/api_partner_category.rst.txt"
+     rel="nofollow">Source</a>
+</div>
+<form action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+        </div>
+      </div>
+    <div class="col-md-9 content">
       
   <div class="section" id="module-openerp.addons.magentoerpconnect.partner_category">
 <span id="partner-category"></span><h1>Partner Category<a class="headerlink" href="#module-openerp.addons.magentoerpconnect.partner_category" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="openerp.addons.magentoerpconnect.partner_category.MagentoResPartnerCategory">
 <em class="property">class </em><code class="descclassname">openerp.addons.magentoerpconnect.partner_category.</code><code class="descname">MagentoResPartnerCategory</code><span class="sig-paren">(</span><em>pool</em>, <em>cr</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/openerp/addons/magentoerpconnect/partner_category.html#MagentoResPartnerCategory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#openerp.addons.magentoerpconnect.partner_category.MagentoResPartnerCategory" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://www.odoo.com/documentation/8.0/reference/orm.html#openerp.models.Model" title="(in odoo v8.0)"><code class="xref py py-class docutils literal"><span class="pre">openerp.models.Model</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://www.odoo.com/documentation/8.0/reference/orm.html#openerp.models.Model" title="(in odoo v8.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">openerp.models.Model</span></code></a></p>
 <dl class="attribute">
 <dt id="openerp.addons.magentoerpconnect.partner_category.MagentoResPartnerCategory.openerp_id">
 <code class="descname">openerp_id</code><a class="headerlink" href="#openerp.addons.magentoerpconnect.partner_category.MagentoResPartnerCategory.openerp_id" title="Permalink to this definition">¶</a></dt>
@@ -266,17 +283,17 @@ client side (domain or string)</li>
 <li><strong>context</strong> – an optional context to use on the client side when
 handling that field (dictionary)</li>
 <li><strong>ondelete</strong> – what to do when the referred record is deleted;
-possible values are: <code class="docutils literal"><span class="pre">'set</span> <span class="pre">null'</span></code>, <code class="docutils literal"><span class="pre">'restrict'</span></code>, <code class="docutils literal"><span class="pre">'cascade'</span></code></li>
+possible values are: <code class="docutils literal notranslate"><span class="pre">'set</span> <span class="pre">null'</span></code>, <code class="docutils literal notranslate"><span class="pre">'restrict'</span></code>, <code class="docutils literal notranslate"><span class="pre">'cascade'</span></code></li>
 <li><strong>auto_join</strong> – whether JOINs are generated upon search through that
-field (boolean, by default <code class="docutils literal"><span class="pre">False</span></code>)</li>
-<li><strong>delegate</strong> – set it to <code class="docutils literal"><span class="pre">True</span></code> to make fields of the target model
-accessible from the current model (corresponds to <code class="docutils literal"><span class="pre">_inherits</span></code>)</li>
+field (boolean, by default <code class="docutils literal notranslate"><span class="pre">False</span></code>)</li>
+<li><strong>delegate</strong> – set it to <code class="docutils literal notranslate"><span class="pre">True</span></code> to make fields of the target model
+accessible from the current model (corresponds to <code class="docutils literal notranslate"><span class="pre">_inherits</span></code>)</li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
-<p>The attribute <code class="docutils literal"><span class="pre">comodel_name</span></code> is mandatory except in the case of related
+<p>The attribute <code class="docutils literal notranslate"><span class="pre">comodel_name</span></code> is mandatory except in the case of related
 fields or field extensions.</p>
 </dd></dl>
 
@@ -290,7 +307,7 @@ fields or field extensions.</p>
 <dl class="class">
 <dt id="openerp.addons.magentoerpconnect.partner_category.PartnerCategoryAdapter">
 <em class="property">class </em><code class="descclassname">openerp.addons.magentoerpconnect.partner_category.</code><code class="descname">PartnerCategoryAdapter</code><span class="sig-paren">(</span><em>connector_env</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/openerp/addons/magentoerpconnect/partner_category.html#PartnerCategoryAdapter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#openerp.addons.magentoerpconnect.partner_category.PartnerCategoryAdapter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="api_backend_adapter.html#openerp.addons.magentoerpconnect.unit.backend_adapter.GenericAdapter" title="openerp.addons.magentoerpconnect.unit.backend_adapter.GenericAdapter"><code class="xref py py-class docutils literal"><span class="pre">openerp.addons.magentoerpconnect.unit.backend_adapter.GenericAdapter</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="api_backend_adapter.html#openerp.addons.magentoerpconnect.unit.backend_adapter.GenericAdapter" title="openerp.addons.magentoerpconnect.unit.backend_adapter.GenericAdapter"><code class="xref py py-class docutils literal notranslate"><span class="pre">openerp.addons.magentoerpconnect.unit.backend_adapter.GenericAdapter</span></code></a></p>
 <dl class="method">
 <dt id="openerp.addons.magentoerpconnect.partner_category.PartnerCategoryAdapter.search">
 <code class="descname">search</code><span class="sig-paren">(</span><em>filters=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/openerp/addons/magentoerpconnect/partner_category.html#PartnerCategoryAdapter.search"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#openerp.addons.magentoerpconnect.partner_category.PartnerCategoryAdapter.search" title="Permalink to this definition">¶</a></dt>
@@ -311,20 +328,20 @@ and returns a list of ids</p>
 <dl class="attribute">
 <dt id="openerp.addons.magentoerpconnect.partner_category.PartnerCategoryBatchImport">
 <code class="descclassname">openerp.addons.magentoerpconnect.partner_category.</code><code class="descname">PartnerCategoryBatchImport</code><a class="headerlink" href="#openerp.addons.magentoerpconnect.partner_category.PartnerCategoryBatchImport" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <a class="reference internal" href="#openerp.addons.magentoerpconnect.partner_category.PartnerCategoryBatchImporter" title="openerp.addons.magentoerpconnect.partner_category.PartnerCategoryBatchImporter"><code class="xref py py-class docutils literal"><span class="pre">PartnerCategoryBatchImporter</span></code></a></p>
+<dd><p>alias of <a class="reference internal" href="#openerp.addons.magentoerpconnect.partner_category.PartnerCategoryBatchImporter" title="openerp.addons.magentoerpconnect.partner_category.PartnerCategoryBatchImporter"><code class="xref py py-class docutils literal notranslate"><span class="pre">openerp.addons.magentoerpconnect.partner_category.PartnerCategoryBatchImporter</span></code></a></p>
 </dd></dl>
 
 <dl class="class">
 <dt id="openerp.addons.magentoerpconnect.partner_category.PartnerCategoryBatchImporter">
 <em class="property">class </em><code class="descclassname">openerp.addons.magentoerpconnect.partner_category.</code><code class="descname">PartnerCategoryBatchImporter</code><span class="sig-paren">(</span><em>connector_env</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/openerp/addons/magentoerpconnect/partner_category.html#PartnerCategoryBatchImporter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#openerp.addons.magentoerpconnect.partner_category.PartnerCategoryBatchImporter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="api_synchronizer.html#openerp.addons.magentoerpconnect.unit.import_synchronizer.DelayedBatchImporter" title="openerp.addons.magentoerpconnect.unit.import_synchronizer.DelayedBatchImporter"><code class="xref py py-class docutils literal"><span class="pre">openerp.addons.magentoerpconnect.unit.import_synchronizer.DelayedBatchImporter</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="api_synchronizer.html#openerp.addons.magentoerpconnect.unit.import_synchronizer.DelayedBatchImporter" title="openerp.addons.magentoerpconnect.unit.import_synchronizer.DelayedBatchImporter"><code class="xref py py-class docutils literal notranslate"><span class="pre">openerp.addons.magentoerpconnect.unit.import_synchronizer.DelayedBatchImporter</span></code></a></p>
 <p>Delay import of the records</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="openerp.addons.magentoerpconnect.partner_category.PartnerCategoryImportMapper">
 <em class="property">class </em><code class="descclassname">openerp.addons.magentoerpconnect.partner_category.</code><code class="descname">PartnerCategoryImportMapper</code><span class="sig-paren">(</span><em>connector_env</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/openerp/addons/magentoerpconnect/partner_category.html#PartnerCategoryImportMapper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#openerp.addons.magentoerpconnect.partner_category.PartnerCategoryImportMapper" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">openerp.addons.connector.unit.mapper.ImportMapper</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">openerp.addons.connector.unit.mapper.ImportMapper</span></code></p>
 <dl class="method">
 <dt id="openerp.addons.magentoerpconnect.partner_category.PartnerCategoryImportMapper.backend_id">
 <code class="descname">backend_id</code><span class="sig-paren">(</span><em>record</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/openerp/addons/magentoerpconnect/partner_category.html#PartnerCategoryImportMapper.backend_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#openerp.addons.magentoerpconnect.partner_category.PartnerCategoryImportMapper.backend_id" title="Permalink to this definition">¶</a></dt>
@@ -351,12 +368,12 @@ and returns a list of ids</p>
 <dl class="class">
 <dt id="openerp.addons.magentoerpconnect.partner_category.ResPartnerCategory">
 <em class="property">class </em><code class="descclassname">openerp.addons.magentoerpconnect.partner_category.</code><code class="descname">ResPartnerCategory</code><span class="sig-paren">(</span><em>pool</em>, <em>cr</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/openerp/addons/magentoerpconnect/partner_category.html#ResPartnerCategory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#openerp.addons.magentoerpconnect.partner_category.ResPartnerCategory" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://www.odoo.com/documentation/8.0/reference/orm.html#openerp.models.Model" title="(in odoo v8.0)"><code class="xref py py-class docutils literal"><span class="pre">openerp.models.Model</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://www.odoo.com/documentation/8.0/reference/orm.html#openerp.models.Model" title="(in odoo v8.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">openerp.models.Model</span></code></a></p>
 <dl class="attribute">
 <dt id="openerp.addons.magentoerpconnect.partner_category.ResPartnerCategory.magento_bind_ids">
 <code class="descname">magento_bind_ids</code><a class="headerlink" href="#openerp.addons.magentoerpconnect.partner_category.ResPartnerCategory.magento_bind_ids" title="Permalink to this definition">¶</a></dt>
 <dd><p>One2many field; the value of such a field is the recordset of all the
-records in <code class="docutils literal"><span class="pre">comodel_name</span></code> such that the field <code class="docutils literal"><span class="pre">inverse_name</span></code> is equal to
+records in <code class="docutils literal notranslate"><span class="pre">comodel_name</span></code> such that the field <code class="docutils literal notranslate"><span class="pre">inverse_name</span></code> is equal to
 the current record.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -364,21 +381,21 @@ the current record.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>comodel_name</strong> – name of the target model (string)</li>
-<li><strong>inverse_name</strong> – name of the inverse <code class="docutils literal"><span class="pre">Many2one</span></code> field in
-<code class="docutils literal"><span class="pre">comodel_name</span></code> (string)</li>
+<li><strong>inverse_name</strong> – name of the inverse <code class="docutils literal notranslate"><span class="pre">Many2one</span></code> field in
+<code class="docutils literal notranslate"><span class="pre">comodel_name</span></code> (string)</li>
 <li><strong>domain</strong> – an optional domain to set on candidate values on the
 client side (domain or string)</li>
 <li><strong>context</strong> – an optional context to use on the client side when
 handling that field (dictionary)</li>
 <li><strong>auto_join</strong> – whether JOINs are generated upon search through that
-field (boolean, by default <code class="docutils literal"><span class="pre">False</span></code>)</li>
+field (boolean, by default <code class="docutils literal notranslate"><span class="pre">False</span></code>)</li>
 <li><strong>limit</strong> – optional limit to use upon read (integer)</li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
-<p>The attributes <code class="docutils literal"><span class="pre">comodel_name</span></code> and <code class="docutils literal"><span class="pre">inverse_name</span></code> are mandatory except in
+<p>The attributes <code class="docutils literal notranslate"><span class="pre">comodel_name</span></code> and <code class="docutils literal notranslate"><span class="pre">inverse_name</span></code> are mandatory except in
 the case of related fields or field extensions.</p>
 </dd></dl>
 
@@ -406,7 +423,7 @@ the case of related fields or field extensions.</p>
     </p>
     <p>
         &copy; Copyright 2013-2015, Odoo Community Association (OCA).<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.1.<br/>
     </p>
   </div>
 </footer>

@@ -2,20 +2,12 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Synchronizers &#8212; Odoo Magento Connector  documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../',
-        VERSION:     '',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
+    <script type="text/javascript" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
@@ -44,8 +36,7 @@
 
 </script>
 
-  </head>
-  <body>
+  </head><body>
 
   <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -247,7 +238,38 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-12 content">
+      <div class="col-md-3">
+        <div id="sidebar" class="bs-sidenav" role="complementary"><ul>
+<li><a class="reference internal" href="#">Synchronizers</a><ul>
+<li><a class="reference internal" href="#module-openerp.addons.magentoerpconnect.unit.import_synchronizer">Import</a></li>
+<li><a class="reference internal" href="#module-openerp.addons.magentoerpconnect.unit.export_synchronizer">Export</a></li>
+<li><a class="reference internal" href="#module-openerp.addons.magentoerpconnect.unit.delete_synchronizer">Delete</a></li>
+</ul>
+</li>
+</ul>
+
+  <li>
+    <a href="api_binder.html" title="Previous Chapter: Binders"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; Binders</span>
+    </a>
+  </li>
+  <li>
+    <a href="api_backend_adapter.html" title="Next Chapter: Backend Adapters"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">Backend Adapters &raquo;</span>
+    </a>
+  </li>
+<div id="sourcelink">
+  <a href="../_sources/api/api_synchronizer.rst.txt"
+     rel="nofollow">Source</a>
+</div>
+<form action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+        </div>
+      </div>
+    <div class="col-md-9 content">
       
   <div class="section" id="synchronizers">
 <h1>Synchronizers<a class="headerlink" href="#synchronizers" title="Permalink to this headline">¶</a></h1>
@@ -256,12 +278,12 @@
 <p>Importers for Magento.</p>
 <p>An import can be skipped if the last sync date is more recent than
 the last update in Magento.</p>
-<p>They should call the <code class="docutils literal"><span class="pre">bind</span></code> method if the binder even if the records
+<p>They should call the <code class="docutils literal notranslate"><span class="pre">bind</span></code> method if the binder even if the records
 are already bound, to update the last sync date.</p>
 <dl class="class">
 <dt id="openerp.addons.magentoerpconnect.unit.import_synchronizer.AddCheckpoint">
 <em class="property">class </em><code class="descclassname">openerp.addons.magentoerpconnect.unit.import_synchronizer.</code><code class="descname">AddCheckpoint</code><span class="sig-paren">(</span><em>connector_env</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/openerp/addons/magentoerpconnect/unit/import_synchronizer.html#AddCheckpoint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#openerp.addons.magentoerpconnect.unit.import_synchronizer.AddCheckpoint" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">openerp.addons.connector.connector.ConnectorUnit</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">openerp.addons.connector.connector.ConnectorUnit</span></code></p>
 <p>Add a connector.checkpoint on the underlying model
 (not the magento.* but the _inherits’ed model)</p>
 <dl class="method">
@@ -274,13 +296,13 @@ are already bound, to update the last sync date.</p>
 <dl class="attribute">
 <dt id="openerp.addons.magentoerpconnect.unit.import_synchronizer.BatchImportSynchronizer">
 <code class="descclassname">openerp.addons.magentoerpconnect.unit.import_synchronizer.</code><code class="descname">BatchImportSynchronizer</code><a class="headerlink" href="#openerp.addons.magentoerpconnect.unit.import_synchronizer.BatchImportSynchronizer" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <a class="reference internal" href="#openerp.addons.magentoerpconnect.unit.import_synchronizer.BatchImporter" title="openerp.addons.magentoerpconnect.unit.import_synchronizer.BatchImporter"><code class="xref py py-class docutils literal"><span class="pre">BatchImporter</span></code></a></p>
+<dd><p>alias of <a class="reference internal" href="#openerp.addons.magentoerpconnect.unit.import_synchronizer.BatchImporter" title="openerp.addons.magentoerpconnect.unit.import_synchronizer.BatchImporter"><code class="xref py py-class docutils literal notranslate"><span class="pre">openerp.addons.magentoerpconnect.unit.import_synchronizer.BatchImporter</span></code></a></p>
 </dd></dl>
 
 <dl class="class">
 <dt id="openerp.addons.magentoerpconnect.unit.import_synchronizer.BatchImporter">
 <em class="property">class </em><code class="descclassname">openerp.addons.magentoerpconnect.unit.import_synchronizer.</code><code class="descname">BatchImporter</code><span class="sig-paren">(</span><em>connector_env</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/openerp/addons/magentoerpconnect/unit/import_synchronizer.html#BatchImporter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#openerp.addons.magentoerpconnect.unit.import_synchronizer.BatchImporter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">openerp.addons.connector.unit.synchronizer.Importer</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">openerp.addons.connector.unit.synchronizer.Importer</span></code></p>
 <p>The role of a BatchImporter is to search for a list of
 items to import, then it can either import them directly or delay
 the import of each item separately.</p>
@@ -295,39 +317,39 @@ the import of each item separately.</p>
 <dl class="attribute">
 <dt id="openerp.addons.magentoerpconnect.unit.import_synchronizer.DelayedBatchImport">
 <code class="descclassname">openerp.addons.magentoerpconnect.unit.import_synchronizer.</code><code class="descname">DelayedBatchImport</code><a class="headerlink" href="#openerp.addons.magentoerpconnect.unit.import_synchronizer.DelayedBatchImport" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <a class="reference internal" href="#openerp.addons.magentoerpconnect.unit.import_synchronizer.DelayedBatchImporter" title="openerp.addons.magentoerpconnect.unit.import_synchronizer.DelayedBatchImporter"><code class="xref py py-class docutils literal"><span class="pre">DelayedBatchImporter</span></code></a></p>
+<dd><p>alias of <a class="reference internal" href="#openerp.addons.magentoerpconnect.unit.import_synchronizer.DelayedBatchImporter" title="openerp.addons.magentoerpconnect.unit.import_synchronizer.DelayedBatchImporter"><code class="xref py py-class docutils literal notranslate"><span class="pre">openerp.addons.magentoerpconnect.unit.import_synchronizer.DelayedBatchImporter</span></code></a></p>
 </dd></dl>
 
 <dl class="class">
 <dt id="openerp.addons.magentoerpconnect.unit.import_synchronizer.DelayedBatchImporter">
 <em class="property">class </em><code class="descclassname">openerp.addons.magentoerpconnect.unit.import_synchronizer.</code><code class="descname">DelayedBatchImporter</code><span class="sig-paren">(</span><em>connector_env</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/openerp/addons/magentoerpconnect/unit/import_synchronizer.html#DelayedBatchImporter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#openerp.addons.magentoerpconnect.unit.import_synchronizer.DelayedBatchImporter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#openerp.addons.magentoerpconnect.unit.import_synchronizer.BatchImporter" title="openerp.addons.magentoerpconnect.unit.import_synchronizer.BatchImporter"><code class="xref py py-class docutils literal"><span class="pre">openerp.addons.magentoerpconnect.unit.import_synchronizer.BatchImporter</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#openerp.addons.magentoerpconnect.unit.import_synchronizer.BatchImporter" title="openerp.addons.magentoerpconnect.unit.import_synchronizer.BatchImporter"><code class="xref py py-class docutils literal notranslate"><span class="pre">openerp.addons.magentoerpconnect.unit.import_synchronizer.BatchImporter</span></code></a></p>
 <p>Delay import of the records</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="openerp.addons.magentoerpconnect.unit.import_synchronizer.DirectBatchImport">
 <code class="descclassname">openerp.addons.magentoerpconnect.unit.import_synchronizer.</code><code class="descname">DirectBatchImport</code><a class="headerlink" href="#openerp.addons.magentoerpconnect.unit.import_synchronizer.DirectBatchImport" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <a class="reference internal" href="#openerp.addons.magentoerpconnect.unit.import_synchronizer.DirectBatchImporter" title="openerp.addons.magentoerpconnect.unit.import_synchronizer.DirectBatchImporter"><code class="xref py py-class docutils literal"><span class="pre">DirectBatchImporter</span></code></a></p>
+<dd><p>alias of <a class="reference internal" href="#openerp.addons.magentoerpconnect.unit.import_synchronizer.DirectBatchImporter" title="openerp.addons.magentoerpconnect.unit.import_synchronizer.DirectBatchImporter"><code class="xref py py-class docutils literal notranslate"><span class="pre">openerp.addons.magentoerpconnect.unit.import_synchronizer.DirectBatchImporter</span></code></a></p>
 </dd></dl>
 
 <dl class="class">
 <dt id="openerp.addons.magentoerpconnect.unit.import_synchronizer.DirectBatchImporter">
 <em class="property">class </em><code class="descclassname">openerp.addons.magentoerpconnect.unit.import_synchronizer.</code><code class="descname">DirectBatchImporter</code><span class="sig-paren">(</span><em>connector_env</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/openerp/addons/magentoerpconnect/unit/import_synchronizer.html#DirectBatchImporter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#openerp.addons.magentoerpconnect.unit.import_synchronizer.DirectBatchImporter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#openerp.addons.magentoerpconnect.unit.import_synchronizer.BatchImporter" title="openerp.addons.magentoerpconnect.unit.import_synchronizer.BatchImporter"><code class="xref py py-class docutils literal"><span class="pre">openerp.addons.magentoerpconnect.unit.import_synchronizer.BatchImporter</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#openerp.addons.magentoerpconnect.unit.import_synchronizer.BatchImporter" title="openerp.addons.magentoerpconnect.unit.import_synchronizer.BatchImporter"><code class="xref py py-class docutils literal notranslate"><span class="pre">openerp.addons.magentoerpconnect.unit.import_synchronizer.BatchImporter</span></code></a></p>
 <p>Import the records directly, without delaying the jobs.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="openerp.addons.magentoerpconnect.unit.import_synchronizer.MagentoImportSynchronizer">
 <code class="descclassname">openerp.addons.magentoerpconnect.unit.import_synchronizer.</code><code class="descname">MagentoImportSynchronizer</code><a class="headerlink" href="#openerp.addons.magentoerpconnect.unit.import_synchronizer.MagentoImportSynchronizer" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <a class="reference internal" href="#openerp.addons.magentoerpconnect.unit.import_synchronizer.MagentoImporter" title="openerp.addons.magentoerpconnect.unit.import_synchronizer.MagentoImporter"><code class="xref py py-class docutils literal"><span class="pre">MagentoImporter</span></code></a></p>
+<dd><p>alias of <a class="reference internal" href="#openerp.addons.magentoerpconnect.unit.import_synchronizer.MagentoImporter" title="openerp.addons.magentoerpconnect.unit.import_synchronizer.MagentoImporter"><code class="xref py py-class docutils literal notranslate"><span class="pre">openerp.addons.magentoerpconnect.unit.import_synchronizer.MagentoImporter</span></code></a></p>
 </dd></dl>
 
 <dl class="class">
 <dt id="openerp.addons.magentoerpconnect.unit.import_synchronizer.MagentoImporter">
 <em class="property">class </em><code class="descclassname">openerp.addons.magentoerpconnect.unit.import_synchronizer.</code><code class="descname">MagentoImporter</code><span class="sig-paren">(</span><em>connector_env</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/openerp/addons/magentoerpconnect/unit/import_synchronizer.html#MagentoImporter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#openerp.addons.magentoerpconnect.unit.import_synchronizer.MagentoImporter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">openerp.addons.connector.unit.synchronizer.Importer</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">openerp.addons.connector.unit.synchronizer.Importer</span></code></p>
 <p>Base importer for Magento</p>
 <dl class="method">
 <dt id="openerp.addons.magentoerpconnect.unit.import_synchronizer.MagentoImporter.run">
@@ -348,27 +370,28 @@ the import of each item separately.</p>
 <dl class="attribute">
 <dt id="openerp.addons.magentoerpconnect.unit.import_synchronizer.SimpleRecordImport">
 <code class="descclassname">openerp.addons.magentoerpconnect.unit.import_synchronizer.</code><code class="descname">SimpleRecordImport</code><a class="headerlink" href="#openerp.addons.magentoerpconnect.unit.import_synchronizer.SimpleRecordImport" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <a class="reference internal" href="#openerp.addons.magentoerpconnect.unit.import_synchronizer.SimpleRecordImporter" title="openerp.addons.magentoerpconnect.unit.import_synchronizer.SimpleRecordImporter"><code class="xref py py-class docutils literal"><span class="pre">SimpleRecordImporter</span></code></a></p>
+<dd><p>alias of <a class="reference internal" href="#openerp.addons.magentoerpconnect.unit.import_synchronizer.SimpleRecordImporter" title="openerp.addons.magentoerpconnect.unit.import_synchronizer.SimpleRecordImporter"><code class="xref py py-class docutils literal notranslate"><span class="pre">openerp.addons.magentoerpconnect.unit.import_synchronizer.SimpleRecordImporter</span></code></a></p>
 </dd></dl>
 
 <dl class="class">
 <dt id="openerp.addons.magentoerpconnect.unit.import_synchronizer.SimpleRecordImporter">
 <em class="property">class </em><code class="descclassname">openerp.addons.magentoerpconnect.unit.import_synchronizer.</code><code class="descname">SimpleRecordImporter</code><span class="sig-paren">(</span><em>connector_env</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/openerp/addons/magentoerpconnect/unit/import_synchronizer.html#SimpleRecordImporter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#openerp.addons.magentoerpconnect.unit.import_synchronizer.SimpleRecordImporter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#openerp.addons.magentoerpconnect.unit.import_synchronizer.MagentoImporter" title="openerp.addons.magentoerpconnect.unit.import_synchronizer.MagentoImporter"><code class="xref py py-class docutils literal"><span class="pre">openerp.addons.magentoerpconnect.unit.import_synchronizer.MagentoImporter</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#openerp.addons.magentoerpconnect.unit.import_synchronizer.MagentoImporter" title="openerp.addons.magentoerpconnect.unit.import_synchronizer.MagentoImporter"><code class="xref py py-class docutils literal notranslate"><span class="pre">openerp.addons.magentoerpconnect.unit.import_synchronizer.MagentoImporter</span></code></a></p>
 <p>Import one Magento Website</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="openerp.addons.magentoerpconnect.unit.import_synchronizer.TranslationImporter">
 <em class="property">class </em><code class="descclassname">openerp.addons.magentoerpconnect.unit.import_synchronizer.</code><code class="descname">TranslationImporter</code><span class="sig-paren">(</span><em>connector_env</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/openerp/addons/magentoerpconnect/unit/import_synchronizer.html#TranslationImporter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#openerp.addons.magentoerpconnect.unit.import_synchronizer.TranslationImporter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">openerp.addons.connector.unit.synchronizer.Importer</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">openerp.addons.connector.unit.synchronizer.Importer</span></code></p>
 <p>Import translations for a record.</p>
-<p>Usually called from importers, in <code class="docutils literal"><span class="pre">_after_import</span></code>.
+<p>Usually called from importers, in <code class="docutils literal notranslate"><span class="pre">_after_import</span></code>.
 For instance from the products and products’ categories importers.</p>
 <dl class="method">
 <dt id="openerp.addons.magentoerpconnect.unit.import_synchronizer.TranslationImporter.run">
 <code class="descname">run</code><span class="sig-paren">(</span><em>magento_id</em>, <em>binding_id</em>, <em>mapper_class=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/openerp/addons/magentoerpconnect/unit/import_synchronizer.html#TranslationImporter.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#openerp.addons.magentoerpconnect.unit.import_synchronizer.TranslationImporter.run" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Run the synchronization</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -390,7 +413,7 @@ For instance from the products and products’ categories importers.</p>
 <dl class="class">
 <dt id="openerp.addons.magentoerpconnect.unit.export_synchronizer.MagentoBaseExporter">
 <em class="property">class </em><code class="descclassname">openerp.addons.magentoerpconnect.unit.export_synchronizer.</code><code class="descname">MagentoBaseExporter</code><span class="sig-paren">(</span><em>connector_env</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/openerp/addons/magentoerpconnect/unit/export_synchronizer.html#MagentoBaseExporter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#openerp.addons.magentoerpconnect.unit.export_synchronizer.MagentoBaseExporter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">openerp.addons.connector.unit.synchronizer.Exporter</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">openerp.addons.connector.unit.synchronizer.Exporter</span></code></p>
 <p>Base exporter for Magento</p>
 <dl class="method">
 <dt id="openerp.addons.magentoerpconnect.unit.export_synchronizer.MagentoBaseExporter.run">
@@ -411,7 +434,7 @@ For instance from the products and products’ categories importers.</p>
 <dl class="class">
 <dt id="openerp.addons.magentoerpconnect.unit.export_synchronizer.MagentoExporter">
 <em class="property">class </em><code class="descclassname">openerp.addons.magentoerpconnect.unit.export_synchronizer.</code><code class="descname">MagentoExporter</code><span class="sig-paren">(</span><em>connector_env</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/openerp/addons/magentoerpconnect/unit/export_synchronizer.html#MagentoExporter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#openerp.addons.magentoerpconnect.unit.export_synchronizer.MagentoExporter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#openerp.addons.magentoerpconnect.unit.export_synchronizer.MagentoBaseExporter" title="openerp.addons.magentoerpconnect.unit.export_synchronizer.MagentoBaseExporter"><code class="xref py py-class docutils literal"><span class="pre">openerp.addons.magentoerpconnect.unit.export_synchronizer.MagentoBaseExporter</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#openerp.addons.magentoerpconnect.unit.export_synchronizer.MagentoBaseExporter" title="openerp.addons.magentoerpconnect.unit.export_synchronizer.MagentoBaseExporter"><code class="xref py py-class docutils literal notranslate"><span class="pre">openerp.addons.magentoerpconnect.unit.export_synchronizer.MagentoBaseExporter</span></code></a></p>
 <p>A common flow for the exports to Magento</p>
 </dd></dl>
 
@@ -427,13 +450,13 @@ For instance from the products and products’ categories importers.</p>
 <dl class="attribute">
 <dt id="openerp.addons.magentoerpconnect.unit.delete_synchronizer.MagentoDeleteSynchronizer">
 <code class="descclassname">openerp.addons.magentoerpconnect.unit.delete_synchronizer.</code><code class="descname">MagentoDeleteSynchronizer</code><a class="headerlink" href="#openerp.addons.magentoerpconnect.unit.delete_synchronizer.MagentoDeleteSynchronizer" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <a class="reference internal" href="#openerp.addons.magentoerpconnect.unit.delete_synchronizer.MagentoDeleter" title="openerp.addons.magentoerpconnect.unit.delete_synchronizer.MagentoDeleter"><code class="xref py py-class docutils literal"><span class="pre">MagentoDeleter</span></code></a></p>
+<dd><p>alias of <a class="reference internal" href="#openerp.addons.magentoerpconnect.unit.delete_synchronizer.MagentoDeleter" title="openerp.addons.magentoerpconnect.unit.delete_synchronizer.MagentoDeleter"><code class="xref py py-class docutils literal notranslate"><span class="pre">openerp.addons.magentoerpconnect.unit.delete_synchronizer.MagentoDeleter</span></code></a></p>
 </dd></dl>
 
 <dl class="class">
 <dt id="openerp.addons.magentoerpconnect.unit.delete_synchronizer.MagentoDeleter">
 <em class="property">class </em><code class="descclassname">openerp.addons.magentoerpconnect.unit.delete_synchronizer.</code><code class="descname">MagentoDeleter</code><span class="sig-paren">(</span><em>connector_env</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/openerp/addons/magentoerpconnect/unit/delete_synchronizer.html#MagentoDeleter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#openerp.addons.magentoerpconnect.unit.delete_synchronizer.MagentoDeleter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">openerp.addons.connector.unit.synchronizer.Deleter</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">openerp.addons.connector.unit.synchronizer.Deleter</span></code></p>
 <p>Base deleter for Magento</p>
 <dl class="method">
 <dt id="openerp.addons.magentoerpconnect.unit.delete_synchronizer.MagentoDeleter.run">
@@ -480,7 +503,7 @@ For instance from the products and products’ categories importers.</p>
     </p>
     <p>
         &copy; Copyright 2013-2015, Odoo Community Association (OCA).<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.1.<br/>
     </p>
   </div>
 </footer>

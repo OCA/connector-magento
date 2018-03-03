@@ -2,20 +2,12 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>openerp.addons.magentoerpconnect.partner_category &#8212; Odoo Magento Connector  documentation</title>
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../../../../',
-        VERSION:     '',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
+    <script type="text/javascript" src="../../../../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../../_static/doctools.js"></script>
@@ -42,8 +34,7 @@
 
 </script>
 
-  </head>
-  <body>
+  </head><body>
 
   <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -229,7 +220,18 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-12 content">
+      <div class="col-md-3">
+        <div id="sidebar" class="bs-sidenav" role="complementary">
+<form action="../../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+        </div>
+      </div>
+    <div class="col-md-9 content">
       
   <h1>Source code for openerp.addons.magentoerpconnect.partner_category</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
@@ -270,8 +272,8 @@
         <span class="n">comodel_name</span><span class="o">=</span><span class="s1">&#39;magento.res.partner.category&#39;</span><span class="p">,</span>
         <span class="n">inverse_name</span><span class="o">=</span><span class="s1">&#39;openerp_id&#39;</span><span class="p">,</span>
         <span class="n">string</span><span class="o">=</span><span class="s1">&#39;Magento Bindings&#39;</span><span class="p">,</span>
-        <span class="n">readonly</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-    <span class="p">)</span></div>
+        <span class="n">readonly</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span></div>
+    <span class="p">)</span>
 
 
 <div class="viewcode-block" id="MagentoResPartnerCategory"><a class="viewcode-back" href="../../../../api/api_partner_category.html#openerp.addons.magentoerpconnect.partner_category.MagentoResPartnerCategory">[docs]</a><span class="k">class</span> <span class="nc">MagentoResPartnerCategory</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
@@ -283,8 +285,8 @@
                                  <span class="n">string</span><span class="o">=</span><span class="s1">&#39;Partner Category&#39;</span><span class="p">,</span>
                                  <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                                  <span class="n">ondelete</span><span class="o">=</span><span class="s1">&#39;cascade&#39;</span><span class="p">)</span>
-    <span class="c1"># TODO : replace by a m2o when tax class will be implemented</span>
-    <span class="n">tax_class_id</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Integer</span><span class="p">(</span><span class="n">string</span><span class="o">=</span><span class="s1">&#39;Tax Class ID&#39;</span><span class="p">)</span></div>
+    <span class="c1"># TODO : replace by a m2o when tax class will be implemented</span></div>
+    <span class="n">tax_class_id</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Integer</span><span class="p">(</span><span class="n">string</span><span class="o">=</span><span class="s1">&#39;Tax Class ID&#39;</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="PartnerCategoryAdapter"><a class="viewcode-back" href="../../../../api/api_partner_category.html#openerp.addons.magentoerpconnect.partner_category.PartnerCategoryAdapter">[docs]</a><span class="nd">@magento</span>
@@ -300,14 +302,14 @@
 <span class="sd">        :rtype: list</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;customer_group_id&#39;</span><span class="p">])</span> <span class="k">for</span> <span class="n">row</span>
-                <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">.list&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_magento_model</span><span class="p">,</span>
-                              <span class="p">[</span><span class="n">filters</span><span class="p">]</span> <span class="k">if</span> <span class="n">filters</span> <span class="k">else</span> <span class="p">[{}])]</span></div></div>
+                <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">.list&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_magento_model</span><span class="p">,</span></div></div>
+                              <span class="p">[</span><span class="n">filters</span><span class="p">]</span> <span class="k">if</span> <span class="n">filters</span> <span class="k">else</span> <span class="p">[{}])]</span>
 
 
 <div class="viewcode-block" id="PartnerCategoryBatchImporter"><a class="viewcode-back" href="../../../../api/api_partner_category.html#openerp.addons.magentoerpconnect.partner_category.PartnerCategoryBatchImporter">[docs]</a><span class="nd">@magento</span>
 <span class="k">class</span> <span class="nc">PartnerCategoryBatchImporter</span><span class="p">(</span><span class="n">DelayedBatchImporter</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Delay import of the records &quot;&quot;&quot;</span>
-    <span class="n">_model_name</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;magento.res.partner.category&#39;</span><span class="p">]</span></div>
+    <span class="sd">&quot;&quot;&quot; Delay import of the records &quot;&quot;&quot;</span></div>
+    <span class="n">_model_name</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;magento.res.partner.category&#39;</span><span class="p">]</span>
 
 
 <span class="n">PartnerCategoryBatchImport</span> <span class="o">=</span> <span class="n">PartnerCategoryBatchImporter</span>  <span class="c1"># deprecated</span>
@@ -323,12 +325,12 @@
     <span class="p">]</span>
 
 <div class="viewcode-block" id="PartnerCategoryImportMapper.magento_id"><a class="viewcode-back" href="../../../../api/api_partner_category.html#openerp.addons.magentoerpconnect.partner_category.PartnerCategoryImportMapper.magento_id">[docs]</a>    <span class="nd">@mapping</span>
-    <span class="k">def</span> <span class="nf">magento_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;magento_id&#39;</span><span class="p">:</span> <span class="n">record</span><span class="p">[</span><span class="s1">&#39;customer_group_id&#39;</span><span class="p">]}</span></div>
+    <span class="k">def</span> <span class="nf">magento_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span></div>
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;magento_id&#39;</span><span class="p">:</span> <span class="n">record</span><span class="p">[</span><span class="s1">&#39;customer_group_id&#39;</span><span class="p">]}</span>
 
 <div class="viewcode-block" id="PartnerCategoryImportMapper.backend_id"><a class="viewcode-back" href="../../../../api/api_partner_category.html#openerp.addons.magentoerpconnect.partner_category.PartnerCategoryImportMapper.backend_id">[docs]</a>    <span class="nd">@mapping</span>
-    <span class="k">def</span> <span class="nf">backend_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;backend_id&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend_record</span><span class="o">.</span><span class="n">id</span><span class="p">}</span></div>
+    <span class="k">def</span> <span class="nf">backend_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span></div>
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;backend_id&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend_record</span><span class="o">.</span><span class="n">id</span><span class="p">}</span>
 
 <div class="viewcode-block" id="PartnerCategoryImportMapper.openerp_id"><a class="viewcode-back" href="../../../../api/api_partner_category.html#openerp.addons.magentoerpconnect.partner_category.PartnerCategoryImportMapper.openerp_id">[docs]</a>    <span class="nd">@only_create</span>
     <span class="nd">@mapping</span>
@@ -338,8 +340,8 @@
             <span class="p">[(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;=&#39;</span><span class="p">,</span> <span class="n">record</span><span class="p">[</span><span class="s1">&#39;customer_group_code&#39;</span><span class="p">])],</span>
             <span class="n">limit</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="k">if</span> <span class="n">existing</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;openerp_id&#39;</span><span class="p">:</span> <span class="n">existing</span><span class="o">.</span><span class="n">id</span><span class="p">}</span></div></div>
+        <span class="k">if</span> <span class="n">existing</span><span class="p">:</span></div></div>
+            <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;openerp_id&#39;</span><span class="p">:</span> <span class="n">existing</span><span class="o">.</span><span class="n">id</span><span class="p">}</span>
 </pre></div>
 
     </div>
@@ -357,7 +359,7 @@
     </p>
     <p>
         &copy; Copyright 2013-2015, Odoo Community Association (OCA).<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.1.<br/>
     </p>
   </div>
 </footer>
