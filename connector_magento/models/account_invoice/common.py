@@ -4,7 +4,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
 import logging
-import xmlrpclib
+import xmlrpc.client
 from odoo import api, models, fields
 from odoo.addons.component.core import Component
 from odoo.addons.queue_job.job import job, related_action
@@ -70,7 +70,7 @@ class AccountInvoiceAdapter(Component):
     def _call(self, method, arguments):
         try:
             return super(AccountInvoiceAdapter, self)._call(method, arguments)
-        except xmlrpclib.Fault as err:
+        except xmlrpc.client.Fault as err:
             # this is the error in the Magento API
             # when the invoice does not exist
             if err.faultCode == 100:
