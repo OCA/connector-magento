@@ -39,7 +39,8 @@ install:
   - travis_install_nightly
   - pip install magento
   - pip install beautifulsoup4
-  - pip install sphinx sphinx_bootstrap_theme sphinx-intl odoo-sphinx-autodoc
+  - pip install sphinx sphinx_bootstrap_theme sphinx-intl
+  - pip install -e git+https://github.com/OCA/odoo-sphinx-autodoc.git#egg=odoo-sphinx-autodoc
   - printf '[options]\n\nrunning_env = dev' > ${HOME}/.openerp_serverrc
 
 script:
