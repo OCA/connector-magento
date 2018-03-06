@@ -8,7 +8,7 @@ Magento Connector
 
 This is the new release of the Open-Source connector linking Odoo and
 Magento also known under the name of **Magentoerpconnect**.  It is
-build on top of the `connector`_ framework. It is is structured so that
+build on top of the `connector`_ framework. It is structured so that
 it can be extended or modified easily from separate addons, a factor of
 success when the implementations of Magento vary a lot.
 
