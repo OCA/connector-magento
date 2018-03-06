@@ -10,7 +10,7 @@
 Helpers usable in the tests
 """
 
-import xmlrpclib
+import xmlrpc.client
 import logging
 
 import mock
@@ -50,7 +50,7 @@ class MockResponseImage(object):
 
 @contextmanager
 def mock_urlopen_image():
-    with mock.patch('urllib2.urlopen') as urlopen:
+    with mock.patch('urllib.request.urlopen') as urlopen:
         urlopen.return_value = MockResponseImage('')
         yield
 
@@ -141,7 +141,7 @@ class MagentoTestCase(SavepointComponentCase):
             yield delayable_cls, delayable
 
     def parse_cassette_request(self, body):
-        args, __ = xmlrpclib.loads(body)
+        args, __ = xmlrpc.client.loads(body)
         # the first argument is a hash, we don't mind
         return args[1:]
 
@@ -213,7 +213,7 @@ class MagentoTestCase(SavepointComponentCase):
         equals = []
         for expected in expected_records:
             for record in records:
-                for field, value in expected._asdict().iteritems():
+                for field, value in list(expected._asdict().items()):
                     if not getattr(record, field) == value:
                         break
                 else:
@@ -226,32 +226,32 @@ class MagentoTestCase(SavepointComponentCase):
         for record in equals:
             # same records
             message.append(
-                u' ✓ {}({})'.format(
+                ' ✓ {}({})'.format(
                     model_name,
-                    u', '.join(u'%s: %s' % (field, getattr(record, field)) for
-                               field in fields)
+                    ', '.join('%s: %s' % (field, getattr(record, field)) for
+                              field in fields)
                 )
             )
         for expected in not_found:
             # missing records
             message.append(
-                u' - {}({})'.format(
+                ' - {}({})'.format(
                     model_name,
-                    u', '.join(u'%s: %s' % (k, v) for
-                               k, v in expected._asdict().iteritems())
+                    ', '.join('%s: %s' % (k, v) for
+                              k, v in list(expected._asdict().items()))
                 )
             )
         for record in records:
             # extra records
             message.append(
-                u' + {}({})'.format(
+                ' + {}({})'.format(
                     model_name,
-                    u', '.join(u'%s: %s' % (field, getattr(record, field)) for
-                               field in fields)
+                    ', '.join('%s: %s' % (field, getattr(record, field)) for
+                              field in fields)
                 )
             )
         if not_found or records:
-            raise AssertionError(u'Records do not match:\n\n{}'.format(
+            raise AssertionError('Records do not match:\n\n{}'.format(
                 '\n'.join(message)
             ))
 

@@ -4,7 +4,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 import logging
-import xmlrpclib
+import xmlrpc.client
 
 from collections import defaultdict
 
@@ -19,7 +19,7 @@ _logger = logging.getLogger(__name__)
 
 
 def chunks(items, length):
-    for index in xrange(0, len(items), length):
+    for index in range(0, len(items), length):
         yield items[index:index + length]
 
 
@@ -113,7 +113,7 @@ class MagentoProductProduct(models.Model):
         for product in self:
             backends[product.backend_id].add(product.id)
 
-        for backend, product_ids in backends.iteritems():
+        for backend, product_ids in list(backends.items()):
             self._recompute_magento_qty_backend(backend,
                                                 self.browse(product_ids))
         return True
@@ -189,7 +189,7 @@ class ProductProductAdapter(Component):
     def _call(self, method, arguments):
         try:
             return super(ProductProductAdapter, self)._call(method, arguments)
-        except xmlrpclib.Fault as err:
+        except xmlrpc.client.Fault as err:
             # this is the error in the Magento API
             # when the product does not exist
             if err.faultCode == 101:

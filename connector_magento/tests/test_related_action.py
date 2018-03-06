@@ -33,7 +33,7 @@ class TestRelatedActionStorage(MagentoSyncTestCase):
             'res_id': product.id,
             'res_model': 'product.product',
         }
-        self.assertEquals(stored.open_related_action(), expected)
+        self.assertEqual(stored.open_related_action(), expected)
 
     def test_link(self):
         """ Open a related action opening an url on Magento """
@@ -49,7 +49,7 @@ class TestRelatedActionStorage(MagentoSyncTestCase):
             'target': 'new',
             'url': url,
         }
-        self.assertEquals(stored.open_related_action(), expected)
+        self.assertEqual(stored.open_related_action(), expected)
 
     def test_link_no_location(self):
         """ Related action opening an url, admin location is not configured """
@@ -59,5 +59,5 @@ class TestRelatedActionStorage(MagentoSyncTestCase):
         )
         stored = job.db_record()
         msg = r'No admin URL configured.*'
-        with self.assertRaisesRegexp(exceptions.UserError, msg):
+        with self.assertRaisesRegex(exceptions.UserError, msg):
             stored.open_related_action()

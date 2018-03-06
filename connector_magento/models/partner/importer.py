@@ -249,7 +249,6 @@ class BaseAddressImportMapper(AbstractComponent):
     direct = [('postcode', 'zip'),
               ('city', 'city'),
               ('telephone', 'phone'),
-              ('fax', 'fax'),
               ('company', 'company'),
               ]
 
@@ -284,7 +283,7 @@ class BaseAddressImportMapper(AbstractComponent):
         if len(lines) == 1:
             result = {'street': lines[0], 'street2': False}
         elif len(lines) >= 2:
-            result = {'street': lines[0], 'street2': u' - '.join(lines[1:])}
+            result = {'street': lines[0], 'street2': ' - '.join(lines[1:])}
         else:
             result = {}
         return result

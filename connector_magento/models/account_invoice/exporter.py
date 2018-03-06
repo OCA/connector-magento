@@ -4,7 +4,7 @@
 
 import logging
 
-import xmlrpclib
+import xmlrpc.client
 
 from odoo import _
 from odoo.addons.component.core import Component
@@ -70,7 +70,7 @@ class MagentoInvoiceExporter(Component):
             external_id = self._export_invoice(magento_order.external_id,
                                                lines_info,
                                                mail_notification)
-        except xmlrpclib.Fault as err:
+        except xmlrpc.client.Fault as err:
             # When the invoice is already created on Magento, it returns:
             # <Fault 102: 'Cannot do invoice for order.'>
             # We'll search the Magento invoice ID to store it in Odoo

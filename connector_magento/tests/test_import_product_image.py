@@ -2,7 +2,9 @@
 # Copyright 2015-2017 Camptocamp SA
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
-import urllib2
+import urllib.request
+import urllib.error
+import urllib.parse
 import mock
 from base64 import b64encode
 
@@ -27,7 +29,7 @@ PNG_IMG_4PX_GREEN = ("\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x04"
                      "\x00\x00\x00\x19tEXtComment\x00Created with GIMPW\x81"
                      "\x0e\x17\x00\x00\x00\x12IDAT\x08\xd7cd\xf8\xcf\x00\x07L"
                      "\x0c\x0c\xc4p\x002\xd2\x01\x07\xce\xee\xd0\xcf\x00\x00"
-                     "\x00\x00IEND\xaeB`\x82")
+                     "\x00\x00IEND\xaeB`\x82".encode('utf-8'))
 B64_PNG_IMG_4PX_GREEN = b64encode(PNG_IMG_4PX_GREEN)
 
 
@@ -120,8 +122,8 @@ class TestImportProductImage(TransactionComponentRegistryCase):
         file3 = {'file': 'file3', 'types': ['thumbnail'], 'position': '4'}
         file4 = {'file': 'file4', 'types': [], 'position': '10'}
         images = [file2, file1, file4, file3]
-        self.assertEquals(self.image_importer._sort_images(images),
-                          [file4, file3, file2, file1])
+        self.assertEqual(self.image_importer._sort_images(images),
+                         [file4, file3, file2, file1])
 
     def test_import_images_404(self):
         """ An image responds a 404 error, skip and take the first valid """
@@ -137,10 +139,10 @@ class TestImportProductImage(TransactionComponentRegistryCase):
         )
         binding.with_context.return_value = binding_no_export
 
-        with mock.patch('urllib2.urlopen') as urlopen:
+        with mock.patch('urllib.request.urlopen') as urlopen:
             def image_url_response(url):
-                if url._Request__original in (url_tee1, url_tee2):
-                    raise urllib2.HTTPError(url, 404, '404', None, None)
+                if url.full_url in (url_tee1, url_tee2):
+                    raise urllib.error.HTTPError(url, 404, '404', None, None)
                 else:
                     return MockResponseImage(PNG_IMG_4PX_GREEN)
             urlopen.side_effect = image_url_response
@@ -162,16 +164,16 @@ class TestImportProductImage(TransactionComponentRegistryCase):
                     '/i/n/ink-eater-krylon-bombear-destroyed-tee-1.jpg')
         url_tee2 = ('http://localhost:9100/media/catalog/product/'
                     'i/n/ink-eater-krylon-bombear-destroyed-tee-2.jpg')
-        with mock.patch('urllib2.urlopen') as urlopen:
+        with mock.patch('urllib.request.urlopen') as urlopen:
             def image_url_response(url):
                 url = url.get_full_url()
                 if url == url_tee2:
-                    raise urllib2.HTTPError(url, 404, '404', None, None)
+                    raise urllib.error.HTTPError(url, 404, '404', None, None)
                 elif url == url_tee1:
-                    raise urllib2.HTTPError(url, 403, '403', None, None)
+                    raise urllib.error.HTTPError(url, 403, '403', None, None)
                 else:
                     return MockResponseImage(PNG_IMG_4PX_GREEN)
 
             urlopen.side_effect = image_url_response
-            with self.assertRaises(urllib2.HTTPError):
+            with self.assertRaises(urllib.error.HTTPError):
                 self.image_importer.run(122, binding)

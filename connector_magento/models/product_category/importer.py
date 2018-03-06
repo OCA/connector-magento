@@ -39,7 +39,7 @@ class ProductCategoryBatchImporter(Component):
         base_priority = 10
 
         def import_nodes(tree, level=0):
-            for node_id, children in tree.iteritems():
+            for node_id, children in list(tree.items()):
                 # By changing the priority, the top level category has
                 # more chance to be imported before the childrens.
                 # However, importers have to ensure that their parent is

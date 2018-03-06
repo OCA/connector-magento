@@ -13,9 +13,9 @@
             <field name="interval_type">days</field>
             <field name="numbercall">-1</field>
             <field eval="False" name="doall"/>
-            <field eval="'magento.backend'" name="model"/>
-            <field eval="'_scheduler_import_sale_orders'" name="function"/>
-            <field eval="'()'" name="args"/>
+            <field ref="connector_magento.model_magento_backend" name="model_id"/>
+            <field name="state">code</field>
+            <field name="code">model._scheduler_import_sale_orders()</field>
         </record>
 
         <record model="ir.cron" id="ir_cron_import_customer_groups" forcecreate="True">
@@ -26,9 +26,9 @@
             <field name="interval_type">days</field>
             <field name="numbercall">-1</field>
             <field eval="False" name="doall"/>
-            <field eval="'magento.backend'" name="model"/>
-            <field eval="'_scheduler_import_customer_groups'" name="function"/>
-            <field eval="'()'" name="args"/>
+            <field ref="connector_magento.model_magento_backend" name="model_id"/>
+            <field name="state">code</field>
+            <field name="code">model._scheduler_import_customer_groups()</field>
         </record>
 
         <record model="ir.cron" id="ir_cron_import_partners" forcecreate="True">
@@ -39,9 +39,9 @@
             <field name="interval_type">days</field>
             <field name="numbercall">-1</field>
             <field eval="False" name="doall"/>
-            <field eval="'magento.backend'" name="model"/>
-            <field eval="'_scheduler_import_partners'" name="function"/>
-            <field eval="'()'" name="args"/>
+            <field ref="connector_magento.model_magento_backend" name="model_id"/>
+            <field name="state">code</field>
+            <field name="code">model._scheduler_import_partners()</field>
         </record>
 
         <record model="ir.cron" id="ir_cron_import_product_categories" forcecreate="True">
@@ -52,11 +52,11 @@
             <field name="interval_type">days</field>
             <field name="numbercall">-1</field>
             <field eval="False" name="doall"/>
-            <field eval="'magento.backend'" name="model"/>
-            <field eval="'_scheduler_import_product_categories'" name="function"/>
-            <field eval="'()'" name="args"/>
+            <field ref="connector_magento.model_magento_backend" name="model_id"/>
+            <field name="state">code</field>
+            <field name="code">model._scheduler_import_product_categories()</field>
         </record>
-        
+
         <record model="ir.cron" id="ir_cron_import_product_product" forcecreate="True">
             <field name="name">Magento -  Import Products</field>
             <field eval="False" name="active"/>
@@ -65,9 +65,9 @@
             <field name="interval_type">days</field>
             <field name="numbercall">-1</field>
             <field eval="False" name="doall"/>
-            <field eval="'magento.backend'" name="model"/>
-            <field eval="'_scheduler_import_product_product'" name="function"/>
-            <field eval="'()'" name="args"/>
+            <field ref="connector_magento.model_magento_backend" name="model_id"/>
+            <field name="state">code</field>
+            <field name="code">model._scheduler_import_product_product()</field>
         </record>
 
         <record model="ir.cron" id="ir_cron_update_product_stock_qty" forcecreate="True">
@@ -78,9 +78,9 @@
             <field name="interval_type">hours</field>
             <field name="numbercall">-1</field>
             <field eval="False" name="doall"/>
-            <field eval="'magento.backend'" name="model"/>
-            <field eval="'_scheduler_update_product_stock_qty'" name="function"/>
-            <field eval="'()'" name="args"/>
+            <field ref="connector_magento.model_magento_backend" name="model_id"/>
+            <field name="state">code</field>
+            <field name="code">model._scheduler_update_product_stock_qty()</field>
         </record>
 
         <record id="excep_wrong_total_amount" model="exception.rule">

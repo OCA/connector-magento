@@ -69,7 +69,7 @@ class TestImportPartner(MagentoSyncTestCase):
                                      ('backend_id', '=', self.backend.id)])
         self.assertEqual(len(partner), 1)
         # Name of the billing address
-        self.assertEqual(partner.name, u'Tay Ray')
+        self.assertEqual(partner.name, 'Tay Ray')
         self.assertEqual(partner.type, 'contact')
         # billing address merged with the partner,
         # second address as a contact
@@ -158,7 +158,7 @@ class TestImportPartner(MagentoSyncTestCase):
                                      ('backend_id', '=', self.backend.id)])
         self.assertEqual(len(partner), 1)
         # Name of the billing address
-        self.assertEqual(partner.name, u'Tay Ray')
+        self.assertEqual(partner.name, 'Tay Ray')
         self.assertEqual(partner.type, 'contact')
         # billing address merged with the partner,
         # second address as a contact

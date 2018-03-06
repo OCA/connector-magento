@@ -42,7 +42,7 @@ class TestExportInvoice(MagentoSyncTestCase):
             self._invoice_open()
             self.assertEqual(self.invoice.state, 'open')
 
-            self.assertEquals(len(self.invoice.magento_bind_ids), 1)
+            self.assertEqual(len(self.invoice.magento_bind_ids), 1)
 
             self.assertEqual(1, delayable_cls.call_count)
             delay_args, delay_kwargs = delayable_cls.call_args
@@ -73,7 +73,7 @@ class TestExportInvoice(MagentoSyncTestCase):
             self._pay_and_reconcile()
 
             self.assertEqual(self.invoice.state, 'paid')
-            self.assertEquals(len(self.invoice.magento_bind_ids), 1)
+            self.assertEqual(len(self.invoice.magento_bind_ids), 1)
 
             self.assertEqual(1, delayable_cls.call_count)
 
@@ -93,7 +93,7 @@ class TestExportInvoice(MagentoSyncTestCase):
             self._invoice_open()
             self.assertEqual(self.invoice.state, 'open')
 
-            self.assertEquals(len(self.invoice.magento_bind_ids), 1)
+            self.assertEqual(len(self.invoice.magento_bind_ids), 1)
 
             self.assertEqual(1, delayable_cls.call_count)
             delay_args, delay_kwargs = delayable_cls.call_args
@@ -124,7 +124,7 @@ class TestExportInvoice(MagentoSyncTestCase):
             self._pay_and_reconcile()
             self.assertEqual(self.invoice.state, 'paid')
 
-            self.assertEquals(len(self.invoice.magento_bind_ids), 1)
+            self.assertEqual(len(self.invoice.magento_bind_ids), 1)
 
             self.assertEqual(1, delayable_cls.call_count)
 
@@ -154,7 +154,7 @@ class TestExportInvoice(MagentoSyncTestCase):
             self._invoice_open()
 
         invoice_binding = self.invoice.magento_bind_ids
-        self.assertEquals(len(invoice_binding), 1)
+        self.assertEqual(len(invoice_binding), 1)
 
         with recorder.use_cassette(
                 'test_export_invoice') as cassette:
