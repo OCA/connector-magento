@@ -324,7 +324,7 @@ class TranslationImporter(Component):
         for storeview in lang2storeview.values():
             lang_record = self._get_magento_data(storeview)
             map_record = mapper.map_record(lang_record)
-            record = map_record.values()
+            record = list(map_record.values())
 
             data = dict((field, value) for field, value in list(record.items())
                         if field in translatable_fields)
