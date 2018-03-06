@@ -4,7 +4,7 @@
 
 import socket
 import logging
-import xmlrpclib
+import xmlrpc.client
 
 from odoo.addons.component.core import AbstractComponent
 from odoo.addons.queue_job.exception import RetryableJobError
@@ -90,7 +90,7 @@ class MagentoAPI(object):
             start = datetime.now()
             try:
                 result = self.api.call(method, arguments)
-            except:
+            except Exception:
                 _logger.error("api.call('%s', %s) failed", method, arguments)
                 raise
             else:
@@ -104,7 +104,7 @@ class MagentoAPI(object):
             raise NetworkRetryableError(
                 'A network error caused the failure of the job: '
                 '%s' % err)
-        except xmlrpclib.ProtocolError as err:
+        except xmlrpc.client.ProtocolError as err:
             if err.errcode in [502,   # Bad gateway
                                503,   # Service unavailable
                                504]:  # Gateway timeout
