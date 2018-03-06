@@ -4,7 +4,9 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
 import logging
-import urllib2
+import urllib.request
+import urllib.error
+import urllib.parse
 import base64
 import sys
 
@@ -78,17 +80,20 @@ class CatalogImageImporter(Component):
         return sorted(images, key=priority)
 
     def _get_binary_image(self, image_data):
-        url = image_data['url'].encode('utf8')
+        url = image_data['url']
         try:
-            request = urllib2.Request(url)
+            request = urllib.request.Request(url)
             if self.backend_record.auth_basic_username \
                     and self.backend_record.auth_basic_password:
                 base64string = base64.b64encode(
-                    '%s:%s' % (self.backend_record.auth_basic_username,
-                               self.backend_record.auth_basic_password))
-                request.add_header("Authorization", "Basic %s" % base64string)
-            binary = urllib2.urlopen(request)
-        except urllib2.HTTPError as err:
+                    ("%s:%s" % (self.backend_record.auth_basic_username,
+                                self.backend_record.auth_basic_password)
+                     ).encode('utf-8')
+                )
+                request.add_header("Authorization", "Basic %s" % (
+                    base64string.decode('utf-8')))
+            binary = urllib.request.urlopen(request)
+        except urllib.error.HTTPError as err:
             if err.code == 404:
                 # the image is just missing, we skip it
                 return

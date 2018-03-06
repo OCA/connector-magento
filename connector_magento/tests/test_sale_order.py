@@ -43,8 +43,7 @@ class TestSaleOrder(MagentoSyncTestCase):
         prod2 = self.env['magento.product.product'].search(
             [('external_id', '=', 302), ('backend_id', '=', self.backend.id)]
         )
-        ship = self.env['product.product'].search([('name', '=', 'ups_GND')])
-
+        ship = binding.carrier_id.product_id
         expected = [
             ExpectedOrderLine(
                 product_id=prod1.odoo_id,
@@ -60,7 +59,7 @@ class TestSaleOrder(MagentoSyncTestCase):
             ),
             ExpectedOrderLine(
                 product_id=ship,
-                name='ups_GND',
+                name='Shipping Costs',
                 price_unit=12.31,
                 product_uom_qty=1.,
             ),
@@ -139,7 +138,7 @@ class TestSaleOrder(MagentoSyncTestCase):
         backend models (backend, wesite, store and storeview)
         """
         binding = self._import_sale_order(100000201)
-        self.assertFalse(binding.project_id)
+        self.assertFalse(binding.analytic_account_id)
         self.assertFalse(binding.fiscal_position_id)
         # keep a reference to backend models the website
         storeview_id = binding.storeview_id
@@ -154,8 +153,8 @@ class TestSaleOrder(MagentoSyncTestCase):
         self.backend.account_analytic_id = account_analytic_id
         self.backend.fiscal_position_id = fp1.id
         binding = self._import_sale_order(100000201)
-        self.assertEquals(binding.project_id, account_analytic_id)
-        self.assertEquals(binding.fiscal_position_id, fp1)
+        self.assertEqual(binding.analytic_account_id, account_analytic_id)
+        self.assertEqual(binding.fiscal_position_id, fp1)
         binding.odoo_id.unlink()
         binding.unlink()
         # define options at the website level
@@ -165,8 +164,8 @@ class TestSaleOrder(MagentoSyncTestCase):
         website_id.specific_account_analytic_id = account_analytic_id
         website_id.specific_fiscal_position_id = fp2.id
         binding = self._import_sale_order(100000201)
-        self.assertEquals(binding.project_id, account_analytic_id)
-        self.assertEquals(binding.fiscal_position_id, fp2)
+        self.assertEqual(binding.analytic_account_id, account_analytic_id)
+        self.assertEqual(binding.fiscal_position_id, fp2)
         binding.odoo_id.unlink()
         binding.unlink()
         # define options at the store level
@@ -176,8 +175,8 @@ class TestSaleOrder(MagentoSyncTestCase):
         store_id.specific_account_analytic_id = account_analytic_id
         store_id.specific_fiscal_position_id = fp3.id
         binding = self._import_sale_order(100000201)
-        self.assertEquals(binding.project_id, account_analytic_id)
-        self.assertEquals(binding.fiscal_position_id, fp3)
+        self.assertEqual(binding.analytic_account_id, account_analytic_id)
+        self.assertEqual(binding.fiscal_position_id, fp3)
         binding.odoo_id.unlink()
         binding.unlink()
         # define options at the storeview level
@@ -187,8 +186,8 @@ class TestSaleOrder(MagentoSyncTestCase):
         storeview_id.specific_account_analytic_id = account_analytic_id
         storeview_id.specific_fiscal_position_id = fp4.id
         binding = self._import_sale_order(100000201)
-        self.assertEquals(binding.project_id, account_analytic_id)
-        self.assertEquals(binding.fiscal_position_id, fp4)
+        self.assertEqual(binding.analytic_account_id, account_analytic_id)
+        self.assertEqual(binding.fiscal_position_id, fp4)
 
     def test_sale_order_cancel_delay_job(self):
         """ Cancel an order, delay a cancel job """

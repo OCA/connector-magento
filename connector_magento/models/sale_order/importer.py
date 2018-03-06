@@ -220,7 +220,8 @@ class SaleOrderImportMapper(Component):
         amount = float(record['customer_balance_amount'])
         if amount == 0.0:
             return values
-        line_builder = self.component(usage='order.line.builder.magento.store_credit')
+        line_builder = self.component(
+            usage='order.line.builder.magento.store_credit')
         line_builder.price_unit = amount
         line = (0, 0, line_builder.get_line())
         values['order_line'].append(line)
@@ -233,7 +234,8 @@ class SaleOrderImportMapper(Component):
         amount = float(record['reward_currency_amount'])
         if amount == 0.0:
             return values
-        line_builder = self.component(usage='order.line.builder.magento.rewards')
+        line_builder = self.component(
+            usage='order.line.builder.magento.rewards')
         line_builder.price_unit = amount
         line = (0, 0, line_builder.get_line())
         values['order_line'].append(line)
@@ -316,10 +318,10 @@ class SaleOrderImportMapper(Component):
             return {'team_id': team.id}
 
     @mapping
-    def project_id(self, record):
-        project_id = self.options.storeview.account_analytic_id
-        if project_id:
-            return {'project_id': project_id.id}
+    def analytic_account_id(self, record):
+        analytic_account_id = self.options.storeview.account_analytic_id
+        if analytic_account_id:
+            return {'analytic_account_id': analytic_account_id.id}
 
     @mapping
     def fiscal_position(self, record):
