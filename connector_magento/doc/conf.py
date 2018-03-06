@@ -131,8 +131,8 @@ autodoc_member_order = 'bysource'
 master_doc = 'index'
 
 # General information about the project.
-project = u'Odoo Magento Connector'
-copyright = u'2013-2015, Odoo Community Association (OCA)'
+project = 'Odoo Magento Connector'
+copyright = '2013-2015, Odoo Community Association (OCA)'
 
 # The version info for the project you're documenting, acts as
 # replacement for |version| and |release|, also used in various other
@@ -320,8 +320,8 @@ latex_elements = {
 # start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
     ('index', 'odoo-magento-connector.tex',
-     u'Odoo Magento Connector Documentation',
-     u'Odoo Community Association (OCA)', 'manual'),
+     'Odoo Magento Connector Documentation',
+     'Odoo Community Association (OCA)', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the
@@ -351,8 +351,8 @@ latex_documents = [
 # (source start file, name, description, authors, manual section).
 man_pages = [
     ('index', 'odoo-magento-connector',
-     u'Odoo Magento Connector Documentation',
-     [u'Odoo Community Association (OCA)'], 1)
+     'Odoo Magento Connector Documentation',
+     ['Odoo Community Association (OCA)'], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -366,8 +366,8 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
     ('index', 'Odoo Magento Connector',
-     u'Odoo Magento Connector Documentation',
-     u'Odoo Community Association (OCA)', 'Odoo Magento Connector',
+     'Odoo Magento Connector Documentation',
+     'Odoo Community Association (OCA)', 'Odoo Magento Connector',
      'Connector between Odoo and Magento',
      'Miscellaneous'),
 ]

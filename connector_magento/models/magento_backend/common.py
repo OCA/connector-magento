@@ -11,7 +11,7 @@ from datetime import datetime, timedelta
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 
-from odoo.addons.connector.checkpoint import checkpoint
+from odoo.addons.connector.models.checkpoint import add_checkpoint
 from ...components.backend_adapter import MagentoLocation, MagentoAPI
 
 _logger = logging.getLogger(__name__)
@@ -42,6 +42,7 @@ class MagentoBackend(models.Model):
             limit=1)
         return field
 
+    name = fields.Char(string='Name', required=True)
     version = fields.Selection(selection='select_versions', required=True)
     location = fields.Char(
         string='Location',
@@ -213,8 +214,8 @@ class MagentoBackend(models.Model):
     def add_checkpoint(self, record):
         self.ensure_one()
         record.ensure_one()
-        return checkpoint.add_checkpoint(self.env, record._name, record.id,
-                                         self._name, self.id)
+        return add_checkpoint(self.env, record._name, record.id,
+                              self._name, self.id)
 
     @api.multi
     def synchronize_metadata(self):
@@ -231,8 +232,8 @@ class MagentoBackend(models.Model):
         except Exception as e:
             _logger.error(e.message, exc_info=True)
             raise UserError(
-                _(u"Check your configuration, we can't get the data. "
-                  u"Here is the error:\n%s") %
+                _("Check your configuration, we can't get the data. "
+                  "Here is the error:\n%s") %
                 str(e).decode('utf-8', 'ignore'))
 
     @api.multi

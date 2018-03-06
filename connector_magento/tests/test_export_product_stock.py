@@ -83,8 +83,8 @@ class TestUpdateStockQty(MagentoSyncTestCase):
             'location_id': self.env.ref('stock.stock_location_stock').id,
             'location_dest_id': customer_location.id,
         })
-        outgoing.action_confirm()
-        outgoing.action_assign()
+        outgoing._action_confirm()
+        outgoing._action_assign()
 
         # the virtual is now 19, available still 30
         self.assertEqual(product.qty_available, 30.0)
@@ -145,9 +145,12 @@ class TestUpdateStockQty(MagentoSyncTestCase):
             self.assertEqual((self.binding_product,), delay_args)
             self.assertEqual(20, delay_kwargs.get('priority'))
 
-            delayable.export_inventory.assert_called_with(
-                fields=['backorders', 'magento_qty', 'manage_stock'],
-            )
+            cargs, ckwargs = delayable.export_inventory.call_args
+            self.assertFalse(cargs)
+            self.assertEqual(set(ckwargs.keys()), set(['fields']))
+            self.assertEqual(
+                set(ckwargs['fields']), set([
+                    'manage_stock', 'backorders', 'magento_qty']))
 
     def test_export_product_inventory_write_job(self):
         with self.mock_with_delay():
