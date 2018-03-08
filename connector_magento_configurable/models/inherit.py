@@ -17,26 +17,13 @@ class MagentoBackend(models.Model):
 
     @api.multi
     def import_product_configurable(self):
-        self._import_from_date('magento.product.configurable',
+        self._import_from_date('magento.product.template',
                                'import_configurables_from_date')
         return True
 
     @api.model
     def _scheduler_import_product_configurable(self, domain=None):
         self._magento_backend('import_product_configurable', domain=domain)
-
-
-class ProductImporter(Component):
-    _inherit = 'magento.product.product.importer'
-
-    """
-        Returns None if the product_type is configurable
-        So that it is not skipped
-    """
-    def _must_skip(self):
-        res = super(ProductImporter, self)._must_skip()
-        if self.magento_record['type_id'] != 'configurable':
-            return res
 
 
 class ProductImportMapper(Component):
@@ -47,22 +34,23 @@ class ProductImportMapper(Component):
         return {'magento_is_configurable': record['type_id'] == 'configurable'}
 
 
-class MagentoProductProduct(models.Model):
-    _inherit = 'magento.product.product'
+# class MagentoProductProduct(models.Model):
+#     _inherit = 'magento.product.product'
 
-    transformed_at = fields.Date(
-        'Transformed At (from simple to templated product)'
-    )
+#     transformed_at = fields.Date(
+#         'Transformed At (from simple to templated product)'
+#     )
 
-    magento_is_configurable = fields.Boolean(
-        'True if the product is a configurable (the parent)'
-    )
+#     magento_is_configurable = fields.Boolean(
+#         'True if the product is a configurable (the parent)'
+#     )
 
 
 class MagentoConfigurableModelBinder(Component):
     _name = 'magento.configurable.binder'
     _inherit = 'magento.binder'
     _apply_on = [
+        'magento.product.template',
         'magento.product.attribute',
         'magento.product.attribute.value',
         'magento.product.attribute.line',
