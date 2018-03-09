@@ -6,28 +6,6 @@ from odoo.addons.component.core import Component
 from odoo.addons.connector.components.mapper import mapping, only_create
 
 
-class ProductAttributeBatchImporter(Component):
-    """ Import the Magento Product Attributes.
-    """
-    _name = 'magento.product.attribute.batch.importer'
-    _inherit = 'magento.direct.batch.importer'
-    _apply_on = ['magento.product.attribute']
-
-    def get_updated_attributes(self, record):
-        """
-            allows to easily override the field used (eg. external_id
-            instead of defaul_code)
-        """
-        return self.backend_adapter.list_attributes(record.external_id)
-
-    def run(self, filters=None):
-        """ Run the synchronization """
-        record = filters['record']
-        updated_attributes = self.get_updated_attributes(record)
-        for attribute in updated_attributes:
-            self._import_record(attribute)
-
-
 class ProductAttributeImporter(Component):
     _name = 'magento.product.attribute.importer'
     _inherit = 'magento.importer'
@@ -41,15 +19,24 @@ class ProductAttributeImporter(Component):
         """
         return self.magento_record
 
+    def _update(self, binding, data):
+        # Check if a field is different before updating
+        modified = False
+        for field in data.keys():
+            if data[field] != binding[field]:
+                modified = True
+                break
+        if modified:
+            super(ProductAttributeImporter, self)._update(binding, data)
+
     def _after_import(self, binding):
-        self.env['magento.product.attribute.value'].import_batch(
-            self.backend_record,
-            {
-                'values': self.magento_record['values'],
-                'magento_attribute': binding,
-                'product_id': self.magento_record['product_id'],
-            }
-        )
+        value_importer = self.component(
+            usage='record.importer',
+            model_name='magento.product.attribute.value')
+        for value in self.magento_record['values']:
+            value.update({'magento_attribute': binding,
+                          'product_id': self.magento_record['product_id']})
+            value_importer.run(value)
 
     def run(self, magento_record, force=False):
         self.magento_record = magento_record

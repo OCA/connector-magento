@@ -7,23 +7,6 @@ from odoo.addons.connector.components.mapper import mapping
 from odoo.addons.connector.exception import MappingError
 
 
-class ProductAttributePriceBatchImporter(Component):
-    """ Import the Magento Product Attributes.
-    """
-    _name = 'magento.product.attribute.price.batch.importer'
-    _inherit = 'magento.direct.batch.importer'
-    _apply_on = ['magento.product.attribute.price']
-
-    def run(self, filters=None):
-        """ Run the synchronization """
-        price = filters['price']
-        price['product_id'] = filters['product_id']
-        price['magento_value'] = filters['magento_value']
-        price['external_id'] = price['value_index']
-        price['external_id'] += '_' + price['product_id']
-        self._import_record(price)
-
-
 class ProductAttributePriceImporter(Component):
     _name = 'magento.product.attribute.price.importer'
     _inherit = 'magento.importer'
@@ -34,7 +17,7 @@ class ProductAttributePriceImporter(Component):
         In this case, the magento_record contains all the data to insert
         """
         record = self.magento_record
-        binder = self.binder_for('magento.product.product')
+        binder = self.binder_for('magento.product.template')
         product_binding = binder.to_internal(record['product_id'])
 
         if not product_binding:
@@ -42,12 +25,27 @@ class ProductAttributePriceImporter(Component):
                                "magento id %s is not imported." %
                                record['product_id'])
 
-        record['template'] = product_binding.product_tmpl_id
+        record['template'] = product_binding.odoo_id
         return record
+
+    def _update(self, binding, data):
+        # Check if a field is different before updating
+        modified = False
+        for field in data.keys():
+            if data[field] != binding[field]:
+                modified = True
+                break
+        if modified:
+            super(ProductAttributePriceImporter, self)._update(binding, data)
+
+    def _import_dependencies(self):
+        product_id = self.magento_record['product_id']
+        if product_id:
+            self._import_dependency(product_id, 'magento.product.product')
 
     def run(self, magento_record, force=False):
         self.magento_record = magento_record
-        super(ProductAttributePriceImporter, self).run(
+        return super(ProductAttributePriceImporter, self).run(
             magento_record['external_id'],
             force,
         )

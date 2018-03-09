@@ -31,21 +31,3 @@ class ProductAttribute(models.Model):
         inverse_name='odoo_id',
         string="Magento Bindings",
     )
-
-
-class ProductAttributeAdapter(Component):
-    _name = 'magento.product.attribute.adapter'
-    _inherit = 'magento.adapter'
-    _apply_on = 'magento.product.attribute'
-
-    _magento_model = 'ol_catalog_product_link'
-    _admin_path = '/{model}/index/'
-
-    def list_attributes(self, sku, storeview_id=None, attributes=None):
-        """Returns the list of the super attributes and their possible values
-        from a specific configurable product
-
-        :rtype: dict
-        """
-        return self._call('%s.listSuperAttributes' % self._magento_model,
-                          [sku, storeview_id, attributes])

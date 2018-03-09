@@ -6,21 +6,6 @@ from odoo.addons.component.core import Component
 from odoo.addons.connector.components.mapper import mapping
 
 
-class ProductAttributeValueBatchImporter(Component):
-    """ Import the Magento Product Attributes.
-    """
-    _name = 'magento.product.attribute.value.batch.importer'
-    _inherit = 'magento.direct.batch.importer'
-    _apply_on = ['magento.product.attribute.value']
-
-    def run(self, filters=None):
-        """ Run the synchronization """
-        for value in filters['values']:
-            value['magento_attribute'] = filters['magento_attribute']
-            value['product_id'] = filters['product_id']
-            self._import_record(value)
-
-
 class ProductAttributeValueImporter(Component):
     _name = 'magento.product.attribute.value.importer'
     _inherit = 'magento.importer'
@@ -32,15 +17,27 @@ class ProductAttributeValueImporter(Component):
         """
         return self.magento_record
 
+    def _update(self, binding, data):
+        # Check if a field is different before updating
+        modified = False
+        for field in data.keys():
+            if data[field] != binding[field]:
+                modified = True
+                break
+        if modified:
+            super(ProductAttributeValueImporter, self)._update(binding, data)
+
     def _after_import(self, binding):
-        self.env['magento.product.attribute.price'].import_batch(
-            self.backend_record,
-            {
-                'price': self.magento_record,
-                'magento_value': binding,
-                'product_id': self.magento_record['product_id']
-            }
-        )
+        price_importer = self.component(
+            usage='record.importer',
+            model_name='magento.product.attribute.price')
+        price = self.magento_record
+        price.update({
+            'magento_value': binding,
+            'external_id': '{}_{}'.format(
+                price['value_index'], price['product_id'])
+            })
+        price_importer.run(price)
 
     def run(self, magento_record, force=False):
         self.magento_record = magento_record
