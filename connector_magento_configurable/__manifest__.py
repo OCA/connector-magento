@@ -11,6 +11,7 @@
  'data': [
      'security/ir.model.access.csv',
      'views/magento_backend_views.xml',
+     'views/product_template.xml',
  ],
  'installable': True,
  'auto_install': True,

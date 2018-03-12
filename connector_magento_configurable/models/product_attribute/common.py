@@ -5,7 +5,6 @@
 import logging
 
 from odoo import models, fields
-from odoo.addons.component.core import Component
 
 _logger = logging.getLogger(__name__)
 
