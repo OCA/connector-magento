@@ -2,6 +2,7 @@
 # Copyright 2018 akretion
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
+from odoo import _
 from odoo.addons.component.core import Component
 
 from odoo.addons.connector.components.mapper import mapping
@@ -40,48 +41,54 @@ class TemplateImportMapper(Component):
         return {'variant_managed_by_magento': True}
 
 
+class CatalogImageImporter(Component):
+    _inherit = 'magento.product.image.importer'
+    _apply_on = ['magento.product.product', 'magento.product.template']
+
+
 class TemplateImporter(Component):
     _name = 'magento.product.template.importer'
-    _inherit = 'magento.importer'
+    _inherit = 'magento.product.product.importer'
     _apply_on = ['magento.product.template']
 
-    def _import_dependencies(self):
-        record = self.magento_record
-        # import related categories
-        for mag_category_id in record['categories']:
-            self._import_dependency(mag_category_id,
-                                    'magento.product.category')
+    def _must_skip(self):
+        if self.magento_record['type_id'] != 'configurable':
+            return _('The template must be imported from a configurable.')
+
+    def _validate_product_type(self, data):
+        return
 
     def _prepare_attribute_vals(self, attribute):
-        attr_binder = self.binder_for('magento.product.attribute')
-        attr = attr_binder.to_internal(attribute['attribute_id'], unwrap=True)
-
         val_binder = self.binder_for('magento.product.attribute.value')
-        attribute_vals = []
+        attribute_values = self.env['product.attribute.value'].browse(False)
         for magento_value in attribute['values']:
-            value = val_binder.to_internal(
+            attribute_value = val_binder.to_internal(
                 magento_value['value_index'], unwrap=True)
-            if value:
-                attribute_vals.append(value.id)
-        return {'attribute_id': attr.id, 'value_ids': [(6, 0, attribute_vals)]}
+            if attribute_value:
+                attribute_values |= attribute_value
+        if attribute_values:
+            return {
+                'attribute_id': attribute_values[0].attribute_id.id,
+                'value_ids': [(6, 0, attribute_values.ids)],
+                }
 
     def _prepare_attr_lines(self, binding, magento_attributes):
         attribute_line_vals = []
         for attribute in magento_attributes:
             vals = self._prepare_attribute_vals(attribute)
-            line = self.env['product.attribute.line'].search([
-                ('attribute_id', '=', vals['attribute_id']),
-                ('product_tmpl_id', '=', binding.odoo_id.id)
-            ])
-            if line:
-                attribute_line_vals.append((1, line.id, vals))
-            else:
-                attribute_line_vals.append((0, 0, vals))
+            if vals:
+                line = self.env['product.attribute.line'].search([
+                    ('attribute_id', '=', vals.get('attribute_id')),
+                    ('product_tmpl_id', '=', binding.odoo_id.id)
+                ])
+                if line:
+                    attribute_line_vals.append((1, line.id, vals))
+                else:
+                    attribute_line_vals.append((0, 0, vals))
         return attribute_line_vals
 
     def _after_import(self, binding):
-        sku = self.magento_record['sku']
-        attrs = self.backend_adapter.list_attributes(sku)
+        attrs = self.backend_adapter.list_attributes(binding.external_id)
 
         attr_importer = self.component(
             usage='record.importer',
@@ -96,7 +103,7 @@ class TemplateImporter(Component):
         value_binder = self.binder_for('magento.product.attribute.value')
         product_binder = self.binder_for('magento.product.product')
 
-        variants = self.backend_adapter.list_variants(sku)
+        variants = self.backend_adapter.list_variants(binding.external_id)
         for variant in variants:
             attribute_value_ids = []
             self._import_dependency(
@@ -116,16 +123,18 @@ class TemplateImporter(Component):
                     attribute_value_ids.append(value.id)
             vals = {'attribute_value_ids': [(6, 0, attribute_value_ids)]}
             template = product.product_tmpl_id
-            if template != binding.odoo_id:
+            if template.id != binding.odoo_id.id:
                 vals['product_tmpl_id'] = binding.odoo_id.id
             product.write(vals)
             if not template.product_variant_ids:
                 template.unlink()
-            else:
-                if template != binding.odoo_id:
-                    raise MappingError(
-                        "The template for the product %s (sku %s)"
-                        " has many variants" % product.id, variant['sku'])
+            # else:
+            #     if template.id != binding.odoo_id.id:
+            #         raise MappingError(
+            #             "The template for the product {} (sku {})"
+            #             " has many variants".format(
+            #                 product.default_code, variant['sku']))
+        super(TemplateImporter, self)._after_import(binding)
 
     def run(self, external_id, force=True):
         super(TemplateImporter, self).run(external_id, True)

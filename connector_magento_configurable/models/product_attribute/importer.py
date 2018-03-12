@@ -57,10 +57,6 @@ class ProductAttributeImportMapper(Component):
         ('store_label', 'display_name'),
     ]
 
-    def name_origin_field(self):
-        """ allows to override the field where the attribute_code is stored"""
-        return 'attribute_code'
-
     @mapping
     def backend_id(self, record):
         return {'backend_id': self.backend_record.id}
@@ -71,7 +67,7 @@ class ProductAttributeImportMapper(Component):
         """ Will bind the attribute on a existing attribute
         with the same name """
         attribute = self.env['product.attribute'].search(
-            [('name', '=', record[self.name_origin_field()])],
+            [('name', '=', record['attribute_code'])],
             limit=1,
         )
         if attribute:

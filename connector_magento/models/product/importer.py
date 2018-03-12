@@ -317,11 +317,7 @@ class ProductImporter(Component):
         translation_importer = self.component(
             usage='translation.importer',
         )
-        translation_importer.run(
-            self.external_id,
-            binding,
-            mapper='magento.product.product.import.mapper'
-        )
+        translation_importer.run(self.external_id, binding)
         image_importer = self.component(usage='product.image.importer')
         image_importer.run(self.external_id, binding)
 

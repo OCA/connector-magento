@@ -64,10 +64,10 @@ class ProductAttributeValueImportMapper(Component):
 
     @mapping
     def attribute_id(self, record):
-        if not record.get('magento_attribute'):
+        if not record['magento_attribute']:
             return
 
         return {
-            'attribute_id': record.get('magento_attribute').odoo_id.id,
-            'magento_attribute_id': record.get('magento_attribute').id,
+            'attribute_id': record['magento_attribute'].odoo_id.id,
+            'magento_attribute_id': record['magento_attribute'].id,
             }

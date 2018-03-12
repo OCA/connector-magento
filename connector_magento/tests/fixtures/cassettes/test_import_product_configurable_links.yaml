@@ -45,7 +45,7 @@ interactions:
       pragma: [no-cache]
       server: [nginx/1.10.2]
       set-cookie: ['PHPSESSID=3c8rm7l3hgta0cd681qhrr7266; expires=Tue, 12-Dec-2017
-          15:47:27 GMT; path=/; domain=magento.acdc10poc.vd; HttpOnly']
+          15:47:27 GMT; path=/; domain=magento; HttpOnly']
       x-powered-by: [PHP/5.3.3]
     status: {code: 200, message: OK}
 - request:
@@ -110,7 +110,7 @@ interactions:
       pragma: [no-cache]
       server: [nginx/1.10.2]
       set-cookie: ['PHPSESSID=4ae5lhtgnomfnruk5frlkr6u11; expires=Tue, 12-Dec-2017
-          15:47:27 GMT; path=/; domain=magento.acdc10poc.vd; HttpOnly']
+          15:47:27 GMT; path=/; domain=magento; HttpOnly']
       x-powered-by: [PHP/5.3.3]
     status: {code: 200, message: OK}
 - request:
@@ -171,7 +171,7 @@ interactions:
       pragma: [no-cache]
       server: [nginx/1.10.2]
       set-cookie: ['PHPSESSID=p0fchd6cd9i0clfn7k8eblgkp5; expires=Tue, 12-Dec-2017
-          15:47:27 GMT; path=/; domain=magento.acdc10poc.vd; HttpOnly']
+          15:47:27 GMT; path=/; domain=magento; HttpOnly']
       x-powered-by: [PHP/5.3.3]
     status: {code: 200, message: OK}
 - request:
@@ -231,7 +231,7 @@ interactions:
       pragma: [no-cache]
       server: [nginx/1.10.2]
       set-cookie: ['PHPSESSID=qu0cqtr7a0215ds5bs92idckt3; expires=Tue, 12-Dec-2017
-          15:47:28 GMT; path=/; domain=magento.acdc10poc.vd; HttpOnly']
+          15:47:28 GMT; path=/; domain=magento; HttpOnly']
       x-powered-by: [PHP/5.3.3]
     status: {code: 200, message: OK}
 - request:
@@ -292,7 +292,7 @@ interactions:
       pragma: [no-cache]
       server: [nginx/1.10.2]
       set-cookie: ['PHPSESSID=m0qhl1rgv0122v3ccm1bf8hvt5; expires=Tue, 12-Dec-2017
-          15:47:28 GMT; path=/; domain=magento.acdc10poc.vd; HttpOnly']
+          15:47:28 GMT; path=/; domain=magento; HttpOnly']
       x-powered-by: [PHP/5.3.3]
     status: {code: 200, message: OK}
 - request:
@@ -353,7 +353,7 @@ interactions:
       pragma: [no-cache]
       server: [nginx/1.10.2]
       set-cookie: ['PHPSESSID=js94g418fmk17eb22gq4p94cg3; expires=Tue, 12-Dec-2017
-          15:47:28 GMT; path=/; domain=magento.acdc10poc.vd; HttpOnly']
+          15:47:28 GMT; path=/; domain=magento; HttpOnly']
       x-powered-by: [PHP/5.3.3]
     status: {code: 200, message: OK}
 - request:
@@ -414,14 +414,14 @@ interactions:
       pragma: [no-cache]
       server: [nginx/1.10.2]
       set-cookie: ['PHPSESSID=cce9phvca1r0690qcl5fdjrvu4; expires=Tue, 12-Dec-2017
-          15:47:30 GMT; path=/; domain=magento.acdc10poc.vd; HttpOnly']
+          15:47:30 GMT; path=/; domain=magento; HttpOnly']
       x-powered-by: [PHP/5.3.3]
     status: {code: 200, message: OK}
 - request:
     body: null
     headers:
       Connection: [close]
-      Host: [magento.acdc10poc.vd]
+      Host: [magento]
       User-Agent: [Python-urllib/2.7]
     method: GET
     uri: http://magento/media/catalog/product/m/t/mtk000t.jpg
@@ -888,7 +888,7 @@ interactions:
       pragma: [no-cache]
       server: [nginx/1.10.2]
       set-cookie: ['PHPSESSID=2gs7s1e3iuokp18rscl0rv18j3; expires=Tue, 12-Dec-2017
-          15:47:30 GMT; path=/; domain=magento.acdc10poc.vd; HttpOnly']
+          15:47:30 GMT; path=/; domain=magento; HttpOnly']
       x-powered-by: [PHP/5.3.3]
     status: {code: 200, message: OK}
 - request:
@@ -937,7 +937,7 @@ interactions:
       pragma: [no-cache]
       server: [nginx/1.10.2]
       set-cookie: ['PHPSESSID=oko3ralqdp7ld5pu3fstfdmu07; expires=Tue, 12-Dec-2017
-          15:47:31 GMT; path=/; domain=magento.acdc10poc.vd; HttpOnly']
+          15:47:31 GMT; path=/; domain=magento; HttpOnly']
       x-powered-by: [PHP/5.3.3]
     status: {code: 200, message: OK}
 - request:
@@ -1002,7 +1002,7 @@ interactions:
       pragma: [no-cache]
       server: [nginx/1.10.2]
       set-cookie: ['PHPSESSID=r3hhtuso9n4rsc7iingb27j8h2; expires=Tue, 12-Dec-2017
-          15:47:31 GMT; path=/; domain=magento.acdc10poc.vd; HttpOnly']
+          15:47:31 GMT; path=/; domain=magento; HttpOnly']
       x-powered-by: [PHP/5.3.3]
     status: {code: 200, message: OK}
 - request:
@@ -1063,14 +1063,14 @@ interactions:
       pragma: [no-cache]
       server: [nginx/1.10.2]
       set-cookie: ['PHPSESSID=dhip4ck4bp8sf263bnsdi3bfb1; expires=Tue, 12-Dec-2017
-          15:47:32 GMT; path=/; domain=magento.acdc10poc.vd; HttpOnly']
+          15:47:32 GMT; path=/; domain=magento; HttpOnly']
       x-powered-by: [PHP/5.3.3]
     status: {code: 200, message: OK}
 - request:
     body: null
     headers:
       Connection: [close]
-      Host: [magento.acdc10poc.vd]
+      Host: [magento]
       User-Agent: [Python-urllib/2.7]
     method: GET
     uri: http://magento/media/catalog/product/m/t/mtk000t_3.jpg
@@ -1537,7 +1537,7 @@ interactions:
       pragma: [no-cache]
       server: [nginx/1.10.2]
       set-cookie: ['PHPSESSID=80eb24v0k9g0dub40bfpauhft7; expires=Tue, 12-Dec-2017
-          15:47:32 GMT; path=/; domain=magento.acdc10poc.vd; HttpOnly']
+          15:47:32 GMT; path=/; domain=magento; HttpOnly']
       x-powered-by: [PHP/5.3.3]
     status: {code: 200, message: OK}
 - request:
@@ -1586,7 +1586,7 @@ interactions:
       pragma: [no-cache]
       server: [nginx/1.10.2]
       set-cookie: ['PHPSESSID=hrtfq03qfbic1b4m054s5udeq0; expires=Tue, 12-Dec-2017
-          15:47:32 GMT; path=/; domain=magento.acdc10poc.vd; HttpOnly']
+          15:47:32 GMT; path=/; domain=magento; HttpOnly']
       x-powered-by: [PHP/5.3.3]
     status: {code: 200, message: OK}
 - request:
@@ -1651,7 +1651,7 @@ interactions:
       pragma: [no-cache]
       server: [nginx/1.10.2]
       set-cookie: ['PHPSESSID=n4c4refot04srr2lecbmmkcek6; expires=Tue, 12-Dec-2017
-          15:47:32 GMT; path=/; domain=magento.acdc10poc.vd; HttpOnly']
+          15:47:32 GMT; path=/; domain=magento; HttpOnly']
       x-powered-by: [PHP/5.3.3]
     status: {code: 200, message: OK}
 - request:
@@ -1712,14 +1712,14 @@ interactions:
       pragma: [no-cache]
       server: [nginx/1.10.2]
       set-cookie: ['PHPSESSID=m8uebjldts5a6kjcmgmaot1ti5; expires=Tue, 12-Dec-2017
-          15:47:33 GMT; path=/; domain=magento.acdc10poc.vd; HttpOnly']
+          15:47:33 GMT; path=/; domain=magento; HttpOnly']
       x-powered-by: [PHP/5.3.3]
     status: {code: 200, message: OK}
 - request:
     body: null
     headers:
       Connection: [close]
-      Host: [magento.acdc10poc.vd]
+      Host: [magento]
       User-Agent: [Python-urllib/2.7]
     method: GET
     uri: http://magento/media/catalog/product/m/t/mtk000t_4.jpg
@@ -2186,7 +2186,7 @@ interactions:
       pragma: [no-cache]
       server: [nginx/1.10.2]
       set-cookie: ['PHPSESSID=vu29h04gpqhtuu65l19muav5u7; expires=Tue, 12-Dec-2017
-          15:47:33 GMT; path=/; domain=magento.acdc10poc.vd; HttpOnly']
+          15:47:33 GMT; path=/; domain=magento; HttpOnly']
       x-powered-by: [PHP/5.3.3]
     status: {code: 200, message: OK}
 - request:
@@ -2235,7 +2235,7 @@ interactions:
       pragma: [no-cache]
       server: [nginx/1.10.2]
       set-cookie: ['PHPSESSID=tu63mlbee0hovo2k1d649hue62; expires=Tue, 12-Dec-2017
-          15:47:33 GMT; path=/; domain=magento.acdc10poc.vd; HttpOnly']
+          15:47:33 GMT; path=/; domain=magento; HttpOnly']
       x-powered-by: [PHP/5.3.3]
     status: {code: 200, message: OK}
 - request:
@@ -2300,7 +2300,7 @@ interactions:
       pragma: [no-cache]
       server: [nginx/1.10.2]
       set-cookie: ['PHPSESSID=f9450ev5ic0gqc09cc26vc05r0; expires=Tue, 12-Dec-2017
-          15:47:34 GMT; path=/; domain=magento.acdc10poc.vd; HttpOnly']
+          15:47:34 GMT; path=/; domain=magento; HttpOnly']
       x-powered-by: [PHP/5.3.3]
     status: {code: 200, message: OK}
 - request:
@@ -2361,14 +2361,14 @@ interactions:
       pragma: [no-cache]
       server: [nginx/1.10.2]
       set-cookie: ['PHPSESSID=rkp63hal17gghn425m03cqlqe3; expires=Tue, 12-Dec-2017
-          15:47:34 GMT; path=/; domain=magento.acdc10poc.vd; HttpOnly']
+          15:47:34 GMT; path=/; domain=magento; HttpOnly']
       x-powered-by: [PHP/5.3.3]
     status: {code: 200, message: OK}
 - request:
     body: null
     headers:
       Connection: [close]
-      Host: [magento.acdc10poc.vd]
+      Host: [magento]
       User-Agent: [Python-urllib/2.7]
     method: GET
     uri: http://magento/media/catalog/product/m/t/mtk002t_3.jpg
@@ -2789,7 +2789,7 @@ interactions:
       pragma: [no-cache]
       server: [nginx/1.10.2]
       set-cookie: ['PHPSESSID=9pilvraamev6naopbh3k1eibj7; expires=Tue, 12-Dec-2017
-          15:47:35 GMT; path=/; domain=magento.acdc10poc.vd; HttpOnly']
+          15:47:35 GMT; path=/; domain=magento; HttpOnly']
       x-powered-by: [PHP/5.3.3]
     status: {code: 200, message: OK}
 - request:
@@ -2838,7 +2838,7 @@ interactions:
       pragma: [no-cache]
       server: [nginx/1.10.2]
       set-cookie: ['PHPSESSID=cumbl5ng65h13i586bso6ftae2; expires=Tue, 12-Dec-2017
-          15:47:35 GMT; path=/; domain=magento.acdc10poc.vd; HttpOnly']
+          15:47:35 GMT; path=/; domain=magento; HttpOnly']
       x-powered-by: [PHP/5.3.3]
     status: {code: 200, message: OK}
 - request:
@@ -2903,7 +2903,7 @@ interactions:
       pragma: [no-cache]
       server: [nginx/1.10.2]
       set-cookie: ['PHPSESSID=87g92aoemr0pp6vv0i41lv9177; expires=Tue, 12-Dec-2017
-          15:47:35 GMT; path=/; domain=magento.acdc10poc.vd; HttpOnly']
+          15:47:35 GMT; path=/; domain=magento; HttpOnly']
       x-powered-by: [PHP/5.3.3]
     status: {code: 200, message: OK}
 - request:
@@ -2964,14 +2964,14 @@ interactions:
       pragma: [no-cache]
       server: [nginx/1.10.2]
       set-cookie: ['PHPSESSID=vq1qj4tqp715a4fjlqsa3fp4t5; expires=Tue, 12-Dec-2017
-          15:47:36 GMT; path=/; domain=magento.acdc10poc.vd; HttpOnly']
+          15:47:36 GMT; path=/; domain=magento; HttpOnly']
       x-powered-by: [PHP/5.3.3]
     status: {code: 200, message: OK}
 - request:
     body: null
     headers:
       Connection: [close]
-      Host: [magento.acdc10poc.vd]
+      Host: [magento]
       User-Agent: [Python-urllib/2.7]
     method: GET
     uri: http://magento/media/catalog/product/m/t/mtk002t_4.jpg
@@ -3392,7 +3392,7 @@ interactions:
       pragma: [no-cache]
       server: [nginx/1.10.2]
       set-cookie: ['PHPSESSID=quhvvvr2i0d2oilvui3v7lip45; expires=Tue, 12-Dec-2017
-          15:47:36 GMT; path=/; domain=magento.acdc10poc.vd; HttpOnly']
+          15:47:36 GMT; path=/; domain=magento; HttpOnly']
       x-powered-by: [PHP/5.3.3]
     status: {code: 200, message: OK}
 - request:
@@ -3441,7 +3441,7 @@ interactions:
       pragma: [no-cache]
       server: [nginx/1.10.2]
       set-cookie: ['PHPSESSID=dhulh96e54884o5c3s1ugki7j2; expires=Tue, 12-Dec-2017
-          15:47:36 GMT; path=/; domain=magento.acdc10poc.vd; HttpOnly']
+          15:47:36 GMT; path=/; domain=magento; HttpOnly']
       x-powered-by: [PHP/5.3.3]
     status: {code: 200, message: OK}
 - request:
@@ -3506,7 +3506,7 @@ interactions:
       pragma: [no-cache]
       server: [nginx/1.10.2]
       set-cookie: ['PHPSESSID=148fdthvq7c7hpe80gi4a9gha1; expires=Tue, 12-Dec-2017
-          15:47:36 GMT; path=/; domain=magento.acdc10poc.vd; HttpOnly']
+          15:47:36 GMT; path=/; domain=magento; HttpOnly']
       x-powered-by: [PHP/5.3.3]
     status: {code: 200, message: OK}
 - request:
@@ -3567,14 +3567,14 @@ interactions:
       pragma: [no-cache]
       server: [nginx/1.10.2]
       set-cookie: ['PHPSESSID=87uec64o0c3n7pg7r022fsuft7; expires=Tue, 12-Dec-2017
-          15:47:37 GMT; path=/; domain=magento.acdc10poc.vd; HttpOnly']
+          15:47:37 GMT; path=/; domain=magento; HttpOnly']
       x-powered-by: [PHP/5.3.3]
     status: {code: 200, message: OK}
 - request:
     body: null
     headers:
       Connection: [close]
-      Host: [magento.acdc10poc.vd]
+      Host: [magento]
       User-Agent: [Python-urllib/2.7]
     method: GET
     uri: http://magento/media/catalog/product/m/t/mtk004t_3.jpg
@@ -3965,7 +3965,7 @@ interactions:
       pragma: [no-cache]
       server: [nginx/1.10.2]
       set-cookie: ['PHPSESSID=niemkh1qupj80qam1eff4kdtu1; expires=Tue, 12-Dec-2017
-          15:47:37 GMT; path=/; domain=magento.acdc10poc.vd; HttpOnly']
+          15:47:37 GMT; path=/; domain=magento; HttpOnly']
       x-powered-by: [PHP/5.3.3]
     status: {code: 200, message: OK}
 - request:
@@ -4014,7 +4014,7 @@ interactions:
       pragma: [no-cache]
       server: [nginx/1.10.2]
       set-cookie: ['PHPSESSID=tjg5qnpdeuqo3bhiagn4sic264; expires=Tue, 12-Dec-2017
-          15:47:38 GMT; path=/; domain=magento.acdc10poc.vd; HttpOnly']
+          15:47:38 GMT; path=/; domain=magento; HttpOnly']
       x-powered-by: [PHP/5.3.3]
     status: {code: 200, message: OK}
 - request:
@@ -4080,7 +4080,7 @@ interactions:
       pragma: [no-cache]
       server: [nginx/1.10.2]
       set-cookie: ['PHPSESSID=bvqtabj9a87ulq7hb9vqorp224; expires=Tue, 12-Dec-2017
-          15:47:38 GMT; path=/; domain=magento.acdc10poc.vd; HttpOnly']
+          15:47:38 GMT; path=/; domain=magento; HttpOnly']
       x-powered-by: [PHP/5.3.3]
     status: {code: 200, message: OK}
 - request:
@@ -4141,14 +4141,14 @@ interactions:
       pragma: [no-cache]
       server: [nginx/1.10.2]
       set-cookie: ['PHPSESSID=tuukkanpgi5a0a27ggk5aqmoo5; expires=Tue, 12-Dec-2017
-          15:47:39 GMT; path=/; domain=magento.acdc10poc.vd; HttpOnly']
+          15:47:39 GMT; path=/; domain=magento; HttpOnly']
       x-powered-by: [PHP/5.3.3]
     status: {code: 200, message: OK}
 - request:
     body: null
     headers:
       Connection: [close]
-      Host: [magento.acdc10poc.vd]
+      Host: [magento]
       User-Agent: [Python-urllib/2.7]
     method: GET
     uri: http://magento/media/catalog/product/m/t/mtk004t_4.jpg
@@ -4539,7 +4539,7 @@ interactions:
       pragma: [no-cache]
       server: [nginx/1.10.2]
       set-cookie: ['PHPSESSID=com524fs3us2frf4v2jrv7tic7; expires=Tue, 12-Dec-2017
-          15:47:39 GMT; path=/; domain=magento.acdc10poc.vd; HttpOnly']
+          15:47:39 GMT; path=/; domain=magento; HttpOnly']
       x-powered-by: [PHP/5.3.3]
     status: {code: 200, message: OK}
 - request:
@@ -4588,7 +4588,7 @@ interactions:
       pragma: [no-cache]
       server: [nginx/1.10.2]
       set-cookie: ['PHPSESSID=f87plid5g2e6vra8h43aq16j50; expires=Tue, 12-Dec-2017
-          15:47:39 GMT; path=/; domain=magento.acdc10poc.vd; HttpOnly']
+          15:47:39 GMT; path=/; domain=magento; HttpOnly']
       x-powered-by: [PHP/5.3.3]
     status: {code: 200, message: OK}
 - request:
@@ -4654,7 +4654,7 @@ interactions:
       pragma: [no-cache]
       server: [nginx/1.10.2]
       set-cookie: ['PHPSESSID=eepje9fumffhhatjc19947m3a2; expires=Tue, 12-Dec-2017
-          15:47:39 GMT; path=/; domain=magento.acdc10poc.vd; HttpOnly']
+          15:47:39 GMT; path=/; domain=magento; HttpOnly']
       x-powered-by: [PHP/5.3.3]
     status: {code: 200, message: OK}
 - request:
@@ -4715,14 +4715,14 @@ interactions:
       pragma: [no-cache]
       server: [nginx/1.10.2]
       set-cookie: ['PHPSESSID=jgbiu2518d4o3d8q7lgje4hes4; expires=Tue, 12-Dec-2017
-          15:47:40 GMT; path=/; domain=magento.acdc10poc.vd; HttpOnly']
+          15:47:40 GMT; path=/; domain=magento; HttpOnly']
       x-powered-by: [PHP/5.3.3]
     status: {code: 200, message: OK}
 - request:
     body: null
     headers:
       Connection: [close]
-      Host: [magento.acdc10poc.vd]
+      Host: [magento]
       User-Agent: [Python-urllib/2.7]
     method: GET
     uri: http://magento/media/catalog/product/m/t/mtk004t_5.jpg
@@ -5113,7 +5113,7 @@ interactions:
       pragma: [no-cache]
       server: [nginx/1.10.2]
       set-cookie: ['PHPSESSID=ggs3pl7f5aa5lhuglc3js40730; expires=Tue, 12-Dec-2017
-          15:47:40 GMT; path=/; domain=magento.acdc10poc.vd; HttpOnly']
+          15:47:40 GMT; path=/; domain=magento; HttpOnly']
       x-powered-by: [PHP/5.3.3]
     status: {code: 200, message: OK}
 - request:
@@ -5162,7 +5162,7 @@ interactions:
       pragma: [no-cache]
       server: [nginx/1.10.2]
       set-cookie: ['PHPSESSID=8e58fpipuikb65haf1gtmrk9i1; expires=Tue, 12-Dec-2017
-          15:47:41 GMT; path=/; domain=magento.acdc10poc.vd; HttpOnly']
+          15:47:41 GMT; path=/; domain=magento; HttpOnly']
       x-powered-by: [PHP/5.3.3]
     status: {code: 200, message: OK}
 - request:
@@ -5228,7 +5228,7 @@ interactions:
       pragma: [no-cache]
       server: [nginx/1.10.2]
       set-cookie: ['PHPSESSID=l3bs6s575terfpudn1936baat5; expires=Tue, 12-Dec-2017
-          15:47:41 GMT; path=/; domain=magento.acdc10poc.vd; HttpOnly']
+          15:47:41 GMT; path=/; domain=magento; HttpOnly']
       x-powered-by: [PHP/5.3.3]
     status: {code: 200, message: OK}
 - request:
@@ -5289,14 +5289,14 @@ interactions:
       pragma: [no-cache]
       server: [nginx/1.10.2]
       set-cookie: ['PHPSESSID=8b7fjhf7nl97epco5u2hamnji3; expires=Tue, 12-Dec-2017
-          15:47:41 GMT; path=/; domain=magento.acdc10poc.vd; HttpOnly']
+          15:47:41 GMT; path=/; domain=magento; HttpOnly']
       x-powered-by: [PHP/5.3.3]
     status: {code: 200, message: OK}
 - request:
     body: null
     headers:
       Connection: [close]
-      Host: [magento.acdc10poc.vd]
+      Host: [magento]
       User-Agent: [Python-urllib/2.7]
     method: GET
     uri: http://magento/media/catalog/product/m/t/mtk004t_6.jpg
@@ -5687,7 +5687,7 @@ interactions:
       pragma: [no-cache]
       server: [nginx/1.10.2]
       set-cookie: ['PHPSESSID=lp6tkd085mvj40a9slhn9cf974; expires=Tue, 12-Dec-2017
-          15:47:42 GMT; path=/; domain=magento.acdc10poc.vd; HttpOnly']
+          15:47:42 GMT; path=/; domain=magento; HttpOnly']
       x-powered-by: [PHP/5.3.3]
     status: {code: 200, message: OK}
 - request:
@@ -5736,7 +5736,7 @@ interactions:
       pragma: [no-cache]
       server: [nginx/1.10.2]
       set-cookie: ['PHPSESSID=tt2n873sb7dgc97dafue0k6hh3; expires=Tue, 12-Dec-2017
-          15:47:42 GMT; path=/; domain=magento.acdc10poc.vd; HttpOnly']
+          15:47:42 GMT; path=/; domain=magento; HttpOnly']
       x-powered-by: [PHP/5.3.3]
     status: {code: 200, message: OK}
 - request:
@@ -5802,7 +5802,7 @@ interactions:
       pragma: [no-cache]
       server: [nginx/1.10.2]
       set-cookie: ['PHPSESSID=2b12ffci928cjcb3heiuvihkm5; expires=Tue, 12-Dec-2017
-          15:47:42 GMT; path=/; domain=magento.acdc10poc.vd; HttpOnly']
+          15:47:42 GMT; path=/; domain=magento; HttpOnly']
       x-powered-by: [PHP/5.3.3]
     status: {code: 200, message: OK}
 - request:
@@ -5863,14 +5863,14 @@ interactions:
       pragma: [no-cache]
       server: [nginx/1.10.2]
       set-cookie: ['PHPSESSID=qt24adtvbguid6vquda94uj5b2; expires=Tue, 12-Dec-2017
-          15:47:43 GMT; path=/; domain=magento.acdc10poc.vd; HttpOnly']
+          15:47:43 GMT; path=/; domain=magento; HttpOnly']
       x-powered-by: [PHP/5.3.3]
     status: {code: 200, message: OK}
 - request:
     body: null
     headers:
       Connection: [close]
-      Host: [magento.acdc10poc.vd]
+      Host: [magento]
       User-Agent: [Python-urllib/2.7]
     method: GET
     uri: http://magento/media/catalog/product/m/t/mtk002t_5.jpg
@@ -6291,7 +6291,7 @@ interactions:
       pragma: [no-cache]
       server: [nginx/1.10.2]
       set-cookie: ['PHPSESSID=7agkq11qbg8e1q9qaa846nv7s7; expires=Tue, 12-Dec-2017
-          15:47:43 GMT; path=/; domain=magento.acdc10poc.vd; HttpOnly']
+          15:47:43 GMT; path=/; domain=magento; HttpOnly']
       x-powered-by: [PHP/5.3.3]
     status: {code: 200, message: OK}
 - request:
@@ -6340,7 +6340,7 @@ interactions:
       pragma: [no-cache]
       server: [nginx/1.10.2]
       set-cookie: ['PHPSESSID=a2vllvk6d2ogjim8ggl82fcvd1; expires=Tue, 12-Dec-2017
-          15:47:43 GMT; path=/; domain=magento.acdc10poc.vd; HttpOnly']
+          15:47:43 GMT; path=/; domain=magento; HttpOnly']
       x-powered-by: [PHP/5.3.3]
     status: {code: 200, message: OK}
 - request:
@@ -6406,7 +6406,7 @@ interactions:
       pragma: [no-cache]
       server: [nginx/1.10.2]
       set-cookie: ['PHPSESSID=g3vc56d8ndg0uggho2i09kpid4; expires=Tue, 12-Dec-2017
-          15:47:43 GMT; path=/; domain=magento.acdc10poc.vd; HttpOnly']
+          15:47:43 GMT; path=/; domain=magento; HttpOnly']
       x-powered-by: [PHP/5.3.3]
     status: {code: 200, message: OK}
 - request:
@@ -6467,14 +6467,14 @@ interactions:
       pragma: [no-cache]
       server: [nginx/1.10.2]
       set-cookie: ['PHPSESSID=gvnf1cmls81oncrgi1kcjlc9e7; expires=Tue, 12-Dec-2017
-          15:47:44 GMT; path=/; domain=magento.acdc10poc.vd; HttpOnly']
+          15:47:44 GMT; path=/; domain=magento; HttpOnly']
       x-powered-by: [PHP/5.3.3]
     status: {code: 200, message: OK}
 - request:
     body: null
     headers:
       Connection: [close]
-      Host: [magento.acdc10poc.vd]
+      Host: [magento]
       User-Agent: [Python-urllib/2.7]
     method: GET
     uri: http://magento/media/catalog/product/m/t/mtk002t_6.jpg
@@ -6895,7 +6895,7 @@ interactions:
       pragma: [no-cache]
       server: [nginx/1.10.2]
       set-cookie: ['PHPSESSID=bkcaedr3ninervj35v7ql8bg71; expires=Tue, 12-Dec-2017
-          15:47:45 GMT; path=/; domain=magento.acdc10poc.vd; HttpOnly']
+          15:47:45 GMT; path=/; domain=magento; HttpOnly']
       x-powered-by: [PHP/5.3.3]
     status: {code: 200, message: OK}
 - request:
@@ -6944,7 +6944,7 @@ interactions:
       pragma: [no-cache]
       server: [nginx/1.10.2]
       set-cookie: ['PHPSESSID=9smmpdjk2dn0t02nie9b518ei0; expires=Tue, 12-Dec-2017
-          15:47:45 GMT; path=/; domain=magento.acdc10poc.vd; HttpOnly']
+          15:47:45 GMT; path=/; domain=magento; HttpOnly']
       x-powered-by: [PHP/5.3.3]
     status: {code: 200, message: OK}
 - request:
@@ -7010,7 +7010,7 @@ interactions:
       pragma: [no-cache]
       server: [nginx/1.10.2]
       set-cookie: ['PHPSESSID=ttcsji8il2d84bj4lgjl9oia53; expires=Tue, 12-Dec-2017
-          15:47:45 GMT; path=/; domain=magento.acdc10poc.vd; HttpOnly']
+          15:47:45 GMT; path=/; domain=magento; HttpOnly']
       x-powered-by: [PHP/5.3.3]
     status: {code: 200, message: OK}
 - request:
@@ -7071,14 +7071,14 @@ interactions:
       pragma: [no-cache]
       server: [nginx/1.10.2]
       set-cookie: ['PHPSESSID=1lt6cgkhnegigm6ojhdik3iqq0; expires=Tue, 12-Dec-2017
-          15:47:46 GMT; path=/; domain=magento.acdc10poc.vd; HttpOnly']
+          15:47:46 GMT; path=/; domain=magento; HttpOnly']
       x-powered-by: [PHP/5.3.3]
     status: {code: 200, message: OK}
 - request:
     body: null
     headers:
       Connection: [close]
-      Host: [magento.acdc10poc.vd]
+      Host: [magento]
       User-Agent: [Python-urllib/2.7]
     method: GET
     uri: http://magento/media/catalog/product/m/t/mtk002t_7.jpg
@@ -7499,7 +7499,7 @@ interactions:
       pragma: [no-cache]
       server: [nginx/1.10.2]
       set-cookie: ['PHPSESSID=enqacac6nfq274mh6ul115vn46; expires=Tue, 12-Dec-2017
-          15:47:46 GMT; path=/; domain=magento.acdc10poc.vd; HttpOnly']
+          15:47:46 GMT; path=/; domain=magento; HttpOnly']
       x-powered-by: [PHP/5.3.3]
     status: {code: 200, message: OK}
 - request:
@@ -7548,7 +7548,7 @@ interactions:
       pragma: [no-cache]
       server: [nginx/1.10.2]
       set-cookie: ['PHPSESSID=16lohfhju15qgug0s9qlcm0hv5; expires=Tue, 12-Dec-2017
-          15:47:46 GMT; path=/; domain=magento.acdc10poc.vd; HttpOnly']
+          15:47:46 GMT; path=/; domain=magento; HttpOnly']
       x-powered-by: [PHP/5.3.3]
     status: {code: 200, message: OK}
 - request:
@@ -7614,7 +7614,7 @@ interactions:
       pragma: [no-cache]
       server: [nginx/1.10.2]
       set-cookie: ['PHPSESSID=qvgqf924ehf2nnfke3o7ooifl0; expires=Tue, 12-Dec-2017
-          15:47:46 GMT; path=/; domain=magento.acdc10poc.vd; HttpOnly']
+          15:47:46 GMT; path=/; domain=magento; HttpOnly']
       x-powered-by: [PHP/5.3.3]
     status: {code: 200, message: OK}
 - request:
@@ -7675,14 +7675,14 @@ interactions:
       pragma: [no-cache]
       server: [nginx/1.10.2]
       set-cookie: ['PHPSESSID=vpfapifkaam8v4457p13l2q6o3; expires=Tue, 12-Dec-2017
-          15:47:47 GMT; path=/; domain=magento.acdc10poc.vd; HttpOnly']
+          15:47:47 GMT; path=/; domain=magento; HttpOnly']
       x-powered-by: [PHP/5.3.3]
     status: {code: 200, message: OK}
 - request:
     body: null
     headers:
       Connection: [close]
-      Host: [magento.acdc10poc.vd]
+      Host: [magento]
       User-Agent: [Python-urllib/2.7]
     method: GET
     uri: http://magento/media/catalog/product/m/t/mtk004t_7.jpg
@@ -8073,7 +8073,7 @@ interactions:
       pragma: [no-cache]
       server: [nginx/1.10.2]
       set-cookie: ['PHPSESSID=57u2cd3fni6ujo4lk27lf8dsq0; expires=Tue, 12-Dec-2017
-          15:47:47 GMT; path=/; domain=magento.acdc10poc.vd; HttpOnly']
+          15:47:47 GMT; path=/; domain=magento; HttpOnly']
       x-powered-by: [PHP/5.3.3]
     status: {code: 200, message: OK}
 - request:
@@ -8122,7 +8122,7 @@ interactions:
       pragma: [no-cache]
       server: [nginx/1.10.2]
       set-cookie: ['PHPSESSID=s4622mq4v178s6nrq2cjjhgvm1; expires=Tue, 12-Dec-2017
-          15:47:47 GMT; path=/; domain=magento.acdc10poc.vd; HttpOnly']
+          15:47:47 GMT; path=/; domain=magento; HttpOnly']
       x-powered-by: [PHP/5.3.3]
     status: {code: 200, message: OK}
 - request:
@@ -8188,7 +8188,7 @@ interactions:
       pragma: [no-cache]
       server: [nginx/1.10.2]
       set-cookie: ['PHPSESSID=1echt2pc0p194s75nrm6g96lb7; expires=Tue, 12-Dec-2017
-          15:47:48 GMT; path=/; domain=magento.acdc10poc.vd; HttpOnly']
+          15:47:48 GMT; path=/; domain=magento; HttpOnly']
       x-powered-by: [PHP/5.3.3]
     status: {code: 200, message: OK}
 - request:
@@ -8249,14 +8249,14 @@ interactions:
       pragma: [no-cache]
       server: [nginx/1.10.2]
       set-cookie: ['PHPSESSID=ck7gpu7pif8uah5dlhqglfnsl4; expires=Tue, 12-Dec-2017
-          15:47:48 GMT; path=/; domain=magento.acdc10poc.vd; HttpOnly']
+          15:47:48 GMT; path=/; domain=magento; HttpOnly']
       x-powered-by: [PHP/5.3.3]
     status: {code: 200, message: OK}
 - request:
     body: null
     headers:
       Connection: [close]
-      Host: [magento.acdc10poc.vd]
+      Host: [magento]
       User-Agent: [Python-urllib/2.7]
     method: GET
     uri: http://magento/media/catalog/product/m/t/mtk000t_5.jpg
@@ -8723,7 +8723,7 @@ interactions:
       pragma: [no-cache]
       server: [nginx/1.10.2]
       set-cookie: ['PHPSESSID=a0mu81tv035o6rqb6s0ftv6pk1; expires=Tue, 12-Dec-2017
-          15:47:49 GMT; path=/; domain=magento.acdc10poc.vd; HttpOnly']
+          15:47:49 GMT; path=/; domain=magento; HttpOnly']
       x-powered-by: [PHP/5.3.3]
     status: {code: 200, message: OK}
 - request:
@@ -8772,7 +8772,7 @@ interactions:
       pragma: [no-cache]
       server: [nginx/1.10.2]
       set-cookie: ['PHPSESSID=vaidgddbqdc956ucijos35vdd4; expires=Tue, 12-Dec-2017
-          15:47:49 GMT; path=/; domain=magento.acdc10poc.vd; HttpOnly']
+          15:47:49 GMT; path=/; domain=magento; HttpOnly']
       x-powered-by: [PHP/5.3.3]
     status: {code: 200, message: OK}
 - request:
@@ -8838,7 +8838,7 @@ interactions:
       pragma: [no-cache]
       server: [nginx/1.10.2]
       set-cookie: ['PHPSESSID=4ar6681oqn0d8es32gvili49j2; expires=Tue, 12-Dec-2017
-          15:47:49 GMT; path=/; domain=magento.acdc10poc.vd; HttpOnly']
+          15:47:49 GMT; path=/; domain=magento; HttpOnly']
       x-powered-by: [PHP/5.3.3]
     status: {code: 200, message: OK}
 - request:
@@ -8899,14 +8899,14 @@ interactions:
       pragma: [no-cache]
       server: [nginx/1.10.2]
       set-cookie: ['PHPSESSID=dbj11pfadvtjg3g3f040dn4jk0; expires=Tue, 12-Dec-2017
-          15:47:50 GMT; path=/; domain=magento.acdc10poc.vd; HttpOnly']
+          15:47:50 GMT; path=/; domain=magento; HttpOnly']
       x-powered-by: [PHP/5.3.3]
     status: {code: 200, message: OK}
 - request:
     body: null
     headers:
       Connection: [close]
-      Host: [magento.acdc10poc.vd]
+      Host: [magento]
       User-Agent: [Python-urllib/2.7]
     method: GET
     uri: http://magento/media/catalog/product/m/t/mtk000t_6.jpg
@@ -9373,7 +9373,7 @@ interactions:
       pragma: [no-cache]
       server: [nginx/1.10.2]
       set-cookie: ['PHPSESSID=07o8da07ltac2mdqilij7her24; expires=Tue, 12-Dec-2017
-          15:47:50 GMT; path=/; domain=magento.acdc10poc.vd; HttpOnly']
+          15:47:50 GMT; path=/; domain=magento; HttpOnly']
       x-powered-by: [PHP/5.3.3]
     status: {code: 200, message: OK}
 - request:
@@ -9422,7 +9422,7 @@ interactions:
       pragma: [no-cache]
       server: [nginx/1.10.2]
       set-cookie: ['PHPSESSID=6r6s5dnke972i0ncab8hhha8n7; expires=Tue, 12-Dec-2017
-          15:47:51 GMT; path=/; domain=magento.acdc10poc.vd; HttpOnly']
+          15:47:51 GMT; path=/; domain=magento; HttpOnly']
       x-powered-by: [PHP/5.3.3]
     status: {code: 200, message: OK}
 - request:
@@ -9488,7 +9488,7 @@ interactions:
       pragma: [no-cache]
       server: [nginx/1.10.2]
       set-cookie: ['PHPSESSID=flr2t9p9df2ip04no1htg79qv1; expires=Tue, 12-Dec-2017
-          15:47:51 GMT; path=/; domain=magento.acdc10poc.vd; HttpOnly']
+          15:47:51 GMT; path=/; domain=magento; HttpOnly']
       x-powered-by: [PHP/5.3.3]
     status: {code: 200, message: OK}
 - request:
@@ -9549,14 +9549,14 @@ interactions:
       pragma: [no-cache]
       server: [nginx/1.10.2]
       set-cookie: ['PHPSESSID=ddghrhthd4dd3m30vacq86hd76; expires=Tue, 12-Dec-2017
-          15:47:51 GMT; path=/; domain=magento.acdc10poc.vd; HttpOnly']
+          15:47:51 GMT; path=/; domain=magento; HttpOnly']
       x-powered-by: [PHP/5.3.3]
     status: {code: 200, message: OK}
 - request:
     body: null
     headers:
       Connection: [close]
-      Host: [magento.acdc10poc.vd]
+      Host: [magento]
       User-Agent: [Python-urllib/2.7]
     method: GET
     uri: http://magento/media/catalog/product/m/t/mtk000t_7.jpg
@@ -10023,7 +10023,7 @@ interactions:
       pragma: [no-cache]
       server: [nginx/1.10.2]
       set-cookie: ['PHPSESSID=m7pc3pv4vn0r4jdqjbq4a84ui0; expires=Tue, 12-Dec-2017
-          15:47:52 GMT; path=/; domain=magento.acdc10poc.vd; HttpOnly']
+          15:47:52 GMT; path=/; domain=magento; HttpOnly']
       x-powered-by: [PHP/5.3.3]
     status: {code: 200, message: OK}
 - request:
@@ -10072,7 +10072,7 @@ interactions:
       pragma: [no-cache]
       server: [nginx/1.10.2]
       set-cookie: ['PHPSESSID=j528a5s2ostj46b1rk8lkjsmg0; expires=Tue, 12-Dec-2017
-          15:47:52 GMT; path=/; domain=magento.acdc10poc.vd; HttpOnly']
+          15:47:52 GMT; path=/; domain=magento; HttpOnly']
       x-powered-by: [PHP/5.3.3]
     status: {code: 200, message: OK}
 - request:
@@ -10131,7 +10131,7 @@ interactions:
       pragma: [no-cache]
       server: [nginx/1.10.2]
       set-cookie: ['PHPSESSID=tbn9h05r2hs5f68uj3fgils393; expires=Tue, 12-Dec-2017
-          15:47:52 GMT; path=/; domain=magento.acdc10poc.vd; HttpOnly']
+          15:47:52 GMT; path=/; domain=magento; HttpOnly']
       x-powered-by: [PHP/5.3.3]
     status: {code: 200, message: OK}
 - request:
@@ -10174,7 +10174,7 @@ interactions:
       pragma: [no-cache]
       server: [nginx/1.10.2]
       set-cookie: ['PHPSESSID=rh1t384q8qnq6uudon318alsd4; expires=Tue, 12-Dec-2017
-          15:47:53 GMT; path=/; domain=magento.acdc10poc.vd; HttpOnly']
+          15:47:53 GMT; path=/; domain=magento; HttpOnly']
       x-powered-by: [PHP/5.3.3]
     status: {code: 200, message: OK}
 - request:
@@ -10223,7 +10223,7 @@ interactions:
       pragma: [no-cache]
       server: [nginx/1.10.2]
       set-cookie: ['PHPSESSID=n3t5d4t0815q29d4pli944t982; expires=Tue, 12-Dec-2017
-          15:47:53 GMT; path=/; domain=magento.acdc10poc.vd; HttpOnly']
+          15:47:53 GMT; path=/; domain=magento; HttpOnly']
       x-powered-by: [PHP/5.3.3]
     status: {code: 200, message: OK}
 - request:
@@ -10312,7 +10312,7 @@ interactions:
       pragma: [no-cache]
       server: [nginx/1.10.2]
       set-cookie: ['PHPSESSID=3135dcavpduhgaooq5qsab9af0; expires=Tue, 12-Dec-2017
-          15:47:53 GMT; path=/; domain=magento.acdc10poc.vd; HttpOnly']
+          15:47:53 GMT; path=/; domain=magento; HttpOnly']
       x-powered-by: [PHP/5.3.3]
     status: {code: 200, message: OK}
 - request:
@@ -10355,7 +10355,7 @@ interactions:
       pragma: [no-cache]
       server: [nginx/1.10.2]
       set-cookie: ['PHPSESSID=lhmfo8uulohl5v5gnmagto8751; expires=Tue, 12-Dec-2017
-          15:47:56 GMT; path=/; domain=magento.acdc10poc.vd; HttpOnly']
+          15:47:56 GMT; path=/; domain=magento; HttpOnly']
       x-powered-by: [PHP/5.3.3]
     status: {code: 200, message: OK}
 version: 1

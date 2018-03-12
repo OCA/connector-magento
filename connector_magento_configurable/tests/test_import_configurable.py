@@ -22,33 +22,28 @@ class TestImportConfigurable(MagentoSyncTestCase):
         """
         backend_id = self.backend.id
 
-        self.env['magento.product.product'].import_record(
+        self.env['magento.product.template'].import_record(
             self.backend, '408'
         )
 
-        product_model = self.env['magento.product.product']
-        products = product_model.search([('backend_id', '=', backend_id),
-                                         ('external_id', '=', '408')])
-        self.assertEqual(len(products), 1)
-
-        self.import_variants()
+        template_model = self.env['magento.product.template']
+        templates = template_model.search([('backend_id', '=', backend_id),
+                                           ('external_id', '=', '408')])
+        self.assertEqual(len(templates), 1)
 
         # the configurable importer takes a magento.product.product
         # as parameter instead of an sku
-        self.env['magento.product.configurable'].import_record(
-            self.backend, products
+        self.env['magento.product.template'].import_record(
+            self.backend, templates
         )
 
-        tmpl_id = products[0].product_tmpl_id.id
-        variants = product_model.search([('backend_id', '=', backend_id),
+        tmpl_id = templates[0].id
+        variants = template_model.search([('backend_id', '=', backend_id),
                                          ('product_tmpl_id', '=', tmpl_id)])
-        self.assertEqual(len(variants), 16)
-        # there is 15 variants but the initial product_product of the template
-        # remains too. The one that was created on simple product import
+        self.assertEqual(len(variants), 15)
 
-        line_model = self.env['magento.product.attribute.line']
-        lines = line_model.search([('backend_id', '=', backend_id),
-                                   ('product_tmpl_id', '=', tmpl_id)])
+        line_model = self.env['product.attribute.line']
+        lines = line_model.search([('product_tmpl_id', '=', tmpl_id)])
         self.assertEqual(len(lines), 2)  # 2 attributes for the template
 
         attribute_ids = [lines[0].attribute_id.id, lines[1].attribute_id.id]
@@ -65,11 +60,3 @@ class TestImportConfigurable(MagentoSyncTestCase):
         price_model = self.env['magento.product.attribute.price']
         prices = price_model.search([('backend_id', '=', backend_id)])
         self.assertEqual(len(prices), len(values))
-
-    def import_variants(self):
-        variant_skus = ['249', '250', '251', '252', '253', '254', '483', '484',
-                        '485', '486', '487', '488', '489', '490', '491']
-        for sku in variant_skus:
-            self.env['magento.product.product'].import_record(
-                self.backend, sku
-            )
