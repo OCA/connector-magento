@@ -24,15 +24,16 @@ class TemplateImportMapper(Component):
     _inherit = 'magento.product.product.import.mapper'
     _apply_on = ['magento.product.template']
 
-    direct = [('name', 'name'),
-              ('description', 'description'),
-              ('weight', 'weight'),
-              ('cost', 'standard_price'),
-              ('short_description', 'description_sale'),
-              ('sku', 'default_code'),
-              (normalize_datetime('created_at'), 'created_at'),
-              (normalize_datetime('updated_at'), 'updated_at'),
-              ]
+    direct = [
+        ('name', 'name'),
+        ('description', 'description'),
+        ('weight', 'weight'),
+        ('cost', 'standard_price'),
+        ('short_description', 'description_sale'),
+        ('sku', 'default_code'),
+        (normalize_datetime('created_at'), 'created_at'),
+        (normalize_datetime('updated_at'), 'updated_at'),
+        ]
 
     @mapping
     def variant_managed_by_magento(self, record):
@@ -76,6 +77,7 @@ class TemplateImporter(Component):
                 attribute_line_vals.append((1, line.id, vals))
             else:
                 attribute_line_vals.append((0, 0, vals))
+        return attribute_line_vals
 
     def _after_import(self, binding):
         sku = self.magento_record['sku']
@@ -87,9 +89,9 @@ class TemplateImporter(Component):
 
         for attribute in attrs:
             attr_importer.run(attribute)
-  
-        binding.write(
-            {'attribute_line_ids': self._prepare_attr_lines(binding, attrs)})
+
+        lines = self._prepare_attr_lines(binding, attrs)
+        binding.write({'attribute_line_ids': lines})
 
         value_binder = self.binder_for('magento.product.attribute.value')
         product_binder = self.binder_for('magento.product.product')
@@ -124,3 +126,6 @@ class TemplateImporter(Component):
                     raise MappingError(
                         "The template for the product %s (sku %s)"
                         " has many variants" % product.id, variant['sku'])
+
+    def run(self, external_id, force=True):
+        super(TemplateImporter, self).run(external_id, True)
