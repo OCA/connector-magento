@@ -78,8 +78,8 @@ class TemplateImporter(Component):
             vals = self._prepare_attribute_vals(attribute)
             if vals:
                 line = self.env['product.attribute.line'].search([
-                    ('attribute_id', '=', vals.get('attribute_id')),
-                    ('product_tmpl_id', '=', binding.odoo_id.id)
+                    ('attribute_id.id', '=', vals.get('attribute_id')),
+                    ('product_tmpl_id.id', '=', binding.odoo_id.id)
                 ])
                 if line:
                     attribute_line_vals.append((1, line.id, vals))

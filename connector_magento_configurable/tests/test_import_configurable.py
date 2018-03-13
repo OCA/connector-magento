@@ -25,20 +25,14 @@ class TestImportConfigurable(MagentoSyncTestCase):
         self.env['magento.product.template'].import_record(
             self.backend, '408'
         )
-
         template_model = self.env['magento.product.template']
         templates = template_model.search([('backend_id', '=', backend_id),
                                            ('external_id', '=', '408')])
         self.assertEqual(len(templates), 1)
 
-        # the configurable importer takes a magento.product.product
-        # as parameter instead of an sku
-        self.env['magento.product.template'].import_record(
-            self.backend, templates
-        )
-
-        tmpl_id = templates[0].id
-        variants = template_model.search([('backend_id', '=', backend_id),
+        tmpl_id = templates[0].odoo_id.id
+        product_model = self.env['magento.product.product']
+        variants = product_model.search([('backend_id', '=', backend_id),
                                          ('product_tmpl_id', '=', tmpl_id)])
         self.assertEqual(len(variants), 15)
 
