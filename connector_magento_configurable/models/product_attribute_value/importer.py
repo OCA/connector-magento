@@ -81,7 +81,7 @@ class ProductAttributeValueImportMapper(Component):
 
         value = self.env['product.attribute.value'].search(
             [('name', '=', record['label']),
-             ('attribute_id', '=', record['magento_attribute'].odoo_id)],
+             ('attribute_id', '=', record['magento_attribute'].odoo_id.id)],
             limit=1
         )
         if value:

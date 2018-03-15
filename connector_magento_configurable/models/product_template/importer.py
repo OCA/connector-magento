@@ -78,8 +78,8 @@ class TemplateImporter(Component):
             vals = self._prepare_attribute_vals(attribute)
             if vals:
                 line = self.env['product.attribute.line'].search([
-                    ('attribute_id', '=', vals.get('attribute_id')),
-                    ('product_tmpl_id', '=', binding.odoo_id.id)
+                    ('attribute_id.id', '=', vals.get('attribute_id')),
+                    ('product_tmpl_id.id', '=', binding.odoo_id.id)
                 ])
                 if line:
                     attribute_line_vals.append((1, line.id, vals))
@@ -88,52 +88,53 @@ class TemplateImporter(Component):
         return attribute_line_vals
 
     def _after_import(self, binding):
-        attrs = self.backend_adapter.list_attributes(binding.external_id)
+        if binding.variant_managed_by_magento:
+            attrs = self.backend_adapter.list_attributes(binding.external_id)
 
-        attr_importer = self.component(
-            usage='record.importer',
-            model_name='magento.product.attribute')
+            attr_importer = self.component(
+                usage='record.importer',
+                model_name='magento.product.attribute')
 
-        for attribute in attrs:
-            attr_importer.run(attribute)
-
-        lines = self._prepare_attr_lines(binding, attrs)
-        binding.write({'attribute_line_ids': lines})
-
-        value_binder = self.binder_for('magento.product.attribute.value')
-        product_binder = self.binder_for('magento.product.product')
-
-        variants = self.backend_adapter.list_variants(binding.external_id)
-        for variant in variants:
-            attribute_value_ids = []
-            self._import_dependency(
-                variant['entity_id'], 'magento.product.product')
-            product = product_binder.to_internal(
-                variant['entity_id'], unwrap=True)
             for attribute in attrs:
-                if variant.get(attribute['attribute_code']):
-                    value = value_binder.to_internal(
-                        variant[attribute['attribute_code']],
-                        unwrap=True)
-                    if not value:
-                        raise MappingError(
-                            "The attribute value with "
-                            "magento id %s is not imported." %
-                            variant[attribute['attribute_code']])
-                    attribute_value_ids.append(value.id)
-            vals = {'attribute_value_ids': [(6, 0, attribute_value_ids)]}
-            template = product.product_tmpl_id
-            if template.id != binding.odoo_id.id:
-                vals['product_tmpl_id'] = binding.odoo_id.id
-            product.write(vals)
-            if not template.product_variant_ids:
-                template.unlink()
-            else:
+                attr_importer.run(attribute)
+
+            lines = self._prepare_attr_lines(binding, attrs)
+            binding.write({'attribute_line_ids': lines})
+
+            value_binder = self.binder_for('magento.product.attribute.value')
+            product_binder = self.binder_for('magento.product.product')
+
+            variants = self.backend_adapter.list_variants(binding.external_id)
+            for variant in variants:
+                attribute_value_ids = []
+                self._import_dependency(
+                    variant['entity_id'], 'magento.product.product')
+                product = product_binder.to_internal(
+                    variant['entity_id'], unwrap=True)
+                for attribute in attrs:
+                    if variant.get(attribute['attribute_code']):
+                        value = value_binder.to_internal(
+                            variant[attribute['attribute_code']],
+                            unwrap=True)
+                        if not value:
+                            raise MappingError(
+                                "The attribute value with "
+                                "magento id %s is not imported." %
+                                variant[attribute['attribute_code']])
+                        attribute_value_ids.append(value.id)
+                vals = {'attribute_value_ids': [(6, 0, attribute_value_ids)]}
+                template = product.product_tmpl_id
                 if template.id != binding.odoo_id.id:
-                    raise MappingError(
-                        "The template for the product {} (sku {})"
-                        " has many variants".format(
-                            product.default_code, variant['sku']))
+                    vals['product_tmpl_id'] = binding.odoo_id.id
+                product.write(vals)
+                if not template.product_variant_ids:
+                    template.unlink()
+                else:
+                    if template.id != binding.odoo_id.id:
+                        raise MappingError(
+                            "The template for the product {} (sku {})"
+                            " has many variants".format(
+                                product.default_code, variant['sku']))
         super(TemplateImporter, self)._after_import(binding)
 
     def run(self, external_id, force=True):

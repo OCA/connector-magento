@@ -17,7 +17,7 @@ class ProductImporter(Component):
     def _update(self, binding, data):
         """ Update an OpenERP record """
         if binding._name == 'magento.product.product':
-            if binding.product_tmpl_id.magento_bind_ids:
+            if binding.product_tmpl_id.attribute_line_ids:
                 for tmpl_field in self.env['product.template']._fields.keys():
                     # Do not raise error when key is missing
                     data.pop(tmpl_field, False)

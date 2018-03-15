@@ -38,11 +38,6 @@ class ProductAttributePriceImporter(Component):
         if modified:
             super(ProductAttributePriceImporter, self)._update(binding, data)
 
-    def _import_dependencies(self):
-        product_id = self.magento_record['product_id']
-        if product_id:
-            self._import_dependency(product_id, 'magento.product.product')
-
     def run(self, magento_record, force=False):
         self.magento_record = magento_record
         return super(ProductAttributePriceImporter, self).run(
@@ -86,5 +81,4 @@ class ProductAttributePriceImportMapper(Component):
         value = record.get('magento_value').odoo_id
         return {
             'value_id': value.id,
-            'magento_value_id': record.get('magento_value').id,
         }
