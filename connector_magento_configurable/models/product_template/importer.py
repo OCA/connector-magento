@@ -128,12 +128,12 @@ class TemplateImporter(Component):
             product.write(vals)
             if not template.product_variant_ids:
                 template.unlink()
-            # else:
-            #     if template.id != binding.odoo_id.id:
-            #         raise MappingError(
-            #             "The template for the product {} (sku {})"
-            #             " has many variants".format(
-            #                 product.default_code, variant['sku']))
+            else:
+                if template.id != binding.odoo_id.id:
+                    raise MappingError(
+                        "The template for the product {} (sku {})"
+                        " has many variants".format(
+                            product.default_code, variant['sku']))
         super(TemplateImporter, self)._after_import(binding)
 
     def run(self, external_id, force=True):

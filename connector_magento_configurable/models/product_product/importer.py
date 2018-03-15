@@ -19,5 +19,6 @@ class ProductImporter(Component):
         if binding._name == 'magento.product.product':
             if binding.product_tmpl_id.magento_bind_ids:
                 for tmpl_field in self.env['product.template']._fields.keys():
-                    data.pop(tmpl_field)
+                    # Do not raise error when key is missing
+                    data.pop(tmpl_field, False)
         return super(ProductImporter, self)._update(binding, data)

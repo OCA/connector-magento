@@ -71,3 +71,18 @@ class ProductAttributeValueImportMapper(Component):
             'attribute_id': record['magento_attribute'].odoo_id.id,
             'magento_attribute_id': record['magento_attribute'].id,
             }
+
+    @mapping
+    def odoo_id(self, record):
+        """ Will bind the value on a existing one
+        with the same name and attribute """
+        if not record['magento_attribute']:
+            return
+
+        value = self.env['product.attribute.value'].search(
+            [('name', '=', record['label']),
+             ('attribute_id', '=', record['magento_attribute'].odoo_id)],
+            limit=1
+        )
+        if value:
+            return {'odoo_id': value.id}
