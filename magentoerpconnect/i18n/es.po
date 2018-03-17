@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: connector-magento (8.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-30 02:39+0000\n"
-"PO-Revision-Date: 2018-01-05 09:08+0000\n"
+"POT-Creation-Date: 2018-03-03 03:20+0000\n"
+"PO-Revision-Date: 2018-03-16 18:06+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: Spanish (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/es/)\n"
 "MIME-Version: 1.0\n"
@@ -2364,7 +2364,7 @@ msgstr "Tarifa"
 #. module: magentoerpconnect
 #: help:magento.sale.order,pricelist_id:0
 msgid "Pricelist for current sales order."
-msgstr ""
+msgstr "Tarifa del pedido de ventas actual."
 
 #. module: magentoerpconnect
 #: field:connector.config.settings,module_magentoerpconnect_pricing:0
