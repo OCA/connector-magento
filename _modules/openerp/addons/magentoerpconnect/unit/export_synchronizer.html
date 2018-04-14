@@ -220,18 +220,7 @@
 
 <div class="container">
   <div class="row">
-      <div class="col-md-3">
-        <div id="sidebar" class="bs-sidenav" role="complementary">
-<form action="../../../../../search.html" method="get">
- <div class="form-group">
-  <input type="text" name="q" class="form-control" placeholder="Search" />
- </div>
-  <input type="hidden" name="check_keywords" value="yes" />
-  <input type="hidden" name="area" value="default" />
-</form>
-        </div>
-      </div>
-    <div class="col-md-9 content">
+    <div class="col-md-12 content">
       
   <h1>Source code for openerp.addons.magentoerpconnect.unit.export_synchronizer</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
@@ -366,16 +355,16 @@
         <span class="c1"># record</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_after_export</span><span class="p">()</span></div>
-        <span class="k">return</span> <span class="n">result</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_after_export</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">result</span></div>
 
     <span class="k">def</span> <span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Flow of the synchronization, implemented in inherited classes&quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span>
 
     <span class="k">def</span> <span class="nf">_after_export</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Can do several actions after exporting a record on magento &quot;&quot;&quot;</span></div>
-        <span class="k">pass</span>
+        <span class="sd">&quot;&quot;&quot; Can do several actions after exporting a record on magento &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
 
 
 <div class="viewcode-block" id="MagentoExporter"><a class="viewcode-back" href="../../../../../api/api_synchronizer.html#openerp.addons.magentoerpconnect.unit.export_synchronizer.MagentoExporter">[docs]</a><span class="k">class</span> <span class="nc">MagentoExporter</span><span class="p">(</span><span class="n">MagentoBaseExporter</span><span class="p">):</span>
@@ -646,8 +635,8 @@
             <span class="n">record</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_data</span><span class="p">(</span><span class="n">map_record</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="n">fields</span><span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">record</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">_</span><span class="p">(</span><span class="s1">&#39;Nothing to export.&#39;</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">magento_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create</span><span class="p">(</span><span class="n">record</span><span class="p">)</span></div>
-        <span class="k">return</span> <span class="n">_</span><span class="p">(</span><span class="s1">&#39;Record exported with ID </span><span class="si">%s</span><span class="s1"> on Magento.&#39;</span><span class="p">)</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">magento_id</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">magento_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">_</span><span class="p">(</span><span class="s1">&#39;Record exported with ID </span><span class="si">%s</span><span class="s1"> on Magento.&#39;</span><span class="p">)</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">magento_id</span></div>
 
 
 <div class="viewcode-block" id="export_record"><a class="viewcode-back" href="../../../../../api/api_synchronizer.html#openerp.addons.magentoerpconnect.unit.export_synchronizer.export_record">[docs]</a><span class="nd">@job</span><span class="p">(</span><span class="n">default_channel</span><span class="o">=</span><span class="s1">&#39;root.magento&#39;</span><span class="p">)</span>
@@ -656,8 +645,8 @@
     <span class="sd">&quot;&quot;&quot; Export a record on Magento &quot;&quot;&quot;</span>
     <span class="n">record</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">env</span><span class="p">[</span><span class="n">model_name</span><span class="p">]</span><span class="o">.</span><span class="n">browse</span><span class="p">(</span><span class="n">binding_id</span><span class="p">)</span>
     <span class="n">env</span> <span class="o">=</span> <span class="n">get_environment</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">record</span><span class="o">.</span><span class="n">backend_id</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
-    <span class="n">exporter</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">get_connector_unit</span><span class="p">(</span><span class="n">MagentoExporter</span><span class="p">)</span></div>
-    <span class="k">return</span> <span class="n">exporter</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">binding_id</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="n">fields</span><span class="p">)</span>
+    <span class="n">exporter</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">get_connector_unit</span><span class="p">(</span><span class="n">MagentoExporter</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">exporter</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">binding_id</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="n">fields</span><span class="p">)</span></div>
 </pre></div>
 
     </div>
@@ -675,7 +664,7 @@
     </p>
     <p>
         &copy; Copyright 2013-2015, Odoo Community Association (OCA).<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.1.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.2.<br/>
     </p>
   </div>
 </footer>

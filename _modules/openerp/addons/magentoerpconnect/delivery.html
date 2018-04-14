@@ -220,18 +220,7 @@
 
 <div class="container">
   <div class="row">
-      <div class="col-md-3">
-        <div id="sidebar" class="bs-sidenav" role="complementary">
-<form action="../../../../search.html" method="get">
- <div class="form-group">
-  <input type="text" name="q" class="form-control" placeholder="Search" />
- </div>
-  <input type="hidden" name="check_keywords" value="yes" />
-  <input type="hidden" name="area" value="default" />
-</form>
-        </div>
-      </div>
-    <div class="col-md-9 content">
+    <div class="col-md-12 content">
       
   <h1>Source code for openerp.addons.magentoerpconnect.delivery</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
@@ -306,8 +295,8 @@
     <span class="nd">@api</span><span class="o">.</span><span class="n">depends</span><span class="p">(</span><span class="s1">&#39;magento_code&#39;</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">_compute_carrier_code</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">carrier</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">carrier</span><span class="o">.</span><span class="n">magento_code</span><span class="p">:</span></div>
-                <span class="bp">self</span><span class="o">.</span><span class="n">magento_carrier_code</span> <span class="o">=</span> <span class="n">carrier</span><span class="o">.</span><span class="n">magento_code</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">carrier</span><span class="o">.</span><span class="n">magento_code</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">magento_carrier_code</span> <span class="o">=</span> <span class="n">carrier</span><span class="o">.</span><span class="n">magento_code</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span></div>
 </pre></div>
 
     </div>
@@ -325,7 +314,7 @@
     </p>
     <p>
         &copy; Copyright 2013-2015, Odoo Community Association (OCA).<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.1.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.2.<br/>
     </p>
   </div>
 </footer>

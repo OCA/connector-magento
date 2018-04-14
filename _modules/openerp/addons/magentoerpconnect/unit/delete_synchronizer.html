@@ -220,18 +220,7 @@
 
 <div class="container">
   <div class="row">
-      <div class="col-md-3">
-        <div id="sidebar" class="bs-sidenav" role="complementary">
-<form action="../../../../../search.html" method="get">
- <div class="form-group">
-  <input type="text" name="q" class="form-control" placeholder="Search" />
- </div>
-  <input type="hidden" name="check_keywords" value="yes" />
-  <input type="hidden" name="area" value="default" />
-</form>
-        </div>
-      </div>
-    <div class="col-md-9 content">
+    <div class="col-md-12 content">
       
   <h1>Source code for openerp.addons.magentoerpconnect.unit.delete_synchronizer</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
@@ -270,8 +259,8 @@
 
 <span class="sd">        :param magento_id: identifier of the record to delete</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">backend_adapter</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">magento_id</span><span class="p">)</span></div></div>
-        <span class="k">return</span> <span class="n">_</span><span class="p">(</span><span class="s1">&#39;Record </span><span class="si">%s</span><span class="s1"> deleted on Magento&#39;</span><span class="p">)</span> <span class="o">%</span> <span class="n">magento_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">backend_adapter</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">magento_id</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">_</span><span class="p">(</span><span class="s1">&#39;Record </span><span class="si">%s</span><span class="s1"> deleted on Magento&#39;</span><span class="p">)</span> <span class="o">%</span> <span class="n">magento_id</span></div></div>
 
 
 <span class="n">MagentoDeleteSynchronizer</span> <span class="o">=</span> <span class="n">MagentoDeleter</span>  <span class="c1"># deprecated</span>
@@ -282,8 +271,8 @@
 <span class="k">def</span> <span class="nf">export_delete_record</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">backend_id</span><span class="p">,</span> <span class="n">magento_id</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Delete a record on Magento &quot;&quot;&quot;</span>
     <span class="n">env</span> <span class="o">=</span> <span class="n">get_environment</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">backend_id</span><span class="p">)</span>
-    <span class="n">deleter</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">get_connector_unit</span><span class="p">(</span><span class="n">MagentoDeleter</span><span class="p">)</span></div>
-    <span class="k">return</span> <span class="n">deleter</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">magento_id</span><span class="p">)</span>
+    <span class="n">deleter</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">get_connector_unit</span><span class="p">(</span><span class="n">MagentoDeleter</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">deleter</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">magento_id</span><span class="p">)</span></div>
 </pre></div>
 
     </div>
@@ -301,7 +290,7 @@
     </p>
     <p>
         &copy; Copyright 2013-2015, Odoo Community Association (OCA).<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.1.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.2.<br/>
     </p>
   </div>
 </footer>

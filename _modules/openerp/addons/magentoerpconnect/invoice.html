@@ -220,18 +220,7 @@
 
 <div class="container">
   <div class="row">
-      <div class="col-md-3">
-        <div id="sidebar" class="bs-sidenav" role="complementary">
-<form action="../../../../search.html" method="get">
- <div class="form-group">
-  <input type="text" name="q" class="form-control" placeholder="Search" />
- </div>
-  <input type="hidden" name="check_keywords" value="yes" />
-  <input type="hidden" name="area" value="default" />
-</form>
-        </div>
-      </div>
-    <div class="col-md-9 content">
+    <div class="col-md-12 content">
       
   <h1>Source code for openerp.addons.magentoerpconnect.invoice</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
@@ -289,8 +278,8 @@
 
     <span class="n">_sql_constraints</span> <span class="o">=</span> <span class="p">[</span>
         <span class="p">(</span><span class="s1">&#39;openerp_uniq&#39;</span><span class="p">,</span> <span class="s1">&#39;unique(backend_id, openerp_id)&#39;</span><span class="p">,</span>
-         <span class="s1">&#39;A Magento binding for this invoice already exists.&#39;</span><span class="p">),</span></div>
-    <span class="p">]</span>
+         <span class="s1">&#39;A Magento binding for this invoice already exists.&#39;</span><span class="p">),</span>
+    <span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="AccountInvoice"><a class="viewcode-back" href="../../../../api/api_invoice.html#openerp.addons.magentoerpconnect.invoice.AccountInvoice">[docs]</a><span class="k">class</span> <span class="nc">AccountInvoice</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
@@ -302,8 +291,8 @@
     <span class="n">magento_bind_ids</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">One2many</span><span class="p">(</span>
         <span class="n">comodel_name</span><span class="o">=</span><span class="s1">&#39;magento.account.invoice&#39;</span><span class="p">,</span>
         <span class="n">inverse_name</span><span class="o">=</span><span class="s1">&#39;openerp_id&#39;</span><span class="p">,</span>
-        <span class="n">string</span><span class="o">=</span><span class="s1">&#39;Magento Bindings&#39;</span><span class="p">,</span></div>
-    <span class="p">)</span>
+        <span class="n">string</span><span class="o">=</span><span class="s1">&#39;Magento Bindings&#39;</span><span class="p">,</span>
+    <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="AccountInvoiceAdapter"><a class="viewcode-back" href="../../../../api/api_invoice.html#openerp.addons.magentoerpconnect.invoice.AccountInvoiceAdapter">[docs]</a><span class="nd">@magento</span>
@@ -328,8 +317,8 @@
                <span class="n">include_comment</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Create a record on the external system &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">.create&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_magento_model</span><span class="p">,</span>
-                          <span class="p">[</span><span class="n">order_increment_id</span><span class="p">,</span> <span class="n">items</span><span class="p">,</span> <span class="n">comment</span><span class="p">,</span></div>
-                           <span class="n">email</span><span class="p">,</span> <span class="n">include_comment</span><span class="p">])</span>
+                          <span class="p">[</span><span class="n">order_increment_id</span><span class="p">,</span> <span class="n">items</span><span class="p">,</span> <span class="n">comment</span><span class="p">,</span>
+                           <span class="n">email</span><span class="p">,</span> <span class="n">include_comment</span><span class="p">])</span></div>
 
 <div class="viewcode-block" id="AccountInvoiceAdapter.search_read"><a class="viewcode-back" href="../../../../api/api_invoice.html#openerp.addons.magentoerpconnect.invoice.AccountInvoiceAdapter.search_read">[docs]</a>    <span class="k">def</span> <span class="nf">search_read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">order_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Search records according to some criterias</span>
@@ -341,8 +330,8 @@
         <span class="k">if</span> <span class="n">filters</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">filters</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">if</span> <span class="n">order_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">filters</span><span class="p">[</span><span class="s1">&#39;order_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;eq&#39;</span><span class="p">:</span> <span class="n">order_id</span><span class="p">}</span></div></div>
-        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">AccountInvoiceAdapter</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">search_read</span><span class="p">(</span><span class="n">filters</span><span class="o">=</span><span class="n">filters</span><span class="p">)</span>
+            <span class="n">filters</span><span class="p">[</span><span class="s1">&#39;order_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;eq&#39;</span><span class="p">:</span> <span class="n">order_id</span><span class="p">}</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">AccountInvoiceAdapter</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">search_read</span><span class="p">(</span><span class="n">filters</span><span class="o">=</span><span class="n">filters</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="MagentoInvoiceExporter"><a class="viewcode-back" href="../../../../api/api_invoice.html#openerp.addons.magentoerpconnect.invoice.MagentoInvoiceExporter">[docs]</a><span class="nd">@magento</span>
@@ -429,8 +418,8 @@
             <span class="c1"># as done, because Magento did not raised an error</span>
             <span class="n">magento_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_existing_invoice</span><span class="p">(</span><span class="n">magento_order</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">magento_id</span><span class="p">:</span></div>
-            <span class="bp">self</span><span class="o">.</span><span class="n">binder</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">magento_id</span><span class="p">,</span> <span class="n">binding_id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">magento_id</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">binder</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">magento_id</span><span class="p">,</span> <span class="n">binding_id</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">_get_existing_invoice</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">magento_order</span><span class="p">):</span>
         <span class="n">invoices</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend_adapter</span><span class="o">.</span><span class="n">search_read</span><span class="p">(</span>
@@ -438,8 +427,8 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="n">invoices</span><span class="p">:</span>
             <span class="k">return</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">invoices</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="k">return</span></div>
-        <span class="k">return</span> <span class="n">invoices</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;increment_id&#39;</span><span class="p">]</span>
+            <span class="k">return</span>
+        <span class="k">return</span> <span class="n">invoices</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;increment_id&#39;</span><span class="p">]</span></div>
 
 
 <span class="n">MagentoInvoiceSynchronizer</span> <span class="o">=</span> <span class="n">MagentoInvoiceExporter</span>  <span class="c1"># deprecated</span>
@@ -476,16 +465,16 @@
             <span class="k">if</span> <span class="n">create_invoice</span> <span class="o">==</span> <span class="n">invoice</span><span class="o">.</span><span class="n">state</span><span class="p">:</span>
                 <span class="n">session</span><span class="o">.</span><span class="n">env</span><span class="p">[</span><span class="s1">&#39;magento.account.invoice&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">create</span><span class="p">({</span>
                     <span class="s1">&#39;backend_id&#39;</span><span class="p">:</span> <span class="n">magento_sale</span><span class="o">.</span><span class="n">backend_id</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-                    <span class="s1">&#39;openerp_id&#39;</span><span class="p">:</span> <span class="n">invoice</span><span class="o">.</span><span class="n">id</span><span class="p">,</span></div>
-                    <span class="s1">&#39;magento_order_id&#39;</span><span class="p">:</span> <span class="n">magento_sale</span><span class="o">.</span><span class="n">id</span><span class="p">})</span>
+                    <span class="s1">&#39;openerp_id&#39;</span><span class="p">:</span> <span class="n">invoice</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                    <span class="s1">&#39;magento_order_id&#39;</span><span class="p">:</span> <span class="n">magento_sale</span><span class="o">.</span><span class="n">id</span><span class="p">})</span></div>
 
 
 <div class="viewcode-block" id="delay_export_account_invoice"><a class="viewcode-back" href="../../../../api/api_invoice.html#openerp.addons.magentoerpconnect.invoice.delay_export_account_invoice">[docs]</a><span class="nd">@on_record_create</span><span class="p">(</span><span class="n">model_names</span><span class="o">=</span><span class="s1">&#39;magento.account.invoice&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">delay_export_account_invoice</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">record_id</span><span class="p">,</span> <span class="n">vals</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Delay the job to export the magento invoice.</span>
-<span class="sd">    &quot;&quot;&quot;</span></div>
-    <span class="n">export_invoice</span><span class="o">.</span><span class="n">delay</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">record_id</span><span class="p">)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">export_invoice</span><span class="o">.</span><span class="n">delay</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">record_id</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="export_invoice_paid"><a class="viewcode-back" href="../../../../api/api_invoice.html#openerp.addons.magentoerpconnect.invoice.export_invoice_paid">[docs]</a><span class="nd">@job</span><span class="p">(</span><span class="n">default_channel</span><span class="o">=</span><span class="s1">&#39;root.magento&#39;</span><span class="p">)</span>
@@ -493,8 +482,8 @@
 <span class="k">def</span> <span class="nf">export_invoice_paid</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">record_id</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Deprecated in 2.1.0.dev0. &quot;&quot;&quot;</span>
     <span class="n">_logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Deprecated: the export_invoice_paid() job is deprecated &#39;</span>
-                    <span class="s1">&#39;in favor of export_invoice()&#39;</span><span class="p">)</span></div>
-    <span class="k">return</span> <span class="n">export_invoice</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">record_id</span><span class="p">)</span>
+                    <span class="s1">&#39;in favor of export_invoice()&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">export_invoice</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">record_id</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="export_invoice"><a class="viewcode-back" href="../../../../api/api_invoice.html#openerp.addons.magentoerpconnect.invoice.export_invoice">[docs]</a><span class="nd">@job</span><span class="p">(</span><span class="n">default_channel</span><span class="o">=</span><span class="s1">&#39;root.magento&#39;</span><span class="p">)</span>
@@ -504,8 +493,8 @@
     <span class="n">invoice</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">env</span><span class="p">[</span><span class="n">model_name</span><span class="p">]</span><span class="o">.</span><span class="n">browse</span><span class="p">(</span><span class="n">record_id</span><span class="p">)</span>
     <span class="n">backend_id</span> <span class="o">=</span> <span class="n">invoice</span><span class="o">.</span><span class="n">backend_id</span><span class="o">.</span><span class="n">id</span>
     <span class="n">env</span> <span class="o">=</span> <span class="n">get_environment</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">backend_id</span><span class="p">)</span>
-    <span class="n">invoice_exporter</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">get_connector_unit</span><span class="p">(</span><span class="n">MagentoInvoiceExporter</span><span class="p">)</span></div>
-    <span class="k">return</span> <span class="n">invoice_exporter</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">record_id</span><span class="p">)</span>
+    <span class="n">invoice_exporter</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">get_connector_unit</span><span class="p">(</span><span class="n">MagentoInvoiceExporter</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">invoice_exporter</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">record_id</span><span class="p">)</span></div>
 </pre></div>
 
     </div>
@@ -523,7 +512,7 @@
     </p>
     <p>
         &copy; Copyright 2013-2015, Odoo Community Association (OCA).<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.1.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.2.<br/>
     </p>
   </div>
 </footer>

@@ -220,18 +220,7 @@
 
 <div class="container">
   <div class="row">
-      <div class="col-md-3">
-        <div id="sidebar" class="bs-sidenav" role="complementary">
-<form action="../../../../search.html" method="get">
- <div class="form-group">
-  <input type="text" name="q" class="form-control" placeholder="Search" />
- </div>
-  <input type="hidden" name="check_keywords" value="yes" />
-  <input type="hidden" name="area" value="default" />
-</form>
-        </div>
-      </div>
-    <div class="col-md-9 content">
+    <div class="col-md-12 content">
       
   <h1>Source code for openerp.addons.magentoerpconnect.product</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
@@ -292,8 +281,8 @@
 
 
 <div class="viewcode-block" id="chunks"><a class="viewcode-back" href="../../../../api/api_product.html#openerp.addons.magentoerpconnect.product.chunks">[docs]</a><span class="k">def</span> <span class="nf">chunks</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="n">length</span><span class="p">):</span>
-    <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="n">xrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">items</span><span class="p">),</span> <span class="n">length</span><span class="p">):</span></div>
-        <span class="k">yield</span> <span class="n">items</span><span class="p">[</span><span class="n">index</span><span class="p">:</span><span class="n">index</span> <span class="o">+</span> <span class="n">length</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="n">xrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">items</span><span class="p">),</span> <span class="n">length</span><span class="p">):</span>
+        <span class="k">yield</span> <span class="n">items</span><span class="p">[</span><span class="n">index</span><span class="p">:</span><span class="n">index</span> <span class="o">+</span> <span class="n">length</span><span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="MagentoProductProduct"><a class="viewcode-back" href="../../../../api/api_product.html#openerp.addons.magentoerpconnect.product.MagentoProductProduct">[docs]</a><span class="k">class</span> <span class="nc">MagentoProductProduct</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
@@ -311,8 +300,8 @@
             <span class="p">(</span><span class="s1">&#39;downloadable&#39;</span><span class="p">,</span> <span class="s1">&#39;Downloadable Product&#39;</span><span class="p">),</span>
             <span class="c1"># XXX activate when supported</span>
             <span class="c1"># (&#39;grouped&#39;, &#39;Grouped Product&#39;),</span>
-            <span class="c1"># (&#39;bundle&#39;, &#39;Bundle Product&#39;),</span></div>
-        <span class="p">]</span>
+            <span class="c1"># (&#39;bundle&#39;, &#39;Bundle Product&#39;),</span>
+        <span class="p">]</span></div>
 
     <span class="n">openerp_id</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Many2one</span><span class="p">(</span><span class="n">comodel_name</span><span class="o">=</span><span class="s1">&#39;product.product&#39;</span><span class="p">,</span>
                                  <span class="n">string</span><span class="o">=</span><span class="s1">&#39;Product&#39;</span><span class="p">,</span>
@@ -376,8 +365,8 @@
             <span class="n">backends</span><span class="p">[</span><span class="n">product</span><span class="o">.</span><span class="n">backend_id</span><span class="p">]</span> <span class="o">|=</span> <span class="n">product</span>
 
         <span class="k">for</span> <span class="n">backend</span><span class="p">,</span> <span class="n">products</span> <span class="ow">in</span> <span class="n">backends</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_recompute_magento_qty_backend</span><span class="p">(</span><span class="n">backend</span><span class="p">,</span> <span class="n">products</span><span class="p">)</span></div>
-        <span class="k">return</span> <span class="kc">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_recompute_magento_qty_backend</span><span class="p">(</span><span class="n">backend</span><span class="p">,</span> <span class="n">products</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
 
     <span class="nd">@api</span><span class="o">.</span><span class="n">multi</span>
     <span class="k">def</span> <span class="nf">_recompute_magento_qty_backend</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">products</span><span class="p">,</span>
@@ -421,8 +410,8 @@
 <span class="sd">        If you need to read additional fields on the product, see the</span>
 <span class="sd">        ``read_fields`` argument of :meth:`~._recompute_magento_qty_backend`</span>
 
-<span class="sd">        &quot;&quot;&quot;</span></div>
-        <span class="k">return</span> <span class="n">product</span><span class="p">[</span><span class="n">stock_field</span><span class="p">]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">product</span><span class="p">[</span><span class="n">stock_field</span><span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="ProductProduct"><a class="viewcode-back" href="../../../../api/api_product.html#openerp.addons.magentoerpconnect.product.ProductProduct">[docs]</a><span class="k">class</span> <span class="nc">ProductProduct</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
@@ -431,8 +420,8 @@
     <span class="n">magento_bind_ids</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">One2many</span><span class="p">(</span>
         <span class="n">comodel_name</span><span class="o">=</span><span class="s1">&#39;magento.product.product&#39;</span><span class="p">,</span>
         <span class="n">inverse_name</span><span class="o">=</span><span class="s1">&#39;openerp_id&#39;</span><span class="p">,</span>
-        <span class="n">string</span><span class="o">=</span><span class="s1">&#39;Magento Bindings&#39;</span><span class="p">,</span></div>
-    <span class="p">)</span>
+        <span class="n">string</span><span class="o">=</span><span class="s1">&#39;Magento Bindings&#39;</span><span class="p">,</span>
+    <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="ProductProductAdapter"><a class="viewcode-back" href="../../../../api/api_product.html#openerp.addons.magentoerpconnect.product.ProductProductAdapter">[docs]</a><span class="nd">@magento</span>
@@ -469,35 +458,35 @@
             <span class="n">filters</span><span class="p">[</span><span class="s1">&#39;updated_at&#39;</span><span class="p">][</span><span class="s1">&#39;to&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">to_date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="n">dt_fmt</span><span class="p">)</span>
         <span class="c1"># TODO add a search entry point on the Magento API</span>
         <span class="k">return</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;product_id&#39;</span><span class="p">])</span> <span class="k">for</span> <span class="n">row</span>
-                <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">.list&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_magento_model</span><span class="p">,</span></div>
-                              <span class="p">[</span><span class="n">filters</span><span class="p">]</span> <span class="k">if</span> <span class="n">filters</span> <span class="k">else</span> <span class="p">[{}])]</span>
+                <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">.list&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_magento_model</span><span class="p">,</span>
+                              <span class="p">[</span><span class="n">filters</span><span class="p">]</span> <span class="k">if</span> <span class="n">filters</span> <span class="k">else</span> <span class="p">[{}])]</span></div>
 
 <div class="viewcode-block" id="ProductProductAdapter.read"><a class="viewcode-back" href="../../../../api/api_product.html#openerp.addons.magentoerpconnect.product.ProductProductAdapter.read">[docs]</a>    <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">storeview_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">attributes</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Returns the information of a record</span>
 
 <span class="sd">        :rtype: dict</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call</span><span class="p">(</span><span class="s1">&#39;ol_catalog_product.info&#39;</span><span class="p">,</span></div>
-                          <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="nb">id</span><span class="p">),</span> <span class="n">storeview_id</span><span class="p">,</span> <span class="n">attributes</span><span class="p">,</span> <span class="s1">&#39;id&#39;</span><span class="p">])</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call</span><span class="p">(</span><span class="s1">&#39;ol_catalog_product.info&#39;</span><span class="p">,</span>
+                          <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="nb">id</span><span class="p">),</span> <span class="n">storeview_id</span><span class="p">,</span> <span class="n">attributes</span><span class="p">,</span> <span class="s1">&#39;id&#39;</span><span class="p">])</span></div>
 
 <div class="viewcode-block" id="ProductProductAdapter.write"><a class="viewcode-back" href="../../../../api/api_product.html#openerp.addons.magentoerpconnect.product.ProductProductAdapter.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">storeview_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Update records on the external system &quot;&quot;&quot;</span>
         <span class="c1"># XXX actually only ol_catalog_product.update works</span>
         <span class="c1"># the PHP connector maybe breaks the catalog_product.update</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call</span><span class="p">(</span><span class="s1">&#39;ol_catalog_product.update&#39;</span><span class="p">,</span></div>
-                          <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="nb">id</span><span class="p">),</span> <span class="n">data</span><span class="p">,</span> <span class="n">storeview_id</span><span class="p">,</span> <span class="s1">&#39;id&#39;</span><span class="p">])</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call</span><span class="p">(</span><span class="s1">&#39;ol_catalog_product.update&#39;</span><span class="p">,</span>
+                          <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="nb">id</span><span class="p">),</span> <span class="n">data</span><span class="p">,</span> <span class="n">storeview_id</span><span class="p">,</span> <span class="s1">&#39;id&#39;</span><span class="p">])</span></div>
 
-<div class="viewcode-block" id="ProductProductAdapter.get_images"><a class="viewcode-back" href="../../../../api/api_product.html#openerp.addons.magentoerpconnect.product.ProductProductAdapter.get_images">[docs]</a>    <span class="k">def</span> <span class="nf">get_images</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">storeview_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span></div>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call</span><span class="p">(</span><span class="s1">&#39;product_media.list&#39;</span><span class="p">,</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="nb">id</span><span class="p">),</span> <span class="n">storeview_id</span><span class="p">,</span> <span class="s1">&#39;id&#39;</span><span class="p">])</span>
+<div class="viewcode-block" id="ProductProductAdapter.get_images"><a class="viewcode-back" href="../../../../api/api_product.html#openerp.addons.magentoerpconnect.product.ProductProductAdapter.get_images">[docs]</a>    <span class="k">def</span> <span class="nf">get_images</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">storeview_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call</span><span class="p">(</span><span class="s1">&#39;product_media.list&#39;</span><span class="p">,</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="nb">id</span><span class="p">),</span> <span class="n">storeview_id</span><span class="p">,</span> <span class="s1">&#39;id&#39;</span><span class="p">])</span></div>
 
 <div class="viewcode-block" id="ProductProductAdapter.read_image"><a class="viewcode-back" href="../../../../api/api_product.html#openerp.addons.magentoerpconnect.product.ProductProductAdapter.read_image">[docs]</a>    <span class="k">def</span> <span class="nf">read_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">image_name</span><span class="p">,</span> <span class="n">storeview_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call</span><span class="p">(</span><span class="s1">&#39;product_media.info&#39;</span><span class="p">,</span></div>
-                          <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="nb">id</span><span class="p">),</span> <span class="n">image_name</span><span class="p">,</span> <span class="n">storeview_id</span><span class="p">,</span> <span class="s1">&#39;id&#39;</span><span class="p">])</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call</span><span class="p">(</span><span class="s1">&#39;product_media.info&#39;</span><span class="p">,</span>
+                          <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="nb">id</span><span class="p">),</span> <span class="n">image_name</span><span class="p">,</span> <span class="n">storeview_id</span><span class="p">,</span> <span class="s1">&#39;id&#39;</span><span class="p">])</span></div>
 
 <div class="viewcode-block" id="ProductProductAdapter.update_inventory"><a class="viewcode-back" href="../../../../api/api_product.html#openerp.addons.magentoerpconnect.product.ProductProductAdapter.update_inventory">[docs]</a>    <span class="k">def</span> <span class="nf">update_inventory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
         <span class="c1"># product_stock.update is too slow</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call</span><span class="p">(</span><span class="s1">&#39;oerp_cataloginventory_stock_item.update&#39;</span><span class="p">,</span></div></div>
-                          <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="nb">id</span><span class="p">),</span> <span class="n">data</span><span class="p">])</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call</span><span class="p">(</span><span class="s1">&#39;oerp_cataloginventory_stock_item.update&#39;</span><span class="p">,</span>
+                          <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="nb">id</span><span class="p">),</span> <span class="n">data</span><span class="p">])</span></div></div>
 
 
 <div class="viewcode-block" id="ProductBatchImporter"><a class="viewcode-back" href="../../../../api/api_product.html#openerp.addons.magentoerpconnect.product.ProductBatchImporter">[docs]</a><span class="nd">@magento</span>
@@ -518,8 +507,8 @@
                                                  <span class="n">to_date</span><span class="o">=</span><span class="n">to_date</span><span class="p">)</span>
         <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;search for magento products </span><span class="si">%s</span><span class="s1"> returned </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span>
                      <span class="n">filters</span><span class="p">,</span> <span class="n">record_ids</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">record_id</span> <span class="ow">in</span> <span class="n">record_ids</span><span class="p">:</span></div></div>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_import_record</span><span class="p">(</span><span class="n">record_id</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">record_id</span> <span class="ow">in</span> <span class="n">record_ids</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_import_record</span><span class="p">(</span><span class="n">record_id</span><span class="p">)</span></div></div>
 
 
 <span class="n">ProductBatchImport</span> <span class="o">=</span> <span class="n">ProductBatchImporter</span>  <span class="c1"># deprecated</span>
@@ -600,8 +589,8 @@
             <span class="n">image_data</span> <span class="o">=</span> <span class="n">images</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
             <span class="n">binary</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_binary_image</span><span class="p">(</span><span class="n">image_data</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">binary</span><span class="p">:</span>
-            <span class="k">return</span></div></div>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_write_image_data</span><span class="p">(</span><span class="n">binding_id</span><span class="p">,</span> <span class="n">binary</span><span class="p">,</span> <span class="n">image_data</span><span class="p">)</span>
+            <span class="k">return</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_write_image_data</span><span class="p">(</span><span class="n">binding_id</span><span class="p">,</span> <span class="n">binary</span><span class="p">,</span> <span class="n">image_data</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="BundleImporter"><a class="viewcode-back" href="../../../../api/api_product.html#openerp.addons.magentoerpconnect.product.BundleImporter">[docs]</a><span class="nd">@magento</span>
@@ -655,8 +644,8 @@
 <div class="viewcode-block" id="BundleImporter.run"><a class="viewcode-back" href="../../../../api/api_product.html#openerp.addons.magentoerpconnect.product.BundleImporter.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">binding_id</span><span class="p">,</span> <span class="n">magento_record</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Import the bundle information about a product.</span>
 
-<span class="sd">        :param magento_record: product information from Magento</span></div></div>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        :param magento_record: product information from Magento</span>
+<span class="sd">        &quot;&quot;&quot;</span></div></div>
 
 
 <div class="viewcode-block" id="ProductImportMapper"><a class="viewcode-back" href="../../../../api/api_product.html#openerp.addons.magentoerpconnect.product.ProductImportMapper">[docs]</a><span class="nd">@magento</span>
@@ -676,21 +665,21 @@
 
 <div class="viewcode-block" id="ProductImportMapper.is_active"><a class="viewcode-back" href="../../../../api/api_product.html#openerp.addons.magentoerpconnect.product.ProductImportMapper.is_active">[docs]</a>    <span class="nd">@mapping</span>
     <span class="k">def</span> <span class="nf">is_active</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
-        <span class="n">mapper</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">unit_for</span><span class="p">(</span><span class="n">IsActiveProductImportMapper</span><span class="p">)</span></div>
-        <span class="k">return</span> <span class="n">mapper</span><span class="o">.</span><span class="n">map_record</span><span class="p">(</span><span class="n">record</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">)</span>
+        <span class="n">mapper</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">unit_for</span><span class="p">(</span><span class="n">IsActiveProductImportMapper</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">mapper</span><span class="o">.</span><span class="n">map_record</span><span class="p">(</span><span class="n">record</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ProductImportMapper.price"><a class="viewcode-back" href="../../../../api/api_product.html#openerp.addons.magentoerpconnect.product.ProductImportMapper.price">[docs]</a>    <span class="nd">@mapping</span>
     <span class="k">def</span> <span class="nf">price</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
-        <span class="n">mapper</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">unit_for</span><span class="p">(</span><span class="n">PriceProductImportMapper</span><span class="p">)</span></div>
-        <span class="k">return</span> <span class="n">mapper</span><span class="o">.</span><span class="n">map_record</span><span class="p">(</span><span class="n">record</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">)</span>
+        <span class="n">mapper</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">unit_for</span><span class="p">(</span><span class="n">PriceProductImportMapper</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">mapper</span><span class="o">.</span><span class="n">map_record</span><span class="p">(</span><span class="n">record</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ProductImportMapper.type"><a class="viewcode-back" href="../../../../api/api_product.html#openerp.addons.magentoerpconnect.product.ProductImportMapper.type">[docs]</a>    <span class="nd">@mapping</span>
     <span class="k">def</span> <span class="nf">type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">record</span><span class="p">[</span><span class="s1">&#39;type_id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;simple&#39;</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;product&#39;</span><span class="p">}</span>
         <span class="k">elif</span> <span class="n">record</span><span class="p">[</span><span class="s1">&#39;type_id&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;virtual&#39;</span><span class="p">,</span> <span class="s1">&#39;downloadable&#39;</span><span class="p">):</span>
-            <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;service&#39;</span><span class="p">}</span></div>
-        <span class="k">return</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;service&#39;</span><span class="p">}</span>
+        <span class="k">return</span></div>
 
 <div class="viewcode-block" id="ProductImportMapper.website_ids"><a class="viewcode-back" href="../../../../api/api_product.html#openerp.addons.magentoerpconnect.product.ProductImportMapper.website_ids">[docs]</a>    <span class="nd">@mapping</span>
     <span class="k">def</span> <span class="nf">website_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
@@ -698,8 +687,8 @@
         <span class="n">binder</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">binder_for</span><span class="p">(</span><span class="s1">&#39;magento.website&#39;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">mag_website_id</span> <span class="ow">in</span> <span class="n">record</span><span class="p">[</span><span class="s1">&#39;websites&#39;</span><span class="p">]:</span>
             <span class="n">website_id</span> <span class="o">=</span> <span class="n">binder</span><span class="o">.</span><span class="n">to_openerp</span><span class="p">(</span><span class="n">mag_website_id</span><span class="p">)</span>
-            <span class="n">website_ids</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="mi">4</span><span class="p">,</span> <span class="n">website_id</span><span class="p">))</span></div>
-        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;website_ids&#39;</span><span class="p">:</span> <span class="n">website_ids</span><span class="p">}</span>
+            <span class="n">website_ids</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="mi">4</span><span class="p">,</span> <span class="n">website_id</span><span class="p">))</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;website_ids&#39;</span><span class="p">:</span> <span class="n">website_ids</span><span class="p">}</span></div>
 
 <div class="viewcode-block" id="ProductImportMapper.categories"><a class="viewcode-back" href="../../../../api/api_product.html#openerp.addons.magentoerpconnect.product.ProductImportMapper.categories">[docs]</a>    <span class="nd">@mapping</span>
     <span class="k">def</span> <span class="nf">categories</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
@@ -728,22 +717,22 @@
 
         <span class="n">result</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;categ_ids&#39;</span><span class="p">:</span> <span class="p">[(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">category_ids</span><span class="p">)]}</span>
         <span class="k">if</span> <span class="n">main_categ_id</span><span class="p">:</span>  <span class="c1"># OpenERP assign &#39;All Products&#39; if not specified</span>
-            <span class="n">result</span><span class="p">[</span><span class="s1">&#39;categ_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">main_categ_id</span></div>
-        <span class="k">return</span> <span class="n">result</span>
+            <span class="n">result</span><span class="p">[</span><span class="s1">&#39;categ_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">main_categ_id</span>
+        <span class="k">return</span> <span class="n">result</span></div>
 
 <div class="viewcode-block" id="ProductImportMapper.magento_id"><a class="viewcode-back" href="../../../../api/api_product.html#openerp.addons.magentoerpconnect.product.ProductImportMapper.magento_id">[docs]</a>    <span class="nd">@mapping</span>
-    <span class="k">def</span> <span class="nf">magento_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span></div>
-        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;magento_id&#39;</span><span class="p">:</span> <span class="n">record</span><span class="p">[</span><span class="s1">&#39;product_id&#39;</span><span class="p">]}</span>
+    <span class="k">def</span> <span class="nf">magento_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;magento_id&#39;</span><span class="p">:</span> <span class="n">record</span><span class="p">[</span><span class="s1">&#39;product_id&#39;</span><span class="p">]}</span></div>
 
 <div class="viewcode-block" id="ProductImportMapper.backend_id"><a class="viewcode-back" href="../../../../api/api_product.html#openerp.addons.magentoerpconnect.product.ProductImportMapper.backend_id">[docs]</a>    <span class="nd">@mapping</span>
-    <span class="k">def</span> <span class="nf">backend_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span></div>
-        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;backend_id&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend_record</span><span class="o">.</span><span class="n">id</span><span class="p">}</span>
+    <span class="k">def</span> <span class="nf">backend_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;backend_id&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend_record</span><span class="o">.</span><span class="n">id</span><span class="p">}</span></div>
 
 <div class="viewcode-block" id="ProductImportMapper.bundle_mapping"><a class="viewcode-back" href="../../../../api/api_product.html#openerp.addons.magentoerpconnect.product.ProductImportMapper.bundle_mapping">[docs]</a>    <span class="nd">@mapping</span>
     <span class="k">def</span> <span class="nf">bundle_mapping</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">record</span><span class="p">[</span><span class="s1">&#39;type_id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;bundle&#39;</span><span class="p">:</span>
-            <span class="n">bundle_mapper</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">unit_for</span><span class="p">(</span><span class="n">BundleProductImportMapper</span><span class="p">)</span></div></div>
-            <span class="k">return</span> <span class="n">bundle_mapper</span><span class="o">.</span><span class="n">map_record</span><span class="p">(</span><span class="n">record</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">)</span>
+            <span class="n">bundle_mapper</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">unit_for</span><span class="p">(</span><span class="n">BundleProductImportMapper</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">bundle_mapper</span><span class="o">.</span><span class="n">map_record</span><span class="p">(</span><span class="n">record</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="ProductImporter"><a class="viewcode-back" href="../../../../api/api_product.html#openerp.addons.magentoerpconnect.product.ProductImporter">[docs]</a><span class="nd">@magento</span>
@@ -825,8 +814,8 @@
         <span class="n">image_importer</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">magento_id</span><span class="p">,</span> <span class="n">binding</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">magento_record</span><span class="p">[</span><span class="s1">&#39;type_id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;bundle&#39;</span><span class="p">:</span>
-            <span class="n">bundle_importer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">unit_for</span><span class="p">(</span><span class="n">BundleImporter</span><span class="p">)</span></div>
-            <span class="n">bundle_importer</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">binding</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">magento_record</span><span class="p">)</span>
+            <span class="n">bundle_importer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">unit_for</span><span class="p">(</span><span class="n">BundleImporter</span><span class="p">)</span>
+            <span class="n">bundle_importer</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">binding</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">magento_record</span><span class="p">)</span></div>
 
 
 <span class="n">ProductImport</span> <span class="o">=</span> <span class="n">ProductImporter</span>  <span class="c1"># deprecated</span>
@@ -837,8 +826,8 @@
     <span class="n">_model_name</span> <span class="o">=</span> <span class="s1">&#39;magento.product.product&#39;</span>
 
 <div class="viewcode-block" id="PriceProductImportMapper.price"><a class="viewcode-back" href="../../../../api/api_product.html#openerp.addons.magentoerpconnect.product.PriceProductImportMapper.price">[docs]</a>    <span class="nd">@mapping</span>
-    <span class="k">def</span> <span class="nf">price</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span></div></div>
-        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;list_price&#39;</span><span class="p">:</span> <span class="n">record</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;price&#39;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)}</span>
+    <span class="k">def</span> <span class="nf">price</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;list_price&#39;</span><span class="p">:</span> <span class="n">record</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;price&#39;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)}</span></div></div>
 
 
 <div class="viewcode-block" id="IsActiveProductImportMapper"><a class="viewcode-back" href="../../../../api/api_product.html#openerp.addons.magentoerpconnect.product.IsActiveProductImportMapper">[docs]</a><span class="nd">@magento</span>
@@ -849,13 +838,13 @@
     <span class="k">def</span> <span class="nf">is_active</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Check if the product is active in Magento</span>
 <span class="sd">        and set active flag in OpenERP</span>
-<span class="sd">        status == 1 in Magento means active&quot;&quot;&quot;</span></div></div>
-        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;active&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">record</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;status&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;1&#39;</span><span class="p">)}</span>
+<span class="sd">        status == 1 in Magento means active&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;active&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">record</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;status&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;1&#39;</span><span class="p">)}</span></div></div>
 
 
 <div class="viewcode-block" id="BundleProductImportMapper"><a class="viewcode-back" href="../../../../api/api_product.html#openerp.addons.magentoerpconnect.product.BundleProductImportMapper">[docs]</a><span class="nd">@magento</span>
-<span class="k">class</span> <span class="nc">BundleProductImportMapper</span><span class="p">(</span><span class="n">ImportMapper</span><span class="p">):</span></div>
-    <span class="n">_model_name</span> <span class="o">=</span> <span class="s1">&#39;magento.product.product&#39;</span>
+<span class="k">class</span> <span class="nc">BundleProductImportMapper</span><span class="p">(</span><span class="n">ImportMapper</span><span class="p">):</span>
+    <span class="n">_model_name</span> <span class="o">=</span> <span class="s1">&#39;magento.product.product&#39;</span></div>
 
 
 <div class="viewcode-block" id="ProductInventoryExporter"><a class="viewcode-back" href="../../../../api/api_product.html#openerp.addons.magentoerpconnect.product.ProductInventoryExporter">[docs]</a><span class="nd">@magento</span>
@@ -894,8 +883,8 @@
         <span class="sd">&quot;&quot;&quot; Export the product inventory to Magento &quot;&quot;&quot;</span>
         <span class="n">product</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">browse</span><span class="p">(</span><span class="n">binding_id</span><span class="p">)</span>
         <span class="n">magento_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">binder</span><span class="o">.</span><span class="n">to_backend</span><span class="p">(</span><span class="n">product</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_data</span><span class="p">(</span><span class="n">product</span><span class="p">,</span> <span class="n">fields</span><span class="p">)</span></div></div>
-        <span class="bp">self</span><span class="o">.</span><span class="n">backend_adapter</span><span class="o">.</span><span class="n">update_inventory</span><span class="p">(</span><span class="n">magento_id</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_data</span><span class="p">(</span><span class="n">product</span><span class="p">,</span> <span class="n">fields</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">backend_adapter</span><span class="o">.</span><span class="n">update_inventory</span><span class="p">(</span><span class="n">magento_id</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></div></div>
 
 
 <span class="n">ProductInventoryExport</span> <span class="o">=</span> <span class="n">ProductInventoryExporter</span>  <span class="c1"># deprecated</span>
@@ -918,8 +907,8 @@
     <span class="n">inventory_fields</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">vals</span><span class="p">)</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">INVENTORY_FIELDS</span><span class="p">))</span>
     <span class="k">if</span> <span class="n">inventory_fields</span><span class="p">:</span>
         <span class="n">export_product_inventory</span><span class="o">.</span><span class="n">delay</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">model_name</span><span class="p">,</span>
-                                       <span class="n">record_id</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="n">inventory_fields</span><span class="p">,</span></div>
-                                       <span class="n">priority</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+                                       <span class="n">record_id</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="n">inventory_fields</span><span class="p">,</span>
+                                       <span class="n">priority</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="export_product_inventory"><a class="viewcode-back" href="../../../../api/api_product.html#openerp.addons.magentoerpconnect.product.export_product_inventory">[docs]</a><span class="nd">@job</span><span class="p">(</span><span class="n">default_channel</span><span class="o">=</span><span class="s1">&#39;root.magento&#39;</span><span class="p">)</span>
@@ -929,8 +918,8 @@
     <span class="n">product</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">env</span><span class="p">[</span><span class="n">model_name</span><span class="p">]</span><span class="o">.</span><span class="n">browse</span><span class="p">(</span><span class="n">record_id</span><span class="p">)</span>
     <span class="n">backend_id</span> <span class="o">=</span> <span class="n">product</span><span class="o">.</span><span class="n">backend_id</span><span class="o">.</span><span class="n">id</span>
     <span class="n">env</span> <span class="o">=</span> <span class="n">get_environment</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">backend_id</span><span class="p">)</span>
-    <span class="n">inventory_exporter</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">get_connector_unit</span><span class="p">(</span><span class="n">ProductInventoryExporter</span><span class="p">)</span></div>
-    <span class="k">return</span> <span class="n">inventory_exporter</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">record_id</span><span class="p">,</span> <span class="n">fields</span><span class="p">)</span>
+    <span class="n">inventory_exporter</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">get_connector_unit</span><span class="p">(</span><span class="n">ProductInventoryExporter</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">inventory_exporter</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">record_id</span><span class="p">,</span> <span class="n">fields</span><span class="p">)</span></div>
 </pre></div>
 
     </div>
@@ -948,7 +937,7 @@
     </p>
     <p>
         &copy; Copyright 2013-2015, Odoo Community Association (OCA).<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.1.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.2.<br/>
     </p>
   </div>
 </footer>

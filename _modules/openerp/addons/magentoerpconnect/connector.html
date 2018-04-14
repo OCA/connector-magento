@@ -220,18 +220,7 @@
 
 <div class="container">
   <div class="row">
-      <div class="col-md-3">
-        <div id="sidebar" class="bs-sidenav" role="complementary">
-<form action="../../../../search.html" method="get">
- <div class="form-group">
-  <input type="text" name="q" class="form-control" placeholder="Search" />
- </div>
-  <input type="hidden" name="check_keywords" value="yes" />
-  <input type="hidden" name="area" value="default" />
-</form>
-        </div>
-      </div>
-    <div class="col-md-9 content">
+    <div class="col-md-12 content">
       
   <h1>Source code for openerp.addons.magentoerpconnect.connector</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
@@ -269,8 +258,8 @@
     <span class="k">if</span> <span class="n">lang_code</span> <span class="o">==</span> <span class="n">session</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;lang&#39;</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">env</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">with</span> <span class="n">env</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">change_context</span><span class="p">(</span><span class="n">lang</span><span class="o">=</span><span class="n">lang_code</span><span class="p">):</span></div>
-            <span class="k">return</span> <span class="n">env</span>
+        <span class="k">with</span> <span class="n">env</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">change_context</span><span class="p">(</span><span class="n">lang</span><span class="o">=</span><span class="n">lang_code</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">env</span></div>
 
 
 <div class="viewcode-block" id="MagentoBinding"><a class="viewcode-back" href="../../../../api/api_connector.html#openerp.addons.magentoerpconnect.connector.MagentoBinding">[docs]</a><span class="k">class</span> <span class="nc">MagentoBinding</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">AbstractModel</span><span class="p">):</span>
@@ -296,8 +285,8 @@
 
     <span class="n">_sql_constraints</span> <span class="o">=</span> <span class="p">[</span>
         <span class="p">(</span><span class="s1">&#39;magento_uniq&#39;</span><span class="p">,</span> <span class="s1">&#39;unique(backend_id, magento_id)&#39;</span><span class="p">,</span>
-         <span class="s1">&#39;A binding already exists with the same Magento ID.&#39;</span><span class="p">),</span></div>
-    <span class="p">]</span>
+         <span class="s1">&#39;A binding already exists with the same Magento ID.&#39;</span><span class="p">),</span>
+    <span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="add_checkpoint"><a class="viewcode-back" href="../../../../api/api_connector.html#openerp.addons.magentoerpconnect.connector.add_checkpoint">[docs]</a><span class="k">def</span> <span class="nf">add_checkpoint</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">record_id</span><span class="p">,</span> <span class="n">backend_id</span><span class="p">):</span>
@@ -313,8 +302,8 @@
 <span class="sd">    :param backend_id: ID of the Magento Backend</span>
 <span class="sd">    :type backend_id: int</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">checkpoint</span><span class="o">.</span><span class="n">add_checkpoint</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">record_id</span><span class="p">,</span></div>
-                                     <span class="s1">&#39;magento.backend&#39;</span><span class="p">,</span> <span class="n">backend_id</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">checkpoint</span><span class="o">.</span><span class="n">add_checkpoint</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">record_id</span><span class="p">,</span>
+                                     <span class="s1">&#39;magento.backend&#39;</span><span class="p">,</span> <span class="n">backend_id</span><span class="p">)</span></div>
 </pre></div>
 
     </div>
@@ -332,7 +321,7 @@
     </p>
     <p>
         &copy; Copyright 2013-2015, Odoo Community Association (OCA).<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.1.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.2.<br/>
     </p>
   </div>
 </footer>
