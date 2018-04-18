@@ -5,7 +5,7 @@
 from odoo import _
 from odoo.addons.component.core import Component
 
-from odoo.addons.connector.components.mapper import mapping
+from odoo.addons.connector.components.mapper import mapping, only_create
 from odoo.addons.connector.exception import MappingError
 from odoo.addons.connector_magento.components.mapper import normalize_datetime
 
@@ -36,6 +36,7 @@ class TemplateImportMapper(Component):
         (normalize_datetime('updated_at'), 'updated_at'),
         ]
 
+    @only_create
     @mapping
     def variant_managed_by_magento(self, record):
         return {'variant_managed_by_magento': True}
