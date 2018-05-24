@@ -31,7 +31,7 @@ from openerp.addons.connector.exception import IDMissingInBackend
 from openerp.addons.connector_ecommerce.event import on_picking_out_done
 from .unit.backend_adapter import GenericAdapter
 from .connector import get_environment
-from .backend import magento
+from .backend import magento, magento2000
 from .stock_tracking import export_tracking_number
 from .related_action import unwrap_binding
 
@@ -73,9 +73,10 @@ class StockPickingAdapter(GenericAdapter):
     _magento_model = 'sales_order_shipment'
     _admin_path = 'sales_shipment/view/shipment_id/{id}'
 
-    def _call(self, method, arguments):
+    def _call(self, method, arguments, http_method=None):
         try:
-            return super(StockPickingAdapter, self)._call(method, arguments)
+            return super(StockPickingAdapter, self)._call(
+                method, arguments, http_method=http_method)
         except xmlrpclib.Fault as err:
             # this is the error in the Magento API
             # when the shipment does not exist
@@ -205,6 +206,33 @@ class MagentoPickingExporter(Exporter):
 MagentoPickingExport = MagentoPickingExporter  # deprecated
 
 
+@magento2000
+class MagentoPickingExporter2000(MagentoPickingExporter):
+
+    def run(self, binding_id):
+        """
+        Export the picking to Magento2
+        """
+        picking = self.model.browse(binding_id)
+        if picking.magento_id:
+            return _('Already exported')
+        lines_info = self._get_lines_info(picking)
+        if not lines_info:
+            raise NothingToDoJob(_('Canceled: the delivery order does not '
+                                   'contain lines from the original '
+                                   'sale order.'))
+        arguments = {
+            'items': [{
+                'order_item_id': key,
+                'qty': val,
+            } for key, val in lines_info.iteritems()]
+        }
+        magento_id = self.backend_adapter._call(
+            'order/%s/ship' % picking.sale_id.magento_bind_ids[0].magento_id,
+            arguments, http_method='post')
+        self.binder.bind(magento_id, binding_id)
+
+
 @on_picking_out_done
 def picking_out_done(session, model_name, record_id, picking_method):
     """
@@ -219,8 +247,6 @@ def picking_out_done(session, model_name, record_id, picking_method):
     if not sale:
         return
     for magento_sale in sale.magento_bind_ids:
-        if magento_sale.backend_id.version == '2.0':
-            continue  # TODO
         session.env['magento.stock.picking'].create({
             'backend_id': magento_sale.backend_id.id,
             'openerp_id': picking.id,
@@ -258,6 +284,8 @@ def export_picking_done(session, model_name, record_id, with_tracking=True):
     picking_exporter = env.get_connector_unit(MagentoPickingExporter)
     res = picking_exporter.run(record_id)
 
+    if picking.backend_id.version == '2.0':
+        return res  # TODO
     if with_tracking and picking.carrier_tracking_ref:
         export_tracking_number.delay(session, model_name, record_id)
     return res
