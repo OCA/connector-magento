@@ -1005,7 +1005,7 @@ class SaleOrderImporter2000(SaleOrderImporter):
         # Look to https://github.com/OCA/sale-workflow/tree/8.0/sale_allotment?
         shippings = self.magento_record[
             'extension_attributes']['shipping_assignments']
-        return shippings and shippings[0]['shipping']['address']
+        return shippings and shippings[0]['shipping'].get('address')
 
     def _import_dependencies(self):
         super(SaleOrderImporter2000, self)._import_dependencies()
