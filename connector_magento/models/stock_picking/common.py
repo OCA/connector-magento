@@ -77,9 +77,9 @@ class StockPickingAdapter(Component):
     _magento_model = 'sales_order_shipment'
     _admin_path = 'sales_shipment/view/shipment_id/{id}'
 
-    def _call(self, method, arguments):
+    def _call(self, method, arguments, http_method=None, storeview=None):
         try:
-            return super(StockPickingAdapter, self)._call(method, arguments)
+            return super(StockPickingAdapter, self)._call(method, arguments, http_method=http_method, storeview=storeview)
         except xmlrpc.client.Fault as err:
             # this is the error in the Magento API
             # when the shipment does not exist
@@ -90,6 +90,8 @@ class StockPickingAdapter(Component):
 
     def create(self, order_id, items, comment, email, include_comment):
         """ Create a record on the external system """
+        if self.magento.version == '2.0':
+            return self._call('order/%s/ship' % order_id, {}, http_method='post')
         return self._call('%s.create' % self._magento_model,
                           [order_id, items, comment, email, include_comment])
 

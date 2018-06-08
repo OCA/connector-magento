@@ -385,6 +385,9 @@ class SaleOrderImporter(Component):
         for item in resource['items']:
             if item.get('parent_item_id'):
                 child_items.setdefault(item['parent_item_id'], []).append(item)
+            elif item.get('parent_item'):  # 2.0
+                child_items.setdefault(
+                    item['parent_item']['item_id'], []).append(item)
             else:
                 top_items.append(item)
 
@@ -555,7 +558,7 @@ class SaleOrderImporter(Component):
 
             customer_record = {
                 'firstname': address['firstname'],
-                'middlename': address['middlename'],
+                'middlename': address.get('middlename'),
                 'lastname': address['lastname'],
                 'prefix': address.get('prefix'),
                 'suffix': address.get('suffix'),
@@ -622,7 +625,14 @@ class SaleOrderImporter(Component):
         billing_id = create_address(record['billing_address'])
 
         shipping_id = None
-        if record['shipping_address']:
+        if record.get('shipping_address'):
+            if self.collection.version == '1.7':
+                shipping_address = record['shipping_address']
+            elif self.collection.version == '2.0':
+                # TODO: Magento2 allows for a different shipping address per line.
+                # Look to https://github.com/OCA/sale-workflow/tree/8.0/sale_allotment?
+                shippings = self.magento_record['extension_attributes']['shipping_assignments']
+                shipping_address = shippings and shippings[0]['shipping'].get('address')
             shipping_id = create_address(record['shipping_address'])
 
         self.partner_id = partner.id
@@ -671,8 +681,9 @@ class SaleOrderImporter(Component):
 
         for line in record.get('items', []):
             _logger.debug('line: %s', line)
-            if 'product_id' in line:
-                self._import_dependency(line['product_id'],
+            field = self.collection.version == '1.7' and 'product_id' or 'sku'
+            if field in line:
+                self._import_dependency(line[field],
                                         'magento.product.product')
 
 
@@ -704,15 +715,18 @@ class SaleOrderLineImportMapper(Component):
     @mapping
     def product_id(self, record):
         binder = self.binder_for('magento.product.product')
-        product = binder.to_internal(record['product_id'], unwrap=True)
+        field = self.collection.version == '1.7' and 'product_id' or 'sku'
+        product = binder.to_internal(record[field], unwrap=True)
         assert product, (
             "product_id %s should have been imported in "
-            "SaleOrderImporter._import_dependencies" % record['product_id'])
+            "SaleOrderImporter._import_dependencies" % record[field])
         return {'product_id': product.id}
 
     @mapping
     def product_options(self, record):
         result = {}
+        if self.collection.version == '2.0':
+            return
         ifield = record['product_options']
         if ifield:
             import re

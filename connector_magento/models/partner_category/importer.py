@@ -19,13 +19,12 @@ class PartnerCategoryImportMapper(Component):
     _apply_on = 'magento.res.partner.category'
 
     direct = [
-        ('customer_group_code', 'name'),
         ('tax_class_id', 'tax_class_id'),
     ]
 
     @mapping
     def external_id(self, record):
-        return {'external_id': record['customer_group_id']}
+        return {'external_id': record.get('id') or record['customer_group_id']}
 
     @mapping
     def backend_id(self, record):
@@ -35,9 +34,14 @@ class PartnerCategoryImportMapper(Component):
     @mapping
     def odoo_id(self, record):
         """ Will bind the category on a existing one with the same name."""
+        name = record.get('code') or record['customer_group_code']
         existing = self.env['res.partner.category'].search(
-            [('name', '=', record['customer_group_code'])],
+            [('name', '=', name)],
             limit=1,
         )
         if existing:
             return {'odoo_id': existing.id}
+
+    @mapping
+    def name(self, record):
+        return {'name': record.get('code') or record['customer_group_code']}

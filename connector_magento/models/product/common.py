@@ -184,11 +184,14 @@ class ProductProductAdapter(Component):
     _apply_on = 'magento.product.product'
 
     _magento_model = 'catalog_product'
+    _magento2_model = 'products'
+    _magento2_search = 'products'
+    _magento2_key = 'sku'
     _admin_path = '/{model}/edit/id/{id}'
 
-    def _call(self, method, arguments):
+    def _call(self, method, arguments, http_method=None, storeview=None):
         try:
-            return super(ProductProductAdapter, self)._call(method, arguments)
+            return super(ProductProductAdapter, self)._call(method, arguments, http_method=http_method, storeview=storeview)
         except xmlrpc.client.Fault as err:
             # this is the error in the Magento API
             # when the product does not exist
@@ -212,6 +215,8 @@ class ProductProductAdapter(Component):
         if to_date is not None:
             filters.setdefault('updated_at', {})
             filters['updated_at']['to'] = to_date.strftime(dt_fmt)
+        if self.collection.version == '2.0':
+            return super(ProductProductAdapter, self).search(filters=filters)
         # TODO add a search entry point on the Magento API
         return [int(row['product_id']) for row
                 in self._call('%s.list' % self._magento_model,
@@ -222,6 +227,14 @@ class ProductProductAdapter(Component):
 
         :rtype: dict
         """
+        if self.collection.version == '2.0':
+            # TODO: storeview context in Magento 2.0
+            res = super(ProductProductAdapter, self).read(
+                id, attributes=attributes)
+            if res:
+                for attr in res.get('custom_attributes', []):
+                    res[attr['attribute_code']] = attr['value']
+            return res
         return self._call('ol_catalog_product.info',
                           [int(id), storeview_id, attributes, 'id'])
 
@@ -229,18 +242,29 @@ class ProductProductAdapter(Component):
         """ Update records on the external system """
         # XXX actually only ol_catalog_product.update works
         # the PHP connector maybe breaks the catalog_product.update
+        if self.collection.version == '2.0':
+            raise NotImplementedError  # TODO
         return self._call('ol_catalog_product.update',
                           [int(id), data, storeview_id, 'id'])
 
-    def get_images(self, id, storeview_id=None):
+    def get_images(self, id, storeview_id=None, data=None):
+        if self.collection.version == '2.0':
+            assert data
+            return (entry for entry in
+                    data.get('media_gallery_entries', [])
+                    if entry['media_type'] == 'image')
         return self._call('product_media.list', [int(id), storeview_id, 'id'])
 
     def read_image(self, id, image_name, storeview_id=None):
+        if self.collection.version == '2.0':
+            raise NotImplementedError  # TODO
         return self._call('product_media.info',
                           [int(id), image_name, storeview_id, 'id'])
 
     def update_inventory(self, id, data):
         # product_stock.update is too slow
+        if self.collection.version == '2.0':
+            return self._call('products/%s/stockItems/1' % id, {"stockItem":{"qty": data['qty']}}, http_method='put')
         return self._call('oerp_cataloginventory_stock_item.update',
                           [int(id), data])
 

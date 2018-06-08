@@ -67,9 +67,10 @@ class AccountInvoiceAdapter(Component):
     _magento_model = 'sales_order_invoice'
     _admin_path = 'sales_invoice/view/invoice_id/{id}'
 
-    def _call(self, method, arguments):
+    def _call(self, method, arguments, http_method=None):
         try:
-            return super(AccountInvoiceAdapter, self)._call(method, arguments)
+            return super(AccountInvoiceAdapter, self)._call(
+                method, arguments, http_method=http_method)
         except xmlrpc.client.Fault as err:
             # this is the error in the Magento API
             # when the invoice does not exist
@@ -81,6 +82,21 @@ class AccountInvoiceAdapter(Component):
     def create(self, order_increment_id, items, comment, email,
                include_comment):
         """ Create a record on the external system """
+        if self.collection.version == '2.0':
+            arguments = {
+                'capture': False,
+                'items': [{'orderItemId': key, 'qty': value}
+                          for key, value in items.items()],
+                'comment': {
+                    'comment': comment,
+                    'isVisibleOnFront': 0,
+                },
+                'appendComment': include_comment,
+            }
+            return self._call(
+                'order/%s/invoice' % order_increment_id, arguments,
+                http_method='post')
+
         return self._call('%s.create' % self._magento_model,
                           [order_increment_id, items, comment,
                            email, include_comment])

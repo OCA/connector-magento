@@ -68,6 +68,24 @@ class MagentoPickingExporter(Component):
         if binding.external_id:
             return _('Already exported')
         picking_method = binding.picking_method
+        if self.collection.version == '2.0':
+            lines_info = self._get_lines_info(binding)
+            if not lines_info:
+                raise NothingToDoJob(_('Canceled: the delivery order does not '
+                                       'contain lines from the original '
+                                       'sale order.'))
+            arguments = {
+                'items': [{
+                    'order_item_id': key,
+                    'qty': val,
+                } for key, val in lines_info.iteritems()]
+            }
+            magento_id = self.backend_adapter._call(
+                'order/%s/ship' % picking.sale_id.magento_bind_ids[0].magento_id,
+                arguments, http_method='post')
+            self.binder.bind(magento_id, binding)
+            return
+
         if picking_method == 'complete':
             args = self._get_args(binding)
         elif picking_method == 'partial':

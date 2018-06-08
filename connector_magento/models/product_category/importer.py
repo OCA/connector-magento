@@ -26,6 +26,25 @@ class ProductCategoryBatchImporter(Component):
         )
 
     def run(self, filters=None):
+        if self.collection.version == '2.0':
+            return self.run_2_0(filters)
+        return self.run_1_7(filters)
+
+    def run_2_0(self, filters=None):
+        """ Run the synchronization.
+            Only a full tree of categories can be retrieved.
+        """
+        tree = self.backend_adapter.search_read()
+        importer = self.component(usage='record.importer')
+        def import_branch(branch):
+            children = branch.pop('children_data', [])
+            importer.run(branch['id'], data=branch)
+            for child in children:
+                import_branch(child)
+
+        import_branch(tree)
+
+    def run_1_7(self, filters=None):
         """ Run the synchronization """
         from_date = filters.pop('from_date', None)
         to_date = filters.pop('to_date', None)

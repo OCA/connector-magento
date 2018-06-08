@@ -148,6 +148,9 @@ class PartnerAdapter(Component):
     _apply_on = 'magento.res.partner'
 
     _magento_model = 'customer'
+    _magento2_model = 'customers'
+    _magento2_search = 'customers/search'
+    _magento2_key = 'id'
     _admin_path = '/{model}/edit/id/{id}'
 
     def _call(self, method, arguments):
@@ -181,6 +184,9 @@ class PartnerAdapter(Component):
             filters['updated_at']['to'] = to_date.strftime(dt_fmt)
         if magento_website_ids is not None:
             filters['website_id'] = {'in': magento_website_ids}
+
+        if self.collection.version == '2.0':
+            return super(PartnerAdapter, self).search(filters=filters)
 
         # the search method is on ol_customer instead of customer
         return self._call('ol_customer.search',

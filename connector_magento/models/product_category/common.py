@@ -52,6 +52,9 @@ class ProductCategoryAdapter(Component):
     _apply_on = 'magento.product.category'
 
     _magento_model = 'catalog_category'
+    _magento2_model = 'categories'
+    _magento2_key = 'id'
+
     _admin_path = '/{model}/index/'
 
     def _call(self, method, arguments):
@@ -83,6 +86,9 @@ class ProductCategoryAdapter(Component):
             filters.setdefault('updated_at', {})
             filters['updated_at']['to'] = to_date.strftime(dt_fmt)
 
+        if self.collection.version == '2.0':
+            return super(ProductCategoryAdapter, self).search(filters=filters)
+
         return self._call('oerp_catalog_category.search',
                           [filters] if filters else [{}])
 
@@ -91,6 +97,9 @@ class ProductCategoryAdapter(Component):
 
         :rtype: dict
         """
+        if self.collection.version == '2.0':
+            # TODO: storeview context in mag 2.0
+            return super(ProductCategoryAdapter, self).read(id, attributes)
         return self._call('%s.info' % self._magento_model,
                           [int(id), storeview_id, attributes])
 
@@ -99,6 +108,8 @@ class ProductCategoryAdapter(Component):
 
         :rtype: dict
         """
+        if self.collection.version == '2.0':
+            raise NotImplementedError  # TODO
         def filter_ids(tree):
             children = {}
             if tree['children']:
@@ -113,21 +124,35 @@ class ProductCategoryAdapter(Component):
         return filter_ids(tree)
 
     def move(self, categ_id, parent_id, after_categ_id=None):
+        if self.collection.version == '2.0':
+            return self._call(
+                '%s/%s/move' % (self._magento2_model, categ_id), {
+                    'parent_id': parent_id,
+                    'after_id': after_categ_id,
+                })
         return self._call('%s.move' % self._magento_model,
                           [categ_id, parent_id, after_categ_id])
 
     def get_assigned_product(self, categ_id):
+        if self.collection.version == '2.0':
+            raise NotImplementedError  # TODO
         return self._call('%s.assignedProducts' % self._magento_model,
                           [categ_id])
 
     def assign_product(self, categ_id, product_id, position=0):
+        if self.collection.version == '2.0':
+            raise NotImplementedError  # TODO
         return self._call('%s.assignProduct' % self._magento_model,
                           [categ_id, product_id, position, 'id'])
 
     def update_product(self, categ_id, product_id, position=0):
+        if self.collection.version == '2.0':
+            raise NotImplementedError  # TODO
         return self._call('%s.updateProduct' % self._magento_model,
                           [categ_id, product_id, position, 'id'])
 
     def remove_product(self, categ_id, product_id):
+        if self.collection.version == '2.0':
+            raise NotImplementedError  # TODO
         return self._call('%s.removeProduct' % self._magento_model,
                           [categ_id, product_id, 'id'])

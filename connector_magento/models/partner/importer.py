@@ -63,15 +63,19 @@ class PartnerImportMapper(Component):
     @mapping
     def names(self, record):
         parts = [part for part in (record['firstname'],
-                                   record['middlename'],
+                                   record.get('middlename'),
                                    record['lastname']) if part]
         return {'name': ' '.join(parts)}
 
     @mapping
     def customer_group_id(self, record):
         # import customer groups
-        binder = self.binder_for(model='magento.res.partner.category')
-        category = binder.to_internal(record['group_id'], unwrap=True)
+        if record['group_id'] == 0:
+            category = self.env.ref('connector_magento.category_no_account')
+        else:
+            binder = self.binder_for(model='magento.res.partner.category')
+            category = binder.to_internal(record['group_id'], unwrap=True)
+
 
         if not category:
             raise MappingError("The partner category with "
@@ -199,12 +203,22 @@ class PartnerAddressBook(Component):
 
     def _get_address_infos(self, magento_partner_id, partner_binding_id):
         adapter = self.component(usage='backend.adapter')
-        mag_address_ids = adapter.search({'customer_id':
+        if self.collection.version == '1.7':
+            address_data = adapter.search({'customer_id':
                                           {'eq': magento_partner_id}})
-        if not mag_address_ids:
-            return
-        for address_id in mag_address_ids:
-            magento_record = adapter.read(address_id)
+            if not mag_address_ids:
+                return
+            mag_address_ids = [
+                (address_id, adapter.read(address_id))
+                for address_id in address_data]
+        elif self.collection.version == '2.0':
+            """ Address repository cannot be queried, but the addresses are
+            included in the partner record.
+            TODO: process the addresses when we read the partner the first time """
+            record = adapter.read(magento_partner_id)
+            mag_address_ids = [(addr['id'], addr) for addr in record['addresses']]
+
+        for address_id, magento_record in mag_address_ids:
 
             # defines if the billing address is merged with the partner
             # or imported as a standalone contact
@@ -279,7 +293,11 @@ class BaseAddressImportMapper(AbstractComponent):
         value = record['street']
         if not value:
             return {}
-        lines = [line.strip() for line in value.split('\n') if line.strip()]
+        if isinstance(value, list):
+            lines = value
+        else:
+            lines = [line.strip() for line in value.split('\n')
+                     if line.strip()]
         if len(lines) == 1:
             result = {'street': lines[0], 'street2': False}
         elif len(lines) >= 2:
@@ -290,7 +308,7 @@ class BaseAddressImportMapper(AbstractComponent):
 
     @mapping
     def title(self, record):
-        prefix = record['prefix']
+        prefix = record.get('prefix')
         if not prefix:
             return
         title = self.env['res.partner.title'].search(

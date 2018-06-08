@@ -170,7 +170,7 @@ class MagentoImporter(AbstractComponent):
         """ Hook called at the end of the import """
         return
 
-    def run(self, external_id, force=False):
+    def run(self, external_id, force=False, data=None):
         """ Run the synchronization
 
         :param external_id: identifier of the record on Magento
@@ -182,11 +182,13 @@ class MagentoImporter(AbstractComponent):
             self.work.model_name,
             external_id,
         )
-
-        try:
-            self.magento_record = self._get_magento_data()
-        except IDMissingInBackend:
-            return _('Record does no longer exist in Magento')
+        if data:
+            self.magento_record = data
+        else:
+            try:
+                self.magento_record = self._get_magento_data()
+            except IDMissingInBackend:
+                return _('Record does no longer exist in Magento')
 
         skip = self._must_skip()
         if skip:
@@ -316,9 +318,8 @@ class TranslationImporter(Component):
         for storeview in lang_storeviews:
             lang_record = self._get_magento_data(storeview.external_id)
             map_record = mapper.map_record(lang_record)
-            record = list(map_record.values())
-
-            data = dict((field, value) for field, value in list(record.items())
+            record = map_record.values()
+            data = dict((field, value) for field, value in record.items()
                         if field in translatable_fields)
 
             binding.with_context(connector_no_export=True,

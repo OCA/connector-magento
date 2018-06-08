@@ -111,6 +111,8 @@ class SaleOrder(models.Model):
             if old_state == 'cancel':
                 continue  # skip if already canceled
             for binding in order.magento_bind_ids:
+                if binding.backend_id.version == '2.0':
+                    continue # TODO
                 job_descr = _("Cancel sales order %s") % (binding.external_id,)
                 binding.with_delay(
                     description=job_descr
@@ -132,6 +134,8 @@ class SaleOrder(models.Model):
         bindings.write({'odoo_id': new.id})
 
         for binding in bindings:
+            if binding.backend_id.version == '2.0':
+                continue  # TODO
             # the sales' status on Magento is likely 'canceled'
             # so we will export the new status (pending, processing, ...)
             job_descr = _("Reopen sales order %s") % (binding.external_id,)
@@ -240,6 +244,9 @@ class SaleOrderAdapter(Component):
     _apply_on = 'magento.sale.order'
 
     _magento_model = 'sales_order'
+    _magento2_model = 'orders'
+    _magento2_search = 'orders'
+    _magento2_key = 'entity_id'
     _admin_path = '{model}/view/order_id/{id}'
 
     def _call(self, method, arguments):
@@ -271,11 +278,13 @@ class SaleOrderAdapter(Component):
             filters['created_at']['to'] = to_date.strftime(dt_fmt)
         if magento_storeview_ids is not None:
             filters['store_id'] = {'in': magento_storeview_ids}
-
-        arguments = {'imported': False,
-                     # 'limit': 200,
-                     'filters': filters,
-                     }
+        if self.collection.version == '1.7':
+            arguments = {'imported': False,
+                         # 'limit': 200,
+                         'filters': filters,
+                         }
+        elif self.collection.version == '2.0':
+            arguments = filters
         return super(SaleOrderAdapter, self).search(arguments)
 
     def read(self, id, attributes=None):
@@ -283,8 +292,12 @@ class SaleOrderAdapter(Component):
 
         :rtype: dict
         """
-        record = self._call('%s.info' % self._magento_model,
-                            [id, attributes])
+        if self.collection.version == '2.0':
+            record = super(SaleOrderAdapter, self).read(
+                id, attributes=attributes)
+        else:
+            record = self._call('%s.info' % self._magento_model,
+                                [id, attributes])
         return record
 
     def get_parent(self, id):

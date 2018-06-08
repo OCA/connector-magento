@@ -32,7 +32,7 @@ class MagentoBackend(models.Model):
         to add a version from an ``_inherit`` does not constrain
         to redefine the ``version`` field in the ``_inherit`` model.
         """
-        return [('1.7', '1.7+')]
+        return [('1.7', '1.7+'), ('2.0', '2.0+')]
 
     @api.model
     def _get_stock_field_id(self):
@@ -58,12 +58,17 @@ class MagentoBackend(models.Model):
     )
     username = fields.Char(
         string='Username',
-        help="Webservice user",
+        help="Webservice user (leave empty for Magento 2.0)",
     )
     password = fields.Char(
         string='Password',
-        help="Webservice password",
+        help="Webservice password or authentication token when connecting to"
+             " Magento 2.0",
     )
+    verify_ssl = fields.Boolean(
+        string="Verify SSL certficate",
+        default=True,
+        help=("Only for Magento 2 REST API"))
     use_auth_basic = fields.Boolean(
         string='Use HTTP Auth Basic',
         help="Use a Basic Access Authentication for the API. "
@@ -193,7 +198,8 @@ class MagentoBackend(models.Model):
             self.location,
             self.username,
             self.password,
-            use_custom_api_path=self.use_custom_api_path
+            use_custom_api_path=self.use_custom_api_path,
+           version=self.version
         )
         if self.use_auth_basic:
             magento_location.use_auth_basic = True
@@ -230,11 +236,11 @@ class MagentoBackend(models.Model):
                     self.env[model_name].import_batch(backend)
             return True
         except Exception as e:
-            _logger.error(e.message, exc_info=True)
+            _logger.error(e, exc_info=True)
             raise UserError(
                 _("Check your configuration, we can't get the data. "
                   "Here is the error:\n%s") %
-                str(e).decode('utf-8', 'ignore'))
+                str(e))
 
     @api.multi
     def import_partners(self):

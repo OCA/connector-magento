@@ -9,8 +9,10 @@ import urllib.error
 import urllib.parse
 import base64
 import sys
+import html2text
 
 from odoo import _
+import requests
 from odoo.addons.component.core import Component
 from odoo.addons.connector.components.mapper import mapping
 from odoo.addons.connector.exception import MappingError, InvalidDataError
@@ -53,8 +55,9 @@ class CatalogImageImporter(Component):
     _apply_on = ['magento.product.product']
     _usage = 'product.image.importer'
 
-    def _get_images(self, storeview_id=None):
-        return self.backend_adapter.get_images(self.external_id, storeview_id)
+    def _get_images(self, storeview_id=None, data=None):
+        return self.backend_adapter.get_images(
+            self.external_id, storeview_id, data=data)
 
     def _sort_images(self, images):
         """ Returns a list of images sorted by their priority.
@@ -80,38 +83,43 @@ class CatalogImageImporter(Component):
         return sorted(images, key=priority)
 
     def _get_binary_image(self, image_data):
-        url = image_data['url']
-        try:
-            request = urllib.request.Request(url)
-            if self.backend_record.auth_basic_username \
-                    and self.backend_record.auth_basic_password:
-                base64string = base64.b64encode(
-                    ("%s:%s" % (self.backend_record.auth_basic_username,
-                                self.backend_record.auth_basic_password)
-                     ).encode('utf-8')
-                )
-                request.add_header("Authorization", "Basic %s" % (
-                    base64string.decode('utf-8')))
-            binary = urllib.request.urlopen(request)
-        except urllib.error.HTTPError as err:
-            if err.code == 404:
-                # the image is just missing, we skip it
-                return
+        if self.collection.version == '2.0':
+            if 'magento.product.product' in self._apply_on:
+                model = 'product'
             else:
-                # we don't know why we couldn't download the image
-                # so we propagate the error, the import will fail
-                # and we have to check why it couldn't be accessed
-                raise
+                raise NotImplementedError  # Categories?
+            url = '%s/pub/media/catalog/%s/%s' % (
+                self.backend_record.location, model, image_data['file'])
         else:
-            return binary.read()
+            url = image_data['url']
+        headers = {}
+        if (self.backend_record.auth_basic_username and
+                self.backend_record.auth_basic_password):
+            base64string = base64.b64encode(
+                '%s:%s' % (self.backend_record.auth_basic_username,
+                           self.backend_record.auth_basic_password))
+            headers['Authorization'] = "Basic %s" % base64string
+        # TODO: make verification of ssl a backend setting
+        request = requests.get(url, headers=headers,
+                               verify=self.backend_record.verify_ssl)
+        if request.status_code == 404:
+            # the image is just missing, we skip it
+            return
+        else:
+            # we don't know why we couldn't download the image
+            # so we propagate the error, the import will fail
+            # and we have to check why it couldn't be accessed
+            request.raise_for_status()
+        return request.content
+
 
     def _write_image_data(self, binding, binary, image_data):
         binding = binding.with_context(connector_no_export=True)
         binding.write({'image': base64.b64encode(binary)})
 
-    def run(self, external_id, binding):
+    def run(self, external_id, binding, data=None):
         self.external_id = external_id
-        images = self._get_images()
+        images = self._get_images(data=data)
         images = self._sort_images(images)
         binary = None
         image_data = None
@@ -176,10 +184,8 @@ class ProductImportMapper(Component):
 
     # TODO :     categ, special_price => minimal_price
     direct = [('name', 'name'),
-              ('description', 'description'),
               ('weight', 'weight'),
               ('cost', 'standard_price'),
-              ('short_description', 'description_sale'),
               ('sku', 'default_code'),
               ('type_id', 'product_type'),
               (normalize_datetime('created_at'), 'created_at'),
@@ -187,11 +193,20 @@ class ProductImportMapper(Component):
               ]
 
     @mapping
+    def description(self, record):
+        return {'description': html2text.html2text(record.get('description', ''))}
+
+    @mapping
+    def description_sale(self, record):
+        return {'description_sale': html2text.html2text(
+            record.get('short_description', ''))}
+
+    @mapping
     def is_active(self, record):
         """Check if the product is active in Magento
-        and set active flag in OpenERP
-        status == 1 in Magento means active"""
-        return {'active': (record.get('status') == '1')}
+        and set active flag in Odoo. Status == 1 in Magento means active.
+        2.0 REST API returns an integer, 1.x a string."""
+        return {'active': (record.get('status') in ('1', 1))}
 
     @mapping
     def price(self, record):
@@ -207,6 +222,8 @@ class ProductImportMapper(Component):
 
     @mapping
     def website_ids(self, record):
+        if self.collection.version == '2.0':
+            return {}
         website_ids = []
         binder = self.binder_for('magento.website')
         for mag_website_id in record['websites']:
@@ -216,7 +233,7 @@ class ProductImportMapper(Component):
 
     @mapping
     def categories(self, record):
-        mag_categories = record['categories']
+        mag_categories = record.get('categories', record['category_ids'])
         binder = self.binder_for('magento.product.category')
 
         category_ids = []
@@ -256,17 +273,25 @@ class ProductImporter(Component):
 
     def _import_bundle_dependencies(self):
         """ Import the dependencies for a Bundle """
-        bundle = self.magento_record['_bundle_data']
-        for option in bundle['options']:
-            for selection in option['selections']:
-                self._import_dependency(selection['product_id'],
+        if self.collection.version == '2.0':
+            for product_link in [
+                    product_link for option in self.magento_record[
+                        'extension_attributes']['bundle_product_options']
+                    for product_link in option['product_links']]:
+                self._import_dependency(product_link['sku'],
                                         'magento.product.product')
+        else:
+            bundle = self.magento_record['_bundle_data']
+            for option in bundle['options']:
+                for selection in option['selections']:
+                    self._import_dependency(selection['product_id'],
+                                            'magento.product.product')
 
     def _import_dependencies(self):
         """ Import the dependencies for the record"""
         record = self.magento_record
         # import related categories
-        for mag_category_id in record['categories']:
+        for mag_category_id in record.get('categories', record['category_ids']):
             self._import_dependency(mag_category_id,
                                     'magento.product.category')
         if record['type_id'] == 'bundle':
@@ -328,7 +353,7 @@ class ProductImporter(Component):
             mapper='magento.product.product.import.mapper'
         )
         image_importer = self.component(usage='product.image.importer')
-        image_importer.run(self.external_id, binding)
+        image_importer.run(self.external_id, binding, data=self.magento_record)
 
         if self.magento_record['type_id'] == 'bundle':
             bundle_importer = self.component(usage='product.bundle.importer')
