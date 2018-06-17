@@ -27,6 +27,7 @@
             'images/connector_magento.png',
             ],
  'data': ['data/connector_magento_data.xml',
+          'data/res_partner_category.xml',
           'security/ir.model.access.csv',
           'views/magento_backend_views.xml',
           'views/product_views.xml',

@@ -22,7 +22,8 @@ class MagentoStoreviewImportMapper(Component):
     @mapping
     def store_id(self, record):
         binder = self.binder_for(model='magento.store')
-        binding = binder.to_internal(record['group_id'])
+        group_id = record.get('store_group_id') or record['group_id']
+        binding = binder.to_internal(group_id)
         return {'store_id': binding.id}
 
 

@@ -38,6 +38,9 @@ class PartnerCategoryAdapter(Component):
     _apply_on = 'magento.res.partner.category'
 
     _magento_model = 'ol_customer_groups'
+    _magento2_model = 'customerGroups'
+    _magento2_search = 'customerGroups/search'
+    _magento2_key = 'id'
     _admin_path = '/customer_group/edit/id/{id}'
 
     def search(self, filters=None):
@@ -46,6 +49,8 @@ class PartnerCategoryAdapter(Component):
 
         :rtype: list
         """
+        if self.work.magento_api._location.version == '2.0':
+            return super(PartnerCategoryAdapter, self).search(filters=filters)
         return [int(row['customer_group_id']) for row
                 in self._call('%s.list' % self._magento_model,
                               [filters] if filters else [{}])]

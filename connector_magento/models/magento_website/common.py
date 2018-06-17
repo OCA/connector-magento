@@ -74,4 +74,5 @@ class WebsiteAdapter(Component):
     _apply_on = 'magento.website'
 
     _magento_model = 'ol_websites'
+    _magento2_model = 'store/websites'
     _admin_path = 'system_store/editWebsite/website_id/{id}'

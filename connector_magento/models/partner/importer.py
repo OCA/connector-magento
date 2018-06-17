@@ -63,24 +63,28 @@ class PartnerImportMapper(Component):
     @mapping
     def names(self, record):
         parts = [part for part in (record['firstname'],
-                                   record['middlename'],
+                                   record.get('middlename'),
                                    record['lastname']) if part]
         return {'name': ' '.join(parts)}
 
     @mapping
     def customer_group_id(self, record):
         # import customer groups
-        binder = self.binder_for(model='magento.res.partner.category')
-        category = binder.to_internal(record['group_id'], unwrap=True)
+        if record['group_id'] == 0:
+            category_id = self.env.ref(
+                'connector_magento.category_no_account').id
+        else:
+            binder = self.binder_for(model='magento.res.partner.category')
+            category_id = binder.to_internal(record['group_id'], unwrap=True)
 
-        if not category:
-            raise MappingError("The partner category with "
-                               "magento id %s does not exist" %
-                               record['group_id'])
+            if not category_id:
+                raise MappingError("The partner category with "
+                                "magento id %s does not exist" %
+                                record['group_id'])
 
         # FIXME: should remove the previous tag (all the other tags from
         # the same backend)
-        return {'category_id': [(4, category.id)]}
+        return {'category_id': [(4, category_id.id)]}
 
     @mapping
     def website_id(self, record):
@@ -196,16 +200,29 @@ class PartnerAddressBook(Component):
         for address_id, infos in addresses:
             importer = self.component(usage='record.importer')
             importer.run(address_id, address_infos=infos)
+            
+    def _read_addresses(self, magento_partner_id):
+        """ Address repository cannot be queried, but the addresses are
+        included in the partner record.
+        TODO: process the addresses when we read the partner the first time """
+        if self.work.magento_api._location.version == '2.0':
+            adapter = self.component(usage='backend.adapter',model_name='magento.res.partner')
+            record = adapter.read(magento_partner_id)
+            return [(addr['id'], addr) for addr in record['addresses']]
+            
+        else:
+            adapter = self.component(usage='backend.adapter')
+            mag_address_ids = adapter.search({'customer_id':
+                                            {'eq': magento_partner_id}})
+            if not mag_address_ids:
+                return
+            return [(address_id, adapter.read(address_id))
+                for address_id in mag_address_ids] 
 
     def _get_address_infos(self, magento_partner_id, partner_binding_id):
-        adapter = self.component(usage='backend.adapter')
-        mag_address_ids = adapter.search({'customer_id':
-                                          {'eq': magento_partner_id}})
-        if not mag_address_ids:
-            return
-        for address_id in mag_address_ids:
-            magento_record = adapter.read(address_id)
-
+        for address_id, magento_record in self._read_addresses(
+                magento_partner_id):
+    
             # defines if the billing address is merged with the partner
             # or imported as a standalone contact
             merge = False
@@ -280,7 +297,11 @@ class BaseAddressImportMapper(AbstractComponent):
         value = record['street']
         if not value:
             return {}
-        lines = [line.strip() for line in value.split('\n') if line.strip()]
+        if isinstance(value, list):
+            lines = value
+        else:
+            lines = [line.strip() for line in value.split('\n')
+                     if line.strip()]
         if len(lines) == 1:
             result = {'street': lines[0], 'street2': False}
         elif len(lines) >= 2:
@@ -291,7 +312,7 @@ class BaseAddressImportMapper(AbstractComponent):
 
     @mapping
     def title(self, record):
-        prefix = record['prefix']
+        prefix = record.get('prefix')
         if not prefix:
             return
         title = self.env['res.partner.title'].search(
