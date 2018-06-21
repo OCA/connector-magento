@@ -5,6 +5,7 @@
 import socket
 import logging
 import xmlrpclib
+import urllib
 
 from odoo.addons.component.core import AbstractComponent
 from odoo.addons.queue_job.exception import RetryableJobError
@@ -260,7 +261,7 @@ class GenericAdapter(AbstractComponent):
 
             def escape(term):
                 if isinstance(term, basestring):
-                    return term.replace('+', '%2B')
+                    return urllib.quote(term, safe='')
                 return term
 
             if attributes:

@@ -27,32 +27,45 @@ class ProductCategoryBatchImporter(Component):
 
     def run(self, filters=None):
         """ Run the synchronization """
-        from_date = filters.pop('from_date', None)
-        to_date = filters.pop('to_date', None)
-        if from_date or to_date:
-            updated_ids = self.backend_adapter.search(filters,
-                                                      from_date=from_date,
-                                                      to_date=to_date)
+        if self.work.magento_api._location.version == '2.0':
+
+            importer = self.component(usage='record.importer')
+            tree = self.backend_adapter.search_read()
+
+            def import_branch(branch):
+                children = branch.pop('children_data', [])
+                importer.run(branch['id'])
+                for child in children:
+                    import_branch(child)
+
+            import_branch(tree)
         else:
-            updated_ids = None
+            from_date = filters.pop('from_date', None)
+            to_date = filters.pop('to_date', None)
+            if from_date or to_date:
+                updated_ids = self.backend_adapter.search(filters,
+                                                        from_date=from_date,
+                                                        to_date=to_date)
+            else:
+                updated_ids = None
 
-        base_priority = 10
+            base_priority = 10
 
-        def import_nodes(tree, level=0):
-            for node_id, children in tree.iteritems():
-                # By changing the priority, the top level category has
-                # more chance to be imported before the childrens.
-                # However, importers have to ensure that their parent is
-                # there and import it if it doesn't exist
-                if updated_ids is None or node_id in updated_ids:
-                    job_options = {
-                        'priority': base_priority + level,
-                    }
-                    self._import_record(
-                        node_id, job_options=job_options)
-                import_nodes(children, level=level + 1)
-        tree = self.backend_adapter.tree()
-        import_nodes(tree)
+            def import_nodes(tree, level=0):
+                for node_id, children in tree.iteritems():
+                    # By changing the priority, the top level category has
+                    # more chance to be imported before the childrens.
+                    # However, importers have to ensure that their parent is
+                    # there and import it if it doesn't exist
+                    if updated_ids is None or node_id in updated_ids:
+                        job_options = {
+                            'priority': base_priority + level,
+                        }
+                        self._import_record(
+                            node_id, job_options=job_options)
+                    import_nodes(children, level=level + 1)
+            tree = self.backend_adapter.tree()
+            import_nodes(tree)
 
 
 class ProductCategoryImporter(Component):
@@ -86,6 +99,12 @@ class ProductCategoryImportMapper(Component):
     direct = [
         ('description', 'description'),
     ]
+    
+    @mapping
+    def external_id(self, record):
+        if self.work.magento_api._location.version == '2.0':
+            return {'external_id': record['id']}
+        return {'external_id': record['category_id']}
 
     @mapping
     def name(self, record):
