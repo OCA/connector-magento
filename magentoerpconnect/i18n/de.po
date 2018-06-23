@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * magentoerpconnect
-# 
+#
 # Translators:
 # Antonio Trueba, 2016
 # bossnm11 <bossnm11@gmail.com>, 2014
@@ -33,41 +33,86 @@ msgstr ""
 "POT-Creation-Date: 2017-08-19 01:27+0000\n"
 "PO-Revision-Date: 2017-08-28 12:31+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
-"Language-Team: German (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/de/)\n"
+"Language-Team: German (http://www.transifex.com/oca/OCA-connector-"
+"magento-8-0/language/de/)\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: magentoerpconnect
 #: help:magento.stock.picking,state:0
 msgid ""
 "\n"
-"                * Draft: not confirmed yet and will not be scheduled until confirmed\n"
+"                * Draft: not confirmed yet and will not be scheduled until "
+"confirmed\n"
 "\n"
-"                * Waiting Another Operation: waiting for another move to proceed before it becomes automatically available (e.g. in Make-To-Order flows)\n"
+"                * Waiting Another Operation: waiting for another move to "
+"proceed before it becomes automatically available (e.g. in Make-To-Order "
+"flows)\n"
 "\n"
-"                * Waiting Availability: still waiting for the availability of products\n"
+"                * Waiting Availability: still waiting for the availability "
+"of products\n"
 "\n"
-"                * Partially Available: some products are available and reserved\n"
+"                * Partially Available: some products are available and "
+"reserved\n"
 "\n"
-"                * Ready to Transfer: products reserved, simply waiting for confirmation.\n"
+"                * Ready to Transfer: products reserved, simply waiting for "
+"confirmation.\n"
 "\n"
-"                * Transferred: has been processed, can't be modified or cancelled anymore\n"
+"                * Transferred: has been processed, can't be modified or "
+"cancelled anymore\n"
 "\n"
 "                * Cancelled: has been cancelled, can't be confirmed anymore"
-msgstr "\n                * Entwurf: Noch nicht freigegeben und wird nicht terminiert bis freigegeben\n\n                * Warte auf anderen Vorgang: Warte zum Fortfahren auf andere Buchung, bevor es automatisch verfügbar wird (z.B. im Prozess der Auftragsbeschaffung)\n\n                * Warte auf Verfügbarkeit: Warte noch auf die Verfügbarkeit von Produkten\n\n                * Teilverfügbarkeit: einige Produkte sind bereits verfügbar und reserviert\n\n                * Bereit zum Umlagern: Produkte sind reserviert, warte nur noch auf Freigabe.\n\n                * Umgelagert: wurde bereits bearbeitet, kann nicht mehr verändert oder storniert werden\n\n                * Storniert: Wurde storniert, kann nicht mehr freigegeben werden"
+msgstr ""
+"\n"
+"                * Entwurf: Noch nicht freigegeben und wird nicht terminiert "
+"bis freigegeben\n"
+"\n"
+"                * Warte auf anderen Vorgang: Warte zum Fortfahren auf andere "
+"Buchung, bevor es automatisch verfügbar wird (z.B. im Prozess der "
+"Auftragsbeschaffung)\n"
+"\n"
+"                * Warte auf Verfügbarkeit: Warte noch auf die Verfügbarkeit "
+"von Produkten\n"
+"\n"
+"                * Teilverfügbarkeit: einige Produkte sind bereits verfügbar "
+"und reserviert\n"
+"\n"
+"                * Bereit zum Umlagern: Produkte sind reserviert, warte nur "
+"noch auf Freigabe.\n"
+"\n"
+"                * Umgelagert: wurde bereits bearbeitet, kann nicht mehr "
+"verändert oder storniert werden\n"
+"\n"
+"                * Storniert: Wurde storniert, kann nicht mehr freigegeben "
+"werden"
 
 #. module: magentoerpconnect
 #: help:magento.account.invoice,state:0
 msgid ""
-" * The 'Draft' status is used when a user is encoding a new and unconfirmed Invoice.\n"
-" * The 'Pro-forma' when invoice is in Pro-forma status,invoice does not have an invoice number.\n"
-" * The 'Open' status is used when user create invoice,a invoice number is generated.Its in open status till user does not pay invoice.\n"
-" * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
+" * The 'Draft' status is used when a user is encoding a new and unconfirmed "
+"Invoice.\n"
+" * The 'Pro-forma' when invoice is in Pro-forma status,invoice does not have "
+"an invoice number.\n"
+" * The 'Open' status is used when user create invoice,a invoice number is "
+"generated.Its in open status till user does not pay invoice.\n"
+" * The 'Paid' status is set automatically when the invoice is paid. Its "
+"related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
-msgstr " * Der Status 'Entwurf' wird verwendet, wenn ein Benutzer eine neue noch nicht freigegebene Rechnung erfasst.\n * Der Status 'Pro-forma' deutet an, dass die Rechnung Proforma gedruckt wurde, aber noch keine Rechnungsnummer erhalten hat.\n * Der Status 'Offen' wird verwendet, wenn die Rechnung erstellt und eine Rechnungsnummer erhalten hat. Die Rechnung bleibt in diesem Status bis sie bezahlt wurde.\n * Der Status 'Bezahlt' wird automatisch gesetzt, wenn die Rechnung bezahlt wurde. Diesbezügliche Journal-Posten können, müssen aber nicht, ausgeglichen sein.\n * Der Status 'Storniert' zeigt an, dass die Rechnung storniert wurde."
+msgstr ""
+" * Der Status 'Entwurf' wird verwendet, wenn ein Benutzer eine neue noch "
+"nicht freigegebene Rechnung erfasst.\n"
+" * Der Status 'Pro-forma' deutet an, dass die Rechnung Proforma gedruckt "
+"wurde, aber noch keine Rechnungsnummer erhalten hat.\n"
+" * Der Status 'Offen' wird verwendet, wenn die Rechnung erstellt und eine "
+"Rechnungsnummer erhalten hat. Die Rechnung bleibt in diesem Status bis sie "
+"bezahlt wurde.\n"
+" * Der Status 'Bezahlt' wird automatisch gesetzt, wenn die Rechnung bezahlt "
+"wurde. Diesbezügliche Journal-Posten können, müssen aber nicht, ausgeglichen "
+"sein.\n"
+" * Der Status 'Storniert' zeigt an, dass die Rechnung storniert wurde."
 
 #. module: magentoerpconnect
 #: field:magento.product.product,sales_count:0
@@ -98,12 +143,26 @@ msgstr "(neuberechnen)"
 #. module: magentoerpconnect
 #: help:magento.sale.order.line,state:0
 msgid ""
-"* The 'Draft' status is set when the related sales order in draft status.                     \n"
-"* The 'Confirmed' status is set when the related sales order is confirmed.                     \n"
-"* The 'Exception' status is set when the related sales order is set as exception.                     \n"
-"* The 'Done' status is set when the sales order line has been picked.                     \n"
+"* The 'Draft' status is set when the related sales order in draft "
+"status.                     \n"
+"* The 'Confirmed' status is set when the related sales order is "
+"confirmed.                     \n"
+"* The 'Exception' status is set when the related sales order is set as "
+"exception.                     \n"
+"* The 'Done' status is set when the sales order line has been "
+"picked.                     \n"
 "* The 'Cancelled' status is set when a user cancel the sales order related."
-msgstr "* Der Status 'Entwurf' zeigt an, dass diesbezüglicher Auftrag den Status 'Entwurf' hat.\n* Der Status 'Freigegeben' zeigt an, das diesbezüglicher Auftrag freigegen wurde.\n* Der Status 'Ausnahme' zeigt an, dass der diesbezügliche Auftrag einen Ausnahme-Fehler aufweist.\n* Der Status 'Erledigt' zeigt an, dass die Kommissionierung zu diesbezüglichem Auftrag abgeschlossen ist.\n* Der Status 'Storniert' zeigt an, dass der diesbezügliche Auftrag storniert wurde."
+msgstr ""
+"* Der Status 'Entwurf' zeigt an, dass diesbezüglicher Auftrag den Status "
+"'Entwurf' hat.\n"
+"* Der Status 'Freigegeben' zeigt an, das diesbezüglicher Auftrag freigegen "
+"wurde.\n"
+"* Der Status 'Ausnahme' zeigt an, dass der diesbezügliche Auftrag einen "
+"Ausnahme-Fehler aufweist.\n"
+"* Der Status 'Erledigt' zeigt an, dass die Kommissionierung zu "
+"diesbezüglichem Auftrag abgeschlossen ist.\n"
+"* Der Status 'Storniert' zeigt an, dass der diesbezügliche Auftrag storniert "
+"wurde."
 
 #. module: magentoerpconnect
 #: sql_constraint:magento.account.invoice:0
@@ -126,37 +185,48 @@ msgstr "Ein Backend mit gleichem Verkaufs-Präfix besteht bereits"
 #: sql_constraint:magento.stock.picking:0 sql_constraint:magento.store:0
 #: sql_constraint:magento.storeview:0 sql_constraint:magento.website:0
 msgid "A binding already exists with the same Magento ID."
-msgstr "Eine Verknüpfung zu Magento mit der gleichen Magento-ID besteht bereits."
+msgstr ""
+"Eine Verknüpfung zu Magento mit der gleichen Magento-ID besteht bereits."
 
 #. module: magentoerpconnect
 #: help:magento.product.category,type:0
 msgid ""
 "A category of the view type is a virtual category that can be used as the "
 "parent of another category to create a hierarchical structure."
-msgstr "Eine Kategorie der Art Sicht ist eine virtuelle Kategorie, die als übergeordneter Knoten in einer Hierarchie dienen kann."
+msgstr ""
+"Eine Kategorie der Art Sicht ist eine virtuelle Kategorie, die als "
+"übergeordneter Knoten in einer Hierarchie dienen kann."
 
 #. module: magentoerpconnect
 #: help:magento.product.product,description_sale:0
 msgid ""
-"A description of the Product that you want to communicate to your customers."
-" This description will be copied to every Sale Order, Delivery Order and "
+"A description of the Product that you want to communicate to your customers. "
+"This description will be copied to every Sale Order, Delivery Order and "
 "Customer Invoice/Refund"
-msgstr "Eine Beschreibung des Produkts, die Sie Ihren Kunden mitteilen möchten. Diese Beschreibung wird in jeden Verkaufsauftrag, Lieferschein und in Kundenrechnungen/-gutschriften kopiert."
+msgstr ""
+"Eine Beschreibung des Produkts, die Sie Ihren Kunden mitteilen möchten. "
+"Diese Beschreibung wird in jeden Verkaufsauftrag, Lieferschein und in "
+"Kundenrechnungen/-gutschriften kopiert."
 
 #. module: magentoerpconnect
 #: help:magento.product.product,description_purchase:0
 msgid ""
-"A description of the Product that you want to communicate to your suppliers."
-" This description will be copied to every Purchase Order, Receipt and "
+"A description of the Product that you want to communicate to your suppliers. "
+"This description will be copied to every Purchase Order, Receipt and "
 "Supplier Invoice/Refund."
-msgstr "Eine Beschreibung des Produkts, die Sie Ihren Lieferanten mitteilen möchten. Diese Beschreibung wird in jeden Bestellauftrag, Lieferquittung und in Liefantenrechnungen/-gutschriften kopiert."
+msgstr ""
+"Eine Beschreibung des Produkts, die Sie Ihren Lieferanten mitteilen möchten. "
+"Diese Beschreibung wird in jeden Bestellauftrag, Lieferquittung und in "
+"Liefantenrechnungen/-gutschriften kopiert."
 
 #. module: magentoerpconnect
 #: help:magento.sale.order,parent_need_cancel:0
 msgid ""
 "A parent sales order has been canceled on the backend and needs to be "
 "canceled."
-msgstr "Ein übergeordneter Verkaufsauftrag wurde im Backend storniert und muss (auch hier) storniert werden."
+msgstr ""
+"Ein übergeordneter Verkaufsauftrag wurde im Backend storniert und muss (auch "
+"hier) storniert werden."
 
 #. module: magentoerpconnect
 #: help:magento.sale.order,parent_id:0
@@ -189,8 +259,13 @@ msgstr "Ein genaue Beschreibung des Produkts, nur für interne Zwecke."
 #: help:magento.backend,sale_prefix:0
 msgid ""
 "A prefix put before the name of imported sales orders.\n"
-"For instance, if the prefix is 'mag-', the sales order 100000692 in Magento, will be named 'mag-100000692' in OpenERP."
-msgstr "Ein Präfix, welches dem importierten Verkaufsauftrag vorangestellt wird.\nIst z.B. das Präfix 'mag-' und der Verkaufsauftrag aus Magento die Bezeichnung 100000692, dann wird der importierte Auftrag 'mag-100000692' benannt."
+"For instance, if the prefix is 'mag-', the sales order 100000692 in Magento, "
+"will be named 'mag-100000692' in OpenERP."
+msgstr ""
+"Ein Präfix, welches dem importierten Verkaufsauftrag vorangestellt wird.\n"
+"Ist z.B. das Präfix 'mag-' und der Verkaufsauftrag aus Magento die "
+"Bezeichnung 100000692, dann wird der importierte Auftrag 'mag-100000692' "
+"benannt."
 
 #. module: magentoerpconnect
 #: view:magento.backend:magentoerpconnect.view_magento_backend_form
@@ -277,9 +352,15 @@ msgstr "Zahlbetrag"
 #. module: magentoerpconnect
 #: help:magento.res.partner,consider_as_company:0
 msgid ""
-"An account imported with a 'company' in the billing address is considered as a company.\n"
-" The partner takes the name of the company and is not merged with the billing address."
-msgstr "Ein Konto, welches ein Unternehmen als Rechnungsanschrift führt, wird als Unternehmen betrachtet.\nDer Partner bekommt den Namen des Unternehmens und wird nicht mit der Rechnungsanschrift zusammengeführt."
+"An account imported with a 'company' in the billing address is considered as "
+"a company.\n"
+" The partner takes the name of the company and is not merged with the "
+"billing address."
+msgstr ""
+"Ein Konto, welches ein Unternehmen als Rechnungsanschrift führt, wird als "
+"Unternehmen betrachtet.\n"
+"Der Partner bekommt den Namen des Unternehmens und wird nicht mit der "
+"Rechnungsanschrift zusammengeführt."
 
 #. module: magentoerpconnect
 #: field:magento.backend,account_analytic_id:0
@@ -327,7 +408,10 @@ msgid ""
 "Bank Account Number to which the invoice will be paid. A Company bank "
 "account if this is a Customer Invoice or Supplier Refund, otherwise a "
 "Partner bank account number."
-msgstr "Bankkontonummer an die diese Rechnung ausgleglichen wird. Eine Unternehmenskontonummer, wenn dies eine Kunden- oder Lieferantenrechnung ist, ansonsten eine Partner-Bankkontonummer."
+msgstr ""
+"Bankkontonummer an die diese Rechnung ausgleglichen wird. Eine "
+"Unternehmenskontonummer, wenn dies eine Kunden- oder Lieferantenrechnung "
+"ist, ansonsten eine Partner-Bankkontonummer."
 
 #. module: magentoerpconnect
 #: field:magento.address,bank_ids:0 field:magento.res.partner,bank_ids:0
@@ -337,9 +421,10 @@ msgstr "Banken"
 #. module: magentoerpconnect
 #: help:magento.product.product,list_price:0
 msgid ""
-"Base price to compute the customer price. Sometimes called the catalog "
-"price."
-msgstr "Basispreis, um den Kundenpreis zu ermitteln. Manchmal auch Katalogpreis genannt."
+"Base price to compute the customer price. Sometimes called the catalog price."
+msgstr ""
+"Basispreis, um den Kundenpreis zu ermitteln. Manchmal auch Katalogpreis "
+"genannt."
 
 #. module: magentoerpconnect
 #: field:magento.backend,auth_basic_password:0
@@ -387,7 +472,14 @@ msgid ""
 "                                    won't be done directly,\n"
 "                                    they will create 'Jobs'\n"
 "                                    executed as soon as possible."
-msgstr "Beim Klicken des Buttons,\n                                      weden Sie die Synchronisation mit Magento initialisieren.\n                                      Beachten Sie dass Im- und Exporte nicht direkt erldedigt werden. \n                                      Es werden 'Arbeitsschritte' erstellt, die dies so früh wie möglich erledigen."
+msgstr ""
+"Beim Klicken des Buttons,\n"
+"                                      weden Sie die Synchronisation mit "
+"Magento initialisieren.\n"
+"                                      Beachten Sie dass Im- und Exporte "
+"nicht direkt erldedigt werden. \n"
+"                                      Es werden 'Arbeitsschritte' erstellt, "
+"die dies so früh wie möglich erledigen."
 
 #. module: magentoerpconnect
 #: field:magento.product.product,rental:0
@@ -410,7 +502,8 @@ msgstr "Im Backend storniert"
 msgid ""
 "Canceled: the delivery order does not contain lines from the original sale "
 "order."
-msgstr "Storniert: Der Lieferschein enthält keine Positionen des Ursprungsauftrags."
+msgstr ""
+"Storniert: Der Lieferschein enthält keine Positionen des Ursprungsauftrags."
 
 #. module: magentoerpconnect
 #: field:magento.sale.order,cancellation_resolved:0
@@ -446,14 +539,17 @@ msgstr "Kategorieart"
 #. module: magentoerpconnect
 #: help:magento.address,is_company:0 help:magento.res.partner,is_company:0
 msgid "Check if the contact is a company, otherwise it is a person"
-msgstr "Anwählen, wenn Kontakt ein Unternehmen ist, anderenfalls ist es eine Person"
+msgstr ""
+"Anwählen, wenn Kontakt ein Unternehmen ist, anderenfalls ist es eine Person"
 
 #. module: magentoerpconnect
 #: help:magento.storeview,no_sales_order_sync:0
 msgid ""
 "Check if the storeview is active in Magento but its sales orders should not "
 "be imported."
-msgstr "Anwählen, wenn die Storeview in Magento aktiv ist, Verkaufsaufträge jedoch nicht importiert werden sollen."
+msgstr ""
+"Anwählen, wenn die Storeview in Magento aktiv ist, Verkaufsaufträge jedoch "
+"nicht importiert werden sollen."
 
 #. module: magentoerpconnect
 #: help:magento.address,vat_subjected:0
@@ -461,7 +557,9 @@ msgstr "Anwählen, wenn die Storeview in Magento aktiv ist, Verkaufsaufträge je
 msgid ""
 "Check this box if the partner is subjected to the VAT. It will be used for "
 "the VAT legal statement."
-msgstr "Wählen Sie diese Box an, wenn der Partner Umsatzsteuerpflichtig ist. Dies wird bei der Umsatzsteueranmeldung verwendet."
+msgstr ""
+"Wählen Sie diese Box an, wenn der Partner Umsatzsteuerpflichtig ist. Dies "
+"wird bei der Umsatzsteueranmeldung verwendet."
 
 #. module: magentoerpconnect
 #: help:magento.address,customer:0 help:magento.res.partner,customer:0
@@ -473,7 +571,10 @@ msgstr "Wählen Sie diese Box an, wenn dies ein Kunde ist."
 msgid ""
 "Check this box if this contact is a supplier. If it's not checked, purchase "
 "people will not see it when encoding a purchase order."
-msgstr "Wählen Sie diese Box an, wenn dies ein Lieferant ist. Wenn dies nicht gewählt ist, sehen Einkäufer diesen Kontakt beim Erfassen von Bestellungen nicht."
+msgstr ""
+"Wählen Sie diese Box an, wenn dies ein Lieferant ist. Wenn dies nicht "
+"gewählt ist, sehen Einkäufer diesen Kontakt beim Erfassen von Bestellungen "
+"nicht."
 
 #. module: magentoerpconnect
 #: help:magento.address,employee:0 help:magento.res.partner,employee:0
@@ -483,7 +584,9 @@ msgstr "Wählen Sie diese Box an, wenn dies ein Mitarbeiter ist."
 #. module: magentoerpconnect
 #: help:magento.product.product,no_stock_sync:0
 msgid "Check this to exclude the product from stock synchronizations."
-msgstr "Auswählen, wenn das Produkt von der Bestandssynchronisierung ausgeschlossen sein sollen."
+msgstr ""
+"Auswählen, wenn das Produkt von der Bestandssynchronisierung ausgeschlossen "
+"sein sollen."
 
 #. module: magentoerpconnect
 #: code:addons/magentoerpconnect/magento_model.py:219
@@ -502,9 +605,13 @@ msgstr "Unterkategorien"
 #. module: magentoerpconnect
 #: help:magento.backend,product_stock_field_id:0
 msgid ""
-"Choose the field of the product which will be used for stock inventory updates.\n"
+"Choose the field of the product which will be used for stock inventory "
+"updates.\n"
 "If empty, Quantity Available is used."
-msgstr "Wählen Sie das Feld des Produktes, welches für Lagerinventar Updates benutzt wird. \nWenn leer, wird die verfügbare Menge benutzt."
+msgstr ""
+"Wählen Sie das Feld des Produktes, welches für Lagerinventar Updates benutzt "
+"wird. \n"
+"Wenn leer, wird die verfügbare Menge benutzt."
 
 #. module: magentoerpconnect
 #: field:magento.address,city:0 field:magento.res.partner,city:0
@@ -521,7 +628,10 @@ msgstr "Code"
 msgid ""
 "Coefficient to convert default Unit of Measure to Unit of Sale\n"
 " uos = uom * coeff"
-msgstr "Koeffizient zur Umrechnung von Vorgabe-Produktmengeneinheit zu Verkaufsmengeneinheit\nVME = ME * Koeff"
+msgstr ""
+"Koeffizient zur Umrechnung von Vorgabe-Produktmengeneinheit zu "
+"Verkaufsmengeneinheit\n"
+"VME = ME * Koeff"
 
 #. module: magentoerpconnect
 #: field:magento.address,color:0 field:magento.product.product,color:0
@@ -570,7 +680,9 @@ msgstr "Vollständige Anschrift"
 #: help:magento.sale.order,carrier_id:0
 msgid ""
 "Complete this field if you plan to invoice the shipping based on picking."
-msgstr "Pflegen Sie dieses Feld, wenn Sie vorhaben Rechnungen gemäß Kommissionierung zu erstellen."
+msgstr ""
+"Pflegen Sie dieses Feld, wenn Sie vorhaben Rechnungen gemäß Kommissionierung "
+"zu erstellen."
 
 #. module: magentoerpconnect
 #: field:magento.product.product,magento_qty:0
@@ -597,7 +709,11 @@ msgstr "Als Unternehmen betrachtet"
 msgid ""
 "Consumable: Will not imply stock management for this product. \n"
 "Stockable product: Will imply stock management for this product."
-msgstr "Verbrauchsartikel: Für dieses Produkt wird keine automatisch Bestandsführung genutzt.\nBestandsgeführt: Für dieses Produkt wird automatische Bestandsführung genutzt."
+msgstr ""
+"Verbrauchsartikel: Für dieses Produkt wird keine automatisch Bestandsführung "
+"genutzt.\n"
+"Bestandsgeführt: Für dieses Produkt wird automatische Bestandsführung "
+"genutzt."
 
 #. module: magentoerpconnect
 #: field:magento.address,ref:0 field:magento.res.partner,ref:0
@@ -633,7 +749,10 @@ msgid ""
 "Cost price of the product template used for standard stock valuation in "
 "accounting and used as a base price on purchase orders. Expressed in the "
 "default unit of measure of the product."
-msgstr "Der Einstandspreis einer Produktvorlage wird zur Bestandsbewertung und als Grundpreis im Bestellwesen verwendet. Ausgedrückt wird der Preis in der Standard-Mengeneinheit des Produkts."
+msgstr ""
+"Der Einstandspreis einer Produktvorlage wird zur Bestandsbewertung und als "
+"Grundpreis im Bestellwesen verwendet. Ausgedrückt wird der Preis in der "
+"Standard-Mengeneinheit des Produkts."
 
 #. module: magentoerpconnect
 #: field:magento.product.product,cost_method:0
@@ -722,11 +841,23 @@ msgstr "Währung"
 #: help:magento.product.product,qty_available:0
 msgid ""
 "Current quantity of products.\n"
-"In a context with a single Stock Location, this includes goods stored at this Location, or any of its children.\n"
-"In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
-"stored in the Stock Location of the Warehouse of this Shop, or any of its children.\n"
-"Otherwise, this includes goods stored in any Stock Location with 'internal' type."
-msgstr "Aktuelle Produktmenge.\nIm Zusammenhang mit einem einzelnen Lagerplatz ist dies die Menge an diesem Platz oder diesem untergeordneten Plätzen.\nIm Zusammenhang mit einem einzelnen Lager ist dies die Menge an allen Plätzen dieses Lagers und deren untergeordneten Plätzen.\nIm Zusammenhang mit einem Ladenlager ist dies die Menge aller in Lagern dieses Ladens und deren Teillager.\nAnderenfalls ist dies die Summe aller Bestände auf 'internen' Lagern."
+"In a context with a single Stock Location, this includes goods stored at "
+"this Location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods stored in the "
+"Stock Location of this Warehouse, or any of its children.\n"
+"stored in the Stock Location of the Warehouse of this Shop, or any of its "
+"children.\n"
+"Otherwise, this includes goods stored in any Stock Location with 'internal' "
+"type."
+msgstr ""
+"Aktuelle Produktmenge.\n"
+"Im Zusammenhang mit einem einzelnen Lagerplatz ist dies die Menge an diesem "
+"Platz oder diesem untergeordneten Plätzen.\n"
+"Im Zusammenhang mit einem einzelnen Lager ist dies die Menge an allen "
+"Plätzen dieses Lagers und deren untergeordneten Plätzen.\n"
+"Im Zusammenhang mit einem Ladenlager ist dies die Menge aller in Lagern "
+"dieses Ladens und deren Teillager.\n"
+"Anderenfalls ist dies die Summe aller Bestände auf 'internen' Lagern."
 
 #. module: magentoerpconnect
 #: field:magento.backend,use_custom_api_path:0
@@ -803,13 +934,19 @@ msgstr "Freigabedatum des Verkaufsauftrags."
 #: help:magento.res.partner,last_reconciliation_date:0
 msgid ""
 "Date on which the partner accounting entries were fully reconciled last "
-"time. It differs from the last date where a reconciliation has been made for"
-" this partner, as here we depict the fact that nothing more was to be "
+"time. It differs from the last date where a reconciliation has been made for "
+"this partner, as here we depict the fact that nothing more was to be "
 "reconciled at this date. This can be achieved in 2 different ways: either "
 "the last unreconciled debit/credit entry of this partner was reconciled, "
 "either the user pressed the button \"Nothing more to reconcile\" during the "
 "manual reconciliation process."
-msgstr "Datum, an dem die Buchungsposten des Partners das letzte Mal ausgeglichen waren. Dies unterscheidet sich vom letzten Ausgleichsdatum insofern, dass hier keine weiteren offenen Posten bestanden. Das kann auf 2 Weisen geschehen: Entweder wurde der letzte offene Soll-/Haben-Posten voll ausgeglichen, oder der Benutzer hat die Schaltfläche \"Keine weiteren offenen Posten\" beim manuellen Ausgleichen gedrückt."
+msgstr ""
+"Datum, an dem die Buchungsposten des Partners das letzte Mal ausgeglichen "
+"waren. Dies unterscheidet sich vom letzten Ausgleichsdatum insofern, dass "
+"hier keine weiteren offenen Posten bestanden. Das kann auf 2 Weisen "
+"geschehen: Entweder wurde der letzte offene Soll-/Haben-Posten voll "
+"ausgeglichen, oder der Benutzer hat die Schaltfläche \"Keine weiteren "
+"offenen Posten\" beim manuellen Ausgleichen gedrückt."
 
 #. module: magentoerpconnect
 #: field:magento.address,is_default_billing:0
@@ -846,7 +983,9 @@ msgstr "Vorgabe Maßeinheit bei allen Lagerbuchungen."
 msgid ""
 "Default Unit of Measure used for purchase orders. It must be in the same "
 "category than the default unit of measure."
-msgstr "Vorgabe Maßeinheit bei Bestellungen. Diese muss zur gleichen Kategorie gehören, wie die Vorgabe-Maßeinheit des Produkts."
+msgstr ""
+"Vorgabe Maßeinheit bei Bestellungen. Diese muss zur gleichen Kategorie "
+"gehören, wie die Vorgabe-Maßeinheit des Produkts."
 
 #. module: magentoerpconnect
 #: field:magento.sale.order,shipped:0
@@ -886,7 +1025,10 @@ msgstr "Lieferanschrift für diesen Verkaufsauftrag."
 msgid ""
 "Depending on the modules installed, this will allow you to define the route "
 "of the product: whether it will be bought, manufactured, MTO/MTS,..."
-msgstr "Abhängig von den installierten Modulen, ermöglicht Ihnen dies die Festlegung der Route des Produkts, ob es auf Lager oder per Kundenauftrag erworben oder hergestellt wird..."
+msgstr ""
+"Abhängig von den installierten Modulen, ermöglicht Ihnen dies die Festlegung "
+"der Route des Produkts, ob es auf Lager oder per Kundenauftrag erworben oder "
+"hergestellt wird..."
 
 #. module: magentoerpconnect
 #: field:magento.product.category,description:0
@@ -932,14 +1074,18 @@ msgstr "Kein Lager verwalten"
 msgid ""
 "Does the invoice export/creation should send an email notification on "
 "Magento side?"
-msgstr "Soll bei Erstellung/Export der Rechnung eine E-Mail aus Magento versendet werden?"
+msgstr ""
+"Soll bei Erstellung/Export der Rechnung eine E-Mail aus Magento versendet "
+"werden?"
 
 #. module: magentoerpconnect
 #: help:magento.store,send_picking_done_mail:0
 msgid ""
 "Does the picking export/creation should send an email notification on "
 "Magento side?"
-msgstr "Soll bei Erstellung / Export eines Lieferscheins eine E-Mail aus Magento versendet werden?"
+msgstr ""
+"Soll bei Erstellung / Export eines Lieferscheins eine E-Mail aus Magento "
+"versendet werden?"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,date_due:0
@@ -1054,21 +1200,27 @@ msgstr "Schreibe Entnahmestrategie vor"
 msgid ""
 "Forces to specify a Serial Number for all moves containing this product and "
 "coming from a Supplier Location"
-msgstr "Erfordert Angabe einer Seriennummer bei allen Buchungen und Lieferantenanlieferungen dieses Produkts"
+msgstr ""
+"Erfordert Angabe einer Seriennummer bei allen Buchungen und "
+"Lieferantenanlieferungen dieses Produkts"
 
 #. module: magentoerpconnect
 #: help:magento.product.product,track_outgoing:0
 msgid ""
 "Forces to specify a Serial Number for all moves containing this product and "
 "going to a Customer Location"
-msgstr "Erfordert Angabe einer Seriennummer bei allen Buchungen und Kundenauslieferungen dieses Produkts"
+msgstr ""
+"Erfordert Angabe einer Seriennummer bei allen Buchungen und "
+"Kundenauslieferungen dieses Produkts"
 
 #. module: magentoerpconnect
 #: help:magento.product.product,track_all:0
 msgid ""
 "Forces to specify a Serial Number on each and every operation related to "
 "this product"
-msgstr "Erfordert Angabe einer Seriennummer bei ausnahmslos allen Buchungen dieses Produkts"
+msgstr ""
+"Erfordert Angabe einer Seriennummer bei ausnahmslos allen Buchungen dieses "
+"Produkts"
 
 #. module: magentoerpconnect
 #: field:magento.product.product,virtual_available:0
@@ -1079,10 +1231,20 @@ msgstr "Vorhersagemenge"
 #: help:magento.product.product,virtual_available:0
 msgid ""
 "Forecast quantity (computed as Quantity On Hand - Outgoing + Incoming)\n"
-"In a context with a single Stock Location, this includes goods stored in this location, or any of its children.\n"
-"In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
-"Otherwise, this includes goods stored in any Stock Location with 'internal' type."
-msgstr "Vorhersagemenge (berechnet aus Freiem Bestand - abgehende + zugehende Mengen)\nIn Zusammenhang mit einem einzelnen Lagerplatz sind dies die Mengen an diesem und seinen untergeordneten Lagerplätzen.\nIn Zusammenhang mit einem einzelnen Lager sind dies die Mengen an diesem und seinen untergeordneten Lagern.\nAnderenfalls sind dies die Bestände aller 'internen' Lager."
+"In a context with a single Stock Location, this includes goods stored in "
+"this location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods stored in the "
+"Stock Location of this Warehouse, or any of its children.\n"
+"Otherwise, this includes goods stored in any Stock Location with 'internal' "
+"type."
+msgstr ""
+"Vorhersagemenge (berechnet aus Freiem Bestand - abgehende + zugehende "
+"Mengen)\n"
+"In Zusammenhang mit einem einzelnen Lagerplatz sind dies die Mengen an "
+"diesem und seinen untergeordneten Lagerplätzen.\n"
+"In Zusammenhang mit einem einzelnen Lager sind dies die Mengen an diesem und "
+"seinen untergeordneten Lagern.\n"
+"Anderenfalls sind dies die Bestände aller 'internen' Lager."
 
 #. module: magentoerpconnect
 #: field:magento.product.product,track_all:0
@@ -1099,7 +1261,10 @@ msgstr "Vollständige Bezeichnung"
 msgid ""
 "Gives the different ways to package the same product. This has no impact on "
 "the picking order and is mainly used if you use the EDI module."
-msgstr "Gibt die unterschiedlichen Verpackungen des gleichen Produkts an. Dies hat keinen Einfluss auf die Kommissionierung und wird hauptsächlich für EDI-Module verwendet."
+msgstr ""
+"Gibt die unterschiedlichen Verpackungen des gleichen Produkts an. Dies hat "
+"keinen Einfluss auf die Kommissionierung und wird hauptsächlich für EDI-"
+"Module verwendet."
 
 #. module: magentoerpconnect
 #: help:magento.product.category,sequence:0
@@ -1109,15 +1274,27 @@ msgstr "Liefert die Anzeigereihenfolge bei List-Anzeige der Warengruppen."
 #. module: magentoerpconnect
 #: help:magento.sale.order.line,sequence:0
 msgid "Gives the sequence order when displaying a list of sales order lines."
-msgstr "Liefert die Anzeigereihenfolge bei List-Anzeige der Auftragspositionen."
+msgstr ""
+"Liefert die Anzeigereihenfolge bei List-Anzeige der Auftragspositionen."
 
 #. module: magentoerpconnect
 #: help:magento.sale.order,state:0
 msgid ""
 "Gives the status of the quotation or sales order.              \n"
-"The exception status is automatically set when a cancel operation occurs               in the invoice validation (Invoice Exception) or in the picking list process (Shipping Exception).\n"
-"The 'Waiting Schedule' status is set when the invoice is confirmed               but waiting for the scheduler to run on the order date."
-msgstr "Liefert den Status des Angebots bzw. Verkaufsauftrags.\nDer Ausnahmezustand wird automatisch gesetzt, wenn ein Storno während der Rechnungsprüfung (Rechnungsausnahmefehler) oder bei der Kommissionierung (Versandfehler) eintritt.\nDer Status 'Erwarte Terminierung' zeigt an, dass die Rechnung zwar freigegeben wurde, der Terminierer jedoch am Plandatum noch nicht ausgeführt wurde."
+"The exception status is automatically set when a cancel operation "
+"occurs               in the invoice validation (Invoice Exception) or in the "
+"picking list process (Shipping Exception).\n"
+"The 'Waiting Schedule' status is set when the invoice is "
+"confirmed               but waiting for the scheduler to run on the order "
+"date."
+msgstr ""
+"Liefert den Status des Angebots bzw. Verkaufsauftrags.\n"
+"Der Ausnahmezustand wird automatisch gesetzt, wenn ein Storno während der "
+"Rechnungsprüfung (Rechnungsausnahmefehler) oder bei der Kommissionierung "
+"(Versandfehler) eintritt.\n"
+"Der Status 'Erwarte Terminierung' zeigt an, dass die Rechnung zwar "
+"freigegeben wurde, der Terminierer jedoch am Plandatum noch nicht ausgeführt "
+"wurde."
 
 #. module: magentoerpconnect
 #: field:magento.product.product,weight:0
@@ -1154,7 +1331,9 @@ msgstr "Wurde im Backend storniert, muss abgebrochen werden."
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr "Enthält den Meldungsverlauf (Anzahl Meldungen, ...) Diese Übersicht liegt in HTML vor, so dass diese unmittelbar in Kanban eingefügt werden können."
+msgstr ""
+"Enthält den Meldungsverlauf (Anzahl Meldungen, ...) Diese Übersicht liegt in "
+"HTML vor, so dass diese unmittelbar in Kanban eingefügt werden können."
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,id:0 field:magento.address,id:0
@@ -1185,16 +1364,22 @@ msgstr "ID in Magento"
 #. module: magentoerpconnect
 #: help:magento.backend,default_category_id:0
 msgid ""
-"If a default category is selected, products imported without a category will"
-" be linked to it."
-msgstr "Durch eine vor-eingestellte Standard Kategorie, werden alle Produkte, ohne irgendeine Kategorie dann mit dieser verlinkt."
+"If a default category is selected, products imported without a category will "
+"be linked to it."
+msgstr ""
+"Durch eine vor-eingestellte Standard Kategorie, werden alle Produkte, ohne "
+"irgendeine Kategorie dann mit dieser verlinkt."
 
 #. module: magentoerpconnect
 #: help:magento.backend,default_lang_id:0
 msgid ""
-"If a default language is selected, the records will be imported in the translation of this language.\n"
+"If a default language is selected, the records will be imported in the "
+"translation of this language.\n"
 "Note that a similar configuration exists for each storeview."
-msgstr "Wenn Vorgabesprache ausgewählt, werden die Datensätze in der Übersetzung dieser Sprache importiert.\nEine entsprechende Einstellung gibt es auch je Storeview."
+msgstr ""
+"Wenn Vorgabesprache ausgewählt, werden die Datensätze in der Übersetzung "
+"dieser Sprache importiert.\n"
+"Eine entsprechende Einstellung gibt es auch je Storeview."
 
 #. module: magentoerpconnect
 #: help:magento.account.invoice,message_unread:0
@@ -1212,7 +1397,10 @@ msgid ""
 "If opt-out is checked, this contact has refused to receive emails for mass "
 "mailing and marketing campaign. Filter 'Available for Mass Mailing' allows "
 "users to filter the partners when performing mass mailing."
-msgstr "Wenn Opt-Out gesetzt ist, hat der Empfänger dem Erhalt von Massenmailings oder Werbung nicht zugestimmt. Der Filter 'Für Massenmails verfügbar' ermöglicht das Herausfiltern dieser Partner bei Massenmailings."
+msgstr ""
+"Wenn Opt-Out gesetzt ist, hat der Empfänger dem Erhalt von Massenmailings "
+"oder Werbung nicht zugestimmt. Der Filter 'Für Massenmails verfügbar' "
+"ermöglicht das Herausfiltern dieser Partner bei Massenmailings."
 
 #. module: magentoerpconnect
 #: help:magento.product.product,valuation:0
@@ -1223,7 +1411,13 @@ msgid ""
 "account set on the product category will represent the current inventory "
 "value, and the stock input and stock output account will hold the "
 "counterpart moves for incoming and outgoing products."
-msgstr "Wenn Echtzeit-Bewertung für ein Produkt eingeschaltet ist, schreibt das System automatisch den Lagerbuchungen Journalbuchungen fort, die der Methode zur 'Preisermittlung' entsprechen. Das Konto Bestandsbewertung, wie es in der Warengruppe gesetzt ist, stellt den gegenwärtigen Bestandswert dar. Warenzugang und Warenabgang erhalten die Gegenbuchungen für jeweils zugehende und abgehende Produkte."
+msgstr ""
+"Wenn Echtzeit-Bewertung für ein Produkt eingeschaltet ist, schreibt das "
+"System automatisch den Lagerbuchungen Journalbuchungen fort, die der Methode "
+"zur 'Preisermittlung' entsprechen. Das Konto Bestandsbewertung, wie es in "
+"der Warengruppe gesetzt ist, stellt den gegenwärtigen Bestandswert dar. "
+"Warenzugang und Warenabgang erhalten die Gegenbuchungen für jeweils "
+"zugehende und abgehende Produkte."
 
 #. module: magentoerpconnect
 #: help:magento.backend,account_analytic_id:0
@@ -1231,7 +1425,10 @@ msgid ""
 "If specified, this analytic account will be used to fill the field  on the "
 "sale order created by the connector. The value can also be specified on "
 "website or the store or the store view."
-msgstr "Wenn angegeben, wird diese Kostenstelle im durch den Connector erstellten Verkaufsauftrag verwendet. Der Wert kann auch für die Webseite, den Store oder die Store-Sicht eingepflegt werden."
+msgstr ""
+"Wenn angegeben, wird diese Kostenstelle im durch den Connector erstellten "
+"Verkaufsauftrag verwendet. Der Wert kann auch für die Webseite, den Store "
+"oder die Store-Sicht eingepflegt werden."
 
 #. module: magentoerpconnect
 #: help:magento.config.specializer,specific_account_analytic_id:0
@@ -1242,7 +1439,10 @@ msgid ""
 "If specified, this analytic account will be used to fill the field on the "
 "sale order created by the connector. The value can also be specified on "
 "website or the store or the store view."
-msgstr "Wenn angegeben, wird diese Kostenstelle im durch den Connector erstellten Verkaufsauftrag verwendet. Der Wert kann auch für die Webseite, den Store oder die Store-Sicht eingepflegt werden."
+msgstr ""
+"Wenn angegeben, wird diese Kostenstelle im durch den Connector erstellten "
+"Verkaufsauftrag verwendet. Der Wert kann auch für die Webseite, den Store "
+"oder die Store-Sicht eingepflegt werden."
 
 #. module: magentoerpconnect
 #: help:magento.backend,fiscal_position_id:0
@@ -1254,14 +1454,20 @@ msgid ""
 "If specified, this fiscal position will be used to fill the field fiscal "
 "position on the sale order created by the connector.The value can also be "
 "specified on website or the store or the store view."
-msgstr "Wenn angegeben, wird diese Steuerzuordnung im durch den Connector erstellten Verkaufsauftrag verwendet. Der Wert kann auch für die Webseite, den Store oder die Store-Sicht eingepflegt werden."
+msgstr ""
+"Wenn angegeben, wird diese Steuerzuordnung im durch den Connector erstellten "
+"Verkaufsauftrag verwendet. Der Wert kann auch für die Webseite, den Store "
+"oder die Store-Sicht eingepflegt werden."
 
 #. module: magentoerpconnect
 #: help:magento.address,lang:0 help:magento.res.partner,lang:0
 msgid ""
 "If the selected language is loaded in the system, all documents related to "
 "this contact will be printed in this language. If not, it will be English."
-msgstr "Wenn die gewählte Sprache im System installiert ist, werden alle Dokumente mit Bezug auf diesen Kontakt in dieser Sprache erstellt. Ansonsten wird Englisch verwendet."
+msgstr ""
+"Wenn die gewählte Sprache im System installiert ist, werden alle Dokumente "
+"mit Bezug auf diesen Kontakt in dieser Sprache erstellt. Ansonsten wird "
+"Englisch verwendet."
 
 #. module: magentoerpconnect
 #: help:magento.stock.picking,backorder_id:0
@@ -1279,17 +1485,22 @@ msgstr ""
 #. module: magentoerpconnect
 #: help:magento.account.invoice,payment_term:0
 msgid ""
-"If you use payment terms, the due date will be computed automatically at the"
-" generation of accounting entries. If you keep the payment term and the due "
+"If you use payment terms, the due date will be computed automatically at the "
+"generation of accounting entries. If you keep the payment term and the due "
 "date empty, it means direct payment. The payment term may compute several "
 "due dates, for example 50% now, 50% in one month."
-msgstr "Wenn Sie Zahlungsbedingungen verwenden, wird das Fälligkeitsdatum automatisch beim Anlegen der Buchungen errechnet. Wenn Sie die Zahlungsbedingung und das Fälligkeitsadtum leer lassen, bedeutet dies sofortige Fälligkeit. Die Zahlungsbedingung kann mehrer Fälligkeiten ermitteln, z.B. 50% sofort und 50% in einem Monat."
+msgstr ""
+"Wenn Sie Zahlungsbedingungen verwenden, wird das Fälligkeitsdatum "
+"automatisch beim Anlegen der Buchungen errechnet. Wenn Sie die "
+"Zahlungsbedingung und das Fälligkeitsadtum leer lassen, bedeutet dies "
+"sofortige Fälligkeit. Die Zahlungsbedingung kann mehrer Fälligkeiten "
+"ermitteln, z.B. 50% sofort und 50% in einem Monat."
 
 #. module: magentoerpconnect
 #: help:magento.account.invoice,date_due:0
 msgid ""
-"If you use payment terms, the due date will be computed automatically at the"
-" generation of accounting entries. The payment term may compute several due "
+"If you use payment terms, the due date will be computed automatically at the "
+"generation of accounting entries. The payment term may compute several due "
 "dates, for example 50% now and 50% in one month, but if you want to force a "
 "due date, make sure that the payment term is not set on the invoice. If you "
 "keep the payment term and the due date empty, it means direct payment."
@@ -1308,8 +1519,8 @@ msgstr "Bild"
 #. module: magentoerpconnect
 #: help:magento.product.product,image:0
 msgid ""
-"Image of the product variant (Big-sized image of product template if false)."
-" It is automatically resized as a 1024x1024px image, with aspect ratio "
+"Image of the product variant (Big-sized image of product template if false). "
+"It is automatically resized as a 1024x1024px image, with aspect ratio "
 "preserved."
 msgstr ""
 
@@ -2019,7 +2230,11 @@ msgid ""
 "Medium-sized image of this contact. It is automatically resized as a "
 "128x128px image, with aspect ratio preserved. Use this field in form views "
 "or some kanban views."
-msgstr "Mittelgroßes Bild. Es wird automatisch auf 128 x 128 Pixel, unter Beibehaltung der Seitenverhältnisse, umgerechnet, sofern eine Seite diese Größe überschreitet. Verwenden Sie dieses Bild in Formularen und Kanban-Sichten"
+msgstr ""
+"Mittelgroßes Bild. Es wird automatisch auf 128 x 128 Pixel, unter "
+"Beibehaltung der Seitenverhältnisse, umgerechnet, sofern eine Seite diese "
+"Größe überschreitet. Verwenden Sie dieses Bild in Formularen und Kanban-"
+"Sichten"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,message_ids:0
@@ -2097,7 +2312,9 @@ msgstr "Keine Bestands-Synchronisation"
 msgid ""
 "No admin URL configured on the backend or no admin path is defined for this "
 "record."
-msgstr "Keine Admin-URL für dieses Backend oder kein Adminpfad für diesen Datensatz festgelegt"
+msgstr ""
+"Keine Admin-URL für dieses Backend oder kein Adminpfad für diesen Datensatz "
+"festgelegt"
 
 #. module: magentoerpconnect
 #: code:addons/magentoerpconnect/stock_tracking.py:83
@@ -2143,9 +2360,12 @@ msgstr ""
 #. module: magentoerpconnect
 #: help:magento.sale.order,order_policy:0
 msgid ""
-"On demand: A draft invoice can be created from the sales order when needed. \n"
-"On delivery order: A draft invoice can be created from the delivery order when the products have been delivered. \n"
-"Before delivery: A draft invoice is created from the sales order and must be paid before the products can be delivered."
+"On demand: A draft invoice can be created from the sales order when "
+"needed. \n"
+"On delivery order: A draft invoice can be created from the delivery order "
+"when the products have been delivered. \n"
+"Before delivery: A draft invoice is created from the sales order and must be "
+"paid before the products can be delivered."
 msgstr ""
 
 #. module: magentoerpconnect
@@ -2158,7 +2378,14 @@ msgid ""
 "                                    You will find the list\n"
 "                                    of the new records to review\n"
 "                                    in the menu 'Connectors > Checkpoint'."
-msgstr "Einmal importiert,\n                                 einige Typen von Daten, \n                                 wie Produkte oder Kategorien, \n                                 brauchen eine manuelle Überprüfung.\n                                 Sie finden die Liste der zu prüfenden Daten in dem \n                                 Menü 'Connectors > Prüfungen'."
+msgstr ""
+"Einmal importiert,\n"
+"                                 einige Typen von Daten, \n"
+"                                 wie Produkte oder Kategorien, \n"
+"                                 brauchen eine manuelle Überprüfung.\n"
+"                                 Sie finden die Liste der zu prüfenden Daten "
+"in dem \n"
+"                                 Menü 'Connectors > Prüfungen'."
 
 #. module: magentoerpconnect
 #: field:magento.address,opt_out:0 field:magento.res.partner,opt_out:0
@@ -2352,7 +2579,10 @@ msgid ""
 "Policy to receive emails for new messages pushed to your personal Inbox:\n"
 "- Never: no emails are sent\n"
 "- All Messages: for every notification you receive in your Inbox"
-msgstr "Regelung für die Weiterleitung neuer Emails in Ihr persönliches Postfach:\n- Niemals: Keine Nachricht wird weitergeleitet\n- Alle Nachrichten: Jede eingehende Mitteilung in Ihrem Posteingang"
+msgstr ""
+"Regelung für die Weiterleitung neuer Emails in Ihr persönliches Postfach:\n"
+"- Niemals: Keine Nachricht wird weitergeleitet\n"
+"- Alle Nachrichten: Jede eingehende Mitteilung in Ihrem Posteingang"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,portal_payment_options:0
@@ -2392,7 +2622,10 @@ msgid ""
 "Prices are set in OpenERP and exported to Magento.\n"
 "\n"
 "This installs the module magentoerpconnect_pricing."
-msgstr "Preise werden in OpenERP bestimmt und zu Magento exportiert.\n\nDies installiert das Modul magentoerpconnect_pricing."
+msgstr ""
+"Preise werden in OpenERP bestimmt und zu Magento exportiert.\n"
+"\n"
+"Dies installiert das Modul magentoerpconnect_pricing."
 
 #. module: magentoerpconnect
 #: field:magento.storeview,catalog_price_tax_included:0
@@ -2531,19 +2764,37 @@ msgstr ""
 #: help:magento.product.product,incoming_qty:0
 msgid ""
 "Quantity of products that are planned to arrive.\n"
-"In a context with a single Stock Location, this includes goods arriving to this Location, or any of its children.\n"
-"In a context with a single Warehouse, this includes goods arriving to the Stock Location of this Warehouse, or any of its children.\n"
-"Otherwise, this includes goods arriving to any Stock Location with 'internal' type."
-msgstr "Plan-Zugang von Produktmengen.\nIn Zusammenhang mit einem einzelnen Lagerplatz, sind dies die Mengen an diesem und seinen untergeordneten Lagerplätzen.\nIn Zusammenhang mit einem einzelnen Lager sind dies die eingehenden Mengen an diesem und seinen untergeordneten Lagern.\nAnderenfalls sind dies die eingehenden Mengen aller 'internen' Lager."
+"In a context with a single Stock Location, this includes goods arriving to "
+"this Location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods arriving to the "
+"Stock Location of this Warehouse, or any of its children.\n"
+"Otherwise, this includes goods arriving to any Stock Location with "
+"'internal' type."
+msgstr ""
+"Plan-Zugang von Produktmengen.\n"
+"In Zusammenhang mit einem einzelnen Lagerplatz, sind dies die Mengen an "
+"diesem und seinen untergeordneten Lagerplätzen.\n"
+"In Zusammenhang mit einem einzelnen Lager sind dies die eingehenden Mengen "
+"an diesem und seinen untergeordneten Lagern.\n"
+"Anderenfalls sind dies die eingehenden Mengen aller 'internen' Lager."
 
 #. module: magentoerpconnect
 #: help:magento.product.product,outgoing_qty:0
 msgid ""
 "Quantity of products that are planned to leave.\n"
-"In a context with a single Stock Location, this includes goods leaving this Location, or any of its children.\n"
-"In a context with a single Warehouse, this includes goods leaving the Stock Location of this Warehouse, or any of its children.\n"
-"Otherwise, this includes goods leaving any Stock Location with 'internal' type."
-msgstr "Plan-Abgang von Produktmengen.\nIn Zusammenhang mit einem einzelnen Lagerplatz sind dies die Mengen an diesem und seinen untergeordneten Lagerplätzen.\nIn Zusammenhang mit einem einzelnen Lager sind dies die abgehenden Mengen an diesem und seinen untergeordneten Lagern.\nAnderenfalls sind dies die Abgänge aller 'internen' Lager."
+"In a context with a single Stock Location, this includes goods leaving this "
+"Location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods leaving the Stock "
+"Location of this Warehouse, or any of its children.\n"
+"Otherwise, this includes goods leaving any Stock Location with 'internal' "
+"type."
+msgstr ""
+"Plan-Abgang von Produktmengen.\n"
+"In Zusammenhang mit einem einzelnen Lagerplatz sind dies die Mengen an "
+"diesem und seinen untergeordneten Lagerplätzen.\n"
+"In Zusammenhang mit einem einzelnen Lager sind dies die abgehenden Mengen an "
+"diesem und seinen untergeordneten Lagern.\n"
+"Anderenfalls sind dies die Abgänge aller 'internen' Lager."
 
 #. module: magentoerpconnect
 #: field:magento.product.product,loc_rack:0
@@ -2758,7 +3009,9 @@ msgstr "Kategorie für dieses Produkt wählen"
 msgid ""
 "Select this if you want to set company's address information  for this "
 "contact"
-msgstr "Anwählen, wenn Sie die Unternehmenanschrift für diesen Kontakt festlegen möchten"
+msgstr ""
+"Anwählen, wenn Sie die Unternehmenanschrift für diesen Kontakt festlegen "
+"möchten"
 
 #. module: magentoerpconnect
 #: selection:magento.product.product,backorders:0
@@ -2815,16 +3068,28 @@ msgstr "Lieferbedingung"
 #. module: magentoerpconnect
 #: help:payment.method,create_invoice_on:0
 msgid ""
-"Should the invoice be created in Magento when it is validated or when it is paid in OpenERP?\n"
-"If nothing is set, the option falls back to the same option on the Magento store related to the sales order."
-msgstr "Soll die Rechnung angelegt werden, wenn sie geprüft wurde oder wenn Sie in OpenERP als bezahlt gekennzeichnet wurde?\nIst nicht angegeben, wird auf die Einstellung aus dem zugehörigen Magento-Shop verwendet."
+"Should the invoice be created in Magento when it is validated or when it is "
+"paid in OpenERP?\n"
+"If nothing is set, the option falls back to the same option on the Magento "
+"store related to the sales order."
+msgstr ""
+"Soll die Rechnung angelegt werden, wenn sie geprüft wurde oder wenn Sie in "
+"OpenERP als bezahlt gekennzeichnet wurde?\n"
+"Ist nicht angegeben, wird auf die Einstellung aus dem zugehörigen Magento-"
+"Shop verwendet."
 
 #. module: magentoerpconnect
 #: help:magento.store,create_invoice_on:0
 msgid ""
-"Should the invoice be created in Magento when it is validated or when it is paid in OpenERP?\n"
-"This only takes effect if the sales order's related payment method is not giving an option for this by itself. (See Payment Methods)"
-msgstr "Soll die Rechnung angelegt werden, wenn der Auftrag geprüft wurde oder wenner in OpenERP bezahlt wurde?\nDiese Einstellung greift nur, wenn die Zahlweise die Wahl nicht vorwegnimmt. (siehe Zahlweisen)"
+"Should the invoice be created in Magento when it is validated or when it is "
+"paid in OpenERP?\n"
+"This only takes effect if the sales order's related payment method is not "
+"giving an option for this by itself. (See Payment Methods)"
+msgstr ""
+"Soll die Rechnung angelegt werden, wenn der Auftrag geprüft wurde oder "
+"wenner in OpenERP bezahlt wurde?\n"
+"Diese Einstellung greift nur, wenn die Zahlweise die Wahl nicht vorwegnimmt. "
+"(siehe Zahlweisen)"
 
 #. module: magentoerpconnect
 #: field:magento.address,signup_expiration:0
@@ -2865,9 +3130,12 @@ msgstr "Bild mit kleinen Abmessungen"
 #: help:magento.address,image_small:0 help:magento.res.partner,image_small:0
 msgid ""
 "Small-sized image of this contact. It is automatically resized as a 64x64px "
-"image, with aspect ratio preserved. Use this field anywhere a small image is"
-" required."
-msgstr "Kleines Bild. Dieses wird automatisch als 64 x 64 Bild, unter Beibehaltung des Seitenverhältnisses, umgerechnet. Verwenden Sie dieses Bild da, wo ein kleines Bild benötigt wird."
+"image, with aspect ratio preserved. Use this field anywhere a small image is "
+"required."
+msgstr ""
+"Kleines Bild. Dieses wird automatisch als 64 x 64 Bild, unter Beibehaltung "
+"des Seitenverhältnisses, umgerechnet. Verwenden Sie dieses Bild da, wo ein "
+"kleines Bild benötigt wird."
 
 #. module: magentoerpconnect
 #: field:magento.storeview,sort_order:0 field:magento.website,sort_order:0
@@ -2911,10 +3179,19 @@ msgstr ""
 #. module: magentoerpconnect
 #: help:magento.product.product,cost_method:0
 msgid ""
-"Standard Price: The cost price is manually updated at the end of a specific period (usually every year).\n"
-"                    Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
-"                    Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example)."
-msgstr "Standardpreis: Die Einstandskosten werden manuell, zum Ende einer Periode (üblicherweise am Jahresende) aktualisiert..\nDurchschnittspreis: Der Einstandspreis wird mit jedem Warenzugang neu ermittelt und zur Bestandsbewertung herangezogen.\nIst-Preis: Der angezeigte Einstandspreis ist der, des letzten abgehenden Produkts (und wird z.B. bei Bestandsverlust eingesetzt)."
+"Standard Price: The cost price is manually updated at the end of a specific "
+"period (usually every year).\n"
+"                    Average Price: The cost price is recomputed at each "
+"incoming shipment and used for the product valuation.\n"
+"                    Real Price: The cost price displayed is the price of the "
+"last outgoing product (will be use in case of inventory loss for example)."
+msgstr ""
+"Standardpreis: Die Einstandskosten werden manuell, zum Ende einer Periode "
+"(üblicherweise am Jahresende) aktualisiert..\n"
+"Durchschnittspreis: Der Einstandspreis wird mit jedem Warenzugang neu "
+"ermittelt und zur Bestandsbewertung herangezogen.\n"
+"Ist-Preis: Der angezeigte Einstandspreis ist der, des letzten abgehenden "
+"Produkts (und wird z.B. bei Bestandsverlust eingesetzt)."
 
 #. module: magentoerpconnect
 #: field:magento.address,state_id:0 field:magento.res.partner,state_id:0
@@ -3089,7 +3366,9 @@ msgstr ""
 msgid ""
 "Tax Identification Number. Check the box if this contact is subjected to "
 "taxes. Used by the some of the legal statements."
-msgstr "Steueridentifikationsnummer. Anwählen, wenn dieser Kontakt Steuerpflichtig ist. Verwendet durch einige Finanzberichte."
+msgstr ""
+"Steueridentifikationsnummer. Anwählen, wenn dieser Kontakt Steuerpflichtig "
+"ist. Verwendet durch einige Finanzberichte."
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,tax_line:0
@@ -3140,11 +3419,22 @@ msgid ""
 "The amount computed in OpenERP doesn't match with the amount in Magento.\n"
 "\n"
 "Cause:\n"
-"The taxes are probably different between OpenERP and Magento. A fiscal position could have changed the final price.\n"
+"The taxes are probably different between OpenERP and Magento. A fiscal "
+"position could have changed the final price.\n"
 "\n"
 "Resolution:\n"
-"Check your taxes and fiscal positions configuration and correct them if necessary."
-msgstr "Die in OpenERP errechnete Summe stimmt nicht mit der aus Magento überein.\n\nGrund:\nDie Versteuerung sind in OpenERP und Magento verschieden eingestellt. Eine geänderte Versteuerung hat die Endsumme evtl. verändert.\n\nLösung:\nÜberprüfen Sie Steuern und Positionssummen und korrigieren Sie diese, falls nötig."
+"Check your taxes and fiscal positions configuration and correct them if "
+"necessary."
+msgstr ""
+"Die in OpenERP errechnete Summe stimmt nicht mit der aus Magento überein.\n"
+"\n"
+"Grund:\n"
+"Die Versteuerung sind in OpenERP und Magento verschieden eingestellt. Eine "
+"geänderte Versteuerung hat die Endsumme evtl. verändert.\n"
+"\n"
+"Lösung:\n"
+"Überprüfen Sie Steuern und Positionssummen und korrigieren Sie diese, falls "
+"nötig."
 
 #. module: magentoerpconnect
 #: help:magento.sale.order,amount_untaxed:0
@@ -3159,8 +3449,8 @@ msgstr ""
 #. module: magentoerpconnect
 #: help:magento.product.product,sale_delay:0
 msgid ""
-"The average delay in days between the confirmation of the customer order and"
-" the delivery of the finished products. It's the time you promise to your "
+"The average delay in days between the confirmation of the customer order and "
+"the delivery of the finished products. It's the time you promise to your "
 "customers."
 msgstr ""
 
@@ -3180,24 +3470,31 @@ msgstr ""
 #: code:addons/magentoerpconnect/product.py:563
 #, python-format
 msgid ""
-"The configurable product is not imported in OpenERP, because only the simple"
-" products are used in the sales orders."
-msgstr "Das konfigurierbare Produkt wurde nicht importiert, das nur einfache Produkte im Verkaufsauftrag anwendung finden."
+"The configurable product is not imported in OpenERP, because only the simple "
+"products are used in the sales orders."
+msgstr ""
+"Das konfigurierbare Produkt wurde nicht importiert, das nur einfache "
+"Produkte im Verkaufsauftrag anwendung finden."
 
 #. module: magentoerpconnect
 #: help:magento.backend,use_custom_api_path:0
 msgid ""
-"The default API path is '/index.php/api/xmlrpc'. Check this box if you use a"
-" custom API path, in that case, the location has to be completed with the "
+"The default API path is '/index.php/api/xmlrpc'. Check this box if you use a "
+"custom API path, in that case, the location has to be completed with the "
 "custom API path "
-msgstr "Der Vorgabe API-Pfad ist '/index.php/api/xmlrpc'. Wählen Sie diese Einstellung, falls Sie einen individuellen API-Pfad verwenden. In diesem Fall muß der Pfad mit diesem individuellen API-Pfad ergänzt werden."
+msgstr ""
+"Der Vorgabe API-Pfad ist '/index.php/api/xmlrpc'. Wählen Sie diese "
+"Einstellung, falls Sie einen individuellen API-Pfad verwenden. In diesem "
+"Fall muß der Pfad mit diesem individuellen API-Pfad ergänzt werden."
 
 #. module: magentoerpconnect
 #: help:magento.address,property_account_position:0
 #: help:magento.res.partner,property_account_position:0
 msgid ""
 "The fiscal position will determine taxes and accounts used for the partner."
-msgstr "Die Steuerzuordnung bestimmt die Steuern und Konten, die bei diesem Partner Anwendung finden."
+msgstr ""
+"Die Steuerzuordnung bestimmt die Steuern und Konten, die bei diesem Partner "
+"Anwendung finden."
 
 #. module: magentoerpconnect
 #: help:magento.product.product,weight:0
@@ -3233,7 +3530,11 @@ msgid ""
 "printed reports. It is important to set a value for this field. You should "
 "use the same timezone that is otherwise used to pick and render date and "
 "time values: your computer's timezone."
-msgstr "Des Partners Zeitzone, verwendet, um angepasste Datums- und Uhrzeitangaben in Drucksachen auszugeben. Es ist wichtig hier korrekte Angaben einzupflegen. Sie sollten die gleiche Zeitzone einstellen, die auch anderweitig genutzt wird, die Ihres Arbeitsplatzrechners."
+msgstr ""
+"Des Partners Zeitzone, verwendet, um angepasste Datums- und Uhrzeitangaben "
+"in Drucksachen auszugeben. Es ist wichtig hier korrekte Angaben "
+"einzupflegen. Sie sollten die gleiche Zeitzone einstellen, die auch "
+"anderweitig genutzt wird, die Ihres Arbeitsplatzrechners."
 
 #. module: magentoerpconnect
 #: help:magento.account.invoice,supplier_invoice_number:0
@@ -3243,14 +3544,28 @@ msgstr ""
 #. module: magentoerpconnect
 #: model:sale.exception,description:magentoerpconnect.excep_wrong_total_amount_tax
 msgid ""
-"The tax amount computed in OpenERP doesn't match with the tax amount in Magento.\n"
+"The tax amount computed in OpenERP doesn't match with the tax amount in "
+"Magento.\n"
 "\n"
 "Cause:\n"
-"The taxes are probably different between OpenERP and Magento. A fiscal position could have changed the final price.\n"
+"The taxes are probably different between OpenERP and Magento. A fiscal "
+"position could have changed the final price.\n"
 "\n"
 "Resolution:\n"
-"Check your taxes and fiscal positions configuration and correct them if necessary."
-msgstr "Die in OpenERP errechnete Steuer stimmt nicht mit der Magento Steuer überein.\n\nGrund:\nVermutlich sind die Steuersätze in OpenERP und Magento nicht identisch.  Durch eine entsprechende Steuerzuordnung wurde möglicherweise der Endpreis verändert.\n\nLösung: \nÜberprüfen Sie die Steuern und auch Zuordnungen und korrigieren Sie diese dann bei Bedarf."
+"Check your taxes and fiscal positions configuration and correct them if "
+"necessary."
+msgstr ""
+"Die in OpenERP errechnete Steuer stimmt nicht mit der Magento Steuer "
+"überein.\n"
+"\n"
+"Grund:\n"
+"Vermutlich sind die Steuersätze in OpenERP und Magento nicht identisch.  "
+"Durch eine entsprechende Steuerzuordnung wurde möglicherweise der Endpreis "
+"verändert.\n"
+"\n"
+"Lösung: \n"
+"Überprüfen Sie die Steuern und auch Zuordnungen und korrigieren Sie diese "
+"dann bei Bedarf."
 
 #. module: magentoerpconnect
 #: help:magento.sale.order,amount_tax:0
@@ -3272,14 +3587,18 @@ msgstr "Das Volumen in m³."
 msgid ""
 "This account will be used for invoices instead of the default one to value "
 "expenses for the current product."
-msgstr "Dieses Konto wird zur Abrechnung verwendet, anstelle des Vorgabe-Aufwandskontos dieses Produkts."
+msgstr ""
+"Dieses Konto wird zur Abrechnung verwendet, anstelle des Vorgabe-"
+"Aufwandskontos dieses Produkts."
 
 #. module: magentoerpconnect
 #: help:magento.product.product,property_account_income:0
 msgid ""
 "This account will be used for invoices instead of the default one to value "
 "sales for the current product."
-msgstr "Dieses Konto wird zur Abrechnung verwendet, anstelle des Vorgabe-Erlöskontos dieses Produkts."
+msgstr ""
+"Dieses Konto wird zur Abrechnung verwendet, anstelle des Vorgabe-Erlöskontos "
+"dieses Produkts."
 
 #. module: magentoerpconnect
 #: help:magento.product.category,property_account_expense_categ:0
@@ -3297,7 +3616,8 @@ msgstr ""
 msgid ""
 "This account will be used instead of the default one as the payable account "
 "for the current partner"
-msgstr "Dieses Konto wird anstelle des Vorgabe-Kreditorenkontos dieses Partners."
+msgstr ""
+"Dieses Konto wird anstelle des Vorgabe-Kreditorenkontos dieses Partners."
 
 #. module: magentoerpconnect
 #: help:magento.address,property_account_receivable:0
@@ -3305,7 +3625,9 @@ msgstr "Dieses Konto wird anstelle des Vorgabe-Kreditorenkontos dieses Partners.
 msgid ""
 "This account will be used instead of the default one as the receivable "
 "account for the current partner"
-msgstr "Dieses Konto wird anstelle des Vorgabe-Debitorenkontos dieses Partners verwendet."
+msgstr ""
+"Dieses Konto wird anstelle des Vorgabe-Debitorenkontos dieses Partners "
+"verwendet."
 
 #. module: magentoerpconnect
 #: help:magento.address,property_delivery_carrier:0
@@ -3318,13 +3640,15 @@ msgstr ""
 msgid ""
 "This field holds the image used as avatar for this contact, limited to "
 "1024x1024px"
-msgstr "Dieses Feld wird für das 1024x1024px grosse Avatar-Bild dieses Kontakts verwendet"
+msgstr ""
+"Dieses Feld wird für das 1024x1024px grosse Avatar-Bild dieses Kontakts "
+"verwendet"
 
 #. module: magentoerpconnect
 #: help:magento.product.product,image_variant:0
 msgid ""
-"This field holds the image used as image for the product variant, limited to"
-" 1024x1024px."
+"This field holds the image used as image for the product variant, limited to "
+"1024x1024px."
 msgstr ""
 
 #. module: magentoerpconnect
@@ -3366,7 +3690,10 @@ msgid ""
 "                              attention to the taxes on the products,\n"
 "                              which should surely include prices when\n"
 "                              this option is activated."
-msgstr "Diese Option sollte der Einstellung in Magento entsprechen. Achten Sie auf die Versteuerung von Produkten, welche ganz sicher inklusive (Bruttopreise) sein sollten, wenn diese Option angewählt ist."
+msgstr ""
+"Diese Option sollte der Einstellung in Magento entsprechen. Achten Sie auf "
+"die Versteuerung von Produkten, welche ganz sicher inklusive (Bruttopreise) "
+"sein sollten, wenn diese Option angewählt ist."
 
 #. module: magentoerpconnect
 #: help:magento.address,property_supplier_payment_term:0
@@ -3374,7 +3701,9 @@ msgstr "Diese Option sollte der Einstellung in Magento entsprechen. Achten Sie a
 msgid ""
 "This payment term will be used instead of the default one for purchase "
 "orders and supplier invoices"
-msgstr "Diese Zahlungsbedingung wird anstelle der Vorgabe bei Bestellungen und Eingangsrechnungen verwendet"
+msgstr ""
+"Diese Zahlungsbedingung wird anstelle der Vorgabe bei Bestellungen und "
+"Eingangsrechnungen verwendet"
 
 #. module: magentoerpconnect
 #: help:magento.address,property_payment_term:0
@@ -3382,7 +3711,9 @@ msgstr "Diese Zahlungsbedingung wird anstelle der Vorgabe bei Bestellungen und E
 msgid ""
 "This payment term will be used instead of the default one for sale orders "
 "and customer invoices"
-msgstr "Diese Zahlungsbedingung wird anstelle der Vorgabe bei Verkaufsaufträgen und Ausgangsrechnungen verwendet"
+msgstr ""
+"Diese Zahlungsbedingung wird anstelle der Vorgabe bei Verkaufsaufträgen und "
+"Ausgangsrechnungen verwendet"
 
 #. module: magentoerpconnect
 #: help:magento.address,property_product_pricelist:0
@@ -3390,7 +3721,9 @@ msgstr "Diese Zahlungsbedingung wird anstelle der Vorgabe bei Verkaufsaufträgen
 msgid ""
 "This pricelist will be used, instead of the default one, for sales to the "
 "current partner"
-msgstr "Diese Preisliste wird anstelle der Vorgabe bei Verkäufen an diesen Partner verwendet"
+msgstr ""
+"Diese Preisliste wird anstelle der Vorgabe bei Verkäufen an diesen Partner "
+"verwendet"
 
 #. module: magentoerpconnect
 #: help:magento.address,property_stock_customer:0
@@ -3398,7 +3731,9 @@ msgstr "Diese Preisliste wird anstelle der Vorgabe bei Verkäufen an diesen Part
 msgid ""
 "This stock location will be used, instead of the default one, as the "
 "destination location for goods you send to this partner"
-msgstr "Dieses Lager wird anstelle der Vorgabe, als Zielort bei Warensendungen an diesen Partner, verwendet"
+msgstr ""
+"Dieses Lager wird anstelle der Vorgabe, als Zielort bei Warensendungen an "
+"diesen Partner, verwendet"
 
 #. module: magentoerpconnect
 #: help:magento.address,property_stock_supplier:0
@@ -3406,7 +3741,9 @@ msgstr "Dieses Lager wird anstelle der Vorgabe, als Zielort bei Warensendungen a
 msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for goods you receive from the current partner"
-msgstr "Dieses Lager wird anstelle der Vorgabe, als Herkunftsort bei Warenlieferungen von diesem Partner, verwendet"
+msgstr ""
+"Dieses Lager wird anstelle der Vorgabe, als Herkunftsort bei "
+"Warenlieferungen von diesem Partner, verwendet"
 
 #. module: magentoerpconnect
 #: help:magento.product.product,property_stock_production:0
@@ -3627,14 +3964,19 @@ msgid ""
 "Use a Basic Access Authentication for the API. The Magento server could be "
 "configured to restrict access using a HTTP authentication based on a "
 "username and a password."
-msgstr "Eine einfache Zugriff-Authentifizierung zur API verwenden. Der Magento-Server kann auf den einfachen HTTP-basierten Zugang mittels Benutzername und Passwort beschränkt sein."
+msgstr ""
+"Eine einfache Zugriff-Authentifizierung zur API verwenden. Der Magento-"
+"Server kann auf den einfachen HTTP-basierten Zugang mittels Benutzername und "
+"Passwort beschränkt sein."
 
 #. module: magentoerpconnect
 #: help:magento.address,type:0 help:magento.res.partner,type:0
 msgid ""
 "Used to select automatically the right address according to the context in "
 "sales and purchases documents."
-msgstr "Verwendet, um automatisch, im Kontext von Verkaufs- oder Einkaufsvorgängen, die richtige Anschrift zu wählen."
+msgstr ""
+"Verwendet, um automatisch, im Kontext von Verkaufs- oder Einkaufsvorgängen, "
+"die richtige Anschrift zu wählen."
 
 #. module: magentoerpconnect
 #: field:magento.backend,username:0
@@ -3740,8 +4082,8 @@ msgid ""
 "When doing real-time inventory valuation, counterpart journal items for all "
 "incoming stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the source location. This is the default "
-"value for all products in this category. It can also directly be set on each"
-" product"
+"value for all products in this category. It can also directly be set on each "
+"product"
 msgstr ""
 
 #. module: magentoerpconnect
@@ -3759,8 +4101,8 @@ msgid ""
 "When doing real-time inventory valuation, counterpart journal items for all "
 "outgoing stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the destination location. This is the "
-"default value for all products in this category. It can also directly be set"
-" on each product"
+"default value for all products in this category. It can also directly be set "
+"on each product"
 msgstr ""
 
 #. module: magentoerpconnect
@@ -3796,7 +4138,9 @@ msgstr "PLZ"
 msgid ""
 "do not consider non-imported sale orders before this date. Leave empty to "
 "import all sale orders"
-msgstr "Vor diesem Datum nicht-importierte Aufträge unberücksichtigt lassen. Bitte tragen Sie nichts ein, um alle Aufträge zu importieren."
+msgstr ""
+"Vor diesem Datum nicht-importierte Aufträge unberücksichtigt lassen. Bitte "
+"tragen Sie nichts ein, um alle Aufträge zu importieren."
 
 #. module: magentoerpconnect
 #: view:magento.backend:magentoerpconnect.view_magento_backend_form
@@ -3821,8 +4165,8 @@ msgstr ""
 #. module: magentoerpconnect
 #: help:magento.stock.picking,quant_reserved_exist:0
 msgid ""
-"technical field used to know if there is already at least one quant reserved"
-" on moves of a given picking"
+"technical field used to know if there is already at least one quant reserved "
+"on moves of a given picking"
 msgstr ""
 
 #. module: magentoerpconnect

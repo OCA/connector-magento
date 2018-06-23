@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * magentoerpconnect
-# 
+#
 # Translators:
 msgid ""
 msgstr ""
@@ -10,28 +10,36 @@ msgstr ""
 "POT-Creation-Date: 2017-07-29 01:22+0000\n"
 "PO-Revision-Date: 2017-08-11 12:01+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
-"Language-Team: Norwegian Bokmål (Norway) (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/nb_NO/)\n"
+"Language-Team: Norwegian Bokmål (Norway) (http://www.transifex.com/oca/OCA-"
+"connector-magento-8-0/language/nb_NO/)\n"
+"Language: nb_NO\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: nb_NO\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: magentoerpconnect
 #: help:magento.stock.picking,state:0
 msgid ""
 "\n"
-"                * Draft: not confirmed yet and will not be scheduled until confirmed\n"
+"                * Draft: not confirmed yet and will not be scheduled until "
+"confirmed\n"
 "\n"
-"                * Waiting Another Operation: waiting for another move to proceed before it becomes automatically available (e.g. in Make-To-Order flows)\n"
+"                * Waiting Another Operation: waiting for another move to "
+"proceed before it becomes automatically available (e.g. in Make-To-Order "
+"flows)\n"
 "\n"
-"                * Waiting Availability: still waiting for the availability of products\n"
+"                * Waiting Availability: still waiting for the availability "
+"of products\n"
 "\n"
-"                * Partially Available: some products are available and reserved\n"
+"                * Partially Available: some products are available and "
+"reserved\n"
 "\n"
-"                * Ready to Transfer: products reserved, simply waiting for confirmation.\n"
+"                * Ready to Transfer: products reserved, simply waiting for "
+"confirmation.\n"
 "\n"
-"                * Transferred: has been processed, can't be modified or cancelled anymore\n"
+"                * Transferred: has been processed, can't be modified or "
+"cancelled anymore\n"
 "\n"
 "                * Cancelled: has been cancelled, can't be confirmed anymore"
 msgstr ""
@@ -39,10 +47,14 @@ msgstr ""
 #. module: magentoerpconnect
 #: help:magento.account.invoice,state:0
 msgid ""
-" * The 'Draft' status is used when a user is encoding a new and unconfirmed Invoice.\n"
-" * The 'Pro-forma' when invoice is in Pro-forma status,invoice does not have an invoice number.\n"
-" * The 'Open' status is used when user create invoice,a invoice number is generated.Its in open status till user does not pay invoice.\n"
-" * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
+" * The 'Draft' status is used when a user is encoding a new and unconfirmed "
+"Invoice.\n"
+" * The 'Pro-forma' when invoice is in Pro-forma status,invoice does not have "
+"an invoice number.\n"
+" * The 'Open' status is used when user create invoice,a invoice number is "
+"generated.Its in open status till user does not pay invoice.\n"
+" * The 'Paid' status is set automatically when the invoice is paid. Its "
+"related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
 msgstr ""
 
@@ -75,10 +87,14 @@ msgstr ""
 #. module: magentoerpconnect
 #: help:magento.sale.order.line,state:0
 msgid ""
-"* The 'Draft' status is set when the related sales order in draft status.                     \n"
-"* The 'Confirmed' status is set when the related sales order is confirmed.                     \n"
-"* The 'Exception' status is set when the related sales order is set as exception.                     \n"
-"* The 'Done' status is set when the sales order line has been picked.                     \n"
+"* The 'Draft' status is set when the related sales order in draft "
+"status.                     \n"
+"* The 'Confirmed' status is set when the related sales order is "
+"confirmed.                     \n"
+"* The 'Exception' status is set when the related sales order is set as "
+"exception.                     \n"
+"* The 'Done' status is set when the sales order line has been "
+"picked.                     \n"
 "* The 'Cancelled' status is set when a user cancel the sales order related."
 msgstr ""
 
@@ -115,16 +131,16 @@ msgstr ""
 #. module: magentoerpconnect
 #: help:magento.product.product,description_sale:0
 msgid ""
-"A description of the Product that you want to communicate to your customers."
-" This description will be copied to every Sale Order, Delivery Order and "
+"A description of the Product that you want to communicate to your customers. "
+"This description will be copied to every Sale Order, Delivery Order and "
 "Customer Invoice/Refund"
 msgstr ""
 
 #. module: magentoerpconnect
 #: help:magento.product.product,description_purchase:0
 msgid ""
-"A description of the Product that you want to communicate to your suppliers."
-" This description will be copied to every Purchase Order, Receipt and "
+"A description of the Product that you want to communicate to your suppliers. "
+"This description will be copied to every Purchase Order, Receipt and "
 "Supplier Invoice/Refund."
 msgstr ""
 
@@ -166,7 +182,8 @@ msgstr ""
 #: help:magento.backend,sale_prefix:0
 msgid ""
 "A prefix put before the name of imported sales orders.\n"
-"For instance, if the prefix is 'mag-', the sales order 100000692 in Magento, will be named 'mag-100000692' in OpenERP."
+"For instance, if the prefix is 'mag-', the sales order 100000692 in Magento, "
+"will be named 'mag-100000692' in OpenERP."
 msgstr ""
 
 #. module: magentoerpconnect
@@ -254,8 +271,10 @@ msgstr ""
 #. module: magentoerpconnect
 #: help:magento.res.partner,consider_as_company:0
 msgid ""
-"An account imported with a 'company' in the billing address is considered as a company.\n"
-" The partner takes the name of the company and is not merged with the billing address."
+"An account imported with a 'company' in the billing address is considered as "
+"a company.\n"
+" The partner takes the name of the company and is not merged with the "
+"billing address."
 msgstr ""
 
 #. module: magentoerpconnect
@@ -314,8 +333,7 @@ msgstr ""
 #. module: magentoerpconnect
 #: help:magento.product.product,list_price:0
 msgid ""
-"Base price to compute the customer price. Sometimes called the catalog "
-"price."
+"Base price to compute the customer price. Sometimes called the catalog price."
 msgstr ""
 
 #. module: magentoerpconnect
@@ -479,7 +497,8 @@ msgstr ""
 #. module: magentoerpconnect
 #: help:magento.backend,product_stock_field_id:0
 msgid ""
-"Choose the field of the product which will be used for stock inventory updates.\n"
+"Choose the field of the product which will be used for stock inventory "
+"updates.\n"
 "If empty, Quantity Available is used."
 msgstr ""
 
@@ -699,10 +718,14 @@ msgstr ""
 #: help:magento.product.product,qty_available:0
 msgid ""
 "Current quantity of products.\n"
-"In a context with a single Stock Location, this includes goods stored at this Location, or any of its children.\n"
-"In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
-"stored in the Stock Location of the Warehouse of this Shop, or any of its children.\n"
-"Otherwise, this includes goods stored in any Stock Location with 'internal' type."
+"In a context with a single Stock Location, this includes goods stored at "
+"this Location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods stored in the "
+"Stock Location of this Warehouse, or any of its children.\n"
+"stored in the Stock Location of the Warehouse of this Shop, or any of its "
+"children.\n"
+"Otherwise, this includes goods stored in any Stock Location with 'internal' "
+"type."
 msgstr ""
 
 #. module: magentoerpconnect
@@ -780,8 +803,8 @@ msgstr ""
 #: help:magento.res.partner,last_reconciliation_date:0
 msgid ""
 "Date on which the partner accounting entries were fully reconciled last "
-"time. It differs from the last date where a reconciliation has been made for"
-" this partner, as here we depict the fact that nothing more was to be "
+"time. It differs from the last date where a reconciliation has been made for "
+"this partner, as here we depict the fact that nothing more was to be "
 "reconciled at this date. This can be achieved in 2 different ways: either "
 "the last unreconciled debit/credit entry of this partner was reconciled, "
 "either the user pressed the button \"Nothing more to reconcile\" during the "
@@ -1056,9 +1079,12 @@ msgstr ""
 #: help:magento.product.product,virtual_available:0
 msgid ""
 "Forecast quantity (computed as Quantity On Hand - Outgoing + Incoming)\n"
-"In a context with a single Stock Location, this includes goods stored in this location, or any of its children.\n"
-"In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
-"Otherwise, this includes goods stored in any Stock Location with 'internal' type."
+"In a context with a single Stock Location, this includes goods stored in "
+"this location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods stored in the "
+"Stock Location of this Warehouse, or any of its children.\n"
+"Otherwise, this includes goods stored in any Stock Location with 'internal' "
+"type."
 msgstr ""
 
 #. module: magentoerpconnect
@@ -1092,8 +1118,12 @@ msgstr ""
 #: help:magento.sale.order,state:0
 msgid ""
 "Gives the status of the quotation or sales order.              \n"
-"The exception status is automatically set when a cancel operation occurs               in the invoice validation (Invoice Exception) or in the picking list process (Shipping Exception).\n"
-"The 'Waiting Schedule' status is set when the invoice is confirmed               but waiting for the scheduler to run on the order date."
+"The exception status is automatically set when a cancel operation "
+"occurs               in the invoice validation (Invoice Exception) or in the "
+"picking list process (Shipping Exception).\n"
+"The 'Waiting Schedule' status is set when the invoice is "
+"confirmed               but waiting for the scheduler to run on the order "
+"date."
 msgstr ""
 
 #. module: magentoerpconnect
@@ -1162,14 +1192,15 @@ msgstr ""
 #. module: magentoerpconnect
 #: help:magento.backend,default_category_id:0
 msgid ""
-"If a default category is selected, products imported without a category will"
-" be linked to it."
+"If a default category is selected, products imported without a category will "
+"be linked to it."
 msgstr ""
 
 #. module: magentoerpconnect
 #: help:magento.backend,default_lang_id:0
 msgid ""
-"If a default language is selected, the records will be imported in the translation of this language.\n"
+"If a default language is selected, the records will be imported in the "
+"translation of this language.\n"
 "Note that a similar configuration exists for each storeview."
 msgstr ""
 
@@ -1256,8 +1287,8 @@ msgstr ""
 #. module: magentoerpconnect
 #: help:magento.account.invoice,payment_term:0
 msgid ""
-"If you use payment terms, the due date will be computed automatically at the"
-" generation of accounting entries. If you keep the payment term and the due "
+"If you use payment terms, the due date will be computed automatically at the "
+"generation of accounting entries. If you keep the payment term and the due "
 "date empty, it means direct payment. The payment term may compute several "
 "due dates, for example 50% now, 50% in one month."
 msgstr ""
@@ -1265,8 +1296,8 @@ msgstr ""
 #. module: magentoerpconnect
 #: help:magento.account.invoice,date_due:0
 msgid ""
-"If you use payment terms, the due date will be computed automatically at the"
-" generation of accounting entries. The payment term may compute several due "
+"If you use payment terms, the due date will be computed automatically at the "
+"generation of accounting entries. The payment term may compute several due "
 "dates, for example 50% now and 50% in one month, but if you want to force a "
 "due date, make sure that the payment term is not set on the invoice. If you "
 "keep the payment term and the due date empty, it means direct payment."
@@ -1285,8 +1316,8 @@ msgstr ""
 #. module: magentoerpconnect
 #: help:magento.product.product,image:0
 msgid ""
-"Image of the product variant (Big-sized image of product template if false)."
-" It is automatically resized as a 1024x1024px image, with aspect ratio "
+"Image of the product variant (Big-sized image of product template if false). "
+"It is automatically resized as a 1024x1024px image, with aspect ratio "
 "preserved."
 msgstr ""
 
@@ -2120,9 +2151,12 @@ msgstr ""
 #. module: magentoerpconnect
 #: help:magento.sale.order,order_policy:0
 msgid ""
-"On demand: A draft invoice can be created from the sales order when needed. \n"
-"On delivery order: A draft invoice can be created from the delivery order when the products have been delivered. \n"
-"Before delivery: A draft invoice is created from the sales order and must be paid before the products can be delivered."
+"On demand: A draft invoice can be created from the sales order when "
+"needed. \n"
+"On delivery order: A draft invoice can be created from the delivery order "
+"when the products have been delivered. \n"
+"Before delivery: A draft invoice is created from the sales order and must be "
+"paid before the products can be delivered."
 msgstr ""
 
 #. module: magentoerpconnect
@@ -2508,18 +2542,24 @@ msgstr ""
 #: help:magento.product.product,incoming_qty:0
 msgid ""
 "Quantity of products that are planned to arrive.\n"
-"In a context with a single Stock Location, this includes goods arriving to this Location, or any of its children.\n"
-"In a context with a single Warehouse, this includes goods arriving to the Stock Location of this Warehouse, or any of its children.\n"
-"Otherwise, this includes goods arriving to any Stock Location with 'internal' type."
+"In a context with a single Stock Location, this includes goods arriving to "
+"this Location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods arriving to the "
+"Stock Location of this Warehouse, or any of its children.\n"
+"Otherwise, this includes goods arriving to any Stock Location with "
+"'internal' type."
 msgstr ""
 
 #. module: magentoerpconnect
 #: help:magento.product.product,outgoing_qty:0
 msgid ""
 "Quantity of products that are planned to leave.\n"
-"In a context with a single Stock Location, this includes goods leaving this Location, or any of its children.\n"
-"In a context with a single Warehouse, this includes goods leaving the Stock Location of this Warehouse, or any of its children.\n"
-"Otherwise, this includes goods leaving any Stock Location with 'internal' type."
+"In a context with a single Stock Location, this includes goods leaving this "
+"Location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods leaving the Stock "
+"Location of this Warehouse, or any of its children.\n"
+"Otherwise, this includes goods leaving any Stock Location with 'internal' "
+"type."
 msgstr ""
 
 #. module: magentoerpconnect
@@ -2792,15 +2832,19 @@ msgstr ""
 #. module: magentoerpconnect
 #: help:payment.method,create_invoice_on:0
 msgid ""
-"Should the invoice be created in Magento when it is validated or when it is paid in OpenERP?\n"
-"If nothing is set, the option falls back to the same option on the Magento store related to the sales order."
+"Should the invoice be created in Magento when it is validated or when it is "
+"paid in OpenERP?\n"
+"If nothing is set, the option falls back to the same option on the Magento "
+"store related to the sales order."
 msgstr ""
 
 #. module: magentoerpconnect
 #: help:magento.store,create_invoice_on:0
 msgid ""
-"Should the invoice be created in Magento when it is validated or when it is paid in OpenERP?\n"
-"This only takes effect if the sales order's related payment method is not giving an option for this by itself. (See Payment Methods)"
+"Should the invoice be created in Magento when it is validated or when it is "
+"paid in OpenERP?\n"
+"This only takes effect if the sales order's related payment method is not "
+"giving an option for this by itself. (See Payment Methods)"
 msgstr ""
 
 #. module: magentoerpconnect
@@ -2842,8 +2886,8 @@ msgstr ""
 #: help:magento.address,image_small:0 help:magento.res.partner,image_small:0
 msgid ""
 "Small-sized image of this contact. It is automatically resized as a 64x64px "
-"image, with aspect ratio preserved. Use this field anywhere a small image is"
-" required."
+"image, with aspect ratio preserved. Use this field anywhere a small image is "
+"required."
 msgstr ""
 
 #. module: magentoerpconnect
@@ -2888,9 +2932,12 @@ msgstr ""
 #. module: magentoerpconnect
 #: help:magento.product.product,cost_method:0
 msgid ""
-"Standard Price: The cost price is manually updated at the end of a specific period (usually every year).\n"
-"                    Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
-"                    Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example)."
+"Standard Price: The cost price is manually updated at the end of a specific "
+"period (usually every year).\n"
+"                    Average Price: The cost price is recomputed at each "
+"incoming shipment and used for the product valuation.\n"
+"                    Real Price: The cost price displayed is the price of the "
+"last outgoing product (will be use in case of inventory loss for example)."
 msgstr ""
 
 #. module: magentoerpconnect
@@ -3117,10 +3164,12 @@ msgid ""
 "The amount computed in OpenERP doesn't match with the amount in Magento.\n"
 "\n"
 "Cause:\n"
-"The taxes are probably different between OpenERP and Magento. A fiscal position could have changed the final price.\n"
+"The taxes are probably different between OpenERP and Magento. A fiscal "
+"position could have changed the final price.\n"
 "\n"
 "Resolution:\n"
-"Check your taxes and fiscal positions configuration and correct them if necessary."
+"Check your taxes and fiscal positions configuration and correct them if "
+"necessary."
 msgstr ""
 
 #. module: magentoerpconnect
@@ -3136,8 +3185,8 @@ msgstr ""
 #. module: magentoerpconnect
 #: help:magento.product.product,sale_delay:0
 msgid ""
-"The average delay in days between the confirmation of the customer order and"
-" the delivery of the finished products. It's the time you promise to your "
+"The average delay in days between the confirmation of the customer order and "
+"the delivery of the finished products. It's the time you promise to your "
 "customers."
 msgstr ""
 
@@ -3157,15 +3206,15 @@ msgstr ""
 #: code:addons/magentoerpconnect/product.py:563
 #, python-format
 msgid ""
-"The configurable product is not imported in OpenERP, because only the simple"
-" products are used in the sales orders."
+"The configurable product is not imported in OpenERP, because only the simple "
+"products are used in the sales orders."
 msgstr ""
 
 #. module: magentoerpconnect
 #: help:magento.backend,use_custom_api_path:0
 msgid ""
-"The default API path is '/index.php/api/xmlrpc'. Check this box if you use a"
-" custom API path, in that case, the location has to be completed with the "
+"The default API path is '/index.php/api/xmlrpc'. Check this box if you use a "
+"custom API path, in that case, the location has to be completed with the "
 "custom API path "
 msgstr ""
 
@@ -3220,13 +3269,16 @@ msgstr ""
 #. module: magentoerpconnect
 #: model:sale.exception,description:magentoerpconnect.excep_wrong_total_amount_tax
 msgid ""
-"The tax amount computed in OpenERP doesn't match with the tax amount in Magento.\n"
+"The tax amount computed in OpenERP doesn't match with the tax amount in "
+"Magento.\n"
 "\n"
 "Cause:\n"
-"The taxes are probably different between OpenERP and Magento. A fiscal position could have changed the final price.\n"
+"The taxes are probably different between OpenERP and Magento. A fiscal "
+"position could have changed the final price.\n"
 "\n"
 "Resolution:\n"
-"Check your taxes and fiscal positions configuration and correct them if necessary."
+"Check your taxes and fiscal positions configuration and correct them if "
+"necessary."
 msgstr ""
 
 #. module: magentoerpconnect
@@ -3300,8 +3352,8 @@ msgstr ""
 #. module: magentoerpconnect
 #: help:magento.product.product,image_variant:0
 msgid ""
-"This field holds the image used as image for the product variant, limited to"
-" 1024x1024px."
+"This field holds the image used as image for the product variant, limited to "
+"1024x1024px."
 msgstr ""
 
 #. module: magentoerpconnect
@@ -3717,8 +3769,8 @@ msgid ""
 "When doing real-time inventory valuation, counterpart journal items for all "
 "incoming stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the source location. This is the default "
-"value for all products in this category. It can also directly be set on each"
-" product"
+"value for all products in this category. It can also directly be set on each "
+"product"
 msgstr ""
 
 #. module: magentoerpconnect
@@ -3736,8 +3788,8 @@ msgid ""
 "When doing real-time inventory valuation, counterpart journal items for all "
 "outgoing stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the destination location. This is the "
-"default value for all products in this category. It can also directly be set"
-" on each product"
+"default value for all products in this category. It can also directly be set "
+"on each product"
 msgstr ""
 
 #. module: magentoerpconnect
@@ -3798,8 +3850,8 @@ msgstr ""
 #. module: magentoerpconnect
 #: help:magento.stock.picking,quant_reserved_exist:0
 msgid ""
-"technical field used to know if there is already at least one quant reserved"
-" on moves of a given picking"
+"technical field used to know if there is already at least one quant reserved "
+"on moves of a given picking"
 msgstr ""
 
 #. module: magentoerpconnect
