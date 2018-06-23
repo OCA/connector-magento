@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * connector_magento
-# 
+#
 # Translators:
 # enjolras <yo@miguelrevilla.com>, 2018
 msgid ""
@@ -12,17 +12,18 @@ msgstr ""
 "PO-Revision-Date: 2017-11-30 16:29+0000\n"
 "Last-Translator: enjolras <yo@miguelrevilla.com>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/oca/teams/23907/es/)\n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: connector_magento
 #: model:ir.model.fields,help:connector_magento.field_magento_stock_picking_state
 msgid ""
 " * Draft: not confirmed yet and will not be scheduled until confirmed\n"
-" * Waiting Another Operation: waiting for another move to proceed before it becomes automatically available (e.g. in Make-To-Order flows)\n"
+" * Waiting Another Operation: waiting for another move to proceed before it "
+"becomes automatically available (e.g. in Make-To-Order flows)\n"
 " * Waiting Availability: still waiting for the availability of products\n"
 " * Partially Available: some products are available and reserved\n"
 " * Ready to Transfer: products reserved, simply waiting for confirmation.\n"
@@ -33,10 +34,14 @@ msgstr ""
 #. module: connector_magento
 #: model:ir.model.fields,help:connector_magento.field_magento_account_invoice_state
 msgid ""
-" * The 'Draft' status is used when a user is encoding a new and unconfirmed Invoice.\n"
-" * The 'Pro-forma' status is used when the invoice does not have an invoice number.\n"
-" * The 'Open' status is used when user creates invoice, an invoice number is generated. It stays in the open status till the user pays the invoice.\n"
-" * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
+" * The 'Draft' status is used when a user is encoding a new and unconfirmed "
+"Invoice.\n"
+" * The 'Pro-forma' status is used when the invoice does not have an invoice "
+"number.\n"
+" * The 'Open' status is used when user creates invoice, an invoice number is "
+"generated. It stays in the open status till the user pays the invoice.\n"
+" * The 'Paid' status is set automatically when the invoice is paid. Its "
+"related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
 msgstr ""
 
@@ -109,8 +114,8 @@ msgstr ""
 #. module: connector_magento
 #: model:ir.model.fields,help:connector_magento.field_magento_product_product_description_sale
 msgid ""
-"A description of the Product that you want to communicate to your customers."
-" This description will be copied to every Sale Order, Delivery Order and "
+"A description of the Product that you want to communicate to your customers. "
+"This description will be copied to every Sale Order, Delivery Order and "
 "Customer Invoice/Refund"
 msgstr ""
 
@@ -155,16 +160,22 @@ msgstr ""
 #: model:ir.model.fields,help:connector_magento.field_magento_backend_sale_prefix
 msgid ""
 "A prefix put before the name of imported sales orders.\n"
-"For instance, if the prefix is 'mag-', the sales order 100000692 in Magento, will be named 'mag-100000692' in Odoo."
+"For instance, if the prefix is 'mag-', the sales order 100000692 in Magento, "
+"will be named 'mag-100000692' in Odoo."
 msgstr ""
 
 #. module: connector_magento
 #: model:ir.model.fields,help:connector_magento.field_magento_product_product_type
 msgid ""
-"A stockable product is a product for which you manage stock. The \"Inventory\" app has to be installed.\n"
-"A consumable product, on the other hand, is a product for which stock is not managed.\n"
+"A stockable product is a product for which you manage stock. The \"Inventory"
+"\" app has to be installed.\n"
+"A consumable product, on the other hand, is a product for which stock is not "
+"managed.\n"
 "A service is a non-material product you provide.\n"
-"A digital content is a non-material product you sell online. The files attached to the products are the one that are sold on the e-commerce such as e-books, music, pictures,... The \"Digital Product\" module has to be installed."
+"A digital content is a non-material product you sell online. The files "
+"attached to the products are the one that are sold on the e-commerce such as "
+"e-books, music, pictures,... The \"Digital Product\" module has to be "
+"installed."
 msgstr ""
 
 #. module: connector_magento
@@ -291,8 +302,10 @@ msgstr ""
 #. module: connector_magento
 #: model:ir.model.fields,help:connector_magento.field_magento_res_partner_consider_as_company
 msgid ""
-"An account imported with a 'company' in the billing address is considered as a company.\n"
-" The partner takes the name of the company and is not merged with the billing address."
+"An account imported with a 'company' in the billing address is considered as "
+"a company.\n"
+" The partner takes the name of the company and is not merged with the "
+"billing address."
 msgstr ""
 
 #. module: connector_magento
@@ -375,8 +388,7 @@ msgstr "Código de barras"
 #. module: connector_magento
 #: model:ir.model.fields,help:connector_magento.field_magento_product_product_list_price
 msgid ""
-"Base price to compute the customer price. Sometimes called the catalog "
-"price."
+"Base price to compute the customer price. Sometimes called the catalog price."
 msgstr ""
 
 #. module: connector_magento
@@ -454,6 +466,11 @@ msgstr "Se puede alquilar"
 #: model:ir.model.fields,field_description:connector_magento.field_magento_product_product_sale_ok
 msgid "Can be Sold"
 msgstr "Se puede vender"
+
+#. module: connector_magento
+#: model:ir.ui.view,arch_db:connector_magento.magento_binding_backend_read_form_view
+msgid "Cancel"
+msgstr ""
 
 #. module: connector_magento
 #: code:addons/connector_magento/models/sale_order/common.py:114
@@ -570,7 +587,8 @@ msgstr ""
 #. module: connector_magento
 #: model:ir.model.fields,help:connector_magento.field_magento_backend_product_stock_field_id
 msgid ""
-"Choose the field of the product which will be used for stock inventory updates.\n"
+"Choose the field of the product which will be used for stock inventory "
+"updates.\n"
 "If empty, Quantity Available is used."
 msgstr ""
 
@@ -578,6 +596,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:connector_magento.field_magento_address_city
 #: model:ir.model.fields,field_description:connector_magento.field_magento_res_partner_city
 msgid "City"
+msgstr ""
+
+#. module: connector_magento
+#: model:ir.ui.view,arch_db:connector_magento.magento_binding_backend_read_form_view
+msgid "Close"
 msgstr ""
 
 #. module: connector_magento
@@ -705,8 +728,8 @@ msgstr ""
 #. module: connector_magento
 #: model:ir.model.fields,help:connector_magento.field_magento_product_product_standard_price
 msgid ""
-"Cost of the product template used for standard stock valuation in accounting"
-" and used as a base price on purchase orders. Expressed in the default unit "
+"Cost of the product template used for standard stock valuation in accounting "
+"and used as a base price on purchase orders. Expressed in the default unit "
 "of measure of the product."
 msgstr ""
 
@@ -756,6 +779,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice_create_uid
 #: model:ir.model.fields,field_description:connector_magento.field_magento_address_create_uid
 #: model:ir.model.fields,field_description:connector_magento.field_magento_backend_create_uid
+#: model:ir.model.fields,field_description:connector_magento.field_magento_binding_backend_read_create_uid
 #: model:ir.model.fields,field_description:connector_magento.field_magento_product_category_create_uid
 #: model:ir.model.fields,field_description:connector_magento.field_magento_product_product_create_uid
 #: model:ir.model.fields,field_description:connector_magento.field_magento_res_partner_category_create_uid
@@ -773,6 +797,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice_create_date
 #: model:ir.model.fields,field_description:connector_magento.field_magento_address_create_date
 #: model:ir.model.fields,field_description:connector_magento.field_magento_backend_create_date
+#: model:ir.model.fields,field_description:connector_magento.field_magento_binding_backend_read_create_date
 #: model:ir.model.fields,field_description:connector_magento.field_magento_product_category_create_date
 #: model:ir.model.fields,field_description:connector_magento.field_magento_product_product_create_date
 #: model:ir.model.fields,field_description:connector_magento.field_magento_res_partner_category_create_date
@@ -816,10 +841,14 @@ msgstr ""
 #: model:ir.model.fields,help:connector_magento.field_magento_product_product_qty_available
 msgid ""
 "Current quantity of products.\n"
-"In a context with a single Stock Location, this includes goods stored at this Location, or any of its children.\n"
-"In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
-"stored in the Stock Location of the Warehouse of this Shop, or any of its children.\n"
-"Otherwise, this includes goods stored in any Stock Location with 'internal' type."
+"In a context with a single Stock Location, this includes goods stored at "
+"this Location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods stored in the "
+"Stock Location of this Warehouse, or any of its children.\n"
+"stored in the Stock Location of the Warehouse of this Shop, or any of its "
+"children.\n"
+"Otherwise, this includes goods stored in any Stock Location with 'internal' "
+"type."
 msgstr ""
 
 #. module: connector_magento
@@ -1021,6 +1050,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice_display_name
 #: model:ir.model.fields,field_description:connector_magento.field_magento_address_display_name
 #: model:ir.model.fields,field_description:connector_magento.field_magento_backend_display_name
+#: model:ir.model.fields,field_description:connector_magento.field_magento_binding_backend_read_display_name
 #: model:ir.model.fields,field_description:connector_magento.field_magento_binding_display_name
 #: model:ir.model.fields,field_description:connector_magento.field_magento_config_specializer_display_name
 #: model:ir.model.fields,field_description:connector_magento.field_magento_product_category_display_name
@@ -1069,8 +1099,8 @@ msgstr ""
 #: model:ir.model.fields,help:connector_magento.field_magento_address_partner_share
 #: model:ir.model.fields,help:connector_magento.field_magento_res_partner_partner_share
 msgid ""
-"Either customer (no user), either shared user. Indicated the current partner"
-" is a customer without access or with a limited access created for sharing "
+"Either customer (no user), either shared user. Indicated the current partner "
+"is a customer without access or with a limited access created for sharing "
 "data."
 msgstr ""
 
@@ -1132,6 +1162,16 @@ msgstr ""
 #: model:ir.model.fields,field_description:connector_magento.field_magento_address_fax
 #: model:ir.model.fields,field_description:connector_magento.field_magento_res_partner_fax
 msgid "Fax"
+msgstr ""
+
+#. module: connector_magento
+#: model:ir.model.fields,field_description:connector_magento.field_magento_binding_backend_read_data
+msgid "File"
+msgstr ""
+
+#. module: connector_magento
+#: model:ir.model.fields,field_description:connector_magento.field_magento_binding_backend_read_name
+msgid "File Name"
 msgstr ""
 
 #. module: connector_magento
@@ -1206,9 +1246,12 @@ msgstr ""
 #: model:ir.model.fields,help:connector_magento.field_magento_product_product_virtual_available
 msgid ""
 "Forecast quantity (computed as Quantity On Hand - Outgoing + Incoming)\n"
-"In a context with a single Stock Location, this includes goods stored in this location, or any of its children.\n"
-"In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
-"Otherwise, this includes goods stored in any Stock Location with 'internal' type."
+"In a context with a single Stock Location, this includes goods stored in "
+"this location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods stored in the "
+"Stock Location of this Warehouse, or any of its children.\n"
+"Otherwise, this includes goods stored in any Stock Location with 'internal' "
+"type."
 msgstr ""
 
 #. module: connector_magento
@@ -1221,6 +1264,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:connector_magento.field_magento_address_email_formatted
 #: model:ir.model.fields,field_description:connector_magento.field_magento_res_partner_email_formatted
 msgid "Formatted Email"
+msgstr ""
+
+#. module: connector_magento
+#: model:ir.ui.view,arch_db:connector_magento.magento_binding_backend_read_form_view
+msgid "Get"
 msgstr ""
 
 #. module: connector_magento
@@ -1287,14 +1335,20 @@ msgid "Has unreconciled entries"
 msgstr ""
 
 #. module: connector_magento
+#: model:ir.ui.view,arch_db:connector_magento.magento_binding_backend_read_form_view
+msgid "Here is the file with information read drom the backend:"
+msgstr ""
+
+#. module: connector_magento
 #: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice_id
 #: model:ir.model.fields,field_description:connector_magento.field_magento_address_id
 #: model:ir.model.fields,field_description:connector_magento.field_magento_backend_id
+#: model:ir.model.fields,field_description:connector_magento.field_magento_binding_backend_read_id
 #: model:ir.model.fields,field_description:connector_magento.field_magento_binding_id
 #: model:ir.model.fields,field_description:connector_magento.field_magento_config_specializer_id
 #: model:ir.model.fields,field_description:connector_magento.field_magento_product_category_id
 #: model:ir.model.fields,field_description:connector_magento.field_magento_product_product_id
-#: model:ir.model.fields,field_description:connector_magento.field_magento_res_partner_category_id_5789
+#: model:ir.model.fields,field_description:connector_magento.field_magento_res_partner_category_id_5798
 #: model:ir.model.fields,field_description:connector_magento.field_magento_res_partner_id
 #: model:ir.model.fields,field_description:connector_magento.field_magento_sale_order_id
 #: model:ir.model.fields,field_description:connector_magento.field_magento_sale_order_line_id
@@ -1331,14 +1385,15 @@ msgstr ""
 #. module: connector_magento
 #: model:ir.model.fields,help:connector_magento.field_magento_backend_default_category_id
 msgid ""
-"If a default category is selected, products imported without a category will"
-" be linked to it."
+"If a default category is selected, products imported without a category will "
+"be linked to it."
 msgstr ""
 
 #. module: connector_magento
 #: model:ir.model.fields,help:connector_magento.field_magento_backend_default_lang_id
 msgid ""
-"If a default language is selected, the records will be imported in the translation of this language.\n"
+"If a default language is selected, the records will be imported in the "
+"translation of this language.\n"
 "Note that a similar configuration exists for each storeview."
 msgstr ""
 
@@ -1484,8 +1539,8 @@ msgstr ""
 #. module: connector_magento
 #: model:ir.model.fields,help:connector_magento.field_magento_account_invoice_payment_term_id
 msgid ""
-"If you use payment terms, the due date will be computed automatically at the"
-" generation of accounting entries. If you keep the payment term and the due "
+"If you use payment terms, the due date will be computed automatically at the "
+"generation of accounting entries. If you keep the payment term and the due "
 "date empty, it means direct payment. The payment term may compute several "
 "due dates, for example 50% now, 50% in one month."
 msgstr ""
@@ -1493,8 +1548,8 @@ msgstr ""
 #. module: connector_magento
 #: model:ir.model.fields,help:connector_magento.field_magento_account_invoice_date_due
 msgid ""
-"If you use payment terms, the due date will be computed automatically at the"
-" generation of accounting entries. The payment term may compute several due "
+"If you use payment terms, the due date will be computed automatically at the "
+"generation of accounting entries. The payment term may compute several due "
 "dates, for example 50% now and 50% in one month, but if you want to force a "
 "due date, make sure that the payment term is not set on the invoice. If you "
 "keep the payment term and the due date empty, it means direct payment."
@@ -1514,8 +1569,8 @@ msgstr ""
 #. module: connector_magento
 #: model:ir.model.fields,help:connector_magento.field_magento_product_product_image
 msgid ""
-"Image of the product variant (Big-sized image of product template if false)."
-" It is automatically resized as a 1024x1024px image, with aspect ratio "
+"Image of the product variant (Big-sized image of product template if false). "
+"It is automatically resized as a 1024x1024px image, with aspect ratio "
 "preserved."
 msgstr ""
 
@@ -1627,8 +1682,8 @@ msgstr ""
 #: model:ir.model.fields,help:connector_magento.field_magento_account_invoice_incoterms_id
 msgid ""
 "Incoterms are series of sales terms. They are used to divide transaction "
-"costs and responsibilities between buyer and seller and reflect state-of-"
-"the-art transportation practices."
+"costs and responsibilities between buyer and seller and reflect state-of-the-"
+"art transportation practices."
 msgstr ""
 
 #. module: connector_magento
@@ -1861,6 +1916,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:connector_magento.field_magento_address___last_update
 #: model:ir.model.fields,field_description:connector_magento.field_magento_backend___last_update
 #: model:ir.model.fields,field_description:connector_magento.field_magento_binding___last_update
+#: model:ir.model.fields,field_description:connector_magento.field_magento_binding_backend_read___last_update
 #: model:ir.model.fields,field_description:connector_magento.field_magento_config_specializer___last_update
 #: model:ir.model.fields,field_description:connector_magento.field_magento_product_category___last_update
 #: model:ir.model.fields,field_description:connector_magento.field_magento_product_product___last_update
@@ -1879,6 +1935,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice_write_uid
 #: model:ir.model.fields,field_description:connector_magento.field_magento_address_write_uid
 #: model:ir.model.fields,field_description:connector_magento.field_magento_backend_write_uid
+#: model:ir.model.fields,field_description:connector_magento.field_magento_binding_backend_read_write_uid
 #: model:ir.model.fields,field_description:connector_magento.field_magento_product_category_write_uid
 #: model:ir.model.fields,field_description:connector_magento.field_magento_product_product_write_uid
 #: model:ir.model.fields,field_description:connector_magento.field_magento_res_partner_category_write_uid
@@ -1896,6 +1953,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:connector_magento.field_magento_account_invoice_write_date
 #: model:ir.model.fields,field_description:connector_magento.field_magento_address_write_date
 #: model:ir.model.fields,field_description:connector_magento.field_magento_backend_write_date
+#: model:ir.model.fields,field_description:connector_magento.field_magento_binding_backend_read_write_date
 #: model:ir.model.fields,field_description:connector_magento.field_magento_product_category_write_date
 #: model:ir.model.fields,field_description:connector_magento.field_magento_product_product_write_date
 #: model:ir.model.fields,field_description:connector_magento.field_magento_res_partner_category_write_date
@@ -2087,6 +2145,11 @@ msgid "Magento Group (Category)"
 msgstr ""
 
 #. module: connector_magento
+#: model:ir.model.fields,field_description:connector_magento.field_magento_binding_backend_read_magento_id
+msgid "Magento Id"
+msgstr ""
+
+#. module: connector_magento
 #: model:ir.model,name:connector_magento.model_magento_account_invoice
 #: model:ir.ui.view,arch_db:connector_magento.view_magento_account_invoice_form
 #: model:ir.ui.view,arch_db:connector_magento.view_magento_account_invoice_tree
@@ -2223,6 +2286,16 @@ msgid "Magento Websites"
 msgstr ""
 
 #. module: connector_magento
+#: model:ir.model.fields,field_description:connector_magento.field_magento_binding_backend_read_magento_backend_id
+msgid "Magento backend id"
+msgstr ""
+
+#. module: connector_magento
+#: model:ir.model.fields,field_description:connector_magento.field_magento_binding_backend_read_magento_binding_model
+msgid "Magento binding model"
+msgstr ""
+
+#. module: connector_magento
 #: code:addons/connector_magento/models/sale_order/exporter.py:58
 #, python-format
 msgid "Magento sales order is already in state %s"
@@ -2256,9 +2329,12 @@ msgstr ""
 #. module: connector_magento
 #: model:ir.model.fields,help:connector_magento.field_magento_product_product_track_service
 msgid ""
-"Manually set quantities on order: Invoice based on the manually entered quantity, without creating an analytic account.\n"
-"Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
-"Create a task and track hours: Create a task on the sale order validation and track the work hours."
+"Manually set quantities on order: Invoice based on the manually entered "
+"quantity, without creating an analytic account.\n"
+"Timesheets on contract: Invoice based on the tracked hours on the related "
+"timesheet.\n"
+"Create a task and track hours: Create a task on the sale order validation "
+"and track the work hours."
 msgstr ""
 
 #. module: connector_magento
@@ -2501,7 +2577,8 @@ msgstr ""
 #: model:ir.model.fields,help:connector_magento.field_magento_product_product_invoice_policy
 msgid ""
 "Ordered Quantity: Invoice based on the quantity the customer ordered.\n"
-"Delivered Quantity: Invoiced based on the quantity the vendor delivered (time or deliveries)."
+"Delivered Quantity: Invoiced based on the quantity the vendor delivered "
+"(time or deliveries)."
 msgstr ""
 
 #. module: connector_magento
@@ -2836,18 +2913,24 @@ msgstr ""
 #: model:ir.model.fields,help:connector_magento.field_magento_product_product_incoming_qty
 msgid ""
 "Quantity of products that are planned to arrive.\n"
-"In a context with a single Stock Location, this includes goods arriving to this Location, or any of its children.\n"
-"In a context with a single Warehouse, this includes goods arriving to the Stock Location of this Warehouse, or any of its children.\n"
-"Otherwise, this includes goods arriving to any Stock Location with 'internal' type."
+"In a context with a single Stock Location, this includes goods arriving to "
+"this Location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods arriving to the "
+"Stock Location of this Warehouse, or any of its children.\n"
+"Otherwise, this includes goods arriving to any Stock Location with "
+"'internal' type."
 msgstr ""
 
 #. module: connector_magento
 #: model:ir.model.fields,help:connector_magento.field_magento_product_product_outgoing_qty
 msgid ""
 "Quantity of products that are planned to leave.\n"
-"In a context with a single Stock Location, this includes goods leaving this Location, or any of its children.\n"
-"In a context with a single Warehouse, this includes goods leaving the Stock Location of this Warehouse, or any of its children.\n"
-"Otherwise, this includes goods leaving any Stock Location with 'internal' type."
+"In a context with a single Stock Location, this includes goods leaving this "
+"Location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods leaving the Stock "
+"Location of this Warehouse, or any of its children.\n"
+"Otherwise, this includes goods leaving any Stock Location with 'internal' "
+"type."
 msgstr ""
 
 #. module: connector_magento
@@ -2858,6 +2941,16 @@ msgstr ""
 #. module: connector_magento
 #: model:ir.model.fields,field_description:connector_magento.field_magento_product_product_expense_policy
 msgid "Re-Invoice Expenses"
+msgstr ""
+
+#. module: connector_magento
+#: model:ir.ui.view,arch_db:connector_magento.magento_binding_backend_read_form_view
+msgid "Read Binding information from backend"
+msgstr ""
+
+#. module: connector_magento
+#: model:ir.actions.act_window,name:connector_magento.magento_binding_backend_read_act_window
+msgid "Read information from backend"
 msgstr ""
 
 #. module: connector_magento
@@ -3191,15 +3284,19 @@ msgstr ""
 #. module: connector_magento
 #: model:ir.model.fields,help:connector_magento.field_account_payment_mode_create_invoice_on
 msgid ""
-"Should the invoice be created in Magento when it is validated or when it is paid in Odoo?\n"
-"If nothing is set, the option falls back to the same option on the Magento store related to the sales order."
+"Should the invoice be created in Magento when it is validated or when it is "
+"paid in Odoo?\n"
+"If nothing is set, the option falls back to the same option on the Magento "
+"store related to the sales order."
 msgstr ""
 
 #. module: connector_magento
 #: model:ir.model.fields,help:connector_magento.field_magento_store_create_invoice_on
 msgid ""
-"Should the invoice be created in Magento when it is validated or when it is paid in Odoo?\n"
-"This only takes effect if the sales order's related payment method is not giving an option for this by itself. (See Payment Methods)"
+"Should the invoice be created in Magento when it is validated or when it is "
+"paid in Odoo?\n"
+"This only takes effect if the sales order's related payment method is not "
+"giving an option for this by itself. (See Payment Methods)"
 msgstr ""
 
 #. module: connector_magento
@@ -3244,8 +3341,8 @@ msgstr ""
 #: model:ir.model.fields,help:connector_magento.field_magento_res_partner_image_small
 msgid ""
 "Small-sized image of this contact. It is automatically resized as a 64x64px "
-"image, with aspect ratio preserved. Use this field anywhere a small image is"
-" required."
+"image, with aspect ratio preserved. Use this field anywhere a small image is "
+"required."
 msgstr ""
 
 #. module: connector_magento
@@ -3298,17 +3395,23 @@ msgstr ""
 #. module: connector_magento
 #: model:ir.model.fields,help:connector_magento.field_magento_product_product_property_cost_method
 msgid ""
-"Standard Price: The cost price is manually updated at the end of a specific period (usually once a year).\n"
-"                Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
-"                Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example)."
+"Standard Price: The cost price is manually updated at the end of a specific "
+"period (usually once a year).\n"
+"                Average Price: The cost price is recomputed at each incoming "
+"shipment and used for the product valuation.\n"
+"                Real Price: The cost price displayed is the price of the "
+"last outgoing product (will be use in case of inventory loss for example)."
 msgstr ""
 
 #. module: connector_magento
 #: model:ir.model.fields,help:connector_magento.field_magento_product_category_property_cost_method
 msgid ""
-"Standard Price: The cost price is manually updated at the end of a specific period (usually once a year).\n"
-"Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
-"Real Price: The cost price displayed is the price of the last outgoing product (will be used in case of inventory loss for example)."
+"Standard Price: The cost price is manually updated at the end of a specific "
+"period (usually once a year).\n"
+"Average Price: The cost price is recomputed at each incoming shipment and "
+"used for the product valuation.\n"
+"Real Price: The cost price displayed is the price of the last outgoing "
+"product (will be used in case of inventory loss for example)."
 msgstr ""
 
 #. module: connector_magento
@@ -3318,6 +3421,7 @@ msgstr ""
 
 #. module: connector_magento
 #: model:ir.model.fields,field_description:connector_magento.field_magento_address_state_id
+#: model:ir.model.fields,field_description:connector_magento.field_magento_binding_backend_read_state
 #: model:ir.model.fields,field_description:connector_magento.field_magento_res_partner_state_id
 msgid "State"
 msgstr ""
@@ -3534,10 +3638,12 @@ msgid ""
 "The amount computed in Odoo doesn't match with the amount in Magento.\n"
 "\n"
 "Cause:\n"
-"The taxes are probably different between Odoo and Magento. A fiscal position could have changed the final price.\n"
+"The taxes are probably different between Odoo and Magento. A fiscal position "
+"could have changed the final price.\n"
 "\n"
 "Resolution:\n"
-"Check your taxes and fiscal positions configuration and correct them if necessary."
+"Check your taxes and fiscal positions configuration and correct them if "
+"necessary."
 msgstr ""
 
 #. module: connector_magento
@@ -3549,8 +3655,8 @@ msgstr ""
 #. module: connector_magento
 #: model:ir.model.fields,help:connector_magento.field_magento_product_product_sale_delay
 msgid ""
-"The average delay in days between the confirmation of the customer order and"
-" the delivery of the finished products. It's the time you promise to your "
+"The average delay in days between the confirmation of the customer order and "
+"the delivery of the finished products. It's the time you promise to your "
 "customers."
 msgstr ""
 
@@ -3582,8 +3688,8 @@ msgstr ""
 #. module: connector_magento
 #: model:ir.model.fields,help:connector_magento.field_magento_backend_use_custom_api_path
 msgid ""
-"The default API path is '/index.php/api/xmlrpc'. Check this box if you use a"
-" custom API path, in that case, the location has to be completed with the "
+"The default API path is '/index.php/api/xmlrpc'. Check this box if you use a "
+"custom API path, in that case, the location has to be completed with the "
 "custom API path "
 msgstr ""
 
@@ -3652,13 +3758,16 @@ msgstr ""
 #. module: connector_magento
 #: model:exception.rule,description:connector_magento.excep_wrong_total_amount_tax
 msgid ""
-"The tax amount computed in Odoo doesn't match with the tax amount in Magento.\n"
+"The tax amount computed in Odoo doesn't match with the tax amount in "
+"Magento.\n"
 "\n"
 "Cause:\n"
-"The taxes are probably different between Odoo and Magento. A fiscal position could have changed the final price.\n"
+"The taxes are probably different between Odoo and Magento. A fiscal position "
+"could have changed the final price.\n"
 "\n"
 "Resolution:\n"
-"Check your taxes and fiscal positions configuration and correct them if necessary."
+"Check your taxes and fiscal positions configuration and correct them if "
+"necessary."
 msgstr ""
 
 #. module: connector_magento
@@ -3669,6 +3778,18 @@ msgstr ""
 #. module: connector_magento
 #: model:ir.model.fields,help:connector_magento.field_magento_product_product_weight
 msgid "The weight of the contents in Kg, not including any packaging, etc."
+msgstr ""
+
+#. module: connector_magento
+#: code:addons/connector_magento/wizards/magento_binding_backend_read.py:41
+#, python-format
+msgid "The wizard must be launched from a magento backend model"
+msgstr ""
+
+#. module: connector_magento
+#: code:addons/connector_magento/wizards/magento_binding_backend_read.py:45
+#, python-format
+msgid "The wizard must be launched on a single magento backend instance"
 msgstr ""
 
 #. module: connector_magento
@@ -3728,8 +3849,8 @@ msgstr ""
 #. module: connector_magento
 #: model:ir.model.fields,help:connector_magento.field_magento_product_product_image_variant
 msgid ""
-"This field holds the image used as image for the product variant, limited to"
-" 1024x1024px."
+"This field holds the image used as image for the product variant, limited to "
+"1024x1024px."
 msgstr ""
 
 #. module: connector_magento
@@ -3873,14 +3994,12 @@ msgstr ""
 
 #. module: connector_magento
 #: model:ir.model.fields,help:connector_magento.field_magento_account_invoice_amount_total_company_signed
-msgid ""
-"Total amount in the currency of the company, negative for credit notes."
+msgid "Total amount in the currency of the company, negative for credit notes."
 msgstr ""
 
 #. module: connector_magento
 #: model:ir.model.fields,help:connector_magento.field_magento_account_invoice_amount_total_signed
-msgid ""
-"Total amount in the currency of the invoice, negative for credit notes."
+msgid "Total amount in the currency of the invoice, negative for credit notes."
 msgstr ""
 
 #. module: connector_magento
@@ -4195,8 +4314,8 @@ msgid ""
 "When doing real-time inventory valuation, counterpart journal items for all "
 "incoming stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the source location. This is the default "
-"value for all products in this category. It can also directly be set on each"
-" product"
+"value for all products in this category. It can also directly be set on each "
+"product"
 msgstr ""
 
 #. module: connector_magento
@@ -4214,8 +4333,8 @@ msgid ""
 "When doing real-time inventory valuation, counterpart journal items for all "
 "outgoing stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the destination location. This is the "
-"default value for all products in this category. It can also directly be set"
-" on each product"
+"default value for all products in this category. It can also directly be set "
+"on each product"
 msgstr ""
 
 #. module: connector_magento
@@ -4248,6 +4367,11 @@ msgid "Zip"
 msgstr ""
 
 #. module: connector_magento
+#: selection:magento.binding.backend.read,state:0
+msgid "choose"
+msgstr ""
+
+#. module: connector_magento
 #: model:ir.model.fields,help:connector_magento.field_magento_storeview_import_orders_from_date
 msgid ""
 "do not consider non-imported sale orders before this date. Leave empty to "
@@ -4265,8 +4389,18 @@ msgid "e.g. http://my.magento.com/admin"
 msgstr ""
 
 #. module: connector_magento
+#: selection:magento.binding.backend.read,state:0
+msgid "get"
+msgstr ""
+
+#. module: connector_magento
 #: model:ir.ui.view,arch_db:connector_magento.view_magento_backend_form
 msgid "mag-"
+msgstr ""
+
+#. module: connector_magento
+#: model:ir.model,name:connector_magento.model_magento_binding_backend_read
+msgid "magento.binding.backend.read"
 msgstr ""
 
 #. module: connector_magento
