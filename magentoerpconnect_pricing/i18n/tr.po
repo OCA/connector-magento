@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * magentoerpconnect_pricing
-# 
+#
 # Translators:
 msgid ""
 msgstr ""
@@ -10,11 +10,12 @@ msgstr ""
 "POT-Creation-Date: 2017-03-23 15:24+0000\n"
 "PO-Revision-Date: 2017-03-23 15:24+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
-"Language-Team: Turkish (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/tr/)\n"
+"Language-Team: Turkish (http://www.transifex.com/oca/OCA-connector-"
+"magento-8-0/language/tr/)\n"
+"Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: magentoerpconnect_pricing
@@ -63,7 +64,9 @@ msgstr ""
 #. module: magentoerpconnect_pricing
 #: help:magento.website,pricelist_id:0
 msgid ""
-"The pricelist used to define the currency of the orders of this website and, if price update is activated on the backend, the prices of the products in Magento for this website.\n"
+"The pricelist used to define the currency of the orders of this website and, "
+"if price update is activated on the backend, the prices of the products in "
+"Magento for this website.\n"
 "Choose a pricelist only if the prices are different for this website.\n"
 "When empty, the default price will be used."
 msgstr ""
