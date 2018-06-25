@@ -30,7 +30,7 @@ from openerp.addons.connector_ecommerce.event import (on_invoice_paid,
 from openerp.addons.connector.exception import IDMissingInBackend
 from .unit.backend_adapter import GenericAdapter
 from .connector import get_environment
-from .backend import magento
+from .backend import magento, magento2000
 from .related_action import unwrap_binding
 
 _logger = logging.getLogger(__name__)
@@ -77,9 +77,10 @@ class AccountInvoiceAdapter(GenericAdapter):
     _magento_model = 'sales_order_invoice'
     _admin_path = 'sales_invoice/view/invoice_id/{id}'
 
-    def _call(self, method, arguments):
+    def _call(self, method, arguments, http_method=None):
         try:
-            return super(AccountInvoiceAdapter, self)._call(method, arguments)
+            return super(AccountInvoiceAdapter, self)._call(
+                method, arguments, http_method=http_method)
         except xmlrpclib.Fault as err:
             # this is the error in the Magento API
             # when the invoice does not exist
@@ -107,6 +108,26 @@ class AccountInvoiceAdapter(GenericAdapter):
         if order_id is not None:
             filters['order_id'] = {'eq': order_id}
         return super(AccountInvoiceAdapter, self).search_read(filters=filters)
+
+
+@magento2000
+class AccountInvoiceAdapter2000(AccountInvoiceAdapter):
+    def create(self, order_increment_id, items, comment, email,
+               include_comment):
+        arguments = {
+            'capture': False,
+            'items': [{'orderItemId': key, 'qty': value}
+                      for key, value in items.items()],
+            'comment': {
+                'comment': comment,
+                'isVisibleOnFront': 0,
+            },
+            'appendComment': include_comment,
+        }
+        res = self._call(
+            'order/%s/invoice' % order_increment_id, arguments,
+            http_method='post')
+        return res
 
 
 @magento

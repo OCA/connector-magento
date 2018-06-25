@@ -39,7 +39,7 @@ from .unit.import_synchronizer import (DelayedBatchImporter,
                                        MagentoImporter,
                                        )
 from .unit.mapper import normalize_datetime
-from .backend import magento
+from .backend import magento, magento2000
 from .connector import get_environment
 
 _logger = logging.getLogger(__name__)
@@ -167,6 +167,9 @@ class MagentoAddress(models.Model):
 class PartnerAdapter(GenericAdapter):
     _model_name = 'magento.res.partner'
     _magento_model = 'customer'
+    _magento2_model = 'customers'
+    _magento2_search = 'customers/search'
+    _magento2_key = 'id'
     _admin_path = '/{model}/edit/id/{id}'
 
     def _call(self, method, arguments):
@@ -201,6 +204,8 @@ class PartnerAdapter(GenericAdapter):
         if magento_website_ids is not None:
             filters['website_id'] = {'in': magento_website_ids}
 
+        if self.magento.version == '2.0':
+            return super(PartnerAdapter, self).search(filters=filters)
         # the search method is on ol_customer instead of customer
         return self._call('ol_customer.search',
                           [filters] if filters else [{}])
@@ -258,20 +263,24 @@ class PartnerImportMapper(ImportMapper):
     def names(self, record):
         # TODO create a glue module for base_surname
         parts = [part for part in (record['firstname'],
-                                   record['middlename'],
+                                   record.get('middlename'),
                                    record['lastname']) if part]
         return {'name': ' '.join(parts)}
 
     @mapping
     def customer_group_id(self, record):
         # import customer groups
-        binder = self.binder_for(model='magento.res.partner.category')
-        category_id = binder.to_openerp(record['group_id'], unwrap=True)
+        if record['group_id'] == 0:
+            category_id = self.env.ref(
+                'magentoerpconnect.category_no_account').id
+        else:
+            binder = self.binder_for(model='magento.res.partner.category')
+            category_id = binder.to_openerp(record['group_id'], unwrap=True)
 
-        if category_id is None:
-            raise MappingError("The partner category with "
-                               "magento id %s does not exist" %
-                               record['group_id'])
+            if category_id is None:
+                raise MappingError("The partner category with "
+                                   "magento id %s does not exist" %
+                                   record['group_id'])
 
         # FIXME: should remove the previous tag (all the other tags from
         # the same backend)
@@ -391,15 +400,18 @@ class PartnerAddressBook(ConnectorUnit):
             importer = self.unit_for(MagentoImporter)
             importer.run(address_id, address_infos=infos)
 
-    def _get_address_infos(self, magento_partner_id, partner_binding_id):
+    def _read_addresses(self, magento_partner_id):
         adapter = self.unit_for(BackendAdapter)
         mag_address_ids = adapter.search({'customer_id':
                                           {'eq': magento_partner_id}})
         if not mag_address_ids:
             return
-        for address_id in mag_address_ids:
-            magento_record = adapter.read(address_id)
+        return [(address_id, adapter.read(address_id))
+                for address_id in mag_address_ids]
 
+    def _get_address_infos(self, magento_partner_id, partner_binding_id):
+        for address_id, magento_record in self._read_addresses(
+                magento_partner_id):
             # defines if the billing address is merged with the partner
             # or imported as a standalone contact
             merge = False
@@ -428,6 +440,18 @@ class PartnerAddressBook(ConnectorUnit):
                                          partner_binding_id=partner_binding_id,
                                          merge=merge)
             yield address_id, address_infos
+
+
+@magento2000
+class PartnerAddressBook2000(PartnerAddressBook):
+
+    def _read_addresses(self, magento_partner_id):
+        """ Address repository cannot be queried, but the addresses are
+        included in the partner record.
+        TODO: process the addresses when we read the partner the first time """
+        adapter = self.unit_for(BackendAdapter, model='magento.res.partner')
+        record = adapter.read(magento_partner_id)
+        return [(addr['id'], addr) for addr in record['addresses']]
 
 
 class BaseAddressImportMapper(ImportMapper):
@@ -468,7 +492,11 @@ class BaseAddressImportMapper(ImportMapper):
         value = record['street']
         if not value:
             return {}
-        lines = [line.strip() for line in value.split('\n') if line.strip()]
+        if isinstance(value, list):
+            lines = value
+        else:
+            lines = [line.strip() for line in value.split('\n')
+                     if line.strip()]
         if len(lines) == 1:
             result = {'street': lines[0], 'street2': False}
         elif len(lines) >= 2:
@@ -479,7 +507,7 @@ class BaseAddressImportMapper(ImportMapper):
 
     @mapping
     def title(self, record):
-        prefix = record['prefix']
+        prefix = record.get('prefix')
         if not prefix:
             return
         title = self.env['res.partner.title'].search(

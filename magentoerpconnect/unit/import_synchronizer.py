@@ -187,7 +187,7 @@ class MagentoImporter(Importer):
         """ Hook called at the end of the import """
         return
 
-    def run(self, magento_id, force=False):
+    def run(self, magento_id, force=False, data=None):
         """ Run the synchronization
 
         :param magento_id: identifier of the record on Magento
@@ -200,10 +200,13 @@ class MagentoImporter(Importer):
             magento_id,
         )
 
-        try:
-            self.magento_record = self._get_magento_data()
-        except IDMissingInBackend:
-            return _('Record does no longer exist in Magento')
+        if data:
+            self.magento_record = data
+        else:
+            try:
+                self.magento_record = self._get_magento_data()
+            except IDMissingInBackend:
+                return _('Record does no longer exist in Magento')
 
         skip = self._must_skip()
         if skip:

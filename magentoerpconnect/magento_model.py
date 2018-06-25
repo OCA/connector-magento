@@ -34,7 +34,7 @@ from .unit.import_synchronizer import (import_batch,
                                        )
 from .partner import partner_import_batch
 from .sale import sale_order_import_batch
-from .backend import magento
+from .backend import magento, magento2000
 from .connector import add_checkpoint
 
 _logger = logging.getLogger(__name__)
@@ -57,7 +57,7 @@ class MagentoBackend(models.Model):
         to add a version from an ``_inherit`` does not constrain
         to redefine the ``version`` field in the ``_inherit`` model.
         """
-        return [('1.7', '1.7+')]
+        return [('1.7', '1.7+'), ('2.0', '2.0')]
 
     @api.model
     def _get_stock_field_id(self):
@@ -82,12 +82,17 @@ class MagentoBackend(models.Model):
     )
     username = fields.Char(
         string='Username',
-        help="Webservice user",
+        help="Webservice user (leave empty for Magento 2.0)",
     )
     password = fields.Char(
         string='Password',
-        help="Webservice password",
+        help=("Webservice password, or authentication token when connecting to"
+              " Magento 2.0"),
     )
+    verify_ssl = fields.Boolean(
+        string="Verify SSL certficate",
+        default=True,
+        help=("Only for Magento 2 REST API"))
     use_auth_basic = fields.Boolean(
         string='Use HTTP Auth Basic',
         help="Use a Basic Access Authentication for the API. "
@@ -597,6 +602,7 @@ class MagentoStoreview(models.Model):
 class WebsiteAdapter(GenericAdapter):
     _model_name = 'magento.website'
     _magento_model = 'ol_websites'
+    _magento2_model = 'store/websites'
     _admin_path = 'system_store/editWebsite/website_id/{id}'
 
 
@@ -604,6 +610,7 @@ class WebsiteAdapter(GenericAdapter):
 class StoreAdapter(GenericAdapter):
     _model_name = 'magento.store'
     _magento_model = 'ol_groups'
+    _magento2_model = 'store/storeGroups'
     _admin_path = 'system_store/editGroup/group_id/{id}'
 
 
@@ -611,7 +618,25 @@ class StoreAdapter(GenericAdapter):
 class StoreviewAdapter(GenericAdapter):
     _model_name = 'magento.storeview'
     _magento_model = 'ol_storeviews'
+    _magento2_model = 'store/storeConfigs'
     _admin_path = 'system_store/editStore/store_id/{id}'
+
+    def read(self, id, attributes=None):
+        """ Conveniently split into two separate APIs in 2.0
+
+        :rtype: dict
+        """
+        if self.magento.version == '2.0':
+            if attributes:
+                raise NotImplementedError  # TODO
+            storeview = next(
+                record for record in self._call('store/storeViews')
+                if record['id'] == id)
+            storeview.update(next(
+                record for record in self._call('store/storeConfigs')
+                if record['id'] == id))
+            return storeview
+        return super(StoreviewAdapter, self).read(id, attributes=attributes)
 
 
 @magento
@@ -679,9 +704,20 @@ class StoreviewImportMapper(ImportMapper):
 
     @mapping
     def store_id(self, record):
+        """ The field name changed to 'store_group_id' in 2.0 """
         binder = self.binder_for(model='magento.store')
-        binding_id = binder.to_openerp(record['group_id'])
+        group_id = record.get('store_group_id') or record['group_id']
+        binding_id = binder.to_openerp(group_id)
         return {'store_id': binding_id}
+
+
+@magento2000
+class StoreviewImportMapper2000(StoreviewImportMapper):
+
+    @mapping
+    def lang_id(self, record):
+        lang = self.env['res.lang'].search([('code', '=', record['locale'])])
+        return {'lang_id': lang.id}
 
 
 @magento
