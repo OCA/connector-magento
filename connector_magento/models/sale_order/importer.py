@@ -332,6 +332,9 @@ class SaleOrderImporter(Component):
         for item in resource['items']:
             if item.get('parent_item_id'):
                 child_items.setdefault(item['parent_item_id'], []).append(item)
+            elif item.get('parent_item'):  # 2.0
+                child_items.setdefault(
+                    item['parent_item']['item_id'], []).append(item)
             else:
                 top_items.append(item)
 
@@ -374,7 +377,11 @@ class SaleOrderImporter(Component):
             # have to be extracted from the child
             for field in ['sku', 'product_id', 'name']:
                 item[field] = child_items[0][field]
-            return item
+            # Experimental support for configurable products with multiple
+            # subitems
+            return [item] + child_items[1:]
+        elif product_type == 'bundle':
+            return child_items
         return top_item
 
     def _import_customer_group(self, group_id):
@@ -445,6 +452,15 @@ class SaleOrderImporter(Component):
         # product in a sale)
         record = self._clean_magento_items(record)
         return record
+    
+    def _get_shipping_address(self):
+        if self.collection.version == '1.7':
+            return record['shipping_address']
+        elif self.collection.version == '2.0':
+            # TODO: Magento2 allows for a different shipping address per line.
+            # Look to https://github.com/OCA/sale-workflow/tree/8.0/sale_allotment?
+            shippings = self.magento_record['extension_attributes']['shipping_assignments']
+            return shippings and shippings[0]['shipping'].get('address')
 
     def _import_addresses(self):
         record = self.magento_record
@@ -502,7 +518,7 @@ class SaleOrderImporter(Component):
 
             customer_record = {
                 'firstname': address['firstname'],
-                'middlename': address['middlename'],
+                'middlename': address.get('middlename'),
                 'lastname': address['lastname'],
                 'prefix': address.get('prefix'),
                 'suffix': address.get('suffix'),
@@ -569,8 +585,9 @@ class SaleOrderImporter(Component):
         billing_id = create_address(record['billing_address'])
 
         shipping_id = None
-        if record['shipping_address']:
-            shipping_id = create_address(record['shipping_address'])
+        shipping_address = self._get_shipping_address()
+        if shipping_address:
+            shipping_id = create_address(shipping_address)
 
         self.partner_id = partner.id
         self.partner_invoice_id = billing_id
@@ -618,9 +635,10 @@ class SaleOrderImporter(Component):
 
         for line in record.get('items', []):
             _logger.debug('line: %s', line)
-            if 'product_id' in line:
-                self._import_dependency(line['product_id'],
-                                        'magento.product.product')
+            field = self.collection.version == '1.7' and 'product_id' or 'sku'
+            if field in line:
+                self._import_dependency(line[field],
+                    'magento.product.product')
 
 
 class SaleOrderLineImportMapper(Component):
@@ -647,11 +665,17 @@ class SaleOrderLineImportMapper(Component):
             discount = 100 * discount_value / row_total
         result = {'discount': discount}
         return result
+    
+    def _get_product_ref(self, record):
+        if self.collection.version == '2.0':
+            return record['sku']
+        return record['product_id']
 
     @mapping
     def product_id(self, record):
         binder = self.binder_for('magento.product.product')
-        product = binder.to_internal(record['product_id'], unwrap=True)
+        product_ref = self._get_product_ref(record)
+        product = binder.to_internal(product_ref, unwrap=True)
         assert product, (
             "product_id %s should have been imported in "
             "SaleOrderImporter._import_dependencies" % record['product_id'])
@@ -677,10 +701,11 @@ class SaleOrderLineImportMapper(Component):
 
     @mapping
     def price(self, record):
+        """ tax key may not be present in magento2 when no taxes apply """
         result = {}
         base_row_total = float(record['base_row_total'] or 0.)
-        base_row_total_incl_tax = float(record['base_row_total_incl_tax'] or
-                                        0.)
+        base_row_total_incl_tax = float(
+            record.get('base_row_total_incl_tax') or base_row_total)
         qty_ordered = float(record['qty_ordered'])
         if self.options.tax_include:
             result['price_unit'] = base_row_total_incl_tax / qty_ordered

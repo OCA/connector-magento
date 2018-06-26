@@ -264,8 +264,8 @@ class ProductProductAdapter(Component):
 
     def update_inventory(self, id, data):
         # product_stock.update is too slow
-        if self.work.magento_api._location.version == '2.0':
-            raise NotImplementedError  # TODO
+        if self.collection.version == '2.0':
+            return self._call('products/%s/stockItems/1' % id, {"stockItem":{"qty": data['qty']}}, http_method='put')
         return self._call('oerp_cataloginventory_stock_item.update',
                           [int(id), data])
 
