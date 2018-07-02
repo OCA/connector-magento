@@ -165,15 +165,21 @@ class SaleOrderImportMapper(Component):
 
     def _add_cash_on_delivery_line(self, map_record, values):
         record = map_record.source
-        amount_excl = float(record.get('cod_fee') or 0.0)
-        amount_incl = float(record.get('cod_tax_amount') or 0.0)
+        if self.collection.version == '2.0':
+            amount_incl = float(record.get('base_grand_total') - record.get('base_subtotal_incl_tax') - record.get('base_shipping_incl_tax'))
+            amount_excl = 0.0  # TODO
+        else:
+            amount_excl = float(record.get('cod_fee') or 0.0)
+            amount_incl = float(record.get('cod_tax_amount') or 0.0)
         if not (amount_excl or amount_incl):
             return values
         line_builder = self.component(usage='order.line.builder.cod')
         tax_include = self.options.tax_include
-        line_builder.price_unit = amount_incl if tax_include else amount_excl
-        line = (0, 0, line_builder.get_line())
-        values['order_line'].append(line)
+        price_unit = amount_incl if tax_include else amount_excl
+        if price_unit:
+            line_builder.price_unit = price_unit
+            line = (0, 0, line_builder.get_line())
+            values['order_line'].append(line)
         return values
 
     def _add_gift_certificate_line(self, map_record, values):
@@ -623,17 +629,17 @@ class SaleOrderImporter(Component):
             return address_bind.odoo_id.id
 
         billing_id = create_address(record['billing_address'])
-
         shipping_id = None
-        if record.get('shipping_address'):
-            if self.collection.version == '1.7':
-                shipping_address = record['shipping_address']
-            elif self.collection.version == '2.0':
-                # TODO: Magento2 allows for a different shipping address per line.
-                # Look to https://github.com/OCA/sale-workflow/tree/8.0/sale_allotment?
-                shippings = self.magento_record['extension_attributes']['shipping_assignments']
-                shipping_address = shippings and shippings[0]['shipping'].get('address')
-            shipping_id = create_address(record['shipping_address'])
+        shipping_address = None
+        if self.collection.version == '1.7' and record.get('shipping_address'):
+            shipping_address = record['shipping_address']
+        elif self.collection.version == '2.0':
+            # TODO: Magento2 allows for a different shipping address per line.
+            # Look to https://github.com/OCA/sale-workflow/tree/8.0/sale_allotment?
+            shippings = self.magento_record['extension_attributes']['shipping_assignments']
+            shipping_address = shippings and shippings[0]['shipping'].get('address')
+        if shipping_address:
+            shipping_id = create_address(shipping_address)
 
         self.partner_id = partner.id
         self.partner_invoice_id = billing_id
@@ -699,6 +705,7 @@ class SaleOrderLineImportMapper(Component):
               ('item_id', 'external_id'),
               ]
 
+
     @mapping
     def discount_amount(self, record):
         discount_value = float(record.get('discount_amount') or 0)
@@ -746,8 +753,7 @@ class SaleOrderLineImportMapper(Component):
     def price(self, record):
         result = {}
         base_row_total = float(record['base_row_total'] or 0.)
-        base_row_total_incl_tax = float(record['base_row_total_incl_tax'] or
-                                        0.)
+        base_row_total_incl_tax = float(record.get('base_row_total_incl_tax', 0))
         qty_ordered = float(record['qty_ordered'])
         if self.options.tax_include:
             result['price_unit'] = base_row_total_incl_tax / qty_ordered

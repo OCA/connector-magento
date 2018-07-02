@@ -242,7 +242,8 @@ class PartnerAddressBook(Component):
                 else:
                     # for B2C individual customers, merge with the main
                     # partner
-                    merge = True
+                    if not partner_binding.openerp_id.magento_address_bind_ids:
+                        merge = True
                     # in the case if the billing address no longer
                     # has a company, reset the flag
                     partner_binding.write({'consider_as_company': False})
