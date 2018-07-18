@@ -37,6 +37,7 @@ from openerp.addons.connector.exception import (MappingError,
                                                 IDMissingInBackend
                                                 )
 from openerp.addons.connector.unit.mapper import (mapping,
+                                                  only_create,
                                                   ImportMapper,
                                                   )
 from .unit.backend_adapter import (GenericAdapter,
@@ -508,6 +509,15 @@ class ProductImportMapper(ImportMapper):
         if record['type_id'] == 'bundle':
             bundle_mapper = self.unit_for(BundleProductImportMapper)
             return bundle_mapper.map_record(record).values(**self.options)
+
+    @only_create
+    @mapping
+    def openerp_id(self, record):
+        """ Will bind the product to an existing one with the same code """
+        product = self.env['product.product'].search(
+            [('default_code', '=', record['sku'])], limit=1)
+        if product:
+            return {'openerp_id': product.id}
 
 
 @magento
