@@ -3100,7 +3100,7 @@ msgid "The commercial entity that will be used on Journal Entries for this invoi
 msgstr ""
 
 #. module: magentoerpconnect
-#: code:addons/magentoerpconnect/product.py:563
+#: code:addons/magentoerpconnect/product.py:573
 #, python-format
 msgid "The configurable product is not imported in OpenERP, because only the simple products are used in the sales orders."
 msgstr ""
