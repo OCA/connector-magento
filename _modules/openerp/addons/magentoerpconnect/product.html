@@ -262,6 +262,7 @@
                                                 <span class="n">IDMissingInBackend</span>
                                                 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">openerp.addons.connector.unit.mapper</span> <span class="k">import</span> <span class="p">(</span><span class="n">mapping</span><span class="p">,</span>
+                                                  <span class="n">only_create</span><span class="p">,</span>
                                                   <span class="n">ImportMapper</span><span class="p">,</span>
                                                   <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">.unit.backend_adapter</span> <span class="k">import</span> <span class="p">(</span><span class="n">GenericAdapter</span><span class="p">,</span>
@@ -732,7 +733,16 @@
     <span class="k">def</span> <span class="nf">bundle_mapping</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">record</span><span class="p">[</span><span class="s1">&#39;type_id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;bundle&#39;</span><span class="p">:</span>
             <span class="n">bundle_mapper</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">unit_for</span><span class="p">(</span><span class="n">BundleProductImportMapper</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">bundle_mapper</span><span class="o">.</span><span class="n">map_record</span><span class="p">(</span><span class="n">record</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">)</span></div></div>
+            <span class="k">return</span> <span class="n">bundle_mapper</span><span class="o">.</span><span class="n">map_record</span><span class="p">(</span><span class="n">record</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ProductImportMapper.openerp_id"><a class="viewcode-back" href="../../../../api/api_product.html#openerp.addons.magentoerpconnect.product.ProductImportMapper.openerp_id">[docs]</a>    <span class="nd">@only_create</span>
+    <span class="nd">@mapping</span>
+    <span class="k">def</span> <span class="nf">openerp_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Will bind the product to an existing one with the same code &quot;&quot;&quot;</span>
+        <span class="n">product</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">[</span><span class="s1">&#39;product.product&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">search</span><span class="p">(</span>
+            <span class="p">[(</span><span class="s1">&#39;default_code&#39;</span><span class="p">,</span> <span class="s1">&#39;=&#39;</span><span class="p">,</span> <span class="n">record</span><span class="p">[</span><span class="s1">&#39;sku&#39;</span><span class="p">])],</span> <span class="n">limit</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">product</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;openerp_id&#39;</span><span class="p">:</span> <span class="n">product</span><span class="o">.</span><span class="n">id</span><span class="p">}</span></div></div>
 
 
 <div class="viewcode-block" id="ProductImporter"><a class="viewcode-back" href="../../../../api/api_product.html#openerp.addons.magentoerpconnect.product.ProductImporter">[docs]</a><span class="nd">@magento</span>
@@ -937,7 +947,7 @@
     </p>
     <p>
         &copy; Copyright 2013-2015, Odoo Community Association (OCA).<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.5.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.6.<br/>
     </p>
   </div>
 </footer>
