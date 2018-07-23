@@ -167,6 +167,7 @@ class SaleOrderImportMapper(Component):
         record = map_record.source
         if self.collection.version == '2.0':
             amount_incl = float(record.get('base_grand_total') - record.get('base_subtotal_incl_tax') - record.get('base_shipping_incl_tax'))
+            amount_incl = round(amount_incl, 3)
             amount_excl = 0.0  # TODO
         else:
             amount_excl = float(record.get('cod_fee') or 0.0)
