@@ -202,8 +202,8 @@ class PartnerAddressBook(Component):
             importer.run(address_id, address_infos=infos)
 
     def _get_address_infos(self, magento_partner_id, partner_binding_id):
-        adapter = self.component(usage='backend.adapter')
         if self.collection.version == '1.7':
+            adapter = self.component(usage='backend.adapter')
             address_data = adapter.search({'customer_id':
                                           {'eq': magento_partner_id}})
             if not mag_address_ids:
@@ -215,9 +215,9 @@ class PartnerAddressBook(Component):
             """ Address repository cannot be queried, but the addresses are
             included in the partner record.
             TODO: process the addresses when we read the partner the first time """
+            adapter = self.component(usage='backend.adapter', model_name='magento.res.partner')
             record = adapter.read(magento_partner_id)
             mag_address_ids = [(addr['id'], addr) for addr in record['addresses']]
-
         for address_id, magento_record in mag_address_ids:
 
             # defines if the billing address is merged with the partner

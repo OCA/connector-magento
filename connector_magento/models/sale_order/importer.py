@@ -596,7 +596,6 @@ class SaleOrderImporter(Component):
                                       model_name='magento.res.partner')
             importer.run(record['customer_id'])
             partner_binding = partner_binder.to_internal(record['customer_id'])
-
         partner = partner_binding.odoo_id
 
         # Import of addresses. We just can't rely on the
