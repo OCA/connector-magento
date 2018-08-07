@@ -684,7 +684,7 @@ class SaleOrderLineImportMapper(Component):
     @mapping
     def product_options(self, record):
         result = {}
-        ifield = record['product_options']
+        ifield = record.get('product_options')
         if ifield:
             import re
             options_label = []

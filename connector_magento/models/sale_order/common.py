@@ -111,8 +111,8 @@ class SaleOrder(models.Model):
             if old_state == 'cancel':
                 continue  # skip if already canceled
             for binding in order.magento_bind_ids:
-                if self.collection.version == '2.0':
-                    continue # TODO
+                #if self.collection.version == '2.0':
+                    #continue # TODO
                 job_descr = _("Cancel sales order %s") % (binding.external_id,)
                 binding.with_delay(
                     description=job_descr
@@ -304,7 +304,14 @@ class SaleOrderAdapter(Component):
                             [id, attributes])
         return record
 
-    def get_parent(self, id):
+    def get_parent(self, id, magento_storeview_ids=None):
+        if self.collection.version == '2.0':
+            filters = {}
+            filters['relation_parent_real_id'] = {'eq': id}
+            result = self.search(filters=filters, magento_storeview_ids=magento_storeview_ids)
+            if result:
+                return result[0]
+            return 0
         return self._call('%s.get_parent' % self._magento_model, [id])
 
     def add_comment(self, id, status, comment=None, notify=False):
