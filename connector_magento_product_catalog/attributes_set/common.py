@@ -14,3 +14,8 @@ class MagentoProductAttributesSet(models.Model):
     
     name = fields.Char(string = 'Set Name')
     attribute_ids = fields.Many2many('product.attribute', string='Attribute(s)')
+    website_ids = fields.Many2many(comodel_name='magento.website',
+                                   string='Websites')
+    created_at = fields.Date('Created At (on Magento)')
+    updated_at = fields.Date('Updated At (on Magento)')
+    
