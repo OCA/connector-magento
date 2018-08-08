@@ -249,9 +249,9 @@ class SaleOrderAdapter(Component):
     _magento2_key = 'entity_id'
     _admin_path = '{model}/view/order_id/{id}'
 
-    def _call(self, method, arguments):
+    def _call(self, method, arguments, http_method=None):
         try:
-            return super(SaleOrderAdapter, self)._call(method, arguments)
+            return super(SaleOrderAdapter, self)._call(method, arguments, http_method=http_method )
         except xmlrpclib.Fault as err:
             # this is the error in the Magento API
             # when the sales order does not exist
@@ -315,5 +315,10 @@ class SaleOrderAdapter(Component):
         return self._call('%s.get_parent' % self._magento_model, [id])
 
     def add_comment(self, id, status, comment=None, notify=False):
+        if self.collection.version == '2.0':
+            customer_not = 0
+            if notify:
+                customer_not = 1
+            return self._call('orders/%s/comments' % id, { "statusHistory": { "comment": comment, "isCustomerNotified": customer_not, "status": status }}, http_method='post')
         return self._call('%s.addComment' % self._magento_model,
                           [id, status, comment, notify])
