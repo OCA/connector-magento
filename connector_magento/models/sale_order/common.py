@@ -307,10 +307,12 @@ class SaleOrderAdapter(Component):
     def get_parent(self, id, magento_storeview_ids=None):
         if self.collection.version == '2.0':
             filters = {}
-            filters['relation_child_real_id'] = {'eq': id}
-            result = self.search(filters=filters, magento_storeview_ids=magento_storeview_ids)
-            if result:
-                return result[0]
+            filters['entity_id'] = {'eq': id}
+            result = self.search_read(filters=filters)
+            
+            if result.get("items"):
+                _logger.info(" %r" % result.get("items")[0].get("relation_parent_id") )
+                return result.get("items")[0].get("relation_parent_id")
             return 0
         return self._call('%s.get_parent' % self._magento_model, [id])
 

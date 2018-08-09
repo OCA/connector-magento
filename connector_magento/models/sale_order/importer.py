@@ -402,7 +402,7 @@ class SaleOrderImporter(Component):
         Note that we have to walk through all the chain of parent sales orders
         in the case of multiple editions / cancellations.
         """
-        parent_id = self.magento_record.get('relation_parent_real_id')
+        parent_id = self.magento_record.get('relation_parent_id')
         if not parent_id:
             return
         all_parent_ids = []
