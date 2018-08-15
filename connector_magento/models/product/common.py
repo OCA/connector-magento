@@ -234,6 +234,7 @@ class ProductProductAdapter(Component):
             if res:
                 for attr in res.get('custom_attributes', []):
                     res[attr['attribute_code']] = attr['value']
+            _logger.debug("=========================================> Product %r" % res)
             return res
         return self._call('ol_catalog_product.info',
                           [int(id), storeview_id, attributes, 'id'])
