@@ -59,31 +59,6 @@ class ProductAttributevalue(models.Model):
         string='Magento Bindings',
     )
     
-#     
-# 
-# class ProductAttributeAdapter(Component):
-#     _name = 'magento.product.attribute.adapter'
-#     _inherit = 'magento.adapter'
-#     _apply_on = 'magento.product.attribute'
-# 
-#     _magento2_model = 'products/attributes'
-#     _magento2_search = 'products/attributes'
-#     _magento2_key = 'attribute_id'
-# 
-# 
-#     def _call(self, method, arguments):
-#         try:
-#             return super(ProductAttributeAdapter, self)._call(method, arguments)
-#         except xmlrpclib.Fault as err:
-#             # this is the error in the Magento API
-#             # when the product does not exist
-#             if err.faultCode == 101:
-#                 raise IDMissingInBackend
-#             else:
-#                 raise
-            
-
-
 
 
 
