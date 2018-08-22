@@ -33,3 +33,8 @@ class AttributeValueImportMapper(Component):
             values.update({'external_id': external_id_parent + '_' + external_id }) 
         return values
     
+
+    #TODO: 
+    ## * Implement _skip method to prevent values with only space to be added
+    ## * une @only_create to check possible deplicate values. EG 97_1 seems to be a duplicate values
+    

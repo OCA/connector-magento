@@ -33,17 +33,37 @@ class AttributeImportMapper(Component):
     _inherit = 'magento.import.mapper'
     _apply_on = ['magento.product.attribute']
 
-    # TODO :     categ, special_price => minimal_price
-    direct = [('attribute_code', 'name'),
-              ]
+    # TODO :     
+    # categ, special_price => minimal_price
+    
+    direct = [
+              ('attribute_code', 'attribute_code'),
+              ('attribute_id', 'attribute_id'),
+              ('frontend_input', 'frontend_input')]
     
     children = [('options', 'magento_attribute_value_ids', 'magento.product.attribute.value'),
-                ]
-
+                ]    
+    
+    
+    @mapping
+    def name(self, record):
+        name = record['attribute_code']
+        if 'default_frontend_label' in record and record['default_frontend_label'] :
+            name = record['default_frontend_label'] 
+        return {'name': name}
+    
+    @mapping
+    def magento_id(self, record):
+        #TODO: get the attribute ID from magento
+        return {'magento_id': False}
+    
+    def get_attribute_creation(self, record):
+        #TODO: Implement method to deal with frontend_input. Selection should flag True create_variant
+        return False
+        
     @mapping
     def create_variant(self, record):
-        """No variant for this project"""
-        return {'create_variant': False}
+        return {'create_variant': self.get_attribute_creation(record)}
 
     @mapping
     def backend_id(self, record):
@@ -53,7 +73,7 @@ class AttributeImportMapper(Component):
     def odoo_id(self, record):
         """ Will bind the product to an existing one with the same code """
         attribute = self.env['product.attribute'].search(
-            [('name', '=', record['attribute_code'])], limit=1)
+            [('attribute_code', '=', record['attribute_code'])], limit=1)
         if attribute:
             return {'odoo_id': attribute.id}
 

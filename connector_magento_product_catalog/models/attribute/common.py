@@ -26,6 +26,12 @@ class MagentoProductAttribute(models.Model):
     
     attribute_set_ids = fields.Many2many('magento.product.attributes.set', string='Attribute(s)')
     
+    magento_id = fields.Integer(string='Magento Attribute ID' )
+
+    _sql_constraints = [
+        ('product_attribute_backend_uniq', 'unique(odoo_id,pmagento_id)', 'This attribute is already mapped to a magento backend!')
+    ]
+    
 class ProductAttribute(models.Model):
     _inherit = 'product.attribute'
 
@@ -35,6 +41,27 @@ class ProductAttribute(models.Model):
         string='Magento Bindings',
     )
 
+    odoo_field = fields.Many2one(comodel_name='ir.model.fields', 
+                                 string="Odoo Field Name",
+                                 domain=[('name', 'ilike', 'product')])
+    
+    attribute_id = fields.Integer(string='Magento Attribute ID' )
+    attribute_code = fields.Char(string='Magento Attribute Attribute Code' )
+    frontend_input = fields.Selection([
+                                           ('text', 'Text'),
+                                           ('textarea', 'Text Area'),
+                                           ('select', 'Selection'), 
+                                           ('multiselect', 'Multi-Selection'),
+                                           ('boolean', 'Yes/No'),
+                                           ('date', 'Date'),
+                                           ('price', 'Price'),
+                                           ('weight', 'Weight'),
+                                           ('media_image', 'Media Image'),
+                                           ('gallery', 'Gallery'),
+                                           ('weee', 'Fixed Product Tax'),
+                                           ('None', 'None'), #this option is not a magento native field it will be better to found a generic solutionto manage this kind of custom option
+                                           ], 'Frontend Input'
+                                          )
 
 class ProductAttributeAdapter(Component):
     _name = 'magento.product.attribute.adapter'
