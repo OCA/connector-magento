@@ -63,21 +63,4 @@ class AttributeImporter(Component):
     _inherit = 'magento.importer'
     _apply_on = ['magento.product.attribute']
     
-
-class AttributeValueImportMapper(Component):
-    _name = 'magento.product.attribute.value.import.mapper'
-    _inherit = 'magento.import.mapper'
-    _apply_on = ['magento.product.attribute.value']
-
-    # TODO :     categ, special_price => minimal_price
-    direct = [('label', 'name'),
-              ('value', 'external_id'),
-              ]
-    
-    def finalize(self, map_record, values):
-        if map_record.parent:
-            external_id = str(values.get('external_id'))
-            external_id_parent = str(map_record.parent.source.get('attribute_id'))
-            values.update({'external_id': external_id_parent + '_' + external_id }) 
-        return values
     
