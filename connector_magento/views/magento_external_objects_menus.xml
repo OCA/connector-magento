@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+		<!-- <record id="action_odoo_uom" model="ir.actions.act_window"> <field 
+			name="name">Magento UOM</field> <field name="res_model">magento.product.uom</field> 
+			<field name="view_mode">tree,form</field> </record> -->
+
+		<!-- <record id="action_odoo_product_templates" model="ir.actions.act_window"> 
+			<field name="name">Magento Product Templates</field> <field name="res_model">magento.product.template</field> 
+			<field name="view_mode">tree,form</field> </record> -->
+<!-- 
+		<record id="action_odoo_attributes" model="ir.actions.act_window">
+			<field name="name">Magento Attributes</field>
+			<field name="res_model">magento.product.attribute</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+		<record id="action_odoo_values" model="ir.actions.act_window">
+			<field name="name">Magento Attribute Values</field>
+			<field name="res_model">magento.product.attribute.value</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+ -->
+		<record id="action_odoo_categories" model="ir.actions.act_window">
+			<field name="name">Magento product Categories</field>
+			<field name="res_model">magento.product.category</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+
+		<record id="action_odoo_products" model="ir.actions.act_window">
+			<field name="name">Magento Products</field>
+			<field name="res_model">magento.product.product</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+
+
+		<menuitem id="menu_odoo_external_objects" name="External Objects"
+			parent="menu_magento_root" />
+
+<!-- 		<menuitem id="menu_odoo_external_uom" name="External UOM"
+			parent="menu_odoo_external_objects" action="action_odoo_uom" />
+		<menuitem id="menu_odoo_external_attribute" name="External Attributes"
+			parent="menu_odoo_external_objects" action="action_odoo_attributes" />
+		<menuitem id="menu_odoo_external_values" name="External Attribute Values"
+			parent="menu_odoo_external_objects" action="action_odoo_attributes" />
+ -->		
+ <!-- 
+ 		<menuitem id="menu_odoo_external_product_templates" name="External Product Templates"
+			parent="menu_odoo_external_objects" action="action_odoo_product_templates" />
+ -->
+ 		<menuitem id="menu_odoo_external_products" name="External Products"
+			parent="menu_odoo_external_objects" action="action_odoo_products" />
+		<menuitem id="menu_odoo_external_categories" name="External Categories"
+			parent="menu_odoo_external_objects" action="action_odoo_categories" />
+
+	</data>
+</openerp>

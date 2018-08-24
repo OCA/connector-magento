@@ -26,6 +26,12 @@ class MagentoProductAttribute(models.Model):
     
     attribute_set_ids = fields.Many2many('magento.product.attributes.set', string='Attribute(s)')
     
+    magento_id = fields.Integer(string='Magento Attribute ID' )
+
+    _sql_constraints = [
+        ('product_attribute_backend_uniq', 'unique(odoo_id,pmagento_id)', 'This attribute is already mapped to a magento backend!')
+    ]
+    
 class ProductAttribute(models.Model):
     _inherit = 'product.attribute'
 
@@ -34,58 +40,28 @@ class ProductAttribute(models.Model):
         inverse_name='odoo_id',
         string='Magento Bindings',
     )
-    
-class MagentoProductAttributevalue(models.Model):
-    _name = 'magento.product.attribute.value'
-    _inherit = 'magento.binding'
-    _inherits = {'product.attribute.value': 'odoo_id'}
-    _description = 'Magento attribute'
-    
-    odoo_id = fields.Many2one(comodel_name='product.attribute.value',
-                              string='Product attribute value',
-                              required=True,
-                              ondelete='restrict')
-    
-    
-    magento_attribute_id = fields.Many2one(comodel_name='magento.product.attribute',
-                                       string='Magento Product Attribute',
-                                       required=True,
-                                       ondelete='cascade',
-                                       index=True)
 
-    backend_id = fields.Many2one(
-        related='magento_attribute_id.backend_id',
-        string='Magento Backend',
-        readonly=True,
-        store=True,
-        # override 'magento.binding', can't be INSERTed if True:
-        required=False,
-    )
-
+    odoo_field = fields.Many2one(comodel_name='ir.model.fields', 
+                                 string="Odoo Field Name",
+                                 domain=[('name', 'ilike', 'product')])
     
-    @api.model
-    def create(self, vals):
-        magento_attribute_id = vals['magento_attribute_id']
-        binding = self.env['magento.product.attribute'].browse(magento_attribute_id)
-        vals['attribute_id'] = binding.odoo_id.id
-        exist = self.env['product.attribute.value'].search([('name','=',vals.get('name')),('attribute_id','=',vals['attribute_id'])])
-        if exist:
-            binging = exist[0]
-        else:
-            binding = super(MagentoProductAttributevalue, self).create(vals)
-        return binding
-    
-    
-class ProductAttributevalue(models.Model):
-    _inherit = 'product.attribute.value'
-
-    magento_bind_ids = fields.One2many(
-        comodel_name='magento.product.attribute.value',
-        inverse_name='odoo_id',
-        string='Magento Bindings',
-    )
-    
-    
+    attribute_id = fields.Integer(string='Magento Attribute ID' )
+    attribute_code = fields.Char(string='Magento Attribute Attribute Code' )
+    frontend_input = fields.Selection([
+                                           ('text', 'Text'),
+                                           ('textarea', 'Text Area'),
+                                           ('select', 'Selection'), 
+                                           ('multiselect', 'Multi-Selection'),
+                                           ('boolean', 'Yes/No'),
+                                           ('date', 'Date'),
+                                           ('price', 'Price'),
+                                           ('weight', 'Weight'),
+                                           ('media_image', 'Media Image'),
+                                           ('gallery', 'Gallery'),
+                                           ('weee', 'Fixed Product Tax'),
+                                           ('None', 'None'), #this option is not a magento native field it will be better to found a generic solutionto manage this kind of custom option
+                                           ], 'Frontend Input'
+                                          )
 
 class ProductAttributeAdapter(Component):
     _name = 'magento.product.attribute.adapter'

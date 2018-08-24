@@ -12,7 +12,12 @@
  'license': 'AGPL-3',
  'website': 'http://www.odoo-magento-connector.com',
 
- 'data': ['views/magento_backend_views.xml',
+ 'data': [
+        'views/magento_backend_views.xml',
+        'views/product_view.xml',
+        'views/magento_external_objects_menus.xml',
+
+        
           ],
  'installable': True,
  'application': False,

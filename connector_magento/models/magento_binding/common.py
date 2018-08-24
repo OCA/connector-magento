@@ -27,6 +27,7 @@ class MagentoBinding(models.AbstractModel):
     # fields.Char because 0 is a valid Magento ID
     external_id = fields.Char(string='ID on Magento')
 
+    #TODO: Setting the constraint here have starange side effects on product_attribute
     _sql_constraints = [
         ('magento_uniq', 'unique(backend_id, external_id)',
          'A binding already exists with the same Magento ID.'),
