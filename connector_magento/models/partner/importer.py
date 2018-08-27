@@ -49,7 +49,7 @@ class PartnerImportMapper(Component):
         (normalize_datetime('created_at'), 'created_at'),
         (normalize_datetime('updated_at'), 'updated_at'),
         ('email', 'emailid'),
-        ('taxvat', 'taxvat'),
+        ('vat_id', 'taxvat'),
         ('group_id', 'group_id'),
     ]
 

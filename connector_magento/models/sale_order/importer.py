@@ -563,7 +563,6 @@ class SaleOrderImporter(Component):
             customer_group = record.get('customer_group_id')
             if customer_group:
                 self._import_customer_group(customer_group)
-
             customer_record = {
                 'firstname': address['firstname'],
                 'middlename': address.get('middlename'),
@@ -571,7 +570,7 @@ class SaleOrderImporter(Component):
                 'prefix': address.get('prefix'),
                 'suffix': address.get('suffix'),
                 'email': record.get('customer_email'),
-                'taxvat': record.get('customer_taxvat'),
+                'vat_id': address.get('vat_id'),
                 'group_id': customer_group,
                 'gender': record.get('customer_gender'),
                 'store_id': record['store_id'],
@@ -589,6 +588,15 @@ class SaleOrderImporter(Component):
             partner_binding = self.env['magento.res.partner'].create(
                 map_record.values(for_create=True))
             partner_binder.bind(guest_customer_id, partner_binding)
+
+            addr_mapper = self.component(usage='import.mapper',
+                                     model_name='magento.address')
+
+            map_record = addr_mapper.map_record(address)
+            partner_binding.odoo_id.write(
+                map_record.values(for_create=True))
+
+
         else:
 
             # we always update the customer when importing an order
