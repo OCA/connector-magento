@@ -2,14 +2,6 @@
 <openerp>
 	<data>
 
-		<!-- <record model="ir.ui.view" id="product_export_button_view_magento"> 
-			<field name="name">product.export.button</field> <field name="model">product.product</field> 
-			<field name="inherit_id" ref="stock.product_form_view_procurement_button" 
-			/> <field name="arch" type="xml"> <xpath expr="//header" position="inside"> 
-			<button name="export_products" string="Export Product" type="object" attrs="{'invisible':['|',('magento_exported','=', 
-			True)]}" /> <button name="update_products" string="Update Product" type="object" 
-			/> </xpath> </field> </record> -->
-
 
 		<record model="ir.ui.view" id="product_product_form_view_magento1">
 			<field name="name">product.normal.form.magento1</field>
@@ -27,7 +19,23 @@
 						</group>
 						<separator></separator>
 						<group>
-							<field name="magento_attribute_line_ids" />
+						<field name="product_tmpl_id" />
+							<field name="magento_attribute_line_ids" 
+							context="{'default_product_tmpl_id': product_tmpl_id}">
+							<tree editable="top">
+								<field name="attribute_id" 
+								domain="[('create_variant', '=', False),]"/>
+								<field name="odoo_field_name"/>
+								<field name="product_tmpl_id"/>
+								<field name="value_ids" widget="many2many_tags"/>
+								<field name="magento_attribute_type" readonly="1"/>
+								<field name="attribute_text"/>
+								
+							</tree>
+							
+							
+							
+							</field>
 						</group>
 						<separator></separator>
 						<!-- <notebook> <page string="Attributes"> <group> <field name="attribute_id" 
@@ -82,7 +90,7 @@
 				</xpath>
 				<xpath expr="//tree//field[@name='create_variant']" position="after">
 					<field name="attribute_code" />
-					<field name="odoo_field" />
+					<field name="odoo_field_name" />
 				</xpath>
 			</field>
 		</record>
@@ -123,7 +131,7 @@
 							<group>
 								<group name="magento" string="Magento">
 									<field name="attribute_code" readonly="1" />
-									<field name="odoo_field" />
+									<field name="odoo_field_name" />
 								</group>
 							</group>
 							<field name="magento_bind_ids" />

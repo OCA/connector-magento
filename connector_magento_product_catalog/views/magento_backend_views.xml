@@ -1,18 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="view_magento_backend_form" model="ir.ui.view">
-        <field name="name">magento.backend.form</field>
-        <field name="model">magento.backend</field>
-        <field name="inherit_id" ref="connector_magento.view_magento_backend_form" />
-        <field name="arch" type="xml">
-            <xpath expr="//button[@name='import_product_product']" position="after" >
-                <label string="import all attributes set attributes and value" class="oe_inline"/>
-                    <button name="import_attributes_set"
-                        type="object"
-                        class="oe_highlight"
-                        string="Import in background"/>
-            </xpath>
-        </field>
-    </record>
+	<record id="view_magento_backend_form" model="ir.ui.view">
+		<field name="name">magento.backend.form</field>
+		<field name="model">magento.backend</field>
+		<field name="inherit_id" ref="connector_magento.view_magento_backend_form" />
+		<field name="arch" type="xml">
+			<xpath expr="//button[@name='import_product_product']"
+				position="after">
+				<label string="import all attributes set attributes and value"
+					class="oe_inline" />
+				<button name="import_attributes_set" type="object" class="oe_highlight"
+					string="Import in background" />
+			</xpath>
+			<xpath expr="//button[@name='import_product_product']"
+				position="after">
+				<label string="Export all values for binded products" class="oe_inline" />
+				<button name="export_product_product_catalog" type="object" class="oe_highlight"
+					string="Export in background" />
+			</xpath>
+		</field>
+	</record>
 </odoo>
