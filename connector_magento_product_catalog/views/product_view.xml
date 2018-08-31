@@ -2,10 +2,10 @@
 <openerp>
 	<data>
 
-
 		<record model="ir.ui.view" id="product_product_form_view_magento1">
 			<field name="name">product.normal.form.magento1</field>
 			<field name="model">product.product</field>
+			<field name="priority" eval="20"></field>
 			<field name="inherit_id" ref="product.product_normal_form_view" />
 			<field name="arch" type="xml">
 				<xpath expr="//field[@name='default_code']" position="attributes">
@@ -19,64 +19,37 @@
 						</group>
 						<separator></separator>
 						<group>
-						<field name="product_tmpl_id" />
-							<field name="magento_attribute_line_ids" 
-							context="{'default_product_tmpl_id': product_tmpl_id}">
-							<tree editable="top">
-								<field name="attribute_id" 
-								domain="[('create_variant', '=', False),]"/>
-								<field name="odoo_field_name"/>
-								<field name="product_tmpl_id"/>
-								<field name="value_ids" widget="many2many_tags"/>
-								<field name="magento_attribute_type" readonly="1"/>
-								<field name="attribute_text"/>
-								
-							</tree>
-							
-							
-							
+							<field name="magento_attribute_line_ids">
+								<tree editable="top">
+									<field name="attribute_id" domain="[('create_variant', '=', False),]" />
+									<field name="odoo_field_name" />
+									<field name="magento_attribute_type" readonly="1" />
+									<field name="attribute_text" />
+								</tree>
 							</field>
 						</group>
 						<separator></separator>
-						<!-- <notebook> <page string="Attributes"> <group> <field name="attribute_id" 
-							/> </group> <field name="magento_attribute"> <tree editable="bottom" string="Attribute"> 
-							<field name="attribute_color" /> <field name="attribute_size" /> <field name="attribute_text" 
-							/> </tree> </field> </page> <page string=" Product Images"> <field name="prod_images"> 
-							<form> <group> <field name="name" /> <field name="image" class="oe_avatar 
-							oe_left" /> </group> </form> <tree> <field name="name" /> <field name="image" 
-							widget="image" class="oe_avatar oe_left" /> </tree> </field> </page> <page 
-							string="Categories"> <field name="prod_category_id" nolabel="1" /> </page> 
-							<page string="Associated Products" attrs="{'invisible':[('product_type','!=','configurable')]}"> 
-							<field name="associated_prod_ids" nolabel="1"> <tree editable="bottom" string="Associated 
-							Products"> <field name="name" domain="[('type','!=','service')]" /> <field 
-							name="parent_prod_id" /> </tree> </field> </page> <page string="MY Grouped 
-							Products" attrs="{'invisible':[('product_type','!=','mygrouped')]}"> <field 
-							name="mygrouped_prod_ids" nolabel="1"> <tree editable="bottom" string=" MY 
-							Grouped Products"> <field name="name" domain="[('product_type','=','bundle')]" 
-							/> </tree> </field> </page> <page string="Download Products" attrs="{'invisible':[('product_type','!=','downloadable')]}"> 
-							<field name="download_prod_ids" nolabel="1"> <tree editable="bottom" string="Download 
-							Product"> <field name="title" /> <field name="price" /> <field name="number_of_downloads" 
-							/> <field name="link_type" /> <field name="link_file" attrs="{'invisible':[('link_type','=','url')]}" 
-							/> <field name="link_url" attrs="{'invisible':[('link_type','=','file')]}" 
-							/> <field name="sample_type" /> <field name="sample_file" attrs="{'invisible':[('sample_type','=','url')]}" 
-							/> <field name="sample_url" attrs="{'invisible':[('sample_type','=','file')]}" 
-							/> </tree> </field> </page> <page string="Bundle Products" attrs="{'invisible':[('product_type','!=','bundle')]}"> 
-							<group colspan="4" col="6"> <field name="option_type" /> <field name="is_required" 
-							/> <field name="top_position" /> </group> <field name="bundle_prod_ids" nolabel="1"> 
-							<tree editable="bottom" string="Bundle Products"> <field name="name" domain="[('type','!=','service')]" 
-							/> <field name="default_qty" /> <field name="user_defined_qty" /> <field 
-							name="position" /> <field name="default" /> </tree> </field> </page> <page 
-							string="Meta Information"> <group> <field name="meta_title" /> <field name="meta_keyword" 
-							/> <field name="meta_description" /> </group> </page> <page string="Magento 
-							Tier Price"> <field name="tier_price_ids" nolabel="1"> <tree editable="bottom" 
-							string="Tier Price"> <field name="shop_id" domain="[('magento_shop','=','True')]" 
-							/> <field name="group_id" /> <field name="quantity" /> <field name="tier_price" 
-							/> </tree> </field> </page> </notebook> -->
 					</page>
 				</xpath>
-				<!-- <xpath expr="//field[@name='sale_ok']" position="after"> <div class="oe_left" 
-					name="options"> <div> <field name="magento_exported" /> <label for="magento_exported" 
-					/> <field name="product_exported" invisible="True" /> </div> </div> </xpath> -->
+
+
+				<xpath
+					expr="//notebook/page[@name='connector']//field[@name='magento_bind_ids']"
+					position="replace">
+					<field name="magento_bind_ids" nolabel="1">
+						<tree>
+							<field name="backend_id" />
+							<field name="product_type" />
+							<button name="export_product" string="Export Attributes"
+								type="object" class="oe_highlight"/>
+							<button name="resync" string="resyn All" help="Stck, Attributes, ..."
+								type="object" class="oe_highlight"/>
+						</tree>
+					</field>
+
+
+				</xpath>
+
 			</field>
 		</record>
 
@@ -88,10 +61,8 @@
 				<xpath expr="//tree" position="attributes">
 					<attribute name="editable"></attribute>
 				</xpath>
-				<xpath expr="//tree//field[@name='create_variant']" position="after">
-					<field name="attribute_code" />
-					<field name="odoo_field_name" />
-				</xpath>
+				<!-- <xpath expr="//tree//field[@name='create_variant']" position="after"> 
+					<field name="attribute_code" /> <field name="odoo_field_name" /> </xpath> -->
 			</field>
 		</record>
 
@@ -129,10 +100,8 @@
 						</page>
 						<page name="magento_page" string="Magento">
 							<group>
-								<group name="magento" string="Magento">
-									<field name="attribute_code" readonly="1" />
-									<field name="odoo_field_name" />
-								</group>
+								<!-- <group name="magento" string="Magento"> <field name="attribute_code" 
+									readonly="1" /> <field name="odoo_field_name" /> </group> -->
 							</group>
 							<field name="magento_bind_ids" />
 						</page>
