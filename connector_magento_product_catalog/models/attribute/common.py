@@ -4,6 +4,7 @@ from odoo.addons.connector.exception import IDMissingInBackend
 from odoo.addons.component.core import Component
 from odoo.addons.component_event import skip_if
 from odoo.addons.queue_job.job import job, related_action
+from __builtin__ import True
 
 _logger = logging.getLogger(__name__)
 
@@ -24,21 +25,6 @@ class MagentoProductAttribute(models.Model):
         string='Magento product attribute value'
     )
     
-    attribute_set_ids = fields.Many2many('magento.product.attributes.set', string='Attribute(s)')
-
-    _sql_constraints = [
-        ('product_attribute_backend_uniq', 'unique(odoo_id,pmagento_id)', 'This attribute is already mapped to a magento backend!')
-    ]
-    
-class ProductAttribute(models.Model):
-    _inherit = 'product.attribute'
-
-    magento_bind_ids = fields.One2many(
-        comodel_name='magento.product.attribute',
-        inverse_name='odoo_id',
-        string='Magento Bindings',
-    )
-
     odoo_field_name = fields.Many2one(comodel_name='ir.model.fields', 
                                  string="Odoo Field Name",
                                  domain=[('model', 'ilike', 'product.')])
@@ -60,7 +46,29 @@ class ProductAttribute(models.Model):
                                            ('None', 'None'), #this option is not a magento native field it will be better to found a generic solutionto manage this kind of custom option
                                            ], 'Frontend Input'
                                           )
+    
+    attribute_set_ids = fields.Many2many('magento.product.attributes.set', string='Attribute(s)')
 
+    _sql_constraints = [
+        ('product_attribute_backend_uniq', 'unique(odoo_id,pmagento_id)', 'This attribute is already mapped to a magento backend!')
+    ]
+    
+    @api.model
+    def _is_generate_variant(self, frontend_input):
+        if frontend_input in ['select', 'multiselect']:
+            return True
+        return False
+    
+class ProductAttribute(models.Model):
+    _inherit = 'product.attribute'
+
+    magento_bind_ids = fields.One2many(
+        comodel_name='magento.product.attribute',
+        inverse_name='odoo_id',
+        string='Magento Bindings',
+    )
+
+    
 class ProductAttributeAdapter(Component):
     _name = 'magento.product.attribute.adapter'
     _inherit = 'magento.adapter'

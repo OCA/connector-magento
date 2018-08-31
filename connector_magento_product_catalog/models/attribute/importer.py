@@ -54,16 +54,12 @@ class AttributeImportMapper(Component):
     
     @mapping
     def magento_id(self, record):
-        #TODO: get the attribute ID from magento
+        #TODO: get the attribute ID from magento ? Wrong name choice for attribute_id
         return {'magento_id': False}
-    
-    def get_attribute_creation(self, record):
-        #TODO: Implement method to deal with frontend_input. Selection should flag True create_variant
-        return False
         
     @mapping
     def create_variant(self, record):
-        return {'create_variant': self.get_attribute_creation(record)}
+        return {'create_variant': self.env['magento.product.attribute']._is_generate_variant(record['frontend_input'])}
 
     @mapping
     def backend_id(self, record):
@@ -72,10 +68,10 @@ class AttributeImportMapper(Component):
     @mapping
     def odoo_id(self, record):
         """ Will bind the product to an existing one with the same code """
-        attribute = self.env['product.attribute'].search(
+        attribute = self.env['magento.product.attribute'].search(
             [('attribute_code', '=', record['attribute_code'])], limit=1)
         if attribute:
-            return {'odoo_id': attribute.id}
+            return {'odoo_id': attribute.odoo_id.id}
 
 
 class AttributeImporter(Component):
