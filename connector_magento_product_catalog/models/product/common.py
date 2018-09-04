@@ -22,8 +22,8 @@ class MagentoProductProduct(models.Model):
         """ Export the attributes configuration of a product. """
         self.ensure_one()
         with self.backend_id.work_on(self._name) as work:
-            exporter = work.component(usage='product.definition.exporter')
-            return exporter.run(self, fields)
+            exporter = work.component(usage='record.exporter')
+            return exporter.run(self)
     
     
     @api.multi
@@ -152,7 +152,7 @@ class ProductProductAdapter(Component):
     _admin_path = '/{model}/edit/id/{id}'
     
     
-    def _get_atts_data(self, binding, fields):
+    def _get_atts_data(self, binding):
         """
         Collect attributes to prensent it regarding to
         https://devdocs.magento.com/swagger/index_20.html
@@ -183,6 +183,6 @@ class ProductProductAdapter(Component):
     
     def get_product_datas(self, data, saveOptions=True):
         main_datas = super(ProductProductAdapter, self).get_product_datas(data, saveOptions)
-        
+#         main_datas.update(self._get_atts_data(self.binding_))
         return main_datas
     
