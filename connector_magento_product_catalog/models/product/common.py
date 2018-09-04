@@ -19,7 +19,7 @@ class MagentoProductProduct(models.Model):
     @job(default_channel='root.magento')
     @api.multi
     def export_product(self, fields=None):
-        """ Export the inventory configuration and quantity of a product. """
+        """ Export the attributes configuration of a product. """
         self.ensure_one()
         with self.backend_id.work_on(self._name) as work:
             exporter = work.component(usage='product.definition.exporter')
