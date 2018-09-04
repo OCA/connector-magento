@@ -19,6 +19,11 @@
 				<button name="export_product_product_catalog" type="object" class="oe_highlight"
 					string="Export in background" />
 			</xpath>
+			<xpath expr="//page[@name='advanced_configuration']//field[@name='is_multi_company']"
+				position="after">
+				
+				<field name="product_synchro_strategy" />
+			</xpath>
 		</field>
 	</record>
 </odoo>
