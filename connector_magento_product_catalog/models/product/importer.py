@@ -18,12 +18,6 @@ from odoo.addons.connector.exception import MappingError, InvalidDataError
 _logger = logging.getLogger(__name__) 
 
 
-class MagentoProductProduct(models.Model):
-    _inherit = 'magento.product.product'
-    
-    attribute_set_id = fields.Many2one('magento.product.attributes.set', string='Attribute set')
-
-    
 
 class ProductImportMapper(Component):
     _inherit = 'magento.product.product.import.mapper'
@@ -48,6 +42,7 @@ class ProductImportMapper(Component):
                 _logger.debug("Import custom att_val %r %r " % (att_val, searchn ))
                 if att_val:
                     link_value.append(att_val[0].odoo_id.id)
+        #TODO: Switch between standr Odoo class or to the new class
         return {'attribute_set_id': attribute_set.id,'attribute_value_ids': [(6,0,link_value)]}
 
 
