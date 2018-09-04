@@ -132,7 +132,6 @@ class MagentoProductProduct(models.Model):
             stock_field = backend.product_stock_field_id.name
         else:
             stock_field = 'virtual_available'
-
         location = self.env['stock.location']
         if self.env.context.get('location'):
             location = location.browse(self.env.context['location'])
@@ -142,6 +141,8 @@ class MagentoProductProduct(models.Model):
         product_fields = ['magento_qty', stock_field]
         if read_fields:
             product_fields += read_fields
+            
+        
 
         self_with_location = self.with_context(location=location.id)
         for chunk_ids in chunks(products.ids, self.RECOMPUTE_QTY_STEP):
@@ -189,9 +190,9 @@ class ProductProductAdapter(Component):
     _magento2_key = 'sku'
     _admin_path = '/{model}/edit/id/{id}'
 
-    def _call(self, method, arguments):
+    def _call(self, method, arguments, http_method=None, storeview=None):
         try:
-            return super(ProductProductAdapter, self)._call(method, arguments)
+            return super(ProductProductAdapter, self)._call(method, arguments, http_method=http_method, storeview=storeview)
         except xmlrpclib.Fault as err:
             # this is the error in the Magento API
             # when the product does not exist
@@ -234,7 +235,6 @@ class ProductProductAdapter(Component):
             if res:
                 for attr in res.get('custom_attributes', []):
                     res[attr['attribute_code']] = attr['value']
-            _logger.debug("=========================================> Product %r" % res)
             return res
         return self._call('ol_catalog_product.info',
                           [int(id), storeview_id, attributes, 'id'])
