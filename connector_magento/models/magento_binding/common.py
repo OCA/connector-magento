@@ -55,7 +55,7 @@ class MagentoBinding(models.AbstractModel):
     @job(default_channel='root.magento')
     @related_action(action='related_action_unwrap_binding')
     @api.multi
-    def export_record(self, fields=None):
+    def export_record(self, backend_id, fields=None):
         """ Export a record on Magento """
         self.ensure_one()
         with self.backend_id.work_on(self._name) as work:
