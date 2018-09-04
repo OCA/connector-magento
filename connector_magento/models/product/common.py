@@ -132,6 +132,7 @@ class MagentoProductProduct(models.Model):
             stock_field = backend.product_stock_field_id.name
         else:
             stock_field = 'virtual_available'
+
         location = self.env['stock.location']
         if self.env.context.get('location'):
             location = location.browse(self.env.context['location'])
