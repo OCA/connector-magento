@@ -22,8 +22,9 @@ class MagentoProductProduct(models.Model):
         """ Export the inventory configuration and quantity of a product. """
         self.ensure_one()
         with self.backend_id.work_on(self._name) as work:
-            exporter = work.component(usage='product.product.exporter')
+            exporter = work.component(usage='product.definition.exporter')
             return exporter.run(self, fields)
+    
     
     @api.multi
     def resync(self):
@@ -108,13 +109,13 @@ class ProductProduct(models.Model):
         
         odoo_field_ids = self.env['magento.product.attribute'].search([
             ('odoo_field_name', '=', odoo_field_name),
+            ('odoo_field_name', '!=', False),
             ('id', '=', attribute_id)
             ])
-        #TODO: Imporve and deal with multiple Magento Instance
+        #TODO: Improve and deal with multiple Magento Instance
         if len(odoo_field_ids) == 1 :
             return {odoo_field_ids[0].odoo_field_name.name : attr[2]['attribute_text']}
         return None
-    
     
     
     @api.multi
@@ -135,10 +136,53 @@ class ProductProduct(models.Model):
             else:
                 #if 'magento_attribute' in org_vals :
                 att_field = self.check_field_mapping(key, vals)
-                _logger.info('WIP No updates')
+                
  
         return super(ProductProduct, self).write(vals)                    
 
      
-     
+class ProductProductAdapter(Component):
+    _inherit = 'magento.product.product.adapter'
+    _apply_on = 'magento.product.product'
+
+    _magento_model = 'catalog_product'
+    _magento2_model = 'products'
+    _magento2_search = 'products'
+    _magento2_key = 'sku'
+    _admin_path = '/{model}/edit/id/{id}'
+    
+    
+    def _get_atts_data(self, binding, fields):
+        """
+        Collect attributes to prensent it regarding to
+        https://devdocs.magento.com/swagger/index_20.html
+        catalogProductRepositoryV1 / POST 
+        """
+        
+        customAttributes = []
+        for values_id in binding.odoo_id.magento_attribute_line_ids:
+            """ Deal with Custom Attributes """            
+            attributeCode = values_id.attribute_id.name
+            value = values_id.attribute_text
+            customAttributes.append({
+                'attributeCode': attributeCode,
+                'value': value
+                })
+            
+        for values_id in binding.odoo_id.attribute_value_ids:
+            """ Deal with Attributes in the 'variant' part of Odoo"""
+            attributeCode = values_id.attribute_id.name
+            value = values_id.name
+            customAttributes.append({
+                'attributeCode': attributeCode,
+                'value': value
+                })
+        result = {'customAttributes': customAttributes}
+        return result
+    
+    
+    def get_product_datas(self, data, saveOptions=True):
+        main_datas = super(ProductProductAdapter, self).get_product_datas(data, saveOptions)
+        
+        return main_datas
     

@@ -182,6 +182,7 @@ class ProductProductAdapter(Component):
     _name = 'magento.product.product.adapter'
     _inherit = 'magento.adapter'
     _apply_on = 'magento.product.product'
+    
 
     _magento_model = 'catalog_product'
     _magento2_model = 'products'
@@ -239,12 +240,35 @@ class ProductProductAdapter(Component):
         return self._call('ol_catalog_product.info',
                           [int(id), storeview_id, attributes, 'id'])
 
+
+    def get_product_datas(self, data, saveOptions=True):
+        """ Hook to implement in other modules"""
+        product_datas = {
+            'product': {
+                "id": 0,
+                "sku": "string",
+                "name": "string",
+                "attributeSetId": 0,
+                "price": 0,
+                "status": 0,
+                "visibility": 0,
+                "typeId": "string",
+                "weight": 0
+            }
+            ,"saveOptions": saveOptions
+            }
+        return product_datas
+
     def write(self, id, data, storeview_id=None):
         """ Update records on the external system """
         # XXX actually only ol_catalog_product.update works
         # the PHP connector maybe breaks the catalog_product.update
         if self.work.magento_api._location.version == '2.0':
-            raise NotImplementedError  # TODO
+            return self._call('products/%s' % id, 
+                              self.get_product_datas(id, data), 
+                              http_method='put')
+            
+#             raise NotImplementedError  # TODO
         return self._call('ol_catalog_product.update',
                           [int(id), data, storeview_id, 'id'])
 
