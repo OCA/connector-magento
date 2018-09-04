@@ -264,11 +264,13 @@ class GenericAdapter(AbstractComponent):
                     return urllib.quote(term, safe='')
                 return term
 
-            if attributes:
-                raise NotImplementedError
+#             if attributes:
+#                 raise NotImplementedError
             if self._magento2_key:
-                return self._call('%s/%s' % (self._magento2_model, escape(id)),
-                                  attributes)
+                res = self._call('%s/%s' % (self._magento2_model, escape(id)), None)
+                #TODO: loop on attributes to get the json limited values
+                attributes=None
+                return res 
             else:
                 res = self._call(self._magento2_model)
                 return next(record for record in res if record['id'] == id)
