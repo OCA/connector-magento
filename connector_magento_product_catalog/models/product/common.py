@@ -22,14 +22,9 @@ class MagentoProductProduct(models.Model):
         """ Export the attributes configuration of a product. """
         self.ensure_one()
         with self.backend_id.work_on(self._name) as work:
-<<<<<<< HEAD
             exporter = work.component(usage='record.exporter')
             return exporter.run(self)
-=======
-            exporter = work.component(usage='product.definition.exporter')
-            return exporter.run(self, fields)
->>>>>>> branch '10.0-components-catalog-manager' of https://github.com/MindAndGo/connector-magento.git
-    
+
     
     @api.multi
     def resync(self):
@@ -156,41 +151,6 @@ class ProductProductAdapter(Component):
     _magento2_key = 'sku'
     _admin_path = '/{model}/edit/id/{id}'
     
-    
-<<<<<<< HEAD
-    def _get_atts_data(self, binding):
-        """
-        Collect attributes to prensent it regarding to
-        https://devdocs.magento.com/swagger/index_20.html
-        catalogProductRepositoryV1 / POST 
-        """
-        
-        customAttributes = []
-        for values_id in binding.odoo_id.magento_attribute_line_ids:
-            """ Deal with Custom Attributes """            
-            attributeCode = values_id.attribute_id.name
-            value = values_id.attribute_text
-            customAttributes.append({
-                'attributeCode': attributeCode,
-                'value': value
-                })
-            
-        for values_id in binding.odoo_id.attribute_value_ids:
-            """ Deal with Attributes in the 'variant' part of Odoo"""
-            attributeCode = values_id.attribute_id.name
-            value = values_id.name
-            customAttributes.append({
-                'attributeCode': attributeCode,
-                'value': value
-                })
-        result = {'customAttributes': customAttributes}
-        return result
-    
-    
-    def get_product_datas(self, data, saveOptions=True):
-        main_datas = super(ProductProductAdapter, self).get_product_datas(data, saveOptions)
-#         main_datas.update(self._get_atts_data(self.binding_))
-=======
     def _get_atts_data(self, binding, fields):
         """
         Collect attributes to prensent it regarding to
@@ -223,6 +183,5 @@ class ProductProductAdapter(Component):
     def get_product_datas(self, data, saveOptions=True):
         main_datas = super(ProductProductAdapter, self).get_product_datas(data, saveOptions)
         
->>>>>>> branch '10.0-components-catalog-manager' of https://github.com/MindAndGo/connector-magento.git
         return main_datas
     
