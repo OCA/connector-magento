@@ -5,160 +5,129 @@
 import xmlrpclib
 
 import odoo
+from datetime import datetime
+
 from odoo import _
 from odoo.addons.component.core import Component
 from odoo.addons.queue_job.exception import NothingToDoJob
+from odoo.addons.connector.unit.mapper import mapping
+
+from odoo.addons.connector_magento.components.backend_adapter import MAGENTO_DATETIME_FORMAT
 
 
-
-
-class ProductProductExporter(Component):
-    _inherit = 'magento.product.product.exporter'
-#     _inherit = 'magento.exporter'
+class BatchProductDefinitionExporter(Component):
+    _name = 'magento.product.batch.exporter'
+    _inherit = 'magento.delayed.batch.exporter'
     _apply_on = ['magento.product.product']
-    _usage = 'product.product.exporter'
+    _usage = 'batch.exporter'
 
+class ProductDefinitionExporter(Component):
+    _name = 'magento.product.product.exporter'
+    _inherit = 'magento.exporter'
+    _apply_on = ['magento.product.product']
+#     _usage = 'product.definition.exporter'
     
     def _get_atts_data(self, binding, fields):
-        result = {}
-        #TODO: implement collect of attribute values
-        # Bothe from attribute lines on the variant and from the custom ones
-#         if 'magento_qty' in fields:
-#             result.update({
-#                 'qty': binding.magento_qty,
-#                 # put the stock availability to "out of stock"
-#                 'is_in_stock': int(binding.magento_qty > 0)
-#             })
-#         if 'manage_stock' in fields:
-#             manage = binding.manage_stock
-#             result.update({
-#                 'manage_stock': int(manage == 'yes'),
-#                 'use_config_manage_stock': int(manage == 'use_default'),
-#             })
-#         if 'backorders' in fields:
-#             backorders = binding.backorders
-#             result.update({
-#                 'backorders': self._map_backorders[backorders],
-#                 'use_config_backorders': int(backorders == 'use_default'),
-#             })
+        """
+        Collect attributes to prensent it regarding to
+        https://devdocs.magento.com/swagger/index_20.html
+        catalogProductRepositoryV1 / POST 
+        """
+        
+        customAttributes = []
+        for values_id in binding.odoo_id.magento_attribute_line_ids:
+            """ Deal with Custom Attributes """            
+            attributeCode = values_id.attribute_id.name
+            value = values_id.attribute_text
+            customAttributes.append({
+                'attributeCode': attributeCode,
+                'value': value
+                })
+            
+        for values_id in binding.odoo_id.attribute_value_ids:
+            """ Deal with Attributes in the 'variant' part of Odoo"""
+            attributeCode = values_id.attribute_id.name
+            value = values_id.name
+            customAttributes.append({
+                'attributeCode': attributeCode,
+                'value': value
+                })
+        result = {'customAttributes': customAttributes}
         return result
 
-    def run(self, binding, fields):
-        """ Export the product attributes to Magento """
-        external_id = self.binder.to_external(binding)
-        data = self._get_atts_data(binding, fields)
-        raise NotImplementedError
-#         self.backend_adapter.update_attributes(external_id, data)
-        
-        
-# 
-# class MagentoProductProductExporter(Component):
-#     _name = 'magento.product.product.exporter'
-#     _inherit = 'magento.exporter'
-#     _apply_on = ['magento.product.product']
-# 
-#     def _get_args(self, binding, lines_info=None):
-#         if lines_info is None:
-#             lines_info = {}
-#         sale_binder = self.binder_for('magento.sale.order')
-#         magento_sale_id = sale_binder.to_external(binding.magento_order_id)
-#         mail_notification = self._get_picking_mail_option(binding)
-#         return (magento_sale_id, lines_info,
-#                 _("Shipping Created"), mail_notification, True)
-# 
-#     def _get_lines_info(self, binding):
-#         """
-#         Get the line to export to Magento. In case some lines doesn't have a
-#         matching on Magento, we ignore them. This allow to add lines manually.
-# 
-#         :param binding: magento.stock.picking record
-#         :return: dict of {magento_product_id: quantity}
-#         :rtype: dict
-#         """
-#         item_qty = {}
-#         # get product and quantities to ship from the picking
-#         for line in binding.move_lines:
-#             sale_line = line.procurement_id.sale_line_id
-#             if not sale_line.magento_bind_ids:
-#                 continue
-#             magento_sale_line = next(
-#                 (line for line in sale_line.magento_bind_ids
-#                  if line.backend_id.id == binding.backend_id.id),
-#                 None
-#             )
-#             if not magento_sale_line:
-#                 continue
-#             item_id = magento_sale_line.external_id
-#             item_qty.setdefault(item_id, 0)
-#             item_qty[item_id] += line.product_qty
-#         return item_qty
-# 
-#     def _get_picking_mail_option(self, binding):
-#         """ Indicates if Magento has to send an email
-# 
-#         :param binding: magento.stock.picking record
-#         :returns: value of send_picking_done_mail chosen on magento shop
-#         :rtype: boolean
-#         """
-#         magento_shop = binding.sale_id.magento_bind_ids[0].store_id
-#         return magento_shop.send_picking_done_mail
-# 
-#     def run(self, binding):
-#         """
-#         Export the picking to Magento
-#         """
-#         if self.collection.version == '2.0':
-#             """
-#             Export the picking to Magento2
-#             """
-#             picking = self.model.browse(binding_id)
-#             if picking.magento_id:
-#                 return _('Already exported')
-#             lines_info = self._get_lines_info(picking)
-#             if not lines_info:
-#                 raise NothingToDoJob(_('Canceled: the delivery order does not '
-#                                     'contain lines from the original '
-#                                     'sale order.'))
-#             arguments = {
-#                 'items': [{
-#                     'order_item_id': key,
-#                     'qty': val,
-#                 } for key, val in lines_info.iteritems()]
-#             }
-#             magento_id = self.backend_adapter._call(
-#                 'order/%s/ship' % picking.sale_id.magento_bind_ids[0].magento_id,
-#                 arguments, http_method='post')
-#             self.binder.bind(magento_id, binding_id)
+    def _should_import(self):
+        """ Before the export, compare the update date
+        in Magento and the last sync date in Odoo,
+        Regarding the product_synchro_strategy Choose 
+        to whether the import or the export is necessary
+        """
+        assert self.binding
+        if not self.external_id:
+            return False
+        sync = self.binding.sync_date
+        if not sync:
+            return True
+        record = self.backend_adapter.read(self.external_id,
+                                           attributes=['updated_at'])
+        if not record['updated_at']:
+            # in rare case it can be empty, in doubt, import it
+            return True
+        sync_date = odoo.fields.Datetime.from_string(sync)
+        magento_date = datetime.strptime(record['updated_at'],
+                                         MAGENTO_DATETIME_FORMAT)
+        if self.backend_record.product_synchro_strategy == 'magento_first':
+            return sync_date < magento_date
+        else:
+            return sync_date > magento_date
+    
+    
+    def _delay_import(self):
+        """ Schedule an import/export of the record.
+
+        Adapt in the sub-classes when the model is not imported
+        using ``import_record``.
+        """
+        # force is True because the sync_date will be more recent
+        # so the import would be skipped
+        assert self.external_id
+        if self.backend_record.product_synchro_strategy == 'magento_first':
+            self.binding.with_delay().import_record(self.backend_record,
+                                                self.external_id,
+                                                force=True)
+        else:
+            self.binding.with_delay().export_record(self.backend_record)
+    
+
+class ProductProductExportMapper(Component):
+    _name = 'magento.product.export.mapper'
+    _inherit = 'magento.export.mapper'
+    _apply_on = ['magento.product.product']
+
+    direct = [
+        ('name', 'name'),
+        ('default_code', 'sku'),
+        ('weight', 'weight'),
+        ('product_type', 'typeId'),
+    ]
+
+    @mapping
+    def attribute_set_id(self, record):        
+        return {'attributeSetId' : record.attribute_set_id.external_id}
+
+    @mapping
+    def names(self, record):
+        return {}
+#         if 'firstname' in record._fields:
+#             firstname = record.firstname
+#             lastname = record.lastname
 #         else:
-#             if binding.external_id:
-#                 return _('Already exported')
-#             picking_method = binding.picking_method
-#             if picking_method == 'complete':
-#                 args = self._get_args(binding)
-#             elif picking_method == 'partial':
-#                 lines_info = self._get_lines_info(binding)
-#                 if not lines_info:
-#                     raise NothingToDoJob(_('Canceled: the delivery order does not '
-#                                         'contain lines from the original '
-#                                         'sale order.'))
-#                 args = self._get_args(binding, lines_info)
+#             if ' ' in record.name:
+#                 parts = record.name.split()
+#                 firstname = parts[0]
+#                 lastname = ' '.join(parts[1:])
 #             else:
-#                 raise ValueError("Wrong value for picking_method, authorized "
-#                                 "values are 'partial' or 'complete', "
-#                                 "found: %s" % picking_method)
-#             try:
-#                 external_id = self.backend_adapter.create(*args)
-#             except xmlrpclib.Fault as err:
-#                 # When the shipping is already created on Magento, it returns:
-#                 # <Fault 102: u"Impossible de faire
-#                 # l\'exp\xe9dition de la commande.">
-#                 if err.faultCode == 102:
-#                     raise NothingToDoJob('Canceled: the delivery order already '
-#                                         'exists on Magento (fault 102).')
-#                 else:
-#                     raise
-#             else:
-#                 self.binder.bind(external_id, binding)
-#                 # ensure that we store the external ID
-#                 if not odoo.tools.config['test_enable']:
-#                     self.env.cr.commit()  # noqa
+#                 lastname = record.name
+#                 firstname = '-'
+#         return {'firstname': firstname, 'lastname': lastname}
+
+

@@ -132,6 +132,7 @@ class MagentoProductProduct(models.Model):
             stock_field = backend.product_stock_field_id.name
         else:
             stock_field = 'virtual_available'
+
         location = self.env['stock.location']
         if self.env.context.get('location'):
             location = location.browse(self.env.context['location'])
@@ -183,6 +184,7 @@ class ProductProductAdapter(Component):
     _name = 'magento.product.product.adapter'
     _inherit = 'magento.adapter'
     _apply_on = 'magento.product.product'
+    
 
     _magento_model = 'catalog_product'
     _magento2_model = 'products'
@@ -239,12 +241,36 @@ class ProductProductAdapter(Component):
         return self._call('ol_catalog_product.info',
                           [int(id), storeview_id, attributes, 'id'])
 
+
+    def get_product_datas(self, data, saveOptions=True):
+        """ Hook to implement in other modules"""
+        product_datas = {
+            'product': {
+                "id": 0,
+                "sku": data['sku'] or data['default_code'],
+                "name": data['name'],
+                "attributeSetId": data['attributeSetId'] ,
+                "price": 0,
+                "status": 0,
+                "visibility": 0,
+                "typeId": data['typeId'],
+                "weight": data['weight']
+            }
+            ,"saveOptions": saveOptions
+            }
+        return product_datas
+
     def write(self, id, data, storeview_id=None):
         """ Update records on the external system """
         # XXX actually only ol_catalog_product.update works
         # the PHP connector maybe breaks the catalog_product.update
-        if self.work.magento_api._location.version == '2.0':
-            raise NotImplementedError  # TODO
+        if self.work.magento_api._location.version == '2.0': 
+            return super(ProductProductAdapter, self)._call(
+                'products/%s' % id, 
+                self.get_product_datas(data), 
+                http_method='put')
+            
+#             raise NotImplementedError  # TODO
         return self._call('ol_catalog_product.update',
                           [int(id), data, storeview_id, 'id'])
 
