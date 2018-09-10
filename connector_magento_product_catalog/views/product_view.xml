@@ -40,7 +40,7 @@
 						<tree>
 							<field name="backend_id" />
 							<field name="product_type" />
-							<button name="export_product" string="Export Attributes"
+							<button name="export_product_button" string="Export Attributes"
 								type="object" class="oe_highlight"/>
 							<button name="resync" string="resyn All" help="Stck, Attributes, ..."
 								type="object" class="oe_highlight"/>

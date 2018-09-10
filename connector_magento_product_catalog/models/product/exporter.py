@@ -15,12 +15,6 @@ from odoo.addons.connector.unit.mapper import mapping
 from odoo.addons.connector_magento.components.backend_adapter import MAGENTO_DATETIME_FORMAT
 
 
-class BatchProductDefinitionExporter(Component):
-    _name = 'magento.product.batch.exporter'
-    _inherit = 'magento.delayed.batch.exporter'
-    _apply_on = ['magento.product.product']
-    _usage = 'batch.exporter'
-
 class ProductDefinitionExporter(Component):
     _name = 'magento.product.product.exporter'
     _inherit = 'magento.exporter'
@@ -106,13 +100,24 @@ class ProductProductExportMapper(Component):
     direct = [
         ('name', 'name'),
         ('default_code', 'sku'),
-        ('weight', 'weight'),
         ('product_type', 'typeId'),
     ]
 
     @mapping
-    def attribute_set_id(self, record):        
-        return {'attributeSetId' : record.attribute_set_id.external_id}
+    def weight(self, record):
+        if record.weight:
+            val = record.weight
+        else:
+            val = 0        
+        return {'weight' : val}
+        
+    @mapping
+    def attribute_set_id(self, record):
+        if record.attribute_set_id:
+            val = record.attribute_set_id.external_id
+        else:
+            val = 1        
+        return {'attributeSetId' : val}
 
     @mapping
     def names(self, record):

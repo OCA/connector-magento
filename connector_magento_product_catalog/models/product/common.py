@@ -16,7 +16,13 @@ _logger = logging.getLogger(__name__)
 class MagentoProductProduct(models.Model):
     _inherit = 'magento.product.product'
     
+    @api.multi
+    def export_product_button(self, fields=None):
+        self.ensure_one()
+        self.with_delay(priority=20).export_product()
+    
     @job(default_channel='root.magento')
+    @related_action(action='related_action_unwrap_binding')
     @api.multi
     def export_product(self, fields=None):
         """ Export the attributes configuration of a product. """
