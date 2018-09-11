@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright <YEAR(S)> <AUTHOR(S)> License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+
+<openerp>
+	<data>
+
+		<record id="wizard_add_backend_view_form" model="ir.ui.view">
+			<field name="name">Bind an Object to a backend</field>
+			<field name="model">connector_magento.add_backend.wizard</field>
+			<field name="arch" type="xml">
+				<form string="Select event to register">
+					<p>Choose the backend you want to bind the product to</p>
+					<field name="backend_id" />
+					<field name="to_export_ids" />
+					<!-- <field name="categ_to_export_ids" /> -->
+					<footer>
+						<button name="action_accept" type="object" string="Accept"
+							class="oe_highlight" />
+						or
+						<button special="cancel" string="Cancel" />
+					</footer>
+				</form>
+			</field>
+		</record>
+
+		<record id="wizard_add_backend_action" model="ir.actions.act_window">
+			<field name="name">Add product to Backend</field>
+			<field name="res_model">connector_magento.add_backend.wizard</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="target">new</field>
+		</record>
+
+
+		<act_window id="product_add_backend_action" name="Add Backend Wizard"
+			src_model="product.product" res_model="connector_magento.add_backend.wizard"
+			key2="client_action_multi" target="new" view_mode="form" multi="True" />
+
+<!-- 		
+		#TODO Check the need of this part
+<act_window id="product_template_add_backend_action" name="Add Backend Wizard"
+			src_model="product.template" res_model="connector_magento.add_backend.wizard"
+			key2="client_action_multi" target="new" view_mode="form" multi="True" />
+
+		<act_window id="category_add_backend_action" name="Add Backend Wizard"
+			src_model="product.category" res_model="connector_magento.add_backend.wizard"
+			key2="client_action_multi" target="new" view_mode="form" multi="True" /> -->
+
+
+
+	</data>
+</openerp>
