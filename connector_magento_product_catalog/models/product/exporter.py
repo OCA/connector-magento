@@ -58,6 +58,8 @@ class ProductDefinitionExporter(Component):
         assert self.binding
         if not self.external_id:
             return False
+        if self.backend_record.product_synchro_strategy == 'odoo_first':
+            return False
         sync = self.binding.sync_date
         if not sync:
             return True
@@ -69,10 +71,8 @@ class ProductDefinitionExporter(Component):
         sync_date = odoo.fields.Datetime.from_string(sync)
         magento_date = datetime.strptime(record['updated_at'],
                                          MAGENTO_DATETIME_FORMAT)
-        if self.backend_record.product_synchro_strategy == 'magento_first':
-            return sync_date < magento_date
-        else:
-            return sync_date > magento_date
+        return sync_date < magento_date
+
     
     
     def _delay_import(self):

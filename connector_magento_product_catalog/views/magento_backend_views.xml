@@ -15,7 +15,11 @@
 			</xpath>
 			<xpath expr="//button[@name='import_product_product']"
 				position="after">
-				<label string="Export all values for binded products" class="oe_inline" />
+                <div>
+                    <label string="Export all values for binded products since" class="oe_inline" />
+                    <field name="export_products_from_date" class="oe_inline"
+                        nolabel="1" />
+                </div>
 				<button name="export_product_product_catalog" type="object" class="oe_highlight"
 					string="Export in background" />
 			</xpath>

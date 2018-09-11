@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api
+
+IMPORT_DELTA_BUFFER = 30  # seconds
     
 class MagentoWebsite(models.Model):
     _inherit = 'magento.website'
@@ -14,19 +16,3 @@ class MagentoWebsite(models.Model):
             )
 
         return True
-
-
-    @api.multi
-    def export_product_product_catalog(self):
-        for website in self:
-            backend = website.backend_id
-            self.env['magento.product.product'].with_delay().export_batch(
-                backend,
-                filters={'magento_website_id': website.external_id}
-            )
-
-        return True
-
-
-
-
