@@ -103,6 +103,13 @@ class ProductProductExportMapper(Component):
         ('product_type', 'typeId'),
     ]
 
+
+    
+    @mapping
+    def category_ids(self, record):
+        #TODO : Map categories from magento
+        return {}
+    
     @mapping
     def weight(self, record):
         if record.weight:
@@ -122,18 +129,6 @@ class ProductProductExportMapper(Component):
     @mapping
     def names(self, record):
         return {}
-#         if 'firstname' in record._fields:
-#             firstname = record.firstname
-#             lastname = record.lastname
-#         else:
-#             if ' ' in record.name:
-#                 parts = record.name.split()
-#                 firstname = parts[0]
-#                 lastname = ' '.join(parts[1:])
-#             else:
-#                 lastname = record.name
-#                 firstname = '-'
-#         return {'firstname': firstname, 'lastname': lastname}
 
     @mapping
     def attributes(self, record):
