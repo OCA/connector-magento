@@ -13,13 +13,14 @@
 				</xpath>
 
 				<xpath expr="//notebook//page[@name='connector']" position="before">
-					<page string="Magento">
+					<page string="Magento" name="magento_attributes">
 						<group>
 							<field name="attribute_set_id" />
 						</group>
 						<separator></separator>
-						<group>
-							<field name="magento_attribute_line_ids">
+						<group attrs="{'invisible': [('attribute_set_id', '=', False)]}">
+							<label for="magento_attribute_line_ids"/>
+							<field name="magento_attribute_line_ids" nolabel="1">
 								<tree editable="top">
 									<field name="attribute_id" domain="[('create_variant', '=', False),]" />
 									<field name="odoo_field_name" />
