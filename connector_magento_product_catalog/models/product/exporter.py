@@ -88,8 +88,8 @@ class ProductDefinitionExporter(Component):
             self.binding.with_delay().import_record(self.backend_record,
                                                 self.external_id,
                                                 force=True)
-        else:
-            self.binding.with_delay().export_record(self.backend_record)
+        #else:
+        #    self.binding.with_delay().export_record(self.backend_record)
     
 
 class ProductProductExportMapper(Component):
@@ -134,5 +134,34 @@ class ProductProductExportMapper(Component):
 #                 lastname = record.name
 #                 firstname = '-'
 #         return {'firstname': firstname, 'lastname': lastname}
+
+    @mapping
+    def attributes(self, record):
+        """
+        Collect attributes to prensent it regarding to
+        https://devdocs.magento.com/swagger/index_20.html
+        catalogProductRepositoryV1 / POST 
+        """
+        
+        customAttributes = []
+        for values_id in record.magento_attribute_line_ids:
+            """ Deal with Custom Attributes """            
+            attributeCode = values_id.attribute_id.attribute_code
+            value = values_id.attribute_text
+            customAttributes.append({
+                'attribute_code': attributeCode,
+                'value': value
+                })
+            
+        for values_id in record.attribute_value_ids:
+            """ Deal with Attributes in the 'variant' part of Odoo"""
+            attributeCode = values_id.attribute_id.name
+            value = values_id.name
+            customAttributes.append({
+                'attributeCode': attributeCode,
+                'value': value
+                })
+        result = {'customAttributes': customAttributes}
+        return result
 
 

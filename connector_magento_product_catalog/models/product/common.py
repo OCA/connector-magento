@@ -182,12 +182,13 @@ class ProductProductAdapter(Component):
                 'attributeCode': attributeCode,
                 'value': value
                 })
-        result = {'customAttributes': customAttributes}
+        result = { 'customAttributes' :  customAttributes }
         return result
     
     
     def get_product_datas(self, data, saveOptions=True):
         main_datas = super(ProductProductAdapter, self).get_product_datas(data, saveOptions)
-        
+        att = {'customAttributes': data['customAttributes']}
+        main_datas['product'].update(att)
         return main_datas
     
