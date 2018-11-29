@@ -50,17 +50,19 @@
         </field>
     </record>
 
-    <record id="view_magento_product_tree" model="ir.ui.view">
+    <!-- <record id="view_magento_product_tree" model="ir.ui.view">
         <field name="name">magento.product.product.tree</field>
         <field name="model">magento.product.product</field>
         <field name="arch" type="xml">
             <tree string="Magento Product">
                 <field name="backend_id"/>
                 <field name="product_type"/>
+                <field name="odoo_id"/>
+                
             </tree>
         </field>
     </record>
-    
+     -->
     <record id="magento_product_product_tree_view" model="ir.ui.view">
 			<field name="name">magento.product.product.tree</field>
 			<field name="model">magento.product.product</field>
@@ -73,7 +75,7 @@
 					<field name="odoo_id" />
 					<field name="backend_id" />
 					<field name="external_id" />
-					
+					<!-- <field name="attribute_set_id"/> -->
 					<field name="sync_date"  />
 					<button name="resync" type="object" string="Resync" />
 				</tree>
