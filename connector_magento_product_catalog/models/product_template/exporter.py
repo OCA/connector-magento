@@ -15,10 +15,10 @@ from odoo.addons.connector.unit.mapper import mapping
 from odoo.addons.connector_magento.components.backend_adapter import MAGENTO_DATETIME_FORMAT
 
 
-class ProductDefinitionExporter(Component):
-    _name = 'magento.product.product.exporter'
+class ProductTemplateDefinitionExporter(Component):
+    _name = 'magento.product.template.exporter'
     _inherit = 'magento.exporter'
-    _apply_on = ['magento.product.product']
+    _apply_on = ['magento.product.template']
     #_usage = 'product.definition.exporter'
     
     
@@ -95,17 +95,23 @@ class ProductDefinitionExporter(Component):
         #    self.binding.with_delay().export_record(self.backend_record)
     
 
-class ProductProductExportMapper(Component):
-    _name = 'magento.product.export.mapper'
+class ProductTemplateExportMapper(Component):
+    _name = 'magento.product.template.export.mapper'
     _inherit = 'magento.export.mapper'
-    _apply_on = ['magento.product.product']
+    _apply_on = ['magento.product.template']
 
     direct = [
-        ('name', 'name'),
-        ('default_code', 'sku'),
-        ('product_type', 'typeId'),
+#         ('name', 'name'),
+#         ('default_code', 'sku'),
+#         ('product_type', 'typeId'),
 #         ('lst_price', 'price'),
     ]
+    
+    
+    @mapping
+    def get_type(self, record):
+        
+        return {}
     
     
     @mapping
@@ -151,44 +157,39 @@ class ProductProductExportMapper(Component):
     def names(self, record):
         return {}
 
-    @mapping
-    def attributes(self, record):
-        """
-        Collect attributes to prensent it regarding to
-        https://devdocs.magento.com/swagger/index_20.html
-        catalogProductRepositoryV1 / POST 
-        """
-        
-        customAttributes = []
-        for values_id in record.magento_attribute_line_ids:
-            """ Deal with Custom Attributes """            
-            attributeCode = values_id.attribute_id.attribute_code
-            value = values_id.attribute_text
-            customAttributes.append({
-                'attribute_code': attributeCode,
-                'value': value
-                })
-            
-        for values_id in record.attribute_value_ids:
-            """ Deal with Attributes in the 'variant' part of Odoo"""
-            odoo_value_id = values_id.magento_bind_ids.filtered(
-                lambda m: m.backend_id == record.backend_id)
-            
-            attributeCode = odoo_value_id.magento_attribute_id.attribute_code
-            value = odoo_value_id.code
-            customAttributes.append({
-                'attributeCode': attributeCode,
-                'value': value
-                })
-        result = {'customAttributes': customAttributes}
-        return result
+#     @mapping
+#     def attributes(self, record):
+#         """
+#         Collect attributes to prensent it regarding to
+#         https://devdocs.magento.com/swagger/index_20.html
+#         catalogProductRepositoryV1 / POST 
+#         """
+#         
+#         customAttributes = []
+#         for values_id in record.magento_attribute_line_ids:
+#             """ Deal with Custom Attributes """            
+#             attributeCode = values_id.attribute_id.attribute_code
+#             value = values_id.attribute_text
+#             customAttributes.append({
+#                 'attribute_code': attributeCode,
+#                 'value': value
+#                 })
+#             
+#         for values_id in record.attribute_value_ids:
+#             """ Deal with Attributes in the 'variant' part of Odoo"""
+#             odoo_value_id = values_id.magento_bind_ids.filtered(
+#                 lambda m: m.backend_id == record.backend_id)
+#             
+#             attributeCode = odoo_value_id.magento_attribute_id.attribute_code
+#             value = odoo_value_id.code
+#             customAttributes.append({
+#                 'attributeCode': attributeCode,
+#                 'value': value
+#                 })
+#         result = {'customAttributes': customAttributes}
+#         return result
 
-    @mapping
-    def price(self, record):
-        price = record['lst_price']
-        return {'price': price}
-    
-    
+
     @mapping
     def option_products(self, record):
         #TODO : Map optionnal products

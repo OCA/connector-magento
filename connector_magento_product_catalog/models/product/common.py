@@ -179,38 +179,40 @@ class ProductProductAdapter(Component):
         return self._call('%s.create' % self._magento_model,
                           [customer_id, data])
     
-    def _get_atts_data(self, binding, fields):
-        """
-        Collect attributes to prensent it regarding to
-        https://devdocs.magento.com/swagger/index_20.html
-        catalogProductRepositoryV1 / POST 
-        """
-        
-        customAttributes = []
-        for values_id in binding.odoo_id.magento_attribute_line_ids:
-            """ Deal with Custom Attributes """            
-            attributeCode = values_id.attribute_id.name
-            value = values_id.attribute_text
-            customAttributes.append({
-                'attributeCode': attributeCode,
-                'value': value
-                })
-            
-        for values_id in binding.odoo_id.attribute_value_ids:
-            """ Deal with Attributes in the 'variant' part of Odoo"""
-            attributeCode = values_id.attribute_id.name
-            value = values_id.name
-            customAttributes.append({
-                'attributeCode': attributeCode,
-                'value': value
-                })
-        result = { 'customAttributes' :  customAttributes }
-        return result
+#     def _get_atts_data(self, binding, fields):
+#         """
+#         Collect attributes to prensent it regarding to
+#         https://devdocs.magento.com/swagger/index_20.html
+#         catalogProductRepositoryV1 / POST 
+#         """
+#         
+#         customAttributes = []
+#         for values_id in binding.odoo_id.magento_attribute_line_ids:
+#             """ Deal with Custom Attributes """            
+#             attributeCode = values_id.attribute_id.name
+#             value = values_id.attribute_text
+#             customAttributes.append({
+#                 'attributeCode': attributeCode,
+#                 'value': value
+#                 })
+#             
+#         for values_id in binding.odoo_id.attribute_value_ids:
+#             """ Deal with Attributes in the 'variant' part of Odoo"""
+#             attributeCode = values_id.attribute_id.name
+#             value = values_id.name
+#             customAttributes.append({
+#                 'attributeCode': attributeCode,
+#                 'value': value
+#                 })
+#         result = { 'customAttributes' :  customAttributes }
+#         return result
     
     
     def get_product_datas(self, data, saveOptions=True):
         main_datas = super(ProductProductAdapter, self).get_product_datas(data, saveOptions)
-        att = {'customAttributes': data['customAttributes']}
-        main_datas['product'].update(att)
+#         att = {'customAttributes': data['customAttributes']}
+        
+        main_datas['product'].update(data)
+#         main_datas['product'].update(att)
         return main_datas
     

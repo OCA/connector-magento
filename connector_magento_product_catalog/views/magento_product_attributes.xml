@@ -2,6 +2,23 @@
 <openerp>
 	<data>
 
+		<record id="magento_product_attribute_value_form_view"
+			model="ir.ui.view">
+			<field name="name">magento.product.attribute.value.form</field>
+			<field name="model">magento.product.attribute.value</field>
+			<field name="arch" type="xml">
+				<form>
+					<sheet>
+						<field name="backend_id" />
+						<field name="code" />
+						<field name="odoo_id" />
+						<field name="attribute_id" />
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+
 		<record id="magento_product_attribute_tree_view"
 			model="ir.ui.view">
 			<field name="name">magento.product.attribute.tree</field>
@@ -36,7 +53,7 @@
 							<field name="attribute_code" />
 							<field name="attribute_id" />
 							<field name="external_id" />
-							<field name="frontend_input" readonly="1"/>
+							<field name="frontend_input" readonly="1" />
 						</group>
 						<group>
 							<field name="backend_id" readonly="1" />

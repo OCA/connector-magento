@@ -26,7 +26,10 @@ class MagentoModelBinder(Component):
     @classproperty
     def _apply_on(self):
         mappings = super(MagentoModelBinder, self)._apply_on[:]
-        return mappings + ['magento.product.attributes.set',
+        return mappings + [
+            'magento.product.attributes.set',
             'magento.product.attribute',
-            'magento.product.attribute.value']
+            'magento.product.attribute.value',
+            'magento.product.template'
+            ]
     

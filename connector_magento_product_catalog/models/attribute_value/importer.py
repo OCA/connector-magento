@@ -22,9 +22,18 @@ class AttributeValueImportMapper(Component):
     _apply_on = ['magento.product.attribute.value']
 
     # TODO :     categ, special_price => minimal_price
-    direct = [('label', 'name'),
+    direct = [
               ('value', 'external_id'),
+              ('id', 'code')
               ]
+    
+    @mapping
+    def get_value(self, record):
+        name = record['label']
+        if not name:
+            name = u'False'
+            
+        return {'name' : name }
     
     def finalize(self, map_record, values):
         if map_record.parent:
