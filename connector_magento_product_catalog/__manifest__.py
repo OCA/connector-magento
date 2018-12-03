@@ -14,9 +14,11 @@
 
  'data': [
         'views/magento_backend_views.xml',
-        'views/product_view.xml',
+        'views/product_custom_values.xml',
         'views/magento_external_objects_menus.xml',
-
+        'views/product_view.xml',
+        'views/magento_product_attributes.xml',
+        
         
           ],
  'installable': True,

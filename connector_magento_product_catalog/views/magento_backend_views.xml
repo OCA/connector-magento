@@ -4,28 +4,35 @@
 	<record id="view_magento_backend_form" model="ir.ui.view">
 		<field name="name">magento.backend.form</field>
 		<field name="model">magento.backend</field>
-		<field name="inherit_id" ref="connector_magento.view_magento_backend_form" />
+		<field name="inherit_id"
+			ref="connector_magento.view_magento_backend_form" />
 		<field name="arch" type="xml">
-			<xpath expr="//button[@name='import_product_product']"
-				position="after">
-				<label string="import all attributes set attributes and value"
-					class="oe_inline" />
-				<button name="import_attributes_set" type="object" class="oe_highlight"
-					string="Import in background" />
+			<xpath expr="//page[@name='import']"
+				position="inside">
+				<group>
+					<div>
+						<label
+							string="Import attribute sets, attributes and value"
+							class="oe_inline" />
+					</div>
+					<button name="import_attributes_set" type="object"
+						class="oe_highlight" string="Import in background" />
+				</group>
+				<group>
+					<div>
+						<label string="Export all values for binded products since"
+							class="oe_inline" />
+						<field name="export_products_from_date" class="oe_inline"
+							nolabel="1" />
+					</div>
+					<button name="export_product_product_catalog" type="object"
+						class="oe_highlight" string="Export in background" />
+				</group>
 			</xpath>
-			<xpath expr="//button[@name='import_product_product']"
+			
+			<xpath
+				expr="//page[@name='advanced_configuration']//field[@name='default_category_id']"
 				position="after">
-                <div>
-                    <label string="Export all values for binded products since" class="oe_inline" />
-                    <field name="export_products_from_date" class="oe_inline"
-                        nolabel="1" />
-                </div>
-				<button name="export_product_product_catalog" type="object" class="oe_highlight"
-					string="Export in background" />
-			</xpath>
-			<xpath expr="//page[@name='advanced_configuration']//field[@name='is_multi_company']"
-				position="after">
-				
 				<field name="product_synchro_strategy" />
 			</xpath>
 		</field>

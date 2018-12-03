@@ -47,10 +47,10 @@ class MagentoProductAttribute(models.Model):
                                            ], 'Frontend Input'
                                           )
     
-    attribute_set_ids = fields.Many2many('magento.product.attributes.set', string='Attribute(s)')
+    attribute_set_ids = fields.Many2many('magento.product.attributes.set', string='Attribute_set(s)')
 
     _sql_constraints = [
-        ('product_attribute_backend_uniq', 'unique(odoo_id,pmagento_id)', 'This attribute is already mapped to a magento backend!')
+        ('product_attribute_backend_uniq', 'unique(odoo_id, external_id)', 'This attribute is already mapped to a magento backend!')
     ]
     
     @api.model

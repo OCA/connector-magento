@@ -16,6 +16,11 @@ _logger = logging.getLogger(__name__)
 class MagentoProductProduct(models.Model):
     _inherit = 'magento.product.product'
     
+    
+    attribute_set_id = fields.Many2one('magento.product.attributes.set',
+                                       related="odoo_id.attribute_set_id",
+                                       string='Attribute set')
+    
     @api.multi
     def export_product_button(self, fields=None):
         self.ensure_one()
@@ -39,8 +44,9 @@ class MagentoProductProduct(models.Model):
 class ProductProduct(models.Model):
     _inherit = 'product.product'
     
+    # TODO: report the dependency on the magento.product.product because
+    # it's a non sense to force the product to have a single attribute_set and also custom values
     attribute_set_id = fields.Many2one('magento.product.attributes.set', string='Attribute set')
-
     magento_attribute_line_ids = fields.One2many(comodel_name='magento.custom.attribute.values', 
                                                  inverse_name='product_id', 
                                                  string='Magento Simple Custom Attributes Values',
@@ -91,7 +97,7 @@ class ProductProduct(models.Model):
                 vals['magento_attribute_line_ids'].append(
                     (mode, mode_id, {
                         'attribute_id': att_id,
-                        'attribute_text'  : vals[field]      
+                        'attribute_text'  : vals[field]
                 }))
          
     
@@ -156,6 +162,22 @@ class ProductProductAdapter(Component):
     _magento2_search = 'products'
     _magento2_key = 'sku'
     _admin_path = '/{model}/edit/id/{id}'
+    
+    
+#     def _create(self, data):
+    
+    def create(self, data):
+        """ Create a record on the external system """
+        if self.work.magento_api._location.version == '2.0': 
+            new_product = super(ProductProductAdapter, self)._call(
+                'products/%s' % id, 
+                self.get_product_datas(data), 
+                http_method='put')            
+            return new_product['id']
+            
+            
+        return self._call('%s.create' % self._magento_model,
+                          [customer_id, data])
     
     def _get_atts_data(self, binding, fields):
         """
