@@ -63,7 +63,7 @@ class MagentoBackend(models.Model):
 
     @api.multi
     def button_check_connection(self):
-        self._check_connection()
+        # TODO : use self._check_connection() as in connector prestashop
         # raise exceptions.UserError(_('Connection successful'))
         self.write({'state': 'checked'})
 
