@@ -418,7 +418,7 @@
 							string="Advanced Configuration">
 							<group>
 								<group string="Warehouse / Products">
-									<field name="default_lang_id" widget="selection" />
+									<!-- <field name="default_lang_id" widget="selection" /> -->
 								</group>
 								<group name="warehouse_products"
 									string="Warehouse / Products">
