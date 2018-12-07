@@ -23,16 +23,15 @@ class CustomAttribute(models.Model):
     magento_product_id = fields.Many2one(comodel_name="magento.product.product",
                                 string="Magento Product",
                                 )
-
-#                                 related="magento_product_id.odoo_id",
     
     product_id = fields.Many2one(comodel_name="product.product",
                                 string="Product",
+                                related="magento_product_id.odoo_id",
                                 required=True)
  
     backend_id = fields.Many2one(comodel_name="magento.backend",
                                       string="Magento Backend",
-#                                       related="attribute_id.backend_id"
+                                      related="magento_product_id.backend_id"
                                       )
      
     attribute_id = fields.Many2one(comodel_name="magento.product.attribute",
@@ -40,24 +39,24 @@ class CustomAttribute(models.Model):
                                       required=True,
 #                                       domain=[('backend_id', '=', backend_id)]
                                       )
-
-#     attribute_set_id = fields.Many2one(comodel_name="magento.product.attributes.set",
-#                                       string="Magento Product Attribute Set",
-#                                       required=True)
-
     
     magento_attribute_type = fields.Selection(
          related="attribute_id.frontend_input"
         )
     
-    odoo_field_name = fields.Many2one(comodel_name='ir.model.fields', 
-#                                       related="attribute_id.odoo_field_name", 
-                                      string="Odoo Field Name",) 
-    
     attribute_text = fields.Char(string='Magento Text / Value',
                                     size=264,
                                     translate=True
                                     )
+    
+    
+    odoo_field_name = fields.Many2one(
+        comodel_name='ir.model.fields', 
+        #related="attribute_id.odoo_field_name", 
+        string="Odoo Field Name",) 
+    
+    store_view_id = fields.Many2one('magento.storeview')
+    
 
     @api.one
     @api.constrains('attribute_id')

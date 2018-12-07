@@ -58,7 +58,7 @@ class AttributeImportMapper(Component):
     @mapping
     def get_att_id(self, record):
         att_id = self._attribute_exists(self._get_name(record)['name'])
-        if len(att_id) ==1 :
+        if att_id and len(att_id) == 1 :
             return {'odoo_id': att_id.id}
         return {}
     

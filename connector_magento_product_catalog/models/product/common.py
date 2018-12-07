@@ -18,8 +18,13 @@ class MagentoProductProduct(models.Model):
     
     
     attribute_set_id = fields.Many2one('magento.product.attributes.set',
-                                       related="odoo_id.attribute_set_id",
+                                       
                                        string='Attribute set')
+    
+    magento_attribute_line_ids = fields.One2many(comodel_name='magento.custom.attribute.values', 
+                                                 inverse_name='magento_product_id', 
+                                                 string='Magento Simple Custom Attributes Values',
+                                        )
     
     @api.multi
     def export_product_button(self, fields=None):
@@ -46,12 +51,12 @@ class ProductProduct(models.Model):
     
     # TODO: report the dependency on the magento.product.product because
     # it's a non sense to force the product to have a single attribute_set and also custom values
-    attribute_set_id = fields.Many2one('magento.product.attributes.set', string='Attribute set')
-    magento_attribute_line_ids = fields.One2many(comodel_name='magento.custom.attribute.values', 
-                                                 inverse_name='product_id', 
-                                                 string='Magento Simple Custom Attributes Values',
-                                        )
-    
+#     attribute_set_id = fields.Many2one('magento.product.attributes.set', string='Attribute set')
+#     magento_attribute_line_ids = fields.One2many(comodel_name='magento.custom.attribute.values', 
+#                                                  inverse_name='product_id', 
+#                                                  string='Magento Simple Custom Attributes Values',
+#                                         )
+#     
     
     #TODO: From now, as the mapping is hold by the product, no multi magento instance is supported
     # Has to be improved
@@ -179,34 +184,7 @@ class ProductProductAdapter(Component):
         return self._call('%s.create' % self._magento_model,
                           [customer_id, data])
     
-#     def _get_atts_data(self, binding, fields):
-#         """
-#         Collect attributes to prensent it regarding to
-#         https://devdocs.magento.com/swagger/index_20.html
-#         catalogProductRepositoryV1 / POST 
-#         """
-#         
-#         customAttributes = []
-#         for values_id in binding.odoo_id.magento_attribute_line_ids:
-#             """ Deal with Custom Attributes """            
-#             attributeCode = values_id.attribute_id.name
-#             value = values_id.attribute_text
-#             customAttributes.append({
-#                 'attributeCode': attributeCode,
-#                 'value': value
-#                 })
-#             
-#         for values_id in binding.odoo_id.attribute_value_ids:
-#             """ Deal with Attributes in the 'variant' part of Odoo"""
-#             attributeCode = values_id.attribute_id.name
-#             value = values_id.name
-#             customAttributes.append({
-#                 'attributeCode': attributeCode,
-#                 'value': value
-#                 })
-#         result = { 'customAttributes' :  customAttributes }
-#         return result
-    
+
     
     def get_product_datas(self, data, saveOptions=True):
         main_datas = super(ProductProductAdapter, self).get_product_datas(data, saveOptions)

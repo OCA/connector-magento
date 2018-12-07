@@ -27,6 +27,8 @@ class MagentoProductAttributevalue(models.Model):
                                        ondelete='cascade',
                                        index=True)
 
+    code = fields.Char('Magento Code for the value')
+    
     backend_id = fields.Many2one(
         related='magento_attribute_id.backend_id',
         string='Magento Backend',

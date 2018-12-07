@@ -43,6 +43,32 @@ class AttributeValueImportMapper(Component):
         return values
     
 
+class MagentoAttributeValueImporter(Component):
+    """ Import one AttributeValueImport """
+
+    _name = 'magento.product.attribute.value.importer'
+    _inherit = 'magento.importer'
+    _apply_on = ['magento.product.attribute.value']
+    
+    
+    def _must_skip(self):
+        """ Hook called right after we read the data from the backend.
+
+        If the method returns a message giving a reason for the
+        skipping, the import will be interrupted and the message
+        recorded in the job (if the import is called directly by the
+        job, not by dependencies).
+
+        If it returns None, the import will continue normally.
+
+        :returns: None | str | unicode
+        """
+        if self.magento_record['type_id'] == 'configurable':
+            return _('The configurable product is not imported in Odoo, '
+                     'because only the simple products are used in the sales '
+                     'orders.')
+    
+
     #TODO: 
     ## * Implement _skip method to prevent values with only space to be added
     ## * une @only_create to check possible deplicate values. EG 97_1 seems to be a duplicate values

@@ -107,11 +107,22 @@ class ProductProductExportMapper(Component):
 #         ('lst_price', 'price'),
     ]
     
-    
     @mapping
-    def get_website_ids(self, record):
+    def get_extension_attributes(self, record):
+        data = {}
         
-        return {}
+        data.update(self.get_website_ids(record))
+        data.update(self.category_ids(record))
+        
+        
+        return {'extension_attributes': data}
+    
+    
+    def get_website_ids(self, record):
+        website_ids = [
+                s.external_id for s in record.backend_id.website_ids
+                ]
+        return {'website_ids': website_ids}
     
     
     @mapping
