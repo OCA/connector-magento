@@ -10,11 +10,13 @@
 
 			<field name="arch" type="xml">
 				<search>
+					<field name="magento_product_id" />
 					<field name="attribute_id" />
 					<field name="backend_id" />
-<!-- 					<field name="attribute_set_id" /> -->
+
 					<field name="magento_attribute_type" />
 					<field name="odoo_field_name" />
+					
 					<field name="product_id" />
 					<group>
 						<filter name="f_magento_attribute_type"

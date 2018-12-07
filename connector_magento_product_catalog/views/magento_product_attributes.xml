@@ -9,12 +9,27 @@
 			<field name="arch" type="xml">
 				<form>
 					<sheet>
-						<field name="backend_id" />
-						<field name="code" />
-						<field name="odoo_id" />
-						<field name="attribute_id" />
+						<group>
+							<field name="backend_id" />
+							<field name="odoo_id" />
+							<field name="external_id" />
+						</group>
 					</sheet>
 				</form>
+			</field>
+		</record>
+
+		<record id="magento_product_attribute_value_tree_view"
+			model="ir.ui.view">
+			<field name="name">magento.product.attribute.value.tree</field>
+			<field name="model">magento.product.attribute.value</field>
+			<field name="arch" type="xml">
+				<tree>
+					<field name="name" />
+					<field name="external_id" />
+					<field name="odoo_id" />
+					<field name="backend_id" />
+				</tree>
 			</field>
 		</record>
 
