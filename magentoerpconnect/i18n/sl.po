@@ -158,8 +158,7 @@ msgstr "Ozadje z enako prodajno predpono že obstaja."
 #: sql_constraint:magento.product.product:0
 #: sql_constraint:magento.res.partner:0
 #: sql_constraint:magento.res.partner.category:0
-#: sql_constraint:magento.sale.order:0
-#: sql_constraint:magento.sale.order.line:0
+#: sql_constraint:magento.sale.order:0 sql_constraint:magento.sale.order.line:0
 #: sql_constraint:magento.stock.picking:0 sql_constraint:magento.store:0
 #: sql_constraint:magento.storeview:0 sql_constraint:magento.website:0
 msgid "A binding already exists with the same Magento ID."
@@ -364,8 +363,7 @@ msgid "Backends"
 msgstr "Ozadja"
 
 #. module: magentoerpconnect
-#: field:magento.account.invoice,residual:0
-#: field:magento.sale.order,residual:0
+#: field:magento.account.invoice,residual:0 field:magento.sale.order,residual:0
 msgid "Balance"
 msgstr "Bilanca"
 
@@ -695,8 +693,7 @@ msgid "Contract / Analytic"
 msgstr "Pogodba/analitika"
 
 #. module: magentoerpconnect
-#: field:magento.address,contract_ids:0
-#: field:magento.address,contracts_count:0
+#: field:magento.address,contract_ids:0 field:magento.address,contracts_count:0
 #: field:magento.res.partner,contract_ids:0
 #: field:magento.res.partner,contracts_count:0
 msgid "Contracts"
@@ -1818,8 +1815,7 @@ msgstr "Zadnjič posodobljeno"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,write_uid:0 field:magento.address,write_uid:0
-#: field:magento.backend,write_uid:0
-#: field:magento.product.category,write_uid:0
+#: field:magento.backend,write_uid:0 field:magento.product.category,write_uid:0
 #: field:magento.product.product,write_uid:0
 #: field:magento.res.partner,write_uid:0
 #: field:magento.res.partner.category,write_uid:0
@@ -1851,8 +1847,7 @@ msgstr "Zadnja obdelana količina za pošiljanje v Magento"
 
 #. module: magentoerpconnect
 #: field:magento.account.invoice,sync_date:0 field:magento.address,sync_date:0
-#: field:magento.binding,sync_date:0
-#: field:magento.product.category,sync_date:0
+#: field:magento.binding,sync_date:0 field:magento.product.category,sync_date:0
 #: field:magento.product.product,sync_date:0
 #: field:magento.res.partner,sync_date:0
 #: field:magento.res.partner.category,sync_date:0
@@ -1885,8 +1880,7 @@ msgid "Link to the automatically generated Journal Items."
 msgstr "Povezava na avtomatsko ustvarjene postavke"
 
 #. module: magentoerpconnect
-#: field:magento.backend,location:0
-#: field:magento.product.product,location_id:0
+#: field:magento.backend,location:0 field:magento.product.product,location_id:0
 #: field:magento.stock.picking,location_id:0
 msgid "Location"
 msgstr "Lokacija"
@@ -1971,8 +1965,7 @@ msgstr "Magento vezave (povzetek)"
 #: view:res.partner:magentoerpconnect.view_partner_form
 #: field:res.partner,magento_bind_ids:0
 #: field:res.partner.category,magento_bind_ids:0
-#: field:sale.order,magento_bind_ids:0
-#: field:sale.order.line,magento_bind_ids:0
+#: field:sale.order,magento_bind_ids:0 field:sale.order.line,magento_bind_ids:0
 #: view:stock.picking:magentoerpconnect.view_stock_picking_out_magento_form
 #: field:stock.picking,magento_bind_ids:0
 msgid "Magento Bindings"
@@ -2209,8 +2202,7 @@ msgstr "Sporočila"
 #: help:magento.account.invoice,message_ids:0
 #: help:magento.address,message_ids:0
 #: help:magento.product.product,message_ids:0
-#: help:magento.res.partner,message_ids:0
-#: help:magento.sale.order,message_ids:0
+#: help:magento.res.partner,message_ids:0 help:magento.sale.order,message_ids:0
 #: help:magento.stock.picking,message_ids:0
 msgid "Messages and communication history"
 msgstr "Sporočila in kronologija komunikacij"
@@ -3355,8 +3347,7 @@ msgstr ""
 "Prestashop"
 
 #. module: magentoerpconnect
-#: field:magento.sale.order,amount_tax:0
-#: field:magento.sale.order.line,tax_id:0
+#: field:magento.sale.order,amount_tax:0 field:magento.sale.order.line,tax_id:0
 msgid "Taxes"
 msgstr "Davki"
 
@@ -3441,7 +3432,7 @@ msgstr ""
 "Komercialna entiteta, ki bo uporabljena na dnevniških vnosih za ta račun."
 
 #. module: magentoerpconnect
-#: code:addons/magentoerpconnect/product.py:563
+#: code:addons/magentoerpconnect/product.py:573
 #, python-format
 msgid ""
 "The configurable product is not imported in OpenERP, because only the simple "
