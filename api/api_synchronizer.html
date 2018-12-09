@@ -413,6 +413,27 @@ For instance from the products and products’ categories importers.</p>
 <dd><p>Export a record on Magento</p>
 </dd></dl>
 
+<dl class="function">
+<dt id="openerp.addons.magentoerpconnect.unit.export_synchronizer.unwrap_binding">
+<code class="descclassname">openerp.addons.magentoerpconnect.unit.export_synchronizer.</code><code class="descname">unwrap_binding</code><span class="sig-paren">(</span><em>session</em>, <em>job</em>, <em>id_pos=2</em><span class="sig-paren">)</span><a class="headerlink" href="#openerp.addons.magentoerpconnect.unit.export_synchronizer.unwrap_binding" title="Permalink to this definition">¶</a></dt>
+<dd><p>Open a form view with the unwrapped record.</p>
+<p>For instance, for a job on a <code class="docutils literal notranslate"><span class="pre">magento.product.product</span></code>,
+it will open a <code class="docutils literal notranslate"><span class="pre">product.product</span></code> form view with the unwrapped
+record.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>id_pos</strong> – position of the binding ID in the args</li>
+<li><strong>binder_class</strong> – base class to search for the binder</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </div>
 <div class="section" id="module-openerp.addons.magentoerpconnect.unit.delete_synchronizer">
 <span id="delete"></span><h2>Delete<a class="headerlink" href="#module-openerp.addons.magentoerpconnect.unit.delete_synchronizer" title="Permalink to this headline">¶</a></h2>
@@ -472,7 +493,7 @@ For instance from the products and products’ categories importers.</p>
     </p>
     <p>
         &copy; Copyright 2013-2015, Odoo Community Association (OCA).<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.6.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
     </p>
   </div>
 </footer>
