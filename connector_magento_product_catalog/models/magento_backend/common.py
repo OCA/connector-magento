@@ -46,5 +46,8 @@ class MagentoBackend(models.Model):
     export_products_from_date = fields.Datetime(
         string='Export products from date',
     )
+    
+    default_attribute_set_id = fields.Char(
+        string="Default Attribute Set id")
 
 

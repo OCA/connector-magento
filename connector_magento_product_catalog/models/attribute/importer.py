@@ -10,7 +10,7 @@ import sys
 
 from odoo import _
 from odoo.addons.component.core import Component
-from odoo.addons.connector.components.mapper import mapping
+from odoo.addons.connector.components.mapper import mapping, only_create
 from odoo.addons.connector.exception import MappingError, InvalidDataError
 
 _logger = logging.getLogger(__name__)
@@ -45,8 +45,25 @@ class AttributeImportMapper(Component):
                 ]    
     
     
+    def _attribute_exists(self, attribute):
+        att_ids = self.env['product.attribute'].search(
+            [('name', '=', attribute)]
+            )
+        if len(att_ids) == 0:
+            return False
+        return att_ids[0]
+        
+    
+    @only_create
     @mapping
-    def name(self, record):
+    def get_att_id(self, record):
+        att_id = self._attribute_exists(self._get_name(record)['name'])
+        if att_id and len(att_id) == 1 :
+            return {'odoo_id': att_id.id}
+        return {}
+    
+    @mapping
+    def _get_name(self, record):
         name = record['attribute_code']
         if 'default_frontend_label' in record and record['default_frontend_label'] :
             name = record['default_frontend_label'] 

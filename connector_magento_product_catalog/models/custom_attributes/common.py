@@ -14,36 +14,57 @@ _logger = logging.getLogger(__name__)
     
 class CustomAttribute(models.Model):
     _name = 'magento.custom.attribute.values'
+    
      
     """
-    This class deal with customs Attrinutes
+    This class deal with customs Attributes
     """
+#     
+    magento_product_id = fields.Many2one(comodel_name="magento.product.product",
+                                string="Magento Product",
+                                )
     
     product_id = fields.Many2one(comodel_name="product.product",
-                                string="Product")
+                                string="Product",
+                                related="magento_product_id.odoo_id",
+                                required=True)
  
     backend_id = fields.Many2one(comodel_name="magento.backend",
                                       string="Magento Backend",
-                                      related="attribute_id.backend_id")
+                                      related="magento_product_id.backend_id"
+                                      )
      
     attribute_id = fields.Many2one(comodel_name="magento.product.attribute",
                                       string="Magento Product Attribute",
-                                      required=True)
-
-        
-    magento_attribute_type = fields.Selection(
-        related="attribute_id.frontend_input")
+                                      required=True,
+#                                       domain=[('backend_id', '=', backend_id)]
+                                      )
     
-    odoo_field_name = fields.Many2one(comodel_name='ir.model.fields', 
-                                      related="attribute_id.odoo_field_name", 
-                                      string="Odoo Field Name",) 
+    magento_attribute_type = fields.Selection(
+         related="attribute_id.frontend_input"
+        )
     
     attribute_text = fields.Char(string='Magento Text / Value',
                                     size=264,
                                     translate=True
                                     )
-
     
+    
+    odoo_field_name = fields.Many2one(
+        comodel_name='ir.model.fields', 
+        #related="attribute_id.odoo_field_name", 
+        string="Odoo Field Name",) 
+    
+    store_view_id = fields.Many2one('magento.storeview')
+    
+
+    @api.one
+    @api.constrains('attribute_id')
+    def check_attribute_id(self):
+        
+        # TODO: control if the attribute and the attribute set are coherent
+        return 
+        
     _sql_constraints = [
         ('custom_attr_unique_product_uiq', 'unique(attribute_id, product_id, backend_id)', 'This attribute already have a value for this product !')
     ]

@@ -7,6 +7,7 @@
  'version': '10.0.1.0.0',
  'category': 'Connector',
  'depends': ['connector_magento',
+             'product'
              ],
  'author': "Info a tout prix, MindAndGo, Camptocamp,Akretion,Sodexis,Odoo Community Association (OCA)",
  'license': 'AGPL-3',
@@ -14,9 +15,11 @@
 
  'data': [
         'views/magento_backend_views.xml',
-        'views/product_view.xml',
+        'views/product_custom_values.xml',
         'views/magento_external_objects_menus.xml',
-
+        'views/product_view.xml',
+        'views/magento_product_attributes.xml',
+        
         
           ],
  'installable': True,

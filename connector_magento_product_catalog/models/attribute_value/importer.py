@@ -22,9 +22,18 @@ class AttributeValueImportMapper(Component):
     _apply_on = ['magento.product.attribute.value']
 
     # TODO :     categ, special_price => minimal_price
-    direct = [('label', 'name'),
+    direct = [
               ('value', 'external_id'),
+              ('id', 'code')
               ]
+    
+    @mapping
+    def get_value(self, record):
+        name = record['label']
+        if not name:
+            name = u'False'
+            
+        return {'name' : name }
     
     def finalize(self, map_record, values):
         if map_record.parent:
@@ -32,6 +41,32 @@ class AttributeValueImportMapper(Component):
             external_id_parent = str(map_record.parent.source.get('attribute_id'))
             values.update({'external_id': external_id_parent + '_' + external_id }) 
         return values
+    
+
+class MagentoAttributeValueImporter(Component):
+    """ Import one AttributeValueImport """
+
+    _name = 'magento.product.attribute.value.importer'
+    _inherit = 'magento.importer'
+    _apply_on = ['magento.product.attribute.value']
+    
+    
+    def _must_skip(self):
+        """ Hook called right after we read the data from the backend.
+
+        If the method returns a message giving a reason for the
+        skipping, the import will be interrupted and the message
+        recorded in the job (if the import is called directly by the
+        job, not by dependencies).
+
+        If it returns None, the import will continue normally.
+
+        :returns: None | str | unicode
+        """
+        if self.magento_record['type_id'] == 'configurable':
+            return _('The configurable product is not imported in Odoo, '
+                     'because only the simple products are used in the sales '
+                     'orders.')
     
 
     #TODO: 

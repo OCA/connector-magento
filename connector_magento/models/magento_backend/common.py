@@ -11,6 +11,7 @@ from datetime import datetime, timedelta
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 
+from odoo.addons.component.core import Component
 from odoo.addons.connector.checkpoint import checkpoint
 from ...components.backend_adapter import MagentoLocation, MagentoAPI
 
@@ -32,7 +33,9 @@ class MagentoBackend(models.Model):
         to add a version from an ``_inherit`` does not constrain
         to redefine the ``version`` field in the ``_inherit`` model.
         """
-        return [('1.7', '1.7+'), ('2.0', '2.0+') ]
+        return [('1.7', '1.7+'),
+                ('2.0', '2.0+') ]
+        
 
     @api.model
     def _get_stock_field_id(self):
@@ -42,6 +45,37 @@ class MagentoBackend(models.Model):
             limit=1)
         return field
 
+    @api.model
+    def _select_state(self):
+        """Available States for this Backend"""
+        return [('draft', 'Draft'),
+                ('checked', 'Checked'),
+                ('production', 'In Production')]
+
+
+    @api.multi
+    def _check_connection(self):
+        self.ensure_one()
+        with self.work_on('magento.backend') as work:
+            component = work.component_by_name(name='magento.adapter.test')
+            with api_handle_errors('Connection failed'):
+                component.head()
+
+    @api.multi
+    def button_check_connection(self):
+        # TODO : use self._check_connection() as in connector prestashop
+        # raise exceptions.UserError(_('Connection successful'))
+        self.write({'state': 'checked'})
+
+    active = fields.Boolean(
+        string='Active',
+        default=True
+    )
+    state = fields.Selection(
+        selection='_select_state',
+        string='State',
+        default='draft'
+    )
     version = fields.Selection(selection='select_versions', required=True)
     location = fields.Char(
         string='Location',
@@ -421,3 +455,11 @@ class MagentoConfigSpecializer(models.AbstractModel):
             this.warehouse_id = (
                 this.specific_warehouse_id or
                 this._parent.warehouse_id)
+
+
+class NoModelAdapter(Component):
+    """ Used to test the connection """
+    _name = 'magento.adapter.test'
+    _inherit = 'magento.adapter'
+    _apply_on = 'magento.backend'
+    _magento_model = ''

@@ -38,7 +38,7 @@
 
 
 		<menuitem id="menu_odoo_external_objects" name="External Objects"
-			parent="menu_magento_root" />
+			parent="menu_magento_root"  sequence="100"/>
 
 <!-- 		<menuitem id="menu_odoo_external_uom" name="External UOM"
 			parent="menu_odoo_external_objects" action="action_odoo_uom" />
