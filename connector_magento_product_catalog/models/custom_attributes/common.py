@@ -52,7 +52,7 @@ class CustomAttribute(models.Model):
     
     odoo_field_name = fields.Many2one(
         comodel_name='ir.model.fields', 
-        #related="attribute_id.odoo_field_name", 
+        related="attribute_id.odoo_field_name", 
         string="Odoo Field Name",) 
     
     store_view_id = fields.Many2one('magento.storeview')
