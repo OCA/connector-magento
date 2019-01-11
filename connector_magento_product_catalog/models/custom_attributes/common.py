@@ -41,7 +41,8 @@ class CustomAttribute(models.Model):
                                       )
     
     magento_attribute_type = fields.Selection(
-         related="attribute_id.frontend_input"
+         related="attribute_id.frontend_input",
+         store=True
         )
     
     attribute_text = fields.Char(string='Magento Text / Value',
@@ -49,11 +50,23 @@ class CustomAttribute(models.Model):
                                     translate=True
                                     )
     
+    attribute_select = fields.Many2one(string='Magento Select / Value',
+                                    comodel_name="magento.product.attribute.value",
+                                    domain=[('magento_attribute_type', '=', 'select')]
+                                    )
+    
+    attribute_multiselect = fields.Many2many(string='Magento MultiSelect / Value',
+                                    relation="magento_custom_attributes_rel",
+                                    comodel_name="magento.product.attribute.value",
+                                    domain=[('magento_attribute_type', '=', 'multiselect')]
+                                    )
+    
     
     odoo_field_name = fields.Many2one(
         comodel_name='ir.model.fields', 
         related="attribute_id.odoo_field_name", 
-        string="Odoo Field Name",) 
+        string="Odoo Field Name",
+        store=True) 
     
     store_view_id = fields.Many2one('magento.storeview')
     

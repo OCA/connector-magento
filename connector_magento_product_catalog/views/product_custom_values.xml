@@ -16,7 +16,7 @@
 
 					<field name="magento_attribute_type" />
 					<field name="odoo_field_name" />
-					
+
 					<field name="product_id" />
 					<group>
 						<filter name="f_magento_attribute_type"
@@ -24,7 +24,7 @@
 							context="{'group_by': ['magento_attribute_type']}" />
 						<filter name="f_attribute_set_id" string="By attribute set"
 							context="{'group_by': ['attribute_set_id']}" />
-					</group> 
+					</group>
 				</search>
 			</field>
 		</record>
@@ -35,17 +35,24 @@
 			<field name="model">magento.custom.attribute.values</field>
 			<field name="arch" type="xml">
 				<tree editable="top">
-					<field name="magento_product_id" /> 
- 					<field name="backend_id" />
+					<field name="magento_product_id" />
+					<field name="backend_id" />
 					<field name="product_id" />
-					
-<!-- 					<field name="attribute_set_id" />
- -->					<field name="attribute_id"
+
+					<!-- <field name="attribute_set_id" /> -->
+					<field name="attribute_id"
 						domain="[('create_variant', '=', False),]" />
-					<field name="odoo_field_name" />
+					<field name="odoo_field_name" readonly="1" />
 					<field name="magento_attribute_type" readonly="1" />
 					<field name="attribute_text" />
- 				</tree>
+					<field name="attribute_select"
+						domain="[('magento_attribute_id', '=', attribute_id)]" />
+					<field name="attribute_multiselect" widget="many2many_tags"
+						domain="[('magento_attribute_id', '=', attribute_id)]" />
+					<!-- attrs="{'readonly': [('magento_attribute_type', '!=', 'select')]}" -->
+					<field name="store_view_id"
+						domain="[('backend_id', '=', backend_id)]" />
+				</tree>
 			</field>
 		</record>
 

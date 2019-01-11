@@ -174,7 +174,21 @@ class ProductProductExportMapper(Component):
         for values_id in record.magento_attribute_line_ids:
             """ Deal with Custom Attributes """            
             attributeCode = values_id.attribute_id.attribute_code
+            
             value = values_id.attribute_text
+            
+            if values_id.magento_attribute_type == 'boolean':
+                try:
+                    value = int(values_id.attribute_text)
+                except:
+                    value = 0
+            
+            
+            if values_id.magento_attribute_type in ['select',] and \
+                    values_id.attribute_select.external_id != False:
+                full_value = values_id.attribute_select.external_id
+                value = full_value.split('_')[1]
+            
             customAttributes.append({
                 'attribute_code': attributeCode,
                 'value': value
