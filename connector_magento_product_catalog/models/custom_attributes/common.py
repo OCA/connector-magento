@@ -12,7 +12,7 @@ from odoo.addons.connector.exception import IDMissingInBackend
 _logger = logging.getLogger(__name__)
 
     
-class CustomAttribute(models.Model):
+class MagentoCustomAttribute(models.Model):
     _name = 'magento.custom.attribute.values'
     
      
@@ -70,13 +70,51 @@ class CustomAttribute(models.Model):
     
     store_view_id = fields.Many2one('magento.storeview')
     
+    @api.model
+    def create(self, vals):
+        res = super(MagentoCustomAttribute,self).create(vals)
+        res.check_attribute_id()
+        return res
+    
+    
+    @api.multi
+    def write(self, vals):
+        org_vals = vals.copy()
+        res = super(MagentoCustomAttribute, self).write(vals)
+        for cv in self:
+            cv.check_attribute_id()
+        return res
 
     @api.one
     @api.constrains('attribute_id')
     def check_attribute_id(self):
-        
-        # TODO: control if the attribute and the attribute set are coherent
-        return 
+        self.ensure_one()
+        res = self
+        if 'no_update' in self._context and \
+            self._context.get('no_update', False):
+            return
+        if res.odoo_field_name.id != False:
+            odoo_field_name = res.odoo_field_name
+            custom_vals = {
+                    odoo_field_name.name: res.attribute_text,
+            }
+            if res.magento_attribute_type == 'boolean':
+                custom_vals.update({
+                    odoo_field_name.name: int(res.attribute_text),
+                    })
+            if res.magento_attribute_type == 'select':
+                custom_vals.update({
+                    odoo_field_name.name: res.attribute_select.odoo_id.id,
+                    })
+            if res.magento_attribute_type == 'multiselect':
+                custom_vals.update({
+                    odoo_field_name.name: [
+                        (6, False, 
+                         [s.odoo_id.id for s in res.attribute_multiselect])
+                        ],
+                    })
+            
+            res.product_id.with_context(no_update=True).write(custom_vals)
         
     _sql_constraints = [
         ('custom_attr_unique_product_uiq', 'unique(attribute_id, product_id, backend_id)', 'This attribute already have a value for this product !')
