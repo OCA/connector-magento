@@ -43,11 +43,11 @@
 				<tree>
 					<field name="attribute_code" />
 					<field name="name" />
-					<field name="attribute_id" />
 					<field name="external_id" />
 					<field name="backend_id" />
 					<field name="odoo_id" />
 					<field name="frontend_input" />
+					<field name="odoo_field_name" />
 				</tree>
 
 			</field>
