@@ -264,7 +264,11 @@ class ProductProductAdapter(Component):
         """ Update records on the external system """
         # XXX actually only ol_catalog_product.update works
         # the PHP connector maybe breaks the catalog_product.update
-        if self.work.magento_api._location.version == '2.0': 
+        if self.work.magento_api._location.version == '2.0':
+            _logger.info("Prepare to call api with %s " %
+                         self.get_product_datas(data))
+            #Replace by the 
+            id  = data['sku']
             return super(ProductProductAdapter, self)._call(
                 'products/%s' % id, 
                 self.get_product_datas(data), 

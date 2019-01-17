@@ -167,6 +167,7 @@ class MagentoCRUDAdapter(AbstractComponent):
                 'MagentoAPI instance to be able to use the '
                 'Backend Adapter.'
             )
+        _logger.debug("Call magento API with method %s and arguments %s , http_method %s and storeview %s" % (method, arguments, http_method, storeview))
         return magento_api.call(method, arguments, http_method, storeview)
 
 
