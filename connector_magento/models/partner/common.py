@@ -142,7 +142,6 @@ class MagentoAddress(models.Model):
 
 
 class PartnerAdapter(Component):
-
     _name = 'magento.partner.adapter'
     _inherit = 'magento.adapter'
     _apply_on = 'magento.res.partner'
@@ -194,7 +193,6 @@ class PartnerAdapter(Component):
 
 
 class AddressAdapter(Component):
-
     _name = 'magento.address.adapter'
     _inherit = 'magento.adapter'
     _apply_on = 'magento.address'
