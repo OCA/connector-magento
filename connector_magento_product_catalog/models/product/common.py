@@ -16,9 +16,7 @@ _logger = logging.getLogger(__name__)
 class MagentoProductProduct(models.Model):
     _inherit = 'magento.product.product'
     
-    
-    attribute_set_id = fields.Many2one('magento.product.attributes.set',
-                                       
+    attribute_set_id = fields.Many2one('magento.product.attributes.set',                           
                                        string='Attribute set')
     
     magento_attribute_line_ids = fields.One2many(comodel_name='magento.custom.attribute.values', 
@@ -73,7 +71,7 @@ class MagentoProductProduct(models.Model):
             custom_vals = {
                     'magento_product_id': self.id,
                     'attribute_id': att_id.id,
-                    'attribute_text': str(self[field]),
+                    'attribute_text': self[field],
                     'attribute_select': False,
                     'attribute_multiselect': False,
             }
@@ -152,18 +150,16 @@ class ProductProductAdapter(Component):
     _admin_path = '/{model}/edit/id/{id}'
     
     
-#     def _create(self, data):
-    
     def create(self, data):
         """ Create a record on the external system """
         if self.work.magento_api._location.version == '2.0': 
             new_product = super(ProductProductAdapter, self)._call(
-                'products/%s' % id, 
+                'products', 
                 self.get_product_datas(data), 
-                http_method='put')            
+                http_method='post')            
             return new_product['id']
-            
-            
+             
+             
         return self._call('%s.create' % self._magento_model,
                           [customer_id, data])
     
@@ -184,9 +180,7 @@ class ProductProductAdapter(Component):
     
     def get_product_datas(self, data, saveOptions=True):
         main_datas = super(ProductProductAdapter, self).get_product_datas(data, saveOptions)
-#         att = {'customAttributes': data['customAttributes']}
-        
         main_datas['product'].update(data)
-#         main_datas['product'].update(att)
+        main_datas['product'].update({'visibility': 1})
         return main_datas
     

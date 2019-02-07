@@ -15,6 +15,9 @@ _logger = logging.getLogger(__name__)
 
 class MagentoProductTemplate(models.Model):
     _name = 'magento.product.template'
+    _inherit = 'magento.binding'
+    _inherits = {'product.template': 'odoo_id'}
+    _description = 'Magento Product Template'
     
     @api.model
     def product_type_get(self):
@@ -29,6 +32,17 @@ class MagentoProductTemplate(models.Model):
             # ('bundle', 'Bundle Product'),
         ]
 
+    @api.depends('odoo_id',)
+    @api.multi
+    def _is_configurable(self):
+        self.ensure_one()
+        self.product_type = 'configurable'
+        
+    attribute_set_id = fields.Many2one('magento.product.attributes.set',
+                                       
+                                       string='Attribute set')
+    
+        
     odoo_id = fields.Many2one(comodel_name='product.template',
                               string='Product Template',
                               required=True,
@@ -42,31 +56,35 @@ class MagentoProductTemplate(models.Model):
     updated_at = fields.Date('Updated At (on Magento)')
     product_type = fields.Selection(selection='product_type_get',
                                     string='Magento Product Type',
-                                    default='simple',
+                                    compute=_is_configurable,
                                     required=True)
     
-    backorders = fields.Selection(
-        selection=[('use_default', 'Use Default Config'),
-                   ('no', 'No Sell'),
-                   ('yes', 'Sell Quantity < 0'),
-                   ('yes-and-notification', 'Sell Quantity < 0 and '
-                                            'Use Customer Notification')],
-        string='Manage Inventory Backorders',
-        default='use_default',
-        required=True,
-    )
-    magento_qty = fields.Float(string='Computed Quantity',
-                               help="Last computed quantity to send "
-                                    "on Magento.")
-    no_stock_sync = fields.Boolean(
-        string='No Stock Synchronization',
-        required=False,
-        help="Check this to exclude the product "
-             "from stock synchronizations.",
-    )
+    magento_attribute_line_ids = fields.One2many(
+                    comodel_name='magento.custom.template.attribute.values', 
+                    inverse_name='magento_product_id', 
+                    string='Magento Simple Custom Attributes Values for templates',
+                                        )
+    
+    
+    @api.multi
+    def export_product_template_button(self, fields=None):
+        self.ensure_one()
+        self.with_delay(priority=20).export_product_template()
 
-    RECOMPUTE_QTY_STEP = 1000  # products at a time
-
+        
+    @job(default_channel='root.magento')
+    @related_action(action='related_action_unwrap_binding')
+    @api.multi
+    def export_product_template(self, fields=None):
+        """ Export the attributes configuration of a product. """
+        self.ensure_one()
+        with self.backend_id.work_on(self._name) as work:
+            #TODO make different usage
+            exporter = work.component(usage='record.exporter')
+            return exporter.run(self)
+        
+        
+    
 #     @job(default_channel='root.magento')
 #     @related_action(action='related_action_unwrap_binding')
 #     @api.multi
@@ -153,21 +171,19 @@ class MagentoProductTemplate(models.Model):
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
     
-    magento_bind_ids = fields.One2many(
+    
+    magento_template_bind_ids = fields.One2many(
         comodel_name='magento.product.template',
         inverse_name='odoo_id',
-        string='Magento Bindings',
-    )
-
-    
-
-class ProductTemplate(models.Model):
-    _inherit = 'product.template'
-    
+        string='Magento Template Bindings',
+    )     
    
     @api.model
     def fields_view_get(self, *args, **kwargs):
         res = super(ProductTemplate, self).fields_view_get(*args, **kwargs)
+        #TODO : Implement method to identify if the field is mapped with Magento
+        # If yes, push a class to highlight the principle.
+        
 #         timebox_model = self.env['project.gtd.timebox']
 #         if (res['type'] == 'fo') and self.env.context.get('gtd', False):
 #             timeboxes = timebox_model.search([])
@@ -189,13 +205,17 @@ class ProductTemplate(models.Model):
     def write(self, vals):
         org_vals = vals.copy()
         res = super(ProductTemplate, self).write(vals)
-        prod_ids = self.filtered(lambda p: len(p.product_variant_ids.magento_bind_ids) > 0)
-        for prod in prod_ids.product_variant_ids.magento_bind_ids:
-            for key in org_vals:
-                prod.check_field_mapping(key, vals)
+        variant_ids = self.product_variant_ids
+        prod_ids = variant_ids.filtered(lambda p: len(p.magento_bind_ids) > 0)
+        for var  in prod_ids:
+            for prod in var.magento_bind_ids:
+                for key in org_vals:
+                    prod.check_field_mapping(key, vals)
         return res              
 
-     
+
+
+
 class ProductTemplateAdapter(Component):
     _name = 'magento.product.template.adapter'
     _inherit = 'magento.adapter'
@@ -208,3 +228,56 @@ class ProductTemplateAdapter(Component):
     _admin_path = '/{model}/edit/id/{id}'
     
     
+    def create(self, data):
+        """ Create a record on the external system """
+        if self.work.magento_api._location.version == '2.0': 
+            datas = self.get_product_datas(data)
+            datas['product'].update(data)
+            new_product = super(ProductTemplateAdapter, self)._call(
+                'products', datas , 
+                http_method='post')            
+            return new_product['id']
+             
+             
+        return self._call('%s.create' % self._magento_model,
+                          [customer_id, data])
+    
+    
+    
+    def get_product_datas(self, data, saveOptions=True):
+        """ Hook to implement in other modules"""
+        visibility = 4 
+        #TODO : Check if the variant counts is more than > 1 if yes then don't export
+        product_datas = {
+            'product': {
+                "id": 0,
+                "sku": data['sku'] or data['default_code'],
+                "name": data['name'],
+                "attributeSetId": data['attributeSetId'],
+                "price": 0,
+                "status": 1,
+                "visibility": visibility,
+                "typeId": data['typeId'],
+                "weight": data['weight'] or 0.0
+            }
+            ,"saveOptions": saveOptions
+            }
+        return product_datas
+
+#     def write(self, id, data, storeview_id=None):
+#         """ Update records on the external system """
+#         # XXX actually only ol_catalog_product.update works
+#         # the PHP connector maybe breaks the catalog_product.update
+#         if self.work.magento_api._location.version == '2.0':
+#             _logger.info("Prepare to call api with %s " %
+#                          self.get_product_datas(data))
+#             #Replace by the 
+#             id  = data['sku']
+#             return super(ProductTemplateAdapter, self)._call(
+#                 'products/%s' % id, 
+#                 self.get_product_datas(data), 
+#                 http_method='put')
+#             
+# #             raise NotImplementedError  # TODO
+#         return self._call('ol_catalog_product.update',
+#                           [int(id), data, storeview_id, 'id'])

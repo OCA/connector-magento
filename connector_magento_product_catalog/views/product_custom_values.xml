@@ -18,6 +18,9 @@
 					<field name="odoo_field_name" />
 
 					<field name="product_id" />
+					<separator />
+					<filter name="f_magento_attribute_type"
+						domain="[('odoo_field_name', '=', False)]" />
 					<group>
 						<filter name="f_magento_attribute_type"
 							string="By Attribute Type"

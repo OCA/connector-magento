@@ -150,7 +150,7 @@ class ProductProductExportMapper(Component):
         
         customAttributes = []
         magento_attribute_line_ids = record.magento_attribute_line_ids.filtered(
-            lambda att: att.store_view_id != False)
+            lambda att: att.store_view_id.id == False)
         
         for values_id in magento_attribute_line_ids:
             """ Deal with Custom Attributes """            
@@ -177,7 +177,7 @@ class ProductProductExportMapper(Component):
             odoo_value_id = values_id.magento_bind_ids.filtered(
                 lambda m: m.backend_id == record.backend_id)    
             attributeCode = odoo_value_id.magento_attribute_id.attribute_code
-            value = odoo_value_id.code
+            value = odoo_value_id.external_id.split('_')[1]
             customAttributes.append({
                 'attributeCode': attributeCode,
                 'value': value

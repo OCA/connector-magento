@@ -31,6 +31,6 @@
  'demo': [],
  'data': ['views/partner_views.xml',
           ],
- 'installable': False,
+ 'installable': True,
  'application': False,
  }

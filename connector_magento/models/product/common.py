@@ -194,7 +194,11 @@ class ProductProductAdapter(Component):
 
     def _call(self, method, arguments, http_method=None, storeview=None):
         try:
-            return super(ProductProductAdapter, self)._call(method, arguments, http_method=http_method, storeview=storeview)
+            return super(ProductProductAdapter, self)._call(
+                method, 
+                arguments, 
+                http_method=http_method, 
+                storeview=storeview)
         except xmlrpclib.Fault as err:
             # this is the error in the Magento API
             # when the product does not exist
@@ -258,6 +262,7 @@ class ProductProductAdapter(Component):
             }
             ,"saveOptions": saveOptions
             }
+        #TODO : check that the status don't change when we update 
         return product_datas
 
     def write(self, id, data, storeview_id=None):

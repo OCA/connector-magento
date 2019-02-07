@@ -31,10 +31,23 @@
 			<field name="view_mode">tree,form</field>
 		</record>
 
+		<record id="action_magento_custom_template_attributes"
+			model="ir.actions.act_window">
+			<field name="name">Magento Custom  Attributes for Templates</field>
+			<field name="res_model">magento.custom.template.attribute.values</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
 		<menuitem id="menu_odoo_external_custom_attributes_values"
 			name="Custom Attribute values"
 			parent="connector_magento.menu_odoo_external_objects"
 			action="action_magento_custom_attributes" />
+
+		<menuitem id="menu_odoo_external_custom_template_attributes_values"
+			name="Custom Attribute values for template"
+			parent="connector_magento.menu_odoo_external_objects"
+			action="action_magento_custom_template_attributes" />
 		<menuitem id="menu_odoo_external_attributes_set"
 			name="External Attributes Sets"
 			parent="connector_magento.menu_odoo_external_objects"

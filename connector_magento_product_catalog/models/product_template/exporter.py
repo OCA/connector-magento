@@ -22,6 +22,34 @@ class ProductTemplateDefinitionExporter(Component):
     #_usage = 'product.definition.exporter'
     
     
+    def _export_dependencies(self):
+        """ Import the dependencies for the record"""
+        record = self.binding
+        for p in record.product_variant_ids:
+            m_prod = p.magento_bind_ids.filtered(lambda m: m.backend_id == record.backend_id)
+            if not m_prod.id:
+                m_prod = self.env['magento.product.product'].create(
+                    {'backend_id': self.backend_record.id,
+                     'odoo_id': p.id,
+                     'attribute_set_id': self.binding.attribute_set_id.id
+                     })
+            self._export_dependency(m_prod,
+                                    'magento.product.product')
+    
+#     def _export_dependency(self, relation, binding_model,
+#                            component_usage='record.exporter',
+#                            binding_field='magento_bind_ids',
+#                            binding_extra_vals=None):
+#         record = self.magento_record
+# 
+#     
+#         for line in record.get('items', []):
+#             _logger.debug('line: %s', line)
+#             field = self.collection.version == '1.7' and 'product_id' or 'sku'
+#             if field in line:
+#                 self._import_dependency(line[field],
+#                     'magento.product.product')
+#     
     
     
 #     def _get_atts_data(self, binding, fields):
@@ -99,25 +127,81 @@ class ProductTemplateExportMapper(Component):
     _name = 'magento.product.template.export.mapper'
     _inherit = 'magento.export.mapper'
     _apply_on = ['magento.product.template']
-
+    
     direct = [
-#         ('name', 'name'),
-#         ('default_code', 'sku'),
-#         ('product_type', 'typeId'),
+        ('name', 'name'),
+        ('product_type', 'typeId'),
 #         ('lst_price', 'price'),
     ]
     
-    
     @mapping
-    def get_type(self, record):
+    def get_extension_attributes(self, record):
+        data = {}
         
-        return {}
+        data.update(self.get_website_ids(record))
+        data.update(self.category_ids(record))
+        data.update(self.configurable_product_options(record))
+        data.update(self.configurable_product_links(record))
+        
+        return {'extension_attributes': data}
     
     
-    @mapping
+    def configurable_product_links(self, record):
+        links = []
+        for p in record.product_variant_ids:
+            mp = p.magento_bind_ids.filtered(
+                lambda m: m.backend_id == record.backend_id)
+            links.append(mp.external_id)
+        return {'configurable_product_links': links}
+    
+    
+    def configurable_product_options(self, record):
+        option_ids  = []
+        att_lines = record.attribute_line_ids.filtered(
+            lambda l: l.attribute_id.create_variant == True
+                    and len(l.attribute_id.magento_bind_ids) > 0
+            )
+        #TODO : Uniquement les attributs pivots
+        for l in att_lines:
+            m_att_id = l.attribute_id.magento_bind_ids.filtered(
+                    lambda m: m.backend_id == record.backend_id)
+            opt = {
+                "id": 1,
+                "attribute_id": m_att_id.external_id,
+                "label": m_att_id.attribute_code,
+                "position": 0,
+                "values": []
+                }
+            for v in l.value_ids:
+                v_id = v.magento_bind_ids.filtered(
+                lambda m: m.backend_id == record.backend_id) 
+                opt['values'].append({ "value_index": v_id.external_id.split('_')[1]})
+                
+            option_ids.append(opt)
+        return {'configurable_product_options': option_ids}
+    
     def get_website_ids(self, record):
-        
-        return {}
+        website_ids = [
+                s.external_id for s in record.backend_id.website_ids
+                ]
+        return {'website_ids': website_ids}
+    
+    def category_ids(self, record):
+        #TODO : Map categories from magento
+        categ_vals = [
+            {
+              "position": 0,
+              "category_id": record.categ_id.magento_bind_ids.external_id,
+#               "extension_attributes": {}
+          }
+        ]
+        for c in record.categ_ids:
+            categ_vals.append({
+              "position": 1,
+              "category_id": c.magento_bind_ids.external_id,
+#               "extension_attributes": {}
+          })
+        return {'category_links': categ_vals}
     
     
     @mapping
@@ -125,15 +209,8 @@ class ProductTemplateExportMapper(Component):
         
         return {}
     
-    @mapping
-    def get_storeview(self, record):
-        
-        return {}
+
     
-    @mapping
-    def category_ids(self, record):
-        #TODO : Map categories from magento
-        return {}
     
     @mapping
     def weight(self, record):
@@ -154,42 +231,72 @@ class ProductTemplateExportMapper(Component):
         return {'attributeSetId' : val}
 
     @mapping
-    def names(self, record):
-        return {}
+    def default_code(self, record):
+        #get the first Reference of variants
+        code = record.product_variant_ids[0].default_code
+        return {'sku': '%s-%s' % (code, 'c')}
 
-#     @mapping
-#     def attributes(self, record):
-#         """
-#         Collect attributes to prensent it regarding to
-#         https://devdocs.magento.com/swagger/index_20.html
-#         catalogProductRepositoryV1 / POST 
-#         """
-#         
-#         customAttributes = []
-#         for values_id in record.magento_attribute_line_ids:
-#             """ Deal with Custom Attributes """            
-#             attributeCode = values_id.attribute_id.attribute_code
-#             value = values_id.attribute_text
-#             customAttributes.append({
-#                 'attribute_code': attributeCode,
-#                 'value': value
-#                 })
-#             
-#         for values_id in record.attribute_value_ids:
+    @mapping
+    def get_common_attributes(self, record):
+        """
+        Collect attributes to prensent it regarding to
+        https://devdocs.magento.com/swagger/index_20.html
+        catalogProductRepositoryV1 / POST 
+        """
+        
+        customAttributes = []
+        magento_attribute_line_ids = record.magento_attribute_line_ids.filtered(
+            lambda att: att.store_view_id.id == False)
+        
+        for values_id in magento_attribute_line_ids:
+            """ Deal with Custom Attributes """            
+            attributeCode = values_id.attribute_id.attribute_code
+            value = values_id.attribute_text
+            if values_id.magento_attribute_type == 'boolean':
+                try:
+                    value = int(values_id.attribute_text)
+                except:
+                    value = 0
+            
+            if values_id.magento_attribute_type in ['select',] and \
+                    values_id.attribute_select.external_id != False:
+                full_value = values_id.attribute_select.external_id
+                value = full_value.split('_')[1]
+            
+            customAttributes.append({
+                'attribute_code': attributeCode,
+                'value': value
+                })     
+        
+        att_lines = record.attribute_line_ids.filtered(
+            lambda l: l.attribute_id.create_variant == True
+                    and len(l.attribute_id.magento_bind_ids) > 0
+            )
+        
+#         value_ids = self.env['product.attribute.value']
+#         for l in att_lines:
+#             value_ids |= l.value_ids
+#         for values_id in value_ids:
 #             """ Deal with Attributes in the 'variant' part of Odoo"""
 #             odoo_value_id = values_id.magento_bind_ids.filtered(
-#                 lambda m: m.backend_id == record.backend_id)
-#             
+#                 lambda m: m.backend_id == record.backend_id)    
 #             attributeCode = odoo_value_id.magento_attribute_id.attribute_code
-#             value = odoo_value_id.code
+#             value = odoo_value_id.external_id.split('_')[1]
 #             customAttributes.append({
 #                 'attributeCode': attributeCode,
 #                 'value': value
 #                 })
-#         result = {'customAttributes': customAttributes}
-#         return result
+            
+            
+        result = {'customAttributes': customAttributes}
+        return result
 
-
+    @mapping
+    def price(self, record):
+        price = record['lst_price']
+        return {'price': price}
+    
+    
     @mapping
     def option_products(self, record):
         #TODO : Map optionnal products

@@ -309,10 +309,19 @@ class GenericAdapter(AbstractComponent):
 
     def create(self, data):
         """ Create a record on the external system """
+        if self.work.magento_api._location.version == '2.0': 
+            new_object = self._call(
+                '%s' % self._magento2_model, 
+                data, http_method='post')            
+            return new_object['id']
         return self._call('%s.create' % self._magento_model, [data])
 
     def write(self, id, data):
         """ Update records on the external system """
+        if self.work.magento_api._location.version == '2.0': 
+            return self._call(
+                '%s/%s' % (self._magento2_model, id), 
+                data, http_method='put')            
         return self._call('%s.update' % self._magento_model,
                           [int(id), data])
 
