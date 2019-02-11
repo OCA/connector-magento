@@ -13,18 +13,18 @@ _logger = logging.getLogger(__name__)
 
     
 class MagentoCustomAttribute(models.Model):
-    _name = 'magento.custom.attribute.values'
+    _name = 'magento.custom.template.attribute.values'
     
      
     """
     This class deal with customs Attributes
     """
 #     
-    magento_product_id = fields.Many2one(comodel_name="magento.product.product",
+    magento_product_id = fields.Many2one(comodel_name="magento.product.template",
                                 string="Magento Product",
                                 )
     
-    product_id = fields.Many2one(comodel_name="product.product",
+    product_id = fields.Many2one(comodel_name="product.template",
                                 string="Product",
                                 related="magento_product_id.odoo_id",
                                 required=True)
@@ -56,7 +56,7 @@ class MagentoCustomAttribute(models.Model):
                                     )
     
     attribute_multiselect = fields.Many2many(string='Magento MultiSelect / Value',
-                                    relation="magento_custom_attributes_rel",
+                                    relation="magento_custom_attributes_template_rel",
                                     comodel_name="magento.product.attribute.value",
                                     domain=[('magento_attribute_type', '=', 'multiselect')]
                                     )
@@ -117,6 +117,8 @@ class MagentoCustomAttribute(models.Model):
             res.product_id.with_context(no_update=True).write(custom_vals)
         
     _sql_constraints = [
-        ('custom_attr_unique_product_uiq', 'unique(attribute_id, product_id, backend_id)', 'This attribute already have a value for this product !')
+        ('custom_attr_unique_product_template_uniq', 
+         'unique(attribute_id, product_id, backend_id)', 
+         'This attribute already have a value for this product template!')
     ]
 

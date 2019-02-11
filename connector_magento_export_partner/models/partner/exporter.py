@@ -102,10 +102,16 @@ class PartnerExportMapper(Component):
 
     direct = [
         ('birthday', 'dob'),
-        ('taxvat', 'taxvat'),
-        ('group_id', 'group_id'),
+        ('vat', 'taxvat'),
         ('website_id', 'website_id'),
     ]
+
+
+    @mapping
+    def group_id(self, record):
+        if record.group_id.external_id:
+            return {'group_id': record.group_id.external_id}
+        return {'group_id': 0}
 
     @changed_by('email', 'emailid')
     @mapping
@@ -116,7 +122,7 @@ class PartnerExportMapper(Component):
     @changed_by('name', 'firstname', 'lastname')
     @mapping
     def names(self, record):
-        if 'firstname' in record._fields:
+        if 'firstname' in record._fields and not record.consider_as_company:
             firstname = record.firstname
             lastname = record.lastname
         else:
@@ -142,7 +148,7 @@ class PartnerAddressExportMapper(Component):
               ('company', 'company'),
               ]
 
-    @changed_by('parent_id', 'openerp_id')
+    @changed_by('parent_id', 'odoo_id')
     @mapping
     def partner(self, record):
         binder = self.binder_for('magento.res.partner')
@@ -159,7 +165,7 @@ class PartnerAddressExportMapper(Component):
         if 'firstname' in record._fields:
             firstname = record.firstname or record.parent_id.firstname
             lastname = record.lastname or record.parent_id.lastname
-        else:
+        if not firstname or not lastname: 
             name = record.name or record.parent_id.name
             if ' ' in name:
                 parts = name.split()
@@ -197,3 +203,10 @@ class PartnerAddressExportMapper(Component):
             street = ['\n'.join([street, record.street2])]
         if street:
             return {'street': street}
+
+    @mapping
+    def get_website_ids(self, record):
+        website_ids = [
+                s.external_id for s in record.backend_id.website_ids
+                ]
+        return {'website_ids': website_ids}

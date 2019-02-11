@@ -81,7 +81,8 @@ class MagentoResPartner(models.Model):
     updated_at = fields.Datetime(string='Updated At (on Magento)',
                                  readonly=True)
     emailid = fields.Char(string='E-mail address')
-    taxvat = fields.Char(string='Magento VAT')
+    # Replaced by the VAT field on the company
+    #taxvat = fields.Char(string='Magento VAT')
     newsletter = fields.Boolean(string='Newsletter')
     guest_customer = fields.Boolean(string='Guest Customer')
     consider_as_company = fields.Boolean(
@@ -142,7 +143,6 @@ class MagentoAddress(models.Model):
 
 
 class PartnerAdapter(Component):
-
     _name = 'magento.partner.adapter'
     _inherit = 'magento.adapter'
     _apply_on = 'magento.res.partner'
@@ -153,16 +153,29 @@ class PartnerAdapter(Component):
     _magento2_key = 'id'
     _admin_path = '/{model}/edit/id/{id}'
 
-    def _call(self, method, arguments):
-        try:
-            return super(PartnerAdapter, self)._call(method, arguments)
-        except xmlrpclib.Fault as err:
-            # this is the error in the Magento API
-            # when the customer does not exist
-            if err.faultCode == 102:
-                raise IDMissingInBackend
-            else:
-                raise
+
+#     def _call(self, method, arguments, http_method=None, storeview=None):
+#         try:
+#             return super(PartnerAdapter, self)._call(method, arguments, http_method=http_method, storeview=storeview)
+#         except xmlrpclib.Fault as err:
+#             # this is the error in the Magento API
+#             # when the Partner does not exist
+#             if err.faultCode == 102:
+#                 raise IDMissingInBackend
+#             else:
+#                 raise
+
+
+#     def _call(self, method, arguments):
+#         try:
+#             return super(PartnerAdapter, self)._call(method, arguments)
+#         except xmlrpclib.Fault as err:
+#             # this is the error in the Magento API
+#             # when the customer does not exist
+#             if err.faultCode == 102:
+#                 raise IDMissingInBackend
+#             else:
+#                 raise
 
     def search(self, filters=None, from_date=None, to_date=None,
                magento_website_ids=None):
@@ -194,7 +207,6 @@ class PartnerAdapter(Component):
 
 
 class AddressAdapter(Component):
-
     _name = 'magento.address.adapter'
     _inherit = 'magento.adapter'
     _apply_on = 'magento.address'

@@ -16,9 +16,7 @@ _logger = logging.getLogger(__name__)
 class MagentoProductProduct(models.Model):
     _inherit = 'magento.product.product'
     
-    
-    attribute_set_id = fields.Many2one('magento.product.attributes.set',
-                                       
+    attribute_set_id = fields.Many2one('magento.product.attributes.set',                           
                                        string='Attribute set')
     
     magento_attribute_line_ids = fields.One2many(comodel_name='magento.custom.attribute.values', 
@@ -38,6 +36,7 @@ class MagentoProductProduct(models.Model):
         """ Export the attributes configuration of a product. """
         self.ensure_one()
         with self.backend_id.work_on(self._name) as work:
+            #TODO make different usage
             exporter = work.component(usage='record.exporter')
             return exporter.run(self)
 
@@ -46,117 +45,99 @@ class MagentoProductProduct(models.Model):
     def resync(self):
         raise NotImplementedError
     
+    @api.multi
+    def check_field_mapping(self, field, vals):
+        # Check if the Odoo Field has a matching attribute in Magento
+        # Update the value
+        # Return an appropriate dictionnary
+        self.ensure_one()
+#         att_id = 0
+        custom_model = self.env['magento.custom.attribute.values']
+        odoo_fields = self.env['ir.model.fields'].search([
+                    ('name', '=', field),
+                    ('model', 'in', ['product.product', 'product.template'])])
+        
+        att_ids = self.env['magento.product.attribute'].search(
+            [('odoo_field_name', 'in', [o.id for o in odoo_fields]),
+             ('backend_id', '=', self.backend_id.id)
+             ])
+        
+        if len(att_ids) > 0:
+            att_id = att_ids[0]
+            values = custom_model.search(
+                [('magento_product_id', '=', self.id),
+                 ('attribute_id', '=', att_id.id)
+                 ])
+            custom_vals = {
+                    'magento_product_id': self.id,
+                    'attribute_id': att_id.id,
+                    'attribute_text': self[field],
+                    'attribute_select': False,
+                    'attribute_multiselect': False,
+            }
+            odoo_field_type = odoo_fields[0].ttype
+            if odoo_field_type in ['many2one', 'many2many'] \
+                    and 'text' in att_id.frontend_input:
+                custom_vals.update({
+                    'attribute_text': str(
+                        [v.magento_bind_ids.external_id for v in self[field]
+                         ])})
+            
+            if att_id.frontend_input == 'boolean':
+                custom_vals.update({
+                    'attribute_text': str(int(self[field]))})
+            if att_id.frontend_input == 'select':
+                custom_vals.update({
+                    'attribute_text': False,
+                    'attribute_multiselect': False,
+                    'attribute_select': self[field].magento_bind_ids[0].id})
+            if att_id.frontend_input == 'multiselect':
+                custom_vals.update({
+                    'attribute_text': False,
+                    'attribute_multiselect': False,
+                    'attribute_multiselect': 
+                    [(6, False, [
+                        v.id for v in self[field].magento_bind_ids] )]})
+            if len(values) == 0:    
+                custom_model.with_context(no_update=True).create(custom_vals)
+            else:
+                values.with_context(no_update=True).write(custom_vals)
+    
 class ProductProduct(models.Model):
     _inherit = 'product.product'
     
-    # TODO: report the dependency on the magento.product.product because
-    # it's a non sense to force the product to have a single attribute_set and also custom values
-#     attribute_set_id = fields.Many2one('magento.product.attributes.set', string='Attribute set')
-#     magento_attribute_line_ids = fields.One2many(comodel_name='magento.custom.attribute.values', 
-#                                                  inverse_name='product_id', 
-#                                                  string='Magento Simple Custom Attributes Values',
-#                                         )
-#     
-    
-    #TODO: From now, as the mapping is hold by the product, no multi magento instance is supported
-    # Has to be improved
-    def check_field_mapping(self, field, vals):
-        #Check if the Odoo Field has a matching attribute in Magento
-        # Return an appropriate dictionnary
-        
-        att_id = 0
-        odoo_field = self.env['ir.model.fields'].search([
-                    ('name', '=', field),
-                    ('model', '=', self._name)])[0]
-        
-        att_ids = self.env['magento.product.attribute'].search(
-            [('odoo_field_name', '=', odoo_field.id or 0),])
-         
-        if len(att_ids)>0 :
-            att_id = att_ids[0].id
-            if 'magento_attribute_line_ids' in vals and len(vals['magento_attribute_line_ids']) >0:
-                key_found = False  
-                for key_dic in vals['magento_attribute_line_ids']:
-                    if key_dic[2]['attribute_color'] == att_id:
-                        key_found = True
-                        key_dic[2]['attribute_text'] = vals[field]
-                if not key_found:
-                    vals['magento_attribute'].append(
-                    (0, False, {
-                        'attribute_color': att_id,
-                        'attribute_text'  : vals[field]      
-                }))
-            else:
-                vals.update({'magento_attribute_line_ids':[]})
-                att_exists = self.magento_attribute_line_ids.filtered(
-                            lambda a: a.attribute_id.id == att_id)
-                
-                if len(att_exists) ==0 :
-                    mode = 0
-                    mode_id = False 
-                else:
-                    att_exists.unlink()
-                    mode = 0
-                    mode_id = False
-                          
-                vals['magento_attribute_line_ids'].append(
-                    (mode, mode_id, {
-                        'attribute_id': att_id,
-                        'attribute_text'  : vals[field]
-                }))
-         
-    
-    def check_attribute_mapping(self, attr):
-        #Check if the attribute modified has a matching field in Odoo
-        # @attr : Tuple coming from a create / write method
-        # Return a dict with field and its value in the proper format
-        # http://www.odoo.com/documentation/10.0/reference/orm.html#model-reference ( CRUD part)
-        
-        odoo_field_name = 0
-        attribute_id = 0
-        
-        if attr[0] == 0 :
-            #Pure Added =>
-            attribute_id = attr[2]['attribute_id']
-            odoo_field_name = attr[2]['odoo_field_name']
-        elif attr[0] == 1 : #Update
-            detail = self.env['magento.custom.attribute.values'].search([('id', '=', attr[1])])
-            odoo_field_name = detail.odoo_field_name.id
-            attribute_id = detail.attribute_id.id
-        
-        odoo_field_ids = self.env['magento.product.attribute'].search([
-            ('odoo_field_name', '=', odoo_field_name),
-            ('odoo_field_name', '!=', False),
-            ('id', '=', attribute_id)
-            ])
-        #TODO: Improve and deal with multiple Magento Instance
-        if len(odoo_field_ids) == 1 :
-            return {odoo_field_ids[0].odoo_field_name.name : attr[2]['attribute_text']}
-        return None
+    @api.model
+    def fields_view_get(self, *args, **kwargs):
+        res = super(ProductProduct, self).fields_view_get(*args, **kwargs)
+#         timebox_model = self.env['project.gtd.timebox']
+#         if (res['type'] == 'fo') and self.env.context.get('gtd', False):
+#             timeboxes = timebox_model.search([])
+#             search_extended = ''
+#             for timebox in timeboxes:
+#                 filter_ = u"""
+#                     <filter domain="[('timebox_id', '=', {timebox_id})]"
+#                             string="{string}"/>\n
+#                     """.format(timebox_id=timebox.id, string=timebox.name)
+#                 search_extended += filter_
+#             search_extended += '<separator orientation="vertical"/>'
+#             res['arch'] = tools.ustr(res['arch']).replace(
+#                 '<separator name="gtdsep"/>', search_extended)
+
+        return res
+   
     
     
     @api.multi
     def write(self, vals):
         org_vals = vals.copy()
-        for key in org_vals:
-            att_field = None
-            odoo_field = None
-            #Store attributes modes for choosing it 
-            attributes_mode = {}
-             
-            if key == 'magento_attribute_line_ids':
-                #If magento attribute, find the matching field if exists
-                for key_att in org_vals['magento_attribute_line_ids']:                     
-                    odoo_field = self.check_attribute_mapping(key_att)
-                    if not odoo_field: continue
-                    vals.update(odoo_field)
-            else:
-                #if 'magento_attribute' in org_vals :
-                att_field = self.check_field_mapping(key, vals)
-                
- 
-        return super(ProductProduct, self).write(vals)                    
+        res = super(ProductProduct, self).write(vals)
+        prod_ids = self.filtered(lambda p: len(p.magento_bind_ids) > 0)
+        for prod in prod_ids.magento_bind_ids:
+            for key in org_vals:
+                prod.check_field_mapping(key, vals)
+        return res              
 
+    
      
 class ProductProductAdapter(Component):
     _inherit = 'magento.product.product.adapter'
@@ -169,28 +150,37 @@ class ProductProductAdapter(Component):
     _admin_path = '/{model}/edit/id/{id}'
     
     
-#     def _create(self, data):
-    
     def create(self, data):
         """ Create a record on the external system """
         if self.work.magento_api._location.version == '2.0': 
             new_product = super(ProductProductAdapter, self)._call(
-                'products/%s' % id, 
+                'products', 
                 self.get_product_datas(data), 
-                http_method='put')            
+                http_method='post')            
             return new_product['id']
-            
-            
+             
+             
         return self._call('%s.create' % self._magento_model,
                           [customer_id, data])
     
-
+#     @api.multi
+#     def write(self, id, data, storeview_id=None):
+#         """ Update records on the external system """
+#         # XXX actually only ol_catalog_product.update works
+#         # the PHP connector maybe breaks the catalog_product.update
+#         if self.work.magento_api._location.version == '2.0':
+#             #Replace by the 
+#             id = data['sku']
+#             return super(ProductProductAdapter, self)._call(id, data, storeview_id=False)
+#             
+# #             raise NotImplementedError  # TODO
+#         return self._call('ol_catalog_product.update',
+#                           [int(id), data, storeview_id, 'id'])
+    
     
     def get_product_datas(self, data, saveOptions=True):
         main_datas = super(ProductProductAdapter, self).get_product_datas(data, saveOptions)
-#         att = {'customAttributes': data['customAttributes']}
-        
         main_datas['product'].update(data)
-#         main_datas['product'].update(att)
+        main_datas['product'].update({'visibility': 1})
         return main_datas
     

@@ -26,6 +26,11 @@ class MagentoProductAttributevalue(models.Model):
                                        required=True,
                                        ondelete='cascade',
                                        index=True)
+    
+    magento_attribute_type = fields.Selection(
+         related="magento_attribute_id.frontend_input",
+         store=True
+        )
 
     code = fields.Char('Magento Code for the value')
     

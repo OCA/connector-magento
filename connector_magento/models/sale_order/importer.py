@@ -237,10 +237,14 @@ class SaleOrderImportMapper(Component):
 
     @mapping
     def shipping_method(self, record):
-        ifield = record.get('shipping_method')
-        if not ifield:
+        ext_field = record.get('extension_attributes')
+        if not ext_field:
             return
-
+        ship_asg = ext_field['shipping_assignments'][0]
+        if not ship_asg:
+            return
+        ifield = ship_asg['shipping']['method']
+    
         carrier = self.env['delivery.carrier'].search(
             [('magento_code', '=', ifield)],
             limit=1,

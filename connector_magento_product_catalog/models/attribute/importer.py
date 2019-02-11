@@ -97,3 +97,6 @@ class AttributeImporter(Component):
     _apply_on = ['magento.product.attribute']
     
     
+    # TODO : use also the #/catalogProductAttributeGroupRepositoryV1/catalogProductAttributeGroupRepositoryV1GetListGet
+    # to deal with the useless info of the attribute
+    

@@ -22,36 +22,6 @@ class ProductDefinitionExporter(Component):
     #_usage = 'product.definition.exporter'
     
     
-    
-    
-#     def _get_atts_data(self, binding, fields):
-#         """
-#         Collect attributes to prensent it regarding to
-#         https://devdocs.magento.com/swagger/index_20.html
-#         catalogProductRepositoryV1 / POST 
-#         """
-#         
-#         customAttributes = []
-#         for values_id in binding.odoo_id.magento_attribute_line_ids:
-#             """ Deal with Custom Attributes """            
-#             attributeCode = values_id.attribute_id.name
-#             value = values_id.attribute_text
-#             customAttributes.append({
-#                 'attributeCode': attributeCode,
-#                 'value': value
-#                 })
-#             
-#         for values_id in binding.odoo_id.attribute_value_ids:
-#             """ Deal with Attributes in the 'variant' part of Odoo"""
-#             attributeCode = values_id.attribute_id.name
-#             value = values_id.name
-#             customAttributes.append({
-#                 'attributeCode': attributeCode,
-#                 'value': value
-#                 })
-#         result = {'customAttributes': customAttributes}
-#         return result
-
     def _should_import(self):
         """ Before the export, compare the update date
         in Magento and the last sync date in Odoo,
@@ -91,9 +61,6 @@ class ProductDefinitionExporter(Component):
             self.binding.with_delay().import_record(self.backend_record,
                                                 self.external_id,
                                                 force=True)
-        #else:
-        #    self.binding.with_delay().export_record(self.backend_record)
-    
 
 class ProductProductExportMapper(Component):
     _name = 'magento.product.export.mapper'
@@ -113,8 +80,6 @@ class ProductProductExportMapper(Component):
         
         data.update(self.get_website_ids(record))
         data.update(self.category_ids(record))
-        
-        
         return {'extension_attributes': data}
     
     
@@ -123,6 +88,23 @@ class ProductProductExportMapper(Component):
                 s.external_id for s in record.backend_id.website_ids
                 ]
         return {'website_ids': website_ids}
+    
+    def category_ids(self, record):
+        #TODO : Map categories from magento
+        categ_vals = [
+            {
+              "position": 0,
+              "category_id": record.categ_id.magento_bind_ids.external_id,
+#               "extension_attributes": {}
+          }
+        ]
+        for c in record.categ_ids:
+            categ_vals.append({
+              "position": 1,
+              "category_id": c.magento_bind_ids.external_id,
+#               "extension_attributes": {}
+          })
+        return {'category_links': categ_vals}
     
     
     @mapping
@@ -135,10 +117,6 @@ class ProductProductExportMapper(Component):
         
         return {}
     
-    @mapping
-    def category_ids(self, record):
-        #TODO : Map categories from magento
-        return {}
     
     @mapping
     def weight(self, record):
@@ -163,7 +141,7 @@ class ProductProductExportMapper(Component):
         return {}
 
     @mapping
-    def attributes(self, record):
+    def get_common_attributes(self, record):
         """
         Collect attributes to prensent it regarding to
         https://devdocs.magento.com/swagger/index_20.html
@@ -171,22 +149,35 @@ class ProductProductExportMapper(Component):
         """
         
         customAttributes = []
-        for values_id in record.magento_attribute_line_ids:
+        magento_attribute_line_ids = record.magento_attribute_line_ids.filtered(
+            lambda att: att.store_view_id.id == False)
+        
+        for values_id in magento_attribute_line_ids:
             """ Deal with Custom Attributes """            
             attributeCode = values_id.attribute_id.attribute_code
             value = values_id.attribute_text
+            if values_id.magento_attribute_type == 'boolean':
+                try:
+                    value = int(values_id.attribute_text)
+                except:
+                    value = 0
+            
+            if values_id.magento_attribute_type in ['select',] and \
+                    values_id.attribute_select.external_id != False:
+                full_value = values_id.attribute_select.external_id
+                value = full_value.split('_')[1]
+            
             customAttributes.append({
                 'attribute_code': attributeCode,
                 'value': value
-                })
-            
+                })     
+        
         for values_id in record.attribute_value_ids:
             """ Deal with Attributes in the 'variant' part of Odoo"""
             odoo_value_id = values_id.magento_bind_ids.filtered(
-                lambda m: m.backend_id == record.backend_id)
-            
+                lambda m: m.backend_id == record.backend_id)    
             attributeCode = odoo_value_id.magento_attribute_id.attribute_code
-            value = odoo_value_id.code
+            value = odoo_value_id.external_id.split('_')[1]
             customAttributes.append({
                 'attributeCode': attributeCode,
                 'value': value

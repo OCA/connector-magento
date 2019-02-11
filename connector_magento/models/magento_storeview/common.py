@@ -23,7 +23,7 @@ class MagentoStoreview(models.Model):
 
     name = fields.Char(required=True, readonly=True)
     code = fields.Char(readonly=True)
-    enabled = fields.Boolean(string='Enabled', readonly=True)
+    enabled = fields.Boolean(string='Enabled', default=True)
     sort_order = fields.Integer(string='Sort Order', readonly=True)
     store_id = fields.Many2one(comodel_name='magento.store',
                                string='Store',

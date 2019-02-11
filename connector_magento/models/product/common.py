@@ -194,7 +194,11 @@ class ProductProductAdapter(Component):
 
     def _call(self, method, arguments, http_method=None, storeview=None):
         try:
-            return super(ProductProductAdapter, self)._call(method, arguments, http_method=http_method, storeview=storeview)
+            return super(ProductProductAdapter, self)._call(
+                method, 
+                arguments, 
+                http_method=http_method, 
+                storeview=storeview)
         except xmlrpclib.Fault as err:
             # this is the error in the Magento API
             # when the product does not exist
@@ -258,13 +262,18 @@ class ProductProductAdapter(Component):
             }
             ,"saveOptions": saveOptions
             }
+        #TODO : check that the status don't change when we update 
         return product_datas
 
     def write(self, id, data, storeview_id=None):
         """ Update records on the external system """
         # XXX actually only ol_catalog_product.update works
         # the PHP connector maybe breaks the catalog_product.update
-        if self.work.magento_api._location.version == '2.0': 
+        if self.work.magento_api._location.version == '2.0':
+            _logger.info("Prepare to call api with %s " %
+                         self.get_product_datas(data))
+            #Replace by the 
+            id  = data['sku']
             return super(ProductProductAdapter, self)._call(
                 'products/%s' % id, 
                 self.get_product_datas(data), 
@@ -289,10 +298,12 @@ class ProductProductAdapter(Component):
         return self._call('product_media.info',
                           [int(id), image_name, storeview_id, 'id'])
 
-    def update_inventory(self, id, data):
+    def update_inventory(self, sku, data):
         # product_stock.update is too slow
         if self.collection.version == '2.0':
-            return self._call('products/%s/stockItems/1' % id, {"stockItem":{"qty": data['qty']}}, http_method='put')
+            _logger.info("Prepare to update stock with %s " %
+                         data)
+            return self._call('products/%s/stockItems/1' % sku, {"stockItem":{"qty": data['qty']}}, http_method='put')
         return self._call('oerp_cataloginventory_stock_item.update',
                           [int(id), data])
 

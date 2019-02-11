@@ -386,6 +386,8 @@ class ProductInventoryExporter(Component):
 
     def run(self, binding, fields):
         """ Export the product inventory to Magento """
-        external_id = self.binder.to_external(binding)
+        #external_id = self.binder.to_external(binding)
+        #https://devdocs.magento.com/swagger/index_22.html
+        external_id = binding.default_code
         data = self._get_data(binding, fields)
         self.backend_adapter.update_inventory(external_id, data)

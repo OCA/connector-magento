@@ -42,6 +42,8 @@
         <field name="arch" type="xml">
             <tree string="Magento Product Category">
                 <field name="backend_id"/>
+                <field name="external_id"/>
+                <field name="odoo_id"/>
             </tree>
         </field>
     </record>

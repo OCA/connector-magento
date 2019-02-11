@@ -40,7 +40,7 @@
                     <field name="updated_at"/>
                     <field name="group_id"/>
                     <field name="emailid"/>
-                    <field name="taxvat"/>
+                    <field name="vat"/>
                     <field name="newsletter"/>
                     <field name="consider_as_company"/>
                 </group>
