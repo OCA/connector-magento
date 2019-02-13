@@ -20,18 +20,18 @@ class MagentoCustomAttribute(models.Model):
     This class deal with customs Attributes
     """
 #     
-    magento_product_id = fields.Many2one(comodel_name="magento.product.template",
+    magento_product_template_id = fields.Many2one(comodel_name="magento.product.template",
                                 string="Magento Product",
                                 )
     
-    product_id = fields.Many2one(comodel_name="product.template",
+    product_template_id = fields.Many2one(comodel_name="product.template",
                                 string="Product",
-                                related="magento_product_id.odoo_id",
+                                related="magento_product_template_id.odoo_id",
                                 required=True)
  
     backend_id = fields.Many2one(comodel_name="magento.backend",
                                       string="Magento Backend",
-                                      related="magento_product_id.backend_id"
+                                      related="magento_product_template_id.backend_id"
                                       )
      
     attribute_id = fields.Many2one(comodel_name="magento.product.attribute",
@@ -114,11 +114,11 @@ class MagentoCustomAttribute(models.Model):
                         ],
                     })
             
-            res.product_id.with_context(no_update=True).write(custom_vals)
+            res.product_template_id.with_context(no_update=True).write(custom_vals)
         
     _sql_constraints = [
         ('custom_attr_unique_product_template_uniq', 
-         'unique(attribute_id, product_id, backend_id)', 
+         'unique(attribute_id, product_template_id, backend_id)', 
          'This attribute already have a value for this product template!')
     ]
 

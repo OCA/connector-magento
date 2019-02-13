@@ -4,6 +4,7 @@
 
 import logging
 import xmlrpclib
+import ast
 from odoo import api, models, fields
 from odoo.addons.component.core import Component
 from odoo.addons.queue_job.job import job, related_action
@@ -36,7 +37,9 @@ class MagentoProductTemplate(models.Model):
     @api.multi
     def _is_configurable(self):
         self.ensure_one()
-        self.product_type = 'configurable'
+        self.product_type = 'simple'
+        if self.odoo_id.product_variant_count > 1:
+            self.product_type = 'configurable'
         
     attribute_set_id = fields.Many2one('magento.product.attributes.set',
                                        
@@ -59,9 +62,9 @@ class MagentoProductTemplate(models.Model):
                                     compute=_is_configurable,
                                     required=True)
     
-    magento_attribute_line_ids = fields.One2many(
+    magento_template_attribute_line_ids = fields.One2many(
                     comodel_name='magento.custom.template.attribute.values', 
-                    inverse_name='magento_product_id', 
+                    inverse_name='magento_product_template_id', 
                     string='Magento Simple Custom Attributes Values for templates',
                                         )
     
@@ -83,6 +86,31 @@ class MagentoProductTemplate(models.Model):
             exporter = work.component(usage='record.exporter')
             return exporter.run(self)
         
+        
+    def action_magento_template_custom_attributes(self):
+        action = self.env['ir.actions.act_window'].for_xml_id(
+            'connector_magento_product_catalog', 
+            'action_magento_custom_template_attributes')
+        
+        action['domain'] = unicode([('magento_product_template_id', '=', self.id)])
+        ctx = action.get('context', '{}') or '{}'
+        
+        action_context = ast.literal_eval(ctx)
+        action_context.update({
+            'default_attribute_set_id': self.attribute_set_id.id,
+            'default_magento_product_template_id': self.id})
+#         
+# #         action_context = ctx
+#         action_context.update({
+#             'default_project_id': self.project_id.id})
+        action['context'] = action_context
+        return action
+        
+#         "
+#                                 type="object" string="Custom Values" class="oe_stat_button"
+#                                 context="{'search_default_magento_product_id': [active_id], 
+#                             'default_attribute_set_id': attribute_set_id,
+#                             'default_magento_product_id': active_id, }"
         
     
 #     @job(default_channel='root.magento')
@@ -244,13 +272,12 @@ class ProductTemplateAdapter(Component):
     
     
     
-    def get_product_datas(self, data, saveOptions=True):
+    def get_product_datas(self, data, id=None, saveOptions=True):
         """ Hook to implement in other modules"""
         visibility = 4 
-        #TODO : Check if the variant counts is more than > 1 if yes then don't export
+        
         product_datas = {
             'product': {
-                "id": 0,
                 "sku": data['sku'] or data['default_code'],
                 "name": data['name'],
                 "attributeSetId": data['attributeSetId'],
@@ -258,26 +285,32 @@ class ProductTemplateAdapter(Component):
                 "status": 1,
                 "visibility": visibility,
                 "typeId": data['typeId'],
-                "weight": data['weight'] or 0.0
+                "weight": data['weight'] or 0.0,
+                "stockItem": {
+                    'is_in_stock': True
+                    }                
             }
             ,"saveOptions": saveOptions
             }
+        if id is None:
+            product_datas['product'].update({'id': 0})
         return product_datas
 
-#     def write(self, id, data, storeview_id=None):
-#         """ Update records on the external system """
-#         # XXX actually only ol_catalog_product.update works
-#         # the PHP connector maybe breaks the catalog_product.update
-#         if self.work.magento_api._location.version == '2.0':
-#             _logger.info("Prepare to call api with %s " %
-#                          self.get_product_datas(data))
-#             #Replace by the 
-#             id  = data['sku']
-#             return super(ProductTemplateAdapter, self)._call(
-#                 'products/%s' % id, 
-#                 self.get_product_datas(data), 
-#                 http_method='put')
-#             
-# #             raise NotImplementedError  # TODO
-#         return self._call('ol_catalog_product.update',
-#                           [int(id), data, storeview_id, 'id'])
+
+    def write(self, id, data, storeview_id=None):
+        """ Update records on the external system """
+        # XXX actually only ol_catalog_product.update works
+        # the PHP connector maybe breaks the catalog_product.update
+        if self.work.magento_api._location.version == '2.0':
+            datas = self.get_product_datas(data, id)
+            datas['product'].update(data)
+            _logger.info("Prepare to call api with %s " % datas)
+            #Replace by the 
+            id  = data['sku']
+            return super(ProductTemplateAdapter, self)._call(
+                'products/%s' % id, datas, 
+                http_method='put')
+             
+#             raise NotImplementedError  # TODO
+        return self._call('ol_catalog_product.update',
+                          [int(id), data, storeview_id, 'id'])

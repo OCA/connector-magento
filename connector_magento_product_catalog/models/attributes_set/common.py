@@ -36,6 +36,7 @@ class ProductAttributeSetAdapter(Component):
 
         :rtype: dict
         """
+        #TODO: find the way to get the code in options
         if self.collection.version == '2.0':
             res = self._call('products/attribute-sets/%s/attributes' % id,
                             {'attributes':{}})

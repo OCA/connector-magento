@@ -14,11 +14,19 @@
 				</page>
 				<page name="connector" position="inside">
 					<group string="Magento Template Bindings">
-						<field name="magento_template_bind_ids" nolabel="1" 
-						attrs="{'invisible': [('')]}">
+						<field name="magento_template_bind_ids" nolabel="1">
 							<tree>
 								<field name="backend_id" />
 								<field name="product_type" />
+								<button name="export_product_template_button"
+									string="Export Template Attributes"
+									type="object" />
+								<button name="resync" string="resyn All"
+									 help="Stck, Attributes, ..."
+									type="object" />
+								<button name="action_magento_template_custom_attributes"
+									type="object" string="Custom Values" 
+									 />
 							</tree>
 						</field>
 					</group>
@@ -36,21 +44,22 @@
 					<sheet>
 						<div class="oe_button_box" name="button_box">
 							<button name="export_product_template_button"
-								class="oe_stat_button" string="Export Template Attributes" type="object" />
+								class="oe_stat_button" string="Export Template Attributes"
+								type="object" />
 							<button name="resync" string="resyn All"
 								class="oe_stat_button" help="Stck, Attributes, ..."
 								type="object" />
-							<!-- <button name="% (action_magento_template_custom_attributes) d"
-								type="action" string="Custom Values" class="oe_stat_button"
+							<button name="action_magento_template_custom_attributes"
+								type="object" string="Custom Values" class="oe_stat_button"
 								context="{'search_default_magento_product_id': [active_id], 
 							'default_attribute_set_id': attribute_set_id,
-							'default_magento_product_id': active_id, }" /> -->
+							'default_magento_product_id': active_id, }" />
 
 						</div>
 						<group name="general">
 							<field name="backend_id" />
 							<field name="external_id" />
-							<field name="attribute_set_id" required="1"/>
+							<field name="attribute_set_id" required="1" />
 							<!-- <field name="created_at" readonly="1" /> <field name="updated_at" 
 								readonly="1" /> -->
 							<field name="product_type" readonly="0" />
