@@ -73,7 +73,7 @@ class MagentoPickingExporter(Component):
             #FIX https://preprod.unamourdetapis.odoo.mind-and-go.net/web#id=28639&view_type=form&model=queue.job&menu_id=110&action=145
             picking = self.model.browse(binding.id)
             _logger.debug("Picking and binding %s / %s" % (picking, binding))
-            if picking.magento_order_id:
+            if picking.external_id:
                 return _('Already exported')
             lines_info = self._get_lines_info(picking)
             if not lines_info:
