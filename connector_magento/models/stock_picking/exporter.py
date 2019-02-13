@@ -3,12 +3,13 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
 import xmlrpclib
-
+import logging
 import odoo
 from odoo import _
 from odoo.addons.component.core import Component
 from odoo.addons.queue_job.exception import NothingToDoJob
 
+_logger = logging.getLogger(__name__)
 
 class MagentoPickingExporter(Component):
     _name = 'magento.stock.picking.exporter'
