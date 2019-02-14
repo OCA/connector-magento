@@ -286,9 +286,7 @@ class ProductTemplateAdapter(Component):
                 "visibility": visibility,
                 "typeId": data['typeId'],
                 "weight": data['weight'] or 0.0,
-                "stockItem": {
-                    'is_in_stock': True
-                    }                
+#                           
             }
             ,"saveOptions": saveOptions
             }
@@ -307,10 +305,16 @@ class ProductTemplateAdapter(Component):
             _logger.info("Prepare to call api with %s " % datas)
             #Replace by the 
             id  = data['sku']
-            return super(ProductTemplateAdapter, self)._call(
+            super(ProductTemplateAdapter, self)._call(
                 'products/%s' % id, datas, 
                 http_method='put')
-             
+            
+            stock_datas = {"stockItem":{
+                'is_in_stock': True}}
+            return super(ProductTemplateAdapter, self)._call(
+                    'products/%s/stockItems/1' % id, 
+                    stock_datas, 
+                    http_method='put')
 #             raise NotImplementedError  # TODO
         return self._call('ol_catalog_product.update',
                           [int(id), data, storeview_id, 'id'])
