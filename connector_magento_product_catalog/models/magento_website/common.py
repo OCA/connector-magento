@@ -10,7 +10,7 @@ class MagentoWebsite(models.Model):
     def import_attributes_set(self):
         for website in self:
             backend = website.backend_id
-            self.env['magento.product.attributes.set'].with_delay().import_batch(
+            self.env['magento.product.attributes.set'].with_delay(identity_key=identity_exact).import_batch(
                 backend,
                 filters={'magento_website_id': website.external_id}
             )

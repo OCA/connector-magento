@@ -11,6 +11,7 @@ from odoo import _
 from odoo.addons.component.core import Component
 from odoo.addons.queue_job.exception import NothingToDoJob
 from odoo.addons.connector.unit.mapper import mapping
+from odoo.addons.queue_job.job import identity_exact
 
 from odoo.addons.connector_magento.components.backend_adapter import MAGENTO_DATETIME_FORMAT
 
@@ -58,7 +59,7 @@ class ProductDefinitionExporter(Component):
         # so the import would be skipped
         assert self.external_id
         if self.backend_record.product_synchro_strategy == 'magento_first':
-            self.binding.with_delay().import_record(self.backend_record,
+            self.binding.with_delay(identity_key=identity_exact).import_record(self.backend_record,
                                                 self.external_id,
                                                 force=True)
 

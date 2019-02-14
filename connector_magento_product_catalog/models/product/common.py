@@ -7,6 +7,7 @@ import xmlrpclib
 from odoo import api, models, fields
 from odoo.addons.component.core import Component
 from odoo.addons.queue_job.job import job, related_action
+from odoo.addons.queue_job.job import identity_exact
 from odoo.addons.connector.exception import IDMissingInBackend
 
 _logger = logging.getLogger(__name__)
@@ -27,7 +28,7 @@ class MagentoProductProduct(models.Model):
     @api.multi
     def export_product_button(self, fields=None):
         self.ensure_one()
-        self.with_delay(priority=20).export_product()
+        self.with_delay(priority=20, identity_key=identity_exact).export_product()
     
     @job(default_channel='root.magento')
     @related_action(action='related_action_unwrap_binding')

@@ -9,6 +9,7 @@ from odoo import api, models, fields
 from odoo.addons.component.core import Component
 from odoo.addons.queue_job.job import job, related_action
 from odoo.addons.connector.exception import IDMissingInBackend
+from odoo.addons.queue_job.job import identity_exact
 
 _logger = logging.getLogger(__name__)
 
@@ -72,7 +73,8 @@ class MagentoProductTemplate(models.Model):
     @api.multi
     def export_product_template_button(self, fields=None):
         self.ensure_one()
-        self.with_delay(priority=20).export_product_template()
+        self.with_delay(priority=20,
+                        identity_key=identity_exact).export_product_template()
 
         
     @job(default_channel='root.magento')
