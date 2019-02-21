@@ -62,6 +62,7 @@ class MagentoCustomAttribute(models.Model):
                                     )
     
     
+    
     odoo_field_name = fields.Many2one(
         comodel_name='ir.model.fields', 
         related="attribute_id.odoo_field_name", 

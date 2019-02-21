@@ -197,6 +197,84 @@ class MagentoProductTemplate(models.Model):
 # 
 #         """
 #         return product[stock_field]
+
+    @api.model
+    def create(self, vals):
+        mg_prod_id = super(MagentoProductTemplate, self).create(vals)
+        attributes = mg_prod_id.attribute_set_id.attribute_ids
+        cstm_att_mdl = self.env['magento.custom.template.attribute.values']
+        for att in attributes:
+            vals = {
+#                 'backend_id': self.backend_id.id,
+                'magento_product_template_id': mg_prod_id.id,
+                'attribute_id': att.id,
+#                 'magento_attribute_type': att.frontend_input,
+#                 'product_template_id': self.odoo_id.id,
+#                 'odoo_field_name': att.odoo_field_name.id or False
+                
+                }
+            
+            cstm_att_mdl.with_context(no_update=True).create(vals)
+        return mg_prod_id
+
+    @api.multi
+    def check_field_mapping(self, field, vals):
+        # Check if the Odoo Field has a matching attribute in Magento
+        # Update the value
+        # Return an appropriate dictionnary
+        self.ensure_one()
+#         att_id = 0
+        custom_model = self.env['magento.custom.template.attribute.values']
+        odoo_fields = self.env['ir.model.fields'].search([
+                    ('name', '=', field),
+                    ('model', 'in', [ 'product.template'])])
+        
+        att_ids = self.env['magento.product.attribute'].search(
+            [('odoo_field_name', 'in', [o.id for o in odoo_fields]),
+             ('backend_id', '=', self.backend_id.id)
+             ])
+        
+        if len(att_ids) > 0:
+            att_id = att_ids[0]
+            values = custom_model.search(
+                [('magento_product_template_id', '=', self.id),
+                 ('attribute_id', '=', att_id.id)
+                 ])
+            custom_vals = {
+                    'magento_product_template_id': self.id,
+                    'attribute_id': att_id.id,
+                    'attribute_text': self[field],
+                    'attribute_select': False,
+                    'attribute_multiselect': False,
+            }
+            odoo_field_type = odoo_fields[0].ttype
+            if odoo_field_type in ['many2one', 'many2many'] \
+                    and 'text' in att_id.frontend_input:
+                custom_vals.update({
+                    'attribute_text': str(
+                        [v.magento_template_bind_ids.external_id for v in self[field]
+                         ])})
+            
+            if att_id.frontend_input == 'boolean':
+                custom_vals.update({
+                    'attribute_text': str(int(self[field]))})
+            if att_id.frontend_input == 'select':
+                custom_vals.update({
+                    'attribute_text': False,
+                    'attribute_multiselect': False,
+                    'attribute_select': self[field].magento_template_bind_ids[0].id})
+            if att_id.frontend_input == 'multiselect':
+                custom_vals.update({
+                    'attribute_text': False,
+                    'attribute_multiselect': False,
+                    'attribute_multiselect': 
+                    [(6, False, [
+                        v.id for v in self[field].magento_template_bind_ids] )]})
+            if len(values) == 0:    
+                custom_model.with_context(no_update=True).create(custom_vals)
+            else:
+                values.with_context(no_update=True).write(custom_vals)
+    
     
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
@@ -208,38 +286,38 @@ class ProductTemplate(models.Model):
         string='Magento Template Bindings',
     )     
    
-    @api.model
-    def fields_view_get(self, *args, **kwargs):
-        res = super(ProductTemplate, self).fields_view_get(*args, **kwargs)
-        #TODO : Implement method to identify if the field is mapped with Magento
-        # If yes, push a class to highlight the principle.
-        
-#         timebox_model = self.env['project.gtd.timebox']
-#         if (res['type'] == 'fo') and self.env.context.get('gtd', False):
-#             timeboxes = timebox_model.search([])
-#             search_extended = ''
-#             for timebox in timeboxes:
-#                 filter_ = u"""
-#                     <filter domain="[('timebox_id', '=', {timebox_id})]"
-#                             string="{string}"/>\n
-#                     """.format(timebox_id=timebox.id, string=timebox.name)
-#                 search_extended += filter_
-#             search_extended += '<separator orientation="vertical"/>'
-#             res['arch'] = tools.ustr(res['arch']).replace(
-#                 '<separator name="gtdsep"/>', search_extended)
-
-        return res
+#     @api.model
+#     def fields_view_get(self, *args, **kwargs):
+#         res = super(ProductTemplate, self).fields_view_get(*args, **kwargs)
+#         #TODO : Implement method to identify if the field is mapped with Magento
+#         # If yes, push a class to highlight the principle.
+#         
+# #         timebox_model = self.env['project.gtd.timebox']
+# #         if (res['type'] == 'fo') and self.env.context.get('gtd', False):
+# #             timeboxes = timebox_model.search([])
+# #             search_extended = ''
+# #             for timebox in timeboxes:
+# #                 filter_ = u"""
+# #                     <filter domain="[('timebox_id', '=', {timebox_id})]"
+# #                             string="{string}"/>\n
+# #                     """.format(timebox_id=timebox.id, string=timebox.name)
+# #                 search_extended += filter_
+# #             search_extended += '<separator orientation="vertical"/>'
+# #             res['arch'] = tools.ustr(res['arch']).replace(
+# #                 '<separator name="gtdsep"/>', search_extended)
+# 
+#         return res
    
 
     @api.multi
     def write(self, vals):
         org_vals = vals.copy()
         res = super(ProductTemplate, self).write(vals)
-        variant_ids = self.product_variant_ids
-        prod_ids = variant_ids.filtered(lambda p: len(p.magento_bind_ids) > 0)
-        for var  in prod_ids:
-            for prod in var.magento_bind_ids:
-                for key in org_vals:
+#         variant_ids = self.product_variant_ids
+#         prod_ids = variant_ids.filtered(lambda p: len(p.magento_bind_ids) > 0)
+        for tpl  in self:
+            for prod in tpl.magento_template_bind_ids:
+                for key in org_vals :
                     prod.check_field_mapping(key, vals)
         return res              
 
