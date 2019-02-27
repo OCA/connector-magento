@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api
+from odoo.addons.queue_job.job import identity_exact
 
 IMPORT_DELTA_BUFFER = 30  # seconds
     
