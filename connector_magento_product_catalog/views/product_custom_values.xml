@@ -19,7 +19,8 @@
 
 					<field name="product_id" />
 					<separator />
-					<filter name="f_magento_attribute_type"
+					<filter name="wt_odoo_mapping"
+						string="Without mapping"
 						domain="[('odoo_field_name', '=', False)]" />
 					<group>
 						<filter name="f_magento_attribute_type"
@@ -77,7 +78,8 @@
 
 					<field name="product_template_id" />
 					<separator />
-					<filter name="f_magento_attribute_type"
+					<filter name="wt_odoo_mapping"
+						string="Without mapping"
 						domain="[('odoo_field_name', '=', False)]" />
 					<group>
 						<filter name="f_magento_attribute_type"
