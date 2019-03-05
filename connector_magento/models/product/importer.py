@@ -10,7 +10,7 @@ import sys
 
 from odoo import _
 from odoo.addons.component.core import Component
-from odoo.addons.connector.components.mapper import mapping
+from odoo.addons.connector.components.mapper import mapping, only_create
 from odoo.addons.connector.exception import MappingError, InvalidDataError
 from ...components.mapper import normalize_datetime
 
@@ -84,7 +84,7 @@ class CatalogImageImporter(Component):
                 model = 'product'
             else:
                 raise NotImplementedError  # Categories?
-            image_data['url'] = '%s/media/catalog/%s/%s' % (
+            image_data['url'] = '%s/pub/media/catalog/%s/%s' % (
                 self.backend_record.location, model, image_data['file'])
         url = image_data['url'].encode('utf8')
         headers = {}
@@ -184,6 +184,7 @@ class ProductImportMapper(Component):
               ('short_description', 'description_sale'),
               ('sku', 'default_code'),
               ('type_id', 'product_type'),
+              ('id', 'magento_id'),
               (normalize_datetime('created_at'), 'created_at'),
               (normalize_datetime('updated_at'), 'updated_at'),
               ]
@@ -252,7 +253,8 @@ class ProductImportMapper(Component):
     @mapping
     def backend_id(self, record):
         return {'backend_id': self.backend_record.id}
-    
+
+    @only_create
     @mapping
     def odoo_id(self, record):
         """ Will bind the product to an existing one with the same code """
@@ -266,6 +268,10 @@ class ProductImporter(Component):
     _name = 'magento.product.product.importer'
     _inherit = 'magento.importer'
     _apply_on = ['magento.product.product']
+
+    def _is_uptodate(self, binding):
+        # TODO: Remove for production - only to test the update
+        return False
 
     def _import_bundle_dependencies(self):
         """ Import the dependencies for a Bundle """
@@ -342,7 +348,7 @@ class ProductImporter(Component):
             mapper='magento.product.product.import.mapper'
         )
         image_importer = self.component(usage='product.image.importer')
-        image_importer.run(self.external_id, binding.id,
+        image_importer.run(self.external_id, binding,
                            data=self.magento_record)
 
         if self.magento_record['type_id'] == 'bundle':

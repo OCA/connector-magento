@@ -394,6 +394,15 @@
 							</group>
 							<group>
 								<div>
+									<label string="Import product templates since" class="oe_inline" />
+									<field name="import_product_templates_from_date" class="oe_inline"
+										nolabel="1" />
+								</div>
+								<button name="import_product_template" type="object"
+									class="oe_highlight" string="Import in background" />
+							</group>
+							<group>
+								<div>
 									<label string="Import sales orders from all store views"
 										class="oe_inline" />
 

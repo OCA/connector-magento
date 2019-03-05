@@ -26,14 +26,14 @@ class MagentoProductAttributevalue(models.Model):
                                        required=True,
                                        ondelete='cascade',
                                        index=True)
-    
+
     magento_attribute_type = fields.Selection(
          related="magento_attribute_id.frontend_input",
          store=True
         )
 
     code = fields.Char('Magento Code for the value')
-    
+
     backend_id = fields.Many2one(
         related='magento_attribute_id.backend_id',
         string='Magento Backend',
@@ -51,7 +51,7 @@ class MagentoProductAttributevalue(models.Model):
         vals['attribute_id'] = binding.odoo_id.id
         exist = self.env['product.attribute.value'].search([('name','=',vals.get('name')),('attribute_id','=',vals['attribute_id'])])
         if exist:
-            binging = exist[0]
+            binding = exist[0]
         else:
             binding = super(MagentoProductAttributevalue, self).create(vals)
         return binding

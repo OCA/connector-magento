@@ -84,6 +84,8 @@
 						<group>
 							<field name="odoo_field_name" readonly="0" />
 						</group>
+						<label for="magento_attribute_value_ids"/>
+						<field name="magento_attribute_value_ids"/>
 					</sheet>
 				</form>
 			</field>

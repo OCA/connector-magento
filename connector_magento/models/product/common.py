@@ -56,6 +56,7 @@ class MagentoProductProduct(models.Model):
                                     string='Magento Product Type',
                                     default='simple',
                                     required=True)
+    magento_id = fields.Integer('Magento ID')
     manage_stock = fields.Selection(
         selection=[('use_default', 'Use Default Config'),
                    ('no', 'Do Not Manage Stock'),
@@ -178,6 +179,10 @@ class ProductProduct(models.Model):
         inverse_name='odoo_id',
         string='Magento Bindings',
     )
+
+    @api.multi
+    def write(self, vals):
+        return super(ProductProduct, self).write(vals)
 
 
 class ProductProductAdapter(Component):

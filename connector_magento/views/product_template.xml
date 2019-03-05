@@ -17,7 +17,6 @@
 						<field name="magento_template_bind_ids" nolabel="1">
 							<tree>
 								<field name="backend_id" />
-								<field name="product_type" />
 								<button name="export_product_template_button"
 									string="Export Template Attributes"
 									type="object" />
@@ -26,6 +25,21 @@
 									type="object" />
 								<button name="action_magento_template_custom_attributes"
 									type="object" string="Custom Values" 
+									 />
+							</tree>
+						</field>
+						<field name="magento_bind_ids" nolabel="1">
+							<tree>
+								<field name="backend_id" />
+								<field name="product_type" />
+								<button name="export_product_template_button"
+									string="Export Template Attributes"
+									type="object" />
+								<button name="resync" string="resyn All"
+									 help="Stck, Attributes, ..."
+									type="object" />
+								<button name="action_magento_template_custom_attributes"
+									type="object" string="Custom Values"
 									 />
 							</tree>
 						</field>
@@ -62,7 +76,6 @@
 							<field name="attribute_set_id" required="1" />
 							<!-- <field name="created_at" readonly="1" /> <field name="updated_at" 
 								readonly="1" /> -->
-							<field name="product_type" readonly="0" />
 						</group>
 						<!-- <group string="Inventory Options" name="inventoy"> <field name="no_stock_sync" 
 							/> <field name="manage_stock" /> <field name="backorders" /> <div class="oe_inline"> 
