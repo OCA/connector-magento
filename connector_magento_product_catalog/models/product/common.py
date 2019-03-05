@@ -42,6 +42,27 @@ class MagentoProductProduct(models.Model):
             return exporter.run(self)
 
     
+    def action_magento_custom_attributes(self):
+        action = self.env['ir.actions.act_window'].for_xml_id(
+            'connector_magento_product_catalog', 
+            'action_magento_custom_attributes')
+        
+        action['domain'] = unicode([('magento_product_id', '=', self.id)])
+        ctx = action.get('context', '{}') or '{}'
+        
+        action_context = ast.literal_eval(ctx)
+        action_context.update({
+            'default_attribute_set_id': self.attribute_set_id.id,
+            'default_magento_product_id': self.id,
+            'search_default_wt_odoo_mapping': True})
+#         
+# #         action_context = ctx
+#         action_context.update({
+#             'default_project_id': self.project_id.id})
+        action['context'] = action_context
+        return action
+    
+    
     @api.multi
     def resync(self):
         raise NotImplementedError

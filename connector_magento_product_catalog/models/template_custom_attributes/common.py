@@ -91,13 +91,16 @@ class MagentoCustomAttribute(models.Model):
     def check_attribute_id(self):
         self.ensure_one()
         res = self
-        if 'no_update' in self._context and \
-            self._context.get('no_update', False):
+        if self._context.get('no_update', False) or \
+            self._context.get('from_copy', False):
             return
         if res.odoo_field_name.id != False:
             odoo_field_name = res.odoo_field_name
+            value = res.attribute_text
+            if not value:
+                value = self.product_template_id[odoo_field_name.name]
             custom_vals = {
-                    odoo_field_name.name: res.attribute_text,
+                    odoo_field_name.name: value,
             }
             if res.magento_attribute_type == 'boolean':
                 custom_vals.update({

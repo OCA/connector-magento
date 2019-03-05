@@ -100,7 +100,8 @@ class MagentoProductTemplate(models.Model):
         action_context = ast.literal_eval(ctx)
         action_context.update({
             'default_attribute_set_id': self.attribute_set_id.id,
-            'default_magento_product_template_id': self.id})
+            'default_magento_product_template_id': self.id,
+            'search_default_wt_odoo_mapping': True})
 #         
 # #         action_context = ctx
 #         action_context.update({
@@ -108,96 +109,6 @@ class MagentoProductTemplate(models.Model):
         action['context'] = action_context
         return action
         
-#         "
-#                                 type="object" string="Custom Values" class="oe_stat_button"
-#                                 context="{'search_default_magento_product_id': [active_id], 
-#                             'default_attribute_set_id': attribute_set_id,
-#                             'default_magento_product_id': active_id, }"
-        
-    
-#     @job(default_channel='root.magento')
-#     @related_action(action='related_action_unwrap_binding')
-#     @api.multi
-#     def export_inventory(self, fields=None):
-#         """ Export the inventory configuration and quantity of a product. """
-#         self.ensure_one()
-#         with self.backend_id.work_on(self._name) as work:
-#             exporter = work.component(usage='product.inventory.exporter')
-#             return exporter.run(self, fields)
-# 
-#     @api.multi
-#     def recompute_magento_qty(self):
-#         """ Check if the quantity in the stock location configured
-#         on the backend has changed since the last export.
-# 
-#         If it has changed, write the updated quantity on `magento_qty`.
-#         The write on `magento_qty` will trigger an `on_record_write`
-#         event that will create an export job.
-# 
-#         It groups the products by backend to avoid to read the backend
-#         informations for each product.
-#         """
-#         # group products by backend
-#         backends = defaultdict(set)
-#         for product in self:
-#             backends[product.backend_id].add(product.id)
-# 
-#         for backend, product_ids in backends.iteritems():
-#             self._recompute_magento_qty_backend(backend,
-#                                                 self.browse(product_ids))
-#         return True
-# 
-#     @api.multi
-#     def _recompute_magento_qty_backend(self, backend, products,
-#                                        read_fields=None):
-#         """ Recompute the products quantity for one backend.
-# 
-#         If field names are passed in ``read_fields`` (as a list), they
-#         will be read in the product that is used in
-#         :meth:`~._magento_qty`.
-# 
-#         """
-#         if backend.product_stock_field_id:
-#             stock_field = backend.product_stock_field_id.name
-#         else:
-#             stock_field = 'virtual_available'
-# 
-#         location = self.env['stock.location']
-#         if self.env.context.get('location'):
-#             location = location.browse(self.env.context['location'])
-#         else:
-#             location = backend.warehouse_id.lot_stock_id
-# 
-#         product_fields = ['magento_qty', stock_field]
-#         if read_fields:
-#             product_fields += read_fields
-#             
-#         
-# 
-#         self_with_location = self.with_context(location=location.id)
-#         for chunk_ids in chunks(products.ids, self.RECOMPUTE_QTY_STEP):
-#             records = self_with_location.browse(chunk_ids)
-#             for product in records.read(fields=product_fields):
-#                 new_qty = self._magento_qty(product,
-#                                             backend,
-#                                             location,
-#                                             stock_field)
-#                 if new_qty != product['magento_qty']:
-#                     self.browse(product['id']).magento_qty = new_qty
-# 
-#     @api.multi
-#     def _magento_qty(self, product, backend, location, stock_field):
-#         """ Return the current quantity for one product.
-# 
-#         Can be inherited to change the way the quantity is computed,
-#         according to a backend / location.
-# 
-#         If you need to read additional fields on the product, see the
-#         ``read_fields`` argument of :meth:`~._recompute_magento_qty_backend`
-# 
-#         """
-#         return product[stock_field]
-
     @api.model
     def create(self, vals):
         mg_prod_id = super(MagentoProductTemplate, self).create(vals)
@@ -205,17 +116,14 @@ class MagentoProductTemplate(models.Model):
         cstm_att_mdl = self.env['magento.custom.template.attribute.values']
         for att in attributes:
             vals = {
-#                 'backend_id': self.backend_id.id,
                 'magento_product_template_id': mg_prod_id.id,
                 'attribute_id': att.id,
-#                 'magento_attribute_type': att.frontend_input,
-#                 'product_template_id': self.odoo_id.id,
-#                 'odoo_field_name': att.odoo_field_name.id or False
-                
                 }
-            
-            cstm_att_mdl.with_context(no_update=True).create(vals)
+            if not self._context.get('from_copy', False):
+                cstm_att_mdl.create(vals)
         return mg_prod_id
+    
+    
 
     @api.multi
     def check_field_mapping(self, field, vals):
@@ -224,6 +132,9 @@ class MagentoProductTemplate(models.Model):
         # Return an appropriate dictionnary
         self.ensure_one()
 #         att_id = 0
+        
+        if self._context.get('from_copy', False):
+            return
         custom_model = self.env['magento.custom.template.attribute.values']
         odoo_fields = self.env['ir.model.fields'].search([
                     ('name', '=', field),
@@ -320,6 +231,29 @@ class ProductTemplate(models.Model):
                 for key in org_vals :
                     prod.check_field_mapping(key, vals)
         return res              
+
+
+    
+    @api.multi
+    def copy(self, default=None):
+        self_copy = self.with_context(from_copy=True)
+        new = super(ProductTemplate, self_copy).copy(default=default)
+        for mg_prod_id in self.magento_template_bind_ids:
+            new_mg_prod_id = mg_prod_id.with_context(from_copy=True).copy({
+                'external_id': False,
+                'odoo_id': new.id
+                })
+            
+            values = self.env['magento.custom.template.attribute.values'].search(
+                [('product_template_id', '=', self.id)])
+            
+            for val in values:
+                vals = val.copy_data({
+                    'magento_product_template_id': new_mg_prod_id.id
+                    })
+                new_val_id = self.env['magento.custom.template.attribute.values'].\
+                            with_context(from_copy=True).create(vals[0])
+        return new
 
 
 
