@@ -5,6 +5,8 @@
 import logging
 import xmlrpclib
 import ast
+from lxml import etree
+from odoo.osv.orm import setup_modifiers
 from odoo import api, models, fields
 from odoo.addons.component.core import Component
 from odoo.addons.queue_job.job import job, related_action
@@ -197,27 +199,27 @@ class ProductTemplate(models.Model):
         string='Magento Template Bindings',
     )     
    
-#     @api.model
-#     def fields_view_get(self, *args, **kwargs):
-#         res = super(ProductTemplate, self).fields_view_get(*args, **kwargs)
-#         #TODO : Implement method to identify if the field is mapped with Magento
-#         # If yes, push a class to highlight the principle.
-#         
-# #         timebox_model = self.env['project.gtd.timebox']
-# #         if (res['type'] == 'fo') and self.env.context.get('gtd', False):
-# #             timeboxes = timebox_model.search([])
-# #             search_extended = ''
-# #             for timebox in timeboxes:
-# #                 filter_ = u"""
-# #                     <filter domain="[('timebox_id', '=', {timebox_id})]"
-# #                             string="{string}"/>\n
-# #                     """.format(timebox_id=timebox.id, string=timebox.name)
-# #                 search_extended += filter_
-# #             search_extended += '<separator orientation="vertical"/>'
-# #             res['arch'] = tools.ustr(res['arch']).replace(
-# #                 '<separator name="gtdsep"/>', search_extended)
-# 
-#         return res
+    @api.model
+    def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
+        context = self._context
+        res = super(ProductTemplate, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
+
+        if res['model'] in ['product.template', 'product.product'] and \
+            res['type'] == 'form':
+            doc = etree.XML(res['arch'])
+            mapped_field_ids = self.env['magento.product.attribute'].search(
+                [('odoo_field_name', '!=', False)]).mapped('odoo_field_name')
+            
+            for field in mapped_field_ids:
+                nodes = doc.xpath("//field[@name='%s']" % field.name)
+                for node in nodes:
+                    node.set('class', 'magento-mapped-field-view')
+                    help = node.get('help', '')
+                    node.set('help', '** Magento ** \n %s' % help)
+                    setup_modifiers(
+                        node, res['fields'][field.name])                    
+            res['arch'] = etree.tostring(doc)
+        return res
    
 
     @api.multi

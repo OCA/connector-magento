@@ -151,7 +151,18 @@ class ProductProductExportMapper(Component):
         
         customAttributes = []
         magento_attribute_line_ids = record.magento_attribute_line_ids.filtered(
-            lambda att: att.store_view_id.id == False)
+            lambda att: att.store_view_id.id == False \
+             and (
+                        att.attribute_text != False
+                        or
+                        att.attribute_select.id != False
+                        or 
+                        len(att.attribute_multiselect.ids) > 0
+                    )
+            
+            )
+        
+        
         
         for values_id in magento_attribute_line_ids:
             """ Deal with Custom Attributes """            
