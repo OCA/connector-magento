@@ -3,12 +3,13 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
 import xmlrpclib
-
+import logging
 import odoo
 from odoo import _
 from odoo.addons.component.core import Component
 from odoo.addons.queue_job.exception import NothingToDoJob
 
+_logger = logging.getLogger(__name__)
 
 class MagentoPickingExporter(Component):
     _name = 'magento.stock.picking.exporter'
@@ -70,8 +71,9 @@ class MagentoPickingExporter(Component):
             Export the picking to Magento2
             """
             #FIX https://preprod.unamourdetapis.odoo.mind-and-go.net/web#id=28639&view_type=form&model=queue.job&menu_id=110&action=145
-            picking = self.model.browse(binding)
-            if picking.magento_id:
+            picking = self.model.browse(binding.id)
+            _logger.debug("Picking and binding %s / %s" % (picking, binding))
+            if picking.external_id:
                 return _('Already exported')
             lines_info = self._get_lines_info(picking)
             if not lines_info:
@@ -85,9 +87,9 @@ class MagentoPickingExporter(Component):
                 } for key, val in lines_info.iteritems()]
             }
             magento_id = self.backend_adapter._call(
-                'order/%s/ship' % picking.sale_id.magento_bind_ids[0].magento_id,
+                'order/%s/ship' % picking.sale_id.magento_bind_ids[0].external_id,
                 arguments, http_method='post')
-            self.binder.bind(magento_id, binding_id)
+            self.binder.bind(magento_id, binding)
         else:
             if binding.external_id:
                 return _('Already exported')

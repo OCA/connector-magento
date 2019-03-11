@@ -303,7 +303,10 @@ class ProductProductAdapter(Component):
         if self.collection.version == '2.0':
             _logger.info("Prepare to update stock with %s " %
                          data)
-            return self._call('products/%s/stockItems/1' % sku, {"stockItem":{"qty": data['qty']}}, http_method='put')
+            stock_datas = {"stockItem":{
+                'qty': data['qty'],
+                'is_in_stock': str(data['qty'] > 0)}}
+            return self._call('products/%s/stockItems/1' % sku, stock_datas, http_method='put')
         return self._call('oerp_cataloginventory_stock_item.update',
                           [int(id), data])
 

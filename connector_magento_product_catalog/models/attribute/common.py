@@ -49,6 +49,7 @@ class MagentoProductAttribute(models.Model):
     
     attribute_set_ids = fields.Many2many('magento.product.attributes.set', 
                                          string='Attribute_set(s)')
+    is_pivot_attribute = fields.Boolean(string="Magento Pivot Attribute", default=False)
 
     _sql_constraints = [
         ('product_attribute_backend_uniq', 'unique(odoo_id, external_id)', 'This attribute is already mapped to a magento backend!')

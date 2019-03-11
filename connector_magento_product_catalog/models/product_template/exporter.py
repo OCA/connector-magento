@@ -11,6 +11,7 @@ from odoo import _
 from odoo.addons.component.core import Component
 from odoo.addons.queue_job.exception import NothingToDoJob
 from odoo.addons.connector.unit.mapper import mapping
+from odoo.addons.queue_job.job import identity_exact
 
 from odoo.addons.connector_magento.components.backend_adapter import MAGENTO_DATETIME_FORMAT
 
@@ -35,21 +36,6 @@ class ProductTemplateDefinitionExporter(Component):
                      })
             self._export_dependency(m_prod,
                                     'magento.product.product')
-    
-#     def _export_dependency(self, relation, binding_model,
-#                            component_usage='record.exporter',
-#                            binding_field='magento_bind_ids',
-#                            binding_extra_vals=None):
-#         record = self.magento_record
-# 
-#     
-#         for line in record.get('items', []):
-#             _logger.debug('line: %s', line)
-#             field = self.collection.version == '1.7' and 'product_id' or 'sku'
-#             if field in line:
-#                 self._import_dependency(line[field],
-#                     'magento.product.product')
-#     
     
     
 #     def _get_atts_data(self, binding, fields):
@@ -116,7 +102,8 @@ class ProductTemplateDefinitionExporter(Component):
         # so the import would be skipped
         assert self.external_id
         if self.backend_record.product_synchro_strategy == 'magento_first':
-            self.binding.with_delay().import_record(self.backend_record,
+            self.binding.with_delay(
+                identity_key=identity_exact).import_record(self.backend_record,
                                                 self.external_id,
                                                 force=True)
         #else:
@@ -151,6 +138,8 @@ class ProductTemplateExportMapper(Component):
         for p in record.product_variant_ids:
             mp = p.magento_bind_ids.filtered(
                 lambda m: m.backend_id == record.backend_id)
+            if not mp.external_id:
+                continue
             links.append(mp.external_id)
         return {'configurable_product_links': links}
     
@@ -165,6 +154,8 @@ class ProductTemplateExportMapper(Component):
         for l in att_lines:
             m_att_id = l.attribute_id.magento_bind_ids.filtered(
                     lambda m: m.backend_id == record.backend_id)
+            if not m_att_id.is_pivot_attribute:
+                continue
             opt = {
                 "id": 1,
                 "attribute_id": m_att_id.external_id,
@@ -203,15 +194,6 @@ class ProductTemplateExportMapper(Component):
           })
         return {'category_links': categ_vals}
     
-    
-    @mapping
-    def get_associated_configurable_product_id(self, record):
-        
-        return {}
-    
-
-    
-    
     @mapping
     def weight(self, record):
         if record.weight:
@@ -234,7 +216,10 @@ class ProductTemplateExportMapper(Component):
     def default_code(self, record):
         #get the first Reference of variants
         code = record.product_variant_ids[0].default_code
-        return {'sku': '%s-%s' % (code, 'c')}
+        if record.product_type == 'configurable':
+            #If Configurable, the code has to be changed to be pushed to the API with its own SKU
+            code = '%s-c' % code
+        return {'sku': code}
 
     @mapping
     def get_common_attributes(self, record):
@@ -245,8 +230,17 @@ class ProductTemplateExportMapper(Component):
         """
         
         customAttributes = []
-        magento_attribute_line_ids = record.magento_attribute_line_ids.filtered(
-            lambda att: att.store_view_id.id == False)
+        magento_attribute_line_ids = record.\
+            magento_template_attribute_line_ids.filtered(
+                lambda att: att.store_view_id.id == False \
+                    and (
+                        att.attribute_text != False
+                        or
+                        att.attribute_select.id != False
+                        or 
+                        len(att.attribute_multiselect.ids) > 0
+                    )
+            )
         
         for values_id in magento_attribute_line_ids:
             """ Deal with Custom Attributes """            
@@ -273,19 +267,19 @@ class ProductTemplateExportMapper(Component):
                     and len(l.attribute_id.magento_bind_ids) > 0
             )
         
-#         value_ids = self.env['product.attribute.value']
-#         for l in att_lines:
-#             value_ids |= l.value_ids
-#         for values_id in value_ids:
-#             """ Deal with Attributes in the 'variant' part of Odoo"""
-#             odoo_value_id = values_id.magento_bind_ids.filtered(
-#                 lambda m: m.backend_id == record.backend_id)    
-#             attributeCode = odoo_value_id.magento_attribute_id.attribute_code
-#             value = odoo_value_id.external_id.split('_')[1]
-#             customAttributes.append({
-#                 'attributeCode': attributeCode,
-#                 'value': value
-#                 })
+        value_ids = self.env['product.attribute.value']
+        for l in att_lines:
+            value_ids |= l.value_ids
+        for values_id in value_ids:
+            """ Deal with Attributes in the 'variant' part of Odoo"""
+            odoo_value_id = values_id.magento_bind_ids.filtered(
+                lambda m: m.backend_id == record.backend_id)    
+            attributeCode = odoo_value_id.magento_attribute_id.attribute_code
+            value = odoo_value_id.external_id.split('_')[1]
+            customAttributes.append({
+                'attributeCode': attributeCode,
+                'value': value
+                })
             
             
         result = {'customAttributes': customAttributes}
@@ -300,6 +294,8 @@ class ProductTemplateExportMapper(Component):
     @mapping
     def option_products(self, record):
         #TODO : Map optionnal products
+        for o_id in record.optional_product_ids:
+            continue
         return {}
 
 

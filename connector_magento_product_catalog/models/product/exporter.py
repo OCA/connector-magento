@@ -11,6 +11,7 @@ from odoo import _
 from odoo.addons.component.core import Component
 from odoo.addons.queue_job.exception import NothingToDoJob
 from odoo.addons.connector.unit.mapper import mapping
+from odoo.addons.queue_job.job import identity_exact
 
 from odoo.addons.connector_magento.components.backend_adapter import MAGENTO_DATETIME_FORMAT
 
@@ -58,7 +59,7 @@ class ProductDefinitionExporter(Component):
         # so the import would be skipped
         assert self.external_id
         if self.backend_record.product_synchro_strategy == 'magento_first':
-            self.binding.with_delay().import_record(self.backend_record,
+            self.binding.with_delay(identity_key=identity_exact).import_record(self.backend_record,
                                                 self.external_id,
                                                 force=True)
 
@@ -150,7 +151,18 @@ class ProductProductExportMapper(Component):
         
         customAttributes = []
         magento_attribute_line_ids = record.magento_attribute_line_ids.filtered(
-            lambda att: att.store_view_id.id == False)
+            lambda att: att.store_view_id.id == False \
+             and (
+                        att.attribute_text != False
+                        or
+                        att.attribute_select.id != False
+                        or 
+                        len(att.attribute_multiselect.ids) > 0
+                    )
+            
+            )
+        
+        
         
         for values_id in magento_attribute_line_ids:
             """ Deal with Custom Attributes """            
