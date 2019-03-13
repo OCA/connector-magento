@@ -100,14 +100,14 @@ class TestImportProductImage(common.TransactionCase):
                     '/i/n/ink-eater-krylon-bombear-destroyed-tee-1.jpg')
         url_tee2 = ('http://localhost:9100/media/catalog/product/'
                     'i/n/ink-eater-krylon-bombear-destroyed-tee-2.jpg')
-        with mock.patch('urllib2.urlopen') as urlopen:
-            def image_url_response(url):
-                if url._Request__original in (url_tee1, url_tee2):
-                    raise urllib2.HTTPError(url, 404, '404', None, None)
+        with mock.patch('requests.get') as requests_get:
+            def image_url_response(url, headers=None, verify=None):
+                if url in (url_tee1, url_tee2):
+                    return MockResponseImage('', code=404)
                 else:
                     return MockResponseImage(PNG_IMG_4PX_GREEN)
 
-            urlopen.side_effect = image_url_response
+            requests_get.side_effect = image_url_response
             with mock_api(simple_product_and_images):
                 importer.run(122, 999)
 
@@ -123,17 +123,15 @@ class TestImportProductImage(common.TransactionCase):
                     '/i/n/ink-eater-krylon-bombear-destroyed-tee-1.jpg')
         url_tee2 = ('http://localhost:9100/media/catalog/product/'
                     'i/n/ink-eater-krylon-bombear-destroyed-tee-2.jpg')
-        with mock.patch('urllib2.urlopen') as urlopen:
-            def image_url_response(url):
-                url = url.get_full_url()
+        with mock.patch('requests.get') as requests_get:
+            def image_url_response(url, headers=None, verify=None):
                 if url == url_tee2:
-                    raise urllib2.HTTPError(url, 404, '404', None, None)
+                    return MockResponseImage('', code=404)
                 elif url == url_tee1:
-                    raise urllib2.HTTPError(url, 403, '403', None, None)
-                else:
-                    return MockResponseImage(PNG_IMG_4PX_GREEN)
+                    return MockResponseImage('', code=403)
+                return MockResponseImage(PNG_IMG_4PX_GREEN)
 
-            urlopen.side_effect = image_url_response
+            requests_get.side_effect = image_url_response
             with mock_api(simple_product_and_images):
                 with self.assertRaises(urllib2.HTTPError):
                     importer.run(122, 999)
