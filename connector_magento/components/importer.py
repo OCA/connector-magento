@@ -235,6 +235,16 @@ class BatchImporter(AbstractComponent):
         record_ids = self.backend_adapter.search(filters)
         for record_id in record_ids:
             self._import_record(record_id)
+        self._query_orphaned_records(record_ids)
+
+    def _query_orphaned_records(self, record_ids):
+        orphaned_records = self.binder.model.search([('backend_id', '=', self.backend_record.id), ('external_id', 'not in', record_ids)])
+        for record in orphaned_records:
+            self._delete_orphaned_record(record)
+
+    def _delete_orphaned_record(self, record):
+        record.odoo_id.unlink()
+        record.unlink()
 
     def _import_record(self, external_id):
         """ Import a record directly or delay the import of the record.

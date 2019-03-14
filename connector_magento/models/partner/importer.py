@@ -49,7 +49,7 @@ class PartnerImportMapper(Component):
         (normalize_datetime('created_at'), 'created_at'),
         (normalize_datetime('updated_at'), 'updated_at'),
         ('email', 'emailid'),
-        ('taxvat', 'taxvat'),
+        ('taxvat', 'vat'),
         ('group_id', 'group_id'),
     ]
 
@@ -149,6 +149,10 @@ class PartnerImporter(Component):
         record = self.magento_record
         self._import_dependency(record['group_id'],
                                 'magento.res.partner.category')
+
+    def _is_uptodate(self, binding):
+        # TODO: Remove for production
+        return False
 
     def _after_import(self, partner_binding):
         """ Import the addresses """
@@ -383,6 +387,10 @@ class AddressImporter(Component):
     _inherit = 'magento.importer'
     _apply_on = 'magento.address'
 
+    def _is_uptodate(self, binding):
+        # TODO: Remove for production
+        return False
+
     def run(self, external_id, address_infos=None, force=False):
         """ Run the synchronization """
         if address_infos is None:
@@ -450,9 +458,9 @@ class AddressImportMapper(Component):
 
     @mapping
     def type(self, record):
-        if record.get('is_default_billing'):
+        if record.get('is_default_billing') or record.get('default_billing'):
             address_type = 'invoice'
-        elif record.get('is_default_shipping'):
+        elif record.get('is_default_shipping') or record.get('default_shipping'):
             address_type = 'delivery'
         else:
             address_type = 'other'

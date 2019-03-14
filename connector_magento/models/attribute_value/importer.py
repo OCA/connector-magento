@@ -34,6 +34,16 @@ class AttributeValueImportMapper(Component):
             name = u'False'
         return {'name': name}
 
+    @mapping
+    def get_external_id(self, record):
+        if record.get('value_index'):
+            return {'external_id': record.get('value_index')}
+        if record.get('value'):
+            return {'external_id': record.get('value_index')}
+        if not name:
+            name = u'False'
+        return {'name': name}
+
     def finalize(self, map_record, values):
         if map_record.parent:
             external_id = str(values.get('external_id'))
