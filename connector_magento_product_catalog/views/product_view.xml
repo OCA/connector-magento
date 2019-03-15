@@ -66,7 +66,7 @@
 						<field name="id" invisible="1" />
 						<field name="odoo_id" invisible="1" />
 						<field name="attribute_set_id" invisible="0" />
-						<field name="product_type" />
+						<!--<field name="product_type" />-->
 						<button name="export_product_button"
 							string="Export Attributes" type="object" class="oe_highlight" />
 						<button name="resync" string="resyn All"

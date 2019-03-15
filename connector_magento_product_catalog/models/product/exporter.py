@@ -134,7 +134,7 @@ class ProductProductExportMapper(Component):
         else:
             # TODO: maybe turn it into defensive option
             # on the magento.backend
-            val = 1        
+            val = 4
         return {'attributeSetId' : val}
 
     @mapping
