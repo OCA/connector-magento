@@ -80,6 +80,10 @@ class ProductCategoryImporter(Component):
         # the root category has a 0 parent_id
         self._import_dependency(record.get('parent_id'), self.model)
 
+    def _is_uptodate(self, binding):
+        # TODO: Remove for production
+        return False
+
     def _create(self, data):
         binding = super(ProductCategoryImporter, self)._create(data)
         self.backend_record.add_checkpoint(binding)

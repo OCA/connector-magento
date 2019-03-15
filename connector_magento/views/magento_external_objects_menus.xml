@@ -56,6 +56,10 @@
 		<menuitem id="menu_odoo_external_categories"
 			name="External Categories" parent="menu_odoo_external_objects"
 			action="action_odoo_categories" />
+		<menuitem id="connector_magento.menu_odoo_attributes"
+			name="Attributes"
+			parent="menu_odoo_external_objects"
+			action="magento_product_attribute_action" />
 
 	</data>
 </openerp>

@@ -49,6 +49,7 @@
 					<field name="odoo_id" />
 					<field name="frontend_input" />
 					<field name="odoo_field_name" />
+					<button name="export_product_attribute_button" type="object" string="Zu Magento exportieren"/>
 				</tree>
 
 			</field>
@@ -60,6 +61,9 @@
 			<field name="model">magento.product.attribute</field>
 			<field name="arch" type="xml">
 				<form>
+					<header>
+						<button name="export_product_attribute_button" type="object" string="Zu Magento exportieren"/>
+					</header>
 					<sheet>
 						<div class="oe_title">
 							<h1>
@@ -80,9 +84,18 @@
 						<group>
 							<field name="odoo_field_name" readonly="0" />
 						</group>
+						<label for="magento_attribute_value_ids"/>
+						<field name="magento_attribute_value_ids"/>
 					</sheet>
 				</form>
 			</field>
+		</record>
+
+		<record id="magento_product_attribute_action" model="ir.actions.act_window">
+		    <field name="name">Magento Attributes</field>
+		    <field name="type">ir.actions.act_window</field>
+		    <field name="res_model">magento.product.attribute</field>
+		    <field name="view_mode">tree,form</field>
 		</record>
 
 		<!-- <record id="product_product_tree_view" model="ir.ui.view"> <field 
