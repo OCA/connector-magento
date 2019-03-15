@@ -42,7 +42,11 @@ class WizardModel(models.TransientModel):
     def get_default_category(self):
         return self.get_default_object('product.category')
         
-    @api.multi 
+    @api.multi
+    def get_default_attributes(self):
+        return self.get_default_object('product.attribute')
+
+    @api.multi
     def check_backend_binding(self):                
         active_model = self.env.context.get('active_model', False)
         
@@ -53,13 +57,16 @@ class WizardModel(models.TransientModel):
         if active_model in ['product.template']:
             to_export_ids = self.to_export_ids
             dest_model = 'magento.product.template'
-        if active_model in ['product.product']:
+        elif active_model in ['product.product']:
             to_export_ids = self.to_export_ids
             dest_model = 'magento.product.product'
         elif active_model == 'product.category':
             to_export_ids = self.categ_to_export_ids
             dest_model = 'magento.product.category'
-            
+        elif active_model == 'product.attribute':
+            to_export_ids = self.attributes_to_export_ids
+            dest_model = 'magento.product.attribute'
+
         export_ids = [p.id for p in to_export_ids]        
         
         odoo_prod_ids = self.env[dest_model].search(
@@ -73,8 +80,7 @@ class WizardModel(models.TransientModel):
         
         for prod in to_export:
             vals = {'odoo_id': prod.id,
-                    'external_id': prod.default_code,
-                    'backend_id': self.backend_id.id                
+                    'backend_id': self.backend_id.id
                 }
             self.env[dest_model].create(vals)
             
@@ -84,7 +90,9 @@ class WizardModel(models.TransientModel):
     
     categ_to_export_ids = fields.Many2many(string='Category To export', 
                                            comodel_name='product.category', default=get_default_category)
-    
+    attributes_to_export_ids = fields.Many2many(string='Product Attributes To export',
+                                     comodel_name='product.attribute', default=get_default_attributes)
+
     
     @api.multi
     def action_accept(self):

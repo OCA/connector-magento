@@ -81,6 +81,7 @@ class MagentoProductAttribute(models.Model):
             self = self.with_context(fields)
             return exporter.run(self)
     
+
 class ProductAttribute(models.Model):
     _inherit = 'product.attribute'
 
@@ -90,6 +91,7 @@ class ProductAttribute(models.Model):
         string='Magento Bindings',
     )
 
+
 class ProductAttributeAdapter(Component):
     _name = 'magento.product.attribute.adapter'
     _inherit = 'magento.adapter'
@@ -98,3 +100,4 @@ class ProductAttributeAdapter(Component):
     _magento2_model = 'products/attributes'
     _magento2_search = 'products/attributes'
     _magento2_key = 'attribute_id'
+    _magento2_name = 'attribute'
