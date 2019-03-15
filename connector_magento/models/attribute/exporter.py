@@ -21,8 +21,6 @@ class ProductAttributeDefinitionExporter(Component):
     _inherit = 'magento.exporter'
     _apply_on = ['magento.product.attribute']
 
-    def _should_import(self):
-        return False
 
 class ProductAttributeExportMapper(Component):
     _name = 'magento.product.attribute.export.mapper'
@@ -30,9 +28,12 @@ class ProductAttributeExportMapper(Component):
     _apply_on = ['magento.product.attribute']
     _magento_name = 'attribute'
 
+    '''
+    No Support for translatable currently on export !
     translatable = [
         ('name', 'default_frontend_label')
     ]
+    '''
 
     direct = [
         ('attribute_code', 'attribute_code'),

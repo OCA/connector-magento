@@ -4,22 +4,17 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
 import logging
-import requests
-import base64
-import sys
-
-from odoo import _
 from odoo.addons.component.core import Component
 from odoo.addons.connector.components.mapper import (
     mapping, 
     only_create, 
     ImportMapChild
     )
-from odoo.addons.connector.exception import MappingError, InvalidDataError
+import uuid
 
 _logger = logging.getLogger(__name__)
 
-    
+
 class AttributeValueImportMapper(Component):
     _name = 'magento.product.attribute.value.import.mapper'
     _inherit = 'magento.import.mapper'
@@ -39,10 +34,9 @@ class AttributeValueImportMapper(Component):
         if record.get('value_index'):
             return {'external_id': record.get('value_index')}
         if record.get('value'):
-            return {'external_id': record.get('value_index')}
-        if not name:
-            name = u'False'
-        return {'name': name}
+            return {'external_id': record.get('value')}
+        # No external id available ? we do need something here - so just generate a uuid4
+        return {'external_id': uuid.uuid4()}
 
     def finalize(self, map_record, values):
         if map_record.parent:
