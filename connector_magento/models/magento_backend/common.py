@@ -52,6 +52,10 @@ class MagentoBackend(models.Model):
                 ('checked', 'Checked'),
                 ('production', 'In Production')]
 
+    @api.multi
+    def button_reset_to_draft(self):
+        self.ensure_one()
+        self.write({'state': 'draft'})
 
     @api.multi
     def _check_connection(self):

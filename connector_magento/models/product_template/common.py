@@ -6,6 +6,8 @@ import logging
 import xmlrpclib
 import ast
 from odoo import api, models, fields
+from lxml import etree
+from odoo.osv.orm import setup_modifiers
 from odoo.addons.component.core import Component
 from odoo.addons.queue_job.job import job, related_action
 from odoo.addons.connector.exception import IDMissingInBackend
@@ -283,6 +285,28 @@ class ProductTemplate(models.Model):
             for prod in tpl.magento_template_bind_ids:
                 for key in org_vals:
                     prod.check_field_mapping(key, vals)
+        return res
+
+    @api.model
+    def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
+        context = self._context
+        res = super(ProductTemplate, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
+
+        if res['model'] in ['product.template', 'product.product'] and \
+            res['type'] == 'form':
+            doc = etree.XML(res['arch'])
+            mapped_field_ids = self.env['magento.product.attribute'].search(
+                [('odoo_field_name', '!=', False)]).mapped('odoo_field_name')
+            
+            for field in mapped_field_ids:
+                nodes = doc.xpath("//field[@name='%s']" % field.name)
+                for node in nodes:
+                    node.set('class', 'magento-mapped-field-view')
+                    help = node.get('help', '')
+                    node.set('help', '** Magento ** \n %s' % help)
+                    setup_modifiers(
+                        node, res['fields'][field.name])                    
+            res['arch'] = etree.tostring(doc)
         return res
 
 

@@ -42,6 +42,7 @@
           'views/stock_views.xml',
           'views/account_payment_mode_views.xml',
           'views/magento_external_objects_menus.xml',
+          'views/template.xml',
           'wizards/add_backend.xml',
           ],
  'installable': True,
