@@ -6,7 +6,7 @@
 			inherit_id="web.assets_backend">
 			<xpath expr="." position="inside">
 				<link rel="stylesheet" 
-				href="/connector_magento_product_catalog/static/src/css/magento.css" />
+				href="/connector_magento/static/src/css/magento.css" />
 			</xpath>
 		</template>
 	</data>
