@@ -50,7 +50,8 @@
 					<field name="odoo_id" />
 					<field name="frontend_input" />
 					<field name="odoo_field_name" />
-					<button name="export_product_attribute_button" type="object" string="Zu Magento exportieren"/>
+					<button name="export_product_attribute_button" type="object" string="Sync to Magento"/>
+						<button name="import_product_attribute_button" type="object" string="Sync from Magento"/>
 				</tree>
 
 			</field>
@@ -63,7 +64,8 @@
 			<field name="arch" type="xml">
 				<form>
 					<header>
-						<button name="export_product_attribute_button" type="object" string="Zu Magento exportieren"/>
+						<button name="export_product_attribute_button" type="object" string="Sync to Magento"/>
+						<button name="import_product_attribute_button" type="object" string="Sync from Magento"/>
 					</header>
 					<sheet>
 						<div class="oe_title">

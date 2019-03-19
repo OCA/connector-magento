@@ -26,14 +26,14 @@ class MagentoProductAttributeValueExportMapper(Component):
     ]
 
     @mapping
-    def value(self, record):
-        if not record.code:
-            record.code = "%s_%s" % (slugify(record.name), record.odoo_id.id)
-        return {'value': record.code}
-
-    @mapping
     def is_default(self, record):
         return {'is_default': False}
+
+    @mapping
+    def code_value(self, record):
+        # Only set value as member if already set - so we can update - else it is a create !
+        if record.code:
+            return {'value': record.code}
 
     @mapping
     def sort_order(self, record):

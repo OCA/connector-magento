@@ -1,19 +1,8 @@
 # -*- coding: utf-8 -*-
 # Copyright 2013-2017 Camptocamp SA
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
-
-import xmlrpclib
-
-import odoo
-from datetime import datetime
-
-from odoo import _
 from odoo.addons.component.core import Component
-from odoo.addons.queue_job.exception import NothingToDoJob
-from odoo.addons.connector.unit.mapper import mapping
-from odoo.addons.queue_job.job import identity_exact
-
-from odoo.addons.connector_magento.components.backend_adapter import MAGENTO_DATETIME_FORMAT
+from odoo.addons.connector.unit.mapper import mapping, only_create
 
 
 class ProductAttributeDefinitionExporter(Component):
@@ -24,6 +13,8 @@ class ProductAttributeDefinitionExporter(Component):
     def _should_import(self):
         return False
 
+    '''
+    Does not work as expected - because we don't get back the value from magento on option add call !
     def _after_export(self):
         # Here we do check for not exported attribute values - and we do export them
         exported_ids = [mvalue.odoo_id.id for mvalue in self.binding.magento_attribute_value_ids]
@@ -32,7 +23,7 @@ class ProductAttributeDefinitionExporter(Component):
             self._export_dependency(value, 'magento.product.attribute.value', binding_extra_vals={
                 'magento_attribute_id': self.binding.id
             })
-
+    '''
 
 class ProductAttributeExportMapper(Component):
     _name = 'magento.product.attribute.export.mapper'
@@ -51,7 +42,13 @@ class ProductAttributeExportMapper(Component):
     '''
 
     direct = [
-        ('attribute_code', 'attribute_code'),
-        ('attribute_id', 'attribute_id'),
-        ('name', 'default_frontend_label')
+        ('name', 'default_frontend_label'),
+        ('frontend_input', 'frontend_input'),
+        ('attribute_code', 'attribute_code')
     ]
+
+    @mapping
+    def attribute_id(self, record):
+        # On create we do not supply anything here - on update we need the id
+        if record.external_id:
+            return {'attribute_id': int(record.external_id)}

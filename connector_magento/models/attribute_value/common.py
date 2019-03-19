@@ -1,10 +1,7 @@
 import logging
 from odoo import models, fields, api
-from odoo.addons.connector.exception import IDMissingInBackend
 from odoo.addons.component.core import Component
-from odoo.addons.component_event import skip_if
-from odoo.addons.queue_job.job import job, related_action
-
+from slugify import slugify
 _logger = logging.getLogger(__name__)
 
 
@@ -43,7 +40,7 @@ class MagentoProductAttributevalue(models.Model):
         required=False,
     )
 
-    
+
     '''
     Not sure what this is for...
     @api.model
@@ -83,18 +80,5 @@ class ProductAttributeValueAdapter(Component):
     def _create_url(self, binding=None):
         return '%s' % (self._magento2_model % {'attributeCode': binding.magento_attribute_id.attribute_code})
 
-    def create(self, data, binding=None):
-        """ Create a record on the external system """
-        if self.work.magento_api._location.version == '2.0':
-            if self._magento2_name:
-                new_object = self._call(
-                    self._create_url(binding),
-                    {self._magento2_name: data}, http_method='post')
-            else:
-                new_object = self._call(
-                    self._create_url(binding),
-                    data, http_method='post')
-            external_id = str(data.get('value'))
-            external_id_parent = str(binding.magento_attribute_id.attribute_id)
-            return external_id_parent + '_' + external_id
-        return self._call('%s.create' % self._magento_model, [data])
+    def _get_id_from_create(self, result, data=None):
+        return data['value']

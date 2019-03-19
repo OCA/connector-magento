@@ -310,6 +310,9 @@ class GenericAdapter(AbstractComponent):
     def _create_url(self, binding=None):
         return '%s' % self._magento2_model
 
+    def _get_id_from_create(self, result, data=None):
+        return result['id']
+
     def create(self, data, binding=None):
         """ Create a record on the external system """
         if self.work.magento_api._location.version == '2.0': 
@@ -321,15 +324,18 @@ class GenericAdapter(AbstractComponent):
                 new_object = self._call(
                     self._create_url(binding),
                     data, http_method='post')
-            return new_object['id']
+            return self._get_id_from_create(new_object, data)
         return self._call('%s.create' % self._magento_model, [data])
+
+    def _write_url(self, id, binding=None):
+        return '%s/%s' % (self._magento2_model, id)
 
     def write(self, id, data, binding=None):
         """ Update records on the external system """
         if self.work.magento_api._location.version == '2.0':
             if self._magento2_name:
                 return self._call(
-                    '%s/%s' % (self._magento2_model, id),
+                    self._write_url(id, binding),
                     {self._magento2_name: data}, http_method='put')
             else:
                 return self._call(
