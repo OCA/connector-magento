@@ -1,7 +1,7 @@
 import logging
 from odoo import models, fields, api
 from odoo.addons.component.core import Component
-from slugify import slugify
+import urllib
 _logger = logging.getLogger(__name__)
 
 
@@ -29,6 +29,7 @@ class MagentoProductAttributevalue(models.Model):
          store=True
         )
 
+    # The real magento code - external_id is a combination of attribute_id + _ + code
     code = fields.Char('Magento Code for the value')
 
     backend_id = fields.Many2one(
@@ -41,22 +42,6 @@ class MagentoProductAttributevalue(models.Model):
     )
 
 
-    '''
-    Not sure what this is for...
-    @api.model
-    def create(self, vals):
-        magento_attribute_id = vals['magento_attribute_id']
-        binding = self.env['magento.product.attribute'].browse(magento_attribute_id)
-        vals['attribute_id'] = binding.odoo_id.id
-        exist = self.env['product.attribute.value'].search([('name','=',vals.get('name')),('attribute_id','=',vals['attribute_id'])])
-        if exist:
-            binding = exist[0]
-        else:
-            binding = super(MagentoProductAttributevalue, self).create(vals)
-        return binding
-    '''
-
-    
 class ProductAttributevalue(models.Model):
     _inherit = 'product.attribute.value'
 
@@ -79,6 +64,17 @@ class ProductAttributeValueAdapter(Component):
 
     def _create_url(self, binding=None):
         return '%s' % (self._magento2_model % {'attributeCode': binding.magento_attribute_id.attribute_code})
+
+    def delete(self, magento_value_id, magento_attribute_id):
+        def escape(term):
+            if isinstance(term, basestring):
+                return urllib.quote(term, safe='')
+            return term
+        """ Delete a record on the external system """
+        if self.work.magento_api._location.version == '2.0':
+            res = self._call('%s/%s' % (self._magento2_model % {'attributeCode': magento_attribute_id}, escape(magento_value_id)), http_method="delete")
+            return res
+        return self._call('%s.delete' % self._magento_model, [int(id)])
 
     def _get_id_from_create(self, result, data=None):
         return data['value']

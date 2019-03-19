@@ -344,8 +344,19 @@ class GenericAdapter(AbstractComponent):
         return self._call('%s.update' % self._magento_model,
                           [int(id), data])
 
+    def _delete_url(self, id):
+        def escape(term):
+            if isinstance(term, basestring):
+                return urllib.quote(term, safe='')
+            return term
+
+        return '%s/%s' % (self._magento2_model, escape(id))
+
     def delete(self, id):
         """ Delete a record on the external system """
+        if self.work.magento_api._location.version == '2.0':
+            res = self._call(self._delete_url(id), http_method="delete")
+            return res
         return self._call('%s.delete' % self._magento_model, [int(id)])
 
     def admin_url(self, id):

@@ -127,6 +127,9 @@ class MagentoBackend(models.Model):
              "order 100000692 in Magento, will be named 'mag-100000692' "
              "in Odoo.",
     )
+    export_all_options = fields.Boolean(
+        string='Always export all attribute options',
+    )
     warehouse_id = fields.Many2one(
         comodel_name='stock.warehouse',
         string='Warehouse',

@@ -97,7 +97,7 @@ class MagentoProductAttribute(models.Model):
     @related_action(action='related_action_unwrap_binding')
     @api.multi
     def import_product_attribute(self):
-        """ Export a simple attribute. """
+        """ Import a simple attribute. """
         self.ensure_one()
         with self.backend_id.work_on(self._name) as work:
             importer = work.component(usage='record.importer')
@@ -128,4 +128,5 @@ class ProductAttributeAdapter(Component):
         return '%s/%s' % (self._magento2_model, binding.attribute_code)
 
     def _get_id_from_create(self, result, data=None):
-        return result['attribute_id']
+        # We do need the complete result after the create function - to work on the options...
+        return result
