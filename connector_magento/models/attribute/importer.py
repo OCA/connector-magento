@@ -27,7 +27,24 @@ class AttributeBatchImporter(Component):
     _apply_on = ['magento.product.attribute']
     
 
-            
+class AttributeImporter(Component):
+    _name = 'magento.product.attribute.import'
+    _inherit = ['magento.importer']
+
+    def _update(self, binding, data):
+        """ Update an OpenERP record """
+        # special check on data before import
+        self._validate_data(data)
+        '''
+        for value_tuple in data['magento_attribute_value_ids']:
+            value = value_tuple[2]
+            for
+        '''
+        binding.with_context(connector_no_export=True).write(data)
+        _logger.debug('%d updated from magento %s', binding, self.external_id)
+        return
+
+
 class AttributeImportMapper(Component):
     _name = 'magento.product.attribute.import.mapper'
     _inherit = 'magento.import.mapper'
@@ -65,15 +82,10 @@ class AttributeImportMapper(Component):
     @mapping
     def _get_name(self, record):
         name = record['attribute_code']
-        if 'default_frontend_label' in record and record['default_frontend_label'] :
+        if 'default_frontend_label' in record and record['default_frontend_label']:
             name = record['default_frontend_label'] 
         return {'name': name}
     
-    @mapping
-    def magento_id(self, record):
-        #TODO: get the attribute ID from magento ? Wrong name choice for attribute_id
-        return {'magento_id': False}
-        
     @mapping
     def create_variant(self, record):
         return {'create_variant': self.env['magento.product.attribute']._is_generate_variant(record['frontend_input'])}
@@ -89,14 +101,3 @@ class AttributeImportMapper(Component):
             [('attribute_code', '=', record['attribute_code'])], limit=1)
         if attribute:
             return {'odoo_id': attribute.odoo_id.id}
-
-
-class AttributeImporter(Component):
-    _name = 'magento.product.attribute.importer'
-    _inherit = 'magento.importer'
-    _apply_on = ['magento.product.attribute']
-    
-    
-    # TODO : use also the #/catalogProductAttributeGroupRepositoryV1/catalogProductAttributeGroupRepositoryV1GetListGet
-    # to deal with the useless info of the attribute
-    

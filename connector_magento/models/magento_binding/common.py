@@ -60,6 +60,9 @@ class MagentoBinding(models.AbstractModel):
         self.ensure_one()
         with self.backend_id.work_on(self._name) as work:
             exporter = work.component(usage='record.exporter')
+            lang = self.backend_id.default_lang_id
+            if lang.code != self.env.context.get('lang'):
+                self = self.with_context(lang=lang.code)
             return exporter.run(self, fields)
 
     @job(default_channel='root.magento')

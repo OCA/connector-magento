@@ -325,7 +325,7 @@ class MagentoExporter(AbstractComponent):
         """ Create the Magento record """
         # special check on data before export
         self._validate_create_data(data)
-        return self.backend_adapter.create(data)
+        return self.backend_adapter.create(data, binding=self.binding)
 
     def _update_data(self, map_record, fields=None, **kwargs):
         """ Get the data to pass to :py:meth:`_update` """

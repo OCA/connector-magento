@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Copyright <YEAR(S)> <AUTHOR(S)> License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
 
-<openerp>
+<odoo>
 	<data>
 
 		<record id="wizard_add_backend_view_form" model="ir.ui.view">
@@ -11,7 +11,9 @@
 				<form string="Select event to register">
 					<p>Choose the backend you want to bind the product to</p>
 					<field name="backend_id" />
-					<field name="to_export_ids" />
+					<field name="attributes_to_export_ids"/>
+					<!-- <field name="to_export_ids" />  -->
+
 					<!-- <field name="categ_to_export_ids" /> -->
 					<footer>
 						<button name="action_accept" type="object" string="Accept"
@@ -52,4 +54,4 @@
 
 
 	</data>
-</openerp>
+</odoo>

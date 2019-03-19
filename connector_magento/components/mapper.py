@@ -17,11 +17,6 @@ class MagentoExportMapper(AbstractComponent):
     _inherit = ['base.magento.connector', 'base.export.mapper']
     _usage = 'export.mapper'
 
-    def finalize(self, map_record, values):
-        return {
-            self._magento_name: values
-        }
-
 
 def normalize_datetime(field):
     """Change a invalid date which comes from Magento, if

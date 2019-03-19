@@ -2,18 +2,9 @@
 # Copyright 2013-2017 Camptocamp SA
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
-import xmlrpclib
-
-import odoo
-from datetime import datetime
-
-from odoo import _
 from odoo.addons.component.core import Component
-from odoo.addons.queue_job.exception import NothingToDoJob
-from odoo.addons.connector.unit.mapper import mapping
-from odoo.addons.queue_job.job import identity_exact
-
-from odoo.addons.connector_magento.components.backend_adapter import MAGENTO_DATETIME_FORMAT
+from odoo.addons.connector.unit.mapper import mapping, only_create
+from slugify import slugify
 
 
 class ProductAttributeValueDefinitionExporter(Component):
@@ -24,12 +15,64 @@ class ProductAttributeValueDefinitionExporter(Component):
     def _should_import(self):
         return False
 
-class ProductAttributeValueExportMapper(Component):
+
+class MagentoProductAttributeValueExportMapper(Component):
     _name = 'magento.product.attribute.value.export.mapper'
     _inherit = 'magento.export.mapper'
     _apply_on = ['magento.product.attribute.value']
-    _magento_name = 'attribute'
 
     direct = [
-        ('name', 'name')
+        ('name', 'label'),
     ]
+
+    @mapping
+    def value(self, record):
+        if not record.code:
+            record.code = "%s_%s" % (slugify(record.name), record.odoo_id.id)
+        return {'value': record.code}
+
+    @mapping
+    def is_default(self, record):
+        return {'is_default': False}
+
+    @mapping
+    def sort_order(self, record):
+        return {'sort_order': record.sequence if record.sequence else 0}
+
+
+class MagentoProductAttributeValueMapChild(Component):
+    _name = 'magento.product.attribute.value.map.child.export'
+    _inherit = 'base.map.child.export'
+    _apply_on = ['magento.product.attribute.value']
+
+    def skip_item(self, map_record):
+        """ Hook to implement in sub-classes when some child
+        records should be skipped.
+
+        The parent record is accessible in ``map_record``.
+        If it returns True, the current child record is skipped.
+
+        :param map_record: record that we are converting
+        :type map_record: :py:class:`MapRecord`
+        """
+        return True if not map_record.source.code else False
+
+
+'''
+class ProductAttributeValueExportMapper(Component):
+    _name = 'product.attribute.value.export.mapper'
+    _inherit = 'magento.export.mapper'
+    _apply_on = ['product.attribute.value']
+
+    direct = [
+        ('name', 'label'),
+    ]
+
+    @mapping
+    def code(self, record):
+        return {'code': "%s_%s" % (slugify(record['name']), record.id, )}
+
+    @mapping
+    def attributeCode(self, record):
+        return {'attributeCode': 'asdf'}
+'''

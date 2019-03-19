@@ -44,6 +44,7 @@
           'views/magento_external_objects_menus.xml',
           'views/template.xml',
           'wizards/add_backend.xml',
+          'views/attribute.xml',
           ],
  'installable': True,
  'application': False,
