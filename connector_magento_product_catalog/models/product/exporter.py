@@ -186,14 +186,15 @@ class ProductProductExportMapper(Component):
         
         for values_id in record.attribute_value_ids:
             """ Deal with Attributes in the 'variant' part of Odoo"""
-            odoo_value_id = values_id.magento_bind_ids.filtered(
-                lambda m: m.backend_id == record.backend_id)    
-            attributeCode = odoo_value_id.magento_attribute_id.attribute_code
-            value = odoo_value_id.external_id.split('_')[1]
-            customAttributes.append({
-                'attributeCode': attributeCode,
-                'value': value
-                })
+            odoo_value_ids = values_id.magento_bind_ids.filtered(
+                lambda m: m.backend_id == record.backend_id)
+            for odoo_value_id in odoo_value_ids:
+                attributeCode = odoo_value_id.magento_attribute_id.attribute_code
+                value = odoo_value_id.external_id.split('_')[1]
+                customAttributes.append({
+                    'attributeCode': attributeCode,
+                    'value': value
+                    })
         result = {'customAttributes': customAttributes}
         return result
 
