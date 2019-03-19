@@ -58,7 +58,7 @@ class MagentoProductTemplate(models.Model):
         self.ensure_one()
         self.with_delay(priority=20,
                         identity_key=identity_exact).export_product_template()
-
+ 
     @job(default_channel='root.magento')
     @related_action(action='related_action_unwrap_binding')
     @api.multi
@@ -191,10 +191,12 @@ class MagentoProductTemplate(models.Model):
                 #                 'magento_attribute_type': att.frontend_input,
                 #                 'product_template_id': self.odoo_id.id,
                 #                 'odoo_field_name': att.odoo_field_name.id or False
-
             }
-
-            cstm_att_mdl.with_context(no_update=True).create(vals)
+            cst_value = cstm_att_mdl.with_context(no_update=True).create(vals)
+            if cst_value.odoo_field_name.id:
+                mg_prod_id.check_field_mapping(
+                    cst_value.odoo_field_name.name,
+                    mg_prod_id[cst_value.odoo_field_name.name])
         return mg_prod_id
 
     @api.multi
