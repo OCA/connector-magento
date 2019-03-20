@@ -1,12 +1,9 @@
 import logging
 from odoo import models, fields, api
-from odoo.addons.connector.exception import IDMissingInBackend
 from odoo.addons.component.core import Component
-from odoo.addons.component_event import skip_if
-from odoo.addons.queue_job.job import job, related_action
-import xmlrpclib
 
 _logger = logging.getLogger(__name__)
+
 
 class MagentoProductAttributesSet(models.Model):
     _name = 'magento.product.attributes.set'
@@ -18,7 +15,6 @@ class MagentoProductAttributesSet(models.Model):
     attribute_ids = fields.Many2many('magento.product.attribute', string='Attribute(s)')
 
 
-
 class ProductAttributeSetAdapter(Component):
     _name = 'magento.product.attributes.set.adapter'
     _inherit = 'magento.adapter'
@@ -27,9 +23,6 @@ class ProductAttributeSetAdapter(Component):
     _magento2_model = 'products/attribute-sets'
     _magento2_search = 'products/attribute-sets/sets/list'
     _magento2_key = 'attribute_set_id'
-    
-    
-  
     
     def read_detail(self, id, attributes=None):
         """ Returns the information of a record
@@ -41,5 +34,3 @@ class ProductAttributeSetAdapter(Component):
             res = self._call('products/attribute-sets/%s/attributes' % id,
                             {'attributes':{}})
             return res
-
-    

@@ -14,6 +14,7 @@ from odoo.exceptions import UserError
 from odoo.addons.component.core import Component
 from odoo.addons.connector.checkpoint import checkpoint
 from ...components.backend_adapter import MagentoLocation, MagentoAPI
+from odoo.addons.queue_job.job import identity_exact
 
 _logger = logging.getLogger(__name__)
 
@@ -129,6 +130,11 @@ class MagentoBackend(models.Model):
     )
     export_all_options = fields.Boolean(
         string='Always export all attribute options',
+        default=True
+    )
+    always_create_new_attributes = fields.Boolean(
+        string='Always create new odoo attributes on import',
+        default=True
     )
     warehouse_id = fields.Many2one(
         comodel_name='stock.warehouse',
@@ -358,10 +364,10 @@ class MagentoBackend(models.Model):
 
     @api.multi
     def import_attributes_set(self):
-        """ Import sale orders from all store views """
+        """ Import attribute sets from backend """
         for backend in self:
             backend.check_magento_structure()
-            backend.website_ids.import_attributes_set()
+            self.env['magento.product.attributes.set'].with_delay(identity_key=identity_exact).import_batch(backend)
         return True
 
     @api.multi

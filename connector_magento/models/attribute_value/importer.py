@@ -5,6 +5,7 @@
 
 import logging
 from odoo.addons.component.core import Component
+from odoo.addons.connector.components.mapper import mapping
 from odoo import tools
 
 _logger = logging.getLogger(__name__)
@@ -20,16 +21,24 @@ class AttributeValueImportMapper(Component):
         ('value', 'code')
     ]
 
+    @mapping
+    def backend_id(self, record):
+        return {'backend_id': self.backend_record.id}
+
     def finalize(self, map_record, values):
         if map_record.parent:
+            # Generate external_id as attribute_id and code
+            values.update({
+                'external_id': "%s_%s" % (str(map_record.parent.source.get('attribute_id')), tools.ustr(values.get('code'))),
+            })
             # Fetch odoo attribute id - is required
             attribute_binder = self.binder_for(model='magento.product.attribute')
             magento_attribute = attribute_binder.to_internal(map_record.parent.source.get('attribute_id'), unwrap=False)
-            # Generate ecxternal_id as attribute_id and code
-            values.update({
-                'external_id': "%s_%s" % (str(map_record.parent.source.get('attribute_id')), tools.ustr(values.get('code'))),
-                'attribute_id': magento_attribute.odoo_id.id
-            })
+            if magento_attribute:
+                # Set odoo attribute id if it does already exists
+                values.update({
+                    'attribute_id': magento_attribute.odoo_id.id
+                })
             # Search for existing entry
             binder = self.binder_for(model='magento.product.attribute.value')
             magento_value = binder.to_internal(values['external_id'], unwrap=False)

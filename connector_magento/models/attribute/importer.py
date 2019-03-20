@@ -4,14 +4,9 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
 import logging
-import requests
-import base64
-import sys
 
-from odoo import _
 from odoo.addons.component.core import Component
 from odoo.addons.connector.components.mapper import mapping, only_create
-from odoo.addons.connector.exception import MappingError, InvalidDataError
 
 _logger = logging.getLogger(__name__)
 
@@ -50,16 +45,14 @@ class AttributeImportMapper(Component):
     _inherit = 'magento.import.mapper'
     _apply_on = ['magento.product.attribute']
 
-    # TODO :     
-    # categ, special_price => minimal_price
-    
     direct = [
               ('attribute_code', 'attribute_code'),
               ('attribute_id', 'attribute_id'),
               ('frontend_input', 'frontend_input')]
     
-    children = [('options', 'magento_attribute_value_ids', 'magento.product.attribute.value'),
-                ]    
+    children = [
+        ('options', 'magento_attribute_value_ids', 'magento.product.attribute.value'),
+    ]
     
     
     def _attribute_exists(self, attribute):
@@ -74,8 +67,12 @@ class AttributeImportMapper(Component):
     @only_create
     @mapping
     def get_att_id(self, record):
+        # Check if we want to always create new odoo attributes
+        if self.backend_record.always_create_new_attributes:
+            return {}
+        # Else search for existing attribute
         att_id = self._attribute_exists(self._get_name(record)['name'])
-        if att_id and len(att_id) == 1 :
+        if att_id and len(att_id) == 1:
             return {'odoo_id': att_id.id}
         return {}
     
@@ -96,8 +93,8 @@ class AttributeImportMapper(Component):
     
     @mapping
     def odoo_id(self, record):
-        """ Will bind the product to an existing one with the same code """
+        """ Will bind the attribute to an existing one with the same code """
         attribute = self.env['magento.product.attribute'].search(
-            [('attribute_code', '=', record['attribute_code'])], limit=1)
+            [('attribute_code', '=', record['attribute_code']),('backend_id', '=', self.backend_record.id)], limit=1)
         if attribute:
             return {'odoo_id': attribute.odoo_id.id}

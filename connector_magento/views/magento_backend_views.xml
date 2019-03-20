@@ -437,6 +437,7 @@
 							<group>
 								<group string="Warehouse / Products">
 									<field name="export_all_options"/>
+									<field name="always_create_new_attributes"/>
 									<!-- <field name="default_lang_id" widget="selection" /> -->
 								</group>
 								<group name="warehouse_products"

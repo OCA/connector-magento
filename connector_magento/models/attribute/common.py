@@ -2,7 +2,6 @@ import logging
 from odoo import models, fields, api
 from odoo.addons.component.core import Component
 from odoo.addons.queue_job.job import job, related_action, identity_exact
-from slugify import slugify
 
 from __builtin__ import True
 
@@ -54,15 +53,12 @@ class MagentoProductAttribute(models.Model):
     is_pivot_attribute = fields.Boolean(string="Magento Pivot Attribute", default=False)
 
     _sql_constraints = [
-        ('product_attribute_backend_uniq', 'unique(odoo_id, external_id)',
+        ('product_attribute_backend_uniq', 'unique(odoo_id, external_id, backend_id)',
          'This attribute is already mapped to a magento backend!')
     ]
 
     @api.model
     def create(self, vals):
-        if 'attribute_code' not in vals:
-            attribute = self.env['product.attribute'].browse(vals['odoo_id'])
-            vals['attribute_code'] = slugify(attribute.name, lowercase=True).lower()
         return super(MagentoProductAttribute, self).create(vals)
 
     @api.model

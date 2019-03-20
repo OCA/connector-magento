@@ -41,6 +41,13 @@ class MagentoProductAttributevalue(models.Model):
         required=False,
     )
 
+    @api.model
+    def create(self, vals):
+        if 'attribute_id' not in vals:
+            # On first create we do need this because attribute_id is missing
+            vals['attribute_id'] = self.env['magento.product.attribute'].browse(vals['magento_attribute_id']).odoo_id.id
+        return super(MagentoProductAttributevalue, self).create(vals)
+
 
 class ProductAttributevalue(models.Model):
     _inherit = 'product.attribute.value'
