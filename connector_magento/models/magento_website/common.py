@@ -8,6 +8,7 @@ from datetime import datetime, timedelta
 from odoo import models, fields, api
 from odoo.addons.component.core import Component
 from ..magento_backend.common import IMPORT_DELTA_BUFFER
+from odoo.addons.queue_job.job import identity_exact
 
 
 class MagentoWebsite(models.Model):
