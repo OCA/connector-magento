@@ -9,15 +9,6 @@ class MagentoBackend(models.Model):
     _inherit = 'magento.backend'
     
     @api.multi
-    def import_attributes_set(self):
-        """ Import sale orders from all store views """
-        for backend in self:
-            backend.check_magento_structure()
-            backend.website_ids.import_attributes_set()
-        return True
-    
-    
-    @api.multi
     def export_product_product_catalog(self):
         import_start_time = datetime.now()
         #TODO make batchExporter class

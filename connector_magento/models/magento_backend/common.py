@@ -357,6 +357,14 @@ class MagentoBackend(models.Model):
         return True
 
     @api.multi
+    def import_attributes_set(self):
+        """ Import sale orders from all store views """
+        for backend in self:
+            backend.check_magento_structure()
+            backend.website_ids.import_attributes_set()
+        return True
+
+    @api.multi
     def _domain_for_update_product_stock_qty(self):
         return [
             ('backend_id', 'in', self.ids),

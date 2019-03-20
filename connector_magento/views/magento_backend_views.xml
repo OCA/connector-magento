@@ -385,6 +385,15 @@
 							</group>
 							<group>
 								<div>
+									<label
+										string="Import attribute sets, attributes and value"
+										class="oe_inline" />
+								</div>
+								<button name="import_attributes_set" type="object"
+									class="oe_highlight" string="Import in background" />
+							</group>
+							<group>
+								<div>
 									<label string="Import products since" class="oe_inline" />
 									<field name="import_products_from_date" class="oe_inline"
 										nolabel="1" />
