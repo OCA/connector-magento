@@ -7,6 +7,7 @@ import logging
 
 from odoo.addons.component.core import Component
 from odoo.addons.connector.components.mapper import mapping, only_create
+import uuid
 
 _logger = logging.getLogger(__name__)
 
@@ -26,15 +27,27 @@ class AttributeImporter(Component):
     _name = 'magento.product.attribute.import'
     _inherit = ['magento.importer']
 
+    def _before_import(self):
+        record = self.magento_record
+        # Check for duplicate values here
+        existing_values = []
+        existing_names = []
+        for i in range(len(record['options'])):
+            value = record['options'][i]
+            if value['value'] in existing_values:
+                raise Exception('Value %s is a duplicate in %s' % (value['value'], record['default_frontend_label']))
+            existing_values.append(value['value'])
+            if value['label'] in existing_names and self.backend_record.rename_duplicate_values:
+                self.magento_record['options'][i]['label'] = "%s (%s)" % (value['label'], str(uuid.uuid4()))
+            elif value['label'] in existing_names and not self.backend_record.rename_duplicate_values:
+                raise Exception('Value %s is a duplicate in %s' % (value['label'], record['default_frontend_label']))
+            existing_names.append(value['label'])
+
+
     def _update(self, binding, data):
         """ Update an OpenERP record """
         # special check on data before import
         self._validate_data(data)
-        '''
-        for value_tuple in data['magento_attribute_value_ids']:
-            value = value_tuple[2]
-            for
-        '''
         binding.with_context(connector_no_export=True).write(data)
         _logger.debug('%d updated from magento %s', binding, self.external_id)
         return

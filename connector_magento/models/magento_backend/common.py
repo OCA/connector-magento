@@ -136,6 +136,10 @@ class MagentoBackend(models.Model):
         string='Always create new odoo attributes on import',
         default=True
     )
+    rename_duplicate_values = fields.Boolean(
+        string='Rename duplicate values in Odoo',
+        default=True
+    )
     warehouse_id = fields.Many2one(
         comodel_name='stock.warehouse',
         string='Warehouse',
