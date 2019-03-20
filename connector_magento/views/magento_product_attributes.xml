@@ -94,24 +94,5 @@
 			</field>
 		</record>
 
-		<record id="magento_product_attribute_action" model="ir.actions.act_window">
-		    <field name="name">Magento Attributes</field>
-		    <field name="type">ir.actions.act_window</field>
-		    <field name="res_model">magento.product.attribute</field>
-		    <field name="view_mode">tree,form</field>
-		</record>
-
-		<!-- <record id="product_product_tree_view" model="ir.ui.view"> <field 
-			name="name">odoo.product.product.tree</field> <field name="model">odoo.product.product</field> 
-			<field name="arch" type="xml"> <tree> <field name="default_code" /> <field 
-			name="barcode" /> <field name="display_name" /> <field name="odoo_id" /> 
-			<field name="backend_id" /> <field name="external_id" /> <button name="resync" 
-			type="object" string="Resync Exp." /> </tree> </field> </record> <record 
-			id="product_category_tree_view" model="ir.ui.view"> <field name="name">odoo.product.category.tree</field> 
-			<field name="model">odoo.product.category</field> <field name="arch" type="xml"> 
-			<tree> <field name="display_name" /> <field name="odoo_id" /> <field name="backend_id" 
-			/> <field name="external_id" /> </tree> </field> </record> -->
-
-
 	</data>
 </openerp>

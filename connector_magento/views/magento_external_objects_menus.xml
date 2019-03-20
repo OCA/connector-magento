@@ -2,30 +2,26 @@
 <openerp>
 	<data>
 
+		<menuitem id="menu_odoo_external_objects"
+			name="External Objects" parent="menu_magento_root" sequence="100" />
+
 		<record id="action_magento_orders" model="ir.actions.act_window">
 			<field name="name">Magento Orders</field>
 			<field name="res_model">magento.sale.order</field>
 			<field name="view_mode">tree,form</field>
 		</record>
-		<!-- <record id="action_odoo_uom" model="ir.actions.act_window"> <field 
-			name="name">Magento UOM</field> <field name="res_model">magento.product.uom</field> 
-			<field name="view_mode">tree,form</field> </record> -->
-
-		<!-- <record id="action_odoo_product_templates" model="ir.actions.act_window"> 
-			<field name="name">Magento Product Templates</field> <field name="res_model">magento.product.template</field> 
-			<field name="view_mode">tree,form</field> </record> -->
-		<!-- <record id="action_odoo_attributes" model="ir.actions.act_window"> 
-			<field name="name">Magento Attributes</field> <field name="res_model">magento.product.attribute</field> 
-			<field name="view_mode">tree,form</field> </record> <record id="action_odoo_values" 
-			model="ir.actions.act_window"> <field name="name">Magento Attribute Values</field> 
-			<field name="res_model">magento.product.attribute.value</field> <field name="view_mode">tree,form</field> 
-			</record> -->
+		<menuitem id="menu_magento_external_orders"
+			name="External orders" parent="menu_odoo_external_objects"
+            action="action_magento_orders" />
 		<record id="action_odoo_categories"
 			model="ir.actions.act_window">
 			<field name="name">Magento product Categories</field>
 			<field name="res_model">magento.product.category</field>
 			<field name="view_mode">tree,form</field>
 		</record>
+		<menuitem id="menu_odoo_external_categories"
+			name="External Categories" parent="menu_odoo_external_objects"
+			action="action_odoo_categories" />
 
 
 		<record id="action_odoo_products" model="ir.actions.act_window">
@@ -33,33 +29,21 @@
 			<field name="res_model">magento.product.product</field>
 			<field name="view_mode">tree,form</field>
 		</record>
-
-
-
-		<menuitem id="menu_odoo_external_objects"
-			name="External Objects" parent="menu_magento_root" sequence="100" />
-
-		<!-- <menuitem id="menu_odoo_external_uom" name="External UOM" parent="menu_odoo_external_objects" 
-			action="action_odoo_uom" /> <menuitem id="menu_odoo_external_attribute" name="External 
-			Attributes" parent="menu_odoo_external_objects" action="action_odoo_attributes" 
-			/> <menuitem id="menu_odoo_external_values" name="External Attribute Values" 
-			parent="menu_odoo_external_objects" action="action_odoo_attributes" /> -->
-		<!-- <menuitem id="menu_odoo_external_product_templates" name="External 
-			Product Templates" parent="menu_odoo_external_objects" action="action_odoo_product_templates" 
-			/> -->
-		<menuitem id="menu_magento_external_orders"
-			name="External orders" parent="menu_odoo_external_objects"
-			action="action_magento_orders" />
 		<menuitem id="menu_odoo_external_products"
 			name="External Products" parent="menu_odoo_external_objects"
 			action="action_odoo_products" />
-		<menuitem id="menu_odoo_external_categories"
-			name="External Categories" parent="menu_odoo_external_objects"
-			action="action_odoo_categories" />
-		<menuitem id="connector_magento.menu_odoo_attributes"
-			name="Attributes"
-			parent="menu_odoo_external_objects"
-			action="magento_product_attribute_action" />
+
+
+		<record id="action_odoo_product_templates" model="ir.actions.act_window">
+			<field name="name">Magento Configurable</field>
+			<field name="res_model">magento.product.template</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		<menuitem id="menu_odoo_product_templates"
+			name="External Configurable" parent="menu_odoo_external_objects"
+			action="action_odoo_product_templates" />
+
+
 
 		<!-- Attribute Sets, Attributes and Values -->
 		<record id="action_odoo_attributes_sets"
@@ -68,25 +52,27 @@
 			<field name="res_model">magento.product.attributes.set</field>
 			<field name="view_mode">tree,form</field>
 		</record>
+		<menuitem id="menu_odoo_external_attributes_set"
+			name="External Attributes Sets"
+			parent="connector_magento.menu_odoo_external_objects"
+			action="action_odoo_attributes_sets" />
+
 		<record id="action_odoo_attributes"
 			model="ir.actions.act_window">
 			<field name="name">Magento Attributes</field>
 			<field name="res_model">magento.product.attribute</field>
 			<field name="view_mode">tree,form</field>
 		</record>
+		<menuitem id="menu_odoo_external_attribute"
+			name="External Attributes"
+			parent="connector_magento.menu_odoo_external_objects"
+			action="action_odoo_attributes" />
+
 		<record id="action_odoo_values" model="ir.actions.act_window">
 			<field name="name">Magento Attribute Values</field>
 			<field name="res_model">magento.product.attribute.value</field>
 			<field name="view_mode">tree,form</field>
 		</record>
-		<menuitem id="menu_odoo_external_attributes_set"
-			name="External Attributes Sets"
-			parent="connector_magento.menu_odoo_external_objects"
-			action="action_odoo_attributes_sets" />
-		<menuitem id="menu_odoo_external_attribute"
-			name="External Attributes"
-			parent="connector_magento.menu_odoo_external_objects"
-			action="action_odoo_attributes" />
 		<menuitem id="connector_magento.menu_odoo_external_values"
 			name="External Attribute Values"
 			parent="connector_magento.menu_odoo_external_objects"
