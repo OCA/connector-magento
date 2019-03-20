@@ -31,6 +31,9 @@ class ProductBatchImporter(Component):
         """ Run the synchronization """
         from_date = filters.pop('from_date', None)
         to_date = filters.pop('to_date', None)
+        # with visibility=4 we only get products which are standalone products - product variants have visibility=1 !
+        filters['visibility'] = {'eq': 4}
+        filters['type_id'] = {'eq': 'simple'}
         external_ids = self.backend_adapter.search(filters,
                                                    from_date=from_date,
                                                    to_date=to_date)
@@ -332,7 +335,13 @@ class ProductImporter(Component):
         """
         self._validate_product_type(data)
 
+    def run(self, external_id, force=False, product_template_id=None):
+        self._product_template_id = product_template_id
+        return super(ProductImporter, self).run(external_id, force)
+
     def _create(self, data):
+        if self._product_template_id:
+            data['product_tmpl_id'] = self._product_template_id
         binding = super(ProductImporter, self)._create(data)
         self.backend_record.add_checkpoint(binding)
         return binding

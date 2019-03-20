@@ -120,6 +120,20 @@ class MagentoProductProduct(models.Model):
         return True
 
     @api.multi
+    def sync_from_magento(self):
+        self.ensure_one()
+        with self.backend_id.work_on(self._name) as work:
+            importer = work.component(usage='record.importer')
+            return importer.run(self.external_id, force=True)
+
+    @api.multi
+    def sync_to_magento(self):
+        self.ensure_one()
+        with self.backend_id.work_on(self._name) as work:
+            exporter = work.component(usage='record.exporter')
+            return exporter.run(self.external_id)
+
+    @api.multi
     def _recompute_magento_qty_backend(self, backend, products,
                                        read_fields=None):
         """ Recompute the products quantity for one backend.
@@ -339,3 +353,17 @@ class MagentoBindingProductListener(Component):
             record.with_delay(priority=20).export_inventory(
                 fields=inventory_fields
             )
+
+
+class MagentoProductVariantModelBinder(Component):
+    """ Bind records and give odoo/magento ids correspondence
+
+    Binding models are models called ``magento.{normal_model}``,
+    like ``magento.res.partner`` or ``magento.product.product``.
+    They are ``_inherits`` of the normal models and contains
+    the Magento ID, the ID of the Magento Backend and the additional
+    fields belonging to the Magento instance.
+    """
+    _name = 'magento.product.variant.binder'
+    _inherit = 'magento.binder'
+    _apply_on = ['magento.product.product']

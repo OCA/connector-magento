@@ -175,6 +175,7 @@ class MagentoImporter(AbstractComponent):
 
         :param external_id: identifier of the record on Magento
         """
+        self.force = force
         self.external_id = external_id
         lock_name = 'import({}, {}, {}, {})'.format(
             self.backend_record._name,

@@ -269,9 +269,7 @@ class GenericAdapter(AbstractComponent):
 #                 raise NotImplementedError
             if self._magento2_key:
                 res = self._call('%s/%s' % (self._magento2_model, escape(id)), None)
-                #TODO: loop on attributes to get the json limited values
-                attributes=None
-                return res 
+                return res
             else:
                 res = self._call(self._magento2_model)
                 return next(record for record in res if record['id'] == id)

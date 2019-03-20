@@ -25,7 +25,6 @@ class MagentoModelBinder(Component):
         'magento.address',
         'magento.res.partner.category',
         'magento.product.category',
-        'magento.product.product',
         'magento.product.template',
         'magento.product.attribute',
         'magento.template.attribute.line',

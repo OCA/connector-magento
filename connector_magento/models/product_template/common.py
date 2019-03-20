@@ -13,6 +13,7 @@ from odoo.addons.queue_job.job import job, related_action
 from odoo.addons.connector.exception import IDMissingInBackend
 from odoo.addons.queue_job.job import identity_exact
 from ...components.backend_adapter import MAGENTO_DATETIME_FORMAT
+import urllib
 
 _logger = logging.getLogger(__name__)
 
@@ -54,11 +55,19 @@ class MagentoProductTemplate(models.Model):
     )
 
     @api.multi
-    def export_product_template_button(self, fields=None):
+    def sync_from_magento(self):
         self.ensure_one()
-        self.with_delay(priority=20,
-                        identity_key=identity_exact).export_product_template()
- 
+        with self.backend_id.work_on(self._name) as work:
+            importer = work.component(usage='record.importer')
+            return importer.run(self.external_id, force=True)
+
+    @api.multi
+    def sync_to_magento(self):
+        self.ensure_one()
+        with self.backend_id.work_on(self._name) as work:
+            exporter = work.component(usage='record.exporter')
+            return exporter.run(self.external_id)
+
     @job(default_channel='root.magento')
     @related_action(action='related_action_unwrap_binding')
     @api.multi
@@ -357,8 +366,15 @@ class ProductTemplateAdapter(Component):
                 http_method='post')
             return new_product['id']
 
-        return self._call('%s.create' % self._magento_model,
-                          [customer_id, data])
+    def list_variants(self, sku):
+        def escape(term):
+            if isinstance(term, basestring):
+                return urllib.quote(term, safe='')
+            return term
+
+        if self.work.magento_api._location.version == '2.0':
+            res = self._call('configurable-products/%s/children' % (escape(sku)), None)
+            return res
 
     def get_product_datas(self, data, id=None, saveOptions=True):
         """ Hook to implement in other modules"""
