@@ -6,11 +6,13 @@
 from odoo.addons.component.core import Component
 import weakref
 
+
 class classproperty(object):
     def __init__(self, fget):
         self.fget = fget
     def __get__(self, owner_self, owner_cls):
         return self.fget(owner_cls)
+
 
 class MagentoModelBinder(Component):
     """ Bind records and give odoo/magento ids correspondence
@@ -27,9 +29,4 @@ class MagentoModelBinder(Component):
     def _apply_on(self):
         mappings = super(MagentoModelBinder, self)._apply_on[:]
         return mappings + [
-            'magento.product.attributes.set',
-            'magento.product.attribute',
-            'magento.product.attribute.value',
-            'magento.product.template'
             ]
-    
