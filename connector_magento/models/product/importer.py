@@ -85,6 +85,8 @@ class CatalogImageImporter(Component):
         if self.work.magento_api._location.version == '2.0':
             if 'magento.product.product' in self._apply_on:
                 model = 'product'
+            elif 'magento.product.template' in self._apply_on:
+                model = 'product'
             else:
                 raise NotImplementedError  # Categories?
             image_data['url'] = '%s/pub/media/catalog/%s/%s' % (
@@ -342,6 +344,9 @@ class ProductImporter(Component):
     def _create(self, data):
         if self._product_template_id:
             data['product_tmpl_id'] = self._product_template_id
+            # Name is set on product template on configurables
+            if 'name' in data:
+                del data['name']
         binding = super(ProductImporter, self)._create(data)
         self.backend_record.add_checkpoint(binding)
         return binding

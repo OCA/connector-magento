@@ -10,8 +10,11 @@ from lxml import etree
 from odoo.osv.orm import setup_modifiers
 from odoo.addons.component.core import Component
 from odoo.addons.queue_job.job import job, related_action
+<<<<<<< HEAD
 from odoo.addons.connector.exception import IDMissingInBackend
 from odoo.addons.queue_job.job import identity_exact
+=======
+>>>>>>> [ADD] Added image importer for configurable. Don't overwrite template name on configurables
 from ...components.backend_adapter import MAGENTO_DATETIME_FORMAT
 import urllib
 
@@ -421,3 +424,18 @@ class ProductTemplateAdapter(Component):
         #             raise NotImplementedError  # TODO
         return self._call('ol_catalog_product.update',
                           [int(id), data, storeview_id, 'id'])
+
+    def get_images(self, id, storeview_id=None, data=None):
+        if self.work.magento_api._location.version == '2.0':
+            assert data
+            return (entry for entry in
+                    data.get('media_gallery_entries', [])
+                    if entry['media_type'] == 'image')
+        else:
+            return self._call('product_media.list', [int(id), storeview_id, 'id'])
+
+    def read_image(self, id, image_name, storeview_id=None):
+        if self.work.magento_api._location.version == '2.0':
+            raise NotImplementedError  # TODO
+        return self._call('product_media.info',
+                          [int(id), image_name, storeview_id, 'id'])

@@ -46,6 +46,18 @@ class ProductTemplateBatchImporter(Component):
             self._import_record(external_id)
 
 
+class MagentoProductTemplateImageImporter(Component):
+    """ Import images for a record.
+
+    Usually called from importers, in ``_after_import``.
+    For instance from the products importer.
+    """
+    _name = 'magento.product.template.image.importer'
+    _inherit = 'magento.product.image.importer'
+    _apply_on = ['magento.product.template']
+    _usage = 'template.image.importer'
+
+
 class ProductTemplateImporter(Component):
     _name = 'magento.product.template.importer'
     _inherit = 'magento.importer'
@@ -96,6 +108,10 @@ class ProductTemplateImporter(Component):
                 )
 
     def _after_import(self, binding):
+        # Import Images
+        image_importer = self.component(usage='template.image.importer')
+        image_importer.run(self.external_id, binding,
+                           data=self.magento_record)
         # Import variants
         magento_variants = self.backend_adapter.list_variants(self.external_id)
         variant_binder = self.binder_for('magento.product.product')
@@ -107,7 +123,7 @@ class ProductTemplateImporter(Component):
             variant_binder._external_field = 'external_id'
             # Import / Update the variant here
             if not variant:
-                # Pass product_template_id in context - so the product mapper will map it
+                # Pass product_template_id in arguments - so the product mapper will map it
                 self._import_dependency(magento_variant['sku'], 'magento.product.product', always=True,
                                         product_template_id=binding.odoo_id.id)
             elif variant.odoo_id.product_tmpl_id.id != binding.odoo_id.id:
