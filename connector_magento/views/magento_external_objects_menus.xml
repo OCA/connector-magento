@@ -5,6 +5,16 @@
 		<menuitem id="menu_odoo_external_objects"
 			name="External Objects" parent="menu_magento_root" sequence="100" />
 
+
+		<record id="action_magento_tax" model="ir.actions.act_window">
+			<field name="name">Magento Tax</field>
+			<field name="res_model">magento.account.tax</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		<menuitem id="menu_magento_account_tax"
+			name="Tax Mapping" parent="menu_odoo_external_objects"
+            action="action_magento_tax" sequence="10"/>
+
 		<record id="action_magento_orders" model="ir.actions.act_window">
 			<field name="name">Magento Orders</field>
 			<field name="res_model">magento.sale.order</field>
@@ -12,7 +22,8 @@
 		</record>
 		<menuitem id="menu_magento_external_orders"
 			name="External orders" parent="menu_odoo_external_objects"
-            action="action_magento_orders" />
+            action="action_magento_orders" sequence="20"/>
+
 		<record id="action_odoo_categories"
 			model="ir.actions.act_window">
 			<field name="name">Magento product Categories</field>
@@ -21,7 +32,7 @@
 		</record>
 		<menuitem id="menu_odoo_external_categories"
 			name="External Categories" parent="menu_odoo_external_objects"
-			action="action_odoo_categories" />
+			action="action_odoo_categories" sequence="30"/>
 
 
 		<record id="action_odoo_products" model="ir.actions.act_window">
@@ -31,7 +42,7 @@
 		</record>
 		<menuitem id="menu_odoo_external_products"
 			name="External Products" parent="menu_odoo_external_objects"
-			action="action_odoo_products" />
+			action="action_odoo_products" sequence="40"/>
 
 
 		<record id="action_odoo_product_templates" model="ir.actions.act_window">
@@ -41,7 +52,7 @@
 		</record>
 		<menuitem id="menu_odoo_product_templates"
 			name="External Configurable" parent="menu_odoo_external_objects"
-			action="action_odoo_product_templates" />
+			action="action_odoo_product_templates" sequence="50"/>
 
 
 
@@ -55,7 +66,7 @@
 		<menuitem id="menu_odoo_external_attributes_set"
 			name="External Attributes Sets"
 			parent="connector_magento.menu_odoo_external_objects"
-			action="action_odoo_attributes_sets" />
+			action="action_odoo_attributes_sets" sequence="100"/>
 
 		<record id="action_odoo_attributes"
 			model="ir.actions.act_window">
@@ -66,7 +77,7 @@
 		<menuitem id="menu_odoo_external_attribute"
 			name="External Attributes"
 			parent="connector_magento.menu_odoo_external_objects"
-			action="action_odoo_attributes" />
+			action="action_odoo_attributes" sequence="110"/>
 
 		<record id="action_odoo_values" model="ir.actions.act_window">
 			<field name="name">Magento Attribute Values</field>
@@ -76,7 +87,7 @@
 		<menuitem id="connector_magento.menu_odoo_external_values"
 			name="External Attribute Values"
 			parent="connector_magento.menu_odoo_external_objects"
-			action="action_odoo_values" />
+			action="action_odoo_values" sequence="120"/>
 
 	</data>
 </openerp>

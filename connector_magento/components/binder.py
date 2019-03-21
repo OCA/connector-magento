@@ -35,6 +35,7 @@ class MagentoModelBinder(Component):
         'magento.sale.order',
         'magento.sale.order.line',
         'magento.account.invoice',
+        'magento.account.tax',
     ]
 
     def to_internal(self, external_id, unwrap=False, external_field=None):

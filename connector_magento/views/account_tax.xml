@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+
+		<record id="account_tax_form_view" model="ir.ui.view">
+			<field name="name">account.tax.form</field>
+			<field name="model">account.tax</field>
+			<field name="inherit_id" ref="account.view_tax_form" />
+			<field name="arch" type="xml">
+				<notebook position="inside">
+					<page string="Magento" name="magento">
+						<group string="Magento Template Bindings">
+							<field name="magento_bind_ids" nolabel="1">
+								<tree>
+									<field name="backend_id" />
+									<field name="class_name" />
+								</tree>
+							</field>
+						</group>
+					</page>
+				</notebook>
+			</field>
+		</record>
+
+
+		<record id="view_magento_account_tax_form" model="ir.ui.view">
+			<field name="name">magento.account.tax.form</field>
+			<field name="model">magento.account.tax</field>
+			<field name="arch" type="xml">
+				<form string="Magento Tax Class">
+					<header>
+					</header>
+					<sheet>
+						<div class="oe_button_box" name="button_box">
+
+						</div>
+						<group name="general">
+							<field name="backend_id" />
+							<field name="class_name" readonly="1"/>
+							<field name="odoo_id" />
+							<field name="external_id" readonyl="1"/>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+
+
+		<record id="magento_account_tax_tree_view" model="ir.ui.view">
+			<field name="name">magento.account.tax.tree</field>
+			<field name="model">magento.account.tax</field>
+			<field name="arch" type="xml">
+				<tree>
+					<field name="backend_id" />
+					<field name="class_name"/>
+					<field name="odoo_id" />
+					<field name="external_id"/>
+				</tree>
+			</field>
+		</record>
+
+
+	</data>
+</openerp>

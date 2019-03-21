@@ -181,7 +181,7 @@ class MagentoImporter(AbstractComponent):
             self.backend_record._name,
             self.backend_record.id,
             self.work.model_name,
-            external_id,
+            str(external_id),
         )
 
         try:
@@ -299,9 +299,9 @@ class TranslationImporter(Component):
     _inherit = 'magento.importer'
     _usage = 'translation.importer'
 
-    def _get_magento_data(self, storeview_id=None):
+    def _get_magento_data(self, storeview_code=None):
         """ Return the raw Magento data for ``self.external_id`` """
-        return self.backend_adapter.read(self.external_id, storeview_id)
+        return self.backend_adapter.read(self.external_id, storeview_code=storeview_code)
 
     def run(self, external_id, binding, mapper=None):
         self.external_id = external_id
@@ -325,7 +325,7 @@ class TranslationImporter(Component):
             mapper = self.component_by_name(mapper)
 
         for storeview in lang_storeviews:
-            lang_record = self._get_magento_data(storeview.external_id)
+            lang_record = self._get_magento_data(storeview.code)
             map_record = mapper.map_record(lang_record)
             record = map_record.values()
 

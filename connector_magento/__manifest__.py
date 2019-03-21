@@ -30,6 +30,7 @@
           'data/res_partner_category.xml',
           'security/ir.model.access.csv',
           'views/magento_backend_views.xml',
+          'views/account_tax.xml',
           'views/product_views.xml',
           'views/product_template.xml',
           'views/product_category_views.xml',

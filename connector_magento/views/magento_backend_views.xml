@@ -356,6 +356,14 @@
 								in the menu 'Connectors > Checkpoint'.
 							</p>
 
+							<group name="tax_class">
+								<div>
+									<label string="Import all tax classes"
+										class="oe_inline" />
+								</div>
+								<button name="import_tax_classes" type="object"
+									class="oe_highlight" string="Import in background" />
+							</group>
 							<group name="customers">
 								<div>
 									<label string="Import all customer groups"

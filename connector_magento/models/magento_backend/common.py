@@ -312,6 +312,13 @@ class MagentoBackend(models.Model):
         return True
 
     @api.multi
+    def import_tax_classes(self):
+        """ Import tax class """
+        for backend in self:
+            self.env['magento.account.tax'].import_batch(backend)
+        return True
+
+    @api.multi
     def import_customer_groups(self):
         for backend in self:
             backend.check_magento_structure()

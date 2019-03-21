@@ -253,7 +253,7 @@ class GenericAdapter(AbstractComponent):
         return self._call('%s.search' % self._magento_model,
                           [filters] if filters else [{}])
 
-    def read(self, id, attributes=None):
+    def read(self, id, attributes=None, storeview_code=None):
         """ Returns the information of a record
 
         :rtype: dict
@@ -268,10 +268,10 @@ class GenericAdapter(AbstractComponent):
 #             if attributes:
 #                 raise NotImplementedError
             if self._magento2_key:
-                res = self._call('%s/%s' % (self._magento2_model, escape(id)), None)
+                res = self._call('%s/%s' % (self._magento2_model, escape(id)), None, storeview=storeview_code)
                 return res
             else:
-                res = self._call(self._magento2_model)
+                res = self._call('%s' % (self._magento2_model), None, storeview=storeview_code)
                 return next(record for record in res if record['id'] == id)
 
         arguments = [int(id)]

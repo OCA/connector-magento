@@ -223,6 +223,19 @@ class ProductImportMapper(Component):
         }
 
     @mapping
+    def tax_class_id(self, record):
+        tax_attribute = [a for a in record['custom_attributes'] if a['attribute_code'] == 'tax_class_id']
+        if not tax_attribute:
+            return {}
+        binder = self.binder_for('magento.account.tax')
+        tax = binder.to_internal(tax_attribute[0]['value'], unwrap=True)
+        if not tax:
+            raise MappingError("The tax class with the id %s"
+                               "is not imported." %
+                               tax_attribute[0]['value'])
+        return {'taxes_id': [(4, tax.id)]}
+
+    @mapping
     def attributes(self, record):
         attribute_binder = self.binder_for('magento.product.attribute')
         value_binder = self.binder_for('magento.product.attribute.value')

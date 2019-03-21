@@ -136,6 +136,15 @@ class ProductTemplateImporter(Component):
         # Update price if price is 0
         if binding.price == 0:
             binding.price = price
+        # Do also import translations
+        translation_importer = self.component(
+            usage='translation.importer',
+        )
+        translation_importer.run(
+            self.external_id,
+            binding,
+            mapper='magento.product.template.import.mapper'
+        )
 
     def _is_uptodate(self, binding):
         # TODO: Remove for production - only to test the update

@@ -32,7 +32,7 @@ class PartnerAdapter(Component):
         return magento2_datas
 
 
-    def create(self, data):
+    def create(self, customer_id, data):
         """ Create a record on the external system """
         if self.work.magento_api._location.version == '2.0': 
             data_api2 = self.get_magento2_datas(data)                        

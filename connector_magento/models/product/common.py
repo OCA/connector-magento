@@ -252,21 +252,21 @@ class ProductProductAdapter(Component):
                 in self._call('%s.list' % self._magento_model,
                               [filters] if filters else [{}])]
 
-    def read(self, id, storeview_id=None, attributes=None):
+    def read(self, id, storeview_code=None, attributes=None):
         """ Returns the information of a record
 
         :rtype: dict
         """
         if self.work.magento_api._location.version == '2.0':
-            # TODO: storeview context in Magento 2.0
+            # TODO: storeview_code context in Magento 2.0
             res = super(ProductProductAdapter, self).read(
-                id, attributes=attributes)
+                id, attributes=attributes, storeview_code=storeview_code)
             if res:
                 for attr in res.get('custom_attributes', []):
                     res[attr['attribute_code']] = attr['value']
             return res
         return self._call('ol_catalog_product.info',
-                          [int(id), storeview_id, attributes, 'id'])
+                          [int(id), storeview_code, attributes, 'id'])
 
 
     def get_product_datas(self, data, saveOptions=True):
