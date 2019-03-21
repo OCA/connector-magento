@@ -46,6 +46,7 @@
 					<field name="name" />
 					<field name="external_id" />
 					<field name="backend_id" />
+					<field name="create_variant" />
 					<field name="is_pivot_attribute" />
 					<field name="odoo_id" />
 					<field name="frontend_input" />
@@ -77,6 +78,7 @@
 							<field name="attribute_code" />
 							<field name="attribute_id" />
 							<field name="external_id" />
+							<field name="create_variant" />
 							<field name="frontend_input" readonly="1" />
 							<field name="is_pivot_attribute" />
 						</group>

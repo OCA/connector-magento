@@ -17,6 +17,8 @@ from odoo.addons.queue_job.job import identity_exact
 >>>>>>> [ADD] Added image importer for configurable. Don't overwrite template name on configurables
 from ...components.backend_adapter import MAGENTO_DATETIME_FORMAT
 import urllib
+import odoo.addons.decimal_precision as dp
+
 
 _logger = logging.getLogger(__name__)
 
@@ -42,6 +44,8 @@ class MagentoProductTemplate(models.Model):
 
     product_type = fields.Char()
     magento_id = fields.Integer('Magento ID')
+    magento_name = fields.Char('Name', translate=True)
+    magento_price = fields.Float('Backend Preis', default=0.0, digits=dp.get_precision('Product Price'),)
     created_at = fields.Date('Created At (on Magento)')
     updated_at = fields.Date('Updated At (on Magento)')
 
@@ -291,9 +295,17 @@ class ProductTemplate(models.Model):
         return super(ProductTemplate, me).create(vals)
 
     @api.multi
+    def create_variant_ids(self):
+        if self.env.context.get('create_product_product', False):
+            # Do not try to create / update variants
+            return True
+        return super(ProductTemplate, self).create_variant_ids()
+
+    @api.multi
     def write(self, vals):
         org_vals = vals.copy()
-        res = super(ProductTemplate, self).write(vals)
+        me = self.with_context(create_product_product=True)
+        res = super(ProductTemplate, me).write(vals)
         # This part is for custom odoo fields to magento attributes
         for tpl in self:
             for prod in tpl.magento_template_bind_ids:
@@ -303,7 +315,6 @@ class ProductTemplate(models.Model):
 
     @api.model
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
-        context = self._context
         res = super(ProductTemplate, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
 
         if res['model'] in ['product.template', 'product.product'] and \

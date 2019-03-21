@@ -98,7 +98,8 @@ class AttributeImportMapper(Component):
     
     @mapping
     def create_variant(self, record):
-        return {'create_variant': self.env['magento.product.attribute']._is_generate_variant(record['frontend_input'])}
+        # Is by default False - will get set as soon as this attribute appears in a configureable product
+        return {'create_variant': False}
 
     @mapping
     def backend_id(self, record):

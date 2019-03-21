@@ -14,6 +14,8 @@ from odoo.addons.component.core import Component
 from odoo.addons.component_event import skip_if
 from odoo.addons.queue_job.job import job, related_action
 from ...components.backend_adapter import MAGENTO_DATETIME_FORMAT
+import odoo.addons.decimal_precision as dp
+
 
 _logger = logging.getLogger(__name__)
 
@@ -57,6 +59,8 @@ class MagentoProductProduct(models.Model):
                                     default='simple',
                                     required=True)
     magento_id = fields.Integer('Magento ID')
+    magento_name = fields.Char('Name', translate=True)
+    magento_price = fields.Float('Backend Preis', default=0.0, digits=dp.get_precision('Product Price'),)
     manage_stock = fields.Selection(
         selection=[('use_default', 'Use Default Config'),
                    ('no', 'Do Not Manage Stock'),

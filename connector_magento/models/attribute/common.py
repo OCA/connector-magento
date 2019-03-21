@@ -61,12 +61,6 @@ class MagentoProductAttribute(models.Model):
     def create(self, vals):
         return super(MagentoProductAttribute, self).create(vals)
 
-    @api.model
-    def _is_generate_variant(self, frontend_input):
-        if frontend_input in ['select', 'multiselect']:
-            return True
-        return False
-
     @api.multi
     def export_product_attribute_button(self):
         self.ensure_one()

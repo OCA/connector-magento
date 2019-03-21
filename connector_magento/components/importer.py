@@ -67,7 +67,7 @@ class MagentoImporter(AbstractComponent):
         return magento_date < sync_date
 
     def _import_dependency(self, external_id, binding_model,
-                           importer=None, always=False):
+                           importer=None, always=False, external_field=None):
         """ Import a dependency.
 
         The importer class is a class or subclass of
@@ -89,7 +89,7 @@ class MagentoImporter(AbstractComponent):
         if not external_id:
             return
         binder = self.binder_for(binding_model)
-        if always or not binder.to_internal(external_id):
+        if always or not binder.to_internal(external_id, external_field=external_field):
             if importer is None:
                 importer = self.component(usage='record.importer',
                                           model_name=binding_model)

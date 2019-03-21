@@ -34,6 +34,7 @@ class ProductBatchImporter(Component):
         # with visibility=4 we only get products which are standalone products - product variants have visibility=1 !
         filters['visibility'] = {'eq': 4}
         filters['type_id'] = {'eq': 'simple'}
+        filters['active'] = {'eq': 1}
         external_ids = self.backend_adapter.search(filters,
                                                    from_date=from_date,
                                                    to_date=to_date)
@@ -182,12 +183,13 @@ class ProductImportMapper(Component):
     _apply_on = ['magento.product.product']
 
     # TODO :     categ, special_price => minimal_price
-    direct = [('name', 'name'),
+    direct = [('name', 'magento_name'),
+              ('price', 'magento_price'),
               ('description', 'description'),
               ('weight', 'weight'),
-              ('cost', 'standard_price'),
               ('short_description', 'description_sale'),
               ('sku', 'default_code'),
+              ('sku', 'external_id'),
               ('type_id', 'product_type'),
               ('id', 'magento_id'),
               (normalize_datetime('created_at'), 'created_at'),
@@ -203,7 +205,44 @@ class ProductImportMapper(Component):
 
     @mapping
     def price(self, record):
-        return {'list_price': record.get('price', 0.0)}
+        if record['visibility'] == 1:
+            # This is a product variant - so the price got set on the template !
+            return {}
+        return {
+            'list_price': record.get('price', 0.0),
+            'standard_price': record.get('cost', 0.0),
+        }
+
+    @mapping
+    def product_name(self, record):
+        if record['visibility'] == 1:
+            # This is a product variant - so the price got set on the template !
+            return {}
+        return {
+            'name': record.get('name', ''),
+        }
+
+    @mapping
+    def attributes(self, record):
+        attribute_binder = self.binder_for('magento.product.attribute')
+        value_binder = self.binder_for('magento.product.attribute.value')
+        attribute_value_ids = []
+        for attribute in record['custom_attributes']:
+            mattribute = attribute_binder.to_internal(attribute['attribute_code'], unwrap=False, external_field='attribute_code')
+            if not mattribute.create_variant:
+                # We do ignore attributes which do not create a variant
+                continue
+            if not mattribute:
+                raise MappingError("The product attribute %s is not imported." %
+                                   mattribute.name)
+            mvalue = value_binder.to_internal("%s_%s" % (mattribute.attribute_id, str(attribute['value'])), unwrap=False)
+            if not mvalue:
+                raise MappingError("The product attribute value %s in attribute %s is not imported." %
+                                   (str(attribute['value']), mattribute.name))
+            attribute_value_ids.append((4, mvalue.odoo_id.id))
+        return {
+            'attribute_value_ids': attribute_value_ids,
+        }
 
     @mapping
     def type(self, record):
@@ -294,6 +333,11 @@ class ProductImporter(Component):
                 'categories', record['category_ids']):
             self._import_dependency(mag_category_id,
                                     'magento.product.category')
+        for attribute in record.get('custom_attributes'):
+            # It will only import if it does not already exists - so it is safe to call it here
+            # With always=True it will force the import / update
+            self._import_dependency(attribute['attribute_code'],
+                                    'magento.product.attribute', external_field='attribute_code')
         if record['type_id'] == 'bundle':
             self._import_bundle_dependencies()
 

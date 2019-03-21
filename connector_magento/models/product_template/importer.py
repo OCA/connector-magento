@@ -4,17 +4,9 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
 import logging
-import requests
-import base64
-import sys
-
-from odoo import models, fields, api
-
-from odoo import _
 from odoo.addons.component.core import Component
 from odoo.addons.connector.components.mapper import mapping, only_create
 from odoo.addons.connector.exception import MappingError, InvalidDataError
-from ...components.mapper import normalize_datetime
 from odoo.addons.queue_job.exception import NothingToDoJob
 
 _logger = logging.getLogger(__name__) 
@@ -37,6 +29,7 @@ class ProductTemplateBatchImporter(Component):
         # Variants to have visibility=1
         filters['visibility'] = {'eq': 4}
         filters['type_id'] = {'eq': 'configurable'}
+        filters['status'] = {'eq': 1}
         external_ids = self.backend_adapter.search(filters,
                                                    from_date=from_date,
                                                    to_date=to_date)
@@ -70,7 +63,7 @@ class ProductTemplateImporter(Component):
         return binding
 
     def _import_dependency(self, external_id, binding_model,
-                           importer=None, always=False, product_template_id=None):
+                           importer=None, always=False, product_template_id=None, external_field=None):
         """ Import a dependency.
 
         The importer class is a class or subclass of
@@ -92,7 +85,7 @@ class ProductTemplateImporter(Component):
         if not external_id:
             return
         binder = self.binder_for(binding_model)
-        if always or not binder.to_internal(external_id):
+        if always or not binder.to_internal(external_id, external_field=external_field):
             if importer is None:
                 importer = self.component(usage='record.importer',
                                           model_name=binding_model)
@@ -116,11 +109,12 @@ class ProductTemplateImporter(Component):
         magento_variants = self.backend_adapter.list_variants(self.external_id)
         variant_binder = self.binder_for('magento.product.product')
         templates_delete = {}
+        price = 0
         for magento_variant in magento_variants:
-            # Search by magento_id - because this is also what is available in the mapper !
-            variant_binder._external_field = 'magento_id'
-            variant = variant_binder.to_internal(magento_variant['id'], unwrap=False)
-            variant_binder._external_field = 'external_id'
+            if not price or magento_variant['price'] < price:
+                price = magento_variant['price']
+            # Search by sku - because this is also what is available in the mapper !
+            variant = variant_binder.to_internal(magento_variant['sku'], unwrap=False)
             # Import / Update the variant here
             if not variant:
                 # Pass product_template_id in arguments - so the product mapper will map it
@@ -139,6 +133,9 @@ class ProductTemplateImporter(Component):
 
         for template_delete in templates_delete:
             templates_delete[template_delete].unlink()
+        # Update price if price is 0
+        if binding.price == 0:
+            binding.price = price
 
     def _is_uptodate(self, binding):
         # TODO: Remove for production - only to test the update
@@ -147,6 +144,11 @@ class ProductTemplateImporter(Component):
     def _import_dependencies(self):
         record = self.magento_record
         # Import attribute deps
+        for attribute in record.get('custom_attributes'):
+            # We do search binding using attribute_code - default is attribute_id !
+            self._import_dependency(attribute['attribute_code'],
+                                    'magento.product.attribute', external_field='attribute_code')
+        # Check for attributes in configurable - with values
         product_options = record['extension_attributes']['configurable_product_options']
         attribute_binder = self.binder_for('magento.product.attribute')
         attribute_value_binder = self.binder_for('magento.product.attribute.value')
@@ -155,6 +157,9 @@ class ProductTemplateImporter(Component):
             if not attribute:
                 # Do import the attribute
                 self._import_dependency(product_option['attribute_id'], 'magento.product.attribute')
+                attribute = attribute_binder.to_internal(product_option['attribute_id'], unwrap=True)
+            # This is a configurable product option attribute - so set the create_variant flag
+            attribute.with_context(connector_no_export=True).create_variant = True
             # Check for attribute values
             for option_value in product_option['values']:
                 attribute_value = attribute_value_binder.to_internal("%s_%s" % (product_option['attribute_id'], option_value['value_index']), unwrap=True)
@@ -171,8 +176,9 @@ class ProductTemplateImportMapper(Component):
     children = []
 
     @mapping
-    def attr_ids(self, record):
+    def attributes(self, record):
         '''
+        We do overwrite the attributes function from product.product
         [
           {
             u'product_id': 2039,
@@ -272,6 +278,19 @@ class ProductTemplateImportMapper(Component):
         if main_categ_id:  # OpenERP assign 'All Products' if not specified
             result['categ_id'] = main_categ_id
         return result
+
+    @mapping
+    def price(self, record):
+        return {
+            'list_price': record.get('price', 0.0),
+            'standard_price': record.get('cost', 0.0),
+        }
+
+    @mapping
+    def product_name(self, record):
+        return {
+            'name': record.get('name', ''),
+        }
 
     @only_create
     @mapping
