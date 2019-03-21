@@ -77,10 +77,10 @@ class StockPickingAdapter(Component):
     _magento_model = 'sales_order_shipment'
     _admin_path = 'sales_shipment/view/shipment_id/{id}'
 
-    def _call(self, method, arguments, http_method=None):
+    def _call(self, method, arguments, http_method=None, storeview=None):
         try:
             return super(StockPickingAdapter, self)._call(
-                method, arguments, http_method=http_method)
+                method, arguments, http_method=http_method, storeview=storeview)
         except xmlrpclib.Fault as err:
             # this is the error in the Magento API
             # when the shipment does not exist

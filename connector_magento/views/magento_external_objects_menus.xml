@@ -89,5 +89,23 @@
 			parent="connector_magento.menu_odoo_external_objects"
 			action="action_odoo_values" sequence="120"/>
 
+		<record id="action_odoo_partner_categorie" model="ir.actions.act_window">
+			<field name="name">Magento Partner Categories</field>
+			<field name="res_model">magento.res.partner.category</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		<menuitem id="connector_magento.menu_odoo_partner_categorie"
+			name="Magento Partner Categories"
+			parent="connector_magento.menu_odoo_external_objects"
+			action="action_odoo_partner_categorie" sequence="200"/>
+		<record id="action_odoo_partner" model="ir.actions.act_window">
+			<field name="name">Magento Partner</field>
+			<field name="res_model">magento.res.partner</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		<menuitem id="connector_magento.menu_odoo_partner"
+			name="Magento Partner"
+			parent="connector_magento.menu_odoo_external_objects"
+			action="action_odoo_partner" sequence="210"/>
 	</data>
 </openerp>

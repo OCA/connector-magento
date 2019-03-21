@@ -181,7 +181,7 @@ class MagentoImporter(AbstractComponent):
             self.backend_record._name,
             self.backend_record.id,
             self.work.model_name,
-            str(external_id),
+            unicode(external_id),
         )
 
         try:

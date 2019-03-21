@@ -138,8 +138,10 @@ class SaleOrderImportMapper(Component):
               ('store_id', 'storeview_id'),
               ]
 
-    children = [('items', 'magento_order_line_ids', 'magento.sale.order.line'),
-                ]
+    children = [
+        ('items', 'magento_order_line_ids', 'magento.sale.order.line'),
+        ('status_histories', 'magento_order_history_ids', 'magento.sale.order.historie')
+    ]
 
     def _add_shipping_line(self, map_record, values):
         record = map_record.source
@@ -433,8 +435,16 @@ class SaleOrderImporter(Component):
             binding.odoo_id._compute_tax_id()
         return binding
 
+    def _link_messages(self, binding):
+        for historie in binding.magento_order_history_ids:
+            historie.update({
+                'model': 'sale.order',
+                'res_id': binding.odoo_id.id
+            })
+
     def _after_import(self, binding):
         self._link_parent_orders(binding)
+        self._link_messages(binding)
 
     def _get_storeview(self, record):
         """ Return the tax inclusion setting for the appropriate storeview """
@@ -716,3 +726,24 @@ class SaleOrderLineImportMapper(Component):
         else:
             result['price_unit'] = base_row_total / qty_ordered
         return result
+
+
+class SaleOrderHistorieImportMapper(Component):
+    _name = 'magento.sale.order.historie.mapper'
+    _inherit = 'magento.import.mapper'
+    _apply_on = 'magento.sale.order.historie'
+
+    direct = [('entity_name', 'entity_name'),
+              ('entity_id', 'external_id'),
+              ('status', 'status'),
+              ('comment', 'body'),
+              (normalize_datetime('created_at'), 'date'),
+              ]
+
+    @mapping
+    def message_type(self, record):
+        return {'message_type': 'notification'}
+
+    @mapping
+    def backend_id(self, record):
+        return {'backend_id': self.backend_record.id}

@@ -34,6 +34,7 @@ class MagentoModelBinder(Component):
         'magento.stock.picking',
         'magento.sale.order',
         'magento.sale.order.line',
+        'magento.sale.order.historie',
         'magento.account.invoice',
         'magento.account.tax',
     ]

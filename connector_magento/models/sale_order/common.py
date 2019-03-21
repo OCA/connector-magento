@@ -24,6 +24,11 @@ class MagentoSaleOrder(models.Model):
     _description = 'Magento Sale Order'
     _inherits = {'sale.order': 'odoo_id'}
 
+    magento_order_history_ids = fields.One2many(
+        comodel_name='magento.sale.order.historie',
+        inverse_name='magento_order_id',
+        string="Magento Order Historie",
+    )
     odoo_id = fields.Many2one(comodel_name='sale.order',
                               string='Sale Order',
                               required=True,
@@ -74,6 +79,35 @@ class MagentoSaleOrder(models.Model):
         return _super.import_batch(backend, filters=filters)
 
 
+class MagentoSaleOrderHistorie(models.Model):
+    _name = 'magento.sale.order.historie'
+    _inherit = 'magento.binding'
+    _description = 'Magento Sale Order Historie'
+    _inherits = {'mail.message': 'odoo_id'}
+
+
+    magento_order_id = fields.Many2one(comodel_name='magento.sale.order',
+                                       string='Magento Sale Order',
+                                       required=True,
+                                       ondelete='cascade',
+                                       index=True)
+    odoo_id = fields.Many2one(comodel_name='mail.message',
+                              string='Message',
+                              required=True,
+                              ondelete='cascade')
+    backend_id = fields.Many2one(
+        related='magento_order_id.backend_id',
+        string='Magento Backend',
+        readonly=True,
+        store=True,
+        # override 'magento.binding', can't be INSERTed if True:
+        required=False,
+    )
+    entity_name = fields.Char('Name')
+    is_customer_notified = fields.Boolean('Customer Notified')
+    status = fields.Char('Status')
+
+
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
@@ -81,6 +115,11 @@ class SaleOrder(models.Model):
         comodel_name='magento.sale.order',
         inverse_name='odoo_id',
         string="Magento Bindings",
+    )
+    magento_order_history_ids = fields.One2many(
+        comodel_name='magento.sale.order.historie',
+        inverse_name='odoo_id',
+        string="Magento Order Historie",
     )
 
     @api.depends('magento_bind_ids', 'magento_bind_ids.magento_parent_id')
@@ -249,9 +288,9 @@ class SaleOrderAdapter(Component):
     _magento2_key = 'entity_id'
     _admin_path = '{model}/view/order_id/{id}'
 
-    def _call(self, method, arguments, http_method=None):
+    def _call(self, method, arguments, http_method=None, storeview=None):
         try:
-            return super(SaleOrderAdapter, self)._call(method, arguments, http_method=http_method )
+            return super(SaleOrderAdapter, self)._call(method, arguments, http_method=http_method, storeview=storeview)
         except xmlrpclib.Fault as err:
             # this is the error in the Magento API
             # when the sales order does not exist
