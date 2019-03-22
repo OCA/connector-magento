@@ -54,34 +54,27 @@
 			<field name="name">magento.product.template.form</field>
 			<field name="model">magento.product.template</field>
 			<field name="arch" type="xml">
-				<form string="Magento Product">
-					<sheet>
-						<div class="oe_button_box" name="button_box">
-							<button name="export_product_template_button"
-								class="oe_stat_button" string="Export Template Attributes"
-								type="object" />
-							<button name="resync" string="resyn All"
-								class="oe_stat_button" help="Stck, Attributes, ..."
-								type="object" />
-							<button name="action_magento_template_custom_attributes"
-								type="object" string="Custom Values" class="oe_stat_button"
-								context="{'search_default_magento_product_id': [active_id], 
+				<form string="Magento Configurable Product">
+					<header>
+						<button type="object" name="sync_from_magento" string="Force Sync Magento -> Odoo"/>
+						<button name="action_magento_template_custom_attributes" type="object" string="Custom Values"
+								class="oe_stat_button" context="{'search_default_magento_product_id': [active_id],
 							'default_attribute_set_id': attribute_set_id,
 							'default_magento_product_id': active_id, }" />
+					</header>
+					<sheet>
+						<div class="oe_button_box" name="button_box">
 
 						</div>
 						<group name="general">
 							<field name="backend_id" />
-							<field name="external_id" />
+							<field name="magento_name" />
+							<field name="magento_price" />
+							<field name="external_id" readonyl="1"/>
+							<field name="magento_id" readonyl="1"/>
+							<field name="odoo_id" readonly="1"/>
 							<field name="attribute_set_id" required="1" />
-							<!-- <field name="created_at" readonly="1" /> <field name="updated_at" 
-								readonly="1" /> -->
 						</group>
-						<!-- <group string="Inventory Options" name="inventoy"> <field name="no_stock_sync" 
-							/> <field name="manage_stock" /> <field name="backorders" /> <div class="oe_inline"> 
-							<label for="magento_qty" class="oe_inline" /> <field name="magento_qty" readonly="1" 
-							class="oe_inline" nolabel="1" /> <button name="recompute_magento_qty" string="(recompute)" 
-							class="oe_link oe_inline" type="object" /> </div> </group> -->
 					</sheet>
 				</form>
 			</field>
@@ -104,7 +97,7 @@
 					<field name="external_id" />
 					<!-- <field name="attribute_set_id"/> -->
 					<field name="sync_date" />
-					<button name="resync" type="object" string="Resync" />
+					<button name="sync_from_magento" type="object" string="Force Sync Magento -> Odoo" />
 				</tree>
 			</field>
 		</record>

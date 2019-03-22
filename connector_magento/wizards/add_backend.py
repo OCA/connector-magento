@@ -18,22 +18,9 @@ class WizardModel(models.TransientModel):
             return []
         domain.append(('id', 'in', active_ids))
         export = self.env[active_model]
- 
-        if active_model == 'product.template' :
-           export = self.env['product.template'].search(domain)
-
-        if active_model == 'product.product' :
-           export = self.env['product.product'].search(domain)
-#            tmp_ids = [p.product_tmpl_id for p in export_prod]     
-#            export = self.env['product.template'].search([('id', 'in', tmp_ids)])
-                 
-        if active_model == 'product.category' :
-           export = self.env['product.category'].search(domain)
-        
         if active_model == model:
-            return export     
-        
-        
+            return export.search(domain)
+
     @api.multi
     def get_default_products(self):
         return self.get_default_object('product.product')
@@ -45,6 +32,10 @@ class WizardModel(models.TransientModel):
     @api.multi
     def get_default_attributes(self):
         return self.get_default_object('product.attribute')
+
+    @api.multi
+    def get_default_backend(self):
+        return self.env['magento.backend'].search([], limit=1)
 
     @api.multi
     def check_backend_binding(self):                
@@ -84,7 +75,7 @@ class WizardModel(models.TransientModel):
                 }
             self.env[dest_model].create(vals)
             
-    backend_id = fields.Many2one(comodel_name='magento.backend', required=True)
+    backend_id = fields.Many2one(comodel_name='magento.backend', required=True, default=get_default_backend)
     to_export_ids = fields.Many2many(string='Product Templates To export', 
                                      comodel_name='product.product', default=get_default_products)
     

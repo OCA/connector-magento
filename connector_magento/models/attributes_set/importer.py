@@ -29,13 +29,13 @@ class AttributeSetBatchImporter(Component):
     def run(self, filters=None):
         """ Run the synchronization """
         _logger.debug("batch filter = %r" % filters)
-        magento_website_ids = [filters.pop('magento_website_id')]
         external_ids = self.backend_adapter.search(filters)
         _logger.info('search for attributes set %s returned %s',
                      filters, external_ids)
         for external_id in external_ids:
             self._import_record(external_id) 
             
+
 class AttributeSetImportMapper(Component):
     _name = 'magento.product.attributes.set.import.mapper'
     _inherit = 'magento.import.mapper'
@@ -50,6 +50,7 @@ class AttributeSetImportMapper(Component):
     def backend_id(self, record):
         return {'backend_id': self.backend_record.id}
     
+
 class AttributeSet(Component):
     _name = 'magento.product.attributes.set.importer'
     _inherit = 'magento.importer'
@@ -69,6 +70,3 @@ class AttributeSet(Component):
             attributebinder = self.binder_for('magento.product.attribute')
             attributes.append(attributebinder.to_internal(record.get('attribute_id')).id)
         binding.write({'attribute_ids' : [(6, 0, attributes)] })
-        
-    
-

@@ -356,6 +356,14 @@
 								in the menu 'Connectors > Checkpoint'.
 							</p>
 
+							<group name="tax_class">
+								<div>
+									<label string="Import all tax classes"
+										class="oe_inline" />
+								</div>
+								<button name="import_tax_classes" type="object"
+									class="oe_highlight" string="Import in background" />
+							</group>
 							<group name="customers">
 								<div>
 									<label string="Import all customer groups"
@@ -381,6 +389,15 @@
 										class="oe_inline" nolabel="1" />
 								</div>
 								<button name="import_product_categories" type="object"
+									class="oe_highlight" string="Import in background" />
+							</group>
+							<group>
+								<div>
+									<label
+										string="Import attribute sets, attributes and value"
+										class="oe_inline" />
+								</div>
+								<button name="import_attributes_set" type="object"
 									class="oe_highlight" string="Import in background" />
 							</group>
 							<group>
@@ -427,6 +444,10 @@
 							string="Advanced Configuration">
 							<group>
 								<group string="Warehouse / Products">
+									<field name="export_all_options"/>
+									<field name="always_create_new_attributes"/>
+									<field name="rename_duplicate_values"/>
+
 									<!-- <field name="default_lang_id" widget="selection" /> -->
 								</group>
 								<group name="warehouse_products"

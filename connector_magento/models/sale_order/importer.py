@@ -106,20 +106,13 @@ class SaleImportRule(Component):
         :rtype: boolean
         """
         payment_method = record['payment']['method']
-        method = self.env['account.payment.mode'].search(
-            [('name', '=', payment_method)],
-            limit=1,
-        )
+        binder = self.binder_for('magento.account.payment.mode')
+        method = binder.to_internal(payment_method, unwrap=True)
         if not method:
             raise FailedJobError(
                 "The configuration is missing for the Payment Mode '%s'.\n\n"
                 "Resolution:\n"
-                "- Go to "
-                "'Accounting > Configuration > Management > Payment Modes'\n"
-                "- Create a new Payment Mode with name '%s'\n"
-                "- Eventually link the Payment Mode to an existing Workflow "
-                "Process or create a new one." % (payment_method,
-                                                  payment_method))
+                "- Create a new Payment Method Mapping" % (payment_method,))
         self._rule_global(record, method)
         self._rules[method.import_rule](self, record, method)
 
@@ -138,8 +131,10 @@ class SaleOrderImportMapper(Component):
               ('store_id', 'storeview_id'),
               ]
 
-    children = [('items', 'magento_order_line_ids', 'magento.sale.order.line'),
-                ]
+    children = [
+        ('items', 'magento_order_line_ids', 'magento.sale.order.line'),
+        ('status_histories', 'magento_order_history_ids', 'magento.sale.order.historie')
+    ]
 
     def _add_shipping_line(self, map_record, values):
         record = map_record.source
@@ -226,10 +221,8 @@ class SaleOrderImportMapper(Component):
     @mapping
     def payment(self, record):
         record_method = record['payment']['method']
-        method = self.env['account.payment.mode'].search(
-            [['name', '=', record_method]],
-            limit=1,
-        )
+        binder = self.binder_for('magento.account.payment.mode')
+        method = binder.to_internal(record_method, unwrap=True)
         assert method, ("method %s should exist because the import fails "
                         "in SaleOrderImporter._before_import when it is "
                         " missing" % record['payment']['method'])
@@ -433,8 +426,26 @@ class SaleOrderImporter(Component):
             binding.odoo_id._compute_tax_id()
         return binding
 
+    def _link_messages(self, binding):
+        for historie in binding.magento_order_history_ids:
+            historie.update({
+                'model': 'sale.order',
+                'res_id': binding.odoo_id.id
+            })
+
+    def _import_payment(self, binding):
+        payment = self.magento_record['payment']
+        binder = self.binder_for('magento.account.payment')
+        payment_binding = binder.to_internal(payment['entity_id'])
+        if not payment_binding:
+            importer = self.component(usage='record.importer',
+                                      model_name='magento.account.payment')
+            importer.run_with_data(payment, order_binding=binding)
+
     def _after_import(self, binding):
         self._link_parent_orders(binding)
+        self._link_messages(binding)
+        self._import_payment(binding)
 
     def _get_storeview(self, record):
         """ Return the tax inclusion setting for the appropriate storeview """
@@ -542,7 +553,7 @@ class SaleOrderImporter(Component):
                                     model_name='magento.res.partner')
             map_record = mapper.map_record(customer_record)
             map_record.update(guest_customer=True)
-            partner_binding = self.env['magento.res.partner'].create(
+            partner_binding = self.env['magento.res.partner'].with_context(connector_no_export=True).create(
                 map_record.values(for_create=True))
             partner_binder.bind(guest_customer_id, partner_binding)
         else:
@@ -581,7 +592,7 @@ class SaleOrderImporter(Component):
         def create_address(address_record):
             map_record = addr_mapper.map_record(address_record)
             map_record.update(addresses_defaults)
-            address_bind = self.env['magento.address'].create(
+            address_bind = self.env['magento.address'].with_context(connector_no_export=True).create(
                 map_record.values(for_create=True,
                                   parent_partner=partner))
             return address_bind.odoo_id.id
@@ -716,3 +727,24 @@ class SaleOrderLineImportMapper(Component):
         else:
             result['price_unit'] = base_row_total / qty_ordered
         return result
+
+
+class SaleOrderHistorieImportMapper(Component):
+    _name = 'magento.sale.order.historie.mapper'
+    _inherit = 'magento.import.mapper'
+    _apply_on = 'magento.sale.order.historie'
+
+    direct = [('entity_name', 'entity_name'),
+              ('entity_id', 'external_id'),
+              ('status', 'status'),
+              ('comment', 'body'),
+              (normalize_datetime('created_at'), 'date'),
+              ]
+
+    @mapping
+    def message_type(self, record):
+        return {'message_type': 'notification'}
+
+    @mapping
+    def backend_id(self, record):
+        return {'backend_id': self.backend_record.id}

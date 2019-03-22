@@ -5,12 +5,8 @@
 
 import logging
 from odoo.addons.component.core import Component
-from odoo.addons.connector.components.mapper import (
-    mapping, 
-    only_create, 
-    ImportMapChild
-    )
-import uuid
+from odoo.addons.connector.components.mapper import mapping
+from odoo import tools
 
 _logger = logging.getLogger(__name__)
 
@@ -21,35 +17,39 @@ class AttributeValueImportMapper(Component):
     _apply_on = ['magento.product.attribute.value']
 
     direct = [
-        ('value', 'code'),
+        ('label', 'name'),
+        ('value', 'code')
     ]
 
     @mapping
-    def get_value(self, record):
-        name = record['label'] or False
-        if not name:
-            name = u'False'
-        return {'name': name}
-
-    @mapping
-    def get_external_id(self, record):
-        if record.get('value_index'):
-            return {'external_id': record.get('value_index')}
-        if record.get('value'):
-            return {'external_id': record.get('value')}
-        # No external id available ? we do need something here - so just generate a uuid4
-        return {'external_id': str(uuid.uuid4())}
+    def backend_id(self, record):
+        return {'backend_id': self.backend_record.id}
 
     def finalize(self, map_record, values):
         if map_record.parent:
-            external_id = str(values.get('external_id'))
-            external_id_parent = str(map_record.parent.source.get('attribute_id'))
-            values.update({'external_id': external_id_parent + '_' + external_id })
+            # Generate external_id as attribute_id and code
+            values.update({
+                'external_id': "%s_%s" % (str(map_record.parent.source.get('attribute_id')), tools.ustr(values.get('code'))),
+            })
+            # Fetch odoo attribute id - is required
+            attribute_binder = self.binder_for(model='magento.product.attribute')
+            magento_attribute = attribute_binder.to_internal(map_record.parent.source.get('attribute_id'), unwrap=False)
+            if magento_attribute:
+                # Set odoo attribute id if it does already exists
+                values.update({
+                    'attribute_id': magento_attribute.odoo_id.id
+                })
             # Search for existing entry
             binder = self.binder_for(model='magento.product.attribute.value')
             magento_value = binder.to_internal(values['external_id'], unwrap=False)
             if magento_value:
                 values.update({'id': magento_value.id})
+                return values
+            # Do also search for an existing odoo value with the same name
+            odoo_value = self.env['product.attribute.value'].search([('name', '=', values.get('name')), ('attribute_id', '=', magento_attribute.odoo_id.id)])
+            if odoo_value:
+                # By passing the odoo id it will not try to create a new odoo value !
+                values.update({'odoo_id': odoo_value.id})
         return values
 
 
@@ -81,3 +81,15 @@ class AttributeValueMapChild(Component):
             else:
                 res.append((0, 0, values))
         return res
+
+    def skip_item(self, map_record):
+        """ Hook to implement in sub-classes when some child
+        records should be skipped.
+
+        The parent record is accessible in ``map_record``.
+        If it returns True, the current child record is skipped.
+
+        :param map_record: record that we are converting
+        :type map_record: :py:class:`MapRecord`
+        """
+        return True if not map_record.source['value'] else False

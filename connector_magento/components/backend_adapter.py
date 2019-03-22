@@ -253,7 +253,7 @@ class GenericAdapter(AbstractComponent):
         return self._call('%s.search' % self._magento_model,
                           [filters] if filters else [{}])
 
-    def read(self, id, attributes=None):
+    def read(self, id, attributes=None, storeview_code=None):
         """ Returns the information of a record
 
         :rtype: dict
@@ -268,12 +268,10 @@ class GenericAdapter(AbstractComponent):
 #             if attributes:
 #                 raise NotImplementedError
             if self._magento2_key:
-                res = self._call('%s/%s' % (self._magento2_model, escape(id)), None)
-                #TODO: loop on attributes to get the json limited values
-                attributes=None
-                return res 
+                res = self._call('%s/%s' % (self._magento2_model, escape(id)), None, storeview=storeview_code)
+                return res
             else:
-                res = self._call(self._magento2_model)
+                res = self._call('%s' % (self._magento2_model), None, storeview=storeview_code)
                 return next(record for record in res if record['id'] == id)
 
         arguments = [int(id)]
@@ -310,6 +308,9 @@ class GenericAdapter(AbstractComponent):
     def _create_url(self, binding=None):
         return '%s' % self._magento2_model
 
+    def _get_id_from_create(self, result, data=None):
+        return result['id']
+
     def create(self, data, binding=None):
         """ Create a record on the external system """
         if self.work.magento_api._location.version == '2.0': 
@@ -321,15 +322,18 @@ class GenericAdapter(AbstractComponent):
                 new_object = self._call(
                     self._create_url(binding),
                     data, http_method='post')
-            return new_object['id']
+            return self._get_id_from_create(new_object, data)
         return self._call('%s.create' % self._magento_model, [data])
+
+    def _write_url(self, id, binding=None):
+        return '%s/%s' % (self._magento2_model, id)
 
     def write(self, id, data, binding=None):
         """ Update records on the external system """
         if self.work.magento_api._location.version == '2.0':
             if self._magento2_name:
                 return self._call(
-                    '%s/%s' % (self._magento2_model, id),
+                    self._write_url(id, binding),
                     {self._magento2_name: data}, http_method='put')
             else:
                 return self._call(
@@ -338,8 +342,19 @@ class GenericAdapter(AbstractComponent):
         return self._call('%s.update' % self._magento_model,
                           [int(id), data])
 
+    def _delete_url(self, id):
+        def escape(term):
+            if isinstance(term, basestring):
+                return urllib.quote(term, safe='')
+            return term
+
+        return '%s/%s' % (self._magento2_model, escape(id))
+
     def delete(self, id):
         """ Delete a record on the external system """
+        if self.work.magento_api._location.version == '2.0':
+            res = self._call(self._delete_url(id), http_method="delete")
+            return res
         return self._call('%s.delete' % self._magento_model, [int(id)])
 
     def admin_url(self, id):

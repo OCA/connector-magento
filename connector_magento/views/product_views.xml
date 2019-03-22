@@ -28,13 +28,22 @@
 		<field name="model">magento.product.product</field>
 		<field name="arch" type="xml">
 			<form string="Magento Product">
+				<header>
+					<button type="object" name="sync_from_magento" string="Force Sync Magento -> Odoo"/>
+				</header>
 				<sheet>
+
 					<div class="oe_button_box" name="button_box">
 
 					</div>
 					<group name="general">
 						<field name="backend_id" />
-						<field name="external_id" />
+						<field name="magento_name" />
+						<field name="magento_price" />
+						<field name="backend_id" />
+						<field name="external_id" string="Magento SKU"/>
+						<field name="magento_id" string="Magento ID" readonly="1"/>
+						<field name="odoo_id" string="Odoo ID" readonly="1"/>
 						<field name="created_at" readonly="1" />
 						<field name="updated_at" readonly="1" />
 						<field name="product_type" readonly="1" />
@@ -56,10 +65,24 @@
 		</field>
 	</record>
 
-	<!-- <record id="view_magento_product_tree" model="ir.ui.view"> <field name="name">magento.product.product.tree</field> 
-		<field name="model">magento.product.product</field> <field name="arch" type="xml"> 
-		<tree string="Magento Product"> <field name="backend_id"/> <field name="product_type"/> 
-		<field name="odoo_id"/> </tree> </field> </record> -->
+	<record id="magento_product_product_search_view" model="ir.ui.view">
+		<field name="name">magento.product.product.search</field>
+		<field name="model">magento.product.product</field>
+		<field name="arch" type="xml">
+            <search string="Search Magento Products">
+                <field name="name"/>
+                <field name="external_id" string="SKU"/>
+                <field name="default_code"/>
+                <group expand="0" string="Group By...">
+                    <filter string="Backend"
+                            icon="terp-folder-orange"
+                            domain="[]"
+                            context="{'group_by':'backend_id'}"/>
+               </group>
+           </search>
+		</field>
+	</record>
+
 	<record id="magento_product_product_tree_view"
 		model="ir.ui.view">
 		<field name="name">magento.product.product.tree</field>
@@ -79,7 +102,6 @@
 			</tree>
 		</field>
 	</record>
-
 
 	<record id="magento_product_product_form_view"
 		model="ir.ui.view">

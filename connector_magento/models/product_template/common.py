@@ -3,16 +3,16 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 import logging
-import xmlrpclib
 import ast
 from odoo import api, models, fields
 from lxml import etree
 from odoo.osv.orm import setup_modifiers
 from odoo.addons.component.core import Component
 from odoo.addons.queue_job.job import job, related_action
-from odoo.addons.connector.exception import IDMissingInBackend
-from odoo.addons.queue_job.job import identity_exact
 from ...components.backend_adapter import MAGENTO_DATETIME_FORMAT
+import urllib
+import odoo.addons.decimal_precision as dp
+
 
 _logger = logging.getLogger(__name__)
 
@@ -38,6 +38,8 @@ class MagentoProductTemplate(models.Model):
 
     product_type = fields.Char()
     magento_id = fields.Integer('Magento ID')
+    magento_name = fields.Char('Name', translate=True)
+    magento_price = fields.Float('Backend Preis', default=0.0, digits=dp.get_precision('Product Price'),)
     created_at = fields.Date('Created At (on Magento)')
     updated_at = fields.Date('Updated At (on Magento)')
 
@@ -54,11 +56,19 @@ class MagentoProductTemplate(models.Model):
     )
 
     @api.multi
-    def export_product_template_button(self, fields=None):
+    def sync_from_magento(self):
         self.ensure_one()
-        self.with_delay(priority=20,
-                        identity_key=identity_exact).export_product_template()
- 
+        with self.backend_id.work_on(self._name) as work:
+            importer = work.component(usage='record.importer')
+            return importer.run(self.external_id, force=True)
+
+    @api.multi
+    def sync_to_magento(self):
+        self.ensure_one()
+        with self.backend_id.work_on(self._name) as work:
+            exporter = work.component(usage='record.exporter')
+            return exporter.run(self.external_id)
+
     @job(default_channel='root.magento')
     @related_action(action='related_action_unwrap_binding')
     @api.multi
@@ -279,9 +289,17 @@ class ProductTemplate(models.Model):
         return super(ProductTemplate, me).create(vals)
 
     @api.multi
+    def create_variant_ids(self):
+        if self.env.context.get('create_product_product', False):
+            # Do not try to create / update variants
+            return True
+        return super(ProductTemplate, self).create_variant_ids()
+
+    @api.multi
     def write(self, vals):
         org_vals = vals.copy()
-        res = super(ProductTemplate, self).write(vals)
+        me = self.with_context(create_product_product=True)
+        res = super(ProductTemplate, me).write(vals)
         # This part is for custom odoo fields to magento attributes
         for tpl in self:
             for prod in tpl.magento_template_bind_ids:
@@ -291,7 +309,6 @@ class ProductTemplate(models.Model):
 
     @api.model
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
-        context = self._context
         res = super(ProductTemplate, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
 
         if res['model'] in ['product.template', 'product.product'] and \
@@ -357,8 +374,15 @@ class ProductTemplateAdapter(Component):
                 http_method='post')
             return new_product['id']
 
-        return self._call('%s.create' % self._magento_model,
-                          [customer_id, data])
+    def list_variants(self, sku):
+        def escape(term):
+            if isinstance(term, basestring):
+                return urllib.quote(term, safe='')
+            return term
+
+        if self.work.magento_api._location.version == '2.0':
+            res = self._call('configurable-products/%s/children' % (escape(sku)), None)
+            return res
 
     def get_product_datas(self, data, id=None, saveOptions=True):
         """ Hook to implement in other modules"""
@@ -405,3 +429,18 @@ class ProductTemplateAdapter(Component):
         #             raise NotImplementedError  # TODO
         return self._call('ol_catalog_product.update',
                           [int(id), data, storeview_id, 'id'])
+
+    def get_images(self, id, storeview_id=None, data=None):
+        if self.work.magento_api._location.version == '2.0':
+            assert data
+            return (entry for entry in
+                    data.get('media_gallery_entries', [])
+                    if entry['media_type'] == 'image')
+        else:
+            return self._call('product_media.list', [int(id), storeview_id, 'id'])
+
+    def read_image(self, id, image_name, storeview_id=None):
+        if self.work.magento_api._location.version == '2.0':
+            raise NotImplementedError  # TODO
+        return self._call('product_media.info',
+                          [int(id), image_name, storeview_id, 'id'])

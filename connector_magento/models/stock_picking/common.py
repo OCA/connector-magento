@@ -77,10 +77,10 @@ class StockPickingAdapter(Component):
     _magento_model = 'sales_order_shipment'
     _admin_path = 'sales_shipment/view/shipment_id/{id}'
 
-    def _call(self, method, arguments, http_method=None):
+    def _call(self, method, arguments, http_method=None, storeview=None):
         try:
             return super(StockPickingAdapter, self)._call(
-                method, arguments, http_method=http_method)
+                method, arguments, http_method=http_method, storeview=storeview)
         except xmlrpclib.Fault as err:
             # this is the error in the Magento API
             # when the shipment does not exist
@@ -95,7 +95,7 @@ class StockPickingAdapter(Component):
                           [order_id, items, comment, email, include_comment])
 
     def add_tracking_number(self, external_id, carrier_code,
-                            tracking_title, tracking_number):
+                            tracking_title, tracking_number, order_id):
         """ Add new tracking number.
 
         :param external_id: shipment increment id
@@ -103,6 +103,20 @@ class StockPickingAdapter(Component):
         :param tracking_title: title displayed on Magento for the tracking
         :param tracking_number: tracking number
         """
+
+        if self.collection.version == '2.0':
+            return self._call('shipment/track', {
+                "entity": {
+                    "order_id": order_id,
+                    "parent_id": external_id,
+                    "weight": 0,
+                    "qty": 1,
+                    "description": tracking_title,
+                    "track_number": tracking_number,
+                    "title": tracking_title,
+                    "carrier_code": carrier_code
+                }
+            }, http_method='post')
         return self._call('%s.addTrack' % self._magento_model,
                           [external_id, carrier_code,
                            tracking_title, tracking_number])

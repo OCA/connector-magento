@@ -336,7 +336,7 @@ class MagentoExporter(AbstractComponent):
         assert self.external_id
         # special check on data before export
         self._validate_update_data(data)
-        self.backend_adapter.write(self.external_id, data)
+        self.backend_adapter.write(self.external_id, data, self.binding)
 
     def _run(self, fields=None):
         """ Flow of the synchronization, implemented in inherited classes"""

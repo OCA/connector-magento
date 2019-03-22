@@ -14,6 +14,7 @@ from odoo.exceptions import UserError
 from odoo.addons.component.core import Component
 from odoo.addons.connector.checkpoint import checkpoint
 from ...components.backend_adapter import MagentoLocation, MagentoAPI
+from odoo.addons.queue_job.job import identity_exact
 
 _logger = logging.getLogger(__name__)
 
@@ -126,6 +127,18 @@ class MagentoBackend(models.Model):
              "For instance, if the prefix is 'mag-', the sales "
              "order 100000692 in Magento, will be named 'mag-100000692' "
              "in Odoo.",
+    )
+    export_all_options = fields.Boolean(
+        string='Always export all attribute options',
+        default=True
+    )
+    always_create_new_attributes = fields.Boolean(
+        string='Always create new odoo attributes on import',
+        default=True
+    )
+    rename_duplicate_values = fields.Boolean(
+        string='Rename duplicate values in Odoo',
+        default=True
     )
     warehouse_id = fields.Many2one(
         comodel_name='stock.warehouse',
@@ -299,6 +312,13 @@ class MagentoBackend(models.Model):
         return True
 
     @api.multi
+    def import_tax_classes(self):
+        """ Import tax class """
+        for backend in self:
+            self.env['magento.account.tax'].import_batch(backend)
+        return True
+
+    @api.multi
     def import_customer_groups(self):
         for backend in self:
             backend.check_magento_structure()
@@ -351,6 +371,14 @@ class MagentoBackend(models.Model):
     def import_product_template(self):
         self._import_from_date('magento.product.template',
                                'import_product_templates_from_date')
+        return True
+
+    @api.multi
+    def import_attributes_set(self):
+        """ Import attribute sets from backend """
+        for backend in self:
+            backend.check_magento_structure()
+            self.env['magento.product.attributes.set'].with_delay(identity_key=identity_exact).import_batch(backend)
         return True
 
     @api.multi

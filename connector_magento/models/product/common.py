@@ -14,6 +14,8 @@ from odoo.addons.component.core import Component
 from odoo.addons.component_event import skip_if
 from odoo.addons.queue_job.job import job, related_action
 from ...components.backend_adapter import MAGENTO_DATETIME_FORMAT
+import odoo.addons.decimal_precision as dp
+
 
 _logger = logging.getLogger(__name__)
 
@@ -57,6 +59,8 @@ class MagentoProductProduct(models.Model):
                                     default='simple',
                                     required=True)
     magento_id = fields.Integer('Magento ID')
+    magento_name = fields.Char('Name', translate=True)
+    magento_price = fields.Float('Backend Preis', default=0.0, digits=dp.get_precision('Product Price'),)
     manage_stock = fields.Selection(
         selection=[('use_default', 'Use Default Config'),
                    ('no', 'Do Not Manage Stock'),
@@ -118,6 +122,20 @@ class MagentoProductProduct(models.Model):
             self._recompute_magento_qty_backend(backend,
                                                 self.browse(product_ids))
         return True
+
+    @api.multi
+    def sync_from_magento(self):
+        self.ensure_one()
+        with self.backend_id.work_on(self._name) as work:
+            importer = work.component(usage='record.importer')
+            return importer.run(self.external_id, force=True)
+
+    @api.multi
+    def sync_to_magento(self):
+        self.ensure_one()
+        with self.backend_id.work_on(self._name) as work:
+            exporter = work.component(usage='record.exporter')
+            return exporter.run(self.external_id)
 
     @api.multi
     def _recompute_magento_qty_backend(self, backend, products,
@@ -234,21 +252,21 @@ class ProductProductAdapter(Component):
                 in self._call('%s.list' % self._magento_model,
                               [filters] if filters else [{}])]
 
-    def read(self, id, storeview_id=None, attributes=None):
+    def read(self, id, storeview_code=None, attributes=None):
         """ Returns the information of a record
 
         :rtype: dict
         """
         if self.work.magento_api._location.version == '2.0':
-            # TODO: storeview context in Magento 2.0
+            # TODO: storeview_code context in Magento 2.0
             res = super(ProductProductAdapter, self).read(
-                id, attributes=attributes)
+                id, attributes=attributes, storeview_code=storeview_code)
             if res:
                 for attr in res.get('custom_attributes', []):
                     res[attr['attribute_code']] = attr['value']
             return res
         return self._call('ol_catalog_product.info',
-                          [int(id), storeview_id, attributes, 'id'])
+                          [int(id), storeview_code, attributes, 'id'])
 
 
     def get_product_datas(self, data, saveOptions=True):
@@ -339,3 +357,17 @@ class MagentoBindingProductListener(Component):
             record.with_delay(priority=20).export_inventory(
                 fields=inventory_fields
             )
+
+
+class MagentoProductVariantModelBinder(Component):
+    """ Bind records and give odoo/magento ids correspondence
+
+    Binding models are models called ``magento.{normal_model}``,
+    like ``magento.res.partner`` or ``magento.product.product``.
+    They are ``_inherits`` of the normal models and contains
+    the Magento ID, the ID of the Magento Backend and the additional
+    fields belonging to the Magento instance.
+    """
+    _name = 'magento.product.variant.binder'
+    _inherit = 'magento.binder'
+    _apply_on = ['magento.product.product']

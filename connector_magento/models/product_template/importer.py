@@ -4,17 +4,10 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
 import logging
-import requests
-import base64
-import sys
-
-from odoo import models, fields, api
-
-from odoo import _
 from odoo.addons.component.core import Component
 from odoo.addons.connector.components.mapper import mapping, only_create
 from odoo.addons.connector.exception import MappingError, InvalidDataError
-from ...components.mapper import normalize_datetime
+from odoo.addons.queue_job.exception import NothingToDoJob
 
 _logger = logging.getLogger(__name__) 
 
@@ -33,6 +26,10 @@ class ProductTemplateBatchImporter(Component):
         """ Run the synchronization """
         from_date = filters.pop('from_date', None)
         to_date = filters.pop('to_date', None)
+        # Variants to have visibility=1
+        filters['visibility'] = {'eq': 4}
+        filters['type_id'] = {'eq': 'configurable'}
+        filters['status'] = {'eq': 1}
         external_ids = self.backend_adapter.search(filters,
                                                    from_date=from_date,
                                                    to_date=to_date)
@@ -40,6 +37,18 @@ class ProductTemplateBatchImporter(Component):
                      filters, external_ids)
         for external_id in external_ids:
             self._import_record(external_id)
+
+
+class MagentoProductTemplateImageImporter(Component):
+    """ Import images for a record.
+
+    Usually called from importers, in ``_after_import``.
+    For instance from the products importer.
+    """
+    _name = 'magento.product.template.image.importer'
+    _inherit = 'magento.product.image.importer'
+    _apply_on = ['magento.product.template']
+    _usage = 'template.image.importer'
 
 
 class ProductTemplateImporter(Component):
@@ -53,8 +62,89 @@ class ProductTemplateImporter(Component):
         self.backend_record.add_checkpoint(binding)
         return binding
 
+    def _import_dependency(self, external_id, binding_model,
+                           importer=None, always=False, product_template_id=None, external_field=None):
+        """ Import a dependency.
+
+        The importer class is a class or subclass of
+        :class:`MagentoImporter`. A specific class can be defined.
+
+        :param external_id: id of the related binding to import
+        :param binding_model: name of the binding model for the relation
+        :type binding_model: str | unicode
+        :param importer_component: component to use for import
+                                   By default: 'importer'
+        :type importer_component: Component
+        :param always: if True, the record is updated even if it already
+                       exists, note that it is still skipped if it has
+                       not been modified on Magento since the last
+                       update. When False, it will import it only when
+                       it does not yet exist.
+        :type always: boolean
+        """
+        if not external_id:
+            return
+        binder = self.binder_for(binding_model)
+        if always or not binder.to_internal(external_id, external_field=external_field):
+            if importer is None:
+                importer = self.component(usage='record.importer',
+                                          model_name=binding_model)
+            try:
+                if binding_model == "magento.product.product":
+                    importer.run(external_id, product_template_id=product_template_id)
+                else:
+                    importer.run(external_id)
+            except NothingToDoJob:
+                _logger.info(
+                    'Dependency import of %s(%s) has been ignored.',
+                    binding_model._name, external_id
+                )
+
     def _after_import(self, binding):
-        pass
+        # Import Images
+        image_importer = self.component(usage='template.image.importer')
+        image_importer.run(self.external_id, binding,
+                           data=self.magento_record)
+        # Import variants
+        magento_variants = self.backend_adapter.list_variants(self.external_id)
+        variant_binder = self.binder_for('magento.product.product')
+        templates_delete = {}
+        price = 0
+        for magento_variant in magento_variants:
+            if not price or magento_variant['price'] < price:
+                price = magento_variant['price']
+            # Search by sku - because this is also what is available in the mapper !
+            variant = variant_binder.to_internal(magento_variant['sku'], unwrap=False)
+            # Import / Update the variant here
+            if not variant:
+                # Pass product_template_id in arguments - so the product mapper will map it
+                self._import_dependency(magento_variant['sku'], 'magento.product.product', always=True,
+                                        product_template_id=binding.odoo_id.id)
+            elif variant.odoo_id.product_tmpl_id.id != binding.odoo_id.id:
+                # Variant does exists already - and is at wrong odoo template - so reassign it - and delete old template
+                old_template = variant.odoo_id.product_tmpl_id
+                variant.odoo_id.product_tmpl_id = binding.odoo_id.id
+                templates_delete[old_template.id] = old_template
+            if variant and self.force:
+                # Update the variant
+                updater = self.component(usage='record.importer',
+                                         model_name='magento.product.product')
+                updater.run(variant.external_id, force=True)
+
+        for template_delete in templates_delete:
+            templates_delete[template_delete].unlink()
+        # Update price if price is 0
+        if binding.price == 0:
+            binding.price = price
+        # Do also import translations
+        translation_importer = self.component(
+            usage='translation.importer',
+        )
+        translation_importer.run(
+            self.external_id,
+            binding,
+            mapper='magento.product.template.import.mapper'
+        )
 
     def _is_uptodate(self, binding):
         # TODO: Remove for production - only to test the update
@@ -62,8 +152,30 @@ class ProductTemplateImporter(Component):
 
     def _import_dependencies(self):
         record = self.magento_record
-        # TODO: Check for dependencies
-        pass
+        # Import attribute deps
+        for attribute in record.get('custom_attributes'):
+            # We do search binding using attribute_code - default is attribute_id !
+            self._import_dependency(attribute['attribute_code'],
+                                    'magento.product.attribute', external_field='attribute_code')
+        # Check for attributes in configurable - with values
+        product_options = record['extension_attributes']['configurable_product_options']
+        attribute_binder = self.binder_for('magento.product.attribute')
+        attribute_value_binder = self.binder_for('magento.product.attribute.value')
+        for product_option in product_options:
+            attribute = attribute_binder.to_internal(product_option['attribute_id'], unwrap=True)
+            if not attribute:
+                # Do import the attribute
+                self._import_dependency(product_option['attribute_id'], 'magento.product.attribute')
+                attribute = attribute_binder.to_internal(product_option['attribute_id'], unwrap=True)
+            # This is a configurable product option attribute - so set the create_variant flag
+            attribute.with_context(connector_no_export=True).create_variant = True
+            # Check for attribute values
+            for option_value in product_option['values']:
+                attribute_value = attribute_value_binder.to_internal("%s_%s" % (product_option['attribute_id'], option_value['value_index']), unwrap=True)
+                if not attribute_value:
+                    # Do update the attribute - so the value will get added
+                    self._import_dependency(product_option['attribute_id'], 'magento.product.attribute', always=True)
+
 
 class ProductTemplateImportMapper(Component):
     _name = 'magento.product.template.import.mapper'
@@ -73,8 +185,9 @@ class ProductTemplateImportMapper(Component):
     children = []
 
     @mapping
-    def attr_ids(self, record):
+    def attributes(self, record):
         '''
+        We do overwrite the attributes function from product.product
         [
           {
             u'product_id': 2039,
@@ -176,34 +289,29 @@ class ProductTemplateImportMapper(Component):
         return result
 
     @mapping
-    def variants(self, record):
-        # Variants are in extension_attributes.configurable_product_links
-        configurable_product_links = record['extension_attributes']['configurable_product_links']
-        binder = self.binder_for('magento.product.product')
-        variant_ids = []
-        for product_id in configurable_product_links:
-            binder._external_field = 'magento_id'
-            variant = binder.to_internal(product_id, unwrap=True)
-            binder._external_field = 'external_id'
-            if not variant:
-                raise MappingError("The product variant with "
-                                   "magento id %s is not imported." %
-                                   product_id)
+    def price(self, record):
+        return {
+            'list_price': record.get('price', 0.0),
+            'standard_price': record.get('cost', 0.0),
+        }
 
-            variant_ids.append((4, variant.id))
-        return {'product_variant_ids': variant_ids}
+    @mapping
+    def product_name(self, record):
+        return {
+            'name': record.get('name', ''),
+        }
 
     @only_create
     @mapping
     def odoo_id(self, record):
         """ Will bind the product to an existing one with the same code """
-        product = self.env['product.product'].search(
+        product = self.env['product.template'].search(
             [('default_code', '=', record['sku'])], limit=1)
         if product:
             return {'odoo_id': product.product_tmpl_id.id}
 
     @mapping
-    def type(self, record):
+    def odoo_type(self, record):
         return {'type': 'product'}
 
     @mapping

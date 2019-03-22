@@ -12,8 +12,34 @@
         <field name="inherit_id" ref="product.attribute_tree_view" />
         <field name="arch" type="xml">
             <field name="create_variant" position="after">
+                <field name="value_ids" readonly="1"/>
+                <field name="magento_bind_ids"  widget="many2many_tags" readonly="1"/>
                 <button type="action" name="%(connector_magento.attribute_add_backend_action)d" string="Export to magento"/>
             </field>
+			<xpath expr="//tree" position="attributes">
+				<attribute name="editable"></attribute>
+			</xpath>
+        </field>
+    </record>
+
+    <record id="product.attribute_action" model="ir.actions.act_window">
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="attribute_form_view" model="ir.ui.view">
+        <field name="name">attribute_form_view</field>
+        <field name="model">product.attribute</field>
+        <field name="inherit_id" ref="product.product_attribute_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//form/group" position="before">
+                <header>
+                    <button type="action" name="%(connector_magento.attribute_add_backend_action)d" string="Export to magento"/>
+                </header>
+            </xpath>
+
+            <group name="values_ids" position="before">
+                <field name="magento_bind_ids" readonly="1"/>
+            </group>
         </field>
     </record>
 
