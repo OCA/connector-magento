@@ -100,6 +100,11 @@ class ProductTemplateImporter(Component):
                     binding_model._name, external_id
                 )
 
+    def _update_price(self, binding, price):
+        # Update price if price is 0
+        if binding.price == 0:
+            binding.price = price
+
     def _after_import(self, binding):
         # Import Images
         image_importer = self.component(usage='template.image.importer')
@@ -133,9 +138,7 @@ class ProductTemplateImporter(Component):
 
         for template_delete in templates_delete:
             templates_delete[template_delete].unlink()
-        # Update price if price is 0
-        if binding.price == 0:
-            binding.price = price
+        self._update_price(binding, price)
         # Do also import translations
         translation_importer = self.component(
             usage='translation.importer',
