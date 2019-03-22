@@ -3,18 +3,12 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 import logging
-import xmlrpclib
 import ast
 from odoo import api, models, fields
 from lxml import etree
 from odoo.osv.orm import setup_modifiers
 from odoo.addons.component.core import Component
 from odoo.addons.queue_job.job import job, related_action
-<<<<<<< HEAD
-from odoo.addons.connector.exception import IDMissingInBackend
-from odoo.addons.queue_job.job import identity_exact
-=======
->>>>>>> [ADD] Added image importer for configurable. Don't overwrite template name on configurables
 from ...components.backend_adapter import MAGENTO_DATETIME_FORMAT
 import urllib
 import odoo.addons.decimal_precision as dp
