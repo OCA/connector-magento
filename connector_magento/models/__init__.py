@@ -22,3 +22,4 @@ from . import queue_job
 from . import sale_order
 from . import stock_picking
 from . import magento_taxclass
+from . import account_payment

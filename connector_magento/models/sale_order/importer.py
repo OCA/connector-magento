@@ -106,20 +106,13 @@ class SaleImportRule(Component):
         :rtype: boolean
         """
         payment_method = record['payment']['method']
-        method = self.env['account.payment.mode'].search(
-            [('name', '=', payment_method)],
-            limit=1,
-        )
+        binder = self.binder_for('magento.account.payment.mode')
+        method = binder.to_internal(payment_method, unwrap=True)
         if not method:
             raise FailedJobError(
                 "The configuration is missing for the Payment Mode '%s'.\n\n"
                 "Resolution:\n"
-                "- Go to "
-                "'Accounting > Configuration > Management > Payment Modes'\n"
-                "- Create a new Payment Mode with name '%s'\n"
-                "- Eventually link the Payment Mode to an existing Workflow "
-                "Process or create a new one." % (payment_method,
-                                                  payment_method))
+                "- Create a new Payment Method Mapping" % (payment_method,))
         self._rule_global(record, method)
         self._rules[method.import_rule](self, record, method)
 
@@ -228,10 +221,8 @@ class SaleOrderImportMapper(Component):
     @mapping
     def payment(self, record):
         record_method = record['payment']['method']
-        method = self.env['account.payment.mode'].search(
-            [['name', '=', record_method]],
-            limit=1,
-        )
+        binder = self.binder_for('magento.account.payment.mode')
+        method = binder.to_internal(record_method, unwrap=True)
         assert method, ("method %s should exist because the import fails "
                         "in SaleOrderImporter._before_import when it is "
                         " missing" % record['payment']['method'])
@@ -442,9 +433,19 @@ class SaleOrderImporter(Component):
                 'res_id': binding.odoo_id.id
             })
 
+    def _import_payment(self, binding):
+        payment = self.magento_record['payment']
+        binder = self.binder_for('magento.account.payment')
+        payment_binding = binder.to_internal(payment['entity_id'])
+        if not payment_binding:
+            importer = self.component(usage='record.importer',
+                                      model_name='magento.account.payment')
+            importer.run_with_data(payment, order_binding=binding)
+
     def _after_import(self, binding):
         self._link_parent_orders(binding)
         self._link_messages(binding)
+        self._import_payment(binding)
 
     def _get_storeview(self, record):
         """ Return the tax inclusion setting for the appropriate storeview """

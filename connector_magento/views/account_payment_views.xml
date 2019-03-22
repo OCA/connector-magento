@@ -1,0 +1,65 @@
+<?xml version ="1.0" encoding="utf-8"?>
+
+<odoo>
+
+    <record id="account_payment_form_inherit" model="ir.ui.view">
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet/group" position="after">
+                <field name="magento_bind_ids" nolabel="1">
+                    <tree>
+                        <field name="backend_id"/>
+                        <field name="amount_ordered"/>
+                        <field name="amount_paid"/>
+                    </tree>
+                </field>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_magento_account_payment_form" model="ir.ui.view">
+        <field name="name">magento.account.payment.form</field>
+        <field name="model">magento.account.payment</field>
+        <field name="arch" type="xml">
+            <form string="Magento Payment Method">
+                <header>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+
+                    </div>
+                    <group name="general">
+                        <field name="backend_id" readonly="1"/>
+                        <field name="order_id" readonly="1"/>
+                        <field name="odoo_id" readonly="1"/>
+                        <field name="account_status" readonly="1"/>
+                        <field name="amount_ordered" readonly="1"/>
+                        <field name="amount_paid" readonly="1"/>
+                        <field name="last_trans_id" readonly="1"/>
+                    </group>
+                    <label for="additional_information"/>
+                    <field name="additional_information" nolabel="1" readonly="1"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+    <record id="magento_account_payment_tree_view" model="ir.ui.view">
+        <field name="name">magento.account.payment.tree</field>
+        <field name="model">magento.account.payment</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="backend_id"/>
+                <field name="order_id"/>
+                <field name="odoo_id"/>
+                <field name="account_status"/>
+                <field name="amount_ordered"/>
+                <field name="amount_paid"/>
+                <field name="last_trans_id"/>
+            </tree>
+        </field>
+    </record>
+
+</odoo>

@@ -10,6 +10,9 @@
                 <attribute name="invisible">0</attribute>
             </page>
             <page name="connector" position="inside">
+                <group string="Magento Payments">
+                    <field name="magento_payment_ids" nolabel="1"/>
+                </group>
                 <group string="Magento Bindings">
                     <field name="magento_bind_ids" nolabel="1"/>
                 </group>
