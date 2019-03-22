@@ -553,7 +553,7 @@ class SaleOrderImporter(Component):
                                     model_name='magento.res.partner')
             map_record = mapper.map_record(customer_record)
             map_record.update(guest_customer=True)
-            partner_binding = self.env['magento.res.partner'].create(
+            partner_binding = self.env['magento.res.partner'].with_context(connector_no_export=True).create(
                 map_record.values(for_create=True))
             partner_binder.bind(guest_customer_id, partner_binding)
         else:
@@ -592,7 +592,7 @@ class SaleOrderImporter(Component):
         def create_address(address_record):
             map_record = addr_mapper.map_record(address_record)
             map_record.update(addresses_defaults)
-            address_bind = self.env['magento.address'].create(
+            address_bind = self.env['magento.address'].with_context(connector_no_export=True).create(
                 map_record.values(for_create=True,
                                   parent_partner=partner))
             return address_bind.odoo_id.id
