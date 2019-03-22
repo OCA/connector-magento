@@ -61,6 +61,7 @@ class AccountPaymentImportMapper(Component):
                 "is wrong. Payment Mode must be configured with a fixed journal !" % (payment_method,))
         return {
             'payment_type': method.payment_method_id.payment_type,
+            'partner_type': 'customer',
             'payment_method_id': method.payment_method_id.id,
             'journal_id': method.fixed_journal_id.id
         }
@@ -90,6 +91,10 @@ class AccountPaymentImporter(Component):
     _name = 'magento.account.payment.importer'
     _inherit = 'magento.importer'
     _apply_on = 'magento.account.payment'
+
+    def _after_import(self, binding):
+        # Post Payment
+        binding.odoo_id.post()
 
     def run_with_data(self, record, order_binding, force=False):
         self.force = force
