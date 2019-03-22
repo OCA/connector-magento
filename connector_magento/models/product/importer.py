@@ -210,6 +210,14 @@ class ProductImportMapper(Component):
             return {}
         return {
             'list_price': record.get('price', 0.0),
+        }
+
+    @mapping
+    def cost(self, record):
+        if record['visibility'] == 1:
+            # This is a product variant - so the price got set on the template !
+            return {}
+        return {
             'standard_price': record.get('cost', 0.0),
         }
 

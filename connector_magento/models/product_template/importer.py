@@ -295,6 +295,11 @@ class ProductTemplateImportMapper(Component):
     def price(self, record):
         return {
             'list_price': record.get('price', 0.0),
+        }
+
+    @mapping
+    def cost(self, record):
+        return {
             'standard_price': record.get('cost', 0.0),
         }
 
