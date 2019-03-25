@@ -23,3 +23,4 @@ from . import sale_order
 from . import stock_picking
 from . import magento_taxclass
 from . import account_payment
+from . import stock_warehouse

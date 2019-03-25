@@ -346,6 +346,20 @@ class ProductImporter(Component):
                 self._import_dependency(selection['product_id'],
                                         'magento.product.product')
 
+    def _import_stock_warehouse(self):
+        record = self.magento_record
+        stock_item = record['extension_attributes']['stock_item']
+        binder = self.binder_for('magento.stock.warehouse')
+        mwarehouse = binder.to_internal(stock_item['stock_id'])
+        if not mwarehouse:
+            # We do create the warehouse binding directly here - did not found a mapping on magento api
+            binding = self.env['magento.stock.warehouse'].create({
+                'backend_id': self.backend_record.id,
+                'external_id': stock_item['stock_id'],
+                'odoo_id': self.env['stock.warehouse'].search([('company_id', '=', self.backend_record.company_id.id)], limit=1).id,
+            })
+            self.backend_record.add_checkpoint(binding)
+
     def _import_dependencies(self):
         """ Import the dependencies for the record"""
         record = self.magento_record
@@ -361,6 +375,8 @@ class ProductImporter(Component):
                                     'magento.product.attribute', external_field='attribute_code')
         if record['type_id'] == 'bundle':
             self._import_bundle_dependencies()
+
+        self._import_stock_warehouse()
 
     def _validate_product_type(self, data):
         """ Check if the product type is in the selection (so we can

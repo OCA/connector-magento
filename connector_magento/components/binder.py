@@ -31,6 +31,7 @@ class MagentoModelBinder(Component):
         'magento.product.attributes.set',
         'magento.product.attribute.value',
         'magento.template.attribute.line',
+        'magento.stock.warehouse',
         'magento.stock.picking',
         'magento.sale.order',
         'magento.sale.order.line',

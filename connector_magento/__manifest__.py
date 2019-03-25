@@ -41,6 +41,7 @@
           'views/connector_magento_menu.xml',
           'views/delivery_views.xml',
           'views/stock_views.xml',
+          'views/stock_warehouse.xml',
           'views/account_payment_views.xml',
           'views/account_payment_mode_views.xml',
           'views/magento_external_objects_menus.xml',
