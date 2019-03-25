@@ -176,7 +176,11 @@ class MagentoImporter(AbstractComponent):
         :param external_id: identifier of the record on Magento
         """
         self.force = force
-        self.external_id = external_id
+        if isinstance(external_id, dict):
+            self.magento_record = external_id
+            self.external_id = external_id[self._magento_id_field]
+        else:
+            self.external_id = external_id
         lock_name = 'import({}, {}, {}, {})'.format(
             self.backend_record._name,
             self.backend_record.id,
@@ -184,10 +188,11 @@ class MagentoImporter(AbstractComponent):
             unicode(external_id),
         )
 
-        try:
-            self.magento_record = self._get_magento_data()
-        except IDMissingInBackend:
-            return _('Record does no longer exist in Magento')
+        if not isinstance(external_id, dict):
+            try:
+                self.magento_record = self._get_magento_data()
+            except IDMissingInBackend:
+                return _('Record does no longer exist in Magento')
 
         skip = self._must_skip()
         if skip:

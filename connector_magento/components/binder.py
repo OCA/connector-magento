@@ -33,6 +33,7 @@ class MagentoModelBinder(Component):
         'magento.template.attribute.line',
         'magento.stock.warehouse',
         'magento.stock.picking',
+        'magento.stock.item',
         'magento.sale.order',
         'magento.sale.order.line',
         'magento.sale.order.historie',

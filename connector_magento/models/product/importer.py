@@ -449,8 +449,13 @@ class ProductImporter(Component):
         if self.magento_record['type_id'] == 'bundle':
             bundle_importer = self.component(usage='product.bundle.importer')
             bundle_importer.run(binding, self.magento_record)
+        # Do import stock item
+        stock_importer = self.component(usage='record.importer',
+                                        model_name='magento.stock.item')
+        stock_importer.run(self.magento_record['extension_attributes']['stock_item'])
 
 
+'''
 class ProductInventoryExporter(Component):
     _name = 'magento.product.inventory.exporter'
     _inherit = 'magento.exporter'
@@ -492,3 +497,4 @@ class ProductInventoryExporter(Component):
         external_id = binding.default_code
         data = self._get_data(binding, fields)
         self.backend_adapter.update_inventory(external_id, data)
+'''
