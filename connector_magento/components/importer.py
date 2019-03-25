@@ -178,14 +178,16 @@ class MagentoImporter(AbstractComponent):
         self.force = force
         if isinstance(external_id, dict):
             self.magento_record = external_id
-            self.external_id = external_id[self._magento_id_field]
+            self.external_id = str(external_id[self._magento_id_field])
         else:
             self.external_id = external_id
+        if not isinstance(self.external_id, basestring):
+            self.external_id = str(self.external_id)
         lock_name = 'import({}, {}, {}, {})'.format(
             self.backend_record._name,
             self.backend_record.id,
             self.work.model_name,
-            unicode(external_id),
+            self.external_id.encode('utf-8'),
         )
 
         if not isinstance(external_id, dict):

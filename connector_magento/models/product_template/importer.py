@@ -124,7 +124,7 @@ class ProductTemplateImporter(Component):
             if not variant:
                 # Pass product_template_id in arguments - so the product mapper will map it
                 self._import_dependency(magento_variant['sku'], 'magento.product.product', always=True,
-                                        product_template_id=binding.odoo_id.id)
+                                        binding_template_id=binding)
             elif variant.odoo_id.product_tmpl_id.id != binding.odoo_id.id:
                 # Variant does exists already - and is at wrong odoo template - so reassign it - and delete old template
                 old_template = variant.odoo_id.product_tmpl_id
@@ -134,7 +134,7 @@ class ProductTemplateImporter(Component):
                 # Update the variant
                 updater = self.component(usage='record.importer',
                                          model_name='magento.product.product')
-                updater.run(variant.external_id, force=True)
+                updater.run(variant.external_id, force=True, binding_template_id=binding)
 
         for template_delete in templates_delete:
             templates_delete[template_delete].unlink()

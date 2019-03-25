@@ -42,6 +42,11 @@ class MagentoStockItemImportMapper(Component):
         }
 
     @mapping
+    def backorders(self, record):
+        # TODO: Find out how to control this
+        return {'backorders': 'use_default'}
+
+    @mapping
     def backend_id(self, record):
         return {'backend_id': self.backend_record.id}
 

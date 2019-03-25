@@ -262,7 +262,7 @@ class GenericAdapter(AbstractComponent):
 
             def escape(term):
                 if isinstance(term, basestring):
-                    return urllib.quote(term, safe='')
+                    return urllib.quote(term.encode('utf-8'), safe='')
                 return term
 
 #             if attributes:
@@ -345,7 +345,7 @@ class GenericAdapter(AbstractComponent):
     def _delete_url(self, id):
         def escape(term):
             if isinstance(term, basestring):
-                return urllib.quote(term, safe='')
+                return urllib.quote(term.encode('utf-8'), safe='')
             return term
 
         return '%s/%s' % (self._magento2_model, escape(id))

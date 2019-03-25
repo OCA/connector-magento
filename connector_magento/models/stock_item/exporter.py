@@ -24,6 +24,7 @@ class MagentoStockItemExportMapper(Component):
         ('min_sale_qty', 'min_sale_qty'),
         ('is_qty_decimal', 'is_qty_decimal'),
         ('is_in_stock', 'is_in_stock'),
+        ('backorders', 'backorders'),
     ]
 
     @mapping

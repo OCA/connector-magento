@@ -42,6 +42,10 @@ class MagentoProductTemplate(models.Model):
     magento_price = fields.Float('Backend Preis', default=0.0, digits=dp.get_precision('Product Price'),)
     created_at = fields.Date('Created At (on Magento)')
     updated_at = fields.Date('Updated At (on Magento)')
+    magento_product_ids = fields.One2many(comodel_name='magento.product.product',
+                                          inverse_name='magento_configurable_id',
+                                          string='Variants',
+                                          readonly=True)
 
     magento_template_attribute_line_ids = fields.One2many(
         comodel_name='magento.template.attribute.line',
@@ -377,7 +381,7 @@ class ProductTemplateAdapter(Component):
     def list_variants(self, sku):
         def escape(term):
             if isinstance(term, basestring):
-                return urllib.quote(term, safe='')
+                return urllib.quote(term.encode('utf-8'), safe='')
             return term
 
         if self.work.magento_api._location.version == '2.0':

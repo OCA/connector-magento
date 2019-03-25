@@ -17,6 +17,7 @@
                     <field name="min_qty"/>
                     <field name="is_qty_decimal"/>
                     <field name="is_in_stock"/>
+                    <field name="backorders"/>
                 </group>
             </form>
         </field>

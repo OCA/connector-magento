@@ -59,37 +59,19 @@ class MagentoProductProduct(models.Model):
                                     default='simple',
                                     required=True)
     magento_id = fields.Integer('Magento ID')
+    magento_configurable_id = fields.Many2one(comodel_name='magento.product.template',
+                                              string='Configurable',
+                                              required=False,
+                                              ondelete='restrict',
+                                              readonly=True)
     magento_name = fields.Char('Name', translate=True)
     magento_price = fields.Float('Backend Preis', default=0.0, digits=dp.get_precision('Product Price'),)
-    manage_stock = fields.Selection(
-        selection=[('use_default', 'Use Default Config'),
-                   ('no', 'Do Not Manage Stock'),
-                   ('yes', 'Manage Stock')],
-        string='Manage Stock Level',
-        default='use_default',
-        required=True,
-    )
-    backorders = fields.Selection(
-        selection=[('use_default', 'Use Default Config'),
-                   ('no', 'No Sell'),
-                   ('yes', 'Sell Quantity < 0'),
-                   ('yes-and-notification', 'Sell Quantity < 0 and '
-                                            'Use Customer Notification')],
-        string='Manage Inventory Backorders',
-        default='use_default',
-        required=True,
-    )
-    magento_qty = fields.Float(string='Computed Quantity',
-                               help="Last computed quantity to send "
-                                    "on Magento.")
-    no_stock_sync = fields.Boolean(
-        string='No Stock Synchronization',
-        required=False,
-        help="Check this to exclude the product "
-             "from stock synchronizations.",
+    magento_stock_item_ids = fields.One2many(
+        comodel_name='magento.stock.item',
+        inverse_name='magento_product_binding_id',
+        string="Magento Stock Items",
     )
 
-    RECOMPUTE_QTY_STEP = 1000  # products at a time
 
     @job(default_channel='root.magento')
     @related_action(action='related_action_unwrap_binding')
@@ -341,10 +323,7 @@ class MagentoBindingProductListener(Component):
 
     # fields which should not trigger an export of the products
     # but an export of their inventory
-    INVENTORY_FIELDS = ('manage_stock',
-                        'backorders',
-                        'magento_qty',
-                        )
+    INVENTORY_FIELDS = ()
 
     @skip_if(lambda self, record, **kwargs: self.no_connector_export(record))
     def on_record_write(self, record, fields=None):

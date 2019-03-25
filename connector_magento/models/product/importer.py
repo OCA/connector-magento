@@ -238,7 +238,7 @@ class ProductImportMapper(Component):
         binder = self.binder_for('magento.account.tax')
         tax = binder.to_internal(tax_attribute[0]['value'], unwrap=True)
         if not tax:
-            raise MappingError("The tax class with the id %s"
+            raise MappingError("The tax class with the id %s "
                                "is not imported." %
                                tax_attribute[0]['value'])
         return {'taxes_id': [(4, tax.id)]}
@@ -418,13 +418,24 @@ class ProductImporter(Component):
         """
         self._validate_product_type(data)
 
-    def run(self, external_id, force=False, product_template_id=None):
-        self._product_template_id = product_template_id
+    def run(self, external_id, force=False, binding_template_id=None):
+        self._binding_template_id = binding_template_id
         return super(ProductImporter, self).run(external_id, force)
 
+    def _update(self, binding, data):
+        if self._binding_template_id:
+            data['product_tmpl_id'] = self._binding_template_id.odoo_id.id
+            data['magento_configurable_id'] = self._binding_template_id.id
+            # Name is set on product template on configurables
+            if 'name' in data:
+                del data['name']
+        super(ProductImporter, self)._update(binding, data)
+        return
+
     def _create(self, data):
-        if self._product_template_id:
-            data['product_tmpl_id'] = self._product_template_id
+        if self._binding_template_id:
+            data['product_tmpl_id'] = self._binding_template_id.odoo_id.id
+            data['magento_configurable_id'] = self._binding_template_id.id
             # Name is set on product template on configurables
             if 'name' in data:
                 del data['name']
@@ -453,48 +464,3 @@ class ProductImporter(Component):
         stock_importer = self.component(usage='record.importer',
                                         model_name='magento.stock.item')
         stock_importer.run(self.magento_record['extension_attributes']['stock_item'])
-
-
-'''
-class ProductInventoryExporter(Component):
-    _name = 'magento.product.inventory.exporter'
-    _inherit = 'magento.exporter'
-    _apply_on = ['magento.product.product']
-    _usage = 'product.inventory.exporter'
-
-    _map_backorders = {'use_default': 0,
-                       'no': 0,
-                       'yes': 1,
-                       'yes-and-notification': 2,
-                       }
-
-    def _get_data(self, binding, fields):
-        result = {}
-        if 'magento_qty' in fields:
-            result.update({
-                'qty': binding.magento_qty,
-                # put the stock availability to "out of stock"
-                'is_in_stock': int(binding.magento_qty > 0)
-            })
-        if 'manage_stock' in fields:
-            manage = binding.manage_stock
-            result.update({
-                'manage_stock': int(manage == 'yes'),
-                'use_config_manage_stock': int(manage == 'use_default'),
-            })
-        if 'backorders' in fields:
-            backorders = binding.backorders
-            result.update({
-                'backorders': self._map_backorders[backorders],
-                'use_config_backorders': int(backorders == 'use_default'),
-            })
-        return result
-
-    def run(self, binding, fields):
-        """ Export the product inventory to Magento """
-        #external_id = self.binder.to_external(binding)
-        #https://devdocs.magento.com/swagger/index_22.html
-        external_id = binding.default_code
-        data = self._get_data(binding, fields)
-        self.backend_adapter.update_inventory(external_id, data)
-'''
