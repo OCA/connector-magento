@@ -4,21 +4,20 @@
 	<record id="product_normal_form_view" model="ir.ui.view">
 		<field name="name">product.product.form</field>
 		<field name="model">product.product</field>
-		<field name="inherit_id"
-			ref="connector_base_product.product_normal_form_view" />
+		<field name="inherit_id" ref="connector_base_product.product_normal_form_view" />
 		<field name="arch" type="xml">
 			<page name="connector" position="attributes">
 				<attribute name="invisible">0</attribute>
 			</page>
+			<label for="magento_template_bind_ids" position="attributes">
+				<attribute name="invisible">1</attribute>
+			</label>
+			<field name="magento_template_bind_ids" position="attributes">
+				<attribute name="invisible">1</attribute>
+			</field>
 			<page name="connector" position="inside">
-				<group string="Magento Bindings">
-					<field name="magento_bind_ids" nolabel="1">
-						<tree>
-							<field name="backend_id" />
-							<field name="product_type" />
-						</tree>
-					</field>
-				</group>
+				<label for="magento_bind_ids"/>
+				<field name="magento_bind_ids" nolabel="1"/>
 			</page>
 		</field>
 	</record>
@@ -90,15 +89,12 @@
 
 		<field name="arch" type="xml">
 			<tree>
-				<field name="id" />
-				<field name="default_code" />
-				<field name="display_name" />
-				<field name="odoo_id" />
-				<field name="backend_id" />
 				<field name="external_id" />
+				<field name="display_name" />
+				<field name="backend_id" />
 				<!-- <field name="attribute_set_id"/> -->
 				<field name="sync_date" />
-				<button name="resync" type="object" string="Resync" />
+				<button name="sync_from_magento" type="object" string="Force Sync Magento -> Odoo" />
 			</tree>
 		</field>
 	</record>

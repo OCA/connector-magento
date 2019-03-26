@@ -435,6 +435,9 @@ class SaleOrderImporter(Component):
 
     def _import_payment(self, binding):
         payment = self.magento_record['payment']
+        if payment.get('amount_paid', 0.0) == 0.0:
+            # No payment !
+            return
         binder = self.binder_for('magento.account.payment')
         payment_binding = binder.to_internal(payment['entity_id'])
         if not payment_binding:
@@ -470,7 +473,7 @@ class SaleOrderImporter(Component):
     
     def _get_shipping_address(self):
         if self.collection.version == '1.7':
-            return record['shipping_address']
+            return self.magento_record['shipping_address']
         elif self.collection.version == '2.0':
             # TODO: Magento2 allows for a different shipping address per line.
             # Look to https://github.com/OCA/sale-workflow/tree/8.0/sale_allotment?

@@ -33,6 +33,7 @@
                     <field name="total_amount_tax"/>
                     <field name="store_id"/>
                     <field name="storeview_id"/>
+                    <field name="odoo_id"/>
                 </group>
             </form>
         </field>

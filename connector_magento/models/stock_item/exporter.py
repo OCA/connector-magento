@@ -24,12 +24,16 @@ class MagentoStockItemExportMapper(Component):
         ('min_sale_qty', 'min_sale_qty'),
         ('is_qty_decimal', 'is_qty_decimal'),
         ('is_in_stock', 'is_in_stock'),
-        ('backorders', 'backorders'),
     ]
 
     @mapping
     def min_qty(self, record):
         return {'min_qty': record.min_qty if record.min_qty else 0.0}
+
+    @mapping
+    def backorders(self, record):
+        # TODO: Find out which values to send !
+        return {}
 
     @mapping
     def qty(self, record):
@@ -40,10 +44,12 @@ class MagentoStockItemExportMapper(Component):
             product_fields = [stock_field]
             record_with_location = record.with_context(location=location.id)
             result = record_with_location.read(product_fields)[0]
+            record.qty = result[stock_field]
             return {
                 'qty': result[stock_field]
             }
         elif record.magento_warehouse_id.calculation_method == 'fix':
+            record.qty = record.magento_warehouse_id.fixed_quantity
             return {
                 'qty': record.magento_warehouse_id.fixed_quantity
             }

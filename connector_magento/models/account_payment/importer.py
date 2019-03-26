@@ -6,6 +6,7 @@ from odoo.addons.component.core import Component
 from odoo.addons.connector.components.mapper import mapping, only_create
 from odoo.addons.connector.exception import MappingError
 import json
+import uuid
 
 
 class AccountPaymentImportMapper(Component):
@@ -24,7 +25,7 @@ class AccountPaymentImportMapper(Component):
     ]
     
     def _generate_payment_reference(self, record):
-        return "%s.%s.%s" % (self.backend_record.id, record['entity_id'], record['last_trans_id'])
+        return "%s.%s.%s" % (self.backend_record.id, record['entity_id'], record['last_trans_id'] if 'last_trans_id' in record else str(uuid.uuid4()))
 
     @mapping
     def name(self, record):

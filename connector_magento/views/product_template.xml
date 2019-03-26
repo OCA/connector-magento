@@ -13,37 +13,8 @@
 					<attribute name="invisible">0</attribute>
 				</page>
 				<page name="connector" position="inside">
-					<group string="Magento Template Bindings">
-						<field name="magento_template_bind_ids" nolabel="1">
-							<tree>
-								<field name="backend_id" />
-								<button name="export_product_template_button"
-									string="Export Template Attributes"
-									type="object" />
-								<button name="resync" string="resyn All"
-									 help="Stck, Attributes, ..."
-									type="object" />
-								<button name="action_magento_template_custom_attributes"
-									type="object" string="Custom Values" 
-									 />
-							</tree>
-						</field>
-						<field name="magento_bind_ids" nolabel="1">
-							<tree>
-								<field name="backend_id" />
-								<field name="product_type" />
-								<button name="export_product_template_button"
-									string="Export Template Attributes"
-									type="object" />
-								<button name="resync" string="resyn All"
-									 help="Stck, Attributes, ..."
-									type="object" />
-								<button name="action_magento_template_custom_attributes"
-									type="object" string="Custom Values"
-									 />
-							</tree>
-						</field>
-					</group>
+					<label for="magento_template_bind_ids"/>
+					<field name="magento_template_bind_ids" nolabel="1"/>
 				</page>
 			</field>
 		</record>
@@ -91,12 +62,9 @@
 
 			<field name="arch" type="xml">
 				<tree>
-					<field name="id" />
-					<field name="default_code" />
-					<field name="display_name" />
-					<field name="odoo_id" />
-					<field name="backend_id" />
 					<field name="external_id" />
+					<field name="display_name" />
+					<field name="backend_id" />
 					<!-- <field name="attribute_set_id"/> -->
 					<field name="sync_date" />
 					<button name="sync_from_magento" type="object" string="Force Sync Magento -> Odoo" />
