@@ -63,7 +63,7 @@ class ProductTemplateImporter(Component):
         return binding
 
     def _import_dependency(self, external_id, binding_model,
-                           importer=None, always=False, product_template_id=None, external_field=None):
+                           importer=None, always=False, binding_template_id=None, external_field=None):
         """ Import a dependency.
 
         The importer class is a class or subclass of
@@ -91,7 +91,7 @@ class ProductTemplateImporter(Component):
                                           model_name=binding_model)
             try:
                 if binding_model == "magento.product.product":
-                    importer.run(external_id, product_template_id=product_template_id)
+                    importer.run(external_id, binding_template_id=binding_template_id)
                 else:
                     importer.run(external_id)
             except NothingToDoJob:
