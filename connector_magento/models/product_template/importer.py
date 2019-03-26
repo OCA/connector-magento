@@ -308,6 +308,14 @@ class ProductTemplateImportMapper(Component):
         return result
 
     @mapping
+    def auto_create_variants(self, records):
+        # By default we disable auto create variants when product is coming from a webshop
+        # TODO: Make this configurable using the backend record !
+        return {
+            'auto_create_variants': False
+        }
+
+    @mapping
     def price(self, record):
         return {
             'list_price': record.get('price', 0.0),

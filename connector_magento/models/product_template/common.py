@@ -285,10 +285,15 @@ class ProductTemplate(models.Model):
         inverse_name='odoo_id',
         string='Magento Bindings',
     )
+    auto_create_variants = fields.Boolean('Auto Create Variants', default=True)
 
     @api.model
     def create(self, vals):
         # Avoid to create variants
+        if vals.get('auto_create_variants', True):
+            # If auto create is true - then create the normal way
+            return super(ProductTemplate, self).create(vals)
+        # Else avoid creating the variants
         me = self.with_context(create_product_product=True)
         return super(ProductTemplate, me).create(vals)
 
@@ -302,7 +307,12 @@ class ProductTemplate(models.Model):
     @api.multi
     def write(self, vals):
         org_vals = vals.copy()
-        me = self.with_context(create_product_product=True)
+        if vals.get('auto_create_variants', self.auto_create_variants):
+            # Do auto create variants
+            me = self
+        else:
+            # Do not auto create variants
+            me = self.with_context(create_product_product=True)
         res = super(ProductTemplate, me).write(vals)
         # This part is for custom odoo fields to magento attributes
         for tpl in self:
