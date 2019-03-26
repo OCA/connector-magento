@@ -130,7 +130,7 @@ class ProductTemplateImporter(Component):
                 old_template = variant.odoo_id.product_tmpl_id
                 variant.odoo_id.product_tmpl_id = binding.odoo_id.id
                 templates_delete[old_template.id] = old_template
-            if variant and self.force:
+            if variant:
                 # Update the variant
                 updater = self.component(usage='record.importer',
                                          model_name='magento.product.product')

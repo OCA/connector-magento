@@ -34,7 +34,7 @@ class ProductBatchImporter(Component):
         # with visibility=4 we only get products which are standalone products - product variants have visibility=1 !
         filters['visibility'] = {'eq': 4}
         filters['type_id'] = {'eq': 'simple'}
-        filters['active'] = {'eq': 1}
+        filters['status'] = {'eq': 1}
         external_ids = self.backend_adapter.search(filters,
                                                    from_date=from_date,
                                                    to_date=to_date)
