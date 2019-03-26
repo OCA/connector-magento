@@ -91,7 +91,7 @@ class ProductCategoryAdapter(Component):
         return self._call('oerp_catalog_category.search',
                           [filters] if filters else [{}])
 
-    def read(self, id, storeview_id=None, attributes=None):
+    def read(self, id, storeview_code=None, attributes=None):
         """ Returns the information of a record
 
         :rtype: dict
@@ -100,7 +100,7 @@ class ProductCategoryAdapter(Component):
             # TODO: storeview context in mag 2.0
             return super(ProductCategoryAdapter, self).read(id, attributes)
         return self._call('%s.info' % self._magento_model,
-                          [int(id), storeview_id, attributes])
+                          [int(id), storeview_code, attributes])
 
     def tree(self, parent_id=None, storeview_id=None):
         """ Returns a tree of product categories
