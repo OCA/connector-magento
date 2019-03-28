@@ -512,7 +512,8 @@ class ProductImportMapper(ImportMapper):
 
     @mapping
     def categories(self, record):
-        mag_categories = record.get('categories', record['category_ids'])
+        mag_categories = record.get('categories') or record.get(
+            'category_ids', [])
         binder = self.binder_for('magento.product.category')
 
         category_ids = []
@@ -596,7 +597,7 @@ class ProductImporter(MagentoImporter):
         record = self.magento_record
         # import related categories
         for mag_category_id in record.get(
-                'categories', record['category_ids']):
+                'categories') or record.get('category_ids', []):
             self._import_dependency(mag_category_id,
                                     'magento.product.category')
         if record['type_id'] == 'bundle':
