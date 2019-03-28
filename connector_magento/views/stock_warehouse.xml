@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_stock_warehouse_magento_form" model="ir.ui.view">
+        <field name="name">stock.warehouse.magento.form</field>
+        <field name="model">stock.warehouse</field>
+        <field name="inherit_id" ref="stock.view_warehouse"/>
+        <field name="arch" type="xml">
+            <notebook position="inside">
+                <page name="connector" position="inside">
+                    <group string="Magento Bindings">
+                        <field name="magento_bind_ids" nolabel="1"/>
+                    </group>
+                </page>
+            </notebook>
+        </field>
+    </record>
+
+    <record id="view_magento_stock_warehouse_out_form" model="ir.ui.view">
+        <field name="name">magento.stock.warehouse.form</field>
+        <field name="model">magento.stock.warehouse</field>
+        <field name="arch" type="xml">
+            <form string="Magento Warehouse" create="false" delete="false">
+                <group>
+                    <field name="backend_id"/>
+                    <field name="external_id"/>
+                    <field name="odoo_id"/>
+                    <field name="calculation_method"/>
+                    <field name="quantity_field" attrs="{'invisible':  [('calculation_method', '!=', 'real')]}"/>
+                    <field name="fixed_quantity" attrs="{'invisible':  [('calculation_method', '!=', 'fix')]}"/>
+                </group>
+                <label for="magento_stock_item_ids"/>
+                <field name="magento_stock_item_ids" nolabel="1"/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_magento_stock_warehouse_tree" model="ir.ui.view">
+        <field name="name">magento.stock.warehouse.tree</field>
+        <field name="model">magento.stock.warehouse</field>
+        <field name="arch" type="xml">
+            <tree string="Magento Delivery Order"
+                    create="false" delete="false">
+                <field name="backend_id"/>
+                <field name="external_id"/>
+                <field name="odoo_id"/>
+                <field name="quantity_field"/>
+            </tree>
+        </field>
+    </record>
+
+</odoo>

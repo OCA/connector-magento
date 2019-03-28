@@ -6,6 +6,7 @@ from odoo.addons.component.core import Component
 from odoo.addons.connector.components.mapper import mapping, only_create
 from odoo.addons.connector.exception import MappingError
 import json
+import uuid
 
 
 class AccountPaymentImportMapper(Component):
@@ -24,7 +25,7 @@ class AccountPaymentImportMapper(Component):
     ]
     
     def _generate_payment_reference(self, record):
-        return "%s.%s.%s" % (self.backend_record.id, record['entity_id'], record['last_trans_id'])
+        return "%s.%s.%s" % (self.backend_record.id, record['entity_id'], record['last_trans_id'] if 'last_trans_id' in record else str(uuid.uuid4()))
 
     @mapping
     def name(self, record):
@@ -61,6 +62,7 @@ class AccountPaymentImportMapper(Component):
                 "is wrong. Payment Mode must be configured with a fixed journal !" % (payment_method,))
         return {
             'payment_type': method.payment_method_id.payment_type,
+            'partner_type': 'customer',
             'payment_method_id': method.payment_method_id.id,
             'journal_id': method.fixed_journal_id.id
         }
@@ -90,6 +92,10 @@ class AccountPaymentImporter(Component):
     _name = 'magento.account.payment.importer'
     _inherit = 'magento.importer'
     _apply_on = 'magento.account.payment'
+
+    def _after_import(self, binding):
+        # Post Payment
+        binding.odoo_id.post()
 
     def run_with_data(self, record, order_binding, force=False):
         self.force = force

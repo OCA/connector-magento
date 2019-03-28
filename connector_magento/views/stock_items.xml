@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_magento_stock_item_out_form" model="ir.ui.view">
+        <field name="name">magento.stock.item.form</field>
+        <field name="model">magento.stock.item</field>
+        <field name="arch" type="xml">
+            <form string="Magento Stock Item"
+                    create="false" delete="false">
+                <group>
+                    <field name="backend_id"/>
+                    <field name="external_id"/>
+                    <field name="odoo_id"/>
+                    <field name="magento_warehouse_id"/>
+                    <field name="qty"/>
+                    <field name="min_sale_qty"/>
+                    <field name="min_qty"/>
+                    <field name="is_qty_decimal"/>
+                    <field name="is_in_stock"/>
+                    <field name="backorders"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_magento_stock_item_out_tree" model="ir.ui.view">
+        <field name="name">magento.stock.item.tree</field>
+        <field name="model">magento.stock.item</field>
+        <field name="arch" type="xml">
+            <tree string="Magento Delivery Order"
+                    create="false" delete="false">
+                <field name="backend_id"/>
+                <field name="external_id"/>
+                <field name="odoo_id"/>
+                <field name="qty"/>
+                <field name="min_sale_qty"/>
+                <field name="min_qty"/>
+                <field name="is_qty_decimal"/>
+                <field name="is_in_stock"/>
+            </tree>
+        </field>
+    </record>
+
+</odoo>

@@ -126,5 +126,37 @@
 			name="Magento Partner"
 			parent="connector_magento.menu_odoo_external_objects"
 			action="action_odoo_partner" sequence="210"/>
+
+
+		<!-- Stock / Warehouse Menu -->
+		<record id="action_magento_warehouse" model="ir.actions.act_window">
+			<field name="name">Magento Warehouse</field>
+			<field name="res_model">magento.stock.warehouse</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		<menuitem id="connector_magento.menu_magento_warehouse"
+			name="Magento Warehouse"
+			parent="connector_magento.menu_odoo_external_objects"
+			action="action_magento_warehouse" sequence="300"/>
+
+		<record id="action_magento_stock_picking" model="ir.actions.act_window">
+			<field name="name">Magento Picking</field>
+			<field name="res_model">magento.stock.picking</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		<menuitem id="connector_magento.menu_magento_stock_picking"
+			name="Magento Picking"
+			parent="connector_magento.menu_odoo_external_objects"
+			action="action_magento_stock_picking" sequence="310"/>
+
+		<record id="action_magento_stock_item" model="ir.actions.act_window">
+			<field name="name">Magento Stock Item</field>
+			<field name="res_model">magento.stock.item</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		<menuitem id="connector_magento.menu_magento_stock_item"
+			name="Magento Stock Item"
+			parent="connector_magento.menu_odoo_external_objects"
+			action="action_magento_stock_item" sequence="320"/>
 	</data>
 </openerp>

@@ -63,7 +63,7 @@ class ProductTemplateImporter(Component):
         return binding
 
     def _import_dependency(self, external_id, binding_model,
-                           importer=None, always=False, product_template_id=None, external_field=None):
+                           importer=None, always=False, binding_template_id=None, external_field=None):
         """ Import a dependency.
 
         The importer class is a class or subclass of
@@ -91,7 +91,7 @@ class ProductTemplateImporter(Component):
                                           model_name=binding_model)
             try:
                 if binding_model == "magento.product.product":
-                    importer.run(external_id, product_template_id=product_template_id)
+                    importer.run(external_id, binding_template_id=binding_template_id)
                 else:
                     importer.run(external_id)
             except NothingToDoJob:
@@ -99,6 +99,11 @@ class ProductTemplateImporter(Component):
                     'Dependency import of %s(%s) has been ignored.',
                     binding_model._name, external_id
                 )
+
+    def _update_price(self, binding, price):
+        # Update price if price is 0
+        if binding.price == 0:
+            binding.price = price
 
     def _after_import(self, binding):
         # Import Images
@@ -119,23 +124,21 @@ class ProductTemplateImporter(Component):
             if not variant:
                 # Pass product_template_id in arguments - so the product mapper will map it
                 self._import_dependency(magento_variant['sku'], 'magento.product.product', always=True,
-                                        product_template_id=binding.odoo_id.id)
+                                        binding_template_id=binding)
             elif variant.odoo_id.product_tmpl_id.id != binding.odoo_id.id:
                 # Variant does exists already - and is at wrong odoo template - so reassign it - and delete old template
                 old_template = variant.odoo_id.product_tmpl_id
                 variant.odoo_id.product_tmpl_id = binding.odoo_id.id
                 templates_delete[old_template.id] = old_template
-            if variant and self.force:
+            if variant:
                 # Update the variant
                 updater = self.component(usage='record.importer',
                                          model_name='magento.product.product')
-                updater.run(variant.external_id, force=True)
+                updater.run(variant.external_id, force=True, binding_template_id=binding)
 
         for template_delete in templates_delete:
             templates_delete[template_delete].unlink()
-        # Update price if price is 0
-        if binding.price == 0:
-            binding.price = price
+        self._update_price(binding, price)
         # Do also import translations
         translation_importer = self.component(
             usage='translation.importer',
@@ -149,6 +152,21 @@ class ProductTemplateImporter(Component):
     def _is_uptodate(self, binding):
         # TODO: Remove for production - only to test the update
         return False
+
+    def _import_stock_warehouse(self):
+        record = self.magento_record
+        stock_item = record['extension_attributes']['stock_item']
+        binder = self.binder_for('magento.stock.warehouse')
+        mwarehouse = binder.to_internal(stock_item['stock_id'])
+        if not mwarehouse:
+            # We do create the warehouse binding directly here - did not found a mapping on magento api
+            # We do create the warehouse binding directly here - did not found a mapping on magento api
+            binding = self.env['magento.stock.warehouse'].create({
+                'backend_id': self.backend_record.id,
+                'external_id': stock_item['stock_id'],
+                'odoo_id': self.env['stock.warehouse'].search([('company_id', '=', self.backend_record.company_id.id)], limit=1).id,
+            })
+            self.backend_record.add_checkpoint(binding)
 
     def _import_dependencies(self):
         record = self.magento_record
@@ -175,6 +193,7 @@ class ProductTemplateImporter(Component):
                 if not attribute_value:
                     # Do update the attribute - so the value will get added
                     self._import_dependency(product_option['attribute_id'], 'magento.product.attribute', always=True)
+        self._import_stock_warehouse()
 
 
 class ProductTemplateImportMapper(Component):
@@ -289,9 +308,22 @@ class ProductTemplateImportMapper(Component):
         return result
 
     @mapping
+    def auto_create_variants(self, records):
+        # By default we disable auto create variants when product is coming from a webshop
+        # TODO: Make this configurable using the backend record !
+        return {
+            'auto_create_variants': False
+        }
+
+    @mapping
     def price(self, record):
         return {
             'list_price': record.get('price', 0.0),
+        }
+
+    @mapping
+    def cost(self, record):
+        return {
             'standard_price': record.get('cost', 0.0),
         }
 

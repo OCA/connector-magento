@@ -154,9 +154,10 @@ class ProductProduct(models.Model):
         org_vals = vals.copy()
         res = super(ProductProduct, self).write(vals)
         prod_ids = self.filtered(lambda p: len(p.magento_bind_ids) > 0)
-        for prod in prod_ids.magento_bind_ids:
-            for key in org_vals:
-                prod.check_field_mapping(key, vals)
+        for prod in prod_ids:
+            for binding in prod.magento_bind_ids:
+                for key in org_vals:
+                    binding.check_field_mapping(key, vals)
         return res              
 
     

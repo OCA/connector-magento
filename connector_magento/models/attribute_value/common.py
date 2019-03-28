@@ -75,7 +75,7 @@ class ProductAttributeValueAdapter(Component):
     def delete(self, magento_value_id, magento_attribute_id):
         def escape(term):
             if isinstance(term, basestring):
-                return urllib.quote(term, safe='')
+                return urllib.quote(term.encode('utf-8'), safe='')
             return term
         """ Delete a record on the external system """
         if self.work.magento_api._location.version == '2.0':

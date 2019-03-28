@@ -34,7 +34,7 @@ class ProductBatchImporter(Component):
         # with visibility=4 we only get products which are standalone products - product variants have visibility=1 !
         filters['visibility'] = {'eq': 4}
         filters['type_id'] = {'eq': 'simple'}
-        filters['active'] = {'eq': 1}
+        filters['status'] = {'eq': 1}
         external_ids = self.backend_adapter.search(filters,
                                                    from_date=from_date,
                                                    to_date=to_date)
@@ -210,6 +210,14 @@ class ProductImportMapper(Component):
             return {}
         return {
             'list_price': record.get('price', 0.0),
+        }
+
+    @mapping
+    def cost(self, record):
+        if record['visibility'] == 1:
+            # This is a product variant - so the price got set on the template !
+            return {}
+        return {
             'standard_price': record.get('cost', 0.0),
         }
 
@@ -230,7 +238,7 @@ class ProductImportMapper(Component):
         binder = self.binder_for('magento.account.tax')
         tax = binder.to_internal(tax_attribute[0]['value'], unwrap=True)
         if not tax:
-            raise MappingError("The tax class with the id %s"
+            raise MappingError("The tax class with the id %s "
                                "is not imported." %
                                tax_attribute[0]['value'])
         return {'taxes_id': [(4, tax.id)]}
@@ -338,6 +346,20 @@ class ProductImporter(Component):
                 self._import_dependency(selection['product_id'],
                                         'magento.product.product')
 
+    def _import_stock_warehouse(self):
+        record = self.magento_record
+        stock_item = record['extension_attributes']['stock_item']
+        binder = self.binder_for('magento.stock.warehouse')
+        mwarehouse = binder.to_internal(stock_item['stock_id'])
+        if not mwarehouse:
+            # We do create the warehouse binding directly here - did not found a mapping on magento api
+            binding = self.env['magento.stock.warehouse'].create({
+                'backend_id': self.backend_record.id,
+                'external_id': stock_item['stock_id'],
+                'odoo_id': self.env['stock.warehouse'].search([('company_id', '=', self.backend_record.company_id.id)], limit=1).id,
+            })
+            self.backend_record.add_checkpoint(binding)
+
     def _import_dependencies(self):
         """ Import the dependencies for the record"""
         record = self.magento_record
@@ -353,6 +375,8 @@ class ProductImporter(Component):
                                     'magento.product.attribute', external_field='attribute_code')
         if record['type_id'] == 'bundle':
             self._import_bundle_dependencies()
+
+        self._import_stock_warehouse()
 
     def _validate_product_type(self, data):
         """ Check if the product type is in the selection (so we can
@@ -394,13 +418,24 @@ class ProductImporter(Component):
         """
         self._validate_product_type(data)
 
-    def run(self, external_id, force=False, product_template_id=None):
-        self._product_template_id = product_template_id
+    def run(self, external_id, force=False, binding_template_id=None):
+        self._binding_template_id = binding_template_id
         return super(ProductImporter, self).run(external_id, force)
 
+    def _update(self, binding, data):
+        if self._binding_template_id:
+            data['product_tmpl_id'] = self._binding_template_id.odoo_id.id
+            data['magento_configurable_id'] = self._binding_template_id.id
+            # Name is set on product template on configurables
+            if 'name' in data:
+                del data['name']
+        super(ProductImporter, self)._update(binding, data)
+        return
+
     def _create(self, data):
-        if self._product_template_id:
-            data['product_tmpl_id'] = self._product_template_id
+        if self._binding_template_id:
+            data['product_tmpl_id'] = self._binding_template_id.odoo_id.id
+            data['magento_configurable_id'] = self._binding_template_id.id
             # Name is set on product template on configurables
             if 'name' in data:
                 del data['name']
@@ -425,46 +460,7 @@ class ProductImporter(Component):
         if self.magento_record['type_id'] == 'bundle':
             bundle_importer = self.component(usage='product.bundle.importer')
             bundle_importer.run(binding, self.magento_record)
-
-
-class ProductInventoryExporter(Component):
-    _name = 'magento.product.inventory.exporter'
-    _inherit = 'magento.exporter'
-    _apply_on = ['magento.product.product']
-    _usage = 'product.inventory.exporter'
-
-    _map_backorders = {'use_default': 0,
-                       'no': 0,
-                       'yes': 1,
-                       'yes-and-notification': 2,
-                       }
-
-    def _get_data(self, binding, fields):
-        result = {}
-        if 'magento_qty' in fields:
-            result.update({
-                'qty': binding.magento_qty,
-                # put the stock availability to "out of stock"
-                'is_in_stock': int(binding.magento_qty > 0)
-            })
-        if 'manage_stock' in fields:
-            manage = binding.manage_stock
-            result.update({
-                'manage_stock': int(manage == 'yes'),
-                'use_config_manage_stock': int(manage == 'use_default'),
-            })
-        if 'backorders' in fields:
-            backorders = binding.backorders
-            result.update({
-                'backorders': self._map_backorders[backorders],
-                'use_config_backorders': int(backorders == 'use_default'),
-            })
-        return result
-
-    def run(self, binding, fields):
-        """ Export the product inventory to Magento """
-        #external_id = self.binder.to_external(binding)
-        #https://devdocs.magento.com/swagger/index_22.html
-        external_id = binding.default_code
-        data = self._get_data(binding, fields)
-        self.backend_adapter.update_inventory(external_id, data)
+        # Do import stock item
+        stock_importer = self.component(usage='record.importer',
+                                        model_name='magento.stock.item')
+        stock_importer.run(self.magento_record['extension_attributes']['stock_item'])

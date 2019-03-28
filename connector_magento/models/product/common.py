@@ -59,69 +59,19 @@ class MagentoProductProduct(models.Model):
                                     default='simple',
                                     required=True)
     magento_id = fields.Integer('Magento ID')
+    magento_configurable_id = fields.Many2one(comodel_name='magento.product.template',
+                                              string='Configurable',
+                                              required=False,
+                                              ondelete='restrict',
+                                              readonly=True)
     magento_name = fields.Char('Name', translate=True)
     magento_price = fields.Float('Backend Preis', default=0.0, digits=dp.get_precision('Product Price'),)
-    manage_stock = fields.Selection(
-        selection=[('use_default', 'Use Default Config'),
-                   ('no', 'Do Not Manage Stock'),
-                   ('yes', 'Manage Stock')],
-        string='Manage Stock Level',
-        default='use_default',
-        required=True,
-    )
-    backorders = fields.Selection(
-        selection=[('use_default', 'Use Default Config'),
-                   ('no', 'No Sell'),
-                   ('yes', 'Sell Quantity < 0'),
-                   ('yes-and-notification', 'Sell Quantity < 0 and '
-                                            'Use Customer Notification')],
-        string='Manage Inventory Backorders',
-        default='use_default',
-        required=True,
-    )
-    magento_qty = fields.Float(string='Computed Quantity',
-                               help="Last computed quantity to send "
-                                    "on Magento.")
-    no_stock_sync = fields.Boolean(
-        string='No Stock Synchronization',
-        required=False,
-        help="Check this to exclude the product "
-             "from stock synchronizations.",
+    magento_stock_item_ids = fields.One2many(
+        comodel_name='magento.stock.item',
+        inverse_name='magento_product_binding_id',
+        string="Magento Stock Items",
     )
 
-    RECOMPUTE_QTY_STEP = 1000  # products at a time
-
-    @job(default_channel='root.magento')
-    @related_action(action='related_action_unwrap_binding')
-    @api.multi
-    def export_inventory(self, fields=None):
-        """ Export the inventory configuration and quantity of a product. """
-        self.ensure_one()
-        with self.backend_id.work_on(self._name) as work:
-            exporter = work.component(usage='product.inventory.exporter')
-            return exporter.run(self, fields)
-
-    @api.multi
-    def recompute_magento_qty(self):
-        """ Check if the quantity in the stock location configured
-        on the backend has changed since the last export.
-
-        If it has changed, write the updated quantity on `magento_qty`.
-        The write on `magento_qty` will trigger an `on_record_write`
-        event that will create an export job.
-
-        It groups the products by backend to avoid to read the backend
-        informations for each product.
-        """
-        # group products by backend
-        backends = defaultdict(set)
-        for product in self:
-            backends[product.backend_id].add(product.id)
-
-        for backend, product_ids in backends.iteritems():
-            self._recompute_magento_qty_backend(backend,
-                                                self.browse(product_ids))
-        return True
 
     @api.multi
     def sync_from_magento(self):
@@ -136,57 +86,6 @@ class MagentoProductProduct(models.Model):
         with self.backend_id.work_on(self._name) as work:
             exporter = work.component(usage='record.exporter')
             return exporter.run(self.external_id)
-
-    @api.multi
-    def _recompute_magento_qty_backend(self, backend, products,
-                                       read_fields=None):
-        """ Recompute the products quantity for one backend.
-
-        If field names are passed in ``read_fields`` (as a list), they
-        will be read in the product that is used in
-        :meth:`~._magento_qty`.
-
-        """
-        if backend.product_stock_field_id:
-            stock_field = backend.product_stock_field_id.name
-        else:
-            stock_field = 'virtual_available'
-
-        location = self.env['stock.location']
-        if self.env.context.get('location'):
-            location = location.browse(self.env.context['location'])
-        else:
-            location = backend.warehouse_id.lot_stock_id
-
-        product_fields = ['magento_qty', stock_field]
-        if read_fields:
-            product_fields += read_fields
-            
-        
-
-        self_with_location = self.with_context(location=location.id)
-        for chunk_ids in chunks(products.ids, self.RECOMPUTE_QTY_STEP):
-            records = self_with_location.browse(chunk_ids)
-            for product in records.read(fields=product_fields):
-                new_qty = self._magento_qty(product,
-                                            backend,
-                                            location,
-                                            stock_field)
-                if new_qty != product['magento_qty']:
-                    self.browse(product['id']).magento_qty = new_qty
-
-    @api.multi
-    def _magento_qty(self, product, backend, location, stock_field):
-        """ Return the current quantity for one product.
-
-        Can be inherited to change the way the quantity is computed,
-        according to a backend / location.
-
-        If you need to read additional fields on the product, see the
-        ``read_fields`` argument of :meth:`~._recompute_magento_qty_backend`
-
-        """
-        return product[stock_field]
 
 
 class ProductProduct(models.Model):
@@ -341,10 +240,7 @@ class MagentoBindingProductListener(Component):
 
     # fields which should not trigger an export of the products
     # but an export of their inventory
-    INVENTORY_FIELDS = ('manage_stock',
-                        'backorders',
-                        'magento_qty',
-                        )
+    INVENTORY_FIELDS = ()
 
     @skip_if(lambda self, record, **kwargs: self.no_connector_export(record))
     def on_record_write(self, record, fields=None):
