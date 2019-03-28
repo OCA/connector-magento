@@ -54,6 +54,9 @@
         <field name="arch" type="xml">
             <tree string="Magento Partner" create="false"
                    delete="false">
+                <field name="external_id"/>
+                <field name="name"/>
+                <field name="email"/>
                 <field name="backend_id"/>
                 <field name="website_id"/>
             </tree>

@@ -88,6 +88,8 @@ class CatalogImageImporter(Component):
                 model = 'product'
             elif 'magento.product.template' in self._apply_on:
                 model = 'product'
+            elif 'magento.product.bundle' in self._apply_on:
+                model = 'product'
             else:
                 raise NotImplementedError  # Categories?
             image_data['url'] = '%s/pub/media/catalog/%s/%s' % (

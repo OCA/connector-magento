@@ -33,6 +33,7 @@
           'views/account_tax.xml',
           'views/product_views.xml',
           'views/product_template.xml',
+          'views/product_bundle.xml',
           'views/product_category_views.xml',
           'views/partner_views.xml',
           'views/invoice_views.xml',
