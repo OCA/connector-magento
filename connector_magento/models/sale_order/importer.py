@@ -524,6 +524,8 @@ class SaleOrderImporter(Component):
 
         partner_binder = self.binder_for('magento.res.partner')
         if is_guest_order:
+            # TODO: Use billing address data for the main contact
+
             # ensure that the flag is correct in the record
             record['customer_is_guest'] = True
             guest_customer_id = 'guestorder:%s' % record['increment_id']
