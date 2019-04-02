@@ -80,13 +80,6 @@ class MagentoProductProduct(models.Model):
             importer = work.component(usage='record.importer')
             return importer.run(self.external_id, force=True)
 
-    @api.multi
-    def sync_to_magento(self):
-        self.ensure_one()
-        with self.backend_id.work_on(self._name) as work:
-            exporter = work.component(usage='record.exporter')
-            return exporter.run(self.external_id)
-
 
 class ProductProduct(models.Model):
     _inherit = 'product.product'
@@ -167,44 +160,6 @@ class ProductProductAdapter(Component):
         return self._call('ol_catalog_product.info',
                           [int(id), storeview_code, attributes, 'id'])
 
-
-    def get_product_datas(self, data, saveOptions=True):
-        """ Hook to implement in other modules"""
-        product_datas = {
-            'product': {
-                "id": 0,
-                "sku": data['sku'] or data['default_code'],
-                "name": data['name'],
-                "attributeSetId": data['attributeSetId'] ,
-                "price": 0,
-                "status": 0,
-                "visibility": 0,
-                "typeId": data['typeId'],
-                "weight": data['weight']
-            }
-            ,"saveOptions": saveOptions
-            }
-        #TODO : check that the status don't change when we update 
-        return product_datas
-
-    def write(self, id, data, storeview_id=None):
-        """ Update records on the external system """
-        # XXX actually only ol_catalog_product.update works
-        # the PHP connector maybe breaks the catalog_product.update
-        if self.work.magento_api._location.version == '2.0':
-            _logger.info("Prepare to call api with %s " %
-                         self.get_product_datas(data))
-            #Replace by the 
-            id  = data['sku']
-            return super(ProductProductAdapter, self)._call(
-                'products/%s' % id, 
-                self.get_product_datas(data), 
-                http_method='put')
-            
-#             raise NotImplementedError  # TODO
-        return self._call('ol_catalog_product.update',
-                          [int(id), data, storeview_id, 'id'])
-
     def get_images(self, id, storeview_id=None, data=None):
         if self.work.magento_api._location.version == '2.0':
             assert data
@@ -219,18 +174,6 @@ class ProductProductAdapter(Component):
             raise NotImplementedError  # TODO
         return self._call('product_media.info',
                           [int(id), image_name, storeview_id, 'id'])
-
-    def update_inventory(self, sku, data):
-        # product_stock.update is too slow
-        if self.collection.version == '2.0':
-            _logger.info("Prepare to update stock with %s " %
-                         data)
-            stock_datas = {"stockItem":{
-                'qty': data['qty'],
-                'is_in_stock': str(data['qty'] > 0)}}
-            return self._call('products/%s/stockItems/1' % sku, stock_datas, http_method='put')
-        return self._call('oerp_cataloginventory_stock_item.update',
-                          [int(id), data])
 
 
 class MagentoBindingProductListener(Component):

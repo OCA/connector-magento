@@ -390,10 +390,10 @@ class ProductBundleAdapter(Component):
     def create(self, data):
         """ Create a record on the external system """
         if self.work.magento_api._location.version == '2.0':
-            datas = self.get_product_datas(data)
-            datas['product'].update(data)
             new_product = super(ProductBundleAdapter, self)._call(
-                'products', datas,
+                'products', {
+                    'product': data
+                },
                 http_method='post')
             return new_product['id']
 
@@ -407,40 +407,18 @@ class ProductBundleAdapter(Component):
             res = self._call('configurable-products/%s/children' % (escape(sku)), None)
             return res
 
-    def get_product_datas(self, data, id=None, saveOptions=True):
-        """ Hook to implement in other modules"""
-        visibility = 4
-
-        product_datas = {
-            'product': {
-                "sku": data['sku'] or data['default_code'],
-                "name": data['name'],
-                "attributeSetId": data['attributeSetId'],
-                "price": 0,
-                "status": 1,
-                "visibility": visibility,
-                "typeId": data['typeId'],
-                "weight": data['weight'] or 0.0,
-                #
-            }
-            , "saveOptions": saveOptions
-        }
-        if id is None:
-            product_datas['product'].update({'id': 0})
-        return product_datas
-
     def write(self, id, data, storeview_id=None):
         """ Update records on the external system """
         # XXX actually only ol_catalog_product.update works
         # the PHP connector maybe breaks the catalog_product.update
         if self.work.magento_api._location.version == '2.0':
-            datas = self.get_product_datas(data, id)
-            datas['product'].update(data)
-            _logger.info("Prepare to call api with %s " % datas)
+            _logger.info("Prepare to call api with %s " % data)
             # Replace by the
             id = data['sku']
             super(ProductBundleAdapter, self)._call(
-                'products/%s' % id, datas,
+                'products/%s' % id, {
+                    'product': data
+                },
                 http_method='put')
 
             stock_datas = {"stockItem": {

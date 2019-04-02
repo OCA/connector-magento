@@ -175,6 +175,8 @@ class ProductTemplateImporter(Component):
             # We do search binding using attribute_code - default is attribute_id !
             self._import_dependency(attribute['attribute_code'],
                                     'magento.product.attribute', external_field='attribute_code')
+        # TODO: Check for product categorie dependency here !
+
         # Check for attributes in configurable - with values
         product_options = record['extension_attributes']['configurable_product_options']
         attribute_binder = self.binder_for('magento.product.attribute')

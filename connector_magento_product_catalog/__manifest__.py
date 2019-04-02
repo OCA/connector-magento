@@ -14,12 +14,13 @@
  'website': 'http://www.odoo-magento-connector.com',
 
  'data': [
-        #'views/template.xml',
-        'views/magento_backend_views.xml',
-        'views/product_custom_values.xml',
-        'views/magento_external_objects_menus.xml',
-        'views/product_view.xml',
-          ],
+     # 'views/template.xml',
+     'views/magento_backend_views.xml',
+     'views/product_custom_values.xml',
+     'views/magento_external_objects_menus.xml',
+     'views/product_view.xml',
+     'wizards/add_backend.xml',
+ ],
  'installable': True,
  'application': False,
- } 
+}

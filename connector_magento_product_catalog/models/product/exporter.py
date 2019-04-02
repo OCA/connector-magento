@@ -20,8 +20,7 @@ class ProductDefinitionExporter(Component):
     _name = 'magento.product.product.exporter'
     _inherit = 'magento.exporter'
     _apply_on = ['magento.product.product']
-    #_usage = 'product.definition.exporter'
-    
+
     
     def _should_import(self):
         """ Before the export, compare the update date
@@ -72,7 +71,6 @@ class ProductProductExportMapper(Component):
         ('name', 'name'),
         ('default_code', 'sku'),
         ('product_type', 'typeId'),
-#         ('lst_price', 'price'),
     ]
     
     @mapping

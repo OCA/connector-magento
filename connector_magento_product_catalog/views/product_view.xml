@@ -2,13 +2,14 @@
 <odoo>
 
 
-	<record id="view_magento_product_catalog_form"
-		model="ir.ui.view">
+	<record id="view_magento_product_catalog_form" model="ir.ui.view">
 		<field name="name">magento.product.product.catalog.form</field>
 		<field name="model">magento.product.product</field>
-		<field name="inherit_id"
-			ref="connector_magento.view_magento_product_form"></field>
+		<field name="inherit_id" ref="connector_magento.view_magento_product_form"></field>
 		<field name="arch" type="xml">
+			<button name="sync_from_magento" position="after">
+				<button type="object" name="sync_to_magento" string="Force Sync Odoo -> Magento"/>
+			</button>
 			<sheet position="inside">
 				<group>
 
@@ -17,8 +18,6 @@
 			</sheet>
 
 			<xpath expr="//div[@name='button_box']" position="inside">
-				<button name="export_product_button" class="oe_stat_button"
-					string="Export Attributes" type="object" />
 				<button name="resync" string="resyn All"
 					class="oe_stat_button" help="Stck, Attributes, ..." type="object" />
 				<button name="%(action_magento_custom_attributes)d"
@@ -30,57 +29,5 @@
 			</xpath>
 		</field>
 	</record>
-
-
-	<record model="ir.ui.view"
-		id="product_product_form_view_magento1">
-		<field name="name">product.normal.form.magento1</field>
-		<field name="model">product.product</field>
-		<field name="priority" eval="20"></field>
-		<field name="inherit_id" ref="product.product_normal_form_view" />
-		<field name="arch" type="xml">
-			<xpath expr="//field[@name='default_code']"
-				position="attributes">
-				<attribute name="string">SKU</attribute>
-			</xpath>
-
-			<xpath
-				expr="//notebook/page[@name='connector']//field[@name='magento_bind_ids']"
-				position="replace">
-				<field name="magento_bind_ids" nolabel="1">
-					<tree>
-						<field name="backend_id" />
-						<field name="id" invisible="1" />
-						<field name="odoo_id" invisible="1" />
-						<field name="attribute_set_id" invisible="0" />
-						<!--<field name="product_type" />-->
-						<button name="export_product_button"
-							string="Export Attributes" type="object" class="oe_highlight" />
-						<button name="resync" string="resyn All"
-							help="Stck, Attributes, ..." type="object" class="oe_highlight" />
-						<button name="action_magento_custom_attributes"
-							type="object" string="Custom Values"
-							context="{'search_default_product_id': [active_id], 
-							'default_attribute_set_id': attribute_set_id,
-							'default_magento_product_id': id, }" />
-					</tree>
-				</field>
-			</xpath>
-		</field>
-	</record>
-
-
-	<record id="action_odoo_product_templates"
-		model="ir.actions.act_window">
-		<field name="name">Magento Product templates</field>
-		<field name="res_model">magento.product.template</field>
-		<field name="view_mode">tree,form</field>
-	</record>
-
-
-	<menuitem id="menu_odoo_external_products"
-		name="External Product Templates" parent="connector_magento.menu_odoo_external_objects"
-		action="action_odoo_product_templates" />
-
 
 </odoo>

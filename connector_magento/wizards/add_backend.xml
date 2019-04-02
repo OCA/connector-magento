@@ -8,16 +8,14 @@
 			<field name="name">Bind an Object to a backend</field>
 			<field name="model">connector_magento.add_backend.wizard</field>
 			<field name="arch" type="xml">
-				<form string="Select event to register">
-					<p>Choose the backend you want to bind the product to</p>
+				<form string="Export to magento">
+					<p>Choose the backend you want to bind to</p>
 					<field name="backend_id" />
-					<field name="attributes_to_export_ids"/>
-					<!-- <field name="to_export_ids" />  -->
+					<field name="model" invisible="1"/>
+					<field name="attributes_to_export_ids" attrs="{'invisible': [('model', '!=', 'product.attribute')]}"/>
 
-					<!-- <field name="categ_to_export_ids" /> -->
 					<footer>
-						<button name="action_accept" type="object" string="Accept"
-							class="oe_highlight" />
+						<button name="action_accept" type="object" string="Export" class="oe_highlight" />
 						or
 						<button special="cancel" string="Cancel" />
 					</footer>
@@ -33,25 +31,6 @@
 			<field name="view_mode">form</field>
 			<field name="target">new</field>
 		</record>
-
-
-		<act_window id="product_add_backend_action"
-			name="Add Backend Wizard" src_model="product.product"
-			res_model="connector_magento.add_backend.wizard"
-			key2="client_action_multi" target="new" view_mode="form" multi="True" />
-
-
-
-		<act_window id="product_template_add_backend_action"
-			name="Add Backend Wizard" src_model="product.template"
-			res_model="connector_magento.add_backend.wizard"
-			key2="client_action_multi" target="new" view_mode="form" multi="True" />
-
-		<!-- <act_window id="category_add_backend_action" name="Add Backend Wizard" 
-			src_model="product.category" res_model="connector_magento.add_backend.wizard" 
-			key2="client_action_multi" target="new" view_mode="form" multi="True" /> -->
-
-
 
 	</data>
 </odoo>
