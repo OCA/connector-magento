@@ -1276,7 +1276,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:connector_magento.field_magento_config_specializer_id
 #: model:ir.model.fields,field_description:connector_magento.field_magento_product_category_id
 #: model:ir.model.fields,field_description:connector_magento.field_magento_product_product_id
-#: model:ir.model.fields,field_description:connector_magento.field_magento_res_partner_category_id_5798
+#: model:ir.model.fields,field_description:connector_magento.field_magento_res_partner_category_id_5804
 #: model:ir.model.fields,field_description:connector_magento.field_magento_res_partner_id
 #: model:ir.model.fields,field_description:connector_magento.field_magento_sale_order_id
 #: model:ir.model.fields,field_description:connector_magento.field_magento_sale_order_line_id
