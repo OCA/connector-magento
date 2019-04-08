@@ -4,6 +4,7 @@
 
 from odoo.addons.component.core import Component
 from odoo.addons.connector.components.mapper import mapping
+from odoo import _
 
 
 class StoreImportMapper(Component):
@@ -31,3 +32,18 @@ class StoreImporter(Component):
         binding = super(StoreImporter, self)._create(data)
         self.backend_record.add_checkpoint(binding)
         return binding
+    
+    def _must_skip(self):
+        """ Hook called right after we read the data from the backend.
+
+        If the method returns a message giving a reason for the
+        skipping, the import will be interrupted and the message
+        recorded in the job (if the import is called directly by the
+        job, not by dependencies).
+
+        If it returns None, the import will continue normally.
+
+        :returns: None | str | unicode
+        """
+        if not self.magento_record :
+            return _('The website is not properly defined')

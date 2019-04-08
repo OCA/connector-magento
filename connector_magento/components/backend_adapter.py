@@ -11,6 +11,7 @@ from odoo.addons.component.core import AbstractComponent
 from odoo.addons.queue_job.exception import RetryableJobError
 from odoo.addons.connector.exception import NetworkRetryableError
 from datetime import datetime
+from odoo import tools
 
 _logger = logging.getLogger(__name__)
 
@@ -272,7 +273,10 @@ class GenericAdapter(AbstractComponent):
                 return res
             else:
                 res = self._call('%s' % (self._magento2_model), None, storeview=storeview_code)
-                return next(record for record in res if record['id'] == id)
+                return next((
+                    record for record in res 
+                    if tools.ustr(record['id']) == id), 
+                    None)
 
         arguments = [int(id)]
         if attributes:
