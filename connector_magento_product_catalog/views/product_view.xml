@@ -32,11 +32,11 @@
 	</record>
 
 
-	<record model="ir.ui.view"
+	<!-- <record model="ir.ui.view"
 		id="product_product_form_view_magento1">
 		<field name="name">product.normal.form.magento1</field>
 		<field name="model">product.product</field>
-		<field name="priority" eval="20"></field>
+		<field name="priority" eval="2000"></field>
 		<field name="inherit_id" ref="product.product_normal_form_view" />
 		<field name="arch" type="xml">
 			<xpath expr="//field[@name='default_code']"
@@ -53,7 +53,7 @@
 						<field name="id" invisible="1" />
 						<field name="odoo_id" invisible="1" />
 						<field name="attribute_set_id" invisible="0" />
-						<!--<field name="product_type" />-->
+						<field name="product_type" />
 						<button name="export_product_button"
 							string="Export Attributes" type="object" class="oe_highlight" />
 						<button name="resync" string="resyn All"
@@ -67,7 +67,7 @@
 				</field>
 			</xpath>
 		</field>
-	</record>
+	</record> -->
 
 
 	<record id="action_odoo_product_templates"

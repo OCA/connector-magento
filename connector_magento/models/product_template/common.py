@@ -286,6 +286,7 @@ class ProductTemplate(models.Model):
         string='Magento Bindings',
     )
     auto_create_variants = fields.Boolean('Auto Create Variants', default=True)
+    magento_default_code = fields.Char(string="Default code used for magento")
 
     @api.model
     def create(self, vals):
