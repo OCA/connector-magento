@@ -181,6 +181,9 @@ class MagentoBackend(models.Model):
     import_product_templates_from_date = fields.Datetime(
         string='Import product templates from date',
     )
+    import_product_bundles_from_date = fields.Datetime(
+        string='Import product bundles from date',
+    )
     import_categories_from_date = fields.Datetime(
         string='Import categories from date',
     )
@@ -371,6 +374,12 @@ class MagentoBackend(models.Model):
     def import_product_template(self):
         self._import_from_date('magento.product.template',
                                'import_product_templates_from_date')
+        return True
+
+    @api.multi
+    def import_product_bundle(self):
+        self._import_from_date('magento.product.bundle',
+                               'import_product_bundles_from_date')
         return True
 
     @api.multi

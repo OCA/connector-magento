@@ -19,7 +19,7 @@ class MagentoBackend(models.Model):
                 domain = [('write_date', '>', backend.export_products_from_date )]
             mag_prods = self.env['magento.product.product'].search(domain)
             for mag_prod in mag_prods:
-                mag_prod.export_product_button()
+                mag_prod.sync_to_magento()
             next_time = import_start_time - timedelta(seconds=IMPORT_DELTA_BUFFER)
             next_time = fields.Datetime.to_string(next_time)
             backend.write({'export_products_from_date': next_time})

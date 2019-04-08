@@ -242,6 +242,13 @@ class SaleOrderLine(models.Model):
         inverse_name='odoo_id',
         string="Magento Bindings",
     )
+    is_bundle_item = fields.Boolean('Bundle item', default=False)
+
+    def _get_to_invoice_qty(self):
+        super(SaleOrderLine, self)._get_to_invoice_qty()
+        for line in self:
+            if line.is_bundle_item:
+                line.qty_to_invoice = 0
 
     @api.model
     def create(self, vals):

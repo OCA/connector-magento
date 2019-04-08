@@ -73,6 +73,14 @@
 			name="External Configurable" parent="menu_odoo_external_objects"
 			action="action_odoo_product_templates" sequence="50"/>
 
+		<record id="action_odoo_product_bundles" model="ir.actions.act_window">
+			<field name="name">Magento Bundles</field>
+			<field name="res_model">magento.product.bundle</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		<menuitem id="menu_odoo_product_bundles"
+			name="External Bundles" parent="menu_odoo_external_objects"
+			action="action_odoo_product_bundles" sequence="60"/>
 
 
 		<!-- Attribute Sets, Attributes and Values -->

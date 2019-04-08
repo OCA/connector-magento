@@ -24,12 +24,14 @@ class MagentoProductProduct(models.Model):
                                                  inverse_name='magento_product_id', 
                                                  string='Magento Simple Custom Attributes Values',
                                         )
-    
+
     @api.multi
-    def export_product_button(self, fields=None):
+    def sync_to_magento(self):
         self.ensure_one()
-        self.with_delay(priority=20, identity_key=identity_exact).export_product()
-    
+        with self.backend_id.work_on(self._name) as work:
+            exporter = work.component(usage='record.exporter')
+            return exporter.run(self)
+
     @job(default_channel='root.magento')
     @related_action(action='related_action_unwrap_binding')
     @api.multi
@@ -37,7 +39,6 @@ class MagentoProductProduct(models.Model):
         """ Export the attributes configuration of a product. """
         self.ensure_one()
         with self.backend_id.work_on(self._name) as work:
-            #TODO make different usage
             exporter = work.component(usage='record.exporter')
             return exporter.run(self)
 
@@ -125,29 +126,9 @@ class MagentoProductProduct(models.Model):
             else:
                 values.with_context(no_update=True).write(custom_vals)
     
+
 class ProductProduct(models.Model):
     _inherit = 'product.product'
-    
-    @api.model
-    def fields_view_get(self, *args, **kwargs):
-        res = super(ProductProduct, self).fields_view_get(*args, **kwargs)
-#         timebox_model = self.env['project.gtd.timebox']
-#         if (res['type'] == 'fo') and self.env.context.get('gtd', False):
-#             timeboxes = timebox_model.search([])
-#             search_extended = ''
-#             for timebox in timeboxes:
-#                 filter_ = u"""
-#                     <filter domain="[('timebox_id', '=', {timebox_id})]"
-#                             string="{string}"/>\n
-#                     """.format(timebox_id=timebox.id, string=timebox.name)
-#                 search_extended += filter_
-#             search_extended += '<separator orientation="vertical"/>'
-#             res['arch'] = tools.ustr(res['arch']).replace(
-#                 '<separator name="gtdsep"/>', search_extended)
-
-        return res
-   
-    
     
     @api.multi
     def write(self, vals):
@@ -158,52 +139,23 @@ class ProductProduct(models.Model):
             for binding in prod.magento_bind_ids:
                 for key in org_vals:
                     binding.check_field_mapping(key, vals)
-        return res              
+        return res
 
-    
-     
+
 class ProductProductAdapter(Component):
     _inherit = 'magento.product.product.adapter'
-    _apply_on = 'magento.product.product'
 
-    _magento_model = 'catalog_product'
-    _magento2_model = 'products'
-    _magento2_search = 'products'
-    _magento2_key = 'sku'
-    _admin_path = '/{model}/edit/id/{id}'
-    
-    
-    def create(self, data):
-        """ Create a record on the external system """
-        if self.work.magento_api._location.version == '2.0': 
-            new_product = super(ProductProductAdapter, self)._call(
-                'products', 
-                self.get_product_datas(data), 
-                http_method='post')            
-            return new_product['id']
-             
-             
-        return self._call('%s.create' % self._magento_model,
-                          [customer_id, data])
-    
-#     @api.multi
-#     def write(self, id, data, storeview_id=None):
-#         """ Update records on the external system """
-#         # XXX actually only ol_catalog_product.update works
-#         # the PHP connector maybe breaks the catalog_product.update
-#         if self.work.magento_api._location.version == '2.0':
-#             #Replace by the 
-#             id = data['sku']
-#             return super(ProductProductAdapter, self)._call(id, data, storeview_id=False)
-#             
-# #             raise NotImplementedError  # TODO
-#         return self._call('ol_catalog_product.update',
-#                           [int(id), data, storeview_id, 'id'])
-    
-    
-    def get_product_datas(self, data, saveOptions=True):
-        main_datas = super(ProductProductAdapter, self).get_product_datas(data, saveOptions)
-        main_datas['product'].update(data)
-        main_datas['product'].update({'visibility': 1})
-        return main_datas
-    
+    def write(self, id, data, storeview_id=None):
+        """ Update records on the external system """
+        # XXX actually only ol_catalog_product.update works
+        # the PHP connector maybe breaks the catalog_product.update
+        if self.work.magento_api._location.version == '2.0':
+            _logger.info("Prepare to call api with %s " % data)
+            return super(ProductProductAdapter, self)._call(
+                'products/%s' % data['sku'], {
+                    'product': data
+                },
+                http_method='put')
+        return self._call('ol_catalog_product.update',
+                          [int(id), data, storeview_id, 'id'])
+

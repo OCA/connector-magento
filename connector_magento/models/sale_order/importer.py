@@ -313,6 +313,7 @@ class SaleOrderImporter(Component):
         if self.binder.to_internal(self.external_id):
             return _('Already imported')
 
+    '''
     def _clean_magento_items(self, resource):
         """
         Method that clean the sale order line given by magento before
@@ -380,6 +381,7 @@ class SaleOrderImporter(Component):
         elif product_type == 'bundle':
             return child_items
         return top_item
+    '''
 
     def _import_customer_group(self, group_id):
         self._import_dependency(group_id, 'magento.res.partner.category')
@@ -468,7 +470,8 @@ class SaleOrderImporter(Component):
             record['website_id'] = storeview.store_id.website_id.external_id
         # sometimes we need to clean magento items (ex : configurable
         # product in a sale)
-        record = self._clean_magento_items(record)
+        # Not needed anymore - product bundle support is here
+        # record = self._clean_magento_items(record)
         return record
     
     def _get_shipping_address(self):
@@ -521,6 +524,8 @@ class SaleOrderImporter(Component):
 
         partner_binder = self.binder_for('magento.res.partner')
         if is_guest_order:
+            # TODO: Use billing address data for the main contact
+
             # ensure that the flag is correct in the record
             record['customer_is_guest'] = True
             guest_customer_id = 'guestorder:%s' % record['increment_id']
@@ -654,9 +659,11 @@ class SaleOrderImporter(Component):
         for line in record.get('items', []):
             _logger.debug('line: %s', line)
             field = self.collection.version == '1.7' and 'product_id' or 'sku'
+            model = 'magento.product.product'
             if field in line:
-                self._import_dependency(line[field],
-                    'magento.product.product')
+                if 'product_type' in line and line['product_type'] == 'bundle':
+                    model = 'magento.product.bundle'
+                self._import_dependency(line[field], model)
 
 
 class SaleOrderLineImportMapper(Component):
@@ -690,8 +697,18 @@ class SaleOrderLineImportMapper(Component):
         return record['product_id']
 
     @mapping
+    def is_bundle_item(self, record):
+        if 'parent_id' in record or 'parent_item_id' in record:
+            # Set Qty to invoice to zero on items of a bundle
+            return {'is_bundle_item': True}
+
+    @mapping
     def product_id(self, record):
-        binder = self.binder_for('magento.product.product')
+        model = 'magento.product.product'
+        if 'product_type' in record and record['product_type'] == 'bundle':
+            model = 'magento.product.bundle'
+
+        binder = self.binder_for(model)
         product_ref = self._get_product_ref(record)
         product = binder.to_internal(product_ref, unwrap=True)
         assert product, (

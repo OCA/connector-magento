@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+		<!--
+		<record id="product_bundle_form_view" model="ir.ui.view">
+			<field name="name">product.bundle.form</field>
+			<field name="model">product.bundle</field>
+			<field name="inherit_id"
+				ref="connector_base_product.product_bundle_common_form" />
+			<field name="arch" type="xml">
+				<page name="connector" position="attributes">
+					<attribute name="invisible">0</attribute>
+				</page>
+				<page name="connector" position="inside">
+					<label for="magento_bundle_bind_ids"/>
+					<field name="magento_bundle_bind_ids" nolabel="1"/>
+				</page>
+			</field>
+		</record>
+		-->
+
+
+		<record id="view_magento_product_bundle_form" model="ir.ui.view">
+			<field name="name">magento.product.bundle.form</field>
+			<field name="model">magento.product.bundle</field>
+			<field name="arch" type="xml">
+				<form string="Magento Bundle Product">
+					<header>
+						<button type="object" name="sync_from_magento" string="Force Sync Magento -> Odoo"/>
+					</header>
+					<sheet>
+						<div class="oe_button_box" name="button_box">
+
+						</div>
+						<group name="general">
+							<field name="backend_id" />
+							<field name="magento_name" />
+							<field name="magento_price" />
+							<field name="external_id" readonyl="1"/>
+							<field name="magento_id" readonyl="1"/>
+							<field name="odoo_id" readonly="1"/>
+							<field name="attribute_set_id" required="1" />
+						</group>
+						<label for="bundle_option_ids"/>
+						<field name="bundle_option_ids" nolabel="1"/>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+
+
+		<record id="magento_product_bundle_tree_view" model="ir.ui.view">
+			<field name="name">magento.product.bundle.tree</field>
+			<field name="model">magento.product.bundle</field>
+
+			<field name="arch" type="xml">
+				<tree>
+					<field name="external_id" />
+					<field name="display_name" />
+					<field name="backend_id" />
+					<!-- <field name="attribute_set_id"/> -->
+					<field name="sync_date" />
+					<button name="sync_from_magento" type="object" string="Force Sync Magento -> Odoo" />
+				</tree>
+			</field>
+		</record>
+
+		
+		<record id="magento_bundle_option_tree_view" model="ir.ui.view">
+			<field name="name">magento.bundle.option.tree</field>
+			<field name="model">magento.bundle.option</field>
+
+			<field name="arch" type="xml">
+				<tree>
+					<field name="position" widet="sequence"/>
+					<field name="external_id" />
+					<field name="title" />
+					<field name="required" />
+					<field name="option_product_ids" widget="many2many_tags"/>
+					<field name="backend_id" />
+				</tree>
+			</field>
+		</record>
+		<record id="view_magento_bundle_option_form" model="ir.ui.view">
+			<field name="name">magento.bundle_option.form</field>
+			<field name="model">magento.bundle.option</field>
+			<field name="arch" type="xml">
+				<form string="Magento Bundle Option">
+					<header>
+					</header>
+					<sheet>
+						<div class="oe_button_box" name="button_box">
+
+						</div>
+						<group name="general">
+							<field name="title" />
+							<field name="position"/>
+							<field name="external_id" />
+							<field name="required" />
+							<field name="backend_id" />
+						</group>
+						<label for="option_product_ids"/>
+						<field name="option_product_ids" nolabel="1"/>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<record id="magento_bundle_option_product_tree_view" model="ir.ui.view">
+			<field name="name">magento.bundle.option.product.tree</field>
+			<field name="model">magento.bundle.option.product</field>
+
+			<field name="arch" type="xml">
+				<tree>
+					<field name="position" widet="sequence"/>
+					<field name="magento_product_id" />
+					<field name="qty" />
+					<field name="is_default" />
+					<field name="price"/>
+				</tree>
+			</field>
+		</record>
+
+	</data>
+</openerp>
