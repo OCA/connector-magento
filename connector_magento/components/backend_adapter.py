@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Copyright 2017 Camptocamp SA
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
@@ -75,9 +74,9 @@ class MagentoAPI(object):
         # we do nothing, api is lazy
         return self
 
-    def __exit__(self, type, value, traceback):
+    def __exit__(self, exc_type, exc_value, traceback):
         if self._api is not None:
-            self._api.__exit__(type, value, traceback)
+            self._api.__exit__(exc_type, exc_value, traceback)
 
     def call(self, method, arguments):
         try:
@@ -121,6 +120,7 @@ class MagentoAPI(object):
 
 class MagentoCRUDAdapter(AbstractComponent):
     """ External Records Adapter for Magento """
+    # pylint: disable=method-required-super
 
     _name = 'magento.crud.adapter'
     _inherit = ['base.backend.adapter', 'base.magento.connector']
@@ -131,7 +131,7 @@ class MagentoCRUDAdapter(AbstractComponent):
         and returns a list of ids """
         raise NotImplementedError
 
-    def read(self, id, attributes=None):
+    def read(self, external_id, attributes=None):
         """ Returns the information of a record """
         raise NotImplementedError
 
@@ -144,11 +144,11 @@ class MagentoCRUDAdapter(AbstractComponent):
         """ Create a record on the external system """
         raise NotImplementedError
 
-    def write(self, id, data):
+    def write(self, external_id, data):
         """ Update records on the external system """
         raise NotImplementedError
 
-    def delete(self, id):
+    def delete(self, external_id):
         """ Delete a record on the external system """
         raise NotImplementedError
 
@@ -165,6 +165,7 @@ class MagentoCRUDAdapter(AbstractComponent):
 
 
 class GenericAdapter(AbstractComponent):
+    # pylint: disable=method-required-super
 
     _name = 'magento.adapter'
     _inherit = 'magento.crud.adapter'
@@ -181,12 +182,12 @@ class GenericAdapter(AbstractComponent):
         return self._call('%s.search' % self._magento_model,
                           [filters] if filters else [{}])
 
-    def read(self, id, attributes=None):
+    def read(self, external_id, attributes=None):
         """ Returns the information of a record
 
         :rtype: dict
         """
-        arguments = [int(id)]
+        arguments = [int(external_id)]
         if attributes:
             # Avoid to pass Null values in attributes. Workaround for
             # https://bugs.launchpad.net/openerp-connector-magento/+bug/1210775
@@ -209,16 +210,17 @@ class GenericAdapter(AbstractComponent):
         """ Create a record on the external system """
         return self._call('%s.create' % self._magento_model, [data])
 
-    def write(self, id, data):
+    def write(self, external_id, data):
         """ Update records on the external system """
         return self._call('%s.update' % self._magento_model,
-                          [int(id), data])
+                          [int(external_id), data])
 
-    def delete(self, id):
+    def delete(self, external_id):
         """ Delete a record on the external system """
-        return self._call('%s.delete' % self._magento_model, [int(id)])
+        return self._call('%s.delete' % self._magento_model,
+                          [int(external_id)])
 
-    def admin_url(self, id):
+    def admin_url(self, external_id):
         """ Return the URL in the Magento admin for a record """
         if self._admin_path is None:
             raise ValueError('No admin path is defined for this record')
@@ -227,7 +229,7 @@ class GenericAdapter(AbstractComponent):
         if not url:
             raise ValueError('No admin URL configured on the backend.')
         path = self._admin_path.format(model=self._magento_model,
-                                       id=id)
+                                       id=external_id)
         url = url.rstrip('/')
         path = path.lstrip('/')
         url = '/'.join((url, path))
