@@ -1,5 +1,4 @@
-# -*- coding: utf-8 -*-
-# Copyright 2103-2017 Camptocamp SA
+# Copyright 2103-2019 Camptocamp SA
 # © 2016 Sodexis
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 

@@ -1,5 +1,4 @@
-# -*- coding: utf-8 -*-
-# Copyright 2015-2017 Camptocamp SA
+# Copyright 2015-2019 Camptocamp SA
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
 import urllib.request
@@ -13,10 +12,8 @@ from odoo.addons.component.core import WorkContext, Component
 from odoo.addons.component.tests.common import (
     TransactionComponentRegistryCase,
 )
-from odoo.addons.connector_magento import components
-from odoo.addons.connector_magento.models.product.importer import (
-    CatalogImageImporter,
-)
+from .. import components
+from ..models.product.importer import CatalogImageImporter
 from .common import MockResponseImage
 
 # simple square of 4 px filled with green in png, used for the product
@@ -66,7 +63,7 @@ class TestImportProductImage(TransactionComponentRegistryCase):
             _usage = 'backend.adapter'
             _apply_on = 'magento.product.product'
 
-            def get_images(self, id, storeview_id=None):
+            def get_images(self, external_id, storeview_id=None):
                 return [
                     {'exclude': '1',
                      'file': '/i/n/ink-eater-krylon-bombear-destroyed-tee-2.jpg',  # noqa
