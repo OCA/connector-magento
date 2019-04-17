@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # © 2013 Guewen Baconnier,Camptocamp SA,Akretion
 # © 2016 Sodexis
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
@@ -104,6 +103,7 @@ class MagentoBaseExporter(AbstractComponent):
         # The commit will also release the lock acquired on the binding
         # record
         if not odoo.tools.config['test_enable']:
+            # pylint: disable=invalid-commit
             self.env.cr.commit()  # noqa
 
         self._after_export()
@@ -274,6 +274,7 @@ class MagentoExporter(AbstractComponent):
                     # the same binding. It will be caught and
                     # raise a RetryableJobError.
                     if not odoo.tools.config['test_enable']:
+                        # pylint: disable=invalid-commit
                         self.env.cr.commit()  # noqa
         else:
             # If magento_bind_ids does not exist we are typically in a

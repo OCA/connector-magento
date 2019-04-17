@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # © 2013 Guewen Baconnier,Camptocamp SA,Akretion
 # © 2016 Sodexis
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
@@ -188,7 +187,7 @@ class MagentoImporter(AbstractComponent):
         except IDMissingInBackend:
             return _('Record does no longer exist in Magento')
 
-        skip = self._must_skip()
+        skip = self._must_skip()    # pylint: disable=assignment-from-none
         if skip:
             return skip
 
