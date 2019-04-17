@@ -1,5 +1,4 @@
-# -*- coding: utf-8 -*-
-# Copyright 2013-2017 Camptocamp SA
+# Copyright 2013-2019 Camptocamp SA
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
 # pylint: disable=missing-manifest-dependency
@@ -42,6 +41,7 @@ class MockResponseImage(object):
         self.headers = {'content-type': 'image/jpeg'}
 
     def read(self):
+        # pylint: disable=method-required-super
         return self.resp_data
 
     def getcode(self):

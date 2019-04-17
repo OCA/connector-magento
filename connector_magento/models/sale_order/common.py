@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # © 2013 Guewen Baconnier,Camptocamp SA,Akretion
 # © 2016 Sodexis
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
@@ -278,18 +277,20 @@ class SaleOrderAdapter(Component):
                      }
         return super(SaleOrderAdapter, self).search(arguments)
 
-    def read(self, id, attributes=None):
+    def read(self, external_id, attributes=None):
         """ Returns the information of a record
 
         :rtype: dict
         """
+        # pylint: disable=method-required-super
         record = self._call('%s.info' % self._magento_model,
-                            [id, attributes])
+                            [external_id, attributes])
         return record
 
-    def get_parent(self, id):
-        return self._call('%s.get_parent' % self._magento_model, [id])
+    def get_parent(self, external_id):
+        return self._call('%s.get_parent' % self._magento_model,
+                          [external_id])
 
-    def add_comment(self, id, status, comment=None, notify=False):
+    def add_comment(self, external_id, status, comment=None, notify=False):
         return self._call('%s.addComment' % self._magento_model,
-                          [id, status, comment, notify])
+                          [external_id, status, comment, notify])

@@ -1,5 +1,4 @@
-# -*- coding: utf-8 -*-
-# Copyright 2013-2017 Camptocamp SA
+# Copyright 2013-2019 Camptocamp SA
 # © 2016 Sodexis
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
@@ -86,13 +85,14 @@ class ProductCategoryAdapter(Component):
         return self._call('oerp_catalog_category.search',
                           [filters] if filters else [{}])
 
-    def read(self, id, storeview_id=None, attributes=None):
+    def read(self, external_id, storeview_id=None, attributes=None):
         """ Returns the information of a record
 
         :rtype: dict
         """
+        # pylint: disable=method-required-super
         return self._call('%s.info' % self._magento_model,
-                          [int(id), storeview_id, attributes])
+                          [int(external_id), storeview_id, attributes])
 
     def tree(self, parent_id=None, storeview_id=None):
         """ Returns a tree of product categories

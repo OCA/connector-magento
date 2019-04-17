@@ -1,5 +1,4 @@
-# -*- coding: utf-8 -*-
-# Copyright 2013-2017 Camptocamp SA
+# Copyright 2013-2019 Camptocamp SA
 # © 2016 Sodexis
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
@@ -81,6 +80,7 @@ class AccountInvoiceAdapter(Component):
     def create(self, order_increment_id, items, comment, email,
                include_comment):
         """ Create a record on the external system """
+        # pylint: disable=method-required-super
         return self._call('%s.create' % self._magento_model,
                           [order_increment_id, items, comment,
                            email, include_comment])

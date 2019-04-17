@@ -1,5 +1,4 @@
-# -*- coding: utf-8 -*-
-# Copyright 2013-2017 Camptocamp SA
+# Copyright 2013-2019 Camptocamp SA
 # © 2016 Sodexis
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
@@ -217,32 +216,35 @@ class ProductProductAdapter(Component):
                 in self._call('%s.list' % self._magento_model,
                               [filters] if filters else [{}])]
 
-    def read(self, id, storeview_id=None, attributes=None):
+    def read(self, external_id, storeview_id=None, attributes=None):
         """ Returns the information of a record
 
         :rtype: dict
         """
+        # pylint: disable=method-required-super
         return self._call('ol_catalog_product.info',
-                          [int(id), storeview_id, attributes, 'id'])
+                          [int(external_id), storeview_id, attributes, 'id'])
 
-    def write(self, id, data, storeview_id=None):
+    def write(self, external_id, data, storeview_id=None):
         """ Update records on the external system """
+        # pylint: disable=method-required-super
         # XXX actually only ol_catalog_product.update works
         # the PHP connector maybe breaks the catalog_product.update
         return self._call('ol_catalog_product.update',
-                          [int(id), data, storeview_id, 'id'])
+                          [int(external_id), data, storeview_id, 'id'])
 
-    def get_images(self, id, storeview_id=None):
-        return self._call('product_media.list', [int(id), storeview_id, 'id'])
+    def get_images(self, external_id, storeview_id=None):
+        return self._call('product_media.list',
+                          [int(external_id), storeview_id, 'id'])
 
-    def read_image(self, id, image_name, storeview_id=None):
+    def read_image(self, external_id, image_name, storeview_id=None):
         return self._call('product_media.info',
-                          [int(id), image_name, storeview_id, 'id'])
+                          [int(external_id), image_name, storeview_id, 'id'])
 
-    def update_inventory(self, id, data):
+    def update_inventory(self, external_id, data):
         # product_stock.update is too slow
         return self._call('oerp_cataloginventory_stock_item.update',
-                          [int(id), data])
+                          [int(external_id), data])
 
 
 class MagentoBindingProductListener(Component):

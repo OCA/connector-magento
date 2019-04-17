@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from . import magento_binding  # should be loaded first for inheritance
 
 from . import account_invoice

@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from . import test_concurrent_sync
 from . import test_export_invoice
 from . import test_export_picking
