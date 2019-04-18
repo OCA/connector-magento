@@ -4,7 +4,7 @@
 
 import base64
 import logging
-import cStringIO
+import io
 import contextlib
 import json
 
@@ -112,7 +112,7 @@ class MagentoBindingBackendRead(models.TransientModel):
                 self.magento_binding_model) as work:
             adapter = work.component(usage='backend.adapter')
             data = adapter.read(self.magento_id)
-        with contextlib.closing(cStringIO.StringIO()) as buf:
+        with contextlib.closing(io.StringIO()) as buf:
             json.dump(data, buf)
             out = base64.encodestring(buf.getvalue())
 
