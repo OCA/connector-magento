@@ -32,7 +32,7 @@ class TestExportPicking(MagentoSyncTestCase):
                         self.env.ref('stock.stock_location_stock').id
                     })]
                 })
-                inventory.action_done()
+                inventory.action_validate()
         self.picking = self.order_binding.picking_ids
         self.assertEqual(len(self.picking), 1)
         magento_shop = self.picking.sale_id.magento_bind_ids[0].store_id

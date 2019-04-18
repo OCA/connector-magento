@@ -94,7 +94,6 @@ Resolution:
 Check your taxes and fiscal positions configuration and correct them if necessary.</field>
             <field name="sequence">30</field>
             <field name="model">sale.order</field>
-            <field name="rule_group">sale</field>
             <field name="code">if sale.magento_bind_ids and abs(sale.amount_total - sale.magento_bind_ids[0].total_amount) >= 0.01:
     failed = True</field>
             <field name="active" eval="True"/>
@@ -111,7 +110,6 @@ Resolution:
 Check your taxes and fiscal positions configuration and correct them if necessary.</field>
             <field name="sequence">30</field>
             <field name="model">sale.order</field>
-            <field name="rule_group">sale</field>
             <field name="code"># By default, a cent of difference for the tax amount is allowed, feel free to customise it in your own module
 if sale.magento_bind_ids and abs(sale.amount_tax - sale.magento_bind_ids[0].total_amount_tax) > 0.01:
     failed = True</field>
