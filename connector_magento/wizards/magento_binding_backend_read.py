@@ -4,7 +4,7 @@
 
 import base64
 import logging
-import cStringIO
+import io
 import contextlib
 import json
 
@@ -19,6 +19,7 @@ _logger = logging.getLogger(__name__)
 class MagentoBindingBackendRead(models.TransientModel):
 
     _name = 'magento.binding.backend.read'
+    _description = 'Magento Generic Object Reader Wizard'
 
     @api.model
     @tools.ormcache_context('self._uid', 'model_name', keys=('lang',))
@@ -61,8 +62,7 @@ class MagentoBindingBackendRead(models.TransientModel):
             _logger.info(
                 'No component registry for database %s. '
                 'Probably because the Odoo registry has not been built '
-                'yet.', exc_info=1
-            )
+                'yet.')
             return []
         component_classes = components_registry.lookup(
             collection_name='magento.backend',
@@ -70,10 +70,16 @@ class MagentoBindingBackendRead(models.TransientModel):
         )
         ret = []
         for component_class in component_classes:
-            ret.append(
-                (component_class._apply_on,
-                 self._get_translated_model_name(component_class._apply_on))
-            )
+            apply_on = component_class._apply_on
+            if not apply_on:
+                continue
+            if isinstance(apply_on, str):
+                apply_on = [apply_on]
+            for model_name in apply_on:
+                ret.append(
+                    (model_name,
+                     self._get_translated_model_name(model_name))
+                )
         return ret
 
     name = fields.Char(
@@ -112,7 +118,7 @@ class MagentoBindingBackendRead(models.TransientModel):
                 self.magento_binding_model) as work:
             adapter = work.component(usage='backend.adapter')
             data = adapter.read(self.magento_id)
-        with contextlib.closing(cStringIO.StringIO()) as buf:
+        with contextlib.closing(io.StringIO()) as buf:
             json.dump(data, buf)
             out = base64.encodestring(buf.getvalue())
 
