@@ -312,9 +312,21 @@ class ProductImporter(Component):
         self._validate_product_type(data)
 
     def _create(self, data):
-        binding = super(ProductImporter, self)._create(data)
+        binding = super()._create(data)
+        if not binding.active:
+            # Disable reordering rules that has been created automatically
+            binding.orderpoint_ids.write({'active': False})
         self.backend_record.add_checkpoint(binding)
         return binding
+
+    def _update(self, binding, data):
+        # enable/disable reordering rules before updating the product as Odoo
+        # do not allow to disable a product while having active reordering
+        # rules on it
+        if 'active' in data and not data.get('active'):
+            binding.mapped('orderpoint_ids').write({'active': False})
+        res = super()._update(binding, data)
+        return res
 
     def _after_import(self, binding):
         """ Hook called at the end of the import """

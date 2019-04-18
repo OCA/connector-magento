@@ -28,7 +28,7 @@ class ResPartner(models.Model):
         string="Magento Address Bindings",
     )
     birthday = fields.Date(string='Birthday')
-    company = fields.Char(string='Company')
+    company = fields.Char(string='Company name (in Magento)')
 
     @api.model
     def _address_fields(self):

@@ -24,7 +24,7 @@ class MagentoBinding(models.AbstractModel):
         ondelete='restrict',
     )
     # fields.Char because 0 is a valid Magento ID
-    external_id = fields.Char(string='ID on Magento')
+    external_id = fields.Char(string='ID on Magento', oldname='magento_id')
 
     _sql_constraints = [
         ('magento_uniq', 'unique(backend_id, external_id)',

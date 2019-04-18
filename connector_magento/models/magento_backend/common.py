@@ -352,6 +352,7 @@ class MagentoBackend(models.Model):
 
 class MagentoConfigSpecializer(models.AbstractModel):
     _name = 'magento.config.specializer'
+    _description = 'Magento Configuration Specializer Mixin'
 
     specific_account_analytic_id = fields.Many2one(
         comodel_name='account.analytic.account',

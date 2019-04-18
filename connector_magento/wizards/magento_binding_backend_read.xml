@@ -34,17 +34,10 @@
         <field name="name">Read information from backend</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">magento.binding.backend.read</field>
+        <field name="binding_model_id" ref="connector_magento.model_magento_backend"/>
         <field name="view_mode">form</field>
         <field name="view_type">form</field>
         <field name="target">new</field>
     </record>
-
-    <record model="ir.values" id="magento_binding_backend_read_act_multi">
-        <field name="name">Read information from backend</field>
-        <field name="key2">client_action_multi</field>
-        <field name="value" eval="'ir.actions.act_window,' +str(ref('magento_binding_backend_read_act_window'))" />
-        <field name="model">magento.backend</field>
-    </record>
-
 
 </odoo>
