@@ -42,7 +42,7 @@ class MagentoProductProduct(models.Model):
         ]
 
     odoo_id = fields.Many2one(comodel_name='product.product',
-                              string='Product',
+                              string='Odoo Product',
                               required=True,
                               ondelete='restrict')
     # XXX website_ids can be computed from categories
