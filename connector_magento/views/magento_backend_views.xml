@@ -65,7 +65,9 @@
                                 in the menu 'Connectors > Checkpoint'.
                             </p>
                             <group>
-                                <label string="Import all customer groups" class="oe_inline"/>
+                                <label for="import_customer_groups"
+                                    string="Import all customer groups"
+                                    class="oe_inline"/>
                                 <div>
                                     <button name="import_customer_groups"
                                         type="object"
@@ -74,7 +76,9 @@
                                 </div>
                             </group>
                             <group>
-                                <label string="Import partners from all websites" class="oe_inline"/>
+                                <label for="import_partners"
+                                    string="Import partners from all websites"
+                                    class="oe_inline"/>
                                 <button name="import_partners"
                                     type="object"
                                     class="oe_highlight"
@@ -82,7 +86,9 @@
                             </group>
                             <group>
                                 <div>
-                                    <label string="Import products categories since" class="oe_inline"/>
+                                    <label for="import_categories_from_date"
+                                        string="Import products categories since"
+                                        class="oe_inline"/>
                                     <field name="import_categories_from_date"
                                         class="oe_inline"
                                         nolabel="1"/>
@@ -94,7 +100,9 @@
                             </group>
                             <group>
                                 <div>
-                                    <label string="Import products since" class="oe_inline"/>
+                                    <label for="import_products_from_date"
+                                        string="Import products since"
+                                        class="oe_inline"/>
                                     <field name="import_products_from_date"
                                         class="oe_inline"
                                         nolabel="1"/>
@@ -105,14 +113,18 @@
                                     string="Import in background"/>
                             </group>
                             <group>
-                                <label string="Import sales orders from all store views" class="oe_inline"/>
+                                <label for="import_sale_orders"
+                                    string="Import sales orders from all store views"
+                                    class="oe_inline"/>
                                 <button name="import_sale_orders"
                                     type="object"
                                     class="oe_highlight"
                                     string="Import in background"/>
                             </group>
                             <group>
-                                <label string="Update all the products stock quantities" class="oe_inline"/>
+                                <label for="update_product_stock_qty"
+                                    string="Update all the products stock quantities"
+                                    class="oe_inline"/>
                                 <button name="update_product_stock_qty"
                                     type="object"
                                     class="oe_highlight"
@@ -129,7 +141,7 @@
                                 <field name="sale_prefix" placeholder="mag-" />
                                 <field name="product_stock_field_id" widget="selection"
                                     domain="[('model', 'in', ['product.product', 'product.template']), ('ttype', '=', 'float')]"/>
-                                <field name="account_analytic_id" groups="sale.group_analytic_accounting" />
+                                <field name="account_analytic_id" groups="analytic.group_analytic_accounting" />
                                 <field name="fiscal_position_id"/>
                                 <field name="is_multi_company"/>
                             </group>
@@ -184,8 +196,8 @@
                         <field name="sort_order"/>
                     </group>
                     <group string="Options" name="options">
-                        <field name="account_analytic_id" groups="sale.group_analytic_accounting" class="oe_read_only"/>
-                        <field name="specific_account_analytic_id" groups="sale.group_analytic_accounting" class="oe_edit_only" />
+                        <field name="account_analytic_id" groups="analytic.group_analytic_accounting" class="oe_read_only"/>
+                        <field name="specific_account_analytic_id" groups="analytic.group_analytic_accounting" class="oe_edit_only" />
                         <field name="fiscal_position_id" class="oe_read_only"/>
                         <field name="specific_fiscal_position_id" class="oe_edit_only" />
                         <field name="is_multi_company" invisible="1"/>
@@ -196,7 +208,9 @@
                         <page name="import" string="Imports">
                             <group>
                                 <div>
-                                    <label string="Import partners since" class="oe_inline"/>
+                                    <label for="import_partners_from_date"
+                                        string="Import partners since"
+                                        class="oe_inline"/>
                                     <field name="import_partners_from_date"
                                         class="oe_inline"
                                         nolabel="1"/>
@@ -257,8 +271,8 @@
                         <field name="website_id"/>
                     </group>
                     <group string="Options">
-                        <field name="account_analytic_id" groups="sale.group_analytic_accounting" class="oe_read_only"/>
-                        <field name="specific_account_analytic_id" groups="sale.group_analytic_accounting" class="oe_edit_only" />
+                        <field name="account_analytic_id" groups="analytic.group_analytic_accounting" class="oe_read_only"/>
+                        <field name="specific_account_analytic_id" groups="analytic.group_analytic_accounting" class="oe_edit_only" />
                         <field name="fiscal_position_id" class="oe_read_only"/>
                         <field name="specific_fiscal_position_id" class="oe_edit_only" />
                         <field name="is_multi_company" invisible="1"/>
@@ -320,14 +334,14 @@
                         <field name="no_sales_order_sync"/>
                     </group>
                     <group string="Options">
-                        <field name="account_analytic_id" groups="sale.group_analytic_accounting" class="oe_read_only"/>
-                        <field name="specific_account_analytic_id" groups="sale.group_analytic_accounting" class="oe_edit_only" />
+                        <field name="account_analytic_id" groups="analytic.group_analytic_accounting" class="oe_read_only"/>
+                        <field name="specific_account_analytic_id" groups="analytic.group_analytic_accounting" class="oe_edit_only" />
                         <field name="fiscal_position_id" class="oe_read_only"/>
                         <field name="specific_fiscal_position_id" class="oe_edit_only" />
                         <field name="is_multi_company" invisible="1"/>
                         <field name="warehouse_id" class="oe_read_only" attrs="{'invisible': [('is_multi_company', '=', False)]}"/>
                         <field name="specific_warehouse_id" class="oe_edit_only" attrs="{'invisible': [('is_multi_company', '=', False)]}"/>
-                        <field name="team_id" options="{'no_create': True}" groups="base.group_multi_salesteams"/>
+                        <field name="team_id" options="{'no_create': True}"/>
                         <field name="lang_id" widget="selection"/>
                         <field name="catalog_price_tax_included"/>
                         <p attrs="{'invisible': [('catalog_price_tax_included', '=', False)]}">
@@ -342,7 +356,8 @@
                         <page name="import" string="Imports">
                             <group colspan="4">
                               <div>
-                                <label string="Import Sale Orders since"
+                                <label for="import_orders_from_date"
+                                       string="Import Sale Orders since"
                                        class="oe_inline"/>
                                 <field name='import_orders_from_date'
                                        class="oe_inline"
