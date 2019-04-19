@@ -44,12 +44,12 @@ class MagentoStockItemExportMapper(Component):
             product_fields = [stock_field]
             record_with_location = record.with_context(location=location.id)
             result = record_with_location.read(product_fields)[0]
-            record.qty = result[stock_field]
+            record.with_context(connector_no_export=True).qty = result[stock_field]
             return {
                 'qty': result[stock_field]
             }
         elif record.magento_warehouse_id.calculation_method == 'fix':
-            record.qty = record.magento_warehouse_id.fixed_quantity
+            record.with_context(connector_no_export=True).qty = record.magento_warehouse_id.fixed_quantity
             return {
                 'qty': record.magento_warehouse_id.fixed_quantity
             }
