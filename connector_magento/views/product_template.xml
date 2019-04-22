@@ -15,6 +15,9 @@
 					<label for="magento_template_bind_ids"/>
 					<field name="magento_template_bind_ids" nolabel="1"/>
 				</page>
+				<field name="type" position="after">
+					<field name="magento_default_code" />
+				</field>
 			</field>
 		</record>
 

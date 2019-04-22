@@ -31,6 +31,9 @@ class MagentoProductAttributevalue(models.Model):
 
     # The real magento code - external_id is a combination of attribute_id + _ + code
     code = fields.Char('Magento Code for the value')
+    main_text_code = fields.Char('Main text code eg. swatch or default value')
+
+
 
     backend_id = fields.Many2one(
         related='magento_attribute_id.backend_id',
@@ -68,6 +71,21 @@ class ProductAttributeValueAdapter(Component):
     _magento2_search = 'options'
     _magento2_key = 'id'
     _magento2_name = 'option'
+
+    def read(self, id, storeview_code=None, attributes=None):
+        """ Returns the information of a record
+
+        :rtype: dict
+        """
+        if self.work.magento_api._location.version == '2.0':
+            # TODO: storeview_code context in Magento 2.0
+            res_admin = super(ProductAttributeValueAdapter, self).read(
+                id, attributes=attributes, storeview_code='all')
+            if res:
+                for attr in res.get('custom_attributes', []):
+                    res[attr['attribute_code']] = attr['value']
+            return res
+        return super(ProductAttributeAdapter, self).read(id, storeview_code=None, attributes=None)
 
     def _create_url(self, binding=None):
         return '%s' % (self._magento2_model % {'attributeCode': binding.magento_attribute_id.attribute_code})

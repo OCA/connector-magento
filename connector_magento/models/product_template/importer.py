@@ -205,6 +205,16 @@ class ProductTemplateImportMapper(Component):
 
     children = []
 
+
+    @mapping
+    def custom_values(self, record):
+        """
+        Force the custom attributes to be in the dictionnary
+        so that creation of the template will get the custom values
+        """
+        custom_values = record['custom_attributes']
+        return {'custom_attributes': custom_values}
+
     @mapping
     def attributes(self, record):
         '''
@@ -343,6 +353,8 @@ class ProductTemplateImportMapper(Component):
             [('default_code', '=', record['sku'])], limit=1)
         if product:
             return {'odoo_id': product.product_tmpl_id.id}
+        return {'magento_default_code': record['sku'],
+                'default_code': record['sku']}
 
     @mapping
     def odoo_type(self, record):

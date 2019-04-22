@@ -26,7 +26,7 @@ class ProductAttributeSetAdapter(Component):
     
     def read_detail(self, id, attributes=None):
         """ Returns the information of a record
-
+ 
         :rtype: dict
         """
         #TODO: find the way to get the code in options

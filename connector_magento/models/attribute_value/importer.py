@@ -7,6 +7,7 @@ import logging
 from odoo.addons.component.core import Component
 from odoo.addons.connector.components.mapper import mapping
 from odoo import tools
+from openupgradelib import openupgrade_merge_records
 
 _logger = logging.getLogger(__name__)
 
@@ -18,9 +19,15 @@ class AttributeValueImportMapper(Component):
 
     direct = [
         ('label', 'name'),
-        ('value', 'code')
+        
     ]
 
+    @mapping
+    def code_and_default_values(self, record):
+        return {'code': record['value'],
+                'main_text_code': record['value']
+                }
+    
     @mapping
     def backend_id(self, record):
         return {'backend_id': self.backend_record.id}

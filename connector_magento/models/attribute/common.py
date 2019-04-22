@@ -113,6 +113,19 @@ class ProductAttributeAdapter(Component):
     _magento2_search = 'products/attributes'
     _magento2_key = 'attribute_id'
     _magento2_name = 'attribute'
+    
+    
+    def read(self, id, storeview_code=None, attributes=None):
+        """ Returns the information of a record
+        :rtype: dict
+        """
+        if self.work.magento_api._location.version == '2.0':
+            # Force the read on all storeviews so that the admin value is returned
+            # https://github.com/magento/magento2/issues/3430
+            res = super(ProductAttributeAdapter, self).read(
+                id, attributes=attributes, storeview_code='all')
+            return res
+        return super(ProductAttributeAdapter, self).read(id, storeview_code=None, attributes=None)
 
     def _write_url(self, id, binding=None):
         return '%s/%s' % (self._magento2_model, binding.attribute_code)

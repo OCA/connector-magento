@@ -13,6 +13,7 @@
 							<field name="backend_id" />
 							<field name="odoo_id" />
 							<field name="external_id" />
+							<field name="main_text_code" />
 							<field name="code" />
 							<field name="magento_attribute_id" />
 						</group>
@@ -28,6 +29,7 @@
 			<field name="arch" type="xml">
 				<tree>
 					<field name="name" />
+					<field name="main_text_code" />
 					<field name="external_id" />
 					<field name="odoo_id" />
 					<field name="backend_id" />

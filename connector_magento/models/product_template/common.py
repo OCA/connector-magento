@@ -195,6 +195,7 @@ class MagentoProductTemplate(models.Model):
     @api.model
     def create(self, vals):
         mg_prod_id = super(MagentoProductTemplate, self).create(vals)
+        org_vals = vals.copy()
         attributes = mg_prod_id.attribute_set_id.attribute_ids
         cstm_att_mdl = self.env['magento.custom.template.attribute.values']
         for att in attributes:
@@ -211,13 +212,35 @@ class MagentoProductTemplate(models.Model):
                 mg_prod_id.check_field_mapping(
                     cst_value.odoo_field_name.name,
                     mg_prod_id[cst_value.odoo_field_name.name])
+                
+        if 'custom_attributes' in org_vals:
+            magento_attr_mdl = self.env['magento.product.attribute']            
+            for cst in org_vals['custom_attributes']:
+                cst_value_id = mg_prod_id.magento_template_attribute_value_ids.filtered(
+                    lambda v: v.attribute_id.attribute_code == cst['attribute_code'])
+                if cst_value_id.odoo_field_name.id:
+                    mg_prod_id.check_field_mapping(
+                        cst_value_id.odoo_field_name.name, 
+                        cst['value']
+                        )
+                elif cst_value_id.id:
+                    cst_value_id.write({
+                        'attribute_text': cst['value']})
+            
+        
         return mg_prod_id
 
     @api.multi
     def check_field_mapping(self, field, vals):
+        """
         # Check if the Odoo Field has a matching attribute in Magento
         # Update the value
         # Return an appropriate dictionnary
+        :param field : field representation as ...
+        :param vals : dictionnary of ... 
+        
+        :return : dictionnary
+        """
         self.ensure_one()
         #         att_id = 0
         custom_model = self.env['magento.custom.template.attribute.values']
