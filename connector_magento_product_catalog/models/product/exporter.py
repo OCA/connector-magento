@@ -70,8 +70,11 @@ class ProductProductExportMapper(Component):
     direct = [
         ('name', 'name'),
         ('default_code', 'sku'),
-        ('product_type', 'typeId'),
     ]
+    
+    @mapping
+    def get_type(self, record):
+        return {'typeId': 'simple'}
     
     @mapping
     def get_extension_attributes(self, record):

@@ -21,8 +21,7 @@ class ProductTemplateDefinitionExporter(Component):
     _inherit = 'magento.exporter'
     _apply_on = ['magento.product.template']
     #_usage = 'product.definition.exporter'
-    
-    
+
     def _export_dependencies(self):
         """ Import the dependencies for the record"""
         record = self.binding
@@ -117,9 +116,33 @@ class ProductTemplateExportMapper(Component):
     
     direct = [
         ('name', 'name'),
-        ('product_type', 'typeId'),
+#         ('product_type', 'typeId'),
 #         ('lst_price', 'price'),
     ]
+    
+    
+    @mapping
+    def _get_type(self, record):
+        product_type = 'simple'
+        if record.product_variant_count > 1:
+            product_type = 'configurable'
+        return {'typeId': product_type}
+    
+    @mapping
+    def default_code(self, record):
+        #get the first Reference of variants
+        code = record.product_variant_ids[0].default_code
+        if record.product_variant_count > 1 and record.magento_default_code:
+            code = record.magento_default_code
+        elif record.product_variant_count > 1 :
+           code = '%s-c' % code
+        return {'sku': code}
+    
+    @mapping
+    def price(self, record):
+        price = record['lst_price']
+        return {'price': price}
+      
     
     @mapping
     def get_extension_attributes(self, record):
@@ -131,8 +154,8 @@ class ProductTemplateExportMapper(Component):
         data.update(self.configurable_product_links(record))
         
         return {'extension_attributes': data}
-    
-    
+
+
     def configurable_product_links(self, record):
         links = []
         for p in record.product_variant_ids:
@@ -142,8 +165,8 @@ class ProductTemplateExportMapper(Component):
                 continue
             links.append(mp.external_id)
         return {'configurable_product_links': links}
-    
-    
+
+
     def configurable_product_options(self, record):
         option_ids  = []
         att_lines = record.attribute_line_ids.filtered(
@@ -171,13 +194,15 @@ class ProductTemplateExportMapper(Component):
                 
             option_ids.append(opt)
         return {'configurable_product_options': option_ids}
-    
+
+
     def get_website_ids(self, record):
         website_ids = [
                 s.external_id for s in record.backend_id.website_ids
                 ]
         return {'website_ids': website_ids}
-    
+
+
     def category_ids(self, record):
         #TODO : Map categories from magento
         categ_vals = [
@@ -194,7 +219,8 @@ class ProductTemplateExportMapper(Component):
 #               "extension_attributes": {}
           })
         return {'category_links': categ_vals}
-    
+
+
     @mapping
     def weight(self, record):
         if record.weight:
@@ -202,7 +228,8 @@ class ProductTemplateExportMapper(Component):
         else:
             val = 0        
         return {'weight' : val}
-        
+
+
     @mapping
     def attribute_set_id(self, record):
         if record.attribute_set_id:
@@ -213,14 +240,6 @@ class ProductTemplateExportMapper(Component):
             val = 1        
         return {'attributeSetId' : val}
 
-    @mapping
-    def default_code(self, record):
-        #get the first Reference of variants
-        code = record.product_variant_ids[0].default_code
-        if record.product_type == 'configurable':
-            #If Configurable, the code has to be changed to be pushed to the API with its own SKU
-            code = '%s-c' % code
-        return {'sku': code}
 
     @mapping
     def get_common_attributes(self, record):
@@ -284,14 +303,9 @@ class ProductTemplateExportMapper(Component):
                     })            
             
         result = {'customAttributes': customAttributes}
-        return result
+        return result   
+   
 
-    @mapping
-    def price(self, record):
-        price = record['lst_price']
-        return {'price': price}
-    
-    
     @mapping
     def option_products(self, record):
         #TODO : Map optionnal products
