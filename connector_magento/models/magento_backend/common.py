@@ -129,8 +129,8 @@ class MagentoBackend(models.Model):
              "in Odoo.",
     )
     export_all_options = fields.Boolean(
-        string='Always export all attribute options',
-        default=True
+        string='Export and Delete all attribute options',
+        default=False
     )
     always_create_new_attributes = fields.Boolean(
         string='Always create new odoo attributes on import',

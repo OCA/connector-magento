@@ -13,13 +13,17 @@ class MagentoProductAttributeBindingExportListener(Component):
 
     @skip_if(lambda self, record, **kwargs: self.no_connector_export(record))
     def on_record_create(self, record, fields=None):
-        record.with_delay(identity_key=identity_exact).export_record(record.backend_id)
+        if record.backend_id.export_all_options:
+            record.with_delay(identity_key=identity_exact).export_record(record.backend_id)
 
     @skip_if(lambda self, record, **kwargs: self.no_connector_export(record))
     def on_record_write(self, record, fields=None):
-        record.with_delay(identity_key=identity_exact).export_record(record.backend_id)
+        if record.backend_id.export_all_options:
+            record.with_delay(identity_key=identity_exact).export_record(record.backend_id)
 
     def on_record_unlink(self, record):
+        if not record.backend_id.export_all_options:
+            return
         with record.backend_id.work_on(record._name) as work:
             external_id = work.component(usage='binder').to_external(record)
             if external_id:

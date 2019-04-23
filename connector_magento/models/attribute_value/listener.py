@@ -12,6 +12,8 @@ class MagentoProductAttributeValueBindingExportListener(Component):
     _apply_on = ['magento.product.attribute.value']
 
     def on_record_unlink(self, record):
+        if not record.backend_id.export_all_options:
+            return
         with record.backend_id.work_on(record._name) as work:
             external_id = work.component(usage='binder').to_external(record)
             if external_id:
