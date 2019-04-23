@@ -22,7 +22,7 @@ class MagentoProductTemplate(models.Model):
     _inherit = 'magento.binding'
     _inherits = {'product.template': 'odoo_id'}
     _description = 'Magento Product Template'
-
+           
     attribute_set_id = fields.Many2one('magento.product.attributes.set',
 
                                        string='Attribute set')

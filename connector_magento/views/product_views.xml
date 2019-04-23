@@ -54,7 +54,7 @@
 						<field name="odoo_id" string="Odoo ID" readonly="1"/>
 						<field name="created_at" readonly="1" />
 						<field name="updated_at" readonly="1" />
-						<field name="product_type" readonly="1" />
+						<!-- <field name="product_type" readonly="1" /> -->
 						<field name="magento_configurable_id"/>
 					</group>
 					<label for="magento_stock_item_ids"/>

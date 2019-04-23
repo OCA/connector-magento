@@ -31,18 +31,7 @@ class MagentoProductProduct(models.Model):
     _inherits = {'product.product': 'odoo_id'}
     _description = 'Magento Product'
 
-    @api.model
-    def product_type_get(self):
-        return [
-            ('simple', 'Simple Product'),
-            ('configurable', 'Configurable Product'),
-            ('virtual', 'Virtual Product'),
-            ('downloadable', 'Downloadable Product'),
-            ('giftcard', 'Giftcard')
-            # XXX activate when supported
-            # ('grouped', 'Grouped Product'),
-            # ('bundle', 'Bundle Product'),
-        ]
+    
 
     odoo_id = fields.Many2one(comodel_name='product.product',
                               string='Product',
@@ -54,10 +43,10 @@ class MagentoProductProduct(models.Model):
                                    readonly=True)
     created_at = fields.Date('Created At (on Magento)')
     updated_at = fields.Date('Updated At (on Magento)')
-    product_type = fields.Selection(selection='product_type_get',
-                                    string='Magento Product Type',
-                                    default='simple',
-                                    required=True)
+#     product_type = fields.Selection(selection='product_type_get',
+#                                     string='Magento Product Type',
+#                                     default='simple',
+#                                     required=True)
     magento_id = fields.Integer('Magento ID')
     magento_configurable_id = fields.Many2one(comodel_name='magento.product.template',
                                               string='Configurable',
