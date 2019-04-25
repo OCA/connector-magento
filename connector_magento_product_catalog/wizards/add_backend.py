@@ -32,11 +32,31 @@ class WizardModel(models.TransientModel):
         else:
             return super(WizardModel, self)._get_ids_and_model()
 
+    @api.multi
+    def check_backend_binding(self, to_export_ids=None, dest_model=None):
+        if not dest_model or not to_export_ids:
+            (to_export_ids, dest_model) = self._get_ids_and_model()
+        if dest_model == 'magento.product.template' and self.product_type == 'simple':
+            # We have to change it to magento.product.product
+            dest_model = "magento.product.product"
+            # And use the product ids instead
+            variant_ids = self.env['product.product']
+            for template in to_export_ids:
+                if template.product_variant_count > 1:
+                    raise UserWarning(_(u'Product template with variants can not get exported as simple product !'))
+                variant_ids += template.product_variant_id
+            to_export_ids = variant_ids
+        return super(WizardModel, self).check_backend_binding(to_export_ids, dest_model)
+
     model = fields.Selection(selection_add=[
         ('product.template', _(u'Product templates')),
         ('product.product', _(u'Product')),
         ('product.category', _(u'Product category')),
     ], string='Model')
+    product_type = fields.Selection(selection=[
+        ('simple', _(u'Simple')),
+        ('configurable', _(u'Configurable')),
+    ], default='simple', string="Product Type")
     to_export_ids = fields.Many2many(string='Products to export',
                                      comodel_name='product.product', default=get_default_products)
     temp_export_ids = fields.Many2many(string='Product Templates to export',

@@ -29,6 +29,8 @@
                     <field name="backend_id"/>
                     <field name="external_id"/>
                     <field name="description"/>
+                    <field name="parent_id"/>
+                    <field name="odoo_id"/>
                     <field name="magento_parent_id"/>
                     <field name="magento_child_ids"/>
                 </group>

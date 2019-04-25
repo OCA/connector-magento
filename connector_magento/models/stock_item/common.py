@@ -60,7 +60,7 @@ class MagentoStockItem(models.Model):
     qty = fields.Float(string='Quantity', default=0.0)
     min_sale_qty = fields.Float(string='Min Sale Qty', default=1.0)
     is_qty_decimal = fields.Boolean(string='Decimal Qty.', default=False)
-    is_in_stock = fields.Boolean(string='In Stock')
+    is_in_stock = fields.Boolean(string='In Stock From Magento')
     min_qty = fields.Float('Min. Qty.', default=0.0)
     backorders = fields.Selection(
         selection=[('use_default', 'Use Default Config'),

@@ -40,8 +40,9 @@ class WizardModel(models.TransientModel):
             return (self.attributes_to_export_ids, 'magento.product.attribute')
 
     @api.multi
-    def check_backend_binding(self):
-        (to_export_ids, dest_model) = self._get_ids_and_model()
+    def check_backend_binding(self, to_export_ids=None, dest_model=None):
+        if not dest_model or not to_export_ids:
+            (to_export_ids, dest_model) = self._get_ids_and_model()
         for model in to_export_ids:
             bind_count = self.env[dest_model].search_count([
                 ('odoo_id', '=', model.id),

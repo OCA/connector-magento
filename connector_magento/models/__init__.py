@@ -26,3 +26,4 @@ from . import account_payment
 from . import stock_warehouse
 from . import stock_item
 from . import product_bundle
+from . import media

@@ -72,6 +72,7 @@ class MagentoProductProduct(models.Model):
         inverse_name='magento_product_binding_id',
         string="Magento Stock Items",
     )
+    no_stock_sync = fields.Boolean('No Stock Sync', default=False)
 
     no_stock_sync = fields.Boolean(
         string='No Stock Synchronization',
@@ -229,6 +230,7 @@ class ProductProductAdapter(Component):
             res = super(ProductProductAdapter, self).read(
                 id, attributes=attributes, storeview_code=storeview_code)
             if res:
+                # TODO: Dirty Hack - should get done in the mapper - in a sort of pre process function - like the finalize function in the mapper
                 for attr in res.get('custom_attributes', []):
                     res[attr['attribute_code']] = attr['value']
             return res

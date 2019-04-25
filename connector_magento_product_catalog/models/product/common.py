@@ -133,6 +133,11 @@ class ProductProduct(models.Model):
 
 class ProductProductAdapter(Component):
     _inherit = 'magento.product.product.adapter'
+    _magento2_name = 'product'
+
+    def _get_id_from_create(self, result, data=None):
+        # Products do use the sku as external_id - but we also need the id - so do return the complete data structure
+        return result
 
 #     def write(self, id, data, storeview_id=None):
 #         """ Update records on the external system """
@@ -148,3 +153,28 @@ class ProductProductAdapter(Component):
 #         return self._call('ol_catalog_product.update',
 #                           [int(id), data, storeview_id, 'id'])
 
+    def put_image(self, id, data, storeview_id=None):
+        """ Update records on the external system """
+        if self.work.magento_api._location.version == '2.0':
+            return super(ProductProductAdapter, self)._call(
+                'products/%s/media' % id, {
+                    "entry": {
+                        "media_type": "image",
+                        "label": "Image",
+                        "position": 1,
+                        "disabled": False,
+                        "types": [
+                            "image",
+                            "small_image",
+                            "thumbnail"
+                        ],
+                        "content": {
+                            "base64EncodedData": data['image'],
+                            "type": "image/png",
+                            "name": data['filename']
+                        }
+                    }
+                },
+                http_method='post',
+                storeview=storeview_id
+            )

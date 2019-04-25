@@ -56,9 +56,9 @@ class ProductCategoryAdapter(Component):
     _magento2_key = 'id'
     _admin_path = '/{model}/index/'
 
-    def _call(self, method, arguments, storeview=None):
+    def _call(self, method, arguments, http_method=None, storeview=None):
         try:
-            return super(ProductCategoryAdapter, self)._call(method, arguments, storeview=storeview)
+            return super(ProductCategoryAdapter, self)._call(method, arguments, http_method=http_method, storeview=storeview)
         except xmlrpclib.Fault as err:
             # 101 is the error in the Magento API
             # when the category does not exist

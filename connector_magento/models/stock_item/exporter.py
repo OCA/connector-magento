@@ -23,7 +23,6 @@ class MagentoStockItemExportMapper(Component):
     direct = [
         ('min_sale_qty', 'min_sale_qty'),
         ('is_qty_decimal', 'is_qty_decimal'),
-        ('is_in_stock', 'is_in_stock'),
     ]
 
     @mapping
@@ -32,8 +31,23 @@ class MagentoStockItemExportMapper(Component):
 
     @mapping
     def backorders(self, record):
-        # TODO: Find out which values to send !
-        return {}
+        '''
+        selection=[('use_default', 'Use Default Config'),
+                   ('no', 'No Sell'), = 0
+                   ('yes', 'Sell Quantity < 0'), = 1
+                   ('yes-and-notification', 'Sell Quantity < 0 and ' = 2
+                                            'Use Customer Notification')],
+        '''
+        if record.backorders == 'use_default':
+            return
+        map = {
+            'no': 0,
+            'yes': 1,
+            'yes-and-notification': 2
+        }
+        return {
+            'backorders': map[record.backorders],
+        }
 
     @mapping
     def qty(self, record):
@@ -46,10 +60,12 @@ class MagentoStockItemExportMapper(Component):
             result = record_with_location.read(product_fields)[0]
             record.with_context(connector_no_export=True).qty = result[stock_field]
             return {
-                'qty': result[stock_field]
+                'qty': result[stock_field],
+                'is_in_stock': True if result[stock_field] > 0 else False,
             }
         elif record.magento_warehouse_id.calculation_method == 'fix':
             record.with_context(connector_no_export=True).qty = record.magento_warehouse_id.fixed_quantity
             return {
-                'qty': record.magento_warehouse_id.fixed_quantity
+                'qty': record.magento_warehouse_id.fixed_quantity,
+                'is_in_stock': True if record.magento_warehouse_id.fixed_quantity > 0 else False,
             }

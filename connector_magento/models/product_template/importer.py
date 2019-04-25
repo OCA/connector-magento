@@ -106,10 +106,22 @@ class ProductTemplateImporter(Component):
             binding.price = price
 
     def _after_import(self, binding):
+        def sort_by_position(elem):
+            return elem.position
+
         # Import Images
+        media_importer = self.component(usage='product.media.importer', model_name='magento.product.media')
+        for media in self.magento_record['media_gallery_entries']:
+            media_importer.run(media, binding)
+        # Here do choose the image at the smallest position as the main image
+        for media_binding in sorted(binding.odoo_id.magento_image_bind_ids.filtered(lambda m: m.media_type == 'image'), key=sort_by_position):
+            binding.with_context(connector_no_export=True).image = media_binding.image
+            break
+        '''
         image_importer = self.component(usage='template.image.importer')
         image_importer.run(self.external_id, binding,
                            data=self.magento_record)
+        '''
         # Import variants
         magento_variants = self.backend_adapter.list_variants(self.external_id)
         variant_binder = self.binder_for('magento.product.product')

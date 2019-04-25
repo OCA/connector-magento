@@ -170,7 +170,7 @@ class MagentoImporter(AbstractComponent):
         """ Hook called at the end of the import """
         return
 
-    def run(self, external_id, force=False):
+    def run(self, external_id, force=False, binding=None):
         """ Run the synchronization
 
         :param external_id: identifier of the record on Magento
@@ -200,7 +200,8 @@ class MagentoImporter(AbstractComponent):
         if skip:
             return skip
 
-        binding = self._get_binding()
+        if not binding:
+            binding = self._get_binding()
 
         if not force and self._is_uptodate(binding):
             return _('Already up-to-date.')

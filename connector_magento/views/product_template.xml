@@ -53,6 +53,8 @@
 						</group>
 						<label for="magento_product_ids"/>
 						<field name="magento_product_ids" nolabel="1"/>
+						<label for="magento_image_bind_ids"/>
+						<field name="magento_image_bind_ids" nolabel="1"/>
 					</sheet>
 				</form>
 			</field>

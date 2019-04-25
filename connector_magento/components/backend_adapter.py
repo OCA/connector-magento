@@ -254,6 +254,17 @@ class GenericAdapter(AbstractComponent):
         return self._call('%s.search' % self._magento_model,
                           [filters] if filters else [{}])
 
+    def _read_url(self, id):
+        def escape(term):
+            if isinstance(term, basestring):
+                return urllib.quote(term.encode('utf-8'), safe='')
+            return term
+
+        if self._magento2_key:
+            return '%s/%s' % (self._magento2_model, escape(id))
+        else:
+            return '%s' % (self._magento2_model)
+
     def read(self, id, attributes=None, storeview_code=None):
         """ Returns the information of a record
 
@@ -261,18 +272,10 @@ class GenericAdapter(AbstractComponent):
         """
         if self.work.magento_api._location.version == '2.0':
 
-            def escape(term):
-                if isinstance(term, basestring):
-                    return urllib.quote(term.encode('utf-8'), safe='')
-                return term
-
-#             if attributes:
-#                 raise NotImplementedError
+            res = self._call(self._read_url(id), None, storeview=storeview_code)
             if self._magento2_key:
-                res = self._call('%s/%s' % (self._magento2_model, escape(id)), None, storeview=storeview_code)
                 return res
             else:
-                res = self._call('%s' % (self._magento2_model), None, storeview=storeview_code)
                 return next((
                     record for record in res 
                     if tools.ustr(record['id']) == id), 
@@ -359,7 +362,7 @@ class GenericAdapter(AbstractComponent):
     def delete(self, id):
         """ Delete a record on the external system """
         if self.work.magento_api._location.version == '2.0':
-            res = self._call(self._delete_url(id), http_method="delete")
+            res = self._call(self._delete_url(id), None, http_method="delete")
             return res
         return self._call('%s.delete' % self._magento_model, [int(id)])
 

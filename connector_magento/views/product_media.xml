@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+	<record id="view_magento_product_media_form" model="ir.ui.view">
+		<field name="name">magento.product.media.form</field>
+		<field name="model">magento.product.media</field>
+		<field name="arch" type="xml">
+			<form string="Magento Product Media">
+				<header>
+				</header>
+				<sheet>
+
+					<group name="general">
+						<field name="magento_product_id" readonyl="1"/>
+						<field name="magento_product_tmpl_id" readonyl="1"/>
+						<field name="backend_id"  readonyl="1"/>
+						<field name="label"/>
+						<field name="file"  readonyl="1"/>
+						<field name="url" widget="url"/>
+						<field name="position" />
+						<field name="disabled"/>
+						<field name="mimetype"/>
+						<field name="media_type"/>
+						<field name="image_type_image"/>
+						<field name="image_type_small_image"/>
+						<field name="image_type_thumbnail"/>
+					</group>
+					<div>
+						<img t-attf-src="#{ url }" t-attf-name="#{ label }"/>
+					</div>
+				</sheet>
+			</form>
+		</field>
+	</record>
+
+	<record id="magento_product_media_search_view" model="ir.ui.view">
+		<field name="name">magento.product.media.search</field>
+		<field name="model">magento.product.media</field>
+		<field name="arch" type="xml">
+            <search string="Search Magento Product Media">
+                <field name="label"/>
+                <field name="magento_product_id" string="Product"/>
+                <field name="magento_product_tmpl_id" string="Configurable"/>
+                <group expand="0" string="Group By...">
+                    <filter string="Backend"
+                            icon="terp-folder-orange"
+                            domain="[]"
+                            context="{'group_by':'backend_id'}"/>
+                    <filter string="Product"
+                            icon="terp-folder-orange"
+                            domain="[]"
+                            context="{'group_by':'magento_product_id'}"/>
+                    <filter string="Configurable"
+                            icon="terp-folder-orange"
+                            domain="[]"
+                            context="{'group_by':'magento_product_tmpl_id'}"/>
+               </group>
+           </search>
+		</field>
+	</record>
+
+	<record id="magento_product_media_tree_view" model="ir.ui.view">
+		<field name="name">magento.product.media.tree</field>
+		<field name="model">magento.product.media</field>
+		<field name="arch" type="xml">
+			<tree order="position">
+				<field name="position" widget="handle"/>
+				<field name="magento_product_id" />
+				<field name="magento_product_tmpl_id" />
+				<field name="label" />
+				<field name="file"/>
+			</tree>
+		</field>
+	</record>
+
+</odoo>

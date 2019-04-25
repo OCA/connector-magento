@@ -63,7 +63,6 @@
 			name="External Products" parent="menu_odoo_external_objects"
 			action="action_odoo_products" sequence="40"/>
 
-
 		<record id="action_odoo_product_templates" model="ir.actions.act_window">
 			<field name="name">Magento Configurable</field>
 			<field name="res_model">magento.product.template</field>
@@ -81,6 +80,15 @@
 		<menuitem id="menu_odoo_product_bundles"
 			name="External Bundles" parent="menu_odoo_external_objects"
 			action="action_odoo_product_bundles" sequence="60"/>
+
+		<record id="action_odoo_product_media" model="ir.actions.act_window">
+			<field name="name">Magento Media</field>
+			<field name="res_model">magento.product.media</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		<menuitem id="menu_odoo_external_media"
+			name="External Product Media" parent="menu_odoo_external_objects"
+			action="action_odoo_product_media" sequence="70"/>
 
 
 		<!-- Attribute Sets, Attributes and Values -->

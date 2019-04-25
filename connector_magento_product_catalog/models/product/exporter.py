@@ -2,17 +2,13 @@
 # Copyright 2013-2017 Camptocamp SA
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
-import xmlrpclib
-
 import odoo
 from datetime import datetime
 
-from odoo import _
 from odoo.addons.component.core import Component
-from odoo.addons.queue_job.exception import NothingToDoJob
 from odoo.addons.connector.unit.mapper import mapping
 from odoo.addons.queue_job.job import identity_exact
-
+from slugify import slugify
 from odoo.addons.connector_magento.components.backend_adapter import MAGENTO_DATETIME_FORMAT
 
 
@@ -54,8 +50,15 @@ class ProductProductExporter(Component):
                                          MAGENTO_DATETIME_FORMAT)
         return sync_date < magento_date
 
-    
-    
+    def _update_binding_record_after_create(self, data):
+        for attr in data.get('custom_attributes', []):
+            data[attr['attribute_code']] = attr['value']
+        # Do use the importer to update the binding
+        importer = self.component(usage='record.importer',
+                                model_name='magento.product.product')
+        importer.run(data, force=True, binding=self.binding)
+        self.external_id = data['sku']
+
     def _delay_import(self):
         """ Schedule an import/export of the record.
 
@@ -69,6 +72,45 @@ class ProductProductExporter(Component):
             self.binding.with_delay(identity_key=identity_exact).import_record(self.backend_record,
                                                 self.external_id,
                                                 force=True)
+
+    def _export_dependencies(self):
+        """ Export the dependencies for the record"""
+        # Check for categories
+        magento_categ_id = self.binding.categ_id.magento_bind_ids.filtered(lambda bc: bc.backend_id.id == self.backend_record.id)
+        if not magento_categ_id:
+            # We need to export the category first
+            self._export_dependency(self.binding.categ_id, "magento.product.category")
+        for extra_category in self.binding.categ_ids:
+            magento_categ_id = extra_category.magento_bind_ids.filtered(lambda bc: bc.backend_id.id == self.backend_record.id)
+            if not magento_categ_id:
+                # We need to export the category first
+                self._export_dependency(extra_category, "magento.product.category")
+        return
+
+    def _after_export(self):
+        def sort_by_position(elem):
+            return elem.position
+
+        # We do export the product media here
+        image_exporter = self.component(usage='record.exporter', model_name='magento.product.media')
+        # We do export the base image on position 0
+        mbinding = None
+        for media_binding in sorted(self.binding.magento_image_bind_ids.filtered(lambda m: m.media_type == 'image'), key=sort_by_position):
+            mbinding = media_binding
+            break
+        if not mbinding:
+            # Create new media binding entry for main image
+            self.env['magento.product.media'].create({
+                'backend_id': self.binding.backend_id.id,
+                'magento_product_id': self.binding.id,
+                'label': self.binding.odoo_id.name,
+                'file': "%s.png" % slugify(self.binding.odoo_id.name).lower(),
+                'position': 1,
+                'mimetype': 'image/png',
+            })
+        else:
+            image_exporter.run(mbinding)
+
 
 class ProductProductExportMapper(Component):
     _name = 'magento.product.export.mapper'
@@ -86,7 +128,7 @@ class ProductProductExportMapper(Component):
         if storeview_id:
             value_ids = record.\
             magento_attribute_line_ids.filtered(
-                lambda att: 
+                lambda att:
                     att.odoo_field_name.name == 'name'
                     and att.store_view_id == storeview_id
                     and att.attribute_id.create_variant != True
@@ -96,7 +138,7 @@ class ProductProductExportMapper(Component):
                 )
             name = value_ids[0].attribute_text
         return {'name': name}
-    
+
     @mapping
     def visibility(self, record):
         #Force not visible individually in configurable dependency context
@@ -123,20 +165,22 @@ class ProductProductExportMapper(Component):
         return {'website_ids': website_ids}
     
     def category_ids(self, record):
-        #TODO : Map categories from magento
+        magento_categ_id = record.categ_id.magento_bind_ids.filtered(
+            lambda bc: bc.backend_id.id == record.backend_id.id)
         categ_vals = [
             {
               "position": 0,
-              "category_id": record.categ_id.magento_bind_ids.external_id,
-#               "extension_attributes": {}
+              "category_id": magento_categ_id.external_id,
           }
         ]
+        i = 1
         for c in record.categ_ids:
-            categ_vals.append({
-              "position": 1,
-              "category_id": c.magento_bind_ids.external_id,
-#               "extension_attributes": {}
-          })
+            for b in c.magento_bind_ids.filtered(lambda bc: bc.backend_id.id == record.backend_id.id):
+                categ_vals.append({
+                    "position": i,
+                    "category_id": b.external_id,
+                })
+                i += 1
         return {'category_links': categ_vals}
     
     
@@ -184,7 +228,7 @@ class ProductProductExportMapper(Component):
         """
         
         customAttributes = []
-        storeview_id = self.work.storeview_id or False 
+        storeview_id = self.work.storeview_id or False
         magento_attribute_line_ids = record.magento_attribute_line_ids.filtered(
             lambda att: att.store_view_id.id == False \
              and (
@@ -240,8 +284,8 @@ class ProductProductExportMapper(Component):
 #     def option_products(self, record):
 #         #TODO : Map optionnal products
 #         return {}
-# 
-# 
+#
+#
 #     @mapping
 #     def crossproducts(self, record):
 #         #TODO : Map cross products

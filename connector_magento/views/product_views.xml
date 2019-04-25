@@ -46,9 +46,9 @@
 					</div>
 					<group name="general">
 						<field name="backend_id" />
+						<field name="no_stock_sync"/>
 						<field name="magento_name" />
 						<field name="magento_price" />
-						<field name="backend_id" />
 						<field name="external_id" string="Magento SKU"/>
 						<field name="magento_id" string="Magento ID" readonly="1"/>
 						<field name="odoo_id" string="Odoo ID" readonly="0"/>
@@ -59,6 +59,8 @@
 					</group>
 					<label for="magento_stock_item_ids"/>
 					<field name="magento_stock_item_ids" nolabel="1"/>
+					<label for="magento_image_bind_ids"/>
+					<field name="magento_image_bind_ids" nolabel="1"/>
 				</sheet>
 			</form>
 		</field>

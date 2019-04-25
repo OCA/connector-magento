@@ -30,6 +30,7 @@ class MagentoModelBinder(Component):
         'magento.product.bundle',
         'magento.bundle.option',
         'magento.bundle.option.product',
+        'magento.product.media',
         'magento.product.attribute',
         'magento.product.attributes.set',
         'magento.product.attribute.value',

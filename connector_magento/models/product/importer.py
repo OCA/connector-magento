@@ -388,6 +388,7 @@ class ProductImporter(Component):
     _name = 'magento.product.product.importer'
     _inherit = 'magento.importer'
     _apply_on = ['magento.product.product']
+    _magento_id_field = 'sku'
 
     def _is_uptodate(self, binding):
         # TODO: Remove for production - only to test the update
@@ -473,9 +474,9 @@ class ProductImporter(Component):
         """
         self._validate_product_type(data)
 
-    def run(self, external_id, force=False, binding_template_id=None):
+    def run(self, external_id, force=False, binding_template_id=None, binding=None):
         self._binding_template_id = binding_template_id
-        return super(ProductImporter, self).run(external_id, force)
+        return super(ProductImporter, self).run(external_id, force, binding=binding)
 
     def _update(self, binding, data):
         if self._binding_template_id:
@@ -499,6 +500,9 @@ class ProductImporter(Component):
         return binding
 
     def _after_import(self, binding):
+        def sort_by_position(elem):
+            return elem.position
+
         """ Hook called at the end of the import """
         translation_importer = self.component(
             usage='translation.importer',
@@ -508,10 +512,20 @@ class ProductImporter(Component):
             binding,
             mapper='magento.product.product.import.mapper'
         )
+
+        media_importer = self.component(usage='product.media.importer', model_name='magento.product.media')
+        for media in self.magento_record['media_gallery_entries']:
+            media_importer.run(media, binding)
+        # Here do choose the image at the smallest position as the main image
+        for media_binding in sorted(binding.magento_image_bind_ids.filtered(lambda m: m.media_type == 'image'), key=sort_by_position):
+            binding.with_context(connector_no_export=True).image = media_binding.image
+            break
+        '''
         image_importer = self.component(usage='product.image.importer')
         image_importer.run(self.external_id, binding,
                            data=self.magento_record)
 
+        '''
         if self.magento_record['type_id'] == 'bundle':
             bundle_importer = self.component(usage='product.bundle.importer')
             bundle_importer.run(binding, self.magento_record)

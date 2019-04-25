@@ -35,6 +35,7 @@
           'views/product_views.xml',
           'views/product_bundle.xml',
           'views/product_category_views.xml',
+          'views/product_media.xml',
           'views/partner_views.xml',
           'views/invoice_views.xml',
           'views/sale_order_views.xml',
