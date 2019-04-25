@@ -211,7 +211,7 @@ class ProductImportMapper(Component):
             # This is a product variant - so the price got set on the template !
             return {}
         return {
-            'list_price': record.get('price', 0.0),
+            'lst_price': record.get('price', 0.0),
         }
 
     @mapping
