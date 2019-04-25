@@ -13,7 +13,7 @@ import base64
 _logger = logging.getLogger(__name__)
 
 
-class MagentoProductProduct(models.Model):
+class MagentoProductMedia(models.Model):
     _name = 'magento.product.media'
     _inherit = 'magento.binding'
     _description = 'Magento Product Media'
@@ -47,6 +47,7 @@ class MagentoProductProduct(models.Model):
     mimetype = fields.Char(string="Mimetype")
     media_type = fields.Selection([
         ('image', _(u'Image')),
+        ('external-video', _(u'External Video')),
     ], default='image', string='Media Type')
     image_type_image = fields.Boolean(string="Image", default=True)
     image_type_small_image = fields.Boolean(string="Small Image", default=True)

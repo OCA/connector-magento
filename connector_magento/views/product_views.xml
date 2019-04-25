@@ -48,6 +48,7 @@
 						<field name="backend_id" />
 						<field name="no_stock_sync"/>
 						<field name="magento_name" />
+						<field name="attribute_set_id" readonly="1"/>
 						<field name="magento_price" />
 						<field name="external_id" string="Magento SKU"/>
 						<field name="magento_id" string="Magento ID" readonly="1"/>

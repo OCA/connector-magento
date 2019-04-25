@@ -38,7 +38,6 @@ class MagentoProductTemplate(models.Model):
             ]       
     
     attribute_set_id = fields.Many2one('magento.product.attributes.set',
-
                                        string='Attribute set')
 
     odoo_id = fields.Many2one(comodel_name='product.template',

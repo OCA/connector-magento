@@ -210,6 +210,7 @@ class ProductImportMapper(Component):
         if record['visibility'] == 1:
             # This is a product variant - so the price got set on the template !
             return {}
+        _logger.info("Do use price: %r", record.get('price', 0.0))
         return {
             'lst_price': record.get('price', 0.0),
         }
@@ -239,6 +240,8 @@ class ProductImportMapper(Component):
             return {}
         binder = self.binder_for('magento.account.tax')
         tax = binder.to_internal(tax_attribute[0]['value'], unwrap=True)
+        if int(tax_attribute[0]['value']) == 0:
+            return {}
         if not tax:
             raise MappingError("The tax class with the id %s "
                                "is not imported." %
@@ -258,6 +261,9 @@ class ProductImportMapper(Component):
             if not mattribute:
                 raise MappingError("The product attribute %s is not imported." %
                                    mattribute.name)
+            if str(attribute['value'])=='0' and mattribute.frontend_input == 'select':
+                # We do ignore attributes with value 0 on select attribute types - magento seems to be buggy here
+                continue
             mvalue = value_binder.to_internal("%s_%s" % (mattribute.attribute_id, str(attribute['value'])), unwrap=False)
             if not mvalue:
                 raise MappingError("The product attribute value %s in attribute %s is not imported." %

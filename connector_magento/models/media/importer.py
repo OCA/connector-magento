@@ -50,6 +50,19 @@ class ProductMediaMapper(Component):
         ('media_type', 'media_type'),
     ]
 
+    '''
+    media_type=external-video:
+            "extension_attributes": {
+                "video_content": {
+                    "media_type": "external-video",
+                    "video_provider": "",
+                    "video_url": "https://www.youtube.com/watch?v=osuhKVHZW2c",
+                    "video_title": "Geoff Anderson Xylo Regenmantel",
+                    "video_description": "Wasserdichter Regenmantel\r\n\r\nPijawetz Generalimport | Fachhandel Geoff Anderson\r\nwww.geoffanderson.de",
+                    "video_metadata": ""
+                }
+            }    
+    '''
     @mapping
     def image_type(self, record):
         return {

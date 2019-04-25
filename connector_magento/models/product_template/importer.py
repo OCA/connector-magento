@@ -114,7 +114,7 @@ class ProductTemplateImporter(Component):
         for media in self.magento_record['media_gallery_entries']:
             media_importer.run(media, binding)
         # Here do choose the image at the smallest position as the main image
-        for media_binding in sorted(binding.odoo_id.magento_image_bind_ids.filtered(lambda m: m.media_type == 'image'), key=sort_by_position):
+        for media_binding in sorted(binding.magento_image_bind_ids.filtered(lambda m: m.media_type == 'image'), key=sort_by_position):
             binding.with_context(connector_no_export=True).image = media_binding.image
             break
         '''

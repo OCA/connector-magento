@@ -48,6 +48,8 @@ class MagentoProductProduct(models.Model):
                               string='Product',
                               required=True,
                               ondelete='restrict')
+    attribute_set_id = fields.Many2one('magento.product.attributes.set',
+                                       string='Attribute set')
     # XXX website_ids can be computed from categories
     website_ids = fields.Many2many(comodel_name='magento.website',
                                    string='Websites',
