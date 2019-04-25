@@ -12,6 +12,7 @@ from odoo.addons.queue_job.job import job, related_action
 from ...components.backend_adapter import MAGENTO_DATETIME_FORMAT
 import urllib
 import odoo.addons.decimal_precision as dp
+from odoo.addons.queue_job.job import identity_exact
 
 
 _logger = logging.getLogger(__name__)
@@ -23,6 +24,19 @@ class MagentoProductTemplate(models.Model):
     _inherits = {'product.template': 'odoo_id'}
     _description = 'Magento Product Template'
            
+    @api.model
+    def product_type_get(self):
+        return [
+            ('simple', 'Simple Product'),
+            ('configurable', 'Configurable Product'),
+#             ('virtual', 'Virtual Product'),
+#             ('downloadable', 'Downloadable Product'),
+#             ('giftcard', 'Giftcard'),
+            # XXX activate when supported
+            # ('grouped', 'Grouped Product'),
+            ('bundle', 'Bundle Product'),
+            ]       
+    
     attribute_set_id = fields.Many2one('magento.product.attributes.set',
 
                                        string='Attribute set')
@@ -36,7 +50,12 @@ class MagentoProductTemplate(models.Model):
                                    string='Websites',
                                    readonly=True)
 
-    product_type = fields.Char()
+#     product_type = fields.Char()
+    product_type = fields.Selection(selection='product_type_get',
+                                    string='Magento Product Type',
+                                    default='simple',
+                                    required=True)
+    
     magento_id = fields.Integer('Magento ID')
     magento_name = fields.Char('Name', translate=True)
     magento_price = fields.Float('Backend Preis', default=0.0, digits=dp.get_precision('Product Price'),)
@@ -69,9 +88,10 @@ class MagentoProductTemplate(models.Model):
     @api.multi
     def sync_to_magento(self):
         self.ensure_one()
-        with self.backend_id.work_on(self._name) as work:
-            exporter = work.component(usage='record.exporter')
-            return exporter.run(self.external_id)
+        self.with_delay(priority=20,
+                        identity_key=identity_exact
+                        ).export_product_template()
+        
 
     @job(default_channel='root.magento')
     @related_action(action='related_action_unwrap_binding')
@@ -375,8 +395,12 @@ class ProductTemplateAdapter(Component):
     _magento_model = 'catalog_product'
     _magento2_model = 'products'
     _magento2_search = 'products'
+    _magento2_name = 'product'
     _magento2_key = 'sku'
     _admin_path = '/{model}/edit/id/{id}'
+
+    def _get_id_from_create(self, result, data=None):
+        return data[self._magento2_key]
 
     def search(self, filters=None, from_date=None, to_date=None):
         """ Search records according to some criteria
@@ -402,15 +426,15 @@ class ProductTemplateAdapter(Component):
                 in self._call('%s.list' % self._magento_model,
                               [filters] if filters else [{}])]
 
-    def create(self, data):
-        """ Create a record on the external system """
-        if self.work.magento_api._location.version == '2.0':
-            new_product = super(ProductTemplateAdapter, self)._call(
-                'products', {
-                    'product': data
-                },
-                http_method='post')
-            return new_product['id']
+#     def create(self, data):
+#         """ Create a record on the external system """
+#         if self.work.magento_api._location.version == '2.0':
+#             new_product = super(ProductTemplateAdapter, self)._call(
+#                 'products', {
+#                     'product': data
+#                 },
+#                 http_method='post')
+#             return new_product['id']
 
     def list_variants(self, sku):
         def escape(term):

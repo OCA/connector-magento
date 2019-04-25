@@ -47,7 +47,7 @@ class MagentoCustomAttribute(models.Model):
     
     attribute_text = fields.Char(string='Magento Text / Value',
                                     size=264,
-                                    translate=True
+#                                     translate=True
                                     )
     
     attribute_select = fields.Many2one(string='Magento Select / Value',

@@ -22,8 +22,15 @@ class ProductTemplateDefinitionExporter(Component):
     _apply_on = ['magento.product.template']
     #_usage = 'product.definition.exporter'
 
+    def _create(self, data):
+        """ Create the Magento record """
+        # special check on data before export
+        res = super(ProductTemplateDefinitionExporter, self)._create(data)
+        self.binding.magento_id = data['id']
+        return res
+
     def _export_dependencies(self):
-        """ Import the dependencies for the record"""
+        """ Export the dependencies for the record"""
         record = self.binding
         for p in record.product_variant_ids:
             m_prod = p.magento_bind_ids.filtered(lambda m: m.backend_id == record.backend_id)
@@ -31,10 +38,13 @@ class ProductTemplateDefinitionExporter(Component):
                 m_prod = self.env['magento.product.product'].create(
                     {'backend_id': self.backend_record.id,
                      'odoo_id': p.id,
-                     'attribute_set_id': self.binding.attribute_set_id.id
+                     'attribute_set_id': self.binding.attribute_set_id.id,
+                     'magento_configurable_id': self.binding.id
                      })
-            self._export_dependency(m_prod,
-                                    'magento.product.product')
+        #TODO: uncomment
+            self._export_dependency(
+                m_prod,
+                'magento.product.product')
     
     
 #     def _get_atts_data(self, binding, fields):
@@ -122,7 +132,7 @@ class ProductTemplateExportMapper(Component):
     
     
     @mapping
-    def _get_type(self, record):
+    def product_type(self, record):
         product_type = 'simple'
         if record.product_variant_count > 1:
             product_type = 'configurable'
@@ -163,7 +173,7 @@ class ProductTemplateExportMapper(Component):
                 lambda m: m.backend_id == record.backend_id)
             if not mp.external_id:
                 continue
-            links.append(mp.external_id)
+            links.append(mp.magento_id)
         return {'configurable_product_links': links}
 
 

@@ -408,7 +408,7 @@ class ProductImporter(Component):
         prevent the `except_orm` and display a better error message).
         """
         product_type = data['product_type']
-        product_model = self.env['magento.product.product']
+        product_model = self.env['magento.product.template']
         types = product_model.product_type_get()
         available_types = [typ[0] for typ in types]
         if product_type not in available_types:

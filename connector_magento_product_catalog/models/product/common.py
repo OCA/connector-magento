@@ -32,6 +32,13 @@ class MagentoProductProduct(models.Model):
             exporter = work.component(usage='record.exporter')
             return exporter.run(self)
 
+    @api.multi
+    def resync(self):
+        self.ensure_one()
+        self.with_delay(priority=20,
+                        identity_key=identity_exact
+                        ).export_product()
+
     @job(default_channel='root.magento')
     @related_action(action='related_action_unwrap_binding')
     @api.multi
@@ -63,10 +70,6 @@ class MagentoProductProduct(models.Model):
         action['context'] = action_context
         return action
     
-    
-    @api.multi
-    def resync(self):
-        raise NotImplementedError
     
     @api.multi
     def check_field_mapping(self, field, vals):
@@ -145,17 +148,17 @@ class ProductProduct(models.Model):
 class ProductProductAdapter(Component):
     _inherit = 'magento.product.product.adapter'
 
-    def write(self, id, data, storeview_id=None):
-        """ Update records on the external system """
-        # XXX actually only ol_catalog_product.update works
-        # the PHP connector maybe breaks the catalog_product.update
-        if self.work.magento_api._location.version == '2.0':
-            _logger.info("Prepare to call api with %s " % data)
-            return super(ProductProductAdapter, self)._call(
-                'products/%s' % data['sku'], {
-                    'product': data
-                },
-                http_method='put')
-        return self._call('ol_catalog_product.update',
-                          [int(id), data, storeview_id, 'id'])
+#     def write(self, id, data, storeview_id=None):
+#         """ Update records on the external system """
+#         # XXX actually only ol_catalog_product.update works
+#         # the PHP connector maybe breaks the catalog_product.update
+#         if self.work.magento_api._location.version == '2.0':
+#             _logger.info("Prepare to call api with %s " % data)
+#             return super(ProductProductAdapter, self)._call(
+#                 'products/%s' % data['sku'], {
+#                     'product': data
+#                 },
+#                 http_method='put')
+#         return self._call('ol_catalog_product.update',
+#                           [int(id), data, storeview_id, 'id'])
 

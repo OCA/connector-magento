@@ -31,7 +31,18 @@ class MagentoProductProduct(models.Model):
     _inherits = {'product.product': 'odoo_id'}
     _description = 'Magento Product'
 
-    
+    @api.model
+    def product_type_get(self):
+        return [
+            ('simple', 'Simple Product'),
+            ('configurable', 'Configurable Product'),
+#             ('virtual', 'Virtual Product'),
+#             ('downloadable', 'Downloadable Product'),
+#             ('giftcard', 'Giftcard'),
+            # XXX activate when supported
+            # ('grouped', 'Grouped Product'),
+            ('bundle', 'Bundle Product'),
+            ]  
 
     odoo_id = fields.Many2one(comodel_name='product.product',
                               string='Product',
@@ -43,10 +54,11 @@ class MagentoProductProduct(models.Model):
                                    readonly=True)
     created_at = fields.Date('Created At (on Magento)')
     updated_at = fields.Date('Updated At (on Magento)')
-#     product_type = fields.Selection(selection='product_type_get',
-#                                     string='Magento Product Type',
-#                                     default='simple',
-#                                     required=True)
+    product_type = fields.Selection(selection='product_type_get',
+                                    string='Magento Product Type',
+                                    default='simple',
+                                    required=True)
+    
     magento_id = fields.Integer('Magento ID')
     magento_configurable_id = fields.Many2one(comodel_name='magento.product.template',
                                               string='Configurable',
@@ -61,6 +73,13 @@ class MagentoProductProduct(models.Model):
         string="Magento Stock Items",
     )
 
+    no_stock_sync = fields.Boolean(
+        string='No Stock Synchronization',
+        required=False,
+        default=False,
+        help="Check this to exclude the product "
+             "from stock synchronizations.",
+    )
 
     @api.multi
     def sync_from_magento(self):
@@ -93,23 +112,28 @@ class ProductProductAdapter(Component):
     _magento_model = 'catalog_product'
     _magento2_model = 'products'
     _magento2_search = 'products'
+    _magento2_name = 'product'
     _magento2_key = 'sku'
     _admin_path = '/{model}/edit/id/{id}'
 
-    def _call(self, method, arguments, http_method=None, storeview=None):
-        try:
-            return super(ProductProductAdapter, self)._call(
-                method, 
-                arguments, 
-                http_method=http_method, 
-                storeview=storeview)
-        except xmlrpclib.Fault as err:
-            # this is the error in the Magento API
-            # when the product does not exist
-            if err.faultCode == 101:
-                raise IDMissingInBackend
-            else:
-                raise
+
+    def _get_id_from_create(self, result, data=None):
+        return data[self._magento2_key]
+
+#     def _call(self, method, arguments, http_method=None, storeview=None):
+#         try:
+#             return super(ProductProductAdapter, self)._call(
+#                 method, 
+#                 arguments, 
+#                 http_method=http_method, 
+#                 storeview=storeview)
+#         except xmlrpclib.Fault as err:
+#             # this is the error in the Magento API
+#             # when the product does not exist
+#             if err.faultCode == 101:
+#                 raise IDMissingInBackend
+#             else:
+#                 raise
 
     def search(self, filters=None, from_date=None, to_date=None):
         """ Search records according to some criteria
@@ -174,17 +198,18 @@ class MagentoBindingProductListener(Component):
     # but an export of their inventory
     INVENTORY_FIELDS = ()
 
-    @skip_if(lambda self, record, **kwargs: self.no_connector_export(record))
-    def on_record_write(self, record, fields=None):
-        if record.no_stock_sync:
-            return
-        inventory_fields = list(
-            set(fields).intersection(self.INVENTORY_FIELDS)
-        )
-        if inventory_fields:
-            record.with_delay(priority=20).export_inventory(
-                fields=inventory_fields
-            )
+# replaced by stock.items export
+#     @skip_if(lambda self, record, **kwargs: self.no_connector_export(record))
+#     def on_record_write(self, record, fields=None):
+#         if record.no_stock_sync:
+#             return
+#         inventory_fields = list(
+#             set(fields).intersection(self.INVENTORY_FIELDS)
+#         )
+#         if inventory_fields:
+#             record.with_delay(priority=20).export_inventory(
+#                 fields=inventory_fields
+#             )
 
 
 class MagentoProductVariantModelBinder(Component):

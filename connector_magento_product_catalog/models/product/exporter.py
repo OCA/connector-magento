@@ -16,11 +16,19 @@ from odoo.addons.queue_job.job import identity_exact
 from odoo.addons.connector_magento.components.backend_adapter import MAGENTO_DATETIME_FORMAT
 
 
-class ProductDefinitionExporter(Component):
+class ProductProductExporter(Component):
     _name = 'magento.product.product.exporter'
     _inherit = 'magento.exporter'
     _apply_on = ['magento.product.product']
 
+
+    def _create(self, data):
+        """ Create the Magento record """
+        # special check on data before export
+        res = super(ProductProductExporter, self)._create(data)
+        self.binding.with_context(
+            no_connector_export=True).magento_id = data['id']
+        return res
     
     def _should_import(self):
         """ Before the export, compare the update date
@@ -73,6 +81,11 @@ class ProductProductExportMapper(Component):
     ]
     
     @mapping
+    def visibility(self, record):
+        #Force not visible individually in configurable dependency context
+        return {'visibility': 1}
+    
+    @mapping
     def get_type(self, record):
         return {'typeId': 'simple'}
     
@@ -111,15 +124,14 @@ class ProductProductExportMapper(Component):
     
     @mapping
     def get_associated_configurable_product_id(self, record):
-        
         return {}
-    
+
+
     @mapping
     def get_storeview(self, record):
-        
         return {}
-    
-    
+
+
     @mapping
     def weight(self, record):
         if record.weight:
@@ -127,7 +139,8 @@ class ProductProductExportMapper(Component):
         else:
             val = 0        
         return {'weight' : val}
-        
+
+
     @mapping
     def attribute_set_id(self, record):
         if record.attribute_set_id:
@@ -160,10 +173,7 @@ class ProductProductExportMapper(Component):
                         or 
                         len(att.attribute_multiselect.ids) > 0
                     )
-            
             )
-        
-        
         
         for values_id in magento_attribute_line_ids:
             """ Deal with Custom Attributes """            

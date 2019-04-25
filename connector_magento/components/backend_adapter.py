@@ -321,7 +321,9 @@ class GenericAdapter(AbstractComponent):
             if self._magento2_name:
                 new_object = self._call(
                     self._create_url(binding),
-                    {self._magento2_name: data}, http_method='post')
+                    {self._magento2_name: data,
+                     'saveOptions': True}, http_method='post')
+                data.update(new_object)
             else:
                 new_object = self._call(
                     self._create_url(binding),
