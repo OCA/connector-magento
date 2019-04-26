@@ -2,8 +2,10 @@ import logging
 from odoo import models, fields, api
 from odoo.addons.connector.exception import IDMissingInBackend
 from odoo.addons.component.core import Component
+from odoo.addons.connector.components.binder import Binder
 from odoo.addons.component_event import skip_if
 from odoo.addons.queue_job.job import job, related_action
+from odoo.addons.connector.exception import MappingError, InvalidDataError
 
 _logger = logging.getLogger(__name__)
 
@@ -68,6 +70,34 @@ class MagentoTemplateAttributeline(models.Model):
         return super(MagentoTemplateAttributeline, self).create(vals)
 
 
+    def _update_attribute_lines(self, magento_template_id):
+        magento_template_id.magento_template_attribute_line_ids.unlink()
+        with magento_template_id.backend_id.work_on('magento.product.attribute.value') as work:
+            model = work.env['magento.template.attribute.line']
+            binder = work.component(usage='binder')
+            
+            for l in magento_template_id.odoo_id.attribute_line_ids:
+                magento_value_ids = []
+                for v in l.value_ids:
+                    odoo_magento_value = binder.to_external(v, wrap=True)
+                    if not odoo_magento_value:
+                        raise MappingError("The product attribute value with "
+                                           "magento id %s is not imported." %
+                                       value['value_index'])
+                    magento_value_id = binder.to_internal(odoo_magento_value)
+                    magento_value_ids.append(magento_value_id.id)
+                    
+                res = model.create({
+                    'odoo_id': l.id,
+                    'magento_template_id': magento_template_id.id,
+                    'magento_attribute_id': magento_value_id.magento_attribute_id.id,
+                    'magento_product_attribute_value_ids':  [
+                        (6, False, magento_value_ids)]
+                    })
+         
+            _logger.debug('found')
+        
+
 class ProductAttributeline(models.Model):
     _inherit = 'product.attribute.line'
 
@@ -76,3 +106,4 @@ class ProductAttributeline(models.Model):
         inverse_name='odoo_id',
         string='Magento Bindings',
     )
+    

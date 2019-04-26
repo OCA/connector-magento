@@ -44,6 +44,7 @@ class MagentoModelBinder(Component):
         'magento.account.tax',
         'magento.account.payment',
     ]
+    _external_field = 'external_id'
 
     def to_internal(self, external_id, unwrap=False, external_field=None):
         """ Give the Odoo recordset for an external ID

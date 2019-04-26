@@ -130,6 +130,11 @@ class ProductTemplateExportMapper(Component):
 #         ('lst_price', 'price'),
     ]
     
+    @mapping
+    def visibility(self, record):
+        
+        return {'visibility': 4}
+    
     
     @mapping
     def product_type(self, record):
@@ -260,9 +265,10 @@ class ProductTemplateExportMapper(Component):
         """
         
         customAttributes = []
-        magento_attribute_line_ids = record.\
-            magento_template_attribute_line_ids.filtered(
-                lambda att: att.store_view_id.id == False \
+        magento_attribute_value_ids = record.\
+            magento_template_attribute_value_ids.filtered(
+                lambda att: 
+                    att.store_view_id.id == False 
                     and (
                         att.attribute_text != False
                         or
@@ -270,9 +276,11 @@ class ProductTemplateExportMapper(Component):
                         or 
                         len(att.attribute_multiselect.ids) > 0
                     )
+                    and att.attribute_id.is_pivot_attribute != True
+                    and att.attribute_id.create_variant != True
             )
         
-        for values_id in magento_attribute_line_ids:
+        for values_id in magento_attribute_value_ids:
             """ Deal with Custom Attributes """            
             attributeCode = values_id.attribute_id.attribute_code
             value = values_id.attribute_text
@@ -287,26 +295,34 @@ class ProductTemplateExportMapper(Component):
                 full_value = values_id.attribute_select.external_id
                 value = full_value.split('_')[1]
             
+            if values_id.magento_attribute_type in ['multiselect',] :
+                value=[]
+                for v in values_id.attribute_multiselect:
+                    full_value = v.external_id
+                    value.append(full_value.split('_')[1])
+            
+            
             customAttributes.append({
                 'attribute_code': attributeCode,
                 'value': value
                 })     
         
-        att_lines = record.attribute_line_ids.filtered(
-            lambda l: l.attribute_id.create_variant == True
-                    and len(l.attribute_id.magento_bind_ids) > 0
+        att_lines = record.magento_template_attribute_line_ids.filtered(
+            lambda l: 
+                    l.magento_attribute_id.create_variant == True
+                    and l.magento_attribute_id.is_pivot_attribute != True
             )
         
-        value_ids = self.env['product.attribute.value']
+        value_ids = self.env['magento.product.attribute.value']
         for l in att_lines:
-            value_ids |= l.value_ids
-        for values_id in value_ids:
-            """ Deal with Attributes in the 'variant' part of Odoo"""
-            odoo_value_ids = values_id.magento_bind_ids.filtered(
-                lambda m: m.backend_id == record.backend_id) 
-            for odoo_value_id in odoo_value_ids:
-                attributeCode = odoo_value_id.magento_attribute_id.attribute_code
-                value = odoo_value_id.external_id.split('_')[1]
+            value_ids |= l.magento_product_attribute_value_ids
+        for value_id in value_ids:
+                """ Deal with Attributes in the 'variant' part of Odoo"""
+#             odoo_value_ids = values_id.magento_bind_ids.filtered(
+#                 lambda m: m.backend_id == record.backend_id) 
+#             for odoo_value_id in odoo_value_ids:
+                attributeCode = value_id.magento_attribute_id.attribute_code
+                value = value_id.external_id.split('_')[1]
                 customAttributes.append({
                     'attributeCode': attributeCode,
                     'value': value

@@ -61,6 +61,23 @@ class ProductAttributevalue(models.Model):
         string='Magento Bindings',
     )
     
+    
+
+# class ProductAttributeValueBinder(Component):
+#     """ Bind records and give odoo/magento ids correspondence
+# 
+#     Binding models are models called ``magento.{normal_model}``,
+#     like ``magento.res.partner`` or ``magento.product.product``.
+#     They are ``_inherits`` of the normal models and contains
+#     the Magento ID, the ID of the Magento Backend and the additional
+#     fields belonging to the Magento instance.
+#     """
+#     _name = 'magento.product.attribute.value.binder'
+#     _inherit = 'magento.binder'
+#     _apply_on = ['magento.product.attribute.value']
+#     
+# #     _usage = 'binder'
+    
 
 class ProductAttributeValueAdapter(Component):
     _name = 'magento.product.attribute.value.adapter'

@@ -40,4 +40,6 @@ class MagentoProductAttributeExportListener(Component):
     @skip_if(lambda self, record, **kwargs: self.no_connector_export(record))
     def on_record_write(self, record, fields=None):
         for binding in record.magento_bind_ids:
+            if not binding.backend_id.export_all_options:
+                return
             binding.with_delay().export_record(binding.backend_id)

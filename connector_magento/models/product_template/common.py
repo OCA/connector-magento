@@ -247,6 +247,8 @@ class MagentoProductTemplate(models.Model):
                     cst_value_id.write({
                         'attribute_text': cst['value']})
             
+#         if mg_prod_id.odoo_id.product_variant_count > 1 :
+#             self.env['magento.template.attribute.line']._update_attribute_lines(mg_prod_id)
         
         return mg_prod_id
 
@@ -339,7 +341,14 @@ class ProductTemplate(models.Model):
             return super(ProductTemplate, self).create(vals)
         # Else avoid creating the variants
         me = self.with_context(create_product_product=True)
-        return super(ProductTemplate, me).create(vals)
+        
+        tpl = super(ProductTemplate, me).create(vals)    
+        for prod in tpl.magento_template_bind_ids:
+                if prod.product_variant_count > 1 :
+                    self.env['magento.template.attribute.line']._update_attribute_lines(prod)
+        return tpl 
+    
+    
 
     @api.multi
     def create_variant_ids(self):
@@ -363,6 +372,9 @@ class ProductTemplate(models.Model):
             for prod in tpl.magento_template_bind_ids:
                 for key in org_vals:
                     prod.check_field_mapping(key, vals)
+                    
+                if prod.product_variant_count > 1 :
+                    self.env['magento.template.attribute.line']._update_attribute_lines(prod)
         return res
 
     @api.model
