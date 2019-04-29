@@ -360,15 +360,16 @@ class ProductTemplate(models.Model):
     @api.multi
     def write(self, vals):
         org_vals = vals.copy()
-        if vals.get('auto_create_variants', self.auto_create_variants):
-            # Do auto create variants
-            me = self
-        else:
-            # Do not auto create variants
-            me = self.with_context(create_product_product=True)
-        res = super(ProductTemplate, me).write(vals)
-        # This part is for custom odoo fields to magento attributes
+
         for tpl in self:
+            if vals.get('auto_create_variants', tpl.auto_create_variants):
+                # do auto create variants
+                me = tpl
+            else:
+                # do not auto create variants
+                me = tpl.with_context(create_product_product=true)
+            res = super(ProductTemplate, me).write(vals)
+            # this part is for custom odoo fields to magento attributes
             for prod in tpl.magento_template_bind_ids:
                 for key in org_vals:
                     prod.check_field_mapping(key, vals)
