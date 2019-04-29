@@ -25,7 +25,7 @@ class ProductProductExporter(Component):
         self.binding.with_context(
             no_connector_export=True).magento_id = data['id']
         return res
-    
+
     def _should_import(self):
         """ Before the export, compare the update date
         in Magento and the last sync date in Odoo,
@@ -119,8 +119,9 @@ class ProductProductExportMapper(Component):
 
     direct = [
         ('default_code', 'sku'),
+        ('product_type', 'typeId'),
     ]
-    
+
     @mapping
     def names(self, record):
         storeview_id = self.work.storeview_id or False
@@ -143,11 +144,11 @@ class ProductProductExportMapper(Component):
     def visibility(self, record):
         #Force not visible individually in configurable dependency context
         return {'visibility': 1}
-    
+
     @mapping
     def get_type(self, record):
         return {'typeId': 'simple'}
-    
+
     @mapping
     def get_extension_attributes(self, record):
         data = {}
@@ -187,17 +188,15 @@ class ProductProductExportMapper(Component):
     @mapping
     def get_associated_configurable_product_id(self, record):
         return {}
-
-
+    
     @mapping
     def weight(self, record):
         if record.weight:
             val = record.weight
         else:
             val = 0        
-        return {'weight' : val}
-
-
+        return {'weight': val}
+        
     @mapping
     def dimensions(self, record):
 #                TODO: dimensions
@@ -210,10 +209,8 @@ class ProductProductExportMapper(Component):
         if record.attribute_set_id:
             val = record.attribute_set_id.external_id
         else:
-            # TODO: maybe turn it into defensive option
-            # on the magento.backend
-            val = 4
-        return {'attributeSetId' : val}
+            val = record.backend_id.default_attribute_set_id.external_id
+        return {'attributeSetId': val}
 
 #     @mapping
 #     def names(self, record):

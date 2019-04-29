@@ -25,6 +25,7 @@
 				expr="//page[@name='advanced_configuration']//field[@name='default_category_id']"
 				position="after">
 				<field name="product_synchro_strategy" />
+				<field name="default_attribute_set_id" domain="[('backend_id', '=', id)]"/>
 			</xpath>
 		</field>
 	</record>
