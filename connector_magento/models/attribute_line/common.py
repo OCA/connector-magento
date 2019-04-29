@@ -83,7 +83,7 @@ class MagentoTemplateAttributeline(models.Model):
                     if not odoo_magento_value:
                         raise MappingError("The product attribute value with "
                                            "magento id %s is not imported." %
-                                       value['value_index'])
+                                       v.name)
                     magento_value_id = binder.to_internal(odoo_magento_value)
                     magento_value_ids.append(magento_value_id.id)
                     
