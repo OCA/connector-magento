@@ -288,8 +288,8 @@ class MagentoProductTemplate(models.Model):
             att_id = att_ids[0]
             values = custom_model.search(
                 [('magento_product_template_id', '=', self.id),
-                 ('attribute_id', '=', att_id.id,
-                  ('store_view_id', '=', False))
+                 ('attribute_id', '=', att_id.id),
+                  ('store_view_id', '=', False)
                  ])
             custom_vals = {
                 'magento_product_template_id': self.id,
