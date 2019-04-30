@@ -3,7 +3,6 @@ from odoo import models, fields, api
 from odoo.addons.component.core import Component
 from odoo.addons.queue_job.job import job, related_action, identity_exact
 
-from __builtin__ import True
 
 _logger = logging.getLogger(__name__)
 
