@@ -11,9 +11,6 @@ class ProductImportMapper(Component):
 
     @mapping
     def price(self, record):
-        if record['visibility'] == 1:
-            # This is a product variant - so the price will get set in fix_price
-            return {
-                'fix_price': record.get('price', 0.0),
-            }
-        return super(ProductImportMapper, self).price(record)
+        vals = super(ProductImportMapper, self).price(record)
+        vals['fix_price'] = record.get('price', 0.0)
+        return vals

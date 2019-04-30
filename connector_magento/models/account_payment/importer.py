@@ -23,15 +23,24 @@ class AccountPaymentImportMapper(Component):
         ('last_trans_id', 'communication'),
         ('entity_id', 'external_id'),
     ]
-    
+
     def _generate_payment_reference(self, record):
-        return "%s.%s.%s" % (self.backend_record.id, record['entity_id'], record['last_trans_id'] if 'last_trans_id' in record else str(uuid.uuid4()))
+        return "%s.%s.%s" % (self.backend_record.id, record['entity_id'],
+                             record['last_trans_id'] if 'last_trans_id' in record else str(uuid.uuid4()))
 
     @mapping
     def name(self, record):
         return {'name': 'Imported payment for order %s' % self.options.order_binding.name}
 
     @mapping
+    def rounding_difference(self, record):
+        if 0.01 > abs(record['amount_paid'] - self.options.order_binding.amount_total) > 0 and self.backend_record.rounding_diff_account_id:
+            return {
+               'payment_difference_handling': 'reconcile',
+               'writeoff_account_id': self.backend_record.rounding_diff_account_id.id
+            }
+
+    @ mapping
     def additional_information(self, record):
         if not 'additional_information' in record:
             return {}
@@ -95,7 +104,8 @@ class AccountPaymentImporter(Component):
 
     def _after_import(self, binding):
         # Post Payment
-        binding.odoo_id.post()
+        if binding.state == 'draft':
+            binding.odoo_id.post()
 
     def run_with_data(self, record, order_binding, force=False):
         self.force = force
@@ -140,5 +150,3 @@ class AccountPaymentImporter(Component):
         self.binder.bind(self.external_id, binding)
 
         self._after_import(binding)
-
-

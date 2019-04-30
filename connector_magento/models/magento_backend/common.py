@@ -218,6 +218,10 @@ class MagentoBackend(models.Model):
         'The value can also be specified on website or the store or the '
         'store view.'
     )
+    rounding_diff_account_id = fields.Many2one(
+        comodel_name='account.account',
+        string='Rounding Diff Account'
+    )
     is_multi_company = fields.Boolean(
         string='Is Backend Multi-Company',
         help="If this flag is set, it is possible to choose warehouse at each "
