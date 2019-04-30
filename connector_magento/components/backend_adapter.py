@@ -322,12 +322,12 @@ class GenericAdapter(AbstractComponent):
                 new_object = self._call(
                     self._create_url(binding),
                     {self._magento2_name: data,
-                     'saveOptions': True}, http_method='post', storeview_code=storeview_code)
+                     'saveOptions': True}, http_method='post')
                 data.update(new_object)
             else:
                 new_object = self._call(
                     self._create_url(binding),
-                    data, http_method='post', storeview_code=storeview_code)
+                    data, http_method='post')
             return self._get_id_from_create(new_object, data)
         return self._call('%s.create' % self._magento_model, [data])
 
