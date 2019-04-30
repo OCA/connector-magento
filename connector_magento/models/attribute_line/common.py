@@ -19,7 +19,7 @@ class MagentoTemplateAttributeline(models.Model):
     odoo_id = fields.Many2one(comodel_name='product.attribute.line',
                               string='Product attribute line',
                               required=True,
-                              ondelete='restrict')
+                              ondelete='cascade')
 
     magento_attribute_id = fields.Many2one(comodel_name='magento.product.attribute',
                                            string='Magento Product Attribute',
