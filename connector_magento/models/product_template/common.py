@@ -88,21 +88,30 @@ class MagentoProductTemplate(models.Model):
     @api.multi
     def sync_to_magento(self):
         self.ensure_one()
-        self.with_delay(priority=20,
+        for storeview_id in self.env['magento.storeview'].search([]):
+            self.with_delay(priority=20,
                         identity_key=identity_exact
-                        ).export_product_template()
+                        ).export_product_template(storeview_id=storeview_id)
         
 
     @job(default_channel='root.magento')
     @related_action(action='related_action_unwrap_binding')
     @api.multi
-    def export_product_template(self, fields=None):
+    def export_product_template(self, fields=None, storeview_id=None):
         """ Export the attributes configuration of a product. """
         self.ensure_one()
-        with self.backend_id.work_on(self._name) as work:
             # TODO make different usage
-            exporter = work.component(usage='record.exporter')
-            return exporter.run(self)
+        
+        with self.backend_id.work_on(
+                self._name,
+                storeview_id=storeview_id
+                ) as work:
+#                 exporter = work.with_context(
+#                     storeview_id=storeview_id).component(usage='record.exporter')
+                exporter = work.component(usage='record.exporter')
+                _logger.debug("retrun")
+                return exporter.run(self)
+                
 
     def action_magento_template_custom_attributes(self):
         action = self.env['ir.actions.act_window'].for_xml_id(
@@ -459,7 +468,7 @@ class ProductTemplateAdapter(Component):
             res = self._call('configurable-products/%s/children' % (escape(sku)), None)
             return res
 
-    def write(self, id, data, storeview_id=None):
+    def write(self, id, data, binding=None):
         """ Update records on the external system """
         # XXX actually only ol_catalog_product.update works
         # the PHP connector maybe breaks the catalog_product.update
@@ -467,18 +476,20 @@ class ProductTemplateAdapter(Component):
             _logger.info("Prepare to call api with %s " % data)
             # Replace by the
             id = data['sku']
+            storeview_id = self.work.storeview_id or False
+            storeview_code = storeview_id.code or False
             super(ProductTemplateAdapter, self)._call(
                 'products/%s' % id, {
                     'product': data
                 },
-                http_method='put')
+                http_method='put', storeview=storeview_code)
 
             stock_datas = {"stockItem": {
                 'is_in_stock': True}}
             return super(ProductTemplateAdapter, self)._call(
                 'products/%s/stockItems/1' % id,
                 stock_datas,
-                http_method='put')
+                http_method='put', )
         #             raise NotImplementedError  # TODO
         return self._call('ol_catalog_product.update',
                           [int(id), data, storeview_id, 'id'])

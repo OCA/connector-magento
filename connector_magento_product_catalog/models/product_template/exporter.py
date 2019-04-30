@@ -162,7 +162,7 @@ class ProductTemplateExportMapper(Component):
     @mapping
     def get_extension_attributes(self, record):
         data = {}
-        
+        storeview_id = self.work.storeview_id or False
         data.update(self.get_website_ids(record))
         data.update(self.category_ids(record))
         data.update(self.configurable_product_options(record))
@@ -265,10 +265,11 @@ class ProductTemplateExportMapper(Component):
         """
         
         customAttributes = []
+        storeview_id = self.work.storeview_id or False 
         magento_attribute_value_ids = record.\
             magento_template_attribute_value_ids.filtered(
                 lambda att: 
-                    att.store_view_id.id == False 
+                    att.store_view_id.id == storeview_id.id or False 
                     and (
                         att.attribute_text != False
                         or

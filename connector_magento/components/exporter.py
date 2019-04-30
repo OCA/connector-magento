@@ -321,17 +321,17 @@ class MagentoExporter(AbstractComponent):
         """ Get the data to pass to :py:meth:`_create` """
         return map_record.values(for_create=True, fields=fields, **kwargs)
 
-    def _create(self, data):
+    def _create(self, data, storeview_code=None):
         """ Create the Magento record """
         # special check on data before export
         self._validate_create_data(data)
-        return self.backend_adapter.create(data, binding=self.binding)
+        return self.backend_adapter.create(data, binding=self.binding, storeview_code=storeview_code)
 
     def _update_data(self, map_record, fields=None, **kwargs):
         """ Get the data to pass to :py:meth:`_update` """
         return map_record.values(fields=fields, **kwargs)
 
-    def _update(self, data):
+    def _update(self, data, storeview_code=None):
         """ Update an Magento record """
         assert self.external_id
         # special check on data before export

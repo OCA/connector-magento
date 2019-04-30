@@ -315,36 +315,36 @@ class GenericAdapter(AbstractComponent):
     def _get_id_from_create(self, result, data=None):
         return result['id']
 
-    def create(self, data, binding=None):
+    def create(self, data, binding=None, storeview_code=None):
         """ Create a record on the external system """
         if self.work.magento_api._location.version == '2.0': 
             if self._magento2_name:
                 new_object = self._call(
                     self._create_url(binding),
                     {self._magento2_name: data,
-                     'saveOptions': True}, http_method='post')
+                     'saveOptions': True}, http_method='post', storeview_code=storeview_code)
                 data.update(new_object)
             else:
                 new_object = self._call(
                     self._create_url(binding),
-                    data, http_method='post')
+                    data, http_method='post', storeview_code=storeview_code)
             return self._get_id_from_create(new_object, data)
         return self._call('%s.create' % self._magento_model, [data])
 
     def _write_url(self, id, binding=None):
         return '%s/%s' % (self._magento2_model, id)
 
-    def write(self, id, data, binding=None):
+    def write(self, id, data, binding=None, storeview_code=None):
         """ Update records on the external system """
         if self.work.magento_api._location.version == '2.0':
             if self._magento2_name:
                 return self._call(
                     self._write_url(id, binding),
-                    {self._magento2_name: data}, http_method='put')
+                    {self._magento2_name: data}, http_method='put', storeview_code=storeview_code)
             else:
                 return self._call(
                     '%s/%s' % (self._magento2_model, id),
-                    data, http_method='put')
+                    data, http_method='put', storeview_code=storeview_code)
         return self._call('%s.update' % self._magento_model,
                           [int(id), data])
 
