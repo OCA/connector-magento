@@ -95,7 +95,8 @@ class MagentoCustomAttribute(models.Model):
             self._context.get('from_copy', False):
             return
         storeview_code = self._context.get('no_update', False) 
-        if res.odoo_field_name.id != False:
+        if res.odoo_field_name.id != False and \
+            not res.store_view_id:
             odoo_field_name = res.odoo_field_name
             value = res.attribute_text
             if not value:
