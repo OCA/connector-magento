@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright <YEAR(S)> <AUTHOR(S)>
+# Copyright 2019 Callino
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 import logging
@@ -8,229 +8,26 @@ from odoo.addons.component.core import Component
 from ...components.backend_adapter import MAGENTO_DATETIME_FORMAT
 import urllib
 import odoo.addons.decimal_precision as dp
-
+from urlparse import urljoin
 
 _logger = logging.getLogger(__name__)
-'''
-{
-        "bundle_product_options": [
-            {
-                "option_id": 26,
-                "title": "choice jacket",
-                "required": true,
-                "type": "select",
-                "position": 1,
-                "sku": "GA990-06",
-                "product_links": [
-                    {
-                        "id": "222",
-                        "sku": "GA2208",
-                        "option_id": 26,
-                        "qty": 1,
-                        "position": 2,
-                        "is_default": false,
-                        "price": 0,
-                        "price_type": 0,
-                        "can_change_quantity": 0
-                    },
-                    {
-                        "id": "223",
-                        "sku": "GA2209",
-                        "option_id": 26,
-                        "qty": 1,
-                        "position": 3,
-                        "is_default": false,
-                        "price": 0,
-                        "price_type": 0,
-                        "can_change_quantity": 0
-                    },
-                    {
-                        "id": "224",
-                        "sku": "GA2210",
-                        "option_id": 26,
-                        "qty": 1,
-                        "position": 4,
-                        "is_default": false,
-                        "price": 0,
-                        "price_type": 0,
-                        "can_change_quantity": 0
-                    },
-                    {
-                        "id": "225",
-                        "sku": "GA2211",
-                        "option_id": 26,
-                        "qty": 1,
-                        "position": 5,
-                        "is_default": false,
-                        "price": 0,
-                        "price_type": 0,
-                        "can_change_quantity": 0
-                    },
-                    {
-                        "id": "226",
-                        "sku": "GA2212",
-                        "option_id": 26,
-                        "qty": 1,
-                        "position": 6,
-                        "is_default": false,
-                        "price": 0,
-                        "price_type": 0,
-                        "can_change_quantity": 0
-                    },
-                    {
-                        "id": "227",
-                        "sku": "GA2320",
-                        "option_id": 26,
-                        "qty": 1,
-                        "position": 7,
-                        "is_default": false,
-                        "price": 0,
-                        "price_type": 0,
-                        "can_change_quantity": 0
-                    }
-                ]
-            },
-            {
-                "option_id": 27,
-                "title": "choice pants",
-                "required": true,
-                "type": "select",
-                "position": 2,
-                "sku": "GA990-06",
-                "product_links": [
-                    {
-                        "id": "228",
-                        "sku": "GA2221",
-                        "option_id": 27,
-                        "qty": 1,
-                        "position": 1,
-                        "is_default": false,
-                        "price": 0,
-                        "price_type": 0,
-                        "can_change_quantity": 0
-                    },
-                    {
-                        "id": "229",
-                        "sku": "GA2222",
-                        "option_id": 27,
-                        "qty": 1,
-                        "position": 2,
-                        "is_default": false,
-                        "price": 0,
-                        "price_type": 0,
-                        "can_change_quantity": 0
-                    },
-                    {
-                        "id": "230",
-                        "sku": "GA2223",
-                        "option_id": 27,
-                        "qty": 1,
-                        "position": 3,
-                        "is_default": false,
-                        "price": 0,
-                        "price_type": 0,
-                        "can_change_quantity": 0
-                    },
-                    {
-                        "id": "231",
-                        "sku": "GA2224",
-                        "option_id": 27,
-                        "qty": 1,
-                        "position": 4,
-                        "is_default": false,
-                        "price": 0,
-                        "price_type": 0,
-                        "can_change_quantity": 0
-                    },
-                    {
-                        "id": "232",
-                        "sku": "GA2225",
-                        "option_id": 27,
-                        "qty": 1,
-                        "position": 5,
-                        "is_default": false,
-                        "price": 0,
-                        "price_type": 0,
-                        "can_change_quantity": 0
-                    },
-                    {
-                        "id": "233",
-                        "sku": "GA2226",
-                        "option_id": 27,
-                        "qty": 1,
-                        "position": 6,
-                        "is_default": false,
-                        "price": 0,
-                        "price_type": 0,
-                        "can_change_quantity": 0
-                    },
-                    {
-                        "id": "234",
-                        "sku": "GA2330",
-                        "option_id": 27,
-                        "qty": 1,
-                        "position": 7,
-                        "is_default": false,
-                        "price": 0,
-                        "price_type": 0,
-                        "can_change_quantity": 0
-                    }
-                ]
-            },
-            {
-                "option_id": 54,
-                "title": "FREE detergent to a set",
-                "required": true,
-                "type": "radio",
-                "position": 3,
-                "sku": "GA990-06",
-                "product_links": [
-                    {
-                        "id": "367",
-                        "sku": "NW181P01",
-                        "option_id": 54,
-                        "qty": 1,
-                        "position": 1,
-                        "is_default": false,
-                        "price": 0,
-                        "price_type": 0,
-                        "can_change_quantity": 0
-                    }
-                ]
-            },
-            {
-                "option_id": 55,
-                "title": "FREE waterproofening spray to a set",
-                "required": true,
-                "type": "radio",
-                "position": 4,
-                "sku": "GA990-06",
-                "product_links": [
-                    {
-                        "id": "368",
-                        "sku": "NW571P01",
-                        "option_id": 55,
-                        "qty": 1,
-                        "position": 1,
-                        "is_default": false,
-                        "price": 0,
-                        "price_type": 0,
-                        "can_change_quantity": 0
-                    }
-                ]
-            }
-        ]
-    },
-    "product_links": [],
-    "options": [],
-  }
-'''
+
 
 class MagentoProductBundle(models.Model):
     _name = 'magento.product.bundle'
     _inherit = 'magento.binding'
     _inherits = {'product.product': 'odoo_id'}
     _description = 'Magento Product Bundle'
+    _magento_backend_path = 'catalog/product/edit/id'
+    _magento_frontend_path = 'catalog/product/view/id'
+
+    @api.depends('backend_id', 'external_id')
+    def _compute_magento_backend_url(self):
+        for binding in self:
+            if binding._magento_backend_path:
+                binding.magento_backend_url = "%s/%s" % (urljoin(binding.backend_id.admin_location, binding._magento_backend_path), binding.magento_id)
+            if binding._magento_frontend_path:
+                binding.magento_frontend_url = "%s/%s" % (urljoin(binding.backend_id.location, binding._magento_frontend_path), binding.magento_id)
 
     attribute_set_id = fields.Many2one('magento.product.attributes.set',
                                        string='Attribute set')

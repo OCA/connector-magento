@@ -26,15 +26,56 @@
         <field name="arch" type="xml">
             <form string="Magento Sales Orders"
                     create="false" delete="false">
-                <group>
-                    <field name="backend_id"/>
-                    <field name="external_id"/>
-                    <field name="total_amount"/>
-                    <field name="total_amount_tax"/>
-                    <field name="store_id"/>
-                    <field name="storeview_id"/>
-                    <field name="odoo_id"/>
-                </group>
+                <header>
+                    <field name="magento_backend_url" widget="url" text="Open in Magento Backend" class="btn fa fa-link"/>
+                </header>
+                <sheet>
+                    <div>
+
+                    </div>
+                    <group>
+                        <group>
+                            <field name="backend_id"/>
+                            <field name="external_id"/>
+                            <field name="odoo_id"/>
+                            <field name="store_id"/>
+                            <field name="storeview_id"/>
+                        </group>
+                        <group>
+                            <field name="state" readonly="1"/>
+                            <field name="partner_id" readonly="1"/>
+                            <field name="partner_invoice_id" readonly="1"/>
+                            <field name="partner_shipping_id" readonly="1"/>
+                            <field name="partner_id" readonly="1"/>
+                            <field name="total_amount" readonly="1"/>
+                            <field name="total_amount_tax" readonly="1"/>
+
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="orderlines" string="Orderlines">
+                            <label for="magento_order_line_ids"/>
+                            <field name="magento_order_line_ids" nolabel="1"/>
+                            <label for="magento_order_history_ids"/>
+                            <field name="magento_order_history_ids" nolabel="1">
+                                <tree>
+                                    <field name="entity_name"/>
+                                    <field name="status"/>
+                                    <field name="body"/>
+                                    <field name="is_customer_notified"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page name="payments" string="Payments">
+                            <label for="magento_payment_ids"/>
+                            <field name="magento_payment_ids" nolabel="1"/>
+                        </page>
+                        <page name="pickings" string="Pickings">
+                            <label for="magento_picking_ids"/>
+                            <field name="magento_picking_ids" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
             </form>
         </field>
     </record>
@@ -48,7 +89,10 @@
                 <field name="backend_id"/>
                 <field name="store_id"/>
                 <field name="storeview_id"/>
-                <field name="external_id"/>
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="total_amount_tax"/>
+                <field name="state"/>
             </tree>
         </field>
     </record>

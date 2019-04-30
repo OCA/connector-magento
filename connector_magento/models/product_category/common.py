@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 # Copyright 2013-2017 Camptocamp SA
 # © 2016 Sodexis
+# © 2019 Callino
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 import logging
 import xmlrpclib
-from odoo import models, fields
+from odoo import models, fields, api
 from odoo.addons.connector.exception import IDMissingInBackend
 from odoo.addons.component.core import Component
 from ...components.backend_adapter import MAGENTO_DATETIME_FORMAT
@@ -18,6 +19,8 @@ class MagentoProductCategory(models.Model):
     _inherit = 'magento.binding'
     _inherits = {'product.category': 'odoo_id'}
     _description = 'Magento Product Category'
+    _magento_backend_path = 'catalog/category/edit/id'
+    _magento_frontend_path = 'catalog/category/view/id'
 
     odoo_id = fields.Many2one(comodel_name='product.category',
                               string='Product Category',
@@ -34,6 +37,13 @@ class MagentoProductCategory(models.Model):
         inverse_name='magento_parent_id',
         string='Magento Child Categories',
     )
+
+    @api.multi
+    def sync_from_magento(self):
+        self.ensure_one()
+        with self.backend_id.work_on(self._name) as work:
+            importer = work.component(usage='record.importer')
+            return importer.run(self.external_id, force=True)
 
 
 class ProductCategory(models.Model):

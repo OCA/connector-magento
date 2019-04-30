@@ -2,25 +2,6 @@
 <openerp>
 	<data>
 
-		<!--
-		<record id="product_bundle_form_view" model="ir.ui.view">
-			<field name="name">product.bundle.form</field>
-			<field name="model">product.bundle</field>
-			<field name="inherit_id"
-				ref="connector_base_product.product_bundle_common_form" />
-			<field name="arch" type="xml">
-				<page name="connector" position="attributes">
-					<attribute name="invisible">0</attribute>
-				</page>
-				<page name="connector" position="inside">
-					<label for="magento_bundle_bind_ids"/>
-					<field name="magento_bundle_bind_ids" nolabel="1"/>
-				</page>
-			</field>
-		</record>
-		-->
-
-
 		<record id="view_magento_product_bundle_form" model="ir.ui.view">
 			<field name="name">magento.product.bundle.form</field>
 			<field name="model">magento.product.bundle</field>
@@ -28,6 +9,8 @@
 				<form string="Magento Bundle Product">
 					<header>
 						<button type="object" name="sync_from_magento" string="Force Sync Magento -> Odoo"/>
+						<button type="object" name="open_magento_backend" string="Open in Magento Backend" class="fa fa-link"/>
+						<button type="object" name="open_magento_frontend" string="Open in Magento Frontend" class="fa fa-link"/>
 					</header>
 					<sheet>
 						<div class="oe_button_box" name="button_box">

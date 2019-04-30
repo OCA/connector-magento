@@ -37,6 +37,8 @@
 								class="oe_stat_button" context="{'search_default_magento_product_id': [active_id],
 							'default_attribute_set_id': attribute_set_id,
 							'default_magento_product_id': active_id, }" />
+						<button type="object" name="open_magento_backend" string="Open in Magento Backend" class="fa fa-link"/>
+						<button type="object" name="open_magento_frontend" string="Open in Magento Frontend" class="fa fa-link"/>
 					</header>
 					<sheet>
 						<div class="oe_button_box" name="button_box">

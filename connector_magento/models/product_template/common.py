@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright <YEAR(S)> <AUTHOR(S)>
+# Copyright 2019 Callino
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 import logging
@@ -13,6 +13,7 @@ from ...components.backend_adapter import MAGENTO_DATETIME_FORMAT
 import urllib
 import odoo.addons.decimal_precision as dp
 from odoo.addons.queue_job.job import identity_exact
+from urlparse import urljoin
 
 
 _logger = logging.getLogger(__name__)
@@ -23,7 +24,17 @@ class MagentoProductTemplate(models.Model):
     _inherit = 'magento.binding'
     _inherits = {'product.template': 'odoo_id'}
     _description = 'Magento Product Template'
-           
+    _magento_backend_path = 'catalog/product/edit/id'
+    _magento_frontend_path = 'catalog/product/view/id'
+
+    @api.depends('backend_id', 'external_id')
+    def _compute_magento_backend_url(self):
+        for binding in self:
+            if binding._magento_backend_path:
+                binding.magento_backend_url = "%s/%s" % (urljoin(binding.backend_id.admin_location, binding._magento_backend_path), binding.magento_id)
+            if binding._magento_frontend_path:
+                binding.magento_frontend_url = "%s/%s" % (urljoin(binding.backend_id.location, binding._magento_frontend_path), binding.magento_id)
+
     @api.model
     def product_type_get(self):
         return [

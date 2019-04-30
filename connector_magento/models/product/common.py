@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Copyright 2013-2017 Camptocamp SA
 # © 2016 Sodexis
+# Copyright 2019 Callino
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 import logging
@@ -15,14 +16,10 @@ from odoo.addons.component_event import skip_if
 from odoo.addons.queue_job.job import job, related_action
 from ...components.backend_adapter import MAGENTO_DATETIME_FORMAT
 import odoo.addons.decimal_precision as dp
+from urlparse import urljoin
 
 
 _logger = logging.getLogger(__name__)
-
-
-def chunks(items, length):
-    for index in xrange(0, len(items), length):
-        yield items[index:index + length]
 
 
 class MagentoProductProduct(models.Model):
@@ -30,6 +27,16 @@ class MagentoProductProduct(models.Model):
     _inherit = 'magento.binding'
     _inherits = {'product.product': 'odoo_id'}
     _description = 'Magento Product'
+    _magento_backend_path = 'catalog/product/edit/id'
+    _magento_frontend_path = 'catalog/product/view/id'
+
+    @api.depends('backend_id', 'external_id')
+    def _compute_magento_backend_url(self):
+        for binding in self:
+            if binding._magento_backend_path:
+                binding.magento_backend_url = "%s/%s" % (urljoin(binding.backend_id.admin_location, binding._magento_backend_path), binding.magento_id)
+            if binding._magento_frontend_path:
+                binding.magento_frontend_url = "%s/%s" % (urljoin(binding.backend_id.location, binding._magento_frontend_path), binding.magento_id)
 
     @api.model
     def product_type_get(self):
@@ -184,21 +191,6 @@ class ProductProductAdapter(Component):
 
     def _get_id_from_create(self, result, data=None):
         return data[self._magento2_key]
-
-#     def _call(self, method, arguments, http_method=None, storeview=None):
-#         try:
-#             return super(ProductProductAdapter, self)._call(
-#                 method, 
-#                 arguments, 
-#                 http_method=http_method, 
-#                 storeview=storeview)
-#         except xmlrpclib.Fault as err:
-#             # this is the error in the Magento API
-#             # when the product does not exist
-#             if err.faultCode == 101:
-#                 raise IDMissingInBackend
-#             else:
-#                 raise
 
     def search(self, filters=None, from_date=None, to_date=None):
         """ Search records according to some criteria

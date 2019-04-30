@@ -23,6 +23,7 @@ class MagentoSaleOrder(models.Model):
     _inherit = 'magento.binding'
     _description = 'Magento Sale Order'
     _inherits = {'sale.order': 'odoo_id'}
+    _magento_backend_path = 'sales/order/view/order_id'
 
     magento_order_history_ids = fields.One2many(
         comodel_name='magento.sale.order.historie',
@@ -37,6 +38,11 @@ class MagentoSaleOrder(models.Model):
         comodel_name='magento.sale.order.line',
         inverse_name='magento_order_id',
         string='Magento Order Lines'
+    )
+    magento_picking_ids = fields.One2many(
+        comodel_name='magento.stock.picking',
+        inverse_name='magento_order_id',
+        string='Magento Pickings'
     )
     total_amount = fields.Float(
         string='Total amount',
