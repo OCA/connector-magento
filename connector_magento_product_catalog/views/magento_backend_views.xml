@@ -16,7 +16,7 @@
 						<field name="export_products_from_date" class="oe_inline"
 							nolabel="1" />
 					</div>
-					<button name="export_product_product_catalog" type="object"
+					<button name="export_product_catalog" type="object"
 						class="oe_highlight" string="Export in background" />
 				</group>
 			</xpath>

@@ -9,7 +9,7 @@ class MagentoBackend(models.Model):
     _inherit = 'magento.backend'
     
     @api.multi
-    def export_product_product_catalog(self):
+    def export_product_catalog(self):
         import_start_time = datetime.now()
         #TODO make batchExporter class
         for backend in self:
@@ -17,7 +17,7 @@ class MagentoBackend(models.Model):
             domain = []
             if backend.export_products_from_date:
                 domain = [('write_date', '>', backend.export_products_from_date )]
-            mag_prods = self.env['magento.product.product'].search(domain)
+            mag_prods = self.env['magento.product.template'].search(domain)
             for mag_prod in mag_prods:
                 mag_prod.sync_to_magento()
             next_time = import_start_time - timedelta(seconds=IMPORT_DELTA_BUFFER)
