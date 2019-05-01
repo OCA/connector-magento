@@ -78,6 +78,8 @@ class ProductProductExportMapper(Component):
     direct = [
         ('name', 'name'),
         ('default_code', 'sku'),
+        ('weight', 'weight'),
+        ('weight', 'weight'),
     ]
     
     @mapping
@@ -92,10 +94,14 @@ class ProductProductExportMapper(Component):
     @mapping
     def get_extension_attributes(self, record):
         data = {}
-        
-        data.update(self.get_website_ids(record))
-        data.update(self.category_ids(record))
-        return {'extension_attributes': data}
+        storeview_id = self.work.storeview_id or False
+        if not storeview_id:
+            return {}
+        return {}
+    #
+#         data.update(self.get_website_ids(record))
+#         data.update(self.category_ids(record))
+#         return {'extension_attributes': data}
     
     
     def get_website_ids(self, record):
@@ -128,11 +134,6 @@ class ProductProductExportMapper(Component):
 
 
     @mapping
-    def get_storeview(self, record):
-        return {}
-
-
-    @mapping
     def weight(self, record):
         if record.weight:
             val = record.weight
@@ -141,19 +142,19 @@ class ProductProductExportMapper(Component):
         return {'weight' : val}
 
 
-    @mapping
-    def attribute_set_id(self, record):
-        if record.attribute_set_id:
-            val = record.attribute_set_id.external_id
-        else:
-            # TODO: maybe turn it into defensive option
-            # on the magento.backend
-            val = 4
-        return {'attributeSetId' : val}
+#     @mapping
+#     def attribute_set_id(self, record):
+#         if record.attribute_set_id:
+#             val = record.attribute_set_id.external_id
+#         else:
+#             # TODO: maybe turn it into defensive option
+#             # on the magento.backend
+#             val = 4
+#         return {'attributeSetId' : val}
 
-    @mapping
-    def names(self, record):
-        return {}
+#     @mapping
+#     def names(self, record):
+#         return {}
 
     @mapping
     def get_common_attributes(self, record):
@@ -164,6 +165,7 @@ class ProductProductExportMapper(Component):
         """
         
         customAttributes = []
+        storeview_id = self.work.storeview_id or False 
         magento_attribute_line_ids = record.magento_attribute_line_ids.filtered(
             lambda att: att.store_view_id.id == False \
              and (
@@ -215,14 +217,14 @@ class ProductProductExportMapper(Component):
         return {'price': price}
     
     
-    @mapping
-    def option_products(self, record):
-        #TODO : Map optionnal products
-        return {}
-
-
-    @mapping
-    def crossproducts(self, record):
-        #TODO : Map cross products
-        return {}
+#     @mapping
+#     def option_products(self, record):
+#         #TODO : Map optionnal products
+#         return {}
+# 
+# 
+#     @mapping
+#     def crossproducts(self, record):
+#         #TODO : Map cross products
+#         return {}
 

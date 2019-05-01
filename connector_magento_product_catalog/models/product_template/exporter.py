@@ -38,13 +38,12 @@ class ProductTemplateDefinitionExporter(Component):
                 m_prod = self.env['magento.product.product'].create(
                     {'backend_id': self.backend_record.id,
                      'odoo_id': p.id,
-                     'attribute_set_id': self.binding.attribute_set_id.id,
-                     'magento_configurable_id': self.binding.id
+                     'attribute_set_id': record.attribute_set_id.id,
+                     'magento_configurable_id': record.id
                      })
-        #TODO: uncomment
-            self._export_dependency(
-                m_prod,
-                'magento.product.product')
+        
+        for p in record.magento_product_ids :
+            self._export_dependency(p, 'magento.product.product')
     
     
 #     def _get_atts_data(self, binding, fields):
@@ -163,6 +162,8 @@ class ProductTemplateExportMapper(Component):
     def get_extension_attributes(self, record):
         data = {}
         storeview_id = self.work.storeview_id or False
+        if not storeview_id:
+            return {}
         data.update(self.get_website_ids(record))
         data.update(self.category_ids(record))
         data.update(self.configurable_product_options(record))

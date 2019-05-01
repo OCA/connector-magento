@@ -28,10 +28,8 @@ class MagentoProductProduct(models.Model):
     @api.multi
     def sync_to_magento(self):
         self.ensure_one()
-        with self.backend_id.work_on(self._name) as work:
-            exporter = work.component(usage='record.exporter')
-            return exporter.run(self)
-
+        self.resync()
+        
     @api.multi
     def resync(self):
         self.ensure_one()
@@ -69,6 +67,50 @@ class MagentoProductProduct(models.Model):
 #             'default_project_id': self.project_id.id})
         action['context'] = action_context
         return action
+    
+    
+    @api.model
+    def create(self, vals):
+        mg_prod_id = super(MagentoProductProduct, self).create(vals)
+        org_vals = vals.copy()
+        attributes = mg_prod_id.attribute_set_id.attribute_ids.filtered(
+            lambda x: x.odoo_field_name.id != False
+            )
+        cstm_att_mdl = self.env['magento.custom.attribute.values']
+        for att in attributes:
+            vals = {
+                #                 'backend_id': self.backend_id.id,
+                'magento_product_id': mg_prod_id.id,
+                'attribute_id': att.id,
+                'store_view_id': False
+                #                 'magento_attribute_type': att.frontend_input,
+                #                 'product_template_id': self.odoo_id.id,
+                #                 'odoo_field_name': att.odoo_field_name.id or False
+            }
+            cst_value = cstm_att_mdl.with_context(no_update=True).create(vals)
+            #if cst_value.odoo_field_name.id:
+            mg_prod_id.check_field_mapping(
+                    cst_value.odoo_field_name.name,
+                    mg_prod_id[cst_value.odoo_field_name.name])
+                
+#         if 'custom_attributes' in org_vals:
+#             magento_attr_mdl = self.env['magento.product.attribute']            
+#             for cst in org_vals['custom_attributes']:
+#                 cst_value_id = mg_prod_id.magento_template_attribute_value_ids.filtered(
+#                     lambda v: v.attribute_id.attribute_code == cst['attribute_code'])
+#                 if cst_value_id.odoo_field_name.id:
+#                     mg_prod_id.check_field_mapping(
+#                         cst_value_id.odoo_field_name.name, 
+#                         cst['value']
+#                         )
+#                 elif cst_value_id.id:
+#                     cst_value_id.write({
+#                         'attribute_text': cst['value']})
+#             
+#         if mg_prod_id.odoo_id.product_variant_count > 1 :
+#             self.env['magento.template.attribute.line']._update_attribute_lines(mg_prod_id)
+        
+        return mg_prod_id
     
     
     @api.multi
@@ -137,9 +179,9 @@ class ProductProduct(models.Model):
     def write(self, vals):
         org_vals = vals.copy()
         res = super(ProductProduct, self).write(vals)
-        prod_ids = self.filtered(lambda p: len(p.magento_bind_ids) > 0)
-        for prod in prod_ids:
-            for binding in prod.magento_bind_ids:
+#         prod_ids = self.filtered(lambda p: len(p.magento_bind_ids) > 0)
+#         for prod in prod_ids:
+        for binding in self.magento_bind_ids:
                 for key in org_vals:
                     binding.check_field_mapping(key, vals)
         return res

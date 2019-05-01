@@ -51,7 +51,7 @@
 						<field name="backend_id" />
 						<field name="external_id" string="Magento SKU"/>
 						<field name="magento_id" string="Magento ID" readonly="1"/>
-						<field name="odoo_id" string="Odoo ID" readonly="1"/>
+						<field name="odoo_id" string="Odoo ID" readonly="0"/>
 						<field name="created_at" readonly="1" />
 						<field name="updated_at" readonly="1" />
 						<!-- <field name="product_type" readonly="1" /> -->
