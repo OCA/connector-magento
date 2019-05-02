@@ -78,9 +78,6 @@ class ProductProductExportMapper(Component):
     direct = [
         ('name', 'name'),
         ('default_code', 'sku'),
-        ('weight', 'weight'),
-        ('height', 'height'),
-        ('width', 'width'),
     ]
     
     @mapping
@@ -142,6 +139,13 @@ class ProductProductExportMapper(Component):
             val = 0        
         return {'weight' : val}
 
+
+    @mapping
+    def dimensions(self, record):
+#                TODO: dimensions
+#         ('height', 'height'),
+#         ('width', 'width'),
+        return {}
 
     @mapping
     def attribute_set_id(self, record):
