@@ -88,10 +88,14 @@ class MagentoProductTemplate(models.Model):
     @api.multi
     def sync_to_magento(self):
         self.ensure_one()
-        for storeview_id in self.env['magento.storeview'].search([]):
-            self.with_delay(priority=20,
+        #First export the datas from no storeviews !
+        self.with_delay(priority=20,
                         identity_key=identity_exact
-                        ).export_product_template(storeview_id=storeview_id)
+                        ).export_product_template()
+        for storeview_id in self.env['magento.storeview'].search([]):
+            self.with_delay(priority=30,
+                            identity_key='%s-%s' % (identity_exact,storeview_id.code)
+                            ).export_product_template(storeview_id=storeview_id)
         
 
     @job(default_channel='root.magento')
@@ -478,7 +482,7 @@ class ProductTemplateAdapter(Component):
             # Replace by the
             id = data['sku']
             storeview_id = self.work.storeview_id or False
-            storeview_code = storeview_id.code or False
+            storeview_code = storeview_id.code if storeview_id else False
             super(ProductTemplateAdapter, self)._call(
                 'products/%s' % id, {
                     'product': data

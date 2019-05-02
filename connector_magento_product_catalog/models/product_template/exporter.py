@@ -270,7 +270,8 @@ class ProductTemplateExportMapper(Component):
         magento_attribute_value_ids = record.\
             magento_template_attribute_value_ids.filtered(
                 lambda att: 
-                    att.store_view_id.id == storeview_id.id or False 
+                    att.attribute_id.is_pivot_attribute != True
+                    and att.attribute_id.create_variant != True
                     and (
                         att.attribute_text != False
                         or
@@ -278,11 +279,20 @@ class ProductTemplateExportMapper(Component):
                         or 
                         len(att.attribute_multiselect.ids) > 0
                     )
-                    and att.attribute_id.is_pivot_attribute != True
-                    and att.attribute_id.create_variant != True
+                    
+#                     
+#                     
+#                     att.store_view_id == storeview_id 
+#                     or
+#                     att.store_view_id.id == storeview_id.id if storeview_id else False
             )
         
         for values_id in magento_attribute_value_ids:
+            if not values_id.store_view_id == storeview_id and \
+                values_id.store_view_id.id == storeview_id.id if storeview_id else False:
+                    
+                continue
+            
             """ Deal with Custom Attributes """            
             attributeCode = values_id.attribute_id.attribute_code
             value = values_id.attribute_text
