@@ -711,6 +711,13 @@ class SaleOrderLineImportMapper(Component):
             return {'is_bundle_item': True}
 
     @mapping
+    def shipping_item_id(self, record):
+        if 'parent_item' in record and 'item_id' in record['parent_item']:
+            return {'shipping_item_id': record['parent_item']['item_id']}
+        else:
+            return {'shipping_item_id': record['item_id']}
+
+    @mapping
     def product_id(self, record):
         model = 'magento.product.product'
         if 'product_type' in record and record['product_type'] == 'bundle':

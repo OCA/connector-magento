@@ -219,6 +219,7 @@ class MagentoSaleOrderLine(models.Model):
         # override 'magento.binding', can't be INSERTed if True:
         required=False,
     )
+    shipping_item_id = fields.Integer('Shipping Item ID')
     tax_rate = fields.Float(string='Tax Rate',
                             digits=dp.get_precision('Account'))
     notes = fields.Char()

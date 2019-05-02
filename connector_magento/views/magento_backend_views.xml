@@ -274,6 +274,9 @@
 						help="Synchonize datas like language, country, currency, tax" string="Synchronize 
 						Base Data" attrs="{'invisible':[('state', 'in', ['draft'])]}" /> -->
 
+					<button name="button_resync_products" type="object"
+						class="oe_highlight" string="Resync all products from Magento to Odoo"
+						attrs="{'invisible':[('state', 'not in', ['draft'])]}" />
 					<button name="button_reset_to_draft" type="object"
 						string="Reset To draft Connection"
 						attrs="{'invisible':[('state', 'in', ['draft'])]}" />
