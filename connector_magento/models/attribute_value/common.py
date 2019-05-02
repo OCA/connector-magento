@@ -10,7 +10,7 @@ class MagentoProductAttributevalue(models.Model):
     _name = 'magento.product.attribute.value'
     _inherit = 'magento.binding'
     _inherits = {'product.attribute.value': 'odoo_id'}
-    _description = 'Magento attribute'
+    _description = 'Magento attribute value'
     
     odoo_id = fields.Many2one(comodel_name='product.attribute.value',
                               string='Product attribute value',

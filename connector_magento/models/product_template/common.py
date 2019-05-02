@@ -377,7 +377,7 @@ class ProductTemplate(models.Model):
                 me = tpl
             else:
                 # do not auto create variants
-                me = tpl.with_context(create_product_product=true)
+                me = tpl.with_context(create_product_product=True)
             res = super(ProductTemplate, me).write(vals)
             # this part is for custom odoo fields to magento attributes
             for prod in tpl.magento_template_bind_ids:
