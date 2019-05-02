@@ -224,6 +224,14 @@ class MagentoSaleOrderLine(models.Model):
                             digits=dp.get_precision('Account'))
     notes = fields.Char()
 
+    @api.model
+    def create(self, vals):
+        magento_order_id = vals['magento_order_id']
+        binding = self.env['magento.sale.order'].browse(magento_order_id)
+        vals['order_id'] = binding.odoo_id.id
+        binding = super(MagentoSaleOrderLine, self).create(vals)
+        return binding
+
 
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
