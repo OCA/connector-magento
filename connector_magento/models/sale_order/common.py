@@ -224,22 +224,6 @@ class MagentoSaleOrderLine(models.Model):
                             digits=dp.get_precision('Account'))
     notes = fields.Char()
 
-    @api.model
-    def create(self, vals):
-        magento_order_id = vals['magento_order_id']
-        binding = self.env['magento.sale.order'].browse(magento_order_id)
-        vals['order_id'] = binding.odoo_id.id
-        binding = super(MagentoSaleOrderLine, self).create(vals)
-        # FIXME triggers function field
-        # The amounts (amount_total, ...) computed fields on 'sale.order' are
-        # not triggered when magento.sale.order.line are created.
-        # It might be a v8 regression, because they were triggered in
-        # v7. Before getting a better correction, force the computation
-        # by writing again on the line.
-        # line = binding.odoo_id
-        # line.write({'price_unit': line.price_unit})
-        return binding
-
 
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'

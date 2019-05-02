@@ -48,6 +48,9 @@ class MagentoPickingExporter(Component):
             if not magento_sale_line:
                 continue
             item_id = magento_sale_line.shipping_item_id if magento_sale_line.shipping_item_id else magento_sale_line.external_id
+            if magento_sale_line.is_bundle_item and item_id in item_qty:
+                # Ignore this if it is part of a bundle - and one item is already in...
+                continue
             item_qty.setdefault(item_id, 0)
             item_qty[item_id] += line.product_qty
         return item_qty

@@ -751,6 +751,9 @@ class SaleOrderLineImportMapper(Component):
 
     @mapping
     def price(self, record):
+        if 'parent_item' in record and record['parent_item']['product_type'] == 'bundle':
+            # This is part of a bundle product - so price here is zero
+            return {'price_unit': 0}
         if record.get('parent_item'):
             # Use parent item here if it is set
             record = record.get('parent_item')
