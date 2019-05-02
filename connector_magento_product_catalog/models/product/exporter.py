@@ -79,7 +79,8 @@ class ProductProductExportMapper(Component):
         ('name', 'name'),
         ('default_code', 'sku'),
         ('weight', 'weight'),
-        ('weight', 'weight'),
+        ('height', 'height'),
+        ('width', 'width'),
     ]
     
     @mapping
@@ -142,15 +143,15 @@ class ProductProductExportMapper(Component):
         return {'weight' : val}
 
 
-#     @mapping
-#     def attribute_set_id(self, record):
-#         if record.attribute_set_id:
-#             val = record.attribute_set_id.external_id
-#         else:
-#             # TODO: maybe turn it into defensive option
-#             # on the magento.backend
-#             val = 4
-#         return {'attributeSetId' : val}
+    @mapping
+    def attribute_set_id(self, record):
+        if record.attribute_set_id:
+            val = record.attribute_set_id.external_id
+        else:
+            # TODO: maybe turn it into defensive option
+            # on the magento.backend
+            val = 4
+        return {'attributeSetId' : val}
 
 #     @mapping
 #     def names(self, record):
