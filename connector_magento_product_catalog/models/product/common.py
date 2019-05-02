@@ -180,8 +180,8 @@ class ProductProduct(models.Model):
         org_vals = vals.copy()
         res = super(ProductProduct, self).write(vals)
 #         prod_ids = self.filtered(lambda p: len(p.magento_bind_ids) > 0)
-#         for prod in prod_ids:
-        for binding in self.magento_bind_ids:
+        for prod in self:
+            for binding in prod.magento_bind_ids:
                 for key in org_vals:
                     binding.check_field_mapping(key, vals)
         return res
