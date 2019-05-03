@@ -124,10 +124,29 @@ class ProductTemplateExportMapper(Component):
     _apply_on = ['magento.product.template']
     
     direct = [
-        ('name', 'name'),
+#         ('name', 'name'),
 #         ('product_type', 'typeId'),
 #         ('lst_price', 'price'),
     ]
+    
+    
+    @mapping
+    def names(self, record):
+        storeview_id = self.work.storeview_id or False
+        name = record.name
+        if storeview_id.id:
+            value_ids = record.\
+            magento_template_attribute_value_ids.filtered(
+                lambda att: 
+                    att.odoo_field_name.name == 'name'
+                    and att_store_voew_id == storeview_id
+                    and att.attribute_id.create_variant != True
+                    and (
+                        att.attribute_text != False
+                    )
+                )
+            name = value_ids[0].attribute_text
+        return {'name': name}
     
     @mapping
     def visibility(self, record):
