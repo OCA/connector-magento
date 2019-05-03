@@ -278,7 +278,7 @@ class ProductImportMapper(Component):
         magento_attribute_line_ids = []
         for attribute in record['custom_attributes']:
             mattribute = attribute_binder.to_internal(attribute['attribute_code'], unwrap=False, external_field='attribute_code')
-            if mattribute.create_variant or mattribute.frontend_input in ['select', 'multiselect']:
+            if mattribute.create_variant :
                 # We do ignore attributes which do not create a variant
                 continue
             if not mattribute:
