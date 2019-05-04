@@ -76,9 +76,26 @@ class ProductProductExportMapper(Component):
     _apply_on = ['magento.product.product']
 
     direct = [
-        ('name', 'name'),
         ('default_code', 'sku'),
     ]
+    
+    @mapping
+    def names(self, record):
+        storeview_id = self.work.storeview_id or False
+        name = record.name
+        if storeview_id:
+            value_ids = record.\
+            magento_attribute_line_ids.filtered(
+                lambda att: 
+                    att.odoo_field_name.name == 'name'
+                    and att.store_view_id == storeview_id
+                    and att.attribute_id.create_variant != True
+                    and (
+                        att.attribute_text != False
+                    )
+                )
+            name = value_ids[0].attribute_text
+        return {'name': name}
     
     @mapping
     def visibility(self, record):
@@ -94,12 +111,9 @@ class ProductProductExportMapper(Component):
         data = {}
         storeview_id = self.work.storeview_id or False
         if not storeview_id:
-            return {}
-        return {}
-    #
-#         data.update(self.get_website_ids(record))
-#         data.update(self.category_ids(record))
-#         return {'extension_attributes': data}
+            data.update(self.get_website_ids(record))
+            data.update(self.category_ids(record))
+        return {'extension_attributes': data}
     
     
     def get_website_ids(self, record):

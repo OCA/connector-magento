@@ -92,10 +92,6 @@ class MagentoProductTemplate(models.Model):
         self.with_delay(priority=20,
                         identity_key=identity_exact
                         ).export_product_template()
-        for storeview_id in self.env['magento.storeview'].search([]):
-            self.with_delay(priority=30,
-                            identity_key='%s-%s' % (identity_exact,storeview_id.code)
-                            ).export_product_template(storeview_id=storeview_id)
         
 
     @job(default_channel='root.magento')
@@ -113,7 +109,6 @@ class MagentoProductTemplate(models.Model):
 #                 exporter = work.with_context(
 #                     storeview_id=storeview_id).component(usage='record.exporter')
                 exporter = work.component(usage='record.exporter')
-                _logger.debug("retrun")
                 return exporter.run(self)
                 
 
@@ -307,7 +302,7 @@ class MagentoProductTemplate(models.Model):
                     and 'text' in att_id.frontend_input:
                 custom_vals.update({
                     'attribute_text': str(
-                        [v.magento_template_bind_ids.external_id for v in self[field]
+                        [v.magento_bind_ids.external_id for v in self[field]
                          ])})
 
             if att_id.frontend_input == 'boolean':
@@ -317,14 +312,14 @@ class MagentoProductTemplate(models.Model):
                 custom_vals.update({
                     'attribute_text': False,
                     'attribute_multiselect': False,
-                    'attribute_select': self[field].magento_template_bind_ids[0].id})
+                    'attribute_select': self[field].magento_bind_ids[0].id})
             if att_id.frontend_input == 'multiselect':
                 custom_vals.update({
                     'attribute_text': False,
                     'attribute_multiselect': False,
                     'attribute_multiselect':
                         [(6, False, [
-                            v.id for v in self[field].magento_template_bind_ids])]})
+                            v.id for v in self[field].magento_bind_ids])]})
             if len(values) == 0:
                 custom_model.with_context(no_update=True).create(custom_vals)
             else:

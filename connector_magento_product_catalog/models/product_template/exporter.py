@@ -44,35 +44,13 @@ class ProductTemplateDefinitionExporter(Component):
         
         for p in record.magento_product_ids :
             self._export_dependency(p, 'magento.product.product')
-    
-    
-#     def _get_atts_data(self, binding, fields):
-#         """
-#         Collect attributes to prensent it regarding to
-#         https://devdocs.magento.com/swagger/index_20.html
-#         catalogProductRepositoryV1 / POST 
-#         """
-#         
-#         customAttributes = []
-#         for values_id in binding.odoo_id.magento_attribute_line_ids:
-#             """ Deal with Custom Attributes """            
-#             attributeCode = values_id.attribute_id.name
-#             value = values_id.attribute_text
-#             customAttributes.append({
-#                 'attributeCode': attributeCode,
-#                 'value': value
-#                 })
-#             
-#         for values_id in binding.odoo_id.attribute_value_ids:
-#             """ Deal with Attributes in the 'variant' part of Odoo"""
-#             attributeCode = values_id.attribute_id.name
-#             value = values_id.name
-#             customAttributes.append({
-#                 'attributeCode': attributeCode,
-#                 'value': value
-#                 })
-#         result = {'customAttributes': customAttributes}
-#         return result
+
+
+    def _after_export(self):
+        if self.work.storeview_id :
+            return
+        for storeview_id in self.env['magento.storeview'].search([]):
+            self.binding.export_product_template(storeview_id=storeview_id)
 
     def _should_import(self):
         """ Before the export, compare the update date
@@ -99,7 +77,6 @@ class ProductTemplateDefinitionExporter(Component):
         return sync_date < magento_date
 
     
-    
     def _delay_import(self):
         """ Schedule an import/export of the record.
 
@@ -114,32 +91,24 @@ class ProductTemplateDefinitionExporter(Component):
                 identity_key=identity_exact).import_record(self.backend_record,
                                                 self.external_id,
                                                 force=True)
-        #else:
-        #    self.binding.with_delay().export_record(self.backend_record)
-    
 
 class ProductTemplateExportMapper(Component):
     _name = 'magento.product.template.export.mapper'
     _inherit = 'magento.export.mapper'
     _apply_on = ['magento.product.template']
     
-    direct = [
-#         ('name', 'name'),
-#         ('product_type', 'typeId'),
-#         ('lst_price', 'price'),
-    ]
-    
+    direct = []
     
     @mapping
     def names(self, record):
         storeview_id = self.work.storeview_id or False
         name = record.name
-        if storeview_id.id:
+        if storeview_id:
             value_ids = record.\
             magento_template_attribute_value_ids.filtered(
                 lambda att: 
                     att.odoo_field_name.name == 'name'
-                    and att_store_voew_id == storeview_id
+                    and att.store_view_id.id == storeview_id.id
                     and att.attribute_id.create_variant != True
                     and (
                         att.attribute_text != False
@@ -150,7 +119,6 @@ class ProductTemplateExportMapper(Component):
     
     @mapping
     def visibility(self, record):
-        
         return {'visibility': 4}
     
     
@@ -298,19 +266,10 @@ class ProductTemplateExportMapper(Component):
                         or 
                         len(att.attribute_multiselect.ids) > 0
                     )
-                    
-#                     
-#                     
-#                     att.store_view_id == storeview_id 
-#                     or
-#                     att.store_view_id.id == storeview_id.id if storeview_id else False
+                    and att.store_view_id.id == False if not storeview_id else storeview_id.id
             )
         
         for values_id in magento_attribute_value_ids:
-            if not values_id.store_view_id == storeview_id and \
-                values_id.store_view_id.id == storeview_id.id if storeview_id else False:
-                    
-                continue
             
             """ Deal with Custom Attributes """            
             attributeCode = values_id.attribute_id.attribute_code

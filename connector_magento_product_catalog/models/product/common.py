@@ -78,7 +78,7 @@ class MagentoProductProduct(models.Model):
             lambda x: x.odoo_field_name.id != False
             )
         cstm_att_mdl = self.env['magento.custom.attribute.values']
-        if not mg_prod_id.magento_attribute_line_ids:
+        if len(mg_prod_id.magento_attribute_line_ids) > 0:
             return mg_prod_id
         for att in attributes:
             vals = {
