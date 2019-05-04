@@ -5,14 +5,9 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 import logging
-import xmlrpclib
-
-from collections import defaultdict
 
 from odoo import models, fields, api
-from odoo.addons.connector.exception import IDMissingInBackend
 from odoo.addons.component.core import Component
-from odoo.addons.component_event import skip_if
 from odoo.addons.queue_job.job import job, related_action
 from ...components.backend_adapter import MAGENTO_DATETIME_FORMAT
 import odoo.addons.decimal_precision as dp
@@ -92,7 +87,14 @@ class MagentoProductProduct(models.Model):
     )
 
     @api.multi
+    @job(default_channel='root.magento')
     def sync_from_magento(self):
+        for binding in self:
+            binding.with_delay().run_sync_from_magento()
+
+    @api.multi
+    @job(default_channel='root.magento')
+    def run_sync_from_magento(self):
         self.ensure_one()
         with self.backend_id.work_on(self._name) as work:
             importer = work.component(usage='record.importer')

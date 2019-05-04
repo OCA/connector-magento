@@ -89,20 +89,18 @@ class MagentoProductTemplate(models.Model):
     )
 
     @api.multi
+    @job(default_channel='root.magento')
     def sync_from_magento(self):
+        for binding in self:
+            binding.with_delay().run_sync_from_magento()
+
+    @api.multi
+    @job(default_channel='root.magento')
+    def run_sync_from_magento(self):
         self.ensure_one()
         with self.backend_id.work_on(self._name) as work:
             importer = work.component(usage='record.importer')
             return importer.run(self.external_id, force=True)
-
-    @api.multi
-    def sync_to_magento(self):
-        self.ensure_one()
-        #First export the datas from no storeviews !
-        self.with_delay(priority=20,
-                        identity_key=identity_exact
-                        ).export_product_template()
-        
 
     @job(default_channel='root.magento')
     @related_action(action='related_action_unwrap_binding')
@@ -111,7 +109,7 @@ class MagentoProductTemplate(models.Model):
         """ Export the attributes configuration of a product. """
         self.ensure_one()
             # TODO make different usage
-        
+
         with self.backend_id.work_on(
                 self._name,
                 storeview_id=storeview_id
@@ -120,7 +118,7 @@ class MagentoProductTemplate(models.Model):
 #                     storeview_id=storeview_id).component(usage='record.exporter')
                 exporter = work.component(usage='record.exporter')
                 return exporter.run(self)
-                
+
 
     def action_magento_template_custom_attributes(self):
         action = self.env['ir.actions.act_window'].for_xml_id(

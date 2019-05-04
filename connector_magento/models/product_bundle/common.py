@@ -9,6 +9,7 @@ from ...components.backend_adapter import MAGENTO_DATETIME_FORMAT
 import urllib
 import odoo.addons.decimal_precision as dp
 from urlparse import urljoin
+from odoo.addons.queue_job.job import job
 
 _logger = logging.getLogger(__name__)
 
@@ -52,7 +53,14 @@ class MagentoProductBundle(models.Model):
 
 
     @api.multi
+    @job(default_channel='root.magento')
     def sync_from_magento(self):
+        for binding in self:
+            binding.with_delay().run_sync_from_magento()
+
+    @api.multi
+    @job(default_channel='root.magento')
+    def run_sync_from_magento(self):
         self.ensure_one()
         with self.backend_id.work_on(self._name) as work:
             importer = work.component(usage='record.importer')

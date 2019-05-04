@@ -303,6 +303,14 @@ class MagentoBackend(models.Model):
                 str(e).decode('utf-8', 'ignore'))
 
     @api.multi
+    def button_resync_products(self):
+        for backend in self:
+            for model_name in ('magento.product.template',
+                               'magento.product.bundle',
+                               'magento.product.product'):
+                self.env[model_name].search([('backend_id', '=', backend.id)]).with_delay().sync_from_magento()
+
+    @api.multi
     def import_partners(self):
         """ Import partners from all websites """
         for backend in self:
