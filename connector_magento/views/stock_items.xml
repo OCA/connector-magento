@@ -7,18 +7,28 @@
         <field name="arch" type="xml">
             <form string="Magento Stock Item"
                     create="false" delete="false">
-                <group>
-                    <field name="backend_id"/>
-                    <field name="external_id"/>
-                    <field name="odoo_id"/>
-                    <field name="magento_warehouse_id"/>
-                    <field name="qty"/>
-                    <field name="min_sale_qty"/>
-                    <field name="min_qty"/>
-                    <field name="is_qty_decimal"/>
-                    <field name="is_in_stock"/>
-                    <field name="backorders"/>
-                </group>
+				<header>
+					<button type="object" name="sync_from_magento" string="Force Sync Magento -> Odoo"/>
+                    <button type="object" name="run_sync_from_magento" string="Force instead Sync Magento -> Odoo" groups="base.group_no_one"/>
+					<button type="object" name="sync_to_magento" string="Force Sync Odoo -> Magento"/>
+                    <button type="object" name="run_sync_to_magento" string="Force instead Sync Odoo -> Magento" groups="base.group_no_one"/>
+				</header>
+                <sheet>
+                    <group>
+                        <field name="backend_id"/>
+                        <field name="external_id"/>
+                        <field name="odoo_id"/>
+                        <field name="magento_warehouse_id"/>
+                        <field name="qty"/>
+                        <field name="calculated_qty"/>
+                        <field name="should_export"/>
+                        <field name="min_sale_qty"/>
+                        <field name="min_qty"/>
+                        <field name="is_qty_decimal"/>
+                        <field name="is_in_stock"/>
+                        <field name="backorders"/>
+                    </group>
+                </sheet>
             </form>
         </field>
     </record>

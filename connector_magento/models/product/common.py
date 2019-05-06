@@ -76,8 +76,6 @@ class MagentoProductProduct(models.Model):
         inverse_name='magento_product_binding_id',
         string="Magento Stock Items",
     )
-    no_stock_sync = fields.Boolean('No Stock Sync', default=False)
-
     no_stock_sync = fields.Boolean(
         string='No Stock Synchronization',
         required=False,
@@ -257,19 +255,6 @@ class MagentoBindingProductListener(Component):
     # fields which should not trigger an export of the products
     # but an export of their inventory
     INVENTORY_FIELDS = ()
-
-# replaced by stock.items export
-#     @skip_if(lambda self, record, **kwargs: self.no_connector_export(record))
-#     def on_record_write(self, record, fields=None):
-#         if record.no_stock_sync:
-#             return
-#         inventory_fields = list(
-#             set(fields).intersection(self.INVENTORY_FIELDS)
-#         )
-#         if inventory_fields:
-#             record.with_delay(priority=20).export_inventory(
-#                 fields=inventory_fields
-#             )
 
 
 class MagentoProductVariantModelBinder(Component):

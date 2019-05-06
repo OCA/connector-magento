@@ -43,8 +43,12 @@ class MagentoStockItemImportMapper(Component):
 
     @mapping
     def backorders(self, record):
-        # TODO: Find out how to control this
-        return {'backorders': 'use_default'}
+        map = {
+            0: 'no',
+            1: 'yes',
+            2: 'yes-and-notification'
+        }
+        return {'backorders': map[record['backorders']]}
 
     @mapping
     def backend_id(self, record):

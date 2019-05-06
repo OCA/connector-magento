@@ -337,7 +337,7 @@ class MagentoExporter(AbstractComponent):
         assert self.external_id
         # special check on data before export
         self._validate_update_data(data)
-        self.backend_adapter.write(self.external_id, data, self.binding)
+        return self.backend_adapter.write(self.external_id, data, self.binding)
 
     def _update_binding_record_after_create(self, data):
         self.external_id = data

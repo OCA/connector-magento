@@ -403,19 +403,14 @@ class MagentoBackend(models.Model):
         return True
 
     @api.multi
-    def _domain_for_update_product_stock_qty(self):
-        return [
+    def update_product_stock_qty(self):
+        magento_products = self.env['magento.product.product'].search([
             ('backend_id', 'in', self.ids),
             ('type', '!=', 'service'),
             ('no_stock_sync', '=', False),
-        ]
-
-    @api.multi
-    def update_product_stock_qty(self):
-        mag_product_obj = self.env['magento.product.product']
-        domain = self._domain_for_update_product_stock_qty()
-        magento_products = mag_product_obj.search(domain)
-        magento_products.recompute_magento_qty()
+        ])
+        for mproduct in magento_products:
+            mproduct.magento_stock_item_ids.sync_to_magento()
         return True
 
     @api.model

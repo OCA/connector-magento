@@ -254,7 +254,7 @@ class GenericAdapter(AbstractComponent):
         return self._call('%s.search' % self._magento_model,
                           [filters] if filters else [{}])
 
-    def _read_url(self, id):
+    def _read_url(self, id, binding=None):
         def escape(term):
             if isinstance(term, basestring):
                 return urllib.quote(term.encode('utf-8'), safe='')
@@ -265,14 +265,14 @@ class GenericAdapter(AbstractComponent):
         else:
             return '%s' % (self._magento2_model)
 
-    def read(self, id, attributes=None, storeview_code=None):
+    def read(self, id, attributes=None, storeview_code=None, binding=None):
         """ Returns the information of a record
 
         :rtype: dict
         """
         if self.work.magento_api._location.version == '2.0':
 
-            res = self._call(self._read_url(id), None, storeview=storeview_code)
+            res = self._call(self._read_url(id, binding), None, storeview=storeview_code)
             if self._magento2_key:
                 return res
             else:
