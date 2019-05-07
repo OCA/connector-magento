@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="assets_backend" name="connector_magento assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <link rel="stylesheet" href="/connector_magento_dashboard/static/src/css/connector_magento_dashboard.css"/>
+            <script type="text/javascript" src="/connector_magento_dashboard/static/src/js/connector_magento_dashboard.js"></script>
+        </xpath>
+    </template>
+</odoo>

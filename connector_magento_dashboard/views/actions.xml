@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- JOB QUEUE ACTIONS -->
+
+        <record id="action_queue_job_failed" model="ir.actions.act_window">
+            <field name="name">Jobs</field>
+            <field name="res_model">queue.job</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_failed': 1}</field>
+            <field name="view_id" ref="queue_job.view_queue_job_tree"/>
+            <field name="search_view_id" ref="queue_job.view_queue_job_search"/>
+        </record>
+
+        <record id="action_queue_job_running" model="ir.actions.act_window">
+            <field name="name">Jobs</field>
+            <field name="res_model">queue.job</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_started': 1}</field>
+            <field name="view_id" ref="queue_job.view_queue_job_tree"/>
+            <field name="search_view_id" ref="queue_job.view_queue_job_search"/>
+        </record>
+
+        <record id="action_queue_job_pending" model="ir.actions.act_window">
+            <field name="name">Jobs</field>
+            <field name="res_model">queue.job</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_pending': 1}</field>
+            <field name="view_id" ref="queue_job.view_queue_job_tree"/>
+            <field name="search_view_id" ref="queue_job.view_queue_job_search"/>
+        </record>
+
+        <!-- PRODUCT ACTIONS -->
+
+        <record id="simple_product_action" model="ir.actions.act_window">
+            <field name="name">Simple Produkte</field>
+            <field name="res_model">magento.product.template</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('product_type', '=', 'simple')]</field>
+        </record>
+
+        <record id="configurable_product_action" model="ir.actions.act_window">
+            <field name="name">Simple Produkte</field>
+            <field name="res_model">magento.product.template</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('product_type', '=', 'configurable')]</field>
+        </record>
+
+        <record id="bundle_product_action" model="ir.actions.act_window">
+            <field name="name">Simple Produkte</field>
+            <field name="res_model">magento.product.bundle</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="read_products_action" model="ir.actions.server">
+            <field name="name">Read Products</field>
+            <field name="model_id" ref="connector_magento.model_magento_backend"/>
+            <field name="code">
+                env['magento.backend'].search([]).import_product_product()
+            </field>
+        </record>
+
+        <record id="read_config_products_action" model="ir.actions.server">
+            <field name="name">Read Products</field>
+            <field name="model_id" ref="connector_magento.model_magento_backend"/>
+            <field name="code">
+                env['magento.backend'].search([]).import_product_template()
+            </field>
+        </record>
+
+        <record id="read_bundles_action" model="ir.actions.server">
+            <field name="name">Read Products</field>
+            <field name="model_id" ref="connector_magento.model_magento_backend"/>
+            <field name="code">
+                env['magento.backend'].search([]).import_product_bundle()
+            </field>
+        </record>
+
+        <record id="export_products_action" model="ir.actions.server">
+            <field name="name">Produkte exportieren</field>
+            <field name="model_id" ref="connector_magento.model_magento_backend"/>
+            <field name="code">
+                action = env.ref('connector_magento.wizard_add_backend_action').read()[0]
+            </field>
+        </record>
+
+        <!-- ORDER ACTIONS -->
+
+        <record id="magento_order_action" model="ir.actions.act_window">
+            <field name="name">Orders</field>
+            <field name="res_model">magento.sale.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="magento_order_today_action" model="ir.actions.act_window">
+            <field name="name">Orders</field>
+            <field name="res_model">magento.sale.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('date_order', '>', datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0))]</field>
+        </record>
+
+        <record id="read_sale_orders_action" model="ir.actions.server">
+            <field name="name">Read Products</field>
+            <field name="model_id" ref="connector_magento.model_magento_backend"/>
+            <field name="code">
+                env['magento.backend'].search([]).import_sale_orders()
+            </field>
+        </record>
+
+        <!-- INVOICE ACTIONS -->
+
+        <record id="magento_invoice_action" model="ir.actions.act_window">
+            <field name="name">Invoices</field>
+            <field name="res_model">magento.account.invoice</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="magento_invoice_today_action" model="ir.actions.act_window">
+            <field name="name">Invoices</field>
+            <field name="res_model">magento.account.invoice</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('date_invoice', '>', datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0))]</field>
+        </record>
+
+        <!-- PARTNER ACTIONS -->
+
+        <record id="magento_partner_action" model="ir.actions.act_window">
+            <field name="name">Orders</field>
+            <field name="res_model">magento.res.partner</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="magento_partner_today_action" model="ir.actions.act_window">
+            <field name="name">Orders</field>
+            <field name="res_model">magento.res.partner</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('date_created', '>', datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0))]</field>
+        </record>
+
+        <record id="read_res_partners_action" model="ir.actions.server">
+            <field name="name">Read Partners</field>
+            <field name="model_id" ref="connector_magento.model_magento_backend"/>
+            <field name="code">
+                env['magento.backend'].search([]).import_partners()
+            </field>
+        </record>
+
+        <!-- CATEGORY ACTIONS -->
+
+    </data>
+</odoo>

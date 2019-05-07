@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="magento_backend_dashboard" model="ir.ui.view">
+            <field name="name">magento.backend.dashboard</field>
+            <field name="model">magento.backend</field>
+            <field name="arch" type="xml">
+                <kanban class="oe_background_grey" create="0" js_class="connector_magento_dashboard">
+                    <field name="name"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban">
+                                <div>
+                                    <a type="object" name="get_current_record_view">
+                                        <div class="o_kanban_card_header_title" style="font-size:1.3em;">
+                                            <div class="o_primary">
+                                                <b>
+                                                    <field name="name"/>
+                                                </b>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="magento_backend_dashboard_action_window" model="ir.actions.act_window">
+            <field name="name">Magento Dashboard</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">magento.backend</field>
+            <field name="view_mode">kanban</field>
+            <field name="target">main</field>
+        </record>
+
+        <record id="magento_backend_form_only_action_window" model="ir.actions.act_window">
+            <field name="name">Magento Dashboard</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">magento.backend</field>
+            <field name="view_mode">form</field>
+            <field name="target">main</field>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="magento_backend_dashboard_view_kanban_specification">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="magento_backend_dashboard"/>
+            <field name="act_window_id" ref="magento_backend_dashboard_action_window"/>
+        </record>
+
+        <!-- This Menu Item must have a parent and an action -->
+        <menuitem id="magento_connector_dashboard_menu" name="Dashboard" parent="connector_magento.menu_magento_root" action="magento_backend_dashboard_action_window" sequence="1"/>
+
+    </data>
+</odoo>

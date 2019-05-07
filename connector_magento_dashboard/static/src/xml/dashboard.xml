@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="connector_magento_dashboard.Dashboard">
+        <div t-if="show_demo or values" class="dashboard_container">
+            <div class="dashboard_actions">
+                <div class="dashboard_actions_main">
+                    <div class="dashboard_action">
+                        <h3>Jobs</h3>
+                        <div class="dasboard-action-smart-button-container">
+                            <div class="dasboard-action-smart-button">
+                                <a href="#" class="dashboard_main o_dashboard_action" name="connector_magento_dashboard.action_queue_job_failed">
+                                    <p class="dasboard-action-smart-button-nr"><span t-esc="values['nr_failed_jobs']"/></p>
+                                    <p>Failed Jobs</p>
+                                </a>
+                            </div>
+                            <div class="dasboard-action-smart-button">
+                                <a href="#" class="dashboard_main o_dashboard_action" name="connector_magento_dashboard.action_queue_job_running">
+                                    <p class="dasboard-action-smart-button-nr"><span t-esc="values['nr_running_jobs']"/></p>
+                                    <p>Running Jobs</p>
+                                </a>
+                            </div>
+                            <div class="dasboard-action-smart-button">
+                                <a href="#" class="dashboard_main o_dashboard_action" name="connector_magento_dashboard.action_queue_job_pending">
+                                    <p class="dasboard-action-smart-button-nr"><span t-esc="values['nr_pending_jobs']"/></p>
+                                    <p>Pending Jobs</p>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dashboard_action">
+                        <h3>Produkte</h3>
+                        <div class="dasboard-action-smart-button-container">
+                            <div class="dasboard-action-smart-button">
+                                <a href="#" class="dashboard_main o_dashboard_action" name="connector_magento_dashboard.simple_product_action">
+                                    <p class="dasboard-action-smart-button-nr"><span t-esc="values['nr_simple_products']"/></p>
+                                    <p>Einfache Produkte</p>
+                                </a>
+                            </div>
+                            <div class="dasboard-action-smart-button">
+                                <a href="#" class="dashboard_main o_dashboard_action" name="connector_magento_dashboard.configurable_product_action">
+                                    <p class="dasboard-action-smart-button-nr"><span t-esc="values['nr_configurable_products']"/></p>
+                                    <p>Konfigurierbare Produkte</p>
+                                </a>
+                            </div>
+                            <div class="dasboard-action-smart-button">
+                                <a href="#" class="dashboard_main o_dashboard_action" name="connector_magento_dashboard.bundle_product_action">
+                                    <p class="dasboard-action-smart-button-nr"><span t-esc="values['nr_set_products']"/></p>
+                                    <p>Sets</p>
+                                </a>
+                            </div>
+                            <hr/>
+                            <div class="dasboard-action-smart-button">
+                                <a href="#" class="dashboard_main o_dashboard_action" name="connector_magento_dashboard.read_products_action">
+                                    <p>Simple Produkte einlesen</p>
+                                </a>
+                                <a href="#" class="dashboard_main o_dashboard_action" name="connector_magento_dashboard.read_config_products_action">
+                                    <p>Konfigurierbare Produkte einlesen</p>
+                                </a>
+                                <a href="#" class="dashboard_main o_dashboard_action" name="connector_magento_dashboard.read_bundles_action">
+                                    <p>Produktbundles einlesen</p>
+                                </a>
+                            </div>
+                            <hr/>
+                            <div class="dasboard-action-smart-button">
+                                <a href="#" class="dashboard_main o_dashboard_action" name="connector_magento_dashboard.export_products_action">
+                                    <p>Produkte exportieren</p>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dashboard_action">
+                        <h3>Bestellungen</h3>
+                        <div class="dasboard-action-smart-button-container">
+                            <div class="dasboard-action-smart-button">
+                                <a href="#" class="dashboard_main o_dashboard_action" name="connector_magento_dashboard.magento_order_today_action">
+                                    <p class="dasboard-action-smart-button-nr"><span t-esc="values['nr_orders_today']"/> / <span t-esc="values['amount_orders_today']"/></p>
+                                    <p>Bestellungen heute</p>
+                                </a>
+                            </div>
+                            <div class="dasboard-action-smart-button">
+                                <a href="#" class="dashboard_main o_dashboard_action" name="connector_magento_dashboard.magento_order_action">
+                                    <p class="dasboard-action-smart-button-nr"><span t-esc="values['nr_orders_total']"/> / <span t-esc="values['amount_orders_total']"/></p>
+                                    <p>Bestellungen gesamt</p>
+                                </a>
+                            </div>
+                            <hr/>
+                            <div class="dasboard-action-smart-button">
+                                <a href="#" class="dashboard_main o_dashboard_action" name="connector_magento_dashboard.read_sale_orders_action">
+                                    <p>Bestellungen einlesen</p>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dashboard_action">
+                        <h3>Rechnungen</h3>
+                        <div class="dasboard-action-smart-button-container">
+                            <div class="dasboard-action-smart-button">
+                                <a href="#" class="dashboard_main o_dashboard_action" name="connector_magento_dashboard.magento_invoice_today_action">
+                                    <p class="dasboard-action-smart-button-nr"><span t-esc="values['nr_invoices_today']"/> / <span t-esc="values['amount_invoices_today']"/></p>
+                                    <p>Rechnungen heute</p>
+                                </a>
+                            </div>
+                            <div class="dasboard-action-smart-button">
+                                <a href="#" class="dashboard_main o_dashboard_action" name="connector_magento_dashboard.magento_invoice_action">
+                                    <p class="dasboard-action-smart-button-nr"><span t-esc="values['nr_invoices_total']"/> / <span t-esc="values['amount_invoices_total']"/></p>
+                                    <p>Rechnungen gesamt</p>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dashboard_action">
+                        <h3>Kunden</h3>
+                        <div class="dasboard-action-smart-button-container">
+                            <div class="dasboard-action-smart-button">
+                                <a href="#" class="dashboard_main o_dashboard_action" name="connector_magento_dashboard.magento_partner_today_action">
+                                    <p class="dasboard-action-smart-button-nr"><span t-esc="values['nr_partner_today']"/></p>
+                                    <p>Neue heute</p>
+                                </a>
+                            </div>
+                            <div class="dasboard-action-smart-button">
+                                <a href="#" class="dashboard_main o_dashboard_action" name="connector_magento_dashboard.magento_partner_action">
+                                    <p class="dasboard-action-smart-button-nr"><span t-esc="values['nr_partner_total']"/></p>
+                                    <p>Insgesammt</p>
+                                </a>
+                            </div>
+                            <hr/>
+                            <div class="dasboard-action-smart-button">
+                                <a href="#" class="dashboard_main o_dashboard_action" name="connector_magento_dashboard.read_res_partners_action">
+                                    <p>Partner einlesen</p>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>
