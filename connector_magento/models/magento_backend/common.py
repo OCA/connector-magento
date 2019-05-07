@@ -440,6 +440,8 @@ class MagentoBackend(models.Model):
     @api.model
     def _scheduler_import_product_product(self, domain=None):
         self._magento_backend('import_product_product', domain=domain)
+        self._magento_backend('import_product_template', domain=domain)
+        self._magento_backend('import_product_bundle', domain=domain)
 
     @api.model
     def _scheduler_update_product_stock_qty(self, domain=None):
