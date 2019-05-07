@@ -466,9 +466,9 @@ class SaleOrderImporter(Component):
         # (http://www.magentocommerce.com/bug-tracking/issue?issue=15886)
         return storeview_binder.to_internal(record['store_id'])
 
-    def _get_magento_data(self):
+    def _get_magento_data(self, binding=None):
         """ Return the raw Magento data for ``self.external_id`` """
-        record = super(SaleOrderImporter, self)._get_magento_data()
+        record = super(SaleOrderImporter, self)._get_magento_data(binding)
         # sometimes we don't have website_id...
         # we fix the record!
         if not record.get('website_id'):

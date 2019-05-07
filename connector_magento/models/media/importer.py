@@ -27,7 +27,7 @@ class ProductMediaImporter(Component):
     def _update_data(self, map_record, **kwargs):
         return map_record.values(product_binding=self.product_binding)
 
-    def _get_magento_data(self):
+    def _get_magento_data(self, binding=None):
         """ Return the raw Magento data for ``self.external_id`` """
         return self.backend_adapter.read(self.external_id, self.product_binding.external_id)
 
