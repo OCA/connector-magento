@@ -89,7 +89,7 @@ class ProductAttributeValueAdapter(Component):
     _magento2_key = 'id'
     _magento2_name = 'option'
 
-    def read(self, id, storeview_code=None, attributes=None):
+    def read(self, id, storeview_code=None, attributes=None, binding=None):
         """ Returns the information of a record
 
         :rtype: dict

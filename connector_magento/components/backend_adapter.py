@@ -138,7 +138,7 @@ class MagentoCRUDAdapter(AbstractComponent):
         and returns a list of ids """
         raise NotImplementedError
 
-    def read(self, id, attributes=None):
+    def read(self, id, attributes=None, binding=None):
         """ Returns the information of a record """
         raise NotImplementedError
 

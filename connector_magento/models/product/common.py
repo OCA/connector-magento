@@ -214,7 +214,7 @@ class ProductProductAdapter(Component):
                 in self._call('%s.list' % self._magento_model,
                               [filters] if filters else [{}])]
 
-    def read(self, id, storeview_code=None, attributes=None):
+    def read(self, id, storeview_code=None, attributes=None, binding=None):
         """ Returns the information of a record
 
         :rtype: dict

@@ -101,7 +101,7 @@ class ProductCategoryAdapter(Component):
         return self._call('oerp_catalog_category.search',
                           [filters] if filters else [{}])
 
-    def read(self, id, storeview_code=None, attributes=None):
+    def read(self, id, storeview_code=None, attributes=None, binding=None):
         """ Returns the information of a record
 
         :rtype: dict

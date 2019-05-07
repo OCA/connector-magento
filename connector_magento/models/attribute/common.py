@@ -114,7 +114,7 @@ class ProductAttributeAdapter(Component):
     _magento2_name = 'attribute'
     
     
-    def read(self, id, storeview_code=None, attributes=None):
+    def read(self, id, storeview_code=None, attributes=None, binding=None):
         """ Returns the information of a record
         :rtype: dict
         """

@@ -336,7 +336,7 @@ class SaleOrderAdapter(Component):
         arguments = self.get_search_arguments(filters)
         return super(SaleOrderAdapter, self).search(arguments)
 
-    def read(self, id, attributes=None):
+    def read(self, id, attributes=None, binding=None):
         """ Returns the information of a record
 
         :rtype: dict

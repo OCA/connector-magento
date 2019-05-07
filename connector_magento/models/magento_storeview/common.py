@@ -111,7 +111,7 @@ class StoreviewAdapter(Component):
     _magento2_model = 'store/storeConfigs'
     _admin_path = 'system_store/editStore/store_id/{id}'
     
-    def read(self, id, attributes=None):
+    def read(self, id, attributes=None, binding=None):
         """ Conveniently split into two separate APIs in 2.0
 
         :rtype: dict

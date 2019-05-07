@@ -88,7 +88,7 @@ class ProductMediaAdapter(Component):
 
         return 'products/%s/media/%s' % (escape(sku), id)
 
-    def read(self, id, sku, attributes=None, storeview_code=None):
+    def read(self, id, sku, attributes=None, storeview_code=None, binding=None):
         if self.work.magento_api._location.version == '2.0':
             return self._call(self._read_url(id, sku), None, storeview=storeview_code)
 
