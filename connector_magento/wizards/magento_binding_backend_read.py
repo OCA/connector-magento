@@ -70,10 +70,16 @@ class MagentoBindingBackendRead(models.TransientModel):
         )
         ret = []
         for component_class in component_classes:
-            ret.append(
-                (component_class._apply_on,
-                 self._get_translated_model_name(component_class._apply_on))
-            )
+            apply_on = component_class._apply_on
+            if not apply_on:
+                continue
+            if isinstance(apply_on, str):
+                apply_on = [apply_on]
+            for model_name in apply_on:
+                ret.append(
+                    (model_name,
+                     self._get_translated_model_name(model_name))
+                )
         return ret
 
     name = fields.Char(
