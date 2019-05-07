@@ -266,11 +266,16 @@ class ProductTemplateExportMapper(Component):
                         or 
                         len(att.attribute_multiselect.ids) > 0
                     )
-                    and att.store_view_id.id == False if not storeview_id else storeview_id.id
             )
+            
         
         for values_id in magento_attribute_value_ids:
-            
+            if not storeview_id and values_id.store_view_id.id != False:
+                #Don't keep the value is no store view
+                continue 
+            if storeview_id and not values_id.store_view_id.id != storeview_id.id:
+                continue
+                
             """ Deal with Custom Attributes """            
             attributeCode = values_id.attribute_id.attribute_code
             value = values_id.attribute_text
