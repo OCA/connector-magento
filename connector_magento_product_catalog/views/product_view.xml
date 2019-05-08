@@ -19,8 +19,6 @@
 			</sheet>
 
 			<xpath expr="//div[@name='button_box']" position="inside">
-				<button name="resync" string="resyn All"
-					class="oe_stat_button" help="Stck, Attributes, ..." type="object" />
 				<button name="%(action_magento_custom_attributes)d"
 					type="action" string="Custom Values" class="oe_stat_button"
 					context="{'search_default_magento_product_id': [active_id], 

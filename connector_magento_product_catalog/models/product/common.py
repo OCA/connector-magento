@@ -108,6 +108,9 @@ class MagentoProductProduct(models.Model):
 class ProductProduct(models.Model):
     _inherit = 'product.product'
     
+
+    '''
+    Moved into the product.product listener
     @api.multi
     def write(self, vals):
         org_vals = vals.copy()
@@ -118,7 +121,7 @@ class ProductProduct(models.Model):
                 for key in org_vals:
                     binding.check_field_mapping(key, vals)
         return res
-
+    '''
 
 class ProductProductAdapter(Component):
     _inherit = 'magento.product.product.adapter'
