@@ -6,6 +6,7 @@ from contextlib import contextmanager
 from datetime import datetime, timedelta
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 _logger = logging.getLogger(__name__)
 
@@ -40,7 +41,7 @@ class MagentoBackend(models.Model):
         # sale data
         orders = self.env['magento.sale.order'].search([('state', 'not in', ('draft', 'canceled'))])
         order_amount = sum(orders.mapped('amount_total'))
-        orders_today = orders.filtered(lambda f: f.date_order > date_midnight)
+        orders_today = orders.filtered(lambda f: datetime.strptime(f.date_order, DEFAULT_SERVER_DATETIME_FORMAT)  > date_midnight)
         order_amount_today = sum(orders_today.mapped('amount_total'))
         values.update({
             'nr_orders_today': len(orders_today),
@@ -51,7 +52,7 @@ class MagentoBackend(models.Model):
         # invoice data
         invoices = self.env['magento.account.invoice'].search([('type', '=', 'out_invoice'), ('state', 'in', ('open', 'paid'))])
         invoice_amount = sum(invoices.mapped('amount_total'))
-        invoices_today = invoices.filtered(lambda f: f.date_invoice > date_midnight)
+        invoices_today = invoices.filtered(lambda f: datetime.strptime(f.date_invoice, DEFAULT_SERVER_DATETIME_FORMAT) > date_midnight)
         invoice_amount_today = sum(invoices_today.mapped('amount_total'))
         values.update({
             'nr_invoices_today': len(invoices_today),
@@ -61,7 +62,7 @@ class MagentoBackend(models.Model):
         })
         # partner data
         partners = self.env['magento.res.partner'].search([('customer', '=', True)])
-        partners_today = invoices.filtered(lambda f: f.date_created > date_midnight)
+        partners_today = invoices.filtered(lambda f: datetime.strptime(f.date_created, DEFAULT_SERVER_DATETIME_FORMAT) > date_midnight)
         values.update({
             'nr_partner_today': len(partners_today),
             'nr_partner_total': len(partners),
