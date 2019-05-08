@@ -326,7 +326,8 @@ class GenericAdapter(AbstractComponent):
                     self._create_url(binding),
                     {self._magento2_name: data,
                      'saveOptions': True}, http_method='post')
-                data.update(new_object)
+                if isinstance(new_object, dict):
+                    data.update(new_object)
             else:
                 new_object = self._call(
                     self._create_url(binding),
@@ -343,11 +344,11 @@ class GenericAdapter(AbstractComponent):
             if self._magento2_name:
                 return self._call(
                     self._write_url(id, binding),
-                    {self._magento2_name: data}, http_method='put', storeview_code=storeview_code)
+                    {self._magento2_name: data}, http_method='put', storeview=storeview_code or 'all')
             else:
                 return self._call(
                     '%s/%s' % (self._magento2_model, id),
-                    data, http_method='put', storeview_code=storeview_code)
+                    data, http_method='put', storeview=storeview_code or 'all')
         return self._call('%s.update' % self._magento_model,
                           [int(id), data])
 

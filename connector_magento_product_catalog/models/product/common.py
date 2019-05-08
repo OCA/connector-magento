@@ -1,14 +1,11 @@
 # -*- coding: utf-8 -*-
-# Copyright <YEAR(S)> <AUTHOR(S)>
+# Copyright 2019 Callino
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 import logging
-import xmlrpclib
 from odoo import api, models, fields
 from odoo.addons.component.core import Component
 from odoo.addons.queue_job.job import job, related_action
-from odoo.addons.queue_job.job import identity_exact
-from odoo.addons.connector.exception import IDMissingInBackend
 
 _logger = logging.getLogger(__name__)
 
@@ -27,28 +24,20 @@ class MagentoProductProduct(models.Model):
 
     
     @api.multi
-    def sync_to_magento(self):
-        self.ensure_one()
-        self.resync()
-        
-    @api.multi
-    def resync(self):
-        self.ensure_one()
-        self.with_delay(priority=20,
-                        identity_key=identity_exact
-                        ).export_product()
-
     @job(default_channel='root.magento')
-    @related_action(action='related_action_unwrap_binding')
+    def sync_to_magento(self):
+        for binding in self:
+            binding.with_delay().run_sync_to_magento()
+
     @api.multi
-    def export_product(self, fields=None):
-        """ Export the attributes configuration of a product. """
+    @related_action(action='related_action_unwrap_binding')
+    @job(default_channel='root.magento')
+    def run_sync_to_magento(self):
         self.ensure_one()
         with self.backend_id.work_on(self._name) as work:
             exporter = work.component(usage='record.exporter')
             return exporter.run(self)
 
-    
     def action_magento_custom_attributes(self):
         action = self.env['ir.actions.act_window'].for_xml_id(
             'connector_magento_product_catalog', 

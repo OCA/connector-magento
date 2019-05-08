@@ -25,7 +25,7 @@ class MagentoProductCategory(models.Model):
     @related_action(action='related_action_unwrap_binding')
     @api.multi
     def export_category(self, fields=None):
-        """ Export the attributes configuration of a product. """
+        """ Export a category. """
         self.ensure_one()
         with self.backend_id.work_on(self._name) as work:
             exporter = work.component(usage='record.exporter')

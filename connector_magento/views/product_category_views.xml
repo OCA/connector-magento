@@ -32,9 +32,9 @@
                 <sheet>
                     <group>
                         <field name="backend_id"/>
+                        <field name="magento_name"/>
                         <field name="external_id"/>
                         <field name="description"/>
-                        <field name="parent_id"/>
                         <field name="odoo_id"/>
                         <field name="magento_parent_id"/>
                         <field name="magento_child_ids"/>
@@ -50,6 +50,7 @@
         <field name="arch" type="xml">
             <tree string="Magento Product Category">
                 <field name="backend_id"/>
+                <field name="magento_name"/>
                 <field name="external_id"/>
                 <field name="odoo_id"/>
             </tree>

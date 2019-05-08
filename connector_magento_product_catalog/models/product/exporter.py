@@ -124,7 +124,7 @@ class ProductProductExportMapper(Component):
 
     @mapping
     def names(self, record):
-        storeview_id = self.work.storeview_id or False
+        storeview_id = self.work.storeview_id if hasattr(self.work, 'storeview_id') else False
         name = record.name
         if storeview_id:
             value_ids = record.\
@@ -142,8 +142,11 @@ class ProductProductExportMapper(Component):
 
     @mapping
     def visibility(self, record):
-        #Force not visible individually in configurable dependency context
-        return {'visibility': 1}
+        return {'visibility': 4}
+
+    @mapping
+    def status(self, record):
+        return {'status': 1 if record.active else 0}
 
     @mapping
     def get_type(self, record):
@@ -152,7 +155,7 @@ class ProductProductExportMapper(Component):
     @mapping
     def get_extension_attributes(self, record):
         data = {}
-        storeview_id = self.work.storeview_id or False
+        storeview_id = self.work.storeview_id if hasattr(self.work, 'storeview_id') else False
         if not storeview_id:
             data.update(self.get_website_ids(record))
             data.update(self.category_ids(record))
@@ -225,7 +228,7 @@ class ProductProductExportMapper(Component):
         """
         
         customAttributes = []
-        storeview_id = self.work.storeview_id or False
+        storeview_id = self.work.storeview_id if hasattr(self.work, 'storeview_id') else False
         magento_attribute_line_ids = record.magento_attribute_line_ids.filtered(
             lambda att: att.store_view_id.id == False \
              and (
@@ -240,6 +243,9 @@ class ProductProductExportMapper(Component):
         for values_id in magento_attribute_line_ids:
             """ Deal with Custom Attributes """            
             attributeCode = values_id.attribute_id.attribute_code
+            if attributeCode == 'category_ids':
+                # Ignore category here - will get set using the category_links
+                continue
             value = values_id.attribute_text
             if values_id.magento_attribute_type == 'boolean':
                 try:

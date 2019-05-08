@@ -102,6 +102,7 @@ class ProductCategoryImportMapper(Component):
 
     direct = [
         ('description', 'description'),
+        ('name', 'magento_name'),
     ]
     
     @mapping

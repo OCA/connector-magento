@@ -9,6 +9,7 @@
 		<field name="arch" type="xml">
 			<button name="sync_from_magento" position="after">
 				<button type="object" name="sync_to_magento" string="Force Sync Odoo -> Magento"/>
+				<button type="object" name="run_sync_to_magento" string="Instead Force Sync Odoo -> Magento" groups="base.group_no_one"/>
 			</button>
 			<sheet position="inside">
 				<group>

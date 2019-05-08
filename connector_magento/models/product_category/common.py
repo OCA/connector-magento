@@ -17,15 +17,15 @@ _logger = logging.getLogger(__name__)
 class MagentoProductCategory(models.Model):
     _name = 'magento.product.category'
     _inherit = 'magento.binding'
-    _inherits = {'product.category': 'odoo_id'}
     _description = 'Magento Product Category'
     _magento_backend_path = 'catalog/category/edit/id'
     _magento_frontend_path = 'catalog/category/view/id'
 
     odoo_id = fields.Many2one(comodel_name='product.category',
                               string='Product Category',
-                              required=True,
+                              required=False,
                               ondelete='cascade')
+    magento_name = fields.Char(string='Name')
     description = fields.Text(translate=True)
     magento_parent_id = fields.Many2one(
         comodel_name='magento.product.category',
