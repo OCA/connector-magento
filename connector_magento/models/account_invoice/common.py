@@ -151,7 +151,7 @@ class MagentoInvoiceListener(Component):
                     if mag_inv.backend_id.id == magento_sale.backend_id.id:
                         binding_exists = True
                         break
-                if binding_exists:
+                if not binding_exists:
                     continue
                 # Check if invoice state matches configuration setting
                 # for when to export an invoice
