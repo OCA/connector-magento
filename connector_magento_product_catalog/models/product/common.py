@@ -14,13 +14,19 @@ _logger = logging.getLogger(__name__)
 class MagentoProductProduct(models.Model):
     _inherit = 'magento.product.product'
     
-    attribute_set_id = fields.Many2one('magento.product.attributes.set',                           
+    @api.depends('magento_attribute_line_ids')
+    def _compute_custom_values_count(self):
+        for product in self:
+            product.custom_values_count = len(product.magento_attribute_line_ids)
+
+    attribute_set_id = fields.Many2one('magento.product.attributes.set',
                                        string='Attribute set')
     
-    magento_attribute_line_ids = fields.One2many(comodel_name='magento.custom.attribute.values', 
+    magento_attribute_line_ids = fields.One2many(comodel_name='magento.custom.attribute.values',
                                                  inverse_name='magento_product_id', 
                                                  string='Magento Simple Custom Attributes Values',
                                         )
+    custom_values_count = fields.Integer('Custom Values Count', compute='_compute_custom_values_count')
 
     
     @api.multi
@@ -38,27 +44,6 @@ class MagentoProductProduct(models.Model):
             exporter = work.component(usage='record.exporter')
             return exporter.run(self)
 
-    def action_magento_custom_attributes(self):
-        action = self.env['ir.actions.act_window'].for_xml_id(
-            'connector_magento_product_catalog', 
-            'action_magento_custom_attributes')
-        
-        action['domain'] = unicode([('magento_product_id', '=', self.id)])
-        ctx = action.get('context', '{}') or '{}'
-        
-        action_context = ast.literal_eval(ctx)
-        action_context.update({
-            'default_attribute_set_id': self.attribute_set_id.id,
-            'default_magento_product_id': self.id,
-            'search_default_wt_odoo_mapping': True})
-#         
-# #         action_context = ctx
-#         action_context.update({
-#             'default_project_id': self.project_id.id})
-        action['context'] = action_context
-        return action
-    
-    
     @api.model
     def create(self, vals):
         mg_prod_id = super(MagentoProductProduct, self).create(vals)
@@ -104,24 +89,6 @@ class MagentoProductProduct(models.Model):
         
         return mg_prod_id
     
-
-class ProductProduct(models.Model):
-    _inherit = 'product.product'
-    
-
-    '''
-    Moved into the product.product listener
-    @api.multi
-    def write(self, vals):
-        org_vals = vals.copy()
-        res = super(ProductProduct, self).write(vals)
-#         prod_ids = self.filtered(lambda p: len(p.magento_bind_ids) > 0)
-        for prod in self:
-            for binding in prod.magento_bind_ids:
-                for key in org_vals:
-                    binding.check_field_mapping(key, vals)
-        return res
-    '''
 
 class ProductProductAdapter(Component):
     _inherit = 'magento.product.product.adapter'

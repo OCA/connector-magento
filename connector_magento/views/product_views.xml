@@ -60,10 +60,16 @@
 						<!-- <field name="product_type" readonly="1" /> -->
 						<field name="magento_configurable_id"/>
 					</group>
-					<label for="magento_stock_item_ids"/>
-					<field name="magento_stock_item_ids" nolabel="1"/>
-					<label for="magento_image_bind_ids"/>
-					<field name="magento_image_bind_ids" nolabel="1"/>
+					<notebook>
+						<page name="images" string="Images">
+							<label for="magento_image_bind_ids"/>
+							<field name="magento_image_bind_ids" nolabel="1"/>
+						</page>
+						<page name="stock" string="Stock Values">
+							<label for="magento_stock_item_ids"/>
+							<field name="magento_stock_item_ids" nolabel="1"/>
+						</page>
+					</notebook>
 				</sheet>
 			</form>
 		</field>
