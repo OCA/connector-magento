@@ -62,6 +62,27 @@
 			</field>
 		</record>
 
+		<record id="magento_product_template_search_view" model="ir.ui.view">
+			<field name="name">magento.product.template.search</field>
+			<field name="model">magento.product.template</field>
+			<field name="arch" type="xml">
+				<search string="Search Magento Configurables">
+					<field name="name"/>
+					<field name="external_id" string="SKU"/>
+					<field name="magento_id" string="Magento ID"/>
+					<group expand="0" string="Group By...">
+						<filter string="Backend"
+								icon="terp-folder-orange"
+								domain="[]"
+								context="{'group_by':'backend_id'}"/>
+						<filter string="Attribute Set"
+								icon="terp-folder-orange"
+								domain="[]"
+								context="{'group_by':'attribute_set_id'}"/>
+				   </group>
+			   </search>
+			</field>
+		</record>
 
 
 		<record id="magento_product_template_tree_view"
@@ -74,12 +95,9 @@
 					<field name="external_id" />
 					<field name="display_name" />
 					<field name="backend_id" />
-					<!-- <field name="attribute_set_id"/> -->
+					<field name="magento_id" />
+					<field name="attribute_set_id"/>
 					<field name="sync_date" />
-					<button name="sync_from_magento" type="object" string="Force Sync Magento -> Odoo" />
-					<button name="sync_to_magento" type="object" string="Force Sync Odoo -> Magento" />
-					<button name="action_magento_template_custom_attributes" type="object" string="Custom Values"
-							/>
 				</tree>
 			</field>
 		</record>
