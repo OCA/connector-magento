@@ -85,10 +85,11 @@
         <field name="model">magento.sale.order</field>
         <field name="arch" type="xml">
             <tree string="Magento Sales Orders"
-                    create="false" delete="false">
+                    create="false" delete="false" order_by="date_order desc">
                 <field name="backend_id"/>
                 <field name="store_id"/>
                 <field name="storeview_id"/>
+                <field name="date_order"/>
                 <field name="name"/>
                 <field name="partner_id"/>
                 <field name="total_amount_tax"/>

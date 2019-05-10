@@ -328,6 +328,12 @@ class SaleOrderImporter(Component):
         for item in resource['items']:
             if item.get('product_type') and item.get('product_type') == 'configurable':
                 continue
+            if item.get('product_type') and item.get('product_type') == 'bundle':
+                item['bundle_items'] = [];
+                # We do append the child items to the bundle item - so the mapper does have them available in the record
+                for subitem in resource['items']:
+                    if subitem.get('parent_item', False) and subitem['parent_item']['item_id'] == item['item_id']:
+                        item['bundle_items'].append(subitem)
             top_items.append(item)
         resource['items'] = top_items
         return resource
@@ -354,40 +360,6 @@ class SaleOrderImporter(Component):
 
         resource['items'] = items
         return resource
-
-    '''
-    def _merge_sub_items(self, product_type, top_item, child_items):
-        """
-        Manage the sub items of the magento sale order lines. A top item
-        contains one or many child_items. For some product types, we
-        want to merge them in the main item, or keep them as order line.
-
-        This method has to stay because it allow to customize the
-        behavior of the sale order according to the product type.
-
-        A list may be returned to add many items (ie to keep all
-        child_items as items.
-
-        :param top_item: main item (bundle, configurable)
-        :param child_items: list of childs of the top item
-        :return: item or list of items
-        """
-        if product_type == 'configurable':
-            item = top_item.copy()
-            # For configurable product all information regarding the
-            # price is in the configurable item. In the child a lot of
-            # information is empty, but contains the right sku and
-            # product_id. So the real product_id and the sku and the name
-            # have to be extracted from the child
-            for field in ['sku', 'product_id', 'name']:
-                item[field] = child_items[0][field]
-            # Experimental support for configurable products with multiple
-            # subitems
-            return [item] + child_items[1:]
-        elif product_type == 'bundle':
-            return child_items
-        return top_item
-    '''
 
     def _import_customer_group(self, group_id):
         self._import_dependency(group_id, 'magento.res.partner.category')
@@ -682,6 +654,15 @@ class SaleOrderLineImportMapper(Component):
               ('name', 'name'),
               ('item_id', 'external_id'),
               ]
+
+    @mapping
+    def name(self, record):
+        name = record['name']
+        if record['product_type'] == 'bundle':
+            # We do provide extra information about the bundle items here
+            for item in record['bundle_items']:
+                name = "%s\n\t* %s" % (name, item['name'], )
+        return {'name': name}
 
     @mapping
     def discount_amount(self, record):
