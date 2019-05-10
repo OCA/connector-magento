@@ -165,6 +165,17 @@ class ProductTemplateImporter(Component):
         # TODO: Remove for production - only to test the update
         return False
 
+    def _get_binding(self):
+        binding = super(ProductTemplateImporter, self)._get_binding()
+        if not binding:
+            # Do search using the magento_id - maybe the sku did changed !
+            binding = self.env['magento.product.template'].search([
+                ('backend_id', '=', self.backend_record.id),
+                ('magento_id', '=', self.magento_record['id']),
+            ])
+            # if we found binding here - then the update will also update the external_id on the binding record
+        return binding
+
     def _import_stock_warehouse(self):
         record = self.magento_record
         stock_item = record['extension_attributes']['stock_item']

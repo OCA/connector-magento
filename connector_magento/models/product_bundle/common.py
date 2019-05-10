@@ -50,6 +50,10 @@ class MagentoProductBundle(models.Model):
     magento_price = fields.Float('Backend Preis', default=0.0, digits=dp.get_precision('Product Price'),)
     created_at = fields.Date('Created At (on Magento)')
     updated_at = fields.Date('Updated At (on Magento)')
+    _sql_constraints = [
+        ('backend_magento_id_uniqueid',
+         'UNIQUE (backend_id, magento_id)',
+         'Duplicate binding of product detected, maybe SKU changed ?')]
 
 
     @api.multi

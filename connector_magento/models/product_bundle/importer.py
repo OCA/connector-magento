@@ -114,6 +114,17 @@ class ProductBundleImporter(Component):
             # Do always import / update
             option_importer.run(moption, bundle_binding=binding)
 
+    def _get_binding(self):
+        binding = super(ProductBundleImporter, self)._get_binding()
+        if not binding:
+            # Do search using the magento_id - maybe the sku did changed !
+            binding = self.env['magento.product.bundle'].search([
+                ('backend_id', '=', self.backend_record.id),
+                ('magento_id', '=', self.magento_record['id']),
+            ])
+            # if we found binding here - then the update will also update the external_id on the binding record
+        return binding
+
     def _after_import(self, binding):
         # Import Images
         image_importer = self.component(usage='bundle.image.importer')

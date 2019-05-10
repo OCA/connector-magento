@@ -27,7 +27,8 @@ class MagentoProductMedia(models.Model):
     def _get_image(self):
         for media in self:
             f = urllib.urlopen(media.url)
-            media.image = base64.b64encode(f.read())
+            if f.code == 200:
+                media.image = base64.b64encode(f.read())
             f.close()
 
     magento_product_id = fields.Many2one(comodel_name='magento.product.product',

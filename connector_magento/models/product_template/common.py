@@ -87,6 +87,10 @@ class MagentoProductTemplate(models.Model):
         inverse_name='magento_product_template_id',
         string='Magento Simple Custom Attributes Values for templates',
     )
+    _sql_constraints = [
+        ('backend_magento_id_uniqueid',
+         'UNIQUE (backend_id, magento_id)',
+         'Duplicate binding of product detected, maybe SKU changed ?')]
 
     @api.multi
     @job(default_channel='root.magento')

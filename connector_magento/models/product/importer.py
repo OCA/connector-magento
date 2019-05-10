@@ -480,6 +480,17 @@ class ProductImporter(Component):
         """
         self._validate_product_type(data)
 
+    def _get_binding(self):
+        binding = super(ProductImporter, self)._get_binding()
+        if not binding:
+            # Do search using the magento_id - maybe the sku did changed !
+            binding = self.env['magento.product.product'].search([
+                ('backend_id', '=', self.backend_record.id),
+                ('magento_id', '=', self.magento_record['id']),
+            ])
+            # if we found binding here - then the update will also update the external_id on the binding record
+        return binding
+
     def run(self, external_id, force=False, binding_template_id=None, binding=None):
         self._binding_template_id = binding_template_id
         return super(ProductImporter, self).run(external_id, force, binding=binding)

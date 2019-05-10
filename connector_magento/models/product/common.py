@@ -83,6 +83,10 @@ class MagentoProductProduct(models.Model):
         help="Check this to exclude the product "
              "from stock synchronizations.",
     )
+    _sql_constraints = [
+        ('backend_magento_id_uniqueid',
+         'UNIQUE (backend_id, magento_id)',
+         'Duplicate binding of product detected, maybe SKU changed ?')]
 
     @api.multi
     @job(default_channel='root.magento')
