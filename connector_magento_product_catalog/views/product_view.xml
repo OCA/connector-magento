@@ -11,12 +11,10 @@
 				<button type="object" name="sync_to_magento" string="Force Sync Odoo -> Magento"/>
 				<button type="object" name="run_sync_to_magento" string="Instead Force Sync Odoo -> Magento" groups="base.group_no_one"/>
 			</button>
-			<sheet position="inside">
-				<group>
-
-					<field name="attribute_set_id" required="1" />
-				</group>
-			</sheet>
+			<field name="no_stock_sync" position="after">
+				<field name="attribute_set_id"/> <!-- is not required - default from backend will get used if not set -->
+				<field name="visibility" readonly="1" />
+			</field>
 
 			<xpath expr="//div[@name='button_box']" position="inside">
 				<button context="{'search_default_magento_product_id': [active_id],
@@ -37,6 +35,17 @@
 					<field name="magento_attribute_line_ids" nolabel="1"/>
 				</page>
 			</xpath>
+		</field>
+	</record>
+
+	<record id="magento_product_product_tree_view" model="ir.ui.view">
+		<field name="name">magento.product.product.tree</field>
+		<field name="model">magento.product.product</field>
+		<field name="inherit_id" ref="connector_magento.magento_product_product_tree_view"/>
+		<field name="arch" type="xml">
+			<field name="backend_id" position="after" >
+				<field name="visibility"/>
+			</field>
 		</field>
 	</record>
 

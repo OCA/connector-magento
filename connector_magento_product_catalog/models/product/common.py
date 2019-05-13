@@ -27,10 +27,14 @@ class MagentoProductProduct(models.Model):
                                                  string='Magento Simple Custom Attributes Values',
                                         )
     custom_values_count = fields.Integer('Custom Values Count', compute='_compute_custom_values_count')
-
+    visibility = fields.Selection([
+        ('1', 'Einzel nicht sichtbar'),
+        ('4', 'Katalog, Suche'),
+    ], string="Visibility", default='4')
     
     @api.multi
     @job(default_channel='root.magento')
+    @related_action(action='related_action_unwrap_binding')
     def sync_to_magento(self):
         for binding in self:
             binding.with_delay().run_sync_to_magento()

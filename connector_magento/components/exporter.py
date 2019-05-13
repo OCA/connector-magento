@@ -371,5 +371,7 @@ class MagentoExporter(AbstractComponent):
             if not record:
                 return _('Nothing to export.')
             data = self._create(record)
+            if not data:
+                raise UserWarning('Create did not returned anything on %s with binding id %s', self._name, self.binding.id)
             self._update_binding_record_after_create(data)
         return _('Record exported with ID %s on Magento.') % self.external_id

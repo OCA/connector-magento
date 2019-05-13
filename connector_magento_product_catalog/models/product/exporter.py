@@ -18,6 +18,15 @@ class ProductProductExporter(Component):
     _apply_on = ['magento.product.product']
 
 
+    def _create_data(self, map_record, fields=None, **kwargs):
+        # Here we do generate a new default code is none exists for now
+        if not self.binding.default_code:
+            name = self.binding.display_name
+            for value in self.binding.attribute_value_ids:
+                name = "%s %s %s" % (name, value.attribute_id.name, value.name)
+            self.binding.default_code = slugify(name, to_lower=True)
+        return super(ProductProductExporter, self)._create_data(map_record, fields=fields, **kwargs)
+
     def _create(self, data):
         """ Create the Magento record """
         # special check on data before export
@@ -91,8 +100,6 @@ class ProductProductExporter(Component):
         def sort_by_position(elem):
             return elem.position
 
-        # We do export the product media here
-        image_exporter = self.component(usage='record.exporter', model_name='magento.product.media')
         # We do export the base image on position 0
         mbinding = None
         for media_binding in sorted(self.binding.magento_image_bind_ids.filtered(lambda m: m.media_type == 'image'), key=sort_by_position):
@@ -100,7 +107,7 @@ class ProductProductExporter(Component):
             break
         if not mbinding:
             # Create new media binding entry for main image
-            self.env['magento.product.media'].create({
+            mbinding = self.env['magento.product.media'].with_context(connector_no_export=True).create({
                 'backend_id': self.binding.backend_id.id,
                 'magento_product_id': self.binding.id,
                 'label': self.binding.odoo_id.name,
@@ -108,8 +115,7 @@ class ProductProductExporter(Component):
                 'position': 1,
                 'mimetype': 'image/png',
             })
-        else:
-            image_exporter.run(mbinding)
+        self._export_dependency(mbinding, "magento.product.media")
 
 
 class ProductProductExportMapper(Component):
@@ -142,7 +148,7 @@ class ProductProductExportMapper(Component):
 
     @mapping
     def visibility(self, record):
-        return {'visibility': 4}
+        return {'visibility': record.visibility}
 
     @mapping
     def status(self, record):
@@ -201,23 +207,12 @@ class ProductProductExportMapper(Component):
         return {'weight': val}
         
     @mapping
-    def dimensions(self, record):
-#                TODO: dimensions
-#         ('height', 'height'),
-#         ('width', 'width'),
-        return {}
-
-    @mapping
     def attribute_set_id(self, record):
         if record.attribute_set_id:
             val = record.attribute_set_id.external_id
         else:
             val = record.backend_id.default_attribute_set_id.external_id
         return {'attributeSetId': val}
-
-#     @mapping
-#     def names(self, record):
-#         return {}
 
     @mapping
     def get_common_attributes(self, record):
@@ -226,20 +221,13 @@ class ProductProductExportMapper(Component):
         https://devdocs.magento.com/swagger/index_20.html
         catalogProductRepositoryV1 / POST 
         """
-        
+
         customAttributes = []
         storeview_id = self.work.storeview_id if hasattr(self.work, 'storeview_id') else False
         magento_attribute_line_ids = record.magento_attribute_line_ids.filtered(
-            lambda att: att.store_view_id.id == False \
-             and (
-                        att.attribute_text != False
-                        or
-                        att.attribute_select.id != False
-                        or 
-                        len(att.attribute_multiselect.ids) > 0
-                    )
-            )
-        
+            lambda att: att.store_view_id.id==storeview_id and (
+                        att.attribute_text or att.attribute_select.id or len(att.attribute_multiselect.ids) > 0))
+
         for values_id in magento_attribute_line_ids:
             """ Deal with Custom Attributes """            
             attributeCode = values_id.attribute_id.attribute_code
@@ -274,23 +262,10 @@ class ProductProductExportMapper(Component):
                     'attributeCode': attributeCode,
                     'value': value
                     })
-        result = {'customAttributes': customAttributes}
+        result = {'custom_attributes': customAttributes}
         return result
 
     @mapping
     def price(self, record):
         price = record['lst_price']
         return {'price': price}
-    
-    
-#     @mapping
-#     def option_products(self, record):
-#         #TODO : Map optionnal products
-#         return {}
-#
-#
-#     @mapping
-#     def crossproducts(self, record):
-#         #TODO : Map cross products
-#         return {}
-

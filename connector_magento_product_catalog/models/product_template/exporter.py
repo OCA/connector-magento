@@ -2,16 +2,14 @@
 # Copyright 2013-2017 Camptocamp SA
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
-import xmlrpclib
 
 import odoo
 from datetime import datetime
 
-from odoo import _
 from odoo.addons.component.core import Component
-from odoo.addons.queue_job.exception import NothingToDoJob
-from odoo.addons.connector.unit.mapper import mapping
+from odoo.addons.connector.unit.mapper import mapping, only_create
 from odoo.addons.queue_job.job import identity_exact
+from slugify import slugify
 
 from odoo.addons.connector_magento.components.backend_adapter import MAGENTO_DATETIME_FORMAT
 
@@ -20,7 +18,19 @@ class ProductTemplateDefinitionExporter(Component):
     _name = 'magento.product.template.exporter'
     _inherit = 'magento.exporter'
     _apply_on = ['magento.product.template']
-    #_usage = 'product.definition.exporter'
+
+    def _create_data(self, map_record, fields=None, **kwargs):
+        # Here we do generate a new default code is none exists for now
+        if not self.binding.external_id:
+            sku = slugify(self.binding.display_name, to_lower=True)
+            search_count = self.env['magento.product.template'].search_count([
+                ('backend_id', '=', self.backend_record.id),
+                ('external_id', '=', sku),
+            ])
+            if search_count > 0:
+                sku = slugify("%s-%s" % (self.binding.display_name, self.binding.id), to_lower=True)
+            self.binding.external_id = sku
+        return super(ProductTemplateDefinitionExporter, self)._create_data(map_record, fields=fields, **kwargs)
 
     def _create(self, data):
         """ Create the Magento record """
@@ -32,25 +42,63 @@ class ProductTemplateDefinitionExporter(Component):
     def _export_dependencies(self):
         """ Export the dependencies for the record"""
         record = self.binding
+        # First - do export the attributes needed
+        att_lines = record.attribute_line_ids.filtered(lambda l: l.attribute_id.create_variant == True)
+        exported_attribute_ids = []
+        for att_line in att_lines:
+            m_att_id = att_line.attribute_id.magento_bind_ids.filtered(lambda m: m.backend_id == self.backend_record)
+            if not m_att_id and att_line.attribute_id.id not in exported_attribute_ids:
+                # We need to export the attribute first
+                self._export_dependency(att_line.attribute_id, "magento.product.attribute", binding_extra_vals={
+                    'create_variant': True,
+                })
+        # Then the attribute values
+        att_exporter = self.component(usage='record.exporter', model_name='magento.product.attribute')
+        for att_line in att_lines:
+            m_att_id = att_line.attribute_id.magento_bind_ids.filtered(lambda m: m.backend_id == self.backend_record)
+            m_att_values = []
+            needs_sync = False
+            for value_id in att_line.value_ids:
+                m_value_id = value_id.magento_bind_ids.filtered(lambda m: m.backend_id == self.backend_record)
+                if not m_value_id:
+                    m_att_values.append((0, 0, {
+                        'attribute_id': att_line.attribute_id.id,
+                        'magento_attribute_id': m_att_id.id,
+                        'odoo_id': value_id.id,
+                        'backend_id': self.backend_record.id,
+                    }))
+                    needs_sync = True
+                else:
+                    m_att_values.append((4, m_value_id.id))
+            # Write the values - then update the attribute
+            m_att_id.with_context(connector_no_export=True).magento_attribute_value_ids = m_att_values
+            if needs_sync:
+                # We only do sync if a new attribute arrived
+                att_exporter.run(m_att_id)
+
+        variant_exporter = self.component(usage='record.exporter', model_name='magento.product.product')
         for p in record.product_variant_ids:
             m_prod = p.magento_bind_ids.filtered(lambda m: m.backend_id == record.backend_id)
             if not m_prod.id:
-                m_prod = self.env['magento.product.product'].create(
-                    {'backend_id': self.backend_record.id,
-                     'odoo_id': p.id,
-                     'attribute_set_id': record.attribute_set_id.id,
-                     'magento_configurable_id': record.id
-                     })
-        
-        for p in record.magento_product_ids :
-            self._export_dependency(p, 'magento.product.product')
-
+                m_prod = self.env['magento.product.product'].with_context(connector_no_export=True).create({
+                    'backend_id': self.backend_record.id,
+                    'odoo_id': p.id,
+                    'attribute_set_id': record.attribute_set_id.id,
+                    'magento_configurable_id': record.id,
+                    'visibility': '1',
+                })
+                variant_exporter.run(m_prod)
 
     def _after_export(self):
-        if self.work.storeview_id :
+        storeview_id = self.work.storeview_id if hasattr(self.work, 'storeview_id') else False
+        if storeview_id:
+            # We are already in the storeview specific export
             return
-        for storeview_id in self.env['magento.storeview'].search([]):
-            self.binding.export_product_template(storeview_id=storeview_id)
+        # TODO Fix and enable again
+        '''
+        for storeview_id in self.env['magento.storeview'].search([('backend_id', '=', self.backend_record.id)]):
+            self.binding.with_delay().export_product_template_for_storeview(storeview_id=storeview_id)
+        '''
 
     def _should_import(self):
         """ Before the export, compare the update date
@@ -101,7 +149,8 @@ class ProductTemplateExportMapper(Component):
     
     @mapping
     def names(self, record):
-        storeview_id = self.work.storeview_id or False
+        storeview_id = self.work.storeview_id if hasattr(self.work, 'storeview_id') else False
+
         name = record.name
         if storeview_id:
             value_ids = record.\
@@ -109,12 +158,10 @@ class ProductTemplateExportMapper(Component):
                 lambda att: 
                     att.odoo_field_name.name == 'name'
                     and att.store_view_id.id == storeview_id.id
-                    and att.attribute_id.create_variant != True
-                    and (
-                        att.attribute_text != False
-                    )
+                    and not att.attribute_id.create_variant
+                    and att.attribute_text
                 )
-            name = value_ids[0].attribute_text
+            name = value_ids[0].attribute_text if value_ids else record.name
         return {'name': name}
     
     @mapping
@@ -131,13 +178,7 @@ class ProductTemplateExportMapper(Component):
     
     @mapping
     def default_code(self, record):
-        #get the first Reference of variants
-        code = record.product_variant_ids[0].default_code
-        if record.product_variant_count > 1 and record.magento_default_code:
-            code = record.magento_default_code
-        elif record.product_variant_count > 1 :
-           code = '%s-c' % code
-        return {'sku': code}
+        return {'sku': record.external_id}
     
     @mapping
     def price(self, record):
@@ -148,7 +189,7 @@ class ProductTemplateExportMapper(Component):
     @mapping
     def get_extension_attributes(self, record):
         data = {}
-        storeview_id = self.work.storeview_id or False
+        storeview_id = self.work.storeview_id if hasattr(self.work, 'storeview_id') else False
         if not storeview_id:
             return {}
         data.update(self.get_website_ids(record))
@@ -238,9 +279,7 @@ class ProductTemplateExportMapper(Component):
         if record.attribute_set_id:
             val = record.attribute_set_id.external_id
         else:
-            # TODO: maybe turn it into defensive option
-            # on the magento.backend
-            val = 1        
+            val = record.backend_id.default_attribute_set_id.external_id
         return {'attributeSetId' : val}
 
 
@@ -253,7 +292,7 @@ class ProductTemplateExportMapper(Component):
         """
         
         customAttributes = []
-        storeview_id = self.work.storeview_id or False 
+        storeview_id = self.work.storeview_id if hasattr(self.work, 'storeview_id') else False
         magento_attribute_value_ids = record.\
             magento_template_attribute_value_ids.filtered(
                 lambda att: 

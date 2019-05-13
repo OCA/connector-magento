@@ -106,4 +106,3 @@ class ProductAttributeline(models.Model):
         inverse_name='odoo_id',
         string='Magento Bindings',
     )
-    

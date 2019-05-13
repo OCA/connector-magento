@@ -106,24 +106,6 @@ class MagentoProductTemplate(models.Model):
             importer = work.component(usage='record.importer')
             return importer.run(self.external_id, force=True)
 
-    @job(default_channel='root.magento')
-    @related_action(action='related_action_unwrap_binding')
-    @api.multi
-    def export_product_template(self, fields=None, storeview_id=None):
-        """ Export the attributes configuration of a product. """
-        self.ensure_one()
-            # TODO make different usage
-
-        with self.backend_id.work_on(
-                self._name,
-                storeview_id=storeview_id
-                ) as work:
-#                 exporter = work.with_context(
-#                     storeview_id=storeview_id).component(usage='record.exporter')
-                exporter = work.component(usage='record.exporter')
-                return exporter.run(self)
-
-
     def action_magento_template_custom_attributes(self):
         action = self.env['ir.actions.act_window'].for_xml_id(
             'connector_magento_product_catalog',
@@ -460,16 +442,6 @@ class ProductTemplateAdapter(Component):
                 in self._call('%s.list' % self._magento_model,
                               [filters] if filters else [{}])]
 
-#     def create(self, data):
-#         """ Create a record on the external system """
-#         if self.work.magento_api._location.version == '2.0':
-#             new_product = super(ProductTemplateAdapter, self)._call(
-#                 'products', {
-#                     'product': data
-#                 },
-#                 http_method='post')
-#             return new_product['id']
-
     def list_variants(self, sku):
         def escape(term):
             if isinstance(term, basestring):
@@ -482,13 +454,11 @@ class ProductTemplateAdapter(Component):
 
     def write(self, id, data, binding=None):
         """ Update records on the external system """
-        # XXX actually only ol_catalog_product.update works
-        # the PHP connector maybe breaks the catalog_product.update
+        storeview_id = self.work.storeview_id if hasattr(self.work, 'storeview_id') else False
         if self.work.magento_api._location.version == '2.0':
             _logger.info("Prepare to call api with %s " % data)
             # Replace by the
             id = data['sku']
-            storeview_id = self.work.storeview_id or False
             storeview_code = storeview_id.code if storeview_id else False
             super(ProductTemplateAdapter, self)._call(
                 'products/%s' % id, {

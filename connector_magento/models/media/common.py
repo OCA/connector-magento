@@ -34,11 +34,11 @@ class MagentoProductMedia(models.Model):
     magento_product_id = fields.Many2one(comodel_name='magento.product.product',
                                          string='Magento Product',
                                          required=False,
-                                         ondelete='restrict')
+                                         ondelete='cascade')
     magento_product_tmpl_id = fields.Many2one(comodel_name='magento.product.template',
                                               string='Magento Product Template',
                                               required=False,
-                                              ondelete='restrict')
+                                              ondelete='cascade')
     label = fields.Char(string="Label")
     file = fields.Char(string="File")
     url = fields.Char(string="URL", compute='_compute_url', store=False)

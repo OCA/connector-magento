@@ -40,6 +40,9 @@
             <group name="values_ids" position="before">
                 <field name="magento_bind_ids" readonly="1"/>
             </group>
+            <group name="values_ids" position="inside">
+                <field name="create_variant"/>
+            </group>
         </field>
     </record>
 

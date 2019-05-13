@@ -26,6 +26,7 @@ class AttributeBatchImporter(Component):
 class AttributeImporter(Component):
     _name = 'magento.product.attribute.import'
     _inherit = ['magento.importer']
+    _magento_id_field = 'attribute_id'
 
     def _before_import(self):
         record = self.magento_record
@@ -61,6 +62,7 @@ class AttributeImportMapper(Component):
     direct = [
               ('attribute_code', 'attribute_code'),
               ('attribute_id', 'attribute_id'),
+              ('attribute_id', 'external_id'),
               ('frontend_input', 'frontend_input')]
     
     children = [
@@ -96,6 +98,7 @@ class AttributeImportMapper(Component):
             name = record['default_frontend_label'] 
         return {'name': name}
     
+    @only_create
     @mapping
     def create_variant(self, record):
         # Is by default False - will get set as soon as this attribute appears in a configureable product
