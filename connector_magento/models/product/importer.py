@@ -380,6 +380,10 @@ class ProductImportMapper(Component):
     def backend_id(self, record):
         return {'backend_id': self.backend_record.id}
 
+    @mapping
+    def no_stock_sync(self, record):
+        return {'no_stock_sync': self.backend_record.no_stock_sync}
+
     @only_create
     @mapping
     def odoo_id(self, record):

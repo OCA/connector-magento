@@ -197,6 +197,13 @@ class MagentoBackend(models.Model):
              "stock inventory updates.\nIf empty, Quantity Available "
              "is used.",
     )
+    no_stock_sync = fields.Boolean(
+        string='No Stock Synchronization',
+        required=False,
+        default=False,
+        help="Check this to default exclude new products "
+             "from stock synchronizations.",
+    )
     product_binding_ids = fields.One2many(
         comodel_name='magento.product.product',
         inverse_name='backend_id',

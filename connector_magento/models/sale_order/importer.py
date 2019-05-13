@@ -568,26 +568,29 @@ class SaleOrderImporter(Component):
         addresses_defaults = {'parent_id': partner.id,
                               'magento_partner_id': partner_binding.id,
                               'email': record.get('customer_email', False),
-                              'active': False,
+                              'active': True,
                               'is_magento_order_address': True}
 
         addr_mapper = self.component(usage='import.mapper',
                                      model_name='magento.address')
 
-        def create_address(address_record):
+        def create_address(address_record, type):
             map_record = addr_mapper.map_record(address_record)
             map_record.update(addresses_defaults)
+            map_record.update({
+                'type': type
+            })
             address_bind = self.env['magento.address'].with_context(connector_no_export=True).create(
                 map_record.values(for_create=True,
                                   parent_partner=partner))
             return address_bind.odoo_id.id
 
-        billing_id = create_address(record['billing_address'])
+        billing_id = create_address(record['billing_address'], 'invoice')
 
         shipping_id = None
         shipping_address = self._get_shipping_address()
         if shipping_address:
-            shipping_id = create_address(shipping_address)
+            shipping_id = create_address(shipping_address, 'delivery')
 
         self.partner_id = partner.id
         self.partner_invoice_id = billing_id

@@ -468,6 +468,7 @@
 									<field name="default_category_id" />
 									<field name="product_stock_field_id" widget="selection"
 										domain="[('model', 'in', ['product.product', 'product.template']), ('ttype', '=', 'float')]" />
+									<field name="no_stock_sync"/>
 								</group>
 								<group string="Sales / Accounting">
 									<field name="sale_prefix" placeholder="mag-" />
