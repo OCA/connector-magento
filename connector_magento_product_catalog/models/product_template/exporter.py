@@ -9,6 +9,7 @@ from datetime import datetime
 from odoo.addons.component.core import Component
 from odoo.addons.connector.unit.mapper import mapping, only_create
 from odoo.addons.queue_job.job import identity_exact
+from odoo.addons.connector.exception import MappingError
 from slugify import slugify
 
 from odoo.addons.connector_magento.components.backend_adapter import MAGENTO_DATETIME_FORMAT
@@ -212,15 +213,14 @@ class ProductTemplateExportMapper(Component):
 
 
     def configurable_product_options(self, record):
-        option_ids  = []
-        att_lines = record.attribute_line_ids.filtered(
-            lambda l: l.attribute_id.create_variant == True
-                    and len(l.attribute_id.magento_bind_ids) > 0
-            )
-        #TODO : Uniquement les attributs pivots
+        option_ids = []
+        att_lines = record.attribute_line_ids.filtered(lambda l: l.attribute_id.create_variant == True and len(l.attribute_id.magento_bind_ids.filtered(lambda m: m.backend_id == record.backend_id)) > 0)
         for l in att_lines:
-            m_att_id = l.attribute_id.magento_bind_ids.filtered(
-                    lambda m: m.backend_id == record.backend_id)
+            m_att_id = l.attribute_id.magento_bind_ids.filtered(lambda m: m.backend_id == record.backend_id)
+            if not m_att_id:
+                raise MappingError("The product attribute %s "
+                                   "is not exported yet." %
+                                   l.attribute_id.name)
             if not m_att_id.is_pivot_attribute:
                 continue
             opt = {
@@ -229,10 +229,9 @@ class ProductTemplateExportMapper(Component):
                 "label": m_att_id.attribute_code,
                 "position": 0,
                 "values": []
-                }
+            }
             for v in l.value_ids:
-                v_ids = v.magento_bind_ids.filtered(
-                lambda m: m.backend_id == record.backend_id)
+                v_ids = v.magento_bind_ids.filtered(lambda m: m.backend_id == record.backend_id)
                 for v_id in v_ids: 
                     opt['values'].append({ "value_index": v_id.external_id.split('_')[1]})
                 

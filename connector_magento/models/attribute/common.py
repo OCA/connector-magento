@@ -31,6 +31,7 @@ class MagentoProductAttribute(models.Model):
 
     attribute_id = fields.Integer(string='Magento Attribute ID')
     attribute_code = fields.Char(string='Magento Attribute Attribute Code')
+    nl2br = fields.Boolean('Enable NL2BR', default=False)
     frontend_input = fields.Selection([
         ('text', 'Text'),
         ('textarea', 'Text Area'),

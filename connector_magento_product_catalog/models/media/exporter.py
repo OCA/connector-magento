@@ -24,11 +24,18 @@ class ProductMediaExportMapper(Component):
 
     direct = [
         ('label', 'label'),
-        ('position', 'position'),
         ('disabled', 'disabled'),
         ('media_type', 'media_type'),
     ]
     
+    @mapping
+    def position(self, record):
+        if record.position is False:
+            return {}
+        return {
+            'position': record.position
+        }
+
     @mapping
     def get_types(self, record):
         itypes = []

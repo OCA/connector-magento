@@ -82,6 +82,7 @@
 							<field name="external_id" />
 							<field name="create_variant" />
 							<field name="frontend_input" readonly="1" />
+							<field name="nl2br" />
 							<field name="is_pivot_attribute" />
 						</group>
 						<group>

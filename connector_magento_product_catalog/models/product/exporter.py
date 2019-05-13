@@ -82,8 +82,7 @@ class ProductProductExporter(Component):
                                                 self.external_id,
                                                 force=True)
 
-    def _export_dependencies(self):
-        """ Export the dependencies for the record"""
+    def _export_categories(self):
         # Check for categories
         magento_categ_id = self.binding.categ_id.magento_bind_ids.filtered(lambda bc: bc.backend_id.id == self.backend_record.id)
         if not magento_categ_id:
@@ -94,6 +93,59 @@ class ProductProductExporter(Component):
             if not magento_categ_id:
                 # We need to export the category first
                 self._export_dependency(extra_category, "magento.product.category")
+
+    def _export_attributes(self):
+        # First - do export the attributes needed
+        record = self.binding
+        exported_attribute_ids = []
+        for att_line in record.attribute_line_ids:
+            m_att_id = att_line.attribute_id.magento_bind_ids.filtered(lambda m: m.backend_id == self.backend_record)
+            if not m_att_id and att_line.attribute_id.id not in exported_attribute_ids:
+                # We need to export the attribute first
+                self._export_dependency(att_line.attribute_id, "magento.product.attribute", binding_extra_vals={
+                    'create_variant': True,
+                })
+
+    def _export_attribute_values(self):
+        # Then the attribute values
+        record = self.binding
+        att_exporter = self.component(usage='record.exporter', model_name='magento.product.attribute')
+        exported_attribute_ids = []
+        for att_line in record.attribute_line_ids:
+            m_att_id = att_line.attribute_id.magento_bind_ids.filtered(lambda m: m.backend_id == self.backend_record)
+            if not m_att_id and att_line.attribute_id.id not in exported_attribute_ids:
+                # We need to export the attribute first
+                self._export_dependency(att_line.attribute_id, "magento.product.attribute", binding_extra_vals={
+                    'create_variant': True,
+                })
+                m_att_id = att_line.attribute_id.magento_bind_ids.filtered(
+                    lambda m: m.backend_id == self.backend_record)
+                exported_attribute_ids.append(att_line.attribute_id.id)
+            m_att_values = []
+            needs_sync = False
+            for value_id in att_line.value_ids:
+                m_value_id = value_id.magento_bind_ids.filtered(lambda m: m.backend_id == self.backend_record)
+                if not m_value_id:
+                    m_att_values.append((0, 0, {
+                        'attribute_id': att_line.attribute_id.id,
+                        'magento_attribute_id': m_att_id.id,
+                        'odoo_id': value_id.id,
+                        'backend_id': self.backend_record.id,
+                    }))
+                    needs_sync = True
+                else:
+                    m_att_values.append((4, m_value_id.id))
+            # Write the values - then update the attribute
+            m_att_id.with_context(connector_no_export=True).magento_attribute_value_ids = m_att_values
+            if needs_sync:
+                # We only do sync if a new attribute arrived
+                att_exporter.run(m_att_id)
+
+    def _export_dependencies(self):
+        """ Export the dependencies for the record"""
+        self._export_categories()
+        #self._export_attributes()
+        self._export_attribute_values()
         return
 
     def _after_export(self):
@@ -102,7 +154,7 @@ class ProductProductExporter(Component):
 
         # We do export the base image on position 0
         mbinding = None
-        for media_binding in sorted(self.binding.magento_image_bind_ids.filtered(lambda m: m.media_type == 'image'), key=sort_by_position):
+        for media_binding in sorted(self.binding.magento_image_bind_ids.filtered(lambda m: m.type == 'improduct_imageage'), key=sort_by_position):
             mbinding = media_binding
             break
         if not mbinding:
@@ -112,8 +164,12 @@ class ProductProductExporter(Component):
                 'magento_product_id': self.binding.id,
                 'label': self.binding.odoo_id.name,
                 'file': "%s.png" % slugify(self.binding.odoo_id.name).lower(),
+                'type': 'product_image',
                 'position': 1,
                 'mimetype': 'image/png',
+                'image_type_image': True,
+                'image_type_small_image': True,
+                'image_type_thumbnail': True,
             })
         self._export_dependency(mbinding, "magento.product.media")
 
@@ -246,6 +302,8 @@ class ProductProductExportMapper(Component):
                 full_value = values_id.attribute_select.external_id
                 value = full_value.split('_')[1]
             
+            if values_id.attribute_id.nl2br:
+                value = value.replace('\n', '<br />\n')
             customAttributes.append({
                 'attribute_code': attributeCode,
                 'value': value

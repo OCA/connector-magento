@@ -9,8 +9,7 @@ from odoo.addons.component.core import Component
 class ProductProductExporter(Component):
     _inherit = 'magento.product.product.exporter'
 
-
-    def _export_dependencies(self):
+    def _export_categories(self):
         """ Export the dependencies for the record"""
         # Check for categories
         for categ in self.binding.public_categ_ids:
@@ -18,6 +17,25 @@ class ProductProductExporter(Component):
             if not magento_categ_id:
                 # We need to export the category first
                 self._export_dependency(categ, "magento.product.category")
+        return
+
+    def _export_images(self):
+        """ Export the product.image's associated with this product """
+        for image in self.binding.product_image_ids:
+            magento_image = image.magento_bind_ids.filtered(lambda bc: bc.backend_id.id == self.binding.backend_id.id)
+            if not magento_image:
+                # We need to export the category first
+                self._export_dependency(image, "magento.product.media", binding_extra_vals={
+                    'product_image_id': image.id,
+                    'magento_product_id': self.binding.id,
+                    'type': 'product_image_ids',
+                })
+        return
+
+    def _after_export(self):
+        """ Export the dependencies for the record"""
+        super(ProductProductExporter, self)._after_export()
+        self._export_images()
         return
 
 

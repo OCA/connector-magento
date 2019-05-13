@@ -40,6 +40,10 @@ class MagentoProductMedia(models.Model):
                                               required=False,
                                               ondelete='cascade')
     label = fields.Char(string="Label")
+    type = fields.Selection([
+        ('product_image', 'Product Image'),
+        ('product_image_ids', 'Extra Product Images'),
+    ], string='Type')
     file = fields.Char(string="File")
     url = fields.Char(string="URL", compute='_compute_url', store=False)
     image = fields.Binary(string="Image", compute='_get_image')
@@ -50,9 +54,9 @@ class MagentoProductMedia(models.Model):
         ('image', _(u'Image')),
         ('external-video', _(u'External Video')),
     ], default='image', string='Media Type')
-    image_type_image = fields.Boolean(string="Image", default=True)
-    image_type_small_image = fields.Boolean(string="Small Image", default=True)
-    image_type_thumbnail = fields.Boolean(string="Thumbnail", default=True)
+    image_type_image = fields.Boolean(string="Image", default=False)
+    image_type_small_image = fields.Boolean(string="Small Image", default=False)
+    image_type_thumbnail = fields.Boolean(string="Thumbnail", default=False)
 
 
 class ProductTemplate(models.Model):
