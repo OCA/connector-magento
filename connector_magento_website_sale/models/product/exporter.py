@@ -15,11 +15,18 @@ class ProductProductExporter(Component):
     def _export_categories(self):
         """ Export the dependencies for the record"""
         # Check for categories
+        if not self.backend_record.auto_create_category:
+            return
+        categ_exporter = self.component(usage='record.exporter', model_name='magento.product.category')
         for categ in self.binding.public_categ_ids:
             magento_categ_id = categ.magento_bind_ids.filtered(lambda bc: bc.backend_id.id == self.binding.backend_id.id)
             if not magento_categ_id:
                 # We need to export the category first
-                self._export_dependency(categ, "magento.product.category")
+                m_categ = self.env['magento.product.category'].with_context(connector_no_export=True).create({
+                    'backend_id': self.backend_record.id,
+                    'public_categ_id': categ.id,
+                })
+                categ_exporter.run(m_categ)
         return
 
     def _export_images(self):
@@ -63,9 +70,10 @@ class ProductProductExportMapper(Component):
         categ_vals = []
         for categ in record.public_categ_ids:
             magento_categ_id = categ.magento_bind_ids.filtered(lambda bc: bc.backend_id.id == record.backend_id.id)
-            categ_vals.append({
-              "position": position,
-              "category_id": magento_categ_id.external_id,
-            })
-            position += 1
+            if magento_categ_id:
+                categ_vals.append({
+                  "position": position,
+                  "category_id": magento_categ_id.external_id,
+                })
+                position += 1
         return {'category_links': categ_vals}

@@ -84,6 +84,7 @@
 							<field name="frontend_input" readonly="1" />
 							<field name="nl2br" />
 							<field name="is_pivot_attribute" />
+							<field name="attribute_set_ids" widget="many2many_tags"/>
 						</group>
 						<group>
 							<field name="backend_id" readonly="1" />

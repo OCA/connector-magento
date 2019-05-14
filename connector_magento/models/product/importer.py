@@ -465,6 +465,11 @@ class ProductImporter(Component):
             # if we found binding here - then the update will also update the external_id on the binding record
         return binding
 
+    def _preprocess_magento_record(self):
+        for attr in self.magento_record.get('custom_attributes', []):
+            self.magento_record[attr['attribute_code']] = attr['value']
+        return
+
     def run(self, external_id, force=False, binding_template_id=None, binding=None):
         self._binding_template_id = binding_template_id
         return super(ProductImporter, self).run(external_id, force, binding=binding)

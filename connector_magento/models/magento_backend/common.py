@@ -173,6 +173,11 @@ class MagentoBackend(models.Model):
         help='If a default category is selected, products imported '
              'without a category will be linked to it.',
     )
+    default_attribute_group_id = fields.Many2one(
+        comodel_name='magento.product.attributes.group',
+        string='Default Attribute Group'
+    )
+    auto_create_category = fields.Boolean('Auto Create Category', default=True)
 
     # TODO? add a field `auto_activate` -> activate a cron
     import_products_from_date = fields.Datetime(

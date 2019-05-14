@@ -15,7 +15,6 @@ class MagentoStockItem(models.Model):
     _name = 'magento.stock.item'
     _inherit = 'magento.binding'
     _description = 'Magento Stock Item'
-    _inherits = {'product.product': 'odoo_id'}
 
     @api.depends('magento_warehouse_id', 'qty', 'magento_product_binding_id', 'magento_product_binding_id.no_stock_sync')
     def _compute_qty(self):
@@ -24,7 +23,12 @@ class MagentoStockItem(models.Model):
             if stockitem.magento_warehouse_id.calculation_method == 'real':
                 location = stockitem.magento_warehouse_id.lot_stock_id
                 product_fields = [stock_field]
-                record_with_location = stockitem.odoo_id.with_context(location=location.id)
+                if stockitem.product_type=='product':
+                    record_with_location = stockitem.magento_product_binding_id.odoo_id.with_context(
+                        location=location.id)
+                else:
+                    record_with_location = stockitem.magento_product_template_binding_id.odoo_id.with_context(
+                        location=location.id)
                 result = record_with_location.read(product_fields)[0]
                 stockitem.calculated_qty = result[stock_field]
             elif stockitem.magento_warehouse_id.calculation_method == 'fix':
@@ -41,14 +45,18 @@ class MagentoStockItem(models.Model):
             stockitem.should_export = True
 
 
-    odoo_id = fields.Many2one(comodel_name='product.product',
-                              string='Product',
-                              required=True,
-                              ondelete='cascade')
     magento_product_binding_id = fields.Many2one(comodel_name='magento.product.product',
                                                  string='Product',
-                                                 required=True,
+                                                 required=False,
                                                  ondelete='cascade')
+    magento_product_template_binding_id = fields.Many2one(comodel_name='magento.product.template',
+                                                          string='Product Template',
+                                                          required=False,
+                                                          ondelete='cascade')
+    product_type = fields.Selection([
+        ('product', 'Product'),
+        ('configurable', 'Configurable'),
+    ], default='product', string="Product Type")
     magento_warehouse_id = fields.Many2one(comodel_name='magento.stock.warehouse',
                                            string='Warehouse',
                                            required=True,
@@ -101,16 +109,6 @@ class MagentoStockItem(models.Model):
             return exporter.run(self)
 
 
-class ProductProduct(models.Model):
-    _inherit = 'product.product'
-
-    magento_stock_item_ids = fields.One2many(
-        comodel_name='magento.stock.item',
-        inverse_name='odoo_id',
-        string="Magento Stock Items",
-    )
-
-
 class MagentoStockItemAdapter(Component):
     _name = 'magento.stock.item.adapter'
     _inherit = 'magento.adapter'
@@ -124,12 +122,23 @@ class MagentoStockItemAdapter(Component):
     _admin_path = '/{model}/edit/id/{id}'
 
     def _write_url(self, id, binding):
-        return "products/%(sku)s/stockItems/%(id)s" % {
-            'sku': binding.magento_product_binding_id.external_id,
-            'id': binding.external_id
-        }
+        if binding.product_type=='product':
+            return "products/%(sku)s/stockItems/%(id)s" % {
+                'sku': binding.magento_product_binding_id.external_id,
+                'id': binding.external_id
+            }
+        else:
+            return "products/%(sku)s/stockItems/%(id)s" % {
+                'sku': binding.magento_product_template_binding_id.external_id,
+                'id': binding.external_id
+            }
 
     def _read_url(self, id, binding):
-        return 'stockItems/%(sku)s' % {
-            'sku': binding.magento_product_binding_id.external_id,
-        }
+        if binding.product_type=='product':
+            return 'stockItems/%(sku)s' % {
+                'sku': binding.magento_product_binding_id.external_id,
+            }
+        else:
+            return 'stockItems/%(sku)s' % {
+                'sku': binding.magento_product_template_binding_id.external_id,
+            }

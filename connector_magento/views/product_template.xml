@@ -31,7 +31,7 @@
 				<form string="Magento Configurable Product">
 					<header>
 						<button type="object" name="sync_from_magento" string="Force Sync Magento -> Odoo"/>
-						<button name="sync_to_magento" type="object" string="Force Sync Odoo -> Magento" />
+						<button type="object" name="run_sync_from_magento" string="Instead Force Sync Magento -> Odoo" groups="base.group_no_one"/>
 						<button name="action_magento_template_custom_attributes" type="object" string="Custom Values"
 								class="oe_stat_button" context="{'search_default_magento_product_id': [active_id],
 							'default_attribute_set_id': attribute_set_id,
@@ -75,6 +75,10 @@
 							<page name="attributes" string="Attributes">
 								<label for="magento_template_attribute_line_ids"/>
 								<field name="magento_template_attribute_line_ids" nolabel="1"/>
+							</page>
+							<page name="stock" string="Stock Values">
+								<label for="magento_stock_item_ids"/>
+								<field name="magento_stock_item_ids" nolabel="1"/>
 							</page>
 						</notebook>
 					</sheet>

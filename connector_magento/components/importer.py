@@ -170,6 +170,10 @@ class MagentoImporter(AbstractComponent):
         """ Hook called at the end of the import """
         return
 
+    def _preprocess_magento_record(self):
+        """ Hook after we got magento record """
+        return
+
     def run(self, external_id, force=False, binding=None):
         """ Run the synchronization
 
@@ -195,7 +199,7 @@ class MagentoImporter(AbstractComponent):
                 self.magento_record = self._get_magento_data(binding)
             except IDMissingInBackend:
                 return _('Record does no longer exist in Magento')
-
+        self._preprocess_magento_record()
         skip = self._must_skip()
         if skip:
             return skip

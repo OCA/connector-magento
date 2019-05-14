@@ -60,6 +60,11 @@ class MagentoProductTemplate(models.Model):
     magento_id = fields.Integer('Magento ID')
     magento_name = fields.Char('Name', translate=True)
     magento_price = fields.Float('Backend Preis', default=0.0, digits=dp.get_precision('Product Price'),)
+    magento_stock_item_ids = fields.One2many(
+        comodel_name='magento.stock.item',
+        inverse_name='magento_product_template_binding_id',
+        string="Magento Stock Items",
+    )
     created_at = fields.Date('Created At (on Magento)')
     updated_at = fields.Date('Updated At (on Magento)')
     magento_product_ids = fields.One2many(comodel_name='magento.product.product',
@@ -201,19 +206,11 @@ class ProductTemplateAdapter(Component):
             # Replace by the
             id = data['sku']
             storeview_code = storeview_id.code if storeview_id else False
-            super(ProductTemplateAdapter, self)._call(
+            return super(ProductTemplateAdapter, self)._call(
                 'products/%s' % id, {
                     'product': data
                 },
                 http_method='put', storeview=storeview_code)
-
-            stock_datas = {"stockItem": {
-                'is_in_stock': True}}
-            return super(ProductTemplateAdapter, self)._call(
-                'products/%s/stockItems/1' % id,
-                stock_datas,
-                http_method='put', )
-        #             raise NotImplementedError  # TODO
         return self._call('ol_catalog_product.update',
                           [int(id), data, storeview_id, 'id'])
 

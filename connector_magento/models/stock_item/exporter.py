@@ -57,5 +57,5 @@ class MagentoStockItemExportMapper(Component):
     def qty(self, record):
         return {
             'qty': record.calculated_qty,
-            'is_in_stock': True if record.calculated_qty > 0 else False,
+            'is_in_stock': True if record.product_type=='configurable' or record.calculated_qty > 0 else False,
         }

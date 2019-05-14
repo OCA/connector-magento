@@ -464,8 +464,10 @@
 								</group>
 								<group name="warehouse_products"
 									string="Warehouse / Products">
+									<field name="default_attribute_group_id"/>
 									<field name="warehouse_id" />
 									<field name="default_category_id" />
+									<field name="auto_create_category" />
 									<field name="product_stock_field_id" widget="selection"
 										domain="[('model', 'in', ['product.product', 'product.template']), ('ttype', '=', 'float')]" />
 									<field name="no_stock_sync"/>

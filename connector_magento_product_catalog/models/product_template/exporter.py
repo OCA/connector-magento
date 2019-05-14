@@ -58,11 +58,6 @@ class ProductTemplateDefinitionExporter(Component):
         self._export_variants()
         return
 
-    def _export_stock(self):
-        # No stock item on configurable
-        pass
-
-
     def _after_export(self):
         super(ProductTemplateDefinitionExporter, self)._after_export()
         storeview_id = self.work.storeview_id if hasattr(self.work, 'storeview_id') else False

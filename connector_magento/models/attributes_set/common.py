@@ -13,6 +13,7 @@ class MagentoProductAttributesSet(models.Model):
     
     name = fields.Char(string = 'Set Name')
     attribute_ids = fields.Many2many('magento.product.attribute', string='Attribute(s)')
+    attribute_group_ids = fields.One2many('magento.product.attributes.group', 'attribute_set_id', string="Groups")
 
 
 class ProductAttributeSetAdapter(Component):

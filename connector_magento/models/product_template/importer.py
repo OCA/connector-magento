@@ -101,10 +101,15 @@ class ProductTemplateImporter(Component):
                     binding_model._name, external_id
                 )
 
+    def _preprocess_magento_record(self):
+        for attr in self.magento_record.get('custom_attributes', []):
+            self.magento_record[attr['attribute_code']] = attr['value']
+        return
+
     def _update_price(self, binding, price):
         # Update price if price is 0
         if binding.price == 0:
-            binding.price = price
+            binding.with_context(connector_no_export=True).price = price
 
     def _after_import(self, binding):
         def sort_by_position(elem):
@@ -161,6 +166,10 @@ class ProductTemplateImporter(Component):
             binding,
             mapper='magento.product.template.import.mapper'
         )
+        # Do import stock item
+        stock_importer = self.component(usage='record.importer',
+                                        model_name='magento.stock.item')
+        stock_importer.run(self.magento_record['extension_attributes']['stock_item'])
 
     def _is_uptodate(self, binding):
         # TODO: Remove for production - only to test the update

@@ -150,6 +150,8 @@ class MagentoProductTemplate(models.Model):
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
+    '''
+    TODO: Check if it is really needed - does cause performance issue
     @api.multi
     def write(self, vals):
         org_vals = vals.copy()
@@ -160,10 +162,10 @@ class ProductTemplate(models.Model):
             for prod in tpl.magento_template_bind_ids:
                 for key in org_vals:
                     prod.check_field_mapping(key, vals)
-
                 if prod.product_variant_count > 1:
                     self.env['magento.template.attribute.line']._update_attribute_lines(prod)
         return res
+    '''
 
     @api.model
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):

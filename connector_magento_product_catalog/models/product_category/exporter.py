@@ -12,11 +12,15 @@ class ProductCategoryExporter(Component):
     _inherit = 'magento.exporter'
     _apply_on = ['magento.product.category']
 
+    '''
+    Category move does not work on magento side...
     def run(self, binding, *args, **kwargs):
         if binding.parent_id and binding.magento_parent_id and binding.magento_parent_id.odoo_id.id != binding.parent_id.id:
             # This is a category move - we have to handle it seperate - after it do the normal export
             self._run_category_move(binding)
+        
         return super(ProductCategoryExporter, self).run(binding, *args, **kwargs)
+    '''
 
     def _run_category_move(self, binding):
         # Get the current magento category id - and the new magento category id
@@ -38,21 +42,21 @@ class ProductCategoryExporter(Component):
     def _export_dependencies(self):
         """ Export the dependencies for the record"""
         # Check parent category
-        if self.binding.parent_id and not self.binding.magento_parent_id:
+        if self.binding.odoo_id and self.binding.odoo_id.parent_id and not self.binding.magento_parent_id:
             self._export_dependency(self.binding.parent_id, "magento.product.category", force_update=True)
 
     def _has_to_skip(self):
         """ Check if category does have parent category - and if the upper most parent is already in sync"""
         def check_parent_recursive(binding):
-            parent_binding = binding.parent_id.magento_bind_ids.filtered(lambda b: b.backend_id == self.backend_record)
-            if not parent_binding and not binding.parent_id.parent_id:
+            parent_binding = binding.odoo_id.parent_id.magento_bind_ids.filtered(lambda b: b.backend_id == self.backend_record)
+            if not parent_binding and not binding.odoo_id.parent_id.parent_id:
                 raise UserWarning('Cannot export the category %s which is not under the main magento category' % binding.name)
-            if parent_binding and not binding.parent_id.parent_id:
+            if parent_binding and not binding.odoo_id.parent_id.parent_id:
                 # We are at the magento root category
                 return
-            check_parent_recursive(binding.parent_id)
+            check_parent_recursive(parent_binding)
 
-        if not self.binding.parent_id:
+        if not self.binding.odoo_id.parent_id:
             raise UserWarning('Cannot export a root level category to magento')
         check_parent_recursive(self.binding)
         return False

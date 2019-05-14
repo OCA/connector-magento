@@ -33,6 +33,7 @@ class MagentoModelBinder(Component):
         'magento.product.media',
         'magento.product.attribute',
         'magento.product.attributes.set',
+        'magento.product.attributes.group',
         'magento.product.attribute.value',
         'magento.template.attribute.line',
         'magento.stock.warehouse',

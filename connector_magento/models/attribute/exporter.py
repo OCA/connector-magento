@@ -104,6 +104,13 @@ class ProductAttributeExportMapper(Component):
             return {'attribute_id': int(record.external_id)}
 
     @mapping
+    def attribute_set_id(self, record):
+        return {
+            'attribute_set_id': int(record.attribute_set_ids[0].external_id),
+            'attribute_group_id': int(record.backend_id.default_attribute_group_id.external_id)
+        }
+
+    @mapping
     def value_options(self, record):
         mids = []
         mapped = []

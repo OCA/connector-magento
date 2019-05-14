@@ -151,6 +151,7 @@ class ProductProductAdapter(Component):
                 in self._call('%s.list' % self._magento_model,
                               [filters] if filters else [{}])]
 
+    '''
     def read(self, id, storeview_code=None, attributes=None, binding=None):
         """ Returns the information of a record
 
@@ -167,6 +168,7 @@ class ProductProductAdapter(Component):
             return res
         return self._call('ol_catalog_product.info',
                           [int(id), storeview_code, attributes, 'id'])
+    '''
 
     def get_images(self, id, storeview_id=None, data=None):
         if self.work.magento_api._location.version == '2.0':
