@@ -4,8 +4,6 @@
 
 from odoo.addons.component.core import Component
 from odoo.addons.connector.unit.mapper import mapping
-import base64
-import magic
 
 
 class ProductMediaExporter(Component):
@@ -64,9 +62,8 @@ class ProductMediaExportMapper(Component):
 
     @mapping
     def get_content(self, record):
-        mime = magic.Magic(mime=True)
         return {'content': {
             'base64_encoded_data': record.magento_product_id.image,
-            'type': mime.from_buffer(base64.b64decode(record.magento_product_id.image)),
+            'type': record.mimetype,
             'name': record.file,
         }}

@@ -46,7 +46,6 @@ class MagentoCustomAttribute(models.Model):
         )
     
     attribute_text = fields.Char(string='Magento Text / Value',
-                                    size=264,
                                     translate=True
                                     )
     

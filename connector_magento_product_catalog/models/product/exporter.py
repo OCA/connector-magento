@@ -10,6 +10,8 @@ from odoo.addons.connector.unit.mapper import mapping
 from odoo.addons.queue_job.job import identity_exact
 from slugify import slugify
 from odoo.addons.connector_magento.components.backend_adapter import MAGENTO_DATETIME_FORMAT
+import magic
+import base64
 
 
 class ProductProductExporter(Component):
@@ -34,6 +36,11 @@ class ProductProductExporter(Component):
         self.binding.with_context(
             no_connector_export=True).magento_id = data['id']
         return res
+
+    def _update(self, data):
+        """ Create the Magento record """
+        # special check on data before export
+        return super(ProductProductExporter, self)._update(data)
 
     def _should_import(self):
         """ Before the export, compare the update date
@@ -94,18 +101,6 @@ class ProductProductExporter(Component):
                 # We need to export the category first
                 self._export_dependency(extra_category, "magento.product.category")
 
-    def _export_attributes(self):
-        # First - do export the attributes needed
-        record = self.binding
-        exported_attribute_ids = []
-        for att_line in record.attribute_line_ids:
-            m_att_id = att_line.attribute_id.magento_bind_ids.filtered(lambda m: m.backend_id == self.backend_record)
-            if not m_att_id and att_line.attribute_id.id not in exported_attribute_ids:
-                # We need to export the attribute first
-                self._export_dependency(att_line.attribute_id, "magento.product.attribute", binding_extra_vals={
-                    'create_variant': True,
-                })
-
     def _export_attribute_values(self):
         # Then the attribute values
         record = self.binding
@@ -144,34 +139,44 @@ class ProductProductExporter(Component):
     def _export_dependencies(self):
         """ Export the dependencies for the record"""
         self._export_categories()
-        #self._export_attributes()
         self._export_attribute_values()
         return
 
-    def _after_export(self):
+    def _export_base_image(self):
         def sort_by_position(elem):
             return elem.position
 
         # We do export the base image on position 0
         mbinding = None
-        for media_binding in sorted(self.binding.magento_image_bind_ids.filtered(lambda m: m.type == 'improduct_imageage'), key=sort_by_position):
+        for media_binding in sorted(self.binding.magento_image_bind_ids.filtered(lambda m: m.type == 'product_image'), key=sort_by_position):
             mbinding = media_binding
             break
         if not mbinding:
             # Create new media binding entry for main image
+            mime = magic.Magic(mime=True)
+            mimetype = mime.from_buffer(base64.b64decode(self.binding.odoo_id.image))
+            extension = 'png' if mimetype == 'image/png' else 'jpeg'
             mbinding = self.env['magento.product.media'].with_context(connector_no_export=True).create({
                 'backend_id': self.binding.backend_id.id,
                 'magento_product_id': self.binding.id,
                 'label': self.binding.odoo_id.name,
-                'file': "%s.png" % slugify(self.binding.odoo_id.name).lower(),
+                'file': "%s.%s" % (slugify(self.binding.odoo_id.name, to_lower=True), extension),
                 'type': 'product_image',
                 'position': 1,
-                'mimetype': 'image/png',
+                'mimetype': mimetype,
                 'image_type_image': True,
                 'image_type_small_image': True,
                 'image_type_thumbnail': True,
             })
         self._export_dependency(mbinding, "magento.product.media")
+
+    def _export_stock(self):
+        for stock_item in self.binding.magento_stock_item_ids:
+            stock_item.sync_to_magento()
+
+    def _after_export(self):
+        self._export_base_image()
+        self._export_stock()
 
 
 class ProductProductExportMapper(Component):
@@ -186,21 +191,7 @@ class ProductProductExportMapper(Component):
 
     @mapping
     def names(self, record):
-        storeview_id = self.work.storeview_id if hasattr(self.work, 'storeview_id') else False
-        name = record.name
-        if storeview_id:
-            value_ids = record.\
-            magento_attribute_line_ids.filtered(
-                lambda att:
-                    att.odoo_field_name.name == 'name'
-                    and att.store_view_id == storeview_id
-                    and att.attribute_id.create_variant != True
-                    and (
-                        att.attribute_text != False
-                    )
-                )
-            name = value_ids[0].attribute_text
-        return {'name': name}
+        return {'name': record.name}
 
     @mapping
     def visibility(self, record):
@@ -225,20 +216,15 @@ class ProductProductExportMapper(Component):
     
     
     def get_website_ids(self, record):
-        website_ids = [
-                s.external_id for s in record.backend_id.website_ids
-                ]
+        website_ids = [s.external_id for s in record.backend_id.website_ids]
         return {'website_ids': website_ids}
     
     def category_ids(self, record):
-        magento_categ_id = record.categ_id.magento_bind_ids.filtered(
-            lambda bc: bc.backend_id.id == record.backend_id.id)
-        categ_vals = [
-            {
-              "position": 0,
-              "category_id": magento_categ_id.external_id,
-          }
-        ]
+        magento_categ_id = record.categ_id.magento_bind_ids.filtered(lambda bc: bc.backend_id.id == record.backend_id.id)
+        categ_vals = [{
+            "position": 0,
+            "category_id": magento_categ_id.external_id,
+        }]
         i = 1
         for c in record.categ_ids:
             for b in c.magento_bind_ids.filtered(lambda bc: bc.backend_id.id == record.backend_id.id):
@@ -248,11 +234,6 @@ class ProductProductExportMapper(Component):
                 })
                 i += 1
         return {'category_links': categ_vals}
-    
-    
-    @mapping
-    def get_associated_configurable_product_id(self, record):
-        return {}
     
     @mapping
     def weight(self, record):
@@ -271,44 +252,8 @@ class ProductProductExportMapper(Component):
         return {'attributeSetId': val}
 
     @mapping
-    def get_common_attributes(self, record):
-        """
-        Collect attributes to prensent it regarding to
-        https://devdocs.magento.com/swagger/index_20.html
-        catalogProductRepositoryV1 / POST 
-        """
-
-        customAttributes = []
-        storeview_id = self.work.storeview_id if hasattr(self.work, 'storeview_id') else False
-        magento_attribute_line_ids = record.magento_attribute_line_ids.filtered(
-            lambda att: att.store_view_id.id==storeview_id and (
-                        att.attribute_text or att.attribute_select.id or len(att.attribute_multiselect.ids) > 0))
-
-        for values_id in magento_attribute_line_ids:
-            """ Deal with Custom Attributes """            
-            attributeCode = values_id.attribute_id.attribute_code
-            if attributeCode == 'category_ids':
-                # Ignore category here - will get set using the category_links
-                continue
-            value = values_id.attribute_text
-            if values_id.magento_attribute_type == 'boolean':
-                try:
-                    value = int(values_id.attribute_text)
-                except:
-                    value = 0
-            
-            if values_id.magento_attribute_type in ['select',] and \
-                    values_id.attribute_select.external_id != False:
-                full_value = values_id.attribute_select.external_id
-                value = full_value.split('_')[1]
-            
-            if values_id.attribute_id.nl2br:
-                value = value.replace('\n', '<br />\n')
-            customAttributes.append({
-                'attribute_code': attributeCode,
-                'value': value
-                })     
-        
+    def get_custom_attributes(self, record):
+        custom_attributes = []
         for values_id in record.attribute_value_ids:
             """ Deal with Attributes in the 'variant' part of Odoo"""
             odoo_value_ids = values_id.magento_bind_ids.filtered(
@@ -316,12 +261,11 @@ class ProductProductExportMapper(Component):
             for odoo_value_id in odoo_value_ids:
                 attributeCode = odoo_value_id.magento_attribute_id.attribute_code
                 value = odoo_value_id.external_id.split('_')[1]
-                customAttributes.append({
+                custom_attributes.append({
                     'attributeCode': attributeCode,
                     'value': value
                     })
-        result = {'custom_attributes': customAttributes}
-        return result
+        return {'custom_attributes': custom_attributes}
 
     @mapping
     def price(self, record):

@@ -8,6 +8,7 @@ from odoo.addons.component.core import Component
 import urllib
 from urlparse import urljoin
 import base64
+import uuid
 
 
 _logger = logging.getLogger(__name__)
@@ -44,12 +45,12 @@ class MagentoProductMedia(models.Model):
         ('product_image', 'Product Image'),
         ('product_image_ids', 'Extra Product Images'),
     ], string='Type')
-    file = fields.Char(string="File")
+    file = fields.Char(string="File", required=True)
     url = fields.Char(string="URL", compute='_compute_url', store=False)
     image = fields.Binary(string="Image", compute='_get_image')
     position = fields.Integer(string="Position", default=0)
     disabled = fields.Boolean(string="Disabled", default=False)
-    mimetype = fields.Char(string="Mimetype")
+    mimetype = fields.Char(string="Mimetype", required=True)
     media_type = fields.Selection([
         ('image', _(u'Image')),
         ('external-video', _(u'External Video')),
@@ -57,6 +58,30 @@ class MagentoProductMedia(models.Model):
     image_type_image = fields.Boolean(string="Image", default=False)
     image_type_small_image = fields.Boolean(string="Small Image", default=False)
     image_type_thumbnail = fields.Boolean(string="Thumbnail", default=False)
+
+    _sql_constraints = [
+        ('file_uniq', 'unique(backend_id, magento_product_id, file)',
+         'The filename must be unique.'),
+    ]
+
+    @api.model
+    def create(self, vals):
+        if 'magento_product_id' in vals and vals['magento_product_id']:
+            existing = self.search_count([
+                ('backend_id', '=', vals['backend_id']),
+                ('magento_product_id', '=', vals['magento_product_id']),
+                ('file', '=', vals['file']),
+            ])
+        elif 'magento_product_tmpl_id' in vals and vals['magento_product_tmpl_id']:
+            existing = self.search_count([
+                ('backend_id', '=', vals['backend_id']),
+                ('magento_product_tmpl_id', '=', vals['magento_product_tmpl_id']),
+                ('file', '=', vals['file']),
+            ])
+        if existing:
+            extension = 'png' if vals['mimetype']=='image/png' else 'jpeg'
+            vals['file'] = "%s.%s" (uuid.uuid4(), extension)
+        return super(MagentoProductMedia, self).create(vals)
 
 
 class ProductTemplate(models.Model):

@@ -274,36 +274,6 @@ class ProductImportMapper(Component):
         }
         
     @mapping
-    def custom_attributes(self, record):
-        """
-        Usefull with catalog exporter module 
-        has to be migrated
-        """
-        attribute_binder = self.binder_for('magento.product.attribute')
-        value_binder = self.binder_for('magento.product.attribute.value')
-        magento_attribute_line_ids = []
-        for attribute in record['custom_attributes']:
-            mattribute = attribute_binder.to_internal(attribute['attribute_code'], unwrap=False, external_field='attribute_code')
-            if mattribute.create_variant :
-                # We do ignore attributes which do not create a variant
-                continue
-            if not mattribute:
-                raise MappingError("The product attribute %s is not imported." %
-                                   mattribute.name)
-        
-            vals = {
-                #                 'backend_id': self.backend_id.id,
-#                 'magento_product_id': mg_prod_id.id,
-                'attribute_id': mattribute.id,
-                'store_view_id': False,
-                'attribute_text': attribute['value']
-            }
-            magento_attribute_line_ids.append((0, False, vals))
-        return {
-            'magento_attribute_line_ids': magento_attribute_line_ids
-        }
-
-    @mapping
     def type(self, record):
         if record['type_id'] == 'simple':
             return {'type': 'product'}

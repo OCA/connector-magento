@@ -16,25 +16,6 @@
 				<field name="visibility" readonly="1" />
 			</field>
 
-			<xpath expr="//div[@name='button_box']" position="inside">
-				<button context="{'search_default_magento_product_id': [active_id],
-							'default_attribute_set_id': attribute_set_id,
-							'default_magento_product_id': active_id, }"
-						class="oe_stat_button" name="%(action_magento_custom_attributes)d"
-						type="action" icon="fa-play">
-					<div class="o_form_field o_stat_info">
-						<span class="o_stat_value"><field name="custom_values_count"/></span>
-						<span class="o_stat_text">Custom Values</span>
-					</div>
-				</button>
-
-			</xpath>
-			<xpath expr="//notebook" position="inside">
-				<page name="custom_values" string="Custom Values">
-					<label for="magento_attribute_line_ids"/>
-					<field name="magento_attribute_line_ids" nolabel="1"/>
-				</page>
-			</xpath>
 		</field>
 	</record>
 

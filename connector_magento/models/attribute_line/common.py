@@ -1,10 +1,5 @@
 import logging
 from odoo import models, fields, api
-from odoo.addons.connector.exception import IDMissingInBackend
-from odoo.addons.component.core import Component
-from odoo.addons.connector.components.binder import Binder
-from odoo.addons.component_event import skip_if
-from odoo.addons.queue_job.job import job, related_action
 from odoo.addons.connector.exception import MappingError, InvalidDataError
 
 _logger = logging.getLogger(__name__)

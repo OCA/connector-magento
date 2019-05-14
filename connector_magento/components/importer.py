@@ -218,7 +218,7 @@ class MagentoImporter(AbstractComponent):
         map_record = self._map_data()
 
         if binding:
-            record = self._update_data(map_record)
+            record = self._update_data(map_record, binding=binding)
             self._update(binding, record)
         else:
             record = self._create_data(map_record)

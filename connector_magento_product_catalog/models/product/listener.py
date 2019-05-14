@@ -38,7 +38,4 @@ class MagentoProductProductExportListener(Component):
             # We do ignore image field
             del fields['image']
         for binding in record.magento_bind_ids:
-            # First - do update the custom attribute values
-            for key in record:
-                binding.check_field_mapping(key, record)
             binding.with_delay().export_record(binding.backend_id)

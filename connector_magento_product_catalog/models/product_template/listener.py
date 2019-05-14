@@ -44,7 +44,4 @@ class MagentoProductTemplateExportListener(Component):
         else:
             binding_ids = record.magento_bind_ids
         for binding in binding_ids:
-            # First - do update the custom attribute values
-            for key in fields:
-                binding.check_field_mapping(key, record)
             binding.with_delay().export_record(binding.backend_id)

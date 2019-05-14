@@ -20,6 +20,7 @@
 						<field name="position" />
 						<field name="disabled"/>
 						<field name="mimetype"/>
+						<field name="type"/>
 						<field name="media_type"/>
 						<field name="image_type_image"/>
 						<field name="image_type_small_image"/>
@@ -67,6 +68,7 @@
 				<field name="position" widget="handle"/>
 				<field name="magento_product_id" />
 				<field name="magento_product_tmpl_id" />
+				<field name="type"/>
 				<field name="label" />
 				<field name="file"/>
 			</tree>

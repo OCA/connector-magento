@@ -4,6 +4,9 @@
 
 
 from odoo.addons.component.core import Component
+from slugify import slugify
+import magic
+import base64
 
 
 class ProductProductExporter(Component):
@@ -21,14 +24,23 @@ class ProductProductExporter(Component):
 
     def _export_images(self):
         """ Export the product.image's associated with this product """
+        mime = magic.Magic(mime=True)
         for image in self.binding.product_image_ids:
             magento_image = image.magento_bind_ids.filtered(lambda bc: bc.backend_id.id == self.binding.backend_id.id)
             if not magento_image:
+                mimetype = mime.from_buffer(base64.b64decode(image.image))
+                extension = 'png' if mimetype == 'image/png' else 'jpeg'
                 # We need to export the category first
                 self._export_dependency(image, "magento.product.media", binding_extra_vals={
                     'product_image_id': image.id,
+                    'file': "%s.%s" % (slugify(image.name, to_lower=True), extension),
+                    'label': image.name,
                     'magento_product_id': self.binding.id,
+                    'mimetype': mimetype,
                     'type': 'product_image_ids',
+                    'image_type_image': False,
+                    'image_type_small_image': False,
+                    'image_type_thumbnail': False,
                 })
         return
 
