@@ -26,7 +26,8 @@ class ProductMediaAdapter(Component):
                 return urllib.quote(term.encode('utf-8'), safe='')
             return term
 
-        return 'products/%s/media' % (escape(binding.magento_product_id.external_id), )
+        pbinding = binding.magento_product_id if binding.magento_product_id else binding.magento_product_tmpl_id
+        return 'products/%s/media' % (escape(pbinding.external_id), )
 
     def _write_url(self, id, binding=None):
         def escape(term):
@@ -34,4 +35,5 @@ class ProductMediaAdapter(Component):
                 return urllib.quote(term.encode('utf-8'), safe='')
             return term
 
-        return 'products/%s/media/%s' % (escape(binding.magento_product_id.external_id), id)
+        pbinding = binding.magento_product_id if binding.magento_product_id else binding.magento_product_tmpl_id
+        return 'products/%s/media/%s' % (escape(pbinding.external_id), id)

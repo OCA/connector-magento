@@ -31,11 +31,15 @@ class ProductProductExporter(Component):
                 mimetype = mime.from_buffer(base64.b64decode(image.image))
                 extension = 'png' if mimetype == 'image/png' else 'jpeg'
                 # We need to export the category first
+                if 'magento.product.template' in self._apply_on:
+                    model_key = 'magento_product_tmpl_id'
+                else:
+                    model_key = 'magento_product_id'
                 self._export_dependency(image, "magento.product.media", binding_extra_vals={
                     'product_image_id': image.id,
                     'file': "%s.%s" % (slugify(image.name, to_lower=True), extension),
                     'label': image.name,
-                    'magento_product_id': self.binding.id,
+                    model_key: self.binding.id,
                     'mimetype': mimetype,
                     'type': 'product_image_ids',
                     'image_type_image': False,

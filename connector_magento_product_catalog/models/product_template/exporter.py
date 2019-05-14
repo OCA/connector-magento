@@ -1,23 +1,18 @@
 # -*- coding: utf-8 -*-
 # Copyright 2013-2017 Camptocamp SA
+# Copyright 2019 Callino
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
 
-import odoo
-from datetime import datetime
-
 from odoo.addons.component.core import Component
 from odoo.addons.connector.unit.mapper import mapping, only_create
-from odoo.addons.queue_job.job import identity_exact
 from odoo.addons.connector.exception import MappingError
 from slugify import slugify
-
-from odoo.addons.connector_magento.components.backend_adapter import MAGENTO_DATETIME_FORMAT
 
 
 class ProductTemplateDefinitionExporter(Component):
     _name = 'magento.product.template.exporter'
-    _inherit = 'magento.exporter'
+    _inherit = 'magento.product.product.exporter'
     _apply_on = ['magento.product.template']
 
     def _create_data(self, map_record, fields=None, **kwargs):
@@ -33,50 +28,17 @@ class ProductTemplateDefinitionExporter(Component):
             self.binding.external_id = sku
         return super(ProductTemplateDefinitionExporter, self)._create_data(map_record, fields=fields, **kwargs)
 
-    def _create(self, data):
-        """ Create the Magento record """
-        # special check on data before export
-        res = super(ProductTemplateDefinitionExporter, self)._create(data)
-        self.binding.magento_id = data['id']
-        return res
+    def _update_binding_record_after_create(self, data):
+        for attr in data.get('custom_attributes', []):
+            data[attr['attribute_code']] = attr['value']
+        # Do use the importer to update the binding
+        importer = self.component(usage='record.importer',
+                                model_name='magento.product.template')
+        importer.run(data, force=True, binding=self.binding)
+        self.external_id = data['sku']
 
-    def _export_dependencies(self):
-        """ Export the dependencies for the record"""
+    def _export_variants(self):
         record = self.binding
-        # First - do export the attributes needed
-        att_lines = record.attribute_line_ids.filtered(lambda l: l.attribute_id.create_variant == True)
-        exported_attribute_ids = []
-        for att_line in att_lines:
-            m_att_id = att_line.attribute_id.magento_bind_ids.filtered(lambda m: m.backend_id == self.backend_record)
-            if not m_att_id and att_line.attribute_id.id not in exported_attribute_ids:
-                # We need to export the attribute first
-                self._export_dependency(att_line.attribute_id, "magento.product.attribute", binding_extra_vals={
-                    'create_variant': True,
-                })
-        # Then the attribute values
-        att_exporter = self.component(usage='record.exporter', model_name='magento.product.attribute')
-        for att_line in att_lines:
-            m_att_id = att_line.attribute_id.magento_bind_ids.filtered(lambda m: m.backend_id == self.backend_record)
-            m_att_values = []
-            needs_sync = False
-            for value_id in att_line.value_ids:
-                m_value_id = value_id.magento_bind_ids.filtered(lambda m: m.backend_id == self.backend_record)
-                if not m_value_id:
-                    m_att_values.append((0, 0, {
-                        'attribute_id': att_line.attribute_id.id,
-                        'magento_attribute_id': m_att_id.id,
-                        'odoo_id': value_id.id,
-                        'backend_id': self.backend_record.id,
-                    }))
-                    needs_sync = True
-                else:
-                    m_att_values.append((4, m_value_id.id))
-            # Write the values - then update the attribute
-            m_att_id.with_context(connector_no_export=True).magento_attribute_value_ids = m_att_values
-            if needs_sync:
-                # We only do sync if a new attribute arrived
-                att_exporter.run(m_att_id)
-
         variant_exporter = self.component(usage='record.exporter', model_name='magento.product.product')
         for p in record.product_variant_ids:
             m_prod = p.magento_bind_ids.filtered(lambda m: m.backend_id == record.backend_id)
@@ -90,7 +52,19 @@ class ProductTemplateDefinitionExporter(Component):
                 })
                 variant_exporter.run(m_prod)
 
+    def _export_dependencies(self):
+        """ Export the dependencies for the record"""
+        super(ProductTemplateDefinitionExporter, self)._export_dependencies()
+        self._export_variants()
+        return
+
+    def _export_stock(self):
+        # No stock item on configurable
+        pass
+
+
     def _after_export(self):
+        super(ProductTemplateDefinitionExporter, self)._after_export()
         storeview_id = self.work.storeview_id if hasattr(self.work, 'storeview_id') else False
         if storeview_id:
             # We are already in the storeview specific export
@@ -100,46 +74,6 @@ class ProductTemplateDefinitionExporter(Component):
         for storeview_id in self.env['magento.storeview'].search([('backend_id', '=', self.backend_record.id)]):
             self.binding.with_delay().export_product_template_for_storeview(storeview_id=storeview_id)
         '''
-
-    def _should_import(self):
-        """ Before the export, compare the update date
-        in Magento and the last sync date in Odoo,
-        Regarding the product_synchro_strategy Choose 
-        to whether the import or the export is necessary
-        """
-        assert self.binding
-        if not self.external_id:
-            return False
-        if self.backend_record.product_synchro_strategy == 'odoo_first':
-            return False
-        sync = self.binding.sync_date
-        if not sync:
-            return True
-        record = self.backend_adapter.read(self.external_id,
-                                           attributes=['updated_at'])
-        if not record['updated_at']:
-            # in rare case it can be empty, in doubt, import it
-            return True
-        sync_date = odoo.fields.Datetime.from_string(sync)
-        magento_date = datetime.strptime(record['updated_at'],
-                                         MAGENTO_DATETIME_FORMAT)
-        return sync_date < magento_date
-
-    
-    def _delay_import(self):
-        """ Schedule an import/export of the record.
-
-        Adapt in the sub-classes when the model is not imported
-        using ``import_record``.
-        """
-        # force is True because the sync_date will be more recent
-        # so the import would be skipped
-        assert self.external_id
-        if self.backend_record.product_synchro_strategy == 'magento_first':
-            self.binding.with_delay(
-                identity_key=identity_exact).import_record(self.backend_record,
-                                                self.external_id,
-                                                force=True)
 
 
 class ProductTemplateExportMapper(Component):
@@ -178,9 +112,6 @@ class ProductTemplateExportMapper(Component):
     @mapping
     def get_extension_attributes(self, record):
         data = {}
-        storeview_id = self.work.storeview_id if hasattr(self.work, 'storeview_id') else False
-        if not storeview_id:
-            return {}
         data.update(self.get_website_ids(record))
         data.update(self.category_ids(record))
         data.update(self.configurable_product_options(record))
@@ -191,8 +122,7 @@ class ProductTemplateExportMapper(Component):
     def configurable_product_links(self, record):
         links = []
         for p in record.product_variant_ids:
-            mp = p.magento_bind_ids.filtered(
-                lambda m: m.backend_id == record.backend_id)
+            mp = p.magento_bind_ids.filtered(lambda m: m.backend_id == record.backend_id)
             if not mp.external_id:
                 continue
             links.append(mp.magento_id)
@@ -208,8 +138,6 @@ class ProductTemplateExportMapper(Component):
                 raise MappingError("The product attribute %s "
                                    "is not exported yet." %
                                    l.attribute_id.name)
-            if not m_att_id.is_pivot_attribute:
-                continue
             opt = {
                 "id": 1,
                 "attribute_id": m_att_id.external_id,
@@ -258,3 +186,8 @@ class ProductTemplateExportMapper(Component):
         else:
             val = record.backend_id.default_attribute_set_id.external_id
         return {'attributeSetId': val}
+
+    @mapping
+    def get_custom_attributes(self, record):
+        custom_attributes = []
+        return {'custom_attributes': custom_attributes}

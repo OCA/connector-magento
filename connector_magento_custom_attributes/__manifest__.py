@@ -15,6 +15,7 @@
  'data': [
      'views/product_custom_values.xml',
      'views/product_view.xml',
+     'views/product_template.xml',
      'views/magento_external_objects_menus.xml',
  ],
  'installable': True,

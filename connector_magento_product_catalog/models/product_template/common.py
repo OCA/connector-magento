@@ -5,6 +5,7 @@
 import logging
 from odoo import api, models, fields
 from odoo.addons.queue_job.job import job, related_action
+from odoo.addons.component.core import Component
 
 
 _logger = logging.getLogger(__name__)
@@ -39,3 +40,12 @@ class MagentoProductTemplate(models.Model):
         with self.backend_id.work_on(self._name, storeview_id=storeview_id) as work:
                 exporter = work.component(usage='record.exporter')
                 return exporter.run(self)
+
+
+class ProductTemplateAdapter(Component):
+    _inherit = 'magento.product.template.adapter'
+    _magento2_name = 'product'
+
+    def _get_id_from_create(self, result, data=None):
+        # Products do use the sku as external_id - but we also need the id - so do return the complete data structure
+        return result

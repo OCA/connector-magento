@@ -22,7 +22,7 @@ class ProductProductExporter(Component):
 
     def _create_data(self, map_record, fields=None, **kwargs):
         # Here we do generate a new default code is none exists for now
-        if not self.binding.default_code:
+        if 'magento.product.product' in self._apply_on and not self.binding.default_code:
             name = self.binding.display_name
             for value in self.binding.attribute_value_ids:
                 name = "%s %s %s" % (name, value.attribute_id.name, value.name)
@@ -85,9 +85,7 @@ class ProductProductExporter(Component):
         # so the import would be skipped
         assert self.external_id
         if self.backend_record.product_synchro_strategy == 'magento_first':
-            self.binding.with_delay(identity_key=identity_exact).import_record(self.backend_record,
-                                                self.external_id,
-                                                force=True)
+            self.binding.import_record(self.backend_record, self.external_id, force=True)
 
     def _export_categories(self):
         # Check for categories
@@ -156,9 +154,13 @@ class ProductProductExporter(Component):
             mime = magic.Magic(mime=True)
             mimetype = mime.from_buffer(base64.b64decode(self.binding.odoo_id.image))
             extension = 'png' if mimetype == 'image/png' else 'jpeg'
+            if 'magento.product.template' in self._apply_on:
+                model_key = 'magento_product_tmpl_id'
+            else:
+                model_key = 'magento_product_id'
             mbinding = self.env['magento.product.media'].with_context(connector_no_export=True).create({
                 'backend_id': self.binding.backend_id.id,
-                'magento_product_id': self.binding.id,
+                model_key: self.binding.id,
                 'label': self.binding.odoo_id.name,
                 'file': "%s.%s" % (slugify(self.binding.odoo_id.name, to_lower=True), extension),
                 'type': 'product_image',

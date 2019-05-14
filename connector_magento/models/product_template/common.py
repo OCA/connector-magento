@@ -73,11 +73,6 @@ class MagentoProductTemplate(models.Model):
         string='Magento Attribute lines for templates',
     )
 
-    magento_template_attribute_value_ids = fields.One2many(
-        comodel_name='magento.custom.template.attribute.values',
-        inverse_name='magento_product_template_id',
-        string='Magento Simple Custom Attributes Values for templates',
-    )
     _sql_constraints = [
         ('backend_magento_id_uniqueid',
          'UNIQUE (backend_id, magento_id)',

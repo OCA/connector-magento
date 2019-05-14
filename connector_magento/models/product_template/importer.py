@@ -55,6 +55,7 @@ class ProductTemplateImporter(Component):
     _name = 'magento.product.template.importer'
     _inherit = 'magento.importer'
     _apply_on = ['magento.product.template']
+    _magento_id_field = 'sku'
 
     def _create(self, data):
         # create_product_product - Avoid creating variant products
@@ -315,6 +316,8 @@ class ProductTemplateImportMapper(Component):
     @mapping
     def categories(self, record):
         # No categories on configurable product
+        if not 'category_links' in record['extension_attributes']:
+            return
         category_links = record['extension_attributes']['category_links']
         binder = self.binder_for('magento.product.category')
         category_ids = []

@@ -16,6 +16,12 @@ _logger = logging.getLogger(__name__)
 class MagentoProductTemplate(models.Model):
     _inherit = 'magento.product.template'
 
+    magento_template_attribute_value_ids = fields.One2many(
+        comodel_name='magento.custom.template.attribute.values',
+        inverse_name='magento_product_template_id',
+        string='Magento Simple Custom Attributes Values for templates',
+    )
+
     def action_magento_template_custom_attributes(self):
         action = self.env['ir.actions.act_window'].for_xml_id(
             'connector_magento_product_catalog',

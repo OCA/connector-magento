@@ -62,7 +62,7 @@ class MagentoProductProduct(models.Model):
     magento_configurable_id = fields.Many2one(comodel_name='magento.product.template',
                                               string='Configurable',
                                               required=False,
-                                              ondelete='restrict',
+                                              ondelete='cascade',
                                               readonly=True)
     magento_name = fields.Char('Name', translate=True)
     magento_price = fields.Float('Backend Preis', default=0.0, digits=dp.get_precision('Product Price'),)

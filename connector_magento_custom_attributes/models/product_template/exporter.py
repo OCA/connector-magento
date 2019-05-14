@@ -37,7 +37,7 @@ class ProductTemplateExportMapper(Component):
         return {'name': name}
     
     @mapping
-    def get_common_attributes(self, record):
+    def get_custom_attributes(self, record):
         """
         Collect attributes to prensent it regarding to
         https://devdocs.magento.com/swagger/index_20.html
@@ -115,5 +115,6 @@ class ProductTemplateExportMapper(Component):
                     'value': value
                     })            
             
-        result = {'customAttributes': customAttributes}
-        return result   
+        result = super(ProductTemplateExportMapper, self).get_custom_attributes(record)
+        result['custom_attributes'].extend(customAttributes)
+        return result

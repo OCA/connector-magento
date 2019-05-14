@@ -40,6 +40,15 @@
 						<button type="object" name="open_magento_frontend" string="Open in Magento Frontend" class="fa fa-link"/>
 					</header>
 					<sheet>
+						<field name="image_medium" widget="image" class="oe_avatar"
+							readonly="1" />
+						<div class="oe_title">
+
+							<h1>
+								<field name="name" placeholder="Product Name" readonly="1" />
+							</h1>
+
+						</div>
 						<div class="oe_button_box" name="button_box">
 
 						</div>
@@ -50,12 +59,24 @@
 							<field name="external_id" readonyl="1"/>
 							<field name="magento_id" readonyl="1"/>
 							<field name="odoo_id" readonly="1"/>
-							<field name="attribute_set_id" required="1" />
+							<field name="attribute_set_id" readonly="1"/>
+							<field name="created_at" readonly="1" />
+							<field name="updated_at" readonly="1" />
 						</group>
-						<label for="magento_product_ids"/>
-						<field name="magento_product_ids" nolabel="1"/>
-						<label for="magento_image_bind_ids"/>
-						<field name="magento_image_bind_ids" nolabel="1"/>
+						<notebook>
+							<page name="variants" string="Variants">
+								<label for="magento_product_ids"/>
+								<field name="magento_product_ids" nolabel="1"/>
+							</page>
+							<page name="images" string="Images">
+								<label for="magento_image_bind_ids"/>
+								<field name="magento_image_bind_ids" nolabel="1"/>
+							</page>
+							<page name="attributes" string="Attributes">
+								<label for="magento_template_attribute_line_ids"/>
+								<field name="magento_template_attribute_line_ids" nolabel="1"/>
+							</page>
+						</notebook>
 					</sheet>
 				</form>
 			</field>
