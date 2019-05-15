@@ -68,7 +68,11 @@ class MagentoCustomAttribute(models.Model):
         store=True) 
     
     store_view_id = fields.Many2one('magento.storeview')
-    
+    _sql_constraints = [
+        ('magento_uniq', 'unique(backend_id, attribute_id, store_view_id, magento_product_id)',
+         'A binding already exists with the same Magento ID.'),
+    ]
+
     @api.model
     def create(self, vals):
         res = super(MagentoCustomAttribute,self).create(vals)
