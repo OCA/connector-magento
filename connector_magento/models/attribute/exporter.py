@@ -63,6 +63,8 @@ class ProductAttributeDefinitionExporter(Component):
         return result
 
     def _update(self, data, storeview_code=None):
+        del data['attribute_group_id']
+        del data['attribute_set_id']
         result = super(ProductAttributeDefinitionExporter, self)._update(data, storeview_code)
         self._update_attribute_with_result(result)
         return result

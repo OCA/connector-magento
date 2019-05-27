@@ -37,26 +37,32 @@
         <!-- PRODUCT ACTIONS -->
 
         <record id="simple_product_action" model="ir.actions.act_window">
-            <field name="name">Simple Produkte</field>
-            <field name="res_model">magento.product.template</field>
+            <field name="name">Simple Products</field>
+            <field name="res_model">magento.product.product</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('product_type', '=', 'simple')]</field>
         </record>
 
         <record id="configurable_product_action" model="ir.actions.act_window">
-            <field name="name">Simple Produkte</field>
+            <field name="name">Configurable Products</field>
             <field name="res_model">magento.product.template</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('product_type', '=', 'configurable')]</field>
         </record>
 
         <record id="bundle_product_action" model="ir.actions.act_window">
-            <field name="name">Simple Produkte</field>
+            <field name="name">Bundle Products</field>
             <field name="res_model">magento.product.bundle</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="requeue_failed_jobs_action" model="ir.actions.server">
+            <field name="name">Requeue failed jobs</field>
+            <field name="model_id" ref="queue_job.model_queue_job"/>
+            <field name="code">
+                env['queue.job'].search([('state', '=', 'failed')]).requeue()
+            </field>
         </record>
 
         <record id="read_products_action" model="ir.actions.server">

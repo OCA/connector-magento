@@ -83,6 +83,7 @@
             <search string="Search Magento Products">
                 <field name="name"/>
                 <field name="external_id" string="SKU"/>
+                <field name="magento_id" string="Magento ID"/>
                 <field name="default_code"/>
                 <group expand="0" string="Group By...">
                     <filter string="Backend"

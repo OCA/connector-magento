@@ -14,9 +14,6 @@
 					<field name="temp_export_ids" attrs="{'invisible': [('model', '!=', 'product.template')]}"/>
 					<field name="categ_to_export_ids" attrs="{'invisible': [('model', '!=', 'product.category')]}"/>
 				</xpath>
-				<field name="model" position="after">
-					<field name="product_type" attrs="{'invisible': [('model', '!=', 'product.template')]}"/>
-				</field>
 			</field>
 		</record>
 

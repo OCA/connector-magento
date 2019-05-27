@@ -36,17 +36,30 @@
 .dashboard_action {
     float: left;
     margin: 10px;
-    border: solid lightgrey 1px;
+    border: solid #f26322 1px;
     padding: 10px;
     min-width: 300px;
-    min-height: 150px;
+    min-height: 500px;
+    background-color: #ffffff;
+    background-image:url("../img/magento_logo_large.png");
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
-.dasboard-action-smart-button-nr {
+.dashboard-action-header {
+    background-color:#f26322;
+    color:white;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+.dashboard-action-smart-button-nr {
     font-size: 1.3em;
     margin-bottom:0px;
 }
-
+.dashboard-action-smart-action-button a {
+    background-color:#007335;
+}
 .o_highlight {
   color: #fff;
 }

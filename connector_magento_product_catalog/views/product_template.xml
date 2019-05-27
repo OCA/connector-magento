@@ -1,19 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-	<data>
+<odoo>
 
-		<record id="view_magento_product_template_form" model="ir.ui.view">
-			<field name="name">magento.product.template.form</field>
-			<field name="model">magento.product.template</field>
-			<field name="inherit_id" ref="connector_magento.view_magento_product_template_form"/>
-			<field name="arch" type="xml">
-				<button name="run_sync_from_magento" position="after">
-					<button name="sync_to_magento" type="object" string="Force Sync Odoo -> Magento" />
-					<button type="object" name="run_sync_to_magento" string="Instead Force Sync Odoo -> Magento" groups="base.group_no_one"/>
-				</button>
-			</field>
-		</record>
+	<record id="view_magento_product_template_form" model="ir.ui.view">
+		<field name="name">magento.product.template.form</field>
+		<field name="model">magento.product.template</field>
+		<field name="inherit_id" ref="connector_magento.view_magento_product_template_form"/>
+		<field name="arch" type="xml">
+			<button name="run_sync_from_magento" position="after">
+				<button name="sync_to_magento" type="object" string="Force Sync Odoo -> Magento" />
+				<button type="object" name="run_sync_to_magento" string="Instead Force Sync Odoo -> Magento" groups="base.group_no_one"/>
+			</button>
+		</field>
+	</record>
 
+	<record id="action_server_resync_product_template_to_magento" model="ir.actions.server">
+		<field name="name">Queue resync to Magento</field>
+		<field name="condition">True</field>
+		<field name="type">ir.actions.server</field>
+		<field name="model_id" ref="model_magento_product_template" />
+		<field name="state">code</field>
+		<field name="code">records.sync_to_magento()</field>
+	</record>
 
-	</data>
-</openerp>
+	<record id="ir_values_resync_product_template_to_magento" model="ir.values">
+		<field name="name">Queue resync to Magento</field>
+		<field name="action_id" ref="action_server_resync_product_template_to_magento" />
+		<field name="value" eval="'ir.actions.server,' + str(ref('action_server_resync_product_template_to_magento'))"/>
+		<field name="key">action</field>
+		<field name="model_id" ref="model_magento_product_template" />
+		<field name="model">magento.product.template</field>
+		<field name="key2">client_action_multi</field>
+	</record>
+
+</odoo>

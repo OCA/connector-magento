@@ -80,7 +80,7 @@ class MagentoProductMedia(models.Model):
             ])
         if existing:
             extension = 'png' if vals['mimetype']=='image/png' else 'jpeg'
-            vals['file'] = "%s.%s" (uuid.uuid4(), extension)
+            vals['file'] = "%s.%s" % (uuid.uuid4(), extension)
         return super(MagentoProductMedia, self).create(vals)
 
 

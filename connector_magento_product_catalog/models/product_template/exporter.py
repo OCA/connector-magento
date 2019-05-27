@@ -30,7 +30,7 @@ class ProductTemplateDefinitionExporter(Component):
                 ('external_id', '=', sku),
             ])
             if search_count > 0:
-                sku = slugify("%s-%s" % (self.binding.display_name, self.binding.id), to_lower=True)
+                sku = slugify("%s-%s" % (self.binding.display_name, self.binding.id), to_lower=True)[0:64]
             self.binding.external_id = sku
         return super(ProductTemplateDefinitionExporter, self)._create_data(map_record, fields=fields, **kwargs)
 

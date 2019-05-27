@@ -13,7 +13,7 @@ var _t = core._t;
 var _lt = core._lt;
 
 var ConnectorMagentoDashboardView = KanbanView.extend({
-    display_name: _lt('Dashboard'),
+    display_name: _lt('Magento Dashboard'),
     icon: 'fa-dashboard',
     searchview_hidden: true,
     events: {
@@ -30,6 +30,9 @@ var ConnectorMagentoDashboardView = KanbanView.extend({
         var super_render = this._super;
         var self = this;
 
+        setTimeout(function rerender(self) {
+            self.render();
+        }, 5000, self);
         return this.fetch_data().then(function(result){
             var sales_dashboard = QWeb.render('connector_magento_dashboard.Dashboard', {
                 widget: self,

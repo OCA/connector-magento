@@ -29,5 +29,23 @@
 			</field>
 		</field>
 	</record>
+	
+	<record id="action_server_resync_product_product_to_magento" model="ir.actions.server">
+		<field name="name">Queue resync to Magento</field>
+		<field name="condition">True</field>
+		<field name="type">ir.actions.server</field>
+		<field name="model_id" ref="model_magento_product_product" />
+		<field name="state">code</field>
+		<field name="code">records.sync_to_magento()</field>
+	</record>
 
+	<record id="ir_values_resync_product_product_to_magento" model="ir.values">
+		<field name="name">Queue resync to Magento</field>
+		<field name="action_id" ref="action_server_resync_product_product_to_magento" />
+		<field name="value" eval="'ir.actions.server,' + str(ref('action_server_resync_product_product_to_magento'))"/>
+		<field name="key">action</field>
+		<field name="model_id" ref="model_magento_product_product" />
+		<field name="model">magento.product.product</field>
+		<field name="key2">client_action_multi</field>
+	</record>
 </odoo>

@@ -36,16 +36,25 @@ class WizardModel(models.TransientModel):
     def check_backend_binding(self, to_export_ids=None, dest_model=None):
         if not dest_model or not to_export_ids:
             (to_export_ids, dest_model) = self._get_ids_and_model()
-        if dest_model == 'magento.product.template' and self.product_type == 'simple':
-            # We have to change it to magento.product.product
-            dest_model = "magento.product.product"
-            # And use the product ids instead
-            variant_ids = self.env['product.product']
+        if dest_model == 'magento.product.template':
             for template in to_export_ids:
                 if template.product_variant_count > 1:
-                    raise UserWarning(_(u'Product template with variants can not get exported as simple product !'))
-                variant_ids += template.product_variant_id
-            to_export_ids = variant_ids
+                    dest_model = 'magento.product.template'
+                    model = template
+                else:
+                    dest_model = 'magento.product.product'
+                    model = template.product_variant_ids[0]
+                bind_count = self.env[dest_model].search_count([
+                    ('odoo_id', '=', model.id),
+                    ('backend_id', '=', self.backend_id.id)
+                ])
+                if not bind_count:
+                    vals = {
+                        'odoo_id': model.id,
+                        'backend_id': self.backend_id.id
+                    }
+                    self.env[dest_model].create(vals)
+            return
         return super(WizardModel, self).check_backend_binding(to_export_ids, dest_model)
 
     model = fields.Selection(selection_add=[
@@ -53,10 +62,6 @@ class WizardModel(models.TransientModel):
         ('product.product', _(u'Product')),
         ('product.category', _(u'Product category')),
     ], string='Model')
-    product_type = fields.Selection(selection=[
-        ('simple', _(u'Simple')),
-        ('configurable', _(u'Configurable')),
-    ], default='simple', string="Product Type")
     to_export_ids = fields.Many2many(string='Products to export',
                                      comodel_name='product.product', default=get_default_products)
     temp_export_ids = fields.Many2many(string='Product Templates to export',
