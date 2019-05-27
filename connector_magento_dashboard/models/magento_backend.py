@@ -10,8 +10,8 @@ from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMA
 
 _logger = logging.getLogger(__name__)
 
-class ResPartner(models.Model):
-    _inherit = 'res.partner'
+class MagentoResPartner(models.Model):
+    _inherit = 'magento.res.partner'
 
     date_created = fields.Datetime(string='Created Date', readonly=True)
 
