@@ -67,7 +67,7 @@ class MagentoBackend(models.Model):
         })
         # partner data
         partners = self.env['magento.res.partner'].search([('customer', '=', True)])
-        partners_today = partners.filtered(lambda f: datetime.strptime(f.date_created, DEFAULT_SERVER_DATETIME_FORMAT) > date_midnight)
+        partners_today = partners.filtered(lambda f: f.date_created and datetime.strptime(f.date_created, DEFAULT_SERVER_DATETIME_FORMAT) > date_midnight)
         values.update({
             'nr_partner_today': len(partners_today),
             'nr_partner_total': len(partners),
