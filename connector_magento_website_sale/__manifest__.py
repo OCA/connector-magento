@@ -7,6 +7,7 @@
  'category': 'Connector',
  'depends': ['connector_magento',
              'website_sale',
+             'connector_magento_product_catalog',
              ],
  'author': "Callino,Odoo Community Association (OCA)",
  'license': 'AGPL-3',
