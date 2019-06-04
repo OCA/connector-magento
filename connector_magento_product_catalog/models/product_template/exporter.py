@@ -99,10 +99,10 @@ class ProductTemplateExportMapper(Component):
                         att.attribute_text != False
                     )
                 )
-	    if len(value_ids) == 0:
-	       	_logger.debug("No name found for %s on storeview %s" % (name, storeview_id))
-	    else:
-		name = value_ids[0].attribute_text
+        if len(value_ids) == 0:
+            _logger.debug("No name found for %s on storeview %s" % (name, storeview_id))
+        else:
+            name = value_ids[0].attribute_text
         return {'name': name}
 
     
@@ -207,7 +207,7 @@ class ProductTemplateExportMapper(Component):
         return {'attributeSetId': val}
 
     @mapping
-    def get_common_attributes(self, record):
+    def get_custom_attributes(self, record):
         custom_attributes = []
         result = {'custom_attributes': custom_attributes}
         return result   

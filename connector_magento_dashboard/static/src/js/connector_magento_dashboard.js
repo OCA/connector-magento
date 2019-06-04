@@ -26,11 +26,17 @@ var ConnectorMagentoDashboardView = KanbanView.extend({
             .call('retrieve_dashboard', []);
     },
 
+    destroy: function () {
+        if (this.timeoutFunction) {
+            clearTimeout(this.timeoutFunction);
+        }
+        this._super.call(this);
+    },
     render: function() {
         var super_render = this._super;
         var self = this;
 
-        setTimeout(function rerender(self) {
+        this.timeoutFunction = setTimeout(function rerender(self) {
             self.render();
         }, 5000, self);
         return this.fetch_data().then(function(result){
