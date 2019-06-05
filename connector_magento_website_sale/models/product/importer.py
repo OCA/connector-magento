@@ -15,6 +15,8 @@ class ProductImportMapper(Component):
 
     @mapping
     def categories(self, record):
+        if 'category_ids' not in record:
+            return
         mag_categories = record.get('categories', record['category_ids'])
         binder = self.binder_for('magento.product.category')
         category_ids = []
