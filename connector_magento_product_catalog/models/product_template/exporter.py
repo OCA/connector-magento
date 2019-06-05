@@ -40,7 +40,7 @@ class ProductTemplateDefinitionExporter(Component):
         # Do use the importer to update the binding
         importer = self.component(usage='record.importer',
                                 model_name='magento.product.template')
-        importer.run(data, force=True, binding=self.binding)
+        importer.with_context(skip_after_import=True).run(data, force=True, binding=self.binding)
         self.external_id = data['sku']
 
     def _export_variants(self):
