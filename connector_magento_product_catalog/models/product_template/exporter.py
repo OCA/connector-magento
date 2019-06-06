@@ -89,8 +89,10 @@ class ProductTemplateDefinitionExporter(Component):
             # We are already in the storeview specific export
             return
         # TODO Fix and enable again
+        '''
         for storeview_id in self.env['magento.storeview'].search([('backend_id', '=', self.backend_record.id)]):
             self.binding.export_product_template_for_storeview(storeview_id=storeview_id)
+        '''
 
 
 class ProductTemplateExportMapper(Component):

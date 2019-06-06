@@ -221,7 +221,8 @@ class ProductTemplateImporter(Component):
                 self._import_dependency(product_option['attribute_id'], 'magento.product.attribute')
                 attribute = attribute_binder.to_internal(product_option['attribute_id'], unwrap=True)
             # This is a configurable product option attribute - so set the create_variant flag
-            attribute.with_context(connector_no_export=True).create_variant = True
+            if not attribute.create_variant:
+                attribute.with_context(connector_no_export=True).create_variant = True
             # Check for attribute values
             for option_value in product_option['values']:
                 attribute_value = attribute_value_binder.to_internal("%s_%s" % (product_option['attribute_id'], option_value['value_index']), unwrap=True)
