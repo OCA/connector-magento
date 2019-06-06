@@ -42,6 +42,6 @@ class MagentoProductTemplateExportListener(Component):
         if record.product_variant_count == 1:
             binding_ids = record.product_variant_ids[0].magento_bind_ids
         else:
-            binding_ids = record.magento_bind_ids
+            binding_ids = record.magento_template_bind_ids
         for binding in binding_ids:
             binding.with_delay().export_record(binding.backend_id)
