@@ -276,7 +276,8 @@ class ProductProductExportMapper(Component):
                 custom_attributes.append({
                     'attributeCode': attributeCode,
                     'value': value
-                    })
+                })
+        _logger.info("Do use custom attributes: %r", custom_attributes)
         return {'custom_attributes': custom_attributes}
 
     @mapping

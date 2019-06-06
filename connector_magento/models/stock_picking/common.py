@@ -9,6 +9,7 @@ from odoo import api, models, fields
 from odoo.addons.queue_job.job import job, related_action
 from odoo.addons.connector.exception import IDMissingInBackend
 from odoo.addons.component.core import Component
+from odoo.addons.queue_job.job import identity_exact
 
 _logger = logging.getLogger(__name__)
 
@@ -55,7 +56,7 @@ class MagentoStockPicking(models.Model):
             exporter = work.component(usage='record.exporter')
             res = exporter.run(self)
             if with_tracking and self.carrier_tracking_ref:
-                self.with_delay().export_tracking_number()
+                self.with_delay(identity_key=identity_exact).export_tracking_number()
             return res
 
 
@@ -146,7 +147,7 @@ class MagentoBindingStockPickingListener(Component):
         # picking at the time of execution of the job, a tracking could
         # have been added and it would be exported twice.
         with_tracking = bool(record.carrier_tracking_ref)
-        record.with_delay().export_picking_done(with_tracking=with_tracking)
+        record.with_delay(identity_key=identity_exact).export_picking_done(with_tracking=with_tracking)
 
 
 class MagentoStockPickingListener(Component):
@@ -158,7 +159,7 @@ class MagentoStockPickingListener(Component):
         for binding in record.magento_bind_ids:
             # Set the priority to 20 to have more chance that it would be
             # executed after the picking creation
-            binding.with_delay(priority=20).export_tracking_number()
+            binding.with_delay(priority=20, identity_key=identity_exact).export_tracking_number()
 
     def on_picking_out_done(self, record, picking_method):
         """

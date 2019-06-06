@@ -320,7 +320,7 @@ class MagentoBackend(models.Model):
             for model_name in ('magento.product.template',
                                'magento.product.bundle',
                                'magento.product.product'):
-                self.env[model_name].search([('backend_id', '=', backend.id)]).with_delay().sync_from_magento()
+                self.env[model_name].search([('backend_id', '=', backend.id)]).with_delay(identity_key=identity_exact).sync_from_magento()
 
     @api.multi
     def import_partners(self):
@@ -349,7 +349,7 @@ class MagentoBackend(models.Model):
     def import_customer_groups(self):
         for backend in self:
             backend.check_magento_structure()
-            self.env['magento.res.partner.category'].with_delay().import_batch(
+            self.env['magento.res.partner.category'].with_delay(identity_key=identity_exact).import_batch(
                 backend,
             )
         return True
@@ -364,7 +364,7 @@ class MagentoBackend(models.Model):
                 from_date = fields.Datetime.from_string(from_date)
             else:
                 from_date = None
-            self.env[model].with_delay().import_batch(
+            self.env[model].with_delay(identity_key=identity_exact).import_batch(
                 backend,
                 filters={'from_date': from_date,
                          'to_date': import_start_time}

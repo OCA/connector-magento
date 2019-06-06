@@ -8,6 +8,7 @@ from datetime import datetime, timedelta
 from odoo import models, fields, api
 from odoo.addons.component.core import Component
 from ..magento_backend.common import IMPORT_DELTA_BUFFER
+from odoo.addons.queue_job.job import identity_exact
 
 
 class MagentoWebsite(models.Model):
@@ -47,7 +48,7 @@ class MagentoWebsite(models.Model):
                 from_date = from_string(website.import_partners_from_date)
             else:
                 from_date = None
-            self.env['magento.res.partner'].with_delay().import_batch(
+            self.env['magento.res.partner'].with_delay(identity_key=identity_exact).import_batch(
                 backend,
                 filters={'magento_website_id': website.external_id,
                          'from_date': from_date,

@@ -16,6 +16,7 @@ from odoo.addons.component.core import AbstractComponent
 from odoo.addons.connector.exception import (IDMissingInBackend,
                                              RetryableJobError)
 from .backend_adapter import MAGENTO_DATETIME_FORMAT
+from odoo.addons.queue_job.job import identity_exact
 
 _logger = logging.getLogger(__name__)
 
@@ -54,9 +55,8 @@ class MagentoBaseExporter(AbstractComponent):
         # force is True because the sync_date will be more recent
         # so the import would be skipped
         assert self.external_id
-        self.binding.with_delay().import_record(self.backend_record,
-                                                self.external_id,
-                                                force=True)
+        self.binding.with_delay(identity_key=identity_exact).import_record(
+            self.backend_record, self.external_id, force=True)
 
     def _should_import(self):
         """ Before the export, compare the update date

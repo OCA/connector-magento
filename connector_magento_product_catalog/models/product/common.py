@@ -6,6 +6,7 @@ import logging
 from odoo import api, models, fields
 from odoo.addons.component.core import Component
 from odoo.addons.queue_job.job import job, related_action
+from odoo.addons.queue_job.job import identity_exact
 
 _logger = logging.getLogger(__name__)
 
@@ -25,7 +26,7 @@ class MagentoProductProduct(models.Model):
     @related_action(action='related_action_unwrap_binding')
     def sync_to_magento(self):
         for binding in self:
-            binding.with_delay().run_sync_to_magento()
+            binding.with_delay(identity_key=identity_exact).run_sync_to_magento()
 
     @api.multi
     @related_action(action='related_action_unwrap_binding')

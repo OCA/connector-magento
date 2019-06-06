@@ -9,6 +9,7 @@ from odoo import api, models, fields
 from odoo.addons.component.core import Component
 from odoo.addons.queue_job.job import job, related_action
 from odoo.addons.connector.exception import IDMissingInBackend
+from odoo.addons.queue_job.job import identity_exact
 
 _logger = logging.getLogger(__name__)
 
@@ -122,7 +123,7 @@ class MagentoBindingInvoiceListener(Component):
     _apply_on = ['magento.account.invoice']
 
     def on_record_create(self, record, fields=None):
-        record.with_delay().export_record()
+        record.with_delay(identity_key=identity_exact).export_record()
 
 
 class MagentoInvoiceListener(Component):

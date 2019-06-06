@@ -44,4 +44,4 @@ class MagentoProductTemplateExportListener(Component):
         else:
             binding_ids = record.magento_template_bind_ids
         for binding in binding_ids:
-            binding.with_delay().export_record(binding.backend_id)
+            binding.with_delay(identity_key=identity_exact).export_record(binding.backend_id)

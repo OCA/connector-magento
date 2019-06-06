@@ -10,6 +10,7 @@ from datetime import datetime, timedelta
 from odoo import models, fields, api
 from odoo.addons.component.core import Component
 from ..magento_backend.common import IMPORT_DELTA_BUFFER
+from odoo.addons.queue_job.job import identity_exact
 
 _logger = logging.getLogger(__name__)
 
@@ -79,7 +80,7 @@ class MagentoStoreview(models.Model):
             else:
                 from_date = None
 
-            delayable = sale_binding_model.with_delay(priority=1)
+            delayable = sale_binding_model.with_delay(priority=1, identity_key=identity_exact)
             filters = {
                 'magento_storeview_id': storeview.external_id,
                 'from_date': from_date,

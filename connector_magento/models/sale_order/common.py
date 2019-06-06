@@ -14,6 +14,7 @@ from odoo.addons.queue_job.job import job
 from odoo.addons.component.core import Component
 
 from ...components.backend_adapter import MAGENTO_DATETIME_FORMAT
+from odoo.addons.queue_job.job import identity_exact
 
 _logger = logging.getLogger(__name__)
 
@@ -160,7 +161,8 @@ class SaleOrder(models.Model):
                     #continue # TODO
                 job_descr = _("Cancel sales order %s") % (binding.external_id,)
                 binding.with_delay(
-                    description=job_descr
+                    description=job_descr,
+                    identity_key=identity_exact
                 ).export_state_change(allowed_states=['cancel'])
 
     @api.multi
@@ -185,7 +187,8 @@ class SaleOrder(models.Model):
                 continue # TODO
             job_descr = _("Reopen sales order %s") % (binding.external_id,)
             binding.with_delay(
-                description=job_descr
+                description=job_descr,
+                identity_key=identity_exact
             ).export_state_change()
 
     @api.multi

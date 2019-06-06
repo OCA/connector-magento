@@ -42,4 +42,4 @@ class MagentoProductMediaExportListener(Component):
             return
         for binding in record.magento_bind_ids:
             for image_binding in binding.magento_image_bind_ids:
-                image_binding.with_delay().export_record(image_binding.backend_id)
+                image_binding.with_delay(identity_key=identity_exact).export_record(image_binding.backend_id)

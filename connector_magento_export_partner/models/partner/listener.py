@@ -37,6 +37,6 @@ class MagentoPartnerExportListener(Component):
     @skip_if(lambda self, record, **kwargs: self.no_connector_export(record))
     def on_record_write(self, record, fields=None):
         for binding in record.magento_bind_ids:
-            binding.with_delay().export_record(binding.backend_id)
+            binding.with_delay(identity_key=identity_exact).export_record(binding.backend_id)
         for binding in record.magento_address_bind_ids:
-            binding.with_delay().export_record(binding.backend_id)
+            binding.with_delay(identity_key=identity_exact).export_record(binding.backend_id)

@@ -42,4 +42,4 @@ class MagentoProductAttributeExportListener(Component):
         for binding in record.magento_bind_ids:
             if not binding.backend_id.export_all_options:
                 return
-            binding.with_delay().export_record(binding.backend_id)
+            binding.with_delay(identity_key=identity_exact).export_record(binding.backend_id)

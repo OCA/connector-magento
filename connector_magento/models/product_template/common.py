@@ -10,6 +10,7 @@ from ...components.backend_adapter import MAGENTO_DATETIME_FORMAT
 import urllib
 import odoo.addons.decimal_precision as dp
 from urlparse import urljoin
+from odoo.addons.queue_job.job import identity_exact
 
 
 _logger = logging.getLogger(__name__)
@@ -87,7 +88,7 @@ class MagentoProductTemplate(models.Model):
     @job(default_channel='root.magento')
     def sync_from_magento(self):
         for binding in self:
-            binding.with_delay().run_sync_from_magento()
+            binding.with_delay(identity_key=identity_exact).run_sync_from_magento()
 
     @api.multi
     @job(default_channel='root.magento')

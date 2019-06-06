@@ -7,6 +7,7 @@ from odoo import api, models, fields
 from odoo.addons.queue_job.job import job, related_action
 from odoo.addons.connector.exception import IDMissingInBackend
 from odoo.addons.component.core import Component
+from odoo.addons.queue_job.job import identity_exact
 
 _logger = logging.getLogger(__name__)
 
@@ -61,7 +62,7 @@ class MagentoStockItem(models.Model):
                                            string='Warehouse',
                                            required=True,
                                            ondelete='cascade')
-    qty = fields.Float(string='Quantity', default=0.0)
+    qty = fields.Float(string='Quantity', default=-999)
     calculated_qty = fields.Float(string='Calculated Qty.', compute='_compute_qty')
     should_export = fields.Boolean(string='Should Export', compute='_compute_qty')
     min_sale_qty = fields.Float(string='Min Sale Qty', default=1.0)
@@ -80,13 +81,13 @@ class MagentoStockItem(models.Model):
     )
 
     @api.multi
-    @job(default_channel='root.magento')
+    @job(default_channel='root.magento.stock')
     def sync_from_magento(self):
         for binding in self:
-            binding.with_delay().run_sync_from_magento()
+            binding.with_delay(priority=5, identity_key=identity_exact).run_sync_from_magento()
 
     @api.multi
-    @job(default_channel='root.magento')
+    @job(default_channel='root.magento.stock')
     def run_sync_from_magento(self):
         self.ensure_one()
         with self.backend_id.work_on(self._name) as work:
@@ -94,14 +95,14 @@ class MagentoStockItem(models.Model):
             return importer.run(self.external_id, force=True, binding=self)
 
     @api.multi
-    @job(default_channel='root.magento')
+    @job(default_channel='root.magento.stock')
     def sync_to_magento(self):
         for binding in self:
             if binding.should_export:
-                binding.with_delay().run_sync_to_magento()
+                binding.with_delay(priority=5, identity_key=identity_exact).run_sync_to_magento()
 
     @api.multi
-    @job(default_channel='root.magento')
+    @job(default_channel='root.magento.stock')
     def run_sync_to_magento(self):
         self.ensure_one()
         with self.backend_id.work_on(self._name) as work:
