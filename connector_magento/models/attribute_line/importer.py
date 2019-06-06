@@ -75,6 +75,29 @@ class AttributeLineImportMapper(Component):
         return {'magento_product_attribute_value_ids': value_ids, 'value_ids': odoo_value_ids}
 
     @mapping
+    @only_create
+    def odoo_id(self, record):
+        tbinder = self.binder_for('magento.product.template')
+        abinder = self.binder_for('magento.product.attribute')
+        template = tbinder.to_internal(record['product_id'], unwrap=True, external_field='magento_id')
+        attribute = abinder.to_internal(record['attribute_id'], unwrap=True)
+        if not attribute:
+            raise MappingError("The product attribute with "
+                               "magento id %s is not imported." %
+                               record['attribute_id'])
+        if not template:
+            raise MappingError("The product template with "
+                               "magento id %s is not imported." %
+                               record['product_id'])
+        line = self.env['product.attribute.line'].search([
+            ('product_tmpl_id', '=', template.id),
+            ('attribute_id', '=', attribute.id),
+        ])
+        if line:
+            return {'odoo_id': line.id}
+
+
+    @mapping
     def magento_attribute_id(self, record):
         binder = self.binder_for('magento.product.attribute')
         attribute = binder.to_internal(record['attribute_id'], unwrap=False)

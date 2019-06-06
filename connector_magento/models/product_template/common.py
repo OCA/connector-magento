@@ -202,7 +202,6 @@ class ProductTemplateAdapter(Component):
         """ Update records on the external system """
         storeview_id = self.work.storeview_id if hasattr(self.work, 'storeview_id') else False
         if self.work.magento_api._location.version == '2.0':
-            _logger.info("Prepare to call api with %s " % data)
             # Replace by the
             id = data['sku']
             storeview_code = storeview_id.code if storeview_id else False

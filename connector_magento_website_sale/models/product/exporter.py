@@ -7,6 +7,9 @@ from odoo.addons.component.core import Component
 from slugify import slugify
 import magic
 import base64
+import logging
+
+_logger = logging.getLogger(__name__)
 
 
 class ProductProductExporter(Component):
@@ -18,6 +21,7 @@ class ProductProductExporter(Component):
         if not self.backend_record.auto_create_category:
             return
         categ_exporter = self.component(usage='record.exporter', model_name='magento.product.category')
+        _logger.info("Public Category IDS: %s", self.binding.public_categ_ids)
         for categ in self.binding.public_categ_ids:
             magento_categ_id = categ.magento_bind_ids.filtered(lambda bc: bc.backend_id.id == self.binding.backend_id.id)
             if not magento_categ_id:

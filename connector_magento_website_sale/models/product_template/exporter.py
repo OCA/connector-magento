@@ -4,6 +4,10 @@
 
 
 from odoo.addons.component.core import Component
+import logging
+
+_logger = logging.getLogger(__name__)
+
 
 class ProductTemplateDefinitionExporter(Component):
     _inherit = 'magento.product.template.exporter'
@@ -15,6 +19,7 @@ class ProductTemplateExportMapper(Component):
     def category_ids(self, record):
         position = 0
         categ_vals = []
+        _logger.info("Public Category IDS: %s", record.public_categ_ids)
         for categ in record.public_categ_ids:
             magento_categ_id = categ.magento_bind_ids.filtered(lambda bc: bc.backend_id.id == record.backend_id.id)
             categ_vals.append({

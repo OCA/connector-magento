@@ -46,7 +46,6 @@ class ProductMediaMapper(Component):
         ('file', 'file'),
         ('position', 'position'),
         ('disabled', 'disabled'),
-        ('mimetype', 'mimetype'),
         ('media_type', 'media_type'),
     ]
 
@@ -63,6 +62,13 @@ class ProductMediaMapper(Component):
                 }
             }    
     '''
+    @mapping
+    def mimetype(self, record):
+        if 'mimetype' in record and record['mimetype']:
+            return {'mimetype': record['mimetype']}
+        else:
+            return {'mimetype': 'image/jpeg'}
+
     @mapping
     def image_type(self, record):
         return {

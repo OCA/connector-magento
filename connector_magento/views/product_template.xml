@@ -86,7 +86,15 @@
 							</page>
 							<page name="attributes" string="Attributes">
 								<label for="magento_template_attribute_line_ids"/>
-								<field name="magento_template_attribute_line_ids" nolabel="1"/>
+								<field name="magento_template_attribute_line_ids" nolabel="1">
+									<tree>
+										<field name="label"/>
+										<field name="position"/>
+										<field name="external_id"/>
+										<field name="magento_attribute_id"/>
+										<field name="magento_template_id"/>
+									</tree>
+								</field>
 							</page>
 							<page name="stock" string="Stock Values">
 								<label for="magento_stock_item_ids"/>

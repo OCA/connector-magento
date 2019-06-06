@@ -8,12 +8,9 @@ from odoo.addons.component.core import Component
 from odoo.addons.connector.unit.mapper import mapping, only_create
 from odoo.addons.connector.exception import MappingError
 from slugify import slugify
-from odoo.addons.queue_job.exception import NothingToDoJob
-from odoo.addons.queue_job.job import identity_exact
-from odoo.addons.connector_magento.components.backend_adapter import MAGENTO_DATETIME_FORMAT
 import logging
-_logger = logging.getLogger(__name__)
 
+_logger = logging.getLogger(__name__)
 
 
 class ProductTemplateDefinitionExporter(Component):
@@ -40,7 +37,8 @@ class ProductTemplateDefinitionExporter(Component):
         # Do use the importer to update the binding
         importer = self.component(usage='record.importer',
                                 model_name='magento.product.template')
-        importer.with_context(skip_after_import=True).run(data, force=True, binding=self.binding)
+        _logger.info("Do update record with: %s", data)
+        importer.run(data, force=True, binding=self.binding)
         self.external_id = data['sku']
 
     def _export_variants(self):
@@ -58,9 +56,29 @@ class ProductTemplateDefinitionExporter(Component):
                 })
                 variant_exporter.run(m_prod)
 
+    def _create_attribute_lines(self):
+        record = self.binding
+        for line in record.attribute_line_ids:
+            m_line = line.magento_bind_ids.filtered(lambda m: m.backend_id == record.backend_id)
+            m_att_id = line.attribute_id.magento_bind_ids.filtered(lambda m: m.backend_id == record.backend_id)
+            if not m_att_id:
+                raise MappingError("The product attribute %s "
+                                   "is not exported yet." %
+                                   line.attribute_id.name)
+
+            if not m_line:
+                self.env['magento.template.attribute.line'].create({
+                    'odoo_id': line.id,
+                    'magento_attribute_id': m_att_id.id,
+                    'magento_template_id': record.id,
+                    'label': m_att_id.name,
+                    'position': m_att_id.sequence,
+                })
+
     def _export_dependencies(self):
         """ Export the dependencies for the record"""
         super(ProductTemplateDefinitionExporter, self)._export_dependencies()
+        self._create_attribute_lines()
         self._export_variants()
         return
 
@@ -71,10 +89,8 @@ class ProductTemplateDefinitionExporter(Component):
             # We are already in the storeview specific export
             return
         # TODO Fix and enable again
-        '''
         for storeview_id in self.env['magento.storeview'].search([('backend_id', '=', self.backend_record.id)]):
-            self.binding.with_delay().export_product_template_for_storeview(storeview_id=storeview_id)
-        '''
+            self.binding.export_product_template_for_storeview(storeview_id=storeview_id)
 
 
 class ProductTemplateExportMapper(Component):
@@ -152,6 +168,9 @@ class ProductTemplateExportMapper(Component):
         option_ids = []
         att_lines = record.attribute_line_ids.filtered(lambda l: l.attribute_id.create_variant == True and len(l.attribute_id.magento_bind_ids.filtered(lambda m: m.backend_id == record.backend_id)) > 0)
         for l in att_lines:
+            if not l.value_ids or len(l.value_ids) < 2:
+                # Do not export attributes with only one selectable value !
+                continue
             m_att_id = l.attribute_id.magento_bind_ids.filtered(lambda m: m.backend_id == record.backend_id)
             if not m_att_id:
                 raise MappingError("The product attribute %s "
@@ -181,12 +200,12 @@ class ProductTemplateExportMapper(Component):
     def category_ids(self, record):
         categ_vals = [{
             "position": 0,
-            "category_id": record.categ_id.magento_bind_ids.external_id,
+            "category_id": record.categ_id.magento_bind_ids.filtered(lambda m: m.backend_id == record.backend_id).external_id,
         }]
         for c in record.categ_ids:
             categ_vals.append({
                 "position": 1,
-                "category_id": c.magento_bind_ids.external_id,
+                "category_id": c.magento_bind_ids.filtered(lambda m: m.backend_id == record.backend_id).external_id,
             })
         return {'category_links': categ_vals}
 

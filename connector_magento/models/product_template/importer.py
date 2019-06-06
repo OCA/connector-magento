@@ -115,9 +115,6 @@ class ProductTemplateImporter(Component):
         def sort_by_position(elem):
             return elem.position
 
-        if self.context.get('skip_after_import', False):
-            _logger.info("Do skip after import function call")
-            return
         # Import Images
         media_importer = self.component(usage='product.media.importer', model_name='magento.product.media')
         for media in self.magento_record['media_gallery_entries']:

@@ -50,7 +50,7 @@ class MagentoProductMedia(models.Model):
     image = fields.Binary(string="Image", compute='_get_image')
     position = fields.Integer(string="Position", default=0)
     disabled = fields.Boolean(string="Disabled", default=False)
-    mimetype = fields.Char(string="Mimetype", required=True)
+    mimetype = fields.Char(string="Mimetype", required=True, default='image/jpeg')
     media_type = fields.Selection([
         ('image', _(u'Image')),
         ('external-video', _(u'External Video')),

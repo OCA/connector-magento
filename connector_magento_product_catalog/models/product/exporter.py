@@ -7,11 +7,13 @@ from datetime import datetime
 
 from odoo.addons.component.core import Component
 from odoo.addons.connector.unit.mapper import mapping
-from odoo.addons.queue_job.job import identity_exact
 from slugify import slugify
 from odoo.addons.connector_magento.components.backend_adapter import MAGENTO_DATETIME_FORMAT
 import magic
 import base64
+import logging
+
+_logger = logging.getLogger(__name__)
 
 
 class ProductProductExporter(Component):
@@ -21,11 +23,17 @@ class ProductProductExporter(Component):
 
 
     def _create_data(self, map_record, fields=None, **kwargs):
+        def sort_by_sequence(elem):
+            return elem.attribute_id.sequence
+
         # Here we do generate a new default code is none exists for now
         if 'magento.product.product' in self._apply_on and not self.binding.default_code:
             name = self.binding.display_name
-            for value in self.binding.attribute_value_ids:
-                name = "%s %s %s" % (name, value.attribute_id.name, value.name)
+            for value in sorted(self.binding.attribute_value_ids, key=sort_by_sequence):
+                # Check the attribute for the product template - it should have more than one value to be useful here
+                line = self.binding.odoo_id.product_tmpl_id.attribute_line_ids.filtered(lambda l: l.attribute_id == value.attribute_id)
+                if len(line.value_ids) > 1:
+                    name = "%s %s %s" % (name, value.attribute_id.name, value.name)
             self.binding.default_code = slugify(name, to_lower=True)
         return super(ProductProductExporter, self)._create_data(map_record, fields=fields, **kwargs)
 
@@ -72,6 +80,7 @@ class ProductProductExporter(Component):
         # Do use the importer to update the binding
         importer = self.component(usage='record.importer',
                                 model_name='magento.product.product')
+        _logger.info("Do update record with: %s", data)
         importer.run(data, force=True, binding=self.binding)
         self.external_id = data['sku']
 
