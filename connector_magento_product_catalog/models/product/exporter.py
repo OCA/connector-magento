@@ -27,7 +27,7 @@ class ProductProductExporter(Component):
             return elem.attribute_id.sequence
 
         # Here we do generate a new default code is none exists for now
-        if 'magento.product.product' in self._apply_on and not self.binding.default_code:
+        if 'magento.product.product' in self._apply_on and not self.binding.external_id:
             name = self.binding.display_name
             for value in sorted(self.binding.attribute_value_ids, key=sort_by_sequence):
                 # Check the attribute for the product template - it should have more than one value to be useful here
@@ -197,7 +197,7 @@ class ProductProductExportMapper(Component):
     _apply_on = ['magento.product.product']
 
     direct = [
-        ('default_code', 'sku'),
+        ('external_id', 'sku'),
         ('product_type', 'typeId'),
     ]
 

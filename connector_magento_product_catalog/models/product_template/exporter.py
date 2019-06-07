@@ -9,6 +9,7 @@ from odoo.addons.connector.unit.mapper import mapping, only_create
 from odoo.addons.connector.exception import MappingError
 from slugify import slugify
 import logging
+import uuid
 
 _logger = logging.getLogger(__name__)
 
@@ -21,14 +22,27 @@ class ProductTemplateDefinitionExporter(Component):
     def _create_data(self, map_record, fields=None, **kwargs):
         # Here we do generate a new default code is none exists for now
         if not self.binding.external_id:
-            sku = slugify(self.binding.display_name, to_lower=True)
-            search_count = self.env['magento.product.template'].search_count([
-                ('backend_id', '=', self.backend_record.id),
-                ('external_id', '=', sku),
-            ])
-            if search_count > 0:
-                sku = slugify("%s-%s" % (self.binding.display_name, self.binding.id), to_lower=True)[0:64]
-            self.binding.external_id = sku
+            if self.binding.magento_default_code:
+                self.binding.external_id = self.binding.magento_default_code
+            else:
+                sku = slugify(self.binding.display_name, to_lower=True)
+                search_count = self.env['magento.product.template'].search_count([
+                    ('backend_id', '=', self.backend_record.id),
+                    ('external_id', '=', sku),
+                ])
+                if not search_count:
+                    search_count = self.env['magento.product.product'].search_count([
+                        ('backend_id', '=', self.backend_record.id),
+                        ('external_id', '=', sku),
+                    ])
+                if not search_count:
+                    search_count = self.env['magento.product.bundle'].search_count([
+                        ('backend_id', '=', self.backend_record.id),
+                        ('external_id', '=', sku),
+                    ])
+                if search_count > 0:
+                    sku = slugify("%s-%s" % (self.binding.display_name, uuid.uuid4()), to_lower=True)[0:64]
+                self.binding.external_id = sku
         return super(ProductTemplateDefinitionExporter, self)._create_data(map_record, fields=fields, **kwargs)
 
     def _update_binding_record_after_create(self, data):
