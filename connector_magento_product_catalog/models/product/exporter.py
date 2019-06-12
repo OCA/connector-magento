@@ -21,20 +21,56 @@ class ProductProductExporter(Component):
     _inherit = 'magento.exporter'
     _apply_on = ['magento.product.product']
 
+    def _sku_inuse(self, sku):
+        search_count = self.env['magento.product.template'].search_count([
+            ('backend_id', '=', self.backend_record.id),
+            ('external_id', '=', sku),
+        ])
+        if not search_count:
+            search_count += self.env['magento.product.product'].search_count([
+                ('backend_id', '=', self.backend_record.id),
+                ('external_id', '=', sku),
+            ])
+        if not search_count:
+            search_count += self.env['magento.product.bundle'].search_count([
+                ('backend_id', '=', self.backend_record.id),
+                ('external_id', '=', sku),
+            ])
+        return search_count > 0
 
-    def _create_data(self, map_record, fields=None, **kwargs):
+    def _get_sku_proposal(self):
         def sort_by_sequence(elem):
             return elem.attribute_id.sequence
 
-        # Here we do generate a new default code is none exists for now
-        if 'magento.product.product' in self._apply_on and not self.binding.external_id:
+        if self.binding.default_code:
+            sku = self.binding.default_code[0:64]
+        else:
             name = self.binding.display_name
             for value in sorted(self.binding.attribute_value_ids, key=sort_by_sequence):
                 # Check the attribute for the product template - it should have more than one value to be useful here
-                line = self.binding.odoo_id.product_tmpl_id.attribute_line_ids.filtered(lambda l: l.attribute_id == value.attribute_id)
+                line = self.binding.odoo_id.product_tmpl_id.attribute_line_ids.filtered(
+                    lambda l: l.attribute_id == value.attribute_id)
                 if len(line.value_ids) > 1:
                     name = "%s %s %s" % (name, value.attribute_id.name, value.name)
-            self.binding.default_code = slugify(name, to_lower=True)
+            sku = slugify(name, to_lower=True)[0:64]
+        return sku
+
+    def _create_data(self, map_record, fields=None, **kwargs):
+        # Here we do generate a new default code is none exists for now
+        if 'magento.product.product' in self._apply_on and not self.binding.external_id:
+            sku = self._get_sku_proposal()
+            i = 0
+            original_sku = sku
+            while self._sku_inuse(sku):
+                sku = "%s-%s" % (original_sku[0:(63-len(str(i)))], i)
+                i += 1
+                _logger.info("Try next sku: %s", sku)
+            self.binding.with_context(connector_no_export=True).external_id = sku
+            # TODO: Add backend option to enable / disable this !
+            '''
+            if not self.binding.default_code:
+                self.binding.with_context(connector_no_export=True).default_code = sku
+            '''
         return super(ProductProductExporter, self)._create_data(map_record, fields=fields, **kwargs)
 
     def _create(self, data):
@@ -186,9 +222,17 @@ class ProductProductExporter(Component):
         for stock_item in self.binding.magento_stock_item_ids:
             stock_item.sync_to_magento()
 
+    def _check_special_price(self):
+        record = self.binding
+        if record.special_price_active and record.with_context(pricelist=record.backend_id.default_pricelist_id.id).price == record['lst_price']:
+            # We do have to remove the special price now
+            self.backend_adapter.remove_special_price(self.binding.external_id)
+            record.with_context(connector_no_export=True).special_price_active = False
+
     def _after_export(self):
         self._export_base_image()
         self._export_stock()
+        self._check_special_price()
 
 
 class ProductProductExportMapper(Component):
@@ -277,10 +321,20 @@ class ProductProductExportMapper(Component):
                     'attributeCode': attributeCode,
                     'value': value
                 })
+        if record.backend_id.default_pricelist_id.discount_policy == 'without_discount' and record.with_context(
+                pricelist=record.backend_id.default_pricelist_id.id).price != record['lst_price']:
+            custom_attributes.append({
+                'attributeCode': 'special_price',
+                'value': record.with_context(pricelist=record.backend_id.default_pricelist_id.id).price
+            })
+            record.with_context(connector_no_export=True).special_price_active = True
         _logger.info("Do use custom attributes: %r", custom_attributes)
         return {'custom_attributes': custom_attributes}
 
     @mapping
     def price(self, record):
-        price = record['lst_price']
+        if record.backend_id.default_pricelist_id.discount_policy=='with_discount':
+            price = record.with_context(pricelist=record.backend_id.default_pricelist_id.id).price
+        else:
+            price = record['lst_price']
         return {'price': price}

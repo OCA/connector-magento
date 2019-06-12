@@ -185,18 +185,41 @@ class ProductImportMapper(Component):
     _apply_on = ['magento.product.product']
 
     # TODO :     categ, special_price => minimal_price
-    direct = [('name', 'magento_name'),
-              ('price', 'magento_price'),
+    direct = [('price', 'magento_price'),
               ('description', 'description'),
               ('weight', 'weight'),
               ('short_description', 'description_sale'),
-              ('sku', 'default_code'),
               ('sku', 'external_id'),
               ('type_id', 'product_type'),
               ('id', 'magento_id'),
               (normalize_datetime('created_at'), 'created_at'),
               (normalize_datetime('updated_at'), 'updated_at'),
               ]
+
+    @only_create
+    @mapping
+    def default_code_on_create(self, record):
+        if self.backend_record.default_code_method == 'none':
+            return
+        if self.backend_record.default_code_method in ['update', 'overwrite']:
+            return {
+                'default_code': record['sku']
+            }
+
+    @mapping
+    def default_code_on_update(self, record):
+        if self.backend_record.default_code_method == 'none':
+            return
+        if self.backend_record.default_code_method == 'overwrite':
+            return {
+                'default_code': record['sku']
+            }
+
+    @mapping
+    def magento_name(self, record):
+        return {
+            'magento_name': record['name']
+        }
 
     @mapping
     def is_active(self, record):
@@ -227,7 +250,7 @@ class ProductImportMapper(Component):
     @mapping
     def product_name(self, record):
         if record['visibility'] == 1:
-            # This is a product variant - so the price got set on the template !
+            # This is a product variant - so the name got set on the template !
             return {}
         return {
             'name': record.get('name', ''),

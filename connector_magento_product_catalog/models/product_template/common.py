@@ -7,6 +7,7 @@ from odoo import api, models, fields
 from odoo.addons.queue_job.job import job, related_action
 from odoo.addons.component.core import Component
 from odoo.addons.queue_job.job import identity_exact
+import urllib
 
 
 _logger = logging.getLogger(__name__)
@@ -14,6 +15,8 @@ _logger = logging.getLogger(__name__)
 
 class MagentoProductTemplate(models.Model):
     _inherit = 'magento.product.template'
+
+    special_price_active = fields.Boolean('Special Price', default=False)
 
     @api.multi
     @job(default_channel='root.magento.productexport')
@@ -50,3 +53,16 @@ class ProductTemplateAdapter(Component):
     def _get_id_from_create(self, result, data=None):
         # Products do use the sku as external_id - but we also need the id - so do return the complete data structure
         return result
+
+    def update_product_links(self, sku, items):
+        def escape(term):
+            if isinstance(term, basestring):
+                return urllib.quote(term.encode('utf-8'), safe='')
+            return term
+
+        if self.work.magento_api._location.version == '2.0':
+            res = self._call('products/%s/links' % escape(sku), {
+                "items": items
+            }, http_method="post")
+            _logger.info("Got result for items: %s.", res)
+            return res

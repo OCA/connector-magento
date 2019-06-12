@@ -19,30 +19,41 @@ class ProductTemplateDefinitionExporter(Component):
     _inherit = 'magento.product.product.exporter'
     _apply_on = ['magento.product.template']
 
+    def _sku_inuse(self, sku):
+        search_count = self.env['magento.product.template'].search_count([
+            ('backend_id', '=', self.backend_record.id),
+            ('external_id', '=', sku),
+        ])
+        if not search_count:
+            search_count += self.env['magento.product.product'].search_count([
+                ('backend_id', '=', self.backend_record.id),
+                ('external_id', '=', sku),
+            ])
+        if not search_count:
+            search_count += self.env['magento.product.bundle'].search_count([
+                ('backend_id', '=', self.backend_record.id),
+                ('external_id', '=', sku),
+            ])
+        return search_count > 0
+
+    def _get_sku_proposal(self):
+        if self.binding.magento_default_code:
+            sku = self.binding.magento_default_code[0:64]
+        else:
+            sku = slugify(self.binding.display_name, to_lower=True)[0:64]
+        return sku
+
     def _create_data(self, map_record, fields=None, **kwargs):
         # Here we do generate a new default code is none exists for now
         if not self.binding.external_id:
-            if self.binding.magento_default_code:
-                self.binding.external_id = self.binding.magento_default_code
-            else:
-                sku = slugify(self.binding.display_name, to_lower=True)
-                search_count = self.env['magento.product.template'].search_count([
-                    ('backend_id', '=', self.backend_record.id),
-                    ('external_id', '=', sku),
-                ])
-                if not search_count:
-                    search_count = self.env['magento.product.product'].search_count([
-                        ('backend_id', '=', self.backend_record.id),
-                        ('external_id', '=', sku),
-                    ])
-                if not search_count:
-                    search_count = self.env['magento.product.bundle'].search_count([
-                        ('backend_id', '=', self.backend_record.id),
-                        ('external_id', '=', sku),
-                    ])
-                if search_count > 0:
-                    sku = slugify("%s-%s" % (self.binding.display_name, uuid.uuid4()), to_lower=True)[0:64]
-                self.binding.external_id = sku
+            sku = self._get_sku_proposal()
+            i = 0
+            original_sku = sku
+            while self._sku_inuse(sku):
+                sku = "%s-%s" % (original_sku[0:(63-len(str(i)))], i)
+                i += 1
+                _logger.info("Try next sku: %s", sku)
+            self.binding.with_context(connector_no_export=True).external_id = sku
         return super(ProductTemplateDefinitionExporter, self)._create_data(map_record, fields=fields, **kwargs)
 
     def _update_binding_record_after_create(self, data):
@@ -178,7 +189,6 @@ class ProductTemplateExportMapper(Component):
                 continue
             links.append(mp.magento_id)
         return {'configurable_product_links': links}
-
 
     def configurable_product_options(self, record):
         option_ids = []

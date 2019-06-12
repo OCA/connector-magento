@@ -177,6 +177,12 @@ class MagentoBackend(models.Model):
         comodel_name='magento.product.attributes.group',
         string='Default Attribute Group'
     )
+    default_code_method = fields.Selection([
+        ('none', 'Do not touch odoo default code'),
+        ('update', 'Do update odoo default code if not already set'),
+        ('overwrite', 'Do overwrite odoo default code'),
+    ], default='none', string='Default code handling')
+
     auto_create_category = fields.Boolean('Auto Create Category', default=True)
 
     # TODO? add a field `auto_activate` -> activate a cron

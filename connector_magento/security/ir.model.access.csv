@@ -21,6 +21,11 @@
 "access_magento_sale_order","magento_sale_order connector manager","model_magento_sale_order","connector.group_connector_manager",1,1,1,1
 "access_magento_sale_order_line","magento_sale_order_line connector manager","model_magento_sale_order_line","connector.group_connector_manager",1,1,1,1
 "access_magento_stock_picking_out","magento_stock_picking connector manager","model_magento_stock_picking","connector.group_connector_manager",1,1,1,1
+"access_magento_product_attributes_set","magento_product_attributes_set connector manager","model_magento_product_attributes_set","connector.group_connector_manager",1,1,1,1
+"access_magento_account_payment","magento_account_payment connector manager","model_magento_account_payment","connector.group_connector_manager",1,1,1,1
+"access_magento_stock_warehouse","magento_stock_warehouse connector manager","model_magento_stock_warehouse","connector.group_connector_manager",1,1,1,1
+
+"access_magento_stock_item","magento_stock_item connector manager","model_magento_stock_item","connector.group_connector_manager",1,1,1,1
 "access_magento_backend_user","magento_backend user","model_magento_backend","sales_team.group_sale_salesman",1,0,0,0
 "access_magento_backend_sale_manager","magento_backend manager","model_magento_backend","sales_team.group_sale_manager",1,0,0,0
 "access_magento_store_user","magento_store user","model_magento_store","sales_team.group_sale_salesman",1,0,0,0
@@ -43,3 +48,7 @@
 "access_stock_picking_out_manager","magento_stock.picking manager","model_magento_stock_picking","stock.group_stock_manager",1,1,1,1
 "access_magento_sale_order_stock_user","magento_sale_order warehouse user","model_magento_sale_order","stock.group_stock_user",1,1,0,0
 "access_magento_sale_order_line_stock_user","magento_sale_order_line warehouse user","model_magento_sale_order_line","stock.group_stock_user",1,1,0,0
+"access_magento_product_attributes_set_user","magento_product_attributes_set connector user","model_magento_product_attributes_set","base.group_user",1,0,0,0
+"access_magento_stock_item_user","magento_stock_item user","model_magento_stock_item","base.group_user",1,0,0,0
+"access_magento_account_payment_user","magento_account_payment user","model_magento_account_payment","base.group_user",1,0,0,0
+"access_magento_stock_warehouse_user","magento_stock_warehouse user","model_magento_stock_warehouse","base.group_user",1,0,0,0

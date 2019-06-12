@@ -14,6 +14,7 @@
 			<field name="no_stock_sync" position="after">
 				<field name="attribute_set_id"/> <!-- is not required - default from backend will get used if not set -->
 				<field name="visibility" readonly="1" />
+				<field name="special_price_active"/>
 			</field>
 
 		</field>

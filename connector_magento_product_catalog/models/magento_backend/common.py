@@ -37,3 +37,5 @@ class MagentoBackend(models.Model):
         string='Export products from date',
     )
     default_attribute_set_id = fields.Many2one('magento.product.attributes.set', string="Default Attribute Set id")
+    default_pricelist_id = fields.Many2one('product.pricelist', string="Default pricelist")
+

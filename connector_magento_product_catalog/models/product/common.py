@@ -7,6 +7,8 @@ from odoo import api, models, fields
 from odoo.addons.component.core import Component
 from odoo.addons.queue_job.job import job, related_action
 from odoo.addons.queue_job.job import identity_exact
+import urllib
+
 
 _logger = logging.getLogger(__name__)
 
@@ -16,6 +18,7 @@ class MagentoProductProduct(models.Model):
     
     attribute_set_id = fields.Many2one('magento.product.attributes.set',
                                        string='Attribute set')
+    special_price_active = fields.Boolean('Special Price', default=False)
     visibility = fields.Selection([
         ('1', 'Einzel nicht sichtbar'),
         ('4', 'Katalog, Suche'),
@@ -45,3 +48,19 @@ class ProductProductAdapter(Component):
     def _get_id_from_create(self, result, data=None):
         # Products do use the sku as external_id - but we also need the id - so do return the complete data structure
         return result
+
+    def remove_special_price(self, sku):
+        def escape(term):
+            if isinstance(term, basestring):
+                return urllib.quote(term.encode('utf-8'), safe='')
+            return term
+
+        if self.work.magento_api._location.version == '2.0':
+            res = self._call('products/special-price-information', {
+                "skus": [sku]
+            }, http_method="post")
+            _logger.info("Got special prices: %s. Do delete them", res)
+            res = self._call('products/special-price-delete', {
+                "prices": res
+            }, http_method="post")
+            return res
