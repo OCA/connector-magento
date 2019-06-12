@@ -86,9 +86,7 @@ class AttributeLineImportMapper(Component):
                                "magento id %s is not imported." %
                                record['attribute_id'])
         if not template:
-            raise MappingError("The product template with "
-                               "magento id %s is not imported." %
-                               record['product_id'])
+            return
         line = self.env['product.attribute.line'].search([
             ('product_tmpl_id', '=', template.id),
             ('attribute_id', '=', attribute.id),
