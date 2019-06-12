@@ -37,7 +37,15 @@ class MagentoProductTemplateExportListener(Component):
     def on_record_write(self, record, fields=None):
         if 'image' in fields:
             # We do ignore image field
-            del fields['image']
+            fields.remove('image')
+        if 'image_medium' in fields:
+            # We do ignore image field
+            fields.remove('image_medium')
+        if 'image_small' in fields:
+            # We do ignore image field
+            fields.remove('image_small')
+        if not len(fields):
+            return
         # Check to see if it is a single variant template
         if record.product_variant_count == 1:
             binding_ids = record.product_variant_ids[0].magento_bind_ids
