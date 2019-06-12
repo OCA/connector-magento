@@ -275,7 +275,7 @@ class ProductImportMapper(Component):
     def attributes(self, record):
         attribute_binder = self.binder_for('magento.product.attribute')
         value_binder = self.binder_for('magento.product.attribute.value')
-        attribute_value_ids = []
+        attribute_value_ids = [(5)]
         for attribute in record['custom_attributes']:
             mattribute = attribute_binder.to_internal(attribute['attribute_code'], unwrap=False, external_field='attribute_code')
             if not mattribute.create_variant:
