@@ -75,6 +75,7 @@ class ProductMediaMapper(Component):
             'image_type_image': 'image' in record['types'],
             'image_type_small_image': 'small_image' in record['types'],
             'image_type_thumbnail': 'thumbnail' in record['types'],
+            'image_type_swatch': 'swatch_image' in record['types'],
         }
 
     @mapping

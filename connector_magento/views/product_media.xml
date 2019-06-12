@@ -25,6 +25,7 @@
 						<field name="image_type_image"/>
 						<field name="image_type_small_image"/>
 						<field name="image_type_thumbnail"/>
+						<field name="image_type_swatch"/>
 					</group>
 					<div>
 						<img t-attf-src="#{ url }" t-attf-name="#{ label }"/>

@@ -43,6 +43,8 @@ class ProductMediaExportMapper(Component):
             itypes.append('small_image')
         if record.image_type_thumbnail:
             itypes.append('thumbnail')
+        if record.image_type_swatch:
+            itypes.append('swatch_image')
         return {'types': itypes}
 
     @mapping

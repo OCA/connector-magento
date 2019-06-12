@@ -58,6 +58,7 @@ class MagentoProductMedia(models.Model):
     image_type_image = fields.Boolean(string="Image", default=False)
     image_type_small_image = fields.Boolean(string="Small Image", default=False)
     image_type_thumbnail = fields.Boolean(string="Thumbnail", default=False)
+    image_type_swatch = fields.Boolean(string="Swatch", default=False)
 
     _sql_constraints = [
         ('file_uniq', 'unique(backend_id, magento_product_id, file)',
