@@ -174,7 +174,7 @@ class ProductProductExporter(Component):
                 else:
                     m_att_values.append((4, m_value_id.id))
             # Write the values - then update the attribute
-            m_att_id.with_context(connector_no_export=True).magento_attribute_value_ids = m_att_values
+            m_att_id.sudo().with_context(connector_no_export=True).magento_attribute_value_ids = m_att_values
             if needs_sync:
                 # We only do sync if a new attribute arrived
                 att_exporter.run(m_att_id)
@@ -215,8 +215,8 @@ class ProductProductExporter(Component):
                 'image_type_small_image': True,
                 'image_type_thumbnail': True,
             })
-        self._export_dependency(mbinding, "magento.product.media", force_update=True)
-        self._export_dependency(mbinding, "magento.product.media", force_update=True)
+        self._export_dependency(mbinding.sudo(), "magento.product.media", force_update=True)
+        self._export_dependency(mbinding.sudo(), "magento.product.media", force_update=True)
 
     def _export_stock(self):
         for stock_item in self.binding.magento_stock_item_ids:

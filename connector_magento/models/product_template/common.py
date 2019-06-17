@@ -98,6 +98,13 @@ class MagentoProductTemplate(models.Model):
             importer = work.component(usage='record.importer')
             return importer.run(self.external_id, force=True)
 
+    def write(self, vals):
+        if 'attribute_set_id' in vals:
+            for configurable in self:
+                for mvariant in configurable.magento_product_ids:
+                    mvariant.attribute_set_id = vals['attribute_set_id']
+        return super(MagentoProductTemplate, self).write(vals)
+
 
 class ProductTemplate(models.Model):
     _inherit = 'product.template'

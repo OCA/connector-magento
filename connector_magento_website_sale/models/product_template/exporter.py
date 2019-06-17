@@ -19,7 +19,8 @@ class ProductTemplateDefinitionExporter(Component):
         position = 1
         for p in record.alternative_product_ids:
             binding = p.magento_template_bind_ids.filtered(lambda bc: bc.backend_id.id == record.backend_id.id)
-            if not binding:
+            if not binding or not binding.external_id:
+                _logger.info("No binding / No external id on binding for linked product %s", p.display_name)
                 continue
             a_products.append({
                 "sku": record.external_id,
