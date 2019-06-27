@@ -129,6 +129,7 @@ class SaleOrderImportMapper(Component):
               ('tax_amount', 'total_amount_tax'),
               (normalize_datetime('created_at'), 'date_order'),
               ('store_id', 'storeview_id'),
+              ('coupon_code', 'webshop_coupon_code'),
               ]
 
     children = [
@@ -278,6 +279,11 @@ class SaleOrderImportMapper(Component):
         warehouse = self.options.storeview.warehouse_id
         if warehouse:
             return {'warehouse_id': warehouse.id}
+
+    @mapping
+    def pricelist_id(self, record):
+        if self.backend_record.default_pricelist_id:
+            return {'pricelist_id': self.backend_record.default_pricelist_id.id}
 
     # partner_id, partner_invoice_id, partner_shipping_id
     # are done in the importer
@@ -522,6 +528,7 @@ class SaleOrderImporter(Component):
                 'lastname': address['lastname'],
                 'prefix': address.get('prefix'),
                 'suffix': address.get('suffix'),
+                'telephone': address.get('telephone'),
                 'email': record.get('customer_email'),
                 'taxvat': record.get('customer_taxvat'),
                 'group_id': customer_group,

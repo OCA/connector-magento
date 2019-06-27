@@ -28,6 +28,7 @@
 "access_magento_template_attribute_line","magento_template_attribute_line connector manager","model_magento_template_attribute_line","connector.group_connector_manager",1,1,1,1
 "access_magento_account_payment","magento_account_payment connector manager","model_magento_account_payment","connector.group_connector_manager",1,1,1,1
 "access_magento_stock_warehouse","magento_stock_warehouse connector manager","model_magento_stock_warehouse","connector.group_connector_manager",1,1,1,1
+"access_magento_account_tax","access_magento_account_tax connector manager","model_magento_account_tax","connector.group_connector_manager",1,1,1,1
 
 "access_magento_stock_item","magento_stock_item connector manager","model_magento_stock_item","connector.group_connector_manager",1,1,1,1
 "access_magento_backend_user","magento_backend user","model_magento_backend","sales_team.group_sale_salesman",1,0,0,0
@@ -60,3 +61,4 @@
 "access_magento_stock_item_user","magento_stock_item user","model_magento_stock_item","base.group_user",1,1,0,0
 "access_magento_account_payment_user","magento_account_payment user","model_magento_account_payment","base.group_user",1,0,0,0
 "access_magento_stock_warehouse_user","magento_stock_warehouse user","model_magento_stock_warehouse","base.group_user",1,0,0,0
+"access_magento_account_tax_user","access_magento_account_tax user","model_magento_account_tax","base.group_user",1,0,0,0

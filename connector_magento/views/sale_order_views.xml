@@ -49,6 +49,7 @@
                             <field name="partner_id" readonly="1"/>
                             <field name="total_amount" readonly="1"/>
                             <field name="total_amount_tax" readonly="1"/>
+                            <field name="webshop_coupon_code" readonly="1"/>
 
                         </group>
                     </group>

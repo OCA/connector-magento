@@ -167,10 +167,12 @@ class ProductTemplateExportMapper(Component):
     
     @mapping
     def price(self, record):
-        price = record['lst_price']
+        if record.backend_id.default_pricelist_id.discount_policy=='with_discount':
+            price = record.with_context(pricelist=record.backend_id.default_pricelist_id.id).price
+        else:
+            price = record['lst_price']
         return {'price': price}
-      
-    
+
     @mapping
     def get_extension_attributes(self, record):
         data = {}
@@ -254,6 +256,14 @@ class ProductTemplateExportMapper(Component):
     @mapping
     def get_custom_attributes(self, record):
         custom_attributes = []
+        if record.backend_id.default_pricelist_id.discount_policy == 'without_discount' and record.with_context(
+                pricelist=record.backend_id.default_pricelist_id.id).price != record['lst_price']:
+            custom_attributes.append({
+                'attributeCode': 'special_price',
+                'value': record.with_context(pricelist=record.backend_id.default_pricelist_id.id).price
+            })
+            record.with_context(connector_no_export=True).special_price_active = True
+        _logger.info("Do use custom attributes: %r", custom_attributes)
         result = {'custom_attributes': custom_attributes}
         return result   
    

@@ -85,7 +85,7 @@ class MagentoBaseExporter(AbstractComponent):
 
         :param binding: binding record to export
         """
-        self.binding = binding
+        self.binding = binding.sudo()
 
         self.external_id = self.binder.to_external(self.binding)
         try:

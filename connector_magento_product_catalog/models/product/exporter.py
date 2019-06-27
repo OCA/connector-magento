@@ -117,7 +117,7 @@ class ProductProductExporter(Component):
         importer = self.component(usage='record.importer',
                                 model_name='magento.product.product')
         _logger.info("Do update record with: %s", data)
-        importer.run(data, force=True, binding=self.binding)
+        importer.run(data, force=True, binding=self.binding.sudo())
         self.external_id = data['sku']
 
     def _delay_import(self):
@@ -173,9 +173,9 @@ class ProductProductExporter(Component):
                     needs_sync = True
                 else:
                     m_att_values.append((4, m_value_id.id))
-            # Write the values - then update the attribute
-            m_att_id.sudo().with_context(connector_no_export=True).magento_attribute_value_ids = m_att_values
             if needs_sync:
+                # Write the values - then update the attribute
+                m_att_id.sudo().with_context(connector_no_export=True).magento_attribute_value_ids = m_att_values
                 # We only do sync if a new attribute arrived
                 att_exporter.run(m_att_id)
 
@@ -203,7 +203,7 @@ class ProductProductExporter(Component):
                 model_key = 'magento_product_tmpl_id'
             else:
                 model_key = 'magento_product_id'
-            mbinding = self.env['magento.product.media'].with_context(connector_no_export=True).create({
+            mbinding = self.env['magento.product.media'].sudo().with_context(connector_no_export=True).create({
                 'backend_id': self.binding.backend_id.id,
                 model_key: self.binding.id,
                 'label': self.binding.odoo_id.name,

@@ -42,7 +42,7 @@ class ProductAttributeDefinitionExporter(Component):
                 if odoo_option:
                     # Create binding here
                     external_id = "%s_%s" % (str(result['attribute_id']), tools.ustr(option['value']))
-                    ov_binder.model.create({
+                    ov_binder.model.sudo().create({
                         ov_binder._external_field: external_id,
                         ov_binder._sync_date_field: now_fmt,
                         ov_binder._odoo_field: odoo_option.id,

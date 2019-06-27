@@ -30,12 +30,12 @@
         <field name="name">magento.res.partner.form</field>
         <field name="model">magento.res.partner</field>
         <field name="arch" type="xml">
-            <form string="Magento Partner" create="false"
-                   delete="false">
+            <form string="Magento Partner" create="false">
                 <group>
                     <field name="website_id"/>
                     <field name="backend_id"/>
                     <field name="external_id"/>
+                    <field name="odoo_id"/>
                     <field name="created_at"/>
                     <field name="updated_at"/>
                     <field name="group_id"/>
@@ -52,8 +52,7 @@
         <field name="name">magento.res.partner.tree</field>
         <field name="model">magento.res.partner</field>
         <field name="arch" type="xml">
-            <tree string="Magento Partner" create="false"
-                   delete="false">
+            <tree string="Magento Partner" create="false">
                 <field name="external_id"/>
                 <field name="name"/>
                 <field name="email"/>

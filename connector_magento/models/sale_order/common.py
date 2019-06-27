@@ -45,6 +45,8 @@ class MagentoSaleOrder(models.Model):
         inverse_name='magento_order_id',
         string='Magento Pickings'
     )
+    webshop_coupon_code = fields.Char('Webshop Coupon Code')
+
     total_amount = fields.Float(
         string='Total amount',
         digits=dp.get_precision('Account')
