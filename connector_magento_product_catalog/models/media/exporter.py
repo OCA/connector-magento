@@ -4,6 +4,7 @@
 
 from odoo.addons.component.core import Component
 from odoo.addons.connector.unit.mapper import mapping
+import os.path
 
 
 class ProductMediaExporter(Component):
@@ -67,5 +68,5 @@ class ProductMediaExportMapper(Component):
         return {'content': {
             'base64_encoded_data': record.magento_product_id.image if record.magento_product_id else record.magento_product_tmpl_id.image,
             'type': record.mimetype,
-            'name': record.file,
+            'name': os.path.basename(record.file),
         }}

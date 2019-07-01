@@ -9,7 +9,6 @@ from odoo.addons.connector.unit.mapper import mapping, only_create
 from odoo.addons.connector.exception import MappingError
 from slugify import slugify
 import logging
-import uuid
 
 _logger = logging.getLogger(__name__)
 
@@ -256,27 +255,15 @@ class ProductTemplateExportMapper(Component):
     @mapping
     def get_custom_attributes(self, record):
         custom_attributes = []
-        if record.backend_id.default_pricelist_id.discount_policy == 'without_discount' and record.with_context(
-                pricelist=record.backend_id.default_pricelist_id.id).price != record['lst_price']:
-            custom_attributes.append({
-                'attributeCode': 'special_price',
-                'value': record.with_context(pricelist=record.backend_id.default_pricelist_id.id).price
-            })
-            record.with_context(connector_no_export=True).special_price_active = True
-        _logger.info("Do use custom attributes: %r", custom_attributes)
         result = {'custom_attributes': custom_attributes}
         return result   
    
 
     @mapping
     def option_products(self, record):
-        #TODO : Map optionnal products
-        for o_id in record.optional_product_ids:
-            continue
         return {}
 
 
     @mapping
     def crossproducts(self, record):
-        #TODO : Map cross products
         return {}

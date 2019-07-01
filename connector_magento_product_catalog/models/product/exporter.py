@@ -216,7 +216,6 @@ class ProductProductExporter(Component):
                 'image_type_thumbnail': True,
             })
         self._export_dependency(mbinding.sudo(), "magento.product.media", force_update=True)
-        self._export_dependency(mbinding.sudo(), "magento.product.media", force_update=True)
 
     def _export_stock(self):
         for stock_item in self.binding.magento_stock_item_ids:

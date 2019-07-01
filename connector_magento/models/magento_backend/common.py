@@ -167,6 +167,7 @@ class MagentoBackend(models.Model):
              "Note that a similar configuration exists "
              "for each storeview.",
     )
+    default_pricelist_id = fields.Many2one('product.pricelist', string="Default pricelist")
     default_category_id = fields.Many2one(
         comodel_name='product.category',
         string='Default Product Category',

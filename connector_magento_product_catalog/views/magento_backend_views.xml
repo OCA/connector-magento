@@ -26,7 +26,6 @@
 				position="after">
 				<field name="product_synchro_strategy" />
 				<field name="default_attribute_set_id" domain="[('backend_id', '=', id)]"/>
-				<field name="default_pricelist_id"/>
 			</xpath>
 		</field>
 	</record>
