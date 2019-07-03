@@ -183,7 +183,11 @@ class MagentoBackend(models.Model):
         ('update', 'Do update odoo default code if not already set'),
         ('overwrite', 'Do overwrite odoo default code'),
     ], default='none', string='Default code handling')
-
+    default_cod_product_id = fields.Many2one(
+        'product.product',
+        string="COD Product",
+        domain="[('type', '=', 'service')]"
+    )
     auto_create_category = fields.Boolean('Auto Create Category', default=True)
 
     # TODO? add a field `auto_activate` -> activate a cron
