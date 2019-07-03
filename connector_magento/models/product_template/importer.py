@@ -201,6 +201,20 @@ class ProductTemplateImporter(Component):
             })
             self.backend_record.add_checkpoint(binding)
 
+    def _import_category_dependencies(self):
+        _logger.info("We do import the category dep here")
+        record = self.magento_record
+        if not 'category_links' in record['extension_attributes']:
+            return
+        category_links = record['extension_attributes']['category_links']
+        _logger.info("cat links: %s", category_links)
+        binder = self.binder_for('magento.product.category')
+        for category_link in category_links:
+            cat = binder.to_internal(category_link['category_id'], unwrap=True)
+            if not cat:
+                _logger.info("import cat link: %s", category_link)
+                self._import_dependency(category_link['category_id'], 'magento.product.category')
+
     def _import_dependencies(self):
         record = self.magento_record
         # Import attribute deps
@@ -208,8 +222,7 @@ class ProductTemplateImporter(Component):
             # We do search binding using attribute_code - default is attribute_id !
             self._import_dependency(attribute['attribute_code'],
                                     'magento.product.attribute', external_field='attribute_code')
-        # TODO: Check for product categorie dependency here !
-
+        self._import_category_dependencies()
         # Check for attributes in configurable - with values
         product_options = record['extension_attributes']['configurable_product_options']
         attribute_binder = self.binder_for('magento.product.attribute')
