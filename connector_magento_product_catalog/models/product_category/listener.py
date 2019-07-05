@@ -44,3 +44,13 @@ class MagentoProductCategoryExportListener(Component):
                 if external_id:
                     binding.with_delay(identity_key=identity_exact).export_delete_record(binding.backend_id,
                                                                                         external_id)
+
+
+class MagentoProductCategoryPositionExportListener(Component):
+    _name = 'magento.product.position.export.listener'
+    _inherit = 'base.connector.listener'
+    _apply_on = ['magento.product.position']
+
+    @skip_if(lambda self, record, **kwargs: self.no_connector_export(record))
+    def on_record_write(self, record, fields=None):
+        record.magento_product_category_id.with_delay(identity_key=('magento_product_category_position_%s'%record.magento_product_category_id.id)).update_positions()

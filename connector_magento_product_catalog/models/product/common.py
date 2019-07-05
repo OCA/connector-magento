@@ -29,7 +29,7 @@ class MagentoProductProduct(models.Model):
     @related_action(action='related_action_unwrap_binding')
     def sync_to_magento(self):
         for binding in self:
-            binding.with_delay(identity_key=identity_exact).run_sync_to_magento()
+            binding.with_delay(identity_key=('magento_product_product_%s' % binding.id)).run_sync_to_magento()
 
     @api.multi
     @related_action(action='related_action_unwrap_binding')

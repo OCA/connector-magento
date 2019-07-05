@@ -60,6 +60,8 @@
 						<field name="updated_at" readonly="1" />
 						<!-- <field name="product_type" readonly="1" /> -->
 						<field name="magento_configurable_id"/>
+						<field name="magento_product_category_ids" widget="many2many_tags"/>
+						<field name="magento_product_position_ids" widget="many2many_tags"/>
 					</group>
 					<notebook>
 						<page name="images" string="Images">

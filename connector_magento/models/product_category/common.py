@@ -14,12 +14,30 @@ from ...components.backend_adapter import MAGENTO_DATETIME_FORMAT
 _logger = logging.getLogger(__name__)
 
 
+class MagentoProductPosition(models.Model):
+    _name = 'magento.product.position'
+    _description = 'Magento Product Position'
+    _order = 'position asc'
+    _rec_name = "name"
+
+    @api.depends('magento_product_category_id', 'product_template_id')
+    def _compute_name(self):
+        for position in self:
+            position.name = "%s in category %s on position %s" % (position.product_template_id.display_name, position.magento_product_category_id.magento_name, position.position)
+
+    name = fields.Char(compute='_compute_name', store=True, string="Name")
+    magento_product_category_id = fields.Many2one('magento.product.category', required=True, ondelete='cascade', string='Magento Category')
+    product_template_id = fields.Many2one('product.template', required=True, ondelete='cascade', string='Product')
+    position = fields.Integer('Position')
+
+
 class MagentoProductCategory(models.Model):
     _name = 'magento.product.category'
     _inherit = 'magento.binding'
     _description = 'Magento Product Category'
     _magento_backend_path = 'catalog/category/edit/id'
     _magento_frontend_path = 'catalog/category/view/id'
+    _rec_name = 'magento_name'
 
     odoo_id = fields.Many2one(comodel_name='product.category',
                               string='Product Category',
@@ -37,6 +55,11 @@ class MagentoProductCategory(models.Model):
         inverse_name='magento_parent_id',
         string='Magento Child Categories',
     )
+    product_position_ids = fields.One2many(
+        comodel_name='magento.product.position',
+        inverse_name='magento_product_category_id',
+        string="Product Positions"
+    )
 
     @api.multi
     def sync_from_magento(self):
@@ -44,6 +67,48 @@ class MagentoProductCategory(models.Model):
         with self.backend_id.work_on(self._name) as work:
             importer = work.component(usage='record.importer')
             return importer.run(self.external_id, force=True)
+
+    @api.multi
+    def update_products(self):
+        for mcategory in self:
+            # Get tmpl_ids from magento.product.template
+            mtemplates = self.env['magento.product.template'].search([
+                ('categ_id', '=', mcategory.odoo_id.id),
+                ('backend_id', '=', mcategory.backend_id.id),
+            ])
+            mbundles = self.env['magento.product.bundle'].search([
+                ('categ_id', '=', mcategory.odoo_id.id),
+                ('backend_id', '=', mcategory.backend_id.id),
+            ])
+            mproducts = self.env['magento.product.product'].search([
+                ('categ_id', '=', mcategory.odoo_id.id),
+                ('magento_configurable_id', '=', False),
+                ('backend_id', '=', mcategory.backend_id.id),
+            ])
+            tmpl_ids = [mtemplate.odoo_id.id for mtemplate in mtemplates]
+            tmpl_ids.extend(mbundle.odoo_id.id for mbundle in mbundles if mbundle.odoo_id.id not in tmpl_ids)
+            tmpl_ids.extend(mproduct.odoo_id.product_tmpl_id.id for mproduct in mproducts if mproduct.odoo_id.product_tmpl_id.id not in tmpl_ids)
+            _logger.info("This product template ids are in this category: %s", tmpl_ids)
+            # Get list of ids already with position entry
+            pt_ids = {}
+            for pp in mcategory.product_position_ids:
+                pt_ids[pp.product_template_id] = pp.id
+            p_tmpl_ids = pt_ids.keys()
+            ppids = []
+            missing = list(set(tmpl_ids) - set(p_tmpl_ids))
+            # Create missing entries
+            for tmpl_id in missing:
+                ppids.append((0, 0, {
+                    'product_template_id': tmpl_id,
+                    'magento_product_category_id': mcategory.id,
+                    'position': 9999,
+                }))
+            # Remove entries lost
+            delete = list(set(p_tmpl_ids) - set(tmpl_ids))
+            for tmpl_id in delete:
+                ppids.append((3, pt_ids[tmpl_id]))
+            mcategory.product_position_ids = ppids
+
 
 
 class ProductCategory(models.Model):

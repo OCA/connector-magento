@@ -31,6 +31,16 @@ class MagentoProductBundle(models.Model):
             if binding._magento_frontend_path:
                 binding.magento_frontend_url = "%s/%s" % (urljoin(binding.backend_id.location, binding._magento_frontend_path), binding.magento_id)
 
+    @api.depends('backend_id', 'odoo_id')
+    def _compute_product_categories(self):
+        for binding in self:
+            magento_product_position_ids = self.env['magento.product.position'].search([
+                ('magento_product_category_id.backend_id', '=', binding.backend_id.id),
+                ('product_template_id', '=', binding.odoo_id.product_tmpls_id.id),
+            ])
+            binding.magento_product_category_ids = [mpp.magento_product_category_id.id for mpp in magento_product_position_ids]
+            binding.magento_product_position_ids = magento_product_position_ids
+
     attribute_set_id = fields.Many2one('magento.product.attributes.set',
                                        string='Attribute set')
 
@@ -51,6 +61,16 @@ class MagentoProductBundle(models.Model):
     magento_price = fields.Float('Backend Preis', default=0.0, digits=dp.get_precision('Product Price'),)
     created_at = fields.Date('Created At (on Magento)')
     updated_at = fields.Date('Updated At (on Magento)')
+    magento_product_position_ids = fields.One2many(
+        comodel_name='magento.product.position',
+        compute='_compute_product_categories',
+        string='Product positions'
+    )
+    magento_product_category_ids = fields.One2many(
+        comodel_name='magento.product.category',
+        compute='_compute_product_categories',
+        string='Product categories'
+    )
     _sql_constraints = [
         ('backend_magento_id_uniqueid',
          'UNIQUE (backend_id, magento_id)',

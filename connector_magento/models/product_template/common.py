@@ -39,7 +39,17 @@ class MagentoProductTemplate(models.Model):
             ('configurable', 'Configurable Product'),
             ('bundle', 'Bundle Product'),
             ]       
-    
+
+    @api.depends('backend_id', 'odoo_id')
+    def _compute_product_categories(self):
+        for binding in self:
+            magento_product_position_ids = self.env['magento.product.position'].search([
+                ('magento_product_category_id.backend_id', '=', binding.backend_id.id),
+                ('product_template_id', '=', binding.odoo_id.id),
+            ])
+            binding.magento_product_category_ids = [mpp.magento_product_category_id.id for mpp in magento_product_position_ids]
+            binding.magento_product_position_ids = magento_product_position_ids
+
     attribute_set_id = fields.Many2one('magento.product.attributes.set',
                                        string='Attribute set')
 
@@ -77,6 +87,16 @@ class MagentoProductTemplate(models.Model):
         comodel_name='magento.template.attribute.line',
         inverse_name='magento_template_id',
         string='Magento Attribute lines for templates',
+    )
+    magento_product_position_ids = fields.One2many(
+        comodel_name='magento.product.position',
+        compute='_compute_product_categories',
+        string='Product positions'
+    )
+    magento_product_category_ids = fields.One2many(
+        comodel_name='magento.product.category',
+        compute='_compute_product_categories',
+        string='Product categories'
     )
 
     _sql_constraints = [

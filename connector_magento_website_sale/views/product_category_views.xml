@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_magento_product_category_form" model="ir.ui.view">
+        <field name="name">magento.product.category.form</field>
+        <field name="model">magento.product.category</field>
+        <field name="inherit_id" ref="connector_magento.view_magento_product_category_form"/>
+        <field name="arch" type="xml">
+            <field name="odoo_id" position="replace">
+                <field name="public_categ_id"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_magento_product_category_tree" model="ir.ui.view">
+        <field name="name">magento.product.category.tree</field>
+        <field name="model">magento.product.category</field>
+        <field name="inherit_id" ref="connector_magento.view_magento_product_category_tree"/>
+        <field name="arch" type="xml">
+            <field name="odoo_id" position="replace">
+                <field name="public_categ_id"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

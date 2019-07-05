@@ -70,14 +70,16 @@ class ProductProductExportMapper(Component):
     _inherit = 'magento.product.export.mapper'
 
     def category_ids(self, record):
-        position = 0
         categ_vals = []
         for categ in record.public_categ_ids:
             magento_categ_id = categ.magento_bind_ids.filtered(lambda bc: bc.backend_id.id == record.backend_id.id)
+            mpos = self.env['magento.product.position'].search([
+                ('product_template_id', '=', record.odoo_id.product_tmpl_id.id),
+                ('magento_product_category_id', '=', magento_categ_id.id)
+            ])
             if magento_categ_id:
                 categ_vals.append({
-                  "position": position,
+                  "position": mpos.position if mpos else 9999,
                   "category_id": magento_categ_id.external_id,
                 })
-                position += 1
         return {'category_links': categ_vals}

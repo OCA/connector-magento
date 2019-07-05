@@ -7,6 +7,37 @@ from odoo.addons.component.core import Component
 from odoo.addons.connector.unit.mapper import mapping
 
 
+class ProductPositionExporter(Component):
+    _name = 'magento.product.position.exporter'
+    _inherit = 'magento.exporter'
+    _usage = 'position.exporter'
+    _apply_on = ['magento.product.category']
+
+    def _should_import(self):
+        return False
+
+    def _has_to_skip(self):
+        return False
+
+    def run(self, binding, mcategory):
+        """ Run the synchronization
+
+        :param binding: binding record to export
+        """
+        if binding._name == 'magento.product.product':
+            mpos = self.env['magento.product.position'].search([
+                ('product_template_id', '=', binding.odoo_id.product_tmpl_id.id),
+                ('magento_product_category_id', '=', mcategory.id)
+            ])
+        elif binding._name == 'magento.product.template':
+            mpos = self.env['magento.product.position'].search([
+                ('product_template_id', '=', binding.odoo_id.id),
+                ('magento_product_category_id', '=', mcategory.id)
+            ])
+        position = mpos.position if mpos else 9999
+        self.backend_adapter.update_category_position(mcategory.external_id, binding.external_id, position)
+
+
 class ProductCategoryExporter(Component):
     _name = 'magento.product.category.exporter'
     _inherit = 'magento.exporter'
@@ -83,9 +114,11 @@ class ProductCategoryExportMapper(Component):
     _inherit = 'magento.export.mapper'
     _apply_on = ['magento.product.category']
 
-    direct = [
-        ('name', 'name'),
-    ]
+    @mapping
+    def name(self, record):
+        return {
+            'name': record.odoo_id.name
+        }
 
     @mapping
     def parent_id(self, record):

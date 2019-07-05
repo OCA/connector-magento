@@ -39,6 +39,18 @@
                         <field name="magento_parent_id"/>
                         <field name="magento_child_ids"/>
                     </group>
+                    <notebook>
+                        <page name="product_position" string="Product Position">
+                            <button type="object" name="update_products" string="Produkte Aktualiseren"/>
+                            <label for="product_position_ids"/>
+                            <field name="product_position_ids">
+                                <tree>
+                                    <field name="position" widget="handle"/>
+                                    <field name="product_template_id"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
                 </sheet>
             </form>
         </field>

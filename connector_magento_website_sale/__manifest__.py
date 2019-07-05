@@ -12,7 +12,9 @@
  'author': "Callino,Odoo Community Association (OCA)",
  'license': 'AGPL-3',
  'website': 'http://www.odoo-magento-connector.com',
- 'data': [],
+ 'data': [
+     'views/product_category_views.xml',
+ ],
  'installable': True,
  'auto_install': True,
  'application': False,

@@ -74,6 +74,8 @@
 							<field name="attribute_set_id"/>
 							<field name="created_at" readonly="1" />
 							<field name="updated_at" readonly="1" />
+							<field name="magento_product_category_ids" widget="many2many_tags"/>
+							<field name="magento_product_position_ids" widget="many2many_tags"/>
 						</group>
 						<notebook>
 							<page name="variants" string="Variants">

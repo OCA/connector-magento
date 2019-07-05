@@ -42,6 +42,16 @@ class MagentoProductProduct(models.Model):
             ('bundle', 'Bundle Product'),
         ]
 
+    @api.depends('backend_id', 'odoo_id')
+    def _compute_product_categories(self):
+        for binding in self:
+            magento_product_position_ids = self.env['magento.product.position'].search([
+                ('magento_product_category_id.backend_id', '=', binding.backend_id.id),
+                ('product_template_id', '=', binding.odoo_id.product_tmpl_id.id),
+            ])
+            binding.magento_product_category_ids = [mpp.magento_product_category_id.id for mpp in magento_product_position_ids]
+            binding.magento_product_position_ids = magento_product_position_ids
+
     odoo_id = fields.Many2one(comodel_name='product.product',
                               string='Product',
                               required=True,
@@ -78,6 +88,16 @@ class MagentoProductProduct(models.Model):
         default=False,
         help="Check this to exclude the product "
              "from stock synchronizations.",
+    )
+    magento_product_position_ids = fields.One2many(
+        comodel_name='magento.product.position',
+        compute='_compute_product_categories',
+        string='Product positions'
+    )
+    magento_product_category_ids = fields.One2many(
+        comodel_name='magento.product.category',
+        compute='_compute_product_categories',
+        string='Product categories'
     )
     _sql_constraints = [
         ('backend_magento_id_uniqueid',

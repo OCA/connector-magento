@@ -4,6 +4,7 @@
 
 
 from odoo.addons.component.core import Component
+from odoo.addons.connector.unit.mapper import mapping
 
 
 class ProductCategoryExporter(Component):
@@ -36,4 +37,15 @@ class ProductCategoryExporter(Component):
             if not self.binding.public_categ_id.parent_id:
                 raise UserWarning('Cannot export a root level category to magento')
             check_public_parent_recursive(self.binding)
-        return super(ProductCategoryExporter, self)._has_to_skip()
+        else:
+            return super(ProductCategoryExporter, self)._has_to_skip()
+
+
+class ProductCategoryExportMapper(Component):
+    _inherit = 'magento.product.category.export.mapper'
+
+    @mapping
+    def name(self, record):
+        return {
+            'name': record.public_categ_id.name
+        }
