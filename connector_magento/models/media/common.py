@@ -18,6 +18,7 @@ class MagentoProductMedia(models.Model):
     _name = 'magento.product.media'
     _inherit = 'magento.binding'
     _description = 'Magento Product Media'
+    _order = 'position'
 
     @api.depends('backend_id', 'file')
     def _compute_url(self):

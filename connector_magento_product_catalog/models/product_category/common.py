@@ -65,7 +65,6 @@ class ProductCategoryAdapter(Component):
             }, storeview=None, http_method="put")
 
     def update_category_position(self, category_id, sku, position):
-        _logger.info("Update position got called")
         if self.work.magento_api._location.version == '2.0':
             res = self._call('categories/%s/products' % category_id, {
               "productLink": {
@@ -75,5 +74,4 @@ class ProductCategoryAdapter(Component):
                 "extension_attributes": {}
               }
             }, http_method="post")
-            _logger.info("Got result after update position: %s", res)
             return res

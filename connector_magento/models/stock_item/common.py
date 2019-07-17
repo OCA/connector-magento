@@ -102,6 +102,7 @@ class MagentoStockItem(models.Model):
     @api.multi
     @job(default_channel='root.magento.stock')
     def run_sync_to_magento(self):
+        _logger.info("Stock Item sync to magento got called")
         self.ensure_one()
         with self.backend_id.work_on(self._name) as work:
             exporter = work.component(usage='record.exporter')
