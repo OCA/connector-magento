@@ -226,12 +226,10 @@ class ProductTemplateExportMapper(Component):
 
     def category_ids(self, record):
         categ_vals = [{
-            "position": 0,
             "category_id": record.categ_id.magento_bind_ids.filtered(lambda m: m.backend_id == record.backend_id).external_id,
         }]
         for c in record.categ_ids:
             categ_vals.append({
-                "position": 1,
                 "category_id": c.magento_bind_ids.filtered(lambda m: m.backend_id == record.backend_id).external_id,
             })
         return {'category_links': categ_vals}

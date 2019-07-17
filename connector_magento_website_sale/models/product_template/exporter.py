@@ -51,18 +51,7 @@ class ProductTemplateExportMapper(Component):
             ])
             if magento_categ_id:
                 categ_vals.append({
-                  "position": 0,
+                  "position": mpos.position if mpos else 0,
                   "category_id": magento_categ_id.external_id,
                 })
         return {'category_links': categ_vals}
-
-
-'''
-    alternative_product_ids = fields.Many2many('product.template', 'product_alternative_rel', 'src_id', 'dest_id',
-                                               string='Alternative Products', help='Suggest more expensive alternatives to '
-                                               'your customers (upsell strategy). Those products show up on the product page.')
-    accessory_product_ids = fields.Many2many('product.product', 'product_accessory_rel', 'src_id', 'dest_id',
-                                             string='Accessory Products', help='Accessories show up when the customer reviews the '
-                                             'cart before paying (cross-sell strategy, e.g. for computers: mouse, keyboard, etc.). '
-                                             'An algorithm figures out a list of accessories based on all the products added to cart.')
-'''
