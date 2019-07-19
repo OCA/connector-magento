@@ -20,9 +20,9 @@ class MagentoStockItem(models.Model):
         for stockitem in self:
             stock_field = stockitem.magento_warehouse_id.quantity_field or 'virtual_available'
             if stockitem.magento_warehouse_id.calculation_method == 'real':
-                location = stockitem.magento_warehouse_id.lot_stock_id
+                location = stockitem.magento_warehouse_id.location_id
                 product_fields = [stock_field]
-                if stockitem.product_type=='product':
+                if stockitem.product_type == 'product':
                     record_with_location = stockitem.magento_product_binding_id.odoo_id.with_context(
                         location=location.id)
                 else:
@@ -94,9 +94,9 @@ class MagentoStockItem(models.Model):
 
     @api.multi
     @job(default_channel='root.magento.stock')
-    def sync_to_magento(self):
+    def sync_to_magento(self, force=False):
         for binding in self:
-            if binding.should_export:
+            if force or binding.should_export:
                 binding.with_delay(priority=5, identity_key=identity_exact).run_sync_to_magento()
 
     @api.multi

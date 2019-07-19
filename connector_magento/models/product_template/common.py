@@ -135,8 +135,7 @@ class ProductTemplate(models.Model):
         string='Magento Template Bindings',
     )
     magento_bind_ids = fields.One2many(
-        comodel_name='magento.product.product',
-        inverse_name='odoo_id',
+        related='product_variant_id.magento_bind_ids',
         string='Magento Bindings',
     )
     auto_create_variants = fields.Boolean('Auto Create Variants', default=True)

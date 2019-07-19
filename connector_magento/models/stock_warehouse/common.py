@@ -21,6 +21,9 @@ class MagentoStockWarehouse(models.Model):
                               string='Warehouse',
                               required=True,
                               ondelete='cascade')
+    location_id = fields.Many2one(comodel_name='stock.location',
+                                  string='Location',
+                                  ondelete='cascade')
     quantity_field = fields.Selection([
         ('qty_available', 'Available Quantity'),
         ('virtual_available', 'Forecast quantity')
@@ -35,7 +38,6 @@ class MagentoStockWarehouse(models.Model):
         inverse_name='magento_warehouse_id',
         string="Magento Stock Items",
     )
-
 
     @job(default_channel='root.magento')
     @related_action(action='related_action_unwrap_binding')

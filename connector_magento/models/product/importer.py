@@ -221,6 +221,7 @@ class ProductImportMapper(Component):
             'magento_name': record['name']
         }
 
+    @only_create
     @mapping
     def is_active(self, record):
         """Check if the product is active in Magento

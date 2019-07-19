@@ -25,6 +25,7 @@
                     <field name="backend_id"/>
                     <field name="external_id"/>
                     <field name="odoo_id"/>
+                    <field name="location_id"/>
                     <field name="calculation_method"/>
                     <field name="quantity_field" attrs="{'invisible':  [('calculation_method', '!=', 'real')]}"/>
                     <field name="fixed_quantity" attrs="{'invisible':  [('calculation_method', '!=', 'fix')]}"/>

@@ -45,12 +45,13 @@ class MagentoProductCategory(models.Model):
                 ('backend_id', '=', mcategory.backend_id.id),
             ])
             with self.backend_id.work_on(self._name) as work:
+                exporter = work.component(usage='position.exporter')
                 for mtemplate in mtemplates:
-                    exporter = work.component(usage='position.exporter')
-                    exporter.run(mtemplate, mcategory=mcategory)
+                    if mtemplate.external_id:
+                        exporter.run(mtemplate, mcategory=mcategory)
                 for mproduct in mproducts:
-                    exporter = work.component(usage='position.exporter')
-                    exporter.run(mproduct, mcategory=mcategory)
+                    if mproduct.external_id:
+                        exporter.run(mproduct, mcategory=mcategory)
 
 
 class ProductCategoryAdapter(Component):

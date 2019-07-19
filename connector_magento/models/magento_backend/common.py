@@ -432,8 +432,9 @@ class MagentoBackend(models.Model):
             ('type', '!=', 'service'),
             ('no_stock_sync', '=', False),
         ])
+        _logger.info("Got products for stock sync: %s", magento_products)
         for mproduct in magento_products:
-            mproduct.magento_stock_item_ids.sync_to_magento()
+            mproduct.magento_stock_item_ids.filtered(lambda si: si.backend_id.id in self.ids).sync_to_magento(True)
         return True
 
     @api.model

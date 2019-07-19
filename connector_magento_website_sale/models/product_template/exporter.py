@@ -42,6 +42,7 @@ class ProductTemplateExportMapper(Component):
 
     def category_ids(self, record):
         categ_vals = []
+        i = 0
         _logger.info("Public Category IDS: %s", record.public_categ_ids)
         for categ in record.public_categ_ids:
             magento_categ_id = categ.magento_bind_ids.filtered(lambda bc: bc.backend_id.id == record.backend_id.id)
@@ -51,7 +52,9 @@ class ProductTemplateExportMapper(Component):
             ])
             if magento_categ_id:
                 categ_vals.append({
-                  "position": mpos.position if mpos else 0,
+                  "position": mpos.position if mpos else i,
                   "category_id": magento_categ_id.external_id,
                 })
+                if not mpos:
+                    i += 1
         return {'category_links': categ_vals}
