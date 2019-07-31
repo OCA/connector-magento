@@ -37,3 +37,12 @@ class ProductMediaAdapter(Component):
 
         pbinding = binding.magento_product_id if binding.magento_product_id else binding.magento_product_tmpl_id
         return 'products/%s/media/%s' % (escape(pbinding.external_id), id)
+
+    def _delete_url(self, id, binding=None):
+        def escape(term):
+            if isinstance(term, basestring):
+                return urllib.quote(term.encode('utf-8'), safe='')
+            return term
+
+        pbinding = binding.magento_product_id if binding.magento_product_id else binding.magento_product_tmpl_id
+        return 'products/%s/media/%s' % (escape(pbinding.external_id), id)

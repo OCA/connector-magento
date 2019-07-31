@@ -57,6 +57,10 @@ class ProductProductExporter(Component):
                     'image_type_small_image': False,
                     'image_type_thumbnail': False,
                 })
+            else:
+                exporter = self.component(usage='record.exporter',
+                                          model_name='magento.product.media')
+                exporter.run(magento_image)
         return
 
     def _after_export(self):

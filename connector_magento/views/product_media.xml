@@ -13,6 +13,7 @@
 					<group name="general">
 						<field name="magento_product_id" readonyl="1"/>
 						<field name="magento_product_tmpl_id" readonyl="1"/>
+						<field name="external_id"  readonyl="1"/>
 						<field name="backend_id"  readonyl="1"/>
 						<field name="label"/>
 						<field name="file"  readonyl="1"/>

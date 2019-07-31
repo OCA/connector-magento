@@ -35,9 +35,6 @@ class MagentoProductTemplateExportListener(Component):
 
     @skip_if(lambda self, record, **kwargs: self.no_connector_export(record))
     def on_record_write(self, record, fields=None):
-        if 'image' in fields:
-            # We do ignore image field
-            fields.remove('image')
         if 'image_medium' in fields:
             # We do ignore image field
             fields.remove('image_medium')

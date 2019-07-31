@@ -254,6 +254,7 @@ class ProductProductExportMapper(Component):
 
     @mapping
     def status(self, record):
+        _logger.info("In original status mapping function")
         return {'status': 1 if record.active else 0}
 
     @mapping
