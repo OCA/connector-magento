@@ -188,6 +188,11 @@ class ProductProductExporter(Component):
         """ Export the dependencies for the record"""
         self._export_categories()
         self._export_attribute_values()
+        # Clear spezial prices here
+        if self.binding.external_id:
+            self.backend_adapter.remove_special_price(self.binding.external_id)
+            if self.binding.special_price_active:
+                self.binding.with_context(connector_no_export=True).special_price_active = False
         return
 
     def _export_base_image(self):
@@ -235,17 +240,9 @@ class ProductProductExporter(Component):
         for stock_item in self.binding.magento_stock_item_ids:
             stock_item.sync_to_magento()
 
-    def _check_special_price(self):
-        record = self.binding
-        if record.special_price_active and record.with_context(pricelist=record.backend_id.default_pricelist_id.id).price == record['lst_price']:
-            # We do have to remove the special price now
-            self.backend_adapter.remove_special_price(self.binding.external_id)
-            record.with_context(connector_no_export=True).special_price_active = False
-
     def _after_export(self):
         self._export_base_image()
         self._export_stock()
-        self._check_special_price()
 
 
 class ProductProductExportMapper(Component):
