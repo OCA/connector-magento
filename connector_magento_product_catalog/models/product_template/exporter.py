@@ -56,6 +56,11 @@ class ProductTemplateDefinitionExporter(Component):
         return super(ProductTemplateDefinitionExporter, self)._create_data(map_record, fields=fields, **kwargs)
 
     def _update_binding_record_after_create(self, data):
+        """
+        This will only get called on a new product export - not on updates !
+        :param data:
+        :return:
+        """
         for attr in data.get('custom_attributes', []):
             data[attr['attribute_code']] = attr['value']
         # Do use the importer to update the binding
@@ -169,14 +174,14 @@ class ProductTemplateExportMapper(Component):
         if record.backend_id.default_pricelist_id.discount_policy=='with_discount':
             price = record.with_context(pricelist=record.backend_id.default_pricelist_id.id).price
         else:
-            price = record['lst_price']
+            price = record['list_price']
         return {'price': price}
 
     @mapping
     def get_extension_attributes(self, record):
         data = {}
         data.update(self.get_website_ids(record))
-        data.update(self.category_ids(record))
+        #data.update(self.category_ids(record))
         data.update(self.configurable_product_options(record))
         data.update(self.configurable_product_links(record))
         return {'extension_attributes': data}
@@ -225,14 +230,14 @@ class ProductTemplateExportMapper(Component):
         return {'website_ids': website_ids}
 
     def category_ids(self, record):
-        categ_vals = [{
-            "category_id": record.categ_id.magento_bind_ids.filtered(lambda m: m.backend_id == record.backend_id).external_id,
-        }]
+        c_ids = []
+        c_ids.append(record.categ_id.magento_bind_ids.filtered(lambda m: m.backend_id == record.backend_id).external_id)
         for c in record.categ_ids:
-            categ_vals.append({
-                "category_id": c.magento_bind_ids.filtered(lambda m: m.backend_id == record.backend_id).external_id,
-            })
-        return {'category_links': categ_vals}
+            c_ids.append(c.magento_bind_ids.filtered(lambda m: m.backend_id == record.backend_id).external_id)
+        return {
+            'attribute_code': 'category_ids',
+            'value': c_ids
+        }
 
     @mapping
     def weight(self, record):
@@ -253,9 +258,14 @@ class ProductTemplateExportMapper(Component):
     @mapping
     def get_custom_attributes(self, record):
         custom_attributes = []
+        custom_attributes.append(self.category_ids(record))
+        if record.magento_url_key:
+            custom_attributes.append({
+                'attribute_code': 'url_key',
+                'value': record.magento_url_key
+            })
         result = {'custom_attributes': custom_attributes}
-        return result   
-   
+        return result
 
     @mapping
     def option_products(self, record):

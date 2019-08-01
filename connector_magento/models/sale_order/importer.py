@@ -161,7 +161,7 @@ class SaleOrderImportMapper(Component):
     def _add_cash_on_delivery_line(self, map_record, values):
         record = map_record.source
         if 'extension_attributes' not in record or 'cash_on_delivery' not in record['extension_attributes']:
-            return
+            return values
         amount_excl = float(record['extension_attributes']['cash_on_delivery'].get('fee') or 0.0)
         amount_incl = float(record['extension_attributes']['cash_on_delivery'].get('fee_incl_tax') or 0.0)
         if not (amount_excl or amount_incl):

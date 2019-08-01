@@ -36,7 +36,7 @@ class MagentoBackend(models.Model):
         """
         return [('1.7', '1.7+'),
                 ('2.0', '2.0+') ]
-        
+
 
     @api.model
     def _get_stock_field_id(self):
@@ -332,6 +332,53 @@ class MagentoBackend(models.Model):
                                'magento.product.bundle',
                                'magento.product.product'):
                 self.env[model_name].search([('backend_id', '=', backend.id)]).with_delay(identity_key=identity_exact).sync_from_magento()
+
+    @api.multi
+    def button_check_products(self):
+        for backend in self:
+            with backend.work_on("magento.product.template") as work:
+                adapter = work.component(usage='backend.adapter')
+                filters = {}
+                products = adapter.search_read(filters)
+                tskus = []
+                pskus = []
+                for product in products['items']:
+                    if product['type_id'] == 'configurable':
+                        tskus.append(product['sku'])
+                        binding = self.env['magento.product.template'].search([
+                            ('backend_id', '=', backend.id),
+                            ('external_id', '=', product['sku']),
+                            ('active', 'in', [True,False]),
+                        ])
+                    else:
+                        pskus.append(product['sku'])
+                        binding = self.env['magento.product.product'].search([
+                            ('backend_id', '=', backend.id),
+                            ('external_id', '=', product['sku']),
+                            ('active', 'in', [True, False]),
+                        ])
+                    if not binding:
+                        _logger.info("Found Magento product without binding: %s", product)
+                        continue
+                    if binding.magento_id != product['id']:
+                        _logger.info("Binding ID does not match magento ID !. %s", product)
+                    if not binding.magento_url_key:
+                        for cattribute in product['custom_attributes']:
+                            if cattribute['attribute_code'] == 'url_key' and cattribute['value']:
+                                _logger.info("Do update stored url key to %s", cattribute['value'])
+                                binding.with_context(connector_no_export=True).magento_url_key = cattribute['value']
+                tbindings = self.env['magento.product.template'].search([
+                    ('backend_id', '=', backend.id),
+                    ('external_id', 'not in', tskus)
+                ])
+                if tbindings:
+                    _logger.info("These template bindings do not have a magento configurable: %s", tbindings)
+                pbindings = self.env['magento.product.product'].search([
+                    ('backend_id', '=', backend.id),
+                    ('external_id', 'not in', pskus)
+                ])
+                if pbindings:
+                    _logger.info("These product bindings do not have a magento product: %s", pbindings)
 
     @api.multi
     def import_partners(self):

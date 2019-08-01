@@ -99,10 +99,14 @@ class MagentoProductProduct(models.Model):
         compute='_compute_product_categories',
         string='Product categories'
     )
+    magento_url_key = fields.Char(string="URL Key")
+
     _sql_constraints = [
         ('backend_magento_id_uniqueid',
          'UNIQUE (backend_id, magento_id)',
-         'Duplicate binding of product detected, maybe SKU changed ?')]
+         'Duplicate binding of product detected, maybe SKU changed ?'
+         ),
+    ]
 
     @api.multi
     @job(default_channel='root.magento')

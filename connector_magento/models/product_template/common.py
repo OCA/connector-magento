@@ -57,17 +57,13 @@ class MagentoProductTemplate(models.Model):
                               string='Product Template',
                               required=True,
                               ondelete='restrict')
-    # XXX website_ids can be computed from categories
     website_ids = fields.Many2many(comodel_name='magento.website',
                                    string='Websites',
                                    readonly=True)
-
-#     product_type = fields.Char()
     product_type = fields.Selection(selection='product_type_get',
                                     string='Magento Product Type',
                                     default='simple',
                                     required=True)
-    
     magento_id = fields.Integer('Magento ID')
     magento_name = fields.Char('Name', translate=True)
     magento_price = fields.Float('Backend Preis', default=0.0, digits=dp.get_precision('Product Price'),)
@@ -98,11 +94,18 @@ class MagentoProductTemplate(models.Model):
         compute='_compute_product_categories',
         string='Product categories'
     )
+    magento_url_key = fields.Char(string="URL Key")
 
     _sql_constraints = [
         ('backend_magento_id_uniqueid',
          'UNIQUE (backend_id, magento_id)',
-         'Duplicate binding of product detected, maybe SKU changed ?')]
+         'Duplicate binding of product detected, maybe SKU changed ?'
+         ),
+        ('backend_url_key_uniqueid',
+         'UNIQUE (backend_id, magento_url_key)',
+         'Duplicate URL Key is not allowed - please set a new one !'
+         ),
+    ]
 
     @api.multi
     @job(default_channel='root.magento')
@@ -150,11 +153,7 @@ class ProductTemplate(models.Model):
         # Else avoid creating the variants
         me = self.with_context(create_product_product=True)
         
-        tpl = super(ProductTemplate, me).create(vals)    
-        for prod in tpl.magento_template_bind_ids:
-                if prod.product_variant_count > 1 :
-                    self.env['magento.template.attribute.line']._update_attribute_lines(prod)
-        return tpl 
+        return super(ProductTemplate, me).create(vals)
 
     @api.multi
     def create_variant_ids(self):

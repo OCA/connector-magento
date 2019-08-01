@@ -71,6 +71,7 @@
 							<field name="magento_name" />
 							<field name="magento_price" />
 							<field name="external_id" readonyl="1"/>
+							<field name="magento_url_key"/>
 							<field name="magento_id" readonyl="1"/>
 							<field name="odoo_id" readonly="1"/>
 							<field name="attribute_set_id"/>

@@ -184,11 +184,11 @@ class ProductImportMapper(Component):
     _inherit = 'magento.import.mapper'
     _apply_on = ['magento.product.product']
 
-    # TODO :     categ, special_price => minimal_price
     direct = [('price', 'magento_price'),
               ('description', 'description'),
               ('weight', 'weight'),
               ('short_description', 'description_sale'),
+              ('url_key', 'magento_url_key'),
               ('sku', 'external_id'),
               ('type_id', 'product_type'),
               ('id', 'magento_id'),

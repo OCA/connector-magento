@@ -266,50 +266,6 @@ class ProductTemplateImportMapper(Component):
     def attributes(self, record):
         '''
         We do overwrite the attributes function from product.product
-        [
-          {
-            u'product_id': 2039,
-            u'attribute_id': u'93',
-            u'label': u'Color',
-            u'values': [
-              {
-                u'value_index': 53
-              },
-              {
-                u'value_index': 57
-              },
-              {
-                u'value_index': 58
-              }
-            ],
-            u'position': 1,
-            u'id': 295
-          },
-          {
-            u'product_id': 2039,
-            u'attribute_id': u'145',
-            u'label': u'Size',
-            u'values': [
-              {
-                u'value_index': 172
-              },
-              {
-                u'value_index': 173
-              },
-              {
-                u'value_index': 174
-              },
-              {
-                u'value_index': 175
-              },
-              {
-                u'value_index': 176
-              }
-            ],
-            u'position': 0,
-            u'id': 294
-          }
-        ]
         :param record:
         :return:
         '''
@@ -368,6 +324,7 @@ class ProductTemplateImportMapper(Component):
             result['categ_id'] = main_categ_id
         return result
 
+    @only_create
     @mapping
     def auto_create_variants(self, records):
         # By default we disable auto create variants when product is coming from a webshop

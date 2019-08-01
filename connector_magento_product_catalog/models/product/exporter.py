@@ -111,6 +111,11 @@ class ProductProductExporter(Component):
         return sync_date < magento_date
 
     def _update_binding_record_after_create(self, data):
+        """
+        This will only get called on a new product export - not on updates !
+        :param data:
+        :return:
+        """
         for attr in data.get('custom_attributes', []):
             data[attr['attribute_code']] = attr['value']
         # Do use the importer to update the binding
@@ -337,4 +342,7 @@ class ProductProductExportMapper(Component):
             price = record.with_context(pricelist=record.backend_id.default_pricelist_id.id).price
         else:
             price = record['lst_price']
-        return {'price': price}
+        return {
+            'price': price,
+            'cost': record.standard_price,
+        }

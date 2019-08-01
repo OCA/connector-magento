@@ -277,6 +277,9 @@
 					<button name="button_resync_products" type="object"
 						class="oe_highlight" string="Resync all products from Magento to Odoo"
 						attrs="{'invisible':[('state', 'in', ['draft'])]}" />
+					<button name="button_check_products" type="object"
+						class="oe_highlight" string="Check Products Sync"
+						attrs="{'invisible':[('state', 'in', ['draft'])]}" />
 					<button name="button_reset_to_draft" type="object"
 						string="Reset To draft Connection"
 						attrs="{'invisible':[('state', 'in', ['draft'])]}" />

@@ -22,8 +22,12 @@ class MagentoProductAttributeValueExportMapper(Component):
 
     direct = [
         ('name', 'label'),
-        ('code', 'value')
     ]
+
+    @mapping
+    def code(self, record):
+        if record.code:
+            return {'value': record.code}
 
     @mapping
     def is_default(self, record):
