@@ -39,3 +39,31 @@ class MagentoProductProductExportListener(Component):
             del fields['image']
         for binding in record.magento_bind_ids:
             binding.with_delay(identity_key=identity_exact).export_record(binding.backend_id)
+
+
+class MagentoProductPricelistItemUpdateListener(Component):
+    _name = 'magento.product.pricelist.item.listener'
+    _inherit = 'base.connector.listener'
+    _apply_on = ['product.pricelist.item']
+
+    def update_products(self, record):
+        if record.applied_on == '1_product':
+            for binding in record.product_tmpl_id.magento_template_bind_ids:
+                binding.with_delay(identity_key=identity_exact).export_record(binding.backend_id)
+                for variant in record.product_tmpl_id.product_variant_ids:
+                    for binding in variant.magento_bind_ids:
+                        binding.with_delay(identity_key=identity_exact).export_record(binding.backend_id)
+        elif record.applied_on == '0_product_variant':
+            for binding in record.product_id.magento_bind_ids:
+                binding.with_delay(identity_key=identity_exact).export_record(binding.backend_id)
+
+    @skip_if(lambda self, record, **kwargs: self.no_connector_export(record))
+    def on_record_create(self, record, fields=None):
+        self.update_products(record)
+
+    @skip_if(lambda self, record, **kwargs: self.no_connector_export(record))
+    def on_record_write(self, record, fields=None):
+        self.update_products(record)
+
+    def on_record_unlink(self, record):
+        self.update_products(record)

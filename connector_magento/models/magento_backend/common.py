@@ -358,10 +358,14 @@ class MagentoBackend(models.Model):
                             ('active', 'in', [True, False]),
                         ])
                     if not binding:
-                        _logger.info("Found Magento product without binding: %s", product)
+                        _logger.info("Found Magento product without binding: %s with status=%s,type=%s", product['sku'], product['status'], product['type_id'])
+                        if product['type_id'] == 'simple':
+                            # Do delete the magento product
+                            adapter.delete(product['sku'])
+                            continue
                         continue
                     if binding.magento_id != product['id']:
-                        _logger.info("Binding ID does not match magento ID !. %s", product)
+                        _logger.info("Binding ID does not match magento ID !. %s, %s", product, binding)
                     if not binding.magento_url_key:
                         for cattribute in product['custom_attributes']:
                             if cattribute['attribute_code'] == 'url_key' and cattribute['value']:

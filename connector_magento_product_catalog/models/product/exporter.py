@@ -199,15 +199,15 @@ class ProductProductExporter(Component):
         for media_binding in sorted(self.binding.magento_image_bind_ids.filtered(lambda m: m.type == 'product_image'), key=sort_by_position):
             mbinding = media_binding
             break
+        # Create new media binding entry for main image
+        mime = magic.Magic(mime=True)
+        mimetype = mime.from_buffer(base64.b64decode(self.binding.odoo_id.image))
+        extension = 'png' if mimetype == 'image/png' else 'jpeg'
+        if 'magento.product.template' in self._apply_on:
+            model_key = 'magento_product_tmpl_id'
+        else:
+            model_key = 'magento_product_id'
         if not mbinding:
-            # Create new media binding entry for main image
-            mime = magic.Magic(mime=True)
-            mimetype = mime.from_buffer(base64.b64decode(self.binding.odoo_id.image))
-            extension = 'png' if mimetype == 'image/png' else 'jpeg'
-            if 'magento.product.template' in self._apply_on:
-                model_key = 'magento_product_tmpl_id'
-            else:
-                model_key = 'magento_product_id'
             mbinding = self.env['magento.product.media'].sudo().with_context(connector_no_export=True).create({
                 'backend_id': self.binding.backend_id.id,
                 model_key: self.binding.id,
@@ -215,6 +215,15 @@ class ProductProductExporter(Component):
                 'file': "%s.%s" % (slugify(self.binding.odoo_id.name, to_lower=True), extension),
                 'type': 'product_image',
                 'position': 1,
+                'mimetype': mimetype,
+                'image_type_image': True,
+                'image_type_small_image': True,
+                'image_type_thumbnail': True,
+            })
+        else:
+            mbinding.sudo().with_context(connector_no_export=True).update({
+                'label': self.binding.odoo_id.name,
+                'file': "%s.%s" % (slugify(self.binding.odoo_id.name, to_lower=True), extension),
                 'mimetype': mimetype,
                 'image_type_image': True,
                 'image_type_small_image': True,
@@ -344,5 +353,4 @@ class ProductProductExportMapper(Component):
             price = record['lst_price']
         return {
             'price': price,
-            'cost': record.standard_price,
         }
