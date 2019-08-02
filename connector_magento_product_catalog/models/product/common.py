@@ -68,8 +68,9 @@ class ProductProductAdapter(Component):
             res = self._call('products/special-price-information', {
                 "skus": [sku]
             }, http_method="post")
-            _logger.info("Got special prices: %s. Do delete them", res)
-            res = self._call('products/special-price-delete', {
-                "prices": res
-            }, http_method="post")
+            if res and len(res) > 0:
+                _logger.info("Got special prices: %s. Do delete them", res)
+                res = self._call('products/special-price-delete', {
+                    "prices": res
+                }, http_method="post")
             return res
