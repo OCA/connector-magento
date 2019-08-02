@@ -301,7 +301,11 @@ class SaleOrderAdapter(Component):
         return record
 
     def get_parent(self, id):
-        return self._call('%s.get_parent' % self._magento_model, [id])
+        if self.collection.version == '2.0':
+            ret = self.read(id, attributes={'fields': 'relation_parent_id'})
+            return type(ret) == dict and ret.get('relation_parent_id', False)
+        else:
+            return self._call('%s.get_parent' % self._magento_model, [id])
 
     def add_comment(self, id, status, comment=None, notify=False):
         return self._call('%s.addComment' % self._magento_model,
