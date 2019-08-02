@@ -66,3 +66,19 @@ class ProductTemplateAdapter(Component):
             }, http_method="post")
             _logger.info("Got result for items: %s.", res)
             return res
+
+    def remove_special_price(self, sku):
+        def escape(term):
+            if isinstance(term, basestring):
+                return urllib.quote(term.encode('utf-8'), safe='')
+            return term
+
+        if self.work.magento_api._location.version == '2.0':
+            res = self._call('products/special-price-information', {
+                "skus": [sku]
+            }, http_method="post")
+            _logger.info("Got special prices: %s. Do delete them", res)
+            res = self._call('products/special-price-delete', {
+                "prices": res
+            }, http_method="post")
+            return res

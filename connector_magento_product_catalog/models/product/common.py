@@ -8,6 +8,7 @@ from odoo.addons.component.core import Component
 from odoo.addons.queue_job.job import job, related_action
 from odoo.addons.queue_job.job import identity_exact
 import urllib
+from urlparse import urljoin
 
 
 _logger = logging.getLogger(__name__)
@@ -16,6 +17,14 @@ _logger = logging.getLogger(__name__)
 class MagentoProductProduct(models.Model):
     _inherit = 'magento.product.product'
     
+    @api.depends('backend_id', 'external_id')
+    def _compute_magento_backend_url(self):
+        for binding in self:
+            if binding._magento_backend_path:
+                binding.magento_backend_url = "%s/%s" % (urljoin(binding.backend_id.admin_location, binding._magento_backend_path), binding.external_id)
+            if binding._magento_frontend_path:
+                binding.magento_frontend_url = "%s.html" % urljoin(binding.backend_id.location, binding.magento_url_key)
+
     attribute_set_id = fields.Many2one('magento.product.attributes.set',
                                        string='Attribute set')
     special_price_active = fields.Boolean('Special Price', default=False)

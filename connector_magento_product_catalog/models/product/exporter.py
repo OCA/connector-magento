@@ -212,12 +212,21 @@ class ProductProductExporter(Component):
             model_key = 'magento_product_tmpl_id'
         else:
             model_key = 'magento_product_id'
+        # Find unique filename
+        filename = "%s.%s" % (slugify(self.binding.odoo_id.name, to_lower=True), extension)
+        i = 0
+        while self.env['magento.product.media'].search_count([
+            ('backend_id', '=', self.binding.backend_id.id),
+            ('file', '=', filename)
+        ]) > 0:
+            filename = "%s-%s.%s" % (slugify(self.binding.odoo_id.name, to_lower=True), i, extension)
+            i += 1
         if not mbinding:
             mbinding = self.env['magento.product.media'].sudo().with_context(connector_no_export=True).create({
                 'backend_id': self.binding.backend_id.id,
                 model_key: self.binding.id,
                 'label': self.binding.odoo_id.name,
-                'file': "%s.%s" % (slugify(self.binding.odoo_id.name, to_lower=True), extension),
+                'file': filename,
                 'type': 'product_image',
                 'position': 1,
                 'mimetype': mimetype,
@@ -228,7 +237,7 @@ class ProductProductExporter(Component):
         else:
             mbinding.sudo().with_context(connector_no_export=True).update({
                 'label': self.binding.odoo_id.name,
-                'file': "%s.%s" % (slugify(self.binding.odoo_id.name, to_lower=True), extension),
+                'file': filename,
                 'mimetype': mimetype,
                 'image_type_image': True,
                 'image_type_small_image': True,
@@ -278,14 +287,14 @@ class ProductProductExportMapper(Component):
         storeview_id = self.work.storeview_id if hasattr(self.work, 'storeview_id') else False
         if not storeview_id:
             data.update(self.get_website_ids(record))
-            data.update(self.category_ids(record))
+            #data.update(self.category_ids(record))
         return {'extension_attributes': data}
-    
     
     def get_website_ids(self, record):
         website_ids = [s.external_id for s in record.backend_id.website_ids]
         return {'website_ids': website_ids}
     
+    '''
     def category_ids(self, record):
         magento_categ_id = record.categ_id.magento_bind_ids.filtered(lambda bc: bc.backend_id.id == record.backend_id.id)
         categ_vals = [{
@@ -301,7 +310,20 @@ class ProductProductExportMapper(Component):
                 })
                 i += 1
         return {'category_links': categ_vals}
-    
+    '''
+
+    def category_ids(self, record):
+        magento_categ_id = record.categ_id.magento_bind_ids.filtered(lambda bc: bc.backend_id.id == record.backend_id.id)
+        c_ids = []
+        c_ids.append(magento_categ_id.external_id)
+        for c in record.categ_ids:
+            for b in c.magento_bind_ids.filtered(lambda bc: bc.backend_id.id == record.backend_id.id):
+                c_ids.append(b.external_id)
+        return {
+            'attribute_code': 'category_ids',
+            'value': c_ids
+        }
+
     @mapping
     def weight(self, record):
         if record.weight:
@@ -339,6 +361,7 @@ class ProductProductExportMapper(Component):
                 'value': record.with_context(pricelist=record.backend_id.default_pricelist_id.id).price
             })
             record.with_context(connector_no_export=True).special_price_active = True
+        custom_attributes.append(self.category_ids(record))
         _logger.info("Do use custom attributes: %r", custom_attributes)
         return {'custom_attributes': custom_attributes}
 

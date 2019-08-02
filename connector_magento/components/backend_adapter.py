@@ -104,8 +104,13 @@ class MagentoAPI(object):
                 except:
                     arguments_string = str(arguments)
                 try:
-                    reason = json.loads(e.reason)
-                    message = reason.message
+                    if hasattr(e, 'reason'):
+                        reason = json.loads(e.reason)
+                        message = reason.message
+                    elif hasattr(e, 'code'):
+                        message = "HTTP Error Code: %s" % e.code
+                    else:
+                        message = str(e)
                 except:
                     message = str(e.reason)
                 _logger.error("api.call('%s', %s, %s, %s) failed with %s", method, arguments_string, http_method, storeview, message)

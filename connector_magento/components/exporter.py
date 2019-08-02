@@ -11,7 +11,7 @@ from datetime import datetime
 import psycopg2
 
 import odoo
-from odoo import _
+from odoo import _, registry, api, SUPERUSER_ID
 from odoo.addons.component.core import AbstractComponent
 from odoo.addons.connector.exception import (IDMissingInBackend,
                                              RetryableJobError)
@@ -19,6 +19,7 @@ from .backend_adapter import MAGENTO_DATETIME_FORMAT
 from odoo.addons.queue_job.job import identity_exact
 from urllib2 import HTTPError
 import json
+from odoo.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 
 _logger = logging.getLogger(__name__)
 
@@ -109,6 +110,10 @@ class MagentoBaseExporter(AbstractComponent):
             self.env.cr.commit()  # noqa
 
         self._after_export()
+        binding.with_context(connector_no_export=True).write({
+            'magento_last_error_string': None,
+            'magento_last_error_timestamp': None,
+        })
         return result
 
     def _run(self):
@@ -367,24 +372,7 @@ class MagentoExporter(AbstractComponent):
             record = self._update_data(map_record, fields=fields)
             if not record:
                 return _('Nothing to export.')
-            try:
-                self._update(record)
-                self.binding.with_context(connector_no_export=True).write({
-                    'magento_last_error_string': None,
-                    'magento_last_error_timestamp': None,
-                })
-            except HTTPError as he:
-                try:
-                    reason = json.loads(he.reason)
-                    message = reason.message
-                except:
-                    message = str(he.reason)
-                with self.env.cr.savepoint():
-                    self.binding.with_context(connector_no_export=True).write({
-                        'magento_last_error_string': message,
-                        'magento_last_error_timestamp': datetime.now(),
-                    })
-                raise he
+            self._update(record)
         else:
             record = self._create_data(map_record, fields=fields)
             if not record:
