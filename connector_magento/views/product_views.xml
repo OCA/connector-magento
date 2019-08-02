@@ -42,7 +42,9 @@
 						<h1>
 							<field name="name" placeholder="Product Name" readonly="1" />
 						</h1>
-
+						<p t-if="magento_last_error_string" style="color:red;">
+							Last Error: <span t-field="magento_last_error_string"/> at <span t-field="magento_last_error_timestamp"/>
+						</p>
 					</div>
 					<div class="oe_button_box" name="button_box">
 

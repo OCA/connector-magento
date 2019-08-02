@@ -39,6 +39,8 @@ class MagentoBinding(models.AbstractModel):
     external_id = fields.Char(string='ID on Magento')
     magento_backend_url = fields.Char(string="Magento Backend URL", compute='_compute_magento_backend_url')
     magento_frontend_url = fields.Char(string="Magento Frontend URL", compute='_compute_magento_backend_url')
+    magento_last_error_string = fields.Char(string="Last Magento Error")
+    magento_last_error_timestamp = fields.Datetime(string="Last Magento Error Timestamp")
 
     #TODO: Setting the constraint here have starange side effects on product_attribute
     _sql_constraints = [

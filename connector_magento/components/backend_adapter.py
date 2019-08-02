@@ -12,6 +12,7 @@ from odoo.addons.queue_job.exception import RetryableJobError
 from odoo.addons.connector.exception import NetworkRetryableError
 from datetime import datetime
 from odoo import tools
+import json
 
 _logger = logging.getLogger(__name__)
 
@@ -97,9 +98,18 @@ class MagentoAPI(object):
             start = datetime.now()
             try:
                 result = self.api.call(method, arguments, http_method=http_method, storeview=storeview)
-            except:
-                _logger.error("api.call('%s', %s, %s, %s) failed", method, arguments, http_method, storeview)
-                raise
+            except Exception, e:
+                try:
+                    arguments_string = json.dumps(arguments)
+                except:
+                    arguments_string = str(arguments)
+                try:
+                    reason = json.loads(e.reason)
+                    message = reason.message
+                except:
+                    message = str(e.reason)
+                _logger.error("api.call('%s', %s, %s, %s) failed with %s", method, arguments_string, http_method, storeview, message)
+                raise e
             else:
                 _logger.debug("api.call('%s', %s, %s, %s) returned %s in %s seconds",
                               method, arguments, result, http_method, storeview, 

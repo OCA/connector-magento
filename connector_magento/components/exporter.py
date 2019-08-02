@@ -17,6 +17,8 @@ from odoo.addons.connector.exception import (IDMissingInBackend,
                                              RetryableJobError)
 from .backend_adapter import MAGENTO_DATETIME_FORMAT
 from odoo.addons.queue_job.job import identity_exact
+from urllib2 import HTTPError
+import json
 
 _logger = logging.getLogger(__name__)
 
@@ -365,7 +367,24 @@ class MagentoExporter(AbstractComponent):
             record = self._update_data(map_record, fields=fields)
             if not record:
                 return _('Nothing to export.')
-            self._update(record)
+            try:
+                self._update(record)
+                self.binding.with_context(connector_no_export=True).write({
+                    'magento_last_error_string': None,
+                    'magento_last_error_timestamp': None,
+                })
+            except HTTPError as he:
+                try:
+                    reason = json.loads(he.reason)
+                    message = reason.message
+                except:
+                    message = str(he.reason)
+                with self.env.cr.savepoint():
+                    self.binding.with_context(connector_no_export=True).write({
+                        'magento_last_error_string': message,
+                        'magento_last_error_timestamp': datetime.now(),
+                    })
+                raise he
         else:
             record = self._create_data(map_record, fields=fields)
             if not record:

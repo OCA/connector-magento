@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api
 from datetime import datetime, timedelta
+from odoo.addons.queue_job.job import identity_exact
 
 IMPORT_DELTA_BUFFER = 30  # seconds
 
@@ -24,6 +25,13 @@ class MagentoBackend(models.Model):
             next_time = fields.Datetime.to_string(next_time)
             backend.write({'export_products_from_date': next_time})
         return True
+
+    @api.multi
+    def button_sync_to_magento_products(self):
+        for backend in self:
+            for model_name in ('magento.product.template',
+                               'magento.product.product'):
+                self.env[model_name].search([('backend_id', '=', backend.id)]).with_delay(identity_key=identity_exact).sync_to_magento()
 
     product_synchro_strategy = fields.Selection([
             ('magento_first', 'Magento First'),

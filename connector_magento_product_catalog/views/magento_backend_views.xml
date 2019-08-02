@@ -27,6 +27,12 @@
 				<field name="product_synchro_strategy" />
 				<field name="default_attribute_set_id" domain="[('backend_id', '=', id)]"/>
 			</xpath>
+			<button name="button_resync_products" position="after">
+					<button name="button_sync_to_magento_products" type="object"
+						class="oe_highlight" string="Resync all products from Odoo to Magento"
+						attrs="{'invisible':[('state', 'in', ['draft'])]}" />
+			</button>
+
 		</field>
 	</record>
 </odoo>
