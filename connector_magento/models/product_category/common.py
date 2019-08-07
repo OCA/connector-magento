@@ -53,6 +53,7 @@ class ProductCategoryAdapter(Component):
 
     _magento_model = 'catalog_category'
     _magento2_model = 'categories'
+    _magento2_search = 'categories'
     _magento2_key = 'id'
 
     _admin_path = '/{model}/index/'
