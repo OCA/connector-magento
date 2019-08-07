@@ -217,7 +217,7 @@ class GenericAdapter(AbstractComponent):
                 })
                 count += 1
         _logger.debug('searchCriteria %s from %s', res, filters)
-        return res if res else {'searchCriteria': ''}
+        return res if res else {'searchCriteria[pageSize]': ''}
 
 
     def search(self, filters=None):
