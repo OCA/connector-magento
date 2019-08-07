@@ -5,6 +5,7 @@
 import socket
 import logging
 import xmlrpc.client
+import urllib
 
 from odoo.addons.component.core import AbstractComponent
 from odoo.addons.queue_job.exception import RetryableJobError
@@ -185,6 +186,13 @@ class GenericAdapter(AbstractComponent):
     _admin_path = None
 
     @staticmethod
+    def _escape(term):
+        if isinstance(term, str):
+            return urllib.parse.quote(
+                term).replace('/', '%2F')
+        return term
+
+    @staticmethod
     def get_searchCriteria(filters):
         """ Craft Magento 2.0 searchCriteria from filters, for example:
 
@@ -260,14 +268,9 @@ class GenericAdapter(AbstractComponent):
         :rtype: dict
         """
         if self.collection.version == '2.0':
-
-            def escape(term):
-                if isinstance(term, str):
-                    return term.replace('+', '%2B')
-                return term
-
             if self._magento2_key:
-                return self._call('%s/%s' % (self._magento2_model, escape(id)),
+                return self._call('%s/%s' % (self._magento2_model,
+                                             self._escape(id)),
                                   attributes)
             elif attributes:
                 raise NotImplementedError
@@ -314,7 +317,7 @@ class GenericAdapter(AbstractComponent):
     def write(self, id, data):
         """ Update records on the external system """
         return self._call('%s.update' % self._magento_model,
-                          [int(id), data])
+                          [self._escape(id), data])
 
     def delete(self, id):
         """ Delete a record on the external system """
