@@ -188,6 +188,11 @@ class MagentoBackend(models.Model):
         string="COD Product",
         domain="[('type', '=', 'service')]"
     )
+    default_gift_product_id = fields.Many2one(
+        'product.product',
+        string="Gift Product",
+        domain="[('type', '=', 'service')]"
+    )
     auto_create_category = fields.Boolean('Auto Create Category', default=True)
 
     # TODO? add a field `auto_activate` -> activate a cron

@@ -477,6 +477,7 @@
 									<field name="default_code_method"/>
 									<field name="default_pricelist_id"/>
 									<field name="default_cod_product_id"/>
+									<field name="default_gift_product_id"/>
 								</group>
 								<group string="Sales / Accounting">
 									<field name="sale_prefix" placeholder="mag-" />

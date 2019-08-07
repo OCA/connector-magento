@@ -170,25 +170,31 @@ class SaleOrderImportMapper(Component):
         line = {
             'product_id': self.backend_record.default_cod_product_id.id,
             'price_unit': amount_incl if tax_include else amount_excl,
-            'product_qty': 1,
+            'product_uom_qty': 1,
         }
         values['order_line'].append((0, 0, line))
         return values
 
     def _add_gift_certificate_line(self, map_record, values):
         record = map_record.source
-        if 'gift_cert_amount' not in record:
+        if 'discount_amount' not in record:
             return values
         # if gift_cert_amount is zero
-        if not record.get('gift_cert_amount'):
+        if not record.get('discount_amount'):
             return values
-        amount = float(record['gift_cert_amount'])
-        line_builder = self.component(usage='order.line.builder.gift')
-        line_builder.price_unit = amount
-        if 'gift_cert_code' in record:
-            line_builder.gift_code = record['gift_cert_code']
-        line = (0, 0, line_builder.get_line())
-        values['order_line'].append(line)
+        amount = float(record['discount_amount'])
+        name = 'Gift'
+        if 'discount_description' in record:
+            name = record['discount_description']
+        if 'discount_code' in record:
+            name = "%s (%s)" % (name, record['discount_code'], )
+        line = {
+            'product_id': self.backend_record.default_gift_product_id.id,
+            'price_unit': amount,
+            'name': name,
+            'product_uom_qty': -1,
+        }
+        values['order_line'].append((0, 0, line))
         return values
 
     def finalize(self, map_record, values):
