@@ -292,13 +292,15 @@ class GenericAdapter(AbstractComponent):
         return self._call('%s.info' % self._magento_model,
                           arguments)
 
-    def search_read(self, filters=None):
+    def search_read(self, filters=None, attributes=None):
         """ Search records according to some criterias
         and returns their information"""
         if self.collection.version == '2.0':
             params = {}
             if self._magento2_search:
                 params.update(self.get_searchCriteria(filters))
+                if attributes:
+                    params.update(attributes)
             else:
                 if filters:
                     raise NotImplementedError  # Unexpected much?

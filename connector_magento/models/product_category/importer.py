@@ -32,17 +32,9 @@ class ProductCategoryBatchImporter(Component):
 
     def run_2_0(self, filters=None):
         """ Run the synchronization.
-            Only a full tree of categories can be retrieved.
+            Start importing root category, and continue with recursive children
         """
-        tree = self.backend_adapter.search_read()
-        importer = self.component(usage='record.importer')
-        def import_branch(branch):
-            children = branch.pop('children_data', [])
-            importer.run(branch['id'], data=branch)
-            for child in children:
-                import_branch(child)
-
-        import_branch(tree)
+        self._import_record(1)
 
     def run_1_7(self, filters=None):
         """ Run the synchronization """
@@ -93,6 +85,12 @@ class ProductCategoryImporter(Component):
 
     def _after_import(self, binding):
         """ Hook called at the end of the import """
+        if self.import_child:
+            children = self.backend_adapter.children(binding.external_id)
+            for child_id in children:
+                self.env['magento.product.category'].with_delay().\
+                    import_record(self.backend_record, child_id,
+                                  import_child=True)
         translation_importer = self.component(usage='translation.importer')
         translation_importer.run(self.external_id, binding)
 

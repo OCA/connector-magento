@@ -5,10 +5,11 @@
 
 import logging
 import xmlrpc.client
-from odoo import models, fields
+from odoo import models, fields, api
 from odoo.addons.connector.exception import IDMissingInBackend
 from odoo.addons.component.core import Component
 from ...components.backend_adapter import MAGENTO_DATETIME_FORMAT
+from odoo.addons.queue_job.job import job, related_action
 
 _logger = logging.getLogger(__name__)
 
@@ -34,6 +35,18 @@ class MagentoProductCategory(models.Model):
         inverse_name='magento_parent_id',
         string='Magento Child Categories',
     )
+
+    @job(default_channel='root.magento')
+    @related_action(action='related_action_magento_link')
+    @api.model
+    def import_record(self, backend, external_id, force=False,
+                      import_child=False):
+        """ Import a Magento record
+        Overriden to import all child categories only when required """
+        with backend.work_on(self._name) as work:
+            importer = work.component(usage='record.importer')
+            importer.import_child = import_child
+            return importer.run(external_id, force=force)
 
 
 class ProductCategory(models.Model):
@@ -104,13 +117,11 @@ class ProductCategoryAdapter(Component):
         return self._call('%s.info' % self._magento_model,
                           [int(id), storeview_id, attributes])
 
-    def tree(self, parent_id=None, storeview_id=None):
+    def tree(self, parent_id=None, storeview_id=None, depth=None):
         """ Returns a tree of product categories
 
         :rtype: dict
         """
-        if self.collection.version == '2.0':
-            raise NotImplementedError  # TODO
         def filter_ids(tree):
             children = {}
             if tree['children']:
@@ -118,11 +129,52 @@ class ProductCategoryAdapter(Component):
                     children.update(filter_ids(node))
             category_id = {tree['category_id']: children}
             return category_id
+
+        def filter_ids_2_0(tree):
+            children = {}
+            if tree.get('children_data'):
+                for node in tree['children_data']:
+                    children.update(filter_ids_2_0(node))
+            category_id = {tree['id']: children}
+            return category_id
+
         if parent_id:
             parent_id = int(parent_id)
-        tree = self._call('%s.tree' % self._magento_model,
-                          [parent_id, storeview_id])
-        return filter_ids(tree)
+        if self.collection.version == '2.0':
+            if not depth:
+                # TODO: Get all tree of categories
+                raise NotImplementedError
+            attributes = {'fields': 'id,children_data[id]'}
+            if depth:
+                attributes.update(depth=int(depth))
+            if parent_id is not None:
+                attributes.update(rootCategoryId=parent_id)
+            tree = self.search_read(attributes=attributes)
+            filtered_ids = filter_ids_2_0(tree)
+        else:
+            tree = self._call('%s.tree' % self._magento_model,
+                              [parent_id, storeview_id])
+            filtered_ids = filter_ids(tree)
+        return filtered_ids
+
+    def children(self, parent_id, storeview_id=None, depth=None):
+        """ Returns a list of children product categories of given parent
+
+        :param parent_id: if of parent product category
+        :type parent_id: int
+        :rtype: list
+        """
+        if self.collection.version != '2.0':
+            raise NotImplementedError
+        attributes = {
+            'fields': 'id,children_data[id]',
+            'depth': depth or 1,
+            'rootCategoryId': parent_id,
+        }
+        tree = self.search_read(attributes=attributes)
+        if tree.get('children_data', {}) is not None:
+            return [child.get('id') for child in tree.get('children_data', {})]
+        return []
 
     def move(self, categ_id, parent_id, after_categ_id=None):
         if self.collection.version == '2.0':
