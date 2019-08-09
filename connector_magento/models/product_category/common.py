@@ -5,11 +5,10 @@
 
 import logging
 import xmlrpc.client
-from odoo import models, fields, api
+from odoo import models, fields
 from odoo.addons.connector.exception import IDMissingInBackend
 from odoo.addons.component.core import Component
 from ...components.backend_adapter import MAGENTO_DATETIME_FORMAT
-from odoo.addons.queue_job.job import job, related_action
 
 _logger = logging.getLogger(__name__)
 
@@ -36,18 +35,6 @@ class MagentoProductCategory(models.Model):
         string='Magento Child Categories',
     )
 
-    @job(default_channel='root.magento')
-    @related_action(action='related_action_magento_link')
-    @api.model
-    def import_record(self, backend, external_id, force=False,
-                      import_child=False):
-        """ Import a Magento record
-        Overriden to import all child categories only when required """
-        with backend.work_on(self._name) as work:
-            importer = work.component(usage='record.importer')
-            importer.import_child = import_child
-            return importer.run(external_id, force=force)
-
 
 class ProductCategory(models.Model):
     _inherit = 'product.category'
@@ -66,7 +53,7 @@ class ProductCategoryAdapter(Component):
 
     _magento_model = 'catalog_category'
     _magento2_model = 'categories'
-    _magento2_search = 'categories'
+    _magento2_search = 'categories/list'
     _magento2_key = 'id'
 
     _admin_path = '/{model}/index/'
@@ -141,15 +128,15 @@ class ProductCategoryAdapter(Component):
         if parent_id:
             parent_id = int(parent_id)
         if self.collection.version == '2.0':
-            if not depth:
-                # TODO: Get all tree of categories
-                raise NotImplementedError
-            attributes = {'fields': 'id,children_data[id]'}
+            attributes = {}
             if depth:
-                attributes.update(depth=int(depth))
+                attributes.update({
+                    'fields': 'id,children_data[id]',
+                    'depth': int(depth),
+                })
             if parent_id is not None:
                 attributes.update(rootCategoryId=parent_id)
-            tree = self.search_read(attributes=attributes)
+            tree = self._call('categories', attributes)
             filtered_ids = filter_ids_2_0(tree)
         else:
             tree = self._call('%s.tree' % self._magento_model,
@@ -167,11 +154,11 @@ class ProductCategoryAdapter(Component):
         if self.collection.version != '2.0':
             raise NotImplementedError
         attributes = {
-            'fields': 'id,children_data[id]',
+            'fields': 'children_data[id]',
             'depth': depth or 1,
             'rootCategoryId': parent_id,
         }
-        tree = self.search_read(attributes=attributes)
+        tree = self._call('categories', attributes)
         if tree.get('children_data', {}) is not None:
             return [child.get('id') for child in tree.get('children_data', {})]
         return []

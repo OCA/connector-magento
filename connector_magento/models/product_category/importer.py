@@ -26,17 +26,6 @@ class ProductCategoryBatchImporter(Component):
         )
 
     def run(self, filters=None):
-        if self.collection.version == '2.0':
-            return self.run_2_0(filters)
-        return self.run_1_7(filters)
-
-    def run_2_0(self, filters=None):
-        """ Run the synchronization.
-            Start importing root category, and continue with recursive children
-        """
-        self._import_record(1)
-
-    def run_1_7(self, filters=None):
         """ Run the synchronization """
         from_date = filters.pop('from_date', None)
         to_date = filters.pop('to_date', None)
@@ -85,12 +74,6 @@ class ProductCategoryImporter(Component):
 
     def _after_import(self, binding):
         """ Hook called at the end of the import """
-        if self.import_child:
-            children = self.backend_adapter.children(binding.external_id)
-            for child_id in children:
-                self.env['magento.product.category'].with_delay().\
-                    import_record(self.backend_record, child_id,
-                                  import_child=True)
         translation_importer = self.component(usage='translation.importer')
         translation_importer.run(self.external_id, binding)
 
