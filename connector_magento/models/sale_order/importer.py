@@ -247,6 +247,8 @@ class SaleOrderImportMapper(Component):
         ship_asg = ext_field['shipping_assignments'][0]
         if not ship_asg:
             return
+        if not 'method' in ship_asg['shipping']:
+            return
         ifield = ship_asg['shipping']['method']
     
         carrier = self.env['delivery.carrier'].search(
@@ -664,16 +666,18 @@ class SaleOrderImporter(Component):
 
 
 class SaleOrderLineImportMapper(Component):
-
     _name = 'magento.sale.order.line.mapper'
     _inherit = 'magento.import.mapper'
     _apply_on = 'magento.sale.order.line'
 
-    direct = [('qty_ordered', 'product_uom_qty'),
-              ('qty_ordered', 'product_qty'),
-              ('name', 'name'),
-              ('item_id', 'external_id'),
-              ]
+    direct = [('item_id', 'external_id'),]
+
+    @mapping
+    def quantity(self, record):
+        return {
+            'product_uom_qty': record['qty_ordered'],
+            'product_qty': record['qty_ordered'],
+        }
 
     @mapping
     def name(self, record):
