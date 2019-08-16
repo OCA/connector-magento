@@ -27,7 +27,7 @@ class ProductCategoryExporter(Component):
         def check_public_parent_recursive(binding):
             parent_binding = binding.public_categ_id.parent_id.magento_bind_ids.filtered(lambda b: b.backend_id == self.backend_record)
             if not parent_binding and not binding.public_categ_id.parent_id.parent_id:
-                raise UserWarning('Cannot export the category %s which is not under the main magento category' % binding.name)
+                raise UserWarning('Cannot export the category %s which is not under the main magento category' % binding.public_categ_id.name)
             if parent_binding and not binding.public_categ_id.parent_id.parent_id:
                 # We are at the magento root category
                 return
