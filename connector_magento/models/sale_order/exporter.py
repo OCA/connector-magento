@@ -60,3 +60,20 @@ class StateExporter(Component):
         self.backend_adapter.add_comment(external_id, magento_state,
                                          comment=comment,
                                          notify=notify)
+
+
+class CancelExporter(Component):
+    _name = 'magento.sale.cancel.exporter'
+    _inherit = 'base.exporter'
+    _usage = 'sale.cancel.exporter'
+    _apply_on = 'magento.sale.order'
+
+    def run(self, binding):
+        external_id = self.binder.to_external(binding)
+        if not external_id:
+            return _('Sale is not linked with a Magento sales order')
+        record = self.backend_adapter.read(
+            external_id, attributes={'fields': 'state'})
+        if record['state'] == 'canceled':
+            return _('Magento sales order is already cancelled')
+        self.backend_adapter.cancel(external_id)

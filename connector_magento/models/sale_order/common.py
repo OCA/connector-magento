@@ -65,6 +65,15 @@ class MagentoSaleOrder(models.Model):
                                 comment=comment, notify=notify)
 
     @job(default_channel='root.magento')
+    @api.multi
+    def export_cancellation(self, notify=None):
+        """ Cancel a sales order on Magento """
+        self.ensure_one()
+        with self.backend_id.work_on(self._name) as work:
+            exporter = work.component(usage='sale.cancel.exporter')
+            return exporter.run(self)
+
+    @job(default_channel='root.magento')
     @api.model
     def import_batch(self, backend, filters=None):
         """ Prepare the import of Sales Orders from Magento """
@@ -111,12 +120,15 @@ class SaleOrder(models.Model):
             if old_state == 'cancel':
                 continue  # skip if already canceled
             for binding in order.magento_bind_ids:
-                if binding.backend_id.version == '2.0':
-                    continue # TODO
                 job_descr = _("Cancel sales order %s") % (binding.external_id,)
-                binding.with_delay(
-                    description=job_descr
-                ).export_state_change(allowed_states=['cancel'])
+                if binding.backend_id.version == '2.0':
+                    binding.with_delay(
+                        description=job_descr
+                    ).export_cancellation()
+                else:
+                    binding.with_delay(
+                        description=job_descr
+                    ).export_state_change(allowed_states=['cancel'])
 
     @api.multi
     def write(self, vals):
@@ -249,9 +261,11 @@ class SaleOrderAdapter(Component):
     _magento2_key = 'entity_id'
     _admin_path = '{model}/view/order_id/{id}'
 
-    def _call(self, method, arguments):
+    def _call(self, method, arguments=None, http_method=None, storeview=None):
         try:
-            return super(SaleOrderAdapter, self)._call(method, arguments)
+            return super(SaleOrderAdapter, self)._call(
+                method, arguments, http_method=http_method,
+                storeview=storeview)
         except xmlrpc.client.Fault as err:
             # this is the error in the Magento API
             # when the sales order does not exist
@@ -310,3 +324,6 @@ class SaleOrderAdapter(Component):
     def add_comment(self, id, status, comment=None, notify=False):
         return self._call('%s.addComment' % self._magento_model,
                           [id, status, comment, notify])
+
+    def cancel(self, id):
+        return self._call('orders/%s/cancel' % id, http_method='post')
