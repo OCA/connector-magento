@@ -107,8 +107,11 @@ class SaleImportRule(Component):
         :rtype: boolean
         """
         payment_method = record['payment']['method']
+        user = self.env['res.users'].browse(self.env.uid)
+        company_id = user and user.company_id.id \
+            or self.backend_record.company_id.id
         method = self.env['account.payment.mode'].search(
-            [('name', '=', payment_method), ('company_id', '=', self.backend_record.company_id.id)],
+            [('name', '=', payment_method), ('company_id', '=', company_id)],
             limit=1,
         )
         if not method:
@@ -286,9 +289,12 @@ class SaleOrderImportMapper(Component):
     @mapping
     def payment(self, record):
         record_method = record['payment']['method']
+        user = self.env['res.users'].browse(self.env.uid)
+        company_id = user and user.company_id.id \
+            or self.backend_record.company_id.id
         method = self.env['account.payment.mode'].search(
             [('name', '=', record_method),
-             ('company_id', '=', self.backend_record.company_id.id)],
+             ('company_id', '=', company_id)],
             limit=1,
         )
         assert method, ("method %s should exist because the import fails "
@@ -302,8 +308,11 @@ class SaleOrderImportMapper(Component):
         if not ifield:
             return
 
+        user = self.env['res.users'].browse(self.env.uid)
+        company_id = user and user.company_id.id \
+            or self.backend_record.company_id.id
         carrier = self.env['delivery.carrier'].search(
-            [('magento_code', '=', ifield), ('company_id', '=', self.backend_record.company_id.id)],
+            [('magento_code', '=', ifield), ('company_id', '=', company_id)],
             limit=1,
         )
         if carrier:
