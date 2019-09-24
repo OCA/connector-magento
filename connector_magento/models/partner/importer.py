@@ -2,15 +2,11 @@
 # Copyright 2013-2017 Camptocamp SA
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
-import logging
-
 from collections import namedtuple
 from odoo.addons.component.core import AbstractComponent, Component
 from odoo.addons.connector.exception import MappingError
 from odoo.addons.connector.components.mapper import mapping, only_create
 from ...components.mapper import normalize_datetime
-
-_logger = logging.getLogger(__name__)
 
 
 class PartnerBatchImporter(Component):
@@ -32,8 +28,6 @@ class PartnerBatchImporter(Component):
             from_date=from_date,
             to_date=to_date,
             magento_website_ids=magento_website_ids)
-        _logger.info('search for magento partners %s returned %s',
-                     filters, record_ids)
         for record_id in record_ids:
             self._import_record(record_id)
 
@@ -66,7 +60,13 @@ class PartnerImportMapper(Component):
         parts = [part for part in (record['firstname'],
                                    record.get('middlename'),
                                    record['lastname']) if part]
-        return {'name': ' '.join(parts)}
+        for address in record['addresses']:
+            if address.get('default_billing', False):
+                company = address.get('company', None)
+        return {
+            'name': ' '.join(parts),
+            'company': company,
+        }
 
     @mapping
     def customer_group_id(self, record):
@@ -231,7 +231,7 @@ class PartnerAddressBook(Component):
             # defines if the billing address is merged with the partner
             # or imported as a standalone contact
             merge = False
-            if magento_record.get('is_default_billing'):
+            if magento_record.get('is_default_billing') or magento_record.get('default_billing'):
                 binding_model = self.env['magento.res.partner']
                 partner_binding = binding_model.browse(partner_binding_id)
                 if magento_record.get('company'):
@@ -431,6 +431,8 @@ class AddressImporter(Component):
         data = self._define_partner_relationship(data)
         return super(AddressImporter, self)._create(data)
 
+    def _update(self, binding, data):
+        return super(AddressImporter, self)._update(binding, data)
 
 class AddressImportMapper(Component):
 

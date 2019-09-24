@@ -11,8 +11,7 @@ from odoo.addons.component.core import Component
 
 from odoo.addons.connector.exception import IDMissingInBackend
 from ...components.backend_adapter import MAGENTO_DATETIME_FORMAT
-
-_logger = logging.getLogger(__name__)
+from odoo.addons.queue_job.job import identity_exact
 
 
 class ResPartner(models.Model):
@@ -54,8 +53,16 @@ class MagentoResPartner(models.Model):
     _inherit = 'magento.binding'
     _inherits = {'res.partner': 'odoo_id'}
     _description = 'Magento Partner'
+    _magento_backend_path = None
+    _magento_frontend_path = None
 
     _rec_name = 'name'
+
+    @api.depends('backend_id', 'external_id')
+    def _compute_magento_backend_url(self):
+        for binding in self:
+            binding.magento_backend_url = None
+            binding.magento_frontend_url = None
 
     odoo_id = fields.Many2one(comodel_name='res.partner',
                               string='Partner',
@@ -92,6 +99,20 @@ class MagentoResPartner(models.Model):
              "The partner takes the name of the company and "
              "is not merged with the billing address.",
     )
+
+    @api.multi
+    @job(default_channel='root.magento')
+    def sync_from_magento(self):
+        for binding in self:
+            binding.with_delay(identity_key=identity_exact).run_sync_from_magento()
+
+    @api.multi
+    @job(default_channel='root.magento')
+    def run_sync_from_magento(self):
+        self.ensure_one()
+        with self.backend_id.work_on(self._name) as work:
+            importer = work.component(usage='record.importer')
+            return importer.run(self.external_id, force=True)
 
 
 class MagentoAddress(models.Model):
