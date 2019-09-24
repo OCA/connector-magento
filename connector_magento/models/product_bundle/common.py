@@ -71,6 +71,12 @@ class MagentoProductBundle(models.Model):
         compute='_compute_product_categories',
         string='Product categories'
     )
+    magento_status = fields.Selection([
+        ('2', 'Disabled'),
+        ('1', 'Enabled'),
+    ], default='1', string="Status")
+
+
     _sql_constraints = [
         ('backend_magento_id_uniqueid',
          'UNIQUE (backend_id, magento_id)',

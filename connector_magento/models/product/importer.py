@@ -224,9 +224,12 @@ class ProductImportMapper(Component):
     @mapping
     def is_active(self, record):
         """Check if the product is active in Magento
-        and set active flag in Odoo. Status == 1 in Magento means active.
+        In Odoo set it always active - and map the status into magento_status
         2.0 REST API returns an integer, 1.x a string. """
-        return {'active': (record.get('status') in ('1', 1))}
+        return {
+            'active': True,
+            'magento_status': str(record.get('status')),
+        }
 
     @mapping
     def price(self, record):

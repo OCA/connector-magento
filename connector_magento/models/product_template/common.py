@@ -95,6 +95,10 @@ class MagentoProductTemplate(models.Model):
         string='Product categories'
     )
     magento_url_key = fields.Char(string="URL Key")
+    magento_status = fields.Selection([
+        ('2', 'Disabled'),
+        ('1', 'Enabled'),
+    ], default='1', string="Status")
 
     _sql_constraints = [
         ('backend_magento_id_uniqueid',

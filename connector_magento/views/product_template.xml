@@ -69,6 +69,7 @@
 						<group name="general">
 							<field name="backend_id" />
 							<field name="magento_name" />
+							<field name="magento_status" />
 							<field name="magento_price" />
 							<field name="external_id" readonyl="1"/>
 							<field name="magento_url_key"/>
@@ -147,6 +148,7 @@
 					<field name="display_name" />
 					<field name="backend_id" />
 					<field name="magento_id" />
+					<field name="magento_status" />
 					<field name="attribute_set_id"/>
 					<field name="sync_date" />
 				</tree>

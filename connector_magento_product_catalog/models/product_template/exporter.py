@@ -268,6 +268,10 @@ class ProductTemplateExportMapper(Component):
         return result
 
     @mapping
+    def status(self, record):
+        return {'status': '2' if not record.active else record.magento_status}
+
+    @mapping
     def option_products(self, record):
         return {}
 

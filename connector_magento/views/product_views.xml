@@ -53,6 +53,7 @@
 						<field name="backend_id" />
 						<field name="no_stock_sync"/>
 						<field name="magento_name" />
+						<field name="magento_status" />
 						<field name="attribute_set_id"/>
 						<field name="magento_price" />
 						<field name="external_id" string="Magento SKU"/>
@@ -111,7 +112,7 @@
 				<field name="external_id" />
 				<field name="display_name" />
 				<field name="backend_id" />
-				<!-- <field name="attribute_set_id"/> -->
+				<field name="magento_status" />
 				<field name="sync_date" />
 				<button name="sync_from_magento" type="object" string="Force Sync Magento -> Odoo" />
 			</tree>

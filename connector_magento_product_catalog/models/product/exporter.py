@@ -274,7 +274,7 @@ class ProductProductExportMapper(Component):
 
     @mapping
     def status(self, record):
-        return {'status': 1 if record.active else 2}
+        return {'status': '2' if not record.active else record.magento_status}
 
     @mapping
     def get_type(self, record):
