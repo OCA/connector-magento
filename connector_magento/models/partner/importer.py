@@ -60,9 +60,11 @@ class PartnerImportMapper(Component):
         parts = [part for part in (record['firstname'],
                                    record.get('middlename'),
                                    record['lastname']) if part]
-        for address in record['addresses']:
-            if address.get('default_billing', False):
-                company = address.get('company', None)
+        company = None
+        if 'addresses' in record:
+            for address in record['addresses']:
+                if address.get('default_billing', False):
+                    company = address.get('company', None)
         return {
             'name': ' '.join(parts),
             'company': company,
