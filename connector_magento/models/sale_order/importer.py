@@ -566,44 +566,45 @@ class SaleOrderImporter(Component):
             # "fix" the record with a on-purpose built ID so we can found it
             # from the mapper
             record['customer_id'] = guest_customer_id
+            partner_binding = partner_binder.to_internal(guest_customer_id)
+            if not partner_binding:
+                address = record['billing_address']
 
-            address = record['billing_address']
+                customer_group = record.get('customer_group_id')
+                if customer_group:
+                    self._import_customer_group(customer_group)
+                customer_record = {
+                    'firstname': address['firstname'],
+                    'middlename': address.get('middlename'),
+                    'lastname': address['lastname'],
+                    'prefix': address.get('prefix'),
+                    'suffix': address.get('suffix'),
+                    'email': record.get('customer_email'),
+                    'vat_id': address.get('vat_id'),
+                    'group_id': customer_group,
+                    'gender': record.get('customer_gender'),
+                    'store_id': record['store_id'],
+                    'created_at': normalize_datetime('created_at')(self,
+                                                                record, ''),
+                    'updated_at': False,
+                    'created_in': False,
+                    'dob': record.get('customer_dob'),
+                    'website_id': record.get('website_id'),
+                }
+                mapper = self.component(usage='import.mapper',
+                                        model_name='magento.res.partner')
+                map_record = mapper.map_record(customer_record)
+                map_record.update(guest_customer=True)
+                partner_binding = self.env['magento.res.partner'].create(
+                    map_record.values(for_create=True))
+                partner_binder.bind(guest_customer_id, partner_binding)
 
-            customer_group = record.get('customer_group_id')
-            if customer_group:
-                self._import_customer_group(customer_group)
-            customer_record = {
-                'firstname': address['firstname'],
-                'middlename': address.get('middlename'),
-                'lastname': address['lastname'],
-                'prefix': address.get('prefix'),
-                'suffix': address.get('suffix'),
-                'email': record.get('customer_email'),
-                'vat_id': address.get('vat_id'),
-                'group_id': customer_group,
-                'gender': record.get('customer_gender'),
-                'store_id': record['store_id'],
-                'created_at': normalize_datetime('created_at')(self,
-                                                               record, ''),
-                'updated_at': False,
-                'created_in': False,
-                'dob': record.get('customer_dob'),
-                'website_id': record.get('website_id'),
-            }
-            mapper = self.component(usage='import.mapper',
-                                    model_name='magento.res.partner')
-            map_record = mapper.map_record(customer_record)
-            map_record.update(guest_customer=True)
-            partner_binding = self.env['magento.res.partner'].create(
-                map_record.values(for_create=True))
-            partner_binder.bind(guest_customer_id, partner_binding)
+                addr_mapper = self.component(usage='import.mapper',
+                                        model_name='magento.address')
 
-            addr_mapper = self.component(usage='import.mapper',
-                                     model_name='magento.address')
-
-            map_record = addr_mapper.map_record(address)
-            partner_binding.odoo_id.write(
-                map_record.values(for_create=True))
+                map_record = addr_mapper.map_record(address)
+                partner_binding.odoo_id.write(
+                    map_record.values(for_create=True))
 
 
         else:
