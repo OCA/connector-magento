@@ -7,7 +7,7 @@ from odoo import api, models, fields
 from odoo.addons.queue_job.job import job, related_action
 from odoo.addons.component.core import Component
 from odoo.addons.queue_job.job import identity_exact
-import urllib
+import urllib.request, urllib.parse, urllib.error
 
 
 _logger = logging.getLogger(__name__)
@@ -56,8 +56,8 @@ class ProductTemplateAdapter(Component):
 
     def update_product_links(self, sku, items):
         def escape(term):
-            if isinstance(term, basestring):
-                return urllib.quote(term.encode('utf-8'), safe='')
+            if isinstance(term, str):
+                return urllib.parse.quote(term.encode('utf-8'), safe='')
             return term
 
         if self.work.magento_api._location.version == '2.0':
@@ -69,8 +69,8 @@ class ProductTemplateAdapter(Component):
 
     def remove_special_price(self, sku):
         def escape(term):
-            if isinstance(term, basestring):
-                return urllib.quote(term.encode('utf-8'), safe='')
+            if isinstance(term, str):
+                return urllib.parse.quote(term.encode('utf-8'), safe='')
             return term
 
         if self.work.magento_api._location.version == '2.0':

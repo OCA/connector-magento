@@ -5,8 +5,8 @@
 import logging
 from odoo import models, fields, api, _
 from odoo.addons.component.core import Component
-import urllib
-from urlparse import urljoin
+import urllib.request, urllib.parse, urllib.error
+from urllib.parse import urljoin
 import base64
 import uuid
 
@@ -28,7 +28,7 @@ class MagentoProductMedia(models.Model):
     @api.depends('url')
     def _get_image(self):
         for media in self:
-            f = urllib.urlopen(media.url)
+            f = urllib.request.urlopen(media.url)
             if f.code == 200:
                 media.image = base64.b64encode(f.read())
             f.close()
@@ -53,8 +53,8 @@ class MagentoProductMedia(models.Model):
     disabled = fields.Boolean(string="Disabled", default=False)
     mimetype = fields.Char(string="Mimetype", required=True, default='image/jpeg')
     media_type = fields.Selection([
-        ('image', _(u'Image')),
-        ('external-video', _(u'External Video')),
+        ('image', _('Image')),
+        ('external-video', _('External Video')),
     ], default='image', string='Media Type')
     image_type_image = fields.Boolean(string="Image", default=False)
     image_type_small_image = fields.Boolean(string="Small Image", default=False)
@@ -114,8 +114,8 @@ class ProductMediaAdapter(Component):
 
     def _read_url(self, id, sku):
         def escape(term):
-            if isinstance(term, basestring):
-                return urllib.quote(term.encode('utf-8'), safe='')
+            if isinstance(term, str):
+                return urllib.parse.quote(term.encode('utf-8'), safe='')
             return term
 
         return 'products/%s/media/%s' % (escape(sku), id)

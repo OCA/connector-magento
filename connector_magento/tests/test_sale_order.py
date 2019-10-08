@@ -154,8 +154,8 @@ class TestSaleOrder(MagentoSyncTestCase):
         self.backend.account_analytic_id = account_analytic_id
         self.backend.fiscal_position_id = fp1.id
         binding = self._import_sale_order(100000201)
-        self.assertEquals(binding.project_id, account_analytic_id)
-        self.assertEquals(binding.fiscal_position_id, fp1)
+        self.assertEqual(binding.project_id, account_analytic_id)
+        self.assertEqual(binding.fiscal_position_id, fp1)
         binding.odoo_id.unlink()
         binding.unlink()
         # define options at the website level
@@ -165,8 +165,8 @@ class TestSaleOrder(MagentoSyncTestCase):
         website_id.specific_account_analytic_id = account_analytic_id
         website_id.specific_fiscal_position_id = fp2.id
         binding = self._import_sale_order(100000201)
-        self.assertEquals(binding.project_id, account_analytic_id)
-        self.assertEquals(binding.fiscal_position_id, fp2)
+        self.assertEqual(binding.project_id, account_analytic_id)
+        self.assertEqual(binding.fiscal_position_id, fp2)
         binding.odoo_id.unlink()
         binding.unlink()
         # define options at the store level
@@ -176,8 +176,8 @@ class TestSaleOrder(MagentoSyncTestCase):
         store_id.specific_account_analytic_id = account_analytic_id
         store_id.specific_fiscal_position_id = fp3.id
         binding = self._import_sale_order(100000201)
-        self.assertEquals(binding.project_id, account_analytic_id)
-        self.assertEquals(binding.fiscal_position_id, fp3)
+        self.assertEqual(binding.project_id, account_analytic_id)
+        self.assertEqual(binding.fiscal_position_id, fp3)
         binding.odoo_id.unlink()
         binding.unlink()
         # define options at the storeview level
@@ -187,8 +187,8 @@ class TestSaleOrder(MagentoSyncTestCase):
         storeview_id.specific_account_analytic_id = account_analytic_id
         storeview_id.specific_fiscal_position_id = fp4.id
         binding = self._import_sale_order(100000201)
-        self.assertEquals(binding.project_id, account_analytic_id)
-        self.assertEquals(binding.fiscal_position_id, fp4)
+        self.assertEqual(binding.project_id, account_analytic_id)
+        self.assertEqual(binding.fiscal_position_id, fp4)
 
     def test_sale_order_cancel_delay_job(self):
         """ Cancel an order, delay a cancel job """

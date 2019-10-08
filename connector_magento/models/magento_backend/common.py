@@ -12,7 +12,7 @@ from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 
 from odoo.addons.component.core import Component
-from odoo.addons.connector.checkpoint import checkpoint
+from odoo.addons.connector.models import checkpoint
 from ...components.backend_adapter import MagentoLocation, MagentoAPI
 from odoo.addons.queue_job.job import identity_exact
 
@@ -72,6 +72,7 @@ class MagentoBackend(models.Model):
         # raise exceptions.UserError(_('Connection successful'))
         self.write({'state': 'checked'})
 
+    name = fields.Char(string='Name')
     active = fields.Boolean(
         string='Active',
         default=True
@@ -324,11 +325,11 @@ class MagentoBackend(models.Model):
                     self.env[model_name].import_batch(backend)
             return True
         except Exception as e:
-            _logger.error(e.message, exc_info=True)
+            _logger.error(str(e), exc_info=True)
             raise UserError(
-                _(u"Check your configuration, we can't get the data. "
-                  u"Here is the error:\n%s") %
-                str(e).decode('utf-8', 'ignore'))
+                _("Check your configuration, we can't get the data. "
+                  "Here is the error:\n%s") %
+                str(e))
 
     @api.multi
     def button_resync_products(self):

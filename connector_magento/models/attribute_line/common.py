@@ -7,10 +7,10 @@ _logger = logging.getLogger(__name__)
 class MagentoTemplateAttributeline(models.Model):
     _name = 'magento.template.attribute.line'
     _inherit = 'magento.binding'
-    _inherits = {'product.attribute.line': 'odoo_id'}
+    _inherits = {'product.template.attribute.line': 'odoo_id'}
     _description = 'Magento attribute line'
 
-    odoo_id = fields.Many2one(comodel_name='product.attribute.line',
+    odoo_id = fields.Many2one(comodel_name='product.template.attribute.line',
                               string='Product attribute line',
                               required=True,
                               ondelete='cascade')
@@ -61,8 +61,8 @@ class MagentoTemplateAttributeline(models.Model):
         return super(MagentoTemplateAttributeline, self).create(vals)
 
 
-class ProductAttributeline(models.Model):
-    _inherit = 'product.attribute.line'
+class ProductTemplateAttributeline(models.Model):
+    _inherit = 'product.template.attribute.line'
 
     magento_bind_ids = fields.One2many(
         comodel_name='magento.template.attribute.line',

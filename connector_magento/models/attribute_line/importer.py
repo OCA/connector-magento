@@ -87,7 +87,7 @@ class AttributeLineImportMapper(Component):
                                record['attribute_id'])
         if not template:
             return
-        line = self.env['product.attribute.line'].search([
+        line = self.env['product.template.attribute.line'].search([
             ('product_tmpl_id', '=', template.id),
             ('attribute_id', '=', attribute.id),
         ])

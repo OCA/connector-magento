@@ -3,7 +3,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 from odoo import fields, tools
 from odoo.addons.component.core import Component
-from odoo.addons.connector.unit.mapper import mapping, only_create
+from odoo.addons.connector.components.mapper import mapping, only_create
 import logging
 
 _logger = logging.getLogger(__name__)
@@ -136,9 +136,9 @@ class ProductAttributeExportMapper(Component):
         for mvalue in record.magento_attribute_value_ids:
             map_record = mvalue_mapper.map_record(mvalue, parent=record)
             mids.append(mvalue.odoo_id.id)
-            mapped.append(map_record.values())
+            mapped.append(list(map_record.values()))
         if self.backend_record.export_all_options:
             for value in record.value_ids.filtered(lambda v: v.id not in mids):
                 map_record = value_mapper.map_record(value, parent=record)
-                mapped.append(map_record.values())
+                mapped.append(list(map_record.values()))
         return {'options': mapped}

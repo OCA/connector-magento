@@ -5,8 +5,8 @@
 import logging
 from odoo import models, fields, api, _
 from odoo.addons.component.core import Component
-import urllib
-from urlparse import urljoin
+import urllib.request, urllib.parse, urllib.error
+from urllib.parse import urljoin
 import base64
 
 
@@ -22,8 +22,8 @@ class ProductMediaAdapter(Component):
 
     def _create_url(self, binding=None):
         def escape(term):
-            if isinstance(term, basestring):
-                return urllib.quote(term.encode('utf-8'), safe='')
+            if isinstance(term, str):
+                return urllib.parse.quote(term.encode('utf-8'), safe='')
             return term
 
         pbinding = binding.magento_product_id if binding.magento_product_id else binding.magento_product_tmpl_id
@@ -31,8 +31,8 @@ class ProductMediaAdapter(Component):
 
     def _write_url(self, id, binding=None):
         def escape(term):
-            if isinstance(term, basestring):
-                return urllib.quote(term.encode('utf-8'), safe='')
+            if isinstance(term, str):
+                return urllib.parse.quote(term.encode('utf-8'), safe='')
             return term
 
         pbinding = binding.magento_product_id if binding.magento_product_id else binding.magento_product_tmpl_id
@@ -40,8 +40,8 @@ class ProductMediaAdapter(Component):
 
     def _delete_url(self, id, binding=None):
         def escape(term):
-            if isinstance(term, basestring):
-                return urllib.quote(term.encode('utf-8'), safe='')
+            if isinstance(term, str):
+                return urllib.parse.quote(term.encode('utf-8'), safe='')
             return term
 
         pbinding = binding.magento_product_id if binding.magento_product_id else binding.magento_product_tmpl_id

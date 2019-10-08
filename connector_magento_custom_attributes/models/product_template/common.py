@@ -27,7 +27,7 @@ class MagentoProductTemplate(models.Model):
             'connector_magento_product_catalog',
             'action_magento_custom_template_attributes')
 
-        action['domain'] = unicode([('magento_product_template_id', '=', self.id)])
+        action['domain'] = str([('magento_product_template_id', '=', self.id)])
         ctx = action.get('context', '{}') or '{}'
 
         action_context = ast.literal_eval(ctx)

@@ -5,8 +5,8 @@
 import logging
 from odoo import models, fields, api, _
 from odoo.addons.component.core import Component
-import urllib
-from urlparse import urljoin
+import urllib.request, urllib.parse, urllib.error
+from urllib.parse import urljoin
 import base64
 
 

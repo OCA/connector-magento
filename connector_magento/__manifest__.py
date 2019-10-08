@@ -1,17 +1,18 @@
 # -*- coding: utf-8 -*-
 # © 2013 Guewen Baconnier,Camptocamp SA,Akretion
 # © 2016 Sodexis
+# © 2019 Wolfgang Pichler, Callino
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+# Removed              'product_multi_category' dependency
 
 {'name': 'Magento Connector',
- 'version': '10.0.1.0.0',
+ 'version': '12.0.1.0.0',
  'category': 'Connector',
  'depends': ['account',
              'base_technical_user',
              'product',
              'delivery',
              'sale_stock',
-             'product_multi_category',
              'connector_ecommerce',
              ],
  'external_dependencies': {

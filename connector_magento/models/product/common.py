@@ -11,7 +11,7 @@ from odoo.addons.component.core import Component
 from odoo.addons.queue_job.job import job, related_action
 from ...components.backend_adapter import MAGENTO_DATETIME_FORMAT
 import odoo.addons.decimal_precision as dp
-from urlparse import urljoin
+from urllib.parse import urljoin
 from odoo.addons.queue_job.job import identity_exact
 
 

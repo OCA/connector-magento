@@ -7,8 +7,8 @@ from odoo import api, models, fields
 from odoo.addons.component.core import Component
 from odoo.addons.queue_job.job import job, related_action
 from odoo.addons.queue_job.job import identity_exact
-import urllib
-from urlparse import urljoin
+import urllib.request, urllib.parse, urllib.error
+from urllib.parse import urljoin
 
 
 _logger = logging.getLogger(__name__)
@@ -60,8 +60,8 @@ class ProductProductAdapter(Component):
 
     def remove_special_price(self, sku):
         def escape(term):
-            if isinstance(term, basestring):
-                return urllib.quote(term.encode('utf-8'), safe='')
+            if isinstance(term, str):
+                return urllib.parse.quote(term.encode('utf-8'), safe='')
             return term
 
         if self.work.magento_api._location.version == '2.0':

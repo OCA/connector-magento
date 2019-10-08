@@ -115,7 +115,7 @@ class AccountPaymentImporter(Component):
             self.backend_record._name,
             self.backend_record.id,
             self.work.model_name,
-            unicode(self.external_id),
+            str(self.external_id),
         )
 
         self.magento_record = record

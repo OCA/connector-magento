@@ -47,7 +47,7 @@ class MagentoProductCategory(models.Model):
             pt_ids = {}
             for pp in mcategory.product_position_ids:
                 pt_ids[pp.product_template_id] = pp.id
-            p_tmpl_ids = pt_ids.keys()
+            p_tmpl_ids = list(pt_ids.keys())
             ppids = []
             missing = list(set(tmpl_ids) - set(p_tmpl_ids))
             # Create missing entries

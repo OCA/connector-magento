@@ -29,7 +29,7 @@
 						<field name="image_type_swatch"/>
 					</group>
 					<div>
-						<img t-attf-src="#{ url }" t-attf-name="#{ label }"/>
+						<img t-attf-src="#{ url }" t-attf-name="#{ label }" t-attf-alt="#{ label }"/>
 					</div>
 				</sheet>
 			</form>
@@ -46,14 +46,17 @@
                 <field name="magento_product_tmpl_id" string="Configurable"/>
                 <group expand="0" string="Group By...">
                     <filter string="Backend"
+							name="backend"
                             icon="terp-folder-orange"
                             domain="[]"
                             context="{'group_by':'backend_id'}"/>
                     <filter string="Product"
+							name="product"
                             icon="terp-folder-orange"
                             domain="[]"
                             context="{'group_by':'magento_product_id'}"/>
                     <filter string="Configurable"
+							name="template"
                             icon="terp-folder-orange"
                             domain="[]"
                             context="{'group_by':'magento_product_tmpl_id'}"/>
@@ -66,7 +69,7 @@
 		<field name="name">magento.product.media.tree</field>
 		<field name="model">magento.product.media</field>
 		<field name="arch" type="xml">
-			<tree order="position">
+			<tree default_order="position">
 				<field name="position" widget="handle"/>
 				<field name="magento_product_id" />
 				<field name="magento_product_tmpl_id" />

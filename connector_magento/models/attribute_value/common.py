@@ -1,7 +1,7 @@
 import logging
 from odoo import models, fields, api
 from odoo.addons.component.core import Component
-import urllib
+import urllib.request, urllib.parse, urllib.error
 _logger = logging.getLogger(__name__)
 
 
@@ -102,8 +102,8 @@ class ProductAttributeValueAdapter(Component):
 
     def delete(self, magento_value_id, magento_attribute_id):
         def escape(term):
-            if isinstance(term, basestring):
-                return urllib.quote(term.encode('utf-8'), safe='')
+            if isinstance(term, str):
+                return urllib.parse.quote(term.encode('utf-8'), safe='')
             return term
         """ Delete a record on the external system """
         if self.work.magento_api._location.version == '2.0':

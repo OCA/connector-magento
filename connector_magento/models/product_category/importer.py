@@ -4,7 +4,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
 from odoo.addons.component.core import Component
-from odoo.addons.connector.components.mapper import mapping
+from odoo.addons.connector.components.mapper import mapping, only_create
 from odoo.addons.connector.exception import MappingError
 
 
@@ -52,7 +52,7 @@ class ProductCategoryBatchImporter(Component):
             base_priority = 10
 
             def import_nodes(tree, level=0):
-                for node_id, children in tree.iteritems():
+                for node_id, children in tree.items():
                     # By changing the priority, the top level category has
                     # more chance to be imported before the childrens.
                     # However, importers have to ensure that their parent is
@@ -122,6 +122,16 @@ class ProductCategoryImportMapper(Component):
     def backend_id(self, record):
         return {'backend_id': self.backend_record.id}
 
+    @only_create
+    @mapping
+    def odoo_id(self, record):
+        if self.backend_record.auto_create_category:
+            odoo_category = self.env['product.category'].create({
+                'name': record['name']
+            })
+            return {
+                'odoo_id': odoo_category.id
+            }
     @mapping
     def parent_id(self, record):
         if not record.get('parent_id'):
@@ -133,6 +143,5 @@ class ProductCategoryImportMapper(Component):
             raise MappingError("The product category with "
                                "magento id %s is not imported." %
                                record['parent_id'])
-
         parent = parent_binding.odoo_id
         return {'parent_id': parent.id, 'magento_parent_id': parent_binding.id}

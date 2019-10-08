@@ -27,7 +27,7 @@
             <form string="Magento Sales Orders"
                     create="false" delete="false">
                 <header>
-                    <field name="magento_backend_url" widget="url" text="Open in Magento Backend" class="btn fa fa-link"/>
+                    <field name="magento_backend_url" widget="url" text="Open in Magento Backend" class="fa fa-link"/>
                 </header>
                 <sheet>
                     <div>
@@ -86,7 +86,7 @@
         <field name="model">magento.sale.order</field>
         <field name="arch" type="xml">
             <tree string="Magento Sales Orders"
-                    create="false" delete="false" order_by="date_order desc">
+                    create="false" delete="false" default_order="date_order desc">
                 <field name="backend_id"/>
                 <field name="store_id"/>
                 <field name="storeview_id"/>

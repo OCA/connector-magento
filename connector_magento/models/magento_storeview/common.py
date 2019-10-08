@@ -4,7 +4,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
 import logging
-import urllib
+import urllib.request, urllib.parse, urllib.error
 
 from datetime import datetime, timedelta
 from odoo import models, fields, api
@@ -120,15 +120,10 @@ class StoreviewAdapter(Component):
         if self.work.magento_api._location.version == '2.0':
             if attributes:
                 raise NotImplementedError  # TODO
-            res = self._call('store/storeViews')
-            storeview = next((
-                record for record in res 
-                if unicode(record['id']).encode('utf-8') == id), 
-                None)
-            storeview.update(next((
-                record for record in self._call('store/storeConfigs')
-                if unicode(record['id']).encode('utf-8') == id),
-                None))
+            views = self._call('store/storeViews')
+            configs = self._call('store/storeConfigs')
+            storeview = [view for view in views if str(view['id'])==id][0]
+            storeview_config = [config for config in configs if str(config['id']) == id][0]
+            storeview.update(storeview_config)
             return storeview
         return super(StoreviewAdapter, self).read(id, attributes=attributes)
-    

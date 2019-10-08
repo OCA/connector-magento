@@ -4,8 +4,8 @@
 
 import socket
 import logging
-import xmlrpclib
-import urllib
+import xmlrpc.client
+import urllib.request, urllib.parse, urllib.error
 
 from odoo.addons.component.core import AbstractComponent
 from odoo.addons.queue_job.exception import RetryableJobError
@@ -98,7 +98,7 @@ class MagentoAPI(object):
             start = datetime.now()
             try:
                 result = self.api.call(method, arguments, http_method=http_method, storeview=storeview)
-            except Exception, e:
+            except Exception as e:
                 try:
                     arguments_string = json.dumps(arguments)
                 except:
@@ -126,7 +126,7 @@ class MagentoAPI(object):
             raise NetworkRetryableError(
                 'A network error caused the failure of the job: '
                 '%s' % err)
-        except xmlrpclib.ProtocolError as err:
+        except xmlrpc.client.ProtocolError as err:
             if err.errcode in [502,   # Bad gateway
                                503,   # Service unavailable
                                504]:  # Gateway timeout
@@ -218,12 +218,12 @@ class GenericAdapter(AbstractComponent):
         operators = [
             'eq', 'finset', 'from', 'gt', 'gteq', 'in', 'like', 'lt',
             'lteq', 'moreq', 'neq', 'nin', 'notnull', 'null', 'to']
-        for field in filters.keys():
-            for op in filters[field].keys():
+        for field in list(filters.keys()):
+            for op in list(filters[field].keys()):
                 assert op in operators
                 value = filters[field][op]
                 if isinstance(value, (list, set)):
-                    value = ','.join([unicode(v) for v in value])
+                    value = ','.join([str(v) for v in value])
                 res.update({
                     expr % (count, 'field'): field,
                     expr % (count, 'condition_type'): op,
@@ -271,8 +271,8 @@ class GenericAdapter(AbstractComponent):
 
     def _read_url(self, id, binding=None):
         def escape(term):
-            if isinstance(term, basestring):
-                return urllib.quote(term.encode('utf-8'), safe='')
+            if isinstance(term, str):
+                return urllib.parse.quote(term.encode('utf-8'), safe='')
             return term
 
         if self._magento2_key:
@@ -369,8 +369,8 @@ class GenericAdapter(AbstractComponent):
 
     def _delete_url(self, id, binding=None):
         def escape(term):
-            if isinstance(term, basestring):
-                return urllib.quote(term.encode('utf-8'), safe='')
+            if isinstance(term, str):
+                return urllib.parse.quote(term.encode('utf-8'), safe='')
             return term
 
         return '%s/%s' % (self._magento2_model, escape(id))

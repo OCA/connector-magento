@@ -92,6 +92,7 @@
                 <field name="default_code"/>
                 <group expand="0" string="Group By...">
                     <filter string="Backend"
+							name="backend"
                             icon="terp-folder-orange"
                             domain="[]"
                             context="{'group_by':'backend_id'}"/>

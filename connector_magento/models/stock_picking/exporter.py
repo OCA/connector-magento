@@ -2,7 +2,7 @@
 # Copyright 2013-2017 Camptocamp SA
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
-import xmlrpclib
+import xmlrpc.client
 import logging
 import odoo
 from odoo import _
@@ -87,7 +87,7 @@ class MagentoPickingExporter(Component):
                 'items': [{
                     'order_item_id': key,
                     'qty': val,
-                } for key, val in lines_info.iteritems()]
+                } for key, val in lines_info.items()]
             }
             magento_id = self.backend_adapter._call(
                 'order/%s/ship' % picking.sale_id.magento_bind_ids[0].external_id,
@@ -112,7 +112,7 @@ class MagentoPickingExporter(Component):
                                 "found: %s" % picking_method)
             try:
                 external_id = self.backend_adapter.create(*args)
-            except xmlrpclib.Fault as err:
+            except xmlrpc.client.Fault as err:
                 # When the shipping is already created on Magento, it returns:
                 # <Fault 102: u"Impossible de faire
                 # l\'exp\xe9dition de la commande.">

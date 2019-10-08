@@ -185,7 +185,7 @@ class MagentoImporter(AbstractComponent):
             self.external_id = str(external_id[self._magento_id_field])
         else:
             self.external_id = external_id
-        if not isinstance(self.external_id, basestring):
+        if not isinstance(self.external_id, str):
             self.external_id = str(self.external_id)
         lock_name = 'import({}, {}, {}, {})'.format(
             self.backend_record._name,

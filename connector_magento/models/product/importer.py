@@ -279,7 +279,7 @@ class ProductImportMapper(Component):
         attribute_value_ids = [(5, )]
         for attribute in record['custom_attributes']:
             mattribute = attribute_binder.to_internal(attribute['attribute_code'], unwrap=False, external_field='attribute_code')
-            if not mattribute.create_variant:
+            if mattribute.create_variant == 'no_variant':
                 # We do ignore attributes which do not create a variant
                 continue
             if not mattribute:
@@ -361,9 +361,9 @@ class ProductImportMapper(Component):
 
             if record.get(att.name):
                 try:
-                    searchn = u'_'.join((att.external_id, str(record.get(att.name)))).encode('utf-8')
+                    searchn = '_'.join((att.external_id, str(record.get(att.name)))).encode('utf-8')
                 except UnicodeEncodeError:
-                    searchn = u'_'.join((att.external_id, record.get(att.name))).encode('utf-8')
+                    searchn = '_'.join((att.external_id, record.get(att.name))).encode('utf-8')
                 att_val = self.env['magento.product.attribute.value'].search(
                     [('external_id', '=', searchn)], limit=1)
                 _logger.debug("Import custom att_val %r %r " % (att_val, searchn))

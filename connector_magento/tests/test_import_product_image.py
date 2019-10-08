@@ -2,7 +2,7 @@
 # Copyright 2015-2017 Camptocamp SA
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 import mock
 from base64 import b64encode
 
@@ -120,7 +120,7 @@ class TestImportProductImage(TransactionComponentRegistryCase):
         file3 = {'file': 'file3', 'types': ['thumbnail'], 'position': '4'}
         file4 = {'file': 'file4', 'types': [], 'position': '10'}
         images = [file2, file1, file4, file3]
-        self.assertEquals(self.image_importer._sort_images(images),
+        self.assertEqual(self.image_importer._sort_images(images),
                           [file4, file3, file2, file1])
 
     def test_import_images_404(self):
@@ -140,7 +140,7 @@ class TestImportProductImage(TransactionComponentRegistryCase):
         with mock.patch('urllib2.urlopen') as urlopen:
             def image_url_response(url):
                 if url._Request__original in (url_tee1, url_tee2):
-                    raise urllib2.HTTPError(url, 404, '404', None, None)
+                    raise urllib.error.HTTPError(url, 404, '404', None, None)
                 else:
                     return MockResponseImage(PNG_IMG_4PX_GREEN)
             urlopen.side_effect = image_url_response
@@ -166,12 +166,12 @@ class TestImportProductImage(TransactionComponentRegistryCase):
             def image_url_response(url):
                 url = url.get_full_url()
                 if url == url_tee2:
-                    raise urllib2.HTTPError(url, 404, '404', None, None)
+                    raise urllib.error.HTTPError(url, 404, '404', None, None)
                 elif url == url_tee1:
-                    raise urllib2.HTTPError(url, 403, '403', None, None)
+                    raise urllib.error.HTTPError(url, 403, '403', None, None)
                 else:
                     return MockResponseImage(PNG_IMG_4PX_GREEN)
 
             urlopen.side_effect = image_url_response
-            with self.assertRaises(urllib2.HTTPError):
+            with self.assertRaises(urllib.error.HTTPError):
                 self.image_importer.run(122, binding)

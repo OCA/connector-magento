@@ -242,9 +242,9 @@ class ProductBundleImportMapper(Component):
             
             if record.get(att.name):
                 try:
-                    searchn = u'_'.join((att.external_id,str(record.get(att.name)))).encode('utf-8')
+                    searchn = '_'.join((att.external_id,str(record.get(att.name)))).encode('utf-8')
                 except UnicodeEncodeError:
-                    searchn = u'_'.join((att.external_id,record.get(att.name))).encode('utf-8')
+                    searchn = '_'.join((att.external_id,record.get(att.name))).encode('utf-8')
                 att_val = self.env['magento.product.attribute.value'].search(
                     [('external_id', '=', searchn)], limit=1)
                 _logger.debug("Import custom att_val %r %r " % (att_val, searchn ))

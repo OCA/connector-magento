@@ -121,10 +121,12 @@
 					<field name="magento_id" string="Magento ID"/>
 					<group expand="0" string="Group By...">
 						<filter string="Backend"
+								name="backend"
 								icon="terp-folder-orange"
 								domain="[]"
 								context="{'group_by':'backend_id'}"/>
 						<filter string="Attribute Set"
+								name="attribute_set_id"
 								icon="terp-folder-orange"
 								domain="[]"
 								context="{'group_by':'attribute_set_id'}"/>

@@ -15,7 +15,6 @@ from . import attribute
 from . import attribute_line
 from . import attribute_value
 from . import attributes_set
-from . import template_custom_attributes
 from . import product_template
 from . import product_category
 from . import queue_job

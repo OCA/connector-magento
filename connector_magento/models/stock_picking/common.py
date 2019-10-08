@@ -4,7 +4,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 import logging
-import xmlrpclib
+import xmlrpc.client
 from odoo import api, models, fields
 from odoo.addons.queue_job.job import job, related_action
 from odoo.addons.connector.exception import IDMissingInBackend
@@ -82,7 +82,7 @@ class StockPickingAdapter(Component):
         try:
             return super(StockPickingAdapter, self)._call(
                 method, arguments, http_method=http_method, storeview=storeview)
-        except xmlrpclib.Fault as err:
+        except xmlrpc.client.Fault as err:
             # this is the error in the Magento API
             # when the shipment does not exist
             if err.faultCode == 100:

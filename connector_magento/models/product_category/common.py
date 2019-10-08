@@ -5,7 +5,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 import logging
-import xmlrpclib
+import xmlrpc.client
 from odoo import models, fields, api
 from odoo.addons.connector.exception import IDMissingInBackend
 from odoo.addons.component.core import Component
@@ -93,7 +93,7 @@ class MagentoProductCategory(models.Model):
             pt_ids = {}
             for pp in mcategory.product_position_ids:
                 pt_ids[pp.product_template_id] = pp.id
-            p_tmpl_ids = pt_ids.keys()
+            p_tmpl_ids = list(pt_ids.keys())
             ppids = []
             missing = list(set(tmpl_ids) - set(p_tmpl_ids))
             # Create missing entries
@@ -134,7 +134,7 @@ class ProductCategoryAdapter(Component):
     def _call(self, method, arguments, http_method=None, storeview=None):
         try:
             return super(ProductCategoryAdapter, self)._call(method, arguments, http_method=http_method, storeview=storeview)
-        except xmlrpclib.Fault as err:
+        except xmlrpc.client.Fault as err:
             # 101 is the error in the Magento API
             # when the category does not exist
             if err.faultCode == 102:

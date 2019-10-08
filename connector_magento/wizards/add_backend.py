@@ -57,7 +57,7 @@ class WizardModel(models.TransientModel):
 
     backend_id = fields.Many2one(comodel_name='magento.backend', required=True, default=get_default_backend)
     model = fields.Selection(selection=[
-        ('product.attribute', _(u'Attribute')),
+        ('product.attribute', _('Attribute')),
     ], string='Model', default=get_default_model)
     attributes_to_export_ids = fields.Many2many(string='Product Attributes To export',
                                                 comodel_name='product.attribute', default=get_default_attributes)

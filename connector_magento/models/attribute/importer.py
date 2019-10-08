@@ -114,7 +114,7 @@ class AttributeImportMapper(Component):
     @mapping
     def create_variant(self, record):
         # Is by default False - will get set as soon as this attribute appears in a configureable product
-        return {'create_variant': False}
+        return {'create_variant': 'no_variant'}
 
     @mapping
     def backend_id(self, record):

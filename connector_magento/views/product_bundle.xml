@@ -57,7 +57,7 @@
 
 			<field name="arch" type="xml">
 				<tree>
-					<field name="position" widet="sequence"/>
+					<field name="position" widget="handle"/>
 					<field name="external_id" />
 					<field name="title" />
 					<field name="required" />
@@ -97,7 +97,7 @@
 
 			<field name="arch" type="xml">
 				<tree>
-					<field name="position" widet="sequence"/>
+					<field name="position" widget="handle"/>
 					<field name="magento_product_id" />
 					<field name="qty" />
 					<field name="is_default" />

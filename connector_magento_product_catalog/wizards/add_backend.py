@@ -58,9 +58,9 @@ class WizardModel(models.TransientModel):
         return super(WizardModel, self).check_backend_binding(to_export_ids, dest_model)
 
     model = fields.Selection(selection_add=[
-        ('product.template', _(u'Product templates')),
-        ('product.product', _(u'Product')),
-        ('product.category', _(u'Product category')),
+        ('product.template', _('Product templates')),
+        ('product.product', _('Product')),
+        ('product.category', _('Product category')),
     ], string='Model')
     to_export_ids = fields.Many2many(string='Products to export',
                                      comodel_name='product.product', default=get_default_products)

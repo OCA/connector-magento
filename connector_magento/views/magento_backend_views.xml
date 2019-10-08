@@ -58,7 +58,7 @@
 						<page name="import" string="Imports">
 							<group>
 								<div>
-									<label string="Import partners since" class="oe_inline" />
+									<label for="import_partners_from_date" string="Import partners since" class="oe_inline" />
 									<field name="import_partners_from_date" class="oe_inline"
 										nolabel="1" />
 								</div>
@@ -213,7 +213,7 @@
 							<group colspan="4">
 								<div>
 									<label string="Import Sale Orders since"
-										class="oe_inline" />
+										class="oe_inline" for="import_orders_from_date"/>
 									<field name='import_orders_from_date' class="oe_inline"
 										nolabel="1" />
 								</div>
@@ -365,7 +365,7 @@
 							<group name="tax_class">
 								<div>
 									<label string="Import all tax classes"
-										class="oe_inline" />
+										class="oe_inline" for="import_tax_classes"/>
 								</div>
 								<button name="import_tax_classes" type="object"
 									class="oe_highlight" string="Import in background" />
@@ -373,7 +373,7 @@
 							<group name="customers">
 								<div>
 									<label string="Import all customer groups"
-										class="oe_inline" />
+										class="oe_inline" for="import_customer_groups"/>
 								</div>
 								<button name="import_customer_groups" type="object"
 									class="oe_highlight" string="Import in background" />
@@ -381,7 +381,7 @@
 							<group>
 								<div>
 									<label string="Import partners from all websites"
-										class="oe_inline" />
+										class="oe_inline" for="import_partners"/>
 								</div>
 								<button name="import_partners" type="object"
 									class="oe_highlight" string="Import in background" />
@@ -390,7 +390,7 @@
 
 								<div>
 									<label string="Import products categories since"
-										class="oe_inline" />
+										class="oe_inline" for="import_categories_from_date"/>
 									<field name="import_categories_from_date"
 										class="oe_inline" nolabel="1" />
 								</div>
@@ -401,14 +401,14 @@
 								<div>
 									<label
 										string="Import attribute sets, attributes and value"
-										class="oe_inline" />
+										class="oe_inline" for="import_attributes_set"/>
 								</div>
 								<button name="import_attributes_set" type="object"
 									class="oe_highlight" string="Import in background" />
 							</group>
 							<group>
 								<div>
-									<label string="Import products since" class="oe_inline" />
+									<label string="Import products since" class="oe_inline" for="import_products_from_date"/>
 									<field name="import_products_from_date" class="oe_inline"
 										nolabel="1" />
 								</div>
@@ -417,7 +417,7 @@
 							</group>
 							<group>
 								<div>
-									<label string="Import product templates since" class="oe_inline" />
+									<label string="Import product templates since" class="oe_inline" for="import_product_templates_from_date"/>
 									<field name="import_product_templates_from_date" class="oe_inline"
 										nolabel="1" />
 								</div>
@@ -426,7 +426,7 @@
 							</group>
 							<group>
 								<div>
-									<label string="Import product bundles since" class="oe_inline" />
+									<label string="Import product bundles since" class="oe_inline" for="import_product_bundles_from_date"/>
 									<field name="import_product_bundles_from_date" class="oe_inline"
 										nolabel="1" />
 								</div>
@@ -436,7 +436,7 @@
 							<group>
 								<div>
 									<label string="Import sales orders from all store views"
-										class="oe_inline" />
+										class="oe_inline" for="%(action_magento_storeview)d"/>
 
 									<button name="%(action_magento_storeview)d"
 										type="action" class="oe_highlight oe_link"
@@ -448,7 +448,7 @@
 							<group>
 								<div>
 									<label string="Update all the products stock quantities"
-										class="oe_inline" />
+										class="oe_inline" for="update_product_stock_qty"/>
 								</div>
 								<button name="update_product_stock_qty" type="object"
 									class="oe_highlight" string="Update" />

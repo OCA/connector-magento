@@ -6,9 +6,9 @@ import logging
 from odoo import api, models, fields, _
 from odoo.addons.component.core import Component
 from ...components.backend_adapter import MAGENTO_DATETIME_FORMAT
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import odoo.addons.decimal_precision as dp
-from urlparse import urljoin
+from urllib.parse import urljoin
 from odoo.addons.queue_job.job import job
 from odoo.addons.queue_job.job import identity_exact
 
@@ -179,7 +179,7 @@ class ProductProduct(models.Model):
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
-    type = fields.Selection(selection_add=[('bundle', _(u'Bundle'))])
+    type = fields.Selection(selection_add=[('bundle', _('Bundle'))])
 
 
 class ProductBundleAdapter(Component):
@@ -229,8 +229,8 @@ class ProductBundleAdapter(Component):
 
     def list_variants(self, sku):
         def escape(term):
-            if isinstance(term, basestring):
-                return urllib.quote(term.encode('utf-8'), safe='')
+            if isinstance(term, str):
+                return urllib.parse.quote(term.encode('utf-8'), safe='')
             return term
 
         if self.work.magento_api._location.version == '2.0':

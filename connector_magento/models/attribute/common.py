@@ -59,9 +59,12 @@ class MagentoProductAttribute(models.Model):
 
     @api.model
     def create(self, vals):
+        '''
+        This can not be correct !
         if 'attribute_set_ids' not in vals:
             backend = self.env['magento.backend'].browse(vals['backend_id'])
             vals['attribute_set_ids'] = [(4, backend.id)]
+        '''
         return super(MagentoProductAttribute, self).create(vals)
 
     @api.multi
