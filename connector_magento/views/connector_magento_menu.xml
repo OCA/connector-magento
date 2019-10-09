@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <record id="connector.menu_connector_root" model="ir.ui.menu">
+        <field name="web_icon">connector_magento,static/description/icon.png</field>
+    </record>
+
     <menuitem id="menu_magento_root"
         parent="connector.menu_connector_root"
         name="Magento"
