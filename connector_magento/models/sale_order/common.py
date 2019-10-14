@@ -12,6 +12,7 @@ from odoo import models, fields, api, _
 from odoo.addons.connector.exception import IDMissingInBackend
 from odoo.addons.queue_job.job import job
 from odoo.addons.component.core import Component
+from datetime import datetime
 
 from ...components.backend_adapter import MAGENTO_DATETIME_FORMAT
 
@@ -322,8 +323,31 @@ class SaleOrderAdapter(Component):
             return self._call('%s.get_parent' % self._magento_model, [id])
 
     def add_comment(self, id, status, comment=None, notify=False):
+        if self.collection.version == '2.0':
+            comment_args = self._get_comment_args(
+                id, status=status, comment=comment, notify=notify)
+            return self._call('orders/%s/comments' % id, comment_args,
+                              http_method='post')
         return self._call('%s.addComment' % self._magento_model,
                           [id, status, comment, notify])
 
     def cancel(self, id):
         return self._call('orders/%s/cancel' % id, http_method='post')
+
+    def _get_comment_args(self, id, status, comment='', date=False,
+                          notify=False):
+        if not date:
+            date = datetime.now()
+        args = {
+            "statusHistory": {
+                "created_at": date.strftime(MAGENTO_DATETIME_FORMAT),
+                "parent_id": id,
+                "entity_name": 'order',
+                "is_customer_notified": notify and 1 or 0,
+            }
+        }
+        if status:
+            args['statusHistory'].update(status=status)
+        if comment:
+            args['statusHistory'].update(comment=comment)
+        return args

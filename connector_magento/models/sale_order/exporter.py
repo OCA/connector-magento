@@ -14,8 +14,10 @@ class StateExporter(Component):
 
     ORDER_STATUS_MAPPING = {  # used in connector_magento_order_comment
         'draft': 'pending',
+        'sent': 'pending',
         'manual': 'processing',
         'progress': 'processing',
+        'sale': 'processing',
         'shipping_except': 'processing',
         'invoice_except': 'processing',
         'done': 'complete',
