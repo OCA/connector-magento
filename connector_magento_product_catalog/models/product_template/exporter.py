@@ -96,7 +96,7 @@ class ProductTemplateDefinitionExporter(Component):
                                    line.attribute_id.name)
 
             if not m_line:
-                self.env['magento.template.attribute.line'].create({
+                self.env['magento.template.attribute.line'].sudo().create({
                     'odoo_id': line.id,
                     'magento_attribute_id': m_att_id.id,
                     'magento_template_id': record.id,

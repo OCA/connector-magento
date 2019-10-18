@@ -43,7 +43,7 @@ class ProductTemplateExportMapper(Component):
     def category_ids(self, record):
         c_ids = []
         for c in record.public_categ_ids:
-            c_ids.append(c.magento_bind_ids.filtered(lambda m: m.backend_id == record.backend_id).external_id)
+            c_ids.extend([bind.external_id for bind in c.magento_bind_ids.filtered(lambda m: m.backend_id == record.backend_id)])
         return {
             'attribute_code': 'category_ids',
             'value': c_ids

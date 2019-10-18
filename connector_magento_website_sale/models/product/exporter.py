@@ -97,7 +97,7 @@ class ProductProductExportMapper(Component):
         for categ in record.public_categ_ids:
             magento_categ_id = categ.magento_bind_ids.filtered(lambda bc: bc.backend_id.id == record.backend_id.id)
             if magento_categ_id:
-                c_ids.append(magento_categ_id.external_id)
+                c_ids.extend([m.external_id for m in magento_categ_id])
         return {
             'attribute_code': 'category_ids',
             'value': c_ids
