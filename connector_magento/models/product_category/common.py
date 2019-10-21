@@ -34,6 +34,7 @@ class MagentoProductPosition(models.Model):
 class MagentoProductCategory(models.Model):
     _name = 'magento.product.category'
     _inherit = 'magento.binding'
+    _inherits = {'product.category': 'odoo_id'}
     _description = 'Magento Product Category'
     _magento_backend_path = 'catalog/category/edit/id'
     _magento_frontend_path = 'catalog/category/view/id'
