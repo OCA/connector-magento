@@ -196,7 +196,6 @@ class ProductImportMapper(Component):
               (normalize_datetime('updated_at'), 'updated_at'),
               ]
 
-    @only_create
     @mapping
     def default_code_on_create(self, record):
         if self.backend_record.default_code_method == 'none':
