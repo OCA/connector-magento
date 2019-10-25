@@ -16,11 +16,20 @@ _logger = logging.getLogger(__name__)
 class MagentoProductTemplate(models.Model):
     _inherit = 'magento.product.template'
 
+
+    @api.depends('magento_template_attribute_value_ids')
+    def _compute_custom_values_count(self):
+        for product in self:
+            product.custom_values_count = len(product.magento_template_attribute_value_ids)
+
+
     magento_template_attribute_value_ids = fields.One2many(
         comodel_name='magento.custom.template.attribute.values',
         inverse_name='magento_product_template_id',
         string='Magento Simple Custom Attributes Values for templates',
     )
+
+    custom_values_count = fields.Integer('Custom Values Count', compute='_compute_custom_values_count')
 
     def action_magento_template_custom_attributes(self):
         action = self.env['ir.actions.act_window'].for_xml_id(
