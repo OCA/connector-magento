@@ -69,7 +69,7 @@ class ProductTemplateExportMapper(Component):
                 continue
                 
             """ Deal with Custom Attributes """            
-            attributeCode = values_id.attribute_id.attribute_code
+            attribute_code = values_id.attribute_id.attribute_code
             value = values_id.attribute_text
             if values_id.magento_attribute_type == 'boolean':
                 try:
@@ -90,7 +90,7 @@ class ProductTemplateExportMapper(Component):
             
             
             customAttributes.append({
-                'attribute_code': attributeCode,
+                'attribute_code': attribute_code,
                 'value': value
                 })     
         
@@ -108,10 +108,10 @@ class ProductTemplateExportMapper(Component):
 #             odoo_value_ids = values_id.magento_bind_ids.filtered(
 #                 lambda m: m.backend_id == record.backend_id) 
 #             for odoo_value_id in odoo_value_ids:
-                attributeCode = value_id.magento_attribute_id.attribute_code
+                attribute_code = value_id.magento_attribute_id.attribute_code
                 value = value_id.external_id.split('_')[1]
                 customAttributes.append({
-                    'attributeCode': attributeCode,
+                    'attribute_code': attribute_code,
                     'value': value
                     })            
             
