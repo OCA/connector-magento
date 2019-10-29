@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_magento_product_category_form"
+        model="ir.ui.view">
+        <field name="name">magento.product.category.form</field>
+        <field name="model">magento.product.category</field>
+        <field name="inherit_id"
+            ref="connector_magento.view_magento_product_category_form"></field>
+        <field name="arch" type="xml">
+            <button name="sync_from_magento" position="after">
+                <button type="object" name="sync_to_magento"
+                    string="Force Sync Odoo -> Magento" class="fa fa-link" />
+            </button>
+        </field>
+    </record>
+</odoo>

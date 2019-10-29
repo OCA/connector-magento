@@ -13,13 +13,19 @@ class MagentoProductCategoryBindingExportListener(Component):
 
     @skip_if(lambda self, record, **kwargs: self.no_connector_export(record))
     def on_record_create(self, record, fields=None):
+        if self.backend_id.product_synchro_strategy == 'magento_first': 
+                return
         record.with_delay(identity_key=identity_exact).export_record(record.backend_id)
 
     @skip_if(lambda self, record, **kwargs: self.no_connector_export(record))
     def on_record_write(self, record, fields=None):
+        if self.backend_id.product_synchro_strategy == 'magento_first': 
+                return
         record.with_delay(identity_key=identity_exact).export_record(record.backend_id)
 
     def on_record_unlink(self, record):
+        if self.backend_id.product_synchro_strategy == 'magento_first': 
+                return
         with record.backend_id.work_on(record._name) as work:
             external_id = work.component(usage='binder').to_external(record)
             if external_id:
@@ -28,17 +34,21 @@ class MagentoProductCategoryBindingExportListener(Component):
 
 
 class MagentoProductCategoryExportListener(Component):
-    _name = 'magento.product.product.export.listener'
+    _name = 'magento.product.category.export.listener'
     _inherit = 'base.connector.listener'
     _apply_on = ['product.category']
 
     @skip_if(lambda self, record, **kwargs: self.no_connector_export(record))
     def on_record_write(self, record, fields=None):
         for binding in record.magento_bind_ids:
+            if binding.backend_id.product_synchro_strategy == 'magento_first': 
+                continue
             binding.with_delay(identity_key=identity_exact).export_record(binding.backend_id)
 
     def on_record_unlink(self, record):
         for binding in record.magento_bind_ids:
+            if binding.backend_id.product_synchro_strategy == 'magento_first': 
+                continue
             with binding.backend_id.work_on(binding._name) as work:
                 external_id = work.component(usage='binder').to_external(binding)
                 if external_id:

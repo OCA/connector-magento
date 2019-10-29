@@ -194,7 +194,8 @@ class MagentoBackend(models.Model):
         string="Gift Product",
         domain="[('type', '=', 'service')]"
     )
-    auto_create_category = fields.Boolean('Auto Create Category', default=True)
+    auto_create_category = fields.Boolean('Auto Create Category On export', default=True)
+    auto_create_category_on_import = fields.Boolean('Auto Create Category On Import', default=True)
 
     # TODO? add a field `auto_activate` -> activate a cron
     import_products_from_date = fields.Datetime(

@@ -18,6 +18,7 @@
      'views/magento_backend_views.xml',
      'views/product_view.xml',
      'views/product_template.xml',
+     'views/product_category_views.xml',
      'wizards/add_backend.xml',
  ],
  'installable': True,

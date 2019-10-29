@@ -457,26 +457,29 @@
 						<page name="advanced_configuration"
 							string="Advanced Configuration">
 							<group>
-								<group string="Warehouse / Products">
+								<group string="Export Options">
 									<field name="export_all_options"/>
 									<field name="always_create_new_attributes"/>
 									<field name="rename_duplicate_values"/>
+                                    <field name="auto_create_category" />
+                                    <field name="default_attribute_group_id"/>
+                                    
 
 									<!-- <field name="default_lang_id" widget="selection" /> -->
 								</group>
-								<group name="warehouse_products"
-									string="Warehouse / Products">
-									<field name="default_attribute_group_id"/>
-									<field name="warehouse_id" />
+								<group string="Import Options">
 									<field name="default_category_id" />
-									<field name="auto_create_category" />
+									<field name="auto_create_category_on_import" />
+                                    
+									<!-- <field name="default_lang_id" widget="selection" /> -->
+								</group>
+								<group name="warehouse_products"
+									string="Warehouse / Products">			
+									<field name="warehouse_id" />
 									<field name="product_stock_field_id" widget="selection"
 										domain="[('model', 'in', ['product.product', 'product.template']), ('ttype', '=', 'float')]" />
 									<field name="no_stock_sync"/>
 									<field name="default_code_method"/>
-									<field name="default_pricelist_id"/>
-									<field name="default_cod_product_id"/>
-									<field name="default_gift_product_id"/>
 								</group>
 								<group string="Sales / Accounting">
 									<field name="sale_prefix" placeholder="mag-" />
@@ -485,6 +488,9 @@
 									<field name="fiscal_position_id" />
 									<field name="rounding_diff_account_id"/>
 									<field name="is_multi_company" />
+                                    <field name="default_pricelist_id"/>
+                                    <field name="default_cod_product_id"/>
+                                    <field name="default_gift_product_id"/>
 								</group>
 							</group>
 						</page>

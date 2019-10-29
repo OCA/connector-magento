@@ -133,6 +133,16 @@ class ProductCategoryImportMapper(Component):
                 'odoo_id': odoo_category.id
             }
     @mapping
+    def odoo_id(self, record):
+        binder = self.binder_for()
+        categ_id = binder.to_internal(record['id'])
+        if self.backend_record.auto_create_category_on_import and not categ_id.odoo_id:
+            vals = {'name': record['name']}
+            categ_id = self.env['product.category'].create(vals)
+            return {'odoo_id': categ_id.id}
+        return {}
+
+    @mapping
     def parent_id(self, record):
         if not record.get('parent_id'):
             return
