@@ -34,6 +34,7 @@ class MagentoProductPosition(models.Model):
 class MagentoProductCategory(models.Model):
     _name = 'magento.product.category'
     _inherit = 'magento.binding'
+    #Don't use _inherits by design https://github.com/wpichler/connector-magento/pull/1#issuecomment-547279470
     _description = 'Magento Product Category'
     _magento_backend_path = 'catalog/category/edit/id'
     _magento_frontend_path = 'catalog/category/view/id'
@@ -66,7 +67,7 @@ class MagentoProductCategory(models.Model):
         self.ensure_one()
         with self.backend_id.work_on(self._name) as work:
             if self.backend_id.product_synchro_strategy == 'odoo_first':
-                self.sync_to_magento()
+                return
             else:
                 importer = work.component(usage='record.importer')
                 return importer.run(self.external_id, force=True)
