@@ -53,7 +53,7 @@ class MagentoProductBundle(models.Model):
     # XXX website_ids can be computed from categories
     website_ids = fields.Many2many(comodel_name='magento.website',
                                    string='Websites',
-                                   readonly=True)
+                                   readonly=False)
 
     product_type = fields.Char()
     magento_id = fields.Integer('Magento ID')

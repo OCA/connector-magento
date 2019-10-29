@@ -71,7 +71,7 @@
 							<field name="magento_url_key"/>
 							<field name="magento_id" readonyl="1" widget="many2many_tags"/>
 							<field name="odoo_id" readonly="1"/>
-							<field name="website_ids" readonly="0" />
+							<field name="website_ids" readonly="0" widget="many2many_tags"/>
 							<field name="attribute_set_id"/>
 							<field name="created_at" readonly="1" />
 							<field name="updated_at" readonly="1" />

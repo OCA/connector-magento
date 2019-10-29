@@ -60,7 +60,7 @@
 						<field name="magento_url_key"/>
 						<field name="magento_id" string="Magento ID"/>
 						<field name="odoo_id" string="Odoo ID"/>
-                        <field name="website_ids" readonly="0" />
+                        <field name="website_ids" readonly="0" widget="many2many_tags"/>
 						<field name="created_at" readonly="1" />
 						<field name="updated_at" readonly="1" />
 						<!-- <field name="product_type" readonly="1" /> -->

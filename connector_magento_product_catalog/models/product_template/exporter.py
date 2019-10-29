@@ -225,7 +225,7 @@ class ProductTemplateExportMapper(Component):
 
     def get_website_ids(self, record):
         website_ids = [
-                s.external_id for s in record.backend_id.website_ids
+                s.external_id for s in record.website_ids
                 ]
         return {'website_ids': website_ids}
 

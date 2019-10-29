@@ -59,7 +59,7 @@ class MagentoProductTemplate(models.Model):
                               ondelete='restrict')
     website_ids = fields.Many2many(comodel_name='magento.website',
                                    string='Websites',
-                                   readonly=True)
+                                   readonly=False)
     product_type = fields.Selection(selection='product_type_get',
                                     string='Magento Product Type',
                                     default='simple',
