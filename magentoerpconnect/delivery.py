@@ -71,4 +71,4 @@ class DeliveryCarrier(models.Model):
     def _compute_carrier_code(self):
         for carrier in self:
             if carrier.magento_code:
-                self.magento_carrier_code = carrier.magento_code.split('_')[0]
+                carrier.magento_carrier_code = carrier.magento_code.split('_')[0]
