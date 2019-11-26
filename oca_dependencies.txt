@@ -1,0 +1,8 @@
+connector
+connector-ecommerce
+e-commerce
+product-attribute
+sale-workflow
+server-tools
+bank-payment
+partner-contact

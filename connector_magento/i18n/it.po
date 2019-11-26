@@ -1,0 +1,1283 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * connector_magento
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Giacomo <giacomo.spettoli@gmail.com>, 2015
+msgid ""
+msgstr ""
+"Project-Id-Version: connector-magento (8.0)\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-07-22 09:38+0000\n"
+"PO-Revision-Date: 2015-08-02 23:46+0000\n"
+"Last-Translator: Giacomo <giacomo.spettoli@gmail.com>\n"
+"Language-Team: Italian (http://www.transifex.com/oca/OCA-connector-magento-8-0/language/it/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: it\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: connector_magento
+#: help:magento.sale.order,magento_order_id:0
+msgid "'order_id' field in Magento"
+msgstr "il campo 'order_id' in Magento"
+
+#. module: connector_magento
+#: view:magento.product.product:connector_magento.view_magento_product_form
+msgid "(recompute)"
+msgstr "(ricalcola)"
+
+#. module: connector_magento
+#: sql_constraint:magento.account.invoice:0
+msgid "A Magento binding for this invoice already exists."
+msgstr "Un collegamento a Magento per questa fattura esiste già"
+
+#. module: connector_magento
+#: sql_constraint:magento.backend:0
+msgid "A backend with the same sale prefix already exists"
+msgstr "Un backend con lo stesso prefisso di vendita esiste già"
+
+#. module: connector_magento
+#: sql_constraint:magento.account.invoice:0 sql_constraint:magento.address:0
+#: sql_constraint:magento.binding:0 sql_constraint:magento.product.category:0
+#: sql_constraint:magento.product.product:0
+#: sql_constraint:magento.res.partner:0
+#: sql_constraint:magento.res.partner.category:0
+#: sql_constraint:magento.sale.order:0
+#: sql_constraint:magento.sale.order.line:0
+#: sql_constraint:magento.stock.picking:0 sql_constraint:magento.store:0
+#: sql_constraint:magento.storeview:0 sql_constraint:magento.website:0
+msgid "A binding already exists with the same Magento ID."
+msgstr "Un collegamento con lo stesso ID Magento esiste già"
+
+#. module: connector_magento
+#: sql_constraint:magento.address:0
+msgid "A partner address can only have one binding by backend."
+msgstr "Un indirizzo di un partner può avere solo un collegamento per ogni backend."
+
+#. module: connector_magento
+#: help:magento.backend,sale_prefix:0
+msgid ""
+"A prefix put before the name of imported sales orders.\n"
+"For instance, if the prefix is 'mag-', the sales order 100000692 in Magento, will be named 'mag-100000692' in OpenERP."
+msgstr "Un prefisso messo prima del nome degli ordini di vendita importati.\nPer esempio, se il prefisso è 'mag-', l'ordine di vendita con numero 100000692 su Magento, verrà chiamato 'mag-100000692' in OpenERP."
+
+#. module: connector_magento
+#: view:magento.backend:connector_magento.view_magento_backend_form
+msgid "API"
+msgstr "API"
+
+#. module: connector_magento
+#: field:magento.address,is_magento_order_address:0
+msgid "Address from a Magento Order"
+msgstr "Indirizzo da un ordine di Magento"
+
+#. module: connector_magento
+#: field:magento.backend,admin_location:0
+msgid "Admin Location"
+msgstr "Locazione della sezione admin"
+
+#. module: connector_magento
+#: view:magento.backend:connector_magento.view_magento_backend_form
+msgid "Advanced Configuration"
+msgstr "Configurazione avanzata"
+
+#. module: connector_magento
+#: code:addons/connector_magento/stock_picking.py:173
+#, python-format
+msgid "Already exported"
+msgstr "Già esportato"
+
+#. module: connector_magento
+#: code:addons/connector_magento/sale.py:611
+#, python-format
+msgid "Already imported"
+msgstr "Già importato"
+
+#. module: connector_magento
+#: code:addons/connector_magento/unit/import_synchronizer.py:208
+#, python-format
+msgid "Already up-to-date."
+msgstr "Già aggiornato"
+
+#. module: connector_magento
+#: help:magento.res.partner,consider_as_company:0
+msgid ""
+"An account imported with a 'company' in the billing address is considered as a company.\n"
+" The partner takes the name of the company and is not merged with the billing address."
+msgstr "Un accont importato con una 'azienda' nell'indirizzo di fatturazione viene considerata come un'azienda.\nIl partner prende il nome dell'azienda e non viene unito all'indirizzo di fatturazione."
+
+#. module: connector_magento
+#: model:ir.ui.menu,name:connector_magento.menu_magento_backend
+msgid "Backends"
+msgstr "Backends"
+
+#. module: connector_magento
+#: field:magento.backend,auth_basic_password:0
+msgid "Basic Auth. Password"
+msgstr "Password per l'autenticazione basic"
+
+#. module: connector_magento
+#: field:magento.backend,auth_basic_username:0
+msgid "Basic Auth. Username"
+msgstr "Username per l'autenticazione basic"
+
+#. module: connector_magento
+#: help:magento.backend,auth_basic_password:0
+msgid "Basic access authentication web server side password"
+msgstr "La password lato web server per l'autenticazione basic"
+
+#. module: connector_magento
+#: help:magento.backend,auth_basic_username:0
+msgid "Basic access authentication web server side username"
+msgstr "Lo username lato web server per l'autenticazione basic"
+
+#. module: connector_magento
+#: field:res.partner,birthday:0
+msgid "Birthday"
+msgstr "Data di nascita"
+
+#. module: connector_magento
+#: view:magento.backend:connector_magento.view_magento_backend_form
+msgid ""
+"By clicking on the buttons,\n"
+"                                    you will initiate the synchronizations\n"
+"                                    with Magento.\n"
+"                                    Note that the import or exports\n"
+"                                    won't be done directly,\n"
+"                                    they will create 'Jobs'\n"
+"                                    executed as soon as possible."
+msgstr "Cliccando sul bottone\nverrà iniziata la sincronizzazione\ncon Magento.\nNota che l'import o l'export\nnon saranno fatti direttamente\nma verranno messi nella coda dei Job\ned eseguiti appena possibile."
+
+#. module: connector_magento
+#: code:addons/connector_magento/stock_picking.py:180
+#, python-format
+msgid ""
+"Canceled: the delivery order does not contain lines from the original sale "
+"order."
+msgstr "Annullato: l'ordine di consegna non contiene linee dell'ordine di vendita originale"
+
+#. module: connector_magento
+#: model:ir.model,name:connector_magento.model_delivery_carrier
+msgid "Carrier"
+msgstr "Trasportatore"
+
+#. module: connector_magento
+#: help:magento.storeview,no_sales_order_sync:0
+msgid ""
+"Check if the storeview is active in Magento but its sales orders should not "
+"be imported."
+msgstr "Seleziona se la storeview è attiva in Magento ma i suoi ordini di vendita non devono essere importati."
+
+#. module: connector_magento
+#: help:magento.product.product,no_stock_sync:0
+msgid "Check this to exclude the product from stock synchronizations."
+msgstr "Verifica se questo esclude il prodotto dalle sincronizzazioni di magazzino"
+
+#. module: connector_magento
+#: help:magento.backend,product_stock_field_id:0
+msgid ""
+"Choose the field of the product which will be used for stock inventory updates.\n"
+"If empty, Quantity Available is used."
+msgstr "Seleziona il campo del prodotto che verrà usato per gli aggiornamenti di inventario di stock.\nSe vuoto, verrà usato il campo 'Quantità disponibile'"
+
+#. module: connector_magento
+#: field:magento.storeview,code:0 field:magento.website,code:0
+msgid "Code"
+msgstr "Codice"
+
+#. module: connector_magento
+#: view:res.partner:connector_magento.view_partner_form
+#: field:res.partner,company:0
+msgid "Company"
+msgstr "Azienda"
+
+#. module: connector_magento
+#: selection:magento.stock.picking,picking_method:0
+msgid "Complete"
+msgstr "Completa"
+
+#. module: connector_magento
+#: field:magento.product.product,magento_qty:0
+msgid "Computed Quantity"
+msgstr "Calcola la quantità"
+
+#. module: connector_magento
+#: model:ir.model,name:connector_magento.model_connector_config_settings
+msgid "Connector Configuration"
+msgstr "Configurazione del connettore"
+
+#. module: connector_magento
+#: field:magento.res.partner,consider_as_company:0
+msgid "Considered as company"
+msgstr "Considerata come un'azienda"
+
+#. module: connector_magento
+#: view:payment.method:connector_magento.payment_method_view_form
+msgid "Create invoice on"
+msgstr "Crea fattura per"
+
+#. module: connector_magento
+#: field:magento.store,create_invoice_on:0
+#: field:payment.method,create_invoice_on:0
+msgid "Create invoice on action"
+msgstr "Crea la fattura dopo l'azione"
+
+#. module: connector_magento
+#: field:magento.address,created_at:0
+#: field:magento.product.product,created_at:0
+#: field:magento.res.partner,created_at:0
+msgid "Created At (on Magento)"
+msgstr "Creato il (su Magento)"
+
+#. module: connector_magento
+#: field:magento.account.invoice,create_uid:0
+#: field:magento.address,create_uid:0 field:magento.backend,create_uid:0
+#: field:magento.product.category,create_uid:0
+#: field:magento.product.product,create_uid:0
+#: field:magento.res.partner,create_uid:0
+#: field:magento.res.partner.category,create_uid:0
+#: field:magento.sale.order,create_uid:0
+#: field:magento.sale.order.line,create_uid:0
+#: field:magento.stock.picking,create_uid:0 field:magento.store,create_uid:0
+#: field:magento.storeview,create_uid:0 field:magento.website,create_uid:0
+msgid "Created by"
+msgstr "Creato da"
+
+#. module: connector_magento
+#: field:magento.account.invoice,create_date:0
+#: field:magento.address,create_date:0 field:magento.backend,create_date:0
+#: field:magento.product.category,create_date:0
+#: field:magento.product.product,create_date:0
+#: field:magento.res.partner,create_date:0
+#: field:magento.res.partner.category,create_date:0
+#: field:magento.sale.order,create_date:0
+#: field:magento.sale.order.line,create_date:0
+#: field:magento.stock.picking,create_date:0 field:magento.store,create_date:0
+#: field:magento.storeview,create_date:0 field:magento.website,create_date:0
+msgid "Created on"
+msgstr "Creato il"
+
+#. module: connector_magento
+#: field:magento.backend,use_custom_api_path:0
+msgid "Custom Api Path"
+msgstr "Percorso del API personalizzato"
+
+#. module: connector_magento
+#: field:magento.address,is_default_billing:0
+msgid "Default Invoice"
+msgstr "Fattura di default"
+
+#. module: connector_magento
+#: field:magento.backend,default_lang_id:0
+msgid "Default Language"
+msgstr "Lingua di default"
+
+#. module: connector_magento
+#: field:magento.backend,default_category_id:0
+msgid "Default Product Category"
+msgstr "Categoria di prodotto di default"
+
+#. module: connector_magento
+#: field:magento.address,is_default_shipping:0
+msgid "Default Shipping"
+msgstr ""
+
+#. module: connector_magento
+#: field:magento.product.category,description:0
+msgid "Description"
+msgstr "Descrizione"
+
+#. module: connector_magento
+#: selection:magento.product.product,manage_stock:0
+msgid "Do Not Manage Stock"
+msgstr "Non gestire il magazzino"
+
+#. module: connector_magento
+#: help:magento.store,send_invoice_paid_mail:0
+msgid ""
+"Does the invoice export/creation should send an email notification on "
+"Magento side?"
+msgstr "Si vuole che l'esportazione/creazione di fatture invii un email di notifica da Magento?"
+
+#. module: connector_magento
+#: help:magento.store,send_picking_done_mail:0
+msgid ""
+"Does the picking export/creation should send an email notification on "
+"Magento side?"
+msgstr "L'esportazione/creazione di un picking dovrebbe inviare una email di notifica lato Magento?"
+
+#. module: connector_magento
+#: field:magento.res.partner,emailid:0
+msgid "E-mail address"
+msgstr "Indirizzo email"
+
+#. module: connector_magento
+#: field:magento.storeview,enabled:0
+msgid "Enabled"
+msgstr "Attiva"
+
+#. module: connector_magento
+#: field:connector.config.settings,module_connector_magento_export_partner:0
+msgid "Export Partners to Magento (experimental)"
+msgstr "Esporta i partner verso Magento (sperimentale)"
+
+#. module: connector_magento
+#: field:delivery.carrier,magento_export_tracking:0
+msgid "Export tracking numbers"
+msgstr "Esporta i numeri di tracciamento"
+
+#. module: connector_magento
+#: view:connector.config.settings:connector_magento.view_magento_config_settings
+msgid "Extensions"
+msgstr "Estensioni"
+
+#. module: connector_magento
+#: field:magento.res.partner,guest_customer:0
+msgid "Guest Customer"
+msgstr "Cliente ospite"
+
+#. module: connector_magento
+#: view:magento.backend:connector_magento.view_magento_backend_form
+msgid "HTTP Authentication"
+msgstr "Autenticazione HTTP"
+
+#. module: connector_magento
+#: field:magento.account.invoice,id:0 field:magento.address,id:0
+#: field:magento.backend,id:0 field:magento.binding,id:0
+#: field:magento.product.category,id:0 field:magento.product.product,id:0
+#: field:magento.res.partner,id:0 field:magento.res.partner.category,id:0
+#: field:magento.sale.order,id:0 field:magento.sale.order.line,id:0
+#: field:magento.stock.picking,id:0 field:magento.store,id:0
+#: field:magento.storeview,id:0 field:magento.website,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: connector_magento
+#: field:magento.account.invoice,magento_id:0
+#: field:magento.address,magento_id:0 field:magento.binding,magento_id:0
+#: field:magento.product.category,magento_id:0
+#: field:magento.product.product,magento_id:0
+#: field:magento.res.partner,magento_id:0
+#: field:magento.res.partner.category,magento_id:0
+#: field:magento.sale.order,magento_id:0
+#: field:magento.sale.order.line,magento_id:0
+#: field:magento.stock.picking,magento_id:0 field:magento.store,magento_id:0
+#: field:magento.storeview,magento_id:0 field:magento.website,magento_id:0
+msgid "ID on Magento"
+msgstr "ID su Magento"
+
+#. module: connector_magento
+#: help:magento.backend,default_category_id:0
+msgid ""
+"If a default category is selected, products imported without a category will"
+" be linked to it."
+msgstr "Se si sceglie una categoria di default, i prodotti importati senza categoria verranno assegnati alla categoria scelta"
+
+#. module: connector_magento
+#: help:magento.backend,default_lang_id:0
+msgid ""
+"If a default language is selected, the records will be imported in the translation of this language.\n"
+"Note that a similar configuration exists for each storeview."
+msgstr "Se una lingua di default viene selezionata, i record verranno importati nella traduzione di quella lingua.\nNota una configurazione simile esiste per ogni storeview."
+
+#. module: connector_magento
+#: view:magento.storeview:connector_magento.view_magento_storeview_form
+msgid "Import Sale Orders"
+msgstr "Importa gli ordini di vendita"
+
+#. module: connector_magento
+#: view:magento.storeview:connector_magento.view_magento_storeview_form
+msgid "Import Sale Orders since"
+msgstr "Importa gli ordini di vendita dal"
+
+#. module: connector_magento
+#: view:magento.backend:connector_magento.view_magento_backend_form
+msgid "Import all customer groups"
+msgstr "Importato tutti i gruppi di clienti"
+
+#. module: connector_magento
+#: field:magento.backend,import_categories_from_date:0
+msgid "Import categories from date"
+msgstr "Importa le categorie dalla data"
+
+#. module: connector_magento
+#: view:magento.backend:connector_magento.view_magento_backend_form
+#: view:magento.website:connector_magento.view_magento_website_form
+msgid "Import in background"
+msgstr "Importa in background"
+
+#. module: connector_magento
+#: view:magento.backend:connector_magento.view_magento_backend_form
+msgid "Import partners from all websites"
+msgstr "Importa i partner da tutti i websites"
+
+#. module: connector_magento
+#: field:magento.website,import_partners_from_date:0
+msgid "Import partners from date"
+msgstr "Importa i partner dalla data"
+
+#. module: connector_magento
+#: view:magento.website:connector_magento.view_magento_website_form
+msgid "Import partners since"
+msgstr "Importa i partner dal"
+
+#. module: connector_magento
+#: view:magento.backend:connector_magento.view_magento_backend_form
+msgid "Import products categories since"
+msgstr "Importa le categorie prodotto dal"
+
+#. module: connector_magento
+#: field:magento.backend,import_products_from_date:0
+msgid "Import products from date"
+msgstr "Importa i prodotti dalla data"
+
+#. module: connector_magento
+#: view:magento.backend:connector_magento.view_magento_backend_form
+msgid "Import products since"
+msgstr "Importa i prodotti dal"
+
+#. module: connector_magento
+#: field:magento.storeview,import_orders_from_date:0
+msgid "Import sale orders from date"
+msgstr "Importa gli ordini di vendita dalla data"
+
+#. module: connector_magento
+#: view:magento.backend:connector_magento.view_magento_backend_form
+msgid "Import sales orders from all store views"
+msgstr "Importa ordini di vendita da tutte le viste negozio."
+
+#. module: connector_magento
+#: view:magento.backend:connector_magento.view_magento_backend_form
+#: view:magento.storeview:connector_magento.view_magento_storeview_form
+#: view:magento.website:connector_magento.view_magento_website_form
+msgid "Imports"
+msgstr "Importa"
+
+#. module: connector_magento
+#: view:magento.store:connector_magento.view_magento_store_form
+#: view:magento.storeview:connector_magento.view_magento_storeview_form
+#: view:magento.website:connector_magento.view_magento_website_form
+msgid "Informations"
+msgstr "Informazioni"
+
+#. module: connector_magento
+#: view:magento.product.product:connector_magento.view_magento_product_form
+msgid "Inventory Options"
+msgstr "Opzioni di inventario"
+
+#. module: connector_magento
+#: model:ir.model,name:connector_magento.model_account_invoice
+#: field:magento.account.invoice,openerp_id:0
+msgid "Invoice"
+msgstr "Fattura"
+
+#. module: connector_magento
+#: code:addons/connector_magento/invoice.py:122
+#: code:addons/connector_magento/tests/test_export_invoice.py:225
+#, python-format
+msgid "Invoice Created"
+msgstr "Fattura creata"
+
+#. module: connector_magento
+#: field:magento.storeview,lang_id:0
+msgid "Language"
+msgstr "Lingua"
+
+#. module: connector_magento
+#: field:magento.account.invoice,write_uid:0 field:magento.address,write_uid:0
+#: field:magento.backend,write_uid:0
+#: field:magento.product.category,write_uid:0
+#: field:magento.product.product,write_uid:0
+#: field:magento.res.partner,write_uid:0
+#: field:magento.res.partner.category,write_uid:0
+#: field:magento.sale.order,write_uid:0
+#: field:magento.sale.order.line,write_uid:0
+#: field:magento.stock.picking,write_uid:0 field:magento.store,write_uid:0
+#: field:magento.storeview,write_uid:0 field:magento.website,write_uid:0
+msgid "Last Updated by"
+msgstr "Ultimo aggiornamento da"
+
+#. module: connector_magento
+#: field:magento.account.invoice,write_date:0
+#: field:magento.address,write_date:0 field:magento.backend,write_date:0
+#: field:magento.product.category,write_date:0
+#: field:magento.product.product,write_date:0
+#: field:magento.res.partner,write_date:0
+#: field:magento.res.partner.category,write_date:0
+#: field:magento.sale.order,write_date:0
+#: field:magento.sale.order.line,write_date:0
+#: field:magento.stock.picking,write_date:0 field:magento.store,write_date:0
+#: field:magento.storeview,write_date:0 field:magento.website,write_date:0
+msgid "Last Updated on"
+msgstr "Ultimo aggiornamento il"
+
+#. module: connector_magento
+#: help:magento.product.product,magento_qty:0
+msgid "Last computed quantity to send on Magento."
+msgstr "L'ultima quantità calcolata da inviare a Magento"
+
+#. module: connector_magento
+#: field:magento.account.invoice,sync_date:0 field:magento.address,sync_date:0
+#: field:magento.binding,sync_date:0
+#: field:magento.product.category,sync_date:0
+#: field:magento.product.product,sync_date:0
+#: field:magento.res.partner,sync_date:0
+#: field:magento.res.partner.category,sync_date:0
+#: field:magento.sale.order,sync_date:0
+#: field:magento.sale.order.line,sync_date:0
+#: field:magento.stock.picking,sync_date:0 field:magento.store,sync_date:0
+#: field:magento.storeview,sync_date:0 field:magento.website,sync_date:0
+msgid "Last synchronization date"
+msgstr "Data ultima sincronizzazione"
+
+#. module: connector_magento
+#: field:magento.backend,location:0
+msgid "Location"
+msgstr "Locazione"
+
+#. module: connector_magento
+#: model:ir.ui.menu,name:connector_magento.menu_magento_root
+#: view:payment.method:connector_magento.payment_method_view_form
+#: view:res.partner.category:connector_magento.view_partner_category_form
+msgid "Magento"
+msgstr "Magento"
+
+#. module: connector_magento
+#: model:ir.model,name:connector_magento.model_magento_address
+#: view:magento.address:connector_magento.view_magento_address_form
+#: view:magento.address:connector_magento.view_magento_address_tree
+msgid "Magento Address"
+msgstr "Indirizzo di Magento"
+
+#. module: connector_magento
+#: view:res.partner:connector_magento.view_partner_form
+#: field:res.partner,magento_address_bind_ids:0
+msgid "Magento Address Bindings"
+msgstr ""
+
+#. module: connector_magento
+#: model:ir.model,name:connector_magento.model_magento_backend
+#: field:magento.account.invoice,backend_id:0
+#: field:magento.address,backend_id:0
+#: view:magento.backend:connector_magento.view_magento_backend_form
+#: view:magento.backend:connector_magento.view_magento_backend_tree
+#: field:magento.binding,backend_id:0
+#: field:magento.product.category,backend_id:0
+#: field:magento.product.product,backend_id:0
+#: field:magento.res.partner,backend_id:0
+#: field:magento.res.partner.category,backend_id:0
+#: field:magento.sale.order,backend_id:0
+#: field:magento.sale.order.line,backend_id:0
+#: field:magento.stock.picking,backend_id:0 field:magento.store,backend_id:0
+#: field:magento.storeview,backend_id:0 field:magento.website,backend_id:0
+msgid "Magento Backend"
+msgstr "Il backend Magento"
+
+#. module: connector_magento
+#: model:ir.actions.act_window,name:connector_magento.action_magento_backend
+msgid "Magento Backends"
+msgstr "I backend Magento"
+
+#. module: connector_magento
+#: model:ir.model,name:connector_magento.model_magento_binding
+#: model:ir.model,name:connector_magento.model_magento_res_partner_category
+msgid "Magento Binding (abstract)"
+msgstr ""
+
+#. module: connector_magento
+#: view:account.invoice:connector_magento.view_invoice_magento_form
+#: field:account.invoice,magento_bind_ids:0
+#: view:product.category:connector_magento.view_product_category_form
+#: field:product.category,magento_bind_ids:0
+#: view:product.product:connector_magento.product_normal_form_view
+#: field:product.product,magento_bind_ids:0
+#: view:res.partner:connector_magento.view_partner_form
+#: field:res.partner,magento_bind_ids:0
+#: field:res.partner.category,magento_bind_ids:0
+#: field:sale.order,magento_bind_ids:0
+#: field:sale.order.line,magento_bind_ids:0
+#: view:stock.picking:connector_magento.view_stock_picking_out_magento_form
+#: field:stock.picking,magento_bind_ids:0
+msgid "Magento Bindings"
+msgstr "Collegamenti di Magento"
+
+#. module: connector_magento
+#: field:delivery.carrier,magento_code:0
+msgid "Magento Carrier Code"
+msgstr "Codice del trasportatore di Magento"
+
+#. module: connector_magento
+#: field:magento.product.category,magento_child_ids:0
+msgid "Magento Child Categories"
+msgstr "Categorie figlie di Magento"
+
+#. module: connector_magento
+#: view:magento.backend:connector_magento.view_magento_backend_form
+msgid "Magento Configuration"
+msgstr "Configurazione di Magento"
+
+#. module: connector_magento
+#: model:ir.model,name:connector_magento.model_magento_stock_picking
+#: view:magento.stock.picking:connector_magento.view_magento_stock_picking_out_form
+#: view:magento.stock.picking:connector_magento.view_magento_stock_picking_out_tree
+msgid "Magento Delivery Order"
+msgstr "Ordine di consegna di Magento"
+
+#. module: connector_magento
+#: field:magento.res.partner,group_id:0
+msgid "Magento Group (Category)"
+msgstr ""
+
+#. module: connector_magento
+#: model:ir.model,name:connector_magento.model_magento_account_invoice
+#: view:magento.account.invoice:connector_magento.view_magento_account_invoice_form
+#: view:magento.account.invoice:connector_magento.view_magento_account_invoice_tree
+msgid "Magento Invoice"
+msgstr "Fattura di Magento"
+
+#. module: connector_magento
+#: field:magento.sale.order,magento_order_id:0
+msgid "Magento Order ID"
+msgstr "ID dell'ordine di Magento"
+
+#. module: connector_magento
+#: field:magento.sale.order,magento_order_line_ids:0
+msgid "Magento Order Lines"
+msgstr "Linee dell'ordine di Magento"
+
+#. module: connector_magento
+#: field:magento.product.category,magento_parent_id:0
+msgid "Magento Parent Category"
+msgstr "Categoria padre di Magento"
+
+#. module: connector_magento
+#: model:ir.model,name:connector_magento.model_magento_res_partner
+#: field:magento.address,magento_partner_id:0
+#: view:magento.res.partner:connector_magento.view_magento_res_partner_form
+#: view:magento.res.partner:connector_magento.view_magento_res_partner_tree
+msgid "Magento Partner"
+msgstr "Partner di Magento"
+
+#. module: connector_magento
+#: model:ir.model,name:connector_magento.model_magento_product_product
+#: view:magento.product.product:connector_magento.view_magento_product_form
+#: view:magento.product.product:connector_magento.view_magento_product_tree
+msgid "Magento Product"
+msgstr "Prodotto di Magento"
+
+#. module: connector_magento
+#: model:ir.model,name:connector_magento.model_magento_product_category
+#: view:magento.product.category:connector_magento.view_magento_product_category_form
+#: view:magento.product.category:connector_magento.view_magento_product_category_tree
+msgid "Magento Product Category"
+msgstr "Categoria prodotto di Magento"
+
+#. module: connector_magento
+#: field:magento.product.product,product_type:0
+msgid "Magento Product Type"
+msgstr "Tipo di prodotto di Magento"
+
+#. module: connector_magento
+#: field:magento.backend,product_binding_ids:0
+#: field:magento.website,product_binding_ids:0
+msgid "Magento Products"
+msgstr "Prodotti di Magento"
+
+#. module: connector_magento
+#: model:ir.model,name:connector_magento.model_magento_sale_order
+#: field:magento.account.invoice,magento_order_id:0
+#: field:magento.sale.order.line,magento_order_id:0
+#: field:magento.stock.picking,magento_order_id:0
+msgid "Magento Sale Order"
+msgstr "Ordine di vendita di Magento"
+
+#. module: connector_magento
+#: model:ir.model,name:connector_magento.model_magento_sale_order_line
+msgid "Magento Sale Order Line"
+msgstr "Linea dell'ordine di Magento"
+
+#. module: connector_magento
+#: model:ir.model,name:connector_magento.model_magento_store
+#: view:magento.store:connector_magento.view_magento_store_form
+#: view:magento.store:connector_magento.view_magento_store_tree
+msgid "Magento Store"
+msgstr "Negozio di Magento"
+
+#. module: connector_magento
+#: model:ir.actions.act_window,name:connector_magento.action_magento_store
+msgid "Magento Stores"
+msgstr "Negozi di Magento"
+
+#. module: connector_magento
+#: model:ir.model,name:connector_magento.model_magento_storeview
+#: field:magento.sale.order,storeview_id:0
+#: view:magento.storeview:connector_magento.view_magento_storeview_form
+#: view:magento.storeview:connector_magento.view_magento_storeview_tree
+msgid "Magento Storeview"
+msgstr "Storeview di Magento"
+
+#. module: connector_magento
+#: model:ir.actions.act_window,name:connector_magento.action_magento_storeview
+msgid "Magento Storeviews"
+msgstr "Le storeview di Magento"
+
+#. module: connector_magento
+#: field:delivery.carrier,magento_tracking_title:0
+msgid "Magento Tracking Title"
+msgstr ""
+
+#. module: connector_magento
+#: field:magento.res.partner,taxvat:0
+msgid "Magento VAT"
+msgstr "Iva di Magento"
+
+#. module: connector_magento
+#: model:ir.model,name:connector_magento.model_magento_website
+#: field:magento.address,website_id:0 field:magento.res.partner,website_id:0
+#: field:magento.store,website_id:0
+#: view:magento.website:connector_magento.view_magento_website_form
+#: view:magento.website:connector_magento.view_magento_website_tree
+msgid "Magento Website"
+msgstr "Sito web di Magento"
+
+#. module: connector_magento
+#: model:ir.actions.act_window,name:connector_magento.action_magento_website
+msgid "Magento Websites"
+msgstr "Siti web di Magento"
+
+#. module: connector_magento
+#: code:addons/connector_magento/sale.py:1079
+#, python-format
+msgid "Magento sales order is already in state %s"
+msgstr "L'ordine di vendita di Magento è già in stato %s"
+
+#. module: connector_magento
+#: view:connector.config.settings:connector_magento.view_magento_config_settings
+msgid "Magentoerpconnect"
+msgstr "Magentoerpconnect"
+
+#. module: connector_magento
+#: view:magento.backend:connector_magento.view_magento_backend_form
+msgid "Main Configuration"
+msgstr "Configurazione principale"
+
+#. module: connector_magento
+#: field:magento.product.product,backorders:0
+msgid "Manage Inventory Backorders"
+msgstr ""
+
+#. module: connector_magento
+#: selection:magento.product.product,manage_stock:0
+msgid "Manage Stock"
+msgstr "Gestisci lo stock"
+
+#. module: connector_magento
+#: field:magento.product.product,manage_stock:0
+msgid "Manage Stock Level"
+msgstr "Gestisci il livello dello stock"
+
+#. module: connector_magento
+#: field:magento.backend,name:0 field:magento.store,name:0
+#: field:magento.storeview,name:0 field:magento.website,name:0
+msgid "Name"
+msgstr "Nome"
+
+#. module: connector_magento
+#: field:magento.res.partner,newsletter:0
+msgid "Newsletter"
+msgstr "Newsletter"
+
+#. module: connector_magento
+#: field:magento.storeview,no_sales_order_sync:0
+msgid "No Sales Order Synchronization"
+msgstr "Nessuna sincronizzazione degli ordini di vendita"
+
+#. module: connector_magento
+#: selection:magento.product.product,backorders:0
+msgid "No Sell"
+msgstr "Nessuna vendita"
+
+#. module: connector_magento
+#: field:magento.product.product,no_stock_sync:0
+msgid "No Stock Synchronization"
+msgstr "Nessuna sincronizzazione dello stock"
+
+#. module: connector_magento
+#: code:addons/connector_magento/related_action.py:55
+#, python-format
+msgid ""
+"No admin URL configured on the backend or no admin path is defined for this "
+"record."
+msgstr "Nessun URL di admin è configurato sul backend o nessun path di admin è definito su questo record."
+
+#. module: connector_magento
+#: code:addons/connector_magento/stock_tracking.py:83
+#, python-format
+msgid "No tracking number to send."
+msgstr "Nessun numero di tracciamento da inviare."
+
+#. module: connector_magento
+#: field:magento.sale.order.line,notes:0
+msgid "Notes"
+msgstr "Note"
+
+#. module: connector_magento
+#: code:addons/connector_magento/unit/export_synchronizer.py:407
+#: code:addons/connector_magento/unit/export_synchronizer.py:412
+#, python-format
+msgid "Nothing to export."
+msgstr "Niente da esportare"
+
+#. module: connector_magento
+#: view:magento.backend:connector_magento.view_magento_backend_form
+msgid ""
+"Once imported,\n"
+"                                    some types of records,\n"
+"                                    like the products or categories,\n"
+"                                    need a manual review.\n"
+"                                    You will find the list\n"
+"                                    of the new records to review\n"
+"                                    in the menu 'Connectors > Checkpoint'."
+msgstr "Una volta importati,\nalcuni tipi di record,\ncome i prodotti o le categorie\nnecessitano di una revisione manuale.\nTroverai la lista\nnella sezione 'Nuovi record da revisionare'\nnel menu 'Connettori > Punto di controllo'"
+
+#. module: connector_magento
+#: view:magento.store:connector_magento.view_magento_store_form
+#: view:magento.storeview:connector_magento.view_magento_storeview_form
+#: view:magento.website:connector_magento.view_magento_website_form
+msgid "Options"
+msgstr "Opzioni"
+
+#. module: connector_magento
+#: selection:magento.store,create_invoice_on:0
+#: selection:payment.method,create_invoice_on:0
+msgid "Paid"
+msgstr "Pagato"
+
+#. module: connector_magento
+#: field:magento.sale.order,magento_parent_id:0
+msgid "Parent Magento Order"
+msgstr "Ordine padre di Magento"
+
+#. module: connector_magento
+#: selection:magento.stock.picking,picking_method:0
+msgid "Partial"
+msgstr "Parziale"
+
+#. module: connector_magento
+#: model:ir.model,name:connector_magento.model_res_partner
+#: field:magento.address,openerp_id:0 field:magento.res.partner,openerp_id:0
+msgid "Partner"
+msgstr "Partner"
+
+#. module: connector_magento
+#: field:magento.res.partner.category,openerp_id:0
+msgid "Partner Category"
+msgstr "Categoria del partner"
+
+#. module: connector_magento
+#: model:ir.model,name:connector_magento.model_res_partner_category
+msgid "Partner Tags"
+msgstr ""
+
+#. module: connector_magento
+#: field:magento.backend,password:0
+msgid "Password"
+msgstr "Password"
+
+#. module: connector_magento
+#: model:ir.model,name:connector_magento.model_payment_method
+msgid "Payment Method"
+msgstr "Metodo di pagamento"
+
+#. module: connector_magento
+#: model:ir.model,name:connector_magento.model_stock_picking
+msgid "Picking List"
+msgstr "Lista di picking"
+
+#. module: connector_magento
+#: field:magento.stock.picking,picking_method:0
+msgid "Picking Method"
+msgstr "Metodo di picking"
+
+#. module: connector_magento
+#: field:connector.config.settings,module_connector_magento_pricing:0
+msgid "Prices are managed in OpenERP with pricelists"
+msgstr "I prezzi sono gestiti in OpenERP con i listini prezzi"
+
+#. module: connector_magento
+#: help:connector.config.settings,module_connector_magento_pricing:0
+msgid ""
+"Prices are set in OpenERP and exported to Magento.\n"
+"\n"
+"This installs the module connector_magento_pricing."
+msgstr "I prezzi vengono impostati su OpenERP ed esportati su Magento.\n\nQuesto installa il modulo connector_magento_pricing."
+
+#. module: connector_magento
+#: field:magento.storeview,catalog_price_tax_included:0
+msgid "Prices include tax"
+msgstr "I prezzi includono le tasse"
+
+#. module: connector_magento
+#: model:ir.model,name:connector_magento.model_product_product
+#: field:magento.product.product,openerp_id:0
+msgid "Product"
+msgstr "Prodotto"
+
+#. module: connector_magento
+#: model:ir.model,name:connector_magento.model_product_category
+#: field:magento.product.category,openerp_id:0
+msgid "Product Category"
+msgstr "Categoria prodotto"
+
+#. module: connector_magento
+#: code:addons/connector_magento/unit/delete_synchronizer.py:38
+#, python-format
+msgid "Record %s deleted on Magento"
+msgstr "Record %s eliminato su Magento"
+
+#. module: connector_magento
+#: code:addons/connector_magento/unit/import_synchronizer.py:199
+#, python-format
+msgid "Record does no longer exist in Magento"
+msgstr "Il record non esiste più su Magento"
+
+#. module: connector_magento
+#: code:addons/connector_magento/unit/export_synchronizer.py:414
+#, python-format
+msgid "Record exported with ID %s on Magento."
+msgstr "Il record è stato esportato con ID %s su Magento"
+
+#. module: connector_magento
+#: field:magento.sale.order,openerp_id:0
+msgid "Sale Order"
+msgstr "Ordine di vendita"
+
+#. module: connector_magento
+#: field:magento.sale.order.line,openerp_id:0
+msgid "Sale Order Line"
+msgstr "Linea dell'ordine di vendita"
+
+#. module: connector_magento
+#: field:magento.backend,sale_prefix:0
+msgid "Sale Prefix"
+msgstr "Prefisso di vendita"
+
+#. module: connector_magento
+#: code:addons/connector_magento/sale.py:1075
+#, python-format
+msgid "Sale is not linked with a Magento sales order"
+msgstr "L'ordine non è collegato ad un ordine di vendita di Magento"
+
+#. module: connector_magento
+#: model:ir.model,name:connector_magento.model_sale_order
+msgid "Sales Order"
+msgstr "Ordini di vendita"
+
+#. module: connector_magento
+#: model:ir.model,name:connector_magento.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Linee degli ordini di vendita"
+
+#. module: connector_magento
+#: field:magento.storeview,section_id:0
+msgid "Sales Team"
+msgstr "Team vendite"
+
+#. module: connector_magento
+#: selection:magento.product.product,backorders:0
+msgid "Sell Quantity < 0"
+msgstr ""
+
+#. module: connector_magento
+#: selection:magento.product.product,backorders:0
+msgid "Sell Quantity < 0 and Use Customer Notification"
+msgstr ""
+
+#. module: connector_magento
+#: field:magento.store,send_invoice_paid_mail:0
+msgid "Send email notification on invoice validated/paid"
+msgstr "Invia una mail di notifica quando la fattura viene validata/pagata"
+
+#. module: connector_magento
+#: field:magento.store,send_picking_done_mail:0
+msgid "Send email notification on picking done"
+msgstr "Invia email di notifica al completamento del picking"
+
+#. module: connector_magento
+#: code:addons/connector_magento/stock_picking.py:126
+#: code:addons/connector_magento/tests/test_export_picking.py:89
+#: code:addons/connector_magento/tests/test_export_picking.py:135
+#: code:addons/connector_magento/tests/test_export_picking.py:169
+#, python-format
+msgid "Shipping Created"
+msgstr "Spedizione creata"
+
+#. module: connector_magento
+#: help:payment.method,create_invoice_on:0
+msgid ""
+"Should the invoice be created in Magento when it is validated or when it is paid in OpenERP?\n"
+"If nothing is set, the option falls back to the same option on the Magento store related to the sales order."
+msgstr ""
+
+#. module: connector_magento
+#: help:magento.store,create_invoice_on:0
+msgid ""
+"Should the invoice be created in Magento when it is validated or when it is paid in OpenERP?\n"
+"This only takes effect if the sales order's related payment method is not giving an option for this by itself. (See Payment Methods)"
+msgstr "La fattura dovrebbe essere creata in Magento quando viene validata o pagata su OpenERP?\nQuesto ha effetto se il metodo di pagamento legato all'ordine di vendita non fornisce già un'opzione per questo (Vedi i metodi di pagamento)"
+
+#. module: connector_magento
+#: field:magento.storeview,sort_order:0 field:magento.website,sort_order:0
+msgid "Sort Order"
+msgstr "Ordinamento"
+
+#. module: connector_magento
+#: code:addons/connector_magento/sale.py:1072
+#, python-format
+msgid "State %s is not exported."
+msgstr "Lo stato %s non è esportato."
+
+#. module: connector_magento
+#: field:magento.backend,product_stock_field_id:0
+msgid "Stock Field"
+msgstr ""
+
+#. module: connector_magento
+#: field:magento.stock.picking,openerp_id:0
+msgid "Stock Picking"
+msgstr ""
+
+#. module: connector_magento
+#: field:magento.storeview,store_id:0
+msgid "Store"
+msgstr "Negozio"
+
+#. module: connector_magento
+#: model:ir.ui.menu,name:connector_magento.menu_magento_store
+#: view:magento.website:connector_magento.view_magento_website_form
+#: field:magento.website,store_ids:0
+msgid "Stores"
+msgstr "Negozi"
+
+#. module: connector_magento
+#: model:ir.ui.menu,name:connector_magento.menu_magento_storeview
+#: view:magento.store:connector_magento.view_magento_store_form
+#: field:magento.store,storeview_ids:0
+msgid "Storeviews"
+msgstr "Storeviews"
+
+#. module: connector_magento
+#: view:magento.backend:connector_magento.view_magento_backend_form
+msgid "Synchronize Metadata"
+msgstr "Sincronizza i metadati"
+
+#. module: connector_magento
+#: field:magento.res.partner.category,tax_class_id:0
+msgid "Tax Class ID"
+msgstr ""
+
+#. module: connector_magento
+#: field:magento.sale.order.line,tax_rate:0
+msgid "Tax Rate"
+msgstr "Aliquota fiscale"
+
+#. module: connector_magento
+#: model:sale.exception,description:connector_magento.excep_wrong_total_amount
+msgid ""
+"The amount computed in OpenERP doesn't match with the amount in Magento.\n"
+"\n"
+"Cause:\n"
+"The taxes are probably different between OpenERP and Magento. A fiscal position could have changed the final price.\n"
+"\n"
+"Resolution:\n"
+"Check your taxes and fiscal positions configuration and correct them if necessary."
+msgstr "Il totale calcolato su OpenERP non corrisponde alla quantità su Magento.\nCausa:\nLe tasse sono probabilmente differenti tra OpenERP e Magento. Una posizione fiscale  potrebbe aver cambiato il prezzo finale.\nSoluzione:\nControlla la configurazione delle tue tasse e delle tue posizioni fiscali e correggile se necessario."
+
+#. module: connector_magento
+#: code:addons/connector_magento/stock_tracking.py:80
+#, python-format
+msgid "The carrier %s does not export tracking numbers."
+msgstr "Il trasportatore %s non esporta i numeri di tracciamento."
+
+#. module: connector_magento
+#: code:addons/connector_magento/product.py:558
+#, python-format
+msgid ""
+"The configurable product is not imported in OpenERP, because only the simple"
+" products are used in the sales orders."
+msgstr "Il prodotto configurabile non è importato in OpenERP, perchè solo i prodotti semplici vengono usati negli ordini di vendita"
+
+#. module: connector_magento
+#: help:magento.backend,use_custom_api_path:0
+msgid ""
+"The default API path is '/index.php/api/xmlrpc'. Check this box if you use a"
+" custom API path, in that case, the location has to be completed with the "
+"custom API path "
+msgstr "Il path predefinito del API è  '/index.php/api/xmlrpc''. Seleziona questo box se utilizzi un path personalizzato per l'API. In quel caso la posizione deve essere completata con il path custom dell'API."
+
+#. module: connector_magento
+#: model:sale.exception,description:connector_magento.excep_wrong_total_amount_tax
+msgid ""
+"The tax amount computed in OpenERP doesn't match with the tax amount in Magento.\n"
+"\n"
+"Cause:\n"
+"The taxes are probably different between OpenERP and Magento. A fiscal position could have changed the final price.\n"
+"\n"
+"Resolution:\n"
+"Check your taxes and fiscal positions configuration and correct them if necessary."
+msgstr "Il totale delle tasse calcolato su OpenERP non corrisponde al totale delle tasse su Magento.\nCausa:\nLe tasse sono probabilmente differenti tra OpenERP e Magento. Una posizione fiscale  potrebbe aver cambiato il prezzo finale.\nSoluzione:\nControlla la configurazione delle tue tasse e delle tue posizioni fiscali e correggile se necessario."
+
+#. module: connector_magento
+#: help:connector.config.settings,module_connector_magento_export_partner:0
+msgid "This installs the module connector_magento_export_partner."
+msgstr "Questo installa il modulo connector_magento_export_partner."
+
+#. module: connector_magento
+#: view:magento.storeview:connector_magento.view_magento_storeview_form
+msgid ""
+"This option should respect the same\n"
+"                              configuration as Magento.  Pay\n"
+"                              attention to the taxes on the products,\n"
+"                              which should surely include prices when\n"
+"                              this option is activated."
+msgstr "Questa opzione dovrebbe essere\nla stessa impostata in Magento. \nFai attenzione che le tasse sul prodotto\ndevono essere incluse nei prezzi quando\nquesta opzione è attivata."
+
+#. module: connector_magento
+#: model:sale.exception,name:connector_magento.excep_wrong_total_amount
+msgid "Total Amount differs from Magento"
+msgstr "Il totale è diverso da quello di Magento"
+
+#. module: connector_magento
+#: model:sale.exception,name:connector_magento.excep_wrong_total_amount_tax
+msgid "Total Tax Amount differs from Magento"
+msgstr "Il totale delle tasse è diverso da quello di Magento"
+
+#. module: connector_magento
+#: field:magento.sale.order,total_amount:0
+msgid "Total amount"
+msgstr "Totale"
+
+#. module: connector_magento
+#: field:magento.sale.order,total_amount_tax:0
+msgid "Total amount w. tax"
+msgstr "Totale tasse incluse"
+
+#. module: connector_magento
+#: code:addons/connector_magento/magento_model.py:575
+#, python-format
+msgid "Undefined"
+msgstr "Non definito"
+
+#. module: connector_magento
+#: view:magento.backend:connector_magento.view_magento_backend_form
+msgid "Update"
+msgstr "Aggiorna"
+
+#. module: connector_magento
+#: view:magento.backend:connector_magento.view_magento_backend_form
+msgid "Update all the products stock quantities"
+msgstr "Aggiorna tutte le quantità dei prodotti in stock"
+
+#. module: connector_magento
+#: field:magento.address,updated_at:0
+#: field:magento.product.product,updated_at:0
+#: field:magento.res.partner,updated_at:0
+msgid "Updated At (on Magento)"
+msgstr "Aggiornato al (su Magento)"
+
+#. module: connector_magento
+#: help:magento.backend,location:0
+msgid "Url to magento application"
+msgstr "L'url all'applicazione Magento"
+
+#. module: connector_magento
+#: selection:magento.product.product,backorders:0
+#: selection:magento.product.product,manage_stock:0
+msgid "Use Default Config"
+msgstr "Usa la configurazione di default"
+
+#. module: connector_magento
+#: field:magento.backend,use_auth_basic:0
+msgid "Use HTTP Auth Basic"
+msgstr "Usa l'autenticazione HTTP"
+
+#. module: connector_magento
+#: help:magento.backend,use_auth_basic:0
+msgid ""
+"Use a Basic Access Authentication for the API. The Magento server could be "
+"configured to restrict access using a HTTP authentication based on a "
+"username and a password."
+msgstr "Utilizza un'autenticazione basic per l'API. Il server Magento potrebbe essere configurato per limitare l'accesso utilizzando un'autenticazione basic HTTP composta da utente e password."
+
+#. module: connector_magento
+#: field:magento.backend,username:0
+msgid "Username"
+msgstr "Username"
+
+#. module: connector_magento
+#: selection:magento.store,create_invoice_on:0
+#: selection:payment.method,create_invoice_on:0
+msgid "Validate"
+msgstr "Valida"
+
+#. module: connector_magento
+#: field:magento.backend,version:0
+msgid "Version"
+msgstr "Versione"
+
+#. module: connector_magento
+#: field:magento.backend,warehouse_id:0
+msgid "Warehouse"
+msgstr "Magazzino"
+
+#. module: connector_magento
+#: help:magento.backend,warehouse_id:0
+msgid "Warehouse used to compute the stock quantities."
+msgstr "Magazzino usato per la valorizzazione delle scorte."
+
+#. module: connector_magento
+#: help:magento.backend,password:0
+msgid "Webservice password"
+msgstr "Password del webservice"
+
+#. module: connector_magento
+#: help:magento.backend,username:0
+msgid "Webservice user"
+msgstr "Utente del webservice"
+
+#. module: connector_magento
+#: field:magento.backend,website_ids:0
+msgid "Website"
+msgstr "Sito web"
+
+#. module: connector_magento
+#: model:ir.ui.menu,name:connector_magento.menu_magento_website
+#: view:magento.backend:connector_magento.view_magento_backend_form
+#: field:magento.product.product,website_ids:0
+msgid "Websites"
+msgstr "Siti web"
+
+#. module: connector_magento
+#: help:magento.storeview,import_orders_from_date:0
+msgid ""
+"do not consider non-imported sale orders before this date. Leave empty to "
+"import all sale orders"
+msgstr "non considerare gli ordini di vendita precedenti a questa data come 'non importati'. Lascia vuoto per importare tutti gli ordini di vendita"
+
+#. module: connector_magento
+#: view:magento.backend:connector_magento.view_magento_backend_form
+msgid "e.g. http://my.magento.com"
+msgstr "es. http://my.magento.com"
+
+#. module: connector_magento
+#: view:magento.backend:connector_magento.view_magento_backend_form
+msgid "e.g. http://my.magento.com/admin"
+msgstr "es. http://my.magento.com/admin"
+
+#. module: connector_magento
+#: view:magento.backend:connector_magento.view_magento_backend_form
+msgid "mag-"
+msgstr ""

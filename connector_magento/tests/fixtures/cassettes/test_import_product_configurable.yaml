@@ -1,0 +1,159 @@
+interactions:
+- request:
+    body: !!python/unicode '<?xml version=''1.0''?>
+
+      <methodCall>
+
+      <methodName>login</methodName>
+
+      <params>
+
+      <param>
+
+      <value><string>odoo</string></value>
+
+      </param>
+
+      <param>
+
+      <value><string>odoo42</string></value>
+
+      </param>
+
+      </params>
+
+      </methodCall>
+
+      '
+    headers:
+      Accept-Encoding: [gzip]
+      Content-Length: ['209']
+      Content-Type: [text/xml]
+      User-Agent: [xmlrpclib.py/1.0.1 (by www.pythonware.com)]
+    method: POST
+    uri: http://magento/index.php/api/xmlrpc
+  response:
+    body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8"?>
+
+        <methodResponse><params><param><value><string>aacec9e6bc212b7a608133f802c4b11a</string></value></param></params></methodResponse>'}
+    headers:
+      cache-control: ['no-store, no-cache, must-revalidate, post-check=0, pre-check=0']
+      connection: [keep-alive]
+      content-type: [text/xml; charset=UTF-8]
+      date: ['Fri, 30 Jun 2017 09:51:54 GMT']
+      expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      pragma: [no-cache]
+      server: [nginx/1.10.2]
+      set-cookie: ['PHPSESSID=6f2nu545eno5j3lot6gjobfdc6; expires=Fri, 30-Jun-2017
+          10:51:53 GMT; path=/; domain=magento; HttpOnly']
+      x-powered-by: [PHP/5.3.3]
+    status: {code: 200, message: OK}
+- request:
+    body: !!python/unicode '<?xml version=''1.0''?>
+
+      <methodCall>
+
+      <methodName>call</methodName>
+
+      <params>
+
+      <param>
+
+      <value><string>aacec9e6bc212b7a608133f802c4b11a</string></value>
+
+      </param>
+
+      <param>
+
+      <value><string>ol_catalog_product.info</string></value>
+
+      </param>
+
+      <param>
+
+      <value><array><data>
+
+      <value><int>408</int></value>
+
+      <value><nil/></value><value><nil/></value><value><string>id</string></value>
+
+      </data></array></value>
+
+      </param>
+
+      </params>
+
+      </methodCall>
+
+      '
+    headers:
+      Accept-Encoding: [gzip]
+      Content-Length: ['422']
+      Content-Type: [text/xml]
+      User-Agent: [xmlrpclib.py/1.0.1 (by www.pythonware.com)]
+    method: POST
+    uri: http://magento/index.php/api/xmlrpc
+  response:
+    body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8"?>
+
+        <methodResponse><params><param><value><struct><member><name>product_id</name><value><string>408</string></value></member><member><name>sku</name><value><string>mtk000c</string></value></member><member><name>set</name><value><string>13</string></value></member><member><name>type</name><value><string>configurable</string></value></member><member><name>categories</name><value><array><data><value><string>16</string></value></data></array></value></member><member><name>websites</name><value><array><data><value><string>1</string></value></data></array></value></member><member><name>type_id</name><value><string>configurable</string></value></member><member><name>name</name><value><string>Chelsea
+        Tee</string></value></member><member><name>description</name><value><string>Ultrasoft,
+        lightweight V-neck tee. 100% cotton. Machine wash.</string></value></member><member><name>short_description</name><value><string>Minimalist
+        style and maximum comfort meet in this lightweight tee.</string></value></member><member><name>news_from_date</name><value><nil/></value></member><member><name>old_id</name><value><nil/></value></member><member><name>news_to_date</name><value><nil/></value></member><member><name>status</name><value><string>1</string></value></member><member><name>url_key</name><value><string>chelsea-tee</string></value></member><member><name>visibility</name><value><string>4</string></value></member><member><name>country_of_manufacture</name><value><nil/></value></member><member><name>url_path</name><value><string>chelsea-tee-701.html</string></value></member><member><name>category_ids</name><value><array><data><value><string>16</string></value></data></array></value></member><member><name>required_options</name><value><string>1</string></value></member><member><name>has_options</name><value><string>1</string></value></member><member><name>image_label</name><value><nil/></value></member><member><name>small_image_label</name><value><nil/></value></member><member><name>thumbnail_label</name><value><nil/></value></member><member><name>created_at</name><value><string>2013-03-05T07:25:10+01:00</string></value></member><member><name>updated_at</name><value><string>2013-03-20
+        18:47:44</string></value></member><member><name>price</name><value><string>75.0000</string></value></member><member><name>group_price</name><value><array><data/></array></value></member><member><name>special_price</name><value><nil/></value></member><member><name>minimal_price</name><value><nil/></value></member><member><name>special_from_date</name><value><nil/></value></member><member><name>special_to_date</name><value><nil/></value></member><member><name>tier_price</name><value><array><data/></array></value></member><member><name>msrp_enabled</name><value><string>2</string></value></member><member><name>msrp_display_actual_price_type</name><value><string>4</string></value></member><member><name>msrp</name><value><nil/></value></member><member><name>tax_class_id</name><value><string>2</string></value></member><member><name>meta_title</name><value><nil/></value></member><member><name>meta_keyword</name><value><nil/></value></member><member><name>meta_description</name><value><nil/></value></member><member><name>custom_design</name><value><nil/></value></member><member><name>custom_design_from</name><value><nil/></value></member><member><name>custom_design_to</name><value><nil/></value></member><member><name>custom_layout_update</name><value><nil/></value></member><member><name>page_layout</name><value><string>one_column</string></value></member><member><name>options_container</name><value><string>container1</string></value></member><member><name>gift_message_available</name><value><nil/></value></member><member><name>gift_wrapping_available</name><value><nil/></value></member><member><name>gift_wrapping_price</name><value><nil/></value></member><member><name>occasion</name><value><string>31</string></value></member><member><name>apparel_type</name><value><string>40</string></value></member><member><name>sleeve_length</name><value><string>46</string></value></member><member><name>fit</name><value><string>51</string></value></member><member><name>gender</name><value><string>93</string></value></member></struct></value></param></params></methodResponse>'}
+    headers:
+      cache-control: ['no-store, no-cache, must-revalidate, post-check=0, pre-check=0']
+      connection: [keep-alive]
+      content-type: [text/xml; charset=UTF-8]
+      date: ['Fri, 30 Jun 2017 09:51:54 GMT']
+      expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      pragma: [no-cache]
+      server: [nginx/1.10.2]
+      set-cookie: ['PHPSESSID=ccmm8eo5ehkv94nr3b2r052k65; expires=Fri, 30-Jun-2017
+          10:51:54 GMT; path=/; domain=magento; HttpOnly']
+      x-powered-by: [PHP/5.3.3]
+    status: {code: 200, message: OK}
+- request:
+    body: !!python/unicode '<?xml version=''1.0''?>
+
+      <methodCall>
+
+      <methodName>endSession</methodName>
+
+      <params>
+
+      <param>
+
+      <value><string>aacec9e6bc212b7a608133f802c4b11a</string></value>
+
+      </param>
+
+      </params>
+
+      </methodCall>
+
+      '
+    headers:
+      Accept-Encoding: [gzip]
+      Content-Length: ['186']
+      Content-Type: [text/xml]
+      User-Agent: [xmlrpclib.py/1.0.1 (by www.pythonware.com)]
+    method: POST
+    uri: http://magento/index.php/api/xmlrpc
+  response:
+    body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8"?>
+
+        <methodResponse><params><param><value><boolean>1</boolean></value></param></params></methodResponse>'}
+    headers:
+      cache-control: ['no-store, no-cache, must-revalidate, post-check=0, pre-check=0']
+      connection: [keep-alive]
+      content-type: [text/xml; charset=UTF-8]
+      date: ['Fri, 30 Jun 2017 09:51:54 GMT']
+      expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      pragma: [no-cache]
+      server: [nginx/1.10.2]
+      set-cookie: ['PHPSESSID=8t12tkivkmnbdf078tifledjd2; expires=Fri, 30-Jun-2017
+          10:51:54 GMT; path=/; domain=magento; HttpOnly']
+      x-powered-by: [PHP/5.3.3]
+    status: {code: 200, message: OK}
+version: 1

@@ -1,0 +1,222 @@
+interactions:
+- request:
+    body: !!python/unicode '<?xml version=''1.0''?>
+
+      <methodCall>
+
+      <methodName>login</methodName>
+
+      <params>
+
+      <param>
+
+      <value><string>odoo</string></value>
+
+      </param>
+
+      <param>
+
+      <value><string>odoo42</string></value>
+
+      </param>
+
+      </params>
+
+      </methodCall>
+
+      '
+    headers:
+      Accept-Encoding: [gzip]
+      Content-Length: ['209']
+      Content-Type: [text/xml]
+      User-Agent: [xmlrpclib.py/1.0.1 (by www.pythonware.com)]
+    method: POST
+    uri: http://magento/index.php/api/xmlrpc
+  response:
+    body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8"?>
+
+        <methodResponse><params><param><value><string>beea7d6a40be57888f268f58a7ed793b</string></value></param></params></methodResponse>'}
+    headers:
+      cache-control: ['no-store, no-cache, must-revalidate, post-check=0, pre-check=0']
+      connection: [keep-alive]
+      content-type: [text/xml; charset=UTF-8]
+      date: ['Wed, 28 Jun 2017 11:02:26 GMT']
+      expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      pragma: [no-cache]
+      server: [nginx/1.10.2]
+      set-cookie: ['PHPSESSID=63bn0h59vtn20rfk6vrg7jv8f5; expires=Wed, 28-Jun-2017
+          12:02:26 GMT; path=/; domain=magento; HttpOnly']
+      x-powered-by: [PHP/5.3.3]
+    status: {code: 200, message: OK}
+- request:
+    body: !!python/unicode '<?xml version=''1.0''?>
+
+      <methodCall>
+
+      <methodName>call</methodName>
+
+      <params>
+
+      <param>
+
+      <value><string>beea7d6a40be57888f268f58a7ed793b</string></value>
+
+      </param>
+
+      <param>
+
+      <value><string>ol_catalog_product.info</string></value>
+
+      </param>
+
+      <param>
+
+      <value><array><data>
+
+      <value><int>337</int></value>
+
+      <value><nil/></value><value><nil/></value><value><string>id</string></value>
+
+      </data></array></value>
+
+      </param>
+
+      </params>
+
+      </methodCall>
+
+      '
+    headers:
+      Accept-Encoding: [gzip]
+      Content-Length: ['422']
+      Content-Type: [text/xml]
+      User-Agent: [xmlrpclib.py/1.0.1 (by www.pythonware.com)]
+    method: POST
+    uri: http://magento/index.php/api/xmlrpc
+  response:
+    body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8"?>
+
+        <methodResponse><params><param><value><struct><member><name>product_id</name><value><string>337</string></value></member><member><name>sku</name><value><string>ace000</string></value></member><member><name>set</name><value><string>11</string></value></member><member><name>type</name><value><string>simple</string></value></member><member><name>categories</name><value><array><data><value><string>18</string></value></data></array></value></member><member><name>websites</name><value><array><data><value><string>1</string></value></data></array></value></member><member><name>type_id</name><value><string>simple</string></value></member><member><name>name</name><value><string>Aviator
+        Sunglasses</string></value></member><member><name>description</name><value><string>Gunmetal
+        frame with crystal gradient polycarbonate lenses in grey. </string></value></member><member><name>short_description</name><value><string>A
+        timeless accessory staple, the unmistakable teardrop lenses of our Aviator
+        sunglasses appeal to everyone from suits to rock stars to citizens of the
+        world.</string></value></member><member><name>weight</name><value><string>1.0000</string></value></member><member><name>news_from_date</name><value><nil/></value></member><member><name>old_id</name><value><nil/></value></member><member><name>news_to_date</name><value><nil/></value></member><member><name>status</name><value><string>1</string></value></member><member><name>url_key</name><value><string>aviator-sunglasses</string></value></member><member><name>visibility</name><value><string>4</string></value></member><member><name>country_of_manufacture</name><value><nil/></value></member><member><name>url_path</name><value><string>aviator-sunglasses.html</string></value></member><member><name>category_ids</name><value><array><data><value><string>18</string></value></data></array></value></member><member><name>required_options</name><value><string>0</string></value></member><member><name>has_options</name><value><string>0</string></value></member><member><name>image_label</name><value><nil/></value></member><member><name>small_image_label</name><value><nil/></value></member><member><name>thumbnail_label</name><value><nil/></value></member><member><name>created_at</name><value><string>2013-03-05T06:48:17+01:00</string></value></member><member><name>updated_at</name><value><string>2013-03-20
+        16:45:10</string></value></member><member><name>price</name><value><string>295.0000</string></value></member><member><name>group_price</name><value><array><data/></array></value></member><member><name>special_price</name><value><nil/></value></member><member><name>special_from_date</name><value><nil/></value></member><member><name>minimal_price</name><value><nil/></value></member><member><name>special_to_date</name><value><nil/></value></member><member><name>tier_price</name><value><array><data/></array></value></member><member><name>msrp_enabled</name><value><string>2</string></value></member><member><name>msrp_display_actual_price_type</name><value><string>4</string></value></member><member><name>msrp</name><value><nil/></value></member><member><name>tax_class_id</name><value><string>2</string></value></member><member><name>meta_title</name><value><nil/></value></member><member><name>meta_keyword</name><value><nil/></value></member><member><name>meta_description</name><value><nil/></value></member><member><name>is_recurring</name><value><string>0</string></value></member><member><name>recurring_profile</name><value><nil/></value></member><member><name>custom_design</name><value><nil/></value></member><member><name>custom_design_from</name><value><nil/></value></member><member><name>custom_design_to</name><value><nil/></value></member><member><name>custom_layout_update</name><value><nil/></value></member><member><name>page_layout</name><value><string>one_column</string></value></member><member><name>options_container</name><value><string>container1</string></value></member><member><name>gift_message_available</name><value><nil/></value></member><member><name>gift_wrapping_available</name><value><nil/></value></member><member><name>gift_wrapping_price</name><value><nil/></value></member><member><name>color</name><value><string>15</string></value></member><member><name>gender</name><value><string>93</string></value></member><member><name>material</name><value><string>130</string></value></member><member><name>luggage_size</name><value><nil/></value></member><member><name>luggage_travel_style</name><value><nil/></value></member><member><name>bag_luggage_type</name><value><nil/></value></member><member><name>accessories_size</name><value><nil/></value></member><member><name>accessories_type</name><value><string>Eyewear</string></value></member><member><name>luggage_style</name><value><nil/></value></member></struct></value></param></params></methodResponse>'}
+    headers:
+      cache-control: ['no-store, no-cache, must-revalidate, post-check=0, pre-check=0']
+      connection: [keep-alive]
+      content-type: [text/xml; charset=UTF-8]
+      date: ['Wed, 28 Jun 2017 11:02:26 GMT']
+      expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      pragma: [no-cache]
+      server: [nginx/1.10.2]
+      set-cookie: ['PHPSESSID=u1vn7oa4rhsi82k680v609tv66; expires=Wed, 28-Jun-2017
+          12:02:26 GMT; path=/; domain=magento; HttpOnly']
+      x-powered-by: [PHP/5.3.3]
+    status: {code: 200, message: OK}
+- request:
+    body: !!python/unicode '<?xml version=''1.0''?>
+
+      <methodCall>
+
+      <methodName>call</methodName>
+
+      <params>
+
+      <param>
+
+      <value><string>beea7d6a40be57888f268f58a7ed793b</string></value>
+
+      </param>
+
+      <param>
+
+      <value><string>product_media.list</string></value>
+
+      </param>
+
+      <param>
+
+      <value><array><data>
+
+      <value><int>337</int></value>
+
+      <value><nil/></value><value><string>id</string></value>
+
+      </data></array></value>
+
+      </param>
+
+      </params>
+
+      </methodCall>
+
+      '
+    headers:
+      Accept-Encoding: [gzip]
+      Content-Length: ['396']
+      Content-Type: [text/xml]
+      User-Agent: [xmlrpclib.py/1.0.1 (by www.pythonware.com)]
+    method: POST
+    uri: http://magento/index.php/api/xmlrpc
+  response:
+    body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8"?>
+
+        <methodResponse><params><param><value><array><data><value><struct><member><name>file</name><value><string>/a/c/ace000a_1.jpg</string></value></member><member><name>label</name><value><string></string></value></member><member><name>position</name><value><string>1</string></value></member><member><name>exclude</name><value><string>0</string></value></member><member><name>url</name><value><string>http://magento/media/catalog/product/a/c/ace000a_1.jpg</string></value></member><member><name>types</name><value><array><data><value><string>image</string></value><value><string>small_image</string></value><value><string>thumbnail</string></value></data></array></value></member></struct></value><value><struct><member><name>file</name><value><string>/a/c/ace000b_1.jpg</string></value></member><member><name>label</name><value><string></string></value></member><member><name>position</name><value><string>2</string></value></member><member><name>exclude</name><value><string>0</string></value></member><member><name>url</name><value><string>http://magento/media/catalog/product/a/c/ace000b_1.jpg</string></value></member><member><name>types</name><value><array><data/></array></value></member></struct></value></data></array></value></param></params></methodResponse>'}
+    headers:
+      cache-control: ['no-store, no-cache, must-revalidate, post-check=0, pre-check=0']
+      connection: [keep-alive]
+      content-type: [text/xml; charset=UTF-8]
+      date: ['Wed, 28 Jun 2017 11:02:27 GMT']
+      expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      pragma: [no-cache]
+      server: [nginx/1.10.2]
+      set-cookie: ['PHPSESSID=snj3nuimd46iuc7nge4usfu7b3; expires=Wed, 28-Jun-2017
+          12:02:27 GMT; path=/; domain=magento; HttpOnly']
+      x-powered-by: [PHP/5.3.3]
+    status: {code: 200, message: OK}
+- request:
+    body: !!python/unicode '<?xml version=''1.0''?>
+
+      <methodCall>
+
+      <methodName>endSession</methodName>
+
+      <params>
+
+      <param>
+
+      <value><string>beea7d6a40be57888f268f58a7ed793b</string></value>
+
+      </param>
+
+      </params>
+
+      </methodCall>
+
+      '
+    headers:
+      Accept-Encoding: [gzip]
+      Content-Length: ['186']
+      Content-Type: [text/xml]
+      User-Agent: [xmlrpclib.py/1.0.1 (by www.pythonware.com)]
+    method: POST
+    uri: http://magento/index.php/api/xmlrpc
+  response:
+    body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8"?>
+
+        <methodResponse><params><param><value><boolean>1</boolean></value></param></params></methodResponse>'}
+    headers:
+      cache-control: ['no-store, no-cache, must-revalidate, post-check=0, pre-check=0']
+      connection: [keep-alive]
+      content-type: [text/xml; charset=UTF-8]
+      date: ['Wed, 28 Jun 2017 11:02:27 GMT']
+      expires: ['Thu, 19 Nov 1981 08:52:00 GMT']
+      pragma: [no-cache]
+      server: [nginx/1.10.2]
+      set-cookie: ['PHPSESSID=oo76pdd8pora9jsghrefdvl0o3; expires=Wed, 28-Jun-2017
+          12:02:27 GMT; path=/; domain=magento; HttpOnly']
+      x-powered-by: [PHP/5.3.3]
+    status: {code: 200, message: OK}
+version: 1

@@ -1,0 +1,39 @@
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+"access_magento_backend","magento_backend connector manager","model_magento_backend","connector.group_connector_manager",1,1,1,1
+"access_magento_binding","magento_binding connector manager","model_magento_binding","connector.group_connector_manager",1,1,1,1
+"access_magento_website","magento_website connector manager","model_magento_website","connector.group_connector_manager",1,1,1,1
+"access_magento_store","magento_store connector manager","model_magento_store","connector.group_connector_manager",1,1,1,1
+"access_magento_storeview","magento_storeview connector manager","model_magento_storeview","connector.group_connector_manager",1,1,1,1
+"access_magento_product_category","magento_product_category connector manager","model_magento_product_category","connector.group_connector_manager",1,1,1,1
+"access_magento_product_product","magento_product_product connector manager","model_magento_product_product","connector.group_connector_manager",1,1,1,1
+"access_magento_res_partner","magento_res_partner connector manager","model_magento_res_partner","connector.group_connector_manager",1,1,1,1
+"access_magento_address","magento_address connector manager","model_magento_address","connector.group_connector_manager",1,1,1,1
+"access_magento_res_partner_category","magento_res_partner_category connector manager","model_magento_res_partner_category","connector.group_connector_manager",1,1,1,1
+"access_magento_account_invoice","magento_account_invoice connector manager","model_magento_account_invoice","connector.group_connector_manager",1,1,1,1
+"access_magento_sale_order","magento_sale_order connector manager","model_magento_sale_order","connector.group_connector_manager",1,1,1,1
+"access_magento_sale_order_line","magento_sale_order_line connector manager","model_magento_sale_order_line","connector.group_connector_manager",1,1,1,1
+"access_magento_stock_picking_out","magento_stock_picking connector manager","model_magento_stock_picking","connector.group_connector_manager",1,1,1,1
+"access_magento_backend_user","magento_backend user","model_magento_backend","sales_team.group_sale_salesman",1,0,0,0
+"access_magento_backend_sale_manager","magento_backend manager","model_magento_backend","sales_team.group_sale_manager",1,0,0,0
+"access_magento_product_product_user","magento_product_product user","model_magento_product_product","sales_team.group_sale_salesman",1,0,0,0
+"access_magento_product_product_sale_manager","magento_product_product sale manager","model_magento_product_product","sales_team.group_sale_manager",1,1,1,1
+"access_magento_store_user","magento_store user","model_magento_store","sales_team.group_sale_salesman",1,0,0,0
+"access_magento_store_sale_manager","magento_store sale manager","model_magento_store","sales_team.group_sale_manager",1,0,0,0
+"access_magento_storeview_user","magento_storeview user","model_magento_storeview","sales_team.group_sale_salesman",1,0,0,0
+"access_magento_storeview_sale_manager","magento_storeview sale manager","model_magento_storeview","sales_team.group_sale_manager",1,0,0,0
+"access_magento_website_user","magento_website user","model_magento_website","sales_team.group_sale_salesman",1,0,0,0
+"access_magento_website_sale_manager","magento_website sale manager","model_magento_website","sales_team.group_sale_manager",1,0,0,0
+"access_magento_sale_order_sale_salesman","magento_sale_order","model_magento_sale_order","sales_team.group_sale_salesman",1,1,1,1
+"access_magento_sale_order_sale_manager","magento_sale_order","model_magento_sale_order","sales_team.group_sale_manager",1,1,1,1
+"access_magento_sale_order_line_sale_salesman","magento_sale_order_line","model_magento_sale_order_line","sales_team.group_sale_salesman",1,1,1,1
+"access_magento_sale_order_line_sale_manager","magento_sale_order_line","model_magento_sale_order_line","sales_team.group_sale_manager",1,1,1,1
+"access_magento_invoice_user","magento_account.invoice","model_magento_account_invoice","account.group_account_invoice",1,1,1,1
+"access_product_category_sale_manager","magento_product.category salemanager","model_magento_product_category","sales_team.group_sale_manager",1,1,1,1
+"access_product_category_user","magento_product.category.user","model_magento_product_category","base.group_user",1,0,0,0
+"access_res_partner_group_user","magento_res_partner group_user","model_magento_res_partner","base.group_user",1,0,0,0
+"access_res_partner_category_group_user","magento_res_partner_category group_user","model_magento_res_partner_category","base.group_user",1,0,0,0
+"access_address_group_user","magento_address_group_user","model_magento_address","base.group_user",1,0,0,0
+"access_stock_picking_out_user","magento_stock.picking user","model_magento_stock_picking","stock.group_stock_user",1,1,1,1
+"access_stock_picking_out_manager","magento_stock.picking manager","model_magento_stock_picking","stock.group_stock_manager",1,1,1,1
+"access_magento_sale_order_stock_user","magento_sale_order warehouse user","model_magento_sale_order","stock.group_stock_user",1,1,0,0
+"access_magento_sale_order_line_stock_user","magento_sale_order_line warehouse user","model_magento_sale_order_line","stock.group_stock_user",1,1,0,0

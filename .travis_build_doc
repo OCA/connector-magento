@@ -1,0 +1,7 @@
+#!/bin/bash
+
+cd ${TRAVIS_BUILD_DIR}
+
+sphinx-build -b html ./connector_magento/doc/ ${HOME}/doc
+# sphinx-intl build
+# sphinx-build -D language=fr -b html ./connector_magento/doc/ ${HOME}/doc/fr
