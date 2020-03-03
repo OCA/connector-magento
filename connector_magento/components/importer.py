@@ -330,7 +330,7 @@ class TranslationImporter(Component):
 
         # find the translatable fields of the model
         fields = self.model.fields_get()
-        translatable_fields = [field for field, attrs in fields.iteritems()
+        translatable_fields = [field for field, attrs in fields.items()
                                if attrs.get('translate')]
 
         if mapper is None:
@@ -343,7 +343,7 @@ class TranslationImporter(Component):
             map_record = mapper.map_record(lang_record)
             record = map_record.values()
 
-            data = dict((field, value) for field, value in record.iteritems()
+            data = dict((field, value) for field, value in record.items()
                         if field in translatable_fields)
 
             binding.with_context(connector_no_export=True,
