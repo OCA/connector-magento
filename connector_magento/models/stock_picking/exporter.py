@@ -37,7 +37,7 @@ class MagentoPickingExporter(Component):
         item_qty = {}
         # get product and quantities to ship from the picking
         for line in binding.move_lines:
-            sale_line = line.procurement_id.sale_line_id
+            sale_line = line.sale_line_id
             if not sale_line.magento_bind_ids:
                 continue
             magento_sale_line = next(
