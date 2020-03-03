@@ -182,6 +182,8 @@ class SaleOrderImportMapper(Component):
         # if gift_cert_amount is zero
         if not record.get('discount_amount'):
             return values
+        if not self.backend_record.default_gift_product_id:
+            return values
         amount = float(record['discount_amount'])
         name = 'Gift'
         if 'discount_description' in record:
@@ -356,29 +358,6 @@ class SaleOrderImporter(Component):
         resource['items'] = top_items
         return resource
 
-    def _create_discount_item(self, resource):
-        """
-        Method that does create an extra discount item(s) if discount is given
-
-        """
-        items = []
-
-        discount = {}
-        for item in resource['items']:
-            if 'discount_percent' in item and 'tax_percent' in item:
-                key = "%s_%s" % (item['discount_percent'], item['tax_percent'])
-            elif 'discount_percent' in item:
-                key = item['discount_percent']
-            if key not in discount:
-                discount[key] = {
-                    'tax_percent'
-                }
-
-            items.append(item)
-
-        resource['items'] = items
-        return resource
-
     def _import_customer_group(self, group_id):
         self._import_dependency(group_id, 'magento.res.partner.category')
 
@@ -444,7 +423,6 @@ class SaleOrderImporter(Component):
             importer.run_with_data(payment, order_binding=binding)
 
     def _after_import(self, binding):
-        #self._create_discount_item(binding)
         self._link_parent_orders(binding)
         self._link_messages(binding)
         self._import_payment(binding)
@@ -693,6 +671,10 @@ class SaleOrderLineImportMapper(Component):
         if record.get('parent_item'):
             # Use parent item here if it is set
             record = record.get('parent_item')
+        if 'discount_percent' in record:
+            return {
+                'discount': record['discount_percent']
+            }
         discount_value = float(record.get('discount_amount') or 0)
         if self.options.tax_include:
             row_total = float(record.get('row_total_incl_tax') or 0)
@@ -764,14 +746,13 @@ class SaleOrderLineImportMapper(Component):
             record = record.get('parent_item')
         """ tax key may not be present in magento2 when no taxes apply """
         result = {}
-        base_row_total = float(record['base_row_total'] or 0.)
-        base_row_total_incl_tax = float(
-            record.get('base_row_total_incl_tax') or base_row_total)
-        qty_ordered = float(record['qty_ordered'])
+        base_price = float(record['base_price'] or 0.)
+        base_price_incl_tax = float(
+            record.get('base_price_incl_tax') or base_price)
         if self.options.tax_include:
-            result['price_unit'] = base_row_total_incl_tax / qty_ordered
+            result['price_unit'] = base_price_incl_tax
         else:
-            result['price_unit'] = base_row_total / qty_ordered
+            result['price_unit'] = base_price
         return result
 
 
