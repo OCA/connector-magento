@@ -96,7 +96,8 @@ class CatalogImageImporter(Component):
                 self.backend_record.location, model, image_data['file'])
         url = image_data['url'].encode('utf8')
         headers = {}
-        if (self.backend_record.auth_basic_username and
+        if (self.backend_record.use_auth_basic and
+                self.backend_record.auth_basic_username and
                 self.backend_record.auth_basic_password):
             base64string = base64.b64encode(
                 '%s:%s' % (self.backend_record.auth_basic_username,
