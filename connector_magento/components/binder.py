@@ -4,6 +4,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo.addons.component.core import Component
+from odoo import tools
 
 
 class MagentoModelBinder(Component):
@@ -31,3 +32,32 @@ class MagentoModelBinder(Component):
         'magento.sale.order.line',
         'magento.account.invoice',
     ]
+
+    def custom_to_internal(self, external_field, external_id, unwrap=False):
+        """ Give the Odoo recordset for an external ID with a custom field
+
+        :param external_field: external field for which we will search
+        :param external_id: external ID for which we want
+                            the Odoo ID
+        :param unwrap: if True, returns the normal record
+                       else return the binding record
+        :return: a recordset, depending on the value of unwrap,
+                 or an empty recordset if the external_id is not mapped
+        :rtype: recordset
+        """
+        if external_field not in self.model._fields.keys():
+            if unwrap:
+                return self.model.browse()[self._odoo_field]
+            return self.model.browse()
+        bindings = self.model.with_context(active_test=False).search(
+            [(external_field, '=', tools.ustr(external_id)),
+             (self._backend_field, '=', self.backend_record.id)]
+        )
+        if not bindings:
+            if unwrap:
+                return self.model.browse()[self._odoo_field]
+            return self.model.browse()
+        bindings.ensure_one()
+        if unwrap:
+            bindings = bindings[self._odoo_field]
+        return bindings

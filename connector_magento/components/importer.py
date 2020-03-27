@@ -101,6 +101,46 @@ class MagentoImporter(AbstractComponent):
                     binding_model._name, external_id
                 )
 
+    def _custom_import_dependency(self, external_field, magento_id,
+                                  external_id,  binding_model, importer=None,
+                                  always=False):
+        """ Import a dependency.
+
+        The importer class is a class or subclass of
+        :class:`MagentoImporter`. A specific class can be defined.
+
+        :param external_field: external field for which we will search
+        :param external_id: id of the related binding to import
+        :param binding_model: name of the binding model for the relation
+        :type binding_model: str | unicode
+        :param importer_component: component to use for import
+                                   By default: 'importer'
+        :type importer_component: Component
+        :param always: if True, the record is updated even if it already
+                       exists, note that it is still skipped if it has
+                       not been modified on Magento since the last
+                       update. When False, it will import it only when
+                       it does not yet exist.
+        :type always: boolean
+        """
+        if not external_id:
+            return
+        binder = self.binder_for(binding_model)
+        if always or (
+                magento_id and
+                (not binder.custom_to_internal(external_field, magento_id) and
+                 not binder.to_internal(external_id))):
+            if importer is None:
+                importer = self.component(usage='record.importer',
+                                          model_name=binding_model)
+            try:
+                importer.run(external_id)
+            except NothingToDoJob:
+                _logger.info(
+                    'Dependency import of %s(%s) has been ignored.',
+                    binding_model._name, external_id
+                )
+
     def _import_dependencies(self):
         """ Import the dependencies for the record
 

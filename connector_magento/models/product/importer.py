@@ -194,6 +194,10 @@ class ProductImportMapper(Component):
               ]
 
     @mapping
+    def magento_id(self, record):
+        return {'magento_id': record.get('id', '')}
+
+    @mapping
     def description(self, record):
         return {'description': html2text.html2text(
             record.get('description', '').replace('\r\n', '<br>'),
@@ -349,6 +353,17 @@ class ProductImporter(Component):
     def _create(self, data):
         binding = super(ProductImporter, self)._create(data)
         self.backend_record.add_checkpoint(binding)
+        return binding
+
+    def _get_binding(self):
+        if self.collection.version == '1.7':
+            return super(ProductImporter, self)._get_binding()
+        binding = self.binder.custom_to_internal(
+            'magento_id', self.magento_record['id'])
+        if not binding:
+            binding = super(ProductImporter, self)._get_binding()
+            if binding and not binding.magento_id:
+                binding.magento_id = self.magento_record['id']
         return binding
 
     def _after_import(self, binding):

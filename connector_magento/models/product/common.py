@@ -45,6 +45,7 @@ class MagentoProductProduct(models.Model):
             # ('bundle', 'Bundle Product'),
         ]
 
+    magento_id = fields.Char('ID on Magento')
     odoo_id = fields.Many2one(comodel_name='product.product',
                               string='Product',
                               required=True,
@@ -99,6 +100,28 @@ class MagentoProductProduct(models.Model):
     )
 
     RECOMPUTE_QTY_STEP = 1000  # products at a time
+
+    _sql_constraints = [
+        ('magento_id_uniq', 'unique(backend_id, magento_id)',
+         'A binding already exists with the same Magento ID.'),
+    ]
+
+
+    @job(default_channel='root.magento',
+         retry_pattern={
+             1: 10 * 60,
+             2: 30 * 60,
+             3: 60 * 60,
+             4: 3 * 60 * 60,
+            })
+    @api.multi
+    def get_id_magento(self):
+        with self.backend_id.work_on(self._name) as work:
+            adapter = work.component(usage='backend.adapter')
+            record = adapter.read(self.external_id, attributes="id")
+            if record:
+                self.magento_id = record['id']
+
 
     @job(default_channel='root.magento')
     @related_action(action='related_action_unwrap_binding')

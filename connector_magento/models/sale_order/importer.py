@@ -741,10 +741,13 @@ class SaleOrderImporter(Component):
 
         for line in record.get('items', []):
             _logger.debug('line: %s', line)
-            field = self.collection.version == '1.7' and 'product_id' or 'sku'
-            if field in line:
-                self._import_dependency(line[field],
-                                        'magento.product.product')
+            if self.collection.version == '1.7':
+                self._import_dependency(
+                    line['product_id'], 'magento.product.product')
+            else:
+                self._custom_import_dependency('magento_id',
+                                               line['product_id'], line['sku'],
+                                               'magento.product.product')
 
 
 class SaleOrderLineImportMapper(Component):
@@ -786,8 +789,21 @@ class SaleOrderLineImportMapper(Component):
     @mapping
     def product_id(self, record):
         binder = self.binder_for('magento.product.product')
-        field = self.collection.version == '1.7' and 'product_id' or 'sku'
-        product = binder.to_internal(record[field], unwrap=True)
+        product = None
+        field = 'product_id'
+        if self.collection.version == '1.7':
+            product = binder.to_internal(record[field], unwrap=True)
+        else:
+            if field in record:
+                product = binder.custom_to_internal(
+                    'magento_id', record[field], unwrap=True)
+            if not product:
+                field = 'sku'
+                product_bind = binder.to_internal(record[field])
+                if product_bind:
+                    product = product_bind.odoo_id
+                    if not product_bind.magento_id:
+                        product_bind.magento_id = record['product_id']
         assert product, (
             "product_id %s should have been imported in "
             "SaleOrderImporter._import_dependencies" % record[field])
