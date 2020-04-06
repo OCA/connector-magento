@@ -62,8 +62,7 @@ class MagentoBindingBackendRead(models.TransientModel):
             _logger.info(
                 'No component registry for database %s. '
                 'Probably because the Odoo registry has not been built '
-                'yet.', exc_info=1
-            )
+                'yet.')
             return []
         component_classes = components_registry.lookup(
             collection_name='magento.backend',
