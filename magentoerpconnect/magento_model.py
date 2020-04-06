@@ -635,6 +635,7 @@ class WebsiteImportMapper(ImportMapper):
         return {'name': name}
 
     @mapping
+    @only_create
     def backend_id(self, record):
         return {'backend_id': self.backend_record.id}
 
