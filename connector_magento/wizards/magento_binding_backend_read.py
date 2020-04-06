@@ -19,6 +19,7 @@ _logger = logging.getLogger(__name__)
 class MagentoBindingBackendRead(models.TransientModel):
 
     _name = 'magento.binding.backend.read'
+    _description = 'Magento Generic Object Reader Wizard'
 
     @api.model
     @tools.ormcache_context('self._uid', 'model_name', keys=('lang',))

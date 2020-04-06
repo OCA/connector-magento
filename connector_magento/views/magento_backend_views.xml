@@ -341,7 +341,7 @@
                         <field name="is_multi_company" invisible="1"/>
                         <field name="warehouse_id" class="oe_read_only" attrs="{'invisible': [('is_multi_company', '=', False)]}"/>
                         <field name="specific_warehouse_id" class="oe_edit_only" attrs="{'invisible': [('is_multi_company', '=', False)]}"/>
-                        <field name="team_id" options="{'no_create': True}" groups="base.group_multi_salesteams"/>
+                        <field name="team_id" options="{'no_create': True}"/>
                         <field name="lang_id" widget="selection"/>
                         <field name="catalog_price_tax_included"/>
                         <p attrs="{'invisible': [('catalog_price_tax_included', '=', False)]}">
