@@ -1061,7 +1061,7 @@ class SaleOrderLineImportMapper(ImportMapper):
             row_total = float(record.get('row_total') or 0)
         discount = 0
         if discount_value > 0 and row_total > 0:
-            discount = 100 * discount_value / row_total
+            discount = 100 * discount_value / (discount_value + row_total)
         result = {'discount': discount}
         return result
 
@@ -1079,14 +1079,16 @@ class SaleOrderLineImportMapper(ImportMapper):
     def price(self, record):
         """ tax key may not be present in magento2 when no taxes apply """
         result = {}
+        discount_amount = float(record['base_discount_amount'] or 0)
         base_row_total = float(record['base_row_total'] or 0.)
         base_row_total_incl_tax = float(
             record.get('base_row_total_incl_tax') or base_row_total)
         qty_ordered = float(record['qty_ordered'])
         if self.options.tax_include:
-            result['price_unit'] = base_row_total_incl_tax / qty_ordered
+            total = base_row_total_incl_tax
         else:
-            result['price_unit'] = base_row_total / qty_ordered
+            total = base_row_total
+        result['price_unit'] = (total + discount_amount) / qty_ordered
         return result
 
 
