@@ -72,10 +72,15 @@ Technical points:
 Installation
 ============
 
-To install this module, you need to:
+To install this module, you need to install library `python-magento`_. To make
+it work with Magento 2, is necessary to install an `specific branch of it`_.
 
 Read the full installation guide:
 http://odoo-magento-connector.com/guides/installation_guide.html
+
+
+.. _`python-magento`: https://github.com/fulfilio/python-magento
+.. _`specific branch of it`: https://github.com/StefanRijnhart/python-magento/tree/call_with_http_method
 
 Configuration and usage
 =======================
