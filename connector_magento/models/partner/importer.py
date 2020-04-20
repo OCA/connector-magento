@@ -206,7 +206,7 @@ class PartnerAddressBook(Component):
             adapter = self.component(usage='backend.adapter')
             address_data = adapter.search({'customer_id':
                                           {'eq': magento_partner_id}})
-            if not mag_address_ids:
+            if not address_data:
                 return
             mag_address_ids = [
                 (address_id, adapter.read(address_id))
@@ -242,7 +242,7 @@ class PartnerAddressBook(Component):
                 else:
                     # for B2C individual customers, merge with the main
                     # partner
-                    if not partner_binding.openerp_id.magento_address_bind_ids:
+                    if not partner_binding.odoo_id.magento_address_bind_ids:
                         merge = True
                     # in the case if the billing address no longer
                     # has a company, reset the flag
