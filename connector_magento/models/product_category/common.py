@@ -104,7 +104,7 @@ class ProductCategoryAdapter(Component):
         return self._call('%s.info' % self._magento_model,
                           [int(id), storeview_id, attributes])
 
-    def tree(self, parent_id=None, storeview_id=None, depth=None):
+    def tree(self, parent_id=1, storeview_id=None, depth=None):
         """ Returns a tree of product categories
 
         :rtype: dict
@@ -125,17 +125,15 @@ class ProductCategoryAdapter(Component):
             category_id = {tree['id']: children}
             return category_id
 
-        if parent_id:
-            parent_id = int(parent_id)
         if self.collection.version == '2.0':
-            attributes = {}
+            attributes = {
+                "rootCategoryId": 1,
+            }
             if depth:
                 attributes.update({
                     'fields': 'id,children_data[id]',
                     'depth': int(depth),
                 })
-            if parent_id is not None:
-                attributes.update(rootCategoryId=parent_id)
             tree = self._call('categories', attributes)
             filtered_ids = filter_ids_2_0(tree)
         else:
