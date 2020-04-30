@@ -304,7 +304,7 @@ class SaleOrderImportMapper(Component):
 
     @mapping
     def shipping_method(self, record):
-        ifield = record.get('shipping_method')
+        ifield = record.get('shipping_method') or record.get('shipping_description')
         if not ifield:
             return
 
@@ -315,18 +315,15 @@ class SaleOrderImportMapper(Component):
             [('magento_code', '=', ifield), ('company_id', '=', company_id)],
             limit=1,
         )
-        if carrier:
-            result = {'carrier_id': carrier.id}
-        else:
-            # FIXME: a mapper should not have any side effects
-            product = self.env.ref(
-                'connector_ecommerce.product_product_shipping')
-            carrier = self.env['delivery.carrier'].create({
-                'product_id': product.id,
-                'name': ifield,
-                'magento_code': ifield})
-            result = {'carrier_id': carrier.id}
-        return result
+        if not carrier:
+            raise FailedJobError(
+                "The configuration is missing for the Delivery Carrier '%s'.\n\n"
+                "Resolution:\n"
+                "- Go to "
+                "'Inventory > Configuration > Delivery > Delivery Methods'\n"
+                "- Create a new Delivery Method with Magento Carrier Code '%s'"
+                "" % (ifield, ifield))
+        return {'carrier_id': carrier.id}
 
     @mapping
     def sales_team(self, record):
