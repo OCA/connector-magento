@@ -175,3 +175,32 @@ class TestSaleOrder(SetUpMagentoSynchronized):
             self.assertEqual(method, 'sales_order.addComment')
             self.assertEqual(magento_id, binding.magento_id)
             self.assertEqual(state, 'pending')
+
+    def test_import_carrier_product(self):
+        """ Product of a carrier is used in the sale line """
+        cr, uid = self.cr, self.uid
+        product = self.registry('product.product').create(
+            cr, uid, {'name': 'Carrier Product'})
+        self.registry('delivery.carrier').create(
+            cr, uid,
+            {'name': 'Flatrate',
+             'partner_id': self.ref('base.main_partner'),
+             'product_id': product.id,
+             'magento_code': 'flatrate_flatrate',
+             'magento_carrier_code': 'flatrate_flatrate',
+             },
+        )
+        binding = self._import_sale_order(900000691)
+        # check if we have a line with the carrier product,
+        # which is the shipping line
+        shipping_line = False
+        for line in binding.order_line:
+            if line.product_id == product:
+                shipping_line = True
+        self.assertTrue(shipping_line,
+                        msg='No shipping line with the product of the carrier '
+                            'has been found. Line names: %s' %
+                            (', '.join("%s (%s)" % (line.name,
+                                                    line.product_id.name)
+                                       for line
+                                       in binding.order_line),))
