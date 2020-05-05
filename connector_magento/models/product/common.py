@@ -243,7 +243,20 @@ class ProductProductAdapter(Component):
         # XXX actually only ol_catalog_product.update works
         # the PHP connector maybe breaks the catalog_product.update
         if self.collection.version == '2.0':
-            raise NotImplementedError  # TODO
+            _logger.info("Prepare to call api with %s " % data)
+            # Replace by the
+            id = data['sku']
+            super(ProductProductAdapter, self)._call(
+                'products/%s' % id, {
+                    'product': data
+                },
+                http_method='put')
+            stock_datas = {"stockItem": {
+                'is_in_stock': True}}
+            return super(ProductProductAdapter, self)._call(
+                'products/%s/stockItems/1' % id,
+                stock_datas,
+                http_method='put')
         return self._call('ol_catalog_product.update',
                           [int(id), data, storeview_id, 'id'])
 
