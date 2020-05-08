@@ -32,7 +32,7 @@ class MagentoBackend(models.Model):
         to add a version from an ``_inherit`` does not constrain
         to redefine the ``version`` field in the ``_inherit`` model.
         """
-        return [('1.7', '1.7+')]
+        return [('1.7', '1.7+'), ('2.0', '2.0+')]
 
     @api.model
     def _get_stock_field_id(self):
@@ -64,6 +64,10 @@ class MagentoBackend(models.Model):
         string='Password',
         help="Webservice password",
     )
+    token = fields.Char(
+        help=('Authentication token for Magento 2.0+. See https://devdocs.'
+              ' magento.com/guides/v2.3/get-started/authentication'
+              '/gs-authentication-token.html'))
     use_auth_basic = fields.Boolean(
         string='Use HTTP Auth Basic',
         help="Use a Basic Access Authentication for the API. "
@@ -79,6 +83,10 @@ class MagentoBackend(models.Model):
         string='Basic Auth. Password',
         help="Basic access authentication web server side password",
     )
+    verify_ssl = fields.Boolean(
+        string='Verify SSL certificate',
+        default=True,
+        help="Only for Magento 2.0+")
     sale_prefix = fields.Char(
         string='Sale Prefix',
         help="A prefix put before the name of imported sales orders.\n"
@@ -193,6 +201,9 @@ class MagentoBackend(models.Model):
             self.location,
             self.username,
             self.password,
+            self.token,
+            self.version,
+            self.verify_ssl,
             use_custom_api_path=self.use_custom_api_path
         )
         if self.use_auth_basic:
