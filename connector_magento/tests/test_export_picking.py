@@ -114,16 +114,13 @@ class TestExportPicking(MagentoSyncTestCase):
             # should be created, then a job is generated that will export
             # the picking. Here the job is not created because we mock
             # 'with_delay()'
-            immediate_transfer = self.env['stock.immediate.transfer'].create(
-                {'pick_ids': [(4, self.picking.id)]}).process()
-            self.assertIsInstance(immediate_transfer, dict,
-                                  'A backorder confirmation wizard action'
-                                  ' must be created')
-            self.assertEqual(immediate_transfer['res_model'],
-                             'stock.backorder.confirmation')
+            backorder_action = self.picking.button_validate()
+            self.assertEqual(
+                backorder_action['res_model'], 'stock.backorder.confirmation',
+                'A backorder confirmation wizard action must be created')
             # Confirm backorder creation
             self.env['stock.backorder.confirmation'].browse(
-                immediate_transfer['res_id']).process()
+                backorder_action['res_id']).process()
 
             self.assertEqual(self.picking.state, 'done')
 
@@ -155,7 +152,7 @@ class TestExportPicking(MagentoSyncTestCase):
             # should be created, then a job is generated that will export
             # the picking. Here the job is not created because we mock
             # 'with_delay()'
-            self.env['stock.immediate.transfer'].create(
+            self.env['stock.backorder.confirmation'].create(
                 {'pick_ids': [(4, self.picking.id)]}).process()
             self.assertEqual(self.picking.state, 'done')
             picking_binding = self.env['magento.stock.picking'].search(

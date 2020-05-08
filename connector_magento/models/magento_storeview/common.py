@@ -30,6 +30,9 @@ class MagentoStoreview(models.Model):
                                readonly=True)
     lang_id = fields.Many2one(comodel_name='res.lang', string='Language')
     team_id = fields.Many2one(comodel_name='crm.team', string='Sales Team')
+    base_media_url = fields.Char(
+        help=('Base URL to retrieve product images. Used for Magento2 only. '
+              'For example: http://magento/media'))
     backend_id = fields.Many2one(
         comodel_name='magento.backend',
         related='store_id.website_id.backend_id',
@@ -106,4 +109,22 @@ class StoreviewAdapter(Component):
     _apply_on = 'magento.storeview'
 
     _magento_model = 'ol_storeviews'
+    _magento2_model = 'store/storeConfigs'
     _admin_path = 'system_store/editStore/store_id/{id}'
+
+    def read(self, external_id, attributes=None):
+        """ Conveniently split into two separate APIs in 2.0
+        :rtype: dict
+        """
+        if self.collection.version == '2.0':
+            if attributes:
+                raise NotImplementedError
+            storeview = next(
+                record for record in self._call('store/storeViews')
+                if record['id'] == external_id)
+            storeview.update(next(
+                record for record in self._call('store/storeConfigs')
+                if record['id'] == external_id))
+            return storeview
+        return super(StoreviewAdapter, self).read(
+            external_id, attributes=attributes)

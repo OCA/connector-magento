@@ -53,9 +53,33 @@ class StateExporter(Component):
             return _('Sale is not linked with a Magento sales order')
         magento_state = self.ORDER_STATUS_MAPPING[state]
         record = self.backend_adapter.read(external_id)
-        if record['status'] == magento_state:
+        # Magento2: sometimes only 'state' is present
+        if (record.get('status') or record['state']) == magento_state:
             return _('Magento sales order is already '
                      'in state %s') % magento_state
-        self.backend_adapter.add_comment(external_id, magento_state,
-                                         comment=comment,
-                                         notify=notify)
+        if self.collection.version == '2.0':
+            self.backend_adapter._call(
+                'orders',
+                {
+                    "entity": {
+                        "entity_id": external_id,
+                        "state": magento_state,
+                        "status": magento_state,
+                    },
+                },
+                http_method='post')
+            to_notify = comment and notify
+            self.backend_adapter._call(
+                'orders/%s/comments' % external_id,
+                {
+                    "statusHistory": {
+                        "comment": comment or magento_state,
+                        "is_customer_notified": 1 if to_notify else 0,
+                        "is_visible_on_front": 0,
+                    }
+                },
+                http_method='post')
+        else:
+            self.backend_adapter.add_comment(external_id, magento_state,
+                                             comment=comment,
+                                             notify=notify)
